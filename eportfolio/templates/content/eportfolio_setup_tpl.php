@@ -78,7 +78,14 @@ $objDownIcon->alt = $this->objLanguage->languageText('phrase_movedown');
 $table->startRow();
 $table->addCell("<strong>".$this->objLanguage->languageText('mod_eportfolio_mainblock','eportfolio')."</strong>");
 $table->endRow();
+//PATCH.Update Visiblity. Some records were updated by others besides the logged in user
+$wrongBlocks = $this->objEPBlocks->getWrongUpdates();
+foreach ($wrongBlocks as $block) {
+    $this->objEPBlocks->updateVisibility($block['id'], $block['visible']);
+}
+
 $mainTab = $this->objEPBlocks->getBlocks('main');
+
 foreach ($mainTab as $block) {
     $upLink->link($this->uri(array('action'=>'moveup','id'=>$block['id'])));
     $upLink->link = $objUpIcon->show();

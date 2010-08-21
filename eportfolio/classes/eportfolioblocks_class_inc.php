@@ -87,7 +87,7 @@ class eportfolioBlocks extends dbTable {
                 $mainBlocks = array('identification', 'activities', 'affiliation', 'transcripts', 'qualifications', 'goals', 'competencies', 'interests', 'reflections', 'assertions');
                 foreach($mainBlocks as $mainBlock){
                     //Create array to hold block data
-                    $blockData = array('title'=>ucfirst(strtolower($mainBlock)), 'side'=>$column,  'isblock'=>TRUE, 'blockname'=>$mainBlock, 'blockmodule'=>'eportfolio');
+                    $blockData = array('userid'=>$userId, 'title'=>ucfirst(strtolower($mainBlock)), 'side'=>$column,  'isblock'=>TRUE, 'blockname'=>$mainBlock, 'blockmodule'=>'eportfolio');
                     $this->insertBlock($blockData);
                 }
                 //Insert for Identity blocks as well
@@ -99,7 +99,7 @@ class eportfolioBlocks extends dbTable {
                      $mainBlocks = array('address', 'contact', 'email', 'demographics');
                     foreach($mainBlocks as $mainBlock){
                         //Create array to hold block data
-                        $blockData = array('title'=>ucfirst(strtolower($mainBlock)), 'side'=>$column,  'isblock'=>TRUE, 'blockname'=>$mainBlock, 'blockmodule'=>'eportfolio');
+                        $blockData = array('userid'=>$userId, 'title'=>ucfirst(strtolower($mainBlock)), 'side'=>$column,  'isblock'=>TRUE, 'blockname'=>$mainBlock, 'blockmodule'=>'eportfolio');
                         $this->insertBlock($blockData);
                     }
                 }
@@ -125,6 +125,32 @@ class eportfolioBlocks extends dbTable {
             customException::cleanUp();
         }
     }
+    /**
+     * Method to retrieve a single block
+     *
+     * @param string $id block id
+     * @return array The block data from the table|error
+     */
+    public function getSingleBlock($id) {
+        try {
+            return $this->getAll("WHERE id = '".$id."'");
+        } catch (customException $e) {
+            customException::cleanUp();
+        }
+    }
+
+    /**
+     * Method to retrieve all blocks not updated by the owner
+     *
+     * @return array The user blocks data from the table|error
+     */
+    public function getWrongUpdates() {
+        try {
+            return $this->getAll("WHERE userid = '".$this->objUser->userId()."' AND updatedby != '".$this->objUser->userId()."' ORDER BY position ASC");
+        } catch (customException $e) {
+            customException::cleanUp();
+        }
+    }
 
     /**
      * Method to change the visibility of a block
@@ -134,13 +160,15 @@ class eportfolioBlocks extends dbTable {
      * @return TRUE|error
      */
     public function updateVisibility($id,$vis) {
+      $blockData = $this->getSingleBlock($id);
+      if ($blockData[0]["userid"]==$this->objUser->userId()){
         try {
             return $this->update('id',$id,array('visible'=>$vis,'datelastupdated'=>$this->now(),'updatedby'=>$this->objUser->userId()));
         } catch (customException $e) {
             customException::cleanUp();
         }
+      }
     }
-
     /**
     * Function to get the next available position on a navbar
     * 
@@ -165,17 +193,18 @@ class eportfolioBlocks extends dbTable {
      * @param array $arrData The data to insert
      * @return TRUE|error
      */
-    public function insertBlock($arrData) {
+    public function insertBlock($arrayData) {
         try {
+            $arrData = array();
             $arrData['visible'] = $this->TRUE;
             $arrData['datelastupdated'] = $this->now();
             $arrData['updatedby'] = $this->objUser->userId();
-            $arrData['title'] = $arrData['title'];
-            $arrData['side'] = $arrData['side'];
-            $arrData['isblock'] = $arrData['isblock'];
-            $arrData['blockname'] = $arrData['blockname'];
-            $arrData['blockmodule'] = $arrData['blockmodule'];
-            $arrData['position'] = $this->getNextPos($arrData['side']);
+            $arrData['title'] = $arrayData['title'];
+            $arrData['side'] = $arrayData['side'];
+            $arrData['isblock'] = $arrayData['isblock'];
+            $arrData['blockname'] = $arrayData['blockname'];
+            $arrData['blockmodule'] = $arrayData['blockmodule'];
+            $arrData['position'] = $this->getNextPos($arrayData['side']);
             $arrData['userid'] = $this->objUser->userId();
             //var_dump($arrData);
             return $this->insert($arrData);
@@ -191,8 +220,11 @@ class eportfolioBlocks extends dbTable {
      * @param array $arrData the data that has changed
      * @return TRUE|error
      */
-    public function updateBlock($id,$arrData) {
+    public function updateBlock($id,$arrayData) {
+      $blockData = $this->getSingleBlock($id);
+      if ($blockData[0]["userid"]==$this->objUser->userId()){
         try {
+            $arrData = array();
             $arrData['visible'] = $this->TRUE;
             $arrData['datelastupdated'] = $this->now();
             $arrData['updatedby'] = $this->objUser->userId();
@@ -200,6 +232,7 @@ class eportfolioBlocks extends dbTable {
         } catch (customException $e) {
             customException::cleanUp();
         }
+      }
     }
 
     /**
