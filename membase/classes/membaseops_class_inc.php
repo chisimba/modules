@@ -115,6 +115,17 @@ class membaseops extends object
     }
 
     /**
+     * Increments the value of a key.
+     *
+     * @access public
+     * @param  string $key The key.
+     */
+    public function increment($key)
+    {
+        $this->objMemcache->increment($key);
+    }
+
+    /**
      * Sets the value of a key.
      *
      * @access public
