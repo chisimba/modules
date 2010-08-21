@@ -57,6 +57,14 @@ $GLOBALS['kewl_entry_point_run']) {
 class urlshortenerops extends object
 {
     /**
+     * Instance of the altconfig class of the config module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objAltConfig;
+
+    /**
      * Instance of the membaseops class of the membase module.
      *
      * @access private
@@ -71,18 +79,43 @@ class urlshortenerops extends object
      */
     public function init()
     {
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
         $this->objMembase = $this->getObject('membaseops', 'membase');
+    }
+
+    /**
+     * Converts a short URL into a long URL.
+     *
+     * @access public
+     * @param  string $short The short URL.
+     * @return string The long URL.
+     */
+    public function getLong($short)
+    {
+        $long = $this->objMemcache->get($short);
+
+        return $long;
     }
 
     /*
      * Converts a long URL into a short URL.
      *
      * @access public
-     * @param  string $url The long URL.
+     * @param  string $long The long URL.
      * @return string The short URL.
      */
-    public function get($key)
+    public function getShort($long)
     {
-        return '';
+        $short = $this->objMemcache->get($long);
+
+        if ($short === FALSE) {
+            $next = $this->objMemcache->increment('_next');
+            $short = $this->objAltConfig->getsiteRoot().base_convert($next, 10, 36);
+
+            $this->objMemcache->set($short, $long);
+            $this->objMemcache->set($long, $short);
+        }
+
+        return $short;
     }
 }
