@@ -7,7 +7,7 @@ $hasAccess = $this->_objUser->isAdmin();
 $this->setVar('pageSuppressXML', true);
 if (!$hasAccess) {
     // Redirect
-    return $this->nextAction('view_assertion', array());
+    return $this->nextAction('main', array());
     break;
 } else {
     // Load classes.

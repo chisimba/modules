@@ -24,7 +24,6 @@ class eportfolio extends controller
      * @var groupId The group Id.
      */
     public $groupId;
-
     /*
     * @var object $objFSContext : The File System Object for the context
     */
@@ -133,7 +132,7 @@ class eportfolio extends controller
         $this->_arrSubGroups['Group 2']['id'] = NULL;
         $this->_arrSubGroups['Group 2']['members'] = array();
         //Check the DB in use and set the appropriate value for TRUE & FALSE
-        if($this->objEPBlocks->dbType == "pgsql") {
+        if ($this->objEPBlocks->dbType == "pgsql") {
             $this->TRUE = 't';
             $this->FALSE = 'f';
         } else {
@@ -149,98 +148,126 @@ class eportfolio extends controller
         $this->setVarByRef('user', $this->user);
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
-                case 'admin':
-                    $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+            case "main":
+                $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+                return $this->showUserDetailsForm();
+                break;
+
+            case 'admin':
+                $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+                return 'eportfolio_setup_tpl.php';
+            case 'editblock':
+                if (!$this->objUser->isAdmin()) {
+                    return 'new_main_tpl.php';
+                } else {
+                    $this->setVar('heading', $this->objLanguage->languageText('mod_prelogin_editblock', 'prelogin'));
+                    $block = $this->objEPBlocks->getRow('id', $this->getParam('id'));
+                    $this->setVar('blockName', $block['title']);
+                    $this->setVar('blockContent', $block['content']);
+                    $this->setVar('location', $block['side']);
+                    $this->setVar('block', array(
+                        'module' => $block['blockmodule'],
+                        'name' => $block['blockname']
+                    ));
+                    $this->setVar('id', $block['id']);
+                    $bType = ($block['isblock'] == $this->TRUE) ? 'block' : 'nonblock';
+                    $this->setVar('bType', $bType);
                     return 'eportfolio_setup_tpl.php';
-                case 'editblock':
-                    if (!$this->objUser->isAdmin()) {
-                        return 'new_main_tpl.php';
-                    } else {
-                        $this->setVar('heading',$this->objLanguage->languageText('mod_prelogin_editblock','prelogin'));
-                        $block = $this->objEPBlocks->getRow('id',$this->getParam('id'));
-                        $this->setVar('blockName',$block['title']);
-                        $this->setVar('blockContent',$block['content']);
-                        $this->setVar('location',$block['side']);
-                        $this->setVar('block',array('module'=> $block['blockmodule'],'name'=>$block['blockname']));
-                        $this->setVar('id',$block['id']);
-                        $bType = ($block['isblock'] == $this->TRUE)? 'block' : 'nonblock';
-                        $this->setVar('bType',$bType);
-                        return 'eportfolio_setup_tpl.php';
+                }
+            case 'addblock':
+                if (!$this->objUser->isAdmin()) {
+                    return 'new_main_tpl.php';
+                } else {
+                    $this->setVar('heading', $this->objLanguage->languageText('mod_prelogin_addblock', 'prelogin'));
+                    return 'eportfolio_setup_tpl.php';
+                }
+            case 'submitblock':
+                if (!$this->objUser->isAdmin()) {
+                    return 'new_main_tpl.php';
+                } else {
+                    $title = $this->getParam('title');
+                    if ($title == '') {
+                        $title = 'untitled';
                     }
-                case 'addblock':
-                    if (!$this->objUser->isAdmin()) {
-                        return 'new_main_tpl.php';
+                    $side = $this->getParam('side');
+                    $bType = ($this->getParam('type') == 'block') ? $this->TRUE : $this->FALSE;
+                    $content = htmlentities($this->getParam('content') , ENT_QUOTES);
+                    //var_dump($content); die();
+                    $block = $this->getParam('moduleblock');
+                    if ($block) {
+                        $arrBlock = explode('|', $block);
+                        $blockModule = $arrBlock[0];
+                        $blockName = $arrBlock[1];
                     } else {
-                        $this->setVar('heading',$this->objLanguage->languageText('mod_prelogin_addblock','prelogin'));
-                        return 'eportfolio_setup_tpl.php';
+                        $blockModule = '';
+                        $blockName = '';
                     }
-                case 'submitblock':
-                    if (!$this->objUser->isAdmin()) {
-                        return 'new_main_tpl.php';
+                    $data = array(
+                        'title' => $title,
+                        'side' => $side,
+                        'content' => $content,
+                        'isblock' => $bType,
+                        'blockname' => $blockName,
+                        'blockmodule' => $blockModule
+                    );
+                    if ($id = $this->getParam('id')) {
+                        $result = $this->objEPBlocks->updateBlock($id, $data);
                     } else {
-                        $title = $this->getParam('title');
-                        if($title == '') {
-                            $title = 'untitled';
-                        }
-                        $side = $this->getParam('side');
-                        $bType = ($this->getParam('type') == 'block')? $this->TRUE : $this->FALSE;
-                        $content = htmlentities($this->getParam('content'),ENT_QUOTES);
-                        //var_dump($content); die();
-                        $block = $this->getParam('moduleblock');
-                        if ($block) {
-                            $arrBlock = explode('|',$block);
-                            $blockModule = $arrBlock[0];
-                            $blockName = $arrBlock[1];
-                        } else {
-                            $blockModule = '';
-                            $blockName = '';
-                        }
-                        $data = array('title'=>$title,'side'=>$side,'content'=>$content,'isblock'=>$bType,'blockname'=>$blockName,'blockmodule'=>$blockModule);
-                        if ($id = $this->getParam('id')) {
-                            $result = $this->objEPBlocks->updateBlock($id,$data);
-                        } else {
-                            $result = $this->objEPBlocks->insertBlock($data);
-                        }
-                        //echo $result;
-                        return $this->nextAction('admin',array('change'=>'2'));
+                        $result = $this->objEPBlocks->insertBlock($data);
                     }
+                    //echo $result;
+                    return $this->nextAction('admin', array(
+                        'change' => '2'
+                    ));
+                }
                 //move a block up
-                case 'moveup':
-                    if (!$this->objUser->isAdmin()) {
-                        return 'new_main_tpl.php';
-                    } else {
-                        $this->objEPBlocks->moveRecUp($this->getParam('id'));
-                        return $this->nextAction('admin',array('change'=>'2'));
-                    }
+                
+            case 'moveup':
+                if (!$this->objUser->isAdmin()) {
+                    return 'new_main_tpl.php';
+                } else {
+                    $this->objEPBlocks->moveRecUp($this->getParam('id'));
+                    return $this->nextAction('admin', array(
+                        'change' => '2'
+                    ));
+                }
                 //move a block down
-                case 'movedown':
-                    if (!$this->objUser->isAdmin()) {
-                        return 'new_main_tpl.php';
-                    } else {
-                        $this->objEPBlocks->moveRecDown($this->getParam('id'));
-                        return $this->nextAction('admin',array('change'=>'2'));
-                    }
+                
+            case 'movedown':
+                if (!$this->objUser->isAdmin()) {
+                    return 'new_main_tpl.php';
+                } else {
+                    $this->objEPBlocks->moveRecDown($this->getParam('id'));
+                    return $this->nextAction('admin', array(
+                        'change' => '2'
+                    ));
+                }
                 //delete a block record
-                case 'delete':
-                    if (!$this->objUser->isAdmin()) {
-                        return 'new_main_tpl.php';
-                    } else {
-                        $this->objEPBlocks->delete('id',$this->getParam('id'));
-                        return $this->nextAction('admin',array('change'=>'2'));
-                    }
+                
+            case 'delete':
+                if (!$this->objUser->isAdmin()) {
+                    return 'new_main_tpl.php';
+                } else {
+                    $this->objEPBlocks->delete('id', $this->getParam('id'));
+                    return $this->nextAction('admin', array(
+                        'change' => '2'
+                    ));
+                }
             case 'update':
-                    $vibe = array();
-                    //Get all blocks
-                    $blocks = $this->objEPBlocks->getAll();
-                    if (isset($blocks)) {
-                      foreach($blocks as $block) {
-                       ($this->getParam($block['id'].'_vis')=='on')? $vis = $this->TRUE : $vis = $this->FALSE;
-                       if ($block['visible'] !== $vis) {
-                           $this->objEPBlocks->updateVisibility($block['id'],$vis);
-                       }
-                      }
+                $vibe = array();
+                //Get all blocks
+                $blocks = $this->objEPBlocks->getAll();
+                if (isset($blocks)) {
+                    foreach($blocks as $block) {
+                        ($this->getParam($block['id'] . '_vis') == 'on') ? $vis = $this->TRUE : $vis = $this->FALSE;
+                        if ($block['visible'] !== $vis) {
+                            $this->objEPBlocks->updateVisibility($block['id'], $vis);
+                        }
                     }
-                     return $this->nextAction('admin',array('change'=>'2'));
+                }
+                return $this->nextAction('admin', array(
+                    'change' => '2'
+                ));
             case "postcomment":
                 $id = $this->objDbComment->insertSingle($this->getParam('eportfoliopartid', NULL) , $this->getParam('newcomment', NULL) , $isapproved = '0');
                 // After processing return to view main
@@ -756,8 +783,7 @@ class eportfolio extends controller
         case "view_activity":
         case "view_qcl":
         case "view_goals":
-            $this->setLayoutTemplate('eportfolio_layout_tpl.php');
-            return 'new_main_tpl.php';
+            return $this->nextAction('main');
             break;
 
         case "add_goals":
@@ -845,133 +871,133 @@ class eportfolio extends controller
         case "deleteconfirm":
             $this->nextAction($id = $this->getParam('id', null) , $this->objDbAddressList->deleteSingle($id));
             // After processing return to view main
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deletecontact":
             $this->nextAction($id = $this->getParam('id', null) , $this->objDbContactList->deleteSingle($id));
             // After processing return to view main
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deleteinterest":
             $this->nextAction($id = $this->getParam('id', null) , $this->objDbInterestList->deleteSingle($id));
             // After processing return to view main
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deletedemographics":
             $this->nextAction($id = $this->getParam('id', null) , $this->objDbDemographicsList->deleteSingle($id));
             // After processing return to view main
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deleteemail":
             $this->nextAction($myid = $this->getParam('myid', null) , $this->objDbEmailList->deleteSingle($myid));
             // After processing return to view main
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deletetranscript":
             $this->nextAction($id = $this->getParam('id', null) , $this->objDbTranscriptList->deleteSingle($id));
             // After processing return to view main
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deleteqcl":
             $this->nextAction($id = $this->getParam('id', null) , $this->objDbQclList->deleteSingle($id));
             // After processing return to view main
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deletecompetency":
             $this->nextAction($id = $this->getParam('id', null) , $this->objDbCompetencyList->deleteSingle($id));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deleteaffiliation":
             $this->nextAction($myid = $this->getParam('id', null) , $this->objDbAffiliationList->deleteSingle($myid));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deletegoals":
             $this->nextAction($myid = $this->getParam('id', null) , $this->objDbGoalsList->deleteSingle($myid));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deletereflection":
             $this->nextAction($myid = $this->getParam('id', null) , $this->objDbReflectionList->deleteSingle($myid));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deleteassertion":
             $this->nextAction($myid = $this->getParam('id', null) , $this->objDbAssertionList->deleteSingle($myid));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deleteactivity":
             $this->nextAction($myid = $this->getParam('id', null) , $this->objDbActivityList->deleteSingle($myid));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deleteproduct":
             $this->nextAction($myid = $this->getParam('id', null) , $this->objDbProductList->deleteSingle($myid));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deletecategory":
             $this->nextAction($myid = $this->getParam('id', null) , $this->objDbCategoryList->deleteSingle($myid));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "deletecategorytype":
             $this->nextAction($myid = $this->getParam('id', null) , $this->objDbCategorytypeList->deleteSingle($myid));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addaddressconfirm":
             //$link = $this->getParam('link', NULL);
             $id = $this->objDbAddressList->insertSingle($this->getParam('address_type', NULL) , $this->getParam('street_no', NULL) , $this->getParam('street_name', NULL) , $this->getParam('locality', NULL) , $this->getParam('city', NULL) , $this->getParam('postcode', NULL) , $this->getParam('postal_address', NULL));
             // After processing return to view main
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addqclconfirm":
             //$link = $this->getParam('link', NULL);
             $id = $this->objDbQclList->insertSingle($this->getParam('qcl_type', NULL) , $this->getParam('title', NULL) , $this->getParam('organisation', NULL) , $this->getParam('qcl_level', NULL) , $this->getParam('award_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addgoalsconfirm":
             //$link = $this->getParam('link', NULL);
             $id = $this->objDbGoalsList->insertSingle($this->getParam('parentid', NULL) , $this->getParam('goal_type', NULL) , $this->getParam('start', NULL) , $this->getParam('priority', NULL) , $this->getParam('status', NULL) , $this->getParam('status_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editqclconfirm":
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbQclList->updateSingle($myid, $this->getParam('qcl_type', NULL) , $this->getParam('title', NULL) , $this->getParam('organisation', NULL) , $this->getParam('qcl_level', NULL) , $this->getParam('award_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editgoalsconfirm":
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbGoalsList->updateSingle($myid, $this->getParam('parentid', NULL) , $this->getParam('goal_type', NULL) , $this->getParam('start', NULL) , $this->getParam('priority', NULL) , $this->getParam('status', NULL) , $this->getParam('status_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editcompetencyconfirm":
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbCompetencyList->updateSingle($myid, $this->getParam('competency_type', NULL) , $this->getParam('award_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addcompetencyconfirm":
             $id = $this->objDbCompetencyList->insertSingle($this->getParam('competency_type', NULL) , $this->getParam('award_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editcompetency":
@@ -994,7 +1020,7 @@ class eportfolio extends controller
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbAssertionList->updateSingle($myid, $this->getParam('language', NULL) , $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addgroupconfirm":
@@ -1003,7 +1029,7 @@ class eportfolio extends controller
             } else {
                 $id = $this->addGroupsOld($this->getParam('group', NULL));
             }
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addassertionconfirm":
@@ -1018,7 +1044,7 @@ class eportfolio extends controller
             }
             // After processing return to view assertion
             //return $this->nextAction( 'view_assertion', array() );
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editassertion":
@@ -1211,12 +1237,12 @@ class eportfolio extends controller
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbReflectionList->updateSingle($myid, $this->getParam('language', NULL) , $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addreflectionconfirm":
             $id = $this->objDbReflectionList->insertSingle($this->getParam('language', NULL) , $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editreflection":
@@ -1241,12 +1267,12 @@ class eportfolio extends controller
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbProductList->updateSingle($myid, $this->getParam('producttype', NULL) , $this->getParam('comment', NULL) , $this->getParam('referential_source', NULL) , $this->getParam('referential_id', NULL) , $this->getParam('assertion_id', NULL) , $this->getParam('assignment_id', NULL) , $this->getParam('essay_id', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addproductconfirm":
             $id = $this->objDbProductList->insertSingle($this->getParam('producttype', NULL) , $this->getParam('comment', NULL) , $this->getParam('referential_source', NULL) , $this->getParam('referential_id', NULL) , $this->getParam('assertion_id', NULL) , $this->getParam('assignment_id', NULL) , $this->getParam('essay_id', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editproduct":
@@ -1282,12 +1308,12 @@ class eportfolio extends controller
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbInterestList->updateSingle($myid, $this->getParam('interest_type', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addinterestconfirm":
             $id = $this->objDbInterestList->insertSingle($this->getParam('interest_type', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editinterest":
@@ -1355,7 +1381,7 @@ class eportfolio extends controller
 
         case "addaffiliationconfirm":
             $id = $this->objDbAffiliationList->insertSingle($this->getParam('affiliation_type', NULL) , $this->getParam('classification', NULL) , $this->getParam('role', NULL) , $this->getParam('organisation', NULL) , $this->getParam('start', NULL) , $this->getParam('finish', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editaddress":
@@ -1408,19 +1434,19 @@ class eportfolio extends controller
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbAddressList->updateSingle($myid, $this->getParam('address_type', NULL) , $this->getParam('street_no', NULL) , $this->getParam('street_name', NULL) , $this->getParam('locality', NULL) , $this->getParam('city', NULL) , $this->getParam('postcode', NULL) , $this->getParam('postal_address', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editaffiliationconfirm":
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbAffiliationList->updateSingle($myid, $this->getParam('affiliation_type', NULL) , $this->getParam('classification', NULL) , $this->getParam('role', NULL) , $this->getParam('organisation', NULL) , $this->getParam('start', NULL) , $this->getParam('finish', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addcontactconfirm":
             $id = $this->objDbContactList->insertSingle($this->getParam('contact_type', NULL) , $this->getParam('contactType', NULL) , $this->getParam('country_code', NULL) , $this->getParam('area_code', NULL) , $this->getParam('id_number', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editemail":
@@ -1437,14 +1463,14 @@ class eportfolio extends controller
 
         case "addemailconfirm":
             $id = $this->objDbEmailList->insertSingle($this->getParam('email_type', NULL) , $this->getParam('email', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editemailconfirm":
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbEmailList->updateSingle($myid, $this->getParam('email_type', NULL) , $this->getParam('email', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editcategory":
@@ -1459,14 +1485,14 @@ class eportfolio extends controller
 
         case "addcategoryconfirm":
             $id = $this->objDbCategoryList->insertSingle($this->getParam('category', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editcategoryconfirm":
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbCategoryList->updateSingle($myid, $this->getParam('category', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editcategorytype":
@@ -1483,14 +1509,14 @@ class eportfolio extends controller
 
         case "addcategorytypeconfirm":
             $id = $this->objDbCategorytypeList->insertSingle($this->getParam('categoryid', NULL) , $this->getParam('categorytype', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editcategorytypeconfirm":
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbCategorytypeList->updateSingle($myid, $this->getParam('categoryid', NULL) , $this->getParam('categorytype', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editcontact":
@@ -1515,18 +1541,12 @@ class eportfolio extends controller
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbContactList->updateSingle($myid, $this->getParam('contact_type', NULL) , $this->getParam('contactType', NULL) , $this->getParam('country_code', NULL) , $this->getParam('area_code', NULL) , $this->getParam('id_number', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "adddemographicsconfirm":
-            /*
-            //Covert date to sql format
-            $this->getParam('birth', NULL);
-            $this->setVarByRef('birth', $this->birth);
-            $birth = $this->objDate->sqlDate($birth);
-            */
             $id = $this->objDbDemographicsList->insertSingle($this->getParam('demographics_type', NULL) , $this->getParam('birth', NULL) , $this->getParam('nationality', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editdemographics":
@@ -1551,7 +1571,7 @@ class eportfolio extends controller
             //$this->setVarByRef('birth', $this->birth);
             //$mybirth = $this->objDate->sqlDate($birth);
             $this->nextAction($this->objDbDemographicsList->updateSingle($myid, $this->getParam('demographics_type', NULL) , $birth, $this->getParam('nationality', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addactivityconfirm":
@@ -1563,13 +1583,13 @@ class eportfolio extends controller
                 $contexttitle = 'None';
             }
             $id = $this->objDbActivityList->insertSingle($contexttitle, $this->getParam('activityType', NULL) , $this->getParam('activityStart', NULL) , $this->getParam('activityFinish', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "addtranscriptconfirm":
             //$link = $this->getParam('link', NULL);
             $id = $this->objDbTranscriptList->insertSingle($this->getParam('type', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "editactivity":
@@ -1603,7 +1623,7 @@ class eportfolio extends controller
                 $contexttitle = 'None';
             }
             $this->nextAction($this->objDbActivityList->updateSingle($myid, $contexttitle, $this->getParam('activityType', NULL) , $this->getParam('activityStart', NULL) , $this->getParam('activityFinish', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "edittranscript":
@@ -1624,7 +1644,7 @@ class eportfolio extends controller
             $myid = $this->getParam('id', null);
             $this->setVarByRef('id', $myid);
             $this->nextAction($this->objDbTranscriptList->updateSingle($myid, $this->getParam('type', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
-            return $this->nextAction('main', NULL);
+            return $this->nextAction('main');
             break;
 
         case "viewgroups":
@@ -1663,11 +1683,6 @@ class eportfolio extends controller
     case "configureviews":
         $this->setLayoutTemplate('eportfolio_layout_tpl.php');
         return "manage_views_tpl.php";
-        break;
-
-    case "main":
-        $this->setLayoutTemplate('eportfolio_layout_tpl.php');
-        return $this->showUserDetailsForm();
         break;
 
     default:
