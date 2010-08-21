@@ -730,11 +730,6 @@ class eportfolio extends controller
             return "userdetails_tpl.php";
             break;
 
-        case "main":
-            $this->setLayoutTemplate('eportfolio_layout_tpl.php');
-            return "new_main_tpl.php";
-            break;
-
         case "add_address":
             $this->setLayoutTemplate('eportfolio_layout_tpl.php');
             return "add_address_tpl.php";
