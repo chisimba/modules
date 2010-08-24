@@ -212,5 +212,51 @@ class dbtestadmin extends dbtable
         }
         return FALSE;
     }
+
+    /*
+     * Method to get all questions for this test (context)
+     *
+     * @access public
+     *
+     * @return array $data the multiple choice questions array
+     */
+    public function getContextQuestions($contextCode) {
+        $sql = "SELECT A.context, B.testid, B.question, B.hint,B.mark, B.questiontype FROM ".$this->table;
+        $sql .= " as A join chisimba.tbl_test_questions as B on A.id = B.testid";
+        $sql .= " WHERE A.context = '".$contextCode."'";
+        $data = $this->getArray($sql);
+        if($data) {
+            return $this->formatContextQuestions($data);
+        }
+        return FALSE;
+    }
+
+    /*
+     * Method to format data for extjs gridview
+     *
+     * @access public
+     *
+     * @return array $mcqData, the formated data
+     */
+    public function formatContextQuestions($data) {
+        $count = 1;
+        $numRows = count($data);
+        $mcqData = "[";
+        foreach ($data as $row) {
+            $mcqData .= "['".$row['testid']."','".trim($row['context'])."','".trim($row['question']). "','" . trim($row['hint']) . "','" . trim($row['questiontype']) . "'";
+            $mcqData .= "]";
+            if ($count < $numRows) {
+                $mcqData .= ",";
+            }
+            $count++;
+        }
+        $mcqData .= "]";
+        
+        $mcqData = str_replace("<p>", "", $mcqData);
+        $mcqData = str_replace("</p>", "", $mcqData);
+
+        return $mcqData;
+    }
+
 } // end of class
 ?>
