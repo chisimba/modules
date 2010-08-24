@@ -219,10 +219,13 @@ $str.= $objForm->show();
 $javascript = "<script language=\"javascript\" type=\"text/javascript\">
     //<![CDATA[
     function submitform(val){
-        
+        window.location.href = '".str_replace("amp;", "", $this->uri(array('action' => 'previewtest','id' => $this->getParam('id'),
+                    'mode' => 'notoolbar')))."&num='+val;
+        //document.submittest.submit();
     }
     //]]>
     </script>";
+//$url = str_replace("amp;", "", $url);
 echo $javascript;
 $nav = '<p align="center"><b>'.$gotoLabel.'</b></p><p align="center">';
 $nav.= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], 10) .'</p>';
