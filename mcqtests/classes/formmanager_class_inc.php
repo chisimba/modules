@@ -345,5 +345,20 @@ class formmanager extends object {
 
         return $objFormEdit->show();
     }
+
+    public function createDatabaseQuestions($oldQuestions) {
+
+        $gridjs =
+        "<script type='text/javascript' language='javascript'>
+            //<![CDATA[
+            Ext.onReady(function(){
+                showQuestionDB(".$oldQuestions.");
+                Ext.get('mcqGrid').hide();
+            });
+
+        </script>";
+
+        return $gridjs;
+    }
 }
 ?>
