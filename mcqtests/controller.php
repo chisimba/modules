@@ -146,6 +146,7 @@ class mcqtests extends controller {
                 $this->setVarByRef('testid',$id);
                 $this->setVarByRef('count',$count);
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
+                $oldQuestions = $this->dbTestadmin->getContextQuestions($this->contextCode);
 
                 // Get the total number of questions if this isn't the first
                 if ($count > 1) {
@@ -154,6 +155,7 @@ class mcqtests extends controller {
                 $test[0]['count'] = $count;
                 $this->setVarByRef('test', $test[0]);
                 $this->setVar('mode', 'add');
+                $this->setVar('oldQuestions', $oldQuestions);
 
                 return 'choosequestiontype_tpl.php';
                 break;
@@ -683,7 +685,11 @@ class mcqtests extends controller {
                 return $this->setTest($testId);
             case 'previewtest':
                 $testId = $this->getParam('id');
-                return $this->previewTest($testId);
+                $num = $this->getParam('num');
+                if($num <= 0) {
+                    $num = 0;
+                }
+                return $this->previewTest($testId, $num);
             case 'continuetest':
                 $this->unsetSession('taketest');
                 $resultId = $this->getParam('resultId', NULL);
