@@ -72,6 +72,8 @@ class dbtriplestore extends dbTable {
 
         // Instance of the user object of the security class.
         $this->objUser = $this->getObject('user', 'security');
+        //Instance of the xml serial class
+        $this->objXMLSerial = $this->getObject('xmlserial', 'utilities');
     }
 
     /**
@@ -285,11 +287,28 @@ class dbtriplestore extends dbTable {
      * Imports a XML file into the triplestore.
      *
      * @access public
-     * @param  string $file      The name and path to the CSV file.
+     * @param  string $file      The name and path to the XML file.
      * @param  string $subject   The name of the column containing the subjects.
+     * @return string $id The id of the last triple inserted
      */
     public function importXML($file, $subject) {
-        //TOdo
+
+        //Convert xml to a php array
+        $triplesArray = $this->objXMLSerial->readXML($file);
+        //Loop through array and insert triples
+        if(is_array($triplesArray) && count($triplesArray)>0){
+            foreach($triplesArray as $triple){
+                var_dump($triple);
+                if(is_array($triple) && count($triple)>0){
+                    foreach($triple as $trip){
+                        var_dump($trip);
+                        $id = $this->insert($trip['subject'], $trip['predicate'], $trip['object']);
+                    }
+                }
+               
+            }
+        }
+        return $id;
     }
 
     /**
