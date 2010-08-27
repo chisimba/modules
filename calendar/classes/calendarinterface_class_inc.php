@@ -90,8 +90,8 @@ class calendarinterface extends object
             $contextEvents = $this->getContextEvents($this->contextCode, $month, $year);
         }
         
-        $objManageGroups = $this->getObject('managegroups', 'contextgroups');
-        $userContextsArray = $objManageGroups->userContexts($this->userId, array('contextcode'));
+       // $objManageGroups = $this->getObject('managegroups', 'contextgroups');
+        //$userContextsArray = $objManageGroups->userContexts($this->userId, array('contextcode'));
         
         
         $otherEvents = array();
@@ -234,8 +234,8 @@ class calendarinterface extends object
                 $eventList .= '('.$event['timefrom'].' - '.$event['timeto'].')';
             }
             
-            $eventList .= '<br /><div>'.$objWashout->parseText($contextInfo.$event['eventdetails']).'</div>'.$edit.' '.$delete.'';
-            
+            //$eventList .= '<br /><div>'.$objWashout->parseText($contextInfo.$event['eventdetails']).'</div>'.$edit.' '.$delete.'';
+            $eventList .= '<br /><div>'.$contextInfo.$event['eventdetails'].'</div>'.$edit.' '.$delete.'';
             if ($event['eventurl'] != NULL) {
                 $link = new link($event['eventurl']);
                 $link->link = $event['eventurl'];
