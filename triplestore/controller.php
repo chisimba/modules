@@ -364,8 +364,7 @@ class triplestore extends controller {
         error_log(var_export($results, true));
         // Use it
         $fileurl = $results[$filename]['fullpath'];
-        $subject = 'me';
-
+        
         if ($filetype == 'csv') {
             $delimiter = $this->getParam('delimiter', ',');
             $this->objTriplestore->importCSV($fileurl, $subject, $delimiter);
@@ -379,7 +378,7 @@ class triplestore extends controller {
 
         // Respond to the client
         $extjs['success'] = true;
-        header('Content-Type: application/json; charset=UTF-8');
+        //header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($extjs);
         exit(0);
     }
@@ -426,7 +425,7 @@ class triplestore extends controller {
                 $allarr[] = $arr;
             }
         }
-        header('Content-Type: application/json; charset=UTF-8');
+        //header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($allarr);
     }
 
@@ -473,7 +472,7 @@ class triplestore extends controller {
         }
         $arr = array();
         $arr['data'] = $allarr;
-        header('Content-Type: application/json; charset=UTF-8');
+        //header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($arr);
     }
 
@@ -496,7 +495,7 @@ class triplestore extends controller {
                 $arr['success'] = false;
             }
         }
-        header('Content-Type: application/json; charset=UTF-8');
+        //header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($arr);
         exit;
     }
@@ -515,7 +514,7 @@ class triplestore extends controller {
         $data = $this->objTriplestore->getTriples($filters);
         $arr['success'] = true;
         $arr['data'] = $data[0];
-        header('Content-Type: application/json; charset=UTF-8');
+        //header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($arr);
         exit;
     }
