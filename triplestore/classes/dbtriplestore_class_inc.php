@@ -298,10 +298,8 @@ class dbtriplestore extends dbTable {
         //Loop through array and insert triples
         if(is_array($triplesArray) && count($triplesArray)>0){
             foreach($triplesArray as $triple){
-                var_dump($triple);
                 if(is_array($triple) && count($triple)>0){
                     foreach($triple as $trip){
-                        var_dump($trip);
                         $id = $this->insert($trip['subject'], $trip['predicate'], $trip['object']);
                     }
                 }
