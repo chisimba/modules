@@ -38,7 +38,8 @@ class tweetstore extends controller
                 }
                 break;
             default:
-                $data = $this->objMongo->find();
+                $cursor = $this->objMongo->find();
+                $data = iterator_to_array($cursor);
                 $json = $this->objJson->encode($data);
                 header('Content-Type: application/json; charset=UTF-8');
                 echo $json;
