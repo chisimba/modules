@@ -29,8 +29,10 @@ class tweetstore extends controller
             case 'add':
                 if (in_array($_SERVER['REMOTE_ADDR'], $this->whitelist)) {
                     $json = file_get_contents('php://input');
-                    $data = $this->objJson($json);
-                    $this->objMongo->insert($data);
+                    $data = $this->objJson->decode($json);
+                    if (is_array($data)) {
+                        $this->objMongo->insert($data);
+                    }
                 } else {
                     header('HTTP/1.1 403 Forbidden');
                 }
