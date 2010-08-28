@@ -111,7 +111,7 @@ foreach($arrFolderList as $folder) {
     $nameLink = $objLink->show();
     // set up unread colour
     if ($folder['unreadmail'] != 0) {
-        $unreadMail = '<font class="error"><b>'.$folder['unreadmail'].'</b></font>';
+        $unreadMail = '<span class="unreadmail"><b>'.$folder['unreadmail'].'</b></span>';
     } else {
         $unreadMail = $folder['unreadmail'];
     }

@@ -110,7 +110,7 @@ foreach($arrFolderList as $folder) {
         $deleteIcon = '';
     }
     if ($folder['unreadmail'] != 0) {
-        $unreadMail = '<font class="error"><b>'.$folder['unreadmail'].'</b></font>';
+        $unreadMail = '<span class="unreadmail"><b>'.$folder['unreadmail'].'</b></span>';
     } else {
         $unreadMail = $folder['unreadmail'];
     }
