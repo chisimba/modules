@@ -141,7 +141,7 @@ if ($mode == 'add') {
         $form->addToForm($recipientTarget->show());
     }
 } else {
-echo "I am the else";
+
     $recipientTarget = new hiddeninput('recipienttarget', $announcement['contextid']);
     $form->addToForm($recipientTarget->show());
 
@@ -172,7 +172,7 @@ $email2Users->addOption('N', $this->objLanguage->languageText('word_no', 'system
 $email2Users->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
 
 
-$email2Users->setSelected('N');
+$email2Users->setSelected('Y');
 
 $email2Users->setBreakSpace(' &nbsp; ');
 
