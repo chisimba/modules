@@ -1,12 +1,8 @@
 jQuery(document).ready(function() {
-
     hideAllForms();
-
     jQuery("#qnoption").change(function(){
         var val=this.value;
 
-        checkNewQuestion(val);
-        /*
         existingQ = jQuery('#existingQ').val();
         
         if(existingQ == 'oldQ') {
@@ -17,10 +13,10 @@ jQuery(document).ready(function() {
         }
         else {
             hideAllForms();
-        }*/
+        }
     });
 
-    /*jQuery('#existingQ').change(function() {
+    jQuery('#existingQ').change(function() {
         val = this.value;
         if(val == '-') {
             hideAllForms();
@@ -28,7 +24,7 @@ jQuery(document).ready(function() {
         else {
             processQuestionMethod(val);
         }
-    });*/
+    });
 });
 
 function processQuestionType() {
@@ -47,24 +43,35 @@ function checkNewQuestion(val) {
     if(val == 'freeform'){
         jQuery('#freeform').show();
         jQuery('#addquestion').hide();
-        //Ext.get('mcqGrid').hide();
+        Ext.get('mcqGrid').hide();
     }else if(val == 'mcq'){
         jQuery('#addquestion').show();
         jQuery('#freeform').hide();
     }else{
         jQuery('#freeform').hide();
         jQuery('#addquestion').hide();
-        //Ext.get('mcqGrid').hide();
+        Ext.get('mcqGrid').hide();
     }
 }
 
 function processQuestionMethod(val) {
+    var dataType;
     if(val == 'oldQ') {
-        jQuery('#freeform').hide();
-        jQuery('#addquestion').hide();
-        jQuery('#dbquestions').show();
-        //Ext.get('mcqGrid').show();
-    //jQuery('#grid-example').show();
+        var type = jQuery("#qnoption").val();
+        if(type == 'freeform' || type == 'mcq'){
+            jQuery('#freeform').hide();
+            jQuery('#addquestion').hide();
+            jQuery('#dbquestions').show();
+            Ext.get('mcqGrid').show();
+
+            if(type == 'mcq') {
+                dataType = 'mcq';
+            }
+            else {
+                dataType = 'freeform';
+            }
+            getGridData(dataType);
+        }
     }
     else if(val == 'newQ') {
         checkNewQuestion(jQuery("#qnoption").val());
@@ -79,6 +86,5 @@ function processQuestionMethod(val) {
 function hideAllForms() {
     jQuery('#freeform').hide();
     jQuery('#addquestion').hide();
-    //jQuery("#dbquestions").hide();
-    //Ext.get('mcqGrid').hide();
+    jQuery("#dbquestions").hide();
 }
