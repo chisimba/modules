@@ -131,5 +131,6 @@ function getGridData(dataType) {
     var newUrl = myUrl + '&type=' + dataType;
     myStore.proxy.setUrl(newUrl);
     myStore.load();
+    jQuery("#mcqGrid").html("");
     showQuestionDB(newUrl);
 }
