@@ -104,6 +104,12 @@ class dbgeonames extends dbTable
         return $this->insertRecord($insarr);
         
     }
+    
+    public function insertResource($insarr) {
+        parent::init('tbl_geo_resources');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
 	
 
 }
