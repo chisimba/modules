@@ -146,7 +146,7 @@ class mcqtests extends controller {
                 $this->setVarByRef('testid',$id);
                 $this->setVarByRef('count',$count);
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
-                $oldQuestions = $this->dbTestadmin->getContextQuestions($this->contextCode);
+                $oldQuestions = $this->dbTestadmin->getContextQuestions($this->contextCode, $id);
 
                 // Get the total number of questions if this isn't the first
                 if ($count > 1) {
@@ -718,6 +718,12 @@ class mcqtests extends controller {
                 break;
             case 'showstudenttest':
                 return $this->showStudentTest();
+            case 'submitdbquestions':
+                $status = $this->submitDBQuestions($this->getParam('ids'));
+                return $status;//$this->nextAction('view', array('id' => $id) , 'mcqtests');
+            case 'formattedquestions':
+                $type = $this->getParam('type');
+                return $this->getGridData($type);
             default:
                 if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
@@ -1618,5 +1624,30 @@ class mcqtests extends controller {
         fclose($fp);
         return $arrIpAddresses;
     }
+
+    /**
+     * Method to submit new questions based on existing questions in the database.
+     *
+     * @access public
+     * @param none
+     * @return status of data submission
+     */
+    public function submitDBQuestions() {
+        // submit the questions into this context.
+        $this->dbQuestions->submitDBQuestions($this->contextCode, $this->getParam(idData), $this->getParam(courseID));
+    }
+
+    /**
+     * Method to retrieve data based on existing questions in the database.
+     *
+     * @access public
+     * @param none
+     * @return status of data submission
+     */
+    public function getGridData($type=null) {
+        $id = $this->getParam('id');
+        echo $this->dbTestadmin->getContextQuestions($this->contextCode, $id, $type);
+    }
+
 } // end of class
 ?>
