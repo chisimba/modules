@@ -102,8 +102,9 @@ public class ForwardTo {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                changeCurrentUser();
                 increaseVersion();
+                changeCurrentUser();
+                
 
                 forwardToDialog.hide();
             }
@@ -142,8 +143,9 @@ public class ForwardTo {
     }
 
     public static void increaseVersion() {
+        int version = org.wits.client.DocumentListPanel.getVersion();
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
-                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=increaseversion&docid=" + Constants.docid+"&version="+org.wits.client.DocumentListPanel.getVersion());
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=increaseversion&docid=" + Constants.docid+"&version="+version);
         try {
 
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -153,9 +155,9 @@ public class ForwardTo {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    String data = response.getText();
-                    System.out.println(data);
-                    MessageBox.info("Done", "The version for document " + Constants.docid + " has been changed to v"+data, null);
+                    String newVersion = response.getText();
+                    System.out.println(newVersion);
+                    MessageBox.info("Done", "The version for document " + Constants.docid + " has been changed to v"+newVersion, null);
                 }
             });
         } catch (Exception e) {
