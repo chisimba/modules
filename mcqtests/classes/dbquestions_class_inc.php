@@ -278,5 +278,39 @@ class dbquestions extends dbtable
         //var_dump($question);
         return $this->objWashout->parseText($question['question']);
     }
+
+    /*
+     * Method to submit questions selected from grid view.
+     *
+     * @access public
+     *
+     * @return none
+     */
+    public function submitDBQuestions($contextID, $data, $id) {
+        $dbAnswers = $this->newObject('dbanswers');
+        $myIDs = explode(",", $data);
+        foreach($myIDs as $eachID) {
+            $data = $this->getRow('id', $eachID);
+            $lastQID = $data['id'];
+            unset($data['id']);
+            unset($data['puid']);
+            $data['testid'] = $id;
+            $qID = $this->addQuestion($data);
+
+            // get answers for this id and also insert them
+            $sql = "select * from tbl_test_answers where questionid = '".$lastQID."'";
+            $ansData = $this->getArray($sql);
+
+            foreach($ansData as $row) {
+                $row['questionid'] = $qID;
+                unset($row['id']);
+                unset($row['puid']);
+                unset($row['updated']);
+                $row['testid'] = $id;
+                $aID = $dbAnswers->addAnswers($row);
+            }
+        }
+        
+    }
 } // end of class
 ?>

@@ -220,43 +220,23 @@ class dbtestadmin extends dbtable
      *
      * @return array $data the multiple choice questions array
      */
-    public function getContextQuestions($contextCode) {
-        $sql = "SELECT A.context, B.testid, B.question, B.hint,B.mark, B.questiontype FROM ".$this->table;
+    public function getContextQuestions($contextCode, $testid, $type=null) {
+        $sql = "SELECT A.context, B.id, B.question, B.hint,B.mark, B.questiontype FROM ".$this->table;
         $sql .= " as A join chisimba.tbl_test_questions as B on A.id = B.testid";
-        $sql .= " WHERE A.context = '".$contextCode."'";
-        $data = $this->getArray($sql);
-        if($data) {
-            return $this->formatContextQuestions($data);
-        }
-        return FALSE;
-    }
+        $sql .= " WHERE A.context = '".$contextCode."' AND B.testid != '".$testid."'";
 
-    /*
-     * Method to format data for extjs gridview
-     *
-     * @access public
-     *
-     * @return array $mcqData, the formated data
-     */
-    public function formatContextQuestions($data) {
-        $count = 1;
-        $numRows = count($data);
-        $mcqData = "[";
-        foreach ($data as $row) {
-            $mcqData .= "['".$row['testid']."','".trim($row['context'])."','".trim($row['question']). "','" . trim($row['hint']) . "','" . trim($row['questiontype']) . "'";
-            $mcqData .= "]";
-            if ($count < $numRows) {
-                $mcqData .= ",";
+        if(strlen(trim($type)) > 0) {
+            $sql .= "and B.questiontype='".$type."'";
+            $data = $this->getArray($sql);
+            return json_encode(array('totalcount'=> count($data), 'results'=>$data));
+        }
+        else {
+            $data = $this->getArray($sql);
+            if($data) {
+                return json_encode(array('totalcount'=> count($data), 'results'=>$data));
             }
-            $count++;
+            return FALSE;
         }
-        $mcqData .= "]";
-        
-        $mcqData = str_replace("<p>", "", $mcqData);
-        $mcqData = str_replace("</p>", "", $mcqData);
-
-        return $mcqData;
     }
-
 } // end of class
 ?>

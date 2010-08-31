@@ -346,16 +346,15 @@ class formmanager extends object {
         return $objFormEdit->show();
     }
 
-    public function createDatabaseQuestions($oldQuestions) {
+    public function createDatabaseQuestions($oldQuestions, $id) {
 
         $gridjs =
         "<script type='text/javascript' language='javascript'>
             //<![CDATA[
-            Ext.onReady(function(){
-                showQuestionDB(".$oldQuestions.");
-                Ext.get('mcqGrid').hide();
-            });
-
+            var submitUrl = '".str_replace("amp;", "", $this->uri(array('action'=>'submitdbquestions')))."',
+                nextUrl = '".str_replace("amp;", "", $this->uri(array('action'=>'view', 'id'=>$id)))."',
+                courseID = '".$this->getParam('id')."',
+                myUrl = '".str_replace("amp;", "", $this->uri(array('action'=>'formattedquestions', 'id'=>$id)))."';
         </script>";
 
         return $gridjs;
