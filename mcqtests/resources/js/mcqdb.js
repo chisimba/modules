@@ -39,23 +39,23 @@ var showQuestionDB = function() {
             hidden: true
         },{
             id:'context',
-            header: 'Context',
+            header: 'Course',
             width: 80,
             sortable: true,
             dataIndex: 'context'
         },{
             id: 'question',
-            header: 'question',
+            header: 'Question',
             width: 160,
             sortable: true,
             dataIndex: 'question'
         },{
-            header: 'hint',
+            header: 'Hint',
             width: 75,
             sortable: true,
             dataIndex: 'hint'
         },{
-            header: 'questiontype',
+            header: 'Question Type',
             width: 85,
             sortable: true,
             dataIndex: 'questiontype'
