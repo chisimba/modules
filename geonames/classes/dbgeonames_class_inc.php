@@ -110,6 +110,12 @@ class dbgeonames extends dbTable
         $this->insert($insarr);
         parent::init('tbl_geonames');
     }
+    
+    public function insertGeoname($insarr) {
+        parent::init('tbl_geo_geoname');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
 	
 
 }
