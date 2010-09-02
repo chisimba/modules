@@ -24,4 +24,16 @@
 			</add>
 		</data>
 	</update>
+        <update>
+		<table>tbl_tests</table>
+		<version>1.0465</version>
+		<description>add course permissions field</description>
+		<data>
+			<add>
+				<name>coursePermissions</name>
+				<type>text</type>
+				<length>15</length>
+			</add>
+		</data>
+	</update>
 </updates>
