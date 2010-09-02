@@ -79,7 +79,7 @@ class sphinx extends controller
             $this->objSphinxApi  = require($this->getResourcePath('sphinxapi.php'));
             $this->objDbSphinx   = $this->getObject('dbsphinx');
             $this->objSphinxOps     = $this->getObject('sphinxops');
-            $this->objDbSphinx->setTable('tbl_tags');
+            
 			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
@@ -117,8 +117,11 @@ class sphinx extends controller
 		    case 'search' :
 		        $term = $this->getParam('term');
 		        $index = $this->getParam('index');
+		        // NOTE: This is for demonstration purposes ONLY, you should hardcode the table name when using these functions or get 
+		        // the table name from a sysconfig for you own module!
+		        $table = $this->getParam('table');
 		        header("Content-Type: application/json");
-		        echo $this->objSphinxOps->doSearch($term, $index, TRUE);
+		        echo $this->objSphinxOps->doSearch($term, $index, $table, TRUE);
 		        break;
 
             default:
