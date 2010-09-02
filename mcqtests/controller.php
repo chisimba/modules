@@ -274,6 +274,7 @@ class mcqtests extends controller {
                         $StepMenuArr['testType'] = $this->getParam('testType');
                         $StepMenuArr['qSequence'] = $this->getParam('qSequence');
                         $StepMenuArr['aSequence'] = $this->getParam('aSequence');
+                        $StepMenuArr['coursePermissions'] = $this->getParam('coursePermissions');
                         $StepMenuArr['save'] = $this->getParam('save');
 
                         $this->setSession('stepmenu1', null);
@@ -334,6 +335,7 @@ class mcqtests extends controller {
                         $fields['hour'] = $step_data2['hour'];
                         $fields['min'] = $step_data2['min'];
                         $fields['comLab'] = $this->getParam('comLab');
+                        $fields['coursePermissions'] = $step_data1['coursePermissions'];
                         //saving the step data
 
                         $id = $this->StepAddTest($fields);
@@ -723,7 +725,8 @@ class mcqtests extends controller {
                 return $status;//$this->nextAction('view', array('id' => $id) , 'mcqtests');
             case 'formattedquestions':
                 $type = $this->getParam('type');
-                return $this->getGridData($type);
+                $courses = $this->getParam('courses');
+                return $this->getGridData($type, $courses);
             default:
                 if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
@@ -832,6 +835,7 @@ class mcqtests extends controller {
         $fields['comlab'] = $data['comLab'];
         $fields['description'] = $data['description'];
         $fields['updated'] = date('Y-m-d H:i:s');
+        $fields['coursePermissions'] = $data['coursePermissions'];
         $id = $this->dbTestadmin->addTest($fields, $id);
         // set all tests to equal percentages
         $postEqual = $this->getParam('setequal', '');
@@ -1644,9 +1648,9 @@ class mcqtests extends controller {
      * @param none
      * @return status of data submission
      */
-    public function getGridData($type=null) {
+    public function getGridData($type=null, $courses=null) {
         $id = $this->getParam('id');
-        echo $this->dbTestadmin->getContextQuestions($this->contextCode, $id, $type);
+        echo $this->dbTestadmin->getContextQuestions($this->contextCode, $id, $type, $courses);
     }
 
 } // end of class

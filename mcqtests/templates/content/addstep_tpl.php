@@ -77,6 +77,9 @@ $addLabLabel = $this->objLanguage->languageText('mod_mcqtests_addlab', 'mcqtests
 $errPercent = $this->objLanguage->languageText('mod_mcqtests_numericpercent', 'mcqtests');
 $errName = $this->objLanguage->languageText('mod_mcqtests_entername', 'mcqtests');
 $errDates = $this->objLanguage->languageText('mod_mcqtests_errordates', 'mcqtests');
+$permissionsLabel = $this->objLanguage->languageText('mod_mcqtests_coursepermissionslabel','mcqtests');
+$coursePermissionPrivate = $this->objLanguage->languageText('mod_mcqtests_privatecourse','mcqtests');
+$coursePermissionPublic = $this->objLanguage->languageText('mod_mcqtests_publiccourse','mcqtests');
 	/*
 	if ($mode == 'edit') {
 		$this->setVarByRef('heading', $editHeading);
@@ -250,6 +253,18 @@ switch($currentstep) {
             "<b>".$aSequenceLabel.":</b>",
             "<b>".$aSequenceRadio."</b>"
         ));
+
+        // set up course permission
+        $objRadio = new radio('coursePermissions');
+        $objRadio->setBreakSpace('&nbsp;&nbsp;/&nbsp;&nbsp;');
+        $objRadio->addOption('Private', $coursePermissionPrivate);
+        $objRadio->addOption('Public', $coursePermissionPublic);
+        $objRadio->setSelected('Private');
+        $objTable->addRow(array(
+            "<b>".$permissionsLabel.":</b>",
+            "<b>".$objRadio->show()."</b>"
+        ));
+
         //=================================================BUTTONS==============================================================================
         //exit and next button
         $objButton = new button('save', 'Next');

@@ -72,7 +72,7 @@ $formmanager=$this->getObject('formmanager');
 $questionContentStr='<div id="addquestion">'.$formmanager->createAddQuestionForm($test).'</div>';
 $questionContentStr.='<div id="freeform">'.$formmanager->createAddFreeForm($test).'</div>';
 $questionContentStr.='<div id="dbquestions">'.$formmanager->createDatabaseQuestions($oldQuestions, $testid).'</div>';
-$questionContentStr.='<div id="mcqGrid"></div>';
+$questionContentStr.='<div id="mcqGrid" style="width: 100%"></div>';
 $fd->addLabel($questionContentStr);
 $mainForm .= $fd->show().'</div>';
 echo $mainForm;
