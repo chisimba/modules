@@ -37,15 +37,32 @@ class dbsphinx extends dbTable {
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
     }
     
+    /**
+     * Method to dynamically set the table name to the recordset table
+     * 
+     * @param string $table
+     * @access public
+     */
     public function setTable($table) {
         parent::init($table);
     }
     
+    /**
+     * Method to retrieve a full row resultset from a puid as set by sphinx
+     *
+     * @param integer $puid
+     * @access public
+     */
     public function getResultRow($puid) {
         // only will ever be one single result
         return $this->getAll("WHERE puid = '$puid'");
     }
     
+    /**
+     * Method to convert a resultset to a JSON object
+     *
+     * @param array $resultset
+     */
     public function jsonify($resultset) {
         return json_encode($resultset);
     }
