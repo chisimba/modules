@@ -5,22 +5,43 @@ var sm2 = new Ext.grid.CheckboxSelectionModel({
     }
 });
 
+var courseTitle = 'Course Databank for - ' + courseName;
+
 // Create the data store
 var myStore = new Ext.data.Store({
     proxy: new Ext.data.HttpProxy({
-                method: 'GET',
-                url: myUrl
-            }),
+        method: 'GET',
+        url: myUrl
+    }),
     reader: new Ext.data.JsonReader({
-            root: 'results',
-            totalProperty: 'totalcount',
-            fields: [
-                {name: 'id', mapping: 'id'},
-                {name: 'context', mapping: 'context'},
-                {name: 'question', mapping: 'question'},
-                {name: 'hint', mapping: 'hint'},
-                {name: 'questiontype', mapping: 'questiontype'}
-           ]
+        root: 'results',
+        totalProperty: 'totalcount',
+        fields: [
+        {
+            name: 'id',
+            mapping: 'id'
+        },
+
+        {
+            name: 'context',
+            mapping: 'context'
+        },
+
+        {
+            name: 'question',
+            mapping: 'question'
+        },
+
+        {
+            name: 'hint',
+            mapping: 'hint'
+        },
+
+        {
+            name: 'questiontype',
+            mapping: 'questiontype'
+        }
+        ]
     })
 });
 
@@ -56,12 +77,23 @@ var showQuestionDB = function() {
             dataIndex: 'hint'
         },{
             header: 'Question Type',
-            width: 85,
+            width: 100,
             sortable: true,
             dataIndex: 'questiontype'
         }],
         tbar: [{
-            text: 'Add',
+            xtype: 'checkbox',
+            name: 'allAssign',
+            boxLabel: 'View All Courses',
+            handler: function(checkbox, checked){
+                if(checked) {
+                    // load data for all courses
+                    getAllCourses();
+                }
+            }
+        }],
+        fbar: [{
+            text: 'Save',
             iconCls: 'silk-add',
             listeners: {
                 click: function() {
@@ -74,7 +106,7 @@ var showQuestionDB = function() {
         autoExpandColumn: 'question',
         height: 350,
         width: 600,
-        title: 'Array Grid',
+        title: courseTitle,
         stateId: 'grid'
     });
 
@@ -86,19 +118,19 @@ function getSelections() {
     var mySelections = sm2.getSelections();
     var ids = "";
     if(sm2.getCount() > 0) {
-        var confirmMsg = "Are you sure you want to submit these " + sm2.getCount() + " questions?";
-        Ext.MessageBox.confirm("Submitting IDs", confirmMsg, function(btn, text){
-            if (btn == 'yes'){
-                for(i=0;i<parseInt(sm2.getCount());i++) {
-                    ids += mySelections[i].get('id');
-                    if( i < parseInt(sm2.getCount()) - 1) {
-                        ids += ",";
-                    }
-                }
-                // do a submit of these id's and go back to this page when done, with new data
-                submitIDs(ids);
+        //var confirmMsg = "Are you sure you want to submit these " + sm2.getCount() + " questions?";
+        //Ext.MessageBox.confirm("Submitting IDs", confirmMsg, function(btn, text){
+        //if (btn == 'yes'){
+        for(i=0;i<parseInt(sm2.getCount());i++) {
+            ids += mySelections[i].get('id');
+            if( i < parseInt(sm2.getCount()) - 1) {
+                ids += ",";
             }
-        });
+        }
+        // do a submit of these id's and go back to this page when done, with new data
+        submitIDs(ids);
+    //}
+    //});
     }
     
     
@@ -129,6 +161,16 @@ var ajaxFailure = function() {
 
 function getGridData(dataType) {
     var newUrl = myUrl + '&type=' + dataType;
+    myStore.proxy.setUrl(newUrl);
+    myStore.load();
+    jQuery("#mcqGrid").html("");
+    showQuestionDB(newUrl);
+}
+
+function getAllCourses() {
+    var dataType = jQuery("#qnoption").val();
+
+    var newUrl = myUrl + '&type=' + dataType + '&courses=all';
     myStore.proxy.setUrl(newUrl);
     myStore.load();
     jQuery("#mcqGrid").html("");

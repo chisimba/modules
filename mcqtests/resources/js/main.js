@@ -88,3 +88,4 @@ function hideAllForms() {
     jQuery('#addquestion').hide();
     jQuery("#dbquestions").hide();
 }
+
