@@ -97,7 +97,9 @@ class sphinxops extends object {
      * @return array $results
      * @access public
      */
-    public function doSearch($term, $index, $asJSON = FALSE, $matchmode = SPH_MATCH_ALL) {
+    public function doSearch($term, $index, $table, $asJSON = FALSE, $matchmode = SPH_MATCH_ALL) {
+        // results are pulled via a SQL query, so we need to tell it which table to use
+        $this->objDbSphinx->setTable($table);
         // Connect to sphinx server
         $sp = new SphinxClient(); 
         // Set the server
