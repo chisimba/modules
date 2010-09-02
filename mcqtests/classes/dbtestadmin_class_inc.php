@@ -220,15 +220,25 @@ class dbtestadmin extends dbtable
      *
      * @return array $data the multiple choice questions array
      */
-    public function getContextQuestions($contextCode, $testid, $type=null) {
+    public function getContextQuestions($contextCode, $testid, $type=null, $courses=null) {
         $sql = "SELECT A.context, B.id, B.question, B.hint,B.mark, B.questiontype FROM ".$this->table;
         $sql .= " as A join chisimba.tbl_test_questions as B on A.id = B.testid";
         $sql .= " WHERE A.context = '".$contextCode."' AND B.testid != '".$testid."'";
 
         if(strlen(trim($type)) > 0) {
-            $sql .= "and B.questiontype='".$type."'";
-            $data = $this->getArray($sql);
-            return json_encode(array('totalcount'=> count($data), 'results'=>$data));
+            $courses = str_replace("-", "", $courses);
+            if(strlen(trim($courses)) > 0)  {
+                $sql = "SELECT A.context, B.id, B.question, B.hint,B.mark, B.questiontype FROM ".$this->table;
+                $sql .= " as A join chisimba.tbl_test_questions as B on A.id = B.testid";
+                $sql .= " WHERE B.questiontype='".$type."'";
+                $data = $this->getArray($sql);
+                return json_encode(array('totalcount'=> count($data), 'results'=>$data));
+            }else {
+                $sql .= "and B.questiontype='".$type."'";
+                $data = $this->getArray($sql);
+                return json_encode(array('totalcount'=> count($data), 'results'=>$data));
+            }
+
         }
         else {
             $data = $this->getArray($sql);
@@ -237,6 +247,20 @@ class dbtestadmin extends dbtable
             }
             return FALSE;
         }
+    }
+
+    /*
+     * Method to get the test name
+     *
+     * @access public
+     * @param string $id the id of the test
+     *
+     * @return string $name the name of the test
+     */
+    public function getTestName($testid) {
+        $data = $this->getRow('id', $testid);
+
+        return $data['name'];
     }
 } // end of class
 ?>

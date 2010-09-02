@@ -347,6 +347,7 @@ class formmanager extends object {
     }
 
     public function createDatabaseQuestions($oldQuestions, $id) {
+        $this->dbTestadmin = $this->newObject('dbtestadmin');
 
         $gridjs =
         "<script type='text/javascript' language='javascript'>
@@ -354,7 +355,8 @@ class formmanager extends object {
             var submitUrl = '".str_replace("amp;", "", $this->uri(array('action'=>'submitdbquestions')))."',
                 nextUrl = '".str_replace("amp;", "", $this->uri(array('action'=>'view', 'id'=>$id)))."',
                 courseID = '".$this->getParam('id')."',
-                myUrl = '".str_replace("amp;", "", $this->uri(array('action'=>'formattedquestions', 'id'=>$id)))."';
+                myUrl = '".str_replace("amp;", "", $this->uri(array('action'=>'formattedquestions', 'id'=>$id)))."',
+                courseName = '".$this->dbTestadmin->getTestName($id)."';
         </script>";
 
         return $gridjs;
