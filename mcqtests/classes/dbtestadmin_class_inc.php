@@ -222,14 +222,14 @@ class dbtestadmin extends dbtable
      */
     public function getContextQuestions($contextCode, $testid, $type=null, $courses=null) {
         $sql = "SELECT A.context, B.id, B.question, B.hint,B.mark, B.questiontype FROM ".$this->table;
-        $sql .= " as A join chisimba.tbl_test_questions as B on A.id = B.testid";
+        $sql .= " as A join tbl_test_questions as B on A.id = B.testid";
         $sql .= " WHERE A.context = '".$contextCode."' AND B.testid != '".$testid."'";
 
         if(strlen(trim($type)) > 0) {
             $courses = str_replace("-", "", $courses);
             if(strlen(trim($courses)) > 0)  {
                 $sql = "SELECT A.context, B.id, B.question, B.hint,B.mark, B.questiontype FROM ".$this->table;
-                $sql .= " as A join chisimba.tbl_test_questions as B on A.id = B.testid";
+                $sql .= " as A join tbl_test_questions as B on A.id = B.testid";
                 $sql .= " WHERE B.questiontype='".$type."'";
                 $data = $this->getArray($sql);
                 return json_encode(array('totalcount'=> count($data), 'results'=>$data));
