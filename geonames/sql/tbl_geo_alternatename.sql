@@ -30,10 +30,10 @@ $fields = array(
 		'length' => 200,
 		),
 	'ispreferredname' => array(
-		'type' => 'boolean',
+		'type' => 'text',
 		),
 	'isshortname' => array(
-		'type' => 'boolean',
+		'type' => 'text',
 		),
 	);
 //create other indexes here...

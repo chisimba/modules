@@ -116,7 +116,35 @@ class dbgeonames extends dbTable
         $this->insert($insarr);
         parent::init('tbl_geonames');
     }
-	
-
+    
+    public function insertAdmin1Code($insarr) {
+        parent::init('tbl_geo_admin1codes');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
+    
+    public function insertAdmin1AsciiCode($insarr) {
+        parent::init('tbl_geo_admin1codesascii');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
+    
+    public function insertAdmin2Code($insarr) {
+        parent::init('tbl_geo_admin2codes');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
+ 
+    public function insertAltName($insarr) {
+        parent::init('tbl_geo_alternatename');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
+    
+    public function insertCountryInfo($insarr) {
+        parent::init('tbl_geo_countryinfo');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
 }
 ?>
