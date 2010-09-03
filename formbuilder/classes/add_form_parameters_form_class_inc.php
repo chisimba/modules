@@ -93,7 +93,7 @@ $formNumber = new hiddeninput('formNumber', null);
 $formNumber->extra ="id=formNumberHiddenInput";
 $objForm->addToForm($formNumber->show() . "<br />");
 $submitButton = new button('submitNewFormDetails');
-$submitButton->setIconClass(decline);
+$submitButton->setIconClass('decline');
 $submitButton->setValue('Submit General Form Details');
 //$submitButton->setToSubmit();
 $objForm->addToForm($submitButton->show() . "<br />");
