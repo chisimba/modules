@@ -80,5 +80,18 @@ class mollomops extends object
 
         Mollom::setPublicKey($publicKey);
         Mollom::setPrivateKey($privateKey);
+        Mollom::getServerList();
+    }
+
+    /**
+     * Rates content as ham or spam.
+     *
+     * @access public
+     * @param  string $content The content.
+     * @return array  The results of the rating.
+     */
+    public function rate($content)
+    {
+        return Mollom::checkContent(NULL, NULL, $content);
     }
 }
