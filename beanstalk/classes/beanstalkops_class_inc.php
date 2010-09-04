@@ -117,6 +117,7 @@ class beanstalkops extends object
                 $object->$method($job->getData());
                 $this->objPheanstalk->delete($job);
             } catch (Exception $e) {
+                $this->objPheanstalk->release($job);
             }
          }
     }
