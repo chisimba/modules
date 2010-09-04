@@ -83,7 +83,7 @@ class beanstalkops extends object
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $host = $this->objSysConfig->getValue('host', 'beanstalk');
 
-        // Load the php-redis library.
+        // Load the pheanstalk library.
         include $this->getResourcePath('pheanstalk_init.php');
         $this->objPheanstalk = new Pheanstalk($host);
     }
