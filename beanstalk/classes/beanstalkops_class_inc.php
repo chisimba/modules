@@ -85,7 +85,7 @@ class beanstalkops extends object
 
         // Load the php-redis library.
         include $this->getResourcePath('pheanstalk_init.php');
-        $this->objPheanstalk = new Pheanstalk('127.0.0.1');
+        $this->objPheanstalk = new Pheanstalk($host);
     }
 
     /**
