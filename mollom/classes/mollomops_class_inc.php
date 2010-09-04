@@ -88,10 +88,13 @@ class mollomops extends object
      *
      * @access public
      * @param  string $content The content.
+     * @param  string $author  The name of the author.
+     * @param  string $uri     The author's URI.
+     * @param  string $email   The author's email address.
      * @return array  The results of the rating.
      */
-    public function rate($content)
+    public function rate($content, $author=NULL, $uri=NULL, $email=NULL)
     {
-        return Mollom::checkContent(NULL, NULL, $content);
+        return Mollom::checkContent(NULL, NULL, $content, $author, $uri, $email);
     }
 }
