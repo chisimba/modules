@@ -77,6 +77,8 @@ class mollomops extends object
         $privateKey = $this->objSysConfig->getValue('privatekey', 'mollom');
         $servers = explode('|', $this->objSysConfig->getValue('servers', 'mollom'));
 
+        include $this->getResourcePath('mollom.php');
+
         Mollom::setPublicKey($publicKey);
         Mollom::setPrivateKey($privateKey);
         Mollom::setServerList($servers);
