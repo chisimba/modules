@@ -87,4 +87,37 @@ class beanstalkops extends object
         include $this->getResourcePath('pheanstalk_init.php');
         $this->objPheanstalk = new Pheanstalk('127.0.0.1');
     }
+
+    /**
+     * Adds a task to the specified queue.
+     *
+     * @access public
+     * @param  string  $queue The name of the queue.
+     * @param  string  $task  The value of the task.
+     * @return integer The number of the new task.
+     */
+    public function add($queue, $task)
+    {
+        $this->objPheanstalk->useTube($queue)->put($task);
+    }
+
+    /**
+     * Binds a method in an object to a queue and waits for incoming tasks.
+     *
+     * @access public
+     * @param  string $queue  The name of the queue.
+     * @param  object $object The object containing the callback method.
+     * @param  string $method The name of the callback method.
+     */
+    public function listen($queue, object $object, $method)
+    {
+        while (true) {
+            $job = $this->objPheanstalk->watch($queue)->ignore('default')->reserve();
+            try {
+                $object->$method($job->getData());
+                $this->objPheanstalk->delete($job);
+            } catch (Exception $e) {
+            }
+         }
+    }
 }
