@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Facade class to the mollom library.
+ * Facade class to the akismet library.
  * 
- * Library methods for interacting with the mollom web service.
+ * Library methods for interacting with the akismet web service.
  * 
  * PHP version 5
  * 
@@ -21,7 +21,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  * @category  Chisimba
- * @package   mollom
+ * @package   akismet
  * @author    Charl van Niekerk <charlvn@charlvn.com>
  * @copyright 2010 Charl van Niekerk
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -42,20 +42,36 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * Facade class to the mollom library.
+ * Facade class to the akismet library.
  * 
- * Library methods for interacting with the mollom web service.
+ * Library methods for interacting with the akismet web service.
  * 
  * @category  Chisimba
- * @package   mollom
+ * @package   akismet
  * @author    Charl van Niekerk <charlvn@charlvn.com>
  * @copyright 2010 Charl van Niekerk
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id$
  * @link      http://avoir.uwc.ac.za/
  */
-class mollomops extends object
+class akismetops extends object
 {
+    /**
+     * Instance of the Akismet class.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objAkismet;
+
+    /**
+     * Instance of the altconfig class of the config module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objAltConfig;
+
     /**
      * Instance of the dbsysconfig class of the sysconfig module.
      *
@@ -71,30 +87,34 @@ class mollomops extends object
      */
     public function init()
     {
+        include $this->getResourcePath('Akismet.class.php');
+
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 
-        $publicKey = $this->objSysConfig->getValue('publickey', 'mollom');
-        $privateKey = $this->objSysConfig->getValue('privatekey', 'mollom');
+        $url = $this->objAltConfig->getsiteRoot();
+        $key = $this->objSysConfig->getValue('key', 'akismet');
 
-        include $this->getResourcePath('mollom.php');
-
-        Mollom::setPublicKey($publicKey);
-        Mollom::setPrivateKey($privateKey);
-        Mollom::getServerList();
+        $this->objAkismet = new Akismet($url, $key);
     }
 
     /**
-     * Rates content as ham or spam.
+     * Rates a submission as ham or spam.
      *
      * @access public
-     * @param  string $content The content.
-     * @param  string $author  The name of the author.
-     * @param  string $uri     The author's URI.
-     * @param  string $email   The author's email address.
-     * @return array  The results of the rating.
+     * @param  string  $content The content.
+     * @param  string  $author  The name of the author.
+     * @param  string  $uri     The author's URI.
+     * @param  string  $email   The author's email address.
+     * @return boolean True if spam, false if ham.
      */
-    public function rate($content, $author=NULL, $uri=NULL, $email=NULL)
+    public function isSpam($content, $author=NULL, $uri=NULL, $email=NULL)
     {
-        return Mollom::checkContent(NULL, NULL, $content, $author, $uri, $email);
+        $this->objAkismet->setCommentContent($content);
+        $this->objAkismet->setCommentAuthor($author);
+        $this->objAkismet->setCommentAuthorURL($uri);
+        $this->objAkismet->setCommentAuthorEmail($email);
+        
+        return $this->objAkismet->isCommentSpam()
     }
 }
