@@ -115,6 +115,6 @@ class akismetops extends object
         $this->objAkismet->setCommentAuthorURL($uri);
         $this->objAkismet->setCommentAuthorEmail($email);
         
-        return $this->objAkismet->isCommentSpam()
+        return $this->objAkismet->isCommentSpam();
     }
 }
