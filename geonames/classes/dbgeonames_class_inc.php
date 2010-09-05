@@ -146,5 +146,30 @@ class dbgeonames extends dbTable
         $this->insert($insarr);
         parent::init('tbl_geonames');
     }
+    
+    public function insertFeatureCodeInfo($insarr) {
+        parent::init('tbl_geo_featurecodes');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
+    
+    public function insertIsoLangCodeInfo($insarr) {
+        parent::init('tbl_geo_iso_languagecodes');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
+    
+    public function insertTimeZoneInfo($insarr) {
+        parent::init('tbl_geo_timezones');
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
+    
+    public function insertUserTagsInfo($insarr) {
+        parent::init('tbl_geo_usertags');
+        $insarr['moddate'] = $this->now();
+        $this->insert($insarr);
+        parent::init('tbl_geonames');
+    }
 }
 ?>
