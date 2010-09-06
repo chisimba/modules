@@ -60,6 +60,7 @@ class qrcreator extends controller
     public $objSysConfig;
     public $objUser;
     public $objConfig;
+    public $objQrOps;
 
     /**
      * Initialises the instance variables.
@@ -75,6 +76,7 @@ class qrcreator extends controller
             $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
             $this->objUser       = $this->getObject('user', 'security');
             $this->objModuleCat  = $this->getObject('modules', 'modulecatalogue');
+            $this->objQrOps      = $this->getObject('qrops');
 			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
