@@ -2,8 +2,7 @@ jQuery(document).ready(function() {
     hideAllForms();
     jQuery("#qnoption").change(function(){
         var val=this.value;
-
-        existingQ = jQuery('#existingQ').val();
+        var existingQ = jQuery('#existingQ').val();
         
         if(existingQ == 'oldQ') {
             processQuestionMethod(existingQ);
