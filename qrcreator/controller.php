@@ -60,8 +60,6 @@ class qrcreator extends controller
     public $objSysConfig;
     public $objUser;
     public $objConfig;
-    public $objCurl;
-    public $objDbQr;
 
     /**
      * Initialises the instance variables.
@@ -77,8 +75,6 @@ class qrcreator extends controller
             $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
             $this->objUser       = $this->getObject('user', 'security');
             $this->objModuleCat  = $this->getObject('modules', 'modulecatalogue');
-            $this->objCurl       = $this->getObject('curl', 'utilities');
-            $this->objDbQr       = $this->getObject('dbqr');
 			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
@@ -119,21 +115,7 @@ class qrcreator extends controller
                 $userid = $this->objUser->userId();
                 $lon = $ll[0];
                 $lat = trim($ll[1]);
-                $code = urlencode($msg.'|'.$lon.','.$lat);
-                $gmapsurl = "http://maps.google.com/maps?q=$lon,$lat+%28$msg%29&iwloc=A&hl=en";
-                // insert the message to the database and generate a url to use via a browser
-                $recordid = $this->objDbQr->insert(array('userid' => $userid, 'msg' => $msg, 'lat' => $lat, 'lon' => $lon, 'gmapsurl' => $gmapsurl));
-                // curl the Google Charts API to create the code
-                $url = 'http://chart.apis.google.com/chart?chs=200x180&cht=qr&chl='.$code;
-                $image = $this->objCurl->exec($url);
-                $basename = 'qr'.$recordid.'.png';
-                $filename = $this->objConfig->getcontentBasePath().'users/'.$userid.'/'.$basename;
-                $file = file_put_contents($filename, $image);
-                // get the image path now
-                $imgsrc = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'users/'.$this->objUser->userId().'/'.$basename;
-                // display the code or something...
-                echo $gmapsurl."<br /><br />";
-                echo '<img src="'.$imgsrc.'"/>';
+                var_dump($this->objQrOps->genQr($userid, $msg, $lat, $lon));
                 break;
 
             default:
