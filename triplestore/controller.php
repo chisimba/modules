@@ -427,6 +427,7 @@ class triplestore extends controller {
         }
         //header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($allarr);
+	exit(0);
     }
 
     /**
@@ -474,6 +475,7 @@ class triplestore extends controller {
         $arr['data'] = $allarr;
         //header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($arr);
+	exit(0);
     }
 
     /**
@@ -497,7 +499,7 @@ class triplestore extends controller {
         }
         //header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($arr);
-        exit;
+        exit(0);
     }
 
     /**
@@ -516,9 +518,29 @@ class triplestore extends controller {
         $arr['data'] = $data[0];
         //header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($arr);
-        exit;
+        exit(0);
     }
 
+    /**
+     * Method to get a single triple
+     *
+     * @access private
+     * @return json formatted string
+     */
+    private function __getformdata(){
+        $id = $this->getParam('id');
+        $ids = explode("|", $id);
+	$id2 = $ids[1];
+        $field = $ids[0];
+        $data = $this->objTriplestore->getTriples(array('id' => $id2));
+	$arr = array();
+	$arr['success'] = true;
+        $arr['data']['subject'] = $data[0]['subject'];
+	if($field == 'predicate'){
+		$arr['data']['predicate'] = $data[0]['predicate'];
+	}
+	echo json_encode($arr);
+        exit(0);
+    }
 }
-
 ?>

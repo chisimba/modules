@@ -8,11 +8,11 @@
  * qfenama@gmail.com/qfenama@uwc.ac.za
  */
 Ext.QuickTips.init();
-
 // turn on validation errors beside the field globally
 Ext.form.Field.prototype.msgTarget = 'side';
 var selectedfolder;
 var selectedid;
+var selectedData;
 var winup;
 var winadd;
 var winupdt;
@@ -51,13 +51,13 @@ var uploadform = new Ext.form.FormPanel({
     url: uri + '?module=triplestore&action=upload',
     frame: true,
     title: 'Upload File',
-    width: 400,
+    width: 450,
+    labelWidth: 50,
     autoHeight: true,
     defaultType: 'textfield',
     bodyStyle: 'padding: 10px 10px 0 10px;',
     items: [{
         xtype: 'radiogroup',
-        labelWidth: 50,
         name: 'filetype_chooser',
         fieldLabel: 'FileType',
         items: [
@@ -110,6 +110,7 @@ var uploadform = new Ext.form.FormPanel({
                 success: function (fp, o) {
                     winup.hide();
                     reload();
+		    //uploadform.getForm().reset();
                     loadingMask.hide();
                 },
                 failure: function(xhr,params) {
@@ -137,30 +138,32 @@ function showField(field)
 var addform = new Ext.FormPanel({
     frame: true,
     url: uri + '?module=triplestore&action=save&mode=add',
-    title: 'Add Triplestore',
-    width: 300,
+    title: 'Add Triple',
+    width: 320,
     autoHeight: true,
     bodyStyle: 'padding: 10px 10px 0 10px;',
     labelWidth: 50,
     defaultType: 'textfield',
     items: [{
+	id: 'subject',
         fieldLabel: 'Subject',
-        labelWidth: 50,
         name: 'subject',
         allowBlank: false
     },
-    {
+    {	
+	id: 'predicate',
         fieldLabel: 'Predicate',
         name: 'predicate',
         allowBlank: false
     },
     {
+	id: 'object',
         fieldLabel: 'Object',
         name: 'object',
         allowBlank: false
     }],
     buttons: [{
-        text: 'Add Triplestore',
+        text: 'Add Triple',
         handler: function () {
             loadingMask.show();
             if (addform.url)
@@ -171,6 +174,7 @@ var addform = new Ext.FormPanel({
                 success: function (fp, o) {
                     winadd.hide();
                     reload();
+		    addform.getForm().reset();
                     loadingMask.hide();
                 },
                 failure: function(xhr,params) {
@@ -183,15 +187,14 @@ var addform = new Ext.FormPanel({
 
 var updtform = new Ext.FormPanel({
     frame: true,
-    title: 'Update Triplestore',
-    width: 300,
+    title: 'Update Triple',
+    width: 320,
+    labelWidth: 50,
     autoHeight: true,
     bodyStyle: 'padding: 10px 10px 0 10px;',
-    labelWidth: 50,
     defaultType: 'textfield',
     items: [{
         fieldLabel: 'Subject',
-        labelWidth: 50,
         name: 'subject',
         allowBlank: false
     },
@@ -206,7 +209,7 @@ var updtform = new Ext.FormPanel({
         allowBlank: false
     }],
     buttons: [{
-        text: 'Update Triplestore',
+        text: 'Update Triple',
         handler: function () {
             loadingMask.show();
             updtform.getForm().getEl().dom.action = uri + '?module=triplestore&action=save&mode=edit&id='+selectedid;
@@ -214,6 +217,7 @@ var updtform = new Ext.FormPanel({
                 success: function (fp, o) {
                     winupdt.hide();
                     reload();
+		    updtform.getForm().reset();
                     loadingMask.hide();
                 },
                 failure: function(xhr,params) {
@@ -226,17 +230,18 @@ var updtform = new Ext.FormPanel({
 
 var addButton = new Ext.Button({
     text: 'Add',
-    tooltip: 'Add Triplestore',
+    tooltip: 'Add Triple',
     iconCls: 'sexy-add',
     handler: function () {
+	addform.getForm().reset();
         winadd = new Ext.Window({
             layout: 'fit',
-            width: 300,
+            width: 320,
             autoHeight: true,
             closeAction: 'hide',
             plain: true,
             items: [addform]
-        });
+        });	
         winadd.show(this);
     }
 });
@@ -248,7 +253,7 @@ var upButton = new Ext.Button({
     handler: function () {
         winup = new Ext.Window({
             layout: 'fit',
-            width: 400,
+            width: 320,
             autoHeight: true,
             closeAction: 'hide',
             plain: true,
@@ -260,11 +265,11 @@ var upButton = new Ext.Button({
 
 var dltButton = new Ext.Button({
     text: 'Delete',
-    tooltip: 'Delete Triplestore',
+    tooltip: 'Delete Triple(s)',
     iconCls: 'sexy-delete',
     disabled: true,
     handler: function () {
-        Ext.MessageBox.confirm('Delete Triplestore', "Are you sure you want to remove the selected Triplestore(s)?",
+        Ext.MessageBox.confirm('Delete Triple(s)', "Are you sure you want to remove the selected Triple(s)?",
             function(btn, text){
                 if (btn == 'yes')
                 {
@@ -304,18 +309,19 @@ var dltButton = new Ext.Button({
 
 var updButton = new Ext.Button({
     text: 'Update',
-    tooltip: 'Update Triplestore',
+    tooltip: 'Update Triple',
     iconCls: 'sexy-pencil',
     disabled: true,
     handler: function () {
         winupdt = new Ext.Window({
             layout: 'fit',
-            width: 300,
+            width: 320,
             autoHeight: true,
             closeAction: 'hide',
             plain: true,
             items: [updtform]
         });
+	updtform.getForm().reset();
         winupdt.show(this);
         updtform.getForm().doAction('load',{
             url:baseuri,
@@ -352,7 +358,6 @@ maintree = new Tree.TreePanel({
     dropConfig: {
         appendOnly: true
     },
-
     listeners: {
         'render': function (tp) {
             tp.getSelectionModel().on('selectionchange', function (tree, node) {
@@ -379,8 +384,32 @@ var root = new Tree.AsyncTreeNode({
     id: 'subject|root',
     expanded:true
 });
+var ctxmenu = new Ext.menu.Menu({
+id:'ctxmenu',
+items: [{
+    iconCls:'sexy-add',
+    text:'Add Triple',
+    handler:function(){
+	loadForm(selectedData);
+}
+},'-',{
+    iconCls:'sexy-cancel',
+    text:'Cancel',
+    handler: function(){
+	ctxmenu.hide();
+}
+}]
+});
+
+function showContextMenu(node){
+	selectedData = node.id;//alert(node.ui.getEl());
+    	ctxmenu.show(node.ui.getEl());
+
+}
 
 maintree.setRootNode(root);
+
+maintree.on('contextMenu', showContextMenu, this);
 
 root.expand(false, true);
 
@@ -415,7 +444,6 @@ var westpanel = new Ext.Panel({
     items: [maintree]
 });
 
-
 var sm2 = new Ext.grid.CheckboxSelectionModel({
     listeners: {
         selectionchange: function(sm) {
@@ -431,13 +459,12 @@ var sm2 = new Ext.grid.CheckboxSelectionModel({
     }
 });
 
-
 var pageNavigation = new Ext.PagingToolbar({
     pageSize: 25,
     store: datastore,
     displayInfo: true,
-    displayMsg: 'Displaying triplestore {0} - {1} of {2}',
-    emptyMsg: "No Triplestore to display",
+    displayMsg: 'Displaying triple {0} - {1} of {2}',
+    emptyMsg: "No Triple to display",
     items:[]
 });	
 
@@ -451,7 +478,7 @@ var maingrid = new Ext.grid.EditorGridPanel({
     ds: datastore,
     sm: sm2,
     viewConfig: {
-        emptyText: 'No Triplestore found'
+        emptyText: 'No Triple Found'
     },
     cm: new Ext.grid.ColumnModel([
     {
@@ -459,10 +486,7 @@ var maingrid = new Ext.grid.EditorGridPanel({
         header: "Subject",
         dataIndex: 'subject',
         width: 250,
-        sortable: true,
-        editor: new fm.TextField({
-            allowBlank: false
-        })
+        sortable: true
     },
 
     {
@@ -491,9 +515,7 @@ var maingrid = new Ext.grid.EditorGridPanel({
     bbar: pageNavigation
 });
 
-
 maingrid.on('afteredit', afterEdit, this );
-
 
 function afterEdit(e){
     // execute an XHR to send/commit data to the server, in callback do (if successful):
@@ -513,6 +535,15 @@ function afterEdit(e){
         }
     });
 }
+
+function concatObject(obj) {
+    var str='';
+    for(prop in obj)
+    {
+        str += prop + " value :"+ obj[prop]+"\n";
+    }
+   return str;
+} 
 
 var main = new Ext.Panel({
     id: 'main',
@@ -541,6 +572,37 @@ function reload(){
     });
 loadingMask.hide();
 }
+
+function loadForm(id){
+	loadingMask.show();
+	Ext.Ajax.request({
+        url: baseuri,
+        method: 'POST',
+        params: {
+            module: 'triplestore',
+            action: 'getformdata',
+            id: id
+        },
+        success: function(response) {
+	var jsonData = Ext.util.JSON.decode(response.responseText);
+	addform.findById('subject').setValue(jsonData.data.subject);
+	addform.findById('predicate').setValue(jsonData.data.predicate);
+	winadd = new Ext.Window({
+            layout: 'fit',
+            width: 320,
+            autoHeight: true,
+            closeAction: 'hide',
+            plain: true,
+            items: [addform]
+        });
+	//addform.getForm().reset();
+        winadd.show(this);
+        loadingMask.hide();
+        },
+        failure: function(xhr,params) {
+            loadingMask.hide();
+        }
+    });}
 
 Ext.onReady(function () {
     //render mainpanel
