@@ -106,7 +106,11 @@ class qrcreator extends controller
             case NULL:
 
             case 'main' :
-                echo "form elements to enter a latlon and a message to print to qr code";
+                $this->requiresLogin(TRUE);
+                $createbasic = $this->objQrOps->basicMsgForm();
+                // $createbasic = $this->objQrOps->geoLocationForm(); //$this->objQrOps->showInviteForm();
+                $this->setVarByRef('createbasic', $createbasic);
+                return 'createbasicmsg_tpl.php';
                 break;
 
             case 'create' :
@@ -118,6 +122,30 @@ class qrcreator extends controller
                 $lon = $ll[0];
                 $lat = trim($ll[1]);
                 var_dump($this->objQrOps->genQr($userid, $msg, $lat, $lon));
+                break;
+                
+            case 'createbasic' :
+                $this->requiresLogin(TRUE);
+                $msg = $this->getParam('msg', $this->objLanguage->languageText('mod_qrcreator_defaultmessage', 'qrcreator'));
+                $userid = $this->objUser->userId();
+                $imagearr = $this->objQrOps->genBasicQr($userid, strip_tags($msg));
+                
+                $image = $imagearr['filename'];
+                $recordid = $imagearr['imageid'];
+                $basename = $imagearr['basename'];
+                $recordid = $this->setVarByRef('recordid', $recordid);
+                $this->setVarByRef('image', $image);
+                $this->setVarByRef('basename', $basename);
+                
+                return 'image_tpl.php';
+                break;
+                
+            case 'downloadcode' :
+                $file = $this->getParam('file');
+                $userid = $this->getParam('userid');
+                
+                // header("Content-type: application/force-download");
+                echo $file;
                 break;
 
             default:
