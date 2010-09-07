@@ -89,10 +89,9 @@ class calendarinterface extends object
         } else {
             $contextEvents = $this->getContextEvents($this->contextCode, $month, $year);
         }
-        
-       // $objManageGroups = $this->getObject('managegroups', 'contextgroups');
-        //$userContextsArray = $objManageGroups->userContexts($this->userId, array('contextcode'));
-        
+        $userContextsArray = array(); 
+        //$objManageGroups = $this->getObject('managegroups', 'contextgroups');
+        //$userContextsArray = $objManageGroups->userContexts($this->userId, array('contextcode'));       
         
         $otherEvents = array();
         if (count($userContextsArray) > 0) {
