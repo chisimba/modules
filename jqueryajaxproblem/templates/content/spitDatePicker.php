@@ -3,7 +3,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-echo $testString = $_REQUEST['testString'];
+$testString = $this->getParam('testString', NULL);
+if (isSet($testString)) {
+    echo $testString;
+}
 $this->loadClass('datepicker','htmlelements');
 $datePicker = $this->newObject('datepicker', 'htmlelements');
  $datePicker->name = 'testdatepicker';

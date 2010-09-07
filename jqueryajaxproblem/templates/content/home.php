@@ -51,7 +51,7 @@ echo $this->objButtonTI->show() . "<BR><BR>";
             var DataToPost = {
                 "testString": "TestRadio"
             };
-            var myurlToProduceRadio = "<?php echo $_SERVER[PHP_SELF]; ?>?module=jqueryajaxproblem&action=produceRadio";
+            var myurlToProduceRadio = "<?php echo html_entity_decode($this->uri(array('action'=>'produceRadio'),'jqueryajaxproblem')); ?>";
             jQuery('#tempdivcontainer').load(myurlToProduceRadio, DataToPost ,function postSuccessFunction(html) {
             });
         });
@@ -62,7 +62,7 @@ echo $this->objButtonTI->show() . "<BR><BR>";
             var DataToPost = {
                 "testString": "This is a test string"
             };
-            var myurlToProduceDatePicker = "<?php echo $_SERVER[PHP_SELF]; ?>?module=jqueryajaxproblem&action=produceDatePicker";
+            var myurlToProduceDatePicker = "<?php echo html_entity_decode($this->uri(array('action'=>'produceDatePicker'),'jqueryajaxproblem')); ?>";
             jQuery('#tempdivcontainer').load(myurlToProduceDatePicker, DataToPost ,function postSuccessFunction(html) {
             });
         });
@@ -72,7 +72,7 @@ echo $this->objButtonTI->show() . "<BR><BR>";
             var DataToPost = {
                 "testString": "TestTextInput"
             };
-            var myurlToProduceTextInput = "<?php echo $_SERVER[PHP_SELF]; ?>?module=jqueryajaxproblem&action=produceTextInput";
+            var myurlToProduceTextInput = "<?php echo html_entity_decode($this->uri(array('action'=>'produceTextInput'),'jqueryajaxproblem')); ?>";
             jQuery('#tempdivcontainer').load(myurlToProduceTextInput, DataToPost ,function postSuccessFunction(html) {
             });
         });
