@@ -295,7 +295,7 @@ class dbfoaf extends dbtable
 
 //interests
 
-/**
+    /**
      * Method to get the interests associated to a user
      * 
      *
@@ -303,11 +303,14 @@ class dbfoaf extends dbtable
      * @return array => the interests related to this userId
      */
 
-     public function getInterests()
+     public function getInterests($userId = NULL)
      {
-           $this->_changeTable('tbl_foaf_interests');
-           $sql = "WHERE userid='".$this->objUser->userId()."' ORDER BY interesturl";                                    
-        return $this->getAll($sql);
+         if(is_null($userId)){
+             $userId =  $this->objUser->userId();
+         }
+         $this->_changeTable('tbl_foaf_interests');
+         $sql = "WHERE userid='".$userId."' ORDER BY interesturl";
+         return $this->getAll($sql);
     }
        
     
@@ -364,10 +367,13 @@ class dbfoaf extends dbtable
      * @return array => the depictions related to this userId
      */
 
-     public function getDepictions()
+     public function getDepictions($userId = NULL)
      {
-          $this->_changeTable('tbl_foaf_depiction');
-       $sql = "WHERE userid='".$this->objUser->userId()."'";                                    
+         if(is_null($userId)){
+             $userId =  $this->objUser->userId();
+         }
+        $this->_changeTable('tbl_foaf_depiction');
+       $sql = "WHERE userid='".$userId."'";                                    
        return $this->getAll($sql);
     }
 
@@ -428,10 +434,13 @@ class dbfoaf extends dbtable
      * @return array => the pages related to this userId
      */
 
-     public function getPgs()
+     public function getPgs($userId = NULL)
      {
-          $this->_changeTable('tbl_foaf_pages');
-       $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY title ";                                    
+         if(is_null($userId)){
+             $userId =  $this->objUser->userId();
+         }
+         $this->_changeTable('tbl_foaf_pages');
+       $sql = "WHERE userid='".$userId."'"." ORDER BY title ";                                    
        return $this->getAll($sql);
     }
 
@@ -568,10 +577,13 @@ class dbfoaf extends dbtable
      * @return array => the accounts in the database
      */
 
-     public function getAccounts()
+     public function getAccounts($userId = NULL)
      {
+         if(is_null($userId)){
+             $userId =  $this->objUser->userId();
+         }
         $this->_changeTable('tbl_foaf_useraccounts');
-        $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY accountname ";                                    
+        $sql = "WHERE userid='".$userId."'"." ORDER BY accountname ";                                    
        return $this->getAll($sql);
     }
 
