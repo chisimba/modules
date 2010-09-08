@@ -1,5 +1,5 @@
 <?php
-$this->loadClass('datepicker', 'htmlelements');
+$this->loadClass('datepicker2');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('inputmasks', 'htmlelements');
@@ -18,7 +18,7 @@ echo "This is a datepicker normally built in chisimba. Now I want to load anothe
 one just like it through ajax. See Chisimba Break (See the fireworks.).";
 
 
-$datePicker = $this->newObject('datepicker', 'htmlelements');
+$datePicker = $this->newObject('datepicker2');
 $datePicker->name = 'testdatepicker';
 $datePicker->setDateFormat("Aug-06-1996");
 $datePicker->setDefaultDate("2010/02/02");

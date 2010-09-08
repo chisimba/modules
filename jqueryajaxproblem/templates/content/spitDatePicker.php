@@ -7,10 +7,10 @@ $testString = $this->getParam('testString', NULL);
 if (isSet($testString)) {
     echo $testString;
 }
-$this->loadClass('datepicker','htmlelements');
-$datePicker = $this->newObject('datepicker', 'htmlelements');
- $datePicker->name = 'testdatepicker';
+
+$datePicker = $this->newObject('datepicker2');
+ $datePicker->name = 'testdatepicker2';
  $datePicker->setDateFormat("Aug-06-1996");
-  $datePicker->setDefaultDate("2010/02/02");
+  $datePicker->setDefaultDate("2010/09/02");
  echo $datePicker->show();
 ?>
