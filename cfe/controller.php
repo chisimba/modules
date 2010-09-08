@@ -1,26 +1,12 @@
 <?php
 
 /**
- * This module contains utilities for rendering elsi skin.
+ * This module contains utilities for rendering CfE skin. It is similar to the one used for the elsi skin.
  *
  * PHP version 5
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the
- * Free Software Foundation, Inc.,
- * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
 
- * @author
- * @copyright  2009 AVOIR
+ * @author	Palesa Mokwena, Thato Selebogo, Mmbudzeni Vhengani
  */
 // security check - must be included in all scripts
 if (!
@@ -76,13 +62,6 @@ class cfe extends controller {
         }
     }
 
-	/*function getMethod(& $action) {
-     
-
-		return '__'.$action;
-
- 
-        }*/
 
     /**
      *
@@ -105,149 +84,286 @@ class cfe extends controller {
         }
     }
 
-    /**
-     * landing page. This will return list of essays
-     * @return <type>
-     */
-    function __home() {
+
+function __home() {
+	      $categoryname="homepage";
+              $this->setVarByRef("category",$categoryname);
               return "home_tpl.php";
+    }	
+function __shortCourses() {
+             $categoryname="short courses";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
-	
-   function __shortCourses() {
-              return "short_courses_tpl.php";
-    }
-
-
  function __preStartUp() {
-              return "pre_start_up_tpl.php";
+              $categoryname="pre start up";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __startUp() {
-              return "start_up_tpl.php";
+              $categoryname="start up";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __development() {
-              return "development_tpl.php";
+              $categoryname="development";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __growth() {
-              return "growth_tpl.php";
+              $categoryname="growth";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __courseSchedule() {
-              return "course_schedule_tpl.php";
+              $categoryname="course schedule for 2010";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
   function __createYourVenture() {
-              return "create_your_venture_tpl.php";
+             $categoryname="create your venture";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
   function __findYourVenture() {
-              return "find_your_venture_tpl.php";
+              $categoryname="find your venture";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
   function __startYourVenture() {
-              return "start_your_venture_tpl.php";
+              $categoryname="start your venture";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
   function __planYourVenture() {
-              return "plan_your_venture_tpl.php";
+              $categoryname="plan your venture";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
   function __buildYourVenture() {
-              return "build_your_venture_tpl.php";
+              $categoryname="build your venture";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 
   function __growYourVenture() {
-              return "grow_your_venture_tpl.php";
+              $categoryname="grow your venture";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
   function __masterclass() {
-              return "masterclass_tpl.php";
+             $categoryname="masterclass";
+             $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 
 function __support() {
-              return "support_tpl.php";
+                $categoryname="support";
+                $relatedlinks='right column';
+                $this->setVarByRef("category",$categoryname);
+                $this->setVarByRef("relatedlinks",$relatedlinks);
+              return "showstory_tpl.php";
     }
 function __news() {
-              return "support_news_tpl.php";
+              $categoryname="news";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __mentoring() {
-              return "support_mentoring_tpl.php";
+              $categoryname="mentoring and coaching";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __internship() {
-              return "support_internship_tpl.php";
+              $categoryname="internship";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __peerSupport() {
-              return "support_peer_support_tpl.php";
+              $categoryname="peer support";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __bussinessClinic() {
-              return "support_bussiness_clinic_tpl.php";
+              $categoryname="business clinic";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __events() {
-              return "support_events_tpl.php";
+              $categoryname="events";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __successStories() {
-              return "support_success_stories_tpl.php";
+              $categoryname="success stories";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 
 function __outreach() {
-              return "outreach_tpl.php";
+              $categoryname="outreach";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
 }
 function __trainTheTrainer() {
-              return "outreach_train_the_trainer_tpl.php";
+              $categoryname="train the trainer";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __witsStudentEvents() {
-              return "outreach_wits_student_events_tpl.php";
+              $categoryname="wits students events";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __gewEvents() {
-              return "outreach_gew_events_tpl.php";
+              $categoryname="GEW events";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __TtTSchedule() {
-              return "outreach_TtT_schedule_tpl.php";
+              $categoryname="TtT Schedule";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
 }
 
 function __capacityBuilding() {
-              return "capacity_building_tpl.php";
+              $categoryname="capacity building";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
-function __thought() {
-              return "capacity_building_thought_tpl.php";
+function __thoughtLeaders() {
+             $categoryname="thought and leaders";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
-function __advisor() {
-              return "capacity_building_advisor_tpl.php";
+function __advisorAndConsultants() {
+               $categoryname="advisors and consultants";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __symposia() {
-              return "capacity_building_symposia_tpl.php";
+               $categoryname="symposia";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __thoughtSchedule() {
-              return "capacity_building_thought_schedule_tpl.php";
+               $categoryname="thought schedule";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __download() {
-              return "capacity_building_download_tpl.php";
+               $categoryname="download application";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __symposiaSchedule() {
-              return "capacity_building_symposia_schedule_tpl.php";
+               $categoryname="sympsia schedule 2010";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 
 
 function __donorsAndSponsors() {
-              return "donors_and_sponsors_tpl.php";
+               $categoryname="donors and sponsors";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __currentPartners() {
-              return "donors_current_partners_tpl.php";
+              $categoryname="current partners";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 function __enterpriseDevelopment() {
-              return "donors_enterprise_development_tpl.php";
+               $categoryname="Enterprise development";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 
 function __contactUs() {
-              return "contact_us_tpl.php";
+               $categoryname="contact us";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
 
 function __siteMap() {
-              return "site_map_tpl.php";
+               $categoryname="sitemap";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
   
 
-  function __research() {
-              return "research_tpl.php";
-    }
-  
+function __research() {
+               $categoryname="research";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
 
+function __researchthemes() {
+              $categoryname="research themes";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
+
+function __researchinprogress() {
+              $categoryname="research in progress";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
+
+function __researchbriefs() {
+              $categoryname="research briefs";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
+
+function __workingpapers() {
+              $categoryname="working papers";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
+
+function __publications() {
+              $categoryname="publications";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
+
+function __conference() {
+              $categoryname="conference";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
 
 function __aboutCfe() {
-              return "aboutCfe_tpl.php";
+               $categoryname="about cfe";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
     }
+
+function __background() {
+               $categoryname="background";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
+
+function __visionandgoals() {
+               $categoryname="vision and goals";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
+
+function __governance() {
+               $categoryname="governance";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
+
+function __staffmembers() {
+               $categoryname="staff members";
+              $this->setVarByRef("category",$categoryname);
+              return "showstory_tpl.php";
+   }
+
     function requiresLogin(){
         return false;
     }
