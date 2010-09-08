@@ -397,5 +397,30 @@ class qrops extends object {
 
         return $ret;
     }
+    
+    /**
+     * Sign in block
+     *
+     * Used in conjunction with the welcome block as a alertbox link. The sign in simply displays the block to sign in to Chisimba
+     *
+     * @return string
+     */
+    public function showSignInBox() {
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        return $objBlocks->showBlock('login', 'security', 'none');
+    }
+
+    /**
+     * Sign up block
+     *
+     * Method to generate a sign up (register) block for the module. It uses a linked alertbox to format the response
+     *
+     * @return string
+     */
+    public function showSignUpBox() {
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_events_signup", "events"), $objBlocks->showBlock('register', 'security', 'none'));
+    }
 }
 ?>

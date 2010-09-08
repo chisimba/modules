@@ -77,6 +77,7 @@ class qrcreator extends controller
             $this->objUser       = $this->getObject('user', 'security');
             $this->objModuleCat  = $this->getObject('modules', 'modulecatalogue');
             $this->objQrOps      = $this->getObject('qrops');
+            $this->objDbQr       = $this->getObject('dbqr');
 			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
@@ -129,15 +130,28 @@ class qrcreator extends controller
                 $msg = $this->getParam('msg', $this->objLanguage->languageText('mod_qrcreator_defaultmessage', 'qrcreator'));
                 $userid = $this->objUser->userId();
                 $imagearr = $this->objQrOps->genBasicQr($userid, strip_tags($msg));
-                
-                $image = $imagearr['filename'];
-                $recordid = $imagearr['imageid'];
-                $basename = $imagearr['basename'];
-                $recordid = $this->setVarByRef('recordid', $recordid);
-                $this->setVarByRef('image', $image);
-                $this->setVarByRef('basename', $basename);
+                $this->setVarByRef('imagearr', $imagearr);
                 
                 return 'image_tpl.php';
+                break;
+                
+            case 'viewcode' :
+                $this->requiresLogin(FALSE);
+                $id = $this->getParam('id');
+                // retrieve the code and display
+                // get the record from the database to make sure we have a proper userid...
+                $row = $this->objDbQr->getRecord($id);
+                if(isset($row[0]) && is_array($row[0])) {
+                    $imgsrc = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'users/'.$row[0]['userid'].'/'.'qr'.$row[0]['id'].'.png';
+                    $message = NULL;
+                }
+                else {
+                    $imagesrc = NULL;
+                    $message = $this->objLanguage->languageText("mod_qrcreator_notfound", "qrcreator");
+                }
+                $this->setVarByRef('imgsrc', $imgsrc);
+                $this->setVarByRef('message', $message);
+                return 'pubview_tpl.php';
                 break;
                 
             case 'downloadcode' :

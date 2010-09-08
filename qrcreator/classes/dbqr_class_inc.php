@@ -46,5 +46,16 @@ class dbqr extends dbTable
 	    $insarr['creationdate'] = $this->now();
 		return $this->insert($insarr, 'tbl_qrmsgs');
 	}
+	
+	/**
+	 * Method to retrieve a specific record by ID from the table
+	 * 
+	 * @param string id
+	 * @access public
+	 * @return array
+	 */
+	 public function getRecord($id) {
+	     return $this->getAll("WHERE id = '$id'");
+	 }
 }
 ?>
