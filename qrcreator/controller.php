@@ -70,7 +70,6 @@ class qrcreator extends controller
     public function init()
     {
         try {
-            // $this->requiresLogin();
             $this->objLanguage   = $this->getObject ( 'language', 'language' );
             $this->objConfig     = $this->getObject('altconfig', 'config');
             $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
@@ -107,7 +106,6 @@ class qrcreator extends controller
             case NULL:
 
             case 'main' :
-                $this->requiresLogin(TRUE);
                 $createbasic = $this->objQrOps->basicMsgForm();
                 // $createbasic = $this->objQrOps->geoLocationForm(); //$this->objQrOps->showInviteForm();
                 $this->setVarByRef('createbasic', $createbasic);
@@ -115,7 +113,6 @@ class qrcreator extends controller
                 break;
 
             case 'create' :
-                $this->requiresLogin(TRUE);
                 $msg = $this->getParam('msg', $this->objLanguage->languageText('mod_qrcreator_defaultmessage', 'qrcreator'));
                 $latlon = $this->getParam('latlon', $this->objLanguage->languageText('mod_qrcreator_defaultlocation', 'qrcreator'));
                 $ll = explode(',', $latlon);
@@ -126,7 +123,6 @@ class qrcreator extends controller
                 break;
                 
             case 'createbasic' :
-                $this->requiresLogin(TRUE);
                 $msg = $this->getParam('msg', $this->objLanguage->languageText('mod_qrcreator_defaultmessage', 'qrcreator'));
                 $userid = $this->objUser->userId();
                 $imagearr = $this->objQrOps->genBasicQr($userid, strip_tags($msg));
@@ -136,7 +132,6 @@ class qrcreator extends controller
                 break;
                 
             case 'viewcode' :
-                $this->requiresLogin(FALSE);
                 $id = $this->getParam('id');
                 // retrieve the code and display
                 // get the record from the database to make sure we have a proper userid...
@@ -168,8 +163,21 @@ class qrcreator extends controller
         }
     }
 
-    public function requiresLogin($param) {
-        return $param;
+    /**
+     * Method to turn off login for selected actions
+     *
+     * @access public
+     * @param string $action Action being run
+     * @return boolean Whether the action requires the user to be logged in or not
+     */
+    function requiresLogin($action='viewcode') {
+        $allowedActions = array('viewcode');
+
+        if (in_array($action, $allowedActions)) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
     }
 }
 ?>
