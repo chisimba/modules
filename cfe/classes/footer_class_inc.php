@@ -1,14 +1,14 @@
 
 <?php
 /**
- /*This class creates two layers 
+ *This class creates two footer layers  
  * 
  * PHP version 5
  * 
  * 
  * @category  Chisimba
  * @package   cfe
- * @author    JCSE <JCSE>
+ * @authors  Palesa Mokwena, Thato Selebogo, Mmbudzeni Vhengani
  */
 
 // security check - must be included in all scripts
@@ -26,14 +26,14 @@ class footer extends object
 {
 
     /**
-     * Holds the text for the footer
+     * Holds the text that is written on the footer
      * @var    string
      * @access public
      */
 	public $footer_text;
      
      /**
-      *Constructor
+      * Constructor
       */
 	public function init()
     	{
@@ -43,18 +43,12 @@ class footer extends object
 		
 		//Create link objects
                 $this->ref = $this->newObject('href', 'htmlelements');
-		$this->ref1 = $this->newObject('href', 'htmlelements');
-		$this->ref2 = $this->newObject('href', 'htmlelements');
-		$this->ref3 = $this->newObject('href', 'htmlelements');
-
-		//Create the images
-		$this->image1 = $this->newObject('image', 'htmlelements');
-		$this->image2 = $this->newObject('image', 'htmlelements');
-		$this->image3 = $this->newObject('image', 'htmlelements');
-
+		
 		//Set the ids and content
 		$this->setID();
 		$this->setContent();
+
+		
         }
     /**
      * Gives the two layers IDs
@@ -71,36 +65,26 @@ class footer extends object
     /**
      * A method to to write on the layers
      *
-     * @access public.
+     * @access private.
      */
-	public function setContent()
+        private function setContent()
 	{
-
-		$footer = '<!-- BOTTOM BANNERS --><div id="bottom_banners"><img src="http://146.141.208.43/chisimba1/packages/cfe/resources//bottom_banners.jpg" border="0" usemap="#Map">
-<map name="Map">
-
-<area shape="rect" coords="209,13,302,59" href="http://www.aabschools.com" target="_blank">
-<area shape="rect" coords="345,14,465,60" href="http://www.mbaworld.com" target="_blank"><area shape="rect" coords="509,13,619,56" href="http://www.pimnetwork.org" target="_blank">
-<area shape="rect" coords="663,16,746,52" href="http://www.sabsa.co.za" target="_blank">
-</map>
-</div> <!-- end bottom banners -->
-<div id="footer"><div class="txt">
-© 2009 by JCSE <span style="margin-left:10px;">|</span> <span style="margin-left:10px;"><a href="/about_wbs/terms_of_use/">Terms of Use</a></span>
-
-<span style="margin-left:10px;"></span>
-
-<span style="margin-left:10px;"></span>
-
-<span style="margin-left:10px;"></span>
-
-<span style="margin-left:10px;"></span>
-
-</div>
-</div> <!-- end footer -->';
-return $footer;
-;
+		//Top layer of the footer
 		
-	}	
+		$viewer = $this->getObject('viewer','cfe');
+		$footerLinks = $viewer->getStory("footer links",0);
+             
+		$this->loadClass('link','htmlelements');
+
+		$this->layer1->str = $footerLinks;
+		//Bottom layer of the footer
+		$this->ref->link = $this->uri(array("action"=>"support"));
+                $this->ref->text = "Terms of use";
+		$footer_text = "2010 by JCSE | ";
+		$this->layer2->str = $footer_text . $this->ref->show();	
+		
+	}
+
     /**
      * A method to show the two layers
      * 
@@ -108,7 +92,7 @@ return $footer;
      */
 	public function show()
 	{
-		return ($this->setContent());
+		return ($this->layer1->show() . $this->layer2->show());
 	}
 
 }

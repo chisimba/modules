@@ -1,14 +1,14 @@
 
 <?php
 /**
- /* This class create links to a specified module
+ /* This class create links 
  * 
  * PHP version 5
  * 
  * 
  * @category  Chisimba
  * @package   cfe
- * @author    JCSE <JCSE>
+ * @authors   David Wafula with modifications by Mmbudzeni Vhengani
  */
 
 // security check - must be included in all scripts
@@ -22,7 +22,7 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 
-/*This class create a link to a specified module. Pass the name of the module and the text that should appear*/
+/*This class create a links. Pass the name of the module and the text that should appear*/
 class links extends object
 {
     /**
@@ -55,7 +55,7 @@ class links extends object
         }
     
     /**
-     * Method to display the link
+     * Method to create the link
      * @var string $linkModule: The module to link to. This should correspond to the function written in controller
      * @var string $texting: The text to appear as a link
      * @var string $mod: The module in which linkModule exists
@@ -139,7 +139,7 @@ class links extends object
         	switch ($module) {
         	    case '_default' : $isRegistered = TRUE;
 			break;
-case 'cfe' : $isRegistered = TRUE;
+		    case 'cfe' : $isRegistered = TRUE;
 			break;
         	    default: $isRegistered = $this->objModules->checkIfRegistered($module);
         	        break;
@@ -148,8 +148,6 @@ case 'cfe' : $isRegistered = TRUE;
         	if ($isRegistered) {
         	    $link = new link($this->uri(array('action' => $action), $module));
         	    $link->link = $text;
-	
-        	    //$isActive = $isActive ? ' id="createVenture"' : '';
 	
         	    return $link->show();
         	} else {
