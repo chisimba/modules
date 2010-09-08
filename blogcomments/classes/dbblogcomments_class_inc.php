@@ -71,11 +71,9 @@ class dbblogcomments extends dbTable
         $pid = $commentarray['postid'];
         $pmod = $commentarray['mod'];
         $ptable = $commentarray['table'];
+        $approved = isset($commentarray['approved']) ? $commentarray['approved'] : 1;
 
-        $this->insert(array('userid' => $userid, 'comment_author' => $commentauthor, 'comment_author_email' => $authemail,
-                              'comment_author_url' => $authurl, 'comment_author_ip' => $authip, 'comment_date' => $date,
-                            'comment_content' => $cont, 'comment_karma' => 0, 'comment_approved' => 1, 'comment_agent' => $agent,
-                            'comment_type' => $type, 'comment_parentid' => $pid, 'comment_parentmod' => $pmod, 'comment_parenttbl' => $ptable));
+        $this->insert(array('userid' => $userid, 'comment_author' => $commentauthor, 'comment_author_email' => $authemail, 'comment_author_url' => $authurl, 'comment_author_ip' => $authip, 'comment_date' => $date, 'comment_content' => $cont, 'comment_karma' => 0, 'comment_approved' => $approved, 'comment_agent' => $agent, 'comment_type' => $type, 'comment_parentid' => $pid, 'comment_parentmod' => $pmod, 'comment_parenttbl' => $ptable));
         //email the owner
         if($email == TRUE && $pmod == 'blog')
         {
