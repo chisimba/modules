@@ -167,6 +167,18 @@ class blogcomments extends controller
                           $this->nextAction('viewsingle',array('postid' => $addinfo['postid'], 'userid' => $this->objUser->userId(), 'comment' => $addinfo['comment'], 'useremail' => $addinfo['useremail']), $addinfo['mod']);
                           exit;
                       }
+
+                      if (is_object($this->objAkismet)) {
+                          if ($this->objAkismet->isSpam($addinfo['comment'], $addinfo['commentauthor'], $addinfo['aurl'], $addinfo['useremail'])) {
+                              $addinfo['approved'] = 0;
+                          }
+                      }
+                      if (is_object($this->objMollom)) {
+                          $rating = $this->objMollom->rate($addinfo['comment'], $addinfo['commentauthor'], $addinfo['aurl'], $addinfo['useremail']);
+                          if ($rating['spam'] == 'spam') {
+                              $addinfo['approved'] = 0;
+                          }
+                      }
                   }
                 //print_r($addinfo);die();
                 $this->objDbcomm->addComm2Db($addinfo);
