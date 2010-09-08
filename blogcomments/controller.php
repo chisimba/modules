@@ -47,6 +47,14 @@ class blogcomments extends controller
     public $objDbcomm;
 
     /**
+     * Instance of the modules class of the modulecatalogue module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objModules;
+
+    /**
     *
     * Standard constructor method to retrieve the action from the
     * querystring, and instantiate the user and lanaguage objects
@@ -63,6 +71,8 @@ class blogcomments extends controller
         	$this->objUser =  & $this->getObject("user", "security");
         	//Create an instance of the language object
         	$this->objLanguage = &$this->getObject("language", "language");
+                // Create an instance of the modules object.
+                $this->objModules = $this->getObject('modules', 'modulecatalogue');
     	}
     	catch (customException $e)
     	{
