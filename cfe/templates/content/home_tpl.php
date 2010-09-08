@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 
+ *
  * PHP version 5
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,8 +18,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
 
- * @author
- * @copyright  2009 AVOIR
+ * @author Palesa Mokwena, Thato Selebogo, Mmbudzeni Vhengani
  */
 // security check - must be included in all scripts
 if (!
@@ -32,23 +31,57 @@ if (!
     die("You cannot view this page directly");
 }
 
-// Make the banner as a layer
-//$bannerLayer = $this->newObject('layer', 'htmlelements');
-//$bannerLayer->id = "bannerLayer";
+$table=$this->getObject('htmltable','htmlelements');
+        $table->border='0';
+        $table->cellspacing = '0';
+        $table->width='941';
+	$viewer = $this->getObject('viewer','cfe');
+	$academicsContent = '<div id="Academics">'.$viewer->getStory("homepage",7).'</div>';
+	$shortCoursesContent = '<div id="ShortCourses">'.$viewer->getStory("homepage",5).'</div>';
+	$entrepreneursContent = '<div id="Entrepreneurs">'.$viewer->getStory("homepage",8).'</div>';
+	$visionContent = '<div id="Vision">'.$viewer->getStory("homepage",6).'</div>';
+	$newsLetterContent = '<div id="Newsletter">'.$viewer->getStory("homepage",4).'</div>';
+	$rightColumnContent = '<div id="CfESideMenu">'.
+	$viewer->getStory("homepage",1).
+	'</div>'.
+	'<div id="GEW">'.
+	$viewer->getStory("homepage",2).
+	'</div>'.
+	'<div id="PartnersHeading">'.
+	$viewer->getStory("homepage",0).
+	'</div>'.
+	'<div id="Partners">'.
+	$viewer->getStory("homepage",3).
+	'</div>';
+	
+	
+        $max=41;
+        //row 1
 
-// Make the banner bar as a layer
-//$bannerBar = $this->newObject('layer', 'htmlelements');
-//$bannerBar->id = "bannerBar";
+        $table->startRow('topRow');
 
-// Make the body
-$body = $this->newObject('body', 'cfe');
-// Make the footer
-//$footer = $this->newObject('footer', 'cfe');
+		$table->addCell($academicsContent,'299');
+		$table->addCell($shortCoursesContent,'299');
+		$table->addCell($rightColumnContent ,'', '', '','' ,'rowspan="3"');
 
+        $table->endRow();
 
-// Echo out the bannerLayer, banner bar, the body and the footerLayer in sequence:
-//echo $bannerLayer->show();
-//echo $bannerBar->show();
-echo $body->show();
-//echo $footer->show();
+        //row 2
+        $table->startRow('middleRow');
+
+		$table->addCell($entrepreneursContent,'299');
+		$table->addCell($visionContent,'299');
+		
+        $table->endRow();
+
+	//row 3
+
+	  $table->startRow('bottomRow');
+
+	     $table->addCell($newsLetterContent,'', '', '', '','colspan="2"');
+
+        $table->endRow();
+
+echo $table->show();
+
 ?>
