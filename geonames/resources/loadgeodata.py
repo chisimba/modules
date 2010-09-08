@@ -32,14 +32,28 @@ def grabFiles():
     for item in filestoget:
         print "Downloading: "+item
         os.system("wget http://download.geonames.org/export/dump/"+item)
+    print "Downloading triples"
+    os.system("wget http://download.geonames.org/all-geonames-rdf.zip")
     print "All files downloaded!... Processing..."
     # Unzip the zipballs
     for item in unzippables:
         print "Unzipping "+item
         unzip_file_into_dir(item, '.')
-    # copy the text files to tmp/
-    
+    unzip_file_into_dir("all-geonames-rdf.zip", '.') 
     print "Done! Uploading data to server..."
+
+def doRDFRPC(line): 
+    server_url = SERV+APIENDPOINT;
+    # Set up the server.
+    server = xmlrpclib.Server(server_url);
+    try:
+        encoded = encoded = base64.b64encode(line)
+        result = server.geordf.accept(encoded)
+        print result
+    except:
+        print "RPC FAILED"
+        sys.exit()
+
 
 def doCountryRPC(line):
     server_url = SERV+APIENDPOINT;
@@ -242,5 +256,13 @@ def main():
         print doUserTagsRPC(line)+": "+str(count)
     print "User tags uploaded!"
     
+    #Lets finally do the RDF triples before we Geo-rize the whole database
+    print "Uploading Linked data..."
+    count = 0
+    for line in fileinput.input(['all-geonames-rdf.txt']):
+        count = count+1
+        print doRDFRPC(line)+": "+str(count)
+    print "RDF Triples uploaded!"
+
 print "Complete!"
 if __name__ == '__main__': main()
