@@ -55,12 +55,28 @@ class blogcomments extends controller
     private $objModules;
 
     /**
+     * Instance of the akismetops class of the akismet module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objAkiset;
+
+    /**
+     * Instance of the mollomops class of the mollom module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objMollom;
+
+    /**
     *
     * Standard constructor method to retrieve the action from the
     * querystring, and instantiate the user and lanaguage objects
     *
     */
-  public  function init()
+    public function init()
     {
         try {
             $this->objDbcomm = $this->getObject('dbblogcomments');
@@ -71,8 +87,16 @@ class blogcomments extends controller
             $this->objUser =  & $this->getObject("user", "security");
             //Create an instance of the language object
             $this->objLanguage = &$this->getObject("language", "language");
-            // Create an instance of the modules object.
+            // Retrieve a reference to the modules object.
             $this->objModules = $this->getObject('modules', 'modulecatalogue');
+            // Retrieve a reference to the akismetops object.
+            if ($this->objModules->checkIfRegistered('akismet')) {
+                $this->objAkismet = $this->getObject('akismetops', 'akismet');
+            }
+            // Retrieve a reference to the mollom object.
+            if ($this->objModules->checkIfRegistered('mollom')) {
+                $this->objMollom = $this->getObject('mollomops', 'mollom');
+            }
         }
         catch (customException $e)
         {
