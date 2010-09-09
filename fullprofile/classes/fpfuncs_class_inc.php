@@ -114,15 +114,15 @@ class fpfuncs extends dbTable
         $output = "";
         switch($triple['predicate']){
             case 'isMentorOf':
-                $subject = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$triple['subject'])).'">'.$this->objUser->fullname($triple['subject']).'</a>';
-                $object = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$triple['object'])).'">'.$this->objUser->fullname($triple['object']).'</a>';
+                $subject = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$triple['subject'])).'">'.$this->objUser->getSmallUserImage($triple['subject']).$this->objUser->fullname($triple['subject']).'</a>';
+                $object = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$triple['object'])).'">'.$this->objUser->getSmallUserImage($triple['object']).$this->objUser->fullname($triple['object']).'</a>';
 
                 $output = $subject.' is mentoring '.$object;
                 break;
 
             case 'isStudentOf':
-                $subject = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$triple['subject'])).'">'.$this->objUser->fullname($triple['subject']).'</a>';
-                $object = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$triple['object'])).'">'.$this->objUser->fullname($triple['object']).'</a>';
+                $subject = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$triple['subject'])).'">'.$this->objUser->getSmallUserImage($triple['subject']).$this->objUser->fullname($triple['subject']).'</a>';
+                $object = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$triple['object'])).'">'.$this->objUser->getSmallUserImage($triple['object']).$this->objUser->fullname($triple['object']).'</a>';
 
                 $output = $subject.' is being mentored by '.$object;
                 break;

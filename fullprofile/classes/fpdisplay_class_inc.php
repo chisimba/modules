@@ -44,6 +44,7 @@ class fpdisplay extends object
 	$this->objFuncs = $this->getObject('fpfuncs', 'fullprofile');
         $this->objDbContext = $this->getObject('dbcontext', 'context');
         $this->objDbFoaf = $this->getObject('dbfoaf', 'foaf');
+        $this->objBuscard = $this->getObject('buscard', 'digitalbusinesscard');
     }
 
     /**
@@ -56,10 +57,43 @@ class fpdisplay extends object
     {
         //Create the html holder
         $html = "";
+
+        $html .= '<div id="ccmsAdminContainer">';
+
+        $html .= '<div id="ccmsTabContainer">';
+
+        $html .= '<ul class="tabs">';
+
+        $html .= '<li><a href="#contentDetailsPanel">Details</a></li>';
+        $html .= '<li><a href="#contentActivityPanel">Activity</a></li>';
+        $html .= '<li><a href="#contentAffiliationsPanel">Affiliations</a></li>';
+        $html .= '<li><a href="#contentMapPanel">Map</a></li>';
+
+        $html .= '</ul>';
+
+        $html .= '<div class="tab_container">';
+
+        $userDetailsHtml = $this->showUserDetails($userId);
+        $html .= '<div id="contentDetailsPanel" class="tab_content">'.$userDetailsHtml.'</div>';
+
+        $activityHtml = $this->showUserActivity($userId);
+        $html .= '<div id="contentActivityPanel" class="tab_content">'.$activityHtml.'</div>';
+
+        $affiliationHtml = $this->showUserAffiliations($userId);
+        $html .= '<div id="contentAffiliationsPanel" class="tab_content">'.$affiliationHtml.'</div>';
+
+
+        $mapHtml = $this->showUserMap($userId);
+        $html .= '<div id="contentMapPanel" class="tab_content">'.$mapHtml.'</div>';
+
+        $html .= '</div>';
+        $html .= '</div>';
+        $html .= '</div>';
+        /*
         //Load the multi tabbed box class
         $this->loadClass('multitabbedbox', 'htmlelements');
         //Create the tabbed box
-        $tabbedBox = new multitabbedbox("1500", "1000");
+        $tabbedBox = new multitabbedbox("900", "700");
         //Get the users affiliations content
         $userDetailsHtml = $this->showUserDetails($userId);
         $tabbedBox->addTab(array('name'=>'Details', 'content'=>$userDetailsHtml, 'default'=>TRUE));
@@ -67,13 +101,17 @@ class fpdisplay extends object
         //Get the activty content
         $activityHtml = $this->showUserActivity($userId);
         //Add the content to the activity tab
-        $tabbedBox->addTab(array('name'=>'Activity', 'content'=>$activityHtml, 'default'=>FALSE));
+        $tabbedBox->addTab(array('name'=>'Activity', 'content'=>$activityHtml));
         //Get the users affiliations content
         $affiliationHtml = $this->showUserAffiliations($userId);
-        $tabbedBox->addTab(array('name'=>'Affiliations', 'content'=>$affiliationHtml, 'default'=>FALSE));
+        $tabbedBox->addTab(array('name'=>'Affiliations', 'content'=>$affiliationHtml));
+        //Get the users map content
+        $mapHtml = $this->showUserMap($userId);
+        $tabbedBox->addTab(array('name'=>'Map', 'content'=>$mapHtml));
+
         //Add tabbed box to the output string
         $html .= $tabbedBox->show();
-
+        */
         
         return $html;
     }
@@ -176,6 +214,16 @@ class fpdisplay extends object
 
         $table->startRow();
         $table->addCell($title->show(), NULL, 'colspan="2"');
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell('&nbsp;');
+        $table->addCell('&nbsp;');
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell('&nbsp;');
+        $table->addCell($this->objUser->getUserImage($userId));
         $table->endRow();
 
         $table->startRow();
@@ -315,5 +363,20 @@ class fpdisplay extends object
         
         return $html;
     }
+
+    /**
+     * Method to display a map for the user
+     *
+     * @param string $userId The users id
+     * @return string $html The html displaying the users details
+     */
+    public function showUserMap($userId)
+    {
+        $html = "";
+        $html .= $this->objBuscard->getLatLong($userId);
+
+        return $html;
+    }
+
 }
 ?>

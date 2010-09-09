@@ -68,6 +68,10 @@ class fullprofile extends controller {
 
             default:
             case 'viewprofile':
+                $this->setVar('JQUERY_VERSION', '1.4.2');
+		$ccms_stylesheet = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/ccms-styles.css').'"/>';
+		$this->appendArrayVar('headerParams', $ccms_stylesheet);
+		$this->appendArrayVar('headerParams', $this->getJavascriptFile('js/tabinit.js', ''));
                 $userId = $this->getParam('userid');
                 if(is_null($userId) || $userId == ""){
                     $userId = $this->userId;
