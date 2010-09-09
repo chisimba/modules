@@ -704,10 +704,10 @@ class buscard extends object
     * @param string $userId The userid of the user to lookup
     * @param boolean $showMap Whether or not to show the map, default TRUE
     * @return string The rendered output
-    * @access private
+    * @access public
     *
     */
-    private function getLatLong($userId, $showMap=TRUE)
+    public function getLatLong($userId, $showMap=TRUE)
     {
         $latitude = $this->objUserParams->getValue("latitude");
         $longitude = $this->objUserParams->getValue("longitude");
