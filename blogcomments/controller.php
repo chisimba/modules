@@ -71,6 +71,14 @@ class blogcomments extends controller
     private $objMollom;
 
     /**
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objSysConfig;
+
+    /**
     *
     * Standard constructor method to retrieve the action from the
     * querystring, and instantiate the user and lanaguage objects
@@ -89,6 +97,8 @@ class blogcomments extends controller
             $this->objLanguage = &$this->getObject("language", "language");
             // Retrieve a reference to the modules object.
             $this->objModules = $this->getObject('modules', 'modulecatalogue');
+            // Retrieve a reference to the dbsysconfig object.
+            $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             // Retrieve a reference to the akismetops object.
             if ($this->objModules->checkIfRegistered('akismet')) {
                 $this->objAkismet = $this->getObject('akismetops', 'akismet');
@@ -138,7 +148,12 @@ class blogcomments extends controller
                 break;
 
             case 'addtodb':
-                //$this->requiresLogin(FALSE);
+                // Check if comments is enabled.
+                $enabled = $this->objSysConfig->getValue('enabled', 'blogcomments');
+                if (!$enabled) {
+                    exit;
+                }
+
                 if(!$this->objUser->isLoggedIn())
                 {
                     $captcha = $this->getParam('request_captcha');
