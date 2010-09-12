@@ -127,7 +127,7 @@ class dbblogcomments extends dbTable
      */
     public function grabComments($pid)
     {
-        $filter = "WHERE comment_parentid = '$pid' ORDER BY comment_date DESC";
+        $filter = "WHERE comment_parentid = '$pid' AND comment_approved = 1 ORDER BY comment_date DESC";
         return $this->getAll($filter);
     }
 
