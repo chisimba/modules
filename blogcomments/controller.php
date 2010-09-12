@@ -189,10 +189,12 @@ class blogcomments extends controller
                           }
                       }
                       if (is_object($this->objMollom)) {
-                          $rating = $this->objMollom->rate($addinfo['comment'], $addinfo['commentauthor'], $addinfo['aurl'], $addinfo['useremail']);
-                          if ($rating['spam'] == 'spam') {
-                              $addinfo['approved'] = 0;
-                          }
+                          try {
+                              $rating = $this->objMollom->rate($addinfo['comment'], $addinfo['commentauthor'], $addinfo['aurl'], $addinfo['useremail']);
+                              if ($rating['spam'] == 'spam') {
+                                  $addinfo['approved'] = 0;
+                              }
+                          } catch (Exception $e) {}
                       }
                   }
                 //print_r($addinfo);die();
