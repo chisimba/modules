@@ -183,6 +183,31 @@ class mongoops extends object
     }
 
     /**
+     * Imports a CSV file into a collection.
+     *
+     * @access public
+     * @param  string  $file       The location of the file.
+     * @param  string  $collection The collection to use.
+     * @param  string  $database   The database containing the collection.
+     * @return boolean The results of the import.
+     */
+    public function importCSV($file, $collection=NULL, $database=NULL)
+    {
+        $handle = fopen($file, 'r');
+        $keys = fgetcsv($handle);
+        $success = TRUE;
+
+        while (($record = fgetcsv($handle)) !== FALSE) {
+            $data = array_combine($keys, $record);
+            $success = $this->insert($data, $collection, $database) && $success;
+        }
+
+        fclose($handle);
+
+        return $success;
+    }
+
+    /**
      * Inserts data into the collection.
      *
      * @access public
