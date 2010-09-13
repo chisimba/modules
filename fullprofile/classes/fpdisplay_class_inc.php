@@ -31,6 +31,20 @@ class fpdisplay extends object
    public $objFuncs;
 
     /**
+    *
+    * This is a hardcoded array of the known social network providers
+    * that will be supported by having Icons stored in this module
+    *
+    * @var array
+    * @access public
+    *
+    */
+    public $networks = array ('africator', 'delicious', 'digg', 'facebook',
+        'flickr', 'friendfeed', 'google', 'identica', 'linkedin', 'muti',
+        'opera', 'picasa', 'qik', 'slideshare', 'technorati', 'twitter',
+        'youtube' );
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -68,6 +82,8 @@ class fpdisplay extends object
         $html .= '<li><a href="#contentActivityPanel">Activity</a></li>';
         $html .= '<li><a href="#contentAffiliationsPanel">Affiliations</a></li>';
         $html .= '<li><a href="#contentMapPanel">Map</a></li>';
+        $html .= '<li><a href="#contentSocialNetworksPanel">Social Networks</a></li>';
+        $html .= '<li><a href="#contentTagsPanel">Tags</a></li>';
 
         $html .= '</ul>';
 
@@ -85,6 +101,12 @@ class fpdisplay extends object
 
         $mapHtml = $this->showUserMap($userId);
         $html .= '<div id="contentMapPanel" class="tab_content">'.$mapHtml.'</div>';
+
+        $socialNetworksHtml = $this->showUserSocialNetworks($userId);
+        $html .= '<div id="contentSocialNetworksPanel" class="tab_content">'.$socialNetworksHtml.'</div>';
+
+        $tagsHtml = $this->showUserTags();
+        $html .= '<div id="contentTagsPanel" class="tab_content">'.$tagsHtml.'</div>';
 
         $html .= '</div>';
         $html .= '</div>';
@@ -374,6 +396,88 @@ class fpdisplay extends object
     {
         $html = "";
         $html .= $this->objBuscard->getLatLong($userId);
+
+        return $html;
+    }
+
+    /**
+     * Method to display a map for the user
+     *
+     * @param string $userId The users id
+     * @return string $html The html displaying the users details
+     */
+    public function showUserTags($userId)
+    {
+        $html = "";
+        $html .= $this->objBuscard->widgetize('chisimba');
+
+        return $html;
+    }
+
+    /**
+     * Method to display the users social networks
+     *
+     * @param string $userId The users id
+     * @return string $html The html displaying the users details
+     */
+    public function showUserSocialNetworks($userId)
+    {
+        // Get the social networks tab content.
+        $html = "";
+
+        //Create the page title
+        $title = $this->getObject('htmlheading', 'htmlelements');
+        $title->type = '2';
+        $title->str = $this->objLanguage->languageText('mod_fullprofile_socialnetworks', 'fullprofile');
+
+        $html .= $title->show();
+        //Place the listin a div
+        $html .= '<div id="socialnetworks" class="socialnetworks">';
+
+        foreach ($this->networks as $network) {
+            $html .= $this->objBuscard->getSocialNetwork($network, $userId);
+        }
+
+        $html .= '</div>';
+        return $html;
+    }
+
+    /**
+     * Method to display a users activity stream
+     *
+     * @param string $userId The users id
+     * @return string $html The html displaying the users activity
+     */
+
+    public function showUserContexts($userId)
+    {
+        $html = "";
+        //Create the page title
+        $title = $this->getObject('htmlheading', 'htmlelements');
+        $title->type = '2';
+        $title->str =
+
+        $html .= $title->show();
+        //Place the listin a div
+        $html .= '<div id="usercontextlist" class="usercontextlist">';
+        //Get the users activity
+        $userActivity = $this->objFuncs->getActivity($userId);
+        //Display the activity
+        if(is_array($userActivity) && count($userActivity)>0){
+            foreach($userActivity as $ua){
+                $dateTime = date("F j, Y, g:i a", strtotime($ua['createdon']));
+                $title = $ua['title'];
+                $contextCode = $ua['contextcode'];
+                if(is_null($contextCode)){
+                    $html .= '<ul>'.$dateTime.'&nbsp;&nbsp;'.'-'.'&nbsp;&nbsp;'.$title.'</ul>';
+                } else {
+                    $html .= '<ul>'.$dateTime.'&nbsp;&nbsp;'.'-'.'&nbsp;&nbsp;'.$title.'&nbsp;&nbsp;'.'-'.'&nbsp;&nbsp;'.$this->objDbContext->getTitle($contextCode).'</ul>';
+                }
+            }
+        } else {
+            $html .= '<span class="subdued">No activities logged</span>';
+        }
+        $html .= '</div>';
 
         return $html;
     }
