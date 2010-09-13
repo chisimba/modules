@@ -536,6 +536,7 @@ class blog extends controller {
                 $this->setVarByRef('postid', $postid);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('userid', $userid);
+                $this->commentsEnabled = $this->objSysConfig->getValue('enabled', 'blogcomments');
                 // $this->setVar('pageSuppressXML', TRUE);
                 return 'viewsingle_tpl.php';
                 break;

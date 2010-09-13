@@ -35,12 +35,19 @@ if (isset($comment) && isset($useremail)) {
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 //show all the posts
 $middleColumn.= ($this->objblogPosts->showPosts($posts, TRUE));
-$middleColumn.= $this->objComments->showComments($postid);
+
+if ($this->commentsEnabled) {
+    $middleColumn.= $this->objComments->showComments($postid);
+}
+
 $middleColumn.= $tracks = $this->objblogTrackbacks->showTrackbacks($postid);
-if ($this->objUser->isLoggedIn() == TRUE) {
-    $middleColumn.= $this->objblogPosts->addCommentForm($postid, $userid, $captcha = FALSE, $comment, $useremail);
-} else {
-    $middleColumn.= $this->objblogPosts->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
+
+if ($this->commentsEnabled) {
+    if ($this->objUser->isLoggedIn() == TRUE) {
+        $middleColumn.= $this->objblogPosts->addCommentForm($postid, $userid, $captcha = FALSE, $comment, $useremail);
+    } else {
+        $middleColumn.= $this->objblogPosts->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
+    }
 }
 
 // Added by Tohir - Standard layout for elearn
