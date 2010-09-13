@@ -165,7 +165,7 @@ $table->endRow();
 
 //filename conversion
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_assignment_filenameconversion', 'assignment', 'Convert Filename on Download?'));
+$table->addCell($this->objLanguage->languageText('mod_assignment_filenameconversion', 'assignment', 'Convert the Filename on Download?'));
 $table->addCell('<div id="filenameConversion"></div>');
 $table->endRow();
 
