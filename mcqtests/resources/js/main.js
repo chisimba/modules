@@ -54,7 +54,6 @@ function checkNewQuestion(val) {
 }
 
 function processQuestionMethod(val) {
-    var dataType;
     if(val == 'oldQ') {
         var type = jQuery("#qnoption").val();
         if(type == 'freeform' || type == 'mcq'){
@@ -63,13 +62,7 @@ function processQuestionMethod(val) {
             jQuery('#dbquestions').show();
             Ext.get('mcqGrid').show();
 
-            if(type == 'mcq') {
-                dataType = 'mcq';
-            }
-            else {
-                dataType = 'freeform';
-            }
-            getGridData(dataType);
+            getGridData();
         }
     }
     else if(val == 'newQ') {
@@ -87,4 +80,3 @@ function hideAllForms() {
     jQuery('#addquestion').hide();
     jQuery("#dbquestions").hide();
 }
-

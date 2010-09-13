@@ -1,11 +1,13 @@
 var sm2 = new Ext.grid.CheckboxSelectionModel({
-    listeners: {
-        rowselect: function(sm2, rowIdx, r) {
+        listeners: {
+            rowselect: function(sm2, rowIdx, r) {
+            }
         }
-    }
-});
-
-var courseTitle = 'Course Databank for - ' + courseName;
+    }),
+    myPageSize = 20,
+    courseTitle = 'Course Databank for - ' + courseName;
+    dataType = Ext.get('qnoption').getValue(),
+    courses = "";
 
 // Create the data store
 var myStore = new Ext.data.Store({
@@ -40,6 +42,10 @@ var myStore = new Ext.data.Store({
         {
             name: 'questiontype',
             mapping: 'questiontype'
+        },
+        {
+            name: 'mark',
+            mapping: 'mark'
         }
         ]
     })
@@ -70,6 +76,12 @@ var showQuestionDB = function() {
             width: 160,
             sortable: true,
             dataIndex: 'question'
+        }, {
+            id: 'mark',
+            header: "Mark",
+            width: 75,
+            sortable: true,
+            dataIndex: 'mark'
         },{
             header: 'Hint',
             width: 75,
@@ -88,7 +100,11 @@ var showQuestionDB = function() {
             handler: function(checkbox, checked){
                 if(checked) {
                     // load data for all courses
-                    getAllCourses();
+                    courses = 'all';
+                    getGridData();
+                }
+                else {
+                    courses = "";
                 }
             }
         }],
@@ -101,6 +117,12 @@ var showQuestionDB = function() {
                 }
             }
         }],
+        bbar: new Ext.PagingToolbar({
+            store: myStore,
+            displayInfo: true,
+            pageSize: myPageSize,
+            displayMessage: "Displaying Questions {0} - {1} of {2}"
+            }),
         sm: sm2,
         stripeRows: true,
         autoExpandColumn: 'question',
@@ -150,6 +172,7 @@ function submitIDs(ids) {
         });
     }
 }
+
 var ajaxSuccess = function() {
     window.location.href = nextUrl;
 }
@@ -158,21 +181,14 @@ var ajaxFailure = function() {
     Ext.MessageBox.alert("There was an error submitting your request. Please try again!");
 }
 
-
-function getGridData(dataType) {
-    var newUrl = myUrl + '&type=' + dataType;
-    myStore.proxy.setUrl(newUrl);
+function getGridData() {
+    if(courses.length > 0) {
+        myStore.setBaseParam('myParams', Ext.urlEncode({type: Ext.get('qnoption').getValue(), courses: courses}));
+    }
+    else {
+        myStore.setBaseParam('myParams', Ext.urlEncode({type: Ext.get('qnoption').getValue()}));
+    }
     myStore.load();
     jQuery("#mcqGrid").html("");
-    showQuestionDB(newUrl);
-}
-
-function getAllCourses() {
-    var dataType = jQuery("#qnoption").val();
-
-    var newUrl = myUrl + '&type=' + dataType + '&courses=all';
-    myStore.proxy.setUrl(newUrl);
-    myStore.load();
-    jQuery("#mcqGrid").html("");
-    showQuestionDB(newUrl);
+    showQuestionDB(myUrl);
 }

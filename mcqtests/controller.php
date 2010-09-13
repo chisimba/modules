@@ -724,9 +724,14 @@ class mcqtests extends controller {
                 $status = $this->submitDBQuestions($this->getParam('ids'));
                 return $status;//$this->nextAction('view', array('id' => $id) , 'mcqtests');
             case 'formattedquestions':
-                $type = $this->getParam('type');
-                $courses = $this->getParam('courses');
-                return $this->getGridData($type, $courses);
+                $myParams = explode("&", $this->getParam('myParams'));
+                $type = explode("=",$myParams[0]);
+                $type = $type[1];
+                $courses = explode("=",$myParams[1]);
+                $courses = $courses[1];
+                $start = $this->getParam('start');
+                $limit = $this->getParam('limit');
+                return $this->getGridData($type, $courses, $start, $limit);
             default:
                 if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
@@ -1648,9 +1653,9 @@ class mcqtests extends controller {
      * @param none
      * @return status of data submission
      */
-    public function getGridData($type=null, $courses=null) {
+    public function getGridData($type=null, $courses=null, $start = null, $limit = null) {
         $id = $this->getParam('id');
-        echo $this->dbTestadmin->getContextQuestions($this->contextCode, $id, $type, $courses);
+        echo $this->dbTestadmin->getContextQuestions($this->contextCode, $id, $type, $courses, $start, $limit);
     }
 
 } // end of class

@@ -283,7 +283,9 @@ class dbquestions extends dbtable
      * Method to submit questions selected from grid view.
      *
      * @access public
-     *
+     * @param string $contextID
+     * @param array $data Array containing details of the question
+     * @param string $id The id of the test
      * @return none
      */
     public function submitDBQuestions($contextID, $data, $id) {
@@ -310,7 +312,14 @@ class dbquestions extends dbtable
                 $aID = $dbAnswers->addAnswers($row);
             }
         }
-        
+        // update the total mark for this test
+        $totalMark = $this->getTotalMarks($id);
+        $this->updateTotalMarks($id, $totalMark);
+    }
+
+    public function updateTotalMarks($testid, $mark) {//echo $testid."\n".$mark;
+        $dbTestadmin = $this->newObject('dbtestadmin');
+        $dbTestadmin->setTotal($testid, $mark);
     }
 } // end of class
 ?>
