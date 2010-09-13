@@ -73,6 +73,11 @@ $fields = array(
 		'type' => 'text',
 		'length' => 1,
 		'default' => '1'
+		),
+       'filename_conversion' => array(
+		'type' => 'text',
+		'length' => 1,
+		'default' => '1'
 		)
 	);
 ?>

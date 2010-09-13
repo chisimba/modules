@@ -257,9 +257,10 @@ class assignment extends controller {
         $closingDate = $this->getParam('closingdate').' '.$this->getParam('closingtime');
         $description = $this->getParam('description');
         $assesment_type = $this->getParam('assesment_type');
-        $emailAlert=$this->getParam('emailalert');
+        $emailAlert = $this->getParam('emailalert');
+	$filenameConversion = $this->getParam('filenameconversion');
 
-        $result = $this->objAssignment->addAssignment($name, $this->contextCode, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type,$emailAlert);
+        $result = $this->objAssignment->addAssignment($name, $this->contextCode, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type, $emailAlert, $filenameConversion);
 
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'unabletosaveassignment'));
@@ -347,8 +348,9 @@ class assignment extends controller {
         $description = $this->getParam('description');
         $assesment_type = $this->getParam('assesment_type');
         $emailAlert=$this->getParam('emailalert');
+	$filenameConversion = $this->getParam('filenameconversion');
         
-        $result = $this->objAssignment->updateAssignment($id, $name, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type,$emailAlert);
+        $result = $this->objAssignment->updateAssignment($id, $name, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type, $emailAlert, $filenameConversion);
 
         $result = $result ? 'Y' : 'N';
 
@@ -457,8 +459,15 @@ class assignment extends controller {
         $file = $objFile->getFile($fileId);
 
         $extension = $file['datatype'];
+	
+	if($assignment['filename_conversion'] == '0')
+        {
+            $filename = $file['filename'];
+        }
+        else{
+            $filename = $this->objUser->fullName($submission['userid']).' '.$objDateTime->formatDate($submission['datesubmitted']).'.'.$extension;
+        }
 
-        $filename = $this->objUser->fullName($submission['userid']).' '.$objDateTime->formatDate($submission['datesubmitted']);
         $filename = str_replace(' ', '_', $filename);
         $filename = str_replace(':', '_', $filename);
 
@@ -466,7 +475,7 @@ class assignment extends controller {
             // Set Mimetype
             header('Content-type: '.$file['mimetype']);
             // Set filename and as download
-            header('Content-Disposition: attachment; filename="'.$filename.'.'.$extension.'"');
+            header('Content-Disposition: attachment; filename="'.$filename.'"');
             // Load file
             readfile($filePath);
             exit;

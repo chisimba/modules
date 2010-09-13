@@ -122,9 +122,11 @@ class dbassignment extends dbtable {
      * @param <type> $opening_date
      * @param <type> $closing_date
      * @param <type> $assesment_type
+     * @param <type> $emailAlert
+     * @param <type> $filename_conversion
      * @return <type>
      */
-    public function addAssignment($name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert) {
+    public function addAssignment($name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion) {
 
         $id = $this->insert(array(
                     'name' => $name,
@@ -138,6 +140,7 @@ class dbassignment extends dbtable {
                     'closing_date' => $closing_date,
                     'assesment_type' => $assesment_type,
                     'email_alert' => $emailAlert,
+                    'filename_conversion' => $filename_conversion,
                     'userid' => $this->objUser->userId(),
                     'last_modified' => date('Y-m-d H:i:s', time()),
                     'updated' => date('Y-m-d H:i:s', time())
@@ -240,7 +243,7 @@ class dbassignment extends dbtable {
      * @param <type> $assesment_type
      * @return <type>
      */
-    public function updateAssignment($id, $name, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert) {
+    public function updateAssignment($id, $name, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion) {
 
         $id = $this->update('id', $id, array(
                     'name' => $name,
@@ -252,6 +255,7 @@ class dbassignment extends dbtable {
                     'opening_date' => $opening_date,
                     'closing_date' => $closing_date,
                     'email_alert' => $emailAlert,
+                    'filename_conversion' => $filename_conversion,
                     'assesment_type' => $assesment_type,
                     'userid' => $this->objUser->userId(),
                     'last_modified' => date('Y-m-d H:i:s', time()),

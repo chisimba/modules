@@ -11,7 +11,7 @@
             </add>
         </data>
     </update>
-     <update>
+    <update>
         <table>tbl_assignment</table>
         <version>0.341</version>
         <description>Added assesment type - Is it a reflection based assignment? </description>
@@ -41,7 +41,7 @@
     <update>
         <table>tbl_assignment</table>
         <version>0.349</version>
-            <description>Change assesment_type to length 1</description>
+        <description>Change assesment_type to length 1</description>
         <data>
             <change>
                 <assesment_type>
@@ -53,8 +53,7 @@
             </change>
         </data>
     </update>
-
-     <update>
+    <update>
         <table>tbl_assignment</table>
         <version>0.362</version>
         <description>Added email alert option </description>
@@ -67,5 +66,17 @@
             </add>
         </data>
     </update>
-
+    <update>
+        <table>tbl_assignment</table>
+        <version>0.402</version>
+        <description>Added filename conversion option </description>
+        <data>
+            <add>
+                <name>filename_conversion</name>
+                <type>text</type>
+                <length>1</length>
+                <default>1</default>
+            </add>
+        </data>
+    </update>
 </updates>

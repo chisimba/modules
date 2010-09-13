@@ -3,6 +3,7 @@ function initRadioButtons(
     _isReflection,
     _allowMultiple,
     _emailAlert,
+    _filenameConversion,
     canChangeField
     )
 {
@@ -10,6 +11,7 @@ function initRadioButtons(
     var isReflection = _isReflection=="1";
     var allowMultiple = _allowMultiple=="1";
     var emailAlert=_emailAlert=="1";
+    var filenameConversion=_filenameConversion=="1";
     customPanel = Ext.extend(Ext.Panel, {
         id:'customPanel',
         border:false,
@@ -100,6 +102,26 @@ function initRadioButtons(
             items: [
                 {boxLabel: 'Yes', name: 'emailalert', inputValue: 1, checked: emailAlert},
                 {boxLabel: 'No', name: 'emailalert', inputValue: 0, checked: !emailAlert}
+                
+            ]
+        }
+        ]
+    });
+    customPanel.override({
+        renderTo : 'filenameConversion'
+    });
+    var panel5 = new customPanel(
+     {
+        defaultType: 'radio',
+        border:false,
+        layout:'anchor',
+        width:100,
+        items: [
+            {
+            xtype: 'radiogroup',
+            items: [
+                {boxLabel: 'Yes', name: 'filenameconversion', inputValue: 1, checked: filenameConversion},
+                {boxLabel: 'No', name: 'filenameconversion', inputValue: 0, checked: !filenameConversion}
                 
             ]
         }

@@ -24,6 +24,7 @@ if ($mode == 'edit') {
             '".$assignment['assesment_type']."',
             '".$assignment['resubmit']."',
             '".$assignment['email_alert']."',
+            '".$assignment['filename_conversion']."',
             ".($canChangeField?'true':'false')."
         );
     });
@@ -36,6 +37,7 @@ else {
             '0',
             '0',
             '0',
+            '1',
             '1',
             true
         );
@@ -159,6 +161,12 @@ $table->endRow();
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_emailalert', 'assignment', 'Email Alert'));
 $table->addCell('<div id="emailAlert"></div>');
+$table->endRow();
+
+//filename conversion
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_assignment_filenameconversion', 'assignment', 'Convert Filename on Download?'));
+$table->addCell('<div id="filenameConversion"></div>');
 $table->endRow();
 
 // Mark
