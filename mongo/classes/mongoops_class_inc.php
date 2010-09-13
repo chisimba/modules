@@ -194,7 +194,7 @@ class mongoops extends object
     public function importCSV($file, $collection=NULL, $database=NULL)
     {
         $handle = fopen($file, 'r');
-        $keys = fgetcsv($handle);
+        $keys = array_map('strtolower', fgetcsv($handle));
         $success = TRUE;
 
         while (($record = fgetcsv($handle)) !== FALSE) {
