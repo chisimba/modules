@@ -179,6 +179,15 @@ class mongoops extends object
      */
     public function find(array $query=array(), array $fields=array(), $collection=NULL, $database=NULL)
     {
+        if($database === NULL)
+        {
+            $database = $this->database;
+        }
+        if($collection === NULL)
+        {
+            $collection = $this->collection;
+        }
+        
         return $this->getCollection($collection, $database)->find($query, $fields);
     }
 
@@ -196,7 +205,6 @@ class mongoops extends object
         $handle = fopen($file, 'r');
         $keys = array_map('strtolower', fgetcsv($handle));
         $success = TRUE;
-
         while (($record = fgetcsv($handle)) !== FALSE) {
             $data = array_combine($keys, $record);
             $success = $this->insert($data, $collection, $database) && $success;
@@ -218,6 +226,14 @@ class mongoops extends object
      */
     public function insert(array $data, $collection=NULL, $database=NULL)
     {
+        if($database === NULL)
+        {
+            $database = $this->database;
+        }
+        if($collection === NULL)
+        {
+            $collection = $this->collection;
+        }
         return $this->getCollection($collection, $database)->insert($data);
     }
 
@@ -241,6 +257,25 @@ class mongoops extends object
     public function setDatabase($database)
     {
         $this->database = $database;
+    }
+    
+    /**
+     * Method to list all collections in a database
+     *
+     * @return array or NULL
+     */
+    public function listCollections()
+    {
+        // Ensure the Mongo connection has been initialised.
+        if (!is_object($this->objMongo)) {
+            $this->objMongo = new Mongo($this->objSysConfig->getValue('server', 'mongo'));
+        }
+        $db = $this->objMongo->selectDB($this->database);
+        $list = $db->listCollections();
+        foreach($list as $coll) {
+            $l[] = $coll->__toString();
+        }
+        return $l;
     }
 }
 
