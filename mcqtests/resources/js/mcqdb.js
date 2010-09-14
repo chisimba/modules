@@ -127,13 +127,14 @@ var showQuestionDB = function() {
         stripeRows: true,
         autoExpandColumn: 'question',
         height: 350,
-        width: 600,
+        width: "100%",
         title: courseTitle,
         stateId: 'grid'
     });
 
     // render the grid to the specified div in the page
     grid.render('mcqGrid');
+      
 }
 
 function getSelections() {

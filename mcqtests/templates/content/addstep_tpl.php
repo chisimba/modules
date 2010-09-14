@@ -295,6 +295,9 @@ switch($currentstep) {
         for ($x = 0 ; $x <= 100 ; $x++) {
             $objDropDown->addOption($x, $x);
         }
+        $markfield=new textinput("mark",$percent);
+
+
         $objDropDown->setSelected($percent);
         $dropStr = $objDropDown->show();
         $objDropDown = new dropdown('decimal');
@@ -302,11 +305,11 @@ switch($currentstep) {
             $objDropDown->addOption($x, $x);
         }
         $objDropDown->setSelected($decimal);
-        $dropStr.= '&nbsp;<b>.</b>&nbsp;&nbsp;'.$objDropDown->show() .'&nbsp;%&nbsp;&nbsp;&nbsp;';
+       // $dropStr.= '&nbsp;<b>.</b>&nbsp;&nbsp;';//.$objDropDown->show() .'&nbsp;%&nbsp;&nbsp;&nbsp;';
        // $dropStr.= '<font class="warning">'.$percentExplanation.'&nbsp;%</font>';
         $objTable->addRow(array(
             $objLabel->show() ,
-            $dropStr
+            $markfield->show()
         ));
         // Set tests to equal percentage
         $objLabel = new label('<b>'.$lbEqualPercent.':</b>', 'input_setequal');

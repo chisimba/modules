@@ -288,7 +288,7 @@ class mcqtests extends controller {
                         break;
                     case '3':
                         $StepMenuArr2 = array();
-                        $StepMenuArr2['percent'] = $this->getParam('percent');
+                        $StepMenuArr2['percent'] = $this->getParam('mark');
                         $StepMenuArr2['decimal'] = $this->getParam('decimal');
                         $StepMenuArr2['setequal'] = $this->getParam('setequal');
                         $StepMenuArr2['start'] = $this->getParam('start');
