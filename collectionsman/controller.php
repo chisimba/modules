@@ -64,6 +64,7 @@ class collectionsman extends controller
     public $objMarc;
     public $objRdf;
     public $objMongodb;
+    public $objCollOps;
 
     /**
      * Initialises the instance variables.
@@ -83,6 +84,7 @@ class collectionsman extends controller
             $this->objMarc       = $this->getObject('marcmeta', 'metadata');
             $this->objRdf        = $this->getObject ('rdf', 'rdfgen');
             $this->objMongodb    = $this->getObject ('mongoops', 'mongo');
+            $this->objCollOps    = $this->getObject('collectionops');
 			
 			// Define the paths we will be needing
 			define ( "RDFAPI_INCLUDE_DIR", $this->getResourcePath ('api/', 'rdfgen'));
@@ -115,20 +117,37 @@ class collectionsman extends controller
         switch ($action) {
             case NULL:
 
-            case 'main' :
-                $this->objMongodb->setDatabase('test');
-                $this->objMongodb->setCollection('coll1');
-                $num = 300000;
-                while($num <= 1000) {
-                    $this->objMongodb->insert(array('string' => 'something '.$num), 'coll1', 'test');
-                    echo $num."<br />";
-                    $num++;
-                }
-                $q = $this->objMongodb->find(array(3010), array('string'), 'coll1', 'test');
-                var_dump($q->getNext());
-                echo "This is the collections manager";
+            case 'addform' :
+                $form = $this->objCollOps->addRecordForm();
+                $this->setVarByRef('form', $form);
+                return 'add_tpl.php';
                 break;
-
+                
+            case 'mongotest' :
+                $this->objMongodb->setCollection('semarchive_audio');
+                $file = '/var/www/so.csv';
+                var_dump($this->objMongodb->importCSV($file, 'semarchive_audio', 'test'));
+                break;
+                
+            case 'addrec' :
+                $acno = $this->getParam('ano');
+                $coll = $this->getParam('coll');
+                $title = $this->getParam('title');
+                $desc = $this->getParam('desc');
+                $datecreated = $this->getParam('datecreated');
+                $media = $this->getParam('media');
+                $comment = $this->getParam('comment');
+                $insarr = array('accession number' => $acno, 'collection' => $coll, 'title' => $title, 'description' => $desc, 'date created' => $datecreated, 'media' => $media, 'comment' => $comment);
+                // dump it to mongo->insert and go back
+                $res = $this->objMongodb->insert($insarr);
+                $this->nextAction('');
+                break;
+                
+            case 'getrecord' :
+                $acno = $this->getParam('acno');
+                $res = $this->objMongodb->find(array('test'), array('title', 'description'));
+                var_dump($res->explain());
+                die();
             default:
                 $this->nextAction('');
                 break;
