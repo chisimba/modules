@@ -221,7 +221,7 @@ class dbtestadmin extends dbtable
      * @return array $data the multiple choice questions array
      */
     public function getContextQuestions($contextCode, $testid, $type=null, $courses=null, $start=null, $limit=null) {
-        $sql = "SELECT A.context, B.id, B.question, B.hint,B.mark, B.questiontype FROM ".$this->table;
+        $sql = "SELECT A.name, B.id, INSERT(MID(B.question, 1, 100),100,3,'...') as question, B.hint,B.mark, B.questiontype FROM ".$this->table;
         $sql .= " as A join tbl_test_questions as B on A.id = B.testid";
         $sql .= " WHERE A.context = '".$contextCode."' AND B.testid != '".$testid."'";
 
@@ -232,14 +232,14 @@ class dbtestadmin extends dbtable
             $courses = str_replace("-", "", $courses);
             if(strlen(trim($courses)) > 0)  {
                 //get the data based on page in grid
-                $sql = "SELECT A.context, B.id, B.question, B.hint,B.mark, B.questiontype FROM ".$this->table;
+                $sql = "SELECT A.name, B.id,  INSERT(MID(B.question, 1, 100),100,3,'...') as question, B.hint,B.mark, B.questiontype FROM ".$this->table;
                 $sql .= " as A join tbl_test_questions as B on A.id = B.testid";
                 $sql .= " WHERE B.questiontype='".$type."'";
                 $sql .= " LIMIT ".$start.",".$count;
                 $data = $this->getArray($sql);
                 
                 // get the total number of records
-                $myCountSql = "SELECT A.context FROM ".$this->table;
+                $myCountSql = "SELECT A.name FROM ".$this->table;
                 $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
                 $myCountSql .= " WHERE B.questiontype='".$type."'";
                 $countData = $this->getArray($myCountSql);
@@ -252,7 +252,7 @@ class dbtestadmin extends dbtable
                 $data = $this->getArray($sql);
                  
                 // get the total number of records
-                $myCountSql = "SELECT A.context FROM ".$this->table;
+                $myCountSql = "SELECT A.name FROM ".$this->table;
                 $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
                 $myCountSql .= " WHERE A.context = '".$contextCode."' AND B.testid != '".$testid."'";
                 $myCountSql .= " and B.questiontype='".$type."'";
@@ -268,7 +268,7 @@ class dbtestadmin extends dbtable
             $data = $this->getArray($sql);
 
             // get the total number of records
-            $myCountSql = "SELECT A.context FROM ".$this->table;
+            $myCountSql = "SELECT A.name FROM ".$this->table;
             $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
 
             $countData = $this->getArray($myCountSql);

@@ -25,14 +25,14 @@ var myStore = new Ext.data.Store({
         },
 
         {
-            name: 'context',
-            mapping: 'context'
+            name: 'name',
+            mapping: 'name'
         },
 
         {
             name: 'question',
             mapping: 'question'
-        },
+        }/*,
 
         {
             name: 'hint',
@@ -46,11 +46,26 @@ var myStore = new Ext.data.Store({
         {
             name: 'mark',
             mapping: 'mark'
-        }
+        }*/
         ]
     })
 });
-
+var allCourses = new Ext.form.Checkbox({
+    xtype: 'checkbox',
+    name: 'allAssign',
+    boxLabel: 'View All Courses',
+    handler: function(checkbox, checked){
+        if(checked) {
+            // load data for all courses
+            courses = 'all';
+            getGridData();
+        }
+        else {
+            courses = "";
+            getGridData();
+        }
+    }
+});
 var showQuestionDB = function() {
 
     // create the Grid
@@ -65,18 +80,18 @@ var showQuestionDB = function() {
             dataIndex: 'id',
             hidden: true
         },{
-            id:'context',
+            id:'name',
             header: 'Course',
-            width: 80,
+            width: 120,
             sortable: true,
-            dataIndex: 'context'
+            dataIndex: 'name'
         },{
             id: 'question',
             header: 'Question',
             width: 160,
             sortable: true,
             dataIndex: 'question'
-        }, {
+        }/*, {
             id: 'mark',
             header: "Mark",
             width: 75,
@@ -92,22 +107,8 @@ var showQuestionDB = function() {
             width: 100,
             sortable: true,
             dataIndex: 'questiontype'
-        }],
-        tbar: [{
-            xtype: 'checkbox',
-            name: 'allAssign',
-            boxLabel: 'View All Courses',
-            handler: function(checkbox, checked){
-                if(checked) {
-                    // load data for all courses
-                    courses = 'all';
-                    getGridData();
-                }
-                else {
-                    courses = "";
-                }
-            }
-        }],
+        }*/],
+        tbar: [allCourses],
         fbar: [{
             text: 'Save',
             iconCls: 'silk-add',
