@@ -60,7 +60,7 @@
     <argument>-username=admin</argument>
     <argument>-names=Administrative User</argument>
     <argument>-email=david.wafula@wits.ac.za</argument>
-    <argument>-roomname=Demo</argument>
+    <argument>-roomname=rrt-demo1</argument>
     </application-desc>
 
     <security>
