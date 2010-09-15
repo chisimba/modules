@@ -58,6 +58,7 @@ $categorytypepage = '';
 $groupname = $this->_objGroupAdmin->getName($groupId);
 //Get the subgroups which represent the various parts of the eportfolio ie a goal item, an activity item
 $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
+
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objHeading->align = 'center';
 $objHeading->type = 2;
@@ -145,19 +146,11 @@ if (!empty($addressList)) {
         } else {
             $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        //$isMember = $this->checkIfExists($addressItem['id'], $groupId);
-        /*
-        if ($isMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
-        } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
-        }
-        */
         // Display each field for addresses
         $addressTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $addressItem['id'];
-        $objCheck->setValue($addressItem['id']);
+        $objCheck->value=$addressItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $addressTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $cattype = $this->objDbCategorytypeList->listSingle($addressItem['type']);
@@ -222,20 +215,13 @@ if (!empty($contactList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
+        }  else {
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        /*
-        //Check if contact exists in group
-        $isGroupMember = $this->checkIfExists($contactItem['id'], $groupId);
-        if ($isGroupMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
-        } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
-        }
-        */
         $contactTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $contactItem['id'];
-        $objCheck->setValue($contactItem['id']);
+        $objCheck->value=$contactItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $contactTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $contactTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
@@ -288,22 +274,15 @@ if (!empty($emailList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
+        }  else {
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        /*
-        //Check if contact exists in group
-        $isMember = $this->checkIfExists($emailItem['id'], $groupId);
-        if ($isMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
-        } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
-        }
-        */
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($emailItem['type']);
         $emailTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $emailItem['id'];
-        $objCheck->setValue($emailItem['id']);
+        $objCheck->value=$emailItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $emailTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $emailTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
@@ -353,20 +332,13 @@ if (!empty($demographicsList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
+        }  else {
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        /*
-        //Check if contact exists in group
-        $dgisGrpMember = $this->checkIfExists($demographicsItem['id'], $groupId);
-        if ($dgisGrpMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
-        } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
-        }
-        */
         $demographicsTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $demographicsItem['id'];
-        $objCheck->setValue($demographicsItem['id']);
+        $objCheck->value=$demographicsItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $demographicsTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
@@ -462,21 +434,15 @@ if (!empty($activitylist)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
+        }  else {
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        /*
-        $acisMember = $this->checkIfExists($item['id'], $groupId);
-        if ($acisMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
-        } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
-        }
-        */
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         $activityTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->setValue($item['id']);
+        $objCheck->value=$item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $activityTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $activityTable->addCell($mycontextTitle, "", NULL, NULL, $class, '');
@@ -534,20 +500,13 @@ if (!empty($affiliationList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }
-        /*
-        //Check if exists in group
-        $affisMember = $this->checkIfExists($affiliationItem['id'], $groupId);
-        if ($affisMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        */
         $affiliationTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $affiliationItem['id'];
-        $objCheck->setValue($affiliationItem['id']);
+        $objCheck->value=$affiliationItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $affiliationTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $affiliationTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
@@ -598,21 +557,14 @@ if (!empty($transcriptlist)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
+        }  else {
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        /*
-        //Check if exists in group
-        $transisMember = $this->checkIfExists($item['id'], $groupId);
-        if ($transisMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
-        } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
-        }
-        */
         // Display each field for activities
         $transcriptTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->setValue($item['id']);
+        $objCheck->value=$item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $transcriptTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $transcriptTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
@@ -665,20 +617,13 @@ if (!empty($qclList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }
-        /*
-        //Check if exists in group
-        $qclisMember = $this->checkIfExists($qclItem['id'], $groupId);
-        if ($qclisMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        */
         $qclTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $qclItem['id'];
-        $objCheck->setValue($qclItem['id']);
+        $objCheck->value=$qclItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $qclTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $qclTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
@@ -729,21 +674,14 @@ if (!empty($goalsList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }
-        /*
-        //Check if exists in group
-        $glisMember = $this->checkIfExists($item['id'], $groupId);
-        if ($glisMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        */
         // Display each field for activities
         $goalsTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->setValue($item['id']);
+        $objCheck->value=$item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $goalsTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $goalsTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
@@ -793,20 +731,13 @@ if (!empty($competencyList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }
-        /*
-        //Check if exists in group
-        $ctyisMember = $this->checkIfExists($item['id'], $groupId);
-        if ($ctyisMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        */
         $competencyTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->setValue($item['id']);
+        $objCheck->value=$item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $competencyTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
@@ -858,20 +789,13 @@ if (!empty($interestList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }
-        /*
-        //Check if exists in group
-        $intrstisMember = $this->checkIfExists($item['id'], $groupId);
-        if ($intrstisMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        */
         $interestTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->setValue($item['id']);
+        $objCheck->value=$item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $interestTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
@@ -908,6 +832,7 @@ $class = NULL;
 if (!empty($reflectionList)) {
     foreach($reflectionList as $item) {
         //Check if this item has been checked already
+
         if (!empty($isSubGroup)) {
             $rfctnCheck = 0;
             foreach($isSubGroup[0] as $subgrp) {
@@ -921,21 +846,14 @@ if (!empty($reflectionList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }
-        /*
-        //Check if exists in group
-        $rfctnisMember = $this->checkIfExists($item['id'], $groupId);
-        if ($rfctnisMember) {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
         } else {
-        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
-        */
         // Display each field for activities
         $reflectionTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->setValue($item['id']);
+        $objCheck->value=$item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
         $reflectionTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
         $reflectionTable->addCell($item['rationale'], "", NULL, NULL, $class, '');
@@ -997,20 +915,14 @@ if (!$hasAccess) {
                         } else {
                             $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
                         }
-                    }
-                    /*
-                    $astnisMember = $this->checkIfExists($assertionslist[0]['id'], $groupId);
-                    if ($astnisMember) {
-                    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
                     } else {
-                    $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+                        $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
                     }
-                    */
                     // Display each field for activities
                     $assertionstable->startRow();
                     // Show the manage item check box
                     $objCheck->cssId = 'checkbox_' . $assertionslist[0]['id'];
-                    $objCheck->setValue($assertionslist[0]['id']);
+                    $objCheck->value=$assertionslist[0]['id'];
                     $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
                     $assertionstable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
                     $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
@@ -1066,20 +978,14 @@ if (!$hasAccess) {
                 } else {
                     $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
                 }
-            }
-            /*
-            $asnisMember = $this->checkIfExists($item['id'], $groupId);
-            if ($asnisMember) {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = true);
             } else {
-            $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
+                $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-            */
             // Display each field for activities
             $assertionstable->startRow();
             // Show the manage item check box
             $objCheck->cssId = 'checkbox_' . $item['id'];
-            $objCheck->setValue($item['id']);
+            $objCheck->value=$item['id'];
             $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
             $assertionstable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
             $assertionstable->addCell($item['rationale'], "", NULL, NULL, $class, '');

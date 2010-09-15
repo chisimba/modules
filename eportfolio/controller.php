@@ -2387,7 +2387,7 @@ function addGroups($title)
     $userPid = $this->objUser->PKId($this->objUser->userId());
     $usergroupId = $this->_objGroupAdmin->getId($userPid);
     // Add subgroup
-    $newGroupId = $this->_objGroupAdmin->addGroup($title, $userPid . ' ' . $groupName, $usergroupId);
+    $newGroupId = $this->_objGroupAdmin->addGroup($title, $userPid . ' ' . $title, $usergroupId);
     // then add them as subGroups of the parent Group.
     $data = array(
         'group_id' => $usergroupId,
