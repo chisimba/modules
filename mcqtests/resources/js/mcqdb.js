@@ -201,7 +201,7 @@ function getGridData() {
 }
 
 
-function showQuestion(){
-    window.open( "http://www.google.com/", "myWindow",
-        "status = 1, height = 300, width = 800, resizable = 0" )
+function showQuestion(questionid){
+    window.open( "?module=mcqtests&action=previewquestion&id="+questionid, "myWindow",
+        "status = 1, height = 350, width = 800, resizable = 0" )
 }

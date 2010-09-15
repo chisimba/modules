@@ -244,7 +244,7 @@ class dbtestadmin extends dbtable {
                 $data = $this->getArray($sql);
                 $index = 0;
                 foreach ($data as $row) {
-                    $row['question'] = '<a href="#" onClick="showQuestion();return false;">' . $row['question'] . '</a>';
+                    $row['question'] = '<a href="#" onClick=\'showQuestion("'.$row['id'].'");\'>' . $row['question'] . '</a>';
                     $data[$index] = $row;
                     $index++;
                 }

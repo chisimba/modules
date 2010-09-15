@@ -732,6 +732,10 @@ class mcqtests extends controller {
                 $start = $this->getParam('start');
                 $limit = $this->getParam('limit');
                 return $this->getGridData($type, $courses, $start, $limit);
+
+            case 'previewquestion':
+                $id = $this->getParam('id');
+                return $this->previewQuestion($id);
             default:
                 if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
@@ -1656,6 +1660,18 @@ class mcqtests extends controller {
     public function getGridData($type=null, $courses=null, $start = null, $limit = null) {
         $id = $this->getParam('id');
         echo $this->dbTestadmin->getContextQuestions($this->contextCode, $id, $type, $courses, $start, $limit);
+    }
+
+    /**
+     * Method to retrieve data based on existing questions in the database.
+     *
+     * @access public
+     * @param none
+     * @return status of data submission
+     */
+    public function previewQuestion($id) {
+        $this->setVarByRef('id', $id);
+        return 'previewquestion_tpl.php';
     }
 
 } // end of class
