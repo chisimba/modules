@@ -223,11 +223,13 @@ class dbtestadmin extends dbtable {
         $type = str_replace("-", "", $type);
         if (strlen(trim($type)) > 0) {
             $courses = str_replace("-", "", $courses);
+            $type = ($type == 'mcq') ? "'mcq' OR B.questiontype ='tf'" : $type;
             if (strlen(trim($courses)) > 0) {
                 //get the data based on page in grid
+                $type = ($type == 'mcq') ? "'mcq' OR B.questiontype ='tf'" : $type;
                 $sql = "SELECT A.name, B.id,  INSERT(MID(B.question, 1, 100),100,3,'...') as question, B.hint,B.mark, B.questiontype FROM " . $this->table;
                 $sql .= " as A join tbl_test_questions as B on A.id = B.testid";
-                $sql .= " WHERE B.questiontype='" . $type . "'";
+                $sql .= " WHERE (B.questiontype=" . $type . ")";
                 $sql .= " LIMIT " . $start . "," . $count;
                 $data = $this->getArray($sql);
                 $index = 0;
@@ -240,12 +242,12 @@ class dbtestadmin extends dbtable {
                 // get the total number of records
                 $myCountSql = "SELECT A.name FROM " . $this->table;
                 $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
-                $myCountSql .= " WHERE B.questiontype='" . $type . "'";
+                $myCountSql .= " WHERE (B.questiontype=" . $type . ")";
                 $countData = $this->getArray($myCountSql);
                 $totalcount = count($countData);
                 return json_encode(array('totalcount' => $totalcount, 'results' => $data));
             } else {
-                $sql .= " and B.questiontype='" . $type . "'";
+                $sql .= " and (B.questiontype=".$type.")";
                 $sql .= " LIMIT " . $start . "," . $count;
                 $data = $this->getArray($sql);
                 $index = 0;
@@ -259,7 +261,7 @@ class dbtestadmin extends dbtable {
                 $myCountSql = "SELECT A.name FROM " . $this->table;
                 $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
                 $myCountSql .= " WHERE A.context = '" . $contextCode . "' AND B.testid != '" . $testid . "'";
-                $myCountSql .= " and B.questiontype='" . $type . "'";
+                $myCountSql .= " and (B.questiontype=" . $type . ")";
                 $countData = $this->getArray($myCountSql);
                 $totalcount = count($countData);
 

@@ -291,12 +291,17 @@ class dbquestions extends dbtable
     public function submitDBQuestions($contextID, $data, $id) {
         $dbAnswers = $this->newObject('dbanswers');
         $myIDs = explode(",", $data);
+        // get the order of the questions
+        $questionOrder = $this->countQuestions($id);
         foreach($myIDs as $eachID) {
+            $questionOrder++;
             $data = $this->getRow('id', $eachID);
             $lastQID = $data['id'];
             unset($data['id']);
             unset($data['puid']);
+            unset($data['questionorder']);
             $data['testid'] = $id;
+            $data['questionorder'] = $questionOrder;
             $qID = $this->addQuestion($data);
 
             // get answers for this id and also insert them
@@ -317,7 +322,7 @@ class dbquestions extends dbtable
         $this->updateTotalMarks($id, $totalMark);
     }
 
-    public function updateTotalMarks($testid, $mark) {//echo $testid."\n".$mark;
+    public function updateTotalMarks($testid, $mark) {
         $dbTestadmin = $this->newObject('dbtestadmin');
         $dbTestadmin->setTotal($testid, $mark);
     }
