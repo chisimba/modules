@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package mcqtests
  */
@@ -16,22 +17,22 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @package mcqtests
  * @version 1.2
  */
-class dbtestadmin extends dbtable
-{
+class dbtestadmin extends dbtable {
+
     /**
      * Method to construct the class and initialise the database table.
      *
      * @access public
      * @return
      */
-    public function init()
-    {
+    public function init() {
         parent::init('tbl_tests');
         $this->table = 'tbl_tests';
         $this->dbQuestions = &$this->newObject('dbquestions');
         $this->dbAnswers = &$this->newObject('dbanswers');
         $this->dbResults = &$this->newObject('dbresults');
         $this->dbMarked = &$this->newObject('dbmarked');
+
     }
 
     /**
@@ -42,8 +43,7 @@ class dbtestadmin extends dbtable
      * @param string $id The id of the test to be updated. Default=NULL.
      * @return
      */
-    public function addTest($fields, $id = NULL)
-    {
+    public function addTest($fields, $id = NULL) {
         if ($id) {
             $this->update('id', $id, $fields);
         } else {
@@ -60,9 +60,8 @@ class dbtestadmin extends dbtable
      * @param string $id The id of the required test. Default=NULL.
      * @return array $data The details of the test or list of tests.
      */
-    public function getTests($context, $fields = '*', $id = NULL)
-    {
-        $sql = "SELECT $fields FROM ".$this->table;
+    public function getTests($context, $fields = '*', $id = NULL) {
+        $sql = "SELECT $fields FROM " . $this->table;
         if ($id) {
             $sql.= " WHERE id='$id'";
         } else {
@@ -86,9 +85,8 @@ class dbtestadmin extends dbtable
      * @param string $filters The filters of the required test. Default=NULL.
      * @return array $data The details of the test or list of tests.
      */
-    public function getNewestTest($fields = '*', $filter = NULL)
-    {
-        $sql = "SELECT $fields FROM ".$this->table;
+    public function getNewestTest($fields = '*', $filter = NULL) {
+        $sql = "SELECT $fields FROM " . $this->table;
         if ($filter) {
             $sql.= " WHERE $filter";
         }
@@ -106,9 +104,8 @@ class dbtestadmin extends dbtable
      *
      * @access public
      */
-    public function getPercentage($context, $testId = NULL)
-    {
-        $sql = "SELECT percentage FROM ".$this->table;
+    public function getPercentage($context, $testId = NULL) {
+        $sql = "SELECT percentage FROM " . $this->table;
         $sql.= " WHERE context='$context'";
         if (isset($testId) && !empty($testId)) {
             $sql.= " AND id != '$testId'";
@@ -116,8 +113,8 @@ class dbtestadmin extends dbtable
         $data = $this->getArray($sql);
         if (!empty($data)) {
             $total = 0;
-            foreach($data as $item) {
-                $total = $total+$item['percentage'];
+            foreach ($data as $item) {
+                $total = $total + $item['percentage'];
             }
             return $total;
         }
@@ -132,9 +129,8 @@ class dbtestadmin extends dbtable
      * @param string $id The id of the required test. Default=NULL.
      * @return array $data The details of the test or list of tests.
      */
-    public function getStudentTests($context, $studentId)
-    {
-        $sql = "SELECT test.*, result.* FROM ".$this->table.' AS test, ';
+    public function getStudentTests($context, $studentId) {
+        $sql = "SELECT test.*, result.* FROM " . $this->table . ' AS test, ';
         $sql.= "tbl_test_results AS result ";
         $sql.= "WHERE result.testid = test.id ";
         $sql.= "AND test.context = '$context' ";
@@ -155,9 +151,8 @@ class dbtestadmin extends dbtable
      * @param string $context The current context.
      * @return array $data The results of the search.
      */
-    public function search($field, $value, $context)
-    {
-        $sql = "SELECT * FROM ".$this->table;
+    public function search($field, $value, $context) {
+        $sql = "SELECT * FROM " . $this->table;
         $sql.= " WHERE $field LIKE '$value%'";
         $sql.= " AND context='$context'";
         $sql.= ' ORDER BY closingdate, name';
@@ -175,8 +170,7 @@ class dbtestadmin extends dbtable
      * @param string $id The id of the test
      * @return
      */
-    public function deleteTest($id)
-    {
+    public function deleteTest($id) {
         $this->delete('id', $id);
         $this->dbQuestions->delete('testid', $id);
         $this->dbAnswers->delete('testid', $id);
@@ -192,8 +186,7 @@ class dbtestadmin extends dbtable
      * @param string $total The mark to be added to the total
      * @return
      */
-    public function setTotal($id, $total)
-    {
+    public function setTotal($id, $total) {
         return $this->update('id', $id, array('totalmark' => $total));
     }
 
@@ -203,9 +196,8 @@ class dbtestadmin extends dbtable
      * @access public
      * @return array $data The test data array
      */
-    public function getAllTests()
-    {
-        $sql = "SELECT * FROM ".$this->table;
+    public function getAllTests() {
+        $sql = "SELECT * FROM " . $this->table;
         $data = $this->getArray($sql);
         if ($data) {
             return $data;
@@ -220,62 +212,67 @@ class dbtestadmin extends dbtable
      *
      * @return array $data the multiple choice questions array
      */
+
     public function getContextQuestions($contextCode, $testid, $type=null, $courses=null, $start=null, $limit=null) {
-        $sql = "SELECT A.name, B.id, INSERT(MID(B.question, 1, 100),100,3,'...') as question, B.hint,B.mark, B.questiontype FROM ".$this->table;
+        $sql = "SELECT A.name, B.id, INSERT(MID(B.question, 1, 100),100,3,'...') as question, B.hint,B.mark, B.questiontype FROM " . $this->table;
         $sql .= " as A join tbl_test_questions as B on A.id = B.testid";
-        $sql .= " WHERE A.context = '".$contextCode."' AND B.testid != '".$testid."'";
+        $sql .= " WHERE A.context = '" . $contextCode . "' AND B.testid != '" . $testid . "'";
 
-        $start = ($start == null)? 0 : $start;
-        $count = ($limit == null)? 20 : $limit;
+        $start = ($start == null) ? 0 : $start;
+        $count = ($limit == null) ? 20 : $limit;
         $type = str_replace("-", "", $type);
-        if(strlen(trim($type)) > 0) {
+        if (strlen(trim($type)) > 0) {
             $courses = str_replace("-", "", $courses);
-            if(strlen(trim($courses)) > 0)  {
+            if (strlen(trim($courses)) > 0) {
                 //get the data based on page in grid
-                $sql = "SELECT A.name, B.id,  INSERT(MID(B.question, 1, 100),100,3,'...') as question, B.hint,B.mark, B.questiontype FROM ".$this->table;
+                $sql = "SELECT A.name, B.id,  INSERT(MID(B.question, 1, 100),100,3,'...') as question, B.hint,B.mark, B.questiontype FROM " . $this->table;
                 $sql .= " as A join tbl_test_questions as B on A.id = B.testid";
-                $sql .= " WHERE B.questiontype='".$type."'";
-                $sql .= " LIMIT ".$start.",".$count;
+                $sql .= " WHERE B.questiontype='" . $type . "'";
+                $sql .= " LIMIT " . $start . "," . $count;
                 $data = $this->getArray($sql);
-                
-                // get the total number of records
-                $myCountSql = "SELECT A.name FROM ".$this->table;
-                $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
-                $myCountSql .= " WHERE B.questiontype='".$type."'";
-                $countData = $this->getArray($myCountSql);
-                $totalcount = count($countData);
-                
-                return json_encode(array('totalcount'=> $totalcount, 'results'=>$data));
-            }else {
-                $sql .= " and B.questiontype='".$type."'";
-                $sql .= " LIMIT ".$start.",".$count;
-                $data = $this->getArray($sql);
-                 
-                // get the total number of records
-                $myCountSql = "SELECT A.name FROM ".$this->table;
-                $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
-                $myCountSql .= " WHERE A.context = '".$contextCode."' AND B.testid != '".$testid."'";
-                $myCountSql .= " and B.questiontype='".$type."'";
-                $countData = $this->getArray($myCountSql);
-                $totalcount = count($countData);
-                
-                return json_encode(array('totalcount'=> $totalcount, 'results'=>$data));
-            }
 
-        }
-        else {
-            $sql .= " LIMIT ".$start.",".$count;
+                // get the total number of records
+                $myCountSql = "SELECT A.name FROM " . $this->table;
+                $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
+                $myCountSql .= " WHERE B.questiontype='" . $type . "'";
+                $countData = $this->getArray($myCountSql);
+                $totalcount = count($countData);
+                return json_encode(array('totalcount' => $totalcount, 'results' => $data));
+            } else {
+                $sql .= " and B.questiontype='" . $type . "'";
+                $sql .= " LIMIT " . $start . "," . $count;
+                $data = $this->getArray($sql);
+                $index = 0;
+                foreach ($data as $row) {
+                    $row['question'] = '<a href="#" onClick="showQuestion();return false;">' . $row['question'] . '</a>';
+                    $data[$index] = $row;
+                    $index++;
+                }
+
+                // get the total number of records
+                $myCountSql = "SELECT A.name FROM " . $this->table;
+                $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
+                $myCountSql .= " WHERE A.context = '" . $contextCode . "' AND B.testid != '" . $testid . "'";
+                $myCountSql .= " and B.questiontype='" . $type . "'";
+                $countData = $this->getArray($myCountSql);
+                $totalcount = count($countData);
+
+
+                return json_encode(array('totalcount' => $totalcount, 'results' => $data));
+            }
+        } else {
+            $sql .= " LIMIT " . $start . "," . $count;
             $data = $this->getArray($sql);
 
             // get the total number of records
-            $myCountSql = "SELECT A.name FROM ".$this->table;
+            $myCountSql = "SELECT A.name FROM " . $this->table;
             $myCountSql .= " as A join tbl_test_questions as B on A.id = B.testid";
 
             $countData = $this->getArray($myCountSql);
             $totalcount = count($countData);
 
-            if($data) {
-                return json_encode(array('totalcount'=> $totalcount, 'results'=>$data));
+            if ($data) {
+                return json_encode(array('totalcount' => $totalcount, 'results' => $data));
             }
             return FALSE;
         }
@@ -289,10 +286,14 @@ class dbtestadmin extends dbtable
      *
      * @return string $name the name of the test
      */
+
     public function getTestName($testid) {
         $data = $this->getRow('id', $testid);
 
         return $data['name'];
     }
-} // end of class
+
+}
+
+// end of class
 ?>

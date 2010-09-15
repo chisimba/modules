@@ -1,12 +1,12 @@
 var sm2 = new Ext.grid.CheckboxSelectionModel({
-        listeners: {
-            rowselect: function(sm2, rowIdx, r) {
-            }
+    listeners: {
+        rowselect: function(sm2, rowIdx, r) {
         }
-    }),
-    myPageSize = 20,
-    courseTitle = 'Course Databank for - ' + courseName;
-    dataType = Ext.get('qnoption').getValue(),
+    }
+}),
+myPageSize = 20,
+courseTitle = 'Course Databank for - ' + courseName;
+dataType = Ext.get('qnoption').getValue(),
     courses = "";
 
 // Create the data store
@@ -123,7 +123,7 @@ var showQuestionDB = function() {
             displayInfo: true,
             pageSize: myPageSize,
             displayMessage: "Displaying Questions {0} - {1} of {2}"
-            }),
+        }),
         sm: sm2,
         stripeRows: true,
         autoExpandColumn: 'question',
@@ -185,12 +185,23 @@ var ajaxFailure = function() {
 
 function getGridData() {
     if(courses.length > 0) {
-        myStore.setBaseParam('myParams', Ext.urlEncode({type: Ext.get('qnoption').getValue(), courses: courses}));
+        myStore.setBaseParam('myParams', Ext.urlEncode({
+            type: Ext.get('qnoption').getValue(),
+            courses: courses
+        }));
     }
     else {
-        myStore.setBaseParam('myParams', Ext.urlEncode({type: Ext.get('qnoption').getValue()}));
+        myStore.setBaseParam('myParams', Ext.urlEncode({
+            type: Ext.get('qnoption').getValue()
+            }));
     }
     myStore.load();
     jQuery("#mcqGrid").html("");
     showQuestionDB(myUrl);
+}
+
+
+function showQuestion(){
+    window.open( "http://www.google.com/", "myWindow",
+        "status = 1, height = 300, width = 800, resizable = 0" )
 }
