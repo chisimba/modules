@@ -245,8 +245,11 @@ class dbassignment extends dbtable {
      */
     public function updateAssignment($id, $name, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion) {
 
+        trigger_error('$filename_conversion='.$filename_conversion);
+
         $id = $this->update('id', $id, array(
                     'name' => $name,
+
                     'description' => $description,
                     'resubmit' => $resubmit,
                     'format' => $format,
