@@ -21,7 +21,7 @@ class rttutil extends object {
         $moduleUri=$objAltConfig->getModuleURI();
         $siteRoot=$objAltConfig->getSiteRoot();
         $codebase=$siteRoot."/".$moduleUri.'/rtt/resources/';
-        $enableDraw=$this->objUser->courseAdmin($this->objContext->getContextCode())?'true':'false';
+        $enableDraw=$this->objUser->isCourseAdmin($this->objContext->getContextCode())?'true':'false';
         if($roomname == ''){
             $roomname=$this->objContext->getTitle($this->objContext->getContextCode());
         }
