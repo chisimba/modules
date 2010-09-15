@@ -283,7 +283,7 @@ class formmanager extends object {
             $objInput = new textinput('editor', 'plaintext', 'hidden');
             $objAddEditor =$this->getObject('htmlarea','htmlelements');
             $objAddEditor->init('question', $question, '300px', '500px');
-            //$objEditor->setDefaultToolBarSetWithoutSave();
+            $objAddEditor->setDefaultToolBarSetWithoutSave();
             $topStr.= $objAddEditor->show();
 
             $objLink = new link("javascript:document.getElementById('form_addquestion').action.value = 'changeeditor';document.getElementById('form_addquestion').submit();");
