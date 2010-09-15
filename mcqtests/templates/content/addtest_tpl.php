@@ -56,6 +56,9 @@ $addLabLabel = $this->objLanguage->languageText('mod_mcqtests_addlab', 'mcqtests
 $errPercent = $this->objLanguage->languageText('mod_mcqtests_numericpercent', 'mcqtests');
 $errName = $this->objLanguage->languageText('mod_mcqtests_entername', 'mcqtests');
 $errDates = $this->objLanguage->languageText('mod_mcqtests_errordates', 'mcqtests');
+$permissionsLabel = $this->objLanguage->languageText('mod_mcqtests_coursepermissionslabel','mcqtests');
+$coursePermissionPrivate = $this->objLanguage->languageText('mod_mcqtests_privatecourse','mcqtests');
+$coursePermissionPublic = $this->objLanguage->languageText('mod_mcqtests_publiccourse','mcqtests');
 
 if ($mode == 'edit') {
     $this->setVarByRef('heading', $editHeading);
@@ -90,6 +93,7 @@ if (!empty($data)) {
     $aSequence = $data[0]['asequence'];
     $comLab = $data[0]['comlab'];
     $description = $data[0]['description'];
+    $coursePermissions = $data[0]['coursepermissions'];
 } else {
     $id = '';
     $name = '';
@@ -103,6 +107,7 @@ if (!empty($data)) {
     $hour = 0;
     $min = 0;
     $description = '';
+    $coursePermissions = '';
 }
 $objTable = new htmltable();
 $objTable->width = '99%';
@@ -281,6 +286,22 @@ $objTable->addRow(array(
     "<b>".$aSequenceLabel.":</b>",
     "<b>".$aSequenceRadio."</b>"
 ));
+// set up course permissions
+$objRadio = new radio('coursePermissions');
+$objRadio->setBreakSpace('table');
+$objRadio->addOption('Private', $coursePermissionPrivate);
+$objRadio->addOption('Public', $coursePermissionPublic);
+if (isset($coursePermissions) && !empty($coursePermissions)) {
+    $objRadio->setSelected($coursePermissions);
+}
+else {
+    $objRadio->setSelected('Private');
+}
+$objTable->addRow(array(
+    "<b>".$permissionsLabel.":</b>",
+    "<b>".$objRadio->show()."</b>"
+));
+
 // set up restricted computer laboratory
 $objDrop = new dropdown('comLab');
 $objDrop->addOption(NULL, $anyLabLabel);

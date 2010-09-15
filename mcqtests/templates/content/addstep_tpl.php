@@ -114,6 +114,7 @@ if (!empty($data)) {
     $aSequence = $data[0]['asequence'];
     $comLab = $data[0]['comlab'];
     $description = $data[0]['description'];
+    $coursePermissions = $data[0]['coursepermissions'];
 } else {
     $id = '';
     $name = '';
@@ -127,6 +128,7 @@ if (!empty($data)) {
     $hour = 0;
     $min = 0;
     $description = '';
+    $coursePermissions = '';
 }
 
 //set a step menu for later use
@@ -259,7 +261,14 @@ switch($currentstep) {
         $objRadio->setBreakSpace('&nbsp;&nbsp;/&nbsp;&nbsp;');
         $objRadio->addOption('Private', $coursePermissionPrivate);
         $objRadio->addOption('Public', $coursePermissionPublic);
-        $objRadio->setSelected('Private');
+
+        if (isset($coursePermissions) && !empty($coursePermissions)) {
+            $objRadio->setSelected($coursePermissions);
+        }
+        else {
+            $objRadio->setSelected('Private');
+        }
+
         $objTable->addRow(array(
             "<b>".$permissionsLabel.":</b>",
             "<b>".$objRadio->show()."</b>"

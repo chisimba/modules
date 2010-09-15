@@ -230,6 +230,12 @@ class dbtestadmin extends dbtable {
                 $sql .= " WHERE B.questiontype='" . $type . "'";
                 $sql .= " LIMIT " . $start . "," . $count;
                 $data = $this->getArray($sql);
+                $index = 0;
+                foreach ($data as $row) {
+                    $row['question'] = '<a href="#" onClick=\'showQuestion("'.$row['id'].'");\'>' . $row['question'] . '</a>';
+                    $data[$index] = $row;
+                    $index++;
+                }
 
                 // get the total number of records
                 $myCountSql = "SELECT A.name FROM " . $this->table;
@@ -263,6 +269,12 @@ class dbtestadmin extends dbtable {
         } else {
             $sql .= " LIMIT " . $start . "," . $count;
             $data = $this->getArray($sql);
+            $index = 0;
+            foreach ($data as $row) {
+                $row['question'] = '<a href="#" onClick=\'showQuestion("'.$row['id'].'");\'>' . $row['question'] . '</a>';
+                $data[$index] = $row;
+                $index++;
+            }
 
             // get the total number of records
             $myCountSql = "SELECT A.name FROM " . $this->table;

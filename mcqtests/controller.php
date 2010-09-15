@@ -909,6 +909,7 @@ class mcqtests extends controller {
         $fields['comlab'] = $this->getParam('comLab');
         $fields['description'] = $this->getParam('description', '');
         $fields['updated'] = date('Y-m-d H:i:s');
+        $fields['coursePermissions'] = $this->getParam('coursePermissions');
         $id = $this->dbTestadmin->addTest($fields, $id);
         // set all tests to equal percentages
         $postEqual = $this->getParam('setequal', '');
