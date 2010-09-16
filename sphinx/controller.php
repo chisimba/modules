@@ -78,7 +78,8 @@ class sphinx extends controller
             $this->objModuleCat  = $this->getObject('modules', 'modulecatalogue');
             $this->objSphinxApi  = require($this->getResourcePath('sphinxapi.php'));
             $this->objDbSphinx   = $this->getObject('dbsphinx');
-            $this->objSphinxOps     = $this->getObject('sphinxops');
+            $this->objSphinxOps  = $this->getObject('sphinxops');
+            $this->objMongoXML   = $this->getObject('mongoxmlpipe2', 'mongo');
             
 			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
@@ -122,6 +123,11 @@ class sphinx extends controller
 		        $table = $this->getParam('table');
 		        header("Content-Type: application/json");
 		        echo $this->objSphinxOps->doSearch($term, $index, $table, TRUE);
+		        break;
+		        
+		    case 'pipetest' :
+		        $path = '/var/www/tmp2/';
+		        var_dump($this->objMongoXML->docIndexer($path));
 		        break;
 
             default:
