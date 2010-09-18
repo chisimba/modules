@@ -210,7 +210,7 @@ class blogposts extends object
                     if (strpos($style, 'vert') !== FALSE) {
                         $style = 'vertical';
                     }
-                    $rt = $this->objTweetButton->getButton($text, $style, $via, $related, $url);
+                    $rt = $this->objTweetButton->getButton($text, $style, $via, $related, htmlspecialchars_decode($url));
                 }
                 $post['post_content'] = $cleanpost; 
                 if($cleanPost  == 'true'){
