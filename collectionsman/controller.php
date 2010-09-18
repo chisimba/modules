@@ -145,9 +145,14 @@ class collectionsman extends controller
                 
             case 'getrecord' :
                 $acno = $this->getParam('acno');
-                $res = $this->objMongodb->find(array('test'), array('title', 'description'));
-                var_dump($res->explain());
-                die();
+                $cursor = $this->objMongodb->find(array('accession number' => $acno), array('accession number', 'collection', 'title', 'description', 'date created', 'media', 'comment'));
+                foreach($cursor as $obj) {
+                    $record = array('accession number' => $obj['accession number'], 'collection' => $obj['collection'], 'title' => $obj['title'], 'description' => $obj['description'], 'date created' => $obj['date created'], 'media' => $obj['media'], 'comment' => $obj['comment']);
+                    $this->setVarByRef('record', $record);
+                }
+                return 'viewsingle_tpl.php';
+                break;
+                
             default:
                 $this->nextAction('');
                 break;
