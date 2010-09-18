@@ -66,9 +66,10 @@ class tweetbutton extends object
      * @param  string $style   The style of the button (vertical, horizontal or none).
      * @param  string $via     A Twitter account that will be mentioned in the suggested tweet.
      * @param  string $related A related Twitter account.
+     * @param  string $uri     The URI to post. Defaults to the current page.
      * @return string The generated HTML.
      */
-    public function getButton($text='Tweet', $style='vertical', $via=NULL, $related=NULL)
+    public function getButton($text='Tweet', $style='vertical', $via=NULL, $related=NULL, $uri=NULL)
     {
         // Create the HTML document.
         $doc = new DOMDocument('UTF-8');
@@ -84,6 +85,9 @@ class tweetbutton extends object
         }
         if ($related) {
             $a->setAttribute('data-related', $related);
+        }
+        if ($uri) {
+            $a->setAttribute('data-url', $uri);
         }
 
         // Create the script element.
