@@ -87,12 +87,12 @@ $firstPageNo= $this->objLanguage->languageText('mod_rimfhe_firstpage', 'rimfhe')
 $lastPageNo= $this->objLanguage->languageText('mod_rimfhe_lastpage', 'rimfhe');
 $author1= $this->objLanguage->languageText('mod_rimfhe_author1', 'rimfhe');
 $author2= $this->objLanguage->languageText('mod_rimfhe_author2', 'rimfhe');
-$author3= $this->objLanguage->languageText('mod_rimfhe_author3', 'rimfhe');
-$author4= $this->objLanguage->languageText('mod_rimfhe_author4', 'rimfhe');
+$others= $this->objLanguage->languageText('mod_rimfhe_others', 'rimfhe');
+//$author4= $this->objLanguage->languageText('mod_rimfhe_author4', 'rimfhe');
 $author1label= $this->objLanguage->languageText('mod_rimfhe_author1affiliation', 'rimfhe');
 $author2label= $this->objLanguage->languageText('mod_rimfhe_author2affiliation', 'rimfhe');
 $author3label= $this->objLanguage->languageText('mod_rimfhe_author3affiliation', 'rimfhe');
-$author4label= $this->objLanguage->languageText('mod_rimfhe_author4affiliation', 'rimfhe');
+//$author4label= $this->objLanguage->languageText('mod_rimfhe_author4affiliation', 'rimfhe');
 //$fractionWeight=$this->objLanguage->languageText('mod_rimfhe_fraction', 'rimfhe'));
 //create table
 $table =new htmltable('accreditedjournal');
@@ -232,7 +232,7 @@ $table->endRow();
 
 // split Authors
 if($mode == 'edit'){
-    list($editAuthor1, $editAuthor2, $editAuthor3, $editAuthor4) = explode("<br />", $arrEdit['authorname']);
+    list($editAuthor1, $editAuthor2, $editOthers, $editAuthor4) = explode("<br />", $arrEdit['authorname']);
 
     // Match HTML tags (<b>) and ()
     //First Author
@@ -261,13 +261,13 @@ if($mode == 'edit'){
         $authorAffiliate2 = 'External Author';
     }
 
-    //Third Author
-    if (preg_match("/<b>/",$editAuthor3)) {
-        $editAuthor3 = strip_tags($editAuthor3);
+   /*//Third Author
+    if (preg_match("/<b>/",$editOthers)) {
+        $editOthers = strip_tags($editOthers);
         $authorAffiliate3 = 'UWC Staff Member';
     }
-    elseif (preg_match("/<span>/",$editAuthor3)) {
-        $editAuthor3 = strip_tags($editAuthor3);
+    elseif (preg_match("/<span>/",$editOthers)) {
+        $editOthers = strip_tags($editOthers);
         $authorAffiliate3 = 'UWC Student';
     }
     else {
@@ -285,9 +285,8 @@ if($mode == 'edit'){
     }
     else {
         $authorAffiliate4 = 'External Author';
-    }
+    }*/
 }
-
 
 //Input and label for Author 1
 $table->startRow();
@@ -360,19 +359,19 @@ $table->endRow();
 
 //Input and label for Author 3
 $table->startRow();
-$objAuthor3 = new textinput ('author3');
-$Author3lLabel = new label($author3.'&nbsp;', 'author3');
+$objOthers = new textinput ('others');
+$OtherslLabel = new label($others.'&nbsp;', 'others');
 if($mode == 'fixerror'){
-    $objAuthor3->value =$this->getParam('author3');
+    $objOthers->value =$this->getParam('others');
 }
 if($mode == 'edit'){
-    $objAuthor3->value =$editAuthor3;
+    $objOthers->value =$editOthers;
 }
-$table->addCell($Author3lLabel->show(), 150, NULL, 'left');
-$table->addCell($objAuthor3->show(), 150, NULL, 'left');
+$table->addCell($OtherslLabel->show(), 150, NULL, 'left');
+$table->addCell($objOthers->show(), 150, NULL, 'left');
 $table->endRow();
 
-// Author 3 affiliate
+/*// Author 3 affiliate
 $table->startRow();
 $objAffiliate3 = new dropdown('author3affiliate');
 $affiliate3Label = new label($author3label, 'author3affiliate');
@@ -424,7 +423,8 @@ foreach ($categories as $category)
 
 $table->addCell($affiliate4Label->show(), 150, NULL, 'left');
 $table->addCell($objAffiliate4->show(), 150, NULL, 'left');
-$table->endRow();
+$table->endRow();*/
+
 
 //captcha
 $table->startRow();

@@ -26,7 +26,7 @@ class dbaccreditedjournal extends dbtable
 		$pagetotal= ($lastpgno - $fisrtpgno) + 1;
 		$author1 =$this->getParam('author1');
 		$author2 =$this->getParam('author2');
-		$author3 =$this->getParam('author3');
+		$others =$this->getParam('others');
 		$author4 =$this->getParam('author4');	
 		$author1affiliate= $this->getParam('author1affiliate');
 		$author2affiliate= $this->getParam('author2affiliate');
