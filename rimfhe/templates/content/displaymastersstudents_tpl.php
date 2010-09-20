@@ -1,6 +1,6 @@
 <?php
 /*
-* This template displays the Gradute masters Students
+* This template displays the Graduted masters Students
 */
 
 // security check - must be included in all scripts
@@ -52,7 +52,7 @@ $link = new link($this->uri(array('action'=>'Graduating Masters Student')));
 $link->link = $objIcon->show();
 
 $addlink = new link($this->uri(array('action'=>'Graduating Masters Student')));
-$addlink->link = 'Add New Graduating Masters Student';
+$addlink->link = 'Add New Graduated Masters Student';
 
 //link to Graduating Masters Students Summary Page
 $objMastersStudSummary = new link($this->uri(array('action'=>'Graduating Masters Students Summary')));
@@ -72,7 +72,7 @@ $table->cellpadding = '5';
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
-$h3->str =$this->objLanguage->languageText('mod_rimfhe_', 'rimfhe', 'Graduating Masters Students Information');
+$h3->str =$this->objLanguage->languageText('mod_rimfhe_', 'rimfhe', 'Graduated Masters Students Information');
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';

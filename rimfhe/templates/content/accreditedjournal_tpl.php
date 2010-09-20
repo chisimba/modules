@@ -147,8 +147,8 @@ if($mode == 'edit'){
     $objjournalName->value =$arrEdit['journalname'];
 }
 
-$table->addCell($objjournalName2->show()." ".$objjournalName1->show()." ".$objjournalName->show(), 150, NULL, 'left');
-$table->addCell(NULL, 110, NULL, 'left');
+$table->addCell($objjournalName2->show()." ".$objjournalName1->show()." ".$objjournalName->show(), 150, NULL, '');
+//$table->addCell(NULL, 110, NULL, 'left');
 $table->endRow();
 
 //Input and label for Title of Article
@@ -164,21 +164,22 @@ if($mode == 'edit'){
 }
 $table->addCell($articleTiltleLabel->show(), 150, NULL, 'left');
 $table->addCell($objarticleTitle->show(), 150, NULL, 'left');
-$table->endRow();
+
 
 
 //Input for Year of Publication
-$table->startRow();
+
 $objPublicationYr = new textinput ('publicationyear');
-$pubYearsLabel = new label($publicationYear.'&nbsp;', 'publicationyear');
+$pubYearsLabel = new label($publicationYear, 'publicationyear');
 if($mode == 'fixerror'){
     $objPublicationYr->value =$this->getParam('publicationyear');
 }
 if($mode == 'edit'){
     $objPublicationYr->value =$arrEdit['publicationyear'];
 }
-$table->addCell($pubYearsLabel->show(), 150, NULL, 'left');
-$table->addCell($objPublicationYr ->show(), 150, NULL, 'left');
+  
+$table->addCell($pubYearsLabel->show(), 150, NULL, 'right');
+$table->addCell($objPublicationYr ->show(), 150, NULL,'right');
 $table->endRow();
 
 //Input and label for Journal Volume
@@ -207,10 +208,10 @@ if($mode == 'edit'){
 }
 $table->addCell($firstPageLabel->show(), 150, NULL, 'left');
 $table->addCell($objFirstPage ->show(), 150, NULL, 'left');
-$table->endRow();
+
 
 //Input and label for Article Last Page Numbers
-$table->startRow();
+
 $objLastPage = new textinput ('lastpage');
 $lastPageLabel = new label($lastPageNo.'&nbsp;', 'lastpage');
 if($mode == 'fixerror'){
@@ -219,8 +220,8 @@ if($mode == 'fixerror'){
 if($mode == 'edit'){
     $objLastPage->value =$arrEdit['lastpageno'];
 }
-$table->addCell($lastPageLabel->show(), 150, NULL, 'left');
-$table->addCell($objLastPage ->show(), 150, NULL, 'left');
+$table->addCell($lastPageLabel->show(), 150, NULL, 'right');
+$table->addCell($objLastPage ->show(), 150, NULL, 'right');
 $table->endRow();
 
 /*

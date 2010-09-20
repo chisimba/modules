@@ -5,7 +5,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 */
 $pageHeading = new htmlheading();
 $pageHeading->type = 2;
-$pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pageheading', 'rimfhe', 'Graduating Doctoral Students');
+$pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pageheading', 'rimfhe', 'Graduated Doctoral Students');
 echo '<br />'.$pageHeading->show();
 
 /*

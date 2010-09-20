@@ -50,7 +50,7 @@ $link = new link($this->uri(array('action'=>'Graduating Doctoral Student')));
 $link->link = $objIcon->show();
 
 $addlink = new link($this->uri(array('action'=>'Graduating Doctoral Student')));
-$addlink->link = 'Add New Doctoral Student';
+$addlink->link = 'Add New Graduated Doctoral Student';
 
 //link to Graduating Doctoral Students Summary Page
 $objGradDocStudSummar = new link($this->uri(array('action'=>'Graduating Doctoral Students Summary')));
@@ -65,7 +65,7 @@ $table->cellpadding = '5';
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
-$h3->str =$this->objLanguage->languageText('mod_rimfhe_pgheadingdisplaydoctoral', 'rimfhe');
+$h3->str =$this->objLanguage->languageText('mod_rimfhe_', 'rimfhe','Graduated Doctoral Students Information' );
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';

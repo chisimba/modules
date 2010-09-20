@@ -60,7 +60,7 @@ $confirmemail= $this->objLanguage->languageText('phrase_confirmemail', 'system')
 
 //create table
 $table =new htmltable('registration');
-$table->width ='80%';
+$table->width ='60%';
 $table->startRow();
 //Input and label for Surname
 $objSurname = new textinput('surname');
