@@ -19,12 +19,10 @@ $fields = array(
     'owneruserid' => array(
         'type' => 'text',
         'length' => 32,
-        'notnull' => FALSE
         ),
     'groupid' => array(
         'type' => 'text',
         'length' => 32,
-        'notnull' => FALSE
         ),
     'sessionid' => array(
         'type' => 'text',
@@ -34,7 +32,6 @@ $fields = array(
     'contextcode' => array(
         'type' => 'text',
         'length' => 25,
-        'notnull' => FALSE
         ),
     'modulecode' => array(
         'type' => 'text',
@@ -65,7 +62,6 @@ $fields = array(
         ),
     'endtime' => array(
         'type' => 'timestamp',
-        'notnull' => FALSE
         )
     );
 ?>
