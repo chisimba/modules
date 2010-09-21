@@ -155,11 +155,6 @@ if (!empty($addressList)) {
     }
     unset($addressItem);
 }
-if ($addrcount == 0) {
-    $addressTable->startRow();
-    $addressTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
-    $addressTable->endRow();
-}
 //echo '<br clear="left" />'.$mainlink->show();
 //End Address View
 //Start Contacts View
