@@ -47,6 +47,7 @@ class dbAnnouncements extends dbTable {
         $this->loadClass("link", "htmlelements");
         $this->objIndexData = $this->getObject('indexdata', 'search');
         $this->objLanguage = $this->getObject("language", "language");
+	$this->dbSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->emailTitle = $this->objLanguage->languageText('mod_announcements_emailtitle', 'announcements', 'Important announcement');
         $this->emailBody1 = $this->objLanguage->languageText('mod_announcements_emailbody1', 'announcements', 'has posted an important new announcement titled');
         $this->emailBody2 = $this->objLanguage->languageText('mod_announcements_emailbody2', 'announcements', 'has updated  announcement titled');
@@ -87,9 +88,13 @@ class dbAnnouncements extends dbTable {
                 if ($email) {
                     $link = new link($this->uri(array("action" => "view", "id" => $messageId)));
                     $atitle = $this->emailTitle . ": '$title'";
-                    $message = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title'. " . $this->emailBody3 . ": " .
-                            $link->href;
+                    $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
+		    	if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
+			    $message1 .= $this->emailBody4.$message ." ";
+			}
+		    $message1 .= $this->emailBody3 . ": " . $link->href;
                     $emailList = $this->getSiteRecipients();
+		    
                     $this->sendEmail($atitle, $message, $emailList);
                 }
             }
@@ -112,12 +117,12 @@ class dbAnnouncements extends dbTable {
                 if ($email) {
                     $link = new link($this->uri(array("action" => "view", "id" => $messageId)));
                     $atitle = $this->emailTitle . ": '$title'";
-                    $message = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' for '$contextcodeList'. " . $this->emailBody3 . ": " .
-                            $link->href;
-
-
-
-                    $this->sendEmail($atitle, $message, $emailList); //JO'C $this->getSiteRecipients()
+                    $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
+		    	if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
+			    $message1 .= ": ".$message ." ";
+			}
+		    $message1 .= $this->emailBody3 . ": " . $link->href;
+		    $this->sendEmail($atitle, $message1, $emailList); //JO'C $this->getSiteRecipients()
                 }
             }
         }
@@ -149,12 +154,15 @@ class dbAnnouncements extends dbTable {
                 $this->objIndexData->optimize();
 
                 if ($email) {
-                    $link = new link($this->uri(array("action" => "view", "id" => $messageId)));
+                    $link = new link($this->uri(array("action" => "view", "id" => $id)));
                     $atitle = $this->emailTitle . ": '$title'";
-                    $message = $this->objUser->fullname() . " " . $this->emailBody2 . " '$atitle' . " . $this->emailBody3 . " " .
-                            $link->href;
+                    $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
+		    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
+			    $message1 .= ": ".$message ." ";
+			}
+		    $message1 .= $this->emailBody3 . ": " . $link->href;
 
-                    $this->sendEmail($atitle, $message, $this->getSiteRecipients());
+                    $this->sendEmail($atitle, $message1, $this->getSiteRecipients());
                 }
             }
         } else {
@@ -174,12 +182,15 @@ class dbAnnouncements extends dbTable {
                 $this->objIndexData->optimize();
 
                 if ($email) {
-                    $link = new link($this->uri(array("action" => "view", "id" => $messageId)));
+                    $link = new link($this->uri(array("action" => "view", "id" => $id)));
                     $atitle = $this->emailTitle . " : $title";
-                    $message = $this->objUser->fullname() . " " . $this->emailBody2 . " '$title'. " . $this->emailBody3 . " " .
-                            $link->href;
-
-                    $this->sendEmail($atitle, $message, $emailList);
+                    $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
+		        if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
+			    $message1 .= ": ".$message ." ";
+			}
+		    $message1 .= $this->emailBody3 . ": " . $link->href;
+		    
+		    $this->sendEmail($atitle, $message1, $emailList);
                 }
             }
         }

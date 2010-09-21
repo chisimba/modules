@@ -43,7 +43,7 @@ class announcements extends controller
     */
     public function init()
     { 
-    	$this->objUser = $this->getObject('user', 'security');         
+        $this->objUser = $this->getObject('user', 'security');         
         $this->objContext = $this->getObject('dbcontext','context');
         $this->objDate = $this->getObject('dateandtime', 'utilities');
         $this->objLanguage = $this->getObject('language', 'language');
