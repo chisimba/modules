@@ -62,6 +62,7 @@ class eportfolio extends controller
         public $objGetall;
         public $objExport;
         public $userId;
+        public $objEportfolioActivityStreamer;
     /**
      * Constructor
      */
