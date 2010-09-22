@@ -28,7 +28,7 @@ $groupId = $this->getSession('groupId', $groupId);
 $groupName = $this->_objGroupAdmin->getName($groupId);
 $header = new htmlheading();
 $header->type = 1;
-$header->str = $this->objLanguage->languageText('mod_eportfolio_wordGroup', "eportfolio") . " " . $groupName . ' - ' . $this->objLanguage->code2Txt('phrase_searchforuserstoadd', 'eportfolio');
+$header->str = $this->objLanguage->languageText('mod_eportfolio_wordGroup', "eportfolio") . " " . $groupName . ' - ' . $this->objLanguage->languageText('phrase_searchforuserstoadd', 'eportfolio');
 echo $header->show();
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = 5;
@@ -134,12 +134,12 @@ if (count($results) == 0) {
     $table->endHeaderRow();
     $objIcon = $this->getObject('geticon', 'htmlelements');
     $objIcon->setIcon('not_applicable');
-    $objIcon->alt = $this->objLanguage->code2Txt('phrase_eportfolio_notmemberofgroup', 'eportfolio');
-    $objIcon->title = $this->objLanguage->code2Txt('phrase_eportfolio_notmemberofgroup', 'eportfolio');
+    $objIcon->alt = $this->objLanguage->languageText('phrase_eportfolio_notmemberofgroup', 'eportfolio');
+    $objIcon->title = $this->objLanguage->languageText('phrase_eportfolio_notmemberofgroup', 'eportfolio');
     $noneIcon = $objIcon->show();
     $objIcon->setIcon('guest');
-    $objIcon->alt = $this->objLanguage->code2Txt('phrase_eportfolio_makememberofgroup', 'eportfolio');
-    $objIcon->title = $this->objLanguage->code2Txt('phrase_eportfolio_makememberofgroup', 'eportfolio');
+    $objIcon->alt = $this->objLanguage->languageText('phrase_eportfolio_makememberofgroup', 'eportfolio');
+    $objIcon->title = $this->objLanguage->languageText('phrase_eportfolio_makememberofgroup', 'eportfolio');
     $guestIcon = $objIcon->show();
     foreach($results as $result) {
         $table->row_attributes = 'onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'none\'; "';
@@ -182,6 +182,6 @@ if (count($results) == 0) {
     echo '<p>' . $this->objLanguage->languageText('mod_contextgroups_browseresults', 'contextgroups', 'Browse Results') . ': ' . $paging . '</p>';
 }
 $returnLink = new link($this->uri(NULL));
-$returnLink->link = $this->objLanguage->code2Txt('phrase_returntoeportfoliogroups', 'eportfolio');
+$returnLink->link = $this->objLanguage->languageText('phrase_returntoeportfoliogroups', 'eportfolio');
 echo '<p align="center">' . $returnLink->show() . '</p>';
 ?>

@@ -117,7 +117,7 @@ if (count($grpMembers) > 0) {
         $objTable->addCell($grpMember['surname']);
         $objTable->addCell($grpMember['emailaddress']);
         if ($this->isValid('removeuser')) {
-            $string = str_replace('[-user-]', ucwords($this->objLanguage->code2txt('word_lecturer', 'system', NULL, '[-author-]')) , $this->objLanguage->languageText('phrase_eportfolio_confirmdeleteuser', 'eportfolio'));
+            $string = str_replace('[-user-]', ucwords($this->objLanguage->languageText('word_lecturer', 'system', NULL, '[-author-]')) , $this->objLanguage->languageText('phrase_eportfolio_confirmdeleteuser', 'eportfolio'));
             //    public function getDeleteIconWithConfirm($id, $deleteArray=NULL, $callingModule=NULL, $deletephrase='phrase_confirmdelete')
             $deleteicon = $objIcon->getDeleteIconWithConfirm(NULL, array(
                 'action' => 'removeuser',
@@ -130,7 +130,7 @@ if (count($grpMembers) > 0) {
     }
 } else {
     $objTable->startRow();
-    $objTable->addCell($this->objLanguage->code2txt('mod_eportfolio_norecords', 'eportfolio') , NULL, NULL, NULL, 'noRecordsMessage', 'colspan="6"');
+    $objTable->addCell($this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio') , NULL, NULL, NULL, 'noRecordsMessage', 'colspan="6"');
     $objTable->endRow();
 }
 $objButton = new button('select', $this->objLanguage->languageText('phrase_selectall'));
@@ -140,7 +140,7 @@ $objButton = new button('unselect', $this->objLanguage->languageText('mod_contex
 $objButton->extra = 'onclick="javascript:SetAllCheckBoxes(\'removelecturers\', \'lecturerId[]\', false)"';
 $buttons.= '&nbsp;&nbsp;&nbsp;&nbsp;' . $objButton->show();
 $objButton = new button('delete', $this->objLanguage->languageText('mod_contextgroups_deleteselected', 'eportfolio', 'Delete Selected'));
-$objButton->extra = 'onclick="javascript:if(confirm(\'' . $this->objLanguage->code2Txt('phrase_eportfolio_confirmdeleteuser', 'eportfolio', NULL, 'Are you sure you want to delete these [-authors-]?') . '\')){document.removelecturers.submit();}else{return false;}"';
+$objButton->extra = 'onclick="javascript:if(confirm(\'' . $this->objLanguage->languageText('phrase_eportfolio_confirmdeleteuser', 'eportfolio', NULL, 'Are you sure you want to delete these [-authors-]?') . '\')){document.removelecturers.submit();}else{return false;}"';
 $buttons.= '&nbsp;&nbsp;&nbsp;&nbsp;' . $objButton->show();
 $objForm = new form('removelecturers', $this->uri(array(
     'action' => 'removeallusers',
@@ -165,7 +165,7 @@ echo $objTabbedbox->show();
 if ($this->isValid('addusers')) {
     $header = new htmlheading();
     $header->type = 3;
-    $header->str = $this->objLanguage->code2Txt('phrase_searchforuserstoadd', 'eportfolio');
+    $header->str = $this->objLanguage->languageText('phrase_searchforuserstoadd', 'eportfolio');
     echo $header->show();
     $table = $this->getObject('htmltable', 'htmlelements');
     $table->cellpadding = 5;

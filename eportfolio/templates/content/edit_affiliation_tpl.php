@@ -23,7 +23,7 @@ $objTable->width = '100%';
 $objTable->attributes = " align='left' border='0'";
 $objTable->cellspacing = '5';
 $row = array(
-    "<b>" . $objLanguage->code2Txt("word_name") . ":</b>"
+    "<b>" . $objLanguage->languageText("word_name") . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'top', 'right');
@@ -114,7 +114,7 @@ $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
 //finish text field
 $row = array(
-    "<b>" . $label = $objLanguage->code2Txt("mod_eportfolio_activityfinish", 'eportfolio') . ":</b>"
+    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');

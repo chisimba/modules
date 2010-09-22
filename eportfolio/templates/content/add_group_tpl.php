@@ -24,7 +24,7 @@ $objTable->width = '30';
 $objTable->attributes = " align='center' border='0'";
 $objTable->cellspacing = '12';
 $row = array(
-    "<b>" . $objLanguage->code2Txt("word_name") . ":</b>"
+    "<b>" . $objLanguage->languageText("word_name") . ":</b>"
 );
 $objTable->addRow($row, NULL);
 $row = array(

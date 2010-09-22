@@ -14,15 +14,15 @@ if (isset($IsAssessment)) {
     $objTable->cellspacing = '2';
     $objTable->cellpadding = '2';
     $objTable->startRow();
-    $objTable->addCell("<b>" . ucfirst($objLanguage->code2Txt("rubric_teacher", "rubric")) . "</b>");
+    $objTable->addCell("<b>" . ucfirst($objLanguage->languageText("rubric_teacher", "rubric")) . "</b>");
     $objTable->addCell($teacher);
     $objTable->endRow();
     $objTable->startRow();
-    $objTable->addCell("<b>" . ucfirst($objLanguage->code2Txt("rubric_studentno", "rubric")) . "</b>");
+    $objTable->addCell("<b>" . ucfirst($objLanguage->languageText("rubric_studentno", "rubric")) . "</b>");
     $objTable->addCell($studentNo);
     $objTable->endRow();
     $objTable->startRow();
-    $objTable->addCell("<b>" . ucfirst($objLanguage->code2Txt("rubric_student", "rubric")) . "</b>");
+    $objTable->addCell("<b>" . ucfirst($objLanguage->languageText("rubric_student", "rubric")) . "</b>");
     $objTable->addCell($student);
     $objTable->endRow();
     $objTable->startRow();

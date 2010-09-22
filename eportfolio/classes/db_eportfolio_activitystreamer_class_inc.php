@@ -69,12 +69,27 @@ class db_eportfolio_activitystreamer extends dbtable
         $this->objFiles = $this->getObject('dbfile','filemanager');        
         // Load Context Object
         $this->objContext = $this->getObject('dbcontext', 'context');            
-
+        //Load Language Object
+        $this->objLanguage = &$this->getObject('language', 'language');
         //Fetch and Store Context Code
         $this->contextCode = $this->objContext->getContextCode();
         //Fetch and Store the session Id
         $this->sessionId = session_Id();
-
+        //Load ePortfolio DB Objects
+        $this->objDbAddressList = &$this->getObject('dbeportfolio_address', 'eportfolio');
+        $this->objDbContactList = &$this->getObject('dbeportfolio_contact', 'eportfolio');
+        $this->objDbDemographicsList = &$this->getObject('dbeportfolio_demographics', 'eportfolio');
+        $this->objDbActivityList = &$this->getObject('dbeportfolio_activity', 'eportfolio');
+        $this->objDbAffiliationList = &$this->getObject('dbeportfolio_affiliation', 'eportfolio');
+        $this->objDbTranscriptList = &$this->getObject('dbeportfolio_transcript', 'eportfolio');
+        $this->objDbEmailList = &$this->getObject('dbeportfolio_email', 'eportfolio');
+        $this->objDbQclList = &$this->getObject('dbeportfolio_qcl', 'eportfolio');
+        $this->objDbGoalsList = &$this->getObject('dbeportfolio_goals', 'eportfolio');
+        $this->objDbCompetencyList = &$this->getObject('dbeportfolio_competency', 'eportfolio');
+        $this->objDbInterestList = &$this->getObject('dbeportfolio_interest', 'eportfolio');
+        $this->objDbReflectionList = &$this->getObject('dbeportfolio_reflection', 'eportfolio');
+        $this->objDbAssertionList = &$this->getObject('dbeportfolio_assertion', 'eportfolio');
+        $this->objDbProductList = &$this->getObject('dbeportfolio_product', 'eportfolio');
     }
     
     /**
@@ -158,7 +173,22 @@ class db_eportfolio_activitystreamer extends dbtable
             return FALSE;
         }
     }
-
+    /**
+     * Method to fetch active context members.
+     *
+     * @access public
+     * @return Array
+     */
+    public function getActiveMembers()
+    {
+        $getDistinct = "SELECT distinct userid  FROM tbl_eportfolio_activitystreamer";
+        $results = $this->getArray($getDistinct);
+        if (count($results) == 0) {
+            return FALSE;
+        } else {
+            return $results[0];
+        }
+    }
     /**
      * Method to fetch distinct user sessions.
      *
@@ -173,19 +203,19 @@ class db_eportfolio_activitystreamer extends dbtable
         if (count($results) == 0) {
             return FALSE;
         } else {
-            return $results[0];
+            return $results;
         }
     }
     /**
-     * Method to fetch all user sessions.
+     * Method to fetch all user activities.
      *
      * @access public
      * @param string $userId User ID
      * @return Array
      */
-    public function getAllUserSessions($userId)
+    public function getAllUserActivities($userId)
     {
-        $getDistinct = "SELECT *  FROM tbl_eportfolio_activitystreamer WHERE userid = '$userId'";
+        $getDistinct = "SELECT * FROM tbl_eportfolio_activitystreamer WHERE userid = '$userId'";
         $results = $this->getArray($getDistinct);
         if (count($results) == 0) {
             return FALSE;
@@ -194,13 +224,30 @@ class db_eportfolio_activitystreamer extends dbtable
         }
     }
     /**
-     * Method to get all the records for a particular session
+     * Method to get all the user activities for a particular session
      *
      * @access public
      * @param string $sessionId Session Id
      * @return TRUE
      */
-    public function getSession($sessionId)
+    public function getSessionActivities($sessionId)
+    {
+        $where = "WHERE sessionid = '$sessionId'";
+        $results = $this->getAll($where);
+        if (isset($results[0])) {
+            return $results;
+        } else {
+            return FALSE;
+        }
+    }
+    /**
+     * Method to check if session exists
+     *
+     * @access public
+     * @param string $sessionId Session Id
+     * @return TRUE
+     */
+    public function sessionExists($sessionId)
     {
         $where = "WHERE sessionid = '$sessionId'";
         $results = $this->getAll($where);
@@ -289,9 +336,6 @@ class db_eportfolio_activitystreamer extends dbtable
         $minmaxtime = array();
         $minmaxtime['mintime'] = $minTime;
         $minmaxtime['maxtime'] = $maxTime;
-        //Create dateTime Objects
-        /*$minTime = date_create($minTime);
-        $maxTime = date_create($maxTime);*/
         $dateDiff = $this->date_diff($minTime, $maxTime);
         $minmaxtime['duration'] = $dateDiff;
         return $minmaxtime;
@@ -363,7 +407,7 @@ class db_eportfolio_activitystreamer extends dbtable
      */
     public function computeUserSessionsDuration($userId)
     {
-        $allRecords = $this->getAllUserSessions($userId);
+        $allRecords = $this->getUserSessions($userId);
         $totalDuration = Null;
         $sumHrs = 0;
         $sumMin = 0;
@@ -461,15 +505,14 @@ class db_eportfolio_activitystreamer extends dbtable
         return $totalDuration;
     }
     /**
-     * Method to compute time taken by each active context member.
+     * Method to compute time taken by each active eportfolio user.
      *
      * @access public
-     * @param string $contextCode Context Code
      * @return Array
      */
-    public function getTimeTakenByEachMember($contextCode)
+    public function getTimeTakenByEachMember()
     {
-        $activeMembers = $this->getActiveMembers($contextCode);
+        $activeMembers = $this->getActiveMembers();
         $userData = array();
         foreach ($activeMembers as $member) {
              $thisArray = array();
@@ -504,9 +547,9 @@ class db_eportfolio_activitystreamer extends dbtable
      * @param string $contextCode Context Code
      * @return string Record ID
      */
-    public function getRecordId($userId, $contextItemId, $sessionid)
+    public function getRecordId($userId, $recordId, $sessionid)
     {
-        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid' AND endtime is NULL";
+        $where = "WHERE userid = '$userId' AND recordid = '$recordId' AND sessionid = '$sessionid'";
         $results = $this->getAll($where);
         if(!empty($results)){
           if(empty($results[0]['endtime']))
@@ -518,46 +561,20 @@ class db_eportfolio_activitystreamer extends dbtable
         }
     }
     /**
-    * Method to get a content page
-    * @param string $pageId Record Id of the Page
-    * @param string $contextCode Context the Page is In
-    * @return array Details of the Page, FALSE if does not exist
-    * @access public
-    */
-    public function getPage($pageId, $contextCode)
-    {
-        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.chapterid, tbl_contextcontent_order.parentid,tbl_contextcontent_pages.scorm, tbl_contextcontent_pages.menutitle, pagecontent, headerscripts, lft, rght, tbl_contextcontent_pages.id as pageid, tbl_contextcontent_order.titleid, isbookmarked
-        FROM tbl_contextcontent_order 
-        INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
-        INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE tbl_contextcontent_order.id=\''.$pageId.'\' AND contextcode=\''.$contextCode.'\'
-        ORDER BY lft LIMIT 1';
-        
-        $results = $this->getArray($sql);
-        
-        if (count($results) == 0) {
-            return FALSE;
-        } else {
-            return $results[0];
-        }
-    }
-    /**
-     * Return a single record
-     * @param string $contextcode Context Code
+     * Return a all records
      * @return array The values
      */
-    function getContextLogs($contextcode, $where ) 
+    function getEportfolioLogs() 
     {
-        return $this->getAll("WHERE contextcode='" . $contextcode . "'".$where);
+        return $this->getAll();
     }
     /**
-     * Return json for context usage logs
-     * @param string $contextcode Context Code
+     * Return json for eportfolio usage logs
      * @return json The logs
      */
-    function jsonContextContextUsage( $contextcode) 
+    function jsonGetEportfolioUsage() 
     {
-        $logs = $this->getTimeTakenByEachMember( $contextcode );
+        $logs = $this->getTimeTakenByEachMember();
         $logCount = (count($logs));
         $str = '{"logcount":"' . $logCount . '","availableLogs":[';
         $logArray = array();
@@ -570,6 +587,9 @@ class db_eportfolio_activitystreamer extends dbtable
               $userNames = "";
               $userNames = $userNames.$this->objUser->fullname( $log['userid'] );
               $infoArray['fullname'] = $userNames;
+              $ownerName = "";
+              $ownerName = $ownerName.$this->objUser->fullname( $log['owneruserid'] );
+              $infoArray['ownerfullname'] = $ownerName;
               $infoArray['contextcode'] = $this->contextCode;
               $infoArray['duration'] = $log['duration'];
               $logArray[] = $infoArray;
@@ -577,7 +597,7 @@ class db_eportfolio_activitystreamer extends dbtable
         }
         return json_encode(array(
             'logcount' => $logCount,
-            'contextlogs' => $logArray
+            'eportfoliologs' => $logArray
         ));
     }
     /**
@@ -585,13 +605,9 @@ class db_eportfolio_activitystreamer extends dbtable
      * @param string $contextcode Context Code
      * @return json The logs
      */
-    function jsonContextLogs( $contextcode, $start, $limit ) 
+    function jsonEportfolioLogs( ) 
     {
-        if ( !empty($start) && !empty($limit) ) 
-         $where = " LIMIT " . $start . " , " . $limit;
-        else
-         $where = "";
-        $logs = $this->getContextLogs( $contextcode, $where );
+        $logs = $this->getEportfolioLogs();
 
         $logCount = (count($logs));
         $str = '{"logcount":"' . $logCount . '","availableLogs":[';
@@ -602,28 +618,72 @@ class db_eportfolio_activitystreamer extends dbtable
           $infoArray = array();
           $infoArray['id'] = $log['id'];
           $infoArray['userid'] = $log['userid'];
-          //Function has bug
-          //$userNames = $this->objUser->getTitle( $log['userid'] ).". ";
-          //Return empty till its fixed
+          $infoArray['username'] = $log['username'];
           $userNames = "";
           $userNames = $userNames.$this->objUser->fullname( $log['userid'] );
-          $infoArray['usernames'] = $userNames;
+          $infoArray['fullname'] = $userNames;
+          $ownerName = "";
+          $ownerName = $ownerName.$this->objUser->fullname( $log['owneruserid'] );
+          $infoArray['ownerfullname'] = $ownerName;
           $infoArray['contextcode'] = $this->contextCode;
           $infoArray['modulecode'] = $log['modulecode'];
-          $infoArray['contextitemid'] = $log['contextitemid'];
+          $infoArray['recordid'] = $log['recordid'];
           //Get context item title (page or chapter)
-          if ( $log['pageorchapter'] == 'page' ) {
-           $pageDetails = $this->getPage( $log['contextitemid'], $contextcode );
-           $pageInfo = $this->objContentPages->pageInfo( $pageDetails['titleid'] );
-           $infoArray['pageorchapter'] = $log['pageorchapter'];
-           $infoArray['contextitemtitle'] = $pageInfo['menutitle'];
-          } elseif ( $log['pageorchapter'] == 'chapter' ) {
-           $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );
-           $infoArray['pageorchapter'] = $log['pageorchapter']; 
-           $infoArray['contextitemtitle'] = $chapterTitle;
+          if ( $log['partname'] == 'address' ) {
+           $list = $this->objDbAddressList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['street_no']." ".$list[0]['street_name'];
+          } elseif ( $log['partname'] == 'contact' ) {
+           $list = $this->objDbContactList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $this->objLanguage->languageText("mod_eportfolio_countrycode", 'eportfolio')." : ".$list[0]['country_code'].", ".$this->objLanguage->languageText("mod_eportfolio_areacode", 'eportfolio')." : ".$list[0]['area_code'];
+          } elseif ( $log['partname'] == 'email' ) {
+           $list = $this->objDbEmailList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['email'];
+          } elseif ( $log['partname'] == 'demographics' ) {
+           $list = $this->objDbDemographicsList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $objLanguage->languageText("mod_eportfolio_nationality", 'eportfolio')." : ".$list[0]['nationality'];
+          } elseif ( $log['partname'] == 'activities' ) {
+           $list = $this->objDbActivityList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'affiliation' ) {
+           $list = $this->objDbAffiliationList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'transcripts' ) {
+           $list = $this->objDbTranscriptList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'qualifications' ) {
+           $list = $this->objDbQclList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'goals' ) {
+           $list = $this->objDbGoalsList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'competencies' ) {
+           $list = $this->objDbCompetencyList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'interests' ) {
+           $list = $this->objDbInterestList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'reflections' ) {
+           $list = $this->objDbReflectionList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'assertions' ) {
+           $list = $this->objDbAssertionList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
           } else {
-           $infoArray['pageorchapter'] = $log['pageorchapter'];
-           $infoArray['contextitemtitle'] = " ";
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = " ";
           }
           $infoArray['datecreated'] = $log['datecreated'];
           $infoArray['description'] = $log['description'];
@@ -635,7 +695,7 @@ class db_eportfolio_activitystreamer extends dbtable
 
         return json_encode(array(
             'logcount' => $logCount,
-            'contextlogs' => $logArray
+            'eportfoliologs' => $logArray
         ));
     }
     /*Returns two datetime values by calculating time randomly from two datetime values. leaves date intact
@@ -722,14 +782,14 @@ class db_eportfolio_activitystreamer extends dbtable
      * @param string $contextcode Context Code
      * @return csv of the logs
      */
-    function csvContextLogs( $contextcode ) 
+    function csvContextLogs() 
     {
         $where = "";
-        $logs = $this->getContextLogs( $contextcode, $where );
+        $logs = $this->getEportfolioLogs();
 
         $logCount = (count($logs));
         $list = array();
-        $list = array('id,userid,usernames,contextcode,modulecode,contextitemid,type,contextitemtitle,datecreated,description,starttime,endtime');
+        $list = array('id, userid, username, fullname, ownerfullname, contextcode, modulecode, recordid, partname, parttitle, datecreated, description, starttime, endtime');
         $csvFile = "logs.csv"; 
         $Handle = fopen($csvFile, 'w');
         //fwrite($Handle, $list);
@@ -739,25 +799,81 @@ class db_eportfolio_activitystreamer extends dbtable
         foreach ( $logs as $log ) {
          //Put $log['endtime'] to == null to return empty fields
          if( !empty ( $log['endtime'] ) || $log['endtime'] == NULL ) {
-          //Return empty till its fixed
+          $infoArray['id'] = $log['id'];
+          $infoArray['userid'] = $log['userid'];
+          $infoArray['username'] = $log['username'];
           $userNames = "";
           $userNames = $userNames.$this->objUser->fullname( $log['userid'] );
+          $infoArray['fullname'] = $userNames;
+          $ownerName = "";
+          $ownerName = $ownerName.$this->objUser->fullname( $log['owneruserid'] );
+          $infoArray['ownerfullname'] = $ownerName;
+          $infoArray['contextcode'] = $this->contextCode;
+          $infoArray['modulecode'] = $log['modulecode'];
+          $infoArray['recordid'] = $log['recordid'];
+
           //Get context item title (page or chapter)
-          $title = '';
-          $pageorchapter = '';
-          if ( $log['pageorchapter'] == 'page' ) {
-           $pageDetails = $this->getPage( $log['contextitemid'], $contextcode );
-           $pageInfo = $this->objContentPages->pageInfo( $pageDetails['titleid'] );
-           $pageorchapter = $log['pageorchapter'];
-           $title = $pageInfo['menutitle'];
-          } elseif ( $log['pageorchapter'] == 'chapter' ) {
-           $chapterTitle = $this->objContentChapter->getContextChapterTitle( $log['contextitemid'] );
-           $pageorchapter = $log['pageorchapter'];
-           $title = $chapterTitle;
+          if ( $log['partname'] == 'address' ) {
+           $list = $this->objDbAddressList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['street_no']." ".$list[0]['street_name'];
+          } elseif ( $log['partname'] == 'contact' ) {
+           $list = $this->objDbContactList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $this->objLanguage->languageText("mod_eportfolio_countrycode", 'eportfolio')." : ".$list[0]['country_code'].", ".$this->objLanguage->languageText("mod_eportfolio_areacode", 'eportfolio')." : ".$list[0]['area_code'];
+          } elseif ( $log['partname'] == 'email' ) {
+           $list = $this->objDbEmailList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['email'];
+          } elseif ( $log['partname'] == 'demographics' ) {
+           $list = $this->objDbDemographicsList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $objLanguage->languageText("mod_eportfolio_nationality", 'eportfolio')." : ".$list[0]['nationality'];
+          } elseif ( $log['partname'] == 'activities' ) {
+           $list = $this->objDbActivityList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'affiliation' ) {
+           $list = $this->objDbAffiliationList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'transcripts' ) {
+           $list = $this->objDbTranscriptList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'qualifications' ) {
+           $list = $this->objDbQclList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'goals' ) {
+           $list = $this->objDbGoalsList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'competencies' ) {
+           $list = $this->objDbCompetencyList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'interests' ) {
+           $list = $this->objDbInterestList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'reflections' ) {
+           $list = $this->objDbReflectionList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
+          } elseif ( $log['partname'] == 'assertions' ) {
+           $list = $this->objDbAssertionList->listSingle( $log['recordid'] );
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = $list[0]['shortdescription'];
           } else {
-           $title = "";
+           $infoArray['partname'] = $log['partname'];
+           $infoArray['parttitle'] = " ";
           }
-          $list = array($log['id'].','.$log['userid'].','.$userNames.','.$this->contextCode.','.$log['modulecode'].','.$log['contextitemid'].','.$pageorchapter.','.$title.','.$log['datecreated'].','.$log['description'].','.$log['starttime'].','.$log['endtime']);
+          $infoArray['datecreated'] = $log['datecreated'];
+          $infoArray['description'] = $log['description'];
+          $infoArray['starttime'] = $log['starttime'];
+          $infoArray['endtime'] = $log['endtime'];
+          $list = array($infoArray['id'].','.$infoArray['userid'].','.$infoArray['username'].','.$infoArray['fullname'].','.$infoArray['ownerfullname'].','.$infoArray['contextcode'].','.$infoArray['modulecode'].','.$infoArray['recordid'].','.$infoArray['partname'].','.$infoArray['parttitle'].','.$infoArray['datecreated'].','.$infoArray['description'].','.$infoArray['starttime'].','.$infoArray['endtime']);
           foreach ($list as $line) {
             fputcsv($Handle, split(',', $line));
           }
@@ -771,14 +887,14 @@ class db_eportfolio_activitystreamer extends dbtable
      * @param string $contextcode Context Code
      * @return csv of the logs
      */
-    function csvContextContentUsage( $contextcode ) 
+    function csvEportfolioContentUsage() 
     {
-        $logs = $this->getTimeTakenByEachMember( $contextcode );
+        $logs = $this->getTimeTakenByEachMember();
 
         $logCount = (count($logs));
         $list = array();
         $list = array('userid,username,fullname,contextcode,duration');
-        $csvFile = $this->contextCode."-contextcontent-usage.csv"; 
+        $csvFile = "eportfolio-usage.csv"; 
         $Handle = fopen($csvFile, 'w');
         //fwrite($Handle, $list);
         foreach ($list as $line) {
@@ -798,12 +914,12 @@ class db_eportfolio_activitystreamer extends dbtable
     }
     /**
      * Method to delete a record
-     * @param string $contextItemId Context Item Id
+     * @param string $recordId Context Item Id
      */
-    function deleteRecord($contextItemId)
+    function deleteRecord($recordId)
     {
         // Delete the Record
-        $this->delete('contextitemid', $contextItemId);
+        $this->delete('recordid', $recordId);
     }
 }
 ?>

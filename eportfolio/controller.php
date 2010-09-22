@@ -16,33 +16,52 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  */
 class eportfolio extends controller
 {
-    /**
-     * @var groupadminmodel Object reference.
-     */
-    var $_objGroupAdmin;
-    /**
-     * @var groupId The group Id.
-     */
-    public $groupId;
-    /*
-    * @var object $objFSContext : The File System Object for the context
-    */
-    public $objFSContext;
-    public $objConfig;
-    public $objLanguage;
-    public $objButtons;
-    public $objUserAdmin;
-    public $objUser;
-    public $userPid;
-    public $isAdmin;
-    public $TRUE;
-    public $FALSE;
-    /**
-     *  The eportfolioblocks DB blocks object
-     *
-     * @var object
-     */
-    public $objEPBlocks;
+        /**
+         * @var groupadminmodel Object reference.
+        */
+        public $objConfig;
+        public $objLanguage;
+        public $objUserAdmin;
+        public $objUser;
+        public $objFile;
+        public $objFolders;
+        public $objCleanUrl;
+        public $objDate;
+        public $objUserContext;
+        public $objContextUser;
+        public $objPopupcal;
+        public $objUrl;
+        public $_objGroupAdmin;
+        public $_objManageGroups;
+        public $objGroupsOps;
+        public $objGroupUsers;
+        public $_objDBContext;
+        public $objContextUsers;
+        public $_objDBAssgnment;
+        public $_objDBEssay;
+        public $objFSContext;
+        public $objMysqlxml;
+        public $lectGroupId;
+        public $objDbAddressList;
+        public $objDbContactList;
+        public $objDbDemographicsList;
+        public $objDbActivityList;
+        public $objDbAffiliationList;
+        public $objDbTranscriptList;
+        public $objDbEmailList;
+        public $objDbQclList;
+        public $objDbGoalsList;
+        public $objDbCompetencyList;
+        public $objDbInterestList;
+        public $objDbReflectionList;
+        public $objDbAssertionList;
+        public $objDbProductList;
+        public $objDbCategoryList;
+        public $objDbComment;
+        public $objDbCategorytypeList;
+        public $objGetall;
+        public $objExport;
+        public $userId;
     /**
      * Constructor
      */
@@ -69,11 +88,11 @@ class eportfolio extends controller
         $this->objGroupUsers = $this->getObject('groupusersdb', 'groupadmin');
         $this->_objDBContext = &$this->newObject('dbcontext', 'context');
         $this->objContextUsers = $this->getObject('contextusers', 'contextgroups');
-        //        $this->_objDBAssgnment = &$this->newObject('dbassignment','assignment');
+        //$this->_objDBAssgnment = &$this->newObject('dbassignment','assignment');
         $this->_objDBEssay = &$this->newObject('dbessay_book', 'essay');
         $this->objFSContext = $this->newObject('fscontext', 'context');
         $this->objMysqlxml = &$this->newObject('mysqlxml_eportfolio', 'eportfolio');
-        //        $this->lectGroupId = $this->_objGroupAdmin->getLeafId( array( $this->_objDBContext->getContextCode(), 'Lecturers' ) );
+        //$this->lectGroupId = $this->_objGroupAdmin->getLeafId( array( $this->_objDBContext->getContextCode(), 'Lecturers' ) );
         // Get the DB object.
         $this->objDbAddressList = &$this->getObject('dbeportfolio_address', 'eportfolio');
         $this->objDbContactList = &$this->getObject('dbeportfolio_contact', 'eportfolio');
@@ -117,6 +136,8 @@ class eportfolio extends controller
         $this->objDbRubricCells = &$this->getObject('dbrubriccells', 'rubric');
         $this->objDbRubricAssessments = &$this->getObject('dbrubricassessments', 'rubric');
         $this->objRubricFunctions = &$this->getObject('functions_rubric', 'rubric');
+        //Load eportfolio activity streamer class
+        $this->objEportfolioActivityStreamer = $this->getObject('db_eportfolio_activitystreamer');
         //Load eportfolio blocks class
         $this->objEPBlocks = $this->getObject('eportfolioblocks');
         // Create an array of words to abstract

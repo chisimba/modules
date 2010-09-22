@@ -25,7 +25,7 @@ $objTable->width = '100%';
 $objTable->attributes = " align='left' border='0'";
 $objTable->cellspacing = '5';
 $row = array(
-    "<b>" . $objLanguage->code2Txt("word_name") . ":</b>"
+    "<b>" . $objLanguage->languageText("word_name") . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'top', 'right');
@@ -110,7 +110,7 @@ $city->size = 25;
 $city->label = 'City(must be filled out)';
 $form->addRule('city', 'Please enter the City', 'required');
 $row = array(
-    "<b>" . $label = $objLanguage->code2Txt("mod_eportfolio_city", 'eportfolio') . ":</b>"
+    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_city", 'eportfolio') . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'top', 'right');
@@ -125,7 +125,7 @@ $postcode->size = 25;
 $postcode->label = 'Post Code(must be filled out)';
 $form->addRule('postcode', 'Please enter the Post Code', 'required');
 $row = array(
-    "<b>" . $label = $objLanguage->code2Txt("mod_eportfolio_postcode", 'eportfolio') . ":</b>"
+    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_postcode", 'eportfolio') . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'top', 'right');

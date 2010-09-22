@@ -29,7 +29,7 @@ if (!$hasAccess) {
     $objTable->attributes = " align='center' border='0'";
     $objTable->cellspacing = '12';
     $row = array(
-        "<b>" . $objLanguage->code2Txt("word_name") . ":</b>"
+        "<b>" . $objLanguage->languageText("word_name") . ":</b>"
     );
     $objTable->startRow();
     $objTable->addCell($row[0], 140, 'top', 'right');
