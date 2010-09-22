@@ -1,4 +1,5 @@
 <?php
+
 //Address book tamplate
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
@@ -23,12 +24,12 @@ if ($arrBookList == false && empty($arrContextList)) {
 } else {
     if (!empty($arrContextList)) {
         foreach ($arrContextList as $context) {
-        // get number of entries
+            // get number of entries
             $groupId = $this->objGroupAdmin->getLeafId(array($context));
             $arrContextUserList = $this->objGroupAdmin->getGroupUsers($groupId, array('userId', 'firstName', 'surname', 'username'));
             $entries = count($arrContextUserList);
 
-            $objLink = new link($this->uri(array('action' => 'addressbook', 'contextcode' => $context, 'currentFolderId' => $currentFolderId, )), 'internalmail');
+            $objLink = new link($this->uri(array('action' => 'addressbook', 'contextcode' => $context, 'currentFolderId' => $currentFolderId,)), 'internalmail');
 
             $objLink->link = $context;
             $contextLink = $objLink->show();
@@ -43,11 +44,11 @@ if ($arrBookList == false && empty($arrContextList)) {
     $this->dbBookEntries = $this->newObject('dbbookentries', 'internalmail');
     if ($arrBookList != false) {
         foreach ($arrBookList as $book) {
-        // get number of entries
+            // get number of entries
             $arrBookEntriesList = $this->dbBookEntries->listBookEntries($book['id']);
             $entries = $arrBookEntriesList != false ? count($arrBookEntriesList) : 0;
 
-            $objLink = new link($this->uri(array('action' => 'addressbook', 'bookId' => $book['id'], 'currentFolderId' => $currentFolderId, )), 'uwcelearningmobile');
+            $objLink = new link($this->uri(array('action' => 'addressbook', 'bookId' => $book['id'], 'currentFolderId' => $currentFolderId,)), 'uwcelearningmobile');
             $objLink->link = $book['book_name'];
             if ($entries == 0 && $mode == 'show') {
                 $bookName = $book['book_name'];
@@ -71,5 +72,5 @@ echo $objFields->show();
 
 $backLink = new link($this->URI(array('action' => 'calladdrecipient')));
 $backLink->link = $this->objLanguage->languageText('word_back', 'system');
-echo $this->homeAndBackLink.' - '.$backLink->show();
+echo $this->homeAndBackLink . ' - ' . $backLink->show();
 ?>

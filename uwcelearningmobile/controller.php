@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Provides functionality specifically aimed at the UWC Elearning Mobile website
@@ -26,19 +27,18 @@
  * @version   $Id: controller.php,v 1.4 2007-11-25 09:13:27 qfenama Exp $
  * @link      http://avoir.uwc.ac.za
  */
-
 // security check - must be included in all scripts
 if (!
-/**
- * The $GLOBALS is an array used to control access to certain constants.
- * Here it is used to check if the file is opening in engine, if not it
- * stops the file from running.
- *
- * @global entry point $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- *
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * The $GLOBALS is an array used to control access to certain constants.
+         * Here it is used to check if the file is opening in engine, if not it
+         * stops the file from running.
+         *
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         *
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -51,15 +51,15 @@ $GLOBALS['kewl_entry_point_run']) {
  *
  */
 class uwcelearningmobile extends controller {
-/**
- *
- * @var string $objSysConfig String object property for holding the
- * configuration object
- * @access public;
- *
- */
-    public $objSysConfig;
 
+    /**
+     *
+     * @var string $objSysConfig String object property for holding the
+     * configuration object
+     * @access public;
+     *
+     */
+    public $objSysConfig;
     /**
      *
      * @var string $objConfig String object property for holding the
@@ -68,7 +68,6 @@ class uwcelearningmobile extends controller {
      *
      */
     public $objConfig;
-
     /**
      *
      * @var string $objLanguage String object property for holding the
@@ -93,7 +92,8 @@ class uwcelearningmobile extends controller {
      *
      */
     public function init() {
-        $this->objSysConfig  = $this->getObject('altconfig','config');
+        $this->objSysConfig = $this->getObject('altconfig', 'config');
+        $this->dbSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
@@ -105,7 +105,7 @@ class uwcelearningmobile extends controller {
         $this->objDate = $this->newObject('dateandtime', 'utilities');
         $this->objMobileSecurity = $this->getObject('mobilesecurity', 'uwcelearningmobile');
         $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
-        $this->link = $this->getObject('link','htmlelements');
+        $this->link = $this->getObject('link', 'htmlelements');
         $this->objGroups = $this->newObject('managegroups', 'contextgroups');
         $this->objGroupAdmin = $this->newObject('groupadminmodel', 'groupadmin');
         $this->dbContext = $this->newObject('dbcontext', 'context');
@@ -116,18 +116,16 @@ class uwcelearningmobile extends controller {
         $this->contextTitle = $this->dbContext->getField('title', $this->contextCode);
 
         $homelink = new link($this->URI(null));
-        $homelink->link = '&nbsp;'.$this->objLanguage->languageText('mod_uwcelearningmobile_wordhome', 'uwcelearningmobile');
+        $homelink->link = '&nbsp;' . $this->objLanguage->languageText('mod_uwcelearningmobile_wordhome', 'uwcelearningmobile');
         $this->homeAndBackLink = $homelink->show();
 
-        if($this->contextCode != null) {
+        if ($this->contextCode != null) {
             $backlink = new link($this->URI(array('action' => 'context',
-                'contextcode' => $this->contextCode)));
+                                'contextcode' => $this->contextCode)));
             $backlink->link = $this->objLanguage->languageText('mod_uwcelearningmobile_wordbacktocontext', 'uwcelearningmobile');
-            ''.$this->homeAndBackLink .= ' - '.$backlink->show();
+            '' . $this->homeAndBackLink .= ' - ' . $backlink->show();
         }
-
     }
-
 
     /**
      * Override the login object in the parent class
@@ -141,7 +139,7 @@ class uwcelearningmobile extends controller {
         //This Hack help to prevent going to the security module when :-
         //1 - action requires login and
         //2 - the user is no logged on
-        if(!in_array($action, $actions) && !$this->objUser->isLoggedIn()) {
+        if (!in_array($action, $actions) && !$this->objUser->isLoggedIn()) {
             return $this->goToLogin();
         }
 
@@ -152,22 +150,21 @@ class uwcelearningmobile extends controller {
         }
     }
 
-
     public function dispatch($action='home') {
-        $actions = array('', 'home', 'login', 'context', 'readmail', 'internalmail', 'filemanager', 'forum', 'viewforum', 'topic', 'compose', 'sendmail', 'calladdrecipient', 'addrecipient', 'rmrecipient', 'showbooks', 'addressbook', 'multirecipient');
+        $actions = array('', 'home', 'login', 'context', 'readmail', 'internalmail', 'filemanager', 'forum', 'viewforum', 'topic', 'compose', 'sendmail', 'calladdrecipient', 'addrecipient', 'rmrecipient', 'showbooks', 'addressbook', 'multirecipient', 'upload');
 
         if ($this->contextCode == NULL && !in_array($action, $actions)) {
             $action = 'home';
         }
-		/*
-        * Convert the action into a method (alternative to 
-        * using case selections)
-        */
+        /*
+         * Convert the action into a method (alternative to
+         * using case selections)
+         */
         $method = $this->__getMethod($action);
         /*
-        * Return the template determined by the method resulting 
-        * from action
-        */
+         * Return the template determined by the method resulting
+         * from action
+         */
         return $this->$method();
     }
 
@@ -202,7 +199,7 @@ class uwcelearningmobile extends controller {
      *
      */
     function __validAction(& $action) {
-        if (method_exists($this, "__".$action)) {
+        if (method_exists($this, "__" . $action)) {
             return TRUE;
         } else {
             return FALSE;
@@ -216,24 +213,23 @@ class uwcelearningmobile extends controller {
      */
     private function __home() {
         $this->setSession('recipientList', NULL);
-        if($this->objUser->isLoggedIn()) {
+        if ($this->objUser->isLoggedIn()) {
             $this->dbContext->leaveContext();
             $usercontexts = $this->objContext->getUserContext($this->objUser->userId());
             $this->setVarByRef('usercontexts', $usercontexts);
 
             $modules = array('filemanager', 'internalmail', 'forum');
             $tools = array();
-            foreach($modules as $mod) {
-                if($this->objModuleCatalogue->checkifRegistered($mod)) {
+            foreach ($modules as $mod) {
+                if ($this->objModuleCatalogue->checkifRegistered($mod)) {
                     $tools[] = $mod;
                 }
             }
             $this->setVarByRef('tools', $tools);
             return 'postlogin_tpl.php';
-        }
-        else {
+        } else {
             $error = $this->getParam('error');
-            if($error) {
+            if ($error) {
                 $this->setVarByRef('error', $error);
             }
             return 'prelogin_tpl.php';
@@ -247,10 +243,9 @@ class uwcelearningmobile extends controller {
      */
     private function __login() {
         $error = $this->objMobileSecurity->CheckErrors();
-        if($error != true) {
+        if ($error != true) {
             return $this->nextAction('login', array(), 'security');
-        }
-        else {
+        } else {
             return $this->nextAction('home', array('error' => $error));
         }
     }
@@ -261,22 +256,22 @@ class uwcelearningmobile extends controller {
      */
     private function __context() {
         $contextcode = $this->getParam('contextcode');
-        $status = $this->dbContext->joinContext ( $contextcode );
+        $status = $this->dbContext->joinContext($contextcode);
         $con = $this->dbContext->getContext($contextcode);
         $conexttitle = $con['title'];
         $this->setVarByRef('conextcode', $contextcode);
         $this->setVarByRef('conexttitle', $conexttitle);
 
         //Modules that should be able to be viewable
-	/*Course Content - File Manager - Assignments - Discussion Forum - Internal Email - Calander - Notifications*/
+        /* Course Content - File Manager - Assignments - Discussion Forum - Internal Email - Calander - Notifications */
         $modules = array('contextcontent', 'filemanager', 'assignment', 'forum', 'internalmail', 'calendar', 'announcements', 'mcqtests');
 
         $tools = array();
-        $objContextModules = $this->getObject ( 'dbcontextmodules', 'context');
+        $objContextModules = $this->getObject('dbcontextmodules', 'context');
         $contextModules = $objContextModules->getContextModules($contextcode);
         //Get Context tools
-        foreach($contextModules as $mod) {
-            if(in_array($mod, $modules)) {
+        foreach ($contextModules as $mod) {
+            if (in_array($mod, $modules)) {
                 $tools[] = $mod;
             }
         }
@@ -295,7 +290,6 @@ class uwcelearningmobile extends controller {
         $coursesann = $this->objAnnouncements->getContextAnnouncements($this->contextCode);
         $coursesanncount = $this->objAnnouncements->getNumContextAnnouncements($this->contextCode);
         //or $coursesanncount = count($coursesann);
-
         //Get all my courses announcement
         $allann = $this->objAnnouncements->getAllAnnouncements($this->userContext);
         $allanncount = count($allann);
@@ -305,7 +299,6 @@ class uwcelearningmobile extends controller {
         $this->setVarByRef('allann', $allann);
         $this->setVarByRef('allanncount', $allanncount);
         return 'announcements_tpl.php';
-
     }
 
     /**
@@ -378,14 +371,11 @@ class uwcelearningmobile extends controller {
         $forum = $this->objForum->getForum($id);
         $order = 'date';
         $direction = 'asc';
-        $limit = ' LIMIT 0, '.$limit;
+        $limit = ' LIMIT 0, ' . $limit;
         $allTopics = $this->objTopic->showTopicsInForum($id, $this->userId, $forum['archivedate'], $order, $direction, NULL, $limit);
         $this->setVarByRef('allTopics', $allTopics);
         $this->setVarByRef('forum', $forum);
         return 'singleforum_tpl.php';
-    }
-
-    private function __workgroup() {
     }
 
     /**
@@ -411,13 +401,12 @@ class uwcelearningmobile extends controller {
         // Get details on the topic
         $rootpost = $objPost->getRootPost($id);
 
-        $subject = $this->getParam('title', 'RE: '.$topic['post_title']);
+        $subject = $this->getParam('title', 'RE: ' . $topic['post_title']);
 
-        if($mode == 'add') {
-            if($subject != null && $message != null) {
+        if ($mode == 'add') {
+            if ($subject != null && $message != null) {
                 $this->saveReply();
-            }
-            else {
+            } else {
                 $err = 'All fields are required';
                 $this->setVarByRef('err', $err);
             }
@@ -460,7 +449,7 @@ class uwcelearningmobile extends controller {
 
     /**
      * Method to show events for the current/selected month.
-     *@access private
+     * @access private
      */
     private function __calendar() {
         $month = $this->getParam('month', date('m'));
@@ -492,9 +481,9 @@ class uwcelearningmobile extends controller {
         $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer', 'contextcontent');
         $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
         $arr = array();
-        foreach($chapters as $con) {
+        foreach ($chapters as $con) {
             $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $con['chapterid'], $this->contextCode);
-            if($ischapterlogged == FALSE) {
+            if ($ischapterlogged == FALSE) {
                 $arr[] = $con;
             }
         }
@@ -556,13 +545,13 @@ class uwcelearningmobile extends controller {
      * @access private
      */
     private function __filemanager() {
-    //My files
+        //My files
         $this->objFiles = $this->getObject('dbfile', 'filemanager');
         $this->objFolders = $this->getObject('dbfolder', 'filemanager');
         $this->objFileIcons = $this->getObject('fileicons', 'files');
         $this->objCleanUrl = $this->getObject('cleanurl', 'filemanager');
         // Get Folder Details
-        $folderpath = 'users/'.$this->objUser->userId();
+        $folderpath = 'users/' . $this->objUser->userId();
         $folderId = $this->objFolders->getFolderId($folderpath);
         $folderId = $this->getParam('folderid', $folderId);
         $folders = $this->objFolders->getSubFolders($folderId);
@@ -570,9 +559,10 @@ class uwcelearningmobile extends controller {
         $files = $this->objFiles->getFolderFiles($singlefolder);
         $currid = $this->getSuperFolder($folderId);
         $foldername = basename($singlefolder);
-        if($foldername == basename($folderpath)) {
+        if ($foldername == basename($folderpath)) {
             $foldername = $this->objLanguage->languageText('mod_uwcelearningmobile_wordmyfiles', 'uwcelearningmobile');
         }
+        $this->setVarByRef('folderid', $folderId);
         $this->setVarByRef('currname', $foldername);
         $this->setVarByRef('currfolder', $currid);
         $this->setVarByRef('files', $files);
@@ -580,19 +570,25 @@ class uwcelearningmobile extends controller {
 
         //Get Context Files
         if ($this->contextCode != NULL) {
-        // Get Folder Details
-            $coursefolderpath = 'context/'.$this->contextCode;
+            // Get Folder Details
+            $coursefolderpath = 'context/' . $this->contextCode;
             $coursefolderId = $this->objFolders->getFolderId($coursefolderpath);
+
             $coursefolderId = $this->getParam('coursefolderid', $coursefolderId);
             $coursefolders = $this->objFolders->getSubFolders($coursefolderId);
             $coursesinglefolder = $this->objFolders->getFolderPath($coursefolderId);
             $coursefiles = $this->objFiles->getFolderFiles($coursesinglefolder);
             $coursecurrid = $this->getSuperFolder($coursefolderId);
+
             $coursefoldername = basename($coursesinglefolder);
-            if($coursefoldername == basename($coursefolderpath)) {
-                $coursefoldername = $this->contextTitle.' - Files';
+            if ($coursefoldername == basename($coursefolderpath)) {
+                $coursefoldername = $this->contextTitle . ' - Files';
             }
+            $folderParts = explode('/', $coursesinglefolder);
+            $folderPermission = $this->objFolders->checkPermissionUploadFolder($folderParts[0], $folderParts[1]);
+            $this->setVarByRef('folderPermission', $folderPermission);
             $this->setVarByRef('coursecurrname', $coursefoldername);
+            $this->setVarByRef('coursefolderid', $coursefolderId);
             $this->setVarByRef('coursecurrfolder', $coursecurrid);
             $this->setVarByRef('coursefiles', $coursefiles);
             $this->setVarByRef('coursefolders', $coursefolders);
@@ -601,16 +597,45 @@ class uwcelearningmobile extends controller {
     }
 
     /**
+     * Method used to upload the files
+     *
+     */
+    function __upload() {
+        $this->objFolders = $this->getObject('dbfolder', 'filemanager');
+        $this->objUpload = $this->getObject('upload', 'filemanager');
+
+        $folderid = $this->getParam('folderid');
+        $folder = $this->objFolders->getFolder($folderid);
+        //error_log(var_export($folder, true));
+        if ($folder != FALSE) {
+            $this->objUpload->setUploadFolder($folder['folderpath']);
+        }
+        // Upload File
+        $results = $this->objUpload->uploadFiles();
+        if ($this->contextCode != NULL) {
+            return $this->nextAction('filemanager', array('folderid' => $folderid));
+        } else {
+            return $this->nextAction('filemanager', array('folderid' => $folderid));
+        }
+    }
+
+    /**
      * Method to get the folder's super folder
      * @access private
+     * @param string id
+     * @return string folderid
      */
     private function getSuperFolder($folderid) {
         $folder = $this->objFolders->getFolder($folderid);
-        $del = '/'.basename($folder['folderpath']);
+        $del = '/' . basename($folder['folderpath']);
         $path = explode($del, $folder['folderpath']);
         return $this->objFolders->getFolderId($path[0]);
     }
 
+    /**
+     * Method that view the context content
+     *
+     */
     private function __viewcontextcontent() {
         $id = $this->getParam('id');
         $this->objContentOrder = $this->getObject('db_contextcontent_order', 'contextcontent');
@@ -624,7 +649,7 @@ class uwcelearningmobile extends controller {
      *
      * @return template @type string
      *
-     **/
+     */
     private function __compose() {
 
         $arrUserId = $this->getParam('userId');
@@ -638,13 +663,13 @@ class uwcelearningmobile extends controller {
             if (!is_array($arrUserId)) {
                 $arrUserId = explode('|', $arrUserId);
             }
-            if($recipientList != NULL) {
+            if ($recipientList != NULL) {
                 $arrRecipients = explode('|', $recipientList);
                 $arrUserId = array_merge($arrRecipients, $arrUserId);
             }
             $toList = '';
-            foreach($arrUserId as $key => $userId) {
-                if($userId != "") {
+            foreach ($arrUserId as $key => $userId) {
+                if ($userId != "") {
                     $username = $this->objUser->userName($userId);
                     $this->addRecipient($username);
                 }
@@ -663,9 +688,9 @@ class uwcelearningmobile extends controller {
     }
 
     /**
-     *The method that send the email
+     * The method that send the email
      *
-     **/
+     */
     private function __sendmail() {
 
         $this->dbEmail = $this->newObject('dbemail', 'internalmail');
@@ -678,13 +703,13 @@ class uwcelearningmobile extends controller {
 
         $recipientList = $this->getRecipientListForDB();
 
-        if($recipientList) {
+        if ($recipientList) {
             $emailId = $this->dbEmail->sendMail($recipientList, $subject, $message, 0);
         }
         return $this->nextAction('internalmail');
     }
 
-    /*
+    /**
      * The method that calls the addrecipients template
      *
      */
@@ -698,12 +723,12 @@ class uwcelearningmobile extends controller {
         return 'addrecipient_tpl.php';
     }
 
-    /*
+    /**
      * The method that remove the recipient from the recipiens list
      */
     private function __rmrecipient() {
         $username = $this->getParam('username');
-        $this-> removeRecipient($username);
+        $this->removeRecipient($username);
         $this->nextAction('compose');
     }
 
@@ -715,20 +740,19 @@ class uwcelearningmobile extends controller {
 
         $reccipients = $this->getSession('recipientList');
         //create the sesstion list if it doesnt exist
-        if($reccipients == NULL) {
+        if ($reccipients == NULL) {
             $reccipients = array();
-            $this->setSession('recipientList',$reccipients);
+            $this->setSession('recipientList', $reccipients);
         }
 
         //Check whether the user is not null and the user already exist on th list
-        if($username != "" && !in_array($username,$reccipients)) {
-        //add the recipient to the session list
+        if ($username != "" && !in_array($username, $reccipients)) {
+            //add the recipient to the session list
             $reccipients[] = $username;
             $this->setSession('recipientList', $reccipients);
             return TRUE;
         }
         return FALSE;
-
     }
 
     /**
@@ -740,23 +764,22 @@ class uwcelearningmobile extends controller {
         $reccipients = $this->getSession('recipientList');
         $k = array_keys($reccipients, $username);
 
-        if(count($k) > 0) {
+        if (count($k) > 0) {
             unset($reccipients[$k[0]]);
             $this->setSession('recipientList', $reccipients);
         }
-
     }
 
     /**
-     * Method to put the recipient list into a stupid string
+     * Method to put the recipient list into a string
      *
      */
     private function getRecipientListForDB() {
         $reccipients = $this->getSession('recipientList');
-        if(count($reccipients) > 0) {
+        if (count($reccipients) > 0) {
             $str = '';
-            foreach($reccipients as $rec) {
-                $str .= $this->objUser->getUserId($rec).'|';
+            foreach ($reccipients as $rec) {
+                $str .= $this->objUser->getUserId($rec) . '|';
             }
             return $str;
         } else {
@@ -764,6 +787,10 @@ class uwcelearningmobile extends controller {
         }
     }
 
+    /**
+     * Method that get the number of users in the system
+     * @return Int
+     */
     private function getAllUsersCount() {
         $usercount = $this->objUser->getAll();
         $usercount = count($usercount);
@@ -771,8 +798,9 @@ class uwcelearningmobile extends controller {
     }
 
     /*
-     *The method that show the address book
+     * The method that show the address book
      */
+
     private function __showbooks() {
         $recipientList = $this->getParam('recipient');
         $subject = $this->getParam('subject');
@@ -781,32 +809,33 @@ class uwcelearningmobile extends controller {
 
         $this->dbBooks = $this->newObject('dbaddressbooks', 'internalmail');
         $arrBookList = $this->dbBooks->listBooks();
-		/*$this->setVarByRef('recipientList', $recipientList);
-		$this->setVarByRef('subject', $subject);
-		$this->setVarByRef('message', $message);
-		$this->setVar('mode', 'show');*/
         $this->setVarByRef('arrContextList', $arrContextList);
         $this->setVarByRef('arrBookList', $arrBookList);
         return 'addressbook_tpl.php';
     }
+
+    /**
+     * Method that calls the address book
+     * @access private
+     * 
+     */
     private function __addressbook() {
         $contextCode = $this->getParam('contextcode', NULL);
         $bookId = $this->getParam('bookId', NULL);
-        if($contextCode != NULL) {
+        if ($contextCode != NULL) {
             $groupId = $this->objGroupAdmin->getLeafId(array($contextCode
-            ));
+                    ));
 
             $users = $this->objGroupAdmin->getGroupUsers($groupId, array(
-                'userId',
-                'firstname',
-                'surname',
-                'username'
-            ));
+                        'userId',
+                        'firstname',
+                        'surname',
+                        'username'
+                    ));
+        } else if ($bookId != NULL) {
+            $this->dbBookEntries = $this->newObject('dbbookentries', 'internalmail');
+            $users = $this->dbBookEntries->listBookEntries($bookId);
         }
-        else if($bookId != NULL) {
-                $this->dbBookEntries = $this->newObject('dbbookentries', 'internalmail');
-                $users = $this->dbBookEntries->listBookEntries($bookId);
-            }
 
         $this->setVarByRef('contextCode', $contextCode);
         $this->setVarByRef('users', $users);
@@ -814,13 +843,16 @@ class uwcelearningmobile extends controller {
         $this->setVarByRef('currentFolderId', $currentFolderId);
         $this->setVar('mode', NULL);
         return 'entries_tpl.php';
-
     }
 
+    /**
+     * Method to add multiply recipients in the mail
+     *
+     */
     private function __multirecipient() {
         $users = $this->getParam('users');
-        foreach($users as $userId) {
-            if($userId != "") {
+        foreach ($users as $userId) {
+            if ($userId != "") {
                 $username = $this->objUser->userName($userId);
                 $this->addRecipient($username);
             }
@@ -848,8 +880,8 @@ class uwcelearningmobile extends controller {
         $parentPostDetails = $this->objPost->getRow('id', $this->getParam('parent'));
 
         //gathering the params
-        $forum_id =$this->getParam('forum');
-        $topic_id =$this->getParam('topic');
+        $forum_id = $this->getParam('forum');
+        $topic_id = $this->getParam('topic');
         $type_id = $this->getParam('discussionType');
         $post_title = $this->getParam('title');
         $post_text = $this->getParam('message');
@@ -857,8 +889,8 @@ class uwcelearningmobile extends controller {
         $original_post = 1;
         $level = $parentPostDetails['level'];
 
-        $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id,  $this->userId, $level);
-        $this->objPostText->insertSingle($post_id, $post_title, $post_text,  $language, $original_post, $this->userId);
+        $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id, $this->userId, $level);
+        $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $original_post, $this->userId);
         //Forum and Topic Classes
         $this->objTopic = $this->getObject('dbtopic', 'forum');
         $this->objForum = $this->getObject('dbforum', 'forum');
@@ -882,26 +914,25 @@ class uwcelearningmobile extends controller {
                     $this->objForumSubscriptions->subscribeUserToForum($forum_id, $this->objUser->userId());
                 }
             } else if ($_POST['subscriptions'] == 'topicsubscribe') { // Now check if the user wants to subscribe to the topic
-                    if ($forumSubscription) { // If user was subscribed to forum, remove subscription
-                        $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $this->objUser->userId());
-                    }
-                    // Now subscribe user to topic, if the user was not subscribed to the topic
-                    if (!$topicSubscription) {
-                        $this->objTopicSubscriptions->subscribeUserToTopic($topic_id, $this->objUser->userId());
-                    }
-                } else if ($_POST['subscriptions'] == 'nosubscriptions') { // Else remove subscription from topic
-                        $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $this->objUser->userId());
-                    }
+                if ($forumSubscription) { // If user was subscribed to forum, remove subscription
+                    $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $this->objUser->userId());
+                }
+                // Now subscribe user to topic, if the user was not subscribed to the topic
+                if (!$topicSubscription) {
+                    $this->objTopicSubscriptions->subscribeUserToTopic($topic_id, $this->objUser->userId());
+                }
+            } else if ($_POST['subscriptions'] == 'nosubscriptions') { // Else remove subscription from topic
+                $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $this->objUser->userId());
+            }
         }
         if ($forumDetails['subscriptions'] == 'Y') {
-            $replyUrl = $this->uri(array('action'=>'postreply','id'=>$post_id));
+            $replyUrl = $this->uri(array('action' => 'postreply', 'id' => $post_id));
             $emailSuccess = NULL;
         } else {
             $emailSuccess = NULL;
         }
-        return $this->nextAction('topic', array('id'=>$topic_id));
+        return $this->nextAction('topic', array('id' => $topic_id));
     }
-
 
     /**
      * Method or action
@@ -912,73 +943,63 @@ class uwcelearningmobile extends controller {
     function __viewsubmission() {
 
         $id = $this->getParam('id');
-
         $this->objUtil = $this->getObject('util');
         $submission = $this->objUtil->getSubmission($id);
 
         if ($submission == FALSE) {
-            return $this->nextAction(NULL, array('error'=>'unknownsubmission'));
+            return $this->nextAction(NULL, array('error' => 'unknownsubmission'));
         }
-
         $assignment = $this->objUtil->getAssignment($submission['assignmentid']);
 
         if ($assignment == FALSE) {
-            return $this->nextAction(NULL, array('error'=>'unknownassignment'));
+            return $this->nextAction(NULL, array('error' => 'unknownassignment'));
         }
-
         if ($assignment['context'] != $this->contextCode) {
-            return $this->nextAction(NULL, array('error'=>'wrongcontext'));
+            return $this->nextAction(NULL, array('error' => 'wrongcontext'));
         }
-
         $this->setVarByRef('assignment', $assignment);
         $this->setVarByRef('submission', $submission);
-
         return 'viewsubmission_tpl.php';
     }
 
-
+    /**
+     * Method used to download the student's assignment
+     *
+     */
     function __downloadfile() {
         $id = $this->getParam('id');
-
         $fileId = $this->getParam('fileid');
-
         $this->objUtil = $this->getObject('util');
         $submission = $this->objUtil->getSubmission($id);
-
         if ($submission == FALSE) {
-            return $this->nextAction(NULL, array('error'=>'unknownsubmission'));
+            return $this->nextAction(NULL, array('error' => 'unknownsubmission'));
         }
-
         $assignment = $this->objUtil->getAssignment($submission['assignmentid']);
 
         if ($assignment == FALSE) {
-            return $this->nextAction(NULL, array('error'=>'unknownassignment'));
+            return $this->nextAction(NULL, array('error' => 'unknownassignment'));
         }
-
-
         $filePath = $this->objUtil->getAssignmentFilename($submission['id'], $fileId);
-
         $objDateTime = $this->getObject('dateandtime', 'utilities');
-
         $objFile = $this->getObject('dbfile', 'filemanager');
-
         $file = $objFile->getFile($fileId);
-
         $extension = $file['datatype'];
 
-        $filename = $this->objUser->fullName($submission['userid']).' '.$objDateTime->formatDate($submission['datesubmitted']);
+        $filename = $this->objUser->fullName($submission['userid']) . ' ' . $objDateTime->formatDate($submission['datesubmitted']);
         $filename = str_replace(' ', '_', $filename);
         $filename = str_replace(':', '_', $filename);
 
         if (file_exists($filePath)) {
-        // Set Mimetype
-            header('Content-type: '.$file['mimetype']);
+            // Set Mimetype
+            header('Content-type: ' . $file['mimetype']);
             // Set filename and as download
-            header('Content-Disposition: attachment; filename="'.$filename.'.'.$extension.'"');
+            header('Content-Disposition: attachment; filename="' . $filename . '.' . $extension . '"');
             // Load file
             readfile($filePath);
             exit;
         }
     }
+
 }
+
 ?>

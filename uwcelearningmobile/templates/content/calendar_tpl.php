@@ -36,13 +36,9 @@ $table->endRow();
 //Navigation
 
 echo $table->show().'<br>';
-
 echo $eventsCalendar.'<br>';
-
 echo $eventsList;
-
 $addEventLink = new link($this->uri(array('action' => 'addevent')));
-
 $addEventLink->link = 'Add event';
 
 //echo '<p>'.$addEventLink->show().'</p>';
