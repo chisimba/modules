@@ -236,7 +236,15 @@ if ($this->isValid('markassignments')) {
             $form->extra = 'enctype="multipart/form-data"';
 
             $objUpload = $this->newObject('uploadinput', 'filemanager');
-            $objUpload->restrictFileList = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'mp3', 'pdf');
+            $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $allowedFilesString = $this->objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
+            if ($allowedFilesString == NULL) {
+                $allowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'mp3', 'pdf');
+            } else {
+                $allowedFileTypes=explode(',',$allowedFilesString);
+            }
+            
+            $objUpload->restrictFileList = $allowedFileTypes;
 
             $button = new button('submitform', $this->objLanguage->languageText('mod_assignment_uploadassignment', 'assignment', 'Upload Assignment'));
             $button->setToSubmit();
@@ -259,7 +267,7 @@ if ($this->isValid('markassignments')) {
             $objSelectFile = $this->newObject('selectfile', 'filemanager');
 
             $objSelectFile->name = 'assignment';
-            $objSelectFile->restrictFileList = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'mp3', 'pdf');
+            $objSelectFile->restrictFileList = $allowedFileTypes;
 
             $button = new button('submitform', 'Submit Assignment');
             $button->setToSubmit();
