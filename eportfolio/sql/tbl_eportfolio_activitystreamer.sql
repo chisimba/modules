@@ -1,6 +1,6 @@
 <?php
 
-$tablename = 'tbl_contextcontent_activitystreamer';
+$tablename = 'tbl_eportfolio_activitystreamer';
 
 // Options line for comments, encoding and character set
 $options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');

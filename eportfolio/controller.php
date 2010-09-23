@@ -291,13 +291,14 @@ class eportfolio extends controller
                     'change' => '2'
                 ));
             case "postcomment":
-                $id = $this->objDbComment->insertSingle($this->getParam('eportfoliopartid', NULL) , $this->getParam('newcomment', NULL) , $isapproved = '0');
+                $partid = $this->getParam('eportfoliopartid', NULL);
+                $id = $this->objDbComment->insertSingle($partid , $this->getParam('newcomment', NULL) , $isapproved = '0');
                 // After processing return to view main
                 $prevaction = $this->getParam('prevaction', NULL);
                 $eportpartidvarname = $this->getParam('eportpartidvarname', NULL);
                 //$this->setVarByRef("reflectId", $reflectId);
                 return $this->nextAction($prevaction, array(
-                    $eportpartidvarname => $this->getParam('eportfoliopartid', NULL)
+                    $eportpartidvarname => $partid
                 ));
             case "singlereflection":
                 $this->setLayoutTemplate(NULL);
@@ -307,6 +308,9 @@ class eportfolio extends controller
                 $this->setVar('suppressFooter', TRUE);
                 $reflectId = $this->getParam("reflectId");
                 $this->setVarByRef("reflectId", $reflectId);
+                //Stream Activity
+                $description = $this->objLanguage->languageText('mod_eportfolio_view','eportfolio','View')." ".$this->objLanguage->languageText('mod_eportfolio_wordReflection','eportfolio','Reflection');
+                $this->objEportfolioActivityStreamer->addRecord($this->userId, Null, Null, Null, 'eportfolio', 'singlereflection', $reflectId, $description, $endtime=NULL);
                 return "viewreflection_tpl.php";
             case "singleassertion":
                 $this->setLayoutTemplate(NULL);

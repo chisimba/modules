@@ -107,7 +107,7 @@ class db_eportfolio_activitystreamer extends dbtable
      * @param string $description Brief description of the activity
      * @param string $sessionendtime session end time
      */
-   public function addRecord($userId, $ownerUserId, $groupId, $contextCode, $moduleCode, $partName, $recordId, $description, $endtime=NULL)
+   public function addRecord($userId, $ownerUserId, $groupId, $contextCode, $moduleCode, $partName, $recordId, $description)
     {
         $row = array();
         $row['userid'] = $userId;
@@ -121,7 +121,7 @@ class db_eportfolio_activitystreamer extends dbtable
         $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
         $row['description'] = $description;
         $row['starttime'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
-        $row['endtime'] = $endtime;
+        $row['endtime'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
 
         return $this->insert($row);
     }
@@ -144,14 +144,33 @@ class db_eportfolio_activitystreamer extends dbtable
      * @param string $userId User ID
      * @param string $recordId Record Id
      * @param string $contextCode Context Code
-     * @return TRUE
+     * @return TRUE|FALSE
+     */
+    public function recordExists($userId, $recordId, $sessionId)
+    {
+        $where = "WHERE userid = '$userId' AND recordid = '$recordId' AND sessionid = '$sessionid'";
+        $results = $this->getAll($where);
+        if (isset($results[0]['id'])) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    /**
+     * Method fetch record data according to userId, recordId and sessionId
+     *
+     * @access public
+     * @param string $userId User ID
+     * @param string $recordId Record Id
+     * @param string $contextCode Context Code
+     * @return Array|FALSE
      */
     public function getRecord($userId, $recordId, $sessionId)
     {
         $where = "WHERE userid = '$userId' AND recordid = '$recordId' AND sessionid = '$sessionid'";
         $results = $this->getAll($where);
         if (isset($results[0]['id'])) {
-            return TRUE;
+            return $results[0];
         } else {
             return FALSE;
         }
