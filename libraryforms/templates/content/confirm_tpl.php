@@ -12,44 +12,62 @@ if (!
 $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
-// end security check
 
-/**
- *
- *libraryforms
- *
- * libraryforms allows students or distant user to request books online
- *
- * @category  Chisimba
- * @package   libraryforms
- * @author    Brenda Mayinga brendamayinga@ymail.com
- */
+$h3 = $this->getObject('htmlheading', 'htmlelements');
+$objLayer = $this->newObject('layer', 'htmlelements');
+$objIcon =  $this->newObject('geticon', 'htmlelements');
+//$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('category_resource_six','libraryforms','');
 
-// create the Form
- //$objForm = new form('confirm_tpl', $this->getFormAction());
+$objLayer->str = $h3->show();
+$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
+$header = $objLayer->show();
 
-//Load form object
-  $this->loadClass('form', 'htmlelements');
+$display = '<p>'.$header.'</p><hr />';
 
-//Load the button object
-  $this->loadClass('button', 'htmlelements');
+//Show Header
+echo $display;
+echo '<div class="noRecordsMessage">'. $this->objLanguage->languageText('category_resource_six','libraryforms','');
+echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_libraryforms_commentsent', 'libraryforms', '').'</div>';
+$objBlocks = $this->getObject('blocks', 'blocks');
+$this->loadClass('link', 'htmlelements');
 
-//$objForm = new form('confirm_tpl', $this->getFormAction());
+/*link to Landing Page
+$objLandingPage = new link($this->uri(array('action'=>'Home')));
+$objLandingPage->link='Home';
+$landinging = $objLandingPage->show();
 
-//   $this->loadElements();
+//link to Staff Member Registration From
+$objdistance = new link($this->uri(array('action'=>'')));
+$objdistance->link='Distance user Form';
+$d = $objdistance->show();
 
-echo '<p>'.$this->objLanguage->languageText('mod_libraryforms_commentsent', 'libraryforms', '').':</p>';
+//link to view registered Staff Members
+$objthesis = new link($this->uri(array('action'=>'')));
+$objthesis->link='Thesis Books only';
+$t = $objthesis->show();
 
-//---------Return Button--------------
-        //Create a button for submitting the form
-        $objButton = new button('Back');
 
-        // Set the button type to submit
-        $objButton->setToSubmit();
+//View Accredited Journal Article
+$objperiod = new link($this->uri(array('action'=>'')));
+$objperiod->link='Periodical Books Only';
+$p = $objperiod->show();
 
-        // 
-        $objButton->setValue(' '.$this->objLanguage->languageText("category_resource_five", "libraryforms").'back');
-      //  $objForm->addToForm($objButton->show());
- 
-echo '<br /><br />';
+
+//link to Entire Book data entry page
+$objfdb = new link($this->uri(array('action'=>'')));
+$objfbd->link='Feed back Form';
+$f = $objfdb->show();
+
+
+$cssLayout = $this->getObject('csslayout', 'htmlelements');
+
+//$leftColumn =$objRegStaff->show();// $this->getVar('leftContent');
+//$middleColumn = $this->getVar('middleContent');
+
+$cssLayout->setNumColumns(2);
+$cssLayout->setLeftColumnContent('<br />'.$landinging.'<br />'.$d.'<br />'.$t.'<br />'.$p.'<br />'.$f.'<br />'.$sumarry);
+$cssLayout->setMiddleColumnContent($this->getContent());
+echo $cssLayout->show();*/
+
+
 ?>

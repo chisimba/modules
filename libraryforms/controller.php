@@ -65,7 +65,7 @@ class libraryforms extends controller {
 	{          
 	    $this->submitmsg(); 
         }
-        return "editadd_tpl.php";
+        return "confirm_tpl.php";
     }
 
 
@@ -111,6 +111,9 @@ $this->sendEmailNotification($title="email notification for distance user",$subj
         if($pid!=null) {
             var_dump('Saved Successfully');
             die;
+            
+
+           
         }
         else {
             var_dump('Sorry Saved Successfully');
@@ -174,6 +177,7 @@ $bentitynum,$bstudentno, $bcourse);
         if($pid!=null) {
             var_dump('Saved Successfully');
             die;
+           
         }
         else {
             var_dump('Sorry Saved Successfully');
@@ -223,6 +227,8 @@ $bentitynum,$bstudentno, $bcourse);
              if($pid!=null) {
             	var_dump('Saved Successfully');
             	die;
+             
+                    
         }
         else {
             	var_dump('Sorry Saved Successfully');
