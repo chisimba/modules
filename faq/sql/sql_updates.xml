@@ -1,33 +1,22 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
-	<update>
-		<table>tbl_faq_categories</table>
-		<version>2.561</version>
-		<description>change the categoryid column name to categoryname</description>
-		<data>
-			<rename>
-			<categoryid>
-				<name>categoryname</name>
-				<definition>
-					<type>text</type>
-					<length>255</length>
-				</definition>
-				</categoryid>
-			</rename>
-		</data>
-	</update>
-	<update>
-		<table>tbl_faq_entries</table>
-		<version>2.609</version>
-		<description>Change the question field to type clob</description>
-		<data>
-            <change>
-                <question>
+    <update>
+        <table>tbl_faq_categories</table>
+        <version>2.561</version>
+        <description>change the categoryid column name to categoryname</description>
+        <data>
+            <rename>
+                <categoryid>
+                    <name>categoryname</name>
                     <definition>
-                        <type>clob</type>
+                        <type>text</type>
+                        <length>255</length>
                     </definition>
-                </question>
-            </change>
-		</data>
-	</update>
+                </categoryid>
+            </rename>
+        </data>
+    </update>
+
+   
+        
 </updates>

@@ -33,7 +33,7 @@ foreach ($categories as $item) {
 $dropdown->setSelected($categoryId);
 $form->addToForm($dropdown);
 
-$label = new label ($objLanguage->languageText("word_question"), 'input_question');
+$label = new label ($objLanguage->languageText("mod_faq_question",'faq','Question'), 'input_question');
 $form->addToForm("<b>" . $label->show() . ":</b>");
 $form->addToForm(new textarea("question", NULL, 5, 80));
 

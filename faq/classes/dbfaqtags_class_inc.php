@@ -5,6 +5,8 @@ class dbfaqtags extends dbtable {
     public function init() {
         parent::init('tbl_faq_tags');
         $this->objUser = $this->getObject('user', 'security');
+        $this->objContext=$this->getObject('dbcontext','context');
+        $this->contextCode=$this->objContext->getContextCode();
     }
 
 
@@ -23,7 +25,7 @@ class dbfaqtags extends dbtable {
 
     public function getLastLimitTags($limit=50) {
         $sql = 'SELECT tbl_faq_tags.* , (SELECT count(tag) FROM tbl_faq_tags AS tags2 WHERE tbl_faq_tags.tag = tags2.tag) AS tagcount
-FROM tbl_faq_tags GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
+FROM tbl_faq_tags,tbl_faq_entries  where tbl_faq_tags.faqid=tbl_faq_entries.id  and tbl_faq_entries.contextid= "'.$this->contextCode.'" GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
 
         if (isset($limit) && $limit > 0) {
             $sql .= ' LIMIT '.$limit;
@@ -99,6 +101,7 @@ FROM tbl_faq_tags GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
                 'faqid'=>$faqId,
                 'tag'=>$tag,
                 'creatorid' => $this->objUser->userId(),
+               
                 'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
         ));
     }

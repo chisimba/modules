@@ -27,7 +27,7 @@ $fields = array(
 		'default' => '',
 		 ),
 	'question' => array(
-	  	'type' => 'clob',
+	  	'type' => 'text',
 		'notnull' => TRUE,
 		'default' => '',
 		),
@@ -46,7 +46,7 @@ $fields = array(
 		'type' => 'timestamp',
 		'notnull' => TRUE,
 		'default' => '0000-00-00 00:00:00',
-		),
+		),  
 	'updated' => array(
 		'type' => 'timestamp',
 		'notnull' => TRUE,

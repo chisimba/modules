@@ -16,12 +16,12 @@ class dbFaqEntries extends dbTable
     /**
     * Constructor method to define the table
     */
-    function init() 
+    function init()
     {
         parent::init('tbl_faq_entries');
         //$this->USE_PREPARED_STATEMENTS=True;
     }
- 
+
     /**
     * Insert a record
     * @param string $contextId The context ID
@@ -36,8 +36,8 @@ class dbFaqEntries extends dbTable
         //$array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName}");
 
         $ins = $this->insert(array(
-            'contextid'=>$contextId, 
-            'categoryid'=>$categoryId, 
+            'contextid'=>$contextId,
+            'categoryid'=>$categoryId,
             '_index' => $this->getNextIndex($contextId, $categoryId),
             'question' => $question,
             'answer' => $answer,
@@ -52,10 +52,10 @@ class dbFaqEntries extends dbTable
 
         $this->objDbFaqCategories =& $this->getObject('dbfaqcategories');
         $categoryRow = $this->objDbFaqCategories->getRow('id', $categoryId);
-        
+
         // Add to Search
         $objIndexData = $this->getObject('indexdata', 'search');
-        
+
         // Prep Data
         $docId = 'faq_entry_'.$ins;
         $docDate = strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated);
@@ -66,10 +66,10 @@ class dbFaqEntries extends dbTable
         $module = 'faq';
         $userId = $userId;
         $context = $categoryRow['contextid'];
-        
+
         // Add to Index
         $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
-        return $ins;	
+        return $ins;
     }
 
      /**
@@ -82,7 +82,7 @@ class dbFaqEntries extends dbTable
 
         return $this->getArray($sql);
     }
-    
+
     /**
     * Get FAQ entries
     * @author Nonhlanhla Gangeni <noegang@gmail.com>
@@ -94,7 +94,7 @@ class dbFaqEntries extends dbTable
         return $this->getArray($sql);
     }
 
-   
+
     /**
     * Return all records
     * @param string $contextId The context ID
@@ -112,7 +112,7 @@ class dbFaqEntries extends dbTable
             return $this->getAll("WHERE contextid='" . $contextId . "' AND categoryid='" . $categoryId ."' ORDER BY _index");
         }
     }
-    
+
     /**
      * Method to get the number of items a category has
      * @param string $categoryId Category Id
@@ -128,13 +128,13 @@ class dbFaqEntries extends dbTable
     * @param string $id ID
     * @return array
     * @return array The FAQ entrry
-    */	
+    */
     function listSingle($id)
     {
         return $this->getRow('id', $id);
     }
 
-    /** 
+    /**
     * Get the next index
     * @param string $contextId The context ID
     * @param string $categoryId The category ID
@@ -145,7 +145,7 @@ class dbFaqEntries extends dbTable
         $array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName} WHERE contextid='$contextId' AND categoryid='$categoryId'");
         return $array[0]['_max'] + 1;
     }
-    
+
 
     /**
     * Update a record
@@ -156,7 +156,7 @@ class dbFaqEntries extends dbTable
     */
     function updateSingle($id, $question, $answer, $categoryId, $userId, $dateLastUpdated)
     {
-        $this->update("id", $id, 
+        $this->update("id", $id,
             array(
                 'question' => $question,
                 'answer' => $answer,
@@ -165,13 +165,13 @@ class dbFaqEntries extends dbTable
                 'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
             )
         );
-        
+
         $this->objDbFaqCategories =& $this->getObject('dbfaqcategories');
         $categoryRow = $this->objDbFaqCategories->getRow('id', $categoryId);
-        
+
         // Add to Search
         $objIndexData = $this->getObject('indexdata', 'search');
-        
+
         // Prep Data
         $docId = 'faq_entry_'.$id;
         $docDate = strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated);
@@ -182,11 +182,11 @@ class dbFaqEntries extends dbTable
         $module = 'faq';
         $userId = $userId;
         $context = $categoryRow['contextid'];
-        
+
         // Add to Index
         $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
     }
-    
+
     /**
     * Delete a record
     * @param string $id ID
@@ -273,7 +273,7 @@ class dbFaqEntries extends dbTable
         else {
             $list =  $this->getAll("WHERE contextid='" . $contextId . "' AND categoryid='" . $categoryId ."' ORDER BY _index");
         }
-        
+
         $indexArray = array();
         $count = 0;
 		foreach ($list as $num) {
