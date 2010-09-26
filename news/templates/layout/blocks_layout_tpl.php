@@ -47,7 +47,7 @@ $leftContent .= $this->objNewsStories->getFeedLinks();
 
 $leftContent .= '<br/><div id="leftblocks">'.$myleftBlocks.'</div>';
 $right = '';
-$right .= '<div id="rightblocks">'.$myrightBlocks.'</div>';
+
 
 $adminOptions = array();
 
@@ -153,8 +153,8 @@ if ($objUser->isAdmin()) {
     $right .= '<div id="editmode">' . $editOnButton->show() . '</div>';
 }
 
+$right .= '<div id="rightblocks">'.$myrightBlocks.'</div>';
 
-//$right .= '<div id="rightblocks">'.$rightBlocks.'</div>';
 
 $left = '';
 
