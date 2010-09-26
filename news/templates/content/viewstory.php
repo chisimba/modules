@@ -200,7 +200,7 @@ if ($this->isValid('addstory')) {
     $addNewsStoryLink->link = 'Add News Story';
     $adminOptions[] = '<li>'.$addNewsStoryLink->show().'</li>';
 }
-
+if ($this->objUser->isAdmin()){
 if (count($adminOptions) > 0) {
 
     $leftContent .= '<h3>News Options</h3>';
@@ -215,7 +215,7 @@ if (count($adminOptions) > 0) {
     $leftContent .= '</ul>';
 
 }
-
+}
 
 $objCssLayout->leftColumnContent .=$leftContent;
 $objCssLayout->leftColumnContent .= '<br/><div id="leftblocks">'.$leftBlocks.'</div>';

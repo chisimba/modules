@@ -5,6 +5,7 @@
  *
  */
 class news extends controller {
+
     /**
      * Instance of the dbsysconfig class of the sysconfig module.
      *
@@ -12,7 +13,6 @@ class news extends controller {
      * @var object
      */
     protected $objSysConfig;
-
     /**
      * Instance of the washout class of the utilities module.
      *
@@ -68,9 +68,6 @@ class news extends controller {
         }
     }
 
-
-
-
     /**
      * Standard Dispatch Function for Controller
      *
@@ -83,14 +80,14 @@ class news extends controller {
         $this->putLayoutTemplate($action);
 
         /*
-        * Convert the action into a method (alternative to
-        * using case selections)
-        */
+         * Convert the action into a method (alternative to
+         * using case selections)
+         */
         $method = $this->getMethod($action);
         /*
-        * Return the template determined by the method resulting
-        * from action
-        */
+         * Return the template determined by the method resulting
+         * from action
+         */
         return $this->$method();
     }
 
@@ -101,7 +98,7 @@ class news extends controller {
      * @param string $action Action being run
      */
     private function putLayoutTemplate($action) {
-        $twoCols = array('admin', 'addcategory', 'managecategories', 'viewlocation', 'addstory', 'viewarchives','archivestory', 'editstory', 'themecloud', 'tagcloud', 'viewtimeline', 'viewbykeyword', 'viewcategory', 'viewlocation',  'viewstories', 'showmap', 'editmenuitem', 'liststories', 'addmenuitem', 'search', 'deletestory', 'deletecategory');
+        $twoCols = array('admin', 'addcategory', 'managecategories', 'viewlocation', 'addstory', 'viewarchives', 'archivestory', 'editstory', 'themecloud', 'tagcloud', 'viewtimeline', 'viewbykeyword', 'viewcategory', 'viewlocation', 'viewstories', 'showmap', 'editmenuitem', 'liststories', 'addmenuitem', 'search', 'deletestory', 'deletecategory');
 
         if (in_array($action, $twoCols)) {
             $this->setLayoutTemplate('2collayout.php');
@@ -109,8 +106,6 @@ class news extends controller {
             $this->setLayoutTemplate('layout.php');
         }
     }
-
-
 
     /**
      *
@@ -124,7 +119,7 @@ class news extends controller {
      */
     function getMethod(& $action) {
         if ($this->validAction($action)) {
-            return '__'.$action;
+            return '__' . $action;
         } else {
             return '__home';
         }
@@ -143,17 +138,14 @@ class news extends controller {
      *
      */
     function validAction(& $action) {
-        if (method_exists($this, '__'.$action)) {
+        if (method_exists($this, '__' . $action)) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
 
-
     // Beginning of Functions Relating to Actions in the Controller //
-
-
 
     /**
      *
@@ -161,7 +153,7 @@ class news extends controller {
      */
     private function __home() {
         // $this->setLayoutTemplate('blocks_layout_tpl.php');
-        $this->setLayoutTemplate ( NULL );
+        $this->setLayoutTemplate(NULL);
 
         $topStories = $this->objNewsStories->getTopStoriesFormatted();
         $this->setVarByRef('topStories', $topStories['stories']);
@@ -171,18 +163,16 @@ class news extends controller {
         $this->setVarByRef('categories', $categories);
 
         // Load Blocks
-        $rightBlocks=$this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage','right');
-        $leftBlocks=$this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage','left');
+        $rightBlocks = $this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage', 'right');
+        $leftBlocks = $this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage', 'left');
         $this->setVar('pageType', 'frontpage');
         $this->setVar('pageTypeId', 'frontpage');
         $this->setVar('rightBlocks', $rightBlocks);
         $this->setVar('leftBlocks', $leftBlocks);
 
-        $this->setLayoutTemplate ("newslayout_tpl.php" );
+        $this->setLayoutTemplate("newslayout_tpl.php");
         return 'newshome_tpl.php';
     }
-
-
 
     /**
      * A Pseudo Action to require the user to login before accessing the home page of the news module
@@ -219,7 +209,7 @@ class news extends controller {
      */
     private function __adddividertomenu() {
         $this->objNewsMenu->addDivider();
-        return $this->nextAction('managecategories', array('newrecord'=>'divideradded'));
+        return $this->nextAction('managecategories', array('newrecord' => 'divideradded'));
     }
 
     /**
@@ -231,19 +221,18 @@ class news extends controller {
         $url = $this->getParam('websiteurl');
 
         if ($title == '' || $url == '' || $url == 'http://') {
-            return $this->nextAction('managecategories', array('error'=>'notitleandurlgiven', 'title'=>$title, 'url'=>urlencode($url)));
+            return $this->nextAction('managecategories', array('error' => 'notitleandurlgiven', 'title' => $title, 'url' => urlencode($url)));
         }
 
         $objUrl = $this->getObject('url', 'strings');
         if (!$objUrl->isValidFormedUrl($url)) {
-            return $this->nextAction('managecategories', array('error'=>'notvalidurl', 'title'=>$title, 'url'=>urlencode($url)));
+            return $this->nextAction('managecategories', array('error' => 'notvalidurl', 'title' => $title, 'url' => urlencode($url)));
         }
 
         $id = $this->objNewsMenu->addWebsite($title, $url);
 
-        return $this->nextAction('managecategories', array('newrecord'=>'urladded', 'id'=>$id));
+        return $this->nextAction('managecategories', array('newrecord' => 'urladded', 'id' => $id));
     }
-
 
     /**
      *
@@ -252,12 +241,12 @@ class news extends controller {
     private function __addtexttomenu() {
         $text = $this->getParam('text');
         if (trim($text) == '') {
-            return $this->nextAction('managecategories', array('error'=>'notext'));
+            return $this->nextAction('managecategories', array('error' => 'notext'));
         }
 
         $id = $this->objNewsMenu->addText($text);
 
-        return $this->nextAction('managecategories', array('newrecord'=>'textadded', 'id'=>$id));
+        return $this->nextAction('managecategories', array('newrecord' => 'textadded', 'id' => $id));
     }
 
     /**
@@ -268,12 +257,12 @@ class news extends controller {
         $module = $this->getParam('themodule');
 
         if (trim($module) == '') {
-            return $this->nextAction('managecategories', array('error'=>'nomodule'));
+            return $this->nextAction('managecategories', array('error' => 'nomodule'));
         }
 
         $id = $this->objNewsMenu->addModule($module);
 
-        return $this->nextAction('managecategories', array('newrecord'=>'moduleadded', 'id'=>$id));
+        return $this->nextAction('managecategories', array('newrecord' => 'moduleadded', 'id' => $id));
     }
 
     /**
@@ -284,12 +273,12 @@ class news extends controller {
         $block = $this->getParam('theblock');
 
         if (trim($block) == '') {
-            return $this->nextAction('managecategories', array('error'=>'noblock'));
+            return $this->nextAction('managecategories', array('error' => 'noblock'));
         }
 
         $id = $this->objNewsMenu->addBlock($block);
 
-        return $this->nextAction('managecategories', array('newrecord'=>'blockadded', 'id'=>$id));
+        return $this->nextAction('managecategories', array('newrecord' => 'blockadded', 'id' => $id));
     }
 
     /**
@@ -301,7 +290,7 @@ class news extends controller {
 
         $id = $this->objNewsMenu->addCategory($categoryId, $this->getParam('basiccategory'));
 
-        return $this->nextAction('managecategories', array('newrecord'=>'categoryadded', 'id'=>$id));
+        return $this->nextAction('managecategories', array('newrecord' => 'categoryadded', 'id' => $id));
     }
 
     private function __updatebasiccategory() {
@@ -315,7 +304,7 @@ class news extends controller {
 
         $this->objNewsMenu->updateCategory($id, $name);
 
-        $function = 'updateBasicCategory_'.$categoryType;
+        $function = 'updateBasicCategory_' . $categoryType;
         $this->objNewsCategories->$function($item['itemvalue'], $name);
 
         $category = $this->objNewsCategories->getCategory($item['itemvalue']);
@@ -327,9 +316,9 @@ class news extends controller {
         $returnAction = $this->getParam('returnaction');
 
         if ($returnAction == 'managecategories') {
-            return $this->nextAction('managecategories', array('message'=>'categoryupdated'));
+            return $this->nextAction('managecategories', array('message' => 'categoryupdated'));
         } else {
-            return $this->nextAction('viewcategory', array('id'=>$item['itemvalue'], 'message'=>'categoryupdated'));
+            return $this->nextAction('viewcategory', array('id' => $item['itemvalue'], 'message' => 'categoryupdated'));
         }
     }
 
@@ -342,17 +331,17 @@ class news extends controller {
         //print_r($_POST);
 
 
-        $name             = $this->getParam('advancecategory');
-        $categoryType     = $this->getParam('advancecategorytype');
-        $itemsOrder       = $this->getParam('advanceorder');
-        $defaultSticky    = $this->getParam('defaultsticky');
+        $name = $this->getParam('advancecategory');
+        $categoryType = $this->getParam('advancecategorytype');
+        $itemsOrder = $this->getParam('advanceorder');
+        $defaultSticky = $this->getParam('defaultsticky');
         $blockOnFrontPage = $this->getParam('blockonfrontpage');
         $showIntroduction = $this->getParam('showintroduction');
-        $introduction     = $this->getParam('introduction');
-        $numitems         = $this->getParam('numitems');
-        $othernum         = $this->getParam('othernum', 10);
-        $rssFeeds         = $this->getParam('rssfeeds');
-        $socialBookmarks         = $this->getParam('socialbookmarks');
+        $introduction = $this->getParam('introduction');
+        $numitems = $this->getParam('numitems');
+        $othernum = $this->getParam('othernum', 10);
+        $rssFeeds = $this->getParam('rssfeeds');
+        $socialBookmarks = $this->getParam('socialbookmarks');
 
         if ($numitems == 'other') {
             $numitems = $othernum;
@@ -368,7 +357,7 @@ class news extends controller {
 
         //echo $categoryId;
 
-        return $this->nextAction('managecategories', array('newrecord'=>'categoryadded', 'id'=>$id));
+        return $this->nextAction('managecategories', array('newrecord' => 'categoryadded', 'id' => $id));
     }
 
     /**
@@ -382,17 +371,17 @@ class news extends controller {
 
         $item = $this->objNewsMenu->getItem($id);
 
-        $name             = $this->getParam('advancecategory');
-        $categoryType     = $this->getParam('advancecategorytype');
-        $itemsOrder       = $this->getParam('advanceorder');
-        $defaultSticky    = $this->getParam('defaultsticky');
+        $name = $this->getParam('advancecategory');
+        $categoryType = $this->getParam('advancecategorytype');
+        $itemsOrder = $this->getParam('advanceorder');
+        $defaultSticky = $this->getParam('defaultsticky');
         $blockOnFrontPage = $this->getParam('blockonfrontpage');
         $showIntroduction = $this->getParam('showintroduction');
-        $introduction     = $this->getParam('introduction');
-        $numitems         = $this->getParam('numitems');
-        $othernum         = $this->getParam('othernum', 10);
-        $rssFeeds         = $this->getParam('rssfeeds');
-        $socialBookmarks         = $this->getParam('socialbookmarks');
+        $introduction = $this->getParam('introduction');
+        $numitems = $this->getParam('numitems');
+        $othernum = $this->getParam('othernum', 10);
+        $rssFeeds = $this->getParam('rssfeeds');
+        $socialBookmarks = $this->getParam('socialbookmarks');
 
         if ($numitems == 'other') {
             $numitems = $othernum;
@@ -411,12 +400,11 @@ class news extends controller {
         $returnAction = $this->getParam('returnaction');
 
         if ($returnAction == 'managecategories') {
-            return $this->nextAction('managecategories', array('message'=>'categoryupdated'));
+            return $this->nextAction('managecategories', array('message' => 'categoryupdated'));
         } else {
-            return $this->nextAction('viewcategory', array('id'=>$item['itemvalue'], 'message'=>'categoryupdated'));
+            return $this->nextAction('viewcategory', array('id' => $item['itemvalue'], 'message' => 'categoryupdated'));
         }
     }
-
 
     /**
      *
@@ -459,7 +447,7 @@ class news extends controller {
         if ($publishdate == 'now') {
             $publishdate = strftime('%Y-%m-%d %H:%M:%S', mktime());
         } else {
-            $publishdate = $this->getParam('storydatepublish').' '.$this->getParam('time');
+            $publishdate = $this->getParam('storydatepublish') . ' ' . $this->getParam('time');
         }
 
         $storyId = $this->objNewsStories->addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate, $sticky);
@@ -471,7 +459,7 @@ class news extends controller {
             $this->objNewsStories->serializeStoryOrder($storyCategory, str_replace('_', ' ', $category['itemsorder']));
         }
 
-        return $this->nextAction('viewstory', array('id'=>$storyId));
+        return $this->nextAction('viewstory', array('id' => $storyId));
     }
 
     /**
@@ -487,7 +475,7 @@ class news extends controller {
 
         // If story does not exist
         if ($story == FALSE) {
-            return $this->nextAction('home', array('error'=>'nostory'));
+            return $this->nextAction('home', array('error' => 'nostory'));
         } else {
 
             // Get Category
@@ -495,17 +483,17 @@ class news extends controller {
 
             // Check that category exists
             if ($category == FALSE) {
-                return $this->nextAction('home', array('error'=>'nostory'));
+                return $this->nextAction('home', array('error' => 'nostory'));
             } else {
 
                 $this->setVarByRef('currentCategory', $category['id']);
 
                 // Check whether story is available to be viewed
                 if (($story['dateavailable'] > strftime('%Y-%m-%d %H:%M:%S', mktime())) && !$this->isValid('viewfuturestory')) {
-                    return $this->nextAction('home', array('error'=>'nostory'));
+                    return $this->nextAction('home', array('error' => 'nostory'));
                 } else {
 
-                    $sectionLayout = $this->getObject('section_'.$category['itemsview']);
+                    $sectionLayout = $this->getObject('section_' . $category['itemsview']);
                     $this->setVarByRef('content', $sectionLayout->renderPage($story, $category));
                     $comments = $this->objComments->getStoryComments($id);
                     $this->setVarByRef('comments', $comments);
@@ -527,15 +515,13 @@ class news extends controller {
                     // Send to Layout Template
                     $this->setVar('rightContent', $rightContent);
                     // Load Blocks
-                    $rightBlocks=$this->objNewsBlocks->getBlocksAndSendToTemplate('story', 'story','right');
-                    $leftBlocks=$this->objNewsBlocks->getBlocksAndSendToTemplate('story', 'story','left');
+                    $rightBlocks = $this->objNewsBlocks->getBlocksAndSendToTemplate('story', 'story', 'right');
+                    $leftBlocks = $this->objNewsBlocks->getBlocksAndSendToTemplate('story', 'story', 'left');
                     $this->setVar('rightBlocks', $rightBlocks);
                     $this->setVar('leftBlocks', $leftBlocks);
                     return 'viewstory.php';
                 }
             }
-
-
         }
     }
 
@@ -559,7 +545,7 @@ class news extends controller {
 
 
         if ($story == FALSE) {
-            return $this->nextAction('home', array('error'=>'nostorytodelete'));
+            return $this->nextAction('home', array('error' => 'nostorytodelete'));
         } else {
             $storyTitle = $story['storytitle'];
             $storyDate = $story['storydate'];
@@ -580,7 +566,7 @@ class news extends controller {
             if ($publishdate == 'now') {
                 $publishdate = strftime('%Y-%m-%d %H:%M:%S', mktime());
             } else {
-                $publishdate = $this->getParam('storydatepublish').' '.$this->getParam('time');
+                $publishdate = $this->getParam('storydatepublish') . ' ' . $this->getParam('time');
             }
 
             $status = 'archive';
@@ -595,12 +581,8 @@ class news extends controller {
             }
 
             // return $this->nextAction('viewstory', array('id'=>$storyId));
-
-
         }
         //------------------END adding archives----------------------
-
-
         //Now deleting from the active table
         $id = $this->getParam('id');
 
@@ -608,21 +590,20 @@ class news extends controller {
         //print_r($story);
         //die();
         if ($story == FALSE) {
-            return $this->nextAction('home', array('error'=>'nostorytodelete'));
+            return $this->nextAction('home', array('error' => 'nostorytodelete'));
         } else {
             $mode = 'archive';
             $this->setVarByRef('mode', $mode);
             $this->setVarByRef('story', $story);
 
             $randomNumber = rand(0, 50000);
-            $this->setSession('deletestory_'.$story['id'], $randomNumber);
+            $this->setSession('deletestory_' . $story['id'], $randomNumber);
             $this->setVarByRef('deleteValue', $randomNumber);
 
             return 'deletestory.php';
         }
         //----------END deleting news story---------------
     }
-
 
     /**
      * Method to list archived stories
@@ -631,7 +612,6 @@ class news extends controller {
     private function __viewarchives() {
         return 'viewarchives.php';
     }
-
 
     /**
      * Method to restore archived stories
@@ -645,15 +625,14 @@ class news extends controller {
         $this->setVarByRef('archive', $restore_story);
 
         if ($restore_story == FALSE) {
-            return $this->nextAction('home', array('error'=>'nostory'));
+            return $this->nextAction('home', array('error' => 'nostory'));
         } else {
             //$storyTitle = $restore_story['storytitle'];
 //print_r($restore_story);
 //echo "@@####".$storyTitle."@@####";
 //echo "@@####".$restore_story['storytitle']."@@####";
-
 //die();
-            foreach($restore_story as $story) {
+            foreach ($restore_story as $story) {
                 $storyTitle = $story['storytitle'];
                 $storyDate = $story['storydate'];
                 $storyCategory = $story['storycategory'];
@@ -672,12 +651,10 @@ class news extends controller {
                 $status = 'restored';
 //	$this->objNewsMenu->updateText($id, $text);
 
-                $this->objArchivesStories->updateStatus($id,$status);
+                $this->objArchivesStories->updateStatus($id, $status);
                 //print_r($storyCategory);
                 //die();
                 $storyId = $this->objNewsStories->addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate, $sticky);
-
-
             }
             return 'viewarchives.php';
         }
@@ -693,7 +670,7 @@ class news extends controller {
         $story = $this->objNewsStories->getStory($id);
 
         if ($story == FALSE) {
-            return $this->nextAction('home', array('error'=>'nostory'));
+            return $this->nextAction('home', array('error' => 'nostory'));
         } else {
             $this->setVar('mode', 'edit');
 
@@ -738,7 +715,7 @@ class news extends controller {
         if ($publishdate == 'now') {
             $publishdate = strftime('%Y-%m-%d %H:%M:%S', mktime());
         } else {
-            $publishdate = $this->getParam('storydatepublish').' '.$this->getParam('time');
+            $publishdate = $this->getParam('storydatepublish') . ' ' . $this->getParam('time');
         }
 
         $tags = $this->getParam('storytags');
@@ -752,34 +729,34 @@ class news extends controller {
             $this->objNewsStories->serializeStoryOrder($storyCategory, str_replace('_', ' ', $category['itemsorder']));
         }
 
-        return $this->nextAction('viewstory', array('id'=>$id));
+        return $this->nextAction('viewstory', array('id' => $id));
     }
 
     /**
      *
      *
      *
-     $tags = $this->objTags->getStoryTags($id);/
-     private function __ajaxkeywords()
-     {
-     $start = $this->getParam($this->getParam('tag'));
+      $tags = $this->objTags->getStoryTags($id);/
+      private function __ajaxkeywords()
+      {
+      $start = $this->getParam($this->getParam('tag'));
 
-     $keywords = $this->objKeywords->getAjaxKeywords($start);
+      $keywords = $this->objKeywords->getAjaxKeywords($start);
 
-     if (count($keywords) > 0) {
-     echo '<ul>';
-     $counter = 1;
-     foreach ($keywords as $keyword)
-     {
-     echo '<li id="'.$counter.'">'.$keyword['keyword'].'</li>';
-     $counter++;
-     }
-     echo '</ul>';
-     }
-     }
+      if (count($keywords) > 0) {
+      echo '<ul>';
+      $counter = 1;
+      foreach ($keywords as $keyword)
+      {
+      echo '<li id="'.$counter.'">'.$keyword['keyword'].'</li>';
+      $counter++;
+      }
+      echo '</ul>';
+      }
+      }
 
 
-     /**
+      /**
      *
      *
      */
@@ -860,7 +837,7 @@ class news extends controller {
             $menuId = $this->objNewsMenu->getIdCategoryItem($id);
             $this->objNewsMenu->deleteCategory($menuId);
 
-            return $this->nextAction(NULL, array('error'=>'categorydoesnotexist'));
+            return $this->nextAction(NULL, array('error' => 'categorydoesnotexist'));
         } else {
 
             //Load Blocks for Page
@@ -871,16 +848,18 @@ class news extends controller {
             $menuId = $this->objNewsMenu->getIdCategoryItem($id);
             $this->setVarByRef('menuId', $menuId);
 
-            $sectionLayout = $this->getObject('section_'.$category['itemsview']);
+            $sectionLayout = $this->getObject('section_' . $category['itemsview']);
             $this->setVarByRef('category', $category);
             $this->setVarByRef('currentCategory', $category['id']);
             $this->setVarByRef('content', $sectionLayout->renderSection($category));
+            // Load Blocks
+            $rightBlocks = $this->objNewsBlocks->getBlocksAndSendToTemplate('story', 'story', 'right');
+            $leftBlocks = $this->objNewsBlocks->getBlocksAndSendToTemplate('story', 'story', 'left');
+            $this->setVar('rightBlocks', $rightBlocks);
+            $this->setVar('leftBlocks', $leftBlocks);
             return 'viewcategory.php';
         }
     }
-
-
-
 
     /**
      *
@@ -890,7 +869,7 @@ class news extends controller {
         $this->objBuildMap = $this->getObject('simplebuildmap', 'simplemap');
 
         $bodyParams = "onunload=\"GUnload()\"";
-        $this->setVarByRef('bodyParams',$bodyParams);
+        $this->setVarByRef('bodyParams', $bodyParams);
 
         //Read the API key from sysconfig
         $apiKey = $this->objBuildMap->getApiKey();
@@ -898,7 +877,7 @@ class news extends controller {
         $hScript = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key="
                 . $apiKey . "\" type=\"text/javascript\"></script>";
         //Add the local script to the page header
-        $this->appendArrayVar('headerParams',$hScript);
+        $this->appendArrayVar('headerParams', $hScript);
 
 
 
@@ -934,7 +913,7 @@ class news extends controller {
 
         $this->objComments->addComment($storyId, $name, $email, $comment);
 
-        return $this->nextAction('viewstory', array('id'=>$storyId));
+        return $this->nextAction('viewstory', array('id' => $storyId));
     }
 
     /**
@@ -956,7 +935,7 @@ class news extends controller {
         if (count($results) > 0) {
             echo '<br />';
 
-            $radio = new radio ('location');
+            $radio = new radio('location');
             $radio->setBreakSpace('<br />');
 
 
@@ -964,10 +943,10 @@ class news extends controller {
                 $locationName = $result['name'];
 
                 if ($result['admin1name'] != '') {
-                    $locationName .= ', '.$result['admin1name'];
+                    $locationName .= ', ' . $result['admin1name'];
                 }
 
-                $locationName .= ', '.$objCountries->getCountryName($result['countrycode']);
+                $locationName .= ', ' . $objCountries->getCountryName($result['countrycode']);
 
                 $radio->addOption($result['geonameid'], $locationName);
             }
@@ -977,16 +956,16 @@ class news extends controller {
             echo $radio->show();
         } else {
             $objCurl = $this->getObject('curl', 'utilities');
-            $data = $objCurl->exec('http://ws.geonames.org/search?name_equals='.urlencode($location).'&style=full&maxRows=20&fclass=P');
+            $data = $objCurl->exec('http://ws.geonames.org/search?name_equals=' . urlencode($location) . '&style=full&maxRows=20&fclass=P');
             $xml = simplexml_load_string($data);
 
             if (!$xml) {
-                echo 'No results for <em>'.$location.'</em><br />';
+                echo 'No results for <em>' . $location . '</em><br />';
             } else {
-                echo '<p><span class="confirm">'.$this->objLanguage->languageText('mod_geonames_file', 'geonames', 'Results from Webservice').'</span></p>';
+                echo '<p><span class="confirm">' . $this->objLanguage->languageText('mod_geonames_file', 'geonames', 'Results from Webservice') . '</span></p>';
 
                 if (isset($xml->geoname)) {
-                    $radio = new radio ('location');
+                    $radio = new radio('location');
                     $radio->setBreakSpace('<br />');
 
                     foreach ($xml->geoname as $geoname) {
@@ -997,18 +976,17 @@ class news extends controller {
                         $locationName = $geoname->name;
 
                         if ($geoname->adminName1 != '') {
-                            $locationName .= ', '.$geoname->adminName1;
+                            $locationName .= ', ' . $geoname->adminName1;
                         }
 
-                        $locationName .= ', '.$geoname->countryName;
+                        $locationName .= ', ' . $geoname->countryName;
 
-                        $radio->addOption($geoname->geonameId.'', $locationName);
-
+                        $radio->addOption($geoname->geonameId . '', $locationName);
                     }
 
                     echo $radio->show();
                 } else {
-                    echo '<p class="error">'.$this->objLanguage->languageText('mod_geonames_noresultsfromwebservice', 'geonames', 'No Results from the Geonames Webservice').'<br />'.$this->objLanguage->languageText('mod_geonames_possiblespellingerror', 'geonames', 'Possibly a spelling error. Please try again').'</p>';
+                    echo '<p class="error">' . $this->objLanguage->languageText('mod_geonames_noresultsfromwebservice', 'geonames', 'No Results from the Geonames Webservice') . '<br />' . $this->objLanguage->languageText('mod_geonames_possiblespellingerror', 'geonames', 'Possibly a spelling error. Please try again') . '</p>';
                 }
             }
             //echo 'No results for <em>'.$location.'</em><br />';
@@ -1022,13 +1000,10 @@ class news extends controller {
             $divider = '';
 
             foreach ($results2 as $result) {
-                echo $divider.'<a href="javascript:ck(\''.addslashes($result['name']).'\')">'.$result['name'].'</a>';
+                echo $divider . '<a href="javascript:ck(\'' . addslashes($result['name']) . '\')">' . $result['name'] . '</a>';
                 $divider = ', ';
             }
-
         }
-
-
     }
 
     /**
@@ -1040,9 +1015,9 @@ class news extends controller {
 
         $result = $this->objNewsMenu->moveItemUp($id);
 
-        $result = $result ? 1: 0;
+        $result = $result ? 1 : 0;
 
-        return $this->nextAction('managecategories', array('id'=>$id, 'act'=>'movedup', 'result'=>$result));
+        return $this->nextAction('managecategories', array('id' => $id, 'act' => 'movedup', 'result' => $result));
     }
 
     /**
@@ -1054,12 +1029,10 @@ class news extends controller {
 
         $result = $this->objNewsMenu->moveItemDown($id);
 
-        $result = $result ? 1: 0;
+        $result = $result ? 1 : 0;
 
-        return $this->nextAction('managecategories', array('id'=>$id, 'act'=>'movedup', 'result'=>$result));
+        return $this->nextAction('managecategories', array('id' => $id, 'act' => 'movedup', 'result' => $result));
     }
-
-
 
     /**
      *
@@ -1131,7 +1104,7 @@ class news extends controller {
         $item = $this->objNewsMenu->getItem($id);
 
         if ($item == FALSE) {
-            return $this->nextAction('managecategories', array('error'=>'unknownitem'));
+            return $this->nextAction('managecategories', array('error' => 'unknownitem'));
         } else {
 
             $this->setVarByRef('item', $item);
@@ -1143,11 +1116,10 @@ class news extends controller {
                 case 'category':
                     return 'managecategories_category.php';
                 case 'divider':
-                    return $this->nextAction('managecategories', array('error'=>'cannoteditdivider'));
+                    return $this->nextAction('managecategories', array('error' => 'cannoteditdivider'));
                 default:
-                    return $this->nextAction('managecategories', array('error'=>'unknowntype'));
+                    return $this->nextAction('managecategories', array('error' => 'unknowntype'));
             }
-
         }
     }
 
@@ -1197,7 +1169,7 @@ class news extends controller {
             default: $message = '';
                 break;
             case 'storydeleted':
-                $message = '<p><span class="confirm">'.$this->getParam('title').' story has been deleted</span></p>';
+                $message = '<p><span class="confirm">' . $this->getParam('title') . ' story has been deleted</span></p>';
                 break;
         }
 
@@ -1214,13 +1186,13 @@ class news extends controller {
         $story = $this->objNewsStories->getStory($id);
 
         if ($story == FALSE) {
-            return $this->nextAction('home', array('error'=>'nostory'));
+            return $this->nextAction('home', array('error' => 'nostory'));
         } else {
             $result = $this->objNewsStories->moveItemUp($id);
 
-            $result = $result ? 1: 0;
+            $result = $result ? 1 : 0;
 
-            return $this->nextAction('liststories', array('id'=>$story['storycategory'], 'act'=>'movedup', 'result'=>$result));
+            return $this->nextAction('liststories', array('id' => $story['storycategory'], 'act' => 'movedup', 'result' => $result));
         }
     }
 
@@ -1234,16 +1206,15 @@ class news extends controller {
         $story = $this->objNewsStories->getStory($id);
 
         if ($story == FALSE) {
-            return $this->nextAction('home', array('error'=>'nostory'));
+            return $this->nextAction('home', array('error' => 'nostory'));
         } else {
             $result = $this->objNewsStories->moveItemDown($id);
 
-            $result = $result ? 1: 0;
+            $result = $result ? 1 : 0;
 
-            return $this->nextAction('liststories', array('id'=>$story['storycategory'], 'act'=>'moveddown', 'result'=>$result));
+            return $this->nextAction('liststories', array('id' => $story['storycategory'], 'act' => 'moveddown', 'result' => $result));
         }
     }
-
 
     /**
      *
@@ -1253,10 +1224,10 @@ class news extends controller {
         $query = $this->getParam('q');
 
 
-        $objLucene =  $this->newObject('searchresults');
+        $objLucene = $this->newObject('searchresults');
         $searchResults = $objLucene->show($query);
         // echo $searchResults; die();
-        $searchResults = str_replace('&','&amp;', $searchResults);
+        $searchResults = str_replace('&', '&amp;', $searchResults);
         $searchResults = str_replace(urlencode('[HIGHLIGHT]'), urlencode($query), $searchResults);
 
         $this->setVarByRef('searchResults', $searchResults);
@@ -1276,12 +1247,12 @@ class news extends controller {
         $story = $this->objNewsStories->getStory($id);
 
         if ($story == FALSE) {
-            return $this->nextAction('home', array('error'=>'nostorytodelete'));
+            return $this->nextAction('home', array('error' => 'nostorytodelete'));
         } else {
             $this->setVarByRef('story', $story);
 
             $randomNumber = rand(0, 50000);
-            $this->setSession('deletestory_'.$story['id'], $randomNumber);
+            $this->setSession('deletestory_' . $story['id'], $randomNumber);
             $this->setVarByRef('deleteValue', $randomNumber);
 
             return 'deletestory.php';
@@ -1298,7 +1269,7 @@ class news extends controller {
         $deletevalue = $this->getParam('deletevalue');
         $confirm = $this->getParam('confirm');
 
-        if (($id != '')  && ($deletevalue != '')  && ($confirm == 'yes') && ($deletevalue == $this->getSession('deletestory_'.$this->getParam('id')))) {
+        if (($id != '') && ($deletevalue != '') && ($confirm == 'yes') && ($deletevalue == $this->getSession('deletestory_' . $this->getParam('id')))) {
             $story = $this->objNewsStories->getStory($id);
 
             if ($story == FALSE) {
@@ -1306,16 +1277,15 @@ class news extends controller {
             } else {
                 $this->objComments->deleteStoryComments($id);
 
-                $this->setSession('deletestory_'.$story['storyid'], NULL);
+                $this->setSession('deletestory_' . $story['storyid'], NULL);
 
                 $this->objNewsStories->deleteStory($id);
 
-                return $this->nextAction('liststories', array('id'=>$story['storycategory'], 'result'=>'storydeleted', 'title'=>$story['storytitle']));
+                return $this->nextAction('liststories', array('id' => $story['storycategory'], 'result' => 'storydeleted', 'title' => $story['storytitle']));
             }
         } else {
-            return $this->nextAction('deletestory', array('id'=>$id, 'error'=>'deletenotconfirmed'));
+            return $this->nextAction('deletestory', array('id' => $id, 'error' => 'deletenotconfirmed'));
         }
-
     }
 
     function __deletecategory() {
@@ -1324,26 +1294,26 @@ class news extends controller {
         $item = $this->objNewsMenu->getItem($id);
 
         if ($item == FALSE) {
-            return $this->nextAction('managecategories', array('error'=>'nocategorytodelete'));
+            return $this->nextAction('managecategories', array('error' => 'nocategorytodelete'));
         }
 
         $category = $this->objNewsCategories->getCategory($item['itemvalue']);
 
         if ($category == FALSE) {
-            return $this->nextAction('managecategories', array('error'=>'nocategorytodelete'));
+            return $this->nextAction('managecategories', array('error' => 'nocategorytodelete'));
         } else {
 
             $numItems = $this->objNewsStories->getNumCategoryStories($item['itemvalue']);
 
             if ($numItems > 0) {
-                return $this->nextAction('liststories', array('id'=>$category['id'], 'error'=>'cannotdeletecategorywithstories'));
+                return $this->nextAction('liststories', array('id' => $category['id'], 'error' => 'cannotdeletecategorywithstories'));
             }
 
             $this->setVarByRef('item', $item);
             $this->setVarByRef('category', $category);
 
             $randomNumber = rand(0, 50000);
-            $this->setSession('deletecategory_'.$category['id'], $randomNumber);
+            $this->setSession('deletecategory_' . $category['id'], $randomNumber);
             $this->setVarByRef('deleteValue', $randomNumber);
 
             return 'deletecategory.php';
@@ -1359,36 +1329,31 @@ class news extends controller {
         $item = $this->objNewsMenu->getItem($id);
 
         if ($item == FALSE) {
-            return $this->nextAction('managecategories', array('error'=>'nocategorytodelete'));
+            return $this->nextAction('managecategories', array('error' => 'nocategorytodelete'));
         }
 
         $category = $this->objNewsCategories->getCategory($item['itemvalue']);
 
         if ($category == FALSE) {
-            return $this->nextAction('managecategories', array('error'=>'nocategorytodelete'));
+            return $this->nextAction('managecategories', array('error' => 'nocategorytodelete'));
         }
 
-        if (($id != '')  && ($item != '')  && ($item != '') && ($deletevalue != '')  && ($confirm == 'yes') && ($deletevalue == $this->getSession('deletecategory_'.$this->getParam('category')))) {
+        if (($id != '') && ($item != '') && ($item != '') && ($deletevalue != '') && ($confirm == 'yes') && ($deletevalue == $this->getSession('deletecategory_' . $this->getParam('category')))) {
 
             $numItems = $this->objNewsStories->getNumCategoryStories($item['itemvalue']);
 
             if ($numItems > 0) {
-                return $this->nextAction('liststories', array('id'=>$category['id'], 'error'=>'cannotdeletecategorywithstories'));
+                return $this->nextAction('liststories', array('id' => $category['id'], 'error' => 'cannotdeletecategorywithstories'));
             } else {
                 $this->objNewsMenu->deleteCategory($id);
                 $this->objNewsCategories->deleteCategory($category['id']);
 
-                return $this->nextAction('managecategories', array('result'=>'categorydeleted', 'title'=>$category['categoryname']));
+                return $this->nextAction('managecategories', array('result' => 'categorydeleted', 'title' => $category['categoryname']));
             }
-
-
-
         } else {
-            return $this->nextAction('deletecategory', array('id'=>$id, 'error'=>'deletenotconfirmed'));
+            return $this->nextAction('deletecategory', array('id' => $id, 'error' => 'deletenotconfirmed'));
         }
     }
-
-
 
     /**
      * Method to render a block
@@ -1401,14 +1366,14 @@ class news extends controller {
             $block = explode('|', $blockId);
 
 
-            $blockId = $side.'___'.str_replace('|', '___', $blockId);
+            $blockId = $side . '___' . str_replace('|', '___', $blockId);
 
             if ($block[0] == 'block') {
                 $objBlocks = $this->getObject('blocks', 'blocks');
-                echo '<div id="'.$blockId.'" class="block highlightblock">'.$objBlocks->showBlock($block[1], $block[2], NULL, 20, TRUE, FALSE).'</div>';
+                echo '<div id="' . $blockId . '" class="block highlightblock">' . $objBlocks->showBlock($block[1], $block[2], NULL, 20, TRUE, FALSE) . '</div>';
             } if
             ($block[0] == 'dynamicblock') {
-                echo '<div id="'.$blockId.'" class="block highlightblock">'.$this->objDynamicBlocks->showBlock($block[1]).'</div>';
+                echo '<div id="' . $blockId . '" class="block highlightblock">' . $this->objDynamicBlocks->showBlock($block[1]) . '</div>';
             } else {
                 echo '';
             }
