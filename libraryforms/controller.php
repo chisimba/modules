@@ -65,7 +65,7 @@ class libraryforms extends controller {
 	{          
 	    $this->submitmsg(); 
         }
-        return "confirm_tpl.php";
+        return "editadd_tpl.php";
     }
 
 

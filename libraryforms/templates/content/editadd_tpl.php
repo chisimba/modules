@@ -38,11 +38,12 @@ $objTable->addCell($objEditForm->show(), '', '','','','colspan="4"');
 //$table->addCell('&nbsp;', 3);
 $objTable->endRow();
 
+
+echo $display;
+echo '<div class="noRecordsMessage">'. $this->objLanguage->languageText("category_resource_seven","libraryforms").'</div>';
 $category = 'user';
 $tab->tabbedbox();
-
 //$tabcontent->addTab('Distance User Form','Book/ Thesis only Form','Periodical Request Form',$tab->show());
-
 $tab->addBoxContent($objEditForm->show());
 $tab->addTabLabel($this->objLanguage->languageText("category_resource_one","libraryforms"));
 $tabcontent->addTab('Distance User Form', $tab->show());
