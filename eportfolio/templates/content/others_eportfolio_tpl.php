@@ -598,7 +598,7 @@ $goalsTable->startRow();
 $goalsTable->addCell($goalsobjHeading->show() , '', '', '', '', 'colspan="2"');
 $goalsTable->endRow();
 $goalsTable->startRow();
-$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_Goals", 'eportfolio') . "</b>");
+$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_goals", 'eportfolio') . "</b>");
 $goalsTable->endRow();
 // Step through the list of addresses.
 $class = NULL;

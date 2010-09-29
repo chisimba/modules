@@ -649,7 +649,7 @@ $goalsTable->border = 0;
 $goalsTable->cellspacing = '12';
 $goalsTable->width = "60%";
 $goalsTable->startRow();
-$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_Goals", 'eportfolio') . "</b>");
+$goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_goals", 'eportfolio') . "</b>");
 $goalsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 'eportfolio') . "</b>");
 $goalsTable->addCell("&nbsp;");
 $goalsTable->endRow();

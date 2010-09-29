@@ -80,7 +80,8 @@ class eportfolio extends controller
         $this->objContextUser = $this->getObject('usercontext', 'context');
         $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
         $this->objUrl = $this->getObject('url', 'strings');
-        $this->_objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
+        $this->_objGAModel = $this->newObject('gamodel', 'groupadmin');
+        $this->_objGroupAdmin = $this->newObject('groupadminmodel', 'groupadmin');
         $this->_objManageGroups = &$this->newObject('managegroups', 'contextgroups');
         //TEMPORARY Check if class groupops exists
         if (file_exists($this->objConfig->getsiteRootPath() . "core_modules/groupadmin/classes/groupops_class_inc.php")) {
@@ -310,7 +311,7 @@ class eportfolio extends controller
                 $this->setVarByRef("reflectId", $reflectId);
                 //Stream Activity
                 $description = $this->objLanguage->languageText('mod_eportfolio_view','eportfolio','View')." ".$this->objLanguage->languageText('mod_eportfolio_wordReflection','eportfolio','Reflection');
-                $this->objEportfolioActivityStreamer->addRecord($this->userId, Null, Null, Null, 'eportfolio', 'singlereflection', $reflectId, $description, $endtime=NULL);
+                //$this->objEportfolioActivityStreamer->addRecord($this->userId, Null, Null, Null, 'eportfolio', 'singlereflection', $reflectId, $description, $endtime=NULL);
                 return "viewreflection_tpl.php";
             case "singleassertion":
                 $this->setLayoutTemplate(NULL);
@@ -2348,7 +2349,7 @@ function navLink($linkText, $moveType, $from, $to)
  */
 function getchildId($parentid, $groupName) 
 {
-    $thisgroupId = $this->_objGroupAdmin->getChildren($parentid);
+    $thisgroupId = $this->_objGroupAdmin->getChildren($parentid);    
     //Get the id for the child that corresponds to $groupName
     foreach($thisgroupId as $item) {
         $mygroupName = $item['name'];

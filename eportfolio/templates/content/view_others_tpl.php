@@ -58,6 +58,7 @@ if (class_exists('groupops', false)) {
                         $userSubGrps = $this->_objGroupAdmin->getSubgroups($userGrpId);
                         //Check if empty
                         if (!empty($userSubGrps)) {
+
                             foreach($userSubGrps[0] as $key => $userSubGrp) {
                                 //					echo "<br>userSubGrp<br>";
                                 //The fields to use in the select for getting group users
