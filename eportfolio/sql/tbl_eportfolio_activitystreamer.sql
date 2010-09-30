@@ -49,7 +49,7 @@ $fields = array(
         'notnull' => TRUE
         ),
     'description' => array(
-        'type' => 'FALSE',
+        'type' => 'text',
         'notnull' => TRUE
         ),
     'datecreated' => array(
