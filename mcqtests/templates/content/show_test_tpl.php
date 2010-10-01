@@ -71,7 +71,7 @@ if (!empty($data)) {
     $tickIcon = $objIcon->show();
     $objIcon->setIcon('redcross');
     $crossIcon = $objIcon->show();
-    
+
     foreach($data as $line) {
         $ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['answerorder']].')';
         if ($line['questiontype'] == 'freeform'){
@@ -83,9 +83,9 @@ if (!empty($data)) {
             if (!empty($line['studorder']) && !empty($line['studans'])) {
                 $ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['studorder']].')';
                 $content.= '<b>'.$yourAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['studans'].'<br />';
-           
+
            }else{
-            
+
                 $content.= $noAnsLabel;
 
             }
@@ -100,7 +100,7 @@ if (!empty($data)) {
         if (!empty($line['studcomment'])) {
             $content.= '<b>'.$commentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$line['studcomment'].'<br />';
         }
-        
+
         $objLayer = new layer();
         $objLayer->str = $icon;
         $objLayer->align = 'right';
@@ -111,15 +111,15 @@ if (!empty($data)) {
         $parsed = $this->objWashout->parseText($parsed);
 
         $objLayer = new layer();
-       
+
         $objLayer->left = '; margin-right: 20px; float:left';
         $objLayer->cssClass = 'forumTopic';
-       
+
         $objLayer->str = '<b>'.$questionLabel.' '.$line['questionorder'].':</b>&nbsp;&nbsp;&nbsp;'.$parsed;
-        
+
         $question = $objLayer->show() .$iconLayer;
 
-        $objLayer = new layer(); 
+        $objLayer = new layer();
         $objLayer->cssClass = 'forumContent';
         $objLayer->str = $content;
         $answers = $objLayer->show();
@@ -127,7 +127,7 @@ if (!empty($data)) {
         $objLayer = new layer();
         $objLayer->cssClass = 'topicContainer';
         $objLayer->str = $question.$answers;
-        $str.= $objLayer->show(); 
+        $str.= $objLayer->show();
 
         $objLayer = new layer();
         $objLayer->cssClass = 'forumBase';
@@ -148,12 +148,14 @@ if ($qNum < $data[0]['count']) {
     $links = $objLink->show() .'&nbsp;&nbsp;|&nbsp;&nbsp;';
 }
 
+/*
 $objLink = new link($this->uri(array(
     'action' => 'liststudents',
     'id' => $result['testid']
 )));
 $objLink->link = $exitLabel;
 $links.= $objLink->show();
+*/
 
 $objLayer = new layer();
 $objLayer->str = '<p />'.$links;
