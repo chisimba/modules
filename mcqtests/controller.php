@@ -537,6 +537,9 @@ class mcqtests extends controller {
                 ));
             case 'mark':
             case 'liststudents':
+                if ($this->objCond->isContextMember('Students')) {
+                    return 'noaccess_tpl.php';
+                }
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id, name, totalmark', $this->getParam('id'));
                 $data = $this->dbResults->getResults($this->getParam('id'));
                 $totalmark = $this->dbQuestions->sumTotalmark($this->getParam('id'));
