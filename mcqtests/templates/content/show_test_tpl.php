@@ -156,6 +156,9 @@ $objLink = new link($this->uri(array(
 $objLink->link = $exitLabel;
 $links.= $objLink->show();
 */
+$objLink = new link($this->uri(array()));
+$objLink->link = $exitLabel;
+$links.= $objLink->show();
 
 $objLayer = new layer();
 $objLayer->str = '<p />'.$links;
