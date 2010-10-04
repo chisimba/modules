@@ -24,57 +24,75 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class libraryforms extends controller {
 
 
-    public $objLanguage;
-    protected $objMail;
+   	 public $objLanguage;
+   	 protected $objMail;
 
     public function init() {
 
-    //Instantiate the language object
+    	//Instantiate the language object
         $this->objLanguage = $this->getObject('language', 'language');
 
-       // Instantiate the class\\
+       // Instantiate the class
         $this->dbAddDistances = $this->getObject('editform', 'libraryforms');
         $this->dbAddBookthesis =$this->getObject('bookthesis','libraryforms');
         $this->dbAddillperiodical=$this->getObject('illperiodical','libraryforms');
         $this->dbfeedback=$this->getObject('feedbk','libraryforms');
         $this->objUser=$this->getObject('User','security');
-	// Get a local reference to the mail
+        // Get a local reference to the mail
         $this->objMail = $this->getObject('email', 'mail');
 
-
-    }//end of function
+       }//end of function
 
    public function dispatch($action) {
      
-//var_dump($action);die;
-        if($action=='addeditform') {
-            $this->saveRecord();
-	 }
-	else 
-	if($action=='addthesis')
-        {
-            $this-> saveBookthesisRecord(); 
-	}
-	else 
-        if($action=='addperiodical')
-        {
-          $this->saveperiodicalRecord();
-        }
-   	else 
-        if ($action=='addfeedbk') 
-	{          
-	    $this->submitmsg(); 
-        }
-        return "editadd_tpl.php";
-    }
+      $action =$this ->getParam('action');
+      $this->setLayoutTemplate('editadd_tpl.php');
+       //if form is submitted
+ 	
+  if($_POST){
 
+	switch($action){
 
- function saveRecord() {
-        if (!$_POST) { // Check that user has submitted a page
+        case 'addeditform':
+          return $this->saveRecord();
+          return $this->sendEmailNotification();
+
+        case 'addthesis':
+         return $this->saveBookthesisRecord();
+         return $this->sendEmailNotification();
+
+        case 'addperiodical':
+         return $this->saveperiodicalRecord();
+         return $this->sendEmailNotification();
+
+        case 'addfeedbk':
+         return $this->submitmsg();
+         return $this->sendEmailNotification();
+      
+	}// end if post
+
+	}// end switch function
+
+ 
+       else{	//Display Landing page and forms
+            switch($action)
+            {
+ 	 default: 
+     return "editadd_tpl.php";
+       
+        }
+	} //end switch
+
+	}//end of function dispatch
+ 	/*
+ 	   *Public Method that checks if all required fields are filled
+ 	   *If fields are filled, and inserts data into db table, else returns error
+ 	   */
+
+ public function saveRecord() {
+           if (!$_POST) { // Check that user has submitted a page
            return $this->nextAction(NULL);
-
-        }
-        //get parametters for the distance form
+           }
         $surname = $this->getParam('surname');
         $initials = $this->getParam('initials');
         $title= $this->getParam('title');
@@ -91,45 +109,46 @@ class libraryforms extends controller {
         $course= $this->getParam('course');
         $department = $this->getParam('department');
         $supervisor = $this->getParam('supervisor');
-	$captcha = $this->getParam('editformrequest_captcha');
+        //$this->objConfirm=$this->getObject('confirm','libraryforms');
+        $captcha = $this->getParam('editformrequest_captcha');
 
-       if (md5(strtoupper($captcha)) != $this->getParam('editformrequest_captcha') || empty($captcha)) {
-            $msg = 'badcaptcha';
+         // Check whether user matched captcha
+        if (md5(strtoupper($captcha)) != $this->getParam('editformrequest_captcha') || empty($captcha)) {
+           $msg = 'badcaptcha';
+           }
+
+          //if form entry is in corect or invavalid
+            if (count($msg) > 0) {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
-            return 'confirm_tpl.php';
-        }
+            return 'editadd_tpl.php';
+             }
 
-        else{
-        // add info into database
-  $pid = $this->dbAddDistances->insertRecord($surname, $initials, $title, $studentno, $postaladdress, $physicaladdress, $postalcode, $postalcode2, $telnoh, $telnow, $cell, $fax,$emailaddress, $course, $department, $supervisor);
-   // send email notification
-
-$this->sendEmailNotification($title="email notification for distance user",$subject="distance user email",$message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.$cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
- }
-
-        if($pid!=null) {
-            var_dump('Saved Successfully');
-            die;
-            
-
-           
-        }
         else {
-            var_dump('Sorry Saved Successfully');
-            die;
+            $this->nextAction('confirm');
+            return $this->objConfirm->addStudentDetails();
         }
+         // insert into database
+	$pid = $this->dbAddDistances->insertRecord($surname, $initials, $title, $studentno, $postaladdress,
+						   $physicaladdress, $postalcode, $postalcode2, $telnoh, 
+                                                   $telnow, $cell, $fax,$emailaddress, $course, $department, $supervisor);
+ 
+           
+        // send email alert 
+ 	$this->sendEmailNotification($title="email notification for distance user",$subject="distance user email",
+				     $message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. 
+                                     $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.
+                                     $cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
 
-    }// end of function
+    }// end of Save Records */
 
-    function saveBookthesisRecord() {
+ function saveBookthesisRecord() {
         if (!$_POST) { // Check that user has submitted a page
 	
             return $this->nextAction(NULL);
-        }
-        //get parametters
-       
-        $bprint = $this->getParam('print');
+        }    
+
+       	$bprint = $this->getParam('print');
         $bauthor= $this->getParam('author');
         $btitle = $this->getParam('title');
         $bplace = $this->getParam('place');
@@ -154,44 +173,43 @@ $this->sendEmailNotification($title="email notification for distance user",$subj
         $bcourse = $this->getParam('course');
  	$captcha = $this->getParam('thesis_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('thesis_captcha') || empty($captcha)) {
+         // Check whether user matched captcha
+       if (md5(strtoupper($captcha)) != $this->getParam('thesis_captcha') || empty($captcha)) {
             $msg = 'badcaptcha';
+           }
+             //if form entry is in corect or invavalid
+            if (count($msg) > 0) {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
-            //return 'form_tpl.php';
-            return 'confirm_tpl.php';
-        }
-        else {
-        //insert into DB
- 	$id= $this->dbAddBookthesis->insertBookthesisRecord($bprint,$bauthor,$btitle,$bplace,$bpublisher,$bdate,$bedition,$bisbn,$bseries,$bcopy,$btitlepages,$bpages,$bthesis,$bname,$baddress,$bcell,$bfax,$btel,$btelw,$bemailaddress,
-$bentitynum,$bstudentno, $bcourse);
-  
- // after inserting into db send email notification
-	$this->sendEmailNotification($title="email notification for thesis books",$subject="book thesis mail",$message= 	$bprint.' '.
-	$bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.$bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '.
-	$btitlepages.' '.$bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.$btel.' '.$btelw.' '.
-	$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse);
-	
-}
+            return 'editadd_tpl.php';
+             }
 
-        if($pid!=null) {
-            var_dump('Saved Successfully');
-            die;
-           
-        }
         else {
-            var_dump('Sorry Saved Successfully');
-            die;
+            $this->nextAction('confirm');
+            return $this->objConfirm->addStudentDetails();
         }
-        
-}// end of function
-       function saveperiodicalRecord() {
+        //insert into DB
+	$id= $this->dbAddBookthesis->insertBookthesisRecord($bprint,$bauthor,$btitle,$bplace,$bpublisher,$bdate,
+                                                            $bedition,$bisbn,$bseries,$bcopy,$btitlepages,$bpages,$bthesis,
+                                                            $bname,$baddress,$bcell,$bfax,$btel,$btelw,$bemailaddress,
+                                                            $bentitynum,$bstudentno, $bcourse);
+
+// after inserting into db send email alert
+	$this->sendEmailNotification($title="email notification for thesis books",$subject="book thesis mail",
+                                     $message= $bprint.' '. $bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.
+				     $bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '. $btitlepages.' '.
+				     $bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.
+				     $btel.' '.$btelw.' '.$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse);
+
+
+  } // end of bookthesisrecord
+
+ public function saveperiodicalRecord() {
         if (!$_POST) { // Check that user has submitted a page
         
             return $this->nextAction(NULL);
         }
-       //get parametters
-      
+
         $titleperiodical = $this->getParam('print');
         $volume= $this->getParam('author');
         $part= $this->getParam('title');
@@ -210,57 +228,71 @@ $bentitynum,$bstudentno, $bcourse);
         $bcourse = $this->getParam('course');
         $captcha = $this->getParam('periodical_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('periodical_captcha') || empty($captcha)) {
-            $msg = 'badcaptcha';
+  	 // Check whether user matched captcha
+	if (md5(strtoupper($captcha)) != $this->getParam('periodical_captcha') || empty($captcha)) {
+               $msg = 'badcaptcha';
+            }
+ 	//if form entry is in corect or invavalid
+            if (count($msg) > 0) {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
-            //return 'form_tpl.php';
-            return 'confirm_tpl.php';
-        }
+            return 'editadd_tpl.php';
+             }
 
-        else{
-        //insert the data into DB
- 	$id=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, 	$titlearticle, $prof,$address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course);
-
-	$this->sendEmailNotification($title="email for periodical books",$subject="periodical thesis mail",$message= 		$titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.$author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.$tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
-}
-             if($pid!=null) {
-            	var_dump('Saved Successfully');
-            	die;
-             
-                    
-        }
         else {
-            	var_dump('Sorry Saved Successfully');
-           	 die;
-        }
-    }// end if function
+            $this->nextAction('confirm');
+            return $this->objConfirm->addStudentDetails();
+           }
 
-    function submitmsg() {
+       //insert the data into DB
+ 	$id=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, 							      $titlearticle, $prof,$address, $cell,$tell,$tellw, 
+							      $emailaddress,$entitynum,$studentno,$course);
+
+	$this->sendEmailNotification($title="email for periodical books",$subject="periodical thesis mail",
+				     $message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.
+				     $author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.
+				     $tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
+
+
+} //  end saveperiodicalRecord
+
+
+public function submitmsg() {
 
         if (!$_POST) { // Check that user has submitted a page
             return $this->nextAction(NULL);
         }
-        //get parametters
-       
+       //get parametters
         $name = $this->getParam('name');
         $emaill = $this->getParam('emaill');
         $msg = $this->getParam('msg');
-         $captcha = $this->getParam('feedback_captcha');
-
-        if (md5(strtoupper($captcha)) != $this->getParam('feedback_captcha') || empty($captcha)) {
+        $captcha = $this->getParam('feedback_captcha');
+ 
+         if (md5(strtoupper($captcha)) != $this->getParam('feedback_captcha') || empty($captcha)) {
             $msg = 'badcaptcha';
+           }
+
+  	 //if form entry is in corect or invavalid
+            if (count($msg) > 0) {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
-            return 'confirm_tpl.php';
-        }
-     else{
-        //insert the data into DB
-            $id=$this->dbfeedback->insertmsgRecord($name,$emaill,$msg);
-	    $this->sendEmailNotification($title="feed back email",$subject="channel your feed back",$message= $msg.'');
-	}
-   }
-public function sendEmailNotification($title,$subject,$message){
+            return 'editadd_tpl.php';
+             }
+
+        else {
+            $this->nextAction('confirm');
+            return $this->objConfirm->addStudentDetails();
+           }
+
+         //insert the data into DB
+         $id=$this->dbfeedback->insertmsgRecord($name,$emaill,$msg);
+          // send email alert
+         $this->sendEmailNotification($title="feed back email",$subject="channel your feed back",$message= $msg.'');
+
+}// end of Submitmsg
+
+
+ public function sendEmailNotification($title,$subject,$message){
         //Get local refence to mail object
         $objMail = $this->getObject('email', 'mail');
         //send to multiple addressed   
@@ -277,8 +309,10 @@ public function sendEmailNotification($title,$subject,$message){
         // send email
         $this->$objMail->send();
 
-    }
-       
-}
+     }  // end of notification email
+
+
+      
+}// end of all
    
 
