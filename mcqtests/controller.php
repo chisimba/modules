@@ -537,7 +537,8 @@ class mcqtests extends controller {
                 ));
             case 'mark':
             case 'liststudents':
-                if ($this->objCond->isContextMember('Students')) {
+                //(!$this->objCond->isContextMember('Lecturers'))
+                if (!$this->objUser->isCourseAdmin($this->contextCode)) {
                     return 'noaccess_tpl.php';
                 }
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id, name, totalmark', $this->getParam('id'));
@@ -740,7 +741,8 @@ class mcqtests extends controller {
                 $id = $this->getParam('id');
                 return $this->previewQuestion($id);
             default:
-                if ($this->objCond->isContextMember('Students')) {
+                //(!$this->objCond->isContextMember('Lecturers'))
+                if (!$this->objUser->isCourseAdmin($this->contextCode)) {
                     $this->unsetSession('taketest');
                     return $this->studentHome();
                 } else {
