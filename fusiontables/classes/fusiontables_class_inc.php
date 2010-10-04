@@ -2,6 +2,8 @@
 
 class fusiontables extends object
 {
+    private $gdata;
+
     public function init()
     {
         $this->getObject('zend', 'zend');
