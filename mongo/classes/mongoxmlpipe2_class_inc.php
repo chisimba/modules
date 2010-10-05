@@ -22,10 +22,10 @@
  * 
  * @category  Chisimba
  * @package   mongo
- * @author    Paul Scott <pscott@uwc.ac.za>
- * @copyright 2010 Paul Scott <pscott@uwc.ac.za>
+ * @author    Charl van Niekerk <charlvn@charlvn.com>
+ * @copyright 2010 Charl van Niekerk
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   
+ * @version   $Id: mongoops_class_inc.php 18998 2010-09-14 12:45:34Z paulscott $
  * @link      http://avoir.uwc.ac.za/
  * @seealso   http://www.mongodb.org/
  */
@@ -49,10 +49,10 @@ $GLOBALS['kewl_entry_point_run']) {
  * 
  * @category  Chisimba
  * @package   mongo
- * @author    Paul Scott <pscott@uwc.ac.za>
- * @copyright 2010 Paul Scott
+ * @author    Charl van Niekerk <charlvn@charlvn.com>
+ * @copyright 2010 Charl van Niekerk
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   
+ * @version   $Id: mongoops_class_inc.php 18998 2010-09-14 12:45:34Z paulscott $
  * @link      http://avoir.uwc.ac.za/
  * @seealso   http://www.mongodb.org/
  */

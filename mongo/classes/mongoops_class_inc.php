@@ -191,6 +191,33 @@ class mongoops extends object
         return $this->getCollection($collection, $database)->find($query, $fields);
     }
 
+    public function removeRecord(array $record=array(), $justone = TRUE, $collection = NULL, $database = NULL)
+    {
+        if($database === NULL)
+        {
+            $database = $this->database;
+        }
+        
+        if($collection === NULL)
+        {
+            $collection = $this->collection;
+        }
+        
+        if($justone === TRUE) {
+            $justone = array("justOne" => true)
+        }
+        else {
+            array("justOne" => false)
+        }
+        
+        return $this->getCollection($collection, $database)->remove($record, $justone);   
+    }
+    
+    public function upsert() 
+    {
+        
+    }
+    
     /**
      * Imports a CSV file into a collection.
      *
