@@ -38,9 +38,16 @@ $objTable->addCell($objEditForm->show(), '', '','','','colspan="4"');
 //$table->addCell('&nbsp;', 3);
 $objTable->endRow();
 
-
 echo $display;
 echo '<div class="noRecordsMessage">'. $this->objLanguage->languageText("category_resource_seven","libraryforms").'</div>';
+
+ $header = new htmlheading();
+        $header->type = 2;
+	$header = $this->objLanguage->languageText("mod_libraryforms_commentsnamerequired","libraryforms","heading2");
+         if($mode!='fixerror'){
+	 echo '<div class="noRecordsMessage">'.'<br /><span style="color:red;font-size:12px;">'.$header.'</span>'.'</div>';
+      }
+
 $category = 'user';
 $tab->tabbedbox();
 //$tabcontent->addTab('Distance User Form','Book/ Thesis only Form','Periodical Request Form',$tab->show());

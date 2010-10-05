@@ -109,7 +109,7 @@ class libraryforms extends controller {
         $course= $this->getParam('course');
         $department = $this->getParam('department');
         $supervisor = $this->getParam('supervisor');
-        //$this->objConfirm=$this->getObject('confirm','libraryforms');
+        $this->objConfirm=$this->getObject('confirm','libraryforms');
         $captcha = $this->getParam('editformrequest_captcha');
 
          // Check whether user matched captcha
@@ -139,7 +139,10 @@ class libraryforms extends controller {
 				     $message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. 
                                      $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.
                                      $cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
+    return 'confirm_tpl.php';
 
+	 	         
+		
     }// end of Save Records */
 
  function saveBookthesisRecord() {

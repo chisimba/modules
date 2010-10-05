@@ -105,15 +105,8 @@ class editform extends dbTable {
 	$pageHeading = new htmlheading();
 	$pageHeading->type = 2;
 	$pageHeading->str = $this->objLanguage->languageText("mod_libraryforms_commenttitleform","libraryforms","title");
-	$objForm->addToForm($pageHeading->show()."<br/>");
-       
-        $header = new htmlheading();
-	$header->type = 4;
-	$header->str = $this->objLanguage->languageText("mod_libraryforms_commentsnamerequired","libraryforms","heading2");
-	if($mode!='fixerror'){
-   	$objForm->addToForm($header->show()."<br/>");
-    	//'<br /><span style="color:red;font-size:12px;">'.$header.'</span>';
-       }
+	$objForm->addToForm($pageHeading->show()."<br/>"."<br/>");
+     
 
         //Create a new textinput for the surname
         $objsurname = new textinput('surname');
