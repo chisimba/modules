@@ -123,6 +123,13 @@ class collectionsman extends controller
                 return 'add_tpl.php';
                 break;
                 
+            case 'createcollection' :
+                $coll = $this->getParam('coll');
+                var_dump($coll);
+                var_dump($this->objMongodb->setCollection($coll));
+                // $this->nextAction('');
+                break;
+                
             case 'mongotest' :
                 $this->objMongodb->setCollection('semarchive_audio');
                 $file = '/var/www/so.csv';
