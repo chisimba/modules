@@ -8,18 +8,32 @@
 * events modified. Its purpose is to allow administrators to edit/add
 * event to the database.
 * 
+* PHP version 5
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the
+* Free Software Foundation, Inc.,
+* 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+*
 * @category Chisimba
-* @package wtm
+* @package WTM
 * @author Yen-Hsiang Huang <wtm.jason@gmail.com>
 * @copyright 2007 AVOIR
 * @license http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
-* @version CVS: $Id:$
-* @link: http://avoir.uwc.ac.za 
+* @version CVS: $Id: demo_class_inc.php,v 1.4 2007-08-03 10:33:34 Exp $
+* @link http://avoir.uwc.ac.za
 */
 
-// security check
 /**
-* The $GLOBALS is an array used to control access to certain constants.
+* Security check: the $GLOBALS is an array used to control access to certain constants.
 * Here it is used to check if the file is opening in engine, if not it
 * stops the file from running.
 *
@@ -30,7 +44,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 {
 	die("You cannot view this page directly");
 }
-// end security check
+
 
 class editevent extends object 
 {
@@ -38,42 +52,56 @@ class editevent extends object
  
 	public $objDBEvents;
  
+	/**
+    * Constructor method to instantiate language and events DB.
+    */  
 	public function init()
 	{
-		//Instantiate the language object
 		$this->objLanguage = $this->getObject('language','language');
-		//Load the DB object
+		
 		$this->objDBEvents = $this->getObject('dbwtm_events','wtm');  
 	}
 	
-	
+	/**
+	* Method to load the required html elements.
+	*/
 	private function loadElements()
 	{
-		//Load the form class
 		$this->loadClass('form','htmlelements');
-		//Load the textinput class
+		
 		$this->loadClass('textinput','htmlelements');
-		//Load the textarea class
+		
 		$this->loadClass('textarea','htmlelements'); 
-		//Load the label class
+		
 		$this->loadClass('label','htmlelements');
-		//Load the button object
+		
 		$this->loadClass('button','htmlelements');
+		
 		$this->loadClass('link','htmlelements');
 	}
 	
+	/**
+	* Build form method, which constructs the add/edit 
+	* events form.
+	*/	
 	private function buildForm()
 	{
 		$this->loadElements();
-		//Create the form
+		
+		//Create new form object
 		$objForm = new form('events', $this->getFormAction());
+		
+		//Retrieve event ID for the case of editing.
 		$id = $this->getParam('id');
+		
+		//Retrieve building name and ID for the case of adding.
 		$refID = $this->getParam('refID');
 		$refbuilding = $this->getParam('refbuilding');
-		//If id is not empty, get the event details
+		
+		//If event id is not empty, get the event details.
 		if (!empty($id))
 		{
-			//Fetch the data
+			//Fetch the existing event data.
 			$eventData = $this->objDBEvents->listSingle($id);
 			$buildingid = $eventData[0]["buildingid"];
 			$event = $eventData[0]["event"];
@@ -84,6 +112,8 @@ class editevent extends object
 		}
 		else
 		{
+			//Set building ID to the retrieved building ID,
+			//which cannot be edited.
 			$buildingid = $refID;
 			$event = "";
 			$date = "";
@@ -92,90 +122,81 @@ class editevent extends object
 			$videoname = "";
 		}
 
-        //...........BUILDINGID TEXT INPUT.......................
-        //Create a new textinput for the name of the event
+        //Building ID text input.
+        //Create a new textinput for the name of the event.
         $objBuildingID = new textinput('buildingid', $buildingid, 'hidden');
-        //Create a new label for the text labels
+        //Create a new label for the text labels (Building name).
         $BuildingIDLabel = new label ($refbuilding);
         $objForm->addToForm($BuildingIDLabel ->show() , "<br />");
         $objForm->addToForm($objBuildingID->show() . "<br />");
 
-        //...........EVENT TEXT INPUT.......................
-        //Create a new textinput for the name of the event
+        //Event name text input.
         $objEvent = new textinput('event', $event);
-        //Create a new label for the text labels
         $eventLabel = new label ($this->objLanguage->languagetext("mod_wtm_event","wtm"),"event");
         $objForm->addToForm($eventLabel ->show() , "<br />");
         $objForm->addToForm($objEvent->show() . "<br />");
 		
-		//...........DATE TEXT INPUT.......................
-        //Create a new textinput for the date
+		//Event date text input.
         $objDate = new textinput('date', $date);
-        //Create a new label for the text labels
         $dateLabel = new label ($this->objLanguage->languagetext("mod_wtm_date","wtm"),"date");
         $objForm->addToForm($dateLabel->show() , "<br />");
         $objForm->addToForm($objDate->show() . "<br />");
 		
-		//...........DESCRIPTION TEXTAREA--------------
-        //Create a new textarea for the description
+		//Event description text area.
         $objDescription = new textarea('description', $description);
         $descriptionLabel = new label($this->objLanguage->languageText("mod_wtm_description","wtm"),"description");
         $objForm->addToForm($descriptionLabel->show() . "<br />");
         $objForm->addToForm($objDescription->show() . "<br />");
 		
-		//...........IMAGENAME TEXT INPUT.......................
-        //Create a new textinput for medialink
+		//Event image name text input.
         $objImageName = new textinput('imagename', $imagename);
-        //Create a new label for the text labels
         $imageNameLabel = new label ($this->objLanguage->languagetext("mod_wtm_imagename","wtm"),"imagename");
         $objForm->addToForm($imageNameLabel->show() , "<br />");
         $objForm->addToForm($objImageName->show() . "<br />");
 		
-		//...........VIDEONAME TEXT INPUT.......................
-        //Create a new textinput for medialink
+		//Event video name text input.
         $objVideoName = new textinput('videoname', $videoname);
-        //Create a new label for the text labels
         $videoNameLabel = new label ($this->objLanguage->languagetext("mod_wtm_videoname","wtm"),"videoname");
         $objForm->addToForm($videoNameLabel->show() , "<br />");
         $objForm->addToForm($objVideoName->show() . "<br />");
 		
-        //----------SUBMIT BUTTON--------------
-        //Create a button for submitting the form
+        //Submit button.
+        //Create a button for submitting the form.
         $objButton = new button('save');
-        // Set the button type to submit
+        // Set the button type to submit.
         $objButton->setToSubmit();
-        // Use the language object to label button
-		// with the word save
+        // Use the language object to label button.
         $objButton->setValue(' '.$this->objLanguage->languageText("mod_wtm_saveEvent", "wtm").' ');
         $objForm->addToForm($objButton->show());
       			
-		//----------BACK BUTTON--------------
-        //Create a button for submitting the form
+		//Back button.
         $objBackButton = new button();
-				
+		$objBackButton->setValue(' '.$this->objLanguage->languageText("mod_wtm_backbutton", "wtm").' ');
+		//Define link for the button.
 		$mngBackLink = new link($this->uri(array(
 									'module'=>'wtm',
 									'action'=>'viewEvents',
 									'refID'=>$refID,
 									'refbuilding'=>$refbuilding
 									)));
-		$objBackButton->setValue(' '.$this->objLanguage->languageText("mod_wtm_backbutton", "wtm").' ');
+		//Set the link image/text.
 		$mngBackLink->link = $objBackButton->show();
+		//Build the link.
 		$linkBackManage = $mngBackLink->show();
-        // Use the language object to label button
-		// with the word save
 		$objForm->addToForm($linkBackManage);
 		
 		return $objForm->show();
 	}
 
+	/**
+	* Method to retrieve form action to determine
+	* if its "addEvent" or "editEvent".
+	*/
 	private function getFormAction()
 	{
-		//Get the action to determine if its add or edit
 		$action = $this->getParam("action", "addEvent");
 		if ($action == "editEvent") 
 		{
-			//Get the event id and pass to uri
 			$id = $this->getParam("id");
 			$formAction = $this->uri(array("action" => "updateEvent", "id"=>$id), "wtm" );
 		} 
@@ -185,7 +206,11 @@ class editevent extends object
 		}
 		return $formAction;
 	}	
-	
+
+	/**
+	* Display event form method which calls the build 
+	* form method.
+	*/
 	public function show()
 	{
 		return $this->buildForm();

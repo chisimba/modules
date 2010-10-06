@@ -1,24 +1,37 @@
 <?php
 /**
-*
 * WTM coordinate class
 *
 * This file provides a position search class for the WTM module.
 * It receives a gps coordinate and compass direction and determines which building
 * is being targeted. Its purpose is to determine which building the phone is pointing at
-* 
+*
+* PHP version 5
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the
+* Free Software Foundation, Inc.,
+* 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+*
 * @category Chisimba
-* @package wtm
+* @package WTM
 * @author Yen-Hsiang Huang <wtm.jason@gmail.com>
 * @copyright 2007 AVOIR
 * @license http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
-* @version CVS: $Id:$
-* @link: http://avoir.uwc.ac.za 
+* @version CVS: $Id: demo_class_inc.php,v 1.4 2007-08-03 10:33:34 Exp $
+* @link http://avoir.uwc.ac.za
 */
 
-// security check
 /**
-* The $GLOBALS is an array used to control access to certain constants.
+* Security check: the $GLOBALS is an array used to control access to certain constants.
 * Here it is used to check if the file is opening in engine, if not it
 * stops the file from running.
 *
@@ -29,7 +42,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 {
 	die("You cannot view this page directly");
 }
-// end security check
+
 
 class coordinate extends object 
 {
@@ -127,7 +140,7 @@ class coordinate extends object
 	/**
     * Retrieves and echoes list of events being requested for 
 	* a spefic (target) building.
-    * @param string $buildingid building ID
+    * @param text $buildingid building ID
     * @echoes relevant event list.
     */
 	public function retrieve ($buildingid)
@@ -170,11 +183,10 @@ class coordinate extends object
 		}
 	}
 	
-	//Retrieve media method. Retrieves specific media type for a specific event
 	/**
     * Retrieves and echoes specific filename of the media 
 	* being requested for a specific event.
-    * @param string $eventid event ID
+    * @param text $eventid event ID
 	* @param integer $num media type enumeration
     * @echoes media filename for specific event
     */
