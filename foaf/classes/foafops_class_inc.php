@@ -1553,43 +1553,44 @@ class foafops extends object
 
     public function searchForm()
     {
-       $searchForm = new form('searchform', $this->uri(array(
+        $searchForm = new form('searchform', $this->uri(array(
             'action' => 'search'
-        )));
-    $fields = array("name" => "Name" ,"firstname" => "First name" , "surname" => "Surname" ,"title" => "Title","mbox" => "E-mail" , "homepage" => "Homepage" ,"weblog" => "Web blog" ,"phone" =>  "Phone","jabberid" => "Jabber Id","geekcode" => "Geek code" ,"theme" => "Theme",
-"workplacehomepage" => "Workplace Homepage" ,"schoolhomepage" => "School Homepage" ,"logo" => "Logo" ,"img" => "Image");
+         )));
+        $fields = array("name" => "Name" ,"firstname" => "First name" , "surname" => "Surname" ,"title" => "Title","mbox" => "E-mail" , "homepage" => "Homepage" ,"weblog" => "Web blog" ,"phone" =>  "Phone","jabberid" => "Jabber Id","geekcode" => "Geek code" ,"theme" => "Theme",
+            "workplacehomepage" => "Workplace Homepage" ,"schoolhomepage" => "School Homepage" ,"logo" => "Logo" ,"img" => "Image");
 
 
         $table = $this->newObject('htmltable', 'htmlelements');
-           $table->cellpadding = 5;
-    $table->cellspacing = 2;
-    $dropdown = new dropdown('schfield');
+        $table->cellpadding = 5;
+        $table->cellspacing = 2;
+        $dropdown = new dropdown('schfield');
 
     
-    foreach($fields as $key => $field)
-    {
-      $dropdown->addOption($key , $field);
+        foreach($fields as $key => $field)
+        {
+            $dropdown->addOption($key , $field);
     
-    }
+        }
 
-      $table->startRow();
-      $label = new label($this->objLanguage->languageText('word_search').':', 'input_schfield');
-          $textInput = new textinput('schvalue');   
-      $table->addCell($label->show());
-      $table->addCell($dropdown->show());     
-      $table->addCell($textInput->show());     
-      $table->endRow();
+        $table->startRow();
+        $label = new label($this->objLanguage->languageText('word_search').':', 'input_schfield');
+        $textInput = new textinput('schvalue');   
+        $table->addCell($label->show());
+        $table->addCell($dropdown->show());
+        $table->addCell($textInput->show());
+        $table->endRow();
     
 
-         $this->objButton = new button('searchfoaf_btn'); 
-         $this->objButton->setValue($this->objLanguage->languageText('word_search'));
-         $this->objButton->setToSubmit();
-         $searchForm ->addToForm($table->show());
-         $searchForm ->addToForm($this->objButton->show());
-         return $searchForm ->show();
+        $this->objButton = new button('searchfoaf_btn'); 
+        $this->objButton->setValue($this->objLanguage->languageText('word_search'));
+        $this->objButton->setToSubmit();
+        $searchForm ->addToForm($table->show());
+        $searchForm ->addToForm($this->objButton->show());
 
+        $output = $searchForm->show();
+        $output .= "";
 
-
+        return $searchForm ->show();
 
     }
 

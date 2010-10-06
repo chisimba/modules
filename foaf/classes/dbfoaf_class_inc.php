@@ -120,10 +120,12 @@ class dbfoaf extends dbtable
      * @param void
      * @return array
      */
-    public function getFriends() 
+    public function getFriends($userid = NULL)
     {
         $this->_changeTable('tbl_foaf_friends');
-        $userid = $this->objUser->userId();
+        if(is_null($userid)){
+            $userid = $this->objUser->userId();
+        }
         $frie = $this->getAll("WHERE userid = '$userid'");
         foreach($frie as $friends) {
             //echo $friends['fuserid'];
@@ -169,6 +171,29 @@ class dbfoaf extends dbtable
        $this->getArray($sql);            
 
     }
+
+    /**
+     * Method to check if a user is a friend
+     *
+     * @param string $userid The users id
+     * @param string $fuserid The user id of the friend to check for
+     * @access public
+     * @return bool True if friend, else False
+     */
+    public function isFriend($userid, $fuserid)
+    {
+        $this->_changeTable('tbl_foaf_friends');
+        $sql = "SELECT COUNT(id) FROM tbl_foaf_friends WHERE userid = '".$userid."' AND fuserid = '".$fuserid."'";
+        $result = $this->getArray($sql);
+
+        if($result[0]['count(id)'] > 0){
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+
+    }
+
     /**
      * Method to insert an organization according to the current userid
      *
