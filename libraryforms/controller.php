@@ -125,7 +125,11 @@ class libraryforms extends controller {
              }
 
         else {
-            $this->nextAction('confirm');
+           // return $this->nextAction('savestep', array('currentstep' => '2a'));
+
+return $this->nextAction('addeditform',array('comment'=> $this->objLanguage->code2Txt('mod_notify_add', 'rimfhe' ,$rep)));
+
+
             return $this->objConfirm->addStudentDetails();
         }
          // insert into database
@@ -139,9 +143,7 @@ class libraryforms extends controller {
 				     $message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. 
                                      $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.
                                      $cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
-    return 'confirm_tpl.php';
 
-	 	         
 		
     }// end of Save Records */
 
@@ -189,7 +191,7 @@ class libraryforms extends controller {
 
         else {
             $this->nextAction('confirm');
-            return $this->objConfirm->addStudentDetails();
+            return $this->objConfirm->addthesisDetails();
         }
         //insert into DB
 	$id= $this->dbAddBookthesis->insertBookthesisRecord($bprint,$bauthor,$btitle,$bplace,$bpublisher,$bdate,
@@ -244,7 +246,7 @@ class libraryforms extends controller {
 
         else {
             $this->nextAction('confirm');
-            return $this->objConfirm->addStudentDetails();
+            return $this->objConfirm->addperiodDetails();
            }
 
        //insert the data into DB
@@ -284,7 +286,7 @@ public function submitmsg() {
 
         else {
             $this->nextAction('confirm');
-            return $this->objConfirm->addStudentDetails();
+            return $this->objConfirm->addfbDetails();
            }
 
          //insert the data into DB

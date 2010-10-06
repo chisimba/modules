@@ -27,7 +27,7 @@ $display = '<p>'.$header.'</p><hr />';
 //Show Header
 echo $display;
 echo '<div class="noRecordsMessage">'. $this->objLanguage->languageText('category_resource_six','libraryforms','');
-echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_libraryforms_commentsent', 'libraryforms', '').'</div>';
+echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_libraryforms_distanceconfirmsent', 'libraryforms', '').'</div>';
 $objBlocks = $this->getObject('blocks', 'blocks');
 $this->loadClass('link', 'htmlelements');
 

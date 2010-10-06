@@ -147,7 +147,7 @@ $strjs = '<script type="text/javascript">
 
   $objButton->setValue(''.$this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms").' ');
    $objForm->addToForm($objButton->show());
-
+       // return $this->nextAction('savestep', array('currentstep' => '2a'));
         return $objForm->show();
        
 
