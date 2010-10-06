@@ -1,116 +1,110 @@
 <?php
 
-/* -------------------- forum class extends controller ----------------*/
+/* -------------------- forum class extends controller ---------------- */
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
 
 /**
-* Forum Controller
-* This class controls all functionality to run the Discussion Forum module
-* @author Tohir Solomons
-* @copyright (c) 2004 University of the Western Cape
-* @package forum
-* @version 1
-*/
-
-class forum extends controller
-{
+ * Forum Controller
+ * This class controls all functionality to run the Discussion Forum module
+ * @author Tohir Solomons
+ * @copyright (c) 2004 University of the Western Cape
+ * @package forum
+ * @version 1
+ */
+class forum extends controller {
 
     /**
-    *
-    * @var string Used to determine whether the forum is for context
-    * or workgroup
-    *
-    * @access protected
-    *
-    */
+     *
+     * @var string Used to determine whether the forum is for context
+     * or workgroup
+     *
+     * @access protected
+     *
+     */
     protected $forumtype;
-
     /**
-    *
-    * @var string the alue of the context (e.g. the coursecode)
-    *
-    * @access protected
-    *
-    */
+     *
+     * @var string the alue of the context (e.g. the coursecode)
+     *
+     * @access protected
+     *
+     */
     protected $contextCode;
-
     /**
-    *
-    * @var string the value of the workgroup if in a workgroup
-    * or workgroup
-    *
-    * @access protected
-    *
-    */
+     *
+     * @var string the value of the workgroup if in a workgroup
+     * or workgroup
+     *
+     * @access protected
+     *
+     */
     protected $workgroupId;
-
     /**
-    *
-    * @var string The workgroup description if in a workgroup
-    * or workgroup
-    *
-    * @access protected
-    *
-    */
+     *
+     * @var string The workgroup description if in a workgroup
+     * or workgroup
+     *
+     * @access protected
+     *
+     */
     protected $workgroupDescription;
 
     /**
-    * Constructor method to instantiate objects and get variables
-    *
-    * @access public
-    *
-    */
-    public function init()
-    {
+     * Constructor method to instantiate objects and get variables
+     *
+     * @access public
+     *
+     */
+    public function init() {
         //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
+        $this->objLog = $this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
 
+        $this->objAltConfig=$this->getObject("altconfig","config");
         // General Classes
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->objUser = & $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
         $this->isLoggedIn = $this->objUser->isLoggedIn();
-        $this->objLanguage =& $this->getObject('language', 'language');
+        $this->objLanguage = & $this->getObject('language', 'language');
 
         // Forum Classes
-        $this->objForum =& $this->getObject('dbforum');
-        $this->objDiscussionType =& $this->getObject('dbdiscussiontypes');
-        $this->objTopic =& $this->getObject('dbtopic');
-        $this->objPost =& $this->getObject('dbpost');
-        $this->objPostText =& $this->getObject('dbposttext');
-        $this->objTopicRead =& $this->getObject('dbtopicread');
+        $this->objForum = & $this->getObject('dbforum');
+        $this->objDiscussionType = & $this->getObject('dbdiscussiontypes');
+        $this->objTopic = & $this->getObject('dbtopic');
+        $this->objPost = & $this->getObject('dbpost');
+        $this->objPostText = & $this->getObject('dbposttext');
+        $this->objTopicRead = & $this->getObject('dbtopicread');
 
         // Forum Attachments
-        $this->objTempAttachments =& $this->getObject('dbtempattachments');
-        $this->objPostAttachments =& $this->getObject('dbpostattachments');
+        $this->objTempAttachments = & $this->getObject('dbtempattachments');
+        $this->objPostAttachments = & $this->getObject('dbpostattachments');
 
         // Forum Ratings
-        $this->objForumRatings =& $this->getObject('dbforum_ratings');
-        $this->objPostRatings =& $this->getObject('dbpost_ratings');
+        $this->objForumRatings = & $this->getObject('dbforum_ratings');
+        $this->objPostRatings = & $this->getObject('dbpost_ratings');
 
         // Forum Email Class
-        $this->objForumEmail =& $this->getObject('forumemail');
+        $this->objForumEmail = & $this->getObject('forumemail');
 
         // Load Forum Subscription classes
-        $this->objForumSubscriptions =& $this->getObject('dbforumsubscriptions');
-        $this->objTopicSubscriptions =& $this->getObject('dbtopicsubscriptions');
+        $this->objForumSubscriptions = & $this->getObject('dbforumsubscriptions');
+        $this->objTopicSubscriptions = & $this->getObject('dbtopicsubscriptions');
 
         // Forum Statistics
-        $this->objForumStats =& $this->getObject('forumstats');
+        $this->objForumStats = & $this->getObject('forumstats');
 
         // Get Context Code Settings
-        $this->contextObject =& $this->getObject('dbcontext', 'context');
+        $this->contextObject = & $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->contextObject->getContextCode();
 
         // If not in context, set code to be 'root' called 'Lobby'
         $this->contextTitle = $this->contextObject->getTitle();
-        if ($this->contextCode == ''){
+        if ($this->contextCode == '') {
             $this->contextCode = 'root';
             $this->contextTitle = 'Lobby';
         }
@@ -123,11 +117,11 @@ class forum extends controller
         $this->objForumEmail->setContextCode($this->contextCode);
 
         // Trim String Functions
-        $this->trimstrObj =& $this->getObject('trimstr', 'strings');
+        $this->trimstrObj = & $this->getObject('trimstr', 'strings');
 
         // Workgroup Classes
-        $this->objWorkGroup =& $this->getObject('dbworkgroup', 'workgroup');
-        $this->objWorkGroupUser =& $this->getObject('dbworkgroupusers', 'workgroup');
+        $this->objWorkGroup = & $this->getObject('dbworkgroup', 'workgroup');
+        $this->objWorkGroupUser = & $this->getObject('dbworkgroupusers', 'workgroup');
 
         // Check for workgroup
         if ($this->getParam('action') == 'workgroup' OR $this->getParam('type') == 'workgroup') {
@@ -141,9 +135,9 @@ class forum extends controller
         $this->objPost->forumtype = $this->forumtype;
 
         // Load Menu Tools Class
-        $this->objMenuTools =& $this->getObject('tools', 'toolbar');
-        $this->objDateTime =& $this->getObject('dateandtime', 'utilities');
-        $this->objFiles =& $this->getObject('dbfile', 'filemanager');
+        $this->objMenuTools = & $this->getObject('tools', 'toolbar');
+        $this->objDateTime = & $this->getObject('dateandtime', 'utilities');
+        $this->objFiles = & $this->getObject('dbfile', 'filemanager');
         $this->loadClass('link', 'htmlelements');
 
         if (strtolower($this->getParam('passthroughlogin')) == 'true') {
@@ -160,25 +154,25 @@ class forum extends controller
         //Load Module Catalogue Class
         $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
         $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
-        if($this->objModuleCatalogue->checkIfRegistered('activitystreamer')) {
-                $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-                $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
-                $this->eventsEnabled = TRUE;
+        if ($this->objModuleCatalogue->checkIfRegistered('activitystreamer')) {
+            $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+            $this->eventDispatcher->addObserver(array($this->objActivityStreamer, 'postmade'));
+            $this->eventsEnabled = TRUE;
         } else {
-                $this->eventsEnabled = FALSE;
+            $this->eventsEnabled = FALSE;
         }
+        $this->objManageGroups = $this->getObject('managegroups', 'contextgroups');
     }
 
     /**
-    *
-    * Determine if a given action requires login
-    *
-    * @return boolean TRUE|FALSE
-    * @access public
-    *
-    */
-    public function requiresLogin()
-    {
+     *
+     * Determine if a given action requires login
+     *
+     * @return boolean TRUE|FALSE
+     * @access public
+     *
+     */
+    public function requiresLogin() {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 
         // Check if User is allowed to view forum without being logged in
@@ -190,8 +184,7 @@ class forum extends controller
         }
 
         // Else user requires login for some actions
-        switch ($this->getParam('action', NULL))
-        {
+        switch ($this->getParam('action', NULL)) {
             case NULL:
             case 'forum':
             case 'viewtopic':
@@ -214,22 +207,19 @@ class forum extends controller
         }
     }
 
-
     /**
-    *
-    * Method to process actions to be taken from the action querystring parameter
-    *
-    * @access public
-    * @return mixed Various templates depending on the action
-    *
-    */
-    public function dispatch($action=Null)
-    {
+     *
+     * Method to process actions to be taken from the action querystring parameter
+     *
+     * @access public
+     * @return mixed Various templates depending on the action
+     *
+     */
+    public function dispatch($action=Null) {
         $this->setLayoutTemplate('forum_layout.php');
         //$this->setVar('pageSuppressXML', TRUE);
 
-        switch ($action)
-        {
+        switch ($action) {
             case 'test':
                 return 'test.php';
             case 'forum':
@@ -331,7 +321,7 @@ class forum extends controller
                 return $this->showNoAccess($this->getParam('id'));
 
             // case 'sendemail':
-                // return $this->sendEmail();
+            // return $this->sendEmail();
 
             case 'statistics':
                 return $this->showForumStatistics($this->getParam('id'));
@@ -390,25 +380,23 @@ class forum extends controller
     }
 
     /**
-    * Method to show the 'Home Page' of the Discussion Forum - listing all
-    * forums in a context and the last post
-    *
-    * @access public
-    * @return string Template - forum_list.php
-    *
-    */
-    public function forumHome()
-    {
+     * Method to show the 'Home Page' of the Discussion Forum - listing all
+     * forums in a context and the last post
+     *
+     * @access public
+     * @return string Template - forum_list.php
+     *
+     */
+    public function forumHome() {
 
         // Check if link comes internal to forum or not.
-        if (isset($_SERVER['HTTP_REFERER'])  && substr_count($_SERVER['HTTP_REFERER'], 'type=workgroup') > 0 && $this->getParam('type') != 'context') {
+        if (isset($_SERVER['HTTP_REFERER']) && substr_count($_SERVER['HTTP_REFERER'], 'type=workgroup') > 0 && $this->getParam('type') != 'context') {
             return $this->nextAction('workgroup');
         }
         $forumNum = $this->objForum->getNumForums($this->contextCode);
-        if ($forumNum == 0)
-        {
+        if ($forumNum == 0) {
             $newforum = $this->objForum->autoCreateForum($this->contextCode, $this->contextTitle);
-            return $this->nextAction('forum', array('id'=>$newforum));
+            return $this->nextAction('forum', array('id' => $newforum));
         } else {
             $allForums = $this->objForum->showAllForums($this->contextCode);
             $this->setVarByRef('forums', $allForums);
@@ -417,13 +405,12 @@ class forum extends controller
     }
 
     /**
-    * View a single forum - with a list of all topics in that forum
-    *
-    * @param string $id - Record ID of the Forum
-    * @return string Template - forum_view.php
-    */
-    public function showForum($id)
-    {
+     * View a single forum - with a list of all topics in that forum
+     *
+     * @param string $id - Record ID of the Forum
+     * @return string Template - forum_view.php
+     */
+    public function showForum($id) {
         $forum = $this->objForum->getForum($id);
 
         $this->objMenuTools->addToBreadCrumbs(array($forum['forum_name']));
@@ -435,7 +422,7 @@ class forum extends controller
 
         // Check if user has access to workgroup forum
         if ($forum['forum_workgroup'] != NULL && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
-            return $this->nextAction('noaccess', array('id'=>$forum['forum_workgroup']));
+            return $this->nextAction('noaccess', array('id' => $forum['forum_workgroup']));
         }
 
         // Check if the forum exists, if not, go to the Forum Home Page
@@ -474,7 +461,7 @@ class forum extends controller
             $page = 1;
         }
 
-        $limit = ' LIMIT '.($page-1)*$limitPerPage.', '.$limitPerPage;
+        $limit = ' LIMIT ' . ($page - 1) * $limitPerPage . ', ' . $limitPerPage;
 
 
 
@@ -485,29 +472,27 @@ class forum extends controller
         $allTopics = $this->objTopic->showTopicsInForum($id, $this->userId, $forum['archivedate'], $order, $direction, NULL, $limit);
         $topicsNum = count($allTopics);
 
-       	//add to activity log
-       	if($this->eventsEnabled)
-       	{
-            $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_forum_hasentered', 'forum')." ".$forum['forum_name'];
-            $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-                'link'=> $this->uri(array()),
+        //add to activity log
+        if ($this->eventsEnabled) {
+            $message = $this->objUser->getsurname() . " " . $this->objLanguage->languageText('mod_forum_hasentered', 'forum') . " " . $forum['forum_name'];
+            $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title' => $message,
+                'link' => $this->uri(array()),
                 'contextcode' => $this->contextCode,
                 'author' => $this->objUser->fullname(),
-                'description'=>$message));
-       	}
+                'description' => $message));
+        }
         $this->setVarByRef('topicsNum', $topicsNum);
         $this->setVarByRef('topics', $allTopics);
         return 'forum_view.php';
     }
 
     /**
-    * Post a new message. This shows the form to do that.
-    *
-    * @param string $id - Record ID of the Forum message will be posted in
-    * @return string Template - forum_newtopic.php
-    */
-    public function newTopicForm($id)
-    {
+     * Post a new message. This shows the form to do that.
+     *
+     * @param string $id - Record ID of the Forum message will be posted in
+     * @return string Template - forum_newtopic.php
+     */
+    public function newTopicForm($id) {
         $forum = $this->objForum->getForum($id);
         // Start checking whether to show the link
         // Check if the forum is locked
@@ -516,7 +501,7 @@ class forum extends controller
             if ($forum['studentstarttopic'] == 'Y') {
                 $returnTemplate = 'forum_newtopic.php';
 
-            // Else check if user is lecturer or admin
+                // Else check if user is lecturer or admin
             } else if ($this->objUser->isCourseAdmin($this->contextCode)) {
                 $returnTemplate = 'forum_newtopic.php';
             } else {
@@ -537,7 +522,7 @@ class forum extends controller
             $temporaryId = $details['temporaryId'];
             $this->setVar('mode', 'fix');
         } else {
-            $temporaryId = $this->objUser->userId().'_'.mktime();
+            $temporaryId = $this->objUser->userId() . '_' . mktime();
             $this->setVar('mode', 'new');
         }
         $this->setVarByRef('temporaryId', $temporaryId);
@@ -549,13 +534,13 @@ class forum extends controller
     }
 
     /**
-    * Save the new posted message in the forum
-    *
-    * @return redirects to the topic with a message to indicate the topic has been saved
-    */
-    public function saveNewTopic()
-    {
-        $tempPostId=$_POST['temporaryId'];
+     * Save the new posted message in the forum
+     *
+     * @return redirects to the topic with a message to indicate the topic has been saved
+     */
+    public function saveNewTopic() {
+        
+        $tempPostId = $_POST['temporaryId'];
         $this->saveTempAttachmentIfAny($tempPostId);
         $forum_id = $_POST['forum'];
         $type_id = $_POST['discussionType'];
@@ -571,21 +556,20 @@ class forum extends controller
             $replyType = NULL;
         }
         // Some Server side validation - Redirect Form - Check details of the post
-
         // Validation
         //     - Remove Tags
         //     - &nbsp; becomes [nothing]
         //     - trim whitespace
         if (trim(strip_tags(str_replace('&nbsp;', '', $post_text))) == '') {
             // Capture details to put in array - Preserve User's work
-            $details = array('replytype'=>$replyType, 'type' => $type_id, 'title'=>$post_title, 'language'=>$language, 'temporaryId'=> $_POST['temporaryId']);
+            $details = array('replytype' => $replyType, 'type' => $type_id, 'title' => $post_title, 'language' => $language, 'temporaryId' => $_POST['temporaryId']);
             // set array as a session
             $this->setSession($_POST['temporaryId'], $details);
             // If tangent, redirect to post reply form
             if ($replyType == 'tangent') {
-                return $this->nextAction('postreply', array('id'=>$_POST['parent'], 'type'=>$this->forumtype, 'message'=>'missing','tempid'=>$_POST['temporaryId']));
+                return $this->nextAction('postreply', array('id' => $_POST['parent'], 'type' => $this->forumtype, 'message' => 'missing', 'tempid' => $_POST['temporaryId']));
             } else { // Redirect to Start New Topic Form
-                return $this->nextAction('newtopic', array('id'=>$forum_id, 'type'=>$this->forumtype, 'message'=>'missing','tempid'=>$_POST['temporaryId']));
+                return $this->nextAction('newtopic', array('id' => $forum_id, 'type' => $this->forumtype, 'message' => 'missing', 'tempid' => $_POST['temporaryId']));
             }
         } else {
             $this->unsetSession($_POST['temporaryId']);
@@ -603,18 +587,17 @@ class forum extends controller
             $tangentParent = '0';
             $post_tangent_parent = 0;
         }
-
         $topic_id = $this->objTopic->insertSingle(
-            $forum_id,
-            $type_id,
-            $tangentParent, // tangent parent
-            $this->userId,
-            $post_title
+                        $forum_id,
+                        $type_id,
+                        $tangentParent, // tangent parent
+                        $this->userId,
+                        $post_title
         );
 
         $this->objForum->updateLastTopic($forum_id, $topic_id);
-        $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id,  $this->userId);
-        $this->objPostText->insertSingle($post_id, $post_title, $post_text,  $language, $original_post, $this->userId);
+        $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id, $this->userId);
+        $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $original_post, $this->userId);
         $this->objTopic->updateFirstPost($topic_id, $post_id);
         $this->objForum->updateLastPost($forum_id, $post_id);
         // Insert topic details into lucene search
@@ -646,47 +629,45 @@ class forum extends controller
         }
         if ($forumDetails['subscriptions'] == 'Y') {
             //http://localhost/nextgen/index.php?module=forum&action=postreply&id=gen8Srv57Nme40_1&type=context
-            $replyUrl = $this->uri(array('action'=>'postreply','id'=>$post_id));
+            $replyUrl = $this->uri(array('action' => 'postreply', 'id' => $post_id));
             //$emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
-            $emailSuccess=NULL;
+            $emailSuccess = NULL;
         } else {
-            $emailSuccess=NULL;
+            $emailSuccess = NULL;
         }
         // End Email Post
-        return $this->nextAction('viewtopic', array('message'=>'save', 'id'=>$topic_id, 'post'=>$post_id, 'type'=>$this->forumtype, 'email'=>$emailSuccess));
+        return $this->nextAction('viewtopic', array('message' => 'save', 'id' => $topic_id, 'post' => $post_id, 'type' => $this->forumtype, 'email' => $emailSuccess));
     }
 
     /**
-    * Method to redirect user to a type of topic view
-    * There are three types of topic views, and this is stored as a preference (session).
-    * This method picks up which session exists, and then redirects to the appropriate view
-    * If no session is stored, it selects the flat view format.
-    * @param string $topic_id Record Id of the topic
-    * @param string $message Message to give to user
-    * @param string $post Record Id of the post to highlight
-    */
-    public function viewTopic($topic_id, $message=NULL, $post = NULL)
-    {
+     * Method to redirect user to a type of topic view
+     * There are three types of topic views, and this is stored as a preference (session).
+     * This method picks up which session exists, and then redirects to the appropriate view
+     * If no session is stored, it selects the flat view format.
+     * @param string $topic_id Record Id of the topic
+     * @param string $message Message to give to user
+     * @param string $post Record Id of the post to highlight
+     */
+    public function viewTopic($topic_id, $message=NULL, $post = NULL) {
         $action = $this->getSession('forumdisplay', 'flatview');
-        return $this->nextAction($action, array('id'=>$topic_id, 'message'=>$message,'post'=>$post, 'type'=>$this->forumtype, 'type'=>$this->forumtype));
+        return $this->nextAction($action, array('id' => $topic_id, 'message' => $message, 'post' => $post, 'type' => $this->forumtype, 'type' => $this->forumtype));
     }
 
     /**
-    * Method to show a thread in a tree format with indentations
-    *
-    * @param $topic_id Record Id of the Topic
-    */
-    public function showThread($topic_id)
-    {
+     * Method to show a thread in a tree format with indentations
+     *
+     * @param $topic_id Record Id of the Topic
+     */
+    public function showThread($topic_id) {
         // Store View as a Preference
         $this->setSession('forumdisplay', 'thread');
         // Get details on the topic
-        $post = $this->objPost->getRootPost ($topic_id);
+        $post = $this->objPost->getRootPost($topic_id);
         $this->objTopic->updateTopicViews($topic_id);
         // Check if the topic exists, else call an error message
         if ($post == NULL) {
             // error message, post doesn't exist
-            return $this->nextAction(NULL, array('error'=>'topicdoesntexist', 'type'=>$this->forumtype));
+            return $this->nextAction(NULL, array('error' => 'topicdoesntexist', 'type' => $this->forumtype));
         } else {
             // Send the topic to the template
             $this->setVarByRef('post', $post);
@@ -696,8 +677,8 @@ class forum extends controller
             // Check if forum is locked - if true - disable / editing replies
             if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
                 $this->objPost->repliesAllowed = FALSE;
-                $this->objPost->editingPostsAllowed=FALSE;
-                $this->objPost->forumLocked=TRUE;
+                $this->objPost->editingPostsAllowed = FALSE;
+                $this->objPost->forumLocked = TRUE;
                 $this->setVar('forumlocked', TRUE);
             } else {
                 $this->setVar('forumlocked', FALSE);
@@ -710,14 +691,14 @@ class forum extends controller
                 $this->setVarByRef('tangentsTable', $tangentsTable);
             }
             // Check if Topic is locked
-            if ($post['status'] =='CLOSE') {
+            if ($post['status'] == 'CLOSE') {
 
                 $this->objPost->repliesAllowed = FALSE;
-                $this->objPost->editingPostsAllowed=FALSE;
+                $this->objPost->editingPostsAllowed = FALSE;
             }
             // Check if ratings allowed in Forum
             if ($forum['ratingsenabled'] == 'Y') {
-                $this->objPost->forumRatingsArray = $this->objForumRatings->getForumRatings ($post['forum_id']);
+                $this->objPost->forumRatingsArray = $this->objForumRatings->getForumRatings($post['forum_id']);
                 $this->objPost->showRatings = TRUE;
                 $this->setVar('showRatingsForm', TRUE);
             } else {
@@ -734,30 +715,29 @@ class forum extends controller
             $this->setVarByRef('changeDisplayForm', $this->objTopic->showChangeDisplayTypeForm($topic_id, 'thread'));
             // Mark the Topic as read for the current user if user is logged in
             if ($this->isLoggedIn) {
-                $this->objTopicRead->markTopicRead ($topic_id, $this->userId);
+                $this->objTopicRead->markTopicRead($topic_id, $this->userId);
             }
             // Bread Crumbs
-            $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'])));
+            $forumLink = new link($this->uri(array('action' => 'forum', 'id' => $post['forum_id'])));
             $forumLink->link = $forum['forum_name'];
-            $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(),$post['post_title']));
+            $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(), $post['post_title']));
             // return the template
             return 'forum_topic_threadedview.php';
         }
     }
 
     /**
-    * This shows a topic post by post, one at a time
-    * @param string $topic_id Record Id of the topic
-    */
-    public function showSingleThread($topic_id)
-    {
+     * This shows a topic post by post, one at a time
+     * @param string $topic_id Record Id of the topic
+     */
+    public function showSingleThread($topic_id) {
         // Store View as a Preference
         $this->setSession('forumdisplay', 'singlethreadview');
         $this->objTopic->updateTopicViews($topic_id);
-        $post = $this->objPost->getRootPost ($topic_id);
+        $post = $this->objPost->getRootPost($topic_id);
         if ($post == NULL) {
             // error message, post doesn't exist
-            return $this->nextAction(NULL, array('error'=>'topicdoesntexist', 'type'=>$this->forumtype));
+            return $this->nextAction(NULL, array('error' => 'topicdoesntexist', 'type' => $this->forumtype));
         } else {
             $this->setVarByRef('post', $post);
             $forum = $this->objForum->getForum($post['forum_id']);
@@ -766,8 +746,8 @@ class forum extends controller
             // Check if forum is locked - if true - disable / editing replies
             if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
                 $this->objPost->repliesAllowed = FALSE;
-                $this->objPost->editingPostsAllowed=FALSE;
-                $this->objPost->forumLocked=TRUE;
+                $this->objPost->editingPostsAllowed = FALSE;
+                $this->objPost->forumLocked = TRUE;
                 $this->setVar('forumlocked', TRUE);
             } else {
                 $this->setVar('forumlocked', FALSE);
@@ -777,7 +757,7 @@ class forum extends controller
             }
             // Check if ratings allowed in Forum
             if ($forum['ratingsenabled'] == 'Y') {
-                $this->objPost->forumRatingsArray = $this->objForumRatings->getForumRatings ($post['forum_id']);
+                $this->objPost->forumRatingsArray = $this->objForumRatings->getForumRatings($post['forum_id']);
                 $this->objPost->showRatings = TRUE;
                 $this->setVar('showRatingsForm', TRUE);
             } else {
@@ -785,9 +765,9 @@ class forum extends controller
                 $this->objPost->showRatings = FALSE;
             }
             // Check if Topic is locked
-            if ($post['status'] =='CLOSE') {
+            if ($post['status'] == 'CLOSE') {
                 $this->objPost->repliesAllowed = FALSE;
-                $this->objPost->editingPostsAllowed=FALSE;
+                $this->objPost->editingPostsAllowed = FALSE;
             }
             // Check if Topic is a tangent
             if ($post['topic_tangent_parent'] == '0') {
@@ -795,11 +775,11 @@ class forum extends controller
                 $this->setVarByRef('tangentsTable', $tangentsTable);
             }
             if ($this->getParam('post') == '') {
-                $postDisplay = $this->objPost->displayPost ($post);
+                $postDisplay = $this->objPost->displayPost($post);
                 $highlightPost = $post['post_id'];
             } else {
                 $requestedPost = $this->objPost->getPostWithText($this->getParam('post'));
-                $postDisplay = $this->objPost->displayPost ($requestedPost);
+                $postDisplay = $this->objPost->displayPost($requestedPost);
                 $highlightPost = $this->getParam('post');
             }
             $this->setVarByRef('postDisplay', $postDisplay);
@@ -812,29 +792,28 @@ class forum extends controller
             $this->setVarByRef('changeDisplayForm', $this->objTopic->showChangeDisplayTypeForm($topic_id, 'singlethreadview'));
             // Mark the Topic as read for the current user if user is logged in
             if ($this->isLoggedIn) {
-                $this->objTopicRead->markTopicRead ($topic_id, $this->userId);
+                $this->objTopicRead->markTopicRead($topic_id, $this->userId);
             }
             // Bread Crumbs
-            $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'])));
+            $forumLink = new link($this->uri(array('action' => 'forum', 'id' => $post['forum_id'])));
             $forumLink->link = $forum['forum_name'];
-            $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(),$post['post_title']));
+            $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(), $post['post_title']));
             return 'forum_topic_singleview.php';
         }
     }
 
     /**
-    * Ajax Method to Load the Translation
-    *
-    */
-    function loadTranslation($postId, $language)
-    {
+     * Ajax Method to Load the Translation
+     *
+     */
+    function loadTranslation($postId, $language) {
         $post = $this->objPostText->getTranslatedPost($postId, $language);
-        $objLanguageCode =& $this->getObject('languagecode', 'language');
+        $objLanguageCode = & $this->getObject('languagecode', 'language');
         if ($post != FALSE) {
             if ($post['original_post'] == '1') {
-                $text = '<strong class="warning">Viewing Original Post Made in '.$objLanguageCode->getLanguage($language).'</strong><br />';
+                $text = '<strong class="warning">Viewing Original Post Made in ' . $objLanguageCode->getLanguage($language) . '</strong><br />';
             } else {
-                $text = '<strong class="warning">Viewing Translation of Post in <em>'.$objLanguageCode->getLanguage($language).'</em></strong><br />';
+                $text = '<strong class="warning">Viewing Translation of Post in <em>' . $objLanguageCode->getLanguage($language) . '</em></strong><br />';
             }
             $text .= $post['post_text'];
             echo $text;
@@ -844,21 +823,20 @@ class forum extends controller
     }
 
     /**
-    * This shows a topic with all posts in a flat view based on date posted, without indentations
-    * @param $topic_id Record Id of the Topic
-    */
-    public function showFlatView($topic_id)
-    {
+     * This shows a topic with all posts in a flat view based on date posted, without indentations
+     * @param $topic_id Record Id of the Topic
+     */
+    public function showFlatView($topic_id) {
         // Store View as a Preference
         $this->setSession('forumdisplay', 'flatview');
-       // Update Views
+        // Update Views
         $this->objTopic->updateTopicViews($topic_id);
         // Get details on the topic
-        $post = $this->objPost->getRootPost ($topic_id);
+        $post = $this->objPost->getRootPost($topic_id);
         // Check if the topic exists, else call an error message
         if ($post == NULL) {
             // error message, post doesn't exist
-            return $this->nextAction(NULL, array('error'=>'topicdoesntexist', 'type'=>$this->forumtype));
+            return $this->nextAction(NULL, array('error' => 'topicdoesntexist', 'type' => $this->forumtype));
         } else {
             // Send the topic to the template
             $this->setVarByRef('post', $post);
@@ -868,8 +846,8 @@ class forum extends controller
             // Check if forum is locked - if true - disable / editing replies
             if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
                 $this->objPost->repliesAllowed = FALSE;
-                $this->objPost->editingPostsAllowed=FALSE;
-                $this->objPost->forumLocked=TRUE;
+                $this->objPost->editingPostsAllowed = FALSE;
+                $this->objPost->forumLocked = TRUE;
                 $this->setVar('forumlocked', TRUE);
             } else {
                 $this->setVar('forumlocked', FALSE);
@@ -879,7 +857,7 @@ class forum extends controller
             }
             // Check if ratings allowed in Forum
             if ($forum['ratingsenabled'] == 'Y') {
-                $this->objPost->forumRatingsArray = $this->objForumRatings->getForumRatings ($post['forum_id']);
+                $this->objPost->forumRatingsArray = $this->objForumRatings->getForumRatings($post['forum_id']);
                 $this->objPost->showRatings = TRUE;
                 $this->setVar('showRatingsForm', TRUE);
             } else {
@@ -891,9 +869,9 @@ class forum extends controller
                 $this->setVarByRef('tangentsTable', $tangentsTable);
             }
             // Check if Topic is locked
-            if ($post['status'] =='CLOSE') {
+            if ($post['status'] == 'CLOSE') {
                 $this->objPost->repliesAllowed = FALSE;
-                $this->objPost->editingPostsAllowed=FALSE;
+                $this->objPost->editingPostsAllowed = FALSE;
             }
             // Create the indented thread
             $thread = $this->objPost->displayFlatThread($topic_id);
@@ -904,24 +882,23 @@ class forum extends controller
             $this->setVarByRef('changeDisplayForm', $this->objTopic->showChangeDisplayTypeForm($topic_id, 'flatview'));
             // Mark the Topic as read for the current user if user is logged in
             if ($this->isLoggedIn) {
-                $this->objTopicRead->markTopicRead ($topic_id, $this->userId);
+                $this->objTopicRead->markTopicRead($topic_id, $this->userId);
             }
             // Bread Crumbs
-            $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'])));
+            $forumLink = new link($this->uri(array('action' => 'forum', 'id' => $post['forum_id'])));
             $forumLink->link = $forum['forum_name'];
-            $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(),$post['post_title']));
+            $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(), $post['post_title']));
             // return the template
             return 'forum_topic_flatview.php';
         }
     }
 
     /**
-    * Method to show the Form to reply to a topic
-    *
-    * $post - Record Id of the Post you are replying to
-    */
-    public function showTopicReplyForm($post)
-    {
+     * Method to show the Form to reply to a topic
+     *
+     * $post - Record Id of the Post you are replying to
+     */
+    public function showTopicReplyForm($post) {
         // Set Variables to FALSE
         // A copy of the post you are replying to appears on top
         // Without these lines, users will be abled to click on links to edit and reply
@@ -934,11 +911,11 @@ class forum extends controller
         // Check if user has access to workgroup forum else redirect
         $this->checkWorkgroupAccessOrRedirect($forum);
         if ($forum['forumlocked'] == 'Y') {
-            return $this->nextAction('viewtopic', array('message'=>'cantreplyforumlocked', 'id'=>$post['topic_id'], 'post'=>$post, 'type'=>$this->forumtype));
+            return $this->nextAction('viewtopic', array('message' => 'cantreplyforumlocked', 'id' => $post['topic_id'], 'post' => $post, 'type' => $this->forumtype));
         } else if ($post['status'] == 'CLOSE') {
-            return $this->nextAction('viewtopic', array('message'=>'cantreplytopiclocked', 'id'=>$post['topic_id'], 'post'=>$post, 'type'=>$this->forumtype));
+            return $this->nextAction('viewtopic', array('message' => 'cantreplytopiclocked', 'id' => $post['topic_id'], 'post' => $post, 'type' => $this->forumtype));
         } else {
-            $postDisplay =  $this->objPost->displayPost ($post);
+            $postDisplay = $this->objPost->displayPost($post);
             $this->setVarByRef('post', $post);
             $this->setVarByRef('postDisplay', $postDisplay);
             $forum = $this->objForum->getForum($post['forum_id']);
@@ -950,7 +927,7 @@ class forum extends controller
                 $temporaryId = $details['temporaryId'];
                 $this->setVar('mode', 'fix');
             } else {
-                $temporaryId = $this->objUser->userId().'_'.mktime();
+                $temporaryId = $this->objUser->userId() . '_' . mktime();
                 $this->setVar('mode', 'new');
             }
             $this->setVarByRef('temporaryId', $temporaryId);
@@ -968,13 +945,11 @@ class forum extends controller
     }
 
     /**
-    * Method to save a reply to a topic
+     * Method to save a reply to a topic
+     */
+    public function saveReply() {
 
-    */
-    public function saveReply()
-    {
-
-        $tempPostId=$_POST['temporaryId'];
+        $tempPostId = $_POST['temporaryId'];
         $this->saveTempAttachmentIfAny($tempPostId);
         if ($_POST['replytype'] == 'reply') {
             $post_parent = $_POST['parent'];
@@ -984,8 +959,8 @@ class forum extends controller
             $post_tangent_parent = $_POST['parent'];
         }
         $parentPostDetails = $this->objPost->getRow('id', $_POST['parent']);
-        $forum_id =$_POST['forum'];
-        $topic_id =$_POST['topic'];
+        $forum_id = $_POST['forum'];
+        $topic_id = $_POST['topic'];
         //we need this because IE is failing to pass it over
         $this->setSession('current_topic_id', $topic_id);
         $type_id = $this->getSession('discussionType'); //$_POST['discussionType'];
@@ -1002,16 +977,16 @@ class forum extends controller
         //     - trim whitespace
         if (trim(strip_tags(str_replace('&nbsp;', '', $post_text))) == '') {
             // Capture details to put in array - Preserve User's work
-            $details = array('replytype' => $_POST['replytype'], 'title'=>$post_title, 'language'=>$language, 'temporaryId'=> $_POST['temporaryId']);
+            $details = array('replytype' => $_POST['replytype'], 'title' => $post_title, 'language' => $language, 'temporaryId' => $_POST['temporaryId']);
             // set array as a session
             $this->setSession($_POST['temporaryId'], $details);
             // Redirect back to for
-            return $this->nextAction('postreply', array('id'=>$_POST['parent'], 'type'=>$this->forumtype, 'message'=>'missing','tempid'=>$_POST['temporaryId']));
+            return $this->nextAction('postreply', array('id' => $_POST['parent'], 'type' => $this->forumtype, 'message' => 'missing', 'tempid' => $_POST['temporaryId']));
         } else {
             $this->unsetSession($_POST['temporaryId']);
         }
-        $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id,  $this->userId, $level);
-        $this->objPostText->insertSingle($post_id, $post_title, $post_text,  $language, $original_post, $this->userId);
+        $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id, $this->userId, $level);
+        $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $original_post, $this->userId);
         $this->objTopic->updateLastPost($topic_id, $post_id);
         $this->objForum->updateLastPost($forum_id, $post_id);
         // Email Post
@@ -1037,7 +1012,7 @@ class forum extends controller
             }
         }
         if ($forumDetails['subscriptions'] == 'Y') {
-            $replyUrl = $this->uri(array('action'=>'postreply','id'=>$post_id));
+            $replyUrl = $this->uri(array('action' => 'postreply', 'id' => $post_id));
             //$emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
             $emailSuccess = NULL;
         } else {
@@ -1045,15 +1020,14 @@ class forum extends controller
         }
         // Attachment Handling
         $this->handleAttachments($post_id, $_POST['temporaryId']);
-        return $this->nextAction('viewtopic', array('message'=>'replysaved', 'id'=>$topic_id, 'post'=>$post_id, 'type'=>$this->forumtype, 'email'=>$emailSuccess));
+        return $this->nextAction('viewtopic', array('message' => 'replysaved', 'id' => $topic_id, 'post' => $post_id, 'type' => $this->forumtype, 'email' => $emailSuccess));
     }
 
     /**
-    * Method to get a post and prepare it for editing form
-    * @param string $id Record Id of the Post
-    */
-    public function editPost($id)
-    {
+     * Method to get a post and prepare it for editing form
+     * @param string $id Record Id of the Post
+     */
+    public function editPost($id) {
         $post = $this->objPost->getPostWithText($id);
 
         if ($post['replypost'] == NULL && $this->objPost->checkOkToEdit($post['datelastupdated'], $post['userid'])) {
@@ -1062,27 +1036,25 @@ class forum extends controller
             // Check if user has access to workgroup forum else redirect
             $this->checkWorkgroupAccessOrRedirect($forum);
             $this->setVarByRef('forum', $forum);
-            $temporaryId = $this->objUser->userId().'_'.mktime();
+            $temporaryId = $this->objUser->userId() . '_' . mktime();
             $this->setVarByRef('temporaryId', $temporaryId);
             // Move posts from tbl_forum_attachments to tbl_forum_temp_attachments
             $attachments = $this->objPostAttachments->getAttachments($id);
-            foreach ($attachments AS $attachment)
-            {
+            foreach ($attachments AS $attachment) {
                 $this->objTempAttachments->insertSingle($temporaryId, $attachment['attachment_id'], $post['forum_id'], $this->userId, mktime());
             }
             $acch = $this->objTempAttachments->getQuickList($temporaryId);
             return 'forum_editpost.php';
         } else {
-             return $this->nextAction('viewtopic', array('message'=>'unabletoeditpost', 'id'=>$post['topic_id'], 'post'=>$post['post_id'], 'type'=>$this->forumtype));
+            return $this->nextAction('viewtopic', array('message' => 'unabletoeditpost', 'id' => $post['topic_id'], 'post' => $post['post_id'], 'type' => $this->forumtype));
         }
     }
 
     /**
-    * Method to update a post after editing
-    */
-    public function updatePost()
-    {
-        $tempPostId= $_POST['temporaryId'];
+     * Method to update a post after editing
+     */
+    public function updatePost() {
+        $tempPostId = $_POST['temporaryId'];
         $this->saveTempAttachmentIfAny($tempPostId);
         $post_id = $_POST['post_id'];
         $title = $_POST['title'];
@@ -1091,18 +1063,17 @@ class forum extends controller
         $this->objPostText->updatePostText($post_id, $title, $text);
         $this->objPostAttachments->deleteAttachments($post_id);
         $this->handleAttachments($post_id, $_POST['temporaryId']);
-        return $this->nextAction('viewtopic', array('message'=>'postupdated', 'id'=>$topic_id, 'post'=>$post_id, 'type'=>$this->forumtype));
+        return $this->nextAction('viewtopic', array('message' => 'postupdated', 'id' => $topic_id, 'post' => $post_id, 'type' => $this->forumtype));
     }
 
     // --------------------------------------------------------------------------------
 
     /**
-    * Forum Administration Page
-    *
-    * Shows the list of forums in a context, allows you to create/edit forum settings
-    */
-    public function forumAdministration()
-    {
+     * Forum Administration Page
+     *
+     * Shows the list of forums in a context, allows you to create/edit forum settings
+     */
+    public function forumAdministration() {
         $contextForums = $this->objForum->getAllContextForums($this->contextCode);
         $this->setVarByRef('forumsList', $contextForums);
         $visibleForums = $this->objForum->getContextForums($this->contextCode);
@@ -1113,44 +1084,41 @@ class forum extends controller
     }
 
     /**
-    * Method to show the form to create a new forum
-    */
-    public function createForum()
-    {
+     * Method to show the form to create a new forum
+     */
+    public function createForum() {
         $action = 'create';
         $this->setVarByRef('action', $action);
         return 'forum_createedit.php';
     }
 
     /**
-    * Method to Save a Newly Created Forum
-    */
-    public function saveForum()
-    {
-        $forum_context      = $this->contextCode;
+     * Method to Save a Newly Created Forum
+     */
+    public function saveForum() {
+        $forum_context = $this->contextCode;
         $forum_workgroup = '';
-        $forum_name          = $this->getParam('name');
+        $forum_name = $this->getParam('name');
         $forum_description = $this->getParam('description');
-        $defaultForum         = 'N';
-        $forum_visible         = $this->getParam('visible');
-        $forumLocked         = 'N';
-        $ratingsenabled      = $this->getParam('ratings');
-        $studentstarttopic   = $this->getParam('student');
-        $attachments          = $this->getParam('attachments');
-        $subscriptions         = $this->getParam('subscriptions');
+        $defaultForum = 'N';
+        $forum_visible = $this->getParam('visible');
+        $forumLocked = 'N';
+        $ratingsenabled = $this->getParam('ratings');
+        $studentstarttopic = $this->getParam('student');
+        $attachments = $this->getParam('attachments');
+        $subscriptions = $this->getParam('subscriptions');
         // Needs to be worked on
-        $moderation            = 'N';
-        $forum = $this->objForum->insertSingle($forum_context, $forum_workgroup, $forum_name, $forum_description,  $defaultForum, $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation);
-        return $this->nextAction('administration', array('message'=>'forumcreated', 'id'=>$forum));
+        $moderation = 'N';
+        $forum = $this->objForum->insertSingle($forum_context, $forum_workgroup, $forum_name, $forum_description, $defaultForum, $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation);
+        return $this->nextAction('administration', array('message' => 'forumcreated', 'id' => $forum));
     }
 
     /**
-    * Method to get a forum's details in order to edit them
-    *
-    * @param $id Record Id of the Forum
-    */
-    public function editForum($id)
-    {
+     * Method to get a forum's details in order to edit them
+     *
+     * @param $id Record Id of the Forum
+     */
+    public function editForum($id) {
         $forum = $this->objForum->getForum($id);
         // Check if Forum exists
         if ($forum == false) {
@@ -1164,118 +1132,111 @@ class forum extends controller
     }
 
     /**
-    * Update a forum's settings
-    *
-    * @return string Template - redirects back to forum admin
-    */
-    public function editForumSave()
-    {
-        $forum_id            = $this->getParam('id');
-        $forum_name          = stripslashes($this->getParam('name'));
-        $forum_description   = stripslashes($this->getParam('description'));
-        $forum_visible       = $this->getParam('visible');
-        $forumLocked         = $this->getParam('lockforum');
-        if ($forum_visible == 'default')
-        {
+     * Update a forum's settings
+     *
+     * @return string Template - redirects back to forum admin
+     */
+    public function editForumSave() {
+        $forum_id = $this->getParam('id');
+        $forum_name = stripslashes($this->getParam('name'));
+        $forum_description = stripslashes($this->getParam('description'));
+        $forum_visible = $this->getParam('visible');
+        $forumLocked = $this->getParam('lockforum');
+        if ($forum_visible == 'default') {
             $forum_visible = 'Y';
         }
-        $ratingsenabled      = $this->getParam('ratings');
-        $studentstarttopic   = $this->getParam('student');
-        $attachments         = $this->getParam('attachments');
-        $subscriptions       = $this->getParam('subscriptions');
+        $ratingsenabled = $this->getParam('ratings');
+        $studentstarttopic = $this->getParam('student');
+        $attachments = $this->getParam('attachments');
+        $subscriptions = $this->getParam('subscriptions');
         // Needs to be worked on
-        $moderation          = 'N';
+        $moderation = 'N';
         // Archiving
-        $doArchive           = $this->getParam('archivingRadio');
+        $doArchive = $this->getParam('archivingRadio');
         if ($doArchive == 'Y') {
             $archiveDate = $this->getParam('archivedate');
         } else {
             $archiveDate = NULL;
         }
-        $this->objForum->updateSingle($forum_id, $forum_name, $forum_description,  $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation, $archiveDate);
-        return $this->nextAction('administration', array('message'=>'forumupdated', 'id'=>$forum_id));
+        $this->objForum->updateSingle($forum_id, $forum_name, $forum_description, $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation, $archiveDate);
+        return $this->nextAction('administration', array('message' => 'forumupdated', 'id' => $forum_id));
     }
 
     /**
-    * Method to show a form for deleting a forum
-    * @param string $id Record Id of the Forum
-    */
-    public function deleteForum($id)
-    {
+     * Method to show a form for deleting a forum
+     * @param string $id Record Id of the Forum
+     */
+    public function deleteForum($id) {
         $forum = $this->objForum->getForum($id);
         $this->setVarByRef('forum', $forum);
         return 'forum_deleteforum.php';
     }
 
     /**
-    * Method to Delete a Forum following confirmation
-    */
-    public function deleteForumConfirm()
-    {
+     * Method to Delete a Forum following confirmation
+     */
+    public function deleteForumConfirm() {
         // Get the Id
         $id = $this->getParam('id');
         // Get Forum Details
         $forum = $this->objForum->getForum($id);
         if ($forum == NULL) { // Check if Forum Exists
-            return $this->nextAction('administration', array('message'=>'forumdoesnotexist'));
+            return $this->nextAction('administration', array('message' => 'forumdoesnotexist'));
         } else if ($forum['defaultforum'] == 'Y') { // Check if Default Forum
-            return $this->nextAction('administration', array('message'=>'cannotdeletedefaultforum'));
+            return $this->nextAction('administration', array('message' => 'cannotdeletedefaultforum'));
         } else {
             $result = $this->objForum->deleteForum($id); // Delete Forum
 
             if ($result) { // Check whether deletion was successful
-                return $this->nextAction('administration', array('message'=>'forumdeleted', 'forum'=>$forum['forum_name']));
+                return $this->nextAction('administration', array('message' => 'forumdeleted', 'forum' => $forum['forum_name']));
             } else {
-                return $this->nextAction('administration', array('message'=>'couldnotdeleteforum'));
+                return $this->nextAction('administration', array('message' => 'couldnotdeleteforum'));
             }
         }
     }
 
     /**
-    * Method to update the visibility status of a forum
-    */
-    public function updateForumVisibility()
-    {
+     * Method to update the visibility status of a forum
+     */
+    public function updateForumVisibility() {
         $id = $this->getParam('id');
         $visibility = $this->getParam('visible');
         // Get Forum Details
         $forum = $this->objForum->getForum($id);
         // Check if changes made
         if ($forum['forum_visible'] == strtoupper($visibility)) {
-            return $this->nextAction('administration', array('forum'=>$id, 'message'=>'visibilityunchanged'));
+            return $this->nextAction('administration', array('forum' => $id, 'message' => 'visibilityunchanged'));
         } else {
             $result = $this->objForum->updateForumVisibility($id, $visibility);
 
             if ($result) {
-                return $this->nextAction('administration', array('forum'=>$id, 'message'=>'visibilityupdated'));
+                return $this->nextAction('administration', array('forum' => $id, 'message' => 'visibilityupdated'));
             } else {
-                return $this->nextAction('administration', array('forum'=>$id, 'message'=>'errorvisibilityupdate'));
+                return $this->nextAction('administration', array('forum' => $id, 'message' => 'errorvisibilityupdate'));
             }
         }
     }
 
     /**
-    * Set a Forum as the default Forum
-    *
-    * @return string Template - redirects back to forum administration
-    */
-    public function setDefaultForum ()
-    {
+     * Set a Forum as the default Forum
+     *
+     * @return string Template - redirects back to forum administration
+     */
+    public function setDefaultForum() {
         $this->objForum->setDefaultForum($_POST['forum'], $this->contextCode);
-        return $this->nextAction('administration', array('message'=>'defaultforumchanged'));
+        return $this->nextAction('administration', array('message' => 'defaultforumchanged'));
     }
 
     // --------------------------------------------------------------------------------------------------------------
 
     /**
-    * Show the list attachments that have already include for a post
-    *
-    * Template that shows in the iframe when a user is busy with a topic/reply
-    *
-    * @param $id Record Id of the Temporary ID
-    */
-    public function showAttachments($id)
-    {
+     * Show the list attachments that have already include for a post
+     *
+     * Template that shows in the iframe when a user is busy with a topic/reply
+     *
+     * @param $id Record Id of the Temporary ID
+     */
+    public function showAttachments($id) {
         $this->setVarByRef('id', $id);
         $files = $this->objTempAttachments->getList($id);
         $this->setVarByRef('files', $files);
@@ -1288,10 +1249,9 @@ class forum extends controller
     }
 
     /**
-    * Method to save temp attahc
-    */
-    public function saveTempAttachmentIfAny($temp_id)
-    {
+     * Method to save temp attahc
+     */
+    public function saveTempAttachmentIfAny($temp_id) {
         $userId = $this->objUser->userId();
         $dateLastUpdated = mktime();
         $attachment_id = $this->getParam('attachment');
@@ -1299,14 +1259,13 @@ class forum extends controller
             $this->objTempAttachments->insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated);
         }
         $this->unsetSession('temporaryId');
-        return $this->nextAction('attachments', array('id'=>$temp_id, 'attachment'=>$attachment_id));
+        return $this->nextAction('attachments', array('id' => $temp_id, 'attachment' => $attachment_id));
     }
 
     /**
-    * Method to add an attachment to a file
-    */
-    public function saveAttachment()
-    {
+     * Method to add an attachment to a file
+     */
+    public function saveAttachment() {
 
         $temp_id = $this->getParam('id');
         $userId = $this->objUser->userId();
@@ -1315,73 +1274,67 @@ class forum extends controller
         if ($attachment_id != '') {
             $this->objTempAttachments->insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated);
         }
-        return $this->nextAction('attachments', array('id'=>$temp_id, 'attachment'=>$attachment_id));
+        return $this->nextAction('attachments', array('id' => $temp_id, 'attachment' => $attachment_id));
     }
 
     /**
-    *
-    *
-    */
-    public function deleteAttachment($temp_id, $attachment_id)
-    {
+     *
+     *
+     */
+    public function deleteAttachment($temp_id, $attachment_id) {
         $this->objTempAttachments->deleteAttachment($temp_id, $attachment_id);
-        return $this->nextAction('attachments', array('id'=>$temp_id));
+        return $this->nextAction('attachments', array('id' => $temp_id));
     }
 
-
     /**
-    * Make Temporary Attachments Permanent
-    *
-    * When a user starts a topic, a temporary id is given for the post to record attachments
-    * This function is run once the topic/reply is posted and moves the record to the post attachments
-    * table and deletes the temporary record
-    *
-    * @param $postId The Records Permanent Post Id
-    * @param $temporaryId The Record's Temporary Post Id
-    */
-    private function handleAttachments($postId, $temporaryId)
-    {
+     * Make Temporary Attachments Permanent
+     *
+     * When a user starts a topic, a temporary id is given for the post to record attachments
+     * This function is run once the topic/reply is posted and moves the record to the post attachments
+     * table and deletes the temporary record
+     *
+     * @param $postId The Records Permanent Post Id
+     * @param $temporaryId The Record's Temporary Post Id
+     */
+    private function handleAttachments($postId, $temporaryId) {
         $files = $this->objTempAttachments->getQuickList($temporaryId);
-        foreach ($files AS $file)
-        {
-            $this->objPostAttachments->insertSingle($postId, $file['attachment_id'], $this->userId,mktime());
+        foreach ($files AS $file) {
+            $this->objPostAttachments->insertSingle($postId, $file['attachment_id'], $this->userId, mktime());
         }
         $this->objTempAttachments->deleteTemps($temporaryId);
         return;
     }
 
     /**
-    * Download attachments
-    *
-    * @param string $id - Record ID of the Attachment
-    * @param string $topic - Record ID of the Topic
-    * @return string Template - forum_view.php
-    */
-    public function downloadAttachment($id, $topic)
-    {
+     * Download attachments
+     *
+     * @param string $id - Record ID of the Attachment
+     * @param string $topic - Record ID of the Topic
+     * @return string Template - forum_view.php
+     */
+    public function downloadAttachment($id, $topic) {
         $files = $this->objPostAttachments->downloadAttachment($id);
         if (count($files) > 0) {
             $location = $this->objFiles->getFullFilePath($files[0]['id']);
-            header('Content-Disposition: attachment; filename="'.$files[0]['filename'].'"');
+            header('Content-Disposition: attachment; filename="' . $files[0]['filename'] . '"');
             readfile($location);
             //header('Location:'.$location); // Todo - Force Download
         } else {
-            return $this->nextAction('thread', array ('id' => $topic, 'type'=>$this->forumtype, 'message'=>'invalidattachment'));
+            return $this->nextAction('thread', array('id' => $topic, 'type' => $this->forumtype, 'message' => 'invalidattachment'));
         }
     }
 
     /**
-    * Shows the form to translate a post
-    * @param string $post_id Record Id of the Post
-    */
-    public function translatePost($post_id)
-    {
+     * Shows the form to translate a post
+     * @param string $post_id Record Id of the Post
+     */
+    public function translatePost($post_id) {
         // These are dummy permission to prevent the display of reply, edit and translate links
         $this->objPost->repliesAllowed = FALSE;
         $this->objPost->editingPostsAllowed = FALSE;
         $this->objPost->forumLocked = TRUE;
         $post = $this->objPost->getPostWithText($post_id);
-        $postDisplay = $this->objPost->displayPost ($post);
+        $postDisplay = $this->objPost->displayPost($post);
         // Get a list of languages for the current post
         // Will be deleted from the list of languages to translate in
         $postLanguages = $this->objPostText->getPostLanguages($post_id);
@@ -1395,26 +1348,24 @@ class forum extends controller
     }
 
     /**
-    * Method to process a form to save translation
-    */
-    public function saveTranslation()
-    {
+     * Method to process a form to save translation
+     */
+    public function saveTranslation() {
         $post_id = $_POST['post'];
         $post_title = $_POST['title'];
         $post_text = $_POST['message'];
         $language = $_POST['language'];
         $original_post = 0; // Set to Zero. this is a translation, not an original post
-        $newId = $this->objPostText->insertSingle($post_id, $post_title, $post_text,  $language, $original_post, $this->userId);
-        return $this->nextAction('viewtranslation', array('id'=>$newId, 'message'=>'translationsaved', 'type'=>$this->forumtype));
+        $newId = $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $original_post, $this->userId);
+        return $this->nextAction('viewtranslation', array('id' => $newId, 'message' => 'translationsaved', 'type' => $this->forumtype));
     }
 
     /**
-    * Method to view the translation of a post in another language
-    */
-    public function viewtranslation($postTextId)
-    {
+     * Method to view the translation of a post in another language
+     */
+    public function viewtranslation($postTextId) {
         $post = $this->objPost->getPostInLanguage($postTextId);
-        $postDisplay = $this->objPost->displayPost ($post);
+        $postDisplay = $this->objPost->displayPost($post);
         // Send the topic to the template
         $this->setVarByRef('post', $post);
         $this->setVarByRef('postDisplay', $postDisplay);
@@ -1425,25 +1376,23 @@ class forum extends controller
     }
 
     /**
-    * Method to save a change in the topic status
-    */
-    public function changeTopicStatus()
-    {
+     * Method to save a change in the topic status
+     */
+    public function changeTopicStatus() {
         $topic_id = $_POST['topic'];
         $status = $_POST['topic_status'];
         $reason = $_POST['reason'];
         $this->objTopic->changeTopicStatus($topic_id, $status, $reason, $this->userId);
-        return $this->nextAction('viewtopic', array('message'=>'statuschanged', 'id'=>$topic_id, 'type'=>$this->forumtype));
+        return $this->nextAction('viewtopic', array('message' => 'statuschanged', 'id' => $topic_id, 'type' => $this->forumtype));
     }
 
     /**
-    * Method to show the settings for a forum (usually at the bottom of posts)
-    * @param string $forum_id Record Id of the Forum
-    * @param boolean $showForumJump Flag to indicate whether the switching between forum has to be shown
-    * @return string Forum Settings
-    */
-    public function showForumFooter($forum_id, $showForumJump = TRUE)
-    {
+     * Method to show the settings for a forum (usually at the bottom of posts)
+     * @param string $forum_id Record Id of the Forum
+     * @param boolean $showForumJump Flag to indicate whether the switching between forum has to be shown
+     * @return string Forum Settings
+     */
+    public function showForumFooter($forum_id, $showForumJump = TRUE) {
         $returnString = '';
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
@@ -1456,7 +1405,7 @@ class forum extends controller
             $forumForm->method = 'GET';
             $forums = $this->objForum->getContextForums($this->contextCode);
             if (count($forums) > 1 && $showForumJump) {
-                $dd= new dropdown('id');
+                $dd = new dropdown('id');
                 foreach ($forums AS $forum) {
                     if ($forum['id'] != $forum_id) {
                         $dd->addOption($forum['id'], $forum['forum_name']);
@@ -1466,12 +1415,12 @@ class forum extends controller
                 $button = new button('');
                 $button->setValue('Go');
                 $button->setToSubmit();
-                $forumForm->addToForm('<p align="center">'.$this->objLanguage->languageText('mod_forum_jumptoanotherforum', 'forum').': '.$dd->show().' '.$button->show().'</p>');
+                $forumForm->addToForm('<p align="center">' . $this->objLanguage->languageText('mod_forum_jumptoanotherforum', 'forum') . ': ' . $dd->show() . ' ' . $button->show() . '</p>');
                 $module = new textinput('module', 'forum');
                 $module->fldType = 'hidden';
                 $action = new textinput('action', 'forum');
                 $action->fldType = 'hidden';
-                $forumForm->addToForm($module->show().$action->show());
+                $forumForm->addToForm($module->show() . $action->show());
                 $fieldset->addContent($forumForm->show());
                 $returnString .= $fieldset->show();
             } else {
@@ -1486,15 +1435,15 @@ class forum extends controller
         $iconsFieldset->setLegend($this->objLanguage->languageText('mod_forum_meaningoficons', 'forum'));
         $icon = $this->getObject('geticon', 'htmlelements');
         $icon->setIcon('lock', NULL, 'icons/forum/');
-        $iconsFieldset->addContent($icon->show().' - '.$this->objLanguage->languageText('mod_forum_topicislocked', 'forum'));
+        $iconsFieldset->addContent($icon->show() . ' - ' . $this->objLanguage->languageText('mod_forum_topicislocked', 'forum'));
         $icon->setIcon('unlock', NULL, 'icons/forum/');
-        $iconsFieldset->addContent('<br />'.$icon->show().' - '.$this->objLanguage->languageText('mod_forum_unlockedtopicexplained', 'forum'));
+        $iconsFieldset->addContent('<br />' . $icon->show() . ' - ' . $this->objLanguage->languageText('mod_forum_unlockedtopicexplained', 'forum'));
         $icon->setIcon('unreadletter');
-        $iconsFieldset->addContent('<br />'.$icon->show().' -  '.$this->objLanguage->languageText('mod_forum_newunreadtopic', 'forum'));
+        $iconsFieldset->addContent('<br />' . $icon->show() . ' -  ' . $this->objLanguage->languageText('mod_forum_newunreadtopic', 'forum'));
         $icon->setIcon('readletter');
-        $iconsFieldset->addContent('<br />'.$icon->show().' - '.$this->objLanguage->languageText('mod_forum_readtopic', 'forum'));
+        $iconsFieldset->addContent('<br />' . $icon->show() . ' - ' . $this->objLanguage->languageText('mod_forum_readtopic', 'forum'));
         $icon->setIcon('readnewposts');
-        $iconsFieldset->addContent('<br />'.$icon->show().' - '.$this->objLanguage->languageText('mod_forum_readtopicnewreplies', 'forum'));
+        $iconsFieldset->addContent('<br />' . $icon->show() . ' - ' . $this->objLanguage->languageText('mod_forum_readtopicnewreplies', 'forum'));
         $forumTable->addCell($iconsFieldset->show(), '50%');
         // -----------------------------------------------
         $forumFieldset = $this->newObject('fieldset', 'htmlelements');
@@ -1502,98 +1451,95 @@ class forum extends controller
         $forumFieldset->setLegend($this->objLanguage->languageText('mod_forum_forumSettings', 'forum'));
         $forumDetails = $this->objForum->getRow('id', $forum_id);
         if ($forumDetails['forumlocked'] == 'Y') {
-            $forumFieldset->addContent('<div class="noRecordsMessage"><strong>'.$this->objLanguage->languageText('mod_forum_forumislocked', 'forum').'<br /><br />'.$this->objLanguage->languageText('mod_forum_allfunctionalitydisabled', 'forum').'</strong></div>');
+            $forumFieldset->addContent('<div class="noRecordsMessage"><strong>' . $this->objLanguage->languageText('mod_forum_forumislocked', 'forum') . '<br /><br />' . $this->objLanguage->languageText('mod_forum_allfunctionalitydisabled', 'forum') . '</strong></div>');
         } else {
             $forumFieldset->addContent('<ul>');
             if ($forumDetails['studentstarttopic'] == 'Y') {
-                $forumFieldset->addContent('<li>'.ucfirst($this->objLanguage->code2Txt('mod_forum_studentsstartopics', 'forum')).'</li>');
+                $forumFieldset->addContent('<li>' . ucfirst($this->objLanguage->code2Txt('mod_forum_studentsstartopics', 'forum')) . '</li>');
             } else {
-                $forumFieldset->addContent('<li>'.$this->objLanguage->languageText('mod_forum_onlylecturersstarttopics', 'forum').'</li>');
+                $forumFieldset->addContent('<li>' . $this->objLanguage->languageText('mod_forum_onlylecturersstarttopics', 'forum') . '</li>');
             }
             if ($forumDetails['attachments'] == 'Y') {
-                $forumFieldset->addContent('<li>'.$this->objLanguage->languageText('mod_forum_usersuploadattachments', 'forum').'</li>');
+                $forumFieldset->addContent('<li>' . $this->objLanguage->languageText('mod_forum_usersuploadattachments', 'forum') . '</li>');
             } else {
-                $forumFieldset->addContent('<li>'.$this->objLanguage->languageText('mod_forum_userscannotupload', 'forum').'</li>');
+                $forumFieldset->addContent('<li>' . $this->objLanguage->languageText('mod_forum_userscannotupload', 'forum') . '</li>');
             }
             if ($forumDetails['ratingsenabled'] == 'Y') {
-                $forumFieldset->addContent('<li>'.$this->objLanguage->languageText('mod_forum_usersrateposts', 'forum').'</li>');
+                $forumFieldset->addContent('<li>' . $this->objLanguage->languageText('mod_forum_usersrateposts', 'forum') . '</li>');
             } else {
-                $forumFieldset->addContent('<li>'.$this->objLanguage->languageText('mod_forum_ratingpostsdisabled', 'forum').'</li>');
+                $forumFieldset->addContent('<li>' . $this->objLanguage->languageText('mod_forum_ratingpostsdisabled', 'forum') . '</li>');
             }
             $forumFieldset->addContent('</ul>');
         }
         // Bottom Fieldset
         $forumLinksFieldset = $this->getObject('fieldset', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
-        $link = new link ($this->uri(array('action'=>'administration')));
+        $link = new link($this->uri(array('action' => 'administration')));
         $link->link = $this->objLanguage->languageText('mod_forum_forumAdministration', 'forum');
         $forumLinksFieldset->addContent($link->show());
         $forumLinksFieldset->addContent(' / ');
-        $link = new link ($this->uri(array('action'=>'editforum', 'id'=>$forum_id)));
+        $link = new link($this->uri(array('action' => 'editforum', 'id' => $forum_id)));
         $link->link = $this->objLanguage->languageText('mod_forum_editforumsettings', 'forum');
         $forumLinksFieldset->addContent($link->show());
         $forumLinksFieldset->addContent(' / ');
-        $link = new link ($this->uri(array('action'=>'statistics', 'id'=>$forum_id)));
+        $link = new link($this->uri(array('action' => 'statistics', 'id' => $forum_id)));
         $link->link = $this->objLanguage->languageText('mod_forum_forumstatistics', 'forum');
         $forumLinksFieldset->addContent($link->show());
         if ($this->objUser->isCourseAdmin($this->contextCode) && $this->forumtype != 'workgroup' && $this->isLoggedIn) {
             $showSettings = $forumLinksFieldset->show();
         } else if ($this->forumtype != 'workgroup') {
-            $link2 = new link ($this->uri(array('type'=>'context')));
+            $link2 = new link($this->uri(array('type' => 'context')));
             $link2->link = ucwords($this->objLanguage->code2Txt('mod_forum_returntocontextforums', 'forum'));
-            $showSettings = '<fieldset><p>'.$link2->show().'</p></fieldset>';
+            $showSettings = '<fieldset><p>' . $link2->show() . '</p></fieldset>';
         } else {
-            $link = new link ($this->uri(NULL, 'workgroup'));
+            $link = new link($this->uri(NULL, 'workgroup'));
             $link->link = ucwords($this->objLanguage->code2Txt('mod_forum_returntoworkgroup', 'forum'));
-            $link2 = new link ($this->uri(array('type'=>'context')));
+            $link2 = new link($this->uri(array('type' => 'context')));
             $link2->link = ucwords($this->objLanguage->code2Txt('mod_forum_returntocontextforums', 'forum'));
-            $showSettings = '<p>'.$link->show().' / '.$link2->show().'</p>';
+            $showSettings = '<p>' . $link->show() . ' / ' . $link2->show() . '</p>';
         }
-        $forumTable->addCell($forumFieldset->show().$showSettings, '50%');
+        $forumTable->addCell($forumFieldset->show() . $showSettings, '50%');
         $returnString .= $forumTable->show();
         return $returnString;
     }
 
     /**
-    * Method to save the ratings of a post
-    */
-    public function savePostRatings()
-    {
+     * Method to save the ratings of a post
+     */
+    public function savePostRatings() {
         // Collect All Posted Values and put them in an array
         $postedArray = $_POST;
         // Remove the submit button from the list
-        unset ($postedArray['submitForm']);
+        unset($postedArray['submitForm']);
         // Store the Topic Id - for redirecting
         $topic = $_POST['topic'];
         // Remove the Topic Id from the list
-        unset ($postedArray['topic']);
+        unset($postedArray['topic']);
         if (isset($_POST['currentPost'])) {
             $currentPost = $_POST['currentPost'];
-            unset ($postedArray['currentPost']);
+            unset($postedArray['currentPost']);
         } else {
             $currentPost = NULL;
         }
         // Start Inserting Values
-        foreach($postedArray AS $post=>$value)
-        {
+        foreach ($postedArray AS $post => $value) {
             if ($value != 'n/a') {
-                $this->objPostRatings->insertRecord($post, $value,  $this->userId);
+                $this->objPostRatings->insertRecord($post, $value, $this->userId);
             }
         }
-        return $this->nextAction('viewtopic', array('message'=>'ratingsaved', 'id'=>$topic, 'post'=>$currentPost, 'type'=>$this->forumtype));
+        return $this->nextAction('viewtopic', array('message' => 'ratingsaved', 'id' => $topic, 'post' => $currentPost, 'type' => $this->forumtype));
     }
 
     /**
-    * Method to show statistics for a discussion forum
-    *
-    * @param string $forum_id Record Id of the forum
-    */
-    public function showForumStatistics($forum_id)
-    {
+     * Method to show statistics for a discussion forum
+     *
+     * @param string $forum_id Record Id of the forum
+     */
+    public function showForumStatistics($forum_id) {
         $this->setVarByRef('id', $forum_id);
         $forumDetails = $this->objForum->getForum($forum_id);
         $this->setVarByRef('forumDetails', $forumDetails);
-        $forumSummaryStats = $this->objForumStats->getStats ($forum_id, $this->contextCode);
+        $forumSummaryStats = $this->objForumStats->getStats($forum_id, $this->contextCode);
         $this->setVarByRef('forumSummaryStats', $forumSummaryStats);
         $tangents = $this->objForumStats->getTangentsNum($forum_id);
         $this->setVarByRef('tangents', $tangents);
@@ -1616,16 +1562,15 @@ class forum extends controller
     }
 
     /**
-    * Method to show Moderation Options for a Topic
-    * @param string $id Record Id of the Topic
-    *
-    */
-    public function moderateTopic($id)
-    {
+     * Method to show Moderation Options for a Topic
+     * @param string $id Record Id of the Topic
+     *
+     */
+    public function moderateTopic($id) {
         $topic = $this->objTopic->getTopicDetails($id);
         // If topic does not exist, redirect with message
         if ($topic == FALSE) {
-            return $this->nextAction(NULL, array('error'=>'moderatetopicdoesnotexist'));
+            return $this->nextAction(NULL, array('error' => 'moderatetopicdoesnotexist'));
         }
         $this->setVarByRef('topic', $topic);
         $otherForums = $this->objForum->otherForums($topic['forum_id'], $this->contextCode);
@@ -1642,26 +1587,24 @@ class forum extends controller
         $this->setVarByRef('topicParent', $topicParent);
         $this->setVarByRef('forum', $forum);
         // Bread Crumbs
-        $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$topic['forum_id'])));
+        $forumLink = new link($this->uri(array('action' => 'forum', 'id' => $topic['forum_id'])));
         $forumLink->link = $forum['forum_name'];
-        $topicLink = new link ($this->uri(array('action'=>'viewtopic', 'id'=>$topic['topic_id'])));
+        $topicLink = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'])));
         $topicLink->link = $topic['post_title'];
         $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(), $topicLink->show(), $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum')));
         return 'forum_moderatetopic.php';
     }
 
-
     /**
-    * Method to control all functionality relating to a moderator deleting a topic
-    *
-    */
-    public function moderateDeleteTopic()
-    {
+     * Method to control all functionality relating to a moderator deleting a topic
+     *
+     */
+    public function moderateDeleteTopic() {
         // Get Topic Info
         $topicInfo = $this->objTopic->getTopicDetails($_POST['id']);
         // Check if a delete request is confirmed
         if ($_POST['delete'] != '1') {
-            $returnArray = array('id'=>$_POST['id'], 'message'=>'deletecancelled');
+            $returnArray = array('id' => $_POST['id'], 'message' => 'deletecancelled');
 
             // Attempt to get default option for tangents and add to array to preserve user's work.
             if (isset($_POST['tangentoption'])) {
@@ -1674,78 +1617,74 @@ class forum extends controller
             if ($topicInfo['topic_tangent_parent'] != '0') {
                 $results = $this->objTopic->deleteTopic($_POST['id']);
                 $this->objForum->updateForumAfterDelete($topicInfo['forum_id']);
-                return $this->nextAction('viewtopic', array('id'=>$topicInfo['topic_tangent_parent'], 'message'=>'tangentdeleted'));
+                return $this->nextAction('viewtopic', array('id' => $topicInfo['topic_tangent_parent'], 'message' => 'tangentdeleted'));
             } else { // Deleting a topic with tangents
                 if (isset($_POST['tangentoption']) && $_POST['tangentoption'] == 'delete') {
                     $results = $this->objTopic->deleteTopic($_POST['id']);
                     $results = $this->objTopic->deleteTangents($_POST['id']);
                     $this->objForum->updateForumAfterDelete($topicInfo['forum_id']);
-                    return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'topictangentsdeleted'));
+                    return $this->nextAction('forum', array('id' => $topicInfo['forum_id'], 'message' => 'topictangentsdeleted'));
                 } else if (isset($_POST['tangentoption']) && $_POST['tangentoption'] == 'move') {
                     $this->objTopic->moveTangentsToAnotherTopic($_POST['id'], $_POST['topicmove']);
                     $results = $this->objTopic->deleteTopic($_POST['id']);
                     $this->objForum->updateForumAfterDelete($topicInfo['forum_id']);
-                    return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'topicdeletedtangentsmoved'));
+                    return $this->nextAction('forum', array('id' => $topicInfo['forum_id'], 'message' => 'topicdeletedtangentsmoved'));
                 } else if (isset($_POST['tangentoption']) && $_POST['tangentoption'] == 'newtopic') {
                     $this->objTopic->moveAllTangentsToRootTopic($_POST['id']);
                     $results = $this->objTopic->deleteTopic($_POST['id']);
-                    return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'topicdeletedtangentsmovedtoroot'));
+                    return $this->nextAction('forum', array('id' => $topicInfo['forum_id'], 'message' => 'topicdeletedtangentsmovedtoroot'));
                 } else { // Simply delete topic - has no tangents
                     $results = $this->objTopic->deleteTopic($_POST['id']);
                     $this->objForum->updateForumAfterDelete($topicInfo['forum_id']);
-                    return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'topicdeleted'));
+                    return $this->nextAction('forum', array('id' => $topicInfo['forum_id'], 'message' => 'topicdeleted'));
                 }
             }
         }
     }
 
     /**
-    * Method to move a topic as a tangent of another topic - moderation option
-    */
-    public function moderateMoveTangent()
-    {
+     * Method to move a topic as a tangent of another topic - moderation option
+     */
+    public function moderateMoveTangent() {
         $id = $_POST['id'];
         $topicmove = $_POST['topicmove'];
         // Get Topic Info
         $topicInfo = $this->objTopic->getTopicDetails($_POST['id']);
         $this->objTopic->moveTopicToTangent($id, $topicmove);
         $this->objTopic->moveTangentsToAnotherTopic($id, $topicmove);
-        return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'topicmovetotangent', 'topic'=>$id));
+        return $this->nextAction('forum', array('id' => $topicInfo['forum_id'], 'message' => 'topicmovetotangent', 'topic' => $id));
     }
 
-    public function moderateMoveNewForum()
-    {
+    public function moderateMoveNewForum() {
         $topic = $this->getParam('id');
         $forum = $this->getParam('forummove');
 
         if ($topic != '' && $forum != '') {
-             $this->objTopic->switchTopicForum($topic, $forum);
+            $this->objTopic->switchTopicForum($topic, $forum);
         }
-        return $this->nextAction('forum', array('id'=>$forum, 'message'=>'topicmovedtonewforum', 'topic'=>$topic));
+        return $this->nextAction('forum', array('id' => $forum, 'message' => 'topicmovedtonewforum', 'topic' => $topic));
     }
 
     /**
-    * Method to move a tangent as a new topic
-    */
-    public function moderateMoveNewTopic()
-    {
+     * Method to move a tangent as a new topic
+     */
+    public function moderateMoveNewTopic() {
         // Get Topic Info
         $topicInfo = $this->objTopic->getTopicDetails($_POST['id']);
         // Check if a delete request is confirmed
         if ($_POST['delete'] != '1') {
             // If not return to moderation page, with message, delete cancelled.
-            return $this->nextAction('moderatetopic', array('id'=>$_POST['id'], 'message'=>'movenewtopiccancelled'));
+            return $this->nextAction('moderatetopic', array('id' => $_POST['id'], 'message' => 'movenewtopiccancelled'));
         } else {
             $this->objTopic->moveTangentToRootTopic($_POST['id']);
-            return $this->nextAction('forum', array('id'=>$topicInfo['forum_id'], 'message'=>'tangentmovedtonewtopic', 'topic'=>$_POST['id']));
+            return $this->nextAction('forum', array('id' => $topicInfo['forum_id'], 'message' => 'tangentmovedtonewtopic', 'topic' => $_POST['id']));
         }
     }
 
     /**
-    * Method to Update the Sticky Status of a Topic
-    */
-    public function moderateStickyTopic()
-    {
+     * Method to Update the Sticky Status of a Topic
+     */
+    public function moderateStickyTopic() {
         $id = $_POST['id'];
         $sticky = $_POST['stickytopic'];
         if ($sticky == '1') {
@@ -1753,15 +1692,13 @@ class forum extends controller
         } else {
             $this->objTopic->removeTopicSticky($id);
         }
-        return $this->nextAction('moderatetopic', array('id'=>$id, 'message'=>'topicstickychanged'));
+        return $this->nextAction('moderatetopic', array('id' => $id, 'message' => 'topicstickychanged'));
     }
 
-
     /**
-    * Method to determine if we are dealing with a workgoup forum via session Id, and whether the user is part of that workgroup (has access)
-    */
-    public function getWorkGroupDetails()
-    {
+     * Method to determine if we are dealing with a workgoup forum via session Id, and whether the user is part of that workgroup (has access)
+     */
+    public function getWorkGroupDetails() {
         // Get the Workgroup
         $this->workgroupId = $this->objWorkGroup->getWorkgroupId();
         $this->workgroupDescription = $this->objWorkGroup->getDescription($this->workgroupId);
@@ -1775,41 +1712,37 @@ class forum extends controller
         //die;
     }
 
-
     /**
-    * Method to get the forum for a workgroup or create one that does not exist. Also checks if user is falsely trying to create one.
-    */
-    public function checkWorkgroupForum()
-    {
+     * Method to get the forum for a workgroup or create one that does not exist. Also checks if user is falsely trying to create one.
+     */
+    public function checkWorkgroupForum() {
         $this->workgroupForum = $this->objForum->getWorkgroupForum($this->contextCode, $this->workgroupId);
         if ($this->workgroupForum == NULL) {
             $this->workgroupForum = $this->objForum->autoCreateWorkgroupForum($this->contextCode, $this->workgroupId, $this->workgroupDescription);
         }
         if ($this->forumtype == 'workgroup') {
-            return $this->nextAction('forum', array('id'=>$this->workgroupForum, 'type'=>$this->forumtype));
+            return $this->nextAction('forum', array('id' => $this->workgroupForum, 'type' => $this->forumtype));
         } else {
             //echo 'not member of forum';
-            return $this->nextAction('noaccess', array('id'=>$this->workgroupForum ));
+            return $this->nextAction('noaccess', array('id' => $this->workgroupForum));
             // Fixup or redirect to forum home
         }
     }
 
-
     /**
-    * Method to determine if a forum is for a workgrup and whether the user has access to it. If not redirect to a page saying so.
-    *
-    * @param array $forum Array containing details of the forum
-    */
-    public function checkWorkgroupAccessOrRedirect($forum)
-    {
+     * Method to determine if a forum is for a workgrup and whether the user has access to it. If not redirect to a page saying so.
+     *
+     * @param array $forum Array containing details of the forum
+     */
+    public function checkWorkgroupAccessOrRedirect($forum) {
         if ($forum['forum_workgroup'] != NULL && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
-            return $this->nextAction('noaccess', array('id'=>$forum['forum_workgroup']));
+            return $this->nextAction('noaccess', array('id' => $forum['forum_workgroup']));
         } else {
             $this->forumtype = 'workgroup';
             $this->setVarByRef('forumtype', $this->forumtype);
             $this->objPost->forumtype = $this->forumtype;
         }
-        if ($forum['forum_workgroup'] == NULL ) {
+        if ($forum['forum_workgroup'] == NULL) {
             $this->forumtype = 'context';
 
             $this->setVarByRef('forumtype', $this->forumtype);
@@ -1818,31 +1751,28 @@ class forum extends controller
     }
 
     /**
-    * Method to show that the user has no access to a workgroup forum
-    */
-    public function showNoAccess($id)
-    {
+     * Method to show that the user has no access to a workgroup forum
+     */
+    public function showNoAccess($id) {
         return 'forum_workgroup_noaccess.php';
     }
 
     /**
-    * Method to View a Mind Map of topics in a Forum
-    * @param string $id Record Id of the Forum
-    */
-    public function viewMindMap($id)
-    {
+     * Method to View a Mind Map of topics in a Forum
+     * @param string $id Record Id of the Forum
+     */
+    public function viewMindMap($id) {
         $forum = $this->objForum->getForum($id);
         $this->setVarByRef('forum', $forum);
-        $this->setVar('map', $this->uri(array('action'=>'generatemindmap', 'id'=>$id)));
+        $this->setVar('map', $this->uri(array('action' => 'generatemindmap', 'id' => $id)));
         return 'forum_mindmap.php';
     }
 
     /**
-    * Method to Generate the XML of Mind Map of topics in a Forum
-    * @param string $id Record Id of the Forum
-    */
-    public function generateMindMap($id)
-    {
+     * Method to Generate the XML of Mind Map of topics in a Forum
+     * @param string $id Record Id of the Forum
+     */
+    public function generateMindMap($id) {
         $forum = $this->objForum->getForum($id);
         // Get Order and Sorting Values
         $order = $this->getParam('order', $this->getSession('sortorder', 'date'));
@@ -1851,27 +1781,25 @@ class forum extends controller
         $this->objForum->order = $order;
         $this->objForum->direction = $direction;
         $allTopics = $this->objTopic->showTopicsInForum($id, $this->userId, $forum['archivedate'], $order, $direction);
-        $this->loadClass('treemenu','tree');
-        $this->loadClass('treenode','tree');
-        $this->loadClass('freemindmap','tree');
-        $this->loadClass('htmllist','tree');
+        $this->loadClass('treemenu', 'tree');
+        $this->loadClass('treenode', 'tree');
+        $this->loadClass('freemindmap', 'tree');
+        $this->loadClass('htmllist', 'tree');
         $treeMenu = new treemenu();
-        $rootNode =& new treenode(array('text'=>$forum['forum_name']), NULL);
+        $rootNode = & new treenode(array('text' => $forum['forum_name']), NULL);
         // start an array
         $nodeArray = array();
         // Reference the array element with the record id
-        $nodeArray[0] =& $rootNode;
-        foreach ($allTopics as $topic)
-        {
-            $node =& new treenode(array('text'=>htmlentities($topic['post_title']), 'link'=>$this->uri(array('action'=>'viewtopic', 'id'=>$topic['topic_id']))), NULL);
+        $nodeArray[0] = & $rootNode;
+        foreach ($allTopics as $topic) {
+            $node = & new treenode(array('text' => htmlentities($topic['post_title']), 'link' => $this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id']))), NULL);
             $nodeArray[0]->addItem($node);
             // Reference the array element with the record id
-            $nodeArray[$topic['topic_id']] =& $node;
+            $nodeArray[$topic['topic_id']] = & $node;
             if ($topic['tangentcheck'] != '') {
                 $tangents = $this->objTopic->getTangents($topic['topic_id']);
-                foreach ($tangents as $tangent)
-                {
-                    $tangentnode =& new treenode(array('text'=>$tangent['post_title'], 'link'=>$this->uri(array('action'=>'viewtopic', 'id'=>$tangent['id']))), NULL);
+                foreach ($tangents as $tangent) {
+                    $tangentnode = & new treenode(array('text' => $tangent['post_title'], 'link' => $this->uri(array('action' => 'viewtopic', 'id' => $tangent['id']))), NULL);
                     $nodeArray[$tangent['topic_tangent_parent']]->addItem($tangentnode);
                 }
             }
@@ -1883,61 +1811,59 @@ class forum extends controller
     }
 
     /**
-    * Method to View a Topic as a Freemind Map
-    * @param string $topic_id Record Id of the Topic
-    */
-    public function viewTopicMindMap($topic_id)
-    {
+     * Method to View a Topic as a Freemind Map
+     * @param string $topic_id Record Id of the Topic
+     */
+    public function viewTopicMindMap($topic_id) {
 
         // Store View as a Preference
         $this->setSession('forumdisplay', 'viewtopicmindmap');
         // Update Views
         $this->objTopic->updateTopicViews($topic_id);
         // Get details on the topic
-        $post = $this->objPost->getRootPost ($topic_id);
+        $post = $this->objPost->getRootPost($topic_id);
         $this->setVarByRef('post', $post);
         $forum = $this->objForum->getForum($post['forum_id']);
         // Check if user has access to workgroup forum else redirect
         $this->checkWorkgroupAccessOrRedirect($forum);
-        $this->setVar('map', $this->uri(array('action'=>'generatetopicmindmap', 'id'=>$topic_id)));
+        $this->setVar('map', $this->uri(array('action' => 'generatetopicmindmap', 'id' => $topic_id)));
         $this->setVarByRef('changeDisplayForm', $this->objTopic->showChangeDisplayTypeForm($topic_id, 'viewtopicmindmap'));
         // Mark the Topic as read for the current user if user is logged in
         if ($this->isLoggedIn) {
-            $this->objTopicRead->markTopicRead ($topic_id, $this->userId);
+            $this->objTopicRead->markTopicRead($topic_id, $this->userId);
         }
         // Check if forum is locked - if true - disable / editing replies
-            if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
-                $this->objPost->repliesAllowed = FALSE;
-                $this->objPost->editingPostsAllowed=FALSE;
-                $this->objPost->forumLocked=TRUE;
-                $this->setVar('forumlocked', TRUE);
-            } else {
-                $this->setVar('forumlocked', FALSE);
-            }
+        if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
+            $this->objPost->repliesAllowed = FALSE;
+            $this->objPost->editingPostsAllowed = FALSE;
+            $this->objPost->forumLocked = TRUE;
+            $this->setVar('forumlocked', TRUE);
+        } else {
+            $this->setVar('forumlocked', FALSE);
+        }
         // Bread Crumbs
-        $forumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'])));
+        $forumLink = new link($this->uri(array('action' => 'forum', 'id' => $post['forum_id'])));
         $forumLink->link = $forum['forum_name'];
-        $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(),$post['post_title']));
+        $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(), $post['post_title']));
 
         return 'forum_topic_mindmap.php';
     }
 
     /**
-    * Method to Generate the Freemind XML for a Topic
-    * @param string $topic_id Record Id of the Topic
-    */
-    public function generateTopicMindMap($topic_id)
-    {
+     * Method to Generate the Freemind XML for a Topic
+     * @param string $topic_id Record Id of the Topic
+     */
+    public function generateTopicMindMap($topic_id) {
         //************************************
         //         TODO!!! TANGENTS
         //************************************
         // Get the topic as a thread
         $thread = $this->objPost->getThread($topic_id);
         // Load the Tree Classes
-        $this->loadClass('treemenu','tree');
-        $this->loadClass('treenode','tree');
-        $this->loadClass('freemindmap','tree');
-        $this->loadClass('htmllist','tree');
+        $this->loadClass('treemenu', 'tree');
+        $this->loadClass('treenode', 'tree');
+        $this->loadClass('freemindmap', 'tree');
+        $this->loadClass('htmllist', 'tree');
         // Load Color Generator
         $objColorGenerator = $this->getObject('randomcolorgenerator', 'utilities');
         // Tree Menu for Nodes
@@ -1947,7 +1873,7 @@ class forum extends controller
         // start an array - used as a referencing point
         $nodeArray = array();
         // Get Root Post and Topic Details
-        $post = $this->objPost->getRootPost ($topic_id);
+        $post = $this->objPost->getRootPost($topic_id);
         $this->setVarByRef('post', $post);
         // Replies starts off as allowed
         $repliesAllowed = TRUE;
@@ -1964,14 +1890,13 @@ class forum extends controller
         }
 
         // Loop through Posts to Create Tree
-        foreach ($thread as $topic)
-        {
+        foreach ($thread as $topic) {
             // Create an Array with the nodes details
             $nodeDetails = array();
             // Add reply link and hook if replies allowed
             if ($repliesAllowed) {
                 // Link to the Node
-                $nodeDetails['link'] = $this->uri(array('action'=>'postreply', 'id'=>$topic['post_id']), NULL);
+                $nodeDetails['link'] = $this->uri(array('action' => 'postreply', 'id' => $topic['post_id']), NULL);
                 // Add a Hooktext - 'popup text';
                 $nodeDetails['hooktext'] = $this->objLanguage->languageText('mod_forum_freemindfollowlink', 'forum', 'Click on the link to post a reply');
             }
@@ -1981,21 +1906,21 @@ class forum extends controller
             $nodeDetails['edgeWidth'] = 8;
             if ($this->showFullName) {
                 // Start text of the node
-                $text = $topic['firstname'].' '.$topic['surname'].' ';
+                $text = $topic['firstname'] . ' ' . $topic['surname'] . ' ';
             } else {
-                $text = $topic['username'].' ';
+                $text = $topic['username'] . ' ';
             }
             // Check if Start of Topic or Reply
             if ($topic['post_parent'] == '0') {
-                $message = $this->objLanguage->languageText('mod_forum_startedtopic', 'forum', 'started topic').':';
+                $message = $this->objLanguage->languageText('mod_forum_startedtopic', 'forum', 'started topic') . ':';
                 $rootNodes[] = $topic['post_id'];
-                $text .= $message.'&#xa;&#xa;'.strip_tags($topic['post_text']);
+                $text .= $message . '&#xa;&#xa;' . strip_tags($topic['post_text']);
                 $nodeDetails['fontsize'] = 20;
                 $nodeDetails['fontbold'] = TRUE;
             } else {
-                $message = $this->objLanguage->languageText('mod_forum_postedareply', 'forum', 'posted a reply').':';
+                $message = $this->objLanguage->languageText('mod_forum_postedareply', 'forum', 'posted a reply') . ':';
                 $nodeDetails['style'] = 'bubble';
-                $text .= $message.'&#xa;&#xa;'.strip_tags($topic['post_text']);
+                $text .= $message . '&#xa;&#xa;' . strip_tags($topic['post_text']);
             }
             // Add text to Node Array
             $nodeDetails['text'] = $text;
@@ -2008,7 +1933,7 @@ class forum extends controller
                 $nodeDetails['cloud'] = FALSE;
             }
             // Create a Node
-            $node =& new treenode($nodeDetails);
+            $node = & new treenode($nodeDetails);
             // Check if Start of Topic or Reply
             // If Start of topic, add to tree menu
             // Else add as a child node
@@ -2018,34 +1943,35 @@ class forum extends controller
                 $nodeArray[$topic['post_parent']]->addItem($node);
             }
             // Reference the array element with the record id
-            $nodeArray[$topic['post_id']] =& $node;
+            $nodeArray[$topic['post_id']] = & $node;
         }
         $tree = &new freemindmap($treeMenu);
         header('content-type:text/xml');
         echo $tree->getMenu();
     }
 
-
     /**
-    * Method to update a passthrough login, log user into required course
-    */
-    public function updatePassThroughLogin()
-    {
+     * Method to update a passthrough login, log user into required course
+     */
+    public function updatePassThroughLogin() {
         $objForumPassThrough = $this->getObject('forum_passthrough');
-        switch ($this->getParam('action'))
-        {
+        switch ($this->getParam('action')) {
             case 'forum':
-                $forum = $objForumPassThrough->getContextFromForum($this->getParam('id')); break;
+                $forum = $objForumPassThrough->getContextFromForum($this->getParam('id'));
+                break;
             case 'viewtopic':
             case 'flatview':
             case 'singlethreadview':
             case 'thread':
             case 'moderatetopic':
-                $forum = $objForumPassThrough->getContextFromTopic($this->getParam('id')); break;
+                $forum = $objForumPassThrough->getContextFromTopic($this->getParam('id'));
+                break;
             case 'postreply':
-                $forum = $objForumPassThrough->getContextFromPost($this->getParam('id')); break;
+                $forum = $objForumPassThrough->getContextFromPost($this->getParam('id'));
+                break;
             default:
-                $forum = ''; break;
+                $forum = '';
+                break;
 
         }
         if ($forum != '' && $forum != FALSE) {
@@ -2055,12 +1981,11 @@ class forum extends controller
     }
 
     /**
-    * Method to Search through the Discussion Forum
-    * @param string $term Term to search for
-    * @param string $form Forum to search in
-    */
-    public function searchForum($term, $forum)
-    {
+     * Method to Search through the Discussion Forum
+     * @param string $term Term to search for
+     * @param string $form Forum to search in
+     */
+    public function searchForum($term, $forum) {
         $errors = array();
         if (trim($term) == '') {
             $errors[] = 'No Search Term was provided';
@@ -2090,34 +2015,32 @@ class forum extends controller
     }
 
     /**
-    * Method to rebuild a topic tree via URL
-    * @param string $id Record Id of the Topic
-    * @param string $post Record Id of the Post
-    */
-    public function rebuildTopic($id, $post=NULL)
-    {
+     * Method to rebuild a topic tree via URL
+     * @param string $id Record Id of the Topic
+     * @param string $post Record Id of the Post
+     */
+    public function rebuildTopic($id, $post=NULL) {
         // Check if Topic is Broken
         $this->objPost->detectBrokenTopic($id);
         // Go to Topic
-        return $this->nextAction('viewtopic', array('id'=>$id, 'post'=>$post));
+        return $this->nextAction('viewtopic', array('id' => $id, 'post' => $post));
     }
 
     /**
-    *
-    *
-    *
-    */
-    public function moderatePost($id)
-    {
+     *
+     *
+     *
+     */
+    public function moderatePost($id) {
         // Get Post Info
         $post = $this->objPost->getPostWithText($id);
         // If it does not exist, redirect with message
         if ($post == NULL) {
-            return $this->nextAction(NULL, array('message'=>'postyoutriedtomoderatedoesnotexist'));
+            return $this->nextAction(NULL, array('message' => 'postyoutriedtomoderatedoesnotexist'));
         }
         // Redirect to Topic Moderation if First Post
         if ($post['postleft'] == 1) {
-            return $this->nextAction('moderatetopic', array('id'=>$post['topic_id']));
+            return $this->nextAction('moderatetopic', array('id' => $post['topic_id']));
         }
         // Turn Off Moderation Icon
         $this->objPost->showModeration = FALSE;
@@ -2138,23 +2061,57 @@ class forum extends controller
     }
 
     /**
-    *
-    *
-    */
-    public function deletePostConfirm()
-    {
+     *
+     *
+     */
+    public function deletePostConfirm() {
         $post = $this->objPost->getPostWithText($_POST['id']);
         if ($post == NULL) {
-            return $this->nextAction(NULL, array('message'=>'postyoutriedtodeletedoesnotexist'));
+            return $this->nextAction(NULL, array('message' => 'postyoutriedtodeletedoesnotexist'));
         }
         if ($_POST['confirmdelete'] == 'Y') {
             $this->objPost->deletePostAndReplies($_POST['id']);
             $this->objTopic->updateTopicAfterDelete($post['topic_id']);
             $this->objForum->updateForumAfterDelete($post['forum_id']);
-            return $this->nextAction('viewtopic', array('id'=>$post['topic_id'], 'message'=>'posthasbeendeleted'));
-
+            return $this->nextAction('viewtopic', array('id' => $post['topic_id'], 'message' => 'posthasbeendeleted'));
         } else {
-            return $this->nextAction('viewtopic', array('id'=>$post['topic_id'], 'post'=>$_POST['id'], 'message'=>'postdeletecancelled'));
+            return $this->nextAction('viewtopic', array('id' => $post['topic_id'], 'post' => $_POST['id'], 'message' => 'postdeletecancelled'));
+        }
+    }
+
+    function sendEmailAlert($subject,$message, $linkUrl) {
+        $recipients = $this->objManageGroups->contextUsers('Students', $this->contextCode, array('tbl_users.userId', 'email', 'firstName', 'surname'));
+        $objMailer = $this->getObject('email', 'mail');
+        $message=html_entity_decode($message);
+        $message=trim($message, "\x00..\x1F");
+        $message=strip_tags($message);
+        $list=array();
+        foreach($recipients as $recipient) {
+            $list[]=$recipient['emailaddress'];
+        }
+        $objMailer->setValue('to',$list);
+        $objMailer->setValue('from', "");
+        $objMailer->setValue('fromName', $this->objAltConfig->getSiteName());
+        $objMailer->setValue('subject', $title);
+        $objMailer->setValue('body', $message);
+        $objMailer->setValue('AltBody', $message);
+        $objMailer->send();
+
+
+
+        $members = $this->objManageGroups->contextUsers('Students', $this->contextCode, array('tbl_users.userId', 'email', 'firstName', 'surname'));
+        $objMailer = $this->getObject('email', 'mail');
+        foreach ($members as $member) {
+
+            $linkUrl = str_replace("amp;", "", $linkUrl);
+            $objMailer->setValue('to', array($member['emailaddress']));
+            $objMailer->setValue('from',"");
+            $objMailer->setValue('fromName',  $this->objAltConfig->getSiteName());
+            $objMailer->setValue('subject', $subject);
+            $objMailer->setValue('body', strip_tags($body));
+            $objMailer->setValue('AltBody', strip_tags($body));
+
+            $objMailer->send();
         }
     }
 

@@ -63,7 +63,7 @@ foreach ($forums as $forum) {
     $forumLink->link = $forum['forum_name'];
     $forumName = $forumLink->show();
     if ($forum['defaultforum'] == 'Y') {
-        $forumName .= '<em> - '.$this->objLanguage->languageText('mod_forum_defaultForum', 'forum').'</em>';
+        $forumName .= '<em> - '.$this->objLanguage->languageText('mod_forum_defaultForum', 'forum','Default Forum').'</em>';
     }
     $objIcon = $this->getObject('geticon', 'htmlelements');
     if ($forum['forumlocked'] == 'Y') {
