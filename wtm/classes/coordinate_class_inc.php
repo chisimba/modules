@@ -38,61 +38,56 @@ class coordinate extends object
 	public $objDBEvents;
 	
 	public $objDBBuildings;
-	
-	/**campus boundaries
-	public $longeast = 28.032419;
-	public $longwest = 28.025325;
-	public $latnorth = -26.186956;
-	public $latsouth = -26.193139;*/
- 
+
+ 	/**
+    * Constructor method to instantiate the language
+	* object and building and event tables.
+    */
 	public function init()
 	{
-		//Instantiate the language object
 		$this->objLanguage = $this->getObject('language','language');
-		//Load the DB object
+		
 		$this->objDBEvents = $this->getObject('dbwtm_events','wtm');  
-		//Load the DB object
+		
 		$this->objDBBuildings = $this->getObject('dbwtm_buildings','wtm');  
 	}
-	
-	//function which searches for the building at which the given coordinates are directed at
+
+	/**
+    * Echo name of building being targetted by 
+	* given coordinates and compass heading.
+    * @param integer $longcoord longitude coordinate
+    * @param integer $latcoord latitude coordinate
+	* @param decimal $angle compass heading in radians
+    * @echoes target building.
+    */
 	public function search($longcoord,$latcoord,$angle)
 	{
-		//allocating the horizontal parameter to a variable which can be modified
+		//Coordinates are shifted to integer form (5 decimal accuracy).
 		$longcoordinate = $longcoord * 100000;
-		//allocating the vertical parameter to a variable which can be modified
 		$latcoordinate = $latcoord * 100000;
-		//equivalent to approx 5m
+		//Approximately 5m iterations.
 		$length = 0.00005 * 100000;
-		//fetch the buildings from the DB
-		$allBuildings = $this->objDBBuildings->listAll();
-		
 		$counter = 0;
-
-		//while the given coordinate is within campus boundaries
-		//while ($longcoordinate < $this->longeast && $longcoordinate >$this->longwest && $latcoordinate < $this->latnorth && $latcoordinate > $this->latsouth)
 		
-		//approx 100m range
+		$allBuildings = $this->objDBBuildings->listAll();
+			
+		//Approximately 100m range.
 		while ($counter < 20)
 		{
 			foreach($allBuildings as $thisBuilding)
 			{
-				//setting building boundaries
+				//Setting building boundaries using building data.
 				$buildingeast = $thisBuilding["longcoordinate"] + $thisBuilding["xexpand"];
 				$buildingwest = $thisBuilding["longcoordinate"] - $thisBuilding["xexpand"];
 				$buildingnorth = $thisBuilding["latcoordinate"] + $thisBuilding["yexpand"];
 				$buildingsouth = $thisBuilding["latcoordinate"] - $thisBuilding["yexpand"];
 				
-				//echo $buildingeast . "<br />" . $buildingwest . "<br />" . $buildingnorth . "<br />" . $buildingsouth . "<br />";
-				//exit;
-				
+				//Coordinates are within longitude boundaries.
 				if ($longcoordinate < $buildingeast && $longcoordinate > $buildingwest)
 				{
-					//echo "within long boundaries";
-					//exit;
+					//Coordiantes are within latitude boundaries.
 					if ($latcoordinate < $buildingnorth && $latcoordinate > $buildingsouth)
 					{
-						//echo $longcoordinate . "<br />" . $latcoordinate . "<br />";
 						echo trim($thisBuilding["building"]) . "\n";
 						echo trim($thisBuilding["id"]);
 						exit;
@@ -100,35 +95,28 @@ class coordinate extends object
 				}
 			}
 			
+			//Coordinates are not within both boundaries.
 			switch ($angle)
 			{
+				//Between N & E. Increase long and lat.
 				case ($angle <= M_PI/2):
-					//increasing horizontal coordinate
 					$longcoordinate += $length * sin($angle);
-					//increasing vertical coordinate
 					$latcoordinate += $length * cos($angle);
-					//echo $longcoordinate . "<br />" . $latcoordinate . "<br />";
 					break;
+				//Between E & S. Increase long decrease lat.
 				case ($angle > M_PI/2 && $angle <= M_PI):
-					//increasing horizontal coordinate
 					$longcoordinate += $length * sin($angle);
-					//decreasing vertical coordinate
 					$latcoordinate += $length * cos($angle);
-					//echo $longcoordinate . "<br />" . $latcoordinate . "<br />";
 					break;
-				case ($angle > M_PI && $angle <= (2*M_PI)/3):
-					//decreasing horizontal coordinate
+				//Between S & W. Decrease long and lat.
+				case ($angle > M_PI && $angle <= (3*M_PI)/2):
 					$longcoordinate += $length * sin($angle);
-					//decreasing vertical coordinate
 					$latcoordinate += $length * cos($angle);
-					//echo $longcoordinate . "<br />" . $latcoordinate . "<br />";
 					break;
-				case ($angle > (2*M_PI)/3):
-					//decreasing horizontal coordinate
+				//Between W & N. Decrease long increase lat.
+				case ($angle > (3*M_PI)/2):
 					$longcoordinate += $length * sin($angle);
-					//increasing vertical coordinate
 					$latcoordinate += $length * cos($angle);
-					//echo $longcoordinate . "<br />" . $latcoordinate . "<br />";
 					break;
 			}
 			
@@ -136,17 +124,21 @@ class coordinate extends object
 		}
 	}
 	
-	//function which retrieves all the events for a specific building
+	/**
+    * Retrieves and echoes list of events being requested for 
+	* a spefic (target) building.
+    * @param string $buildingid building ID
+    * @echoes relevant event list.
+    */
 	public function retrieve ($buildingid)
 	{
-		//fetch the events from the DB
 		$allEvents = $this->objDBEvents->listAll();
 		
 		foreach($allEvents as $thisEvent)
 		{
 			if ($buildingid == $thisEvent["buildingid"])
 			{
-				//if text description exists
+				//Last 3 characters echoed characters determine media availability
 				if ($thisEvent["description"] != NULL)
 				{
 					$text = 1;
@@ -155,7 +147,6 @@ class coordinate extends object
 				{
 					$text = 0;
 				}
-				//if images exist
 				if ($thisEvent["imagename"] != NULL)
 				{
 					$image = 1;
@@ -164,7 +155,6 @@ class coordinate extends object
 				{
 					$image = 0;
 				}
-				//if videos exist
 				if ($thisEvent["videoname"] != NULL)
 				{
 					$video = 1;
@@ -180,6 +170,14 @@ class coordinate extends object
 		}
 	}
 	
+	//Retrieve media method. Retrieves specific media type for a specific event
+	/**
+    * Retrieves and echoes specific filename of the media 
+	* being requested for a specific event.
+    * @param string $eventid event ID
+	* @param integer $num media type enumeration
+    * @echoes media filename for specific event
+    */
 	public function retrievemedia($eventid, $num)
 	{
 		$allEvents = $this->objDBEvents->listAll();
