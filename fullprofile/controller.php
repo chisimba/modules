@@ -47,12 +47,12 @@ class fullprofile extends controller {
     */
     public function init()
     {
-
         $this->objLanguage = $this->getObject( 'language', 'language' );
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
         $this->objDisplay = $this->newObject('fpdisplay', 'fullprofile');
         $this->objFuncs = $this->newObject('fpfuncs', 'fullprofile');
+        $this->objDbFullprofile = $this->newObject('dbfullprofile', 'fullprofile');
     }
 
     /**
@@ -67,6 +67,19 @@ class fullprofile extends controller {
         switch($action){
 
             default:
+            case 'search':
+                $searchTerm = $this->getParam('searchterm');
+                if(!is_null($searchTerm) && $searchTerm != ""){
+                    $result = $this->objDbFullprofile->searchUser($searchTerm);
+                } else {
+                    $result = NULL;
+                }
+                $formHtml = $this->objDisplay->showSearchForm($searchTerm, $result);
+
+                $this->setVarByRef('templateContent', $formHtml);
+                return 'display_tpl.php';
+                break;
+
             case 'viewprofile':
                 $this->setVar('JQUERY_VERSION', '1.4.2');
 		$ccms_stylesheet = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/ccms-styles.css').'"/>';
@@ -81,6 +94,22 @@ class fullprofile extends controller {
                 return 'display_tpl.php';
                 break;
 
+            case 'addfriend':
+                $fuserid = $this->getParam('fuserid');
+                $userid = $this->getParam('userid');
+
+                $return = $this->objFuncs->addFriend($userid, $fuserid);
+
+                $this->nextAction('viewprofile', array('userid'=>$fuserid), 'fullprofile');
+                break;
+
+            case 'removefriend':
+                $id = $this->getParam('id');
+                $userId = $this->getParam('userid');
+
+                $return = $this->objFuncs->removeFriend($id);
+                $this->nextAction('viewprofile', array('userid'=>$userId), 'fullprofile');
+                break;
         }
     }
 }

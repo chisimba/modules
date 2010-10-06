@@ -55,6 +55,7 @@ class fpfuncs extends dbTable
         $this->objDbActivity = $this->getObject('activitydb', 'activitystreamer');
         $this->objUserContext = $this->getObject('usercontext', 'context');
         $this->objDbGroups = $this->getObject('dbgroups', 'interestgroups');
+        $this->objDbFoaf = $this->getObject('dbfoaf', 'foaf');
     }
 
     /**
@@ -145,6 +146,38 @@ class fpfuncs extends dbTable
 
         return $output;
     }
+
+    /**
+     * Method to remove a friend
+     *
+     * @param string $id The id of the entry to be removed
+     * @access public
+     */
+    public function removeFriend($id)
+    {
+        $result = $this->objDbFoaf->removeFriend($id);
+
+        return $result;
+    }
+
+    /**
+     * Method to add a friend
+     *
+     * @param string $userid The id of the user
+     * @param string $fuserid The id of the friend
+     * @access public
+     */
+    public function addFriend($userid, $fuserid)
+    {
+        $friend = array('userid'=>$userid, 'fuserid'=>$fuserid);
+        $result = $this->objDbFoaf->insertFriend($friend);
+        return $result;
+    }
+
+    /**
+     *
+     */
+
 }
 
 ?>

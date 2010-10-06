@@ -59,6 +59,14 @@ class fpdisplay extends object
         $this->objDbContext = $this->getObject('dbcontext', 'context');
         $this->objDbFoaf = $this->getObject('dbfoaf', 'foaf');
         $this->objBuscard = $this->getObject('buscard', 'digitalbusinesscard');
+        $this->objContextDsiplay = $this->getObject('displaycontext', 'context');
+        //Load the htmlelements classess
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('hiddeninput', 'htmlelements');
+
     }
 
     /**
@@ -72,6 +80,22 @@ class fpdisplay extends object
         //Create the html holder
         $html = "";
 
+        $title = $this->getObject('htmlheading', 'htmlelements');
+        $title->type = '1';
+        
+        $currentUser = $this->objUser->userId();
+        $addFriendIcon = $this->newObject('geticon', 'htmlelements');
+        $addFriendIcon->setIcon('add_icon');
+        $addFriendIcon->title = $this->objLanguage->languageText('mod_fullprofile_addfriend', 'fullprofile');
+
+        $addFriendLink = '<a href="'.$this->uri(array('action'=>'addfriend', 'userid'=>$currentUser, 'fuserid'=>$userId)).'">'.$addFriendIcon->show().'</a>';
+        
+        if($userId != $this->objUser->userId() && !$this->objDbFoaf->isFriend($this->objUser->userId(), $userId)){
+            $title->str = $this->objUser->fullname($userId).'&nbsp;'.$addFriendLink;
+        } else {
+            $title->str = $this->objUser->fullname($userId);
+        }
+        $html .= $title->show();
         $html .= '<div id="ccmsAdminContainer">';
 
         $html .= '<div id="ccmsTabContainer">';
@@ -84,6 +108,8 @@ class fpdisplay extends object
         $html .= '<li><a href="#contentMapPanel">Map</a></li>';
         $html .= '<li><a href="#contentSocialNetworksPanel">Social Networks</a></li>';
         $html .= '<li><a href="#contentTagsPanel">Tags</a></li>';
+        $html .= '<li><a href="#contentContextPanel">'.$this->objLanguage->abstractText('Context').'</a></li>';
+        $html .= '<li><a href="#contentFriendsPanel">Friends</a></li>';
 
         $html .= '</ul>';
 
@@ -105,8 +131,14 @@ class fpdisplay extends object
         $socialNetworksHtml = $this->showUserSocialNetworks($userId);
         $html .= '<div id="contentSocialNetworksPanel" class="tab_content">'.$socialNetworksHtml.'</div>';
 
-        $tagsHtml = $this->showUserTags();
+        $tagsHtml = $this->showUserTags($userId);
         $html .= '<div id="contentTagsPanel" class="tab_content">'.$tagsHtml.'</div>';
+
+        $contextHtml = $this->showUserContexts($userId);
+        $html .= '<div id="contentContextPanel" class="tab_content">'.$contextHtml.'</div>';
+
+        $friendsHtml = $this->showUserFriends($userId);
+        $html .= '<div id="contentFriendsPanel" class="tab_content">'.$friendsHtml.'</div>';
 
         $html .= '</div>';
         $html .= '</div>';
@@ -147,15 +179,15 @@ class fpdisplay extends object
 
     public function showUserActivity($userId)
     {
-        $html = "";
+        $html = "<br />&nbsp;<br />";
         //Create the page title
         $title = $this->getObject('htmlheading', 'htmlelements');
         $title->type = '2';
         $title->str = $this->objLanguage->languageText('mod_fullprofile_siteactivity', 'fullprofile');
 
-        $html .= $title->show();
         //Place the listin a div
         $html .= '<div id="activitystream" class="activitystream">';
+        $html .= $title->show();
         //Get the users activity
         $userActivity = $this->objFuncs->getActivity($userId);
         //Display the activity
@@ -186,17 +218,17 @@ class fpdisplay extends object
      */
     public function showUserAffiliations($userId)
     {
-        $html = "";
+        $html = "<br />&nbsp;<br />";
 
         //Create the page title
         $title = $this->getObject('htmlheading', 'htmlelements');
         $title->type = '2';
         $title->str = $this->objLanguage->languageText('mod_fullprofile_affiliations', 'fullprofile');
 
-        $html .= $title->show();
+
         //Place the list in a div
         $html .= '<div id="affiliations" class="affiliations">';
-
+        $html .= $title->show();
         //Get the users triples
         $userTriples = $this->objFuncs->getTriples($userId);
 
@@ -220,7 +252,7 @@ class fpdisplay extends object
      */
     public function showUserDetails($userId)
     {
-        $html = "";
+        $html = "<br />&nbsp;<br />";
         //Create detail header
         $title = $this->getObject('htmlheading', 'htmlelements');
         $title->type = '2';
@@ -394,7 +426,7 @@ class fpdisplay extends object
      */
     public function showUserMap($userId)
     {
-        $html = "";
+        $html = "<br />&nbsp;<br />";
         $html .= $this->objBuscard->getLatLong($userId);
 
         return $html;
@@ -423,7 +455,7 @@ class fpdisplay extends object
     public function showUserSocialNetworks($userId)
     {
         // Get the social networks tab content.
-        $html = "";
+        $html = "<br />&nbsp;<br />";
 
         //Create the page title
         $title = $this->getObject('htmlheading', 'htmlelements');
@@ -451,35 +483,336 @@ class fpdisplay extends object
 
     public function showUserContexts($userId)
     {
-        $html = "";
+        $html = "<br />&nbsp;<br />";
         //Create the page title
         $title = $this->getObject('htmlheading', 'htmlelements');
         $title->type = '2';
-        $title->str =
+        $title->str = $this->objLanguage->abstractText('Context');
 
         $html .= $title->show();
         //Place the listin a div
         $html .= '<div id="usercontextlist" class="usercontextlist">';
         //Get the users activity
-        $userActivity = $this->objFuncs->getActivity($userId);
+        $userContexts = $this->objFuncs->getContexts($userId);
         //Display the activity
-        if(is_array($userActivity) && count($userActivity)>0){
-            foreach($userActivity as $ua){
-                $dateTime = date("F j, Y, g:i a", strtotime($ua['createdon']));
-                $title = $ua['title'];
-                $contextCode = $ua['contextcode'];
-                if(is_null($contextCode)){
-                    $html .= '<ul>'.$dateTime.'&nbsp;&nbsp;'.'-'.'&nbsp;&nbsp;'.$title.'</ul>';
-                } else {
-                    $html .= '<ul>'.$dateTime.'&nbsp;&nbsp;'.'-'.'&nbsp;&nbsp;'.$title.'&nbsp;&nbsp;'.'-'.'&nbsp;&nbsp;'.$this->objDbContext->getTitle($contextCode).'</ul>';
+        if(is_array($userContexts) && count($userContexts)>0){
+            foreach($userContexts as $context){
+                $contextDetails = $this->objDbContext->getContext($context);
+                if(is_array($contextDetails) && count($contextDetails)>0){
+                       //Display context
+                        $html .= $this->objContextDsiplay->formatContextDisplayBlock($contextDetails, FALSE);
                 }
             }
         } else {
-            $html .= '<span class="subdued">No activities logged</span>';
+            $html .= '<span class="subdued">User does not belong to any projects</span>';
         }
         $html .= '</div>';
 
         return $html;
+    }
+    
+    /**
+     * Method to show a list of a users friends
+     * 
+     * @param string $userId The users id
+     * @param int $start
+     * @param int $end
+     * @access public
+     */
+    public function showUserFriends($userId)
+    {
+        $html = "<br />&nbsp;<br />";
+        //Create the page title
+        $title = $this->getObject('htmlheading', 'htmlelements');
+        $title->type = '2';
+        $title->str = $this->objLanguage->languageText('mod_fullprofile_friends', 'fullprofile');
+
+        
+        //Place the listin a div
+        $html .= '<div id="friendslist" class="friendslist">';
+        $html .= $title->show();
+        //Get list of friends
+        $friendsList = $this->objDbFoaf->getFriends($userId);
+
+        //Create table to hold friends
+        $friendsTbl = $this->newObject('htmltable', 'htmlelements');
+        
+        if(is_array($friendsList) && count($friendsList)>0){
+            $count = 0;
+            foreach($friendsList as $friend){
+
+                $fid = $friend['id'];
+                $fuserid = $friend['fuserid'];
+                $fname = $friend['name'];
+                $fpic = $this->objUser->getUserImage($fuserid);
+                $deleteArr = array('action'=>'removefriend', 'id'=>$fid, 'userid'=>$userId);
+                $deletePhrase = $this->objLanguage->languageText('mod_fullprofile_removefriend', 'fullprofile').':'.'&nbsp;'.$fname;
+                $deleteIcon = $this->newObject('geticon', 'htmlelements');
+                $deleteIcon->setIcon('delete');
+                $deleteIcon->title = $this->objLanguage->languageText('mod_fullprofile_removefriend', 'fullprofile').':'.'&nbsp;'.$fname;
+                $deleteCont = '<a href="'.$this->uri($deleteArr).'">'.$deleteIcon->show().'</a>';
+                if($userId == $this->objUser->userId()){
+                    $fdetails = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$fuserid)).'">'.$fpic.'<br />'.$fname.'</a><br />'.$deleteCont;
+                } else {
+                    $fdetails = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$fuserid)).'">'.$fpic.'<br />'.$fname.'</a>';
+                }
+                if($count == 0){
+                    $friendsTbl->startRow();
+                    $friendsTbl->addCell($fdetails, NULL, 'center', 'center');
+                    $count++;
+                } else if($count == 5){
+                     $friendsTbl->addCell($fdetails, NULL, 'center', 'center');
+                     $friendsTbl->endRow();
+                     $count = 0;
+                } else {
+                     $friendsTbl->addCell($fdetails, NULL, 'center', 'center');
+                     $count++;
+                }
+
+
+            }
+        }else {
+            $html .= '<span class="subdued">User has not added any friends</span>';
+        }
+
+        $html .= $friendsTbl->show();
+
+        return $html;
+    }
+
+
+    /**
+     * Method to display the user search form
+     *
+     * @access public
+     * @return string $html The html for the search form
+     */
+    public function showSearchForm($searchTerm, $result = NULL)
+    {
+        $html = "<br />&nbsp;<br />";
+
+        //Place the list in a div
+        $html .= '<div id="searchfriendsform" class="searchfriendsform">';
+        
+        //Create the form
+        $form = new form('searchuser',$this->uri(array('action'=>'search')));
+        //$form->displayType = 4;
+
+        //Create the search text input
+        $searchInput = new textinput('searchterm');
+        $searchInput->size = 40;
+        $searchLabel = new label($this->objLanguage->languageText('mod_fullprofile_searchfor', 'fullprofile', 'Search for'), 'input_searchterm');
+
+        $button = new button ('search', $this->objLanguage->languageText('word_search', 'system', 'Search'));
+        $button->cssId = 'searchbutton';
+        $button->setToSubmit();
+
+        $searchHtml = $searchLabel->show().'&nbsp;'.$searchInput->show().'&nbsp;'.$button->show();
+
+        $form->addToForm($searchHtml);
+
+        $html .= $form->show();
+
+        $html .= '<div id=searchresult>';
+
+        if(is_array($result) && count($result)>0){
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->width = "60%";
+            $title = $this->getObject('htmlheading', 'htmlelements');
+            $title->type = '3';
+            $title->str = $this->objLanguage->languageText('mod_fullprofile_searchresults', 'fullprofile');
+
+            $table->startRow();
+            $table->addCell($title->show(), null, 'top', null, null, 'colspan="2"', '0');
+            $table->endRow();
+            foreach($result as $res){
+                $userId = $res['userid'];
+                $userImage = $this->objUser->getUserImage($userId);
+                $linkToProfilePic = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$userId)).'">'.$userImage.'</a>';
+                $linkToProfileText = '<a href="'.$this->uri(array('action'=>'viewprofile', 'userid'=>$userId)).'">'.$this->objUser->fullname($userId).'</a>';
+                $table->startRow();
+                $table->addCell($linkToProfilePic, null, 'center', null, null, null, '0');
+                $table->addCell($linkToProfileText, null, 'center', null, null, null, '0');
+                //Set current user to check if user is friend
+                $currentUser = $this->objUser->userId();
+                $addFriendIcon = $this->newObject('geticon', 'htmlelements');
+                $addFriendIcon->setIcon('add_icon');
+                $addFriendIcon->title = $this->objLanguage->languageText('mod_fullprofile_addfriend', 'fullprofile');
+
+                $addFriendLink = '<a href="'.$this->uri(array('action'=>'addfriend', 'userid'=>$currentUser, 'fuserid'=>$userId)).'">'.$addFriendIcon->show().'</a>';
+
+                if($userId != $this->objUser->userId() && !$this->objDbFoaf->isFriend($this->objUser->userId(), $userId)){
+                    $table->addCell($addFriendLink, null, 'center', null, null, null, '0');
+                } else {
+                    $table->addCell('&nbsp;', null, 'center', null, null, null, '0');
+                }
+                $table->endRow();
+
+            }
+            $html .= $table->show();
+        }
+
+        $html .= '</div>';
+        return $html;
+
+    }
+
+    /**
+    *
+    * Get the latitude and longitude of the user and return it in hcard format
+    * while optionally rendering a google map
+    *
+    * @param string $userId The userid of the user to lookup
+    * @param boolean $showMap Whether or not to show the map, default TRUE
+    * @return string The rendered output
+    * @access public
+    *
+    */
+    public function getLatLong($userId, $showMap=TRUE)
+    {
+        //Change the user id
+        if(!is_null($userId) && $userId != ""){
+             $this->objUserParams->setUserId($userId);
+        }
+
+        $latitude = $this->objUserParams->getValue("latitude");
+        $longitude = $this->objUserParams->getValue("longitude");
+        if ($latitude && $longitude) {
+            $ret = '<span class="geo">'
+              . '<abbr class="latitude" title="' . $latitude
+              . '">' . $latitude . "</abbr>\n"
+              .  '<abbr class="longitude" title="'
+              . $longitude . '">' . $longitude . "</abbr>\n"
+              . "</span>\n";
+            $ret = $this->getLinkIcon("earth") . $ret;
+            if ($showMap) {
+                $ret .= $this->getMap($latitude, $longitude);
+            }
+            return $ret;
+        }
+    }
+
+    /**
+    *
+    * Method to render a simple google map
+    *
+    * @param string $latitude Latitude of user
+    * @param string $longitude Longitude of user
+    * @return string The rendered map
+    * @access private
+    *
+    */
+    private function getMap($latitude, $longitude)
+    {
+        $ret = '<br /><div class="vcard_map">'
+          . '<iframe width="512" height="512" '
+          . 'frameborder="0" scrolling="no" '
+          . 'marginheight="0" marginwidth="0" '
+          . 'src="http://maps.google.com/maps/api/staticmap?center='
+          . $latitude .',' . $longitude
+          . '&zoom=17&size=512x512&maptype=hybrid'
+          . '&markers=color:red|' . $latitude .','
+          . $longitude . '&sensor=false&key=' . $this->mapApiKey
+          . '"></iframe></div>';
+        return $ret;
+    }
+
+    public function widgetize($terms) {
+        $collecta = "";
+        $title ="My favorite tags";
+        $widget = '<iframe style="border: medium none ; overflow: hidden; width:640px; height:480px;"
+                  src="http://widget.collecta.com/widget.html?query='.urlencode($terms).'&alias='.$title.'&
+                  headerimg=&stylesheet=&delay=" id="widgetframe" frameborder="0" scrolling="no">
+                  </iframe>';
+        /*$widget = "<iframe style=\"border: medium none ; overflow: hidden; width: 600px; height: 400px;\""
+           . "src=\"http://widget.collecta.com/widget.html?query="
+          . "$terms&alias=$title&headerimg=&stylesheet=&delay= "
+          . "id=\"widgetframe\" frameborder=\"0\" scrolling=\"no\"></iframe>";*/
+
+        return $widget;
+    }
+
+    /**
+    *
+    * Get tags stored in the format tag1-tag2-tag3
+    *
+    * @return string The rendered tags or boolean FALSE if no tags found
+    *
+    */
+    private function getTags()
+    {
+
+        $tags = $this->objUserParams->getValue("tags");
+        if ($tags) {
+            $tagsAr = explode("-", $tags);
+            $ret = "";
+            $terms="";
+            $tagNo = count($tagsAr);
+            $counter = 1;
+            foreach ($tagsAr as $tag) {
+                if ($counter == $tagNo) {
+                    $terms .= $tag;
+                } else {
+                    $terms .= $tag . " OR ";
+                }
+                $ret .= $this->relTag($tag);
+                $counter ++;
+            }
+            $terms = $this->widgetize("terms: $terms");
+            return "<center>$terms <br /> $ret</center";
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+    *
+    * Get the social network and return it with linked icon
+    * and optionally with or without text
+    *
+    * @param string $network The social network from the array of networks
+    * @param string $userId The userid of the person to look up
+    * @param boolean $noText TRUE|FALSE whether to return text, default yes
+    * @return string The rendered icon/text
+    * @access public
+    *
+    */
+    public function getSocialNetwork($network, $userId, $noText=FALSE)
+    {
+        $identifier = $network . "url";
+        //Change the user id
+        if(!is_null($userId) && $userId != ""){
+             $this->objUserParams->setUserId($userId);
+        }
+        if ($url = $this->objUserParams->getValue($identifier)) {
+            $icon = $this->getLinkIcon($network);
+            if ($noText) {
+                return "<a class='url' rel='me' href='$url' "
+                 . "target='_blank'>$icon</a><br />\n";
+            } else {
+                return "<a class='url' rel='me' href='$url' "
+                  . "target='_blank'>$icon $url</a><br />\n";
+            }
+        }
+    }
+
+    /**
+    *
+    * Get the country of the user and render in in hcard format
+    *
+    * @param boolean $noText TRUE|FALSE whether to return text, default yes
+    * @return string The rendered country with flag
+    * @access private
+    *
+    */
+    private function getCountry($noText=FALSE)
+    {
+        // Use this to get the country flag
+        $objCountries = $this->getObject('countries', 'utilities');
+        $countryName = $objCountries->getCountryName($this->country);
+        $countryFlag = $objCountries->getCountryFlag($this->country);
+        $ret = "<div class=\"country-name\">$countryName</div>";
+        return "<table><tr><td> $countryFlag</td><td>$ret</td></tr></table>";
     }
 
 }
