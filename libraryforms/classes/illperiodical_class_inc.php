@@ -387,10 +387,10 @@ class ILLperiodical extends dbTable {
     private function getFormAction() {
 
         $action = $this->getParam("action", "addperiodical");
-        if ($action == "edit") {
-            $formAction = $this->uri(array("action" => "update"), "libraryforms");
-        } else {
+        if ($action == "addperiodical") {
             $formAction = $this->uri(array("action" => "addperiodical"), "libraryforms");
+        } else {
+            $formAction = $this->uri(array("action" => "update"), "libraryforms");
         }
         return $formAction;
 

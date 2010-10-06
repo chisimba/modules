@@ -160,10 +160,10 @@ $strjs = '<script type="text/javascript">
 
     private function getFormAction() {
         $action = $this->getParam("action", "addfeedbk");
-        if ($action == "edit") {
-            $formAction = $this->uri(array("action" => "update"), "libraryforms");
-        } else {
+        if ($action == "addfeedbk") {
             $formAction = $this->uri(array("action" => "addfeedbk"), "libraryforms");
+        } else {
+            $formAction = $this->uri(array("action" => "update"), "libraryforms");
         }
         return $formAction;
     }
