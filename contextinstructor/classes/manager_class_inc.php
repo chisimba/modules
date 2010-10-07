@@ -66,7 +66,7 @@ class manager extends object {
                 });
                 ";
             $renderSurface = '<div id="addsession-win" class="x-hidden">
-        <div class="x-window-header">' . $this->objLanguage->code2Txt('mod_contextinstructor_authors', 'contextinstructor',null,'[-author]') . '</div>
+        <div class="x-window-header">' . $this->objLanguage->code2Txt('mod_contextinstructor_authors', 'contextinstructor',null,'[-authors-]') . '</div>
         </div>';
             $js = '<script language="JavaScript" src="' . $this->getResourceUri('js/lecturers.js') . '" type="text/javascript"></script>';
             $instructorProfile .=$renderSurface . $js . "<script type=\"text/javascript\">" . $mainjs . "</script>";
