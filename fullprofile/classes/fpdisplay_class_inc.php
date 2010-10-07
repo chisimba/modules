@@ -815,5 +815,70 @@ class fpdisplay extends object
         return "<table><tr><td> $countryFlag</td><td>$ret</td></tr></table>";
     }
 
+    /**
+     * Method to return the user details form
+     *
+     * @param array $details The users details
+     * @access public
+     * @return string $html The html for the form
+     */
+    public function userDetailsForm($details = NULL)
+    {
+        $html = "<br />&nbsp;<br />";
+
+        //Place the form in a div
+        $html .= '<div id="userdetailsform" class="userdetailsform">';
+
+        //Create the form
+        $form = new form('userdetails',$this->uri(array('action'=>'updatedetails')));
+        //$form->displayType = 4;
+
+        //Create the latitude text input
+        $latInput = new textinput('latitude');
+        $latInput->size = 30;
+        $latLabel = new label($this->objLanguage->languageText('mod_fullprofile_latitude', 'fullprofile', 'Latitude'), 'input_latitude');
+
+        //Create the latitude text input
+        $longInput = new textinput('longitude');
+        $longInput->size = 30;
+        $longLabel = new label($this->objLanguage->languageText('mod_fullprofile_longitude', 'fullprofile', 'Longitude'), 'input_longitude');
+
+        //Create the latitude text input
+        $tagsInput = new textinput('tags');
+        $tagsInput->size = 30;
+        $tagsLabel = new label($this->objLanguage->languageText('mod_fullprofile_tags', 'fullprofile', 'Tags'), 'input_tags');
+
+        $objTable = $this->newObject('htmltable', 'htmlelements');
+
+        $title = $this->getObject('htmlheading', 'htmlelements');
+        $title->type = '3';
+        $title->str = $this->objLanguage->languageText('mod_fullprofile_userinfo', 'fullprofile');
+
+        $objTable->startRow();
+        $objTable->addCell($title->show(), null, 'top', null, null, 'colspan="2"', '0');
+        $objTable->endRow();
+        
+        $button = new button ('search', $this->objLanguage->languageText('word_submit', 'system', 'Submit'));
+        $button->cssId = 'submitbutton';
+        $button->setToSubmit();
+
+        $objTable->startRow();
+        $objTable->addCell($tagsLabel->show());
+        $objTable->addCell($tagsInput->show());
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $objTable->addCell($latLabel->show());
+        $objTable->addCell($latInput->show());
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $objTable->addCell($longLabel->show());
+        $objTable->addCell($longInput->show());
+        $objTable->endRow();
+
+
+    }
+
 }
 ?>
