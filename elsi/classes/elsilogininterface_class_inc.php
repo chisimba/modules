@@ -30,7 +30,8 @@ class elsilogininterface extends object {
         $usernameField = new textinput('username', '', 'text', '15');
         $usernameField->extra = "maxlength=255";
         $usernameLabel = new label($this->objLanguage->languageText('word_username') . ': ', 'input_username');
-        //Add validation for username
+      
+//Add validation for username
         $objForm->addRule('username', $this->objLanguage->languageText("mod_login_unrequired", 'security', 'Please enter a username. A username is required in order to login.'), 'required');
 
 

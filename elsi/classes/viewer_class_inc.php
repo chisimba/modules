@@ -89,7 +89,7 @@ class viewer extends object {
                 $storyLink->link = $story['storytitle'];
                 $output .= '<div id="newsstorytext-header"><h3>' . $storyLink->show() . '</h3></div>';
                 $output.='<div id="storydate">' . $story['storydate'] . '<div>';
-                $output .= '</div><br clear="both" />';
+                $output .= '</div>';
             }
 
             return array('topstoryids' => $storyIds, 'stories' => $output);
@@ -100,7 +100,7 @@ class viewer extends object {
         $index = 0;
         $result = "";
         $blogPosts = $this->getObject('blogposts', 'blog');
-        $display = $blogPosts->showLastTenPosts(5);
+        $display = $blogPosts->showLastTenPosts(3);
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $content = $display;
         $block = "blog" . $index++;
