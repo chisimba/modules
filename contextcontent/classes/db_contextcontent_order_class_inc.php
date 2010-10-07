@@ -618,7 +618,46 @@ class db_contextcontent_order extends dbtable {
     }
 
 
+  public function getPrevPageId($context, $chapter, $leftValue='', $module='contextcontent')
+    {
+        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_pages.menutitle
+        FROM tbl_contextcontent_order
+        INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id)
+        INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\')
+        WHERE contextcode =\''.$context.'\' AND lft < '.$leftValue.' AND chapterid=\''.$chapter.'\'
+        ORDER BY lft DESC LIMIT 1';
 
+        $results = $this->getArray($sql);
+
+        if (count($results) == 0) {
+            $page = $this->getArray("SELECT chaptertitle FROM tbl_contextcontent_chaptercontent WHERE chapterid = '$chapter'");
+            //If user is logged in specify action, otherwise for public courses, just go to contextcontent home
+            $userId = $this->objUser->userId();
+            if(!empty($userId)){
+             $link = new link ($this->uri(array("action"=>"viewchapter","id"=>$chapter), $module));
+            }else{
+             $link = new link ($this->uri(Null, $module));
+            }
+            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_backchapter','contextcontent').': '.htmlentities($page[0]['chaptertitle']);
+            $pageId = Null;
+        } else {
+            $page = $results[0];
+            $pageId = $page['id'];
+            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
+            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_prevpage','contextcontent').': '.htmlentities($page['menutitle']);
+        }
+        return $pageId;
+    }
+    public function getNextPageId($context, $chapter, $leftValue='')
+    {
+        $page = $this->getNextPageSQL($context, $chapter, $leftValue);
+        if ($page == '') {
+            return Null;
+        } else {
+            $pageId = $page['id'];
+            return $pageId;
+        }
+    }
     public function getPreviousPage($context, $chapter, $leftValue='', $module='contextcontent') {
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_pages.menutitle
         FROM tbl_contextcontent_order 

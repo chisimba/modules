@@ -2,6 +2,25 @@
 
 $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
+
+//Add link back to the chapter list on the middle links
+$middle = '';
+if(empty($pagelft)) {
+    $pagelft = Null;
+} else {
+    $prvpage = $this->objContentOrder->getPrevPageId($this->contextCode, $currentChapter, $pagelft);
+    //Check if first page in the chapter
+    $prevLeftValue = $pagelft-2;
+    $nextpage = $this->objContentOrder->getNextPageId($this->contextCode, $currentChapter, $prevLeftValue);
+}
+$link = new link ($this->uri(array("action"=>"showcontextchapters","chapterid"=>$currentChapter, 'prevpageid'=>$nextpage), $module));
+$link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_backchapter','contextcontent');
+$middle .= $link->show();
+
+$middle .= ' <br /> ';
+
+
+//A link to adding a page
 $addLink = new link($this->uri(array('action' => 'addpage', 'id' => $page['id'], 'context' => $this->contextCode, 'chapter' => $page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages', 'contextcontent');
 
@@ -11,7 +30,7 @@ $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextconten
 $addScormLink = new link($this->uri(array('action' => 'addscormpage', 'id' => $page['id'], 'context' => $this->contextCode, 'chapter' => $page['chapterid'])));
 $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages', 'contextcontent');
 
-
+//A link to editing a page
 $editLink = new link($this->uri(array('action' => 'editpage', 'id' => $page['id'], 'context' => $this->contextCode)));
 $editLink->link = $this->objLanguage->languageText('mod_contextcontent_editcontextpages', 'contextcontent');
 
@@ -26,7 +45,7 @@ $list = array();
 
 if ($this->isValid('addpage')) {
     $list[] = $addLink->show();
-    $list[] = $addPageFromFileLink->show();
+    //   $list[] = $addPageFromFileLink->show();
     $list[] = $addScormLink->show();
 }
 
@@ -41,7 +60,7 @@ if ($this->isValid('deletepage')) {
 if (count($list) == 0) {
     $middle = '&nbsp;';
 } else {
-    $middle = '';
+    $middle .= '';
     $divider = '';
 
     foreach ($list as $item) {
@@ -135,16 +154,21 @@ if (trim($page['headerscripts']) != '') {
 $objWashout = $this->getObject('washout', 'utilities');
 
 $content = "";
+/*
+  if ($isFirstPageOnLevel) {
+  $introheader = new htmlheading();
+  $introheader->type = 3;
+  $introheader->str = $this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction', 'contextcontent', 'About Chapter (Introduction)');
+  $chapter=$this->objContextChapters->getChapter($currentChapter);
 
-if ($isFirstPageOnLevel) {
-    $introheader = new htmlheading();
-    $introheader->type = 3;
-    $introheader->str = $this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction', 'contextcontent', 'About Chapter (Introduction)');
-     $chapter=$this->objContextChapters->getChapter($currentChapter);
-
-    $content.= $introheader->show().$chapter['introduction'];
-}
-$content.= $objWashout->parseText($page['pagecontent']);
+  $content.= $introheader->show().$chapter['introduction'];
+  }
+ */
+$pageintroheader = new htmlheading();
+$pageintroheader->type = 1;
+$pageintroheader->cssClass = "pagetitle";
+$pageintroheader->str = $page['menutitle'];
+$content.= $pageintroheader->show() . $objWashout->parseText($page['pagecontent']);
 
 $form = "";
 
@@ -180,9 +204,9 @@ if ($this->isValid('addpage')) {
     // $objTabs->addTab("Lecturer View",$topTable->show().$content.'<hr />'.$table->show().$form);
     // $objTabs->addTab("Student View",$topTable->show().$content.'<hr />'.$table2->show());
     // echo $objTabs->show();
-    echo $topTable->show() . $content . '<hr />' . $table->show() . $form;
+    echo '<div id="tablenav">'.$topTable->show() . $content . '<hr />' . $table->show() . $form.'</div>';
 } else {
-    echo $topTable->show() . $content . '<hr />' . $table->show() . $form;
+    echo '<div id="tablenav">'.$topTable->show() . $content . '<hr />' . $table->show() . $form.'</div>';
 }
 
 //Check if comments are allowed for this course

@@ -52,6 +52,12 @@ $fields = array(
         ),
     'datemodified' => array(
         'type' => 'timestamp'
+        ),
+   'releasedate' => array(
+        'type' => 'timestamp'
+        ),
+   'enddate' => array(
+        'type' => 'timestamp'
         )
     );
     

@@ -130,7 +130,7 @@ if (isset($currentChapter)) {
         $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$chapter['id'])));
         $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
 
-        $left .= '<hr /><p>'.$addLink->show().'&nbsp;&nbsp;'.$addPageFromFileLink->show().'&nbsp;&nbsp;'.$addScormLink->show().'</p>';
+        $left .= '<hr /><p>'.$addLink->show().'&nbsp;&nbsp;'.$addScormLink->show().'</p>';
     }
 
     $returnLink = new link ($this->uri(NULL));

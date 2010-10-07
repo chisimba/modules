@@ -101,7 +101,8 @@ $dropdown = new dropdown('id');
 $chapterList = '<div id="allchapters">';
 
 $objWashout = $this->getObject('washout', 'utilities');
-
+$todays_date = date('Y-m-d H:i');
+$today = strtotime($todays_date);
 foreach ($chapters as $chapter) {
     $showChapter = TRUE;
 
@@ -111,6 +112,28 @@ foreach ($chapters as $chapter) {
 
     if ($this->isValid('viewhiddencontent')) {
         $showChapter = TRUE;
+    }
+
+
+    $releasedate = strtotime($chapter['releasedate']);
+    $enddate = strtotime($chapter['enddate']);
+
+    //compate dates here, then decide on visibility
+    if (!empty($releasedate) && !empty($enddate)) {
+        if (($today <= $releasedate)) {
+            $showChapter = FALSE;
+            if ($this->isValid('addchapter')) {
+                $showChapter = TRUE;
+                $chapter['chaptertitle']=$chapter['chaptertitle'].' (Hidden)';
+            }
+        }
+        if ($enddate < $today) {
+            $showChapter = FALSE;
+            if ($this->isValid('addchapter')) {
+                $showChapter = TRUE;
+                $chapter['chaptertitle']=$chapter['chaptertitle'].' (Hidden)';
+            }
+        }
     }
 
     if ($showChapter) {
@@ -231,7 +254,7 @@ foreach ($chapters as $chapter) {
 
             if ($this->isValid('addpage')) {
                 $content .= ' '.$addPageLink->show();
-                $content .= ' '.$addPageFromFileLink->show();
+                //$content .= ' '.$addPageFromFileLink->show();
             }
 
 

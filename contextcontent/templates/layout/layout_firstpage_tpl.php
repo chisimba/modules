@@ -52,6 +52,9 @@ $content = "";
 $content .= '<h3>Chapters:</h3>';
 $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
 
+$todays_date = date('Y-m-d H:i');
+$today = strtotime($todays_date);
+
 if (count($chapters) > 0) {
 
     $content .= '<ol>';
@@ -66,6 +69,29 @@ if (count($chapters) > 0) {
         if ($this->isValid('viewhiddencontent')) {
             $showChapter = TRUE;
         }
+
+                $releasedate = strtotime($chapter['releasedate']);
+        $enddate = strtotime($chapter['enddate']);
+
+
+        //compate dates here, then decide on visibility
+        if (!empty($releasedate) && !empty($enddate)) {
+            if (($today <= $releasedate )) {
+                $showChapter = FALSE;
+                if($this->isValid('addchapter')){
+                    $showChapter = TRUE;
+                    $chapter['chaptertitle']=$chapter['chaptertitle'].' (Hidden)';
+                }
+            }
+            if ($enddate < $today) {
+                $showChapter = FALSE;
+                 if($this->isValid('addchapter')){
+                    $showChapter = TRUE;
+                    $chapter['chaptertitle']=$chapter['chaptertitle'].' (Hidden)';
+                }
+            }
+        }
+
 
         if ($showChapter) {
 

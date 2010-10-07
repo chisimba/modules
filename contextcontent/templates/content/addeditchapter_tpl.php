@@ -7,6 +7,7 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('htmlHeading','htmlelements');
+$this->loadClass('fieldset','htmlelements');
 
 $header=new htmlheading();
 $header->type=1;
@@ -21,8 +22,8 @@ if ($mode == 'edit') {
 
 $header->str=$areaTitle;
 //echo '<p>Todo: Allow User to place order of chapter</p>';
-    
-$form = new form ('addchapter', $this->uri(array('action'=>$formaction)));
+
+$form = new form ('addchapter', $this->uri(array('action'=>$formaction, 'prevaction'=>$prevaction)));
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $title = new textinput('chapter');
@@ -37,6 +38,57 @@ $table->startRow();
 $table->addCell($label->show(), 150);
 $table->addCell($title->show());
 $table->endRow();
+
+
+
+$radio = new radio ('visibility');
+$radio->addOption('Y', ' '.$this->objLanguage->languageText('word_yes','system', 'Yes'));
+$radio->addOption('N', ' '.$this->objLanguage->languageText('word_no','system', 'No'));
+$radio->addOption('I', ' '.$this->objLanguage->languageText('mod_contextcontent_onlyshowintroduction','contextcontent'));
+
+if ($mode == 'edit') {
+    $radio->setSelected($chapter['visibility']);
+} else {
+    $radio->setSelected('Y');
+}
+$radio->setBreakSpace(' &nbsp; ');
+$table->startRow();
+$table->addCell("<br/>");
+$table->endRow();
+
+$table->startRow();
+$table->addCell($this->objLanguage->code2Txt('mod_contextcontent_visibletostudents','contextcontent'));
+$table->addCell($radio->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell("<br/>");
+$table->endRow();
+
+$objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
+$startLabel=$this->objLanguage->languageText('mod_contextcontent_releasedate','contextcontent',"Release date");
+$closeLabel=$this->objLanguage->languageText('mod_contextcontent_enddate','contextcontent',"End date");
+/* *** start date & time *** */
+// Set start date of test
+$startField = $objPopupcal->show('startdate', 'yes', 'no', $chapter['releasedate']);
+$objLabel = new label('<b>'.$startLabel.':</b>', 'input_start');
+$table->addRow(array(
+    $objLabel->show() ,
+    $startField
+));
+// Set closing date of test
+$closeField = $objPopupcal->show('enddate', 'yes', 'no', $chapter['enddate']);
+$objLabel = new label('<b>'.$closeLabel.':</b>', 'input_close');
+$table->addRow(array(
+    $objLabel->show() ,
+    $closeField
+));
+
+
+$table->startRow();
+$table->addCell("<br/>");
+$table->endRow();
+
 
 $label = new label ($this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction','contextcontent'), 'input_aboutchapter');
 $htmlArea = $this->newObject('htmlarea', 'htmlelements');
@@ -53,23 +105,6 @@ $table->addCell($htmlArea->show());
 $table->endRow();
 
 
-$radio = new radio ('visibility');
-$radio->addOption('Y', ' '.$this->objLanguage->languageText('word_yes','system', 'Yes'));
-$radio->addOption('N', ' '.$this->objLanguage->languageText('word_no','system', 'No'));
-$radio->addOption('I', ' '.$this->objLanguage->languageText('mod_contextcontent_onlyshowintroduction','contextcontent'));
-
-if ($mode == 'edit') {
-    $radio->setSelected($chapter['visibility']);
-} else {
-    $radio->setSelected('Y');
-}
-$radio->setBreakSpace(' &nbsp; ');
-
-$table->startRow();
-$table->addCell($this->objLanguage->code2Txt('mod_contextcontent_visibletostudents','contextcontent'));
-$table->addCell($radio->show());
-$table->endRow();
-
 
 $form->addToForm($table->show());
 
@@ -82,13 +117,13 @@ $form->addToForm($button->show());
 if ($mode == 'edit') {
     $hiddeninput = new hiddeninput('id', $id);
     $form->addToForm($hiddeninput->show());
-    
+
     $hiddeninput = new hiddeninput('chaptercontentid', $chapter['id']);
     $form->addToForm($hiddeninput->show());
-    
+
     $hiddeninput = new hiddeninput('contextchapterid', $chapter['contextchapterid']);
     $form->addToForm($hiddeninput->show());
-    
+
 }
 
 echo '<div class="addchapterform">' . $header->show() . $form->show() . "</div>";

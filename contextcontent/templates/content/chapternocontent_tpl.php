@@ -53,7 +53,7 @@ if ($this->isValid('deletechapter')) {
 }
 
 if ($this->isValid('addpage')) {
-    $con.= ' '.$addPageLink->show().' / '.$addPageFromFileLink->show();
+    $con.= ' '.$addPageLink->show();//.' / '.$addPageFromFileLink->show();
 }
 $chapterlink->str=$con;
 echo  $chapterlink->show();
@@ -81,7 +81,7 @@ $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextconten
 
 
 if ($this->isValid('addpage')) {
-     echo $addPageLink->show().' / '.$addPageFromFileLink->show().' / ';
+     echo $addPageLink->show().' / ';//.' / '.$addPageFromFileLink->show().' / ';
 }
 
 $returnLink = new link ($this->uri(NULL));

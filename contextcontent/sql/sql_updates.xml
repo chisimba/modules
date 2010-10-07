@@ -64,4 +64,29 @@
             </add>
         </data>
     </update>
+
+
+       <update>
+        <table>tbl_contextcontent_chaptercontext</table>
+        <version>1.584</version>
+        <description>Added fields for release dates</description>
+        <data>
+            <add>
+                <name>releasedate</name>
+                <type>timestamp</type>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_contextcontent_chaptercontext</table>
+        <version>1.584</version>
+        <description>Added fields for release dates</description>
+        <data>
+            <add>
+                <name>enddate</name>
+                <type>timestamp</type>
+            </add>
+        </data>
+    </update>
+
 </updates>
