@@ -13,7 +13,7 @@ class manager extends object {
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->objContext->getContextCode();
         $this->objDbContextInstructor = $this->getObject("dbcontextinstructor");
-     
+        $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject("user", "security");
         $this->loadClass("link", "htmlelements");
     }
@@ -21,12 +21,12 @@ class manager extends object {
     function show() {
         $mainInstructorId = $this->objDbContextInstructor->getMainInstructor($this->contextCode);
         $lecturers = $this->objManageGroups->contextUsers('Lecturers', $this->contextCode, array('tbl_users.userId', 'email', 'firstName', 'surname'));
-        $total=count($lecturers);
+        $total = count($lecturers);
         $userlist = "";
-        $instructorexists=false;
+        $instructorexists = false;
         foreach ($lecturers as $row) {
-            if($row['userid'] == $mainInstructorId){
-                $instructorexists=true;
+            if ($row['userid'] == $mainInstructorId) {
+                $instructorexists = true;
             }
             $userlist.="[";
             $userlist.="'" . $row['userid'] . "',";
@@ -37,12 +37,12 @@ class manager extends object {
                 $userlist.=',';
             }
         }
-  
-        if (!$mainInstructorId ) {
+
+        if (!$mainInstructorId) {
             $mainInstructorId = $lecturers[0]['userid'];
         }
 
-        if($instructorexists == false){
+        if ($instructorexists == false) {
             $mainInstructorId = $lecturers[0]['userid'];
         }
         $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -53,7 +53,7 @@ class manager extends object {
 
         $objIcon->setIcon('edit');
         $editIcon = $objIcon->show();
-        $changeURL = '<a href="#" onclick="showSelectInstructorWin();return false;">'.$editIcon.'<a/>';
+        $changeURL = '<a href="#" onclick="showSelectInstructorWin();return false;">' . $editIcon . '<a/>';
         $changeLink = "";
         $changeMemberUrl = $this->uri(array("action" => "changeinstructor"));
         $instructorProfile = "";
@@ -65,11 +65,11 @@ class manager extends object {
                 initChangeInstructor(userlist,changeInstructorUrl);
                 });
                 ";
-             $renderSurface='<div id="addsession-win" class="x-hidden">
-        <div class="x-window-header">'.$this->objLanguage->code2Txt('mod_contextinstructor_authors','contextinstructor').'</div>
+            $renderSurface = '<div id="addsession-win" class="x-hidden">
+        <div class="x-window-header">' . $this->objLanguage->code2Txt('mod_contextinstructor_authors', 'contextinstructor') . '</div>
         </div>';
-            $js= '<script language="JavaScript" src="'.$this->getResourceUri('js/lecturers.js').'" type="text/javascript"></script>';
-            $instructorProfile .=$renderSurface.$js. "<script type=\"text/javascript\">".$mainjs."</script>";
+            $js = '<script language="JavaScript" src="' . $this->getResourceUri('js/lecturers.js') . '" type="text/javascript"></script>';
+            $instructorProfile .=$renderSurface . $js . "<script type=\"text/javascript\">" . $mainjs . "</script>";
             $changeLink = $changeURL;
         }
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -82,7 +82,7 @@ class manager extends object {
             $names = $instructor['firstname'] . ' ' . $instructor['surname'];
             $title = $instructor['title'];
             $cellnumber = $instructor['cellnumber'];
-            $boxtitle = $this->objLanguage->code2Txt('mod_contextinstructor_author','contextinstructor');
+            $boxtitle = $this->objLanguage->code2Txt('mod_contextinstructor_author', 'contextinstructor');
             $content = '<center class="instructorcenter">' . $photo . '<br/>' . $title . ' ' . $names . '<br/>' . '<a href="mailto:' . $email . '">' . $email . '</a><br/>' . $cellnumber . '</center><br/>' . $changeLink;
             $block = "competitions" . $index++;
             $hidden = 'default';
