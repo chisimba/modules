@@ -98,6 +98,10 @@ $fields = array(
     'closingdate' => array(
         'type' => 'timestamp',
         ),
+    'coursePermissions' => array(
+        'type' => 'text',
+        'length' => 15,
+        ),
     'updated' => array(
         'type' => 'timestamp',
         ),
