@@ -1,5 +1,6 @@
 var addMemberForm;
 var userid="";
+var addMemberWin;
 function initChangeInstructor(userlist,url){
     var userdatastore = new Ext.data.ArrayStore({
         fields: ['userid','name'],
@@ -39,7 +40,7 @@ function initChangeInstructor(userlist,url){
 }
 
 function showSelectInstructorWin(){
-    var addMemberWin;
+    
     if(!addMemberWin){
         addMemberWin = new Ext.Window({
             applyTo:'addsession-win',
@@ -47,7 +48,7 @@ function showSelectInstructorWin(){
             width:500,
             height:150,
             x:250,
-            y:50,
+            y:350,
             closeAction:'destroy',
             plain: true,
 
@@ -61,7 +62,7 @@ function showSelectInstructorWin(){
                    
                     }
                     addMemberForm.getForm().submit();
-                 //   window.location=addMemberForm.url+"&userid="+userid;
+                
                 }
             },{
                 text: 'Close',
