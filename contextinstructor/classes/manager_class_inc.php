@@ -82,7 +82,7 @@ class manager extends object {
             $names = $instructor['firstname'] . ' ' . $instructor['surname'];
             $title = $instructor['title'];
             $cellnumber = $instructor['cellnumber'];
-            $boxtitle = $this->objLanguage->code2Txt('mod_contextinstructor_authors', 'contextinstructor',null,'[-authors-]');
+            $boxtitle = $this->objLanguage->code2Txt('mod_contextinstructor_author', 'contextinstructor',null,'[-author-]');
             $content = '<center class="instructorcenter">' . $photo . '<br/>' . $title . ' ' . $names . '<br/>' . '<a href="mailto:' . $email . '">' . $email . '</a><br/>' . $cellnumber . '</center><br/>' . $changeLink;
             $block = "competitions" . $index++;
             $hidden = 'default';
