@@ -15,7 +15,7 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
         ),       
-    'email' => array(emai
+    'email' => array(
         'type' => 'text',
         'length' => 512,
         ),
