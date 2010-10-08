@@ -58,9 +58,7 @@ class dbWorkgroupUsers extends dbTable
         if (count($list) == 0) {
 			// If the user is not a student in the workgroup,
 			// check if the user is a context lecturer.
-            // The following line of code won't work so I have commented it out and made the method return FALSE for this case.
-            //return $this->objUser->isContextLecturer();
-            return FALSE;
+            return $this->objUser->isContextLecturer();
         } else {
             return TRUE;
         }
