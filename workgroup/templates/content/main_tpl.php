@@ -40,7 +40,7 @@ $middleContent .= '<h3 align="center">'.$forumLink->show().'</h3>';
 
 //View Group Assignments
 $pageText->type=3;
-$pageText->str=ucwords($objLanguage->code2Txt("mod_assignment_groupassignments",'assignment'));
+$pageText->str=ucwords($objLanguage->code2Txt("mod_assignment_groupassignments",'assignment',null,'Workgroup Assignments'));
 $middleContent .= $pageText->show();
 
 /*
@@ -50,7 +50,7 @@ $middleContent .= '<div class="wrapperLightBkg" style="border: 1px dotted #c0c0c
 */
 $fromworkgroup = 1;
 $assignmentLink = new link ($this->uri(array('action'=>'home', 'workgroupId' => $this->workgroupId, 'fromworkgroup'=>$fromworkgroup), 'assignment'));
-$assignmentLink->link = $objLanguage->languageText('mod_assignment_viewassignment','assignment');
+$assignmentLink->link = $objLanguage->languageText('mod_assignment_viewassignment','assignment','View Assignments');
 
 //$middleContent .= '<h3 align="center">'.$assignmentLink->show().'</h3>';
 $middleContent .= '<div class="wrapperLightBkg" style="border: 1px dotted #c0c0c0;"><h3 align="center">'.$assignmentLink->show().'</h3></div>';
