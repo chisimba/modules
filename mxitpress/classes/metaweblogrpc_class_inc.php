@@ -123,13 +123,13 @@ class metaweblogrpc extends object
         $resp = $cli->send($msg);
         if (!$resp)
         {
-            throw new customException($this->objLanguage->languageText("mod_packages_commserr", "packages").": ".$cli->errstr);
+            return $this->objLanguage->languageText("mod_packages_commserr", "packages").": ".$cli->errstr;
             exit;
         }
         if (!$resp->faultCode())
         {
             $val = $resp->value();
-            return $val->serialize($val);
+            return $val->serialize($val)." ".$this->objLanguage->languageText("mod_mxitpress_success", "mxitpress");
         }
         else
         {
@@ -137,7 +137,7 @@ class metaweblogrpc extends object
             * Display problems that have been gracefully caught and
             * reported by the xmlrpc server class.
             */
-            throw new customException($this->objLanguage->languageText("mod_packages_faultcode", "packages").": ".$resp->faultCode() . $this->objLanguage->languageText("mod_packages_faultreason", "packages").": ".$resp->faultString());
+            return $this->objLanguage->languageText("mod_packages_faultcode", "packages").": ".$resp->faultCode() . $this->objLanguage->languageText("mod_packages_faultreason", "packages").": ".$resp->faultString();
         }
     }
     

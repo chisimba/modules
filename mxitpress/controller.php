@@ -53,6 +53,7 @@ class mxitpress extends controller {
         $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'mxitpress' );
         
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->objBack = $this->getObject ( 'background', 'utilities' );
         
         $this->objDbMpUsers = $this->getObject('dbmpusers');
         $this->objDbMpPosts = $this->getObject('dbmpposts');
@@ -83,6 +84,13 @@ class mxitpress extends controller {
                 break; 
                 
             case 'messagehandler' :
+                log_debug("Starting messagehandler");
+                // This is a looooong running task... Lets use the background class to handle it
+                //check the connection status
+                $status = $this->objBack->isUserConn ();
+                //keep the user connection alive even if the browser is closed
+                $callback = $this->objBack->keepAlive ();
+                // Now the code is backrounded and cannot be aborted! Be careful now...
                 $this->conn->autoSubscribe ();
                 try {
                     $this->conn->connect ();
@@ -133,6 +141,10 @@ class mxitpress extends controller {
                                                 $bod = explode("#", $pl['body']);
                                                 $title = $bod[0];
                                                 $content = $bod[1];
+                                                // check that this is not just a ping
+                                                if($pl['body'] == '' || empty($pl['body']) || $pl['body'] == NULL) {
+                                                    break;
+                                                }
                                                 // check for empty title or body
                                                 if(empty($title) || empty($content))
                                                 {
@@ -140,7 +152,7 @@ class mxitpress extends controller {
                                                     break;
                                                 }
                                                 else {    
-                                                    $content = $content." <br /> ".$this->objLanguage->languageText("mod_mxitpress_poweredby", "mxitpress");
+                                                    $content = $content." <br /><br /> ".$this->objLanguage->languageText("mod_mxitpress_poweredby", "mxitpress");
                                                     $msgtype = $pl ['type'];
                                                     // add the post to the db and fire off the metaweblogapi call to the user's blog
                                                     $recarr = array('msgtype' => $msgtype, 'msgfrom' => $jid, 'msgtitle' => $title, 'msgbody' => $content);
@@ -149,9 +161,9 @@ class mxitpress extends controller {
                                                     $owner = $owner[0];
                                                     // fire off the metaweblog API call to the owner blog
                                                     $postdata = array('title' => $title, 'content' => $content, 'username' => $owner['username'], 'password' => $owner['pass'], 'endpoint' => $owner['endpoint'], 'url' => $owner['url']);
-                                                    $this->objRPC->postToBlog($postdata);
+                                                    $ret = $this->objRPC->postToBlog($postdata);
                                                     // say thanks
-                                                    $this->conn->message($pl['from'], $this->objLanguage->languageText("mod_mxitpress_thanksforposting", "mxitpress"));
+                                                    $this->conn->message($pl['from'], $this->objLanguage->languageText("mod_mxitpress_thanksforposting", "mxitpress")." ".$ret);
                                                     break;
                                                 }
                                             }
