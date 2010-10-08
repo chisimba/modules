@@ -122,20 +122,23 @@ class viewer extends object {
     function getEvents() {
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
         $objCategories = $this->getObject("dbnewscategories", "news");
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $news = $this->getObject("dbnewsstories", "news");
+                  $objTrimString = $this->getObject('trimstr', 'strings');
         $categories = $objCategories->getCategories();
         $currentShow = "No events have been set up";
-        $link = new link($this->uri(array("action" => "featured")));
+
         foreach ($categories as $cat) {
 
             if ($cat['categoryname'] == 'events') {
                 $onAirNowId = $cat['id'];
                 $onAirNowStories = $news->getCategoryStories($onAirNowId);
-                $currentShow = $onAirNowStories[0]['storytext'];
+                $currentShow = $onAirNowStories[0]['storytitle'];
             }
         }
-        $link->link = $currentShow;
-        $content = $currentShow;
+        $storyLink = new link($this->uri(array('action' => 'viewstory', 'id' => $onAirNowStories[0]['id']), "news"));
+        $storyLink->link = '<h1>'.$onAirNowStories[0]['storytitle'].'</h1>'.$objTrimString->strTrim($onAirNowStories[0]['storytext']);
+        $content = $storyLink->show();
         $block = "events";
         $hidden = 'default';
         $showToggle = false;
@@ -235,4 +238,5 @@ class viewer extends object {
     }
 
 }
+
 ?>
