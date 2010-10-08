@@ -63,7 +63,7 @@ var sfp = new Ext.FormPanel({
                     sfp.getForm().submit({
                         url: '?',
                         params:  {
-                            'module' : 'turnitin',
+                            'module' : 'jturnitin',
                             'action': 'ajax_lectureruploadassessment'
                         },
                         waitMsg: 'Uploading your paper...',
@@ -149,7 +149,7 @@ function showLecturerResult(){
         url : "?",
         timeout : 300000,
         method:'POST',
-        params :"module=turnitin&action=lecturer_submit_assessment&papertitle="+spaperTitle+"&assignmenttitle="+assgTitle+"&filepath="+sfilePath+"&filename="+sfileName+"&firstname="+pfirstname+"&lastname="+plastname,
+        params :"module=jturnitin&action=lecturer_submit_assessment&papertitle="+spaperTitle+"&assignmenttitle="+assgTitle+"&filepath="+sfilePath+"&filename="+sfileName+"&firstname="+pfirstname+"&lastname="+plastname,
         success: function ( result, request ) {
             Ext.MessageBox.hide();
             var obj = eval('(' + result.responseText + ')');

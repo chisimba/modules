@@ -93,11 +93,11 @@ class turnitinops extends object {
     public function init() {
         // Retrieve system configuration
         $this->_objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $this->aid = $this->_objSysConfig->getValue('accountid', 'turnitin');
-        $this->remote_host = $this->_objSysConfig->getValue('apihost', 'turnitin');
-        $this->shared_secret_key = $this->_objSysConfig->getValue('sharedkey', 'turnitin');
-        $this->uem = $this->_objSysConfig->getValue('email', 'turnitin');
-        $this->upw = $this->_objSysConfig->getValue('password', 'turnitin');
+        $this->aid = $this->_objSysConfig->getValue('accountid', 'jturnitin');
+        $this->remote_host = $this->_objSysConfig->getValue('apihost', 'jturnitin');
+        $this->shared_secret_key = $this->_objSysConfig->getValue('sharedkey', 'jturnitin');
+        $this->uem = $this->_objSysConfig->getValue('email', 'jturnitin');
+        $this->upw = $this->_objSysConfig->getValue('password', 'jturnitin');
 
 
         //setup defaults

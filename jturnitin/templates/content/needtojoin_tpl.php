@@ -6,11 +6,11 @@ $this->loadClass('link', 'htmlelements');
 $header = new htmlheading();
 $header->type = 1;
 $header->cssClass = 'error';
-$header->str = $this->objLanguage->code2Txt('mod_context_unabletoentercontext', 'turnitin', NULL, 'Unable to launch turnitin');
+$header->str = $this->objLanguage->code2Txt('mod_context_unabletoentercontext', 'jturnitin', NULL, 'Unable to launch turnitin');
 $content=="";
 $content.= $header->show();
 
-$content.= '<p>'.$this->objLanguage->code2Txt('mod_context_unabletoenterinfo', 'turnitin', NULL, 'It appears you have not joined the course, or been logged out of the course.').'</p>';
+$content.= '<p>'.$this->objLanguage->code2Txt('mod_context_unabletoenterinfo', 'jturnitin', NULL, 'It appears you have not joined the course, or been logged out of the course.').'</p>';
 
 
 

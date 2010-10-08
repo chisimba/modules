@@ -79,7 +79,7 @@ class forms extends object
         }
         
         $cform = new form ( 'submitassessment');
-		$cform->action = $this->uri ( array ('action' => 'submitassessment' ,'module' => 'turnitin') ) ;
+		$cform->action = $this->uri ( array ('action' => 'submitassessment' ,'module' => 'jturnitin') ) ;
         $cfieldset = $this->getObject ( 'fieldset', 'htmlelements' );
         $ctbl = $this->newObject ( 'htmltable', 'htmlelements' );
         $ctbl->cellpadding = 5;

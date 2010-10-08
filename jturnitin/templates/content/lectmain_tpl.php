@@ -9,14 +9,14 @@ $objExtJS->show();
 $ext = "";
 $this->appendArrayVar('headerParams', '
 	        	<script type="text/javascript">
-	        		var storeUri = "'.str_replace('&amp;','&',$this->uri(array('action' => 'json_getstudentassessments', 'module' => 'turnitin'))).'"; 
+	        		var storeUri = "'.str_replace('&amp;','&',$this->uri(array('action' => 'json_getstudentassessments', 'module' => 'jturnitin'))).'";
 	        		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
 	        	</script>');
 
-$ext .=$this->getJavaScriptFile('lecturers.js', 'turnitin');
-$ext .=$this->getJavaScriptFile('advancedassigoptions.js', 'turnitin');
-$ext .=$this->getJavaScriptFile('advancedassigoptions2.js', 'turnitin');
-$ext .=$this->getJavaScriptFile('studentsubmit.js', 'turnitin');
+$ext .=$this->getJavaScriptFile('lecturers.js', 'jturnitin');
+$ext .=$this->getJavaScriptFile('advancedassigoptions.js', 'jturnitin');
+$ext .=$this->getJavaScriptFile('advancedassigoptions2.js', 'jturnitin');
+$ext .=$this->getJavaScriptFile('studentsubmit.js', 'jturnitin');
 $ext .= '<style type="text/css">
 
        

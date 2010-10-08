@@ -1,5 +1,5 @@
 <?php
-$script = $this->getJavaScriptFile('turnitin.js', 'turnitin');
+$script = $this->getJavaScriptFile('turnitin.js', 'jturnitin');
 $this->appendArrayVar('headerParams', $script);
 ?>
 

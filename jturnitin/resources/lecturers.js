@@ -142,7 +142,7 @@ var assTypeCombo = new Ext.form.ComboBox({
 */
 var addForm = new Ext.FormPanel({
     labelWidth: 75, // label settings here cascade unless overridden
-    url: baseuri+'?module=turnitin&action=ajax_addassignment',
+    url: baseuri+'?module=jturnitin&action=ajax_addassignment',
     frame:true,
     //layout:'column',
     shadow: true,
@@ -237,7 +237,7 @@ var submitbutton = new Ext.Button({
                 timeout:10,
                 
                 params: {
-                    module: 'turnitin',
+                    module: 'jturnitin',
                     action: 'ajax_addassignment',
 
                     report_gen_speed:reportGenSpeed,
@@ -317,7 +317,7 @@ var assStore = new Ext.data.JsonStore({
     }
     ],
     proxy: new Ext.data.HttpProxy({
-        url: baseuri+'?module=turnitin&action=json_getassessments'
+        url: baseuri+'?module=jturnitin&action=json_getassessments'
     })
 });
 assStore.setDefaultSort('duedate', 'desc');
@@ -358,7 +358,7 @@ submissionsStore =new Ext.data.JsonStore({
     }
     ],
     proxy: new Ext.data.HttpProxy({
-        url: baseuri+'?module=turnitin&action=json_getsubmissions'
+        url: baseuri+'?module=jturnitin&action=json_getsubmissions'
     })
 });
     
@@ -586,7 +586,7 @@ Ext.onReady(function(){
 });
 function renderEditLink(value, p, record){
 
-    return String.format('<a href="#"  onClick="window.open(\''+baseuri+'?module=turnitin&action=editassignment&contextcode={0}&title={1}&instructoremail={2}&id={3}\',\'rview\',\'height=768,width=1024,location=0,menubar=0,resizable=0,scrollbars=0,titlebar=0,toolbar=0,status=0\');return false;" >Edit</a>',
+    return String.format('<a href="#"  onClick="window.open(\''+baseuri+'?module=jturnitin&action=editassignment&contextcode={0}&title={1}&instructoremail={2}&id={3}\',\'rview\',\'height=768,width=1024,location=0,menubar=0,resizable=0,scrollbars=0,titlebar=0,toolbar=0,status=0\');return false;" >Edit</a>',
         record.data.contextcode, record.data.title,record.data.instructoremail,record.data.id);
     
 }
@@ -623,7 +623,7 @@ function renderScore(value, p, record){
         value = value+'%';
     }
 
-    return String.format('<a href="#" class="'+cid+'" onClick="window.open(\''+baseuri+'?module=turnitin&mode=lecturer&action=returnreport&objectid={2}&userid={3}\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>',
+    return String.format('<a href="#" class="'+cid+'" onClick="window.open(\''+baseuri+'?module=jturnitin&mode=lecturer&action=returnreport&objectid={2}&userid={3}\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>',
         value, record.data.contextcode, record.data.objectid,record.data.userid);
         
 
@@ -646,7 +646,7 @@ function deleteAssignment(xcontextCode,xpaperTitle){
             Ext.Ajax.request({
                 url : "?",
                 method:'POST',
-                params :'module=turnitin&action=deleteassignment&contextcode='+xcontextCode+'&title='+xpaperTitle,
+                params :'module=jturnitin&action=deleteassignment&contextcode='+xcontextCode+'&title='+xpaperTitle,
                 success: function(form, action) {
 
                     assStore.load({
@@ -690,7 +690,7 @@ function deleteSubmission(xobjectid, xpaperTitle,xnames){
             Ext.Ajax.request({
                 url : "?",
                 method:'POST',
-                params :'module=turnitin&action=deletesubmission&oid='+xobjectid+'&papertitle='+paperTitle,
+                params :'module=jturnitin&action=deletesubmission&oid='+xobjectid+'&papertitle='+paperTitle,
                 success: function(form, action) {
                     submissionsStore.load({
                         params: {
@@ -712,6 +712,6 @@ function deleteSubmission(xobjectid, xpaperTitle,xnames){
 
 
 function getDeleteParams(){
-    return 'module=turnitin&action=deleteassignment&contextcode='+contextCode+'&title='+paperTitle;
+    return 'module=jturnitin&action=deleteassignment&contextcode='+contextCode+'&title='+paperTitle;
 
 }

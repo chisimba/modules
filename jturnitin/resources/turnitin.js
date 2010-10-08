@@ -35,7 +35,7 @@ function addAssignment()
         jQuery.ajax({
             type: "GET", 
             url: "index.php", 
-            data: "module=turnitin&action=ajax_addassignment",
+            data: "module=jturnitin&action=ajax_addassignment",
             success: function(msg){
                 jQuery('#addassignment').html(msg);
                 if ('function' == typeof window.adjustLayout) {
@@ -55,7 +55,7 @@ function addAssignment()
         jQuery.ajax({
             type: "GET", 
             url: "index.php", 
-            data: "module=turnitin&action=ajax_returnreport&objectid="+objectid,
+            data: "module=jturnitin&action=ajax_returnreport&objectid="+objectid,
             success: function(msg){
                 jQuery('#report').html(msg);
                 if ('function' == typeof window.adjustLayout) {

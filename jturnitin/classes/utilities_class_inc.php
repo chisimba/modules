@@ -332,7 +332,7 @@ class utilities extends object {
      */
     public function getUserParams() {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $defaultpass = $objSysConfig->getValue('defaultpass', 'turnitin');
+        $defaultpass = $objSysConfig->getValue('defaultpass', 'jturnitin');
 
         $params = array();
         $params['password'] = $defaultpass;
@@ -360,7 +360,7 @@ class utilities extends object {
 
     public function getUserParamsUsingId($userid) {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $defaultpass = $objSysConfig->getValue('defaultpass', 'turnitin');
+        $defaultpass = $objSysConfig->getValue('defaultpass', 'jturnitin');
 
         $params = array();
         $params['password'] = $defaultpass;
@@ -558,7 +558,7 @@ class utilities extends object {
     }
 
     public function saveFile($path, $docname) {
-        $dir = $this->objSysConfig->getValue('FILES_DIR', 'turnitin');
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'jturnitin');
         $filepath = $dir . $path . '/' . $this->objUser->userid();
         $filepath = str_replace("//", "/", $filepath);
         $destinationDir = $filepath;
@@ -738,7 +738,7 @@ class utilities extends object {
     function downloadFile($filename, $userid) {
         //check if user has access to the parent folder before accessing it
 
-        $download_path = $this->objSysConfig->getValue('FILES_DIR', 'turnitin');
+        $download_path = $this->objSysConfig->getValue('FILES_DIR', 'jturnitin');
         // Detect missing filename
         if (!$filename)
             die("I'm sorry, you must specify a file name to download.");

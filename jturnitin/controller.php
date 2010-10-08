@@ -402,7 +402,7 @@ class jturnitin extends controller {
                     echo     '{"success":"false", "msg": "'.htmlentities("Error occured. Could not upload paper").'"}';
                 }
 
-                $this->eventDispatcher->post($this->objActivityStreamer, "turnitin", array('title'=>'Assignment Submitted',
+                $this->eventDispatcher->post($this->objActivityStreamer, "jturnitin", array('title'=>'Assignment Submitted',
                         'link'=> $this->uri(array()),
                         'contextcode' => $this->objDBContext->getContextCode(),
                         'author' => $this->objUser->fullname(),

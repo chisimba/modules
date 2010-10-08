@@ -45,7 +45,7 @@ Ext.onReady(function(){
     Ext.QuickTips.init();
     var addForm = new Ext.FormPanel({
         labelWidth: 75, // label settings here cascade unless overridden
-        url: baseuri+'?module=turnitin&action=ajax_updateassignment',
+        url: baseuri+'?module=jturnitin&action=ajax_updateassignment',
         frame:true,
     
         shadow: true,
@@ -136,7 +136,7 @@ Ext.onReady(function(){
 
                     params: {
                         module: 'turnitin',
-                        action: 'ajax_updateassignment',
+                        action: 'ajjax_updateassignment',
 
                         report_gen_speed:reportGenSpeed,
                         exclude_biblio:excludeBiographicMaterial,

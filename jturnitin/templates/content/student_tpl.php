@@ -13,7 +13,7 @@ $this->appendArrayVar('headerParams', '
 	        	<script type="text/javascript">
 
 
-	        		var storeUri = "' . str_replace('&amp;', '&', $this->uri(array('action' => 'json_getstudentassessments', 'module' => 'turnitin'))) . '";
+	        		var storeUri = "' . str_replace('&amp;', '&', $this->uri(array('action' => 'json_getstudentassessments', 'module' => 'jturnitin'))) . '";
 	        		var baseUri = "' . $objSysConfig->getsiteRoot() . 'index.php";
 	        	</script>');
 
@@ -21,7 +21,7 @@ $this->appendArrayVar('headerParams', '
 //$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/ux/ColumnNodeUI.js', 'htmlelements');
 //$ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/tree/column-tree.js', 'htmlelements');
 //$ext .=$this->getJavaScriptFile('lecturers.js', 'turnitin');
-$ext .=$this->getJavaScriptFile('students.js', 'turnitin');
+$ext .=$this->getJavaScriptFile('students.js', 'jturnitin');
 /* $ext .=$this->getJavaScriptFile('ext-3.0-rc2/examples/shared/examples.js', 'htmlelements');
 
 

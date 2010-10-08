@@ -107,7 +107,7 @@ class turnitinupload extends object {
                     $this->isError = TRUE;
                     return array(
                             'success' => FALSE,
-                            'message' => $this->objLanguage->languageText("error_UPLOAD_NOOVERWRITE", 'turnitin'),
+                            'message' => $this->objLanguage->languageText("error_UPLOAD_NOOVERWRITE", 'jturnitin'),
                     );
 
                 }
@@ -117,7 +117,7 @@ class turnitinupload extends object {
                     if($this->checkExists($docname.'.'.$this->getFileExtension())) {
                         return array(
                                 'success' => TRUE,
-                                'message' => $this->objLanguage->languageText("error_UPLOAD_ERR_OK", 'turnitin'),
+                                'message' => $this->objLanguage->languageText("error_UPLOAD_ERR_OK", 'jturnitin'),
                                 'filename' => $this->fileName,
                                 'clonename' =>$this->clonename,
                                 'mimetype' => $this->type,
@@ -127,7 +127,7 @@ class turnitinupload extends object {
                     else {
                         return array(
                                 'success' => FALSE,
-                                'message' => $this->objLanguage->languageText("error_UPLOAD_FILENOTUPLOADED", 'turnitin'),
+                                'message' => $this->objLanguage->languageText("error_UPLOAD_FILENOTUPLOADED", 'jturnitin'),
                         );
                     }
                 }
@@ -168,7 +168,7 @@ class turnitinupload extends object {
 
                 return array(
                         'success' => FALSE,
-                        'message' => $this->objLanguage->languageText("error_UPLOAD_DISALLOWEDEXTENSION", 'turnitin'),
+                        'message' => $this->objLanguage->languageText("error_UPLOAD_DISALLOWEDEXTENSION", 'jturnitin'),
                 );
             }
         }
@@ -224,27 +224,27 @@ class turnitinupload extends object {
         switch ($errCode) {
 
             case 0:
-                return $this->objLanguage->languageText("mod_files_err_0", 'turnitin');
+                return $this->objLanguage->languageText("mod_files_err_0", 'tjurnitin');
                 break;
 
             case 1:
-                return $this->objLanguage->languageText("mod_files_err_1", 'turnitin');
+                return $this->objLanguage->languageText("mod_files_err_1", 'jturnitin');
                 break;
 
             case 2:
-                return $this->objLanguage->languageText("mod_files_err_2", 'turnitin');
+                return $this->objLanguage->languageText("mod_files_err_2", 'jturnitin');
                 break;
 
             case 3:
-                return $this->objLanguage->languageText("mod_files_err_3", 'turnitin');
+                return $this->objLanguage->languageText("mod_files_err_3", 'jturnitin');
                 break;
 
             case 4:
-                return $this->objLanguage->languageText("mod_files_err_4", 'turnitin');
+                return $this->objLanguage->languageText("mod_files_err_4", 'jturnitin');
                 break;
 
             default:
-                return $this->objLanguage->languageText("mod_files_err_default", 'turnitin');
+                return $this->objLanguage->languageText("mod_files_err_default", 'jturnitin');
                 break;
         }
 

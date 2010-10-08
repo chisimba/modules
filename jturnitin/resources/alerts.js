@@ -21,6 +21,6 @@ function init(btn){
            waitConfig: {interval:200}
        });
 
-    window.location="?module=turnitin&action=loadusertemplate";
+    window.location="?module=jturnitin&action=loadusertemplate";
 }
 

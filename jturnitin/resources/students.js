@@ -16,10 +16,10 @@ var msg = function(title, msg){
     });
 };
 function getParams(){
-    return "module=turnitin&action=submit_assessment&papertitle="+paperTitle+"&assignmenttitle="+assgTitle+"&filepath="+filePath;
+    return "module=jturnitin&action=submit_assessment&papertitle="+paperTitle+"&assignmenttitle="+assgTitle+"&filepath="+filePath;
 }
 function getRefreshParams(){
-    return "module=turnitin";
+    return "module=jturnitin";
 }
 function showResult(){
     Ext.MessageBox.show({
@@ -37,7 +37,7 @@ function showResult(){
         url : "?",
         timeout : 300000,
         method:'POST',
-        params :"module=turnitin&action=submit_assessment&papertitle="+paperTitle+"&assignmenttitle="+assgTitle+"&filepath="+filePath+"&filename="+fileName,
+        params :"module=jturnitin&action=submit_assessment&papertitle="+paperTitle+"&assignmenttitle="+assgTitle+"&filepath="+filePath+"&filename="+fileName,
         success: function ( result, request ) {
             Ext.MessageBox.hide();
             var obj = eval('(' + result.responseText + ')');
@@ -340,7 +340,7 @@ function renderScore(value, p, record){
 
         }else {
           
-            var ct='<a href="#" class="'+cid+'" onClick="window.open(\''+baseUri+'?module=turnitin&action=returnreport&objectid={2}\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>';
+            var ct='<a href="#" class="'+cid+'" onClick="window.open(\''+baseUri+'?module=jturnitin&action=returnreport&objectid={2}\',\'rview\',\'height=768,width=1024,location=no,menubar=no,resizable=yes,scrollbars=yes,titlebar=no,toolbar=no,status=no\');" ><span class="white">{0}</span> </a>';
             if(record.data.resubmit == '1'){
                 ct+=String.format('<a href="#"  onClick="uploadFormPanel(\''+record.data.title+'\', \''+record.data.contextcode+'\');" >Resubmit </a>');
             }
@@ -446,7 +446,7 @@ var fp = new Ext.FormPanel({
                     fp.getForm().submit({
                         url: '?',
                         params:  {
-                            'module' : 'turnitin',
+                            'module' : 'jturnitin',
                             'action': 'ajax_uploadassessment'
                         },
                         waitMsg: 'Uploading your paper...',
