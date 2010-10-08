@@ -45,8 +45,8 @@ class dbmpusers extends dbTable {
      * @param array $recarr
      * @return string $id
      */
-    public function addRecord($jid, $url, $user, $pass) {
-        $insarr = array('jid' => $jid, 'status' => 1, 'datesent' => $this->now(), 'url' => $url, 'username' => $user, 'pass' => $pass);
+    public function addRecord($jid, $url, $endpoint, $user, $pass) {
+        $insarr = array('jid' => $jid, 'status' => 1, 'datesent' => $this->now(), 'url' => $url, 'endpoint' => $endpoint, 'username' => $user, 'pass' => $pass);
         if($this->userExists($jid) === FALSE) {
             return $this->insert ( $insarr, 'tbl_mxitpress_users' );
         }
@@ -90,6 +90,10 @@ class dbmpusers extends dbTable {
 
     public function getNoSubs() {
         return count($this->getAll("WHERE status = '1'"));
+    }
+    
+    public function getUser($jid) {
+        return $this->getAll("WHERE jid = '$jid'");
     }
 }
 ?>

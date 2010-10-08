@@ -19,6 +19,10 @@ $fields = array(
         'type' => 'text',
         'length' => 255,
         ),
+    'msgtitle' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
     'msgbody' => array(
         'type' => 'clob',
         ),

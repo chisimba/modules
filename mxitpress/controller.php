@@ -55,6 +55,8 @@ class mxitpress extends controller {
         $this->objLanguage = $this->getObject('language', 'language');
         
         $this->objDbMpUsers = $this->getObject('dbmpusers');
+        $this->objDbMpPosts = $this->getObject('dbmpposts');
+        $this->objRPC = $this->getObject('metaweblogrpc');
 
         include ($this->getResourcePath ( 'XMPPHP/XMPP.php', 'im' ));
         $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, 
@@ -74,7 +76,10 @@ class mxitpress extends controller {
         $action = $this->getParam ( 'action' );
         switch ($action) {
             case NULL :
-                echo "hello";
+                // show a register form
+                $form = 'form data';
+                $this->setVarByRef('form', $form);
+                return 'blogreg_tpl.php';
                 break; 
                 
             case 'messagehandler' :
@@ -112,10 +117,11 @@ class mxitpress extends controller {
                                                 $regstr = $bod[1];
                                                 $uarr = explode(" ", $regstr);
                                                 $url = $uarr[0];
-                                                $user = $uarr[1];
-                                                $pass = $uarr[2];
-                                                $url = $url."/xmlrpc.php";
-                                                $this->objDbMpUsers->addRecord($jid, $url, $user, $pass);
+                                                $endpoint = $uarr[1];
+                                                $user = $uarr[2];
+                                                $pass = $uarr[3];
+                                                
+                                                $this->objDbMpUsers->addRecord($jid, $url, $endpoint, $user, $pass);
                                                 $this->conn->message($pl['from'], $this->objLanguage->languageText("mod_mxitpress_thanksregister", "mxitpress")); 
                                                 break;
                                             }
@@ -127,8 +133,27 @@ class mxitpress extends controller {
                                                 $bod = explode("#", $pl['body']);
                                                 $title = $bod[0];
                                                 $content = $bod[1];
-                                                // add the post to the db and fire off the metaweblogapi call to the user's blog
-                                                
+                                                // check for empty title or body
+                                                if(empty($title) || empty($content))
+                                                {
+                                                    $this->conn->message($pl['from'], $this->objLanguage->languageText("mod_mxitpress_missingelement", "mxitpress"));
+                                                    break;
+                                                }
+                                                else {    
+                                                    $content = $content." <br /> ".$this->objLanguage->languageText("mod_mxitpress_poweredby", "mxitpress");
+                                                    $msgtype = $pl ['type'];
+                                                    // add the post to the db and fire off the metaweblogapi call to the user's blog
+                                                    $recarr = array('msgtype' => $msgtype, 'msgfrom' => $jid, 'msgtitle' => $title, 'msgbody' => $content);
+                                                    $postid = $this->objDbMpPosts->addRecord($recarr);
+                                                    $owner = $this->objDbMpUsers->getUser($jid);
+                                                    $owner = $owner[0];
+                                                    // fire off the metaweblog API call to the owner blog
+                                                    $postdata = array('title' => $title, 'content' => $content, 'username' => $owner['username'], 'password' => $owner['pass'], 'endpoint' => $owner['endpoint'], 'url' => $owner['url']);
+                                                    $this->objRPC->postToBlog($postdata);
+                                                    // say thanks
+                                                    $this->conn->message($pl['from'], $this->objLanguage->languageText("mod_mxitpress_thanksforposting", "mxitpress"));
+                                                    break;
+                                                }
                                             }
                                             // $this->conn->message($pl['from'], "I don't understand your request!");
                                             break;

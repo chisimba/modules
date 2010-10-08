@@ -25,6 +25,9 @@ $fields = array(
     'url' => array(
         'type' => 'clob'
     ),
+    'endpoint' => array(
+        'type' => 'text'
+    ),
     'username' => array(
         'type' => 'text',
         'length' => 255,

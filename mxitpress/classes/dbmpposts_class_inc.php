@@ -40,32 +40,22 @@ class dbmpposts extends dbTable {
     }
 
     /**
-     * Public method to insert a record to the popularity contest table as a log.
+     * Public method to insert a record to the posts table as a log.
      *
-     * This method takes the IP and module_name and inserts the record with a timestamp for temporal analysis.
+     * This method takes the array of post data and inserts the record with a timestamp for temporal analysis.
      *
      * @param array $recarr
      * @return string $id
      */
-    public function addRecord($pl) {
-        $userSplit = explode ( '/', $pl ['from'] );
-        $userSplit2 = explode ( "/", $userSplit [0] );
+    public function addRecord($recarr) {
         $times = $this->now ();
         $recarr ['datesent'] = $times;
-        $recarr ['msgtype'] = $pl ['type'];
-        $recarr ['msgfrom'] = $userSplit2 [0];
-        $recarr ['msgbody'] = $pl ['body'];
-        // $recarr ['twitthreadid'] = $pl['twitthreadid'];
         // Check for empty messages
         if ($recarr ['msgbody'] == "") {
             return;
         } else {
             $itemid = $this->insert ( $recarr, 'tbl_mxitpress_posts' );
-            //$objImView = $this->getObject('jbviewer');
-            //$objImView->parseHashtags($recarr['msgbody'], $itemid);
-            //$objImView->parseAtTags($recarr['msgbody'], $itemid);
-            //$this->appendSitemap($itemid);
-
+            // possibly upstream to twitter here as a notification thing?
             return $itemid;
         }
     }
@@ -81,7 +71,7 @@ class dbmpposts extends dbTable {
         $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 'postid' => $itemid)), 'lastmod' => $this->now(), 'changefreq' => 'daily', 'priority' => 0.5 );
         $smarr = array($maparray);
         $sitemap = $this->getObject('sitemap', 'utilities');
-        if(!file_exists($this->objConfig->getsiteRootPath().'jblogsitemap.xml')) {
+        if(!file_exists($this->objConfig->getsiteRootPath().'mpsitemap.xml')) {
             $smxml = $sitemap->createSiteMap($smarr);
             $sitemap->writeSitemap($smxml, 'jblogsitemap');
         }
