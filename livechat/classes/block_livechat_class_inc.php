@@ -14,7 +14,7 @@ class block_livechat extends object {
         $objWasher = $this->getObject("washout", "utilities");
         $applet = "[IFRAME]".$siteRoot."?module=livechat|200|400[/IFRAME]";
 
-        return $objWasher->parseText($applet);
+        return "Disabled";// $objWasher->parseText($applet);
     }
 
 }

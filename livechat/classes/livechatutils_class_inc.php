@@ -14,13 +14,14 @@ class livechatutils extends object {
         
         $this->isInstructor = $this->objUser->isCourseAdmin($this->objContext->getContextCode()) ? "yes" : "no";
         $this->roomDesc = $this->objContext->getTitle($this->objContext->getContextCode());
+        $this->roomName='livechat';//$this->objContext->getContextCode() == '' ?"lobby": $this->objContext->getContextCode();
     }
 
     function generateJNLP() {
         $stringData = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jnlp href="launch' . $this->objUser->userid() . '.jnlp" spec="1.0+">
     <information>
-        <title>LiveChat</title>
+        <title>Who is online plugin for KEWL3</title>
         <vendor>eLearning Support and Innovation Unit</vendor>
         <homepage href="https://elearn.wits.ac.za"/>
         <description>Support Live chats within the course</description>
@@ -36,11 +37,11 @@ class livechatutils extends object {
         <jar href="smack.jar"/>
         <jar href="smackx.jar"/>
     </resources>
-    <applet-desc height="300" main-class="livechat.gui.CompactChatFrame" name="LiveChat" width="250">
+    <applet-desc height="250" main-class="livechat.gui.CompactChatFrame" name="LiveChat" width="250">
         <param name="serverHost" value="' . $this->objSysConfig->getValue('SERVER_HOST', 'livechat') . '"/>
         <param name="serverPort" value="' . $this->objSysConfig->getValue('SERVER_PORT', 'livechat') . '"/>
         <param name="username" value="' . $this->objUser->username() . '"/>
-        <param name="roomname" value="' . $this->objContext->getContextCode() . '"/>
+        <param name="roomname" value="' . $this->roomName . '"/>
         <param name="email" value="' . $this->objUser->email() . '"/>
         <param name="names" value="' . $this->objUser->fullname() . '"/>
         <param name="isinstructor" value="' . $this->isInstructor . '"/>

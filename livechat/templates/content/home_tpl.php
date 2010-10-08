@@ -14,7 +14,7 @@ $this->appendArrayVar('headerParams', '
     <script src="http://www.java.com/js/deployJava.js"></script>');
 $this->appendArrayVar('headerParams', "<script>
     <!-- applet id can be used to get a reference to the applet object -->
-    var attributes = { id:'livechatApplet', code:'livechat.gui.CompactChatFrame',  width:160, height:300} ;
+    var attributes = { id:'livechatApplet', code:'livechat.gui.CompactChatFrame',  width:300, height:450} ;
     var parameters = {jnlp_href: '" . $jnlpPath . "'} ;
     deployJava.runApplet(attributes, parameters, '1.6');
 </script>");
