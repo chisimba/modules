@@ -124,14 +124,14 @@ foreach ($chapters as $chapter) {
             $showChapter = FALSE;
             if ($this->isValid('addchapter')) {
                 $showChapter = TRUE;
-                $chapter['chaptertitle']=$chapter['chaptertitle'].$this->objLanguage->languageText('mod_contextcontent_hidden','contextcontent',' (Hidden)');
+                $chapter['chaptertitle']=$chapter['chaptertitle'].'&nbsp;('.$this->objLanguage->languageText('mod_contextcontent_hidden','contextcontent',' Hidden').')';
             }
         }
         if ($enddate < $today) {
             $showChapter = FALSE;
             if ($this->isValid('addchapter')) {
                 $showChapter = TRUE;
-                $chapter['chaptertitle']=$chapter['chaptertitle'].$this->objLanguage->languageText('mod_contextcontent_hidden','contextcontent',' (Hidden)');
+                $chapter['chaptertitle']=$chapter['chaptertitle'].'&nbsp;('.$this->objLanguage->languageText('mod_contextcontent_hidden','contextcontent',' Hidden').')';
             }
         }
     }
