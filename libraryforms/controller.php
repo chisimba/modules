@@ -83,6 +83,23 @@ class libraryforms extends controller {
         }
 	} //end switch
 
+
+        $this->objMail->from = 'no-reply@uwc.ac.za';
+        $this->objMail->fromName = 'noname';
+
+        // Give the mail a subject and a body.
+        $this->objMail->subject = 'Test';
+        $this->objMail->body = 'testing testing';
+
+        // Send to a single address.
+        $this->objMail->to = 'nmaseko@uwc.ac.za';
+
+        // Send to multiple addresses.
+        $this->objMail->to = array('david.wafula@wits.ac.za','pmalinga@uwc.ac.za','bmumanyi@uwc.ac.za');
+
+        // Send the mail.
+        $this->objMail->send();
+    
 	}//end of function dispatch
  	/*
  	   *Public Method that checks if all required fields are filled
@@ -127,8 +144,7 @@ class libraryforms extends controller {
         else {
            // return $this->nextAction('savestep', array('currentstep' => '2a'));
 
-return $this->nextAction('addeditform',array('comment'=> $this->objLanguage->code2Txt('mod_notify_add', 'rimfhe' ,$rep)));
-
+return $this->nextAction('addeditform',array('save'=> '2a'));
 
             return $this->objConfirm->addStudentDetails();
         }
@@ -139,11 +155,11 @@ return $this->nextAction('addeditform',array('comment'=> $this->objLanguage->cod
  
            
         // send email alert 
- 	$this->sendEmailNotification($title="email notification for distance user",$subject="distance user email",
+ 	$this->objMail->body($title="email notification for distance user",$subject="distance user email",
 				     $message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. 
                                      $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.
                                      $cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
-
+$this->objMail->send();
 		
     }// end of Save Records */
 
@@ -190,7 +206,7 @@ return $this->nextAction('addeditform',array('comment'=> $this->objLanguage->cod
              }
 
         else {
-            $this->nextAction('confirm');
+             return $this->nextAction('addthesis',array('save'=> '2a'));
             return $this->objConfirm->addthesisDetails();
         }
         //insert into DB
@@ -200,7 +216,7 @@ return $this->nextAction('addeditform',array('comment'=> $this->objLanguage->cod
                                                             $bentitynum,$bstudentno, $bcourse);
 
 // after inserting into db send email alert
-	$this->sendEmailNotification($title="email notification for thesis books",$subject="book thesis mail",
+	$this->objMail->body($title="email notification for thesis books",$subject="book thesis mail",
                                      $message= $bprint.' '. $bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.
 				     $bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '. $btitlepages.' '.
 				     $bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.
@@ -245,7 +261,7 @@ return $this->nextAction('addeditform',array('comment'=> $this->objLanguage->cod
              }
 
         else {
-            $this->nextAction('confirm');
+            return $this->nextAction('addperiodical',array('save'=> '2a'));
             return $this->objConfirm->addperiodDetails();
            }
 
@@ -253,7 +269,7 @@ return $this->nextAction('addeditform',array('comment'=> $this->objLanguage->cod
  	$id=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, 							      $titlearticle, $prof,$address, $cell,$tell,$tellw, 
 							      $emailaddress,$entitynum,$studentno,$course);
 
-	$this->sendEmailNotification($title="email for periodical books",$subject="periodical thesis mail",
+	$this->objMail->body($title="email for periodical books",$subject="periodical thesis mail",
 				     $message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.
 				     $author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.
 				     $tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
@@ -285,14 +301,15 @@ public function submitmsg() {
              }
 
         else {
-            $this->nextAction('confirm');
+            return $this->nextAction('addfeedbk',array('save'=> '2a'));
             return $this->objConfirm->addfbDetails();
            }
 
          //insert the data into DB
          $id=$this->dbfeedback->insertmsgRecord($name,$emaill,$msg);
           // send email alert
-         $this->sendEmailNotification($title="feed back email",$subject="channel your feed back",$message= $msg.'');
+         $this->objMail->body($title="feed back email",$subject="channel your feed back",$message= $msg.'');
+	$this->objMail->send();
 
 }// end of Submitmsg
 
@@ -315,7 +332,6 @@ public function submitmsg() {
         $this->$objMail->send();
 
      }  // end of notification email
-
 
       
 }// end of all

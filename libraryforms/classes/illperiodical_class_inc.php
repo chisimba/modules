@@ -142,9 +142,8 @@ class ILLperiodical extends dbTable {
         $pageslLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpages","libraryforms"),"pages");
         $table->addCell($pageslLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpages->show(), '', 'center', 'left', '');
-        $objForm->addRule('period_pages',$this->objLanguage->languageText("mod_pages2_required","libraryforms"),'required');
+       $objForm->addRule('period_pages','pages Must contain valid numbers','numeric');
         $table->endRow();
-
 
 
         //Create a new textinput for author
@@ -285,9 +284,6 @@ class ILLperiodical extends dbTable {
         $table->addCell($objCheck5->show(), '', 'center', 'left', '');
         $table->addCell($pgLabel->show(), '', 'center', 'left', '');
 
-
-
-
         $objCheck6 = new checkbox('arrayList[]');
         $objCheck6->setValue($userPerm['id']);
         $ugLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentug","libraryforms"),"ug");
@@ -388,7 +384,7 @@ class ILLperiodical extends dbTable {
 
         $action = $this->getParam("action", "addperiodical");
         if ($action == "addperiodical") {
-            $formAction = $this->uri(array("action" => "addperiodical"), "libraryforms");
+            $formAction = $this->uri(array("action" => "save"), "libraryforms");
         } else {
             $formAction = $this->uri(array("action" => "update"), "libraryforms");
         }

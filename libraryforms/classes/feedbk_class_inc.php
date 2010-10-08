@@ -147,7 +147,7 @@ $strjs = '<script type="text/javascript">
 
   $objButton->setValue(''.$this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms").' ');
    $objForm->addToForm($objButton->show());
-       // return $this->nextAction('savestep', array('currentstep' => '2a'));
+       
         return $objForm->show();
        
 
@@ -160,10 +160,11 @@ $strjs = '<script type="text/javascript">
 
     private function getFormAction() {
         $action = $this->getParam("action", "addfeedbk");
+     
         if ($action == "addfeedbk") {
-            $formAction = $this->uri(array("action" => "addfeedbk"), "libraryforms");
+           $formAction = $this->uri(array("action" => "save"), "libraryforms");
         } else {
-            $formAction = $this->uri(array("action" => "update"), "libraryforms");
+        $formAction = $this->uri(array("action" => "update"), "libraryforms");
         }
         return $formAction;
     }
