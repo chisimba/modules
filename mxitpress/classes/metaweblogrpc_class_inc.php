@@ -129,7 +129,8 @@ class metaweblogrpc extends object
         if (!$resp->faultCode())
         {
             $val = $resp->value();
-            return $val->serialize($val)." ".$this->objLanguage->languageText("mod_mxitpress_success", "mxitpress");
+            $val->serialize($val);
+            return $this->objLanguage->languageText("mod_mxitpress_success", "mxitpress");
         }
         else
         {
