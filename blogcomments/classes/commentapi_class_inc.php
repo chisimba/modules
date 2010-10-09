@@ -133,7 +133,7 @@ class commentapi extends object
 		$ctbl->endRow();
 
 		//textarea for the comment
-		$commlabel = new label($this->objLanguage->languageText('mod_blogcomments_Comment', 'blogcomments') .':', 'input_comminput');
+		$commlabel = new label($this->objLanguage->languageText('mod_blogcomments_comment', 'blogcomments') .':', 'input_comminput');
 		$ctbl->startRow();
 		$ctbl->addCell($commlabel->show());
 		$ctbl->endRow();

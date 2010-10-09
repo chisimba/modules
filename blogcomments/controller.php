@@ -76,7 +76,7 @@ class blogcomments extends controller
      * @access private
      * @var    object
      */
-    private $objSysConfig;
+    public $objSysConfig;
 
     /**
     *
