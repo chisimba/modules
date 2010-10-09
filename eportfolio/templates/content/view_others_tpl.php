@@ -185,7 +185,7 @@ if (class_exists('groupops', false)) {
     //Else if groupops not found, use old groupadmin
     //getUserDirectGroups
     $groupexists = 0;
-    $myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->PKId($this->objUser->userId()));
+    $myGroups = $this->_objGAModel->getUserGroups($this->objUser->PKId($this->objUser->userId()));
     $myPid = $this->objUser->PKId($this->objUser->userId());
     foreach($myGroups as $groupId) {
         $filter = " WHERE id = '$groupId'";
@@ -195,12 +195,12 @@ if (class_exists('groupops', false)) {
             "parent_id"
         ) , $filter);
         $myparentId = $parentId[0];
-        $ownerId = $this->_objGroupAdmin->getname($myparentId['parent_id']);
+        $ownerId = $this->_objGAModel->getname($myparentId['parent_id']);
         if ($ownerId !== $myPid) {
             $fullname = $this->objUserAdmin->getUserDetails($ownerId);
             if (!empty($fullname)) {
                 // Add row with user details.
-                $groupname = $this->_objGroupAdmin->getName($groupId);
+                $groupname = $this->_objGAModel->getName($groupId);
                 //Select View
                 $iconSelect = $this->getObject('geticon', 'htmlelements');
                 $iconSelect->setIcon('view');
