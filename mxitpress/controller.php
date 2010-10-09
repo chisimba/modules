@@ -122,12 +122,19 @@ class mxitpress extends controller {
                                                 // registration request
                                                 // registration string should be register:url username password
                                                 log_debug("registration request");
+                                                
                                                 $regstr = $bod[1];
                                                 $uarr = explode(" ", $regstr);
                                                 $url = $uarr[0];
                                                 $endpoint = $uarr[1];
                                                 $user = $uarr[2];
                                                 $pass = $uarr[3];
+                                                
+                                                if(!isset($uarr[0]) || !isset($uarr[1]) || !isset($uarr[2]) || !isset($uarr[3])) {
+                                                    // registration string is wonky, send instructions again
+                                                    $this->conn->message($pl['from'], $this->objLanguage->languageText("mod_mxitpress_detailedins", "mxitpress")); 
+                                                    break;
+                                                }
                                                 
                                                 $this->objDbMpUsers->addRecord($jid, $url, $endpoint, $user, $pass);
                                                 $this->conn->message($pl['from'], $this->objLanguage->languageText("mod_mxitpress_thanksregister", "mxitpress")); 

@@ -111,7 +111,7 @@ class metaweblogrpc extends object
             "link" => new XML_RPC_Value('http://www.chisimba.com', "string")
             ), "struct"); 
 
-        $params = array(new XML_RPC_VALUE('', 'string'), new XML_RPC_VALUE($postdata['username'], 'string'), new XML_RPC_VALUE($postdata['password'], 'string'), $content, new XML_RPC_VALUE(true, 'boolean'));
+        $params = array(new XML_RPC_VALUE('', 'string'), new XML_RPC_VALUE($postdata['username'], 'string'), new XML_RPC_VALUE(base64_decode($postdata['password']), 'string'), $content, new XML_RPC_VALUE(true, 'boolean'));
 
         // Construct the method call (message). 
         $msg = new XML_RPC_Message('metaWeblog.newPost', $params); 

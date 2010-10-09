@@ -46,7 +46,7 @@ class dbmpusers extends dbTable {
      * @return string $id
      */
     public function addRecord($jid, $url, $endpoint, $user, $pass) {
-        $insarr = array('jid' => $jid, 'status' => 1, 'datesent' => $this->now(), 'url' => $url, 'endpoint' => $endpoint, 'username' => $user, 'pass' => $pass);
+        $insarr = array('jid' => $jid, 'status' => 1, 'datesent' => $this->now(), 'url' => $url, 'endpoint' => $endpoint, 'username' => $user, 'pass' => base64_encode($pass));
         if($this->userExists($jid) === FALSE) {
             return $this->insert ( $insarr, 'tbl_mxitpress_users' );
         }
