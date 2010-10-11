@@ -373,6 +373,7 @@ class formmanager extends object {
 
         return $gridjs;
     }
+
     /**
      * Method to create a list of descriptions
      *
@@ -390,12 +391,8 @@ class formmanager extends object {
         $phraseQnText = $this->objLanguage->languageText('mod_mcqtests_qntext', 'mcqtests');
         $wordFeedback = $this->objLanguage->languageText('mod_mcqtests_generalfeedback', 'mcqtests');
         $wordTags = $this->objLanguage->languageText('mod_mcqtests_wordtags', 'mcqtests');
-        $phraseOfficialTags = $this->objLanguage->languageText('mod_mcqtests_officialtags', 'mcqtests');
-        $phraseMngOfficialTags = $this->objLanguage->languageText('mod_mcqtests_mngofficialtags', 'mcqtests');
-        $phraseOtherTags = $this->objLanguage->languageText('mod_mcqtests_othertags', 'mcqtests');
-        $phraseOtherTagsDesc = $this->objLanguage->languageText('mod_mcqtests_othertagsdesc', 'mcqtests');
 
-        if (!empty($id)) {
+        if (!empty($categoryId)) {
             $data = $this->dbDescription->getDescriptions($categoryId);
             $data = $data[0];
         }
@@ -417,27 +414,26 @@ class formmanager extends object {
         //category text box
         $category = new textinput("desccategoryid", "");
         $category->size = 60;
-        //Add Category to the table
+        //Add Heading to the table
         $objTable->startRow();
-        $objTable->addCell($wordCategory, '20%');
-        $objTable->addCell($wordGeneral, '60%');
+        $objTable->addCell("<b>" . $wordCategory . "</b>", '20%');
+        $objTable->addCell("<b>" . $phraseQnName . "</b>", '60%');
         $objTable->addCell(Null, '20%');
         $objTable->endRow();
 
         //question name text box
-        if (empty($data)) {
-            $qnname = new textinput("descqnname", "");
-        } else {
-            $qnname = new textinput("descqnname", $data['questionname']);
+        if (!empty($data)) {
+            foreach ($data as $descdata) {
+                $objTable->startRow();
+                $objTable->addCell($descdata['categoryid'], '20%');
+                $objTable->addCell($descdata['questionname'], '60%');
+                $objTable->addCell(Null, '20%');
+                $objTable->endRow();
+            }
         }
-        $qnname->size = 60;
-        $form->addRule('descqnname', $this->objLanguage->languageText('mod_mcqtests_qnnamerequired', 'mcqtests'), 'required');
-        //Add Category to the table
-        $objTable->startRow();
-        $objTable->addCell($phraseQnName, '20%');
-        $objTable->addCell($qnname->show(), '80%');
-        $objTable->endRow();
+        return $objTable->show();
     }
+
     /**
      * Method to create add description form
      *
