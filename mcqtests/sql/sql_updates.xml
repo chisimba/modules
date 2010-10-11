@@ -38,7 +38,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.181</version>
+		<version>1.18</version>
 		<description>add name field</description>
 		<data>
 			<add>
@@ -50,7 +50,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.182</version>
+		<version>1.18</version>
 		<description>add questiontext field</description>
 		<data>
 			<add>
@@ -62,7 +62,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.183</version>
+		<version>1.18</version>
 		<description>add generalfeedback field</description>
 		<data>
 			<add>
@@ -74,7 +74,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.183</version>
+		<version>1.18</version>
 		<description>add penalty field</description>
 		<data>
 			<add>
@@ -86,7 +86,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.184</version>
+		<version>1.18</version>
 		<description>add qtype field</description>
 		<data>
 			<add>
@@ -98,7 +98,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.184</version>
+		<version>1.18</version>
 		<description>add length field</description>
 		<data>
 			<add>
@@ -110,7 +110,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.184</version>
+		<version>1.18</version>
 		<description>add stamp field</description>
 		<data>
 			<add>
@@ -122,7 +122,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.185</version>
+		<version>1.18</version>
 		<description>add version field</description>
 		<data>
 			<add>
@@ -134,7 +134,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.185</version>
+		<version>1.18</version>
 		<description>add hidden field</description>
 		<data>
 			<add>
@@ -146,7 +146,7 @@
 	</update>
         <update>
 		<table>tbl_test_questions</table>
-		<version>1.188</version>
+		<version>1.18</version>
 		<description>add subanswers field</description>
 		<data>
 			<add>
