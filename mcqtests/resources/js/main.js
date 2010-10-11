@@ -10,9 +10,6 @@ jQuery(document).ready(function() {
         else if(existingQ == 'newQ') {
             checkNewQuestion(val);
         }
-        else {
-            hideAllForms();
-        }
     });
 
     jQuery('#existingQ').change(function() {
@@ -38,45 +35,62 @@ function processQuestionType() {
 }
 
 function checkNewQuestion(val) {
-
+    hideAllForms();
+    jQuery("#qtype").show();
     if(val == 'freeform'){
         jQuery('#freeform').show();
-        jQuery('#addquestion').hide();
-        Ext.get('mcqGrid').hide();
     }else if(val == 'mcq'){
         jQuery('#addquestion').show();
-        jQuery('#freeform').hide();
-    }else{
-        jQuery('#freeform').hide();
-        jQuery('#addquestion').hide();
-        Ext.get('mcqGrid').hide();
+    }else if(val == 'addDescription'){
+        jQuery('#addDescription').show();
+    }else if(val == 'addRandomShortAnsMatching'){
+        jQuery("#randomshortansmatching").show();
+    }else if(val == 'addShortAns'){
+        jQuery("#shortans").show();
     }
 }
 
 function processQuestionMethod(val) {
+    hideAllForms();
     if(val == 'oldQ') {
+        jQuery("#qtype").show();
         var type = jQuery("#qnoption").val();
         if(type == 'freeform' || type == 'mcq'){
-            jQuery('#freeform').hide();
-            jQuery('#addquestion').hide();
             jQuery('#dbquestions').show();
             Ext.get('mcqGrid').show();
-
             getGridData();
         }
     }
     else if(val == 'newQ') {
+        jQuery("#qtype").show();
         checkNewQuestion(jQuery("#qnoption").val());
     }
-    else {
-        jQuery('#dbquestions').hide();
-        jQuery('#freeform').show();
-        jQuery('#addquestion').show();
+    else if(val == 'calcQ') {
+        jQuery("#calcquestions").show();
+        //showCalcQForm();
+    }
+    else if(val == 'matchQ') {
+        jQuery("#matchingquestions").show();
+    }
+    else if(val == 'numericalQ') {
+        jQuery("#numericalquestions").show();
+    }
+    else if(val == 'shortansQ') {
+        jQuery("#shortanswerquestions").show();
     }
 }
 
 function hideAllForms() {
-    jQuery('#freeform').hide();
+    jQuery("#shortans").hide();
+    jQuery("#randomshortansmatching").hide();
     jQuery('#addquestion').hide();
+    jQuery('#freeform').hide();
     jQuery("#dbquestions").hide();
+    jQuery("#calcquestions").hide();    
+    jQuery("#addDescription").hide();        
+    jQuery("#matchingquestions").hide();
+    jQuery("#numericalquestions").hide();
+    jQuery("#mcqGrid").hide();
+    jQuery("#qtype").hide();
+    jQuery("#shortanswerquestions").hide();
 }
