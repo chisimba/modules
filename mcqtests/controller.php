@@ -57,6 +57,7 @@ class mcqtests extends controller {
      * @var object to hold formmanager class
      */
     public $objFormManager;
+
     /**
      * Method to construct the class.
      *
@@ -151,6 +152,17 @@ class mcqtests extends controller {
                 //Insert/Update
                 $id = $this->dbCategory->addCategory($fields, $id);
                 return $this->nextAction('view', array('id' => $id));
+            case 'addeditdesc':
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                //Get the test id
+                $id = $this->getParam('id', Null);
+                //Get desc id if its an edit
+                $descId = $this->getParam('descid', Null);
+                $test = $this->getParam('test', Null);
+                $this->setVarByRef('id', $id);
+                $this->setVarByRef('descId', $descId);
+                $this->setVarByRef('test', $test);
+                return 'description_tpl.php';
             case 'adddescconfirm':
                 //Get the test id
                 $id = $this->getParam('id', Null);
@@ -158,15 +170,14 @@ class mcqtests extends controller {
                 $descId = $this->getParam('descid', Null);
                 //Fetch the form data into an array for insertion/update
                 $fields = array();
-                $fields['categoryid'] = $this->getParam('categoryId', Null);
-                $fields['questionname'] = $this->getParam('qnname', Null);
-                $fields['questiontext'] = $this->getParam('qntext', Null);
-                $fields['feedback'] = $this->getParam('genfeedback', Null);
-                $fields['tags'] = $this->getParam('officialtags', Null);
-                $fields['othertags'] = $this->getParam('othertags', Null);
-
+                $fields['categoryid'] = $this->getParam('desccategoryid', Null);
+                $fields['questionname'] = $this->getParam('descqnname', Null);
+                $fields['questiontext'] = $this->getParam('descqntext', Null);
+                $fields['feedback'] = $this->getParam('descgenfeedback', Null);
+                $fields['tags'] = $this->getParam('descofficialtags', Null);
+                $fields['othertags'] = $this->getParam('descothertags', Null);
                 $id = $this->dbDescription->addDescription($fields, $descId);
-                return $this->nextAction('view', array('id' => $id));
+                return $this->nextAction('addeditdesc', array('id' => $id));
             case 'activatetest':
                 $id = $this->getParam('id', '');
                 $this->applyChangeStatus();
@@ -424,8 +435,8 @@ class mcqtests extends controller {
 
             case 'edit':
                 return $this->editTest();
-            // delete a test
 
+            // delete a test
             case 'delete':
                 $this->dbTestadmin->deleteTest($this->getParam('id'));
                 $back = $this->getParam('back');
@@ -457,9 +468,9 @@ class mcqtests extends controller {
                 $type = $this->getParam('type');
                 $questionid = $this->getParam('questionId');
                 $this->setVarByRef('questionid', $questionid);
-                if($type == 'numerical') {
+                if ($type == 'numerical') {
                     return 'editnumericalquestion_tpl.php';
-                } else if($type == 'matching') {
+                } else if ($type == 'matching') {
                     return 'editmatchingquestion_tpl.php';
                 } else if ($data[0]['questiontype'] == 'freeform') {
                     return 'addfreeform_tpl.php';
@@ -811,14 +822,13 @@ class mcqtests extends controller {
                 return $this->calcqForm();
             case 'addmatchingquestion':
                 $qtype = $this->objLanguage->languageText('mod_mcqtests_matching', 'mcqtests');
-                if($this->getParam('edit')) {
-                    if($this->getParam('edit')== 'true') {
+                if ($this->getParam('edit')) {
+                    if ($this->getParam('edit') == 'true') {
                         $edit = true;
                     }
                     $id = $this->addGeneralFormQuestions($qtype, $edit);
                     $this->addMatchingQuestions($id, $edit);
-                }
-                else {
+                } else {
                     $id = $this->addGeneralFormQuestions($qtype);
                     $this->addMatchingQuestions($id);
                 }
@@ -826,14 +836,13 @@ class mcqtests extends controller {
                 return $this->nextAction('view', array('id' => $this->getParam('id')));
             case 'addnumericalquestion':
                 $qtype = $this->objLanguage->languageText('mod_mcqtests_numerical', 'mcqtests');
-                if($this->getParam('edit')) {
-                    if($this->getParam('edit')== 'true') {
+                if ($this->getParam('edit')) {
+                    if ($this->getParam('edit') == 'true') {
                         $edit = true;
                     }
                     $id = $this->addGeneralFormQuestions($qtype, $edit);
                     $this->addNumericalQuestions($id, $edit);
-                }
-                else {
+                } else {
                     $id = $this->addGeneralFormQuestions($qtype);
                     $this->addNumericalQuestions($id);
                 }
@@ -1784,29 +1793,29 @@ class mcqtests extends controller {
         $questiondata['hint'] = $this->getParam('hint');
         $questiondata['questiontext'] = $this->getParam('qText');
         $questiondata['mark'] = $this->getParam('qMark');
-        $questiondata['generalfeedback'] = $this->getParam('calcqgenfeedback');//('generalfeedback');
+        $questiondata['generalfeedback'] = $this->getParam('calcqgenfeedback'); //('generalfeedback');
         $questiondata['penalty'] = $this->getParam('qPenalty');
         $questiondata['questiontype'] = $qtype;
 
-        if($edit) {
+        if ($edit) {
             $id = $this->getParam('id');
             $objQuestions->addQuestion($questiondata, $id);
-        }else {
+        } else {
             $id = $objQuestions->addQuestion($questiondata);
         }
         return $id;
     }
+
     public function addMatchingQuestions($id, $edit=false) {
         $objQuestionMatching = $this->newObject('dbquestion_matching');
-        
+
         $matchingQuestionData = array();
-        $matchingQuestionData['subquestions'] = array('q1'=> trim($this->getParam('qmatching1')), 'q2'=> trim($this->getParam('qmatching2')), 'q3' => trim($this->getParam('qmatching3')));
-        $matchingQuestionData['subanswers'] = array('a1' => $this->getParam('aMatching1'), 'a2'=>$this->getParam('aMatching2'), 'a3'=>$this->getParam('aMatching3'));
-        
-        if($edit) {
+        $matchingQuestionData['subquestions'] = array('q1' => trim($this->getParam('qmatching1')), 'q2' => trim($this->getParam('qmatching2')), 'q3' => trim($this->getParam('qmatching3')));
+        $matchingQuestionData['subanswers'] = array('a1' => $this->getParam('aMatching1'), 'a2' => $this->getParam('aMatching2'), 'a3' => $this->getParam('aMatching3'));
+
+        if ($edit) {
             $objQuestionMatching->updateMatchingQuestions($id, $matchingQuestionData);
-        }
-        else {
+        } else {
             $objQuestionMatching->addMatchingQuestions($id, $matchingQuestionData);
         }
     }
@@ -1818,31 +1827,27 @@ class mcqtests extends controller {
         $questionid = $id;
         $numericalQuestionData = array();
         // get info for unit marked
-        if(strlen($this->getParam('unitmarked')) > 0) {
+        if (strlen($this->getParam('unitmarked')) > 0) {
             $unitmarked = 'yes';
-        }
-        else if($this->getParam('dispUnit')) {
+        } else if ($this->getParam('dispUnit')) {
             $dispUnit = 'yes';
         }
-        $numericalQuestionData['answer'] = array('a1' => $this->getParam('aNumerical1'), 'a2'=>$this->getParam('aNumerical2'), 'a3'=>$this->getParam('aNumerical3'));
-        $numericalQuestionData['mark'] = array('mark1'=> $this->getParam('mark_1'), 'mark2'=> $this->getParam('mark_2'), 'mark3'=> $this->getParam('mark_3'));
-        if($edit) {
+        $numericalQuestionData['answer'] = array('a1' => $this->getParam('aNumerical1'), 'a2' => $this->getParam('aNumerical2'), 'a3' => $this->getParam('aNumerical3'));
+        $numericalQuestionData['mark'] = array('mark1' => $this->getParam('mark_1'), 'mark2' => $this->getParam('mark_2'), 'mark3' => $this->getParam('mark_3'));
+        if ($edit) {
             $objQuestionNumerical->updateNumericalQuestions($questionid, $numericalQuestionData);
-        }
-        else {
+        } else {
             $objQuestionNumerical->addNumericalQuestions($questionid, $numericalQuestionData);
         }
         //insert unit data
         $unitData = array();
         $unitData['unit'] = $this->getParam('aUnit');
         $unitData['questionid'] = $questionid;
-        if($edit) {
+        if ($edit) {
             $objQuestionUnit->updateNumericalUnits($unitData, $id);
-        }
-        else {
+        } else {
             $objQuestionUnit->addNumericalUnits($unitData);
         }
-
     }
 
 }

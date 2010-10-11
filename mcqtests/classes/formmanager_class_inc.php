@@ -1,6 +1,15 @@
 <?php
 
 class formmanager extends object {
+    /*
+     * @var object to hold tbl description class
+     */
+
+    public $dbDescription;
+    /*
+     * @var object to hold language class
+     */
+    public $objLanguage;
 
     function init() {
         $this->loadClass('form', 'htmlelements');
@@ -12,6 +21,7 @@ class formmanager extends object {
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->dbDescription = $this->newObject('dbdescription');
     }
 
     public function createAddFreeForm($test) {
@@ -397,7 +407,10 @@ class formmanager extends object {
                             'action' => 'adddescconfirm',
                             'id' => $id
                         )));
-
+        if (!empty($id)) {
+            $data = $this->dbDescription->getDescription($id);
+            $data = $data[0];
+        }
         //Form Heading/Title
         $objHeading = &$this->getObject('htmlheading', 'htmlelements');
         $objHeading->type = 1;
@@ -409,11 +422,12 @@ class formmanager extends object {
         //Create table to hold the general stuff
         $objTable = new htmltable();
         $objTable->width = '800px';
-        $objTable->attributes = " align='center' border='0'";
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
         $objTable->cellspacing = '12';
 
         //category text box
-        $category = new textinput("categoryid", "");
+        $category = new textinput("desccategoryid", "");
         $category->size = 60;
         //Add Category to the table
         $objTable->startRow();
@@ -422,9 +436,13 @@ class formmanager extends object {
         $objTable->endRow();
 
         //question name text box
-        $qnname = new textinput("qnname", "");
+        if (empty($data)) {
+            $qnname = new textinput("descqnname", "");
+        } else {
+            $qnname = new textinput("descqnname", $data['questionname']);
+        }
         $qnname->size = 60;
-        $form->addRule('qnname', $this->objLanguage->languageText('mod_mcqtests_qnnamerequired', 'mcqtests'), 'required');
+        $form->addRule('descqnname', $this->objLanguage->languageText('mod_mcqtests_qnnamerequired', 'mcqtests'), 'required');
         //Add Category to the table
         $objTable->startRow();
         $objTable->addCell($phraseQnName, '20%');
@@ -433,11 +451,15 @@ class formmanager extends object {
 
         //qn text
         $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = 'qntext';
+        $editor->name = 'descqntext';
         $editor->height = '100px';
         $editor->width = '550px';
         $editor->setMCQToolBar();
-        $qntext = '';
+        if (empty($data)) {
+            $qntext = '';
+        } else {
+            $qntext = $data['questiontext'];
+        }
         $editor->setContent($qntext);
         //Add Category to the table
         $objTable->startRow();
@@ -447,11 +469,15 @@ class formmanager extends object {
 
         //general feedback
         $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = 'genfeedback';
+        $editor->name = 'descgenfeedback';
         $editor->height = '100px';
         $editor->width = '550px';
         $editor->setMCQToolBar();
-        $genfeedback = '';
+        if (empty($data)) {
+            $genfeedback = '';
+        } else {
+            $genfeedback = $data['feedback'];
+        }
         $editor->setContent($genfeedback);
         //Add General Feedback to the table
         $objTable->startRow();
@@ -461,7 +487,7 @@ class formmanager extends object {
 
         //Add fieldset to hold general stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
-        //$objFieldset->width = '800px';
+        $objFieldset->width = '800px';
         //$objFieldset->align = 'center';
         $objFieldset->setLegend($wordGeneral);
 
@@ -480,7 +506,11 @@ class formmanager extends object {
         $objTable2->cellspacing = '12';
 
         //tags text box
-        $officialtags = new textinput("officialtags", "");
+        if (empty($data)) {
+            $officialtags = new textinput("descofficialtags", "");
+        } else {
+            $officialtags = new textinput("descofficialtags", $data['tags']);
+        }
         $officialtags->size = 60;
 
         //Add Tags to the table
@@ -490,12 +520,16 @@ class formmanager extends object {
         $objTable2->endRow();
 
         //tags text box
-        $othertags = "";
+        if (empty($data)) {
+            $othertags = "";
+        } else {
+            $othertags = $data["othertags"];
+        }
         $othertagsTA = new textarea();
-        $othertagsTA->setName("othertags");
+        $othertagsTA->setName("descothertags");
         $othertagsTA->setValue($othertags);
         $othertagsTA->setRows('4');
-        $othertagsTA->setColumns('70');
+        $othertagsTA->setColumns('68');
 
         //Add Tags to the table
         $objTable2->startRow();
@@ -508,7 +542,7 @@ class formmanager extends object {
 
         //Add table to Tags Fieldset
         $objFieldset->addContent($objTable2->show());
-
+        $objFieldset->width = '800px';
         // Create Save Button
         $form->addToForm($objFieldset->show());
         $button = new button("submit", $this->objLanguage->languageText("word_save"));
@@ -1596,9 +1630,9 @@ class formmanager extends object {
             $objTable5->cellspacing = '12';
 
             //unit text box
-            $unitxt = new textinput("unit".$count, "");
+            $unitxt = new textinput("unit" . $count, "");
             $unitxt->size = 60;
-            $form->addRule('unit'.$count, $wordUnit . " " . $phraseIsRequired, 'required');
+            $form->addRule('unit' . $count, $wordUnit . " " . $phraseIsRequired, 'required');
             //Add Unit to the table
             $objTable5->startRow();
             $objTable5->addCell($wordUnit, '20%');
@@ -1612,7 +1646,7 @@ class formmanager extends object {
             $objTable5->endRow();
 
             //Add fieldset to hold units
-            $objFieldset->setLegend($wordUnit." ".$count);
+            $objFieldset->setLegend($wordUnit . " " . $count);
 
             //Add table to Tags Fieldset
             $objFieldset->addContent($objTable5->show());
