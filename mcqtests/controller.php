@@ -1,4 +1,5 @@
 <?php
+
 /**
  * testadmin class extends controller
  * @package testadmin
@@ -20,31 +21,42 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @version 0.1
  */
 class mcqtests extends controller {
-/**
- * @var string $user The full name of the current logged in user
- */
-    protected $user;
 
+    /**
+     * @var string $user The full name of the current logged in user
+     */
+    protected $user;
     /**
      * @var string $userId The userId of the current logged in user
      */
     protected $userId;
-
     /**
      * @var string $email The email address of the current logged in user
      */
     protected $email;
-
     /**
      * @var array $arrComLabs Array containg all computer laboratory files
      */
     protected $arrComLabs;
-
     /**
      * @var array $assignment A boolean value indicating if the Assignment module is registered
      */
     protected $assignment;
-
+    /**
+     *
+     * @var object to hold tbl description class
+     */
+    public $dbDescription;
+    /**
+     *
+     * @var object to hold tbl category class
+     */
+    public $dbCategory;
+    /**
+     *
+     * @var object to hold formmanager class
+     */
+    public $objFormManager;
     /**
      * Method to construct the class.
      *
@@ -52,7 +64,7 @@ class mcqtests extends controller {
      * @return
      */
     public function init() {
-    // Check if the assignment module is registered and can be linked to.
+        // Check if the assignment module is registered and can be linked to.
         $this->objModules = $this->newObject('modules', 'modulecatalogue');
         $this->assignment = FALSE;
         if ($this->objModules->checkIfRegistered('Assignment Management', 'assignment')) {
@@ -60,6 +72,9 @@ class mcqtests extends controller {
         }
 
         // get the user object
+        $this->objFormManager = $this->getObject('formmanager');
+        $this->dbDescription = $this->newObject('dbdescription');
+        $this->dbCategory = $this->newObject('dbcategory');
         $this->dbTestadmin = $this->newObject('dbtestadmin');
         $this->dbQuestions = $this->newObject('dbquestions');
         $this->dbAnswers = $this->newObject('dbanswers');
@@ -75,7 +90,7 @@ class mcqtests extends controller {
         $this->email = $this->objUser->email($this->userId);
         $this->objMail = $this->newObject('dbemail', 'internalmail');
         $this->objEmailFiles = $this->newObject('emailfiles', 'internalmail');
-        $this->objWashout = $this->getObject('washout','utilities');
+        $this->objWashout = $this->getObject('washout', 'utilities');
         $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
 
         // context
@@ -90,9 +105,9 @@ class mcqtests extends controller {
 
         $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
 
-        if($this->objModuleCatalogue->checkIfRegistered('activitystreamer')) {
+        if ($this->objModuleCatalogue->checkIfRegistered('activitystreamer')) {
             $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-            $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+            $this->eventDispatcher->addObserver(array($this->objActivityStreamer, 'postmade'));
             $this->eventsEnabled = TRUE;
         } else {
             $this->eventsEnabled = FALSE;
@@ -101,7 +116,7 @@ class mcqtests extends controller {
 
         // Log this call if registered
         if (!$this->objModules->checkIfRegistered('logger', 'logger')) {
-        //Get the activity logger class
+            //Get the activity logger class
             $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
             $this->objLog->log();
@@ -120,21 +135,50 @@ class mcqtests extends controller {
         if ($this->contextCode == '') {
             return $this->nextAction(NULL, NULL, '_default');
         }
-        //http://localhost/chisimba/index.php?module=mcqtests&action=answertest&id=gen1Srv45Nme53_48244_1258481346&mode=notoolbar
         // Now the main switch for $action
         switch ($action) {
+            case 'addcategory':
+                return 'addcategory_tpl.php';
+                break;
+            case 'addcategoryconfirm':
+                //Get the cat id
+                $id = $this->getParam('id', Null);
+                //Fetch the form data into an array for insertion/update
+                $fields = array();
+                $fields['parentcategoryid'] = $this->getParam('parentId', Null);
+                $fields['name'] = $this->getParam('categoryname', Null);
+                $fields['categoryinfo'] = $this->getParam('desc', Null);
+                //Insert/Update
+                $id = $this->dbCategory->addCategory($fields, $id);
+                return $this->nextAction('view', array('id' => $id));
+            case 'adddescconfirm':
+                //Get the test id
+                $id = $this->getParam('id', Null);
+                //Get desc id if its an edit
+                $descId = $this->getParam('descid', Null);
+                //Fetch the form data into an array for insertion/update
+                $fields = array();
+                $fields['categoryid'] = $this->getParam('categoryId', Null);
+                $fields['questionname'] = $this->getParam('qnname', Null);
+                $fields['questiontext'] = $this->getParam('qntext', Null);
+                $fields['feedback'] = $this->getParam('genfeedback', Null);
+                $fields['tags'] = $this->getParam('officialtags', Null);
+                $fields['othertags'] = $this->getParam('othertags', Null);
+
+                $id = $this->dbDescription->addDescription($fields, $descId);
+                return $this->nextAction('view', array('id' => $id));
             case 'activatetest':
                 $id = $this->getParam('id', '');
                 $this->applyChangeStatus();
                 return $this->nextAction('view', array(
-                'id' => $id
+                    'id' => $id
                 ));
             case 'addnewquestion': {
-                    $option=$this->getParam('qnoption');
-                    if($option == 'mcq') {
+                    $option = $this->getParam('qnoption');
+                    if ($option == 'mcq') {
                         return $this->addMcqQuestion();
                     }
-                    if($option == 'freeform') {
+                    if ($option == 'freeform') {
                         return $this->addFreeForm();
                     }
                 }
@@ -143,8 +187,8 @@ class mcqtests extends controller {
                 $this->viewtest();
                 $id = $this->getParam('id');
                 $count = $this->getParam('count');
-                $this->setVarByRef('testid',$id);
-                $this->setVarByRef('count',$count);
+                $this->setVarByRef('testid', $id);
+                $this->setVarByRef('count', $count);
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
                 $oldQuestions = $this->dbTestadmin->getContextQuestions($this->contextCode, $id);
 
@@ -181,7 +225,7 @@ class mcqtests extends controller {
                 $id = $this->getParam('testId', '');
                 if ($postSave == $this->objLanguage->languageText('word_cancel')) {
                     return $this->nextAction('view', array(
-                    'id' => $id
+                        'id' => $id
                     ));
                 }
                 if ($postSave == $this->objLanguage->languageText('word_save')) {
@@ -192,10 +236,10 @@ class mcqtests extends controller {
                     $qType = $this->getParam('type');
                     $fields = array();
                     $fields['testid'] = $id;
-                    if($this->getParam('formtype') == 'freeform')
-                    $fields['question'] = $this->getParam('freeformquestion', '');
+                    if ($this->getParam('formtype') == 'freeform')
+                        $fields['question'] = $this->getParam('freeformquestion', '');
                     else
-                    $fields['question'] = $this->getParam('question', '');
+                        $fields['question'] = $this->getParam('question', '');
                     $hint = $this->getParam('hint', '');
                     if ($hintConfirm == 'no') {
                         $hint = '';
@@ -212,29 +256,28 @@ class mcqtests extends controller {
 
                     if ($qType == 'mcq') {
                         return $this->nextAction('addanswers', array(
-                        'questionId' => $qId,
-                        'testId' => $id,
-                        'count' => $this->getParam('qOrder'),
-                        'qNum' => $this->getParam('options')
+                            'questionId' => $qId,
+                            'testId' => $id,
+                            'count' => $this->getParam('qOrder'),
+                            'qNum' => $this->getParam('options')
                         ));
                     }
                     if ($qType == 'tf') {
                         return $this->nextAction('addanswers', array(
-                        'questionId' => $qId,
-                        'testId' => $id,
-                        'count' => $this->getParam('qOrder'),
-                        'qNum' => 2,
-                        'truefalse' => true
+                            'questionId' => $qId,
+                            'testId' => $id,
+                            'count' => $this->getParam('qOrder'),
+                            'qNum' => 2,
+                            'truefalse' => true
                         ));
                     }
-                    if($qType == 'freeform') {
+                    if ($qType == 'freeform') {
                         return $this->nextAction('addfreeformanswers', array(
-                        'questionId' => $qId,
-                        'testId' => $id,
-                        'count' => $this->getParam('qOrder')
+                            'questionId' => $qId,
+                            'testId' => $id,
+                            'count' => $this->getParam('qOrder')
                         ));
                     }
-
                 }
                 break;
             case 'addfreeform':
@@ -281,7 +324,7 @@ class mcqtests extends controller {
                         $this->setSession('stepmenu1', $StepMenuArr);
                         $StepMenuArr = null;
 
-                        return $this->nextAction('savestep', array('currentstep'=>'2a'));
+                        return $this->nextAction('savestep', array('currentstep' => '2a'));
 
                     case '2a':
                         return 'addstep_tpl.php';
@@ -301,16 +344,16 @@ class mcqtests extends controller {
                         $this->setSession('stepmenu2', $StepMenuArr2);
                         $StepMenuArr = null;
                         //add to activity log
-                        if($this->eventsEnabled) {
-                            $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_mcqtests_newmcq', 'mcqtests')." ".$this->objContext->getContextCode();
-                            $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-                                'link'=> $this->uri(array()),
+                        if ($this->eventsEnabled) {
+                            $message = $this->objUser->getsurname() . " " . $this->objLanguage->languageText('mod_mcqtests_newmcq', 'mcqtests') . " " . $this->objContext->getContextCode();
+                            $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title' => $message,
+                                'link' => $this->uri(array()),
                                 'contextcode' => $this->objContext->getContextCode(),
                                 'author' => $this->objUser->fullname(),
-                                'description'=>$message));
+                                'description' => $message));
                         }
 
-                        return $this->nextAction('savestep', array('currentstep'=>'3a'));
+                        return $this->nextAction('savestep', array('currentstep' => '3a'));
                         break;
                     case '3a':
                         return 'addstep_tpl.php';
@@ -323,7 +366,7 @@ class mcqtests extends controller {
                         $fields['status'] = $step_data1['status'];
                         $fields['name'] = $step_data1['name'];
                         $fields['description'] = $step_data1['description'];
-                        $fields['testType'] =$step_data1['testType'];
+                        $fields['testType'] = $step_data1['testType'];
                         $fields['qSequence'] = $step_data1['qSequence'];
                         $fields['aSequence'] = $step_data1['aSequence'];
                         $fields['percent'] = $step_data2['percent'];
@@ -354,7 +397,7 @@ class mcqtests extends controller {
                 }
                 $id = $this->applyAddTest();
                 return $this->nextAction('view', array(
-                'id' => $id
+                    'id' => $id
                 ));
             // display template to edit a test
 
@@ -366,9 +409,9 @@ class mcqtests extends controller {
                 $this->dbTestadmin->deleteTest($this->getParam('id'));
                 $back = $this->getParam('back');
                 if (!empty($back)) {
-                    Header("Location: ".$this->uri(array(
-                        'action' => 'viewbyletter'
-                        ) , $back));
+                    Header("Location: " . $this->uri(array(
+                                'action' => 'viewbyletter'
+                                    ), $back));
                     break;
                 }
                 return $this->nextAction('');
@@ -390,10 +433,16 @@ class mcqtests extends controller {
                 $numAnswers = $this->dbAnswers->countAnswers($this->getParam('questionId'));
                 $this->setVarByRef('numAnswers', $numAnswers);
                 $this->setVar('mode', 'edit');
-                if ($data[0]['questiontype'] == 'freeform') {
+                $type = $this->getParam('type');
+                $questionid = $this->getParam('questionId');
+                $this->setVarByRef('questionid', $questionid);
+                if($type == 'numerical') {
+                    return 'editnumericalquestion_tpl.php';
+                } else if($type == 'matching') {
+                    return 'editmatchingquestion_tpl.php';
+                } else if ($data[0]['questiontype'] == 'freeform') {
                     return 'addfreeform_tpl.php';
-                }
-                else {
+                } else {
                     return 'addquestion_tpl.php';
                 }
                 break;
@@ -404,17 +453,17 @@ class mcqtests extends controller {
                 //$this->dbTestadmin->setTotal($this->getParam('id') , -$this->getParam('mark'));
                 $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
                 return $this->nextAction('view', array(
-                'id' => $this->getParam('id')
+                    'id' => $this->getParam('id')
                 ));
             case 'questionup':
-                $this->dbQuestions->changeOrder($this->getParam('questionId') , TRUE);
+                $this->dbQuestions->changeOrder($this->getParam('questionId'), TRUE);
                 return $this->nextAction('view', array(
-                'id' => $this->getParam('id')
+                    'id' => $this->getParam('id')
                 ));
             case 'questiondown':
-                $this->dbQuestions->changeOrder($this->getParam('questionId') , FALSE);
+                $this->dbQuestions->changeOrder($this->getParam('questionId'), FALSE);
                 return $this->nextAction('view', array(
-                'id' => $this->getParam('id')
+                    'id' => $this->getParam('id')
                 ));
             // save the question to the database and call next action to add answers
             case 'addanswers':
@@ -435,9 +484,9 @@ class mcqtests extends controller {
                 $correctAnswerNum = $this->dbAnswers->getCorrectAnswer($questionId);
                 $this->setVarByRef('correctAnswerNum', $correctAnswerNum);
 
-                if($answers == null) {
+                if ($answers == null) {
                     $this->setVar('mode', 'add');
-                }else {
+                } else {
                     $this->setVar('mode', 'edit');
                 }
                 return 'addanswer_tpl.php';
@@ -458,9 +507,9 @@ class mcqtests extends controller {
                 $this->setVarByRef('answers', $answers);
 
 
-                if($answers == null) {
+                if ($answers == null) {
                     $this->setVar('mode', 'add');
-                }else {
+                } else {
                     $this->setVar('mode', 'edit');
                 }
                 return 'addfreeformanswer_tpl.php';
@@ -476,9 +525,9 @@ class mcqtests extends controller {
                 if (!$postCorId) {
                     $this->dbAnswers->setCorrect($postAns, 1);
                 } else if ($postAns != $postCorId) {
-                        $this->dbAnswers->setCorrect($postAns, 1);
-                        $this->dbAnswers->setCorrect($postCorId, 0);
-                    }
+                    $this->dbAnswers->setCorrect($postAns, 1);
+                    $this->dbAnswers->setCorrect($postCorId, 0);
+                }
             // var_dump($postAns);
             // var_dump($postCorId);
 
@@ -489,7 +538,7 @@ class mcqtests extends controller {
                 $qNum = $this->getParam('qNum', '');
                 if ($postSave == $this->objLanguage->languageText('word_cancel')) {
                     return $this->nextAction('editquestion', array(
-                    'questionId' => $postQuestionId
+                        'questionId' => $postQuestionId
                     ));
                 }
 
@@ -497,8 +546,8 @@ class mcqtests extends controller {
                 $msg = $this->objLanguage->languageText('mod_mcqtests_confirmaddanswer', 'mcqtests');
                 $this->setSession('confirm', $msg);
                 return $this->nextAction('view', array(
-                'id' => $postTestId,
-                'qNum' => $qNum
+                    'id' => $postTestId,
+                    'qNum' => $qNum
                 ));
 
             case 'applyfreeformanswer':
@@ -508,16 +557,16 @@ class mcqtests extends controller {
 
                 if ($postSave == $this->objLanguage->languageText('word_cancel')) {
                     return $this->nextAction('editquestion', array(
-                    'questionId' => $postQuestionId
+                        'questionId' => $postQuestionId
                     ));
                 }
                 $this->addAnswers($postTestId, $postQuestionId, $_POST, 4);
                 $msg = $this->objLanguage->languageText('mod_mcqtests_confirmaddanswer', 'mcqtests');
                 $this->setSession('confirm', $msg);
 
-                return $this->nextAction('view',array(
-                'id' => $postTestId,
-                'qNum' => $qNum
+                return $this->nextAction('view', array(
+                    'id' => $postTestId,
+                    'qNum' => $qNum
                 ));
             // display template to edit a specified answer
 
@@ -533,14 +582,10 @@ class mcqtests extends controller {
             case 'deleteanswer':
                 $this->dbAnswers->deleteAnswer($this->getParam('answerId'));
                 return $this->nextAction('editquestion', array(
-                'questionId' => $this->getParam('questionId')
+                    'questionId' => $this->getParam('questionId')
                 ));
             case 'mark':
             case 'liststudents':
-                //(!$this->objCond->isContextMember('Lecturers'))
-                if (!$this->objUser->isCourseAdmin($this->contextCode)) {
-                    return 'noaccess_tpl.php';
-                }
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id, name, totalmark', $this->getParam('id'));
                 $data = $this->dbResults->getResults($this->getParam('id'));
                 $totalmark = $this->dbQuestions->sumTotalmark($this->getParam('id'));
@@ -556,7 +601,7 @@ class mcqtests extends controller {
                 $this->dbMarked->deleteMarked($studentId, $testId);
                 $this->dbResults->deleteResult($testId, $studentId);
                 return $this->nextAction('liststudents', array(
-                'id' => $testId
+                    'id' => $testId
                 ));
             case 'export':
                 $testId = $this->getParam('testId');
@@ -569,35 +614,35 @@ class mcqtests extends controller {
                 $testData = $this->dbTestadmin->getTests('', 'totalmark', $testId);
                 $exportType = $this->getParam('exporttype');
                 $contentRoot = $this->objConfig->getcontentBasePath();
-                $fileLocation = $contentRoot.'modules/mcqtests';
+                $fileLocation = $contentRoot . 'modules/mcqtests';
                 if (!is_dir($fileLocation)) {
                     $this->objMkdir->fullFilePath = $fileLocation;
                     $this->objMkdir->makedir();
                 }
-                $file = $fileLocation.'/'.$testId.'.csv';
+                $file = $fileLocation . '/' . $testId . '.csv';
                 if ($exportType == 'answers') {
                     $usersResultList = $this->dbResults->getResults($testId);
                     if (isset($usersResultList) && !empty($usersResultList)) {
                         $outputFile = fopen($file, 'wb');
-                        fwrite($outputFile, '"Student Number","Student name","Start time","End time","Answers selected"'."\n");
-                        foreach($usersResultList as $user) {
+                        fwrite($outputFile, '"Student Number","Student name","Start time","End time","Answers selected"' . "\n");
+                        foreach ($usersResultList as $user) {
                             $userAnswerList = $this->dbMarked->getAnswersForOutput($testId, $user['studentid']);
-                            $line = $userAnswerList[0]['studentid'].",";
-                            $line.= $this->objUser->fullname($userAnswerList[0]['studentid']) .",";
-                            $line.= $userAnswerList[0]['starttime'].",";
-                            $line.= $userAnswerList[0]['endtime'].",";
+                            $line = $userAnswerList[0]['studentid'] . ",";
+                            $line.= $this->objUser->fullname($userAnswerList[0]['studentid']) . ",";
+                            $line.= $userAnswerList[0]['starttime'] . ",";
+                            $line.= $userAnswerList[0]['endtime'] . ",";
                             if (isset($userAnswerList) && !empty($userAnswerList)) {
-                                foreach($userAnswerList as $answer) {
+                                foreach ($userAnswerList as $answer) {
                                     $value = isset($answer['answerorder']) ? $answer['answerorder'] : 'NULL';
-                                    $line.= $value.",";
+                                    $line.= $value . ",";
                                 }
                             }
-                            fwrite($outputFile, $line."\n");
+                            fwrite($outputFile, $line . "\n");
                         }
                         fclose($outputFile);
                         return $this->nextAction('emailresults', array(
-                        'file' => $file,
-                        'testId' => $testId
+                            'file' => $file,
+                            'testId' => $testId
                         ));
                     } else {
                         return $this->nextAction('');
@@ -606,18 +651,18 @@ class mcqtests extends controller {
                     $usersResultList = $this->dbResults->getResults($testId);
                     if (isset($usersResultList) && !empty($usersResultList)) {
                         $outputFile = fopen($file, 'wb');
-                        fwrite($outputFile, '"Student Number","Student name","Score","Percentage"'."\n");
-                        foreach($usersResultList as $user) {
-                            $line = $user['studentid'].",";
-                            $line.= $this->objUser->fullname($user['studentid']) .",";
-                            @ $line.= $user['mark'].",";
-                            $line.= (round(($user['mark']/$testData[0]['totalmark']) , 4) *100) ."%,";
-                            fwrite($outputFile, $line."\n");
+                        fwrite($outputFile, '"Student Number","Student name","Score","Percentage"' . "\n");
+                        foreach ($usersResultList as $user) {
+                            $line = $user['studentid'] . ",";
+                            $line.= $this->objUser->fullname($user['studentid']) . ",";
+                            @ $line.= $user['mark'] . ",";
+                            $line.= ( round(($user['mark'] / $testData[0]['totalmark']), 4) * 100) . "%,";
+                            fwrite($outputFile, $line . "\n");
                         }
                         fclose($outputFile);
                         return $this->nextAction('emailresults', array(
-                        'file' => $file,
-                        'testId' => $testId
+                            'file' => $file,
+                            'testId' => $testId
                         ));
                     }
                 }
@@ -650,28 +695,28 @@ class mcqtests extends controller {
                 $file = $_FILES;
                 if ($file['comLab']['type'] != 'text/x-comma-separated-values') {
                     return $this->nextAction('addlab', array(
-                    'id' => $id,
-                    'mode' => $mode,
-                    'error' => TRUE
+                        'id' => $id,
+                        'mode' => $mode,
+                        'error' => TRUE
                     ));
                 } else {
                     $contentRoot = $this->objConfig->getcontentBasePath();
-                    $fileLocation = $contentRoot.'/modules/mcqtests/';
+                    $fileLocation = $contentRoot . '/modules/mcqtests/';
                     if (!is_dir($fileLocation)) {
                         $this->objMkdir->fullFilePath = $fileLocation;
                         $this->objMkdir->makedir();
                     }
-                    $labFileLocation = $fileLocation.$file['comLab']['name'];
+                    $labFileLocation = $fileLocation . $file['comLab']['name'];
                     move_uploaded_file($file['comLab']['tmp_name'], $labFileLocation);
                     if ($mode == 'add') {
                         return $this->nextAction('addtest', array(
-                        'mode' => $mode
-                        ) , 'mcqtests');
+                            'mode' => $mode
+                                ), 'mcqtests');
                     } else {
                         return $this->nextAction('edit', array(
-                        'id' => $id,
-                        'mode' => $mode
-                        ) , 'mcqtests');
+                            'id' => $id,
+                            'mode' => $mode
+                                ), 'mcqtests');
                     }
                 }
                 break;
@@ -692,7 +737,7 @@ class mcqtests extends controller {
             case 'previewtest':
                 $testId = $this->getParam('id');
                 $num = $this->getParam('num');
-                if($num <= 0) {
+                if ($num <= 0) {
                     $num = 0;
                 }
                 return $this->previewTest($testId, $num);
@@ -705,7 +750,7 @@ class mcqtests extends controller {
                 $this->setVarByRef('testDuration', $testDuration);
                 $this->setVarByRef('resultId', $resultId);
                 $this->setVarByRef('mode', $mode);
-                return $this->setTest($this->getParam('id') , $this->getParam('qnum', ''));
+                return $this->setTest($this->getParam('id'), $this->getParam('qnum', ''));
             case 'marktest':
                 $this->unsetSession('qData');
                 $this->unsetSession('taketest');
@@ -726,12 +771,12 @@ class mcqtests extends controller {
                 return $this->showStudentTest();
             case 'submitdbquestions':
                 $status = $this->submitDBQuestions($this->getParam('ids'));
-                return $status;//$this->nextAction('view', array('id' => $id) , 'mcqtests');
+                return $status; //$this->nextAction('view', array('id' => $id) , 'mcqtests');
             case 'formattedquestions':
                 $myParams = explode("&", $this->getParam('myParams'));
-                $type = explode("=",$myParams[0]);
+                $type = explode("=", $myParams[0]);
                 $type = $type[1];
-                $courses = explode("=",$myParams[1]);
+                $courses = explode("=", $myParams[1]);
                 $courses = $courses[1];
                 $start = $this->getParam('start');
                 $limit = $this->getParam('limit');
@@ -740,9 +785,40 @@ class mcqtests extends controller {
             case 'previewquestion':
                 $id = $this->getParam('id');
                 return $this->previewQuestion($id);
+            case 'calcqform':
+                $id = $this->getParam('id');
+                return $this->calcqForm();
+            case 'addmatchingquestion':
+                $qtype = $this->objLanguage->languageText('mod_mcqtests_matching', 'mcqtests');
+                if($this->getParam('edit')) {
+                    if($this->getParam('edit')== 'true') {
+                        $edit = true;
+                    }
+                    $id = $this->addGeneralFormQuestions($qtype, $edit);
+                    $this->addMatchingQuestions($id, $edit);
+                }
+                else {
+                    $id = $this->addGeneralFormQuestions($qtype);
+                    $this->addMatchingQuestions($id);
+                }
+
+                return $this->nextAction('view', array('id' => $this->getParam('id')));
+            case 'addnumericalquestion':
+                $qtype = $this->objLanguage->languageText('mod_mcqtests_numerical', 'mcqtests');
+                if($this->getParam('edit')) {
+                    if($this->getParam('edit')== 'true') {
+                        $edit = true;
+                    }
+                    $id = $this->addGeneralFormQuestions($qtype, $edit);
+                    $this->addNumericalQuestions($id, $edit);
+                }
+                else {
+                    $id = $this->addGeneralFormQuestions($qtype);
+                    $this->addNumericalQuestions($id);
+                }
+                return $this->nextAction('view', array('id' => $this->getParam('id')));
             default:
-                //(!$this->objCond->isContextMember('Lecturers'))
-                if (!$this->objUser->isCourseAdmin($this->contextCode)) {
+                if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
                     return $this->studentHome();
                 } else {
@@ -758,10 +834,10 @@ class mcqtests extends controller {
      * @return boolean
      */
     public function isValid($action) {
-        if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
+        if ($this->objUser->isAdmin() || $this->objContextGroups->isContextLecturer()) {
             return TRUE;
         } else {
-            return FALSE;//parent::isValid ( $action );
+            return FALSE; //parent::isValid ( $action );
         }
     }
 
@@ -775,9 +851,9 @@ class mcqtests extends controller {
     private function home($testId = NULL) {
         $data = $this->dbTestadmin->getTests($this->contextCode);
         if (!empty($data)) {
-            foreach($data as $key => $line) {
+            foreach ($data as $key => $line) {
                 $sql = "SELECT title FROM tbl_context_nodes WHERE ";
-                $sql.= "id = '".$line['chapter']."'";
+                $sql.= "id = '" . $line['chapter'] . "'";
                 $nodes = $this->objContentNodes->getArray($sql);
                 if (!empty($nodes)) {
                     $data[$key]['node'] = $nodes[0]['title'];
@@ -791,8 +867,6 @@ class mcqtests extends controller {
         return 'index_tpl.php';
     }
 
-
-
     /**
      * Method to get the context child nodes and display form to add a new test.
      *
@@ -805,7 +879,7 @@ class mcqtests extends controller {
         INNER JOIN tbl_context_parentnodes ON ( tbl_context_parentnodes_id =
         tbl_context_parentnodes.id )
         WHERE tbl_context_parentnodes.tbl_context_parentnodes_has_tbl_context_tbl_context_contextCode
-        = "'.$this->contextCode.'"'; // AND parent_Node = "" ';
+        = "' . $this->contextCode . '"'; // AND parent_Node = "" ';
         $nodes = $this->objContentNodes->getArray($nodesSQL);
         $allPercent = $this->dbTestadmin->getPercentage($this->contextCode);
         $this->setVarByRef('nodes', $nodes);
@@ -813,7 +887,6 @@ class mcqtests extends controller {
         $this->setVar('mode', 'add');
         return 'addtest_tpl.php';
     }
-
 
     /**
      * Method to add a new test
@@ -829,16 +902,16 @@ class mcqtests extends controller {
         $fields['userid'] = $this->userId;
         // $fields['chapter'] = $this->getParam('chapter', '');
         $fields['status'] = $data['status'];
-        $percent =$data['percent'];
+        $percent = $data['percent'];
         $decimal = $data['decimal'];
-        $fields['percentage'] = $percent.'.'.$decimal;
+        $fields['percentage'] = $percent . '.' . $decimal;
         $postTimed = $data['timed'];
         if (!empty($postTimed)) {
             $fields['timed'] = 1;
         } else {
             $fields['timed'] = 0;
         }
-        $fields['duration'] = ($data['hour'] *60) +$data['min'];
+        $fields['duration'] = ($data['hour'] * 60) + $data['min'];
         $startDate = $data['start'];
         $closeDate = $data['close'];
         $fields['startdate'] = $startDate;
@@ -856,16 +929,17 @@ class mcqtests extends controller {
         if (isset($postEqual) && !empty($postEqual)) {
             $tests = $this->dbTestadmin->getTests($this->contextCode, 'id, percentage');
             $num = count($tests);
-            $percent = round((100/$num) , 2);
+            $percent = round((100 / $num), 2);
             $arrField = array(
                 'percentage' => $percent
             );
-            foreach($tests as $item) {
+            foreach ($tests as $item) {
                 $this->dbTestadmin->addTest($arrField, $item['id']);
             }
         }
         return $id;
     }
+
     /**
      * Method to add change status of test
      *
@@ -879,6 +953,7 @@ class mcqtests extends controller {
         $id = $this->dbTestadmin->addTest($fields, $id);
         return;
     }
+
     /**
      * Method to add a new test
      *
@@ -896,14 +971,14 @@ class mcqtests extends controller {
         $fields['status'] = $this->getParam('status', '');
         $percent = $this->getParam('percent', 0);
         $decimal = $this->getParam('decimal', 0);
-        $fields['percentage'] = $percent.'.'.$decimal;
+        $fields['percentage'] = $percent . '.' . $decimal;
         $postTimed = $this->getParam('timed', '');
         if (!empty($postTimed)) {
             $fields['timed'] = 1;
         } else {
             $fields['timed'] = 0;
         }
-        $fields['duration'] = ($this->getParam('hour', 0) *60) +$this->getParam('min', 0);
+        $fields['duration'] = ($this->getParam('hour', 0) * 60) + $this->getParam('min', 0);
         $startDate = $this->getParam('start', '');
         $closeDate = $this->getParam('close', '');
         $fields['startdate'] = $startDate;
@@ -914,18 +989,17 @@ class mcqtests extends controller {
         $fields['comlab'] = $this->getParam('comLab');
         $fields['description'] = $this->getParam('description', '');
         $fields['updated'] = date('Y-m-d H:i:s');
-        $fields['coursePermissions'] = $this->getParam('coursePermissions');
         $id = $this->dbTestadmin->addTest($fields, $id);
         // set all tests to equal percentages
         $postEqual = $this->getParam('setequal', '');
         if (isset($postEqual) && !empty($postEqual)) {
             $tests = $this->dbTestadmin->getTests($this->contextCode, 'id, percentage');
             $num = count($tests);
-            $percent = round((100/$num) , 2);
+            $percent = round((100 / $num), 2);
             $arrField = array(
                 'percentage' => $percent
             );
-            foreach($tests as $item) {
+            foreach ($tests as $item) {
                 $this->dbTestadmin->addTest($arrField, $item['id']);
             }
         }
@@ -941,9 +1015,9 @@ class mcqtests extends controller {
     private function viewTest() {
         $data = $this->dbTestadmin->getTests($this->contextCode, '*', $this->getParam('id'));
         if (!empty($data)) {
-            foreach($data as $key => $line) {
+            foreach ($data as $key => $line) {
                 $sql = "SELECT title FROM tbl_context_nodes WHERE ";
-                $sql.= "id = '".$line['chapter']."'";
+                $sql.= "id = '" . $line['chapter'] . "'";
                 $nodes = $this->objContentNodes->getArray($sql);
                 if (!empty($nodes)) {
                     $data[$key]['node'] = $nodes[0]['title'];
@@ -977,6 +1051,7 @@ class mcqtests extends controller {
         $this->setVar('mode', 'add');
         return 'addquestion_tpl.php';
     }
+
     /**
      * this returns a form for freefomrm questions
      * @return template
@@ -1007,12 +1082,12 @@ class mcqtests extends controller {
         $testId = $this->getParam('id');
         $data = $this->dbTestadmin->getTests($this->contextCode, '*', $testId);
         /* $nodesSQL = 'SELECT tbl_context_nodes.id AS chapter_id,
-        tbl_context_nodes.title AS chapter_title FROM tbl_context_nodes
-        INNER JOIN tbl_context_parentnodes ON ( tbl_context_parentnodes_id =
-        tbl_context_parentnodes.id )
-        WHERE tbl_context_parentnodes.tbl_context_parentnodes_has_tbl_context_tbl_context_contextCode
-        = "'.$this->contextCode.'"'; // AND parent_Node = "" ';
-        */
+          tbl_context_nodes.title AS chapter_title FROM tbl_context_nodes
+          INNER JOIN tbl_context_parentnodes ON ( tbl_context_parentnodes_id =
+          tbl_context_parentnodes.id )
+          WHERE tbl_context_parentnodes.tbl_context_parentnodes_has_tbl_context_tbl_context_contextCode
+          = "'.$this->contextCode.'"'; // AND parent_Node = "" ';
+         */
         $allPercent = $this->dbTestadmin->getPercentage($this->contextCode, $testId);
         $this->setVarByRef('allPercent', $allPercent);
         //$this->setVarByRef('nodes', $nodes);
@@ -1035,15 +1110,15 @@ class mcqtests extends controller {
     private function addAnswers($testId, $questionId, $answers, $num = 4) {
         $answerId = $this->getParam('answerId');
         $questiontype = $this->getParam('qtype');
-        /*if ($answerId) {
-            $fields = array();
-            $fields['testid'] = $testId;
-            $fields['questionid'] = $questionId;
-            $fields['answer'] = $answers['answer1'];
-            $fields['commenttext'] = $answers['comment1'];
-            $this->dbAnswers->addAnswers($fields, $answerId);
-            return TRUE;
-        }*/
+        /* if ($answerId) {
+          $fields = array();
+          $fields['testid'] = $testId;
+          $fields['questionid'] = $questionId;
+          $fields['answer'] = $answers['answer1'];
+          $fields['commenttext'] = $answers['comment1'];
+          $this->dbAnswers->addAnswers($fields, $answerId);
+          return TRUE;
+          } */
 
         $i = 1;
         $order = 1;
@@ -1056,29 +1131,28 @@ class mcqtests extends controller {
             $fields = array();
             $fields['testid'] = $testId;
             $fields['questionid'] = $questionId;
-            $fields['answer'] = $answers['answer'.$i];
-            $fields['commenttext'] = $answers['comment'.$i];
+            $fields['answer'] = $answers['answer' . $i];
+            $fields['commenttext'] = $answers['comment' . $i];
             $fields['answerorder'] = $order++;
             // var_dump($answers['correctans']);
-            if($questiontype == 'freeform') {
-                $fields['correct']= 1;
+            if ($questiontype == 'freeform') {
+                $fields['correct'] = 1;
                 $f++;
-            }else
-                if($answers['correctans'] == $i) {
-                    $fields['correct'] = 1;
-                }else {
-                    $fields['correct'] = 0;
-                }
+            } else
+            if ($answers['correctans'] == $i) {
+                $fields['correct'] = 1;
+            } else {
+                $fields['correct'] = 0;
+            }
             //var_dump($fields['correct']);
-            if($answerId == '') {
+            if ($answerId == '') {
                 $this->dbAnswers->addAnswers($fields);
-            }else {
-                $this->dbAnswers->addAnswers($fields,$answerId);
+            } else {
+                $this->dbAnswers->addAnswers($fields, $answerId);
             }
 
             $i++;
         } // end while
-
     }
 
     /**
@@ -1106,17 +1180,16 @@ class mcqtests extends controller {
         // Remove alternative answers for free form questions.
         $data = array();
         if (!empty($tempData)) {
-            foreach($tempData as $key => $line) {
+            foreach ($tempData as $key => $line) {
                 if ($line['questiontype'] == 'freeform' && $line['answerorder'] != 1) {
                     continue;
-                }
-                else {
+                } else {
                     $data[$key] = $line;
                 }
             }
         }
         if (!empty($data)) {
-            foreach($data as $key => $line) {
+            foreach ($data as $key => $line) {
                 $_questiontype = $line['questiontype'];
                 switch ($_questiontype) {
                     case 'mcq':
@@ -1129,10 +1202,10 @@ class mcqtests extends controller {
                         $data[$key]['visible'] = true;
                         break;
                     case 'freeform':
-                    //                        if ($line['answerorder'] != 1) {
-                    //                            unset($data[$key]);
-                    //                            continue;
-                    //                        }
+                        //                        if ($line['answerorder'] != 1) {
+                        //                            unset($data[$key]);
+                        //                            continue;
+                        //                        }
                         $data[$key]['alternativeanswers'] = $this->dbAnswers->getAlternativeAnswers($testId, $line['questionid']);
                         $marked = $this->dbMarked->getMarkedFreeForm($studentId, $line['questionid'], $testId);
                         $data[$key]['studcorrect'] = $marked[0]['correct'];
@@ -1142,8 +1215,7 @@ class mcqtests extends controller {
                         $markedAnswer = $this->dbMarked->getMarkedFreeFormAnswer($studentId, $line['questionid'], $testId);
                         if ($markedAnswer) {
                             $data[$key]['answered'] = $markedAnswer[0]['answered'];
-                        }
-                        else {
+                        } else {
                             $data[$key]['answered'] = NULL;
                         }
                         break;
@@ -1181,13 +1253,13 @@ class mcqtests extends controller {
     public function getLabs() {
         $arrComLabs = array();
         $contentRoot = $this->objConfig->getcontentBasePath();
-        $fileLocation = $contentRoot.'/modules/mcqtests/';
-        $fileLocation = str_replace('//','/',$fileLocation);
+        $fileLocation = $contentRoot . '/modules/mcqtests/';
+        $fileLocation = str_replace('//', '/', $fileLocation);
         if (!is_dir($fileLocation)) {
             $this->objMkdir->mkdirs($fileLocation);
         }
-        $pattern = $fileLocation.'*.csv';
-        foreach(glob($pattern) as $filename) {
+        $pattern = $fileLocation . '*.csv';
+        foreach (glob($pattern) as $filename) {
             $file = basename($filename, ".csv");
             $arrComLabs[] = $file;
         }
@@ -1203,9 +1275,9 @@ class mcqtests extends controller {
     private function studentHome() {
         $data = $this->dbTestadmin->getTests($this->contextCode);
         if (!empty($data)) {
-            foreach($data as $key => $line) {
+            foreach ($data as $key => $line) {
                 $sql = "SELECT title FROM tbl_context_nodes WHERE ";
-                $sql.= "id = '".$line['chapter']."'";
+                $sql.= "id = '" . $line['chapter'] . "'";
                 $nodes = $this->objContentNodes->getArray($sql);
                 $data[$key]['node'] = '';
                 if (!empty($nodes)) {
@@ -1252,7 +1324,7 @@ class mcqtests extends controller {
      * @return
      */
     private function closeTest($testId) {
-    // Check if result exists, if not return to main page
+        // Check if result exists, if not return to main page
         $result = $this->dbResults->getResult($this->userId, $testId);
         if ($result === FALSE) {
             $fields = array();
@@ -1264,7 +1336,6 @@ class mcqtests extends controller {
         }
         return $this->nextAction('');
     }
-
 
     /**
      * Method to set up a test for answering.
@@ -1285,10 +1356,10 @@ class mcqtests extends controller {
                 $data = array_slice($qData, $num, 10);
                 $data[0]['count'] = count($qData);
                 $data[0]['qnum'] = $num;
-                foreach($data as $key => $line) {
+                foreach ($data as $key => $line) {
                     if (isset($results) && !empty($results)) {
-                        foreach($results as $item) {
-                            foreach($data[$key]['answers'] as $k => $val) {
+                        foreach ($results as $item) {
+                            foreach ($data[$key]['answers'] as $k => $val) {
                                 if (($item['questionid'] == $line['id']) && ($item['answerid'] == $val['id'])) {
                                     $data[$key]['answers'][$k]['selected'] = $item['id'];
                                 }
@@ -1302,11 +1373,11 @@ class mcqtests extends controller {
                     if ($test[0]['qsequence'] == 'Scrambled') {
                         shuffle($qData);
                     }
-                    foreach($qData as $key => $line) {
-                        $qData[$key]['questionorder'] = ($key+1);
+                    foreach ($qData as $key => $line) {
+                        $qData[$key]['questionorder'] = ($key + 1);
                     }
                     $qData[0]['count'] = count($qData);
-                    foreach($qData as $key => $line) {
+                    foreach ($qData as $key => $line) {
                         $answers = $this->dbAnswers->getAnswers($line['id']);
                         if ($test[0]['asequence'] == 'Scrambled') {
                             shuffle($answers);
@@ -1320,14 +1391,14 @@ class mcqtests extends controller {
                 }
             }
         } else {
-        // original code
-            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > '.$num.' ORDER BY questionorder LIMIT 10');
+            // original code
+            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');
             if (!empty($data)) {
-                foreach($data as $key => $line) {
+                foreach ($data as $key => $line) {
                     $answers = $this->dbAnswers->getAnswers($line['id']);
                     if (isset($results) && !empty($results)) {
-                        foreach($results as $item) {
-                            foreach($answers as $k => $val) {
+                        foreach ($results as $item) {
+                            foreach ($answers as $k => $val) {
                                 if (($item['questionid'] == $line['id']) && ($item['answerid'] == $val['id'])) {
                                     $answers[$k]['selected'] = $item['id'];
                                 }
@@ -1366,10 +1437,10 @@ class mcqtests extends controller {
                 $data = array_slice($qData, $num, 10);
                 $data[0]['count'] = count($qData);
                 $data[0]['qnum'] = $num;
-                foreach($data as $key => $line) {
+                foreach ($data as $key => $line) {
                     if (isset($results) && !empty($results)) {
-                        foreach($results as $item) {
-                            foreach($data[$key]['answers'] as $k => $val) {
+                        foreach ($results as $item) {
+                            foreach ($data[$key]['answers'] as $k => $val) {
                                 if (($item['questionid'] == $line['id']) && ($item['answerid'] == $val['id'])) {
                                     $data[$key]['answers'][$k]['selected'] = $item['id'];
                                 }
@@ -1383,11 +1454,11 @@ class mcqtests extends controller {
                     if ($test[0]['qsequence'] == 'Scrambled') {
                         shuffle($qData);
                     }
-                    foreach($qData as $key => $line) {
-                        $qData[$key]['questionorder'] = ($key+1);
+                    foreach ($qData as $key => $line) {
+                        $qData[$key]['questionorder'] = ($key + 1);
                     }
                     $qData[0]['count'] = count($qData);
-                    foreach($qData as $key => $line) {
+                    foreach ($qData as $key => $line) {
                         $answers = $this->dbAnswers->getAnswers($line['id']);
                         if ($test[0]['asequence'] == 'Scrambled') {
                             shuffle($answers);
@@ -1401,14 +1472,14 @@ class mcqtests extends controller {
                 }
             }
         } else {
-        // original code
-            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > '.$num.' ORDER BY questionorder LIMIT 10');
+            // original code
+            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');
             if (!empty($data)) {
-                foreach($data as $key => $line) {
+                foreach ($data as $key => $line) {
                     $answers = $this->dbAnswers->getAnswers($line['id']);
                     if (isset($results) && !empty($results)) {
-                        foreach($results as $item) {
-                            foreach($answers as $k => $val) {
+                        foreach ($results as $item) {
+                            foreach ($answers as $k => $val) {
                                 if (($item['questionid'] == $line['id']) && ($item['answerid'] == $val['id'])) {
                                     $answers[$k]['selected'] = $item['id'];
                                 }
@@ -1440,34 +1511,32 @@ class mcqtests extends controller {
         $total = 0;
         $postCount = $this->getParam('count', NULL);
         if ($postCount) {
-            for ($i = $this->getParam('first', 0) ; $i <= $postCount ; $i++) {
-            // Check if answer selected and needs updating
-                $postSelected = $this->getParam('selected'.$i, NULL);
+            for ($i = $this->getParam('first', 0); $i <= $postCount; $i++) {
+                // Check if answer selected and needs updating
+                $postSelected = $this->getParam('selected' . $i, NULL);
                 // Save the students answers.
                 $testId = $this->getParam('id');
-                $questType = $this->getParam('qtype'.$i);
-                $questId = $this->getParam('questionId'.$i);
+                $questType = $this->getParam('qtype' . $i);
+                $questId = $this->getParam('questionId' . $i);
                 if (!empty($testId) && !empty($questId)) {
                     $fields = array();
                     $fields['testid'] = $testId;
                     $fields['questionid'] = $questId;
-                    $postAns = $this->getParam('ans'.$i);
+                    $postAns = $this->getParam('ans' . $i);
                     $fields['studentid'] = $this->userId;
                     if ($questType == 'freeform') {
                         $fields['answerid'] = '';
                         $fields['answered'] = $postAns;
-                    }else {
+                    } else {
                         $fields['answerid'] = $postAns;
                         $fields['answered'] = '';
                     }
 
                     $this->dbMarked->addMarked($fields, $postSelected);
-
                 }
             }
         }
         return $resultId;
-
     }
 
     /**
@@ -1488,13 +1557,11 @@ class mcqtests extends controller {
             if (!empty($data)) {
                 foreach ($data as $val) {
 
-                    if ($val['answered']!= NULL) {
-                        $total = $total+$val['mark'];
-                    //$total = $p;
+                    if ($val['answered'] != NULL) {
+                        $total = $total + $val['mark'];
+                        //$total = $p;
                     }
-
                 }
-
             }
         }   //  $j++;
 
@@ -1502,14 +1569,13 @@ class mcqtests extends controller {
         if (!empty($testId)) {
             $data = $this->dbMarked->getCorrectAnswers($this->userId, $testId);
             if (!empty($data)) {
-                foreach($data as $item) { //$b++;
+                foreach ($data as $item) { //$b++;
                     if ($item['correct']) {
-                        $total = $total+$item['mark'];
-                    //$total = $b;
+                        $total = $total + $item['mark'];
+                        //$total = $b;
                     }
                 }
             }
-
         }
         $this->dbResults->addMark($resultId, $total);
     }
@@ -1536,16 +1602,16 @@ class mcqtests extends controller {
             $data = $this->dbQuestions->getQuestionCorrectAnswer($testId, $qNum);
         }
         if (!empty($data)) {
-            foreach($data as $key => $line) {
+            foreach ($data as $key => $line) {
                 $marked = $this->dbMarked->getMarked($this->userId, $line['questionid'], $testId);
                 $ffmarked = $this->dbMarked->getAllMarked($this->userId, $line['questionid'], $testId);
                 $correctans = $this->dbAnswers->getAnswers($line['questionid']);
-                if($line['questiontype'] == 'freeform') {
+                if ($line['questiontype'] == 'freeform') {
                     $simple = array();
-                    foreach($correctans as $base) {
+                    foreach ($correctans as $base) {
                         $simple[] = $base['answer'];
                     }
-                    $stringOut = implode(',',$simple);
+                    $stringOut = implode(',', $simple);
                 }
                 $data[$key]['studcorrect'] = $marked[0]['correct'];
                 $data[$key]['studfreeans'] = $ffmarked[0]['answered'];
@@ -1578,7 +1644,7 @@ class mcqtests extends controller {
         if ($current == 0) {
             $current = 1;
         }
-        $rem = ($current-1) %$num;
+        $rem = ($current - 1) % $num;
         if ($rem != 0) {
             if ($rem == 1) {
                 $link = '1';
@@ -1589,31 +1655,31 @@ class mcqtests extends controller {
             $objLink->link = $link;
             $output.= $objLink->show();
         }
-        for ($i = $rem+1 ; $i <= $total ; $i = $i+$num) {
-            $end = $i+$num-1;
+        for ($i = $rem + 1; $i <= $total; $i = $i + $num) {
+            $end = $i + $num - 1;
             if ($end > $total) {
-                $link = $i.'&nbsp;-&nbsp;'.$total;
+                $link = $i . '&nbsp;-&nbsp;' . $total;
             } else {
                 if ($i == $end) {
                     $link = $i;
                 } else {
-                    $link = $i.'&nbsp;-&nbsp;'.$end;
+                    $link = $i . '&nbsp;-&nbsp;' . $end;
                 }
             }
             if ($i == $current) {
                 if ($i == 1) {
                     $output.= $link;
                 } else {
-                    $output.= '&nbsp;&nbsp;|&nbsp;&nbsp;'.$link;
+                    $output.= '&nbsp;&nbsp;|&nbsp;&nbsp;' . $link;
                 }
             } else {
-                $j = $i-1;
+                $j = $i - 1;
                 $objLink = new link("javascript:submitform('$j');");
                 $objLink->link = $link;
                 if ($i == 1) {
                     $output.= $objLink->show();
                 } else {
-                    $output.= '&nbsp;&nbsp;|&nbsp;&nbsp;'.$objLink->show();
+                    $output.= '&nbsp;&nbsp;|&nbsp;&nbsp;' . $objLink->show();
                 }
             }
         }
@@ -1629,12 +1695,12 @@ class mcqtests extends controller {
      */
     public function getIps($comLab) {
         $contentRoot = $this->objConfig->getcontentBasePath();
-        $fileLocation = $contentRoot.'/modules/mcqtests/';
+        $fileLocation = $contentRoot . '/modules/mcqtests/';
         if (!is_dir($fileLocation)) {
             $this->objMkdir->fullFilePath = $fileLocation;
             $this->objMkdir->makedir();
         }
-        $file = $fileLocation.$comLab.'.csv';
+        $file = $fileLocation . $comLab . '.csv';
         $arrIpAddresses = array();
         $fp = fopen($file, 'r');
         while ($line = fgetcsv($fp, 1024, ",")) {
@@ -1680,5 +1746,85 @@ class mcqtests extends controller {
         return 'previewquestion_tpl.php';
     }
 
-} // end of class
+    public function calcqForm() {
+        $objCalcQFormmanager = $this->newObject('question_calculated_formmanager');
+        $id = $this->getParam('id');
+
+        echo $objCalcQFormmanager->calcQForm($id);
+    }
+
+    private function addGeneralFormQuestions($qtype, $edit=null) {
+        $objQuestions = $this->getObject('dbquestions', 'mcqtests');
+        //insert into questions table
+        $questiondata = array();
+        $questiondata['testid'] = $this->getParam('id');
+        $questiondata['question'] = $this->getParam('qText');
+        $questiondata['name'] = $this->getParam('qName');
+        $questiondata['hint'] = $this->getParam('hint');
+        $questiondata['questiontext'] = $this->getParam('qText');
+        $questiondata['mark'] = $this->getParam('qMark');
+        $questiondata['generalfeedback'] = $this->getParam('calcqgenfeedback');//('generalfeedback');
+        $questiondata['penalty'] = $this->getParam('qPenalty');
+        $questiondata['questiontype'] = $qtype;
+
+        if($edit) {
+            $id = $this->getParam('id');
+            $objQuestions->addQuestion($questiondata, $id);
+        }else {
+            $id = $objQuestions->addQuestion($questiondata);
+        }
+        return $id;
+    }
+    public function addMatchingQuestions($id, $edit=false) {
+        $objQuestionMatching = $this->newObject('dbquestion_matching');
+        
+        $matchingQuestionData = array();
+        $matchingQuestionData['subquestions'] = array('q1'=> trim($this->getParam('qmatching1')), 'q2'=> trim($this->getParam('qmatching2')), 'q3' => trim($this->getParam('qmatching3')));
+        $matchingQuestionData['subanswers'] = array('a1' => $this->getParam('aMatching1'), 'a2'=>$this->getParam('aMatching2'), 'a3'=>$this->getParam('aMatching3'));
+        
+        if($edit) {
+            $objQuestionMatching->updateMatchingQuestions($id, $matchingQuestionData);
+        }
+        else {
+            $objQuestionMatching->addMatchingQuestions($id, $matchingQuestionData);
+        }
+    }
+
+    public function addNumericalQuestions($id, $edit=false) {
+        $objQuestionNumerical = $this->newObject('dbquestion_numerical');
+        $objQuestionUnit = $this->newObject('dbnumericalunits');
+
+        $questionid = $id;
+        $numericalQuestionData = array();
+        // get info for unit marked
+        if(strlen($this->getParam('unitmarked')) > 0) {
+            $unitmarked = 'yes';
+        }
+        else if($this->getParam('dispUnit')) {
+            $dispUnit = 'yes';
+        }
+        $numericalQuestionData['answer'] = array('a1' => $this->getParam('aNumerical1'), 'a2'=>$this->getParam('aNumerical2'), 'a3'=>$this->getParam('aNumerical3'));
+        $numericalQuestionData['mark'] = array('mark1'=> $this->getParam('mark_1'), 'mark2'=> $this->getParam('mark_2'), 'mark3'=> $this->getParam('mark_3'));
+        if($edit) {
+            $objQuestionNumerical->updateNumericalQuestions($questionid, $numericalQuestionData);
+        }
+        else {
+            $objQuestionNumerical->addNumericalQuestions($questionid, $numericalQuestionData);
+        }
+        //insert unit data
+        $unitData = array();
+        $unitData['unit'] = $this->getParam('aUnit');
+        $unitData['questionid'] = $questionid;
+        if($edit) {
+            $objQuestionUnit->updateNumericalUnits($unitData, $id);
+        }
+        else {
+            $objQuestionUnit->addNumericalUnits($unitData);
+        }
+
+    }
+
+}
+
+// end of class
 ?>
