@@ -203,6 +203,27 @@ class mcqtests extends controller {
 
                 return 'choosequestiontype_tpl.php';
                 break;
+            // create an interface to choose a questiontype
+            case 'choosequestiontype2':
+                $this->viewtest();
+                $id = $this->getParam('id');
+                $count = $this->getParam('count');
+                $this->setVarByRef('testid', $id);
+                $this->setVarByRef('count', $count);
+                $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
+                $oldQuestions = $this->dbTestadmin->getContextQuestions($this->contextCode, $id);
+
+                // Get the total number of questions if this isn't the first
+                if ($count > 1) {
+                    $count = $this->dbQuestions->countQuestions($id);
+                }
+                $test[0]['count'] = $count;
+                $this->setVarByRef('test', $test[0]);
+                $this->setVar('mode', 'add');
+                $this->setVar('oldQuestions', $oldQuestions);
+
+                return 'choosequestiontype2_tpl.php';
+                break;
 
             case 'addquestion':
                 $id = $this->getParam('id', NULL);
