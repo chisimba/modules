@@ -463,6 +463,7 @@ class learningcontent extends controller {
                     'link'=> $this->uri(array()),
                     'contextcode' => $this->contextCode,
                     'author' => $this->objUser->fullname(),
+                    'chapterId' => $chapterId,
                     'description'=>$message));
             }
 
