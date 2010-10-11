@@ -156,29 +156,4 @@
 			</add>
 		</data>
 	</update>
-        <update>
-		<table>tbl_test_question_multianswers</table>
-		<version>1.192</version>
-		<description>modify length of answer field</description>
-		<data>
-			<add>
-				<name>answer</name>
-				<type>text</type>
-				<length>255</length>
-			</add>
-		</data>
-	</update>
-        <update>
-		<table>tbl_test_question_numerical</table>
-		<version>1.200</version>
-		<description>add mark field</description>
-		<data>
-			<add>
-				<name>mark</name>
-				<type>integer</type>
-				<length>10</length>
-			</add>
-		</data>
-	</update>
-
 </updates>
