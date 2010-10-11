@@ -99,9 +99,8 @@ class assignment extends controller {
         //database objects , provides access to the related tables.
         $this->objAssignment = $this->getObject('dbassignment');
         $this->objAssignmentSubmit = $this->getObject('dbassignmentsubmit');
-
-
         $this->objAssignmentFunctions = $this->getObject('functions_assignment', 'assignment');
+        $this->objAssignmentUploadablefiletypes = $this->getObject('dbassignmentuploadablefiletypes');
         $this->objDate = $this->getObject('dateandtime','utilities');
         $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user','security');
@@ -248,6 +247,10 @@ class assignment extends controller {
     }
 
     private function __saveassignment() {
+//        echo '<pre>';
+//        var_dump($_POST);
+//        echo '</pre>';
+//        die;
         $name = $this->getParam('name');
         $type = $this->getParam('type');
         $resubmit = $this->getParam('resubmit');
@@ -258,13 +261,14 @@ class assignment extends controller {
         $description = $this->getParam('description');
         $assesment_type = $this->getParam('assesment_type');
         $emailAlert = $this->getParam('emailalert');
-	$filenameConversion = $this->getParam('filenameconversion');
-
+    	$filenameConversion = $this->getParam('filenameconversion');
+        $filetypes = $this->getParam('filetypes');
         $result = $this->objAssignment->addAssignment($name, $this->contextCode, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type, $emailAlert, $filenameConversion);
 
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'unabletosaveassignment'));
         } else {
+            $this->objAssignmentUploadablefiletypes->addFiletypes($result, $filetypes);
             //add to activity streamer
             if($this->eventsEnabled) {
                 $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_assignment_addedassignment', 'assignment')." ".$this->contextCode;
@@ -348,9 +352,12 @@ class assignment extends controller {
         $description = $this->getParam('description');
         $assesment_type = $this->getParam('assesment_type');
         $emailAlert=$this->getParam('emailalert');
-	$filenameConversion = $this->getParam('filenameconversion');
-        
+    	$filenameConversion = $this->getParam('filenameconversion');
+        $filetypes = $this->getParam('filetypes');
         $result = $this->objAssignment->updateAssignment($id, $name, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type, $emailAlert, $filenameConversion);
+        $this->objAssignmentUploadablefiletypes->deleteFiletypes($id);
+        $this->objAssignmentUploadablefiletypes->addFiletypes($id, $filetypes);
+
 
         $result = $result ? 'Y' : 'N';
 
@@ -459,7 +466,7 @@ class assignment extends controller {
         $file = $objFile->getFile($fileId);
 
         $extension = $file['datatype'];
-	
+
 	if($assignment['filename_conversion'] == '0')
         {
             $filename = $file['filename'];

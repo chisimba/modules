@@ -66,13 +66,31 @@ if ($assignment['format'] == '0') {
 } else {
     $table->addCell($this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
 }
+$table->endRow();
+
+$table->startRow();
 $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_emailalert', 'assignment', 'Email alert').'</strong>', 130);
 if ($assignment['email_alert'] == '0') {
     $table->addCell($this->objLanguage->languageText('mod_assignment_emailalertoff', 'assignment', 'Off'));
 } else {
     $table->addCell($this->objLanguage->languageText('mod_assignment_emailalerton', 'assignment', 'On'));
 }
+$table->endRow();
 
+$table->startRow();
+$filetypes = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
+if (empty($filetypes)) {
+    $str = $this->objLanguage->languageText('word_none', 'assignment');
+} else {
+    $str = '';
+    $separator = '' ;
+    foreach ($filetypes as $filetype){
+        $str .= $separator . $filetype['filetype'];
+        $separator = '&nbsp;';
+    }
+}
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment').':</strong>&nbsp;'.$str,NULL,NULL,NULL,NULL,'colspan="4"');
+//$table->addCell($str,NULL,NULL,NULL,NULL,'colspan="2"');
 $table->endRow();
 
 
@@ -236,14 +254,22 @@ if ($this->isValid('markassignments')) {
             $form->extra = 'enctype="multipart/form-data"';
 
             $objUpload = $this->newObject('uploadinput', 'filemanager');
-            $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-            $allowedFilesString = $this->objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
-            if ($allowedFilesString == NULL) {
-                $allowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'mp3', 'pdf');
+
+            $filetypes = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
+            if (empty($filetypes)) {
+                $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+                $allowedFilesString = $this->objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
+                if (is_null($allowedFilesString)) {
+                    $allowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'mp3', 'pdf');
+                } else {
+                    $allowedFileTypes=explode(',',$allowedFilesString);
+                }
             } else {
-                $allowedFileTypes=explode(',',$allowedFilesString);
+                $allowedFileTypes = array();
+                foreach ($filetypes as $filetype){
+                    $allowedFileTypes[] = $filetype['filetype'];
+                }
             }
-            
             $objUpload->restrictFileList = $allowedFileTypes;
 
             $button = new button('submitform', $this->objLanguage->languageText('mod_assignment_uploadassignment', 'assignment', 'Upload Assignment'));
@@ -271,7 +297,6 @@ if ($this->isValid('markassignments')) {
 
             $button = new button('submitform', 'Submit Assignment');
             $button->setToSubmit();
-            ;
 
             $form->addToForm($hiddenInput->show().$objSelectFile->show().'<br />'.$button->show());
 

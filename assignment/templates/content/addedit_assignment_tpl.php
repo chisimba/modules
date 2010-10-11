@@ -163,6 +163,41 @@ $table->addCell($this->objLanguage->languageText('mod_assignment_emailalert', 'a
 $table->addCell('<div id="emailAlert"></div>');
 $table->endRow();
 
+// Uploadable file types
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment'));
+$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+$allowedFileTypes = $objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
+if (is_null($allowedFileTypes)) {
+    $arrAllowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'pdf');
+} else {
+    $arrAllowedFileTypes=explode(',',$allowedFileTypes);
+}
+$this->loadClass('checkbox', 'htmlelements');
+if ($mode == 'edit') {
+    $rs = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
+    $arrAllowedFileTypesSelected = array();
+    if (!empty($rs)) {
+        foreach ($rs as $row) {
+            $arrAllowedFileTypesSelected[] = $row['filetype'];
+        }
+    }
+}
+else {
+    $arrAllowedFileTypesSelected = $arrAllowedFileTypes;
+}
+$stringFiletypes = '';
+$separator = '';
+foreach ($arrAllowedFileTypes as $filetype){
+    $objCheckbox = new checkbox('filetypes[]','dummy', in_array($filetype, $arrAllowedFileTypesSelected));
+    $objCheckbox->setValue($filetype);
+    $stringFiletypes .= $separator.$objCheckbox->show().'&nbsp;'.$filetype;
+    $separator = ' ';
+    unset($objCheckbox);
+}
+$table->addCell($stringFiletypes);
+$table->endRow();
+
 //filename conversion
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_filenameconversion', 'assignment', 'Convert the Filename on Download?'));
