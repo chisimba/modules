@@ -147,7 +147,7 @@
         <update>
 		<table>tbl_test_questions</table>
 		<version>1.188</version>
-		<description>add hidden field</description>
+		<description>add subanswers field</description>
 		<data>
 			<add>
 				<name>subanswers</name>
