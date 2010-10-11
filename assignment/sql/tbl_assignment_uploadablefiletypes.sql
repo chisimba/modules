@@ -1,6 +1,6 @@
 <?php
 //Table Name
-$tablename = 'tbl_assignment_filetypes';
+$tablename = 'tbl_assignment_uploadablefiletypes';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'List of file types allowed for uploadable assignments', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
