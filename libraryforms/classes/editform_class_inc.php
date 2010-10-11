@@ -288,9 +288,9 @@ class editform extends dbTable {
         return $userrec;
     }
     /**
-     * Return a single record in the tbl_phonebook.
+     * Return a single record in the distance_tbl.
      *
-     * @param $id is the id taken from the tbl_phonebook
+     * @param $id is the id taken from the distance_tbl.
      */
     public function listSingle($id) {
         $onerec = $this->getRow('id', $id);

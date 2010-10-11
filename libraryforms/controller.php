@@ -55,19 +55,30 @@ class libraryforms extends controller {
 
         case 'addeditform':
           return $this->saveRecord();
-          return $this->sendEmailNotification();
+          return $this->sendEmailNotification($title,$subject,
+				     $message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. 
+                                     $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.
+                                     $cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
+
 
         case 'addthesis':
          return $this->saveBookthesisRecord();
-         return $this->sendEmailNotification();
+         return $this->sendEmailNotification($title,$subject,
+                                     $message= $bprint.' '. $bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.
+				     $bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '. $btitlepages.' '.
+				     $bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.
+				     $btel.' '.$btelw.' '.$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse);
 
         case 'addperiodical':
          return $this->saveperiodicalRecord();
-         return $this->sendEmailNotification();
+         return $this->sendEmailNotification($title,$subject,
+				     $message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.
+				     $author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.
+				     $tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
 
         case 'addfeedbk':
          return $this->submitmsg();
-         return $this->sendEmailNotification();
+         return $this->sendEmailNotification($title,$subject,$message= $msg);;
       
 	}// end if post
 
@@ -85,17 +96,32 @@ class libraryforms extends controller {
 
 
         $this->objMail->from = 'no-reply@uwc.ac.za';
-        $this->objMail->fromName = 'noname';
+        $this->objMail->fromName = 'no-reply';
 
         // Give the mail a subject and a body.
-        $this->objMail->subject = 'Test';
-        $this->objMail->body = 'testing testing';
+        $this->objMail->subject = 'Student Book Enquiry';
+        $this->objMail->body =       $message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. 
+                                     $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.
+                                     $cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor;
+                              
+                                     $message= $bprint.' '. $bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.
+				     $bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '. $btitlepages.' '.
+				     $bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.
+				     $btel.' '.$btelw.' '.$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse;
+                                     
+                                     $message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.
+				     $author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.
+				     $tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course;
+                                     
+                                     $message=$msg;
+
+                                     
 
         // Send to a single address.
-        $this->objMail->to = 'nmaseko@uwc.ac.za';
+        $this->objMail->to = 'arieluwc@uwc.ac.za';
 
         // Send to multiple addresses.
-        $this->objMail->to = array('david.wafula@wits.ac.za','pmalinga@uwc.ac.za','bmumanyi@uwc.ac.za');
+        $this->objMail->to = array('library@uwc.ac.za','pmalinga@uwc.ac.za','kpetersen548@gmail.com');
 
         // Send the mail.
         $this->objMail->send();
@@ -155,11 +181,11 @@ return $this->nextAction('addeditform',array('save'=> '2a'));
  
            
         // send email alert 
- 	$this->objMail->body($title="email notification for distance user",$subject="distance user email",
+ 	$this->sendEmailNotification($title,$subject,
 				     $message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. 
                                      $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.
                                      $cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
-$this->objMail->send();
+
 		
     }// end of Save Records */
 
@@ -216,7 +242,7 @@ $this->objMail->send();
                                                             $bentitynum,$bstudentno, $bcourse);
 
 // after inserting into db send email alert
-	$this->objMail->body($title="email notification for thesis books",$subject="book thesis mail",
+	$this->sendEmailNotification($title,$subject,
                                      $message= $bprint.' '. $bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.
 				     $bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '. $btitlepages.' '.
 				     $bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.
@@ -269,7 +295,7 @@ $this->objMail->send();
  	$id=$this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, 							      $titlearticle, $prof,$address, $cell,$tell,$tellw, 
 							      $emailaddress,$entitynum,$studentno,$course);
 
-	$this->objMail->body($title="email for periodical books",$subject="periodical thesis mail",
+	$this->sendEmailNotification($title,$subject,
 				     $message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.
 				     $author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.
 				     $tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
@@ -308,7 +334,7 @@ public function submitmsg() {
          //insert the data into DB
          $id=$this->dbfeedback->insertmsgRecord($name,$emaill,$msg);
           // send email alert
-         $this->objMail->body($title="feed back email",$subject="channel your feed back",$message= $msg.'');
+         $this->sendEmailNotification($title="feed back email",$subject="channel your feed back",$message= $msg.'');
 	$this->objMail->send();
 
 }// end of Submitmsg
