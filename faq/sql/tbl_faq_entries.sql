@@ -27,7 +27,7 @@ $fields = array(
 		'default' => '',
 		 ),
 	'question' => array(
-	  	'type' => 'text',
+	  	'type' => 'clob',
 		'notnull' => TRUE,
 		'default' => '',
 		),
