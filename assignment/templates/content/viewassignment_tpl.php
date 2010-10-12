@@ -80,12 +80,22 @@ $table->endRow();
 $table->startRow();
 $filetypes = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
 if (empty($filetypes)) {
+    $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    $allowedFilesString = $objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
+    $allowedFileTypes=explode(',',$allowedFilesString);
+} else {
+    $allowedFileTypes = array();
+    foreach ($filetypes as $filetype){
+        $allowedFileTypes[] = $filetype['filetype'];
+    }
+}
+if (empty($allowedFileTypes)) {
     $str = $this->objLanguage->languageText('word_none', 'assignment');
 } else {
     $str = '';
     $separator = '' ;
-    foreach ($filetypes as $filetype){
-        $str .= $separator . $filetype['filetype'];
+    foreach ($allowedFileTypes as $filetype){
+        $str .= $separator . $filetype;
         $separator = '&nbsp;';
     }
 }

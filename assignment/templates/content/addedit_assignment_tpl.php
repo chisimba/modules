@@ -274,6 +274,7 @@ if ($mode == 'edit') {
 }
 // Form
 $form = new form ('addeditassignment', $this->uri(array('action'=>$action)));
+//$form
 if ($mode == 'edit') {
     $hiddenId = new hiddeninput('id', $assignment['id']);
     $form->addToForm($hiddenId->show());
@@ -288,6 +289,26 @@ $form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_mark
 $form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_numreq', 'assignment', 'Has to be a number'), 'numeric');
 $form->addRule('yearmark', $this->objLanguage->languageText('mod_assignment_val_yearmark', 'assignment', 'Please enter year mark'), 'required');
 $form->addRule('yearmark', $this->objLanguage->languageText('mod_assignment_val_numreq', 'assignment', 'Has to be a number'), 'numeric');
+$js_filetypes = '
+<script language="JavaScript" type="text/javascript">
+function val_filetypes(name)
+{
+    //return false;
+    //alert(name);
+    var els = document.getElementsByName(name);
+    var len = els.length;
+    //alert(\'len==\'+len);
+    var cnt = 0;
+    for (var i=0; i<len; ++i)
+        //alert(els[i].value);
+        if (els[i].checked)
+            ++cnt;
+    return cnt != 0;
+}
+</script>
+';
+echo $js_filetypes;
+$form->addRule('filetypes[]', 'You must select at least one filetype', 'custom', 'val_filetypes');
 echo $form->show();
 // Footer note
 if (!$canChangeField) {
