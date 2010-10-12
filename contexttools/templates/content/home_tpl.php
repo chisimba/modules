@@ -11,14 +11,20 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 
 
-$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
+/*$extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
 $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 $uxcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/ux/css/ColumnNodeUI.css','htmlelements').'"/>';
 $uxjs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ux/ColumnNodeUI.js','htmlelements').'" type="text/javascript"></script>';
+ *
+ */
 $tools = '<script language="JavaScript" src="'.$this->getResourceUri('contexttools.js').'" type="text/javascript"></script>';
-$ckeditorbase = '<script language="JavaScript" src="'.$this->getResourceUri('ckeditor/ckeditor.js','htmlelements').'" type="text/javascript"></script>';
+/*$ckeditorbase = '<script language="JavaScript" src="'.$this->getResourceUri('ckeditor/ckeditor.js','htmlelements').'" type="text/javascript"></script>';
+*/
 
+$objExtjs=$this->getObject("extjs","ext");
+$objExtjs->show();
+$ckeditorbase = '<script language="JavaScript" src="'.$this->getResourceUri('ckeditor/ckeditor.js','ckeditor').'" type="text/javascript"></script>';
 
 
 $initVars='
@@ -31,13 +37,14 @@ $initVars='
 
 $this->appendArrayVar('headerParams', $initVars);
 
-$this->appendArrayVar('headerParams', $ckeditorbase);
+/*
 $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $uxcss);
-$this->appendArrayVar('headerParams', $uxjs);
+$this->appendArrayVar('headerParams', $uxjs);*/
 $this->appendArrayVar('headerParams', $tools);
+$this->appendArrayVar('headerParams', $ckeditorbase);
 
 $contextlisturl = $this->uri(array('action'=>'jsonusercontexts'));
 $contexturl = $this->uri(array('action'=>'joincontext'),'context');

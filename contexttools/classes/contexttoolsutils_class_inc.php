@@ -128,7 +128,6 @@ class contexttoolsutils extends object {
 
     public function readFilterParams($filtername) {
         try {
-
             $this->_path = $this->objConfig->getModulePath()."contexttools/resources/filters.xml";
             $xml = simplexml_load_file($this->_path);
             $entries = $xml->xpath("//filter[name='$filtername']");
