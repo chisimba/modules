@@ -24,7 +24,7 @@ $radio->setBreakSpace('</p><p>');
 
 $form->addToForm('<p >'.$radio->show().'</p>');
 
-$button = new button ('confirm', $this->objLanguage->languageText('mod_contextcontent_confirmdelcontextpages','contextcontent'));
+$button = new button ('confirm', $this->objLanguage->languageText('mod_contextcontent_confirmdelcontextpages','contextcontent','Delete'));
 $button->setToSubmit();
 
 $hiddeninput = new hiddeninput('id', $page['id']);
