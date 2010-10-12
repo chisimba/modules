@@ -100,24 +100,38 @@ class libraryforms extends controller {
 
         // Give the mail a subject and a body.
         $this->objMail->subject = 'Student Book Enquiry';
-        $this->objMail->body =       $message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. 
-                                     $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.
-                                     $cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor;
-                              
-                                     $message= $bprint.' '. $bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.
-				     $bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '. $btitlepages.' '.
-				     $bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.
-				     $btel.' '.$btelw.' '.$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse;
-                                     
-                                     $message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.
-				     $author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.
-				     $tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course;
-                                     
-                                     $message=$msg;
+        $this->objMail->body ='';
 
-                                     
+          switch($action){
+          case 'addeditform':
 
-        // Send to a single address.
+        return $this->objMail->body=
+         	$surname = $this->getParam('surname');
+		$initials = $this->getParam('$initials');
+        	$title = $this->getParam('title');
+		$studentno = $this->getParam('studentno');
+		$postaladdress=$this->getParam('postaladdress');
+        	$physicaladdress=$this->getParam('physicaladdress');
+        	$postalcode=$this->getParam('postalcode');
+        	$postalcode2=$this->getParam('postalcode2');
+        	$telnoh =$this->getParam('telnoh');
+        	$telnow=$this->getParam('telnow');
+        	$cell=$this->getParam('cell');
+        	$fax=$this->getParam('fax');
+        	$emailaddress=$this->getParam('emailaddress');
+        	$course=$this->getParam('course');
+        	$department=$this->getParam('department');
+        	$supervisor=$this->getParam('supervisor');
+
+      case 'addfeedbk':
+        return $this->objMail->body=
+	       $name = $this->getParam('name');
+       	       $email =$this->getParam('email');
+       	       $msg=$this->getParam('msg');
+      }// end case
+
+
+       // Send to a single address.
         $this->objMail->to = 'arieluwc@uwc.ac.za';
 
         // Send to multiple addresses.
@@ -334,7 +348,7 @@ public function submitmsg() {
          //insert the data into DB
          $id=$this->dbfeedback->insertmsgRecord($name,$emaill,$msg);
           // send email alert
-         $this->sendEmailNotification($title="feed back email",$subject="channel your feed back",$message= $msg.'');
+         $this->sendEmailNotification($message=$name,$email,$msg);
 	$this->objMail->send();
 
 }// end of Submitmsg
