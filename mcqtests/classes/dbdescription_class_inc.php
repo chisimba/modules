@@ -67,12 +67,16 @@ class dbdescription extends dbtable {
      * @param string $filter An additional filter on the select statement.
      * @return array $data The list of descriptions in the category.
      */
-    public function getDescriptions($categoryId, $filter = NULL) {
+    public function getDescriptions($categoryId = NULL, $filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
-        if ($filter) {
+        if ($filter && $categoryId) {
             $sql.= " WHERE categoryid='$categoryId' AND $filter";
-        } else {
+        } else if ($filter != NULL) {
             $sql.= " WHERE categoryid='$categoryId' ORDER BY sortorder";
+        } else if ($categoryId != NULL) {
+            $sql.= " WHERE categoryid='$categoryId' ORDER BY sortorder";
+        } else {
+            $sql .= "";
         }
         $data = $this->getArray($sql);
         if (!empty($data)) {

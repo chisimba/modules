@@ -152,6 +152,14 @@ class mcqtests extends controller {
                 //Insert/Update
                 $id = $this->dbCategory->addCategory($fields, $id);
                 return $this->nextAction('view', array('id' => $id));
+            case 'mcqlisting':
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                return 'mcqlisting_tpl.php';
+            case "deletedesc":
+                $this->nextAction($id = $this->getParam('id', null), $this->dbDescription->deleteDescription($id));
+                // After processing return to choosequestiontype2
+                return $this->nextAction('choosequestiontype2');
+                break;
             case 'addeditdesc':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 //Get the test id
@@ -178,6 +186,11 @@ class mcqtests extends controller {
                 $fields['othertags'] = $this->getParam('descothertags', Null);
                 $id = $this->dbDescription->addDescription($fields, $descId);
                 return $this->nextAction('addeditdesc', array('id' => $id));
+            case "deletedesc":
+                $this->nextAction($id = $this->getParam('id', null), $this->dbDescription->deleteDescription($id));
+                // After processing return to choosequestiontype2
+                return $this->nextAction('mcqlisting');
+                break;
             case 'activatetest':
                 $id = $this->getParam('id', '');
                 $this->applyChangeStatus();

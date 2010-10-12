@@ -3,7 +3,16 @@
 //set the layout of the choosequestiontype template
 $this->setLayoutTemplate('mcqtests_layout_tpl.php');
 
-
+//String of links -- to be removed
+$objBack = &$this->getObject("link", "htmlelements");
+$objBack->link($this->uri(array(
+            'module' => 'mcqtests',
+            'action' => 'mcqlisting'
+        )));
+$objBack->link = "MCQ Descriptions";
+$str = "";
+$str .= "<h4>".$objBack->show()."</h4>";
+echo $str;
 //Load the classes for the template
 
 $this->loadclass('htmltable', 'htmlelements');
@@ -60,24 +69,24 @@ echo '<strong><h1>' . $test['name'] . '</h1></strong>';
 $existingQuestions = new dropdown('existingQ');
 $existingQuestions->setId("existingQ");
 
-$existingQuestions->addOption('-', '[-'.$selectQBLabel.'-]');
+$existingQuestions->addOption('-', '[-' . $selectQBLabel . '-]');
 $existingQuestions->addOption('newQ', $newqns);
 $existingQuestions->addOption('oldQ', $choosefromdb);
 $existingQuestions->addOption('calcQ', $calcdqn);
 $existingQuestions->addOption('matchQ', $matchingqn);
 $existingQuestions->addOption('numericalQ', $numericalqns);
 $existingQuestions->addOption('shortansQ', 'Short Answer Questions');
-$existingQuestionsLabel = new label($selectQBLabel." ", 'existingQ');
+$existingQuestionsLabel = new label($selectQBLabel . " ", 'existingQ');
 
 $batchOptions = new dropdown('qnoption');
 $batchOptions->setId("qnoption");
-$batchOptions->addOption('-', '[-'.$selectqntype.'-]');
+$batchOptions->addOption('-', '[-' . $selectqntype . '-]');
 $batchOptions->addOption('mcq', $selectQBLabel);
 $batchOptions->addOption('freeform', $freeformLabel);
 $batchOptions->addOption('addDescription', $addDescription);
 $batchOptions->addOption('addShortAns', $phraseAddingShortAnswerQn);
-$batchOptions->addOption('addRandomShortAnsMatching', $phraseAddA." ".$phraseRandomShortAns);
-$batchLabel = new label($selectqntype.' ', 'input_qnoptionlabel');
+$batchOptions->addOption('addRandomShortAnsMatching', $phraseAddA . " " . $phraseRandomShortAns);
+$batchLabel = new label($selectqntype . ' ', 'input_qnoptionlabel');
 
 $fd = $this->getObject('fieldsetex', 'htmlelements');
 
@@ -87,9 +96,9 @@ $fd->setLegend($selectqntype);
 $formmanager = $this->getObject('formmanager');
 $calcqformmanager = $this->getObject('question_calculated_formmanager');
 $numericalformmanager = $this->getObject('numerical_question');
-$shortansformmanager=$this->getObject('short_answer_question');
+$shortansformmanager = $this->getObject('short_answer_question');
 
-$questionContentStr ='<div id="randomshortansmatching">' . $formmanager->createRandomShortAnsForm($test, $testid). '</div>';
+$questionContentStr = '<div id="randomshortansmatching">' . $formmanager->createRandomShortAnsForm($test, $testid) . '</div>';
 $questionContentStr.= '<div id="shortans">' . $formmanager->createAddShortAnswerForm($test, $testid) . '</div>';
 $questionContentStr.= '<div id="addquestion">' . $formmanager->createAddQuestionForm($test) . '</div>';
 $questionContentStr.='<div id="freeform">' . $formmanager->createAddFreeForm($test) . '</div>';
