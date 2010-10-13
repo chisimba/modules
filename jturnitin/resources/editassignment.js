@@ -135,7 +135,7 @@ Ext.onReady(function(){
                     timeout:10,
 
                     params: {
-                        module: 'turnitin',
+                        module: 'jturnitin',
                         action: 'ajjax_updateassignment',
 
                         report_gen_speed:reportGenSpeed,
