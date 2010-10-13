@@ -435,12 +435,12 @@ class turnitinops extends object {
         $optionalArgs.=' "-journal_check='.$this->journal_check.'" ';
 
         $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs.' '.$optionalArgs;
-        /*$myFile = "/dwaf/turnitin/debugx.txt";
+        $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debugx.txt";
 $fh = fopen($myFile, 'w') or die("can't open file");
 $stringData = $command;
 fwrite($fh, $stringData);
 fclose($fh);
-die();*/
+//die();
         $results = shell_exec($command);
         return $this->getXMLResult($results);
     }
@@ -466,12 +466,12 @@ die();*/
         $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
         $actionArgs='"-action=1" "-fid=1" "-utp='.$this->utp.'"';
         $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
-              $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
+              /*$myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
 $fh = fopen($myFile, 'w') or die("can't open file");
 fwrite($fh, $command);
 fclose($fh);
         
-
+*/
         $results = shell_exec($command);
 
         return $this->getXMLResult($results);
