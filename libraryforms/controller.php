@@ -106,28 +106,72 @@ class libraryforms extends controller {
           case 'addeditform':
 
         return $this->objMail->body=
-         	$surname = $this->getParam('surname');
-		$initials = $this->getParam('$initials');
-        	$title = $this->getParam('title');
-		$studentno = $this->getParam('studentno');
-		$postaladdress=$this->getParam('postaladdress');
-        	$physicaladdress=$this->getParam('physicaladdress');
-        	$postalcode=$this->getParam('postalcode');
-        	$postalcode2=$this->getParam('postalcode2');
-        	$telnoh =$this->getParam('telnoh');
-        	$telnow=$this->getParam('telnow');
-        	$cell=$this->getParam('cell');
-        	$fax=$this->getParam('fax');
-        	$emailaddress=$this->getParam('emailaddress');
-        	$course=$this->getParam('course');
-        	$department=$this->getParam('department');
-        	$supervisor=$this->getParam('supervisor');
+         			$surname = $this->getParam('surname');
+				$initials = $this->getParam('$initials');
+        			$title = $this->getParam('title');
+				$studentno = $this->getParam('studentno');
+				$postaladdress=$this->getParam('postaladdress');
+        			$physicaladdress=$this->getParam('physicaladdress');
+        			$postalcode=$this->getParam('postalcode');
+        			$postalcode2=$this->getParam('postalcode2');
+        			$telnoh =$this->getParam('telnoh');
+        			$telnow=$this->getParam('telnow');
+        			$cell=$this->getParam('cell');
+        			$fax=$this->getParam('fax');
+        			$emailaddress=$this->getParam('emailaddress');
+        			$course=$this->getParam('course');
+        			$department=$this->getParam('department');
+        			$supervisor=$this->getParam('supervisor');
+
+         case 'addthesis':
+               return $this->objMail=				
+                 		$bauthor= $this->getParam('bauthor');
+				$btitle= $this->getParam('btitle');
+				$bplace = $this->getParam('bplace');
+				$bpublisher = $this->getParam('bpublisher');
+ 				$bdate = $this->getParam('bdate');
+				$bedition = $this->getParam('bedition');
+				$bisbn = $this->getParam('bisbn');
+				$bseries = $this->getParam('bseries');
+				$bcopy = $this->getParam('bcopy');
+ 				$btitlepages = $this->getParam('btitlepages');
+				$bpages = $this->getParam('bpages');
+                                $bthesis = $this->getParam('bthesis');
+                                $bname = $this->getParam('bname');
+                                $baddress = $this->getParam('baddress');
+                                $bcell = $this->getParam('bcell');
+                                $bfax = $this->getParam('bfax');
+				$btel = $this->getParam('btel');
+                                $btelw = $this->getParam('btelw');
+                                $bemailaddress = $this->getParam('bemailaddress');
+                                $bentitynum = $this->getParam('bstudentno');
+                                $bstudentno = $this->getParam('bstudentno');
+                                $bcourse = $this->getParam('bcourse');
+
+	case 'addperiodical':
+                  return $this->objMail=
+                   		$titleperiodical = $this->getParam('titleperiodical');
+				$volume = $this->getParam('volume');
+				$part = $this->getParam('part');
+				$year = $this->getParam('year');
+				$pages = $this->getParam('pages');
+				$author = $this->getParam('author');
+				$titlearticle = $this->getParam('titlearticle');
+				$prof = $this->getParam('prof');
+				$address = $this->getParam('address');
+				$cell = $this->getParam('cell');
+				$tell = $this->getParam('tell');
+				$tellw = $this->getParam('tellw');
+				$emailaddress = $this->getParam('emailaddress');
+				$entitynum = $this->getParam('entitynum');
+				$studentno = $this->getParam('studentno');
+				$course = $this->getParam('course');
 
       case 'addfeedbk':
         return $this->objMail->body=
-	       $name = $this->getParam('name');
-       	       $email =$this->getParam('email');
-       	       $msg=$this->getParam('msg');
+	       			$name = $this->getParam('name');
+       	      			$email =$this->getParam('email');
+       	       			$msg=$this->getParam('msg');
       }// end case
 
 
