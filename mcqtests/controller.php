@@ -138,6 +138,11 @@ class mcqtests extends controller {
         }
         // Now the main switch for $action
         switch ($action) {
+            case "deletecat":
+                $this->nextAction($id = $this->getParam('id', null), $this->dbCategory->deleteCategory($id));
+                // After processing return to categorylisting
+                return $this->nextAction('categorylisting');
+                break;
             case 'categorylisting':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'categorylisting_tpl.php';
@@ -166,7 +171,7 @@ class mcqtests extends controller {
             case "deletedesc":
                 $this->nextAction($id = $this->getParam('id', null), $this->dbDescription->deleteDescription($id));
                 // After processing return to choosequestiontype2
-                return $this->nextAction('choosequestiontype2');
+                return $this->nextAction('mcqlisting');
                 break;
             case 'addeditdesc':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");

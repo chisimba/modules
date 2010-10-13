@@ -446,7 +446,7 @@ class formmanager extends object {
                 $objConfirm = &$this->newObject('confirm', 'utilities');
                 $objConfirm->setConfirm($iconDelete->show(), $this->uri(array(
                             'module' => 'mcqtests',
-                            'action' => 'deletedesc',
+                            'action' => 'deletecat',
                             'id' => $thisdata["id"]
                         )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
                 $objTable->startRow();
@@ -663,14 +663,14 @@ class formmanager extends object {
 
         //Create table to hold the general stuff
         $objTable = new htmltable();
-        $objTable->width = '800px';
+        $objTable->width = '600px';
         $objTable->border = '0';
         $objTable->attributes = " align='left' border='0'";
         $objTable->cellspacing = '12';
 
         //Add Heading to the table
         $objTable->startRow();
-        $objTable->addCell("<b>" . $phraseQnName . "</b>", '60%');
+        $objTable->addCell("<b>" . $phraseQnName . "</b>", '80%');
         $objTable->addCell(Null, '20%');
         $objTable->endRow();
 
@@ -703,7 +703,7 @@ class formmanager extends object {
                             'id' => $descdata["id"]
                         )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
                 $objTable->startRow();
-                $objTable->addCell($descdata['questionname'], '60%');
+                $objTable->addCell($descdata['questionname'], '80%');
                 $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show(), '20%');
                 $objTable->endRow();
             }
@@ -729,7 +729,7 @@ class formmanager extends object {
         $str .= " ".$objAdd->show();
         //Add fieldset to hold Descriptions stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
-        $objFieldset->width = '800px';
+        $objFieldset->width = '600px';
         //$objFieldset->align = 'center';
         $objFieldset->setLegend($wordDesc);
 
