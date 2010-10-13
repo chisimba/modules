@@ -476,6 +476,8 @@ class mcqtests extends controller {
 
             case 'view':
                 return $this->viewTest();
+            case 'view2':
+                return $this->viewTest2();
             // Display template to edit a question
             case 'editquestion':
                 $data = $this->dbQuestions->getQuestion($this->getParam('questionId'));
@@ -1082,6 +1084,33 @@ class mcqtests extends controller {
         $this->setVarByRef('questions', $questions);
         $this->setVarByRef('qNum', $this->getParam('qNum'));
         return 'viewtest_tpl.php';
+    }
+
+    /**
+     * Method to display a test for viewing.
+     *
+     * @access private
+     * @return
+     */
+    private function viewTest2() {
+        $data = $this->dbTestadmin->getTests($this->contextCode, '*', $this->getParam('id'));
+        if (!empty($data)) {
+            foreach ($data as $key => $line) {
+                $sql = "SELECT title FROM tbl_context_nodes WHERE ";
+                $sql.= "id = '" . $line['chapter'] . "'";
+                $nodes = $this->objContentNodes->getArray($sql);
+                if (!empty($nodes)) {
+                    $data[$key]['node'] = $nodes[0]['title'];
+                } else {
+                    $data[$key]['node'] = '';
+                }
+            }
+        }
+        $questions = $this->dbQuestions->getQuestions($this->getParam('id'));
+        $this->setVarByRef('data', $data[0]);
+        $this->setVarByRef('questions', $questions);
+        $this->setVarByRef('qNum', $this->getParam('qNum'));
+        return 'viewtest2_tpl.php';
     }
 
     /**
