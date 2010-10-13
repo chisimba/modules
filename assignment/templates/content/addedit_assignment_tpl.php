@@ -308,7 +308,7 @@ function val_filetypes(name)
 </script>
 ';
 echo $js_filetypes;
-$form->addRule('filetypes[]', 'You must select at least one filetype', 'custom', 'val_filetypes');
+$form->addRule('filetypes[]', $this->objLanguage->languageText('mod_assignment_selectatleastone','assignment'), 'custom', 'val_filetypes');
 echo $form->show();
 // Footer note
 if (!$canChangeField) {
