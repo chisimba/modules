@@ -176,6 +176,40 @@ class db_eportfolio_activitystreamer extends dbtable
         }
     }
     /**
+     * Method to fetch user groups from groupadmin
+     *
+     * @access public
+     * @param string $permUserId $perm User Id from tbl_perms_perm_users
+     * @return TRUE
+     */
+    public function getAuthUserId($userId)
+    {
+        $sql = "SELECT pu.perm_user_id FROM tbl_perms_perm_users as pu where pu.auth_user_id='".$userId."'";
+        $results = $this->getArray($sql);
+        if (isset($results[0])) {
+            return $results[0]["perm_user_id"];
+        } else {
+            return FALSE;
+        }
+    }
+    /**
+     * Method to fetch user groups from groupadmin
+     *
+     * @access public
+     * @param string $permUserId $perm User Id from tbl_perms_perm_users
+     * @return TRUE
+     */
+    public function getUserGroups($permUserId)
+    {
+        $sql = "SELECT gu.perm_user_id, gu.group_id FROM tbl_perms_groupusers as gu where gu.perm_user_id='".$permUserId."'";
+        $results = $this->getArray($sql);
+        if (isset($results[0])) {
+            return $results;
+        } else {
+            return FALSE;
+        }
+    }
+    /**
      * Method to fetch record
      *
      * @access public
