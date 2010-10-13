@@ -6,15 +6,20 @@ if ($mode == 'edit') {
 else { // Mode is add so we can always change the type of the assignment
     $canChangeField = true;
 }
+/*
 // Load CSS & JS
 $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
 $extbasejs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
 $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-$js = '<script language="JavaScript" src="'.$this->getResourceUri('addedit_assignment.js').'" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $extallcss);
 $this->appendArrayVar('headerParams', $extbasejs);
 $this->appendArrayVar('headerParams', $extalljs);
+*/
+/*
+$js = '<script language="JavaScript" src="'.$this->getResourceUri('addedit_assignment.js').'" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
+*/
+/*
 // Ext onReady
 if ($mode == 'edit') {
     $onReady = "
@@ -45,6 +50,7 @@ else {
     ";
 }
 $this->appendArrayVar('headerParams', "<script type='text/javascript'>".$onReady."</script>");
+*/
 // Load classes
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -94,23 +100,22 @@ if (!$canChangeField) {
     $table->addCell($textinput->show().$_type.'<sup>1</sup>');
 }
 else {
-    /*
     $radio = new radio ('type');
     $radio->addOption(0, $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online'));
     $radio->addOption(1, $this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
     if ($mode == 'edit') {
         $radio->setSelected($assignment['format']);
     }
-    $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
+    $radio->setBreakSpace('&nbsp;');
     $table->addCell($radio->show());
-    */
+    /*
     $table->addCell('<div id="_type"></div>');
+    */
 }
 $table->endRow();
 // Reflection
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_isreflection', 'assignment', 'Is it a Reflection?'));
-/*
 if (!$canChangeField) {
     $textinput = new textinput('assesment_type');
     $textinput->value = $assignment['assesment_type'];
@@ -123,46 +128,52 @@ if (!$canChangeField) {
     $table->addCell($textinput->show().$isReflection.'<sup>1</sup>');
 }
 else {
-*/
-/*
     $radio = new radio ('assesment_type');
     $radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
     $radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
-    $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
+    $radio->setBreakSpace('&nbsp;');
     if ($mode == 'edit') {
     	$radio->setSelected($assignment['assesment_type']);
     }
-    $radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
+    $radio->setBreakSpace('&nbsp;');
     $table->addCell($radio->show());
-*/
-$table->addCell('<div id="isReflection"></div>');
 /*
-}
+$table->addCell('<div id="isReflection"></div>');
 */
+}
 $table->endRow();
 // Multiple submissions
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_allowresubmit', 'assignment', 'Allow Multiple Submissions?'));
-/*
 $radio = new radio ('resubmit');
 $radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
 $radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
 if ($mode == 'edit') {
     $radio->setSelected($assignment['resubmit']);
 }
-$radio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
+$radio->setBreakSpace('&nbsp;');
 $table->addCell($radio->show());
-*/
+/*
 $table->addCell('<div id="allowMultiple"></div>');
+*/
 $table->endRow();
-
-
 //email alerts
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_assignment_emailalert', 'assignment', 'Email Alert'));
+$table->addCell($this->objLanguage->languageText('mod_assignment_emailalert', 'assignment', 'Email Alert?'));
+$radio = new radio ('emailalert');
+$radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
+$radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
+if ($mode == 'edit') {
+    $radio->setSelected($assignment['email_alert']);
+} else {
+    $radio->setSelected(1);
+}
+$radio->setBreakSpace('&nbsp;');
+$table->addCell($radio->show());
+/*
 $table->addCell('<div id="emailAlert"></div>');
+*/
 $table->endRow();
-
 // Uploadable file types
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment'));
@@ -197,13 +208,23 @@ foreach ($arrAllowedFileTypes as $filetype){
 }
 $table->addCell($stringFiletypes);
 $table->endRow();
-
 //filename conversion
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_assignment_filenameconversion', 'assignment', 'Convert the Filename on Download?'));
+$radio = new radio ('filenameconversion');
+$radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
+$radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
+if ($mode == 'edit') {
+    $radio->setSelected($assignment['filename_conversion']);
+} else {
+    $radio->setSelected(1);
+}
+$radio->setBreakSpace('&nbsp;');
+$table->addCell($radio->show());
+/*
 $table->addCell('<div id="filenameConversion"></div>');
+*/
 $table->endRow();
-
 // Mark
 $table->startRow();
 $label = new label ($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark'), 'input_mark');
