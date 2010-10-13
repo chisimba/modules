@@ -29,7 +29,6 @@ if (class_exists('groupops', false)) {
         //Check if grpName was concatenated by ^
         if (count($getOwner) == 2) {
             //Check if $getOwner[0] is a userId
-            echo $getOwner[0] . "<br />";
             $nameOfOwner = $this->objUser->userName($getOwner[0]);
             if ($nameOfOwner != "Error: Data Not Found") {
                 $ownerPkId = $this->objUser->PKId($getOwner[0]);
