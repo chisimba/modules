@@ -499,7 +499,7 @@ class mcqtests extends controller {
                 if ($type == 'numerical') {
                     return 'editnumericalquestion_tpl.php';
                 } else if ($type == 'matching') {
-                    return 'editmatchingquestion_tpl.php';
+                    return $this->matchingQuestion();
                 } else if ($data[0]['questiontype'] == 'freeform') {
                     return 'addfreeform_tpl.php';
                 } else {
@@ -875,6 +875,10 @@ class mcqtests extends controller {
                     $this->addNumericalQuestions($id);
                 }
                 return $this->nextAction('view', array('id' => $this->getParam('id')));
+            case 'viewmatchingquestions':
+                return $this->viewMatchingQuestions();
+            case 'viewnumericalquestions':
+                return $this->viewNumericalQuestions();
             default:
                 if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
@@ -1903,6 +1907,18 @@ class mcqtests extends controller {
         } else {
             $objQuestionUnit->addNumericalUnits($unitData);
         }
+    }
+
+    public function matchingQuestion() {
+        return 'editmatchingquestion_tpl.php';
+    }
+
+    public function viewMatchingQuestions() {
+        return 'editmatchingquestion_tpl.php';
+    }
+
+    public function viewNumericalQuestions() {
+        return 'editnumericalquestion_tpl.php';
     }
 
 }

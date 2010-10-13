@@ -22,6 +22,9 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 
+$viewjs = '<script language="JavaScript" src="' . $this->getResourceUri('js/view.js') . '" type="text/javascript"></script>';
+$this->appendArrayVar('headerParams', $viewjs);
+
 // set up language items
 $testdetailsLabel = $this->objLanguage->languageText('mod_mcqtests_testdetailsLabel', 'mcqtests');
 $addqestionslabel = $this->objLanguage->languageText('mod_mcqtests_addquestions', 'mcqtests');
@@ -429,8 +432,11 @@ $form->addToForm($button->show().$previewButton->show());
 echo $form->show();
 
 $myJS = '<script type="text/javascript">
-            var oldQUrl = '.$this->uri(array("action"=>"choosequestiontype")).'
+            var mcqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"choosequestiontype"))).'",
+                calqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewcalcquestions"))).'",
+                matchingqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewmatchingquestions"))).'",
+                numericalqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewnumericalquestions"))).'",
+                shortanswerqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewshortansquestions"))).'";
         </script>';
-
 echo $myJS;
 ?>
