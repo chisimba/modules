@@ -27,14 +27,30 @@ class dbcategory extends dbtable {
      * @return
      */
     public $table;
+    /*
+     * @var object to hold user db class
+     */
     public $objUser;
+    /*
+     * @var string to hold the user Id
+     */
     public $userId;
+    /*
+     * @var object to hold context db class
+     */
+    public $objContext;
+    /*
+     * @var string to hold the context Code
+     */
+    public $contextCode;
 
     public function init() {
         parent::init('tbl_test_category');
         $this->table = 'tbl_test_category';
         $this->objUser = &$this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
+        $this->objContext = $this->newObject('dbcontext', 'context');
+        $this->contextCode = $this->objContext->getContextCode();
     }
 
     /**
@@ -54,6 +70,7 @@ class dbcategory extends dbtable {
         } else {
             $fields['timecreated'] = date('Y-m-d H:i:s');
             $fields['createdby'] = $this->userId;
+            $fields['contextcode'] = $this->contextCode;
             $id = $this->insert($fields);
         }
         return $id;
@@ -76,12 +93,13 @@ class dbcategory extends dbtable {
         }
         $data = $this->getArray($sql);
         if (!empty($data)) {
-            $count = $this->countCategories($testId);
+            $count = $this->countCategories($data);
             $data[0]['count'] = $count;
             return $data;
         }
         return FALSE;
     }
+
     /**
      * Method to get a specific category.
      *
@@ -185,5 +203,6 @@ class dbcategory extends dbtable {
     }
 
 }
+
 // end of class
 ?>

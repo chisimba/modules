@@ -10,7 +10,15 @@ class formmanager extends object {
      * @var object to hold language class
      */
     public $objLanguage;
-
+    /*
+     * @var object to hold context db class
+     */
+    public $objContext;
+    /*
+     * @var object to hold the context Code
+     */
+    public $contextCode;
+    
     function init() {
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
@@ -22,6 +30,9 @@ class formmanager extends object {
         $this->loadClass('htmltable', 'htmlelements');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->dbDescription = $this->newObject('dbdescription');
+        $this->dbCategory = $this->newObject('dbcategory');
+        $this->objContext = $this->newObject('dbcontext', 'context');
+        $this->contextCode = $this->objContext->getContextCode();
     }
 
     public function createAddFreeForm($test) {
@@ -206,12 +217,6 @@ class formmanager extends object {
         $lbType = $this->objLanguage->languageText('mod_mcqtests_typeofquest', 'mcqtests');
         $lbNumOpt = $this->objLanguage->languageText('mod_mcqtests_numoptions', 'mcqtests');
 
-        /*      if ($mode == 'edit') {
-          $this->setVarByRef('heading', $editHead);
-          } else {
-          $this->setVarByRef('heading', $addHead);
-          }
-         */
         // Display test info
         $topStr = '<b>' . $testLabel . ':</b>&nbsp;&nbsp;' . $test['name'] . '<br />';
         $topStr.= '<b>' . $totalLabel . ':</b>&nbsp;&nbsp;' . $test['totalmark'] . '<br />&nbsp;';
@@ -374,6 +379,258 @@ class formmanager extends object {
         return $gridjs;
     }
 
+
+    /**
+     * Method to list categories in a context
+     *
+     * @access private
+     * @param  array $contextCode Contains Context Code
+     * @author Paul Mungai
+     */
+    public function createCategoryList($contextCode = Null) {
+        //Form text
+        $addCategory = $this->objLanguage->languageText('mod_mcqtests_addcategory', 'mcqtests', "Add Category");
+        $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
+        $addCategory = $this->objLanguage->languageText('mod_mcqtests_addcategory', 'mcqtests', "Add Category");
+        $parentCategory = $this->objLanguage->languageText('mod_mcqtests_parentcategory', 'mcqtests', "Parent Category");
+        $wordName = $this->objLanguage->languageText('mod_mcqtests_wordname', 'mcqtests', "Name");
+
+        if (!empty($contextCode)) {
+            $data = $this->dbCategory->getCategories($this->contextCode);
+        } else {
+            $data = $this->dbCategory->getCategories($this->contextCode);
+        }
+        //Form Heading/Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        $objHeading->str = $wordCategory;
+
+        //Add heading/title to string
+        $str = "";
+
+        //Create table to hold the general stuff
+        $objTable = new htmltable();
+        $objTable->width = '600px';
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
+        $objTable->cellspacing = '12';
+
+        //Add Heading to the table
+        $objTable->startRow();
+        $objTable->addCell("<b>" . $wordName . "</b>", '80%');
+        $objTable->addCell(Null, '20%');
+        $objTable->endRow();
+
+        //question name text box
+        if (!empty($data)) {
+            foreach ($data as $thisdata) {
+                // Show the edit link
+                $iconEdit = $this->getObject('geticon', 'htmlelements');
+                $iconEdit->setIcon('edit');
+                $iconEdit->alt = $this->objLanguage->languageText("word_edit", 'system');
+                $iconEdit->align = false;
+                $objLink = &$this->getObject("link", "htmlelements");
+                $objLink->link($this->uri(array(
+                            'module' => 'mcqtests',
+                            'action' => 'addcategory',
+                            'id' => $thisdata['id']
+                        )));
+                $objLink->link = $iconEdit->show();
+                $linkEdit = $objLink->show();
+                // Show the delete link
+                $iconDelete = $this->getObject('geticon', 'htmlelements');
+                $iconDelete->setIcon('delete');
+                $iconDelete->alt = $this->objLanguage->languageText("word_delete", 'mcqtests');
+                $iconDelete->align = false;
+                $objConfirm = &$this->getObject("link", "htmlelements");
+                $objConfirm = &$this->newObject('confirm', 'utilities');
+                $objConfirm->setConfirm($iconDelete->show(), $this->uri(array(
+                            'module' => 'mcqtests',
+                            'action' => 'deletedesc',
+                            'id' => $thisdata["id"]
+                        )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
+                $objTable->startRow();
+                $objTable->addCell($thisdata["name"], '80%');
+                $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show(), '20%');
+                $objTable->endRow();
+            }
+        }
+        $str .= $objTable->show();
+        // Create Back Button
+        $buttonBack = new button("submit", $this->objLanguage->languageText("word_back"));
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'choosequestiontype2'
+                )));
+        $objBack->link = $buttonBack->showSexy();
+        $str .= $objBack->show();
+        
+        // Create Back Button
+        $buttonAdd = new button("submit", $addCategory);
+        $objAdd = &$this->getObject("link", "htmlelements");
+        $objAdd->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'addcategory'
+                )));
+        $objAdd->link = $buttonAdd->showSexy();
+        $str .= " ".$objAdd->show();
+
+        //Add fieldset to hold Descriptions stuff
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->width = '600px';
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($wordCategory);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($str);
+        //Form Object
+        $form = new form("adddescription", $this->uri(array(
+                            'module' => 'mcqtest',
+                            'action' => 'mcqlisting'
+                        )));
+        //Add General Fieldset to form
+        $form->addToForm($objFieldset->show());
+
+        //Reset Fieldset
+        $objFieldset->reset();
+        return $form->show();
+    }
+
+    /**
+     * Method to create add/edit category form
+     *
+     * @access private
+     * @param  array $test Contains test data
+     * @param  string $id Contains the test id
+     * @author Paul Mungai
+     */
+    public function createAddCategoryForm($test, $id) {
+        //Load Classes
+        $this->loadClass("textinput", "htmlelements");
+        $this->loadClass("form", "htmlelements");
+        $this->loadClass("textarea", "htmlelements");
+
+        //Form text
+        $addCategory = $this->objLanguage->languageText('mod_mcqtests_addcategory', 'mcqtests', "Add Category");
+        $parentCategory = $this->objLanguage->languageText('mod_mcqtests_parentcategory', 'mcqtests', "Parent Category");
+        $wordName = $this->objLanguage->languageText('mod_mcqtests_wordname', 'mcqtests', "Name");
+        $phraseCatInfo = $this->objLanguage->languageText('mod_mcqtests_catinfo', 'mcqtests', 'Category Information');
+        $phraseIsRequired = $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests', 'is required');
+        $editCategory = $this->objLanguage->languageText('mod_mcqtests_editcategory', 'mcqtests', 'Edit Category');
+
+        //Form Object
+        $form = new form("adddescription", $this->uri(array(
+                            'module' => 'mcqtest',
+                            'action' => 'addcategoryconfirm',
+                            'id' => $id
+                        )));
+        $data = "";
+
+        if (!empty($id)) {
+            $data = $this->dbCategory->getCategory($id);
+            $data = $data[0];
+        }
+        //Form Heading/Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        $objHeading->str = $addCategory;
+
+        //Add heading/title to form
+        //$form->addToForm($objHeading->show());
+        //Create table to hold the general stuff
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
+        $objTable->cellspacing = '12';
+
+        //parent category
+        $category = new textinput("parentId", "");
+        $category->size = 60;
+        //Add Category to the table
+        $objTable->startRow();
+        $objTable->addCell($parentCategory, '20%');
+        $objTable->addCell($wordName, '80%');
+        $objTable->endRow();
+
+        //question name text box
+        if (empty($data)) {
+            $catname = new textinput("categoryname", $data['parentcategoryid']);
+        } else {
+            $catname = new textinput("categoryname", $data['name']);
+        }
+        $catname->size = 60;
+        $form->addRule('categoryname', $wordName . " " . $phraseIsRequired, 'required');
+        //Add Category to the table
+        $objTable->startRow();
+        $objTable->addCell($wordName, '20%');
+        $objTable->addCell($catname->show(), '80%');
+        $objTable->endRow();
+
+        //Description
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = 'desc';
+        $editor->height = '100px';
+        $editor->width = '550px';
+        $editor->setMCQToolBar();
+        if (empty($data)) {
+            $qntext = '';
+        } else {
+            $qntext = $data['categoryinfo'];
+        }
+        $editor->setContent($qntext);
+        //Add Description to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseCatInfo, '20%');
+        $objTable->addCell($editor->show(), '80%');
+        $objTable->endRow();
+
+        //Add fieldset to hold general stuff
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->width = '800px';
+        //$objFieldset->align = 'center';
+        if (empty($id)) {
+            $objFieldset->setLegend($addCategory);
+        } else {
+            $objFieldset->setLegend($editCategory);
+        }
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+
+        //Add General Fieldset to form
+        $form->addToForm($objFieldset->show());
+
+        //Reset Fieldset
+        $objFieldset->reset();
+        $button = new button("submit", $this->objLanguage->languageText("word_save"));
+        $button->setToSubmit();
+        $btnSave = $button->showSexy();
+        // Create Cancel Button
+        $buttonCancel = new button("submit", $this->objLanguage->languageText("word_cancel"));
+        $objCancel = &$this->getObject("link", "htmlelements");
+        $objCancel->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'categorylisting',
+                    'id' => $id
+                )));
+        $objCancel->link = $buttonCancel->showSexy();
+        $btnCancel = $objCancel->show();
+        // Create Back Button
+        $buttonBack = new button("submit", $this->objLanguage->languageText("word_back"));
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'choosequestiontype2'
+                )));
+        $objBack->link = $buttonBack->showSexy();
+        $btnBack = $objBack->show();
+        //Add Save and Cancel Buttons to form
+        $form->addToForm("<br />" . $btnSave . " " . $btnCancel . " " . $btnBack . "<br />");
+
+        return "<div>" . $form->show() . "</div>";
+    }
     /**
      * Method to create a list of descriptions
      *
@@ -384,6 +641,7 @@ class formmanager extends object {
      */
     public function createDescriptionList($categoryId) {
         //Form text
+        $addDesc = $this->objLanguage->languageText('mod_mcqtests_addDesc', 'mcqtests', 'Add Description');
         $wordDesc = $this->objLanguage->languageText('mod_mcqtests_description', 'mcqtests');
         $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
         $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
@@ -392,7 +650,7 @@ class formmanager extends object {
         $wordFeedback = $this->objLanguage->languageText('mod_mcqtests_generalfeedback', 'mcqtests');
         $wordTags = $this->objLanguage->languageText('mod_mcqtests_wordtags', 'mcqtests');
 
-        if (!empty($categoryId) || $categoryId==NULL) {
+        if (!empty($categoryId) || $categoryId == NULL) {
             $data = $this->dbDescription->getDescriptions($categoryId);
         }
         //Form Heading/Title
@@ -410,9 +668,6 @@ class formmanager extends object {
         $objTable->attributes = " align='left' border='0'";
         $objTable->cellspacing = '12';
 
-        //category text box
-        $category = new textinput("desccategoryid", "");
-        $category->size = 60;
         //Add Heading to the table
         $objTable->startRow();
         $objTable->addCell("<b>" . $phraseQnName . "</b>", '60%');
@@ -446,10 +701,10 @@ class formmanager extends object {
                             'module' => 'mcqtests',
                             'action' => 'deletedesc',
                             'id' => $descdata["id"]
-                        )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests')."?");
+                        )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
                 $objTable->startRow();
                 $objTable->addCell($descdata['questionname'], '60%');
-                $objTable->addCell($linkEdit."&nbsp;&nbsp;".$objConfirm->show(), '20%');
+                $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show(), '20%');
                 $objTable->endRow();
             }
         }
@@ -463,6 +718,15 @@ class formmanager extends object {
                 )));
         $objBack->link = $buttonBack->showSexy();
         $str .= $objBack->show();
+        // Create Back Button
+        $buttonAdd = new button("submit", $addDesc);
+        $objAdd = &$this->getObject("link", "htmlelements");
+        $objAdd->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'addeditdesc'
+                )));
+        $objAdd->link = $buttonAdd->showSexy();
+        $str .= " ".$objAdd->show();
         //Add fieldset to hold Descriptions stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
         $objFieldset->width = '800px';
@@ -483,7 +747,6 @@ class formmanager extends object {
         $objFieldset->reset();
         return $form->show();
     }
-
     /**
      * Method to create add description form
      *
@@ -517,6 +780,7 @@ class formmanager extends object {
                             'action' => 'adddescconfirm',
                             'id' => $id
                         )));
+        $data = "";
         if (!empty($id)) {
             $data = $this->dbDescription->getDescription($id);
             $data = $data[0];
@@ -663,7 +927,7 @@ class formmanager extends object {
         $objCancel = &$this->getObject("link", "htmlelements");
         $objCancel->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'view',
+                    'action' => 'mcqlisting',
                     'id' => $id
                 )));
         $objCancel->link = $buttonCancel->showSexy();
@@ -673,12 +937,12 @@ class formmanager extends object {
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'mcqlisting'
+                    'action' => 'choosequestiontype2'
                 )));
         $objBack->link = $buttonBack->showSexy();
         $btnBack = $objBack->show();
         //Add Save and Cancel Buttons to form
-        $form->addToForm("<br />" . $btnSave . " " . $btnCancel ." ".$btnBack. "<br />");
+        $form->addToForm("<br />" . $btnSave . " " . $btnCancel . " " . $btnBack . "<br />");
 
         return "<div>" . $form->show() . "</div>";
     }

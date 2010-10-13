@@ -138,7 +138,15 @@ class mcqtests extends controller {
         }
         // Now the main switch for $action
         switch ($action) {
+            case 'categorylisting':
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                return 'categorylisting_tpl.php';
             case 'addcategory':
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                $id = $this->getParam('id', Null);
+                $test = $this->getParam('test', Null);
+                $this->setVarByRef('id', $id);
+                $this->setVarByRef('test', $test);
                 return 'addcategory_tpl.php';
                 break;
             case 'addcategoryconfirm':
@@ -151,7 +159,7 @@ class mcqtests extends controller {
                 $fields['categoryinfo'] = $this->getParam('desc', Null);
                 //Insert/Update
                 $id = $this->dbCategory->addCategory($fields, $id);
-                return $this->nextAction('view', array('id' => $id));
+                return $this->nextAction('addcategory', array('id' => $id));
             case 'mcqlisting':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'mcqlisting_tpl.php';

@@ -1,5 +1,4 @@
 <?php
-
-echo $this->objFormManager->createAddCategoryForm($test=Null, $id=Null);
-
+$form = $this->objFormManager->createAddCategoryForm($test, $id);
+echo $form;
 ?>

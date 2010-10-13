@@ -4,14 +4,22 @@
 $this->setLayoutTemplate('mcqtests_layout_tpl.php');
 
 //String of links -- to be removed
-$objBack = &$this->getObject("link", "htmlelements");
-$objBack->link($this->uri(array(
+$str = "";
+$objDescLink = &$this->getObject("link", "htmlelements");
+$objDescLink->link($this->uri(array(
             'module' => 'mcqtests',
             'action' => 'mcqlisting'
         )));
-$objBack->link = "MCQ Descriptions";
-$str = "";
-$str .= "<h4>".$objBack->show()."</h4>";
+$objDescLink->link = "MCQ Descriptions";
+$str .= "<h4>".$objDescLink->show()."</h4>";
+$objDescLink = &$this->getObject("link", "htmlelements");
+$objDescLink->link($this->uri(array(
+            'module' => 'mcqtests',
+            'action' => 'categorylisting'
+        )));
+$objDescLink->link = "MCQ Category";
+$str .= "<h4>".$objDescLink->show()."</h4>";
+
 echo $str;
 //Load the classes for the template
 
