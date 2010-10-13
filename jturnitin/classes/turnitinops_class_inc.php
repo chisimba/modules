@@ -435,11 +435,11 @@ class turnitinops extends object {
         $optionalArgs.=' "-journal_check='.$this->journal_check.'" ';
 
         $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs.' '.$optionalArgs;
-        $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debugx.txt";
+        /*$myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debugx.txt";
 $fh = fopen($myFile, 'w') or die("can't open file");
 $stringData = $command;
 fwrite($fh, $stringData);
-fclose($fh);
+fclose($fh);*/
 //die();
         $results = shell_exec($command);
         return $this->getXMLResult($results);
