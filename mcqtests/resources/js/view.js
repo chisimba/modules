@@ -5,11 +5,22 @@ jQuery(document).ready(function() {
 });
 
 var goToPage = function(page) {
-    switch(page) {
-        case 'calcQ':
-            window.location.href = calqUrl;
-            break;
-        default:
-            window.location.href = mcqUrl;
+    if(page != '-') {
+        switch(page) {
+            case 'calcQ':
+                window.location.href = calqUrl;
+                break;
+            case 'matchQ':
+                window.location.href = matchingqUrl;
+                break;
+            case 'numericalQ':
+                window.location.href = numericalqUrl;
+                break;
+            case 'shortansQ':
+                window.location.href = shortanswerqUrl;
+                break;
+            default:
+                window.location.href = mcqUrl;
+        }
     }
 }
