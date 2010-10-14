@@ -44,7 +44,7 @@ $table->addCell($objWashout->parseText($assignment['description']), NULL, NULL, 
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<strong>'.ucfirst($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]')).':</strong>', 130);
+$table->addCell('<strong>'.ucfirst($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]')).'</strong>', 130);
 $table->addCell($this->objUser->fullName($assignment['userid']));
 $table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark').'</strong>', 130);
 $table->addCell($assignment['mark']);
@@ -53,7 +53,7 @@ $table->endRow();
 $table->startRow();
 $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_openingdate', 'assignment', 'Opening Date').'</strong>', 130);
 $table->addCell($objDateTime->formatDate($assignment['opening_date']));
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_percentyrmark', 'assignment', 'Percentage of year mark').':</strong>', 200, NULL, NULL, 'nowrap');
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_percentyrmark', 'assignment', 'Percentage of year mark').'</strong>', 200, NULL, NULL, 'nowrap');
 $table->addCell($assignment['percentage'].'%');
 $table->endRow();
 
@@ -77,32 +77,33 @@ if ($assignment['email_alert'] == '0') {
 }
 $table->endRow();
 
-$table->startRow();
-$filetypes = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
-if (empty($filetypes)) {
-    $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-    $allowedFilesString = $objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
-    $allowedFileTypes=explode(',',$allowedFilesString);
-} else {
-    $allowedFileTypes = array();
-    foreach ($filetypes as $filetype){
-        $allowedFileTypes[] = $filetype['filetype'];
+if ($assignment['format'] != '0') {
+    $table->startRow();
+    $filetypes = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
+    if (empty($filetypes)) {
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $allowedFilesString = $objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
+        $allowedFileTypes=explode(',',$allowedFilesString);
+    } else {
+        $allowedFileTypes = array();
+        foreach ($filetypes as $filetype){
+            $allowedFileTypes[] = $filetype['filetype'];
+        }
     }
-}
-if (empty($allowedFileTypes)) {
-    $str = $this->objLanguage->languageText('word_none', 'assignment');
-} else {
-    $str = '';
-    $separator = '' ;
-    foreach ($allowedFileTypes as $filetype){
-        $str .= $separator . $filetype;
-        $separator = '&nbsp;';
+    if (empty($allowedFileTypes)) {
+        $str = $this->objLanguage->languageText('word_none', 'assignment');
+    } else {
+        $str = '';
+        $separator = '' ;
+        foreach ($allowedFileTypes as $filetype){
+            $str .= $separator . $filetype;
+            $separator = '&nbsp;';
+        }
     }
+    $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment').'</strong>&nbsp;'.$str,NULL,NULL,NULL,NULL,'colspan="4"');
+    //$table->addCell($str,NULL,NULL,NULL,NULL,'colspan="2"');
+    $table->endRow();
 }
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment').':</strong>&nbsp;'.$str,NULL,NULL,NULL,NULL,'colspan="4"');
-//$table->addCell($str,NULL,NULL,NULL,NULL,'colspan="2"');
-$table->endRow();
-
 
 echo $table->show();
 

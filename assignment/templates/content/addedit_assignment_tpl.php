@@ -100,11 +100,46 @@ if (!$canChangeField) {
     $table->addCell($textinput->show().$_type.'<sup>1</sup>');
 }
 else {
+    $jsToggleType = '
+<script language="JavaScript" type="text/javascript">
+function toggleTypeOptions(val)
+{
+    var els = document.getElementsByName(\'filetypes[]\');
+    var len = els.length;
+    for (var i=0; i<len; ++i)
+        els[i].disabled = !val;
+    var els = document.getElementsByName(\'filenameconversion\');
+    var len = els.length;
+    for (var i=0; i<len; ++i)
+        els[i].disabled = !val;
+    return;
+}
+function toggleType(el)
+{
+    switch (el.value) {
+    case \'0\':
+        //document.getElementById(\'uploadableOptions\').style.visibility = \'hidden\';
+        toggleTypeOptions(false);
+        break;
+    case \'1\':
+        //document.getElementById(\'uploadableOptions\').style.visibility = \'visible\';
+        toggleTypeOptions(true);
+        break;
+    default: ;
+    }
+    return true;
+}
+</script>
+';
     $radio = new radio ('type');
+    $radio->extra = 'onclick="toggleType(this);"';
     $radio->addOption(0, $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online'));
     $radio->addOption(1, $this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
     if ($mode == 'edit') {
         $radio->setSelected($assignment['format']);
+    }
+    else {
+        $radio->setSelected(0);
     }
     $radio->setBreakSpace('&nbsp;');
     $table->addCell($radio->show());
@@ -112,6 +147,84 @@ else {
     $table->addCell('<div id="_type"></div>');
     */
 }
+$table->endRow();
+// Uploadable options
+if ($mode == 'edit') {
+    $uploadableOptionsDisabled = $assignment['format'] == '0';
+}
+else {
+    $uploadableOptionsDisabled = TRUE;
+}
+//
+$headingUploadableOptions = new htmlHeading();
+$headingUploadableOptions->type = 3;
+$headingUploadableOptions->str = $this->objLanguage->languageText('mod_assignment_uploadoptions','assignment');
+// Uploadable options table
+$tableUploadableOptions = $this->newObject('htmltable', 'htmlelements');
+// Uploadable file types
+$tableUploadableOptions->startRow();
+$tableUploadableOptions->addCell($this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment'));
+$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+$allowedFileTypes = $objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
+if (is_null($allowedFileTypes)) {
+    $arrAllowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'pdf');
+} else {
+    $arrAllowedFileTypes=explode(',',$allowedFileTypes);
+}
+$this->loadClass('checkbox', 'htmlelements');
+if ($mode == 'edit') {
+    $rs = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
+    $arrAllowedFileTypesSelected = array();
+    if (!empty($rs)) {
+        foreach ($rs as $row) {
+            $arrAllowedFileTypesSelected[] = $row['filetype'];
+        }
+    }
+}
+else {
+    $arrAllowedFileTypesSelected = $arrAllowedFileTypes;
+}
+$stringFiletypes = '';
+$separator = '';
+foreach ($arrAllowedFileTypes as $filetype){
+    $objCheckbox = new checkbox('filetypes[]','dummy', in_array($filetype, $arrAllowedFileTypesSelected));
+    $objCheckbox->setValue($filetype);
+    if ($uploadableOptionsDisabled) {
+        $objCheckbox->extra = 'disabled="disabled"';
+    }
+    $stringFiletypes .= $separator.$objCheckbox->show().'&nbsp;'.$filetype;
+    $separator = ' ';
+    unset($objCheckbox);
+}
+$tableUploadableOptions->addCell($stringFiletypes);
+$tableUploadableOptions->endRow();
+//filename conversion
+$tableUploadableOptions->startRow();
+$tableUploadableOptions->addCell($this->objLanguage->languageText('mod_assignment_filenameconversion', 'assignment', 'Convert the Filename on Download?'));
+$radio = new radio ('filenameconversion');
+$radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
+$radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
+if ($mode == 'edit') {
+    $radio->setSelected($assignment['filename_conversion']);
+} else {
+    $radio->setSelected(1);
+}
+$radio->setBreakSpace('&nbsp;');
+if ($uploadableOptionsDisabled) {
+    $radio->extra = 'disabled="disabled"';
+}
+$tableUploadableOptions->addCell($radio->show());
+/*
+$table->addCell('<div id="filenameConversion"></div>');
+*/
+$tableUploadableOptions->endRow();
+$table->startRow();
+$table->addCell(
+    '<div id="uploadableOptions" style="background-color: silver;">'
+    .$headingUploadableOptions->show()
+    .$tableUploadableOptions->show()
+    .'</div>',
+    NULL,NULL,NULL,NULL,'colspan="2"');
 $table->endRow();
 // Reflection
 $table->startRow();
@@ -172,57 +285,6 @@ $radio->setBreakSpace('&nbsp;');
 $table->addCell($radio->show());
 /*
 $table->addCell('<div id="emailAlert"></div>');
-*/
-$table->endRow();
-// Uploadable file types
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment'));
-$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-$allowedFileTypes = $objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
-if (is_null($allowedFileTypes)) {
-    $arrAllowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'pdf');
-} else {
-    $arrAllowedFileTypes=explode(',',$allowedFileTypes);
-}
-$this->loadClass('checkbox', 'htmlelements');
-if ($mode == 'edit') {
-    $rs = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
-    $arrAllowedFileTypesSelected = array();
-    if (!empty($rs)) {
-        foreach ($rs as $row) {
-            $arrAllowedFileTypesSelected[] = $row['filetype'];
-        }
-    }
-}
-else {
-    $arrAllowedFileTypesSelected = $arrAllowedFileTypes;
-}
-$stringFiletypes = '';
-$separator = '';
-foreach ($arrAllowedFileTypes as $filetype){
-    $objCheckbox = new checkbox('filetypes[]','dummy', in_array($filetype, $arrAllowedFileTypesSelected));
-    $objCheckbox->setValue($filetype);
-    $stringFiletypes .= $separator.$objCheckbox->show().'&nbsp;'.$filetype;
-    $separator = ' ';
-    unset($objCheckbox);
-}
-$table->addCell($stringFiletypes);
-$table->endRow();
-//filename conversion
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_assignment_filenameconversion', 'assignment', 'Convert the Filename on Download?'));
-$radio = new radio ('filenameconversion');
-$radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
-$radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
-if ($mode == 'edit') {
-    $radio->setSelected($assignment['filename_conversion']);
-} else {
-    $radio->setSelected(1);
-}
-$radio->setBreakSpace('&nbsp;');
-$table->addCell($radio->show());
-/*
-$table->addCell('<div id="filenameConversion"></div>');
 */
 $table->endRow();
 // Mark
@@ -314,6 +376,13 @@ $js_filetypes = '
 <script language="JavaScript" type="text/javascript">
 function val_filetypes(name)
 {
+    var els = document.getElementsByName(\'type\');
+    var len = els.length;
+    for (var i=0; i<len; ++i) {
+        if (els[i].value == \'0\'
+            && els[i].checked)
+        return true;
+    }
     //return false;
     //alert(name);
     var els = document.getElementsByName(name);
@@ -330,6 +399,18 @@ function val_filetypes(name)
 ';
 echo $js_filetypes;
 $form->addRule('filetypes[]', $this->objLanguage->languageText('mod_assignment_selectatleastone','assignment'), 'custom', 'val_filetypes');
+$js_pre_submittrigger = '
+<script language="JavaScript" type="text/javascript">
+function val_pre_submittrigger(dummy)
+{
+    toggleTypeOptions(true);
+    return true;
+}
+</script>
+';
+echo $js_pre_submittrigger;
+$form->addRule('uploadableOptions', '', 'custom', 'val_pre_submittrigger');
+echo $jsToggleType;
 echo $form->show();
 // Footer note
 if (!$canChangeField) {

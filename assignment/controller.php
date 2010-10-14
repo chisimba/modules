@@ -338,6 +338,10 @@ class assignment extends controller {
 
 
     function __updateassignment() {
+//        echo '<pre>';
+//        var_dump($_POST);
+//        echo '</pre>';
+//        die;
         $id = $this->getParam('id');
         $name = $this->getParam('name');
 
