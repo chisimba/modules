@@ -19,6 +19,12 @@ var goToPage = function(page) {
             case 'shortansQ':
                 window.location.href = shortanswerqUrl;
                 break;
+            case 'category':
+                window.location.href = categoryUrl;
+                break;
+            case 'adddescription':
+                window.location.href = descriptionUrl;
+                break;
             default:
                 window.location.href = mcqUrl;
         }

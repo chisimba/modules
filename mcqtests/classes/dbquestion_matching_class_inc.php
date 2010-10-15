@@ -56,9 +56,18 @@ class dbquestion_matching extends dbtable {
         }
     }
 
+    public function updateMatchingQuestions($id, $matchingQuestionData) {echo "ID IS: $id";die();
+        $this->delete('questionid', $id);
+        $this->insert($id, $matchingQuestionData);
+    }
+
     public function getMatchingQuestions($id) {
         $filter = "WHERE questionid='$id'";
         return $this->getAll($filter);
+    }
+
+    public function deleteQuestions($id) {
+        $this->delete('questionid', $id);
     }
 }
 ?>

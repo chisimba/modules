@@ -36,5 +36,19 @@ class dbquestion_multianswers extends dbtable {
     public function addAnswers($data) {
         $this->insert($data);
     }
+
+    public function getAnswers($id) {
+        $filter = "WHERE questionid='$id'";
+        return $this->getAll($filter);
+    }
+
+    public function insertAnswers($data) {
+        $this->delete('questionid', $data['id']);
+        $this->addAnswers($data);
+    }
+
+    public function deleteQuestions($id) {
+        $this->delete('questionid', $id);
+    }
 }
 ?>
