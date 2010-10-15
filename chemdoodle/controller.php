@@ -66,7 +66,7 @@ class chemdoodle extends controller {
 
             default:
             case 'show':
-                $file = '/var/www/vre/trunk/app/packages/chemdoodle/resources/molecules/larger.mol';
+                $file = $this->getResourcePath('molecules/larger.mol', 'chemdoodle');//'/var/www/vre/trunk/app/packages/chemdoodle/resources/molecules/larger.mol';
 
                 $html = $this->objDisplay->show2dMolecule($file);
                 $html .= '<br />';
@@ -83,28 +83,5 @@ class chemdoodle extends controller {
                 break;
         }
     }
-    
-    private function file2js($f)
-    {
-        if (ereg('/', $f)){
-            $file = $f;
-        } else {
-            $file = "./molecules/$f.mol";
-        }
-
-        if (empty($file)){
-            return "File error. File not found.";
-        } else {
-            $fileContents = file_get_contents($file);
-            if ($fileContents){
-                // We don't need REMARKs for our examples.  If REMARKS are needed, comment out the following line.
-                $fileContents = preg_replace('/REMARK.*\n/', '', $fileContents);
-                return "'".str_replace(array("\r\n", "\n", "\r", "'"), array("\\n", "\\n", "\\n", "\\'"), $fileContents)."'";
-            } else {
-                return "File error. Empty file.";
-	    }
-        }
-    }
-
 }
 ?>
