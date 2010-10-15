@@ -9,7 +9,7 @@ class numerical_question extends object {
         $this->loadClass('htmltable', 'htmlelements');
     }
 
-    public function numericalQForm($testid=null, $data=null, $edit=false) {
+    public function numericalQForm($testid=null, $data=null, $edit=false, $questionId=null) {
         $generalForm = $this->objGeneralForm->newGeneralForm($data);
         
         $objAnswerFieldset = $this->getAnswers($data['id']);
@@ -23,7 +23,7 @@ class numerical_question extends object {
 
         // Create form and add the table
         if($edit) {
-            $objForm = new form('numericalq', str_replace("amp;", "", $this->uri(array('action' => 'addnumericalquestion', 'id' => $testid, 'edit'=>'true'))));
+            $objForm = new form('numericalq', str_replace("amp;", "", $this->uri(array('action' => 'addnumericalquestion', 'id' => $testid, '$questionId'=>$questionId, 'edit'=>'true'))));
         }else {
             $objForm = new form('numericalq', str_replace("amp;", "", $this->uri(array('action' => 'addnumericalquestion', 'id' => $testid))));
         }
@@ -31,7 +31,7 @@ class numerical_question extends object {
         $objForm->addToForm($objAnswerFieldset);
         $objForm->addToForm($unitsHandling);
         $objForm->addToForm($units);
-        $objForm->addToForm("<br />" . $btnSave . " " . $btnCancel . "<br />");
+        $objForm->addToForm("<br /><br />" . $btnSave . " " . $btnCancel . "<br /><br />");
 
         return $objForm->show();
     }
@@ -98,10 +98,10 @@ class numerical_question extends object {
             $objAnswerTable->addCell($editor->show(), '70%');
             $objAnswerTable->endRow();
 
-
+            //$objQuestionFieldset->reset();
             $objQuestionFieldset = $this->newObject('fieldset', 'htmlelements');
             $objQuestionFieldset->width = '800px';
-            $objQuestionFieldset->align = 'center';
+            //$objQuestionFieldset->align = 'center';
             $objQuestionFieldset->setExtra($fieldExtra);
             $objQuestionFieldset->setLegend($answerLabel . $i);
             $objQuestionFieldset->addContent($objAnswerTable->show());
@@ -186,7 +186,7 @@ class numerical_question extends object {
 
         $objQuestionFieldset = $this->newObject('fieldset', 'htmlelements');
         $objQuestionFieldset->width = '800px';
-        $objQuestionFieldset->align = 'center';
+        //$objQuestionFieldset->align = 'center';
         $objQuestionFieldset->setExtra($fieldExtra);
         $objQuestionFieldset->setLegend($unitsHandling);
         $objQuestionFieldset->addContent($objAnswerTable->show());
@@ -228,7 +228,7 @@ class numerical_question extends object {
 
         $objUnitFieldset = $this->newObject('fieldset', 'htmlelements');
         $objUnitFieldset->width = '800px';
-        $objUnitFieldset->align = 'center';
+        //$objUnitFieldset->align = 'center';
         $objUnitFieldset->setExtra($fieldExtra);
 
         $objUnitFieldset->setLegend($unitLabel.' 1');
