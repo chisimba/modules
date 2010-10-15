@@ -1,9 +1,9 @@
 <?php
 
 /**
-* Template for the fullprofile module
+* Template for the chemdoodle module
 * @author Warren Windvogel <warren.windvogel@wits.ac.za>
-* @package fullprofile
+* @package chemdoodle
 */
 
 $this->setLayoutTemplate('layout_tpl.php');

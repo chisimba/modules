@@ -10,7 +10,7 @@ $objBlocks = $this->getObject('blocks', 'blocks');
 $cssLayout->setNumColumns(2);
 
 $leftColumnContent = $userMenuBar->menuUser();
-$leftColumnContent .= $objBlocks->showBlock('fullprofile', 'fullprofile');
+
 
 $cssLayout->setLeftColumnContent($leftColumnContent);
 $cssLayout->setMiddleColumnContent($this->getContent());
