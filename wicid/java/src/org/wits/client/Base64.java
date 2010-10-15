@@ -1,6 +1,7 @@
 package org.wits.client;
 /*
-Copyright (c) 2009, Mark Renouf
+Modified by david.wafula
+ Copyright (c) 2009, Mark Renouf
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
