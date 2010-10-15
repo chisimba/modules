@@ -93,6 +93,8 @@ class mcqtests extends controller {
         $this->objEmailFiles = $this->newObject('emailfiles', 'internalmail');
         $this->objWashout = $this->getObject('washout', 'utilities');
         $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+        $this->objQuestionMatching = $this->newObject('dbquestion_matching');
+        $this->objMultiAnswers = $this->newObject('dbquestion_multianswers');
 
         // context
         $this->objContext = $this->newObject('dbcontext', 'context');
@@ -510,6 +512,8 @@ class mcqtests extends controller {
             // delete a question
             case 'deletequestion':
                 $this->dbQuestions->deleteQuestion($this->getParam('questionId'));
+                //$this->objQuestionMatching->deleteQuestions($this->getParam('questionId'));
+                //$this->objMultiAnswers->deleteQuestions($this->getParam('questionId'));
                 //$this->dbTestadmin->setTotal($this->getParam('id') , -$this->getParam('mark'));
                 $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
                 return $this->nextAction('view', array(
@@ -850,18 +854,19 @@ class mcqtests extends controller {
                 return $this->calcqForm();
             case 'addmatchingquestion':
                 $qtype = $this->objLanguage->languageText('mod_mcqtests_matching', 'mcqtests');
-                if ($this->getParam('edit')) {
+                if (strlen($this->getParam('edit')) > 0 ) {
                     if ($this->getParam('edit') == 'true') {
                         $edit = true;
                     }
-                    $id = $this->addGeneralFormQuestions($qtype, $edit);
-                    $this->addMatchingQuestions($id, $edit);
+                    $this->addGeneralFormQuestions($qtype, $edit);
+                    $questionId = $this->getParam('questionId');
+                    $this->addMatchingQuestions($questionId, $edit);
                 } else {
                     $id = $this->addGeneralFormQuestions($qtype);
                     $this->addMatchingQuestions($id);
                 }
 
-                return $this->nextAction('view', array('id' => $this->getParam('id')));
+                return $this->nextAction('view2', array('id' => $this->getParam('id')));
             case 'addnumericalquestion':
                 $qtype = $this->objLanguage->languageText('mod_mcqtests_numerical', 'mcqtests');
                 if ($this->getParam('edit')) {
@@ -879,6 +884,8 @@ class mcqtests extends controller {
                 return $this->viewMatchingQuestions();
             case 'viewnumericalquestions':
                 return $this->viewNumericalQuestions();
+            case 'viewcalcq':
+                return $this->viewCalcQ();
             default:
                 if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
@@ -1843,10 +1850,12 @@ class mcqtests extends controller {
     }
 
     private function addGeneralFormQuestions($qtype, $edit=null) {
-        $objQuestions = $this->getObject('dbquestions', 'mcqtests');
+        //$objQuestions = $this->getObject('dbquestions', 'mcqtests');
+
+        $id = $this->getParam('id');
         //insert into questions table
         $questiondata = array();
-        $questiondata['testid'] = $this->getParam('id');
+        $questiondata['testid'] = $id;
         $questiondata['question'] = $this->getParam('qText');
         $questiondata['name'] = $this->getParam('qName');
         $questiondata['hint'] = $this->getParam('hint');
@@ -1857,25 +1866,24 @@ class mcqtests extends controller {
         $questiondata['questiontype'] = $qtype;
 
         if ($edit) {
-            $id = $this->getParam('id');
-            $objQuestions->addQuestion($questiondata, $id);
+            $this->dbQuestions->addQuestion($questiondata, $id);
         } else {
-            $id = $objQuestions->addQuestion($questiondata);
+            $id = $this->dbQuestions->addQuestion($questiondata);
         }
         return $id;
     }
 
     public function addMatchingQuestions($id, $edit=false) {
-        $objQuestionMatching = $this->newObject('dbquestion_matching');
+        $this->objQuestionMatching = $this->newObject('dbquestion_matching');
 
         $matchingQuestionData = array();
         $matchingQuestionData['subquestions'] = array('q1' => trim($this->getParam('qmatching1')), 'q2' => trim($this->getParam('qmatching2')), 'q3' => trim($this->getParam('qmatching3')));
         $matchingQuestionData['subanswers'] = array('a1' => $this->getParam('aMatching1'), 'a2' => $this->getParam('aMatching2'), 'a3' => $this->getParam('aMatching3'));
 
         if ($edit) {
-            $objQuestionMatching->updateMatchingQuestions($id, $matchingQuestionData);
+            $this->objQuestionMatching->updateMatchingQuestions($id, $matchingQuestionData);
         } else {
-            $objQuestionMatching->addMatchingQuestions($id, $matchingQuestionData);
+            $this->objQuestionMatching->addMatchingQuestions($id, $matchingQuestionData);
         }
     }
 
@@ -1919,6 +1927,10 @@ class mcqtests extends controller {
 
     public function viewNumericalQuestions() {
         return 'editnumericalquestion_tpl.php';
+    }
+
+    public function viewCalcQ() {
+        return 'editcalcquestion_tpl.php';
     }
 
 }
