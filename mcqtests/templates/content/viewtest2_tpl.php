@@ -45,6 +45,9 @@ $actionLabel = $objLanguage->languageText('mod_mcqtests_actions', 'mcqtests');
 $lbConfirm = $objLanguage->languageText('mod_mcqtests_deletequestion', 'mcqtests');
 $wordquestion = $objLanguage->languageText('mod_mcqtests_deletequestionword', 'mcqtests');
 $wordmcq = $objLanguage->languageText('mod_mcqtests_mcq', 'mcqtests');
+$category = $objLanguage->languageText('mod_mcqtests_addcategory', 'mcqtests');
+$simple = $objLanguage->languageText('mod_mcqtests_wordsimpleq', 'mcqtests');
+$description = $objLanguage->languageText('mod_mcqtests_addDesc', 'mcqtests');
 
 $listLabel = ucwords($objLanguage->code2Txt('mod_mcqtests_liststudents', 'mcqtests', array(
     'readonlys' => 'students'
@@ -69,6 +72,7 @@ $sequentialLabel = $this->objLanguage->languageText('word_sequential');
 $computerLabel = $this->objLanguage->languageText('mod_mcqtests_comlab', 'mcqtests');
 $anyLabLabel = $this->objLanguage->languageText('mod_mcqtests_labs', 'mcqtests');
 $selectqntype = $this->objLanguage->languageText('mod_mcqtests_selectqntype', 'mcqtests', 'Select question type');
+
 
 //switch between the question descriptions and adding questions
 $mode = $this->getParam('mode');
@@ -198,16 +202,18 @@ $matchingqn = $this->objLanguage->languageText('mod_mcqtests_matchingqn', 'mcqte
 $numericalqns = $this->objLanguage->languageText('mod_mcqtests_numericalqns', 'mcqtests', 'Numerical Question');
 $selectQBLabel = "Choose Question Type";
 
-
 $existingQuestions = new dropdown('existingQ');
 $existingQuestions->setId("existingQ");
 
 $existingQuestions->addOption('-', '[-' . $selectqntype . '-]');
-$existingQuestions->addOption('mcq', $wordmcq);
-$existingQuestions->addOption('calcQ', $calcdqn);
+$existingQuestions->addOption('mcq', $simple);
+$existingQuestions->addOption('adddescription', $description);
+$existingQuestions->addOption('category', $category);
+//$existingQuestions->addOption('calcQ', $calcdqn);
 $existingQuestions->addOption('matchQ', $matchingqn);
 $existingQuestions->addOption('numericalQ', $numericalqns);
-$existingQuestions->addOption('shortansQ', 'Short Answer Questions');
+
+//$existingQuestions->addOption('shortansQ', 'Short Answer Questions');
 
 /*// choose questiontype
 $objIcon->title = $addLabel;
@@ -295,7 +301,9 @@ if (!empty($questions)) {
         $objIcon->title = $editIconLabel;
         $editUrl = $this->uri(array(
             'action' => 'editquestion',
-            'questionId' => $line['id']
+            'questionId' => $line['id'],
+            'id' => $this->getParam('id'),
+            'type' => $line['questiontype']
         ));
         $icons = $objIcon->getEditIcon($editUrl);
         $objIcon->title = $deleteLabel;
@@ -432,11 +440,13 @@ $form->addToForm($button->show().$previewButton->show());
 echo $form->show();
 
 $myJS = '<script type="text/javascript">
-            var mcqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"choosequestiontype"))).'",
-                calqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewcalcquestions"))).'",
-                matchingqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewmatchingquestions"))).'",
-                numericalqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewnumericalquestions"))).'",
-                shortanswerqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewshortansquestions"))).'";
+            var mcqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"choosequestiontype", "id"=>$this->getParam('id')))).'",
+                calqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewcalcquestions", "id"=>$this->getParam('id')))).'",
+                matchingqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewmatchingquestions", "id"=>$this->getParam('id')))).'",
+                numericalqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewnumericalquestions", "id"=>$this->getParam('id')))).'",
+                shortanswerqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewshortansquestions", "id"=>$this->getParam('id')))).'",
+                categoryUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"categorylisting", "id"=>$this->getParam('id')))).'",
+                descriptionUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"addeditdesc"))).'";
         </script>';
 echo $myJS;
 ?>
