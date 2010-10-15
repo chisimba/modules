@@ -157,13 +157,15 @@ class dbquestions extends dbtable
     {
         $question = $this->getQuestion($id);
         if (!empty($question)) {
-            $filter = 'questionorder > '.$question[0]['questionorder'].' ORDER BY questionorder';
-            $data = $this->getQuestions($question[0]['testid'], $filter);
-            if (!empty($data)) {
-                foreach($data as $line) {
-                    $fields = array();
-                    $fields['questionorder'] = $line['questionorder']-1;
-                    $this->addQuestion($fields, $line['id']);
+            if(strlen($question[0]['questionorder']) > 0) {
+                $filter = 'questionorder > '.$question[0]['questionorder'].' ORDER BY questionorder';
+                $data = $this->getQuestions($question[0]['testid'], $filter);
+                if (!empty($data)) {
+                    foreach($data as $line) {
+                        $fields = array();
+                        $fields['questionorder'] = $line['questionorder']-1;
+                        $this->addQuestion($fields, $line['id']);
+                    }
                 }
             }
         }
