@@ -72,6 +72,7 @@ class dbassignment extends dbtable {
         return $this->getRow('id', $id);
     }
 
+
     /**
      * Method to search assignments and return the results.
      * @param string $field The table field in which to search.
@@ -126,7 +127,9 @@ class dbassignment extends dbtable {
      * @param <type> $filename_conversion
      * @return <type>
      */
-    public function addAssignment($name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion) {
+    public function addAssignment(
+    $name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion, $visibility, $emailalert_onsubmit
+    ) {
 
         $id = $this->insert(array(
                     'name' => $name,
@@ -140,16 +143,18 @@ class dbassignment extends dbtable {
                     'closing_date' => $closing_date,
                     'assesment_type' => $assesment_type,
                     'email_alert' => $emailAlert,
+                    'email_alert_onsubmit' => $emailalert_onsubmit,
+                    'visibility' => $visibility,
                     'filename_conversion' => $filename_conversion,
                     'userid' => $this->objUser->userId(),
                     'last_modified' => date('Y-m-d H:i:s', time()),
                     'updated' => date('Y-m-d H:i:s', time())
                 ));
         if ($emailAlert == '1') {
-            $title ="'".$name."' ".$this->objLanguage->languageText('mod_assignment_emailsubject', 'assignment', " assignment  has been created in '") . $this->objContext->getTitle($context) . "'";
+            $title = "'" . $name . "' " . $this->objLanguage->languageText('mod_assignment_emailsubject', 'assignment', " assignment  has been created in '") . $this->objContext->getTitle($context) . "'";
             $link = new link($this->uri(array("action" => "view", "id" => $id)));
 
-            $message = $this->objLanguage->languageText('mod_assignment_emailbody', 'assignment', "To view the assignment, click on this link") .' '.
+            $message = $this->objLanguage->languageText('mod_assignment_emailbody', 'assignment', "To view the assignment, click on this link") . ' ' .
                     $link->href;
             $this->sendEmail($title, $message, $this->getContextRecipients($context));
         }
@@ -161,6 +166,14 @@ class dbassignment extends dbtable {
         return $id;
     }
 
+    /**
+     * adds an assignment to a calendar as a reminder
+     * @param <type> $name
+     * @param <type> $desciption
+     * @param <type> $opening_date
+     * @param <type> $closing_date
+     * @param <type> $id 
+     */
     private function addReminderToCalendar(
     $name, $desciption, $opening_date, $closing_date, $id
     ) {
@@ -243,11 +256,10 @@ class dbassignment extends dbtable {
      * @param <type> $assesment_type
      * @return <type>
      */
-    public function updateAssignment($id, $name, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion) {
+    public function updateAssignment($id, $name, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion, $visibility, $emailalert_onsubmit) {
 
         $id = $this->update('id', $id, array(
                     'name' => $name,
-
                     'description' => $description,
                     'resubmit' => $resubmit,
                     'format' => $format,
@@ -256,6 +268,8 @@ class dbassignment extends dbtable {
                     'opening_date' => $opening_date,
                     'closing_date' => $closing_date,
                     'email_alert' => $emailAlert,
+                    'email_alert_onsubmit' => $emailalert_onsubmit,
+                    'visibility' => $visibility,
                     'filename_conversion' => $filename_conversion,
                     'assesment_type' => $assesment_type,
                     'userid' => $this->objUser->userId(),
@@ -278,4 +292,5 @@ class dbassignment extends dbtable {
     }
 
 }
+
 ?>

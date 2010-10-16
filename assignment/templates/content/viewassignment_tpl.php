@@ -103,6 +103,11 @@ if ($assignment['format'] != '0') {
     $table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment').'</strong>&nbsp;'.$str,NULL,NULL,NULL,NULL,'colspan="4"');
     //$table->addCell($str,NULL,NULL,NULL,NULL,'colspan="2"');
     $table->endRow();
+
+    $table->startRow();
+    $table->addCell('<b>'. $this->objLanguage->languageText('mod_assignment_learningoutcomes', 'assignment','Learning outcomes').':</b>');
+    $table->addCell($goals);
+    $table->endRow();
 }
 
 echo $table->show();

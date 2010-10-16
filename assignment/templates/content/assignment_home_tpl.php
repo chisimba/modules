@@ -10,11 +10,13 @@ $onlineLabel = $this->objLanguage->languageText('mod_assignment_online','assignm
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('htmlheading','htmlelements');
 $this->loadClass('link','htmlelements');
+$this->loadClass('button','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
 $objTimeOut = $this->newObject('timeoutMessage','htmlelements');
 
 $objTrim = $this->getObject('trimstr', 'strings');
-
+$createButton = new button('submit', $this->objLanguage->languageText('mod_assignment_createassignments', 'assignment', 'Create Assignment'));
+$createButton->setToSubmit();
 
 $objHead = new htmlheading();
 $objHead->str=$this->objLanguage->languageText('mod_assignment_assignments', 'assignment', 'Assignments');
@@ -22,11 +24,11 @@ $objHead->type=1;
 
 if ($this->isValid('add')) {
 
-    $objIcon->setIcon('add');
+    //$objIcon->setIcon('add');
     $link = new link ($this->uri(array('action'=>'add')));
-    $link->link = $objIcon->show();
-
+    $link->link = $createButton->show();
     $objHead->str .= ' '.$link->show();
+    
 }
 
 echo $objHead->show();

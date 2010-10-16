@@ -79,4 +79,33 @@
             </add>
         </data>
     </update>
+
+    <update>
+        <table>tbl_assignment</table>
+        <version>0.501</version>
+        <description>Added visibility option </description>
+        <data>
+            <add>
+                <name>visibility</name>
+                <type>text</type>
+                <length>1</length>
+                <default>1</default>
+            </add>
+        </data>
+    </update>
+
+
+    <update>
+        <table>tbl_assignment</table>
+        <version>0.501</version>
+        <description>Added email alert option </description>
+        <data>
+            <add>
+                <name>email_alert_onsubmit</name>
+                <type>text</type>
+                <length>1</length>
+                <default>1</default>
+            </add>
+        </data>
+    </update>
 </updates>

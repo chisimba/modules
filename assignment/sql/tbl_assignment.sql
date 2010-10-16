@@ -78,6 +78,17 @@ $fields = array(
 		'type' => 'text',
 		'length' => 1,
 		'default' => '1'
-		)
+		),
+       'visibility' => array(
+		'type' => 'text',
+		'length' => 1,
+		'default' => '1'
+		),
+       'email_alert_onsubmit' => array(
+		'type' => 'text',
+		'length' => 1,
+		'default' => '1'
+		),
+
 	);
 ?>
