@@ -45,6 +45,7 @@ class dbassignmentsubmit extends dbtable {
      */
     public function init() {
         $this->loadClass("link", "htmlelements");
+        $this->objUser=$this->getObject("user","security");
         parent::init('tbl_assignment_submit');
     }
 
