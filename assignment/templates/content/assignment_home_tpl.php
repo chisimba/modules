@@ -105,6 +105,12 @@ if (count($assignments) == 0) {
             $okToShow = TRUE;
         }
 
+        if($assignment['visibility'] == '0'){
+            $groups=$this->objAssignmentGroups->getWorkgroups($assignment['id']);
+            if(count($groups)< 1){
+                $okToShow=FALSE;
+            }
+        }
         if ($this->isValid('edit')) {
             $okToShow = TRUE;
         }

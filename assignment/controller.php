@@ -288,17 +288,17 @@ class assignment extends controller {
                     'description' => $message));
             }
 
-            $this->objAssignmentLearningOutcomes->deleteGoals();
+            $this->objAssignmentLearningOutcomes->deleteGoals($result);
             if (is_array($goals)) {
 
                 if (count($goals) > 0) {
                     foreach ($goals as $goal) {
-                        $this->objAssignmentLearningOutcomes->addGoals($result, $goal);
+                        $this->objAssignmentLearningOutcomes->addGoal($result, $goal);
                     }
                 }
             }
 
-            $this->objAssignmentGroups->deleteWorkgroups();
+            $this->objAssignmentGroups->deleteWorkgroups($result);
             if (is_array($groups)) {
 
                 if (count($groups) > 0) {
@@ -350,9 +350,11 @@ class assignment extends controller {
             return $this->nextAction(NULL, array('error' => 'wrongcontext'));
         }
         $learningoutcomesinassignment = $this->objAssignmentLearningOutcomes->getGoalsFormatted($id);
-
+        $groups=  $this->objAssignmentGroups->getGroupsFormatted($id);
+        
         $this->setVarByRef('assignment', $assignment);
         $this->setVarByRef('goals', $learningoutcomesinassignment);
+        $this->setVarByRef('groups', $groups);
         return 'viewassignment_tpl.php';
     }
 
@@ -443,7 +445,7 @@ class assignment extends controller {
             }
         }
 
-        //return $this->nextAction('view', array('id' => $id, 'update' => $result));
+        return $this->nextAction('view', array('id' => $id, 'update' => $update));
     }
 
     function __uploadassignment() {
@@ -478,6 +480,7 @@ class assignment extends controller {
     }
 
     function __submitonlineassignment() {
+        
         $result = $this->objAssignmentSubmit->submitAssignmentOnline($this->getParam('id'), $this->objUser->userId(), $this->getParam('text'));
 
         return $this->nextAction('view', array('id' => $this->getParam('id'), 'message' => 'assignmentsubmitted'));

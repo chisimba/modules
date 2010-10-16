@@ -55,6 +55,7 @@ class dbassignmentworkgroups extends dbtable {
     public function init() {
         parent::init('tbl_assignment_workgroups');
         $this->objUser = $this->getObject('user', 'security');
+        $this->loadClass('link','htmlelements');
     }
 
     /**
@@ -69,6 +70,31 @@ class dbassignmentworkgroups extends dbtable {
 
         return $this->getAll($sql);
     }
+
+
+    public function getGroupsFormatted($id) {
+        $sql = "select wg.description,wg.id
+        from tbl_workgroup wg,tbl_assignment_workgroups lw
+        WHERE lw.assignment_id ='{$id}' and wg.id=lw.workgroup_id
+        ";
+        $str = "";
+        $groups = $this->getArray($sql);
+        $count=1;
+        if (!empty($groups)) {
+
+            foreach ($groups as $thisGr) {
+                $link=new link($this->uri(array("action"=>"joinworkgroup","workgroup"=>$thisGr['id']),"workgroup"));
+                $link->link=$thisGr["description"].'<br/>';
+                $str .= $link->show();
+                $count++;
+            }
+
+        } else {
+            $str = " ";
+        }
+        return $str;
+    }
+
 
     /**
      * links assignments and workgroups

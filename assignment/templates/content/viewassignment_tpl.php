@@ -7,7 +7,7 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
-
+$this->loadClass('fieldset', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objWashout = $this->getObject('washout', 'utilities');
 $objIcon->setIcon('edit');
@@ -112,13 +112,33 @@ if ($assignment['format'] != '0') {
         }
     }
     $table->addCell('<strong>' . $this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment') . '</strong>&nbsp;' . $str, NULL, NULL, NULL, NULL, 'colspan="4"');
-    //$table->addCell($str,NULL,NULL,NULL,NULL,'colspan="2"');
     $table->endRow();
 
     $table->startRow();
-    $table->addCell('<b>' . $this->objLanguage->languageText('mod_assignment_learningoutcomes', 'assignment', 'Learning outcomes') . ':</b>');
-    $table->addCell($goals);
+    $table->addCell('<br/>', NULL, NULL, NULL, NULL, 'colspan="2"');
     $table->endRow();
+}
+    if (isset ($goals)) {
+        $fieldset = new fieldset();
+        $fieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_learningoutcomes', 'assignment', 'Learning outcomes') . ':</b>');
+        $fieldset->addContent($goals);
+
+        $table->startRow();
+        $table->addCell($fieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
+        $table->endRow();
+    }
+
+    
+    if (isset ($groups)) {
+        
+        $gfieldset = new fieldset();
+        $gfieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_groups', 'assignment', 'Groups'));
+        $gfieldset->addContent($groups);
+
+        $table->startRow();
+        $table->addCell($gfieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
+        $table->endRow();
+    
 }
 
 echo $table->show();
@@ -131,10 +151,6 @@ echo '<hr />' . $htmlHeader->show();
 // If Lecturer, show list of assignments
 if ($this->isValid('markassignments')) {
     $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignment['id']);
-
-
-
-
     $table = $this->newObject('htmltable', 'htmlelements');
     $table->startHeaderRow();
     $table->addHeaderCell(ucwords($this->objLanguage->code2Txt('mod_assignment_studname', 'assignment', NULL, '[-readonly-] Name')));
