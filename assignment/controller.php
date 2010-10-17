@@ -263,8 +263,10 @@ class assignment extends controller {
         $emailalertonsubmit = $this->getParam('emailalertonsubmit');
         $groups = $this->getParam('groups');
         $goals = $this->getParam('goals');
+        $usegroups = $this->getParam('groups_radio');
+        $usegoals = $this->getParam('goals_radio');
 
-        $result = $this->objAssignment->addAssignment($name, $this->contextCode, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type, $emailAlert, $filenameConversion, $visibility, $emailalertonsubmit);
+        $result = $this->objAssignment->addAssignment($name, $this->contextCode, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type, $emailAlert, $filenameConversion, $visibility, $emailalertonsubmit,$usegroups,$usegoals);
 
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error' => 'unabletosaveassignment'));
@@ -403,8 +405,10 @@ class assignment extends controller {
         $filetypes = $this->getParam('filetypes');
         $visibility = $this->getParam('visibility');
         $emailalertonsubmit = $this->getParam('emailalertonsubmit');
+        $usegroups = $this->getParam('groups_radio');
+        $usegoals = $this->getParam('goals_radio');
 
-        $result = $this->objAssignment->updateAssignment($id, $name, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type, $emailAlert, $filenameConversion, $visibility, $emailalertonsubmit);
+        $result = $this->objAssignment->updateAssignment($id, $name, $description, $resubmit, $type, $mark, $yearmark, $openingDate, $closingDate, $assesment_type, $emailAlert, $filenameConversion, $visibility, $emailalertonsubmit,$usegroups,$usegoals);
         $this->objAssignmentUploadablefiletypes->deleteFiletypes($id);
         $this->objAssignmentUploadablefiletypes->addFiletypes($id, $filetypes);
         $groups = $this->getParam('groups');

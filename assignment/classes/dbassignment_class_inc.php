@@ -128,7 +128,7 @@ class dbassignment extends dbtable {
      * @return <type>
      */
     public function addAssignment(
-    $name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion, $visibility, $emailalert_onsubmit
+    $name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion, $visibility, $emailalert_onsubmit,$usegroups,$usegoals
     ) {
 
         $id = $this->insert(array(
@@ -145,6 +145,8 @@ class dbassignment extends dbtable {
                     'email_alert' => $emailAlert,
                     'email_alert_onsubmit' => $emailalert_onsubmit,
                     'visibility' => $visibility,
+                    'usegroups'=>$usegroups,
+                    'usegoals'=>$usegoals,
                     'filename_conversion' => $filename_conversion,
                     'userid' => $this->objUser->userId(),
                     'last_modified' => date('Y-m-d H:i:s', time()),
@@ -256,7 +258,7 @@ class dbassignment extends dbtable {
      * @param <type> $assesment_type
      * @return <type>
      */
-    public function updateAssignment($id, $name, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion, $visibility, $emailalert_onsubmit) {
+    public function updateAssignment($id, $name, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type, $emailAlert, $filename_conversion, $visibility, $emailalert_onsubmit,$usegroups,$usegoals) {
 
         $id = $this->update('id', $id, array(
                     'name' => $name,
@@ -264,6 +266,9 @@ class dbassignment extends dbtable {
                     'resubmit' => $resubmit,
                     'format' => $format,
                     'mark' => $mark,
+                                'usegroups'=>$usegroups,
+                    'usegoals'=>$usegoals,
+
                     'percentage' => $percentage,
                     'opening_date' => $opening_date,
                     'closing_date' => $closing_date,

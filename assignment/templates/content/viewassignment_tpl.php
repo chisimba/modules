@@ -118,7 +118,8 @@ if ($assignment['format'] != '0') {
     $table->addCell('<br/>', NULL, NULL, NULL, NULL, 'colspan="2"');
     $table->endRow();
 }
-    if (isset ($goals)) {
+if ($assignment['usegoals'] == '1') {
+   
         $fieldset = new fieldset();
         $fieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_learningoutcomes', 'assignment', 'Learning outcomes') . ':</b>');
         $fieldset->addContent($goals);
@@ -126,11 +127,10 @@ if ($assignment['format'] != '0') {
         $table->startRow();
         $table->addCell($fieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
         $table->endRow();
-    }
-
     
-    if (isset ($groups)) {
-        
+}
+if ($assignment['usegroups'] == '1') {
+    
         $gfieldset = new fieldset();
         $gfieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_groups', 'assignment', 'Groups'));
         $gfieldset->addContent($groups);

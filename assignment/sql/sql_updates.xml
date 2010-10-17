@@ -108,4 +108,35 @@
             </add>
         </data>
     </update>
+
+
+    <update>
+        <table>tbl_assignment</table>
+        <version>0.503</version>
+        <description>Added groups option </description>
+        <data>
+            <add>
+                <name>usegroups</name>
+                <type>text</type>
+                <length>1</length>
+                <default>1</default>
+            </add>
+        </data>
+    </update>
+
+
+        <update>
+        <table>tbl_assignment</table>
+        <version>0.503</version>
+        <description>Added goals option</description>
+        <data>
+            <add>
+                <name>usegoals</name>
+                <type>text</type>
+                <length>1</length>
+                <default>1</default>
+            </add>
+        </data>
+    </update>
+
 </updates>

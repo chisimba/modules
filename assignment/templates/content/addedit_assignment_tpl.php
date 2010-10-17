@@ -395,7 +395,6 @@ $groupslink->link = $this->objLanguage->languageText('mod_assignment_managegroup
 $groupsList = $groupslink->show();
 
 $groupstoselect = array();
-$groupsExist = "0";
 if (is_array($workgroupsinassignment)) {
     foreach ($workgroupsinassignment as $row) {
         $groupstoselect[] = $row['workgroup_id'];
@@ -410,11 +409,10 @@ if (count($groups) > 0) {
         $checkbox->cssId = 'group_' . $group['id'];
         $checkbox->cssClass = 'group_option';
         if ($mode == 'edit') {
-
+              $objGroups->setSelected($assignment['usegroups']);
             if (in_array($group['id'], $groupstoselect)) {
                 $checkbox->ischecked = TRUE;
-                $groupsExist = "1";
-                $objGroups->setSelected('1');
+               
             }
         }
         $label = new label(' ' . $group['description'], 'group_' . $group['id']);
@@ -437,15 +435,15 @@ $recstable->endRow();
 
 
 $objGoalsRadio = new radio('goals_radio');
-$objGoalsRadio->addOption('1', $this->objLanguage->languageText('mod_assignment_excludelearningoutcomes', 'assignment', 'Do not use learning outcomes'));
-$objGoalsRadio->addOption('0', $this->objLanguage->languageText('mod_assignment_uselearningoutcomes', 'assignment', 'Use learning outcomes'));
-
-$objGoalsRadio->setSelected('1');
+$objGoalsRadio->addOption('0', $this->objLanguage->languageText('mod_assignment_excludelearningoutcomes', 'assignment', 'Do not use learning outcomes'));
+$objGoalsRadio->addOption('1', $this->objLanguage->languageText('mod_assignment_uselearningoutcomes', 'assignment', 'Use learning outcomes'));
+//$objGoalsRadio->setId('');
+$objGoalsRadio->setSelected('0');
 
 
 $goalstable = $this->newObject('htmltable', 'htmlelements');
 $goalsList = $this->objLanguage->languageText('mod_assignment_none', 'assignment', "None");
-$goalsExist = "0";
+
 $goalstoselect = array();
 if (is_array($learningoutcomesinassignment)) {
     foreach ($learningoutcomesinassignment as $row) {
@@ -463,11 +461,10 @@ if (count($goals) > 0) {
         $checkbox->cssClass = 'goal_option';
 
         if ($mode == 'edit') {
-
+               $objGoalsRadio->setSelected($assignment['usegoals']);
             if (in_array($goal['id'], $goalstoselect)) {
                 $checkbox->ischecked = TRUE;
-                $objGoalsRadio->setSelected('0');
-                $goalsExist = "1";
+                
             }
         }
 
@@ -651,11 +648,19 @@ if (!$canChangeField) {
     echo '<sup>1</sup>' . $this->objLanguage->languageText('mod_assignment_cannotchangefield', 'assignment');
 }
 
+$hidegroups = "0";
+if ($mode == 'edit') {
+    $hidegroups = $assignment['usegroups'];
+}
 
+$hidegoals = "0";
+if ($mode == 'edit') {
+    $hidegoals = $assignment['usegoals'];
+}
 $groupsJs = '
-var hidegroups ="' . $groupsExist . '";
+var hidegroups ="' . $hidegroups . '";
     
-var hidegoals="' . $goalsExist . '";
+var hidegoals="' . $hidegoals . '";
 jQuery(document).ready(function() {
 
                    if(hidegroups == 0){
@@ -664,36 +669,33 @@ jQuery(document).ready(function() {
                    }
                    if(hidegoals == 0){
                    jQuery("#goalslist").hide();
-                   }
                    jQuery("#selectgoals").hide();
-                    var showGroups=0;
+                   }
+                  
                     jQuery("input[@name=\'groups_radio\']").change(function(){
+                     var radiobuttonvalue = jQuery("input[@name=\'groups_radio\']:checked").val();
 
-                    if(showGroups == 0){
-                        showGroups=1;
+                    if(radiobuttonvalue == 1){
                         jQuery("#groupslist").show();
                         jQuery("#selectgroups").show();
                     }else{
                         jQuery("#groupslist").hide();
                         jQuery("#selectgroups").hide();
-                        showGroups=0;
+                       
                     }
 
  });
 
 
-
-                    var showGoals=0;
                     jQuery("input[@name=\'goals_radio\']").change(function(){
-
-                    if(showGoals == 0){
-                        showGoals=1;
-                        jQuery("#goalslist").show();
+                   var radiobuttonvalue = jQuery("input[@name=\'goals_radio\']:checked").val();
+                    if(radiobuttonvalue == 1){
+                       jQuery("#goalslist").show();
                         jQuery("#selectgoals").show();
                     }else{
                         jQuery("#goalslist").hide();
                         jQuery("#selectgoals").hide();
-                        showGoals=0;
+                       
                     }
 
                   });

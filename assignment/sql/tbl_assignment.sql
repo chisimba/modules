@@ -89,6 +89,15 @@ $fields = array(
 		'length' => 1,
 		'default' => '1'
 		),
-
+       'usegroups' => array(
+		'type' => 'text',
+		'length' => 1,
+		'default' => '1'
+		),
+       'usegoals' => array(
+		'type' => 'text',
+		'length' => 1,
+		'default' => '1'
+		)
 	);
 ?>
