@@ -81,7 +81,7 @@ class dbassignmentlearningoutcomes extends dbtable {
         if (!empty($LO)) {
            
             foreach ($LO as $thisLO) {
-                $str .= $thisLO["learningoutcome"];
+                $str .= $thisLO["learningoutcome"].'<br/>';
                 $count++;
             }
            

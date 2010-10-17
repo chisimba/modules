@@ -151,10 +151,9 @@ class assignment extends controller {
      *
      */
     public function dispatch($action) {
-        /* else {
-          return $this->nextAction(NULL, array('error'=>'notincontext'), '_default');
-          }
-         */
+        if (!$this->objContext->isInContext()) {
+            return "needtojoin_tpl.php";
+        }
         if (!$this->isValid($action)) {
             return $this->nextAction(NULL, array('error' => 'nopermission'));
         }
@@ -350,8 +349,8 @@ class assignment extends controller {
             return $this->nextAction(NULL, array('error' => 'wrongcontext'));
         }
         $learningoutcomesinassignment = $this->objAssignmentLearningOutcomes->getGoalsFormatted($id);
-        $groups=  $this->objAssignmentGroups->getGroupsFormatted($id);
-        
+        $groups = $this->objAssignmentGroups->getGroupsFormatted($id);
+
         $this->setVarByRef('assignment', $assignment);
         $this->setVarByRef('goals', $learningoutcomesinassignment);
         $this->setVarByRef('groups', $groups);
@@ -480,7 +479,7 @@ class assignment extends controller {
     }
 
     function __submitonlineassignment() {
-        
+
         $result = $this->objAssignmentSubmit->submitAssignmentOnline($this->getParam('id'), $this->objUser->userId(), $this->getParam('text'));
 
         return $this->nextAction('view', array('id' => $this->getParam('id'), 'message' => 'assignmentsubmitted'));
