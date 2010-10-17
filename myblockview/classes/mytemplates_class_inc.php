@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * 
+ * My blockview
  *
  * Create and display personal templates stored in the users upload directory.
  *
@@ -48,7 +48,9 @@ $GLOBALS['kewl_entry_point_run'])
 
 /**
 *
-* Database accesss class for Chisimba for the module myblockview
+* My blockview
+*
+* Create and display personal templates stored in the users upload directory.
 *
 * @author Derek Keats
 * @package myblockview
@@ -64,6 +66,7 @@ class mytemplates extends object
     *
     * Intialiser for the myblockview database connector
     * @access public
+    * @return VOID
     *
     */
     public function init()
@@ -73,16 +76,19 @@ class mytemplates extends object
     }
 
     /**
-     *
-     * 
-     *
-     */
+    *
+    * Return a template that is specified in the querystring, defaulting to
+    * the directory templates/default
+    *
+    * @return string The template content (or boolean FALSE if the file is not found)
+    *
+    */
     public function getMyTemplate()
     {
-        $templateName = $this->getParam('template', FALSE);
-        if ($templateName) {
-            if ($templateDir = $this->getPersonalTemplateDir($templateName)) {
-                $templateFile = $templateDir . 'template.txt';
+        $templateName = $this->getParam('template', "default");
+        if ($templateDir = $this->getPersonalTemplateDir($templateName)) {
+            $templateFile = $templateDir . 'template.txt';
+            if (file_exists($templateFile)) {
                 $pageContent = file_get_contents($templateFile);
                 return $pageContent;
             }
