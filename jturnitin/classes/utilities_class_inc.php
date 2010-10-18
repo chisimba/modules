@@ -454,7 +454,7 @@ class utilities extends object {
                                 $this->getClassParams(),
                                 $assParams,
                                 $optionalParams));
-        error_log(var_export($res, true));
+       // error_log(var_export($res, true));
         if (in_array($res['code'], $successcodes)) {
             //add to local database
             if ($this->objTAssDB->addAssignment($this->objDBContext->getContextCode(), $assParams, $optionalParams)) {
