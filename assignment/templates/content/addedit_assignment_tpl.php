@@ -674,7 +674,13 @@ jQuery(document).ready(function() {
                   
                     jQuery("input[@name=\'groups_radio\']").change(function(){
                      var radiobuttonvalue = jQuery("input[@name=\'groups_radio\']:checked").val();
+                     if(jQuery.browser == \'msie\'){
+                       if(radiobuttonvalue == 1)
+                       radiobuttonvalue=0;
+                       else
+                       radiobuttonvalue=1;
 
+                    }
                     if(radiobuttonvalue == 1){
                         jQuery("#groupslist").show();
                         jQuery("#selectgroups").show();
@@ -689,6 +695,13 @@ jQuery(document).ready(function() {
 
                     jQuery("input[@name=\'goals_radio\']").change(function(){
                    var radiobuttonvalue = jQuery("input[@name=\'goals_radio\']:checked").val();
+           if(jQuery.browser == \'msie\'){
+                       if(radiobuttonvalue == 1)
+                       radiobuttonvalue=0;
+                       else
+                       radiobuttonvalue=1;
+
+                    }
                     if(radiobuttonvalue == 1){
                        jQuery("#goalslist").show();
                         jQuery("#selectgoals").show();
