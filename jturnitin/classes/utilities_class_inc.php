@@ -418,7 +418,7 @@ class utilities extends object {
         $params['assignmentdatestart'] = $this->formatTIIDate($this->getParam('startdt'));
         $params['assignmentdatedue'] = $this->formatTIIDate($this->getParam('duedt'));
         $params['instructoremail'] = $this->getInstructorEmail();
-        
+
         return $params;
     }
 
@@ -448,15 +448,15 @@ class utilities extends object {
 
 
 
-        $res = $this->objTOps->createAssessment(array_merge(
+        $xres = $this->objTOps->createAssessment(array_merge(
                                 $this->getUserParams(),
                                 $this->getClassParams(),
                                 $assParams,
                                 $optionalParams));
-print_r($res);
-die();
-       // $this->objTOps->debug($res['rcode'].','.$res['rmessage']);
-        if (in_array($res['code'], $successcodes)) {
+        $res = explode("|", $xres);
+        $code = $res[0];
+        $message = $res[1];
+        if (in_array($code, $successcodes)) {
             //add to local database
             if ($this->objTAssDB->addAssignment($this->objDBContext->getContextCode(), $assParams, $optionalParams)) {
                 return json_encode(array('success' => 'true', 'msg' => 'A new assigment entitled <b>"' . $this->getParam('title') . '"</b> was successfully created'));
@@ -464,8 +464,8 @@ die();
                 return json_encode(array('success' => false, 'msg' => 'The assigment was create on Turnitin but an error occurred while inserting the details into the database'));
             }
         } else {
-            $message = $res['message'];
-            return json_encode(array('success' => false, 'msg' => "Error: " . $message[0]));
+          
+            return json_encode(array('success' => false, 'msg' => "Error: " . $message));
         }
     }
 

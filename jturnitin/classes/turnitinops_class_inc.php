@@ -443,14 +443,8 @@ class turnitinops extends object {
         $object = ($xml->object) ? $xml->object : null;
         $objectID = ($xml->objectID) ? $xml->objectID : null;
 
-        echo $message.','.$rcode;
-        die();
-
-        return array('message' => $message,
-            'code' => $rcode,
-            'object' => $object,
-            'xmlobject' => $xml,
-            'objectid' => $objectID);
+        return $rcode.'|'.$message;
+        
     }
 
     private function writeToFile() {
