@@ -51,8 +51,8 @@ class dbquestion_numerical extends dbtable {
         $this->addNumericalQuestions($id, $data);
     }
 
-    public function deleteNumericaQuestion($id) {
-        $this->delete('id', $id);
+    public function deleteNumericalQuestion($id) {
+        $this->delete('questionid', $id);
     }
 
     public function getNumericalAnswers($id) {

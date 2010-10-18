@@ -23,7 +23,7 @@ class numerical_question extends object {
 
         // Create form and add the table
         if($edit) {
-            $objForm = new form('numericalq', str_replace("amp;", "", $this->uri(array('action' => 'addnumericalquestion', 'id' => $testid, '$questionId'=>$questionId, 'edit'=>'true'))));
+            $objForm = new form('numericalq', str_replace("amp;", "", $this->uri(array('action' => 'addnumericalquestion', 'id' => $testid, 'questionId'=>$questionId, 'edit'=>'true'))));
         }else {
             $objForm = new form('numericalq', str_replace("amp;", "", $this->uri(array('action' => 'addnumericalquestion', 'id' => $testid))));
         }

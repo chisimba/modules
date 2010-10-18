@@ -95,6 +95,8 @@ class mcqtests extends controller {
         $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
         $this->objQuestionMatching = $this->newObject('dbquestion_matching');
         $this->objMultiAnswers = $this->newObject('dbquestion_multianswers');
+        $this->objQuestionNumerical = $this->newObject('dbquestion_numerical');
+        $this->objNumericalUnit = $this->newObject('dbnumericalunits');
 
         // context
         $this->objContext = $this->newObject('dbcontext', 'context');
@@ -511,10 +513,16 @@ class mcqtests extends controller {
 
             // delete a question
             case 'deletequestion':
+                $type = $this->getParam('type');
+                if($type == 'matching') {
+                    $this->objQuestionMatching->deleteQuestions($this->getParam('questionId'));
+                    $this->objMultiAnswers->deleteQuestions($this->getParam('questionId'));
+                }
+                else if($type == 'numerical') {
+                    $this->objQuestionNumerical->deleteNumericalQuestion($this->getParam('questionId'));
+                    $this->objNumericalUnit->deleteNumericalUnit($this->getParam('questionId'));
+                }
                 $this->dbQuestions->deleteQuestion($this->getParam('questionId'));
-                //$this->objQuestionMatching->deleteQuestions($this->getParam('questionId'));
-                //$this->objMultiAnswers->deleteQuestions($this->getParam('questionId'));
-                //$this->dbTestadmin->setTotal($this->getParam('id') , -$this->getParam('mark'));
                 $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
                 return $this->nextAction('view', array(
                     'id' => $this->getParam('id')
@@ -805,6 +813,13 @@ class mcqtests extends controller {
                     $num = 0;
                 }
                 return $this->previewTest($testId, $num);
+            case 'previewtest2':
+                $testId = $this->getParam('id');
+                $num = $this->getParam('num');
+                if ($num <= 0) {
+                    $num = 0;
+                }
+                return $this->previewTest2($testId, $num);
             case 'continuetest':
                 $this->unsetSession('taketest');
                 $resultId = $this->getParam('resultId', NULL);
@@ -858,28 +873,28 @@ class mcqtests extends controller {
                     if ($this->getParam('edit') == 'true') {
                         $edit = true;
                     }
-                    $this->addGeneralFormQuestions($qtype, $edit);
-                    $questionId = $this->getParam('questionId');
+                    $questionId = $this->addGeneralFormQuestions($qtype, $edit);
                     $this->addMatchingQuestions($questionId, $edit);
                 } else {
                     $id = $this->addGeneralFormQuestions($qtype);
                     $this->addMatchingQuestions($id);
                 }
-
+                $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
                 return $this->nextAction('view2', array('id' => $this->getParam('id')));
             case 'addnumericalquestion':
                 $qtype = $this->objLanguage->languageText('mod_mcqtests_numerical', 'mcqtests');
-                if ($this->getParam('edit')) {
+                if (strlen($this->getParam('edit')) > 0 ) {
                     if ($this->getParam('edit') == 'true') {
                         $edit = true;
                     }
-                    $id = $this->addGeneralFormQuestions($qtype, $edit);
-                    $this->addNumericalQuestions($id, $edit);
+                    $questionId = $this->addGeneralFormQuestions($qtype, $edit);
+                    $this->addNumericalQuestions($questionId, $edit);
                 } else {
                     $id = $this->addGeneralFormQuestions($qtype);
                     $this->addNumericalQuestions($id);
                 }
-                return $this->nextAction('view', array('id' => $this->getParam('id')));
+                $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
+                return $this->nextAction('view2', array('id' => $this->getParam('id')));
             case 'viewmatchingquestions':
                 return $this->viewMatchingQuestions();
             case 'viewnumericalquestions':
@@ -1597,6 +1612,88 @@ class mcqtests extends controller {
     }
 
     /**
+     * Method to set up a test for answering.
+     *
+     * @access private
+     * @param string $testId The id of the test to be answered.
+     * @return The template displaying the test.
+     */
+    private function previewTest2($testId, $num = 0) {
+        $data = array();
+        $fieldlist = 'id,name,totalmark,timed,duration,description,testtype,qsequence,asequence';
+        $test = $this->dbTestadmin->getTests('', $fieldlist, $this->getParam('id'));
+        $results = $this->dbMarked->getSelectedAnswers($this->userId, $testId);
+        // new code for scrambling tests
+        if ($test[0]['qsequence'] == 'Scrambled' || $test[0]['asequence'] == 'Scrambled') {
+            $qData = $this->getSession('qData');
+            if (isset($qData) && !empty($qData)) {
+                $data = array_slice($qData, $num, 10);
+                $data[0]['count'] = count($qData);
+                $data[0]['qnum'] = $num;
+                foreach ($data as $key => $line) {
+                    if (isset($results) && !empty($results)) {
+                        foreach ($results as $item) {
+                            foreach ($data[$key]['answers'] as $k => $val) {
+                                if (($item['questionid'] == $line['id']) && ($item['answerid'] == $val['id'])) {
+                                    $data[$key]['answers'][$k]['selected'] = $item['id'];
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                $qData = $this->dbQuestions->getQuestions($test[0]['id']);
+                if (!empty($qData)) {
+                    if ($test[0]['qsequence'] == 'Scrambled') {
+                        shuffle($qData);
+                    }
+                    foreach ($qData as $key => $line) {
+                        $qData[$key]['questionorder'] = ($key + 1);
+                    }
+                    $qData[0]['count'] = count($qData);
+                    foreach ($qData as $key => $line) {
+                        $answers = $this->dbAnswers->getAnswers($line['id']);
+                        if ($test[0]['asequence'] == 'Scrambled') {
+                            shuffle($answers);
+                        }
+                        $qData[$key]['answers'] = $answers;
+                    }
+                    $this->setSession('qData', $qData);
+                    $data = array_slice($qData, $num, 10);
+                    $data[0]['count'] = count($qData);
+                    $data[0]['qnum'] = $num;
+                }
+            }
+        } else {
+            // original code
+            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');
+            if (!empty($data)) {
+                foreach ($data as $key => $line) {
+                    $answers = $this->dbAnswers->getAnswers($line['id']);
+                    if (isset($results) && !empty($results)) {
+                        foreach ($results as $item) {
+                            foreach ($answers as $k => $val) {
+                                if (($item['questionid'] == $line['id']) && ($item['answerid'] == $val['id'])) {
+                                    $answers[$k]['selected'] = $item['id'];
+                                }
+                            }
+                        }
+                    }
+                    $data[$key]['answers'] = $answers;
+                }
+                $data[0]['qnum'] = $num;
+            }
+        }
+
+        $this->setVarByRef('test', $test[0]);
+        $this->setVarByRef('data', $data);
+
+        $this->setVar('suppressFooter', TRUE);
+
+        return 'previewtest2_tpl.php';
+    }
+
+    /**
      * Method to save the students answers to the database.
      *
      * @access private
@@ -1852,10 +1949,10 @@ class mcqtests extends controller {
     private function addGeneralFormQuestions($qtype, $edit=null) {
         //$objQuestions = $this->getObject('dbquestions', 'mcqtests');
 
-        $id = $this->getParam('id');
+        $id = $this->getParam('questionId');
         //insert into questions table
         $questiondata = array();
-        $questiondata['testid'] = $id;
+        $questiondata['testid'] = $this->getParam('id');
         $questiondata['question'] = $this->getParam('qText');
         $questiondata['name'] = $this->getParam('qName');
         $questiondata['hint'] = $this->getParam('hint');
@@ -1874,8 +1971,6 @@ class mcqtests extends controller {
     }
 
     public function addMatchingQuestions($id, $edit=false) {
-        $this->objQuestionMatching = $this->newObject('dbquestion_matching');
-
         $matchingQuestionData = array();
         $matchingQuestionData['subquestions'] = array('q1' => trim($this->getParam('qmatching1')), 'q2' => trim($this->getParam('qmatching2')), 'q3' => trim($this->getParam('qmatching3')));
         $matchingQuestionData['subanswers'] = array('a1' => $this->getParam('aMatching1'), 'a2' => $this->getParam('aMatching2'), 'a3' => $this->getParam('aMatching3'));
@@ -1887,11 +1982,7 @@ class mcqtests extends controller {
         }
     }
 
-    public function addNumericalQuestions($id, $edit=false) {
-        $objQuestionNumerical = $this->newObject('dbquestion_numerical');
-        $objQuestionUnit = $this->newObject('dbnumericalunits');
-
-        $questionid = $id;
+    public function addNumericalQuestions($questionid, $edit=false) {
         $numericalQuestionData = array();
         // get info for unit marked
         if (strlen($this->getParam('unitmarked')) > 0) {
@@ -1902,18 +1993,17 @@ class mcqtests extends controller {
         $numericalQuestionData['answer'] = array('a1' => $this->getParam('aNumerical1'), 'a2' => $this->getParam('aNumerical2'), 'a3' => $this->getParam('aNumerical3'));
         $numericalQuestionData['mark'] = array('mark1' => $this->getParam('mark_1'), 'mark2' => $this->getParam('mark_2'), 'mark3' => $this->getParam('mark_3'));
         if ($edit) {
-            $objQuestionNumerical->updateNumericalQuestions($questionid, $numericalQuestionData);
+            $this->objQuestionNumerical->updateNumericalQuestions($questionid, $numericalQuestionData);
         } else {
-            $objQuestionNumerical->addNumericalQuestions($questionid, $numericalQuestionData);
+            $this->objQuestionNumerical->addNumericalQuestions($questionid, $numericalQuestionData);
         }
         //insert unit data
         $unitData = array();
         $unitData['unit'] = $this->getParam('aUnit');
-        $unitData['questionid'] = $questionid;
         if ($edit) {
-            $objQuestionUnit->updateNumericalUnits($unitData, $id);
+            $this->objNumericalUnit->updateNumericalUnits($questionid, $unitData);
         } else {
-            $objQuestionUnit->addNumericalUnits($unitData);
+            $this->objNumericalUnit->addNumericalUnits($unitData);
         }
     }
 

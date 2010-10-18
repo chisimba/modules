@@ -35,12 +35,12 @@ class dbnumericalunits extends dbtable {
         $this->insert($data);
     }
 
-    public function updateNumericalUnits($data, $id) {
-        $this->update("questionid", $id, $data);
+    public function updateNumericalUnits($id, $data) {
+        $this->update('questionid', $id, $data);
     }
 
     public function deleteNumericalUnit($id) {
-        $this->delete('id', $id);
+        $this->delete('questionid', $id);
     }
 
     public function getNumericalUnits($id) {

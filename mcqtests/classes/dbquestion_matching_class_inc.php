@@ -47,7 +47,10 @@ class dbquestion_matching extends dbtable {
             $questionData['subquestions'] = $row;
             $this->insert($questionData);
         }
-        
+        $this->addAnswers($id, $matchingQuestionData);
+    }
+
+   public function addAnswers($id, $matchingQuestionData) {
         $answerData = array();
         $answerData['questionid'] = $id;
         foreach($matchingQuestionData['subanswers'] as $row) {
@@ -56,9 +59,10 @@ class dbquestion_matching extends dbtable {
         }
     }
 
-    public function updateMatchingQuestions($id, $matchingQuestionData) {echo "ID IS: $id";die();
+    public function updateMatchingQuestions($id, $matchingQuestionData) {
         $this->delete('questionid', $id);
-        $this->insert($id, $matchingQuestionData);
+        $this->deleteAnswers($id);
+        $this->addMatchingQuestions($id, $matchingQuestionData);
     }
 
     public function getMatchingQuestions($id) {
@@ -68,6 +72,10 @@ class dbquestion_matching extends dbtable {
 
     public function deleteQuestions($id) {
         $this->delete('questionid', $id);
+    }
+
+    public function deleteAnswers($id) {
+        $this->objMultiAnswers->deleteAnswers($id);
     }
 }
 ?>

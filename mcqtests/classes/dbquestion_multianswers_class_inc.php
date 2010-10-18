@@ -47,7 +47,7 @@ class dbquestion_multianswers extends dbtable {
         $this->addAnswers($data);
     }
 
-    public function deleteQuestions($id) {
+    public function deleteAnswers($id) {
         $this->delete('questionid', $id);
     }
 }
