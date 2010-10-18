@@ -454,7 +454,7 @@ class utilities extends object {
                                 $assParams,
                                 $optionalParams));
 
-        $this->objTOps->debug($res['rcode'].','.$res['rmessage']);
+       // $this->objTOps->debug($res['rcode'].','.$res['rmessage']);
         if (in_array($res['code'], $successcodes)) {
             //add to local database
             if ($this->objTAssDB->addAssignment($this->objDBContext->getContextCode(), $assParams, $optionalParams)) {

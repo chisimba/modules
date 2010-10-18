@@ -167,7 +167,7 @@ class turnitinops extends object {
      */
     public function getXMLResult($xmlStr) {
         if ($this->diagnostic == 0) {
-            error_log(var_export($$xmlStr, true));
+           
             try {
                 $xml = new SimpleXMLElement($xmlStr);
             } catch (Exception $e) {
@@ -179,9 +179,10 @@ class turnitinops extends object {
                     'xmlobject' => "");
             }
 
+            $this->debug("startng ..");
             $message = $xml->rmessage;
             $rcode = $xml->rcode;
-
+$this->debug("message == ".$message);
             $object = ($xml->object) ? $xml->object : null;
             $objectID = ($xml->objectID) ? $xml->objectID : null;
 
@@ -507,7 +508,7 @@ class turnitinops extends object {
 
     public function debug($message) {
         $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
-        $fh = fopen($myFile, 'w') or die("can't open file");
+        $fh = fopen($myFile, 'a') or die("can't open file");
         fwrite($fh, $message);
         fclose($fh);
     }
