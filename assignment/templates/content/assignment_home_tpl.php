@@ -24,9 +24,9 @@ $objHead->type = 1;
 
 if ($this->isValid('add')) {
 
-    //$objIcon->setIcon('add');
+    $objIcon->setIcon('add');
     $link = new link($this->uri(array('action' => 'add')));
-    $link->link = $createButton->show();
+    $link->link =$objIcon->show();// $createButton->show();
     $objHead->str .= ' ' . $link->show();
 }
 
