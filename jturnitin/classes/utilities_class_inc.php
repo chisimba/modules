@@ -447,14 +447,14 @@ class utilities extends object {
             "submit_papers_to" => $this->getParam('submit_papers_to')
         );
 
-        error_log(var_export($assParams, true));
+        
 
         $res = $this->objTOps->createAssessment(array_merge(
                                 $this->getUserParams(),
                                 $this->getClassParams(),
                                 $assParams,
                                 $optionalParams));
-       // error_log(var_export($res, true));
+  
         if (in_array($res['code'], $successcodes)) {
             //add to local database
             if ($this->objTAssDB->addAssignment($this->objDBContext->getContextCode(), $assParams, $optionalParams)) {
