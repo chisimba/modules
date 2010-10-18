@@ -461,12 +461,7 @@ class turnitinops extends object {
         $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
         $actionArgs = '"-action=1" "-fid=1" "-utp=' . $this->utp . '"';
         $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
-        /* $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
-          $fh = fopen($myFile, 'w') or die("can't open file");
-          fwrite($fh, $command);
-          fclose($fh);
-
-         */
+        $this->debug($command);
         $results = shell_exec($command);
 
         return $this->getXMLResult($results);
@@ -512,6 +507,13 @@ class turnitinops extends object {
         $results = shell_exec($command);
         echo $results;
         //   return $this->getXMLResult($results);
+    }
+
+    private function debug($message) {
+        $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
+        $fh = fopen($myFile, 'w') or die("can't open file");
+        fwrite($fh, $command);
+        fclose($fh);
     }
 
     public function submitPaper($params) {
