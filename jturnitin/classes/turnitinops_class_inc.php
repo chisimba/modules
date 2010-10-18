@@ -185,7 +185,6 @@ class turnitinops extends object {
             $object = ($xml->object) ? $xml->object : null;
             $objectID = ($xml->objectID) ? $xml->objectID : null;
 
-$this->debug("message == ".$message. ", codes == ".$rcode);
 
             return array('message' => $message,
                 'code' => $rcode,
@@ -427,7 +426,7 @@ $this->debug("message == ".$message. ", codes == ".$rcode);
         $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs . ' ' . $optionalArgs;
         
         $results = shell_exec($command);
-       // $this->debug($command);
+       
         return $this->getXMLResult($results);
     }
 

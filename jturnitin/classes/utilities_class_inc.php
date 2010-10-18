@@ -453,7 +453,8 @@ class utilities extends object {
                                 $this->getClassParams(),
                                 $assParams,
                                 $optionalParams));
-
+print_r($res);
+die();
        // $this->objTOps->debug($res['rcode'].','.$res['rmessage']);
         if (in_array($res['code'], $successcodes)) {
             //add to local database
