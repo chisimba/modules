@@ -16,7 +16,7 @@ $objTimeOut = $this->newObject('timeoutMessage', 'htmlelements');
 
 $objTrim = $this->getObject('trimstr', 'strings');
 $createButton = new button('submit', $this->objLanguage->languageText('mod_assignment_createassignments', 'assignment', 'Create Assignment'));
-$createButton->setToSubmit();
+//$createButton->setToSubmit();
 
 $objHead = new htmlheading();
 $objHead->str = $this->objLanguage->languageText('mod_assignment_assignments', 'assignment', 'Assignments');
