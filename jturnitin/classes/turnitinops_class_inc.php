@@ -179,12 +179,12 @@ class turnitinops extends object {
                     'xmlobject' => "");
             }
 
-            $this->debug("startng ..");
+        ;
             $message = $xml->rmessage;
             $rcode = $xml->rcode;
-$this->debug("message == ".$message);
             $object = ($xml->object) ? $xml->object : null;
             $objectID = ($xml->objectID) ? $xml->objectID : null;
+$this->debug("message == ".$message, "codes == ".$rcode);
 
             return array('message' => $message,
                 'code' => $rcode,
@@ -509,7 +509,7 @@ $this->debug("message == ".$message);
     public function debug($message) {
         $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
         $fh = fopen($myFile, 'a') or die("can't open file");
-        fwrite($fh, $message);
+        fwrite($fh, $message.'\n');
         fclose($fh);
     }
 
