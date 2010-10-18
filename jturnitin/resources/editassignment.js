@@ -63,7 +63,7 @@ Ext.onReady(function(){
             emptyText: 'Title of the paper...',
             anchor:'95%',
             value: title,
-            // disabled:true,
+             disabled:true,
             allowBlank:false
         },
 
