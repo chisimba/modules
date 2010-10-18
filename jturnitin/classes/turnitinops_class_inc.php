@@ -179,12 +179,13 @@ class turnitinops extends object {
                     'xmlobject' => "");
             }
 
-        ;
+        
             $message = $xml->rmessage;
             $rcode = $xml->rcode;
             $object = ($xml->object) ? $xml->object : null;
             $objectID = ($xml->objectID) ? $xml->objectID : null;
-$this->debug("message == ".$message, "codes == ".$rcode);
+
+$this->debug("message == ".$message. ", codes == ".$rcode);
 
             return array('message' => $message,
                 'code' => $rcode,
