@@ -438,8 +438,8 @@ class turnitinops extends object {
         }
 
 
-        $message = $xml->rmessage;
-        $rcode = $xml->rcode;
+        $message = $xml->object->rmessage;
+        $rcode = $xml->object->rcode;
         $object = ($xml->object) ? $xml->object : null;
         $objectID = ($xml->objectID) ? $xml->objectID : null;
 
