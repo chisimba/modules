@@ -418,8 +418,7 @@ class utilities extends object {
         $params['assignmentdatestart'] = $this->formatTIIDate($this->getParam('startdt'));
         $params['assignmentdatedue'] = $this->formatTIIDate($this->getParam('duedt'));
         $params['instructoremail'] = $this->getInstructorEmail();
-        //error_log(var_export($params, true));
-
+        
         return $params;
     }
 
@@ -447,14 +446,15 @@ class utilities extends object {
             "submit_papers_to" => $this->getParam('submit_papers_to')
         );
 
-        
+
 
         $res = $this->objTOps->createAssessment(array_merge(
                                 $this->getUserParams(),
                                 $this->getClassParams(),
                                 $assParams,
                                 $optionalParams));
-  
+
+        $this->objTOps->debuf($res['rcode'].','.$res['rmessage']);
         if (in_array($res['code'], $successcodes)) {
             //add to local database
             if ($this->objTAssDB->addAssignment($this->objDBContext->getContextCode(), $assParams, $optionalParams)) {

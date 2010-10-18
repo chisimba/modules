@@ -240,7 +240,7 @@ class jturnitin extends controller {
 
             //------- Ajax methods-------//
             case 'ajax_addassignment':
-                //echo $this->objUtils->doAddAssignment();
+                echo $this->objUtils->doAddAssignment();
 
                 exit(0);
                 break;
