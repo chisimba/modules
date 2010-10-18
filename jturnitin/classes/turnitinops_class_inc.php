@@ -423,12 +423,7 @@ class turnitinops extends object {
         $optionalArgs.=' "-journal_check=' . $this->journal_check . '" ';
 
         $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs . ' ' . $optionalArgs;
-        /* $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debugx.txt";
-          $fh = fopen($myFile, 'w') or die("can't open file");
-          $stringData = $command;
-          fwrite($fh, $stringData);
-          fclose($fh); */
-//die();
+        $this->debug($command);
         $results = shell_exec($command);
         return $this->getXMLResult($results);
     }
@@ -510,7 +505,7 @@ class turnitinops extends object {
     }
 
     private function debug($message) {
-        $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
+        $myFile = "/var/www/chisimba/turnitin-uploads/debug.txt";
         $fh = fopen($myFile, 'w') or die("can't open file");
         fwrite($fh, $message);
         fclose($fh);
