@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Methods which intergrates the Turnitin API
  * into the Chisimba framework
@@ -28,23 +29,21 @@
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link      http://avoir.uwc.ac.za
  */
-
 // security check - must be included in all scripts
 if (!
-/**
- * The $GLOBALS is an array used to control access to certain constants.
- * Here it is used to check if the file is opening in engine, if not it
- * stops the file from running.
- *
- * @global entry point $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- *
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * The $GLOBALS is an array used to control access to certain constants.
+         * Here it is used to check if the file is opening in engine, if not it
+         * stops the file from running.
+         *
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         *
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
-
 
 /**
  * Class to supply an easy API for use from this module or even other modules.
@@ -55,36 +54,30 @@ class turnitinops extends object {
 
     //required
     public $gmtime, $encrypt, $md5, $aid, $diagnostic, $uem, $ufn, $uln, $utp;
-
     //optional
     public $said, $upw, $dis;
-
     //unique ids
     public $uid, $cid, $assignid;
-
     //function specific
     public $fid, $fcmd;
     public $ctl, $cpw, $tem, $assign, $dtstart, $dtdue, $ainst, $newassign, $ptl, $pdata, $ptype, $pfn, $pln;
     public $oid, $newupw, $username;
-
     //session
     public $sessionid;
-
     //config
     public $remote_host, $shared_secret_key;
-
     public $filepath;
-
     //optional params
-    public  $internet_check,
-            $report_gen_speed,
-            $exclude_biblio,
-            $exclude_quoted,
-            $exclude_value,
-            $late_accept_flag,
-            $submit_papers_to,
-            $s_paper_check,
-            $journal_check;
+    public $internet_check,
+    $report_gen_speed,
+    $exclude_biblio,
+    $exclude_quoted,
+    $exclude_value,
+    $late_accept_flag,
+    $submit_papers_to,
+    $s_paper_check,
+    $journal_check;
+
     /**
      * Constructor for the twitterlib class
      * @access public
@@ -102,20 +95,18 @@ class turnitinops extends object {
 
         //setup defaults
         $this->gmtime = $this->getGMT();
-        $this->encrypt=0;
-        $this->dis=0;
-        $this->diagnostic=0;
+        $this->encrypt = 0;
+        $this->dis = 0;
+        $this->diagnostic = 0;
 
         //additional properties
         $this->idsync = 1;
         $this->s_view_report = 1; // allow students to view the Originality Report (optional, default is set to not allow students to view Originality Reports)
-
-
         //success codes
         $this->successCodes = array();
         $this->successCodes['2'] = array(20, 21, 22);
         $this->successCodes['1'] = array(10, 11);
-        $this->submitted=$this->getObject("turnitinsubmittedassignments");
+        $this->submitted = $this->getObject("turnitinsubmittedassignments");
     }
 
     /**
@@ -124,42 +115,42 @@ class turnitinops extends object {
      * @return unknown
      */
     public function getMD5() {
-        $md5string = 	$this->aid.
-                $this->assign.
-                $this->assignid.
-                $this->cid.
-                $this->cpw.
-                $this->ctl.
-                $this->diagnostic.
-                $this->dis.
-                $this->dtdue.
-                $this->dtstart.
-                $this->encrypt.
-                $this->fcmd.
-                $this->fid.
-                $this->gmtime.
-                $this->newassign.
-                $this->newupw.
-                $this->oid.
-                $this->pfn.
-                $this->pln.
-                $this->ptl.
-                $this->ptype.
-                $this->said.
-                $this->tem.
-                $this->uem.
-                $this->ufn.
-                $this->uid.
-                $this->uln.
-                $this->upw.
-                $this->utp.
+        $md5string = $this->aid .
+                $this->assign .
+                $this->assignid .
+                $this->cid .
+                $this->cpw .
+                $this->ctl .
+                $this->diagnostic .
+                $this->dis .
+                $this->dtdue .
+                $this->dtstart .
+                $this->encrypt .
+                $this->fcmd .
+                $this->fid .
+                $this->gmtime .
+                $this->newassign .
+                $this->newupw .
+                $this->oid .
+                $this->pfn .
+                $this->pln .
+                $this->ptl .
+                $this->ptype .
+                $this->said .
+                $this->tem .
+                $this->uem .
+                $this->ufn .
+                $this->uid .
+                $this->uln .
+                $this->upw .
+                $this->utp .
                 $this->shared_secret_key;
         //error_log($md5string);
         return md5($md5string);
     }
 
     /**
-     *Get the time in a formatted GMT sting
+     * Get the time in a formatted GMT sting
      *
      * @return string
      */
@@ -175,7 +166,7 @@ class turnitinops extends object {
      * @return array
      */
     public function getXMLResult($xmlStr) {
-        if($this->diagnostic == 0) {
+        if ($this->diagnostic == 0) {
             error_log(var_export($$xmlStr, true));
             try {
                 $xml = new SimpleXMLElement($xmlStr);
@@ -183,10 +174,9 @@ class turnitinops extends object {
 
                 return array('message' => 'An error occured, cannot continue processing this request. Please
                      contact system administrator',
-                        'code' =>'413' ,
-                        'object' => "",
-                        'xmlobject' => "");
-
+                    'code' => '413',
+                    'object' => "",
+                    'xmlobject' => "");
             }
 
             $message = $xml->rmessage;
@@ -196,11 +186,11 @@ class turnitinops extends object {
             $objectID = ($xml->objectID) ? $xml->objectID : null;
 
             return array('message' => $message,
-                    'code' => $rcode,
-                    'object' => $object,
-                    'xmlobject' => $xml,
-                    'objectid'=>$objectID);
-        }else {
+                'code' => $rcode,
+                'object' => $object,
+                'xmlobject' => $xml,
+                'objectid' => $objectID);
+        } else {
             return $xmlStr;
         }
     }
@@ -212,38 +202,38 @@ class turnitinops extends object {
      * @return string
      */
     public function getParams() {
-        $url = "gmtime=".$this->gmtime;
-        $url .= "&fid=".$this->fid;
-        $url .= "&fcmd=".$this->fcmd;
-        $url .= "&encrypt=".$this->encrypt;
-        $url .= "&md5=".$this->getMD5();
-        $url .= "&aid=".$this->aid;
-        $url .= "&said=".$this->said;
-        $url .= "&diagnostic=".$this->diagnostic;
-        $url .= "&uem=".urlencode($this->uem);
-        $url .= "&upw=".urlencode($this->upw);
-        $url .= "&ufn=".urlencode($this->ufn);
-        $url .= "&uln=".urlencode($this->uln);
-        $url .= "&utp=".$this->utp;
-        $url .= "&ctl=".urlencode($this->ctl);
-        $url .= "&cpw=".urlencode($this->cpw);
-        $url .= "&tem=".$this->tem;
-        $url .= "&oid=".$this->oid;
-        $url .= "&newupw=".urlencode($this->newupw);
-        $url .= "&assign=".urlencode($this->assign);
-        $url .= "&dis=".$this->dis;
-        $url .= "&uid=".urlencode($this->uid);
-        $url .= "&cid=".urlencode($this->cid);
-        $url .= "&idsync=".urlencode($this->idsync);
-        $url .= "&assignid=".urlencode($this->assignid);
-        $url .= "&dtstart=".urlencode($this->dtstart);
-        $url .= "&dtdue=".urlencode($this->dtdue);
-        $url .= "&ptl=".urlencode($this->ptl);
-        $url .= "&s_view_report=".urlencode($this->s_view_report);
-        $url .= "&ptype=".urlencode($this->ptype);
-        $url .= "&filepath=".urlencode($this->filepath);
-        if($this->sessionid) {
-            $url .= "&session-id=".urlencode($this->sessionid);
+        $url = "gmtime=" . $this->gmtime;
+        $url .= "&fid=" . $this->fid;
+        $url .= "&fcmd=" . $this->fcmd;
+        $url .= "&encrypt=" . $this->encrypt;
+        $url .= "&md5=" . $this->getMD5();
+        $url .= "&aid=" . $this->aid;
+        $url .= "&said=" . $this->said;
+        $url .= "&diagnostic=" . $this->diagnostic;
+        $url .= "&uem=" . urlencode($this->uem);
+        $url .= "&upw=" . urlencode($this->upw);
+        $url .= "&ufn=" . urlencode($this->ufn);
+        $url .= "&uln=" . urlencode($this->uln);
+        $url .= "&utp=" . $this->utp;
+        $url .= "&ctl=" . urlencode($this->ctl);
+        $url .= "&cpw=" . urlencode($this->cpw);
+        $url .= "&tem=" . $this->tem;
+        $url .= "&oid=" . $this->oid;
+        $url .= "&newupw=" . urlencode($this->newupw);
+        $url .= "&assign=" . urlencode($this->assign);
+        $url .= "&dis=" . $this->dis;
+        $url .= "&uid=" . urlencode($this->uid);
+        $url .= "&cid=" . urlencode($this->cid);
+        $url .= "&idsync=" . urlencode($this->idsync);
+        $url .= "&assignid=" . urlencode($this->assignid);
+        $url .= "&dtstart=" . urlencode($this->dtstart);
+        $url .= "&dtdue=" . urlencode($this->dtdue);
+        $url .= "&ptl=" . urlencode($this->ptl);
+        $url .= "&s_view_report=" . urlencode($this->s_view_report);
+        $url .= "&ptype=" . urlencode($this->ptype);
+        $url .= "&filepath=" . urlencode($this->filepath);
+        if ($this->sessionid) {
+            $url .= "&session-id=" . urlencode($this->sessionid);
         }
 
         error_log($url);
@@ -257,20 +247,20 @@ class turnitinops extends object {
      */
     public function getRedirectUrl() {
         $this->utp = 3;
-        return $this->remote_host.'?'.$this->getParams();
+        return $this->remote_host . '?' . $this->getParams();
     }
 
     public function getRemoteHost() {
         return $this->remote_host;
     }
+
     /**
      * Method to get the results from turnitin
      *
      */
     public function doGet() {
-        header('location:'.$this->remote_host.'?'.$this->getParams());
+        header('location:' . $this->remote_host . '?' . $this->getParams());
     }
-
 
     /**
      * To use the doPost function as written, CURL must be installed.
@@ -289,34 +279,33 @@ class turnitinops extends object {
         $ch = curl_init();
         //curl_setopt($ch, CURLOPT_POST,1);
 
-        curl_setopt($ch, CURLOPT_URL,$this->remote_host);
-        curl_setopt($ch, CURLOPT_POST, 1 );
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
+        curl_setopt($ch, CURLOPT_URL, $this->remote_host);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 
-        if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '') {
+        if (!empty($proxyArr) && $proxyArr['proxy_protocol'] != '') {
             error_log('Using proxy......');
             error_log(var_export($proxyArr, true));
             //setup proxy
             //curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
             curl_setopt($ch, CURLOPT_PROXYPORT, $proxyArr['proxy_port']);
-            curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_protocol'].'://'.$proxyArr['proxy_host']);
+            curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_protocol'] . '://' . $proxyArr['proxy_host']);
         }
         $params = $this->getParams();
         // print $params;
         //die($params);
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
         ob_start();
-        $result=curl_exec ($ch);
-        curl_close ($ch);
+        $result = curl_exec($ch);
+        curl_close($ch);
         error_log(var_export($result, true));
         return $this->getXMLResult($result);
     }
-
 
     /**
      * Method to post an assessment to Turnitin
@@ -328,22 +317,22 @@ class turnitinops extends object {
         $proxyArr = $objProxy->getProxy();
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_POST,1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
-        curl_setopt($ch, CURLOPT_URL,$this->remote_host);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($ch, CURLOPT_URL, $this->remote_host);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '') {
+        if (!empty($proxyArr) && $proxyArr['proxy_protocol'] != '') {
             //setup proxy
             //curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
             curl_setopt($ch, CURLOPT_PROXYPORT, $proxyArr['proxy_port']);
-            curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_protocol'].$proxyArr['proxy_host']);
+            curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_protocol'] . $proxyArr['proxy_host']);
         }
-        $result=curl_exec ($ch);
-        curl_close ($ch);
+        $result = curl_exec($ch);
+        curl_close($ch);
 
         //return $this->getXMLResult($result);
         //print $params;
@@ -359,14 +348,12 @@ class turnitinops extends object {
         $this->fcmd = 1;
         $this->fcmd = 2;
 
-        $this->uem= $params['email'];
-        $this->ufn=$params['firstname'];
-        $this->uln=$params['lastname'];
-        $this->upw=$params['password'];
+        $this->uem = $params['email'];
+        $this->ufn = $params['firstname'];
+        $this->uln = $params['lastname'];
+        $this->upw = $params['password'];
         return $this->doPost();
-
     }
-
 
     /**
      * Method to create a Lecturer on Turnitin
@@ -385,6 +372,7 @@ class turnitinops extends object {
     function createStudent($params) {
         return $this->createUser($params, 1);
     }
+
     public function createAssessment($params) {
         $this->fid = 4;
         $this->fcmd = 2;
@@ -399,52 +387,59 @@ class turnitinops extends object {
         $this->dtstart = $params['assignmentdatestart'];
         $this->dtdue = $params['assignmentdatedue'];
 
-        $this->internet_check=$params['internet_check'];
-        $this->report_gen_speed=$params['report_gen_speed'];
-        $this->exclude_biblio=$params['exclude_biblio'];
-        $this->exclude_quoted=$params['exclude_quoted'];
-        $this->exclude_value=$params['exclude_value'];
-        $this->late_accept_flag=$params['late_accept_flag'];
-        $this->submit_papers_to=$params['submit_papers_to'];
+        $this->internet_check = $params['internet_check'];
+        $this->report_gen_speed = $params['report_gen_speed'];
+        $this->exclude_biblio = $params['exclude_biblio'];
+        $this->exclude_quoted = $params['exclude_quoted'];
+        $this->exclude_value = $params['exclude_value'];
+        $this->late_accept_flag = $params['late_accept_flag'];
+        $this->submit_papers_to = $params['submit_papers_to'];
 
-        $this->internet_check=$params['internet_check'];
-        $this->report_gen_speed=$params['report_gen_speed'];
-        $this->exclude_biblio=$params['exclude_biblio'];
-        $this->exclude_quoted=$params['exclude_quoted'];
-        $this->exclude_value=$params['exclude_value'];
-        $this->late_accept_flag=$params['late_accept_flag'];
-        $this->submit_papers_to=$params['submit_papers_to'];
-        $this->journal_check=$params['journal_check'];
-        $this->s_paper_check=$params['s_paper_check'];
-        $this->s_view_report=$params['s_view_report'];
+        $this->internet_check = $params['internet_check'];
+        $this->report_gen_speed = $params['report_gen_speed'];
+        $this->exclude_biblio = $params['exclude_biblio'];
+        $this->exclude_quoted = $params['exclude_quoted'];
+        $this->exclude_value = $params['exclude_value'];
+        $this->late_accept_flag = $params['late_accept_flag'];
+        $this->submit_papers_to = $params['submit_papers_to'];
+        $this->journal_check = $params['journal_check'];
+        $this->s_paper_check = $params['s_paper_check'];
+        $this->s_view_report = $params['s_view_report'];
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=3" "-fid=4" "-utp='.$this->utp.'"   "-dis=1"  "-cpw=classpass" "-ctl='.$this->ctl .'"  "-dtstart='.$this->dtstart.'" "-dtdue='.$this->dtdue.'" ';
-        $actionArgs.='"-tem='.$this->tem .'" "-assign='.$this->assign.'"  "-ainst='.$this->ainst.'" ';
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=3" "-fid=4" "-utp=' . $this->utp . '"   "-dis=1"  "-cpw=classpass" "-ctl=' . $this->ctl . '"  "-dtstart=' . $this->dtstart . '" "-dtdue=' . $this->dtdue . '" ';
+        $actionArgs.='"-tem=' . $this->tem . '" "-assign=' . $this->assign . '"  "-ainst=' . $this->ainst . '" ';
 
-        $optionalArgs.=' "-internet_check='.$this->internet_check.'" ';
-        $optionalArgs.=' "-studentviewreport='.$this->s_view_report.'" ';
-        $optionalArgs.=' "-report_gen_speed='.$this->report_gen_speed.'" ';
-        $optionalArgs.=' "-exclude_biblio='.$this->exclude_biblio.'" ';
-        $optionalArgs.=' "-exclude_quoted='.$this->exclude_quoted.'" ';
-        $optionalArgs.=' "-exclude_type='.$this->exclude_value.'" ';
-        $optionalArgs.=' "-late_accept_flag='.$this->late_accept_flag.'" ';
-        $optionalArgs.=' "-submit_papers_to='.$this->submit_papers_to.'" ';
-        $optionalArgs.=' "-s_paper_check='.$this->s_paper_check.'" ';
-        $optionalArgs.=' "-journal_check='.$this->journal_check.'" ';
+        $optionalArgs.=' "-internet_check=' . $this->internet_check . '" ';
+        $optionalArgs.=' "-studentviewreport=' . $this->s_view_report . '" ';
+        $optionalArgs.=' "-report_gen_speed=' . $this->report_gen_speed . '" ';
+        $optionalArgs.=' "-exclude_biblio=' . $this->exclude_biblio . '" ';
+        $optionalArgs.=' "-exclude_quoted=' . $this->exclude_quoted . '" ';
+        $optionalArgs.=' "-exclude_type=' . $this->exclude_value . '" ';
+        $optionalArgs.=' "-late_accept_flag=' . $this->late_accept_flag . '" ';
+        $optionalArgs.=' "-submit_papers_to=' . $this->submit_papers_to . '" ';
+        $optionalArgs.=' "-s_paper_check=' . $this->s_paper_check . '" ';
+        $optionalArgs.=' "-journal_check=' . $this->journal_check . '" ';
 
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs.' '.$optionalArgs;
-        /*$myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debugx.txt";
-$fh = fopen($myFile, 'w') or die("can't open file");
-$stringData = $command;
-fwrite($fh, $stringData);
-fclose($fh);*/
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs . ' ' . $optionalArgs;
+        /* $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debugx.txt";
+          $fh = fopen($myFile, 'w') or die("can't open file");
+          $stringData = $command;
+          fwrite($fh, $stringData);
+          fclose($fh); */
 //die();
         $results = shell_exec($command);
         return $this->getXMLResult($results);
     }
 
+    private function writeToFile() {
+        $myFile = $this->debugfilename;
+        $fh = fopen($myFile, 'w') or die("can't open file");
+        $stringData = $command;
+        fwrite($fh, $stringData);
+        fclose($fh);
+    }
 
     /**
      * Method to create a user on Turnitin
@@ -462,16 +457,16 @@ fclose($fh);*/
         $this->uln = $params['lastname'];
         $this->uem = $params['email'];
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=1" "-fid=1" "-utp='.$this->utp.'"';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
-              /*$myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
-$fh = fopen($myFile, 'w') or die("can't open file");
-fwrite($fh, $command);
-fclose($fh);
-        
-*/
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=1" "-fid=1" "-utp=' . $this->utp . '"';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
+        /* $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
+          $fh = fopen($myFile, 'w') or die("can't open file");
+          fwrite($fh, $command);
+          fclose($fh);
+
+         */
         $results = shell_exec($command);
 
         return $this->getXMLResult($results);
@@ -482,9 +477,9 @@ fclose($fh);
         $this->fcmd = 2;
         $this->utp = 2;
 
-        $this->npw = 'nitsckie';//$params['password'];
-        $this->newupw = 'nitsckie';//$params['password'];
-        $this->upw = '123456';//$params['password'];
+        $this->npw = 'nitsckie'; //$params['password'];
+        $this->newupw = 'nitsckie'; //$params['password'];
+        $this->upw = '123456'; //$params['password'];
         $this->uid = $params['username'];
         $this->ufn = $params['firstname'];
         $this->uln = $params['lastname'];
@@ -509,10 +504,10 @@ fclose($fh);
         $this->ctl = $params['classtitle'];
         $this->cpw = $params['classpassword'];
         $this->diagnostic = 0;
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=11" "-fid=7" "-utp='.$this->utp.'" "-tem='.$this->tem.'"  "-assign='.$this->assign.'" "-oid='.$this->oid.'" "-ctl='.$this->ctl.'" ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=11" "-fid=7" "-utp=' . $this->utp . '" "-tem=' . $this->tem . '"  "-assign=' . $this->assign . '" "-oid=' . $this->oid . '" "-ctl=' . $this->ctl . '" ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
         echo $command;
         $results = shell_exec($command);
         echo $results;
@@ -523,7 +518,7 @@ fclose($fh);
         $this->fid = 5;
         $this->fcmd = 2;
         $this->utp = 1;
-        $this->ptype = 2;//file
+        $this->ptype = 2; //file
         $this->upw = $params['password'];
         $this->uid = $params['username'];
         $this->ufn = $params['firstname'];
@@ -533,32 +528,32 @@ fclose($fh);
         $this->assign = $params['assign'];
         $this->ptl = $params['papertitle'];
         $this->filepath = $params['filepath'];
-        $ie=$params['instructoremail'];
-        if($ie == '') {
-            $this->tem ='undefined';
+        $ie = $params['instructoremail'];
+        if ($ie == '') {
+            $this->tem = 'undefined';
         }
-        $xctl=$params['classtitle'];
+        $xctl = $params['classtitle'];
 
-        if($xctl == '') {
-            $xctl='Undefined';
+        if ($xctl == '') {
+            $xctl = 'Undefined';
         }
         $this->ctl = $xctl;
 
         //$this->cid = $params['classid'];
         $this->diagnostic = 0;
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=6" "-fid=5" "-utp='.$this->utp.'" "-ptl='.$this->ptl.'" "-filepath='.$this->filepath.'"  "-ptype='.$this->ptype.'" "-ctl='.$this->ctl.'" "-tem='.$this->tem.'"  "-assign='.$this->assign.'"  ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=6" "-fid=5" "-utp=' . $this->utp . '" "-ptl=' . $this->ptl . '" "-filepath=' . $this->filepath . '"  "-ptype=' . $this->ptype . '" "-ctl=' . $this->ctl . '" "-tem=' . $this->tem . '"  "-assign=' . $this->assign . '"  ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
         //echo $command;
         //die();
         /*
-$myFile = "/home/davidwaf/tttestFile.txt";
-$fh = fopen($myFile, 'w') or die("can't open file");
-fwrite($fh, $command);
-fclose($fh);
-        
-die();*/
+          $myFile = "/home/davidwaf/tttestFile.txt";
+          $fh = fopen($myFile, 'w') or die("can't open file");
+          fwrite($fh, $command);
+          fclose($fh);
+
+          die(); */
 
         $results = shell_exec($command);
         return $this->getXMLResult($results);
@@ -568,36 +563,36 @@ die();*/
         $this->fid = 5;
         $this->fcmd = 2;
         $this->utp = 2;
-        $this->ptype = 2;//file
+        $this->ptype = 2; //file
         $this->upw = $params['password'];
         $this->uid = $params['username'];
         $this->ufn = $params['firstname'];
         $this->uln = $params['lastname'];
         $this->uem = $params['email'];
 
-        $this->pfn=$params['pfirstname'];
-        $this->pln=$params['plastname'];
+        $this->pfn = $params['pfirstname'];
+        $this->pln = $params['plastname'];
         $this->tem = $params['instructoremail'];
         $this->assign = $params['assign'];
         $this->ptl = $params['papertitle'];
         $this->filepath = $params['filepath'];
-        $ie=$params['instructoremail'];
-        if($ie == '') {
-            $this->tem ='undefined';
+        $ie = $params['instructoremail'];
+        if ($ie == '') {
+            $this->tem = 'undefined';
         }
-        $xctl=$params['classtitle'];
+        $xctl = $params['classtitle'];
 
-        if($xctl == '') {
-            $xctl='Undefined';
+        if ($xctl == '') {
+            $xctl = 'Undefined';
         }
         $this->ctl = $xctl;
 
         //$this->cid = $params['classid'];
         $this->diagnostic = 0;
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=15" "-fid=5" "-utp='.$this->utp.'" "-ptl='.$this->ptl.'" "-filepath='.$this->filepath.'"  "-ptype='.$this->ptype.'" "-ctl='.$this->ctl.'" "-tem='.$this->tem.'"  "-assign='.$this->assign.'" "-pfn='.$this->pfn.'" "-pln='.$this->pln.'" ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=15" "-fid=5" "-utp=' . $this->utp . '" "-ptl=' . $this->ptl . '" "-filepath=' . $this->filepath . '"  "-ptype=' . $this->ptype . '" "-ctl=' . $this->ctl . '" "-tem=' . $this->tem . '"  "-assign=' . $this->assign . '" "-pfn=' . $this->pfn . '" "-pln=' . $this->pln . '" ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
         $results = shell_exec($command);
         return $this->getXMLResult($results);
     }
@@ -621,23 +616,23 @@ die();*/
         $this->uem = $params['email'];
         $this->tem = $params['instructoremail'];
 
-        $ie=$params['instructoremail'];
-        if($ie == '') {
-            $this->tem ='undefined';
+        $ie = $params['instructoremail'];
+        if ($ie == '') {
+            $this->tem = 'undefined';
         }
-        $xctl=$params['classtitle'];
+        $xctl = $params['classtitle'];
 
-        if($xctl == '') {
-            $xctl='Undefined';
+        if ($xctl == '') {
+            $xctl = 'Undefined';
         }
         $this->ctl = $xctl;
 
         //$this->cid = $params['classid'];
         $this->diagnostic = 0;
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=5" "-fid=3" "-utp='.$this->utp.'"  "-ctl='.$this->ctl.'" "-tem='.$this->tem.'"';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=5" "-fid=3" "-utp=' . $this->utp . '"  "-ctl=' . $this->ctl . '" "-tem=' . $this->tem . '"';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
         $results = shell_exec($command);
 
         return $this->getXMLResult($results);
@@ -650,7 +645,7 @@ die();*/
      * @return array
      */
     public function adminStats($params) {
-        $this->fid=12;
+        $this->fid = 12;
         $this->fcmd = 1;
         $this->utp = 3;
 
@@ -670,14 +665,14 @@ die();*/
         $this->cpw = $params['classpassword'];
 
         $this->cid = $params['classid'];
-        $this->dtstart=$params['dtstart'];
-        $this->dtdue=$params['dtdue'];
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
+        $this->dtstart = $params['dtstart'];
+        $this->dtdue = $params['dtdue'];
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
 
-        $actionArgs='"-action=2" "-fid=2" "-utp='.$this->utp.'"    "-cpw=classpass" "-ctl='.$this->ctl .'"  "-dtstart='.$this->dtstart.'" "-dtdue='.$this->dtdue.'" ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
-     
+        $actionArgs = '"-action=2" "-fid=2" "-utp=' . $this->utp . '"    "-cpw=classpass" "-ctl=' . $this->ctl . '"  "-dtstart=' . $this->dtstart . '" "-dtdue=' . $this->dtdue . '" ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
+
         $results = shell_exec($command);
         return $this->getXMLResult($results);
     }
@@ -696,19 +691,19 @@ die();*/
         $this->dtstart = $params['assignmentdatestart'];
         $this->dtdue = $params['assignmentdatedue'];
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
 
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=3" "-fid=4" "-utp='.$this->utp.'"   "-ctl='.$this->ctl .'" ';
-        $actionArgs.='"-tem='.$this->tem .'" "-assign='.$this->assign.'" ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs.' '.$optionalArgs;
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=3" "-fid=4" "-utp=' . $this->utp . '"   "-ctl=' . $this->ctl . '" ';
+        $actionArgs.='"-tem=' . $this->tem . '" "-assign=' . $this->assign . '" ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs . ' ' . $optionalArgs;
         $results = shell_exec($command);
         return $this->getXMLResult($results);
-
     }
+
     public function updateAssessment($params) {
         $this->fid = 4;
         $this->fcmd = 3;
@@ -723,48 +718,49 @@ die();*/
         $this->dtstart = $params['assignmentdatestart'];
         $this->dtdue = $params['assignmentdatedue'];
 
-        $this->internet_check=$params['internet_check'];
-        $this->report_gen_speed=$params['report_gen_speed'];
-        $this->exclude_biblio=$params['exclude_biblio'];
-        $this->exclude_quoted=$params['exclude_quoted'];
-        $this->exclude_value=$params['exclude_value'];
-        $this->late_accept_flag=$params['late_accept_flag'];
-        $this->submit_papers_to=$params['submit_papers_to'];
+        $this->internet_check = $params['internet_check'];
+        $this->report_gen_speed = $params['report_gen_speed'];
+        $this->exclude_biblio = $params['exclude_biblio'];
+        $this->exclude_quoted = $params['exclude_quoted'];
+        $this->exclude_value = $params['exclude_value'];
+        $this->late_accept_flag = $params['late_accept_flag'];
+        $this->submit_papers_to = $params['submit_papers_to'];
 
-        $this->internet_check=$params['internet_check'];
-        $this->report_gen_speed=$params['report_gen_speed'];
-        $this->exclude_biblio=$params['exclude_biblio'];
-        $this->exclude_quoted=$params['exclude_quoted'];
-        $this->exclude_value=$params['exclude_value'];
-        $this->late_accept_flag=$params['late_accept_flag'];
-        $this->submit_papers_to=$params['submit_papers_to'];
-        $this->journal_check=$params['journal_check'];
-        $this->s_paper_check=$params['s_paper_check'];
-        $this->s_view_report=$params['s_view_report'];
+        $this->internet_check = $params['internet_check'];
+        $this->report_gen_speed = $params['report_gen_speed'];
+        $this->exclude_biblio = $params['exclude_biblio'];
+        $this->exclude_quoted = $params['exclude_quoted'];
+        $this->exclude_value = $params['exclude_value'];
+        $this->late_accept_flag = $params['late_accept_flag'];
+        $this->submit_papers_to = $params['submit_papers_to'];
+        $this->journal_check = $params['journal_check'];
+        $this->s_paper_check = $params['s_paper_check'];
+        $this->s_view_report = $params['s_view_report'];
 
-        $objUser=$this->getObject("user","security");
+        $objUser = $this->getObject("user", "security");
 
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=3" "-fid=4" "-utp='.$this->utp.'"   "-dis=1"  "-cpw=classpass" "-ctl='.$this->ctl .'"  "-dtstart='.$this->dtstart.'" "-dtdue='.$this->dtdue.'" ';
-        $actionArgs.='"-tem='.$this->tem .'" "-assign='.$this->assign.'"  "-ainst='.$this->ainst.'" ';
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=3" "-fid=4" "-utp=' . $this->utp . '"   "-dis=1"  "-cpw=classpass" "-ctl=' . $this->ctl . '"  "-dtstart=' . $this->dtstart . '" "-dtdue=' . $this->dtdue . '" ';
+        $actionArgs.='"-tem=' . $this->tem . '" "-assign=' . $this->assign . '"  "-ainst=' . $this->ainst . '" ';
 
-        $optionalArgs.=' "-internet_check='.$this->internet_check.'" ';
-        $optionalArgs.=' "-studentviewreport='.$this->s_view_report.'" ';
-        $optionalArgs.=' "-report_gen_speed='.$this->report_gen_speed.'" ';
-        $optionalArgs.=' "-exclude_biblio='.$this->exclude_biblio.'" ';
-        $optionalArgs.=' "-exclude_quoted='.$this->exclude_quoted.'" ';
-        $optionalArgs.=' "-exclude_type='.$this->exclude_value.'" ';
-        $optionalArgs.=' "-late_accept_flag='.$this->late_accept_flag.'" ';
-        $optionalArgs.=' "-submit_papers_to='.$this->submit_papers_to.'" ';
-        $optionalArsdfgs.=' "-s_paper_check='.$this->s_paper_check.'" ';
-        $optionalArgs.=' "-journal_check='.$this->journal_check.'" ';
+        $optionalArgs.=' "-internet_check=' . $this->internet_check . '" ';
+        $optionalArgs.=' "-studentviewreport=' . $this->s_view_report . '" ';
+        $optionalArgs.=' "-report_gen_speed=' . $this->report_gen_speed . '" ';
+        $optionalArgs.=' "-exclude_biblio=' . $this->exclude_biblio . '" ';
+        $optionalArgs.=' "-exclude_quoted=' . $this->exclude_quoted . '" ';
+        $optionalArgs.=' "-exclude_type=' . $this->exclude_value . '" ';
+        $optionalArgs.=' "-late_accept_flag=' . $this->late_accept_flag . '" ';
+        $optionalArgs.=' "-submit_papers_to=' . $this->submit_papers_to . '" ';
+        $optionalArsdfgs.=' "-s_paper_check=' . $this->s_paper_check . '" ';
+        $optionalArgs.=' "-journal_check=' . $this->journal_check . '" ';
 
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs.' '.$optionalArgs;
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs . ' ' . $optionalArgs;
         $results = shell_exec($command);
         return $this->getXMLResult($results);
     }
+
     public function deleteAssessment($params) {
         $this->fid = 4;
         $this->fcmd = 4;
@@ -779,36 +775,35 @@ die();*/
         $this->dtstart = $params['assignmentdatestart'];
         $this->dtdue = $params['assignmentdatedue'];
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=3" "-fid=4" "-utp='.$this->utp.'"   "-dis=1"  "-cpw=classpass" "-ctl='.$this->ctl .'"  "-dtstart='.$this->dtstart.'" "-dtdue='.$this->dtdue.'" ';
-        $actionArgs.='"-tem='.$this->tem .'" "-assign='.$this->assign.'"  "-ainst='.$this->ainst.'" ';
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=3" "-fid=4" "-utp=' . $this->utp . '"   "-dis=1"  "-cpw=classpass" "-ctl=' . $this->ctl . '"  "-dtstart=' . $this->dtstart . '" "-dtdue=' . $this->dtdue . '" ';
+        $actionArgs.='"-tem=' . $this->tem . '" "-assign=' . $this->assign . '"  "-ainst=' . $this->ainst . '" ';
 
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs.' '.$optionalArgs;
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs . ' ' . $optionalArgs;
 
         $results = shell_exec($command);
         return $this->getXMLResult($results);
     }
 
     /*  public function deleteAssessment($params) {
-        $this->fid = 4;
-        $this->fcmd = 4;
-        $this->utp = 2;
-        $this->ufn = $params['firstname'];
-        $this->uln = $params['lastname'];
-        $this->uem = $params['email'];
-        $this->assign = $params['assignmenttitle'];
-        $this->ctl = $params['classtitle'];
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=13" "-fid=4" "-utp='.$this->utp.'"';
-        $actionArgs.='"-assign='.$this->assign.'" "-ctl='.$this->ctl .'"  ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
-  
-        $results = shell_exec($command);
-        return $this->getXMLResult($results);
-    }*/
+      $this->fid = 4;
+      $this->fcmd = 4;
+      $this->utp = 2;
+      $this->ufn = $params['firstname'];
+      $this->uln = $params['lastname'];
+      $this->uem = $params['email'];
+      $this->assign = $params['assignmenttitle'];
+      $this->ctl = $params['classtitle'];
+      $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
+      $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
+      $actionArgs='"-action=13" "-fid=4" "-utp='.$this->utp.'"';
+      $actionArgs.='"-assign='.$this->assign.'" "-ctl='.$this->ctl .'"  ';
+      $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
 
+      $results = shell_exec($command);
+      return $this->getXMLResult($results);
+      } */
 
     /**
      * Method to get a list of assessments
@@ -844,16 +839,17 @@ die();*/
 
         error_log("going to redirect to TII now...");
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
 
-        $actionArgs='"-action=8" "-fid=11" "-utp='.$this->utp.'"  "-ctl='.$this->ctl .'" ';
-        $actionArgs.=' "-assign='.$this->assign.'"  "-tem='.$this->tem.'"  ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
+        $actionArgs = '"-action=8" "-fid=11" "-utp=' . $this->utp . '"  "-ctl=' . $this->ctl . '" ';
+        $actionArgs.=' "-assign=' . $this->assign . '"  "-tem=' . $this->tem . '"  ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
 
         $results = shell_exec($command);
         return $this->getXMLResult($results);
     }
+
     public function checkForSubmission($params) {
         $this->fid = 11;
         $this->fcmd = 2;
@@ -871,18 +867,18 @@ die();*/
 
         error_log("going to redirect to TII now...");
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
 
-        $actionArgs='"-action=8" "-fid=11" "-utp='.$this->utp.'"  "-ctl='.$this->ctl .'" ';
-        $actionArgs.=' "-assign='.$this->assign.'"  "-tem='.$this->tem.'"  ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
-       /* $myFile = "/dwaf/turnitin/nxa4.txt";
-        $fh = fopen($myFile, 'w') or die("can't open file");
-        $stringData = $command;
-        fwrite($fh, $stringData);
-        fclose($fh);
-        */
+        $actionArgs = '"-action=8" "-fid=11" "-utp=' . $this->utp . '"  "-ctl=' . $this->ctl . '" ';
+        $actionArgs.=' "-assign=' . $this->assign . '"  "-tem=' . $this->tem . '"  ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
+        /* $myFile = "/dwaf/turnitin/nxa4.txt";
+          $fh = fopen($myFile, 'w') or die("can't open file");
+          $stringData = $command;
+          fwrite($fh, $stringData);
+          fclose($fh);
+         */
         ////die();
         $results = shell_exec($command);
         return $this->getXMLResult($results);
@@ -918,24 +914,21 @@ die();*/
         $this->doGet();
     }
 
-
-
     public function getCode($xml) {
         $tiixml = new SimpleXMLElement($xml);
         return $tiixml->rcode;
     }
 
-
-    public function getReport($params,$contextcode) {
-        $objUser=$this->getObject("user","security");
+    public function getReport($params, $contextcode) {
+        $objUser = $this->getObject("user", "security");
         $this->fid = 6;
         $this->fcmd = 1;
         $this->diagnostic = 1;
         $this->oid = $this->getParam('objectid');
-        $this->utp  = $objUser->isContextLecturer($params['userid'],$contextcode)?2:1;
+        $this->utp = $objUser->isContextLecturer($params['userid'], $contextcode) ? 2 : 1;
         $this->diagnostic = 0;
 
-        $this->upw =$this->upw = $this->_objSysConfig->getValue('password', 'turnitin');
+        $this->upw = $this->upw = $this->_objSysConfig->getValue('password', 'turnitin');
         $this->ufn = $params['firstname'];
         $this->uln = $params['lastname'];
         $this->uem = $params['email'];
@@ -964,42 +957,38 @@ die();*/
         $this->ufn = $params['firstname'];
         $this->uln = $params['lastname'];
         $this->uem = $params['email'];
-        $this->oid= $params['oid'];
+        $this->oid = $params['oid'];
         $this->diagnostic = 0;
 
         $this->assign = $params['assignmenttitle'];
         $this->ctl = $params['classtitle'];
 
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
 
-        $actionArgs='"-action=14" "-fid=8" "-utp='.$this->utp.'"  "-ctl='.$this->ctl .'" ';
-        $actionArgs.=' "-oid='.$this->oid.'" "-assign='.$this->assign.'" "-tem='.$this->tem.'"  ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
+        $actionArgs = '"-action=14" "-fid=8" "-utp=' . $this->utp . '"  "-ctl=' . $this->ctl . '" ';
+        $actionArgs.=' "-oid=' . $this->oid . '" "-assign=' . $this->assign . '" "-tem=' . $this->tem . '"  ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
 
         $results = shell_exec($command);
         return $this->getXMLResult($results);
-
     }
 
     public function viewSubmission($param) {
-
+        
     }
-
 
     public function isSuccess($fid, $code) {
         return in_array($code, $this->successCodes[$fid]);
     }
 
-
-    public function getSubmissions($params,$contextcode) {
+    public function getSubmissions($params, $contextcode) {
 
         $this->fid = 10;
         $this->fcmd = 2;
-        $objUser=$this->getObject("user","security");
-        $this->utp  =2;// $objUser->isContextLecturer($params['userid'],$contextcode)?2:1;
-
+        $objUser = $this->getObject("user", "security");
+        $this->utp = 2; // $objUser->isContextLecturer($params['userid'],$contextcode)?2:1;
         //var_dump($params);die;
         $this->assign = $params['assignmenttitle'];
         $this->tem = $params['instructoremail'];
@@ -1009,30 +998,29 @@ die();*/
         $this->uln = $params['lastname'];
         $this->uem = $params['email'];
 
-        if($params['instructoremail'] != $objUser->email()) {
-            $user=$this->submitted->getUser($params['instructoremail']);
+        if ($params['instructoremail'] != $objUser->email()) {
+            $user = $this->submitted->getUser($params['instructoremail']);
             $this->ufn = $user['firstname'];
             $this->uln = $user['surname'];
             $this->uem = $params['instructoremail'];
-
         }
 
 
         $this->diagnostic = 0;
 
 
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
 
-        $actionArgs='"-action=10" "-fid=10" "-utp='.$this->utp.'"  "-tem='.$this->tem.'" "-ctl='.$this->ctl .'" ';
-        $actionArgs.=' "-assign='.$this->assign.'"   ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
-        /*$myFile = "/dwaf/turnitin/nxa3.txt";
-        $fh = fopen($myFile, 'w') or die("can't open file");
-        $stringData = $command;
-        fwrite($fh, $stringData);
-        fclose($fh);
-        die();*/
+        $actionArgs = '"-action=10" "-fid=10" "-utp=' . $this->utp . '"  "-tem=' . $this->tem . '" "-ctl=' . $this->ctl . '" ';
+        $actionArgs.=' "-assign=' . $this->assign . '"   ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
+        /* $myFile = "/dwaf/turnitin/nxa3.txt";
+          $fh = fopen($myFile, 'w') or die("can't open file");
+          $stringData = $command;
+          fwrite($fh, $stringData);
+          fclose($fh);
+          die(); */
         $results = shell_exec($command);
         return $this->getXMLResult($results);
     }
@@ -1056,11 +1044,11 @@ die();*/
         $this->diagnostic = 0;
 
         error_log("get score for $this->ctl -> $this->assign -> $this->oid");
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
 
-        $actionArgs='"-action=7" "-fid=6" "-utp='.$this->utp.'"  "-oid='.$this->oid .'" ';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
+        $actionArgs = '"-action=7" "-fid=6" "-utp=' . $this->utp . '"  "-oid=' . $this->oid . '" ';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
 
         $results = shell_exec($command);
         return $this->getXMLResult($results);
@@ -1081,21 +1069,21 @@ die();*/
         $this->ufn = $params['firstname'];
         $this->uln = $params['lastname'];
         $this->uem = $params['email'];
-        $this->upw = "";//$params['password'];
+        $this->upw = ""; //$params['password'];
         //$this->userid = 18882189;
         //$this->sessionid = "7de114699da17b7df28605e403c7f275";
 //    	print_r($this->getParams());
-        $this->log('logSession', $params['firstname']. ' '. $params['lastname']);
-        $baseArgs='"-aid='.$this->aid.'" "-sharedsecretekey='.$this->shared_secret_key.'" "-diagnostic='.$this->diagnostic;
-        $baseArgs.=   '" "-encrypt='.$this->encrypt.'" "-fcmd='.$this->fcmd.'" "-uem='.$this->uem.'" "-upw='.$this->upw.'" "-ufn='.$this->ufn.'" "-uln='.$this->uln.'"';
-        $actionArgs='"-action=9" "-fid=17" "-utp='.$this->utp.'"  "-fcmd='.$this->fcmd.'"';
-        $command='java -jar '.$this->getResourcePath('turnitin.jar').' '.$baseArgs.' '.$actionArgs;
+        $this->log('logSession', $params['firstname'] . ' ' . $params['lastname']);
+        $baseArgs = '"-aid=' . $this->aid . '" "-sharedsecretekey=' . $this->shared_secret_key . '" "-diagnostic=' . $this->diagnostic;
+        $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
+        $actionArgs = '"-action=9" "-fid=17" "-utp=' . $this->utp . '"  "-fcmd=' . $this->fcmd . '"';
+        $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
         $results = shell_exec($command);
         return $this->getXMLResult($results);
-
     }
 
     function log($function, $message) {
         error_log("\nTURNITIN DEBUG: $function() -> :::: -> $message");
     }
+
 }
