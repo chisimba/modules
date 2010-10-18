@@ -389,6 +389,7 @@ class formmanager extends object {
      */
     public function createCategoryList($contextCode = Null) {
         //Form text
+        $noRecords = $this->objLanguage->languageText('mod_mcqtests_norecords', 'mcqtests', "No records found");
         $addCategory = $this->objLanguage->languageText('mod_mcqtests_addcategory', 'mcqtests', "Add Category");
         $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
         $addCategory = $this->objLanguage->languageText('mod_mcqtests_addcategory', 'mcqtests', "Add Category");
@@ -454,6 +455,10 @@ class formmanager extends object {
                 $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show(), '20%');
                 $objTable->endRow();
             }
+        } else {
+                $objTable->startRow();
+                $objTable->addCell($noRecords, '80%', $valign="top", $align='left', $class=null, $attrib="colspan='2'", $border = '0');
+                $objTable->endRow();
         }
         $str .= $objTable->show();
         // Create Back Button
@@ -641,6 +646,14 @@ class formmanager extends object {
      */
     public function createDescriptionList($categoryId) {
         //Form text
+        $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
+        $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
+        $wordDescriptions = $this->objLanguage->languageText("mod_mcqtests_descriptions", 'mcqtests', "Descriptions");
+        $wordBack = $this->objLanguage->languageText("word_back");
+        $listTitle = $phraseListOf." ".$wordDescriptions;
+        $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
+        $backToHome = $wordBack." ".$wordTo." ".$mcqHome;
+        $noRecords = $this->objLanguage->languageText('mod_mcqtests_norecords', 'mcqtests', "No records found");
         $addDesc = $this->objLanguage->languageText('mod_mcqtests_addDesc', 'mcqtests', 'Add Description');
         $wordDesc = $this->objLanguage->languageText('mod_mcqtests_description', 'mcqtests');
         $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
@@ -707,17 +720,13 @@ class formmanager extends object {
                 $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show(), '20%');
                 $objTable->endRow();
             }
+        } else {
+                $objTable->startRow();
+                $objTable->addCell($noRecords, '80%', $valign="top", $align='left', $class=null, $attrib="colspan='2'", $border = '0');
+                $objTable->endRow();
         }
         $str .= $objTable->show();
-        // Create Back Button
-        $buttonBack = new button("submit", $this->objLanguage->languageText("word_back"));
-        $objBack = &$this->getObject("link", "htmlelements");
-        $objBack->link($this->uri(array(
-                    'module' => 'mcqtests',
-                    'action' => 'choosequestiontype2'
-                )));
-        $objBack->link = $buttonBack->showSexy();
-        $str .= $objBack->show();
+
         // Create Back Button
         $buttonAdd = new button("submit", $addDesc);
         $objAdd = &$this->getObject("link", "htmlelements");
@@ -727,11 +736,22 @@ class formmanager extends object {
                 )));
         $objAdd->link = $buttonAdd->showSexy();
         $str .= " ".$objAdd->show();
+
+        // Create Back Button
+        $buttonBack = new button("submit", $backToHome);
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'choosequestiontype2'
+                )));
+        $objBack->link = $buttonBack->showSexy();
+        $str .= " ".$objBack->show();
+        
         //Add fieldset to hold Descriptions stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
         $objFieldset->width = '600px';
         //$objFieldset->align = 'center';
-        $objFieldset->setLegend($wordDesc);
+        $objFieldset->setLegend($listTitle);
 
         //Add table to General Fieldset
         $objFieldset->addContent($str);
@@ -762,6 +782,13 @@ class formmanager extends object {
         $this->loadClass("textarea", "htmlelements");
 
         //Form text
+        $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
+        $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
+        $wordDescriptions = $this->objLanguage->languageText("mod_mcqtests_descriptions", 'mcqtests', "Descriptions");
+        $wordBack = $this->objLanguage->languageText("word_back");
+        $BackToList = $wordBack." ".$wordTo." ".$phraseListOf." ".$wordDescriptions;
+        $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
+        $backToHome = $wordBack." ".$wordTo." ".$mcqHome;
         $addDescform = $this->objLanguage->languageText('mod_mcqtests_addDescription', 'mcqtests');
         $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
         $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
@@ -923,26 +950,26 @@ class formmanager extends object {
         $button->setToSubmit();
         $btnSave = $button->showSexy();
         // Create Cancel Button
-        $buttonCancel = new button("submit", $this->objLanguage->languageText("word_cancel"));
+        $buttonCancel = new button("submit", $backToHome);
         $objCancel = &$this->getObject("link", "htmlelements");
         $objCancel->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'mcqlisting',
+                    'action' => 'choosequestiontype2',
                     'id' => $id
                 )));
         $objCancel->link = $buttonCancel->showSexy();
         $btnCancel = $objCancel->show();
         // Create Back Button
-        $buttonBack = new button("submit", $this->objLanguage->languageText("word_back"));
+        $buttonBack = new button("submit", $BackToList);
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'choosequestiontype2'
+                    'action' => 'mcqlisting'
                 )));
         $objBack->link = $buttonBack->showSexy();
         $btnBack = $objBack->show();
         //Add Save and Cancel Buttons to form
-        $form->addToForm("<br />" . $btnSave . " " . $btnCancel . " " . $btnBack . "<br />");
+        $form->addToForm("<br />" . $btnSave . " " . $btnBack. " " . $btnCancel . "<br />");
 
         return "<div>" . $form->show() . "</div>";
     }

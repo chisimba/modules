@@ -77,9 +77,9 @@ $addLabLabel = $this->objLanguage->languageText('mod_mcqtests_addlab', 'mcqtests
 $errPercent = $this->objLanguage->languageText('mod_mcqtests_numericpercent', 'mcqtests');
 $errName = $this->objLanguage->languageText('mod_mcqtests_entername', 'mcqtests');
 $errDates = $this->objLanguage->languageText('mod_mcqtests_errordates', 'mcqtests');
-$permissionsLabel = $this->objLanguage->languageText('mod_mcqtests_coursepermissionslabel','mcqtests');
-$coursePermissionPrivate = $this->objLanguage->languageText('mod_mcqtests_privatecourse','mcqtests');
-$coursePermissionPublic = $this->objLanguage->languageText('mod_mcqtests_publiccourse','mcqtests');
+$permissionsLabel = $this->objLanguage->languageText('mod_mcqtests_coursepermissionslabel','mcqtests',"Data Bank Type");
+$coursePermissionPrivate = $this->objLanguage->languageText('mod_mcqtests_privatecourse','mcqtests', "Private Course");
+$coursePermissionPublic = $this->objLanguage->languageText('mod_mcqtests_publiccourse','mcqtests', "Public Course");
 	/*
 	if ($mode == 'edit') {
 		$this->setVarByRef('heading', $editHeading);
@@ -138,7 +138,9 @@ $this->objStepMenu->addStep($stepmenurestrictions,$stepmenusubrestrictions);
 
 //set a html table for display
 $objTable = new htmltable();
-$objTable->width = '99%';
+$objTable->width = '650px';
+$objTable->border = "0";
+$objTable->attributes = "align = 'center'";
 $objTable->cellpadding = 5;
 
 
@@ -163,20 +165,20 @@ switch($currentstep) {
     // Set test name
         $objLabel = new label('<b>'.$nameLabel.':</b>', 'input_name');
         $objInput = new textinput('name', $name);
-        $objInput->size = 70;
+        $objInput->size = "61";
 
         $objTable->startRow();
-        $objTable->addCell($objLabel->show() , '30%');
-        $objTable->addCell($objInput->show() , '70%');
+        $objTable->addCell($objLabel->show() , '20%', $valign="top");
+        $objTable->addCell($objInput->show() , '80%', $valign="top");
         $objTable->endRow();
 
         // Set description
         $objLabel = new label('<b>'.$descriptionLabel.':</b>', 'input_description');
-        $objText = new textarea('description', $description, 7, 67);
-        $objTable->addRow(array(
-            $objLabel->show() ,
-            $objText->show()
-        ));
+        $objText = new textarea('description', $description, "7", "70");
+        $objTable->startRow();
+        $objTable->addCell($objLabel->show() , '20%', $valign="top");
+        $objTable->addCell($objText->show() , '80%', $valign="top");
+        $objTable->endRow();
         // hidden fields
 	/*
 	$hidden = '';
@@ -283,8 +285,8 @@ switch($currentstep) {
         $objButton->setOnClick('javascript:document.getElementById(\'form_exit\').submit()');
         $btnExit = $objButton->show();
         $objTable->startRow();
-        $objTable->addCell($btnSave, '30%', '', 'right');
-        //$objTable->addCell($btnExit, '70%', '', 'left');
+        $objTable->addCell($btnSave, '20%', 'top', 'right');
+        $objTable->addCell("&nbsp;", '70%', '', 'left');
         $objTable->endRow();
 
         $this->objStepMenu->setCurrent(1);
@@ -392,8 +394,8 @@ switch($currentstep) {
         $objButton->setOnClick('javascript:history.back()');
         $btnExit = $objButton->show();
         $objTable->startRow();
-        $objTable->addCell($btnSave, '30%', '', 'right');
-        $objTable->addCell($btnExit, '70%', '', 'left');
+        $objTable->addCell($btnSave, '30%', 'top', 'right');
+        $objTable->addCell($btnExit, '70%', 'top', 'left');
         $objTable->endRow();
         $this->objStepMenu->setCurrent(2);
         $objForm->addToForm($objTable->show());
