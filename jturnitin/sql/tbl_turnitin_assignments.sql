@@ -36,6 +36,10 @@ $fields = array(
     'datestart' => array(
         'type' => 'timestamp',
     	),
+'resubmit' => array(
+        'type' => 'text',
+        'length' => 1,
+        ),
     );
 
 ?>

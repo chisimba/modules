@@ -75,7 +75,7 @@
 
     <update>
         <table>tbl_turnitin_assignments</table>
-        <version>0.115</version>
+        <version>0.117</version>
         <description>Added resubmit</description>
         <data>
             <add>
