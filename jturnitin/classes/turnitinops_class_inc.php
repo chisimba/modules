@@ -166,8 +166,8 @@ class turnitinops extends object {
      * @return array
      */
     public function getXMLResult($xmlStr) {
-        //if ($this->diagnostic == 0) {
-           
+        if ($this->diagnostic == 0) {
+
             try {
                 $xml = new SimpleXMLElement($xmlStr);
             } catch (Exception $e) {
@@ -179,7 +179,7 @@ class turnitinops extends object {
                     'xmlobject' => "");
             }
 
-        
+
             $message = $xml->rmessage;
             $rcode = $xml->rcode;
             $object = ($xml->object) ? $xml->object : null;
@@ -191,9 +191,9 @@ class turnitinops extends object {
                 'object' => $object,
                 'xmlobject' => $xml,
                 'objectid' => $objectID);
-        //} else {
-          //  return $xmlStr;
-        //}
+        } else {
+            return $xmlStr;
+        }
     }
 
     /**
@@ -424,10 +424,31 @@ class turnitinops extends object {
         $optionalArgs.=' "-journal_check=' . $this->journal_check . '" ';
 
         $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs . ' ' . $optionalArgs;
-        
+
         $results = shell_exec($command);
-       
-        return $this->getXMLResult($results);
+        try {
+            $xml = new SimpleXMLElement($results);
+        } catch (Exception $e) {
+
+            return array('message' => 'An error occured, cannot continue processing this request. Please
+                     contact system administrator',
+                'code' => '413',
+                'object' => "",
+                'xmlobject' => "");
+        }
+
+
+        $message = $xml->rmessage;
+        $rcode = $xml->rcode;
+        $object = ($xml->object) ? $xml->object : null;
+        $objectID = ($xml->objectID) ? $xml->objectID : null;
+
+
+        return array('message' => $message,
+            'code' => $rcode,
+            'object' => $object,
+            'xmlobject' => $xml,
+            'objectid' => $objectID);
     }
 
     private function writeToFile() {
@@ -509,7 +530,7 @@ class turnitinops extends object {
     public function debug($message) {
         $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
         $fh = fopen($myFile, 'a') or die("can't open file");
-        fwrite($fh, $message.'\n');
+        fwrite($fh, $message . '\n');
         fclose($fh);
     }
 
