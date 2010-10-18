@@ -166,7 +166,7 @@ class turnitinops extends object {
      * @return array
      */
     public function getXMLResult($xmlStr) {
-        if ($this->diagnostic == 0) {
+        //if ($this->diagnostic == 0) {
            
             try {
                 $xml = new SimpleXMLElement($xmlStr);
@@ -191,9 +191,9 @@ class turnitinops extends object {
                 'object' => $object,
                 'xmlobject' => $xml,
                 'objectid' => $objectID);
-        } else {
-            return $xmlStr;
-        }
+        //} else {
+          //  return $xmlStr;
+        //}
     }
 
     /**
