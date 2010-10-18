@@ -4,7 +4,7 @@
 
         <update>
         <table>tbl_turnitin_assignments_submitted</table>
-        <version>0.113</version>
+        <version>0.118</version>
         <description>Added context code</description>
         <data>
             <add>
@@ -47,7 +47,7 @@
 
     <update>
         <table>tbl_turnitin_assignments</table>
-        <version>0.113</version>
+        <version>0.118</version>
         <description>Added context code</description>
         <data>
             <add>
@@ -61,13 +61,13 @@
 
     <update>
         <table>tbl_turnitin_assignments_submitted</table>
-        <version>0.113</version>
+        <version>0.118</version>
         <description>Added document name</description>
         <data>
             <add>
                 <name>filename</name>
                 <type>text</type>
-                <length>255</length>
+                <length>512</length>
             </add>
         </data>
     </update>

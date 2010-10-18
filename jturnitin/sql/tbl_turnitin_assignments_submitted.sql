@@ -26,7 +26,11 @@ $fields = array(
  'submitted' => array(
         'type' => 'text',
         'length' => 1,
-        )  
+        )  ,
+  'contextcode' => array(
+        'type' => 'text',
+        'length' => 32,
+        ),
     );
 
 ?>
