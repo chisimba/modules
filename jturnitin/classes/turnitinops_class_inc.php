@@ -505,7 +505,7 @@ class turnitinops extends object {
     }
 
     private function debug($message) {
-        $myFile = "/var/www/wip/elearning/turnitin-uploads/debug.txt";
+        $myFile = "/var/www/kim/wip/elearning/turnitin-uploads/debug.txt";
         $fh = fopen($myFile, 'w') or die("can't open file");
         fwrite($fh, $message);
         fclose($fh);
