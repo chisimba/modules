@@ -48,6 +48,7 @@ $wordmcq = $objLanguage->languageText('mod_mcqtests_mcq', 'mcqtests');
 $category = $objLanguage->languageText('mod_mcqtests_addcategory', 'mcqtests');
 $simple = $objLanguage->languageText('mod_mcqtests_wordsimpleq', 'mcqtests');
 $description = $objLanguage->languageText('mod_mcqtests_addDesc', 'mcqtests');
+$typeLabel = $objLanguage->languageText('mod_mcqtests_typeofquest', 'mcqtests');
 
 $listLabel = ucwords($objLanguage->code2Txt('mod_mcqtests_liststudents', 'mcqtests', array(
     'readonlys' => 'students'
@@ -429,7 +430,7 @@ $button->setToSubmit();
 $previewButton = new button ('previewButton','Preview');
 
 $previewButton->setOnClick(  "window.open('".$this->uri(array(
-    'action' => 'previewtest',
+    'action' => 'previewtest2',
     'id' => $data['id'],
     'mode' => 'notoolbar'
     )) ."', 'previewtest', 'fullscreen,scrollbars');");

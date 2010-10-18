@@ -6,7 +6,6 @@
 
 // set up layout template
 $this->setLayoutTemplate('mcqtests_layout_tpl.php');
-
 $numericalformmanager = $this->getObject('numerical_question');
 
 $testid = $this->getParam('id');
