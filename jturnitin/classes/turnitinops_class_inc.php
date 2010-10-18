@@ -444,9 +444,9 @@ class turnitinops extends object {
         $objectID = ($xml->objectID) ? $xml->objectID : null;
 
 
-        return array('message' => $message,
-            'code' => $rcode,
-            'object' => $object,
+        return array('xxmessage' => $message,
+            'xxcode' => $rcode,
+            'xobject' => $object,
             'xmlobject' => $xml,
             'objectid' => $objectID);
     }
