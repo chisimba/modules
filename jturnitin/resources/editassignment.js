@@ -136,7 +136,7 @@ Ext.onReady(function(){
 
                     params: {
                         module: 'jturnitin',
-                        action: 'ajjax_updateassignment',
+                        action: 'ajax_updateassignment',
 
                         report_gen_speed:reportGenSpeed,
                         exclude_biblio:excludeBiographicMaterial,
