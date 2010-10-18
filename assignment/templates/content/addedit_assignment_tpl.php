@@ -674,7 +674,7 @@ jQuery(document).ready(function() {
                   
                     jQuery("input[@name=\'groups_radio\']").change(function(){
                      var radiobuttonvalue = jQuery("input[@name=\'groups_radio\']:checked").val();
-                     if(jQuery.browser == \'msie\'){
+                     if(jQuery.browser.msie){
                        if(radiobuttonvalue == 1)
                        radiobuttonvalue=0;
                        else
@@ -695,8 +695,8 @@ jQuery(document).ready(function() {
 
                     jQuery("input[@name=\'goals_radio\']").change(function(){
                    var radiobuttonvalue = jQuery("input[@name=\'goals_radio\']:checked").val();
-                   //alert(jQuery.browser);
-           if(jQuery.browser == \'msie\'){
+                   
+           if(jQuery.browser.msie){
                        if(radiobuttonvalue == 1)
                        radiobuttonvalue=0;
                        else
