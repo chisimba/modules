@@ -517,6 +517,16 @@ class formmanager extends object {
         $this->loadClass("textarea", "htmlelements");
 
         //Form text
+        $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
+        $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
+        $wordCategories = $this->objLanguage->languageText("mod_mcqtests_categories", 'mcqtests', "Categories");
+        $wordBack = $this->objLanguage->languageText("word_back");
+        $BackToList = $wordBack." ".$wordTo." ".$phraseListOf." ".$wordCategories;
+        $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
+        $backToHome = $wordBack." ".$wordTo." ".$mcqHome;
+        $addDescform = $this->objLanguage->languageText('mod_mcqtests_addDescription', 'mcqtests');
+        $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
+
         $addCategory = $this->objLanguage->languageText('mod_mcqtests_addcategory', 'mcqtests', "Add Category");
         $parentCategory = $this->objLanguage->languageText('mod_mcqtests_parentcategory', 'mcqtests', "Parent Category");
         $wordName = $this->objLanguage->languageText('mod_mcqtests_wordname', 'mcqtests', "Name");
@@ -613,7 +623,7 @@ class formmanager extends object {
         $button->setToSubmit();
         $btnSave = $button->showSexy();
         // Create Cancel Button
-        $buttonCancel = new button("submit", $this->objLanguage->languageText("word_cancel"));
+        $buttonCancel = new button("submit", $BackToList);
         $objCancel = &$this->getObject("link", "htmlelements");
         $objCancel->link($this->uri(array(
                     'module' => 'mcqtests',
@@ -623,7 +633,7 @@ class formmanager extends object {
         $objCancel->link = $buttonCancel->showSexy();
         $btnCancel = $objCancel->show();
         // Create Back Button
-        $buttonBack = new button("submit", $this->objLanguage->languageText("word_back"));
+        $buttonBack = new button("submit", $backToHome);
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
