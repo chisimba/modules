@@ -729,7 +729,7 @@ class turnitinops extends object {
         $this->uln = $params['lastname'];
         $this->uem = $params['email'];
         $this->tem = $params['instructoremail'];
-        $this->assign = $params['newassignmenttitle'];
+        $this->assign = $params['assignmenttitle'];
         $this->ainst = $params['assignmentinstruct'];
         $this->dtstart = $params['assignmentdatestart'];
         $this->dtdue = $params['assignmentdatedue'];
