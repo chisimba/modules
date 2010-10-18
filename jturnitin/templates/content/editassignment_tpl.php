@@ -11,6 +11,7 @@ $this->appendArrayVar('headerParams', '
 	        		var baseuri = "'.$objSysConfig->getsiteRoot().'index.php";
                                 var ainst="'.$instructions.'";
                                 var title="'.$title.'";
+                                var oldtitle="'.$title.'";
                                 var dstart="'.$datestart.'";
                                 var dend="'.$dateend.'";
                                 var assignmentid="'.$id.'";

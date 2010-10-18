@@ -464,7 +464,7 @@ class utilities extends object {
                 return json_encode(array('success' => false, 'msg' => 'The assigment was create on Turnitin but an error occurred while inserting the details into the database'));
             }
         } else {
-          
+
             return json_encode(array('success' => false, 'msg' => "Error: " . $message));
         }
     }
@@ -477,7 +477,7 @@ class utilities extends object {
     public function doUpdateAssignment() {
         $successcodes = array(40, 41, 42, 43);
         $assParams = $this->getAssessmentParams();
-
+        $params['assignmenttitle'] = $this->getParam('oldtitle');
         $optionalParams = array(
             "internet_check" => $this->getParam('internet_check'),
             "report_gen_speed" => $this->getParam('report_gen_speed'),

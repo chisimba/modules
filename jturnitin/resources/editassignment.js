@@ -148,7 +148,8 @@ Ext.onReady(function(){
                         journal_check:journal_check,
                         internet_check:internet_check,
                         s_view_report:studentsViewOriginalityReports,
-                        assignmentid:assignmentid
+                        assignmentid:assignmentid,
+                        oldtitle:oldtitle
 
                     },
                     success: function(form, action) {
