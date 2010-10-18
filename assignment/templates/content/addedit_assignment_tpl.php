@@ -695,7 +695,7 @@ jQuery(document).ready(function() {
 
                     jQuery("input[@name=\'goals_radio\']").change(function(){
                    var radiobuttonvalue = jQuery("input[@name=\'goals_radio\']:checked").val();
-                   alert(jQuery.browser);
+                   //alert(jQuery.browser);
            if(jQuery.browser == \'msie\'){
                        if(radiobuttonvalue == 1)
                        radiobuttonvalue=0;
