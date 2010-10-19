@@ -55,126 +55,71 @@ class libraryforms extends controller {
 
         case 'addeditform':
           return $this->saveRecord();
-          return $this->sendEmailNotification($title,$subject,
-				     $message= $surname.' '.$initials.' '. $title.' '. $studentno.' '. $postaladdress.' '. 
-                                     $physicaladdress.' '. $postalcode.' '. $postalcode2.' '.$telnoh.' '. $telnow.' '.
-                                     $cell.' '. $fax.' '.$emailaddress.' ' .$course.' '. $department.' '. $supervisor);
-
+          
 
         case 'addthesis':
          return $this->saveBookthesisRecord();
-         return $this->sendEmailNotification($title,$subject,
-                                     $message= $bprint.' '. $bauthor.' '.$btitle.' '.$bplace.' '.$bpublisher.' '.
-				     $bdate.' '.$bedition.' '.$bisbn.' '.$bseries.' '.$bcopy.' '. $btitlepages.' '.
-				     $bpages.' '.$bthesis.' '.$bname.' '.$baddress.' '.$bcell.' '.$bfax.' '.
-				     $btel.' '.$btelw.' '.$bemailaddress.' '.$bentitynum.' '.$bstudentno.' '.$bcourse);
+         
 
         case 'addperiodical':
          return $this->saveperiodicalRecord();
-         return $this->sendEmailNotification($title,$subject,
-				     $message= $titleperiodical.''. $volume.''.$part.''.$year.''.$pages.''.
-				     $author.''.$titlearticle.''.$prof.''.$address.''.$cell.''.$tell.''.
-				     $tellw.''.$emailaddress.''.$entitynum.''.$studentno.''.$course);
+         
 
         case 'addfeedbk':
          return $this->submitmsg();
-         return $this->sendEmailNotification($title,$subject,$message= $msg);;
+         
       
 	}// end if post
 
 	}// end switch function
 
+    //Display Landing page and forms
  
-       else{	//Display Landing page and forms
+     else{	
             switch($action)
-            {
+         {
  	 default: 
-     return "editadd_tpl.php";
-       
-        }
-	} //end switch
+            
+       return "editadd_tpl.php";
 
+       	case 'save_addedit':
+               return 'confirm_tpl.php';
+          
+          case 'update_addedit':              
+                return 'confirm_tpl.php';
+    
+         case 'save_book':
+               return 'confirm_tpl.php';
 
-        $this->objMail->from = 'no-reply@uwc.ac.za';
+         case 'update_book':
+               return 'confirm_tpl.php';
+
+	 case 'save_periodical':
+             return 'confirm_tpl.php';
+            
+         case 'update_periodical':         
+               return 'confirm_tpl.php';
+
+              
+	case 'save_fdbk':
+                   		
+                return 'fdbkconfirm_tpl.php';
+	case 'update_fdbk':
+                  return 'fdbkconfirm_tpl.php';
+   
+        case 'back':
+		return 'editadd_tpl.php';
+     }
+    }
+          
+              
+	$this->objMail->from = 'no-reply@uwc.ac.za';
         $this->objMail->fromName = 'no-reply';
 
         // Give the mail a subject and a body.
-        $this->objMail->subject = 'Student Book Enquiry';
-        $this->objMail->body ='';
-
-          switch($action){
-          case 'addeditform':
-
-        return $this->objMail->body=
-         			$surname = $this->getParam('surname');
-				$initials = $this->getParam('$initials');
-        			$title = $this->getParam('title');
-				$studentno = $this->getParam('studentno');
-				$postaladdress=$this->getParam('postaladdress');
-        			$physicaladdress=$this->getParam('physicaladdress');
-        			$postalcode=$this->getParam('postalcode');
-        			$postalcode2=$this->getParam('postalcode2');
-        			$telnoh =$this->getParam('telnoh');
-        			$telnow=$this->getParam('telnow');
-        			$cell=$this->getParam('cell');
-        			$fax=$this->getParam('fax');
-        			$emailaddress=$this->getParam('emailaddress');
-        			$course=$this->getParam('course');
-        			$department=$this->getParam('department');
-        			$supervisor=$this->getParam('supervisor');
-
-         case 'addthesis':
-               return $this->objMail=				
-                 		$bauthor= $this->getParam('bauthor');
-				$btitle= $this->getParam('btitle');
-				$bplace = $this->getParam('bplace');
-				$bpublisher = $this->getParam('bpublisher');
- 				$bdate = $this->getParam('bdate');
-				$bedition = $this->getParam('bedition');
-				$bisbn = $this->getParam('bisbn');
-				$bseries = $this->getParam('bseries');
-				$bcopy = $this->getParam('bcopy');
- 				$btitlepages = $this->getParam('btitlepages');
-				$bpages = $this->getParam('bpages');
-                                $bthesis = $this->getParam('bthesis');
-                                $bname = $this->getParam('bname');
-                                $baddress = $this->getParam('baddress');
-                                $bcell = $this->getParam('bcell');
-                                $bfax = $this->getParam('bfax');
-				$btel = $this->getParam('btel');
-                                $btelw = $this->getParam('btelw');
-                                $bemailaddress = $this->getParam('bemailaddress');
-                                $bentitynum = $this->getParam('bstudentno');
-                                $bstudentno = $this->getParam('bstudentno');
-                                $bcourse = $this->getParam('bcourse');
-
-	case 'addperiodical':
-                  return $this->objMail=
-                   		$titleperiodical = $this->getParam('titleperiodical');
-				$volume = $this->getParam('volume');
-				$part = $this->getParam('part');
-				$year = $this->getParam('year');
-				$pages = $this->getParam('pages');
-				$author = $this->getParam('author');
-				$titlearticle = $this->getParam('titlearticle');
-				$prof = $this->getParam('prof');
-				$address = $this->getParam('address');
-				$cell = $this->getParam('cell');
-				$tell = $this->getParam('tell');
-				$tellw = $this->getParam('tellw');
-				$emailaddress = $this->getParam('emailaddress');
-				$entitynum = $this->getParam('entitynum');
-				$studentno = $this->getParam('studentno');
-				$course = $this->getParam('course');
-
-      case 'addfeedbk':
-        return $this->objMail->body=
-	       			$name = $this->getParam('name');
-       	      			$email =$this->getParam('email');
-       	       			$msg=$this->getParam('msg');
-      }// end case
-
-
+        $this->objMail->subject = 'Book(s) Enquiry';
+        //$this->objMail->body =' Testing got furthup of this';
+       
        // Send to a single address.
         $this->objMail->to = 'arieluwc@uwc.ac.za';
 
@@ -183,8 +128,12 @@ class libraryforms extends controller {
 
         // Send the mail.
         $this->objMail->send();
-    
-	}//end of function dispatch
+
+
+}//end of function dispatch
+
+
+
  	/*
  	   *Public Method that checks if all required fields are filled
  	   *If fields are filled, and inserts data into db table, else returns error
@@ -228,9 +177,9 @@ class libraryforms extends controller {
         else {
            // return $this->nextAction('savestep', array('currentstep' => '2a'));
 
-return $this->nextAction('addeditform',array('save'=> '2a'));
+	return $this->nextAction('addeditform',array('save_addedit'=> '2a'));
 
-            return $this->objConfirm->addStudentDetails();
+        return $this->objConfirm->addStudentDetails();
         }
          // insert into database
 	$pid = $this->dbAddDistances->insertRecord($surname, $initials, $title, $studentno, $postaladdress,
@@ -290,7 +239,7 @@ return $this->nextAction('addeditform',array('save'=> '2a'));
              }
 
         else {
-             return $this->nextAction('addthesis',array('save'=> '2a'));
+             return $this->nextAction('addthesis',array('save_book'=> '2a'));
             return $this->objConfirm->addthesisDetails();
         }
         //insert into DB
@@ -345,7 +294,7 @@ return $this->nextAction('addeditform',array('save'=> '2a'));
              }
 
         else {
-            return $this->nextAction('addperiodical',array('save'=> '2a'));
+            return $this->nextAction('addperiodical',array('save_periodical'=> '2a'));
             return $this->objConfirm->addperiodDetails();
            }
 
@@ -385,7 +334,7 @@ public function submitmsg() {
              }
 
         else {
-            return $this->nextAction('addfeedbk',array('save'=> '2a'));
+            return $this->nextAction('addfeedbk',array('save_fdbk'=> '2a'));
             return $this->objConfirm->addfbDetails();
            }
 

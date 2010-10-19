@@ -162,9 +162,9 @@ $strjs = '<script type="text/javascript">
         $action = $this->getParam("action", "addfeedbk");
      
         if ($action == "addfeedbk") {
-           $formAction = $this->uri(array("action" => "save"), "libraryforms");
+           $formAction = $this->uri(array("action" => "save_fdbk"), "libraryforms");
         } else {
-        $formAction = $this->uri(array("action" => "update"), "libraryforms");
+        $formAction = $this->uri(array("action" => "update_fdbk"), "libraryforms");
         }
         return $formAction;
     }

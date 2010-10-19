@@ -28,7 +28,17 @@ $display = '<p>'.$header.'</p><hr />';
 echo $display;
 echo '<div class="noRecordsMessage">'. $this->objLanguage->languageText('category_resource_six','libraryforms','');
 echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_libraryforms_fdbkconfirmsent', 'libraryforms', '').'</div>';
+
+echo ('Back');
+  switch($action)
+     {
+     case 'Back':
+     return 'editadd_tpl.php';
+}
 $objBlocks = $this->getObject('blocks', 'blocks');
 $this->loadClass('link', 'htmlelements');
+
+
+
 
 ?>

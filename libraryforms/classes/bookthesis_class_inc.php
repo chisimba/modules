@@ -492,9 +492,9 @@ class bookthesis extends dbTable {
 
         $action = $this->getParam("action", "addthesis");
         if ($action == "addthesis") {
-            $formAction = $this->uri(array("action" => "addthesis"), "libraryforms");
+            $formAction = $this->uri(array("action" => "save_book"), "libraryforms");
         } else {
-            $formAction = $this->uri(array("action" => "update"), "libraryforms");
+            $formAction = $this->uri(array("action" => "update_book"), "libraryforms");
         }
         return $formAction;
 

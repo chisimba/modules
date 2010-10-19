@@ -31,6 +31,8 @@ echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_libr
 $objBlocks = $this->getObject('blocks', 'blocks');
 $this->loadClass('link', 'htmlelements');
 
+
+
 /*link to Landing Page
 $objLandingPage = new link($this->uri(array('action'=>'Home')));
 $objLandingPage->link='Home';

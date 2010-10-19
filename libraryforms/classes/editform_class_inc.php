@@ -349,9 +349,9 @@ class editform extends dbTable {
 
         $action = $this->getParam("action", "addeditform");
         if ($action == "addeditform") {
-            $formAction = $this->uri(array("action" => "save"), "libraryforms");
+            $formAction = $this->uri(array("action" => "save_addedit"), "libraryforms");
         } else {
-            $formAction = $this->uri(array("action" => "update"), "libraryforms");
+            $formAction = $this->uri(array("action" => "update_addedit"), "libraryforms");
         }
         return $formAction;
 
