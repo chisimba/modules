@@ -16,7 +16,7 @@ $middle .= $header->show();
 if ($this->objSysConfig->getValue('mod_news_homeintroduction', 'news')) {
     foreach ($categories as $category) {
         if ($category['showintroduction'] == 'Y') {
-            $middle .= $this->objWashOut->parseText($category['introduction']).'<br /><br />';
+           $middle .= $this->objWashOut->parseText($category['introduction']).'<br /><br />';
         }
     }
 }

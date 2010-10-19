@@ -76,6 +76,24 @@ $formTable->addCell('&nbsp;');
 $formTable->addCell('&nbsp;');
 $formTable->endRow();
 
+
+$datePicker = $this->newObject('datepicker', 'htmlelements');
+$datePicker->name = 'storyexpirydate';
+
+if ($mode == 'edit') {
+    $datePicker->defaultDate = $story['datetopstoryexpire'];
+}
+
+$formTable->startRow();
+$formTable->addCell($this->objLanguage->languageText('mod_news_storyexpirydate', 'news', 'Expiry Date'));
+$formTable->addCell($datePicker->show());
+$formTable->endRow();
+
+$formTable->startRow();
+$formTable->addCell('&nbsp;');
+$formTable->addCell('&nbsp;');
+$formTable->endRow();
+
 $datePicker = $this->newObject('datepicker', 'htmlelements');
 $datePicker->name = 'storydatepublish';
 

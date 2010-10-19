@@ -432,6 +432,7 @@ class news extends controller {
     private function __savestory() {
         $storyTitle = $this->getParam('storytitle');
         $storyDate = $this->getParam('storydate');
+        $storyExpiryDate = $this->getParam('storyexpirydate');
         $storyCategory = $this->getParam('storycategory');
         $storyLocation = $this->getParam('location');
         $storyText = $this->getParam('storytext');
@@ -450,7 +451,15 @@ class news extends controller {
             $publishdate = $this->getParam('storydatepublish') . ' ' . $this->getParam('time');
         }
 
-        $storyId = $this->objNewsStories->addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate, $sticky);
+        $storyId = $this->objNewsStories->addStory(
+                $storyTitle,
+                $storyDate,
+
+                $storyCategory,
+                $storyLocation,
+                $storyText,
+                $storySource,
+                $storyImage, $tags, $keyTags, $publishdate, $sticky,$storyExpiryDate);
 
 
         $category = $this->objNewsCategories->getCategory($storyCategory);
@@ -708,7 +717,7 @@ class news extends controller {
         $storySource = $this->getParam('storysource');
         $storyImage = $this->getParam('imageselect');
         $sticky = $this->getParam('sticky');
-
+        $storyExpiryDate = $this->getParam('storyexpirydate');
 
         $publishdate = $this->getParam('publishon');
 
@@ -721,7 +730,7 @@ class news extends controller {
         $tags = $this->getParam('storytags');
         $keyTags = array($this->getParam('keytag1'), $this->getParam('keytag2'), $this->getParam('keytag3'));
 
-        $result = $this->objNewsStories->updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate, $sticky);
+        $result = $this->objNewsStories->updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate, $sticky,$storyExpiryDate);
 
         $category = $this->objNewsCategories->getCategory($storyCategory);
 
@@ -847,7 +856,6 @@ class news extends controller {
 
             $menuId = $this->objNewsMenu->getIdCategoryItem($id);
             $this->setVarByRef('menuId', $menuId);
-
             $sectionLayout = $this->getObject('section_' . $category['itemsview']);
             $this->setVarByRef('category', $category);
             $this->setVarByRef('currentCategory', $category['id']);
@@ -1372,6 +1380,8 @@ class news extends controller {
                 $objBlocks = $this->getObject('blocks', 'blocks');
                 echo '<div id="' . $blockId . '" class="block highlightblock">' . $objBlocks->showBlock($block[1], $block[2], NULL, 20, TRUE, FALSE) . '</div>';
             } if
+
+
             ($block[0] == 'dynamicblock') {
                 echo '<div id="' . $blockId . '" class="block highlightblock">' . $this->objDynamicBlocks->showBlock($block[1]) . '</div>';
             } else {

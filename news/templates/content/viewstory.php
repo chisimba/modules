@@ -17,6 +17,7 @@ if ($this->objUser->isAdmin()) {
     $objIcon->setIcon('delete');
     $deleteIcon = $objIcon->show();
     ?>
+
 <script type="text/javascript">
     // <![CDATA[
     upIcon = '<?php echo $upIcon; ?>';
@@ -170,7 +171,7 @@ if ( $this->isValid('editmenuitem') && $menuId != FALSE && $this->objUser->inAdm
 // Loop through permissions and add page.
 if (count($editOptions) > 0) {
     $divider = '';
-    $middleContent .= '<p>';
+    $middleContent .= '<p class="newstoryp">';
     foreach ($editOptions as $editOption)
     {
         $middleContent .= $divider.$editOption;

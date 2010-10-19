@@ -35,7 +35,10 @@ class dbnewsstories extends dbtable
     * @param array $keyTags Key Tags
     * @param date/time $publishDate Date when story should be published
     */
-    public function addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate = NULL, $sticky='N')
+    public function addStory(
+            $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText,
+            $storySource, $storyImage, $tags, $keyTags, $publishDate = NULL, $sticky='N', $storyExpiryDate=NULL
+           )
     {
 
      
@@ -55,6 +58,7 @@ class dbnewsstories extends dbtable
             'storysource' => stripslashes($storySource),
             'storyimage' => $storyImage,
             'creatorid' => $userId,
+            'datetopstoryexpire'=> $storyExpiryDate,
             'storyorder' => $this->getLastCategoryOrder($storyCategory)+1,
             'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
             'dateavailable' => $publishDate,
@@ -135,7 +139,7 @@ class dbnewsstories extends dbtable
     * @param array $keyTags Key Tags
     * @param date/time $publishDate Date when story should be published
     */
-    public function updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate, $sticky)
+    public function updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate, $sticky,$storyExpiryDate)
     {
         $userId = $this->objUser->userId();
         
@@ -148,6 +152,7 @@ class dbnewsstories extends dbtable
             'storysource' => stripslashes($storySource),
             'storyimage' => $storyImage,
             'sticky' => $sticky,
+            'datetopstoryexpire'=> $storyExpiryDate,
             'modifierid' => $userId,
             'dateavailable' => $publishDate,
             'datemodified' => strftime('%Y-%m-%d %H:%M:%S', mktime())
