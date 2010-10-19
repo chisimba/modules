@@ -119,7 +119,7 @@ if ($assignment['format'] != '0') {
     $table->endRow();
 }
 if ($assignment['usegoals'] == '1') {
-   
+
         $fieldset = new fieldset();
         $fieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_learningoutcomes', 'assignment', 'Learning outcomes') . ':</b>');
         $fieldset->addContent($goals);
@@ -127,10 +127,10 @@ if ($assignment['usegoals'] == '1') {
         $table->startRow();
         $table->addCell($fieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
         $table->endRow();
-    
+
 }
 if ($assignment['usegroups'] == '1') {
-    
+
         $gfieldset = new fieldset();
         $gfieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_groups', 'assignment', 'Groups'));
         $gfieldset->addContent($groups);
@@ -138,7 +138,7 @@ if ($assignment['usegroups'] == '1') {
         $table->startRow();
         $table->addCell($gfieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
         $table->endRow();
-    
+
 }
 
 echo $table->show();
@@ -195,7 +195,7 @@ if ($this->isValid('markassignments')) {
 
 
     if (count($submissions) == 0) {
-        
+
     } else if (count($submissions) == 0) {
 
     } else {

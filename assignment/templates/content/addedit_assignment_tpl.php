@@ -412,7 +412,7 @@ if (count($groups) > 0) {
               $objGroups->setSelected($assignment['usegroups']);
             if (in_array($group['id'], $groupstoselect)) {
                 $checkbox->ischecked = TRUE;
-               
+
             }
         }
         $label = new label(' ' . $group['description'], 'group_' . $group['id']);
@@ -464,7 +464,7 @@ if (count($goals) > 0) {
                $objGoalsRadio->setSelected($assignment['usegoals']);
             if (in_array($goal['id'], $goalstoselect)) {
                 $checkbox->ischecked = TRUE;
-                
+
             }
         }
 
@@ -598,6 +598,9 @@ $form->addToForm($objEditor->show());
 $button = new button('save', $this->objLanguage->languageText('mod_assignment_saveassignment', 'assignment', 'Save Assignment'));
 $button->setToSubmit();
 $form->addToForm($button->show());
+$button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$button->setOnClick('javascript: window.location=\''.$this->uri(array()).'\'');
+$form->addToForm($button->show());
 $form->addRule('name', $this->objLanguage->languageText('mod_assignment_val_title', 'assignment', 'Please enter title'), 'required');
 $form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_mark', 'assignment', 'Please enter mark'), 'required');
 $form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_numreq', 'assignment', 'Has to be a number'), 'numeric');
@@ -659,7 +662,7 @@ if ($mode == 'edit') {
 }
 $groupsJs = '
 var hidegroups ="' . $hidegroups . '";
-    
+
 var hidegoals="' . $hidegoals . '";
 jQuery(document).ready(function() {
 
@@ -671,7 +674,7 @@ jQuery(document).ready(function() {
                    jQuery("#goalslist").hide();
                    jQuery("#selectgoals").hide();
                    }
-                  
+
                     jQuery("input[@name=\'groups_radio\']").change(function(){
                      var radiobuttonvalue = jQuery("input[@name=\'groups_radio\']:checked").val();
                      if(jQuery.browser.msie){
@@ -687,7 +690,7 @@ jQuery(document).ready(function() {
                     }else{
                         jQuery("#groupslist").hide();
                         jQuery("#selectgroups").hide();
-                       
+
                     }
 
  });
@@ -695,7 +698,7 @@ jQuery(document).ready(function() {
 
                     jQuery("input[@name=\'goals_radio\']").change(function(){
                    var radiobuttonvalue = jQuery("input[@name=\'goals_radio\']:checked").val();
-                   
+
            if(jQuery.browser.msie){
                        if(radiobuttonvalue == 1)
                        radiobuttonvalue=0;
@@ -709,7 +712,7 @@ jQuery(document).ready(function() {
                     }else{
                         jQuery("#goalslist").hide();
                         jQuery("#selectgoals").hide();
-                       
+
                     }
 
                   });
