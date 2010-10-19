@@ -694,5 +694,36 @@ class functions_assignment extends object {
 
         return $filename.'.'.$ext;
     }
+
+
+    /**
+     * creates a zip file from the submissions
+     * @param <type> $submissions
+     * @param <type> $assignmentId
+     * @return string
+     */
+    function createZipFromSubmissions($submissions, $assignmentId) {
+        $objConfig = $this->getObject('altconfig', 'config');
+        $objFile = $this->getObject('dbfile', 'filemanager');
+        $dirPath = $objConfig->getcontentBasePath() . '/assignment/submissions/' . $assignmentId;
+
+        $mkdir = $this->getObject('mkdir', 'files');
+        $mkdir->mkdirs($dirPath);
+        $wzip = $this->getObject('wzip', 'utilities');
+        $zip_name =$objConfig->getcontentBasePath() . '/assignment/submissions/'. $assignmentId.'.zip';
+        $zip = new ZipArchive();
+        $zip->open($zip_name, ZIPARCHIVE::CREATE);
+        foreach ($submissions as $submission) {
+            $submissionId = $submission['id'];
+            $fileId = $submission['studentfileid'];
+            $file = $objFile->getFile($fileId);
+            $filePath = $objConfig->getcontentBasePath() . '/assignment/submissions/' . $submissionId . '/' . $file['filename'];
+            $zip->addFile($filePath, $file['filename']);
+        }
+
+        $zip->close();
+        return  $zip_name;
+    }
+
 }//end of class
 ?>

@@ -764,7 +764,27 @@ class assignment extends controller {
         $this->setVarbyRef("filename", $filename);
         return "downloadsubmissionsfile_tpl.php";
     }
+    /**
+     * this downloads all student submissions as a zip file
+     */
+    function __downloadall() {
 
+        $assignmentId = $this->getParam("id");
+        $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignmentId);
+       
+
+        $zipname = $this->objAssignmentFunctions->createZipFromSubmissions($submissions, $assignmentId);
+        
+        if (file_exists($zipname)) {
+// Set Mimetype
+            header('Content-type: application/zip');
+// Set filename and as download
+            header('Content-Disposition: attachment; filename="' . $assignmentId . '.zip"');
+// Load file
+            readfile($zipname);
+            exit;
+        }
+    }
     /* ------------- END: Set of methods to replace case selection ------------ */
 }
 

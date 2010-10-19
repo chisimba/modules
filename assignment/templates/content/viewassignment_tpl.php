@@ -120,25 +120,23 @@ if ($assignment['format'] != '0') {
 }
 if ($assignment['usegoals'] == '1') {
 
-        $fieldset = new fieldset();
-        $fieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_learningoutcomes', 'assignment', 'Learning outcomes') . ':</b>');
-        $fieldset->addContent($goals);
+    $fieldset = new fieldset();
+    $fieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_learningoutcomes', 'assignment', 'Learning outcomes') . ':</b>');
+    $fieldset->addContent($goals);
 
-        $table->startRow();
-        $table->addCell($fieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
-        $table->endRow();
-
+    $table->startRow();
+    $table->addCell($fieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
+    $table->endRow();
 }
 if ($assignment['usegroups'] == '1') {
 
-        $gfieldset = new fieldset();
-        $gfieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_groups', 'assignment', 'Groups'));
-        $gfieldset->addContent($groups);
+    $gfieldset = new fieldset();
+    $gfieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_groups', 'assignment', 'Groups'));
+    $gfieldset->addContent($groups);
 
-        $table->startRow();
-        $table->addCell($gfieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
-        $table->endRow();
-
+    $table->startRow();
+    $table->addCell($gfieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
+    $table->endRow();
 }
 
 echo $table->show();
@@ -195,7 +193,7 @@ if ($this->isValid('markassignments')) {
 
 
     if (count($submissions) == 0) {
-
+        
     } else if (count($submissions) == 0) {
 
     } else {
@@ -350,12 +348,17 @@ if ($this->isValid('markassignments')) {
 $backLink = new link($this->uri(NULL));
 $backLink->link = $this->objLanguage->languageText('mod_assignment_backtolist', 'assignment', 'Back to List of Assignments');
 $exportStr = "";
+$downloadAllStr = "";
 if ($this->isValid('edit')) {
 
     $exportLink = new link($this->uri(array("action" => "exportospreadsheet", "assignmentid" => $assignment['id'])));
     $exportLink->link = $this->objLanguage->languageText('mod_assignment_export', 'assignment', 'Export to spreadsheet');
-    $exportStr = $exportLink->show();
+    $exportStr = '&nbsp;&nbsp;|&nbsp;&nbsp'.$exportLink->show();
+
+    $downloadalllink = new link($this->uri(array("action" => "downloadall", 'id' => $assignment['id'])));
+    $downloadalllink->link = $this->objLanguage->languageText('mod_assignment_downloadall', 'assignment', 'Download All');
+    $downloadAllStr='&nbsp;&nbsp;|&nbsp;&nbsp'.$downloadalllink->show();
 }
 echo '<br />';
-echo '<p>' . $backLink->show() . '&nbsp;' . $exportStr . '</p>';
+echo '<p>' . $backLink->show() . '&nbsp;' . $exportStr .$downloadAllStr. '</p>';
 ?>
