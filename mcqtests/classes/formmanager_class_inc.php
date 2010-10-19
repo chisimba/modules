@@ -1352,6 +1352,12 @@ class formmanager extends object {
         $this->loadClass("checkbox", "htmlelements");
 
         //Form texts
+        $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
+        $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
+        $wordBack = $this->objLanguage->languageText("word_back");
+        $BackToList = $wordBack." ".$wordTo." ".$phraseListOf." ";
+        $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
+        $backToHome = $wordBack." ".$wordTo." ".$mcqHome;
         $addDescform = $this->objLanguage->languageText('mod_mcqtests_addDescription', 'mcqtests');
         $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
         $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
@@ -1376,8 +1382,8 @@ class formmanager extends object {
         $phraseCreatedOrSaved = $this->objLanguage->languageText('mod_mcqtests_createdorsaved', 'mcqtests');
         $phraseCreated = $this->objLanguage->languageText('mod_mcqtests_created', 'mcqtests');
         $phrasePermissions = $this->objLanguage->languageText("mod_mcqtests_permissionsto", 'mcqtests');
-        $phraseSaveChanges = $this->objLanguage->languageText("mod_mcqtests_savechanges", 'mcqtests');
-        $phraseSaveAsNewQn = $this->objLanguage->languageText("mod_mcqtests_saveasnewqn", 'mcqtests');
+        $phraseSaveChanges = $this->objLanguage->languageText("mod_mcqtests_savechanges", 'mcqtests', "Save changes");
+        $phraseSaveAsNewQn = $this->objLanguage->languageText("mod_mcqtests_saveasnewqn", 'mcqtests', "Save as a new question");
 
         //Form Object
         $form = new form("adddescription", $this->uri(array(
@@ -1615,19 +1621,18 @@ class formmanager extends object {
         //$button1->setToSubmit();
         $btnSaveAsnew = $button1->showSexy();
 
-        // Create Cancel Button
-        $buttonCancel = new button("submit", $this->objLanguage->languageText("word_cancel"));
-        $objCancel = &$this->getObject("link", "htmlelements");
-        $objCancel->link($this->uri(array(
+        // Create Back Button
+        $buttonBack = new button("submit", $backToHome);
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'view',
-                    'id' => $id
+                    'action' => 'choosequestiontype2'
                 )));
-        $objCancel->link = $buttonCancel->showSexy();
-        $btnCancel = $objCancel->show();
+        $objBack->link = $buttonBack->showSexy();
+        $btnBack = $objBack->show();
 
         //Add Save and Cancel Buttons to form
-        $form->addToForm("<br />" . $btnSave . " " . $btnSaveAsnew . " " . $btnCancel . "<br />");
+        $form->addToForm("<br />" . $btnSave . " " . $btnSaveAsnew . " " . $btnBack . "<br />");
 
         return "<div>" . $form->show() . "</div>";
     }

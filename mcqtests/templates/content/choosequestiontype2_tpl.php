@@ -20,6 +20,14 @@ $objDescLink->link($this->uri(array(
 $objDescLink->link = "MCQ Category";
 $str .= "<h4>".$objDescLink->show()."</h4>";
 
+$objDescLink = &$this->getObject("link", "htmlelements");
+$objDescLink->link($this->uri(array(
+            'module' => 'mcqtests',
+            'action' => 'addrandomshortans'
+        )));
+$objDescLink->link = "Add Random Short Answer Question";
+$str .= "<h4>".$objDescLink->show()."</h4>";
+
 echo $str;
 //Load the classes for the template
 

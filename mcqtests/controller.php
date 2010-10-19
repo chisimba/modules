@@ -142,6 +142,25 @@ class mcqtests extends controller {
         }
         // Now the main switch for $action
         switch ($action) {
+            case 'addrandomshortans':
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                $id = $this->getParam('id', Null);
+                $test = $this->getParam('test', Null);
+                $this->setVarByRef('id', $id);
+                $this->setVarByRef('test', $test);
+                return 'addrandomshortanswer_tpl.php';
+                break;
+            case 'addrandomshortansconfirm':
+                //Get the cat id
+                $id = $this->getParam('id', Null);
+                //Fetch the form data into an array for insertion/update
+                $fields = array();
+                $fields['parentcategoryid'] = $this->getParam('parentId', Null);
+                $fields['name'] = $this->getParam('categoryname', Null);
+                $fields['categoryinfo'] = $this->getParam('desc', Null);
+                //Insert/Update
+                $id = $this->dbCategory->addCategory($fields, $id);
+                return $this->nextAction('addcategory', array('id' => $id));
             case "deletecat":
                 $this->nextAction($id = $this->getParam('id', null), $this->dbCategory->deleteCategory($id));
                 // After processing return to categorylisting
