@@ -155,12 +155,21 @@ class mcqtests extends controller {
                 $id = $this->getParam('id', Null);
                 //Fetch the form data into an array for insertion/update
                 $fields = array();
-                $fields['parentcategoryid'] = $this->getParam('parentId', Null);
-                $fields['name'] = $this->getParam('categoryname', Null);
-                $fields['categoryinfo'] = $this->getParam('desc', Null);
+                $fields['currentcategory'] = $this->getParam('currentcategory', Null);
+                $fields['categoryid'] = $this->getParam('categoryid', Null);
+                $fields['qname'] = $this->getParam('qname', Null);
+                $fields['qntext'] = $this->getParam('qntext', Null);
+                $fields['qngrade'] = $this->getParam('qngrade', Null);
+                $fields['penaltyfactor'] = $this->getParam('penaltyfactor', Null);
+                $fields['genfeedback'] = $this->getParam('genfeedback', Null);
+                $fields['sensitivity'] = $this->getParam('sensitivity', Null);
+                $fields['officialtags'] = $this->getParam('officialtags', Null);
+                $fields['othertags'] = $this->getParam('othertags', Null);
+
                 //Insert/Update
                 $id = $this->dbCategory->addCategory($fields, $id);
-                return $this->nextAction('addcategory', array('id' => $id));
+                return $this->nextAction('addrandomshortans', array('id' => $id));
+                break;
             case "deletecat":
                 $this->nextAction($id = $this->getParam('id', null), $this->dbCategory->deleteCategory($id));
                 // After processing return to categorylisting

@@ -1433,7 +1433,7 @@ class formmanager extends object {
         $objTable->cellspacing = '12';
 
         //use-category text box
-        $usecategory = new checkbox('usecategory');
+        $usecategory = new checkbox('currentcategory');
         $usecategory->setChecked(0);
         $usecategory->setValue(1);
 
