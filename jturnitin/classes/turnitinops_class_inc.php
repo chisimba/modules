@@ -475,7 +475,7 @@ class turnitinops extends object {
         $baseArgs.= '" "-encrypt=' . $this->encrypt . '" "-fcmd=' . $this->fcmd . '" "-uem=' . $this->uem . '" "-upw=' . $this->upw . '" "-ufn=' . $this->ufn . '" "-uln=' . $this->uln . '"';
         $actionArgs = '"-action=1" "-fid=1" "-utp=' . $this->utp . '"';
         $command = 'java -jar ' . $this->getResourcePath('turnitin.jar') . ' ' . $baseArgs . ' ' . $actionArgs;
-        $this->debug($command);
+        //$this->debug($command);
         $results = shell_exec($command);
 
         return $this->getXMLResult($results);
