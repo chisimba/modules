@@ -6,6 +6,60 @@ if ($mode == 'edit') {
 } else { // Mode is add so we can always change the type of the assignment
     $canChangeField = true;
 }
+// JavaScript
+if ($canChangeField) {
+    $jsToggleType = '<script language="JavaScript" type="text/javascript">
+function setTypeOptionsToDefault()
+{
+    var els = document.getElementsByName(\'filetypes[]\');
+    var len = els.length;
+    for (var i=0; i<len; ++i)
+        els[i].checked = false;
+    var els = document.getElementsByName(\'filenameconversion\');
+    var len = els.length;
+    for (var i=0; i<len; ++i)
+    switch (els[i].value) {
+        case \'0\':
+            els[i].checked = false;
+            break;
+        case \'1\':
+            els[i].checked = true;
+            break;
+        default: ;
+    }
+    return;
+}
+function toggleTypeOptions(val)
+{
+    var els = document.getElementsByName(\'filetypes[]\');
+    var len = els.length;
+    for (var i=0; i<len; ++i)
+        els[i].disabled = !val;
+    var els = document.getElementsByName(\'filenameconversion\');
+    var len = els.length;
+    for (var i=0; i<len; ++i)
+        els[i].disabled = !val;
+    return;
+}
+function toggleType(el)
+{
+    switch (el.value) {
+    case \'0\':
+        //document.getElementById(\'uploadableOptions\').style.visibility = \'hidden\';
+        setTypeOptionsToDefault();
+        toggleTypeOptions(false);
+        break;
+    case \'1\':
+        //document.getElementById(\'uploadableOptions\').style.visibility = \'visible\';
+        toggleTypeOptions(true);
+        break;
+    default: ;
+    }
+    return true;
+}
+</script>';
+    echo $jsToggleType;
+}
 /*
   // Load CSS & JS
   $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
@@ -94,21 +148,6 @@ $generaltable->addCell($label->show(), 200);
 $generaltable->addCell($textinput->show());
 $generaltable->endRow();
 
-//filename conversion
-$generaltable->startRow();
-$generaltable->addCell($this->objLanguage->languageText('mod_assignment_filenameconversion', 'assignment', 'Convert the Filename on Download?'));
-$radio = new radio('filenameconversion');
-$radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
-$radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
-if ($mode == 'edit') {
-    $radio->setSelected($assignment['filename_conversion']);
-} else {
-    $radio->setSelected(1);
-}
-$radio->setBreakSpace('&nbsp;');
-$generaltable->addCell($radio->show());
-$generaltable->endRow();
-
 //visibility
 
 $generaltable->startRow();
@@ -126,47 +165,12 @@ $radio->setBreakSpace('&nbsp;');
 $generaltable->addCell($radio->show());
 $generaltable->endRow();
 
-// Uploadable file types
-$generaltable->startRow();
-$generaltable->addCell($this->objLanguage->languageText('mod_assignment_uploadablefiletypes', 'assignment'));
-$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-$allowedFileTypes = $objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
-if (is_null($allowedFileTypes)) {
-    $arrAllowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'pdf', 'zip');
-} else {
-    $arrAllowedFileTypes = explode(',', $allowedFileTypes);
-}
-$this->loadClass('checkbox', 'htmlelements');
-if ($mode == 'edit') {
-    $rs = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
-    $arrAllowedFileTypesSelected = array();
-    if (!empty($rs)) {
-        foreach ($rs as $row) {
-            $arrAllowedFileTypesSelected[] = $row['filetype'];
-        }
-    }
-} else {
-    $arrAllowedFileTypesSelected = $arrAllowedFileTypes;
-}
-$stringFiletypes = '';
-$separator = '';
-foreach ($arrAllowedFileTypes as $filetype) {
-    $objCheckbox = new checkbox('filetypes[]', 'dummy', in_array($filetype, $arrAllowedFileTypesSelected));
-    $objCheckbox->setValue($filetype);
-    $stringFiletypes .= $separator . $objCheckbox->show() . '&nbsp;' . $filetype;
-    $separator = ' ';
-    unset($objCheckbox);
-}
-$generaltable->addCell($stringFiletypes);
-$generaltable->endRow();
-
-
-
 // type
 $typetable = $this->newObject('htmltable', 'htmlelements');
 
 $typetable->startRow();
 $typetable->addCell($this->objLanguage->languageText('mod_assignment_assignmenttype', 'assignment', 'Assignment Type'));
+/*
 if (!$canChangeField) {
     $textinput = new textinput('type');
     $textinput->value = $assignment['format'];
@@ -178,33 +182,39 @@ if (!$canChangeField) {
     }
     $typetable->addCell($textinput->show() . $_type . '<sup>1</sup>');
 } else {
-    $radio = new radio('type');
-    $radio->extra = 'onclick="toggleType(this);"';
-    $radio->addOption(0, $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online'));
-    $radio->addOption(1, $this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
-    if ($mode == 'edit') {
-        $radio->setSelected($assignment['format']);
-    } else {
-        $radio->setSelected(0);
-    }
-    $radio->setBreakSpace('&nbsp;');
-    $typetable->addCell($radio->show());
-    /*
-      $table->addCell('<div id="_type"></div>');
-     */
+*/
+$radio = new radio('type');
+$radio->extra = 'onclick="toggleType(this);"';
+$radio->addOption(0, $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online'));
+$radio->addOption(1, $this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
+if ($mode == 'edit') {
+    $radio->setSelected($assignment['format']);
+} else {
+    $radio->setSelected(0);
 }
+if (!$canChangeField) {
+    $radio->extra = 'disabled="disabled"';
+}
+$radio->setBreakSpace('&nbsp;');
+$typetable->addCell($radio->show().($canChangeField?'':'<sup>1</sup>'));
+/*
+$table->addCell('<div id="_type"></div>');
+*/
+/*
+}
+*/
 $typetable->endRow();
 
 // Uploadable options
 if ($mode == 'edit') {
-    $uploadableOptionsDisabled = $assignment['format'] == '0';
+    $uploadableOptionsEnabled = $assignment['format'] == '1';
 } else {
-    $uploadableOptionsDisabled = TRUE;
+    $uploadableOptionsEnabled = FALSE;
 }
 //
-$headingUploadableOptions = new htmlHeading();
-$headingUploadableOptions->type = 3;
-$headingUploadableOptions->str = $this->objLanguage->languageText('mod_assignment_uploadoptions', 'assignment');
+//$headingUploadableOptions = new htmlHeading();
+//$headingUploadableOptions->type = 3;
+//$headingUploadableOptions->str = $this->objLanguage->languageText('mod_assignment_uploadoptions', 'assignment');
 // Uploadable options table
 $tableUploadableOptions = $this->newObject('htmltable', 'htmlelements');
 // Uploadable file types
@@ -213,12 +223,11 @@ $tableUploadableOptions->addCell($this->objLanguage->languageText('mod_assignmen
 $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 $allowedFileTypes = $objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
 if (is_null($allowedFileTypes)) {
-    $arrAllowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'pdf');
+    $arrAllowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'pdf', 'zip');
 } else {
     $arrAllowedFileTypes = explode(',', $allowedFileTypes);
 }
-$this->loadClass('checkbox', 'htmlelements');
-if ($mode == 'edit') {
+if ($uploadableOptionsEnabled) {
     $rs = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
     $arrAllowedFileTypesSelected = array();
     if (!empty($rs)) {
@@ -227,14 +236,17 @@ if ($mode == 'edit') {
         }
     }
 } else {
-    $arrAllowedFileTypesSelected = $arrAllowedFileTypes;
+    //$arrAllowedFileTypesSelected = $arrAllowedFileTypes;
+    // Set selected file types to all be deselected
+    $arrAllowedFileTypesSelected = array();
 }
+$this->loadClass('checkbox', 'htmlelements');
 $stringFiletypes = '';
 $separator = '';
 foreach ($arrAllowedFileTypes as $filetype) {
     $objCheckbox = new checkbox('filetypes[]', 'dummy', in_array($filetype, $arrAllowedFileTypesSelected));
     $objCheckbox->setValue($filetype);
-    if ($uploadableOptionsDisabled) {
+    if (!$uploadableOptionsEnabled) {
         $objCheckbox->extra = 'disabled="disabled"';
     }
     $stringFiletypes .= $separator . $objCheckbox->show() . '&nbsp;' . $filetype;
@@ -249,28 +261,23 @@ $tableUploadableOptions->addCell($this->objLanguage->languageText('mod_assignmen
 $radio = new radio('filenameconversion');
 $radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
 $radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
-if ($mode == 'edit') {
+if ($uploadableOptionsEnabled) {
     $radio->setSelected($assignment['filename_conversion']);
 } else {
     $radio->setSelected(1);
-}
-$radio->setBreakSpace('&nbsp;');
-if ($uploadableOptionsDisabled) {
     $radio->extra = 'disabled="disabled"';
 }
+$radio->setBreakSpace('&nbsp;');
 $tableUploadableOptions->addCell($radio->show());
-/*
-  $table->addCell('<div id="filenameConversion"></div>');
- */
 $tableUploadableOptions->endRow();
-$tableUploadableOptions->startRow();
-$tableUploadableOptions->addCell(
-        '<div id="uploadableOptions" style="background-color: silver;">'
-        . $headingUploadableOptions->show()
-        . $tableUploadableOptions->show()
-        . '</div>',
-        NULL, NULL, NULL, NULL, 'colspan="2"');
-$tableUploadableOptions->endRow();
+// Uploadable options fieldset
+$fs = new fieldset();
+$fs->setLegend($this->objLanguage->languageText('mod_assignment_uploadoptions', 'assignment'));
+$fs->addContent($tableUploadableOptions->show());
+// Uploadable options cell
+$typetable->startRow();
+$typetable->addcell($fs->show(),NULL, NULL, NULL, NULL, 'colspan="2"');
+$typetable->endRow();
 // Reflection
 $typetable->startRow();
 $typetable->addCell($this->objLanguage->languageText('mod_assignment_isreflection', 'assignment', 'Is it a Reflection?'));
@@ -599,13 +606,14 @@ $button = new button('save', $this->objLanguage->languageText('mod_assignment_sa
 $button->setToSubmit();
 $form->addToForm($button->show());
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-$button->setOnClick('javascript: window.location=\''.$this->uri(array()).'\'');
+if ($mode == 'edit') {
+    $uri = $this->uri(array('action'=>'view', 'id'=>$assignment['id']));
+} else {
+    $uri = $this->uri(array());
+}
+$button->setOnClick('javascript: window.location=\''.$uri.'\'');
 $form->addToForm($button->show());
 $form->addRule('name', $this->objLanguage->languageText('mod_assignment_val_title', 'assignment', 'Please enter title'), 'required');
-$form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_mark', 'assignment', 'Please enter mark'), 'required');
-$form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_numreq', 'assignment', 'Has to be a number'), 'numeric');
-$form->addRule('yearmark', $this->objLanguage->languageText('mod_assignment_val_yearmark', 'assignment', 'Please enter year mark'), 'required');
-$form->addRule('yearmark', $this->objLanguage->languageText('mod_assignment_val_numreq', 'assignment', 'Has to be a number'), 'numeric');
 $js_filetypes = '
 <script language="JavaScript" type="text/javascript">
 function val_filetypes(name)
@@ -633,6 +641,11 @@ function val_filetypes(name)
 ';
 echo $js_filetypes;
 $form->addRule('filetypes[]', $this->objLanguage->languageText('mod_assignment_selectatleastone', 'assignment'), 'custom', 'val_filetypes');
+$form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_mark', 'assignment', 'Please enter mark'), 'required');
+$form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_numreq', 'assignment', 'Has to be a number'), 'numeric');
+$form->addRule('yearmark', $this->objLanguage->languageText('mod_assignment_val_yearmark', 'assignment', 'Please enter year mark'), 'required');
+$form->addRule('yearmark', $this->objLanguage->languageText('mod_assignment_val_numreq', 'assignment', 'Has to be a number'), 'numeric');
+/*
 $js_pre_submittrigger = '
 <script language="JavaScript" type="text/javascript">
 function val_pre_submittrigger(dummy)
@@ -644,7 +657,7 @@ function val_pre_submittrigger(dummy)
 ';
 echo $js_pre_submittrigger;
 $form->addRule('uploadableOptions', '', 'custom', 'val_pre_submittrigger');
-echo $jsToggleType;
+*/
 echo $form->show();
 // Footer note
 if (!$canChangeField) {
