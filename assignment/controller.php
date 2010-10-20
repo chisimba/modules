@@ -257,8 +257,8 @@ class assignment extends controller {
         $description = $this->getParam('description');
         $assesment_type = $this->getParam('assesment_type');
         $emailAlert = $this->getParam('emailalert');
-        $filenameConversion = $this->getParam('filenameconversion');
-        $filetypes = $this->getParam('filetypes');
+        $filetypes = $this->getParam('filetypes', array());
+        $filenameConversion = $this->getParam('filenameconversion','1');
         $visibility = $this->getParam('visibility');
         $emailalertonsubmit = $this->getParam('emailalertonsubmit');
         $groups = $this->getParam('groups');
@@ -401,8 +401,8 @@ class assignment extends controller {
         $description = $this->getParam('description');
         $assesment_type = $this->getParam('assesment_type');
         $emailAlert = $this->getParam('emailalert');
-        $filenameConversion = $this->getParam('filenameconversion');
-        $filetypes = $this->getParam('filetypes');
+        $filetypes = $this->getParam('filetypes', array());
+        $filenameConversion = $this->getParam('filenameconversion','1');
         $visibility = $this->getParam('visibility');
         $emailalertonsubmit = $this->getParam('emailalertonsubmit');
         $usegroups = $this->getParam('groups_radio');
@@ -771,10 +771,10 @@ class assignment extends controller {
 
         $assignmentId = $this->getParam("id");
         $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignmentId);
-       
+
 
         $zipname = $this->objAssignmentFunctions->createZipFromSubmissions($submissions, $assignmentId);
-        
+
         if (file_exists($zipname)) {
 // Set Mimetype
             header('Content-type: application/zip');

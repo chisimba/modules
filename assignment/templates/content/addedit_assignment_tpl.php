@@ -171,10 +171,6 @@ $typetable = $this->newObject('htmltable', 'htmlelements');
 $typetable->startRow();
 $typetable->addCell($this->objLanguage->languageText('mod_assignment_assignmenttype', 'assignment', 'Assignment Type'));
 /*
-if (!$canChangeField) {
-    $textinput = new textinput('type');
-    $textinput->value = $assignment['format'];
-    $textinput->fldType = "hidden";
     if ($assignment['format'] == '0') {
         $_type = $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online');
     } else {
@@ -183,7 +179,7 @@ if (!$canChangeField) {
     $typetable->addCell($textinput->show() . $_type . '<sup>1</sup>');
 } else {
 */
-$radio = new radio('type');
+$radio = new radio($canChangeField?'type':'typeDisabled');
 $radio->extra = 'onclick="toggleType(this);"';
 $radio->addOption(0, $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online'));
 $radio->addOption(1, $this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload'));
@@ -196,7 +192,12 @@ if (!$canChangeField) {
     $radio->extra = 'disabled="disabled"';
 }
 $radio->setBreakSpace('&nbsp;');
-$typetable->addCell($radio->show().($canChangeField?'':'<sup>1</sup>'));
+if (!$canChangeField) {
+    $textinput = new textinput('type');
+    $textinput->value = $assignment['format'];
+    $textinput->fldType = "hidden";
+}
+$typetable->addCell($radio->show().($canChangeField?'':($textinput->show().'<sup>1</sup>')));
 /*
 $table->addCell('<div id="_type"></div>');
 */
@@ -281,6 +282,7 @@ $typetable->endRow();
 // Reflection
 $typetable->startRow();
 $typetable->addCell($this->objLanguage->languageText('mod_assignment_isreflection', 'assignment', 'Is it a Reflection?'));
+/*
 if (!$canChangeField) {
     $textinput = new textinput('assesment_type');
     $textinput->value = $assignment['assesment_type'];
@@ -292,19 +294,33 @@ if (!$canChangeField) {
     }
     $typetable->addCell($textinput->show() . $isReflection . '<sup>1</sup>');
 } else {
-    $radio = new radio('assesment_type');
-    $radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
-    $radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
-    $radio->setBreakSpace('&nbsp;');
-    if ($mode == 'edit') {
-        $radio->setSelected($assignment['assesment_type']);
-    }
-    $radio->setBreakSpace('&nbsp;');
-    $typetable->addCell($radio->show());
-    /*
-      $table->addCell('<div id="isReflection"></div>');
-     */
+*/
+$radio = new radio($canChangeField?'assesment_type':'assesment_typeDisabled');
+$radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
+$radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
+$radio->setBreakSpace('&nbsp;');
+if ($mode == 'edit') {
+    $radio->setSelected($assignment['assesment_type']);
 }
+if (!$canChangeField) {
+    $radio->extra = 'disabled="disabled"';
+}
+$radio->setBreakSpace('&nbsp;');
+if (!$canChangeField) {
+    $textinput = new textinput('assesment_type');
+    $textinput->value = $assignment['assesment_type'];
+    $textinput->fldType = "hidden";
+}
+/*
+$typetable->addCell($radio->show());
+*/
+$typetable->addCell($radio->show().($canChangeField?'':($textinput->show().'<sup>1</sup>')));
+/*
+$table->addCell('<div id="isReflection"></div>');
+*/
+/*
+}
+*/
 $typetable->endRow();
 
 // Multiple submissions
@@ -619,11 +635,18 @@ $js_filetypes = '
 function val_filetypes(name)
 {
     var els = document.getElementsByName(\'type\');
+    //alert(els.length);
     var len = els.length;
-    for (var i=0; i<len; ++i) {
-        if (els[i].value == \'0\'
-            && els[i].checked)
-        return true;
+    if (len == 1) {
+        if (els[0].value == \'0\')
+            return true;
+    }
+    else {
+        for (var i=0; i<len; ++i) {
+            if (els[i].value == \'0\'
+                && els[i].checked)
+            return true;
+        }
     }
     //return false;
     //alert(name);
