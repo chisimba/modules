@@ -107,7 +107,7 @@ class libraryforms extends controller {
 	case 'update_fdbk':
                   return 'fdbkconfirm_tpl.php';
    
-        case 'back':
+        case 'Back to Forms':
 		return 'editadd_tpl.php';
      }
     }

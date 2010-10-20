@@ -21,6 +21,18 @@ $objIcon =  $this->newObject('geticon', 'htmlelements');
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
 $header = $objLayer->show();
+$this->loadClass('link', 'htmlelements');
+$cssLayout = $this->getObject('csslayout', 'htmlelements');
+
+//link to Landing Page
+$objLandingPage = new link($this->uri(array('action'=>'Back to Forms')));
+$objLandingPage->link='Back to Forms';
+$landinging = $objLandingPage->show();
+$cssLayout->setNumColumns(2);
+$cssLayout->setLeftColumnContent($landinging);
+$cssLayout->setMiddleColumnContent($this->getContent());
+echo $cssLayout->show();
+
 
 $display = '<p>'.$header.'</p><hr />';
 
