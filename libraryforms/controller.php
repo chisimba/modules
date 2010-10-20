@@ -47,12 +47,13 @@ class libraryforms extends controller {
      
       $action =$this ->getParam('action');
       $this->setLayoutTemplate('editadd_tpl.php');
-       //if form is submitted
- 	
-  if($_POST){
+       
 
 	switch($action){
-
+         
+          default:
+          return "editadd_tpl.php"; 
+           
         case 'addeditform':
           return $this->saveRecord();
           
@@ -66,23 +67,9 @@ class libraryforms extends controller {
          
 
         case 'addfeedbk':
-         return $this->submitmsg();
-         
+         return $this->submitmsg();         
       
-	}// end if post
-
-	}// end switch function
-
-    //Display Landing page and forms
- 
-     else{	
-            switch($action)
-         {
- 	 default: 
-            
-       return "editadd_tpl.php";
-
-       	case 'save_addedit':
+	case 'save_addedit':
                return 'confirm_tpl.php';
           
           case 'update_addedit':              
@@ -109,16 +96,15 @@ class libraryforms extends controller {
    
         case 'Back to Forms':
 		return 'editadd_tpl.php';
-     }
-    }
-          
+   
+ }// close for switch    
               
 	$this->objMail->from = 'no-reply@uwc.ac.za';
         $this->objMail->fromName = 'no-reply';
 
         // Give the mail a subject and a body.
         $this->objMail->subject = 'Book(s) Enquiry';
-        //$this->objMail->body =' Testing got furthup of this';
+        $this->objMail->body =' Testing got furthup of this';
        
        // Send to a single address.
         $this->objMail->to = 'arieluwc@uwc.ac.za';
@@ -128,7 +114,6 @@ class libraryforms extends controller {
 
         // Send the mail.
         $this->objMail->send();
-
 
 }//end of function dispatch
 

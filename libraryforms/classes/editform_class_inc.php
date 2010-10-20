@@ -98,7 +98,6 @@ class editform extends dbTable {
 
         //Create the form
         $objForm = new form('distanceform', $this->getFormAction());
-        $objForm = new form('myform',$this->uri(array('action'=>'valform','htmlelements')));
         $table = $this->newObject('htmltable', 'htmlelements');
 	//*****//	
 	$this->loadClass('htmlheading', 'htmlelements');
@@ -114,15 +113,17 @@ class editform extends dbTable {
         $table->startRow();
         $table->addCell($surnameLabel->show(), '', 'center', 'left', '');
         $table->addCell($objsurname->show(), '', 'center', 'left', '');
-        $objForm->addRule('surname',$this->objLanguage->languageText("mod_surname_required", "libraryforms", 'Please enter a surname. Surname missing.'),'required');
+        $objForm->addRule('surname',$this->objLanguage->languageText
+			  ("mod_surname_required", "libraryforms", 'Please enter a surname. Surname missing.'),'required');
 
         //Create a new textinput for the surname
         $objinitials = new textinput('initials');
-        $initailsLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentinitials","libraryforms"),"initials");
+        $initailsLabel = new label($this->objLanguage->languageText ("mod_libraryforms_commentinitials","libraryforms"),"initials");
 
         $table->addCell($initailsLabel->show(), '', 'center', 'left', '');
         $table->addCell($objinitials->show(), '', 'center', 'left', '');
-        $objForm->addRule('initials',$this->objLanguage->languageText("mod_initials_required", "libraryforms", 'Please enter a initials.initials is missing.'),'required');
+        $objForm->addRule('initials',$this->objLanguage->languageText
+		("mod_initials_required", "libraryforms", 'Please enter a initials.initials is missing.'),'required');
         $table->endRow();
 
 
