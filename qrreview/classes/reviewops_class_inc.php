@@ -239,14 +239,15 @@ class reviewops extends object {
         $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'qrreview', 'Required').'</span>';
         
         // start the form
-        $form = new form ('rev', $this->uri(array('action'=>'addreview'), 'qrreview'));
+        $form = new form ('rev', $this->uri(array('action'=>'addreview', 'prodid' => $row['id']), 'qrreview'));
+        // $form->addRule('prodrate', $this->objLanguage->languageText("mod_qrreview_needrate", "qrreview"), 'required');
+        $form->addRule('phone', $this->objLanguage->languageText("mod_qrreview_needphone", "qrreview"), 'required');
         
         $table = $this->newObject('htmltable', 'htmlelements');
         
         // product/service rating
         $this->loadClass('dropdown', 'htmlelements');
         $prodrate = new dropdown('prodrate');
-        $prodrate->addOption();
         $prodrate->addOption(1, 1);
         $prodrate->addOption(2, 2);
         $prodrate->addOption(3, 3);
@@ -264,7 +265,7 @@ class reviewops extends object {
         $prodrateLabel = new label($this->objLanguage->languageText('prodrate', 'qrreview').'&nbsp;', 'input_prodrate');
         $table->addCell($prodrateLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($prodrate->show()." out of 10");
+        $table->addCell($prodrate->show()." out of 10".$required);
         $table->endRow();
         
         // phone number
@@ -274,7 +275,7 @@ class reviewops extends object {
         $phoneLabel = new label($this->objLanguage->languageText('phone', 'qrreview').'&nbsp;', 'input_phone');
         $table->addCell($phoneLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($phone->show()." e.g. 0831234567");
+        $table->addCell($phone->show()." e.g. 0831234567".$required);
         $table->endRow();
         
         // comment  box

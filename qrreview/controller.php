@@ -161,9 +161,6 @@ class qrreview extends controller
                 else {
                     $row = $row[0];
                 }
-                // $this->setVarByRef('row', $row);
-                // send out a form for mobile to do the review
-                // return 'mobireview_tpl.php';
                 echo $this->objReviewOps->showReviewFormMobi($row);
                 break;
                 
@@ -172,8 +169,14 @@ class qrreview extends controller
                 $prodrate = $this->getParam('prodrate');
                 $prodcomm = $this->getParam('prodcomm');
                 $phone = $this->getParam('phone');
-                
-                $data = array('prodrate' => $prodrate, 'prodcomm' => $prodcomm, 'phone' => $phone);
+                $prodid = $this->getParam('prodid');
+                // quick double check in case a phone browser doesn't support JS
+                if(strlen($phone) != 10 || $prodrate == '' || intval($phone) == 0) {
+                    echo $this->objLanguage->languageText("mod_qrreview_missingtext", "qrreview");
+                    break;
+                }
+                // make up the data array
+                $data = array('prodid' => $prodid, 'prodrate' => $prodrate, 'prodcomm' => $prodcomm, 'phone' => $phone);
                 var_dump($data);
                 
                 break;
