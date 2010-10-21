@@ -328,5 +328,12 @@ class dbquestions extends dbtable
         $dbTestadmin = $this->newObject('dbtestadmin');
         $dbTestadmin->setTotal($testid, $mark);
     }
+
+    public function getMaxOrder($id) {
+        $sql  = "select max(questionorder) questionorder from $this->table where testid = '".$id."'";
+
+        $data = $this->getArray($sql);
+        return $data[0]['questionorder'];
+    }
 } // end of class
 ?>

@@ -48,6 +48,7 @@ $wordmcq = $objLanguage->languageText('mod_mcqtests_mcq', 'mcqtests');
 $category = $objLanguage->languageText('mod_mcqtests_addcategory', 'mcqtests');
 $simple = $objLanguage->languageText('mod_mcqtests_wordsimpleq', 'mcqtests');
 $description = $objLanguage->languageText('mod_mcqtests_addDesc', 'mcqtests');
+$shortans = $objLanguage->languageText('mod_mcqtests_shortans', 'mcqtests');
 $typeLabel = $objLanguage->languageText('mod_mcqtests_typeofquest', 'mcqtests');
 
 $listLabel = ucwords($objLanguage->code2Txt('mod_mcqtests_liststudents', 'mcqtests', array(
@@ -73,6 +74,14 @@ $sequentialLabel = $this->objLanguage->languageText('word_sequential');
 $computerLabel = $this->objLanguage->languageText('mod_mcqtests_comlab', 'mcqtests');
 $anyLabLabel = $this->objLanguage->languageText('mod_mcqtests_labs', 'mcqtests');
 $selectqntype = $this->objLanguage->languageText('mod_mcqtests_selectqntype', 'mcqtests', 'Select question type');
+
+// question types descriptions
+$descriptionDesc = $this->objLanguage->languageText('mod_mcqtests_descriptiondesc', 'mcqtests');
+$categoryDesc = $this->objLanguage->languageText('mod_mcqtests_categorydesc', 'mcqtests');
+$simpleDesc = $this->objLanguage->languageText('mod_mcqtests_simpledesc', 'mcqtests');
+$numericalDesc = $this->objLanguage->languageText('mod_mcqtests_numericaldesc', 'mcqtests');
+$matchingDesc = $this->objLanguage->languageText('mod_mcqtests_matchingdesc', 'mcqtests');
+$shortansDesc = $this->objLanguage->languageText('mod_mcqtests_shortansdesc', 'mcqtests');
 
 
 //switch between the question descriptions and adding questions
@@ -241,6 +250,17 @@ $objHeading->str = $questionsLabel.' ('.$count.'):
 $qHeading = $objHeading->show();
 $str.= $qHeading;
 
+
+$goButton = new button ('goButton','Go');
+$goButton->setOnClick("goAddQuestion();");
+
+// add descriptions of the different types of questions
+$str.="<div id='adddescriptionDesc'><label>".$description.":&nbsp;</label>".$descriptionDesc."<br/>".$goButton->show()."</div>";
+$str.="<div id='categoryDesc'><label>".$category.":&nbsp;</label>".$categoryDesc."<br/>".$goButton->show()."</div>";
+$str.="<div id='matchQDesc'><label>".$matchingqn.":&nbsp;</label>".$matchingDesc."<br/>".$goButton->show()."</div>";
+$str.="<div id='numericalQDesc'><label>".$numericalqns.":&nbsp;</label>".$numericalDesc."<br/>".$goButton->show()."</div>";
+$str.="<div id='shortansQDesc'><label>".$shortans.":&nbsp;</label>".$shortansDesc."<br/>".$goButton->show()."</div>";
+$str.="<div id='simpleDesc'><label>".$simple.":&nbsp;</label>".$simpleDesc."<br/>".$goButton->show()."</div>";
 
 // Confirmation message on saving a question
 $confirm = $this->getParam('confirm');
@@ -441,7 +461,7 @@ $form->addToForm($button->show().$previewButton->show());
 echo $form->show();
 
 $myJS = '<script type="text/javascript">
-            var mcqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"choosequestiontype", "id"=>$this->getParam('id')))).'",
+            var mcqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"choosequestiontype2", "id"=>$this->getParam('id')))).'",
                 calqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewcalcquestions", "id"=>$this->getParam('id')))).'",
                 matchingqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewmatchingquestions", "id"=>$this->getParam('id')))).'",
                 numericalqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewnumericalquestions", "id"=>$this->getParam('id')))).'",

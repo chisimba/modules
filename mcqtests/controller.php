@@ -542,11 +542,10 @@ class mcqtests extends controller {
             // delete a question
             case 'deletequestion':
                 $type = $this->getParam('type');
-                if($type == 'matching') {
+                if ($type == 'matching') {
                     $this->objQuestionMatching->deleteQuestions($this->getParam('questionId'));
                     $this->objMultiAnswers->deleteQuestions($this->getParam('questionId'));
-                }
-                else if($type == 'numerical') {
+                } else if ($type == 'numerical') {
                     $this->objQuestionNumerical->deleteNumericalQuestion($this->getParam('questionId'));
                     $this->objNumericalUnit->deleteNumericalUnit($this->getParam('questionId'));
                 }
@@ -897,7 +896,7 @@ class mcqtests extends controller {
                 return $this->calcqForm();
             case 'addmatchingquestion':
                 $qtype = $this->objLanguage->languageText('mod_mcqtests_matching', 'mcqtests');
-                if (strlen($this->getParam('edit')) > 0 ) {
+                if (strlen($this->getParam('edit')) > 0) {
                     if ($this->getParam('edit') == 'true') {
                         $edit = true;
                     }
@@ -911,7 +910,7 @@ class mcqtests extends controller {
                 return $this->nextAction('view2', array('id' => $this->getParam('id')));
             case 'addnumericalquestion':
                 $qtype = $this->objLanguage->languageText('mod_mcqtests_numerical', 'mcqtests');
-                if (strlen($this->getParam('edit')) > 0 ) {
+                if (strlen($this->getParam('edit')) > 0) {
                     if ($this->getParam('edit') == 'true') {
                         $edit = true;
                     }
@@ -1694,7 +1693,7 @@ class mcqtests extends controller {
             }
         } else {
             // original code
-            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');
+            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');//print_r($data);
             if (!empty($data)) {
                 foreach ($data as $key => $line) {
                     $answers = $this->dbAnswers->getAnswers($line['id']);
@@ -1706,6 +1705,8 @@ class mcqtests extends controller {
                                 }
                             }
                         }
+                    } else if($data[$key]['questiontype'] == 'matching'){ // to check other types of questions, not the simple mcq's
+                        $answers = $this->objQuestionMatching->getAnswers($line['id']);
                     }
                     $data[$key]['answers'] = $answers;
                 }
@@ -1976,8 +1977,10 @@ class mcqtests extends controller {
 
     private function addGeneralFormQuestions($qtype, $edit=null) {
         //$objQuestions = $this->getObject('dbquestions', 'mcqtests');
-
         $id = $this->getParam('questionId');
+
+        // get the maximum question order
+        $questionorder = $this->dbQuestions->getMaxOrder($this->getParam('id'));
         //insert into questions table
         $questiondata = array();
         $questiondata['testid'] = $this->getParam('id');
@@ -1993,6 +1996,7 @@ class mcqtests extends controller {
         if ($edit) {
             $this->dbQuestions->addQuestion($questiondata, $id);
         } else {
+            $questiondata['questionorder'] = ++$questionorder;
             $id = $this->dbQuestions->addQuestion($questiondata);
         }
         return $id;
