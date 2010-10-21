@@ -306,5 +306,12 @@ class reviewops extends object {
         return $ret;
     }
     
+    public function wineUpstream($data) {
+        $url = 'http://spitorswallow.co.za/api.php?action=vote&farm_id=8013&score='.$data['prodrate'].'&userid='.$data['phone'].'&apikey=a35zd29p7e';
+        $objCurl = $this->getObject('curl', 'utilities');
+        log_debug($objCurl->exec($url));
+        
+    }
+    
 }
 ?>

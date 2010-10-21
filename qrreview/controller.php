@@ -61,6 +61,7 @@ class qrreview extends controller
     public $objUser;
     public $objConfig;
     public $objQrOps;
+    public $sysType = 'wine';
 
     /**
      * Initialises the instance variables.
@@ -177,8 +178,15 @@ class qrreview extends controller
                 }
                 // make up the data array
                 $data = array('prodid' => $prodid, 'prodrate' => $prodrate, 'prodcomm' => $prodcomm, 'phone' => $phone);
-                var_dump($data);
-                
+                $this->objDbReview->addComment($data);
+                // upstream to wine times if this is a wine review site
+                if($this->sysType == 'wine') {
+                    $this->objReviewOps->wineUpstream($data);
+                    // upstream to twitter too
+                    
+                    return 'thanks_tpl.php';
+                }
+                return 'thanks_tpl.php';
                 break;
                 
             case 'review' :

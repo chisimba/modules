@@ -61,5 +61,18 @@ class dbqrreview extends dbTable
 	 public function updateQR($recid, $fileurl) {
 	     $this->update('id', $recid, $fileurl);
 	 }
+	 
+	 public function changeTable($table) {
+	     parent::init($table);
+	 }
+	 
+	 public function addComment($commarr){
+	     $this->changeTable('tbl_qrreview_reviews');
+	     $commarr['creationdate'] = $this->now();
+	     $id = $this->insert($commarr, 'tbl_qrreview_reviews');
+	     $this->changeTable('tbl_qrreview_prods');
+	     
+	     return $id;
+	 }
 }
 ?>
