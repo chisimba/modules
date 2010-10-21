@@ -57,5 +57,9 @@ class dbqr extends dbTable
 	 public function getRecord($id) {
 	     return $this->getAll("WHERE id = '$id'");
 	 }
+	 
+	 public function getMsg($filter) {
+	     return $this->getAll("WHERE msg = '$filter'");
+	 }
 }
 ?>
