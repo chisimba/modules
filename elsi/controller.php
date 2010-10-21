@@ -24,33 +24,33 @@
  */
 // security check - must be included in all scripts
 if (!
-/**
- * Description for $GLOBALS
- * @global unknown $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * Description for $GLOBALS
+         * @global unknown $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
+
 class elsi extends controller {
 
-
     function init() {
-    //Instantiate the language object
+        //Instantiate the language object
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->objLoggedInUsers = $this->getObject('loggedinusers', 'security');
     }
 
-
     public function dispatch($action) {
-    /*
-    * Convert the action into a method (alternative to
-    * using case selections)
-    */
+        /*
+         * Convert the action into a method (alternative to
+         * using case selections)
+         */
         $method = $this->getMethod($action);
-    /*
-    * Return the template determined by the method resulting
-    * from action
-    */
+        /*
+         * Return the template determined by the method resulting
+         * from action
+         */
         return $this->$method();
     }
 
@@ -66,9 +66,8 @@ class elsi extends controller {
      */
     function getMethod(& $action) {
         if ($this->validAction($action)) {
-            return '__'.$action;
-        }
-        else {
+            return '__' . $action;
+        } else {
             return '__home';
         }
     }
@@ -86,10 +85,9 @@ class elsi extends controller {
      *
      */
     function validAction(& $action) {
-        if (method_exists($this, '__'.$action)) {
+        if (method_exists($this, '__' . $action)) {
             return TRUE;
-        }
-        else {
+        } else {
             return FALSE;
         }
     }
@@ -99,12 +97,28 @@ class elsi extends controller {
      * @return <type>
      */
     function __home() {
-              return "home_tpl.php";
+        return "home_tpl.php";
     }
 
+    function __getLoggedInUserCount() {
+        $onlineusers = $this->objLoggedInUsers->getActiveUserCount();
+        echo "$onlineusers logged in.";
+        die();
+    }
 
-    function requiresLogin(){
+    function __getListOnlineUsers() {
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $onlineusers = $this->objLoggedInUsers->getListOnlineUsers();
+        $this->setVarByRef("users", $onlineusers);
+        return "onlineusers_tpl.php";
+    }
+
+    function requiresLogin() {
         return false;
     }
+
 }
+
 ?>
