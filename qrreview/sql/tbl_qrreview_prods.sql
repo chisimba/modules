@@ -21,7 +21,11 @@ $fields = array(
 	'prodname' => array(
 		'type' => 'text',
 		'length' => 255,
-		),	
+		),
+    'qr' => array(
+        'type' => 'text',
+        'length' => 255,
+    ),	
 	'creationdate' => array(
 		'type' => 'text',
 		'length' => 80,

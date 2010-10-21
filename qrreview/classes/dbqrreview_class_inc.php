@@ -57,5 +57,9 @@ class dbqrreview extends dbTable
 	 public function getRecord($id) {
 	     return $this->getAll("WHERE id = '$id'");
 	 }
+	 
+	 public function updateQR($recid, $fileurl) {
+	     $this->update('id', $recid, $fileurl);
+	 }
 }
 ?>

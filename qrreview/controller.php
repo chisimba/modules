@@ -79,6 +79,7 @@ class qrreview extends controller
             $this->objDbQr       = $this->getObject('dbqr', 'qrcreator');
             $this->objReviewOps  = $this->getObject('reviewops');
             $this->objDbReview   = $this->getObject('dbqrreview');
+            $this->objTu = $this->getObject("tinyurlapi", "utilities");
 			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
@@ -109,7 +110,6 @@ class qrreview extends controller
 
             case 'new' :
                 $createbasic = $this->objReviewOps->addForm();
-                // $createbasic = $this->objQrOps->geoLocationForm(); //$this->objQrOps->showInviteForm();
                 $this->setVarByRef('createbasic', $createbasic);
                 return 'newproduct_tpl.php';
                 break;
@@ -122,8 +122,15 @@ class qrreview extends controller
                 $recarr = array('longdesc' => $longdesc, 'prodname' => $prodname, 'userid' => $userid);
                 $recid = $this->objDbReview->insertRecord($recarr);
                 
-                $url = $this->uri(array('id' => $recid, 'action' => 'mobireview'));
+                $url = $this->uri(array('id' => $recid, 'action' => 'mobireview'), 'qrreview');
+                // tinyurl the url as i-nigma doesn't pick up anything after ?
+                $url = str_replace('&amp;', '&', $url);
+                $url = $this->objTu->createTinyUrl($url);
                 $data = $this->objReviewOps->genBasicQr($userid, $url);
+                // update the table with the code details too.
+                $fileurl = $data['filename'];
+                $fileurl = array('qr' => $fileurl);
+                $this->objDbReview->updateQR($recid, $fileurl);
                 $this->nextAction('details', array('id' => $recid));
                 break;
                 
@@ -137,7 +144,9 @@ class qrreview extends controller
                 else {
                     $row = $row[0];
                 }
+                
                 $this->setVarByRef('row', $row);
+                $this->setVarByRef('filename', $filename);
                 return 'detailview_tpl.php';
                 break;
                 

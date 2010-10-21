@@ -227,7 +227,7 @@ class reviewops extends object {
         $name = $row['prodname'];
         $this->loadClass('htmlheading', 'htmlelements');
         $headern = new htmlHeading();
-        $headern->str = $this->objLanguage->languageText('mod_qrreview_reviewprod', 'qrreview').": ".$name;
+        $headern->str = $this->objLanguage->languageText('mod_qrreview_reviewprod', 'qrreview').": ".$row['prodname'];
         $headern->type = 3;
         $ret .= $headern->show();
         
@@ -237,8 +237,6 @@ class reviewops extends object {
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
         $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'qrreview', 'Required').'</span>';
-        
-        $ret = NULL;
         
         // start the form
         $form = new form ('rev', $this->uri(array('action'=>'addreview'), 'qrreview'));
