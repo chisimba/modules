@@ -637,10 +637,10 @@ function val_filetypes(name)
     var els = document.getElementsByName(\'type\');
     //alert(els.length);
     var len = els.length;
-    if (len == 1) {
-        if (els[0].value == \'0\')
-            return true;
-    }
+//    if (len == 1)
+//        alert(els[0].type);
+    if (len == 1 && els[0].type == \'hidden\'&& els[0].value == \'0\')
+        return true;
     else {
         for (var i=0; i<len; ++i) {
             if (els[i].value == \'0\'
