@@ -11,14 +11,14 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * Class for providing access to the table tbl_test_description in the database
+ * Class for providing access to the table tbl_test_tag_instance in the database
  * @author Paul Mungai
  *
  * @copyright (c) 2010 University of the Witwatersrand
  * @package mcqtests
  * @version 1.2
  */
-class dbdescription extends dbtable {
+class dbtag_instance extends dbtable {
 
     /**
      * Method to construct the class and initialise the table.
@@ -31,21 +31,21 @@ class dbdescription extends dbtable {
     public $userId;
 
     public function init() {
-        parent::init('tbl_test_description');
-        $this->table = 'tbl_test_description';
+        parent::init('tbl_test_tag_instance');
+        $this->table = 'tbl_test_tag_instance';
         $this->objUser = &$this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
     }
 
     /**
-     * Method to insert or update a description in the database.
+     * Method to insert or update a tag instance in the database.
      *
      * @access public
      * @param array $fields The table fields to be added/updated.
      * @param string $id The id of the description to be edited. Default=NULL.
      * @return string $id The id of the inserted or updated description.
      */
-    public function addDescription($fields, $id = NULL) {
+    public function addInstance($fields, $id = NULL) {
         $fields['timemodified'] = date('Y-m-d H:i:s');
         if ($id) {
             $fields['timemodified'] = date('Y-m-d H:i:s');
@@ -60,27 +60,27 @@ class dbdescription extends dbtable {
     }
 
     /**
-     * Method to get a set of descriptions for a particular category.
+     * Method to get a set of instances for a particular item.
      *
      * @access public
-     * @param string $categoryId The Id of the category being used.
+     * @param string $itemId The Id of the item being used.
      * @param string $filter An additional filter on the select statement.
-     * @return array $data The list of descriptions in the category.
+     * @return array $data The list of instances.
      */
-    public function getDescriptions($categoryId = NULL, $filter = NULL) {
+    public function getInstances($itemId = NULL, $filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
-        if ($filter && $categoryId) {
-            $sql.= " WHERE categoryid='$categoryId' AND $filter";
+        if ($filter && $itemId) {
+            $sql.= " WHERE itemid='$itemId' AND $filter";
         } else if ($filter != NULL) {
-            $sql.= " WHERE categoryid='$categoryId' ORDER BY sortorder";
-        } else if ($categoryId != NULL) {
-            $sql.= " WHERE categoryid='$categoryId' ORDER BY sortorder";
+            $sql.= " WHERE '$filter' ORDER BY sortorder";
+        } else if ($itemId != NULL) {
+            $sql.= " WHERE itemid='$itemId' ORDER BY sortorder";
         } else {
             $sql .= "";
         }
         $data = $this->getArray($sql);
         if (!empty($data)) {
-            $count = $this->countDescriptions($categoryId);
+            $count = $this->countInstances($itemId);
             $data[0]['count'] = $count;
             return $data;
         }
@@ -88,13 +88,13 @@ class dbdescription extends dbtable {
     }
 
     /**
-     * Method to get a specific description.
+     * Method to get a specific instance.
      *
      * @access public
-     * @param string $id The id of the description.
-     * @return array $data The details of the description.
+     * @param string $id The id of the instance.
+     * @return array $data The details of the instance.
      */
-    public function getDescription($id) {
+    public function getInstance($id) {
         $sql = 'SELECT * FROM ' . $this->table;
         $sql.= " WHERE id='$id'";
         $data = $this->getArray($sql);
@@ -105,23 +105,23 @@ class dbdescription extends dbtable {
     }
 
     /**
-     * Method to delete a description.
-     * The sort order of the following descriptions is decreased by one.
+     * Method to delete an instance.
+     * The sort order of the following instances is decreased by one.
      *
      * @access public
-     * @param string $id The id of the description.
+     * @param string $id The id of the instance to be deleted.
      * @return
      */
-    public function deleteDescription($id) {
-        $desc = $this->getDescription($id);
+    public function deleteInstance($id) {
+        $desc = $this->getInstance($id);
         if (!empty($desc)) {
             $filter = 'sortorder > ' . $desc[0]['sortorder'] . ' ORDER BY sortorder';
-            $data = $this->getDescriptions($desc[0]['categoryid'], $filter);
+            $data = $this->getInstances($desc[0]['itemid'], $filter);
             if (!empty($data)) {
                 foreach ($data as $line) {
                     $fields = array();
                     $fields['sortorder'] = $line['sortorder'] - 1;
-                    $this->addDescription($fields, $line['id']);
+                    $this->addInstance($fields, $line['id']);
                 }
             }
         }
@@ -129,14 +129,14 @@ class dbdescription extends dbtable {
     }
 
     /**
-     * Method to count the number of descriptions in the specified category.
+     * Method to count the number of instances in an item.
      *
      * @access public
-     * @param string $categoryId The id of the specified category.
-     * @return int $catnum The number of descriptions in the category.
+     * @param string $itemId The id of the specified item.
+     * @return int $instnum The number of instances for a particular item.
      */
-    public function countDescriptions($categoryId) {
-        $sql = "SELECT count(id) AS qnum FROM " . $this->table . " WHERE categoryid='$categoryId'";
+    public function countInstances($itemId) {
+        $sql = "SELECT count(id) AS qnum FROM " . $this->table . " WHERE itemid='$itemId'";
         $data = $this->getArray($sql);
         if (!empty($data)) {
             $qnum = $data[0]['qnum'];
@@ -146,25 +146,25 @@ class dbdescription extends dbtable {
     }
 
     /**
-     * Change the order of descriptions in a category
+     * Change the order of instances in an item
      *
      * @access public
-     * @param string $id The id of the description to be moved
-     * @param bool $order If order is true move description up else move description down 1
+     * @param string $id The id of the instance to be moved
+     * @param bool $order If order is true move instance up else move instance down 1
      * @return bool TRUE if the order has been changed, FALSE if it hasn't.
      */
     public function changeOrder($id, $order) {
-        $sql = 'SELECT categoryId, sortorder FROM ' . $this->table . " WHERE id='$id'";
+        $sql = 'SELECT itemId, sortorder FROM ' . $this->table . " WHERE id='$id'";
         $data = $this->getArray($sql);
         if (!empty($data)) {
             $pos = $data[0]['sortorder'];
-            $categoryId = $data[0]['categoryid'];
+            $itemId = $data[0]['itemid'];
             // if move desc up, check its not the first desc
             if ($order && $pos > 1) {
                 $newpos = $pos - 1;
                 // if move desc down, check its not the last desc
             } else if (!$order) {
-                $num = $this->countDescriptions($categoryId);
+                $num = $this->countInstances($itemId);
                 if ($pos < $num) {
                     $newpos = $pos + 1;
                 } else {
@@ -173,8 +173,8 @@ class dbdescription extends dbtable {
             } else {
                 return FALSE;
             }
-            // swap order of desc
-            $sql = 'SELECT id FROM ' . $this->table . " WHERE categoryid='$categoryId' and sortorder='$newpos'";
+            // swap order of instance
+            $sql = 'SELECT id FROM ' . $this->table . " WHERE itemid='$itemId' and sortorder='$newpos'";
             $result = $this->getArray($sql);
             if (!empty($result)) {
                 $this->update('id', $result[0]['id'], array(
