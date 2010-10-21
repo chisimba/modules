@@ -246,8 +246,23 @@ class reviewops extends object {
         $table = $this->newObject('htmltable', 'htmlelements');
         
         // product/service rating
+        $this->loadClass('dropdown', 'htmlelements');
+        $prodrate = new dropdown('prodrate');
+        $prodrate->addOption();
+        $prodrate->addOption(1, 1);
+        $prodrate->addOption(2, 2);
+        $prodrate->addOption(3, 3);
+        $prodrate->addOption(4, 4);
+        $prodrate->addOption(5, 5);
+        $prodrate->addOption(6, 6);
+        $prodrate->addOption(7, 7);
+        $prodrate->addOption(8, 8);
+        $prodrate->addOption(9, 9);
+        $prodrate->addOption(10, 10);
+        
         $table->startRow();
-        $prodrate = new textinput('prodrate');
+        //$prodrate = new textinput('prodrate');
+        //$prodrate->size = 2;
         $prodrateLabel = new label($this->objLanguage->languageText('prodrate', 'qrreview').'&nbsp;', 'input_prodrate');
         $table->addCell($prodrateLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -257,6 +272,7 @@ class reviewops extends object {
         // phone number
         $table->startRow();
         $phone = new textinput('phone');
+        $phone->size = 10;
         $phoneLabel = new label($this->objLanguage->languageText('phone', 'qrreview').'&nbsp;', 'input_phone');
         $table->addCell($phoneLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
