@@ -652,13 +652,18 @@ function val_filetypes(name)
     //alert(name);
     var els = document.getElementsByName(name);
     var len = els.length;
+    if (0 == len)
+        return true;
     //alert(\'len==\'+len);
     var cnt = 0;
     for (var i=0; i<len; ++i)
         //alert(els[i].value);
         if (els[i].checked)
             ++cnt;
-    return cnt != 0;
+    var res = 0 != cnt;
+    if (!res)
+        els[0].focus();
+    return res;
 }
 </script>
 ';
