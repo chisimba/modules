@@ -31,8 +31,8 @@ class dbrandom_matching extends dbtable {
     public $userId;
 
     public function init() {
-        parent::init('tbl_test_random_matching');
-        $this->table = 'tbl_test_random_matching';
+        parent::init('tbl_test_randomshortansmatch');
+        $this->table = 'tbl_test_randomshortansmatch';
         $this->objUser = &$this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
     }

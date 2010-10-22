@@ -181,7 +181,7 @@ class mcqtests extends controller {
                     $otTags = array();
                     $otTags['tags'] = $othertags;
                     //Insert/Update Tags
-                    $tagId = $this->dbTag->addTag($otTags, $id);
+                    $tagId = $this->dbTag->addTag($otTags, Null);
                 }
                 return $this->nextAction('addrandomshortans', array('id' => $id));
                 break;

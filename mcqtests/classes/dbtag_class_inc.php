@@ -34,6 +34,7 @@ class dbtag extends dbtable {
         parent::init('tbl_test_tag');
         $this->table = 'tbl_test_tag';
         $this->objUser = &$this->getObject('user', 'security');
+        $this->dbTagInstance = $this->newObject('dbtag_instance');
         $this->userId = $this->objUser->userId();
     }
 
@@ -55,18 +56,26 @@ class dbtag extends dbtable {
             foreach ($othertags as $ot) {
                 if (!empty($ot)) {
                     $count++;
-                    $fields['name'] = $ot;
-                    $fields['rawname'] = $ot;
-                    $fields['timemodified'] = date('Y-m-d H:i:s');
+                    $fieldsT['name'] = $ot;
+                    $fieldsT['userid'] = $this->userId;
+                    $fieldsT['rawname'] = $ot;
+                    $fieldsT['tagtype'] = "default";
+
+                    $fieldsT['timemodified'] = date('Y-m-d H:i:s');
                     if ($id) {
-                        $fields['timemodified'] = date('Y-m-d H:i:s');
-                        $fields['modifiedby'] = $this->userId;
-                        $this->update('id', $id, $fields);
+                        $fieldsT['timemodified'] = date('Y-m-d H:i:s');
+                        $fieldsT['modifiedby'] = $this->userId;
+                        $this->update('id', $id, $fieldsT);
                     } else {
-                        $fields['timecreated'] = date('Y-m-d H:i:s');
-                        $fields['createdby'] = $this->userId;
-                        $id = $this->insert($fields);
-                        $idArr[$count] = $id;
+                        $fieldsT['timecreated'] = date('Y-m-d H:i:s');
+                        $fieldsT['createdby'] = $this->userId;
+                        $tagid = $this->insert($fieldsT);
+                        $idArr[$count] = $tagid;
+                        $fieldsTI = array();
+                        $fieldsTI['tagid'] = $tagid;
+                        $fieldsTI['itemtype'] = "question";
+                        $fieldsTI['itemid'] = $id;
+                        $this->dbTagInstance->addInstance($fieldsTI, Null);
                     }
                 }
             }
