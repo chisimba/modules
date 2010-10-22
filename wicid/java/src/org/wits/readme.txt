@@ -5,16 +5,7 @@ CONFIGURATION STEPS
 
 2. Copy Wicid.html and Wicid.css from localhost/chisimba/packages/wicid/java/src/org/wits into yourProjectDir/Wicid/war
 
-3. Open yourProjectDir/Wicid/war/Wicid.html in gedit. Change script links to css and extjs to the correct one for your project. ie:
-
-    <script type="text/javascript" language="javascript" src="http://localhost/chisimba/core_modules/htmlelements/resources/ext-3.0-rc2/resources/css/ext-all.css"></script>
-    <link type="text/css" rel="stylesheet" href="http://localhost/chisimba/core_modules/htmlelements/resources/ext-3.0-rc2/ux/css/ux-all.css">
-    <link type="text/css" rel="stylesheet" href="http://localhost/chisimba/packages/wicid/resources/css/gxt/css/gxt-all.css">
-    <link type="text/css" rel="stylesheet" href="http://localhost/chisimba/packages/wicid/resources/css/data-view.css">
-    <link type="text/css" rel="stylesheet" href="http://localhost/chisimba/packages/wicid/resources/css/buttons.css">
-
-	- Adding or removing app/ after localhost/chisimba/..
-
+3. Open yourProjectDir/Wicid/war/Wicid.html in gedit. Change script links to css and extjs to the correct one for your project. 
 
 4. Copy web.xml from localhost/chisimba/packages/wicid/java/src/org/wits into yourProjectDir/Wicid/war/WEB-INF
 
@@ -28,7 +19,7 @@ CONFIGURATION STEPS
 
 9. In the terminal compile ant gwtc by going to your project directory and typing 'ant gwtc'. This will take a few minutes.
 
-10. Open firefox and go to chisimba (localhost/chisimba). Go to 'Admin' then 'Site Administartion' then 'System Configuration'. Scroll down to wicid and click on it. Click on FILES_DIR, change the parameter value to where you want wicid to save your files to and save (make sure the folder where you're saving to exists).
+10. Open firefox and go to chisimba (localhost/chisimba). Go to 'Admin' then 'Site Administartion' then 'System Configuration'. Scroll down to wicid and click on it. Click on FILES_DIR, change the parameter value to where you want wicid to save your files to and save (make sure the folder where you're saving to exists and is writable).
 
 11. Click on MODE, change the parameter value to 'apo' and save.
 
