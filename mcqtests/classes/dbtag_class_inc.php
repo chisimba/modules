@@ -43,18 +43,33 @@ class dbtag extends dbtable {
      * @access public
      * @param array $fields The table fields to be added/updated.
      * @param string $id The id of the tag to be edited. Default=NULL.
-     * @return string $id The id of the inserted or updated description.
+     * @return array $id The id(s) of the inserted or updated description.
      */
     public function addTag($fields, $id = NULL) {
-        $fields['timemodified'] = date('Y-m-d H:i:s');
-        if ($id) {
-            $fields['timemodified'] = date('Y-m-d H:i:s');
-            $fields['modifiedby'] = $this->userId;
-            $this->update('id', $id, $fields);
-        } else {
-            $fields['timecreated'] = date('Y-m-d H:i:s');
-            $fields['createdby'] = $this->userId;
-            $id = $this->insert($fields);
+        $othertags = explode(",", $fields["tags"]);
+        if (!empty($othertags)) {
+            $count = 0;
+            $idArr = array();
+            if (!empty($id))
+                $idArr[$count] = $id;
+            foreach ($othertags as $ot) {
+                if (!empty($ot)) {
+                    $count++;
+                    $fields['name'] = $ot;
+                    $fields['rawname'] = $ot;
+                    $fields['timemodified'] = date('Y-m-d H:i:s');
+                    if ($id) {
+                        $fields['timemodified'] = date('Y-m-d H:i:s');
+                        $fields['modifiedby'] = $this->userId;
+                        $this->update('id', $id, $fields);
+                    } else {
+                        $fields['timecreated'] = date('Y-m-d H:i:s');
+                        $fields['createdby'] = $this->userId;
+                        $id = $this->insert($fields);
+                        $idArr[$count] = $id;
+                    }
+                }
+            }
         }
         return $id;
     }
@@ -108,6 +123,8 @@ class dbtag extends dbtable {
     public function deleteTag($id) {
         $this->delete('id', $id);
     }
+
 }
+
 // end of class
 ?>

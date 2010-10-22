@@ -18,7 +18,7 @@ class formmanager extends object {
      * @var object to hold the context Code
      */
     public $contextCode;
-    
+
     function init() {
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
@@ -379,7 +379,6 @@ class formmanager extends object {
         return $gridjs;
     }
 
-
     /**
      * Method to list categories in a context
      *
@@ -456,9 +455,9 @@ class formmanager extends object {
                 $objTable->endRow();
             }
         } else {
-                $objTable->startRow();
-                $objTable->addCell($noRecords, '80%', $valign="top", $align='left', $class=null, $attrib="colspan='2'", $border = '0');
-                $objTable->endRow();
+            $objTable->startRow();
+            $objTable->addCell($noRecords, '80%', $valign = "top", $align = 'left', $class = null, $attrib = "colspan='2'", $border = '0');
+            $objTable->endRow();
         }
         $str .= $objTable->show();
         // Create Back Button
@@ -470,7 +469,7 @@ class formmanager extends object {
                 )));
         $objBack->link = $buttonBack->showSexy();
         $str .= $objBack->show();
-        
+
         // Create Back Button
         $buttonAdd = new button("submit", $addCategory);
         $objAdd = &$this->getObject("link", "htmlelements");
@@ -479,7 +478,7 @@ class formmanager extends object {
                     'action' => 'addcategory'
                 )));
         $objAdd->link = $buttonAdd->showSexy();
-        $str .= " ".$objAdd->show();
+        $str .= " " . $objAdd->show();
 
         //Add fieldset to hold Descriptions stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
@@ -521,9 +520,9 @@ class formmanager extends object {
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
         $wordCategories = $this->objLanguage->languageText("mod_mcqtests_categories", 'mcqtests', "Categories");
         $wordBack = $this->objLanguage->languageText("word_back");
-        $BackToList = $wordBack." ".$wordTo." ".$phraseListOf." ".$wordCategories;
+        $BackToList = $wordBack . " " . $wordTo . " " . $phraseListOf . " " . $wordCategories;
         $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
-        $backToHome = $wordBack." ".$wordTo." ".$mcqHome;
+        $backToHome = $wordBack . " " . $wordTo . " " . $mcqHome;
         $addDescform = $this->objLanguage->languageText('mod_mcqtests_addDescription', 'mcqtests');
         $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
 
@@ -646,6 +645,7 @@ class formmanager extends object {
 
         return "<div>" . $form->show() . "</div>";
     }
+
     /**
      * Method to create a list of descriptions
      *
@@ -660,9 +660,9 @@ class formmanager extends object {
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
         $wordDescriptions = $this->objLanguage->languageText("mod_mcqtests_descriptions", 'mcqtests', "Descriptions");
         $wordBack = $this->objLanguage->languageText("word_back");
-        $listTitle = $phraseListOf." ".$wordDescriptions;
+        $listTitle = $phraseListOf . " " . $wordDescriptions;
         $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
-        $backToHome = $wordBack." ".$wordTo." ".$mcqHome;
+        $backToHome = $wordBack . " " . $wordTo . " " . $mcqHome;
         $noRecords = $this->objLanguage->languageText('mod_mcqtests_norecords', 'mcqtests', "No records found");
         $addDesc = $this->objLanguage->languageText('mod_mcqtests_addDesc', 'mcqtests', 'Add Description');
         $wordDesc = $this->objLanguage->languageText('mod_mcqtests_description', 'mcqtests');
@@ -731,9 +731,9 @@ class formmanager extends object {
                 $objTable->endRow();
             }
         } else {
-                $objTable->startRow();
-                $objTable->addCell($noRecords, '80%', $valign="top", $align='left', $class=null, $attrib="colspan='2'", $border = '0');
-                $objTable->endRow();
+            $objTable->startRow();
+            $objTable->addCell($noRecords, '80%', $valign = "top", $align = 'left', $class = null, $attrib = "colspan='2'", $border = '0');
+            $objTable->endRow();
         }
         $str .= $objTable->show();
 
@@ -745,7 +745,7 @@ class formmanager extends object {
                     'action' => 'addeditdesc'
                 )));
         $objAdd->link = $buttonAdd->showSexy();
-        $str .= " ".$objAdd->show();
+        $str .= " " . $objAdd->show();
 
         // Create Back Button
         $buttonBack = new button("submit", $backToHome);
@@ -755,8 +755,8 @@ class formmanager extends object {
                     'action' => 'choosequestiontype2'
                 )));
         $objBack->link = $buttonBack->showSexy();
-        $str .= " ".$objBack->show();
-        
+        $str .= " " . $objBack->show();
+
         //Add fieldset to hold Descriptions stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
         $objFieldset->width = '600px';
@@ -777,6 +777,7 @@ class formmanager extends object {
         $objFieldset->reset();
         return $form->show();
     }
+
     /**
      * Method to create add description form
      *
@@ -796,9 +797,9 @@ class formmanager extends object {
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
         $wordDescriptions = $this->objLanguage->languageText("mod_mcqtests_descriptions", 'mcqtests', "Descriptions");
         $wordBack = $this->objLanguage->languageText("word_back");
-        $BackToList = $wordBack." ".$wordTo." ".$phraseListOf." ".$wordDescriptions;
+        $BackToList = $wordBack . " " . $wordTo . " " . $phraseListOf . " " . $wordDescriptions;
         $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
-        $backToHome = $wordBack." ".$wordTo." ".$mcqHome;
+        $backToHome = $wordBack . " " . $wordTo . " " . $mcqHome;
         $addDescform = $this->objLanguage->languageText('mod_mcqtests_addDescription', 'mcqtests');
         $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
         $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
@@ -979,7 +980,7 @@ class formmanager extends object {
         $objBack->link = $buttonBack->showSexy();
         $btnBack = $objBack->show();
         //Add Save and Cancel Buttons to form
-        $form->addToForm("<br />" . $btnSave . " " . $btnBack. " " . $btnCancel . "<br />");
+        $form->addToForm("<br />" . $btnSave . " " . $btnBack . " " . $btnCancel . "<br />");
 
         return "<div>" . $form->show() . "</div>";
     }
@@ -1355,9 +1356,9 @@ class formmanager extends object {
         $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
         $wordBack = $this->objLanguage->languageText("word_back");
-        $BackToList = $wordBack." ".$wordTo." ".$phraseListOf." ";
+        $BackToList = $wordBack . " " . $wordTo . " " . $phraseListOf . " ";
         $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
-        $backToHome = $wordBack." ".$wordTo." ".$mcqHome;
+        $backToHome = $wordBack . " " . $wordTo . " " . $mcqHome;
         $addDescform = $this->objLanguage->languageText('mod_mcqtests_addDescription', 'mcqtests');
         $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
         $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
@@ -1510,7 +1511,7 @@ class formmanager extends object {
         $objTable->addCell($editor->show(), '80%');
         $objTable->endRow();
 
-        $noofqnsdropdown = new dropdown("sensitivity");
+        $noofqnsdropdown = new dropdown("qncount");
         $noofqnsdropdown->addOption("2", "2");
         $noofqnsdropdown->addOption("3", "3");
         $noofqnsdropdown->addOption("4", "4");
@@ -1551,6 +1552,7 @@ class formmanager extends object {
         //tags text box
         $officialtags = new textinput("officialtags", "");
         $officialtags->size = 60;
+        $officialtags->extra = "disabled";
 
         //Add Tags to the table
         $objTable2->startRow();

@@ -73,6 +73,7 @@ class mcqtests extends controller {
         }
 
         // get the user object
+        $this->dbTag = $this->newObject('dbtag');
         $this->objFormManager = $this->getObject('formmanager');
         $this->dbDescription = $this->newObject('dbdescription');
         $this->dbCategory = $this->newObject('dbcategory');
@@ -155,19 +156,24 @@ class mcqtests extends controller {
                 $id = $this->getParam('id', Null);
                 //Fetch the form data into an array for insertion/update
                 $fields = array();
-                $fields['currentcategory'] = $this->getParam('currentcategory', Null);
-                $fields['categoryid'] = $this->getParam('categoryid', Null);
-                $fields['qname'] = $this->getParam('qname', Null);
-                $fields['qntext'] = $this->getParam('qntext', Null);
-                $fields['qngrade'] = $this->getParam('qngrade', Null);
-                $fields['penaltyfactor'] = $this->getParam('penaltyfactor', Null);
-                $fields['genfeedback'] = $this->getParam('genfeedback', Null);
-                $fields['sensitivity'] = $this->getParam('sensitivity', Null);
-                $fields['officialtags'] = $this->getParam('officialtags', Null);
-                $fields['othertags'] = $this->getParam('othertags', Null);
-
-                //Insert/Update
-                $id = $this->dbCategory->addCategory($fields, $id);
+                $fields['id'] = $this->getParam('id', Null);
+                //$fields['currentcategory'] = $this->getParam('currentcategory', Null);
+                //$fields['categoryid'] = $this->getParam('categoryid', Null);
+                $fields['name'] = $this->getParam('qname', Null);
+                $fields['questiontext'] = $this->getParam('qntext', Null);
+                $fields['mark'] = $this->getParam('qngrade', Null);
+                $fields['penalty'] = $this->getParam('penaltyfactor', Null);
+                $fields['generalfeedback'] = $this->getParam('genfeedback', Null);
+                $qncount = $this->getParam('qncount', Null);
+                //Insert/Update Question
+                $id = $this->dbQuestions->addQuestion($fields, $id);
+                $officialTags = array();
+                $officialTags['tags'] = $this->getParam('officialtags', Null);
+                $othertags = $this->getParam('othertags', Null);
+                $otTags = array();
+                $otTags['tags'] = $othertags;
+                //Insert/Update Tags
+                $tagId = $this->dbTag->addTag($otTags, $id);
                 return $this->nextAction('addrandomshortans', array('id' => $id));
                 break;
             case "deletecat":

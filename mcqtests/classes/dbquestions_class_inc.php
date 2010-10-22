@@ -39,7 +39,7 @@ class dbquestions extends dbtable
      *
      * @access public
      * @param array $fields The table fields to be updated.
-     * @param string $id The id of the question to be edited. Default=NULL.
+     * @param string $id The id of the tag to be edited. Default=NULL.
      * @return string $id The id of the inserted or updated question.
      */
     public function addQuestion($fields, $id = NULL)
