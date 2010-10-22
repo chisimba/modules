@@ -97,12 +97,14 @@ class viewer extends object {
     }
 
     function getLatestBlogs() {
+        $alllink = new link($this->uri(array("action"=>"allblogs"), "blog"));
+        $alllink->link = 'View all blogs';
         $index = 0;
         $result = "";
         $blogPosts = $this->getObject('blogposts', 'blog');
         $display = $blogPosts->showLastTenPosts(3);
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $content = $display;
+        $content = $alllink->show().$display;
         $block = "blog" . $index++;
         $hidden = 'default';
         $showToggle = false;
@@ -124,7 +126,7 @@ class viewer extends object {
         $objCategories = $this->getObject("dbnewscategories", "news");
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $news = $this->getObject("dbnewsstories", "news");
-                  $objTrimString = $this->getObject('trimstr', 'strings');
+        $objTrimString = $this->getObject('trimstr', 'strings');
         $categories = $objCategories->getCategories();
         $currentShow = "No events have been set up";
 
@@ -137,7 +139,7 @@ class viewer extends object {
             }
         }
         $storyLink = new link($this->uri(array('action' => 'viewstory', 'id' => $onAirNowStories[0]['id']), "news"));
-        $storyLink->link = '<h1>'.$onAirNowStories[0]['storytitle'].'</h1>'.$objTrimString->strTrim($onAirNowStories[0]['storytext']);
+        $storyLink->link = '<h1>' . $onAirNowStories[0]['storytitle'] . '</h1>' . $objTrimString->strTrim($onAirNowStories[0]['storytext']);
         $content = $storyLink->show();
         $block = "events";
         $hidden = 'default';
