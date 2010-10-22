@@ -102,6 +102,7 @@ class elsi extends controller {
     }
 
     function __getLoggedInUserCount() {
+        $this->objLoggedInUsers->clearInactive();
         $onlineusers = $this->objLoggedInUsers->getActiveUserCount();
         echo "$onlineusers logged in.";
         die();
