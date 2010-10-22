@@ -156,7 +156,6 @@ class mcqtests extends controller {
                 $id = $this->getParam('id', Null);
                 //Fetch the form data into an array for insertion/update
                 $fields = array();
-                $fields['id'] = $this->getParam('id', Null);
                 //$fields['currentcategory'] = $this->getParam('currentcategory', Null);
                 //$fields['categoryid'] = $this->getParam('categoryid', Null);
                 $fields['name'] = $this->getParam('qname', Null);
@@ -166,14 +165,17 @@ class mcqtests extends controller {
                 $fields['generalfeedback'] = $this->getParam('genfeedback', Null);
                 $qncount = $this->getParam('qncount', Null);
                 //Insert/Update Question
-                $id = $this->dbQuestions->addQuestion($fields, $id);
+                if (!empty($fields))
+                    $id = $this->dbQuestions->addQuestion($fields, $id);
                 $officialTags = array();
                 $officialTags['tags'] = $this->getParam('officialtags', Null);
                 $othertags = $this->getParam('othertags', Null);
-                $otTags = array();
-                $otTags['tags'] = $othertags;
-                //Insert/Update Tags
-                $tagId = $this->dbTag->addTag($otTags, $id);
+                if (!empty($othertags)) {
+                    $otTags = array();
+                    $otTags['tags'] = $othertags;
+                    //Insert/Update Tags
+                    $tagId = $this->dbTag->addTag($otTags, $id);
+                }
                 return $this->nextAction('addrandomshortans', array('id' => $id));
                 break;
             case "deletecat":
@@ -1699,7 +1701,7 @@ class mcqtests extends controller {
             }
         } else {
             // original code
-            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');//print_r($data);
+            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10'); //print_r($data);
             if (!empty($data)) {
                 foreach ($data as $key => $line) {
                     $answers = $this->dbAnswers->getAnswers($line['id']);
@@ -1711,7 +1713,7 @@ class mcqtests extends controller {
                                 }
                             }
                         }
-                    } else if($data[$key]['questiontype'] == 'matching'){ // to check other types of questions, not the simple mcq's
+                    } else if ($data[$key]['questiontype'] == 'matching') { // to check other types of questions, not the simple mcq's
                         $answers = $this->objQuestionMatching->getAnswers($line['id']);
                     }
                     $data[$key]['answers'] = $answers;
