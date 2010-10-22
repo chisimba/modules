@@ -102,13 +102,12 @@ class uwcelearningmobile extends controller {
         $this->objContext = $this->getObject('usercontext', 'context');
         $this->dbContext = $this->getObject('dbcontext', 'context');
         $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
-        $this->objDate = $this->newObject('dateandtime', 'utilities');
+        $this->objDate = $this->getObject('dateandtime', 'utilities');
         $this->objMobileSecurity = $this->getObject('mobilesecurity', 'uwcelearningmobile');
         $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
         $this->link = $this->getObject('link', 'htmlelements');
-        $this->objGroups = $this->newObject('managegroups', 'contextgroups');
-        $this->objGroupAdmin = $this->newObject('groupadminmodel', 'groupadmin');
-        $this->dbContext = $this->newObject('dbcontext', 'context');
+        $this->objGroups = $this->getObject('managegroups', 'contextgroups');
+        $this->objGroupAdmin = $this->getObject('groupadminmodel', 'groupadmin');
         // Store Context Code
         $this->userId = $this->objUser->userId();
         $this->userContext = $this->objContext->getUserContext($this->userId);
@@ -215,6 +214,7 @@ class uwcelearningmobile extends controller {
         $this->setSession('recipientList', NULL);
         if ($this->objUser->isLoggedIn()) {
             $this->dbContext->leaveContext();
+	    $this->objContext = $this->getObject('usercontext', 'context');
             $usercontexts = $this->objContext->getUserContext($this->objUser->userId());
             $this->setVarByRef('usercontexts', $usercontexts);
 
@@ -319,7 +319,7 @@ class uwcelearningmobile extends controller {
      * @access private
      */
     private function __mcqtests() {
-        $this->dbTestadmin = $this->newObject('dbtestadmin', 'mcqtests');
+        $this->dbTestadmin = $this->getObject('dbtestadmin', 'mcqtests');
         $tests = $this->dbTestadmin->getTests($this->contextCode);
 
         $this->setVarByRef('tests', $tests);
@@ -498,8 +498,8 @@ class uwcelearningmobile extends controller {
     private function __internalmail() {
         $this->setSession('recipientList', NULL);
         $folderId = $this->getParam('folderId', 'init_1');
-        $this->dbFolders = $this->newObject('dbfolders', 'internalmail');
-        $this->dbRouting = $this->newObject('dbrouting', 'internalmail');
+        $this->dbFolders = $this->getObject('dbfolders', 'internalmail');
+        $this->dbRouting = $this->getObject('dbrouting', 'internalmail');
 
         $arrFolderList = $this->dbFolders->listFolders();
         $arrFolderData = $this->dbFolders->getFolder($folderId);
@@ -519,8 +519,8 @@ class uwcelearningmobile extends controller {
      */
     private function __readmail() {
         $routingId = $this->getParam('routingid');
-        $this->dbRouting = $this->newObject('dbrouting', 'internalmail');
-        $this->dbemail = $this->newObject('dbemail', 'internalmail');
+        $this->dbRouting = $this->getObject('dbrouting', 'internalmail');
+        $this->dbemail = $this->getObject('dbemail', 'internalmail');
         $route = $this->dbRouting->getMail($routingId);
 
         $msgid = $route['email_id'];
@@ -656,7 +656,7 @@ class uwcelearningmobile extends controller {
         $subject = $this->getParam('subject');
         $message = $this->getParam('message');
         $emailId = $this->getParam('emailId');
-        $this->dbRouting = $this->newObject('dbrouting', 'internalmail');
+        $this->dbRouting = $this->getObject('dbrouting', 'internalmail');
 
         $recipientList = $this->getParam('recipientList', NULL);
         if (!empty($arrUserId)) {
@@ -693,7 +693,7 @@ class uwcelearningmobile extends controller {
      */
     private function __sendmail() {
 
-        $this->dbEmail = $this->newObject('dbemail', 'internalmail');
+        $this->dbEmail = $this->getObject('dbemail', 'internalmail');
         $subject = $this->getParam('subject');
 
         if ($subject == '') {
@@ -807,7 +807,7 @@ class uwcelearningmobile extends controller {
         $message = $this->getParam('message');
         $arrContextList = $this->objGroups->usercontextcodes($this->userId);
 
-        $this->dbBooks = $this->newObject('dbaddressbooks', 'internalmail');
+        $this->dbBooks = $this->getObject('dbaddressbooks', 'internalmail');
         $arrBookList = $this->dbBooks->listBooks();
         $this->setVarByRef('arrContextList', $arrContextList);
         $this->setVarByRef('arrBookList', $arrBookList);
@@ -833,7 +833,7 @@ class uwcelearningmobile extends controller {
                         'username'
                     ));
         } else if ($bookId != NULL) {
-            $this->dbBookEntries = $this->newObject('dbbookentries', 'internalmail');
+            $this->dbBookEntries = $this->getObject('dbbookentries', 'internalmail');
             $users = $this->dbBookEntries->listBookEntries($bookId);
         }
 
