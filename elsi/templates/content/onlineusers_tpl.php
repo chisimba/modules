@@ -11,7 +11,9 @@ $table->addHeaderCell('Count');
 $table->addHeaderCell('Username');
 $table->addHeaderCell('Firstname');
 $table->addHeaderCell('Surname');
-$table->addHeaderCell('Duration');
+$table->addHeaderCell('Logon time');
+$table->addHeaderCell('Last active time');
+$table->addHeaderCell('Idle time');
 $table->endHeaderRow();
 foreach ($users as $user) {
 
@@ -20,8 +22,12 @@ foreach ($users as $user) {
     $table->addCell($user['username']);
     $table->addCell($user['firstname']);
     $table->addCell($user['surname']);
-    $duration = $this->objLoggedInUsers->getMyTimeOn($user['userid']);
-    $table->addCell($duration);
+    $logonTime = $this->objLoggedInUsers->getLogonTime($user['userid']);
+    $lastActiveTime = $this->objLoggedInUsers->getLastActiveTime($user['userid']);
+    $idleTime = $this->objLoggedInUsers->getInactiveTime($user['userid']);
+    $table->addCell($logonTime);
+    $table->addCell($lastActiveTime);
+    $table->addCell($idleTime);
     $table->endRow();
 }
 
