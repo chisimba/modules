@@ -24,7 +24,7 @@ $headern = new htmlHeading();
 $headern->str = $this->objLanguage->languageText("mod_qrreview_thanks", "qrreview");
 $headern->type = 1;
 
-$middleColumn .= $headern->show();
+$middleColumn .= $headern->show().'<br /><a href="'.$this->uri('').'">'.$this->objLanguage->languageText("mod_qrreview_home", "qrreview").'</a>';
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);

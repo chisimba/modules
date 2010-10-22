@@ -109,6 +109,12 @@ class qrreview extends controller
         switch ($action) {
             case NULL:
 
+            case 'viewtop' :
+                echo "Latest votes, latest products and latest stats";
+                
+                
+                break;
+            
             case 'new' :
                 $createbasic = $this->objReviewOps->addForm();
                 $this->setVarByRef('createbasic', $createbasic);
@@ -208,7 +214,7 @@ class qrreview extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='review') {
-        $allowedActions = array('mobireview', 'details', 'addreview');
+        $allowedActions = array('mobireview', 'details', 'addreview', 'viewtop');
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
