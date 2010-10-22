@@ -93,7 +93,7 @@ class elsitoolbar extends object {
 
 
         // Return Toolbar
-        return '<div id="chromestyle"><ul>' . $home . $str . '</ul>';
+        return  '<div id="chromestyle"><ul>' . $home . $str . '</ul></div>';
     }
 
     private function generateItem($action='', $module='webpresent', $text, $isActive=FALSE) {

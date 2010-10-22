@@ -13,7 +13,7 @@ $table->addHeaderCell('Firstname');
 $table->addHeaderCell('Surname');
 $table->addHeaderCell('Logon time');
 $table->addHeaderCell('Last active time');
-$table->addHeaderCell('Idle time');
+$table->addHeaderCell('Idle time (mins)');
 $table->endHeaderRow();
 foreach ($users as $user) {
 
