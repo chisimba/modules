@@ -19,7 +19,7 @@ CONFIGURATION STEPS
 
 9. In the terminal compile ant gwtc by going to your project directory and typing 'ant gwtc'. This will take a few minutes.
 
-10. Open firefox and go to chisimba (localhost/chisimba). Go to 'Admin' then 'Site Administartion' then 'System Configuration'. Scroll down to wicid and click on it. Click on FILES_DIR, change the parameter value to where you want wicid to save your files to and save (make sure the folder where you're saving to exists and is writable).
+10. Open firefox and go to chisimba (localhost/chisimba). Go to 'Admin' then 'Site Administartion' then 'System Configuration'. Scroll down to wicid and click on it. Click on FILES_DIR, change the parameter value to where you want wicid to save your files to and save (make sure the folder where you're saving to exists). Change the file permissions on this folder sudo chmod -R 777 /...(your folder's path)
 
 11. Click on MODE, change the parameter value to 'apo' and save.
 
