@@ -80,7 +80,10 @@ class qrreview extends controller
             $this->objDbQr       = $this->getObject('dbqr', 'qrcreator');
             $this->objReviewOps  = $this->getObject('reviewops');
             $this->objDbReview   = $this->getObject('dbqrreview');
-            $this->objTu = $this->getObject("tinyurlapi", "utilities");
+            $this->objTu         = $this->getObject("tinyurlapi", "utilities");
+            $this->objSysConfig  = $this->getObject('dbsysconfig', 'sysconfig');
+            
+            $this->sysType       = $this->objSysConfig->getValue('type', 'qrreview');
 			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
