@@ -73,6 +73,7 @@ class mcqtests extends controller {
         }
 
         // get the user object
+        $this->dbRandomMatchingSA = $this->newObject("dbrandom_matching");
         $this->dbTag = $this->newObject('dbtag');
         $this->objFormManager = $this->getObject('formmanager');
         $this->dbDescription = $this->newObject('dbdescription');
@@ -154,6 +155,7 @@ class mcqtests extends controller {
             case 'addrandomshortansconfirm':
                 //Get the cat id
                 $id = $this->getParam('id', Null);
+                //Get no of
                 //Fetch the form data into an array for insertion/update
                 $fields = array();
                 //$fields['currentcategory'] = $this->getParam('currentcategory', Null);
@@ -165,8 +167,13 @@ class mcqtests extends controller {
                 $fields['generalfeedback'] = $this->getParam('genfeedback', Null);
                 $qncount = $this->getParam('qncount', Null);
                 //Insert/Update Question
-                if (!empty($fields))
+                if (!empty($fields)) {
                     $id = $this->dbQuestions->addQuestion($fields, $id);
+                    $rSA = array();
+                    $rSA["questionid"] = $id;
+                    $rSA["choose"] = $qncount;
+                    $rSAId = $this->dbRandomMatchingSA->addRecord($rSA, Null);
+                }
                 $officialTags = array();
                 $officialTags['tags'] = $this->getParam('officialtags', Null);
                 $othertags = $this->getParam('othertags', Null);

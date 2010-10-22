@@ -47,6 +47,11 @@ class dbrandom_matching extends dbtable {
      */
     public function addRecord($fields, $id = NULL) {
         $fields['timemodified'] = date('Y-m-d H:i:s');
+        //Check if the question has already been added
+        $exists = $this->getRecords( 'questionid = "'.$fields["questionid"].'"');
+        if(!empty($exists)){
+            $id = $exists[0]["id"];
+        }
         if ($id) {
             $fields['timemodified'] = date('Y-m-d H:i:s');
             $fields['modifiedby'] = $this->userId;
@@ -66,7 +71,7 @@ class dbrandom_matching extends dbtable {
      * @param string $filter An additional filter on the select statement.
      * @return array $data The list of Records.
      */
-    public function getRecords($itemId = NULL, $filter = NULL) {
+    public function getRecords($filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter != NULL) {
             $sql.= " WHERE '$filter'";
