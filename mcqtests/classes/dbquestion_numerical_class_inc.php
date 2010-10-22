@@ -55,7 +55,7 @@ class dbquestion_numerical extends dbtable {
         $this->delete('questionid', $id);
     }
 
-    public function getNumericalAnswers($id) {
+    public function getAnswers($id) {
         $answers = $this->getAll("WHERE questionid = '$id'");
         return $answers;
     }

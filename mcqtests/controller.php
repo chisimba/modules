@@ -1708,7 +1708,8 @@ class mcqtests extends controller {
             }
         } else {
             // original code
-            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10'); //print_r($data);
+            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');
+
             if (!empty($data)) {
                 foreach ($data as $key => $line) {
                     $answers = $this->dbAnswers->getAnswers($line['id']);
@@ -1720,8 +1721,13 @@ class mcqtests extends controller {
                                 }
                             }
                         }
-                    } else if ($data[$key]['questiontype'] == 'matching') { // to check other types of questions, not the simple mcq's
+
+                    }
+                    else if($data[$key]['questiontype'] == 'matching'){ // to check other types of questions, not the simple mcq's
                         $answers = $this->objQuestionMatching->getAnswers($line['id']);
+                    }
+                    else if ($data[$key]['questiontype'] == 'numerical'){
+                        $answers = $this->objQuestionNumerical->getAnswers($line['id']);
                     }
                     $data[$key]['answers'] = $answers;
                 }

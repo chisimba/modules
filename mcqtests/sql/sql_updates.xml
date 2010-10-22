@@ -156,4 +156,16 @@
 			</add>
 		</data>
 	</update>
+        <update>
+		<table>tbl_test_question_multianswers</table>
+		<version>1.931</version>
+		<description>add correctanswer field</description>
+		<data>
+			<add>
+				<name>correctanswer</name>
+				<type>text</type>
+				<length>5</length>
+			</add>
+		</data>
+	</update>
 </updates>

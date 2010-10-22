@@ -117,7 +117,6 @@ if (!empty($data)) {
         $objInput->fldType = 'hidden';
         $hidden = $objInput->show();
 
-
         // Display answers
         if (!empty($line['answers'])) {
             if ($line['questiontype'] == 'freeform') {
@@ -148,35 +147,31 @@ if (!empty($data)) {
 
                     $objRadio = new radio('ans' . $questionCounter);
                     $ansNum = '<b>&nbsp;'.$alpha[($key + 1)].')</b>&nbsp;&nbsp;';
-                    $objRadio->addOption($val['id'], $ansNum.strip_tags($val['subquestions']));
-
+                    if(strlen(strip_tags(trim($val['subquestions']))) > 0) {
+                        $objRadio->addOption($val['id'], $ansNum.strip_tags($val['subquestions']));
+                    }
                     $matchTable->startRow();
                     $matchTable->addCell($objRadio->show(), '50%');
                     $matchTable->addCell($objDropNum->show(), '50%');
                     $matchTable->endRow();
 
                     ++$key;
-                    /*;
-                    if (isset($val['selected']) && !empty($val['selected'])) {
-                        $objRadio->setSelected($val['id']);
-                        $objInput->textinput('selected' . $line['questionorder'], $val['selected']);
-                        $objInput->fldType = 'hidden';
-                        $hidden.= $objInput->show();
-                        $objInput = new textinput('qtype' . $line['questionorder'], '');
-                        $objInput->fldType = 'hidden';
-                        $hidden.= $objInput->show();
-                    }*/
                 }
                 
             }
+            else if ($line['questiontype'] == 'numerical') {
+                $objTextInput = new textinput('ans'.$questionCounter, "");
+                $objTextInput->size = 10;
+            }
             else {
                 $objRadio = new radio('ans' . $questionCounter);
-                //$objRadio = new radio('ans'.$line['id']);
                 $objRadio->setBreakSpace('<br />');
 
-                foreach ($line['answers'] as $key => $val) {echo $val;
+                foreach ($line['answers'] as $key => $val) {
                     $ansNum = '<b>&nbsp;' . $alpha[($key + 1)] . ')</b>&nbsp;&nbsp;';
-                    $objRadio->addOption($val['id'], $ansNum . $val['answer']);
+                    if(strlen(strip_tags(trim($val['answer']))) > 0) {
+                        $objRadio->addOption($val['id'], $ansNum . $val['answer']);
+                    }
                     if (isset($val['selected']) && !empty($val['selected'])) {
                         $objRadio->setSelected($val['id']);
                         $objInput->textinput('selected' . $line['questionorder'], $val['selected']);
@@ -194,8 +189,11 @@ if (!empty($data)) {
         if($line['questiontype'] == 'matching') {
             $row[] = $matchTable->show();
         }
+        else if($line['questiontype'] == 'numerical') {
+            $row[] = $objTextInput->show();
+        }
         else {
-            $objRadio->show();
+            $row[] = $objRadio->show();
         }
         $objTable->addRow($row, 'even');
         $questionCounter++;
