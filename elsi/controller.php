@@ -39,6 +39,7 @@ class elsi extends controller {
         //Instantiate the language object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLoggedInUsers = $this->getObject('loggedinusers', 'security');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
     public function dispatch($action) {
@@ -110,10 +111,13 @@ class elsi extends controller {
         $this->setVar('pageSuppressBanner', TRUE);
         $this->setVar('suppressFooter', TRUE);
         $this->setVar('pageSuppressToolbar', TRUE);
+        $this->objLoggedInUsers->clearInactive();
         $onlineusers = $this->objLoggedInUsers->getListOnlineUsers();
         $this->setVarByRef("users", $onlineusers);
         return "onlineusers_tpl.php";
     }
+
+   
 
     function requiresLogin() {
         return false;
