@@ -58,6 +58,10 @@ class dbqrreview extends dbTable
 	     return $this->getAll("WHERE id = '$id'");
 	 }
 	 
+	 public function getLastProds($num) {
+	     return $this->getALL(" ORDER BY puid LIMIT 0,10"); 
+	 }
+	 
 	 public function updateQR($recid, $fileurl) {
 	     $this->update('id', $recid, $fileurl);
 	 }
@@ -73,6 +77,14 @@ class dbqrreview extends dbTable
 	     $this->changeTable('tbl_qrreview_prods');
 	     
 	     return $id;
+	 }
+	 
+	 public function getLastReviews($num) {
+	     $this->changeTable('tbl_qrreview_reviews');
+	     $data = $this->getAll("LIMIT 0, $num");
+	     $this->changeTable('tbl_qrreview_prods');
+	     return $data;
+	     
 	 }
 }
 ?>

@@ -113,9 +113,7 @@ class qrreview extends controller
             case NULL:
 
             case 'viewtop' :
-                echo "Latest votes, latest products and latest stats";
-                
-                
+                return 'front_tpl.php';
                 break;
             
             case 'new' :

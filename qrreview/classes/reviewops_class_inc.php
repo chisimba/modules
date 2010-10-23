@@ -111,6 +111,7 @@ class reviewops extends object {
         $this->objCurl       = $this->getObject('curl', 'utilities');
         $this->objDbQr       = $this->getObject('dbqr', 'qrcreator');
         $this->objCookie     = $this->getObject('cookie', 'utilities');
+        $this->objDbReview   = $this->getObject('dbqrreview');
     }
     
     public function addForm() {
@@ -311,6 +312,75 @@ class reviewops extends object {
         $objCurl = $this->getObject('curl', 'utilities');
         log_debug($objCurl->exec($url));
         
+    }
+    
+    public function reviewsPage() {
+        $reviews = $this->objDbReview->getLastReviews(5);
+        $revs = NULL;
+        
+        foreach($reviews as $review) {
+            $objFeatureBox = $this->newObject('featurebox', 'navigation');
+            $prodid = $review['prodid'];
+            $rate = $review['prodrate'];
+            $prodcomments = $review['prodcomm'];
+            $product = $this->objDbReview->getRecord($prodid);
+            $product = $product[0];
+            $plongdesc = $product['longdesc'];
+            $pname = $product['prodname'];
+            $qr = $product['qr'];
+            $added = $product['creationdate'];
+            
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->startRow();
+            $table->addCell($rate."<br />".nl2br($prodcomments), 100, NULL, 'left');
+            $table->addCell('<img src="'.$qr.'" />', 50, NULL, 'right');
+            $table->endRow();
+            $revs .= $objFeatureBox->show($pname." ".$this->objLanguage->languageText("mod_qrreview_addedon", "qrreview")." ".$added, $table->show());
+        }
+        
+        return $revs;   
+    }
+    
+    public function recentlyAdded() {
+        $prods = $this->objDbReview->getLastProds(5);
+        $ret = NULL;
+        foreach($prods as $product) {
+            $objFeatureBox = $this->newObject('featurebox', 'navigation');
+            $plongdesc = $product['longdesc'];
+            $pname = $product['prodname'];
+            $qr = $product['qr'];
+            $added = $product['creationdate'];
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->startRow();
+            $table->addCell(nl2br($plongdesc), 100, NULL, 'left');
+            $table->addCell('<img src="'.$qr.'" />', 50, NULL, 'right');
+            $table->endRow();
+            $prods .= $objFeatureBox->show($pname." ".$this->objLanguage->languageText("mod_qrreview_addedon", "qrreview")." ".$added, $table->show());
+            
+        }
+        
+        return $prods;
+    }
+    
+    public function topScorers() {
+        return 'top scores';
+    }
+    
+    /**
+     * Main container function (tabber) box to do the layout for the main template
+     *
+     * Chisimba tabber interface is used to create tabs that are dynamically switchable.
+     *
+     * @return string
+     */
+    public function middleContainer() {
+        // get the tabbed box class
+        $tabs = $this->getObject('tabber', 'htmlelements');
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_qrerview_latestreviews", "qrreview"), 'content' => $this->reviewsPage(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_qrreview_recentlyadded", "qrreview"), 'content' => $this->recentlyAdded(), 'onclick' => ''));
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_topscorers", "qrreview"), 'content' => $this->topScorers(), 'onclick' => ''));
+
+        return $tabs->show();
     }
     
 }
