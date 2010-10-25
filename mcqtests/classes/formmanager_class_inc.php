@@ -465,7 +465,8 @@ class formmanager extends object {
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'choosequestiontype2'
+                    'action' => 'view2',
+                    'id' => $this->getParam('id')
                 )));
         $objBack->link = $buttonBack->showSexy();
         $str .= $objBack->show();
@@ -965,7 +966,7 @@ class formmanager extends object {
         $objCancel = &$this->getObject("link", "htmlelements");
         $objCancel->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'choosequestiontype2',
+                    'action' => 'view2',
                     'id' => $id
                 )));
         $objCancel->link = $buttonCancel->showSexy();

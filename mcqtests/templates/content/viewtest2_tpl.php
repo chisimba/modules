@@ -467,7 +467,7 @@ $myJS = '<script type="text/javascript">
                 numericalqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewnumericalquestions", "id"=>$this->getParam('id')))).'",
                 shortanswerqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewshortansquestions", "id"=>$this->getParam('id')))).'",
                 categoryUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"categorylisting", "id"=>$this->getParam('id')))).'",
-                descriptionUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"addeditdesc"))).'";
+                descriptionUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"addeditdesc", "id"=>$this->getParam('id')))).'";
         </script>';
 echo $myJS;
 ?>

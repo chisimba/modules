@@ -19,7 +19,12 @@ class numerical_question extends object {
 
         $unitsHandling = $this->getUnitHandling();
 
-        $units = $this->getUnit($data['id']);
+        if(!empty($data)) {
+            $units = $this->getUnit($data['id']);
+        }
+        else {
+            $units = "";
+        }
 
         // Create form and add the table
         if($edit) {
@@ -48,7 +53,7 @@ class numerical_question extends object {
         
         //get the answers
         $objQuestionNumerical = $this->newObject('dbquestion_numerical');
-        $answers = $objQuestionNumerical->getNumericalAnswers($questionid);
+        $answers = $objQuestionNumerical->getAnswers($questionid);
 
         for ($i = 1; $i <= 3; $i++) {
             if(strlen(trim($answers[$i-1]['answer'])) > 0) {

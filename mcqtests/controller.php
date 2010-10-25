@@ -211,7 +211,7 @@ class mcqtests extends controller {
                 $fields['categoryinfo'] = $this->getParam('desc', Null);
                 //Insert/Update
                 $id = $this->dbCategory->addCategory($fields, $id);
-                return $this->nextAction('addcategory', array('id' => $id));
+                return $this->nextAction('categorylisting', array('id' => $id));
             case 'mcqlisting':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'mcqlisting_tpl.php';
@@ -245,7 +245,7 @@ class mcqtests extends controller {
                 $fields['tags'] = $this->getParam('descofficialtags', Null);
                 $fields['othertags'] = $this->getParam('descothertags', Null);
                 $id = $this->dbDescription->addDescription($fields, $descId);
-                return $this->nextAction('addeditdesc', array('id' => $id));
+                return $this->nextAction('view2', array('id' => $this->getParam('id')));
             case "deletedesc":
                 $this->nextAction($id = $this->getParam('id', null), $this->dbDescription->deleteDescription($id));
                 // After processing return to choosequestiontype2

@@ -20,13 +20,13 @@ $objDescLink->link($this->uri(array(
 $objDescLink->link = "MCQ Category";
 $str .= "<h4>".$objDescLink->show()."</h4>";
 
-$objDescLink = &$this->getObject("link", "htmlelements");
+/*$objDescLink = &$this->getObject("link", "htmlelements");
 $objDescLink->link($this->uri(array(
             'module' => 'mcqtests',
             'action' => 'addrandomshortans'
         )));
 $objDescLink->link = "Add Random Short Answer Question";
-$str .= "<h4>".$objDescLink->show()."</h4>";
+$str .= "<h4>".$objDescLink->show()."</h4>";*/
 
 echo $str;
 //Load the classes for the template
@@ -88,10 +88,10 @@ $existingQuestions->setId("existingQ");
 $existingQuestions->addOption('-', '[-' . $selectQBLabel . '-]');
 $existingQuestions->addOption('newQ', $newqns);
 $existingQuestions->addOption('oldQ', $choosefromdb);
-$existingQuestions->addOption('calcQ', $calcdqn);
+/*$existingQuestions->addOption('calcQ', $calcdqn);
 $existingQuestions->addOption('matchQ', $matchingqn);
 $existingQuestions->addOption('numericalQ', $numericalqns);
-$existingQuestions->addOption('shortansQ', 'Short Answer Questions');
+$existingQuestions->addOption('shortansQ', 'Short Answer Questions');*/
 $existingQuestionsLabel = new label($selectQBLabel . " ", 'existingQ');
 
 $batchOptions = new dropdown('qnoption');
@@ -99,9 +99,9 @@ $batchOptions->setId("qnoption");
 $batchOptions->addOption('-', '[-' . $selectqntype . '-]');
 $batchOptions->addOption('mcq', $selectQBLabel);
 $batchOptions->addOption('freeform', $freeformLabel);
-$batchOptions->addOption('addDescription', $addDescription);
+/*$batchOptions->addOption('addDescription', $addDescription);
 $batchOptions->addOption('addShortAns', $phraseAddingShortAnswerQn);
-$batchOptions->addOption('addRandomShortAnsMatching', $phraseAddA . " " . $phraseRandomShortAns);
+$batchOptions->addOption('addRandomShortAnsMatching', $phraseAddA . " " . $phraseRandomShortAns);*/
 $batchLabel = new label($selectqntype . ' ', 'input_qnoptionlabel');
 
 $fd = $this->getObject('fieldsetex', 'htmlelements');
@@ -114,15 +114,15 @@ $calcqformmanager = $this->getObject('question_calculated_formmanager');
 $numericalformmanager = $this->getObject('numerical_question');
 $shortansformmanager = $this->getObject('short_answer_question');
 
-$questionContentStr = '<div id="randomshortansmatching">' . $formmanager->createRandomShortAnsForm($test, $testid) . '</div>';
-$questionContentStr.= '<div id="shortans">' . $formmanager->createAddShortAnswerForm($test, $testid) . '</div>';
+/*$questionContentStr = '<div id="randomshortansmatching">' . $formmanager->createRandomShortAnsForm($test, $testid) . '</div>';
+$questionContentStr.= '<div id="shortans">' . $formmanager->createAddShortAnswerForm($test, $testid) . '</div>';*/
+$questionContentStr.='<div id="addDescription">' . $formmanager->createAddDescriptionForm($test, $testid) . '</div>';
 $questionContentStr.= '<div id="addquestion">' . $formmanager->createAddQuestionForm($test) . '</div>';
 $questionContentStr.='<div id="freeform">' . $formmanager->createAddFreeForm($test) . '</div>';
 $questionContentStr.='<div id="dbquestions">' . $formmanager->createDatabaseQuestions($oldQuestions, $testid) . '</div>';
-$questionContentStr.='<div id="calcquestions">' . $calcqformmanager->calcQForm($testid) . '</div>';
-$questionContentStr.='<div id="addDescription">' . $formmanager->createAddDescriptionForm($test, $testid) . '</div>';
+/*$questionContentStr.='<div id="calcquestions">' . $calcqformmanager->calcQForm($testid) . '</div>';
 $questionContentStr.='<div id="matchingquestions">' . $calcqformmanager->matchingQForm($testid) . '</div>';
-$questionContentStr.='<div id="numericalquestions">' . $numericalformmanager->numericalQForm($testid) . '</div>';
+$questionContentStr.='<div id="numericalquestions">' . $numericalformmanager->numericalQForm($testid) . '</div>';*/
 
 //$questionContentStr.='<div id="mcqGrid"></div>';
 

@@ -201,7 +201,7 @@ class question_calculated_formmanager extends object {
         $objCancel = &$this->getObject("link", "htmlelements");
         $objCancel->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'view',
+                    'action' => 'view2',
                     'id' => $id
                 )));
         $objCancel->link = $buttonCancel->showSexy();
