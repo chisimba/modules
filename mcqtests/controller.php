@@ -160,7 +160,7 @@ class mcqtests extends controller {
                 $fields = array();
                 //$fields['currentcategory'] = $this->getParam('currentcategory', Null);
                 //$fields['categoryid'] = $this->getParam('categoryid', Null);
-                $fields['name'] = $this->getParam('qname', Null);
+                $fields['name'] = $this->getParam('qnName', Null);
                 $fields['questiontext'] = $this->getParam('qntext', Null);
                 $fields['mark'] = $this->getParam('qngrade', Null);
                 $fields['penalty'] = $this->getParam('penaltyfactor', Null);
@@ -181,7 +181,7 @@ class mcqtests extends controller {
                     $otTags = array();
                     $otTags['tags'] = $othertags;
                     //Insert/Update Tags
-                    $tagId = $this->dbTag->addTag($otTags, Null);
+                    $tagId = $this->dbTag->addTag($otTags, Null, $id);
                 }
                 return $this->nextAction('addrandomshortans', array('id' => $id));
                 break;

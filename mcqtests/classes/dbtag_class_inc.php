@@ -44,9 +44,10 @@ class dbtag extends dbtable {
      * @access public
      * @param array $fields The table fields to be added/updated.
      * @param string $id The id of the tag to be edited. Default=NULL.
-     * @return array $id The id(s) of the inserted or updated description.
+     * @return array $id The id of the inserted or updated tag.
+     * @return array $qnId The qnId of the inserted or updated question.
      */
-    public function addTag($fields, $id = NULL) {
+    public function addTag($fields, $id = Null, $qnId = Null) {
         $othertags = explode(",", $fields["tags"]);
         if (!empty($othertags)) {
             $count = 0;
@@ -74,7 +75,7 @@ class dbtag extends dbtable {
                         $fieldsTI = array();
                         $fieldsTI['tagid'] = $tagid;
                         $fieldsTI['itemtype'] = "question";
-                        $fieldsTI['itemid'] = $id;
+                        $fieldsTI['itemid'] = $qnId;
                         $this->dbTagInstance->addInstance($fieldsTI, Null);
                     }
                 }
@@ -93,7 +94,7 @@ class dbtag extends dbtable {
     public function getTags($filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter != NULL) {
-            $sql.= " WHERE '$filter'";
+            $sql.= " WHERE " . $filter;
         } else {
             $sql .= "";
         }

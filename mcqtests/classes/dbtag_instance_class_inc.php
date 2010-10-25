@@ -68,6 +68,7 @@ class dbtag_instance extends dbtable {
      * @return array $data The list of instances.
      */
     public function getInstances($itemId = NULL, $filter = NULL) {
+        
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter && $itemId) {
             $sql.= " WHERE itemid='$itemId' AND $filter";

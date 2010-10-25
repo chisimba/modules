@@ -18,6 +18,26 @@ class formmanager extends object {
      * @var object to hold the context Code
      */
     public $contextCode;
+    /*
+     * @var object to hold questions db class
+     */
+    public $dbQuestions;
+    /*
+     * @var object to hold random_matching db class
+     */
+    public $dbRandomMatching;
+    /*
+     * @var object to hold Category db class
+     */
+    public $dbCategory;
+    /*
+     * @var object to hold Tag db class
+     */
+    public $dbTag;
+    /*
+     * @var object to hold tag_instance db class
+     */
+    public $dbTagInstance;
 
     function init() {
         $this->loadClass('form', 'htmlelements');
@@ -30,6 +50,10 @@ class formmanager extends object {
         $this->loadClass('htmltable', 'htmlelements');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->dbDescription = $this->newObject('dbdescription');
+        $this->dbQuestions = $this->newObject('dbquestions');
+        $this->dbRandomMatching = $this->newObject('dbrandom_matching');
+        $this->dbTag = $this->newObject('dbtag');
+        $this->dbTagInstance = $this->newObject('dbtag_instance');
         $this->dbCategory = $this->newObject('dbcategory');
         $this->objContext = $this->newObject('dbcontext', 'context');
         $this->contextCode = $this->objContext->getContextCode();
@@ -1393,6 +1417,27 @@ class formmanager extends object {
                             'action' => 'addrandomshortansconfirm',
                             'id' => $id
                         )));
+        $qnData = $this->dbQuestions->getQuestion($id);
+
+        $randSAData = $this->dbRandomMatching->getRecords("questionid='" . $id . "'");
+        $qnData = $qnData[0];
+        $randSAData = $randSAData[0];
+
+        //Get the Qn tags
+        $tagInstData = $this->dbTagInstance->getInstances($id);
+        $tagStr = "";
+        $count = 0;
+        $arrLength = count($tagInstData);
+        foreach ($tagInstData as $thisTagInst) {
+            $tagData = $this->dbTag->getTag($thisTagInst["tagid"]);
+            $tagData = $tagData[0];
+            $tagStr .= $tagData["name"];
+
+            $count++;
+
+            if ($count < $arrLength)
+                $tagStr .= ",";
+        }
 
         //Form Heading/Title
         $objHeading = &$this->getObject('htmlheading', 'htmlelements');
@@ -1455,7 +1500,11 @@ class formmanager extends object {
         $objTable->endRow();
 
         //question name text box
-        $qnname = new textinput("qnname", "");
+        if (!empty($qnData)) {
+            $qnname = new textinput("qnName", $qnData["name"]);
+        } else {
+            $qnname = new textinput("qnName", "");
+        }
         $qnname->size = 60;
         $form->addRule('qnname', $this->objLanguage->languageText('mod_mcqtests_qnnamerequired', 'mcqtests'), 'required');
         //Add Category to the table
@@ -1470,7 +1519,11 @@ class formmanager extends object {
         $editor->height = '100px';
         $editor->width = '550px';
         $editor->setMCQToolBar();
-        $qntext = '';
+        if (!empty($qnData)) {
+            $qntext = $qnData["questiontext"];
+        } else {
+            $qntext = '';
+        }
         $editor->setContent($qntext);
         //Add Category to the table
         $objTable->startRow();
@@ -1479,7 +1532,11 @@ class formmanager extends object {
         $objTable->endRow();
 
         //Add default qn grade
-        $qngrade = new textinput("qngrade", "");
+        if (!empty($qnData)) {
+            $qngrade = new textinput("qngrade", $qnData["mark"]);
+        } else {
+            $qngrade = new textinput("qngrade", "");
+        }
         $qngrade->size = 60;
         $form->addRule('qngrade', $phraseQnGrade . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
         //Add qn grade to the table
@@ -1489,7 +1546,11 @@ class formmanager extends object {
         $objTable->endRow();
 
         //Add Penalty factor
-        $pfactor = new textinput("penaltyfactor", "");
+        if (!empty($qnData)) {
+            $pfactor = new textinput("penaltyfactor", $qnData["penalty"]);
+        } else {
+            $pfactor = new textinput("penaltyfactor", "");
+        }
         $pfactor->size = 60;
         $form->addRule('penaltyfactor', $phrasePenaltyFactor . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
         //Add penalty factor field to the table
@@ -1504,7 +1565,11 @@ class formmanager extends object {
         $editor->height = '100px';
         $editor->width = '550px';
         $editor->setMCQToolBar();
-        $genfeedback = '';
+        if (!empty($qnData)) {
+            $genfeedback = $qnData["generalfeedback"];
+        } else {
+            $genfeedback = '';
+        }
         $editor->setContent($genfeedback);
         //Add General Feedback to the table
         $objTable->startRow();
@@ -1522,7 +1587,11 @@ class formmanager extends object {
         $noofqnsdropdown->addOption("8", "8");
         $noofqnsdropdown->addOption("9", "9");
         $noofqnsdropdown->addOption("10", "10");
-        $noofqnsdropdown->setSelected("0");
+        if (!empty($randSAData)) {
+            $noofqnsdropdown->setSelected($randSAData["count"]);
+        } else {
+            $noofqnsdropdown->setSelected("0");
+        }
 
         //Add Sensitivity dropdown to the table
         $objTable->startRow();
@@ -1565,7 +1634,11 @@ class formmanager extends object {
         $othertags = "";
         $othertagsTA = new textarea();
         $othertagsTA->setName("othertags");
-        $othertagsTA->setValue($othertags);
+        if (!empty($tagInstData)) {
+            $othertagsTA->setValue($tagStr);
+        } else {
+            $othertagsTA->setValue("");
+        }
         $othertagsTA->setRows('4');
         $othertagsTA->setColumns('70');
 

@@ -74,7 +74,7 @@ class dbrandom_matching extends dbtable {
     public function getRecords($filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter != NULL) {
-            $sql.= " WHERE '$filter'";
+            $sql.= " WHERE ".$filter;
         } else {
             $sql .= "";
         }
