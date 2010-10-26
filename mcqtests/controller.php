@@ -158,7 +158,12 @@ class mcqtests extends controller {
                 //Get no of
                 //Fetch the form data into an array for insertion/update
                 $fields = array();
-                //$fields['currentcategory'] = $this->getParam('currentcategory', Null);
+                $submitVal = $this->getParam('submit', Null);
+                //Flag to determine if we save question as new or just update
+                $saveAsNew = 0;
+                if ($submitVal = "Save as a new question") {
+                    $saveAsNew = 1;
+                }
                 $fields['categoryid'] = $this->getParam('categoryid', Null);
                 $fields['name'] = $this->getParam('qnName', Null);
                 $fields['questiontext'] = $this->getParam('qntext', Null);
@@ -168,7 +173,7 @@ class mcqtests extends controller {
                 $qncount = $this->getParam('qncount', Null);
                 //Insert/Update Question
                 if (!empty($fields)) {
-                    $id = $this->dbQuestions->addQuestion($fields, $id);
+                    $id = $this->dbQuestions->addQuestion($fields, $id, $saveAsNew);
                     $rSA = array();
                     $rSA["questionid"] = $id;
                     $rSA["choose"] = $qncount;
@@ -1721,12 +1726,9 @@ class mcqtests extends controller {
                                 }
                             }
                         }
-
-                    }
-                    else if($data[$key]['questiontype'] == 'matching'){ // to check other types of questions, not the simple mcq's
+                    } else if ($data[$key]['questiontype'] == 'matching') { // to check other types of questions, not the simple mcq's
                         $answers = $this->objQuestionMatching->getAnswers($line['id']);
-                    }
-                    else if ($data[$key]['questiontype'] == 'numerical'){
+                    } else if ($data[$key]['questiontype'] == 'numerical') {
                         $answers = $this->objQuestionNumerical->getAnswers($line['id']);
                     }
                     $data[$key]['answers'] = $answers;

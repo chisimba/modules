@@ -1483,7 +1483,11 @@ class formmanager extends object {
 
         //use-category text box
         $usecategory = new checkbox('currentcategory');
-        $usecategory->setChecked(0);
+        if (!empty($qnData)) {
+            $usecategory->setChecked(1);
+        } else {
+            $usecategory->setChecked(0);
+        }
         $usecategory->setValue(1);
 
         //Add Use-Category to the table
@@ -1693,13 +1697,13 @@ class formmanager extends object {
 
         // Create Save Button
         $button = new button("submit", $phraseSaveChanges);
-        $button->setValue('savechanges');
+        $button->setValue($phraseSaveChanges);
         $button->setToSubmit();
         $btnSave = $button->showSexy();
 
         $button1 = new button("submit", $phraseSaveAsNewQn);
-        $button1->setValue('saveasnew');
-        //$button1->setToSubmit();
+        $button1->setValue($phraseSaveAsNewQn);
+        $button1->setToSubmit();
         $btnSaveAsnew = $button1->showSexy();
 
         // Create Back Button

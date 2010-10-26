@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package mcqtests
  * @filesource
@@ -18,16 +19,15 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @package mcqtests
  * @version 1.2
  */
-class dbquestions extends dbtable
-{
+class dbquestions extends dbtable {
+
     /**
      * Method to construct the class and initialise the table.
      *
      * @access public
      * @return
      */
-    public function init()
-    {
+    public function init() {
         parent::init('tbl_test_questions');
         $this->table = 'tbl_test_questions';
         $this->dbAnswers = &$this->newObject('dbanswers');
@@ -40,12 +40,14 @@ class dbquestions extends dbtable
      * @access public
      * @param array $fields The table fields to be updated.
      * @param string $id The id of the tag to be edited. Default=NULL.
+     * @param string $saveAsNew Flag indicating whether question should be saved as new qn
      * @return string $id The id of the inserted or updated question.
      */
-    public function addQuestion($fields, $id = NULL)
-    {
+    public function addQuestion($fields, $id = NULL, $saveAsNew = Null) {
         $fields['updated'] = date('Y-m-d H:i:s');
-        if ($id) {
+        if ($saveAsNew == 1) {
+            $id = $this->insert($fields);
+        } elseif ($id && $saveAsNew != 1) {
             $this->update('id', $id, $fields);
         } else {
             $id = $this->insert($fields);
@@ -61,9 +63,8 @@ class dbquestions extends dbtable
      * @param string $filter An additional filter on the select statement.
      * @return array $data The list of questions in the test.
      */
-    public function getQuestions($testId, $filter = NULL)
-    {
-        $sql = 'SELECT * FROM '.$this->table;
+    public function getQuestions($testId, $filter = NULL) {
+        $sql = 'SELECT * FROM ' . $this->table;
         if ($filter) {
             $sql.= " WHERE testid='$testId' AND $filter";
         } else {
@@ -86,10 +87,9 @@ class dbquestions extends dbtable
      * @param string $num The question to start from.
      * @return array $data The list of questions and answers in the test.
      */
-    public function getQuestionCorrectAnswer($testId, $num = 0)
-    {
+    public function getQuestionCorrectAnswer($testId, $num = 0) {
         $sql = "SELECT DISTINCT question.*, question.id AS questionId, answer.*";
-        $sql.= " FROM ".$this->table." AS question,";
+        $sql.= " FROM " . $this->table . " AS question,";
         $sql.= " tbl_test_answers AS answer";
         $sql.= " WHERE question.id = answer.questionid";
         $sql.= " AND question.testid='$testId'";
@@ -113,9 +113,8 @@ class dbquestions extends dbtable
      * @param string $testId The id of the test being used.
      * @return array $data The list of questions and answers in the test.
      */
-    public function getQuestionAndAnswer($testId)
-    {
-        $sql = "SELECT question.*, answer.* FROM ".$this->table." AS question,";
+    public function getQuestionAndAnswer($testId) {
+        $sql = "SELECT question.*, answer.* FROM " . $this->table . " AS question,";
         $sql.= " tbl_test_answers AS answer";
         $sql.= " WHERE question.id = answer.questionid";
         $sql.= " AND testid='$testId'";
@@ -134,9 +133,8 @@ class dbquestions extends dbtable
      * @param string $id The id of the question.
      * @return array $data The details of the question.
      */
-    public function getQuestion($id)
-    {
-        $sql = 'SELECT * FROM '.$this->table;
+    public function getQuestion($id) {
+        $sql = 'SELECT * FROM ' . $this->table;
         $sql.= " WHERE id='$id'";
         $data = $this->getArray($sql);
         if (!empty($data)) {
@@ -153,17 +151,16 @@ class dbquestions extends dbtable
      * @param string $id The id of the question.
      * @return
      */
-    public function deleteQuestion($id)
-    {
+    public function deleteQuestion($id) {
         $question = $this->getQuestion($id);
         if (!empty($question)) {
-            if(strlen($question[0]['questionorder']) > 0) {
-                $filter = 'questionorder > '.$question[0]['questionorder'].' ORDER BY questionorder';
+            if (strlen($question[0]['questionorder']) > 0) {
+                $filter = 'questionorder > ' . $question[0]['questionorder'] . ' ORDER BY questionorder';
                 $data = $this->getQuestions($question[0]['testid'], $filter);
                 if (!empty($data)) {
-                    foreach($data as $line) {
+                    foreach ($data as $line) {
                         $fields = array();
-                        $fields['questionorder'] = $line['questionorder']-1;
+                        $fields['questionorder'] = $line['questionorder'] - 1;
                         $this->addQuestion($fields, $line['id']);
                     }
                 }
@@ -180,9 +177,8 @@ class dbquestions extends dbtable
      * @param string $testId The id of the specified test.
      * @return int $qnum The number of questions in the test.
      */
-    public function countQuestions($testId)
-    {
-        $sql = "SELECT count(id) AS qnum FROM ".$this->table." WHERE testid='$testId'";
+    public function countQuestions($testId) {
+        $sql = "SELECT count(id) AS qnum FROM " . $this->table . " WHERE testid='$testId'";
         $data = $this->getArray($sql);
         if (!empty($data)) {
             $qnum = $data[0]['qnum'];
@@ -190,6 +186,7 @@ class dbquestions extends dbtable
         }
         return FALSE;
     }
+
     /**
      * Method to sum the total mark for a test.
      *
@@ -197,9 +194,8 @@ class dbquestions extends dbtable
      * @param string $testId The id of the specified test.
      * @return int $tmark The total mark for the test.
      */
-    public function sumTotalmark($testId)
-    {
-        $sql = "SELECT sum(mark) AS totalmark FROM ".$this->table." WHERE testid='$testId'";
+    public function sumTotalmark($testId) {
+        $sql = "SELECT sum(mark) AS totalmark FROM " . $this->table . " WHERE testid='$testId'";
         $data = $this->getArray($sql);
         if (!empty($data)) {
             $tmark = $data[0]['totalmark'];
@@ -207,6 +203,7 @@ class dbquestions extends dbtable
         }
         return FALSE;
     }
+
     /**
      * Change the order of questions in the test
      *
@@ -215,22 +212,20 @@ class dbquestions extends dbtable
      * @param bool $order If order is true move question up else move question down 1
      * @return bool TRUE if the order has been changed, FALSE if it hasn't.
      */
-    public function changeOrder($id, $order)
-    {
-        $sql = 'SELECT testid, questionorder FROM '.$this->table." WHERE id='$id'";
+    public function changeOrder($id, $order) {
+        $sql = 'SELECT testid, questionorder FROM ' . $this->table . " WHERE id='$id'";
         $data = $this->getArray($sql);
         if (!empty($data)) {
             $pos = $data[0]['questionorder'];
             $testId = $data[0]['testid'];
             // if move question up, check its not the first question
             if ($order && $pos > 1) {
-                $newpos = $pos-1;
+                $newpos = $pos - 1;
                 // if move question down, check its not the last question
-
             } else if (!$order) {
                 $num = $this->countQuestions($testId);
                 if ($pos < $num) {
-                    $newpos = $pos+1;
+                    $newpos = $pos + 1;
                 } else {
                     return FALSE;
                 }
@@ -238,7 +233,7 @@ class dbquestions extends dbtable
                 return FALSE;
             }
             // swap order of questions
-            $sql = 'SELECT id FROM '.$this->table." WHERE testid='$testId' and questionorder='$newpos'";
+            $sql = 'SELECT id FROM ' . $this->table . " WHERE testid='$testId' and questionorder='$newpos'";
             $result = $this->getArray($sql);
             if (!empty($result)) {
                 $this->update('id', $result[0]['id'], array(
@@ -253,16 +248,14 @@ class dbquestions extends dbtable
         return FALSE;
     }
 
-    public function getTotalMarks($testId)
-    {
+    public function getTotalMarks($testId) {
         $mark = 0;
         $questions = $this->getQuestions($testId);
 
         //var_dump($questions);
 
         if (count($questions) > 0 && $questions != FALSE) {
-            foreach ($questions as $question)
-            {
+            foreach ($questions as $question) {
                 $mark += $question['mark'];
             }
         }
@@ -275,8 +268,7 @@ class dbquestions extends dbtable
      * @param array $question Array containing details of the question
      * @return string Preview of Question
      */
-    public function previewQuestion($question)
-    {
+    public function previewQuestion($question) {
         //var_dump($question);
         return $this->objWashout->parseText($question['question']);
     }
@@ -290,12 +282,13 @@ class dbquestions extends dbtable
      * @param string $id The id of the test
      * @return none
      */
+
     public function submitDBQuestions($contextID, $data, $id) {
         $dbAnswers = $this->newObject('dbanswers');
         $myIDs = explode(",", $data);
         // get the order of the questions
         $questionOrder = $this->countQuestions($id);
-        foreach($myIDs as $eachID) {
+        foreach ($myIDs as $eachID) {
             $questionOrder++;
             $data = $this->getRow('id', $eachID);
             $lastQID = $data['id'];
@@ -307,10 +300,10 @@ class dbquestions extends dbtable
             $qID = $this->addQuestion($data);
 
             // get answers for this id and also insert them
-            $sql = "select * from tbl_test_answers where questionid = '".$lastQID."'";
+            $sql = "select * from tbl_test_answers where questionid = '" . $lastQID . "'";
             $ansData = $this->getArray($sql);
 
-            foreach($ansData as $row) {
+            foreach ($ansData as $row) {
                 $row['questionid'] = $qID;
                 unset($row['id']);
                 unset($row['puid']);
@@ -330,10 +323,13 @@ class dbquestions extends dbtable
     }
 
     public function getMaxOrder($id) {
-        $sql  = "select max(questionorder) questionorder from $this->table where testid = '".$id."'";
+        $sql = "select max(questionorder) questionorder from $this->table where testid = '" . $id . "'";
 
         $data = $this->getArray($sql);
         return $data[0]['questionorder'];
     }
-} // end of class
+
+}
+
+// end of class
 ?>
