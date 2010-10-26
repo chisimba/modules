@@ -771,8 +771,7 @@ class assignment extends controller {
 
         $assignmentId = $this->getParam("id");
         $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignmentId);
-
-
+        
         $zipname = $this->objAssignmentFunctions->createZipFromSubmissions($submissions, $assignmentId);
 
         if (file_exists($zipname)) {
