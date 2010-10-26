@@ -1491,10 +1491,10 @@ class formmanager extends object {
         $usecategory->setValue(1);
 
         //Add Use-Category to the table
-        $objTable->startRow();
-        $objTable->addCell($phraseCurrentCategory, '20%');
-        $objTable->addCell($usecategory->show() . " " . $phraseUseCategory, '80%');
-        $objTable->endRow();
+        /* $objTable->startRow();
+          $objTable->addCell($phraseCurrentCategory, '20%');
+          $objTable->addCell($usecategory->show() . " " . $phraseUseCategory, '80%');
+          $objTable->endRow(); */
 
         //category drop down
         if (!empty($qnData)) {
@@ -1672,17 +1672,24 @@ class formmanager extends object {
         $objTable3->width = '800px';
         $objTable3->attributes = " align='center' border='0'";
         $objTable3->cellspacing = '12';
-
         //Add Last Saved to the table
         $objTable3->startRow();
         $objTable3->addCell($phraseCreated, '20%');
-        $objTable3->addCell("&nbsp;", '80%');
+        if (!empty($randSAData)) {
+            $objTable3->addCell($randSAData["timecreated"], '80%');
+        } else {
+            $objTable3->addCell("&nbsp;", '80%');
+        }
         $objTable3->endRow();
 
         //Add Last Saved to the table
         $objTable3->startRow();
         $objTable3->addCell($phraseLastSaved, '20%');
-        $objTable3->addCell("&nbsp;", '80%');
+        if (!empty($randSAData)) {
+            $objTable3->addCell($randSAData["timemodified"], '80%');
+        } else {
+            $objTable3->addCell("&nbsp;", '80%');
+        }
         $objTable3->endRow();
 
         //Add fieldset to hold last-saved
