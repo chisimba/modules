@@ -234,6 +234,11 @@ class question_calculated_formmanager extends object {
     }
 
     public function matchingQForm($testid, $data=null, $edit=null, $questionId=null) {
+        $qNameMsg = $this->objLanguage->languageText('mod_mcqtests_reqname', 'mcqtests');
+        $qTextMsg = $this->objLanguage->languageText('mod_mcqtests_reqtext', 'mcqtests');
+        $qMarkMsg = $this->objLanguage->languageText('mod_mcqtests_reqmark', 'mcqtests');
+        $qPenaltyMsg = $this->objLanguage->languageText('mod_mcqtests_reqpenalty', 'mcqtests');
+
         $this->id = $testid;
         $qtype = "Matching";
         $objGeneralFieldset = $this->newGeneralForm($data, $qtype);
@@ -254,10 +259,10 @@ class question_calculated_formmanager extends object {
         $objForm->addToForm($matchingNote);
         $objForm->addToForm($objAnswerFieldset);
         $objForm->addToForm("<br />" . $btnSave . " " . $btnCancel . "<br />");
-        $objForm->addRule('qName', 'Please Enter a question name', 'required');
-        $objForm->addRule('qText', 'Please Enter question text', 'required');
-        $objForm->addRule('qMark', 'Please Enter the default mark for the question', 'required');
-        $objForm->addRule('qPenalty', 'Please Enter the penalty for the question', 'required');
+        $objForm->addRule('qName', $qNameMsg, 'required');
+        $objForm->addRule('qText', $qTextMsg, 'required');
+        $objForm->addRule('qMark', $qMarkMsg, 'required');
+        $objForm->addRule('qPenalty', $qPenaltyMsg, 'required');
 
         return $objForm->show();
     }

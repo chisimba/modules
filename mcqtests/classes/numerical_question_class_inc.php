@@ -10,6 +10,11 @@ class numerical_question extends object {
     }
 
     public function numericalQForm($testid=null, $data=null, $edit=false, $questionId=null) {
+        $qNameMsg = $this->objLanguage->languageText('mod_mcqtests_reqname', 'mcqtests');
+        $qTextMsg = $this->objLanguage->languageText('mod_mcqtests_reqtext', 'mcqtests');
+        $qMarkMsg = $this->objLanguage->languageText('mod_mcqtests_reqmark', 'mcqtests');
+        $qPenaltyMsg = $this->objLanguage->languageText('mod_mcqtests_reqpenalty', 'mcqtests');
+
         $generalForm = $this->objGeneralForm->newGeneralForm($data);
         
         $objAnswerFieldset = $this->getAnswers($data['id']);
@@ -37,6 +42,10 @@ class numerical_question extends object {
         $objForm->addToForm($unitsHandling);
         $objForm->addToForm($units);
         $objForm->addToForm("<br /><br />" . $btnSave . " " . $btnCancel . "<br /><br />");
+        $objForm->addRule('qName', $qNameMsg, 'required');
+        $objForm->addRule('qText', $qTextMsg, 'required');
+        $objForm->addRule('qMark', $qMarkMsg, 'required');
+        $objForm->addRule('qPenalty', $qPenaltyMsg, 'required');
 
         return $objForm->show();
     }
