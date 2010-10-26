@@ -161,7 +161,7 @@ class mcqtests extends controller {
                 $submitVal = $this->getParam('submit', Null);
                 //Flag to determine if we save question as new or just update
                 $saveAsNew = 0;
-                if ($submitVal = "Save as a new question") {
+                if ($submitVal == "Save as a new question") {
                     $saveAsNew = 1;
                 }
                 $fields['categoryid'] = $this->getParam('categoryid', Null);
