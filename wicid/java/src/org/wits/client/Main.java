@@ -120,7 +120,7 @@ public class Main {
     private TabItem filesTab = new TabItem("Files");
     private NewCourseProposalDialog newCourseProposalDialog;
     private AdvancedSearchDialog advancedSearchDialog;
-    private String mode = "default";
+    private String mode = "apo";
     private boolean admin = false;
     private TextField<String> searchField = new TextField<String>();
     private Button searchButton = new Button("Search");
@@ -158,6 +158,9 @@ public class Main {
         ToolBar toolBar = new ToolBar();
 
         newFolderButton.setIconStyle("folderadd");
+        if (mode.equals("apo")){
+            newFolderButton.setText("New Faculty");
+        }
         //newFolderButton.setEnabled(false);
         newFolderButton.addSelectionListener(new SelectionListener<ButtonEvent>() {
 
@@ -287,7 +290,13 @@ public class Main {
 
         toolBar.add(refreshFolders);
         west.setTopComponent(toolBar);
-        west.setHeading("Topic Index");
+
+        if (mode.equals("default")) {
+            west.setHeading("Topic Index");
+        } else if (mode.equals("apo")) {
+            west.setHeading("Faculty index");
+        }
+
 
         KeyListener keyListener = new KeyListener() {
 
@@ -499,7 +508,7 @@ public class Main {
         rejectedDocsTab.add(rejectedDocsPanel);
         tab.add(rejectedDocsTab);
 
-      
+
 
 
         BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER, (Window.getClientWidth() / 4) * 3, 100, Window.getClientWidth());
@@ -815,7 +824,11 @@ public class Main {
     private Menu initTreeContextTree() {
         Menu contextMenu = new Menu();
 
-        newFolderMenuItem.setText("New Topic");
+        if (mode.equals("default")) {
+            newFolderMenuItem.setText("New Topic");
+        } else if (mode.equals("apo")) {
+            newFolderMenuItem.setText("New Faculty");
+        }
         newFolderMenuItem.setIconStyle("folderadd");
         //newFolderButton.setEnabled(false);
         newFolderMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
