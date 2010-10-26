@@ -9,7 +9,7 @@
  *
  * @author kim
  */
-class storyparser  extends dbTable {
+class ocsstoryparser  extends dbTable {
 
     public function init() {
         parent::init('tbl_stories');
@@ -29,6 +29,8 @@ class storyparser  extends dbTable {
         $data = $this->getAll($sql);
         return $data;
     }
+    
+
     public function getTopic($id) {
         $sql="select * from tbl_cms_sections where id='$id'";
         $data = $this->getArray($sql);

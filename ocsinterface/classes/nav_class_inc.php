@@ -7,7 +7,7 @@ class nav extends object {
         $this->objUser = $this->getObject('user', 'security');
         $this->loadclass('link','htmlelements');
         $this->objDbSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $this->storyparser=$this->getObject('storyparser');
+        $this->storyparser=$this->getObject('ocsstoryparser');
     }
 
     public function getLeftContent() {
