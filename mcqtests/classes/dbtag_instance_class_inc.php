@@ -71,9 +71,9 @@ class dbtag_instance extends dbtable {
         
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter && $itemId) {
-            $sql.= " WHERE itemid='$itemId' AND $filter";
+            $sql.= " WHERE itemid='$itemId' AND ".$filter;
         } else if ($filter != NULL) {
-            $sql.= " WHERE '$filter' ORDER BY sortorder";
+            $sql.= " WHERE ".$filter." ORDER BY sortorder";
         } else if ($itemId != NULL) {
             $sql.= " WHERE itemid='$itemId' ORDER BY sortorder";
         } else {

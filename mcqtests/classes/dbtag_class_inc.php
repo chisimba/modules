@@ -68,15 +68,33 @@ class dbtag extends dbtable {
                         $fieldsT['modifiedby'] = $this->userId;
                         $this->update('id', $id, $fieldsT);
                     } else {
-                        $fieldsT['timecreated'] = date('Y-m-d H:i:s');
-                        $fieldsT['createdby'] = $this->userId;
-                        $tagid = $this->insert($fieldsT);
-                        $idArr[$count] = $tagid;
-                        $fieldsTI = array();
-                        $fieldsTI['tagid'] = $tagid;
-                        $fieldsTI['itemtype'] = "question";
-                        $fieldsTI['itemid'] = $qnId;
-                        $this->dbTagInstance->addInstance($fieldsTI, Null);
+                        //Add only if tag does not exist
+                        //Check if tag already exists
+                        $tagExists = $this->getTags("name='" . $ot . "'");
+                        //If tag exists, check if there exists its instance for this question, else add tag
+                        if (!empty($tagExists)) {
+                            $tagid = $tagExists[0]["id"];
+                            //Check if there is an instance of this tag for this particular question, if not add instance
+                            $tagInstanceExists = $this->dbTagInstance->getInstances($itemId = $qnId, $filter = "tagid = '" . $tagid . "'");
+                            if (empty($tagInstanceExists)) {
+                                $idArr[$count] = $tagid;
+                                $fieldsTI = array();
+                                $fieldsTI['tagid'] = $tagid;
+                                $fieldsTI['itemtype'] = "question";
+                                $fieldsTI['itemid'] = $qnId;
+                                $this->dbTagInstance->addInstance($fieldsTI, Null);
+                            }
+                        } else {
+                            $fieldsT['timecreated'] = date('Y-m-d H:i:s');
+                            $fieldsT['createdby'] = $this->userId;
+                            $tagid = $this->insert($fieldsT);
+                            $idArr[$count] = $tagid;
+                            $fieldsTI = array();
+                            $fieldsTI['tagid'] = $tagid;
+                            $fieldsTI['itemtype'] = "question";
+                            $fieldsTI['itemid'] = $qnId;
+                            $this->dbTagInstance->addInstance($fieldsTI, Null);
+                        }
                     }
                 }
             }
