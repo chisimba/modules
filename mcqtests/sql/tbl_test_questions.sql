@@ -14,6 +14,10 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
         ),
+    'categoryid' => array(
+        'type' => 'text',
+        'length' => 32,
+        ),
     'name' => array(
         'type'=>'text',
         'length'=>32

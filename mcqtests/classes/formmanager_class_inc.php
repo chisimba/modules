@@ -1427,7 +1427,9 @@ class formmanager extends object {
         $tagInstData = $this->dbTagInstance->getInstances($id);
         $tagStr = "";
         $count = 0;
+        //Get the count of the array
         $arrLength = count($tagInstData);
+        //Get each tag and store in a string for rendering on the form, comma separated
         foreach ($tagInstData as $thisTagInst) {
             $tagData = $this->dbTag->getTag($thisTagInst["tagid"]);
             $tagData = $tagData[0];
@@ -1490,13 +1492,17 @@ class formmanager extends object {
         $objTable->addCell($usecategory->show() . " " . $phraseUseCategory, '80%');
         $objTable->endRow();
 
-        //category text box
-        $category = new textinput("categoryid", "");
-        $category->size = 60;
+        //category drop down
+        $catdropdown = new dropdown("categoryid");
+        $contextCategories = $this->dbCategory->getCategories($this->contextCode, $filter = NULL);
+        //Create a dynamic drop down list
+        foreach($contextCategories as $thisCategory){
+            $catdropdown->addOption($thisCategory["id"], $thisCategory["name"]);
+        }
         //Add Category to the table
         $objTable->startRow();
         $objTable->addCell($phraseSaveInCategory, '20%');
-        $objTable->addCell($wordGeneral, '80%');
+        $objTable->addCell($catdropdown->show(), '80%');
         $objTable->endRow();
 
         //question name text box
@@ -1588,7 +1594,7 @@ class formmanager extends object {
         $noofqnsdropdown->addOption("9", "9");
         $noofqnsdropdown->addOption("10", "10");
         if (!empty($randSAData)) {
-            $noofqnsdropdown->setSelected($randSAData["count"]);
+            $noofqnsdropdown->setSelected($randSAData["choose"]);
         } else {
             $noofqnsdropdown->setSelected("0");
         }

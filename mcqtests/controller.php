@@ -159,7 +159,7 @@ class mcqtests extends controller {
                 //Fetch the form data into an array for insertion/update
                 $fields = array();
                 //$fields['currentcategory'] = $this->getParam('currentcategory', Null);
-                //$fields['categoryid'] = $this->getParam('categoryid', Null);
+                $fields['categoryid'] = $this->getParam('categoryid', Null);
                 $fields['name'] = $this->getParam('qnName', Null);
                 $fields['questiontext'] = $this->getParam('qntext', Null);
                 $fields['mark'] = $this->getParam('qngrade', Null);

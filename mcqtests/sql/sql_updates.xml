@@ -168,4 +168,16 @@
 			</add>
 		</data>
 	</update>
+        <update>
+		<table>tbl_test_questions</table>
+		<version>1.96</version>
+		<description>add categoryid field</description>
+		<data>
+			<add>
+				<name>categoryid</name>
+				<type>text</type>
+				<length>32</length>
+			</add>
+		</data>
+	</update>
 </updates>
