@@ -175,7 +175,7 @@
 
     <update>
         <table>tbl_wicid_documents</table>
-        <version>0.051</version>
+        <version>0.052</version>
         <description>Added the status column</description>
         <data>
             <add>
