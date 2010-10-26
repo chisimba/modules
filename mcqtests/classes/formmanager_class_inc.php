@@ -1537,7 +1537,7 @@ class formmanager extends object {
         } else {
             $qngrade = new textinput("qngrade", "");
         }
-        $qngrade->size = 60;
+        $qngrade->size = 2;
         $form->addRule('qngrade', $phraseQnGrade . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
         //Add qn grade to the table
         $objTable->startRow();
@@ -1551,7 +1551,7 @@ class formmanager extends object {
         } else {
             $pfactor = new textinput("penaltyfactor", "");
         }
-        $pfactor->size = 60;
+        $pfactor->size = 2;
         $form->addRule('penaltyfactor', $phrasePenaltyFactor . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
         //Add penalty factor field to the table
         $objTable->startRow();
