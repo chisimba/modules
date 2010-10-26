@@ -1493,16 +1493,15 @@ class formmanager extends object {
         $objTable->endRow();
 
         //category drop down
-        $catdropdown = new dropdown("categoryid");
-        $contextCategories = $this->dbCategory->getCategories($this->contextCode, $filter = NULL);
-        //Create a dynamic drop down list
-        foreach($contextCategories as $thisCategory){
-            $catdropdown->addOption($thisCategory["id"], $thisCategory["name"]);
+        if (!empty($qnData)) {
+            $categories = $this->dbCategory->generateDropDown($this->contextCode, $qnData["categoryid"]);
+        } else {
+            $categories = $this->dbCategory->generateDropDown($this->contextCode, Null);
         }
         //Add Category to the table
         $objTable->startRow();
         $objTable->addCell($phraseSaveInCategory, '20%');
-        $objTable->addCell($catdropdown->show(), '80%');
+        $objTable->addCell($categories, '80%');
         $objTable->endRow();
 
         //question name text box

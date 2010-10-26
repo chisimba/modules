@@ -100,6 +100,31 @@ class dbcategory extends dbtable {
         return FALSE;
     }
 
+    /*
+     * Method to generate categories dropdown
+     *
+     * @access public
+     * @param $contextCode The context code
+     * @param $selectedCategory The Id of the previously selected category
+     * @return object dropdown
+     */
+
+    public function generateDropDown($contextCode, $selectedCategory=Null) {
+        //Load objects
+        $this->loadClass('dropdown', 'htmlelements');
+        $catdropdown = new dropdown("categoryid");
+        $contextCategories = $this->getCategories($contextCode, $filter = NULL);
+        //Create a dynamic drop down list
+        foreach ($contextCategories as $thisCategory) {
+            $catdropdown->addOption($thisCategory["id"], $thisCategory["name"]);
+        }
+        if (!empty($selectedCategory)) {
+            $catdropdown->setSelected($selectedCategory);
+        }
+        $categories = $catdropdown->show();
+        return $categories;
+    }
+
     /**
      * Method to get a specific category.
      *
