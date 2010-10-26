@@ -223,8 +223,8 @@ class question_calculated_formmanager extends object {
         $objFormEdit->addToForm($objGeneralFieldset);
         $objFormEdit->addToForm($objAnswerFieldset);
         $objFormEdit->addToForm("<div align='center'><br />" . $btnSave . " " . $btnCancel . "<br /></div>");
-
-        return $objFormEdit->show(); //echo "hello world";
+        
+        return $objFormEdit->show();
     }
 
     public function getMatchingNote() {
@@ -254,6 +254,10 @@ class question_calculated_formmanager extends object {
         $objForm->addToForm($matchingNote);
         $objForm->addToForm($objAnswerFieldset);
         $objForm->addToForm("<br />" . $btnSave . " " . $btnCancel . "<br />");
+        $objForm->addRule('qName', 'Please Enter a question name', 'required');
+        $objForm->addRule('qText', 'Please Enter question text', 'required');
+        $objForm->addRule('qMark', 'Please Enter the default mark for the question', 'required');
+        $objForm->addRule('qPenalty', 'Please Enter the penalty for the question', 'required');
 
         return $objForm->show();
     }
