@@ -135,6 +135,25 @@ class mongoops extends object
         return $objCollection;
     }
 
+    /**
+     * Returns a list of the names of the collections inside a database.
+     *
+     * @access public
+     * @param  string $database The name of the database to use.
+     * @return array  The names of the collections.
+     */
+    public function getCollectionNames($database=NULL)
+    {
+        $collections = $this->getDatabase($database)->listCollections();
+        $names = array();
+
+        foreach($collections as $collection) {
+            $names[] = (string) $collection;
+        }
+
+        return $names;
+    }
+
     public function getDatabase($database=NULL)
     {
         // Use the default if the database name has not been specified.
@@ -258,23 +277,6 @@ class mongoops extends object
     public function setDatabase($database)
     {
         $this->database = $database;
-    }
-
-    /**
-     * Method to list all collections in a database
-     *
-     * @return array or NULL
-     */
-    public function listCollections($database=NULL)
-    {
-        $collections = $this->getDatabase($database)->listCollections();
-        $names = array();
-
-        foreach($collections as $collection) {
-            $names[] = (string) $collection;
-        }
-
-        return $names;
     }
 }
 
