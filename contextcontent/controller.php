@@ -358,6 +358,9 @@ class contextcontent extends controller {
      */
     protected function saveChapter() {
         $title = $this->getParam('chapter');
+        if($title == null){
+            $title="Unknown";
+        }
         $intro = $this->getParam('intro');
         $visibility = $this->getParam('visibility');
         $startDate = $this->getParam('startdate');
@@ -718,6 +721,9 @@ class contextcontent extends controller {
     protected function savePage() {
 
         $menutitle = stripslashes($this->getParam('menutitle'));
+        if($menutitle ==null){
+            $menutitle="Untitled";
+        }
         $headerscripts = stripslashes($this->getParam('headerscripts'));
         $language = 'en';
         $pagecontent = stripslashes($this->getParam('pagecontent'));
