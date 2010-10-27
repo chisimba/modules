@@ -121,24 +121,8 @@ class mongoops extends object
             $collection = $this->collection;
         }
 
-        // Use the default if the database name has not been specified.
-        if ($database === NULL) {
-            $database = $this->database;
-        }
-
-        // Ensure the Mongo connection has been initialised.
-        if (!is_object($this->objMongo)) {
-            $this->objMongo = new Mongo($this->objSysConfig->getValue('server', 'mongo'));
-        }
-
-        // Retrieve the MongoDB object from cache or create it.
-        if (array_key_exists($database, $this->databaseCache)) {
-            $objDatabase = $this->databaseCache[$database];
-        } else {
-            $objDatabase = $this->objMongo->$database;
-            $this->databaseCache[$database] = $objDatabase;
-            $this->collectionCache[$database] = array();
-        }
+        // Retrieve the MongoDB object.
+        $objDatabase = $this->getDatabase($database);
 
         // Retrieve the MongoCollection object from cache or create it.
         if (array_key_exists($collection, $this->collectionCache[$database])) {
@@ -151,6 +135,25 @@ class mongoops extends object
         return $objCollection;
     }
 
+    public function getDatabase($database=NULL)
+    {
+        // Use the default if the database name has not been specified.
+        if ($database === NULL) {
+            $database = $this->database;
+        }
+
+        // Retrieve the MongoDB object from cache or create it.
+        if (array_key_exists($database, $this->databaseCache)) {
+            $objDatabase = $this->databaseCache[$database];
+        } else {
+            $objDatabase = $this->objMongo->$database;
+            $this->databaseCache[$database] = $objDatabase;
+            $this->collectionCache[$database] = array();
+        }
+
+        return $objDatabase;
+    }
+
     /*
      * Initialises some of the object's properties.
      *
@@ -158,13 +161,16 @@ class mongoops extends object
      */
     public function init()
     {
-        // Objects from other classes.
+        // Objects
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objMongo     = new Mongo($this->objSysConfig->getValue('server', 'mongo'));
 
-        // Local properties.
+        // Arrays
         $this->collectionCache = array();
-        $this->database        = $this->objSysConfig->getValue('database', 'mongo');
         $this->databaseCache   = array();
+
+        // Strings
+        $this->database = $this->objSysConfig->getValue('database', 'mongo');
     }
 
     /**
@@ -179,28 +185,11 @@ class mongoops extends object
      */
     public function find(array $query=array(), array $fields=array(), $collection=NULL, $database=NULL)
     {
-        if($database === NULL)
-        {
-            $database = $this->database;
-        }
-        if($collection === NULL)
-        {
-            $collection = $this->collection;
-        }
-
         return $this->getCollection($collection, $database)->find($query, $fields);
     }
 
-    public function removeRecord(array $record=array(), $justOne = TRUE, $collection = NULL, $database = NULL)
+    public function removeRecord(array $record=array(), $justOne=TRUE, $collection=NULL, $database=NULL)
     {
-        if ($database === NULL) {
-            $database = $this->database;
-        }
-
-        if ($collection === NULL) {
-            $collection = $this->collection;
-        }
-
         $options = array('justOne' => $justOne);
 
         return $this->getCollection($collection, $database)->remove($record, $options);
@@ -246,14 +235,6 @@ class mongoops extends object
      */
     public function insert(array $data, $collection=NULL, $database=NULL)
     {
-        if($database === NULL)
-        {
-            $database = $this->database;
-        }
-        if($collection === NULL)
-        {
-            $collection = $this->collection;
-        }
         return $this->getCollection($collection, $database)->insert($data);
     }
 
@@ -284,18 +265,16 @@ class mongoops extends object
      *
      * @return array or NULL
      */
-    public function listCollections()
+    public function listCollections($database=NULL)
     {
-        // Ensure the Mongo connection has been initialised.
-        if (!is_object($this->objMongo)) {
-            $this->objMongo = new Mongo($this->objSysConfig->getValue('server', 'mongo'));
+        $collections = $this->getDatabase($database)->listCollections();
+        $names = array();
+
+        foreach($collections as $collection) {
+            $names[] = (string) $collection;
         }
-        $db = $this->objMongo->selectDB($this->database);
-        $list = $db->listCollections();
-        foreach($list as $coll) {
-            $l[] = $coll->__toString();
-        }
-        return $l;
+
+        return $names;
     }
 }
 
