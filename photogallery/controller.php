@@ -56,7 +56,17 @@ class photogallery extends controller {
     public function dispatch() {
         $this->setVar('pageSuppressXML', true);
         $action = $this->getParam("action");
-        $this->setLayoutTemplate('layout_tpl.php');
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $uselayout = $objSysConfig->getValue('USE_LAYOUT', 'photogallery');
+        if ($uselayout) {
+            if ($uselayout == 'true' || $uselayout == 'TRUE') {
+                $this->setLayoutTemplate('layout_tpl.php');
+            } else {
+                $this->setLayoutTemplate(NULL);
+            }
+        } else {
+            $this->setLayoutTemplate('layout_tpl.php');
+        }
         $css = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('admin.css', 'photogallery') . '" />';
         $css .= '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('style/default.css', 'photogallery') . '" />';
         $this->appendArrayVar('headerParams', $css);
