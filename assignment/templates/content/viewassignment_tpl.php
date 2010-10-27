@@ -353,12 +353,13 @@ if ($this->isValid('edit')) {
 
     $exportLink = new link($this->uri(array("action" => "exportospreadsheet", "assignmentid" => $assignment['id'])));
     $exportLink->link = $this->objLanguage->languageText('mod_assignment_export', 'assignment', 'Export to spreadsheet');
-    $exportStr = '&nbsp;&nbsp;|&nbsp;&nbsp'.$exportLink->show();
-
-    $downloadalllink = new link($this->uri(array("action" => "downloadall", 'id' => $assignment['id'])));
-    $downloadalllink->link = $this->objLanguage->languageText('mod_assignment_downloadall', 'assignment', 'Download All');
-    $downloadAllStr='&nbsp;&nbsp;|&nbsp;&nbsp'.$downloadalllink->show();
+    $exportStr = '&nbsp;&nbsp;|&nbsp;&nbsp' . $exportLink->show();
+    if ($assignment['format'] == '1') {
+        $downloadalllink = new link($this->uri(array("action" => "downloadall", 'id' => $assignment['id'])));
+        $downloadalllink->link = $this->objLanguage->languageText('mod_assignment_downloadall', 'assignment', 'Download All');
+        $downloadAllStr = '&nbsp;&nbsp;|&nbsp;&nbsp' . $downloadalllink->show();
+    }
 }
 echo '<br />';
-echo '<p>' . $backLink->show() . '&nbsp;' . $exportStr .$downloadAllStr. '</p>';
+echo '<p>' . $backLink->show() . '&nbsp;' . $exportStr . $downloadAllStr . '</p>';
 ?>

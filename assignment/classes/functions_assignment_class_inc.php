@@ -692,31 +692,33 @@ class functions_assignment extends object {
      */
     function createZipFromSubmissions($submissions, $assignmentId) {
         $objConfig = $this->getObject('altconfig', 'config');
+        $mkdir = $this->getObject('mkdir', 'files');
         $objFile = $this->getObject('dbfile', 'filemanager');
+        $objCreateZipFile=  $this->getObject('createzipfile');
         $dirPath = $objConfig->getcontentBasePath() . '/assignment/submissions/' . $assignmentId;
 
-        $mkdir = $this->getObject('mkdir', 'files');
+        
         $mkdir->mkdirs($dirPath);
         $wzip = $this->getObject('wzip', 'utilities');
         $zip_name = $objConfig->getcontentBasePath() . '/assignment/submissions/' . $assignmentId . '.zip';
         if(file_exists($zip_name)){
             unlink($zip_name);
         }
-        
-        $zip = new ZipArchive();
-        $zip->open($zip_name, ZIPARCHIVE::CREATE);
-         foreach ($submissions as $submission) {
-          
+        //$zip = new ZipArchive();
+        //$zip->open($zip_name, ZIPARCHIVE::CREATE);
+        foreach ($submissions as $submission) {
             $submissionId = $submission['id'];
             $fileId = $submission['studentfileid'];
             $file = $objFile->getFile($fileId);
             $filePath = $objConfig->getcontentBasePath() . '/assignment/submissions/' . $submissionId . '/' . $file['filename'];
             if (file_exists($filePath)) {
-                $zip->addFile($filePath, $file['filename']);
+//                $zip->addFile($filePath, $file['filename']);
+                copy($filePath, $dirPath . '/' . $file['filename']);
             }
         }
-
-        $zip->close();
+        $objCreateZipFile->zipDirectory($dirPath, $zip_name);
+        //die();
+        //$zip->close();
         return $zip_name;
     }
 
