@@ -154,6 +154,13 @@ class mongoops extends object
         return $names;
     }
 
+    /**
+     * Returns the MongoDB instance associated with the given database name.
+     *
+     * @access public
+     * @param  string $database The database name. If not specified, default is assumed.
+     * @return object Corresponding instance of MongoDB.
+     */
     public function getDatabase($database=NULL)
     {
         // Use the default if the database name has not been specified.
@@ -207,6 +214,16 @@ class mongoops extends object
         return $this->getCollection($collection, $database)->find($query, $fields);
     }
 
+    /**
+     * Deletes a record from the collection.
+     *
+     * @access public
+     * @param  array   $record The record to delete.
+     * @param  boolean Delete just one record.
+     * @param  string  $collection The name of the collection to run the query on.
+     * @param  string  $database   The name of the database containing the collection.
+     * @return boolean The results of the delete.
+     */
     public function removeRecord(array $record=array(), $justOne=TRUE, $collection=NULL, $database=NULL)
     {
         $options = array('justOne' => $justOne);
