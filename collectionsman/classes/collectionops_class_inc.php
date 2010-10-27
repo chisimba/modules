@@ -126,7 +126,7 @@ class collectionops extends object {
 
         // dropdown collection field
         $coll = new dropdown('coll');
-        $list = $this->objMongodb->listCollections();
+        $list = $this->objMongodb->getCollections();
         foreach($list as $item) {
             $coll->addOption($item, $item);
         }
