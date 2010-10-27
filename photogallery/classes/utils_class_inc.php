@@ -32,6 +32,7 @@ class utils extends object
        $this->galFolder = & $this->_objConfig->getcontentBasePath().'photogallery';
        $this->_objTags = & $this->getObject('dbtags', 'tagging');
        $this->_objFileMan = & $this->getObject('dbfile','filemanager');
+       $this->_zipManager = & $this->getObject('archivefactory','archivemanager');
     }
 
     /**
@@ -90,11 +91,127 @@ class utils extends object
   	*/
   	public function uploadImages()
   	{
-		
 		$objUpload =& $this->newObject('upload', 'filemanager');
 		$objUpload->setUploadFolder('users/'.$this->_objUser->userId().'/photos/');
 		$results = $objUpload->uploadFilesArray('files');
-		
+
+                
+                //echo"<pre>Before";
+                //print_r($results);
+                //echo"</pre>";
+                
+                /*
+                $objDir = $this->getObject('mkdir','files');
+                $SupportedMime = $this->_zipManager->getSupportedTypes();
+                $filePath = $this->_objConfig->getcontentBasePath().'users/'.$this->_objUser->userId().'/photos/ArchiveTemp';
+                $filePath = str_replace("/","\\",$filePath);
+                $objDir->mkdirs($filePath,0777);
+
+                
+                foreach ($_FILES["files"]["error"] as $key => $error) 
+                {
+                    if ($error == 0)
+                    {
+                        //echo "Name ".$_FILES["files"]["name"][$key]."<br/>";
+                        //echo "Temp name ".$_FILES["files"]["tmp_name"][$key]."<br/>";
+                        
+                        $UploadedFileMime = $_FILES["files"]["type"][$key];
+                        if( in_array($UploadedFileMime,$SupportedMime) )
+                        {
+                            $UploadedFilePath = $_FILES["files"]["tmp_name"][$key];
+                            $UploadedFileName = $_FILES["files"]["name"][$key];
+                            move_uploaded_file($UploadedFilePath, $filePath);
+                            //$archive = $this->_archiveManager->open( $filePath."/".$UploadedFileName );
+                            //$archive->extractTo($filePath);
+                        }
+                    }
+                }
+
+                */
+            
+                $objMime = $this->getObject('mimetypes','files');
+                $objDir = $this->getObject('mkdir','files');
+                $mimetypes = $this->_zipManager->getSupportedTypes();
+                $objAnalyzeMediaFile = $this->getObject('analyzemediafile','filemanager');
+                $objMediaFileInfo = $this->getObject('dbmediafileinfo','filemanager');
+                $objThumbnails = $this->getObject('thumbnails','filemanager');
+
+                if($results)
+                {
+                    foreach($results as $file)
+                    {
+                        
+                        if( in_array($file['mimetype'],$mimetypes) )
+                        {
+                            $filePath = $this->_objFileMan->getFilePath($file['fileid']);
+                            $filePath = str_replace(".","_",$filePath);
+                            $fullFilePath = $this->_objFileMan->getFullFilePath($file['fileid']);
+                            $fullFilePath = str_replace(".","_",$fullFilePath);
+                            //echo $fullFilePath."<br/>";
+                            $zip = $this->_zipManager->open( $this->_objFileMan->getFilePath($file['fileid']) );
+                            $objDir->mkdirs($fullFilePath);
+                            $zip->extractTo($fullFilePath);
+                            //echo $fullFilePath."<br/>";
+                            $this->_objFileMan->deleteFile($file['fileid'],TRUE);
+
+                            //list files in
+                            $handle = opendir($fullFilePath);
+                            if ($handle)
+                            {
+                                while (false !== ($dirfile = readdir($handle)))
+                                {
+                                    $mimetype = $objMime->getMimeType($fullFilePath."/".$dirfile);
+                                    if(strstr($mimetype,"image/"))
+                                    {
+                                        $infoArray = array();
+                                        // 1) Add to Database
+                                        $fileId = $this->_objFileMan->addFile($dirfile, $fullFilePath."/".$dirfile, filesize($fullFilePath."/".$dirfile), $mimetype, "images", 1, $this->_objUser->userId(), NULL, $this->getParam('creativecommons_files',''));
+
+                                        // Get Media Info
+                                        $fileInfo = $objAnalyzeMediaFile->analyzeFile($fullFilePath."/".$dirfile);
+
+                                        // Add Information to Databse
+                                        $objMediaFileInfo->addMediaFileInfo($fileId, $fileInfo[0]);
+
+                                        // Check whether mimetype needs to be updated
+                                        if ($fileInfo[1] != '') {
+                                            $this->_objFileMan->updateMimeType($fileId, $fileInfo[1]);
+                                        };
+
+                                        $objThumbnails->createThumbailFromFile($fullFilePath."/".$dirfile, $fileId);
+                                        
+                                        // Update Return Array Details
+                                        $infoArray['fileid'] = $fileId;
+                                        $infoArray['success'] = TRUE;
+                                        $infoArray['path'] = $filePath."_temp";
+                                        $infoArray['fullpath'] = $fullFilePath."/";
+                                        $infoArray['subfolder'] = "images";
+                                        $infoArray['originalfolder'] = "images";
+                                        $infoArray['name'] = $dirfile;
+                                        $infoArray['mimetype'] = $mimetype;
+                                        $infoArray['errorcode'] = 0;
+                                        $infoArray['size'] = filesize($fullFilePath."/".$dirfile);
+
+                                        $results[$dirfile] = $infoArray;
+                                    }
+                                    else
+                                    {
+                                        @unlink($fullFilePath."/".$dirfile);
+                                    }
+                                 }
+                             }
+                            closedir($handle);
+                            
+                        }
+                      }
+                    }
+                //$results = $objUpload->uploadFilesArray('files');
+                
+                //echo"<pre>After";
+                //print_r($results);
+                //echo"</pre>";
+                
+
 		return $results;
 	}
   
