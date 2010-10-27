@@ -2,24 +2,24 @@
 
 /**
  * MongoDB Helper Class
- * 
+ *
  * Convenience class for interacting with MongoDB
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @category  Chisimba
  * @package   mongo
  * @author    Charl van Niekerk <charlvn@charlvn.com>
@@ -44,9 +44,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * MongoDB Helper Class
- * 
+ *
  * Convenience class for interacting with MongoDB.
- * 
+ *
  * @category  Chisimba
  * @package   mongo
  * @author    Charl van Niekerk <charlvn@charlvn.com>
@@ -187,7 +187,7 @@ class mongoops extends object
         {
             $collection = $this->collection;
         }
-        
+
         return $this->getCollection($collection, $database)->find($query, $fields);
     }
 
@@ -196,21 +196,21 @@ class mongoops extends object
         if ($database === NULL) {
             $database = $this->database;
         }
-        
+
         if ($collection === NULL) {
             $collection = $this->collection;
         }
 
         $options = array('justOne' => $justOne);
 
-        return $this->getCollection($collection, $database)->remove($record, $options);   
+        return $this->getCollection($collection, $database)->remove($record, $options);
     }
-    
-    public function upsert() 
+
+    public function upsert()
     {
-        
+
     }
-    
+
     /**
      * Imports a CSV file into a collection.
      *
@@ -278,7 +278,7 @@ class mongoops extends object
     {
         $this->database = $database;
     }
-    
+
     /**
      * Method to list all collections in a database
      *
