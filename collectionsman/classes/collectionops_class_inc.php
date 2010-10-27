@@ -95,7 +95,7 @@ class collectionops extends object {
         $this->objUser       = $this->getObject('user', 'security');
         $this->objMongodb    = $this->getObject ('mongoops', 'mongo');
     }
-    
+
     /**
      * Method to show a form to insert a record to a Mongo collection
      *
@@ -123,7 +123,7 @@ class collectionops extends object {
         $table->startRow();
         // add some rules
         // $form->addRule('', $this->objLanguage->languageText("mod_collectionsman_needsomething", "collectionsman"), 'required');
-        
+
         // dropdown collection field
         $coll = new dropdown('coll');
         $list = $this->objMongodb->listCollections();
@@ -135,7 +135,7 @@ class collectionops extends object {
         $table->addCell('&nbsp;', 5);
         $table->addCell($coll->show());
         $table->endRow();
-        
+
         // accession number
         $ano = new textinput();
         $ano->name = 'ano';
@@ -145,7 +145,7 @@ class collectionops extends object {
         $table->addCell('&nbsp;', 5);
         $table->addCell($ano->show());
         $table->endRow();
-               
+
         // title
         $title = new textinput();
         $title->name = 'title';
@@ -155,7 +155,7 @@ class collectionops extends object {
         $table->addCell('&nbsp;', 5);
         $table->addCell($title->show());
         $table->endRow();
-        
+
         // description
         $desc = $this->newObject('htmlarea', 'htmlelements');
         $desc->name = 'desc';
@@ -167,7 +167,7 @@ class collectionops extends object {
         $msg->toolbarSet = 'simple';
         $table->addCell($desc->show());
         $table->endRow();
-        
+
         // date created
         $dc = new textinput();
         $dc->name = 'datecreated';
@@ -177,7 +177,7 @@ class collectionops extends object {
         $table->addCell('&nbsp;', 5);
         $table->addCell($dc->show());
         $table->endRow();
-        
+
         // media
         $media = new textinput();
         $media->name = 'media';
@@ -187,7 +187,7 @@ class collectionops extends object {
         $table->addCell('&nbsp;', 5);
         $table->addCell($media->show());
         $table->endRow();
-        
+
         // comment
         $comment = new textinput();
         $comment->name = 'comment';
@@ -197,7 +197,7 @@ class collectionops extends object {
         $table->addCell('&nbsp;', 5);
         $table->addCell($comment->show());
         $table->endRow();
-        
+
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend = ''; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
         $fieldset->contents = $table->show();
@@ -207,13 +207,13 @@ class collectionops extends object {
         $button->setToSubmit();
         $form->addToForm('<p align="center"><br />'.$button->show().'</p>');
         $ret .= $form->show();
-        
+
         return $ret;
     }
-    
+
     /**
      * Method to format a single retrieved record and display it
-     * 
+     *
      * @access public
      * @param array $record
      * @return string
@@ -227,27 +227,27 @@ class collectionops extends object {
         $ret = NULL;
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->startRow();
-        
+
         $collLabel = new label($this->objLanguage->languageText('mod_collectionsman_collection', 'collectionsman').'&nbsp;', 'input_coll');
         $table->addCell($collLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($record['collection']);
         $table->endRow();
-        
+
         // accession number
         $anoLabel = new label($this->objLanguage->languageText('mod_collectionsman_accno', 'collectionsman').'&nbsp;', 'input_ano');
         $table->addCell($anoLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($record['accession number']);
         $table->endRow();
-               
+
         // title
         $titleLabel = new label($this->objLanguage->languageText('mod_collectionsman_title', 'collectionsman').'&nbsp;', 'input_title');
         $table->addCell($titleLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($record['title']);
         $table->endRow();
-        
+
         // description
         $descLabel = new label($this->objLanguage->languageText('mod_collectionsman_description', 'collectionsman').'&nbsp;', 'input_desc');
         $table->addCell($descLabel->show(), 150, NULL, 'right');
@@ -255,36 +255,36 @@ class collectionops extends object {
         $msg->toolbarSet = 'simple';
         $table->addCell($this->objWashout->parseText($record['description']));
         $table->endRow();
-        
+
         // date created
         $dcLabel = new label($this->objLanguage->languageText('mod_collectionsman_datecreated', 'collectionsman').'&nbsp;', 'input_datecreated');
         $table->addCell($dcLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($record['date created']);
         $table->endRow();
-        
+
         // media
         $mediaLabel = new label($this->objLanguage->languageText('mod_collectionsman_media', 'collectionsman').'&nbsp;', 'input_media');
         $table->addCell($mediaLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($record['media']);
         $table->endRow();
-        
+
         // comment
         $commentLabel = new label($this->objLanguage->languageText('mod_collectionsman_comment', 'collectionsman').'&nbsp;', 'input_comment');
         $table->addCell($commentLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($record['comment']);
         $table->endRow();
-        
+
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend = ''; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
         $fieldset->contents = $table->show();
-        
+
         $ret .= $fieldset->show();
-        
+
         return $ret;
     }
-    
+
 }
 ?>
