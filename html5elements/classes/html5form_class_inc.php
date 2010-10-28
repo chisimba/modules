@@ -31,6 +31,24 @@
 class html5form extends object
 {
     /**
+     * Generates an HTML5 form submit button.
+     *
+     * @access public
+     * @param  object $documnt The DOMDocument to use.
+     * @param  string $caption The text on the button.
+     * @return object The generated DOMElement.
+     */
+    public function submit(DOMDocument $document, $caption)
+    {
+        $button = $document->createElement('button');
+
+        $text = $document->createTextNode($caption);
+        $button->appendChild($text);
+
+        return $button;
+    }
+
+    /**
      * Generates an HTML5 form element for input fields.
      *
      * @access public
