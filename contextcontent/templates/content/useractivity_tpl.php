@@ -22,7 +22,7 @@ foreach ($data as $row) {
     $link->link = $this->objUser->fullname($row['userid']);
     $table->startRow();
     $table->addCell($count + ".");
-    $table->addCell($link->show());
+    $table->addCell($row['userid']);
     $table->addCell($row['accesscount']);
     $table->addCell($row['lastaccess']);
     $table->endRow();
