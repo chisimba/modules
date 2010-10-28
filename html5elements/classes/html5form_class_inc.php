@@ -31,6 +31,24 @@
 class html5form extends object
 {
     /**
+     * Generates a hidden form field.
+     *
+     * @access public
+     * @param  object $document The DOMDocument to use.
+     * @param  string $name     The name of the field.
+     * @param  string $value    The value of the field.
+     * @return object The generated DOMElement.
+     */
+    public function hidden(DOMDocument $document, $name, $value)
+    {
+        $input = $document->createElement('input');
+        $input->setAttribute('name', $name);
+        $input->setAttribute('value', $value);
+
+        return $input;
+    }
+
+    /**
      * Generates an HTML5 form submit button.
      *
      * @access public
