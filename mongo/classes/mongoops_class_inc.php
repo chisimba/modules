@@ -165,17 +165,17 @@ class mongoops extends object
      * Deletes a record from the collection.
      *
      * @access public
-     * @param  array   $record The record to delete.
-     * @param  boolean Delete just one record.
+     * @param  array   $criteria   The criteria of the records to delete.
+     * @param  boolean $justOne    Delete just one record.
      * @param  string  $collection The name of the collection to run the query on.
      * @param  string  $database   The name of the database containing the collection.
-     * @return boolean The results of the delete.
+     * @return boolean Has the delete been successfully received or not.
      */
-    public function delete(array $record=array(), $justOne=TRUE, $collection=NULL, $database=NULL)
+    public function delete(array $criteria, $justOne=TRUE, $collection=NULL, $database=NULL)
     {
         $options = array('justOne' => $justOne);
 
-        return $this->getCollection($collection, $database)->remove($record, $options);
+        return $this->getCollection($collection, $database)->remove($criteria, $options);
     }
 
     /**
