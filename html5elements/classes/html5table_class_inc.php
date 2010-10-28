@@ -85,7 +85,7 @@ class html5table extends object
             $tbody = $document->createElement('tbody');
             $table->appendChild($tbody);
 
-            foreach ($contents as $row) {
+            foreach ($contents as $i => $row) {
                 $tr = $document->createElement('tr');
                 $tbody->appendChild($tr);
 
@@ -94,7 +94,7 @@ class html5table extends object
                     $tr->appendChild($td);
 
                     $input = $document->createElement('input');
-                    $input->setAttribute('name', $checkbox.'['.array_shift($row).']');
+                    $input->setAttribute('name', $checkbox.'['.$i.']');
                     $input->setAttribute('type', 'checkbox');
                     $td->appendChild($input);
                 }
