@@ -37,16 +37,26 @@ class html5table extends object
      * @param  string $title    The title of the table. NULL for none.
      * @param  array  $headers  The column headers. Empty array for none.
      * @param  array  $contents The table contents. Empty array for none.
+     * @param  string $class    The class(es) to assign to the table.
+     * @param  string $id       The id of the table.
      * @return string The markup for the table.
      */
-    public function show($title, array $headers, array $contents)
+    public function show($title, array $headers, array $contents, $class=NULL, $id=NULL)
     {
         $document = new DOMDocument();
 
         $table = $document->createElement('table');
         $document->appendChild($table);
 
-        if ($title !== NULL) {
+        if (is_string($class)) {
+            $table->setAttribute('class', $class);
+        }
+
+        if (is_string($id)) {
+            $table->setAttribute('id', $id);
+        }
+
+        if (is_string($title)) {
             $caption = $document->createElement('caption');
             $table->appendChild($caption);
 
