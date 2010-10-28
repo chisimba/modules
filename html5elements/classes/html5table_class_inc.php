@@ -36,7 +36,7 @@ class html5table extends object
      * @access private
      * @var    object
      */
-    private $objConfig;
+    private $objDbConfig;
 
     /**
      * Instance of the language class of the language module.
@@ -53,7 +53,7 @@ class html5table extends object
      */
     public function init()
     {
-        $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objDbConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objLanguage = $this->getObject('language', 'language');
     }
 
@@ -147,7 +147,7 @@ class html5table extends object
                         $a->setAttribute('href', $this->uri($edit));
                         $td->appendChild($a);
 
-                        $icon = $this->objConfig->getValue('edit_icon', 'html5elements');
+                        $icon = $this->objDbConfig->getValue('edit_icon', 'html5elements');
                         $text = $this->objLanguage->languageText('mod_html5elements_edit', 'html5elements');
 
                         $img = $document->createElement('img');
@@ -164,7 +164,7 @@ class html5table extends object
                         $a->setAttribute('href', $this->uri($delete));
                         $td->appendChild($a);
 
-                        $icon = $this->objConfig->getValue('delete_icon', 'html5elements');
+                        $icon = $this->objDbConfig->getValue('delete_icon', 'html5elements');
                         $text = $this->objLanguage->languageText('mod_html5elements_delete');
 
                         $img = $document->createElement('img');
