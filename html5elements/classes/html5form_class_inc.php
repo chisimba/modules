@@ -42,6 +42,7 @@ class html5form extends object
     public function hidden(DOMDocument $document, $name, $value)
     {
         $input = $document->createElement('input');
+        $input->setAttribute('type', 'hidden');
         $input->setAttribute('name', $name);
         $input->setAttribute('value', $value);
 
@@ -106,6 +107,7 @@ class html5form extends object
     {
         $input = $document->createElement('input');
         $input->setAttribute('type', $search ? 'search' : 'text');
+        $input->setAttribute('name', $name);
 
         if (is_string($placeholder)) {
             $input->setAttribute('placeholder', $placeholder);
