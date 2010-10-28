@@ -66,12 +66,13 @@ class html5table extends object
      * @param  array  $contents The table contents. Empty array for none.
      * @param  array  $edit     The query string parameters for editing.
      * @param  array  $delete   The query string parameters for deleting.
+     * @param  string $module   The name of the module.
      * @param  string $checkbox The name of the checkbox array.
      * @param  string $class    The class(es) to assign to the table.
      * @param  string $id       The id of the table.
      * @return string The markup for the table.
      */
-    public function show($title, array $headers, array $contents, array $edit=array(), array $delete=array(), $checkbox=NULL, $class=NULL, $id=NULL)
+    public function show($title, array $headers, array $contents, array $edit=array(), array $delete=array(), $module=NULL, $checkbox=NULL, $class=NULL, $id=NULL)
     {
         $document = new DOMDocument();
 
@@ -152,7 +153,7 @@ class html5table extends object
                         $edit['id'] = $i;
 
                         $a = $document->createElement('a');
-                        $a->setAttribute('href', html_entity_decode($this->uri($edit)));
+                        $a->setAttribute('href', html_entity_decode($this->uri($edit, $module)));
                         $td->appendChild($a);
 
                         $icon = $this->objDbConfig->getValue('edit_icon', 'html5elements');
@@ -169,7 +170,7 @@ class html5table extends object
                         $delete['id'] = $i;
 
                         $a = $document->createElement('a');
-                        $a->setAttribute('href', html_entity_decode($this->uri($delete)));
+                        $a->setAttribute('href', html_entity_decode($this->uri($delete, $module)));
                         $td->appendChild($a);
 
                         $icon = $this->objDbConfig->getValue('delete_icon', 'html5elements');
