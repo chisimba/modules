@@ -61,6 +61,7 @@ class html5table extends object
      * Generates an HTML5 table.
      *
      * @access public
+     * @param  object $document The DOMDocument to use.
      * @param  string $title    The title of the table. NULL for none.
      * @param  array  $headers  The column headers. Empty array for none.
      * @param  array  $contents The table contents. Empty array for none.
@@ -70,12 +71,10 @@ class html5table extends object
      * @param  string $checkbox The name of the checkbox array.
      * @param  string $class    The class(es) to assign to the table.
      * @param  string $id       The id of the table.
-     * @return string The markup for the table.
+     * @return object The DOMElement generated.
      */
-    public function show($title, array $headers, array $contents, array $edit=array(), array $delete=array(), $module=NULL, $checkbox=NULL, $class=NULL, $id=NULL)
+    public function table(DOMDocument $document, $title, array $headers, array $contents, array $edit=array(), array $delete=array(), $module=NULL, $checkbox=NULL, $class=NULL, $id=NULL)
     {
-        $document = new DOMDocument();
-
         $table = $document->createElement('table');
         $document->appendChild($table);
 
@@ -186,7 +185,7 @@ class html5table extends object
             }
         }
 
-        return $document->saveHTML();
+        return $table;
     }
 }
 

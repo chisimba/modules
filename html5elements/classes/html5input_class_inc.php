@@ -34,18 +34,17 @@ class html5input extends object
      * Generates an HTML5 input element for text values.
      *
      * @access public
+     * @param  object  $document    The DOMDocument to use.
      * @param  string  $name        The name of the input field.
      * @param  string  $placeholder The placeholder text.
      * @param  string  $pattern     The input pattern.
      * @param  boolean $search      Is this a search field.
      * @param  boolean $required    Does a value need to be filled in before submission.
      * @param  boolean $autofocus   Should the focus automatically be on this field after pageload.
-     * @return string  The generated HTML.
+     * @return object  The generated DOMElement.
      */
-    public function text($name, $placeholder=NULL, $pattern=NULL, $search=FALSE, $required=FALSE, $autofocus=FALSE)
+    public function text(DOMDocument $document, $name, $placeholder=NULL, $pattern=NULL, $search=FALSE, $required=FALSE, $autofocus=FALSE)
     {
-        $document = new DOMDocument();
-
         $input = $document->createElement('input');
         $input->setAttribute('type', $search ? 'search' : 'text');
         $document->appendChild($input);
@@ -66,7 +65,7 @@ class html5input extends object
             $input->setAttribute('autofocus', '');
         }
 
-        return $document->saveHTML();
+        return $input;
     }
 }
 
