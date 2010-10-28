@@ -411,20 +411,7 @@ class bookthesis extends dbTable {
         return $objForm->show();
     }
 
-    public function listAll($userId) {
-        $userrec = $this->getAll("WHERE userid = '$userId'");
-        return $userrec;
-    }
-    /**
-     * Return a single record in the tbl_phonebook.
-     *
-     * @param $id is the id taken from the tbl_phonebook
-     */
-    public function listSingle($id) {
-        $onerec = $this->getRow('id', $id);
-        return $onerec;
-    }
-
+    
 
     function insertRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname,$baddress, $bbcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
         $id = $this->insert(array(
@@ -486,6 +473,20 @@ class bookthesis extends dbTable {
 
         ));
         return $id;
+    }
+
+public function listAll($userId) {
+        $userrec = $this->getAll("WHERE userid = '$userId'");
+        return $userrec;
+    }
+    /**
+     * Return a single record in the tbl_phonebook.
+     *
+     * @param $id is the id taken from the tbl_phonebook
+     */
+    public function listSingle($id) {
+        $onerec = $this->getRow('id', $id);
+        return $onerec;
     }
 
     private function getFormAction() {

@@ -47,9 +47,30 @@ class libraryforms extends controller {
      
       $action =$this ->getParam('action');
       $this->setLayoutTemplate('editadd_tpl.php');
-       
 
-	switch($action){
+        
+	$this->objMail->from = 'no-reply@uwc.ac.za';
+        $this->objMail->fromName = 'no-reply';
+
+        // Give the mail a subject and a body.
+        $this->objMail->subject = 'Book(s) Enquiry';
+        $this->objMail->body =  'it workes';
+
+				/*$name = $this->getParam('name');
+			       $email=$this->getParam('email');
+                                $msg=$this->getParam('msg');*/
+       
+       // Send to a single address.
+        $this->objMail->to = 'arieluwc@uwc.ac.za';
+
+        // Send to multiple addresses.
+        $this->objMail->to = array('library@uwc.ac.za','pmalinga@uwc.ac.za','arieluwc@uwc.ac.za');
+
+        // Send the mail.
+        $this->objMail->send();
+
+
+ 	switch($action){
          
           default:
           return "editadd_tpl.php"; 
@@ -96,26 +117,13 @@ class libraryforms extends controller {
    
         case 'Back to Forms':
 		return 'editadd_tpl.php';
+
+       case 'Check if information entered is correct':
+
+                  return 'checkinfo_tpl.php';
    
  }// close for switch    
-              
-	$this->objMail->from = 'no-reply@uwc.ac.za';
-        $this->objMail->fromName = 'no-reply';
-
-        // Give the mail a subject and a body.
-        $this->objMail->subject = 'Book(s) Enquiry';
-        $this->objMail->body =' Testing got furthup of this';
-       
-       // Send to a single address.
-        $this->objMail->to = 'arieluwc@uwc.ac.za';
-
-        // Send to multiple addresses.
-        $this->objMail->to = array('library@uwc.ac.za','pmalinga@uwc.ac.za','kpetersen548@gmail.com');
-
-        // Send the mail.
-        $this->objMail->send();
-
-}//end of function dispatch
+ }//end of function dispatch
 
 
 
@@ -337,7 +345,7 @@ public function submitmsg() {
         $objMail = $this->getObject('email', 'mail');
         //send to multiple addressed   
         $list=array("library@uwc.ac.za","arieluwc@uwc.ac.za");
-        $objMail->to=$list;
+        $objMail->to=($list);
 	// specify whom the email is coming from
         $objMail->from= "no-reply@uwc.ac.za";
         $objMail->from= "no-reply";

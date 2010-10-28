@@ -45,7 +45,4 @@ echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_libr
 $objBlocks = $this->getObject('blocks', 'blocks');
 
 
-
-
-
 ?>
