@@ -31,6 +31,27 @@
 class html5form extends object
 {
     /**
+     * Generates an HTML5 form element for input fields.
+     *
+     * @access public
+     * @param  object $document The DOMDocument to use.
+     * @param  string $method   The HTTP method.
+     * @param  string $action   The URI to post to.
+     * @return object The generated DOMElement.
+     */
+    public function form(DOMDocument $document, $method='GET', $action=NULL)
+    {
+        $form = $document->createElement('form');
+        $form->setAttribute('method', $method);
+
+        if (is_string($action)) {
+            $form->setAttribute('action', $action);
+        }
+
+        return $form;
+    }
+
+    /**
      * Generates an HTML5 input element for text values.
      *
      * @access public
