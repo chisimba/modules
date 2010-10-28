@@ -46,7 +46,8 @@ class html5form extends object
         $form->setAttribute('method', $method);
 
         if (count($params) > 0 && is_string($module)) {
-            $form->setAttribute('action', $this->uri($params, $module));
+            $action = $this->uri($params, $module, '', FALSE, TRUE, TRUE);
+            $form->setAttribute('action', $action);
         }
 
         return $form;
