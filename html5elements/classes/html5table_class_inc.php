@@ -95,6 +95,14 @@ class html5table extends object
         }
 
         if (count($headers) > 0) {
+            if (is_string($checkbox)) {
+                array_unshift($headers, 'Select');
+            }
+
+            if (count($edit) > 0 || count($delete)) {
+                array_push($headers, 'Actions');
+            }
+
             $thead = $document->createElement('thead');
             $table->appendChild($thead);
 
@@ -144,7 +152,7 @@ class html5table extends object
                         $edit['id'] = $i;
 
                         $a = $document->createElement('a');
-                        $a->setAttribute('href', $this->uri($edit));
+                        $a->setAttribute('href', html_entity_decode($this->uri($edit)));
                         $td->appendChild($a);
 
                         $icon = $this->objDbConfig->getValue('edit_icon', 'html5elements');
@@ -161,7 +169,7 @@ class html5table extends object
                         $delete['id'] = $i;
 
                         $a = $document->createElement('a');
-                        $a->setAttribute('href', $this->uri($delete));
+                        $a->setAttribute('href', html_entity_decode($this->uri($delete)));
                         $td->appendChild($a);
 
                         $icon = $this->objDbConfig->getValue('delete_icon', 'html5elements');
