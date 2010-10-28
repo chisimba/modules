@@ -161,6 +161,18 @@ class collectionsman extends controller
                 break;
 
             case 'search':
+                $query = $this->getParam('q');
+                if ($query) {
+                    $records = $this->objMongodb->find(array('title' => $query));
+                } else {
+                    $records = $this->objMongodb->find();
+                }
+                $contents = array();
+                foreach ($records as $record) {
+                    $contents[(string)$record['_id']] = array($record['title'], $record['date created']);
+                }
+                $this->setVarByRef('contents', $contents);
+                $this->setVarByRef('query', $query);
                 return 'search_tpl.php';
 
             default:
