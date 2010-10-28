@@ -19,4 +19,14 @@ $delete = array('action' => 'delete');
 
 $form->appendChild($objTable->table($document, NULL, $headers, $contents, $edit, $delete, $this->moduleName));
 
-echo $document->saveHTML();
+$this->loadClass('htmlheading', 'htmlelements');
+$header = new htmlHeading();
+$header->str = $this->objLanguage->languageText('mod_collectionsman_search', 'collectionsman');
+$header->type = 1;
+
+$leftMenu = $this->newObject('usermenu', 'toolbar');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(2);
+$cssLayout->setLeftColumnContent($leftMenu->show());
+$cssLayout->setMiddleColumnContent($header->show().$document->saveHTML());
+echo $cssLayout->show();
