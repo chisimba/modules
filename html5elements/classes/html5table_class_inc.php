@@ -39,9 +39,10 @@ class html5table extends object
      * @param  array  $contents The table contents. Empty array for none.
      * @param  string $class    The class(es) to assign to the table.
      * @param  string $id       The id of the table.
+     * @param  string $checkbox The name of the checkbox array.
      * @return string The markup for the table.
      */
-    public function show($title, array $headers, array $contents, $class=NULL, $id=NULL)
+    public function show($title, array $headers, array $contents, $class=NULL, $id=NULL, $checkbox=NULL)
     {
         $document = new DOMDocument();
 
@@ -87,6 +88,16 @@ class html5table extends object
             foreach ($contents as $row) {
                 $tr = $document->createElement('tr');
                 $tbody->appendChild($tr);
+
+                if (is_string($checkbox)) {
+                    $td = $document->createElement('td');
+                    $tr->appendChild($td);
+
+                    $input = $document->createElement('input');
+                    $input->setAttribute('name', $checkbox.'['.array_shift($row).']');
+                    $input->setAttribute('type', 'checkbox');
+                    $td->appendChild($input);
+                }
 
                 foreach ($row as $value) {
                     $td = $document->createElement('td');
