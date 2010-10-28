@@ -76,7 +76,6 @@ class html5table extends object
     public function table(DOMDocument $document, $title, array $headers, array $contents, array $edit=array(), array $delete=array(), $module=NULL, $checkbox=NULL, $class=NULL, $id=NULL)
     {
         $table = $document->createElement('table');
-        $document->appendChild($table);
 
         if (is_string($class)) {
             $table->setAttribute('class', $class);

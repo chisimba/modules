@@ -47,7 +47,6 @@ class html5input extends object
     {
         $input = $document->createElement('input');
         $input->setAttribute('type', $search ? 'search' : 'text');
-        $document->appendChild($input);
 
         if (is_string($placeholder)) {
             $input->setAttribute('placeholder', $placeholder);
