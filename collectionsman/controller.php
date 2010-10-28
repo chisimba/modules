@@ -85,11 +85,11 @@ class collectionsman extends controller
             $this->objRdf        = $this->getObject ('rdf', 'rdfgen');
             $this->objMongodb    = $this->getObject ('mongoops', 'mongo');
             $this->objCollOps    = $this->getObject('collectionops');
-			
+
 			// Define the paths we will be needing
 			define ( "RDFAPI_INCLUDE_DIR", $this->getResourcePath ('api/', 'rdfgen'));
 			include (RDFAPI_INCLUDE_DIR . "RdfAPI.php");
-			
+
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
                 $this->objActStream = $this->getObject('activityops','activitystreamer');
@@ -122,20 +122,20 @@ class collectionsman extends controller
                 $this->setVarByRef('form', $form);
                 return 'add_tpl.php';
                 break;
-                
+
             case 'createcollection' :
                 $coll = $this->getParam('coll');
                 var_dump($coll);
                 var_dump($this->objMongodb->setCollection($coll));
                 // $this->nextAction('');
                 break;
-                
+
             case 'mongotest' :
                 $this->objMongodb->setCollection('semarchive_audio');
                 $file = '/var/www/so.csv';
                 var_dump($this->objMongodb->importCSV($file, 'semarchive_audio', 'test'));
                 break;
-                
+
             case 'addrec' :
                 $acno = $this->getParam('ano');
                 $coll = $this->getParam('coll');
@@ -149,7 +149,7 @@ class collectionsman extends controller
                 $res = $this->objMongodb->insert($insarr);
                 $this->nextAction('');
                 break;
-                
+
             case 'getrecord' :
                 $acno = $this->getParam('acno');
                 $cursor = $this->objMongodb->find(array('accession number' => $acno), array('accession number', 'collection', 'title', 'description', 'date created', 'media', 'comment'));
@@ -159,7 +159,10 @@ class collectionsman extends controller
                 }
                 return 'viewsingle_tpl.php';
                 break;
-                
+
+            case 'search':
+                return 'search_tpl.php';
+
             default:
                 $this->nextAction('');
                 break;
