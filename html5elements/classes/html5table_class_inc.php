@@ -151,7 +151,7 @@ class html5table extends object
                         $edit['id'] = $i;
 
                         $a = $document->createElement('a');
-                        $a->setAttribute('href', html_entity_decode($this->uri($edit, $module)));
+                        $a->setAttribute('href', $this->uri($edit, $module, '', FALSE, TRUE, TRUE));
                         $td->appendChild($a);
 
                         $icon = $this->objDbConfig->getValue('edit_icon', 'html5elements');
