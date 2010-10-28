@@ -167,13 +167,15 @@ class mongoops extends object
      * @access public
      * @param  array   $criteria   The criteria of the records to delete.
      * @param  boolean $justOne    Delete just one record.
+     * @param  boolean $safe       Blocks until update has been applied.
+     * @param  boolean $fsync      Write the update to disk immediately.
      * @param  string  $collection The name of the collection to run the query on.
      * @param  string  $database   The name of the database containing the collection.
-     * @return boolean Has the delete been successfully received or not.
+     * @return mixed   Boolean if asynchronous, array if synchronous.
      */
-    public function delete(array $criteria, $justOne=TRUE, $collection=NULL, $database=NULL)
+    public function delete(array $criteria, $justOne=FALSE, $safe=FALSE, $fsync=FALSE, $collection=NULL, $database=NULL)
     {
-        $options = array('justOne' => $justOne);
+        $options = array('justOne' => $justOne, 'safe' => $safe, 'fsync' => $fsync);
 
         return $this->getCollection($collection, $database)->remove($criteria, $options);
     }
