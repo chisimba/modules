@@ -36,16 +36,17 @@ class html5form extends object
      * @access public
      * @param  object $document The DOMDocument to use.
      * @param  string $method   The HTTP method.
-     * @param  string $action   The URI to post to.
+     * @param  array  $params   The URI to post to.
+     * @param  string $module   The module name.
      * @return object The generated DOMElement.
      */
-    public function form(DOMDocument $document, $method='GET', $action=NULL)
+    public function form(DOMDocument $document, $method='GET', array $params=array(), $module=NULL)
     {
         $form = $document->createElement('form');
         $form->setAttribute('method', $method);
 
-        if (is_string($action)) {
-            $form->setAttribute('action', $action);
+        if (count($params) > 0 && is_string($module)) {
+            $form->setAttribute('action', $this->uri($params, $module));
         }
 
         return $form;
