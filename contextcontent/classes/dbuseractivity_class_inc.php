@@ -22,7 +22,7 @@ class dbuseractivity extends dbtable {
                 $sql.=" and module='$module' ";
             }
 
-            $sql.="group by userid order by createdon";
+            $sql.="group by userid order by accesscount";
 
 
             $data = $this->getArray($sql);
