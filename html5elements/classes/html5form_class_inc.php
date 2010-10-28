@@ -96,6 +96,7 @@ class html5form extends object
      * @access public
      * @param  object  $document    The DOMDocument to use.
      * @param  string  $name        The name of the input field.
+     * @param  string  $value       The value of the input field.
      * @param  string  $placeholder The placeholder text.
      * @param  string  $pattern     The input pattern.
      * @param  boolean $search      Is this a search field.
@@ -103,11 +104,15 @@ class html5form extends object
      * @param  boolean $autofocus   Should the focus automatically be on this field after pageload.
      * @return object  The generated DOMElement.
      */
-    public function text(DOMDocument $document, $name, $placeholder=NULL, $pattern=NULL, $search=FALSE, $required=FALSE, $autofocus=FALSE)
+    public function text(DOMDocument $document, $name, $value=NULL, $placeholder=NULL, $pattern=NULL, $search=FALSE, $required=FALSE, $autofocus=FALSE)
     {
         $input = $document->createElement('input');
         $input->setAttribute('type', $search ? 'search' : 'text');
         $input->setAttribute('name', $name);
+
+        if (is_string($value)) {
+            $input->setAttribute('value', $value);
+        }
 
         if (is_string($placeholder)) {
             $input->setAttribute('placeholder', $placeholder);
