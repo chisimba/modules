@@ -136,32 +136,13 @@ class mongoops extends object
     }
 
     /**
-     * Returns a list of the names of the collections inside a database.
-     *
-     * @access public
-     * @param  string $database The name of the database to use.
-     * @return array  The names of the collections.
-     */
-    public function getCollectionNames($database=NULL)
-    {
-        $collections = $this->getDatabase($database)->listCollections();
-        $names = array();
-
-        foreach($collections as $collection) {
-            $names[] = (string) $collection;
-        }
-
-        return $names;
-    }
-
-    /**
      * Returns the MongoDB instance associated with the given database name.
      *
      * @access public
      * @param  string $database The database name. If not specified, default is assumed.
      * @return object Corresponding instance of MongoDB.
      */
-    public function getDatabase($database=NULL)
+    private function getDatabase($database=NULL)
     {
         // Use the default if the database name has not been specified.
         if ($database === NULL) {
@@ -178,6 +159,57 @@ class mongoops extends object
         }
 
         return $objDatabase;
+    }
+
+    /**
+     * Deletes a record from the collection.
+     *
+     * @access public
+     * @param  array   $record The record to delete.
+     * @param  boolean Delete just one record.
+     * @param  string  $collection The name of the collection to run the query on.
+     * @param  string  $database   The name of the database containing the collection.
+     * @return boolean The results of the delete.
+     */
+    public function delete(array $record=array(), $justOne=TRUE, $collection=NULL, $database=NULL)
+    {
+        $options = array('justOne' => $justOne);
+
+        return $this->getCollection($collection, $database)->remove($record, $options);
+    }
+
+    /**
+     * Runs a query on a collection.
+     *
+     * @access public
+     * @param  array  $query      The query to run.
+     * @param  array  $fields     The fields to return.
+     * @param  string $collection The name of the collection to run the query on.
+     * @param  string $database   The name of the database containing the collection.
+     * @return object Instance of the MongoCursor class.
+     */
+    public function find(array $query=array(), array $fields=array(), $collection=NULL, $database=NULL)
+    {
+        return $this->getCollection($collection, $database)->find($query, $fields);
+    }
+
+    /**
+     * Returns a list of the names of the collections inside a database.
+     *
+     * @access public
+     * @param  string $database The name of the database to use.
+     * @return array  The names of the collections.
+     */
+    public function getCollectionNames($database=NULL)
+    {
+        $collections = $this->getDatabase($database)->listCollections();
+        $names = array();
+
+        foreach($collections as $collection) {
+            $names[] = (string) $collection;
+        }
+
+        return $names;
     }
 
     /*
@@ -200,43 +232,6 @@ class mongoops extends object
     }
 
     /**
-     * Runs a query on a collection.
-     *
-     * @access public
-     * @param  array  $query      The query to run.
-     * @param  array  $fields     The fields to return.
-     * @param  string $collection The name of the collection to run the query on.
-     * @param  string $database   The name of the database containing the collection.
-     * @return object Instance of the MongoCursor class.
-     */
-    public function find(array $query=array(), array $fields=array(), $collection=NULL, $database=NULL)
-    {
-        return $this->getCollection($collection, $database)->find($query, $fields);
-    }
-
-    /**
-     * Deletes a record from the collection.
-     *
-     * @access public
-     * @param  array   $record The record to delete.
-     * @param  boolean Delete just one record.
-     * @param  string  $collection The name of the collection to run the query on.
-     * @param  string  $database   The name of the database containing the collection.
-     * @return boolean The results of the delete.
-     */
-    public function removeRecord(array $record=array(), $justOne=TRUE, $collection=NULL, $database=NULL)
-    {
-        $options = array('justOne' => $justOne);
-
-        return $this->getCollection($collection, $database)->remove($record, $options);
-    }
-
-    public function upsert()
-    {
-
-    }
-
-    /**
      * Imports a CSV file into a collection.
      *
      * @access public
@@ -250,6 +245,7 @@ class mongoops extends object
         $handle = fopen($file, 'r');
         $keys = array_map('strtolower', fgetcsv($handle));
         $success = TRUE;
+
         while (($record = fgetcsv($handle)) !== FALSE) {
             $data = array_combine($keys, $record);
             $success = $this->insert($data, $collection, $database) && $success;
