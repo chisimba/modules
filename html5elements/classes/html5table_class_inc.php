@@ -91,3 +91,5 @@ class html5table extends object
         return $document->saveHTML();
     }
 }
+
+?>
