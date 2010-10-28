@@ -31,18 +31,47 @@
 class html5table extends object
 {
     /**
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objConfig;
+
+    /**
+     * Instance of the language class of the language module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objLanguage;
+
+    /**
+     * Initialises the object properties.
+     *
+     * @access public
+     */
+    public function init()
+    {
+        $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objLanguage = $this->getObject('language', 'language');
+    }
+
+    /**
      * Generates an HTML5 table.
      *
      * @access public
      * @param  string $title    The title of the table. NULL for none.
      * @param  array  $headers  The column headers. Empty array for none.
      * @param  array  $contents The table contents. Empty array for none.
+     * @param  array  $edit     The query string parameters for editing.
+     * @param  array  $delete   The query string parameters for deleting.
+     * @param  string $checkbox The name of the checkbox array.
      * @param  string $class    The class(es) to assign to the table.
      * @param  string $id       The id of the table.
-     * @param  string $checkbox The name of the checkbox array.
      * @return string The markup for the table.
      */
-    public function show($title, array $headers, array $contents, $class=NULL, $id=NULL, $checkbox=NULL)
+    public function show($title, array $headers, array $contents, array $edit=array(), array $delete=array(), $checkbox=NULL, $class=NULL, $id=NULL)
     {
         $document = new DOMDocument();
 
@@ -105,6 +134,45 @@ class html5table extends object
 
                     $text = $document->createTextNode($value);
                     $td->appendChild($text);
+                }
+
+                if (count($edit) > 0 || count($delete) > 0) {
+                    $td = $document->createElement('td');
+                    $tr->appendChild($td);
+
+                    if (count($edit) > 0) {
+                        $edit['id'] = $i;
+
+                        $a = $document->createElement('a');
+                        $a->setAttribute('href', $this->uri($edit));
+                        $td->appendChild($a);
+
+                        $icon = $this->objConfig->getValue('edit_icon', 'html5elements');
+                        $text = $this->objLanguage->languageText('mod_html5elements_edit', 'html5elements');
+
+                        $img = $document->createElement('img');
+                        $img->setAttribute('src', $icon);
+                        $img->setAttribute('alt', $text);
+                        $img->setAttribute('title', $text);
+                        $a->appendChild($img);
+                    }
+
+                    if (count($delete) > 0) {
+                        $delete['id'] = $i;
+
+                        $a = $document->createElement('a');
+                        $a->setAttribute('href', $this->uri($delete));
+                        $td->appendChild($a);
+
+                        $icon = $this->objConfig->getValue('delete_icon', 'html5elements');
+                        $text = $this->objLanguage->languageText('mod_html5elements_delete');
+
+                        $img = $document->createElement('img');
+                        $img->setAttribute('src', $icon);
+                        $img->setAttribute('alt', $text);
+                        $img->setAttribute('title', $text);
+                        $a->appendChild($img);
+                    }
                 }
             }
         }
