@@ -1,7 +1,7 @@
 <?php
 
 /**
- * html5input_class_inc.php
+ * html5form_class_inc.php
  *
  * Generates HTML5 input fields.
  *
@@ -25,10 +25,10 @@
  * @author    Charl van Niekerk <charlvn@charlvn.com>
  * @copyright 2010 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: html5input_class_inc.php -1   $
+ * @version   $Id: html5form_class_inc.php -1   $
  * @link      http://avoir.uwc.ac.za
  */
-class html5input extends object
+class html5form extends object
 {
     /**
      * Generates an HTML5 input element for text values.
