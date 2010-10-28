@@ -121,6 +121,11 @@ class mongoops extends object
             $collection = $this->collection;
         }
 
+        // Use the default if the database name has not been specified.
+        if ($database === NULL) {
+            $database = $this->database;
+        }
+
         // Retrieve the MongoDB object.
         $objDatabase = $this->getDatabase($database);
 
