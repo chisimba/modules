@@ -14,7 +14,9 @@ class html5table extends object
     public function show($title, array $headers, array $contents)
     {
         $document = new DOMDocument();
+
         $table = $document->createElement('table');
+        $document->appendChild($table);
 
         if ($title !== NULL) {
             $caption = $document->createElement('caption');
@@ -58,6 +60,6 @@ class html5table extends object
             }
         }
 
-        return $table->saveHTML();
+        return $document->saveHTML();
     }
 }
