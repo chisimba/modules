@@ -214,7 +214,11 @@ class sasiwebserver extends object {
             foreach($simpledata as $smdata) {
                 $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
             }
-            return $arr.$dropdown->show();
+
+            $link = 'Start';
+
+            $str = $link;
+            return $str.$arr.$dropdown->show();
         }
 
         if($data == 'dept') {
@@ -229,11 +233,13 @@ class sasiwebserver extends object {
                 $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
             }
 
-            $link = new link ($this->uri(array('action'=>'showfac'), 'sasicontext'));
-            $link->link = $this->getFacultyName($fac);
+            $link = new link ('#');
+            $link->link = 'Start Over';
             $link->rel = 'facebox';
-            $str = $link->show();
 
+            $link2 = $this->getFacultyName($fac);
+
+            $str = $link->show().'  >>  '.$link2;
             return $str.$arr.$dropdown->show();
         }
         if($data == 'mod') {
@@ -252,15 +258,18 @@ class sasiwebserver extends object {
 			var str = document.getElementById(\'input_mod\').value;
 			loadData(\''.$this->uri(array('action' => 'adddata', 'dept' => $dept, 'faculty' => $faculty)).'&subjcode='.'\'+str);
 			"';
-            $link = new link ($this->uri(array('action'=>'showfac'), 'sasicontext'));
-            $link->link = 'Faculty Name';
+            $link = new link ('#');
+            $link->link = 'Start Over';
             $link->rel = 'facebox';
 
-            $link2 = new link ($this->uri(array('action'=>'showfac'), 'sasicontext'));
-            $link2->link = 'Department Name';
+            $link2 = new link ('#');
+            $link2->link = $this->getFacultyName($faculty);
             $link2->rel = 'facebox';
 
-            $str = $link->show().' >> '.$link2->show();
+            $link3 = $this->getDeptName($faculty, $dept);
+            
+
+            $str = $link->show().'  >>  '.$link2->show().'  >>  '.$link3;
             return $str.$arr.$dropdown->show().'<br/>'.$objButton->show();
         }
     }

@@ -21,7 +21,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   Mxit Dictionary
+ * @package   Sasi Context
  * @author    Qhamani Fenama <qfenama@gmail.com>
  * @copyright 2007 Qhamani fenama
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -83,7 +83,7 @@ class sasicontext extends controller {
             $this->objUsers = $this->getObject('users');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
-            $this->dbSasicontext = $this->getObject('dbsasicontext', 'sasicontext');
+            $this->dbSasicontext= $this->getObject('dbsasicontext', 'sasicontext');
             $this->objSasicontext = $this->getObject('sasiwebserver', 'sasicontext');
             $this->objContext = $this->getObject('dbcontext', 'context');
             $this->objSasiUsers = $this->getObject('users');
@@ -96,9 +96,7 @@ class sasicontext extends controller {
             echo customException::cleanUp();
             die();
         }
-    }
-
-    //end of init function
+    }//end of init function
 
     /**
      * Method to process actions to be taken
@@ -126,23 +124,24 @@ class sasicontext extends controller {
                 $faculty = $this->getParam('faculty');
                 $department =  $this->getParam('dept');
                 $sasiCode =  $this->getParam('subjcode');
+                $this->objSasicontext->addData($this->contextCode, $faculty, $department, $sasiCode);
                 if($this->objSasicontext->addData($this->contextCode, $faculty, $department, $sasiCode)) {
                     echo '<h1>'.$this->objLanguage->code2Txt("mod_sasicontext_success", "sasicontext").'</h1>';
                 }
                 else {
                     echo '<center><h1>'.$this->objLanguage->code2Txt("mod_sasicontext_success", "sasicontext").'</h1></center>';
                 }
+                //$this->nextAction('context', array ('action' => 'controlpanel'));
                 exit(0);
                 break;
             case 'synchronize':
-                $this->objUsers->synchronizeAll($this->contextCode);
-                $this->nextAction(null, array ('addtocontext' =>  $this->objUsers->addtocontext ,'addtosite' => $this->objUsers->addtosite, 'removed' => $this->objUsers->removed));
+                $remove = $this->getParam('remove');
+                $role = $this->getParam('role');
+                $this->objUsers->synchronizeAll($this->contextCode, $remove);
+                $this->nextAction(NULL, array ('addtocontext' =>  $this->objUsers->addtocontext ,'addtosite' => $this->objUsers->addtosite, 'removed' => $this->objUsers->removed));
                 exit (0);
                 break;
         } //end of switch
     }
-
-
 }
-
 ?>

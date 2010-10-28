@@ -54,11 +54,41 @@ class users extends object {// extends abauth implements ifauth {
      * @access public
      */
     public $objUser;
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $addtocontext = 0;
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $addtosite = 0;
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $removed = 0;
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     private $ldapserver;
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     private $ldapuservarname;
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     private $ldapWhere;
 
     /**
@@ -150,8 +180,7 @@ class users extends object {// extends abauth implements ifauth {
      * @param var @contextCode
      * @return boolean
     */
-    public function synchronizeAll($contextCode) {
-
+    public function synchronizeAll($contextCode, $remove) {
         //Get the class list
         $sub = $this->dbSasicontext->getSasicontextByField('contextcode', $contextCode);
         $subject = $sub['subject'];
@@ -159,17 +188,10 @@ class users extends object {// extends abauth implements ifauth {
 
         //Add users to the class list
         if (!empty($users[0])) {
-
-            //Remove users that are not in the class list from the course users
-            //if ($remove){
-            // $this->removed++;
-            //get context users
-            //compare with the class list from sasi webserver
-            //remove user
-            //}
-
+            $arr = array();
             foreach ($users as $user) {
                 $username = $user['column'][0];
+                $arr[] = $username;
                 //Check if user is already on the db(if not) add user to db from LDAP
                 if(!$this->checkUserExists($username)) {
                     $dn = $this->objAuthLdap->checkUser($username);
@@ -190,6 +212,28 @@ class users extends object {// extends abauth implements ifauth {
                     $this->synchronizeUser($contextCode, $username, 'Students');
                 }
             }
+
+            //Remove users that are not in the class list from the course users
+            if ($remove) {
+
+                //get context users
+                $contextusers = $this->objGroups->contextUsers('Students' ,$this->contextCode, array('userid'));
+
+                foreach ($contextusers as $user) {
+                    //compare with the class list from sasi webserver
+                    if (!in_array($user['username'], $arr)) {
+                        //get the userid via username
+                        $userDetails = $this->objUser->lookupData($user['username']);
+                        $userId = $userDetails['userid'];
+
+                        //get the perm user id and groupId
+                        $permUserId = $this->objGroupAdmin->getPermUserId($userId);
+                        $groupId = $this->objGroupAdmin->getLeafId(array($contextCode, 'Students'));
+                        $this->objGroupAdmin->deleteGroupUser($groupId, $permUserId);
+                        $this->removed++;
+                    }
+                }
+            }
         }
 
         //return user that has been added
@@ -205,12 +249,10 @@ class users extends object {// extends abauth implements ifauth {
 
         //Get the groupId
         $groupId = $this->objGroupAdmin->getLeafId(array($contextCode, $role));
-        //get the userid via username
         $userDetails = $this->objUser->lookupData($username);
         $userId = $userDetails['userid'];
-
-        //get the perm user id
         $permUserId = $this->objGroupAdmin->getPermUserId($userId);
+
         $this->addtocontext++;
         return $this->objGroupAdmin->addGroupUser($groupId, $permUserId);
     }

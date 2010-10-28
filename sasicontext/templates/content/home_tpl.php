@@ -47,9 +47,9 @@ $objTable->endRow();
 
 //Remove user selection
 $rad = new radio('remove');
-$rad->addOption('y', 'Yes');
-$rad->addOption('n', 'No');
-$rad->setSelected('y');
+$rad->addOption('1', 'Yes');
+$rad->addOption('0', 'No');
+$rad->setSelected('1');
 $rad->breakSpace = '&nbsp;';
 
 $objTable->startRow();
