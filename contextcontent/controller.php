@@ -165,7 +165,12 @@ class contextcontent extends controller {
                 return $this->addPage($this->getParam('chapter'), $this->getParam('id', ''), $this->getParam('context', ''));
             case 'savepage':
                 return $this->savePage();
-            // case 'autosavepage':
+            case 'useractivity':
+                return $this->userActivity();
+
+            case 'showuseractivity':
+                return $this->showUserActivity();
+// case 'autosavepage':
             //     return $this->autoSavePage();
             case 'addscorm':
                 return $this->addScormChapter();
@@ -358,8 +363,8 @@ class contextcontent extends controller {
      */
     protected function saveChapter() {
         $title = $this->getParam('chapter');
-        if($title == null){
-            $title="Unknown";
+        if ($title == null) {
+            $title = "Unknown";
         }
         $intro = $this->getParam('intro');
         $visibility = $this->getParam('visibility');
@@ -721,8 +726,8 @@ class contextcontent extends controller {
     protected function savePage() {
 
         $menutitle = stripslashes($this->getParam('menutitle'));
-        if($menutitle ==null){
-            $menutitle="Untitled";
+        if ($menutitle == null) {
+            $menutitle = "Untitled";
         }
         $headerscripts = stripslashes($this->getParam('headerscripts'));
         $language = 'en';
@@ -1516,6 +1521,28 @@ class contextcontent extends controller {
                     'pagecontent' => $pagecontent,
                     'parent' => $parent,
                     'chapter' => $chapter));
+    }
+
+    function showUserActivity() {
+        $startDate = $this->getParam('startdate');
+        $endDate = $this->getParam('enddate');
+        $studentsonly = $this->getParam('studentsonly');
+        $module = $this->getParam('moduleid');
+        $objUserActivity=$this->getObject('dbuseractivity');
+        
+        $groupOps = $this->getObject('groupops', 'groupadmin');
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $contextGroupId = $objGroups->getId($this->contextCode . '^Students');
+        $usersInContext = $groupOps->getUsersInGroup($contextGroupId);
+        
+        $data=$objUserActivity->getUserActivityByModule($startDate, $endDate, $module, $studentsonly,$usersInContext,$this->contextCode);
+        $this->setVarByRef("data",$data);
+        $this->setVarbyRef("modulename",$module);
+        return "useractivity_tpl.php";
+    }
+
+    function userActivity() {
+        return "selectdates_tpl.php";
     }
 
 }
