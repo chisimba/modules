@@ -1,5 +1,6 @@
 package org.wits.client.ads;
 
+import com.extjs.gxt.ui.client.Style.HideMode;
 import java.util.ArrayList;
 import java.util.List;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
@@ -37,6 +38,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import org.wits.client.Constants;
+import org.wits.client.EditDocumentDialog;
 
 /**
  *
@@ -103,10 +105,12 @@ public class ForwardTo {
             @Override
             public void componentSelected(ButtonEvent ce) {
                 increaseVersion();
-                changeCurrentUser();
-                
+                changeCurrentUser();               
 
                 forwardToDialog.hide();
+                EditDocumentDialog.hide();
+                String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
+                Constants.main.getDocumentListPanel().refreshDocumentList(params);
             }
         });
         panel.add(forwardButton);
@@ -122,9 +126,11 @@ public class ForwardTo {
     }
 
     public void changeCurrentUser() {
+        int version = org.wits.client.DocumentListPanel.getVersion();
+
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
                 + Constants.MAIN_URL_PATTERN + "?module=wicid&action=changecurrentuser&userid="
-                + selectedUserid + "&docid=" + Constants.docid);
+                + selectedUserid + "&docid=" + Constants.docid+"&version="+version);
         try {
 
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -142,10 +148,10 @@ public class ForwardTo {
         }
     }
 
-    public static void increaseVersion() {
-        int version = org.wits.client.DocumentListPanel.getVersion();
+    public void increaseVersion() {
+
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
-                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=increaseversion&docid=" + Constants.docid+"&version="+version);
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=increaseversion&docid=" + Constants.docid);
         try {
 
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -156,8 +162,7 @@ public class ForwardTo {
 
                 public void onResponseReceived(Request request, Response response) {
                     String newVersion = response.getText();
-                    System.out.println(newVersion);
-                    MessageBox.info("Done", "The version for document " + Constants.docid + " has been changed to v"+newVersion, null);
+                    MessageBox.info("Done", "The version for the document has been changed to "+newVersion, null);
                 }
             });
         } catch (Exception e) {
