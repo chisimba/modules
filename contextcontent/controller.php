@@ -102,8 +102,11 @@ class contextcontent extends controller {
             } else {
                 $this->eventsEnabled = FALSE;
             }
-
-$this->eventsEnabled=FALSE;
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $enableActivityStreamer = $objSysConfig->getValue('ENABLE_ACTIVITYSTREAMER', 'contextcontent');
+            if (strtoupper($enableActivityStreamer) == 'FALSE') {
+                $this->eventsEnabled = FALSE;
+            }
 
             $this->objMenuTools = $this->getObject('tools', 'toolbar');
             $this->objConfig = $this->getObject('altconfig', 'config');
