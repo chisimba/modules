@@ -106,7 +106,7 @@ class ocsinterfacetoolbar extends object {
 
 
         // Return Toolbar
-        return '<ul id="navigation_bar">' . $home . $str . '</ul>';
+        return '<ul id="cnavigation_bar">' . $home . $str . '</ul>';
     }
 
     private function generateItem($action='', $module='ocsinterface', $text, $isActive=FALSE, $storyid='', $menucount=1) {
