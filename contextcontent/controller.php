@@ -103,7 +103,7 @@ class contextcontent extends controller {
                 $this->eventsEnabled = FALSE;
             }
 
-
+$this->eventsEnabled=FALSE;
 
             $this->objMenuTools = $this->getObject('tools', 'toolbar');
             $this->objConfig = $this->getObject('altconfig', 'config');
@@ -487,7 +487,9 @@ class contextcontent extends controller {
      */
     protected function editScormChapter($id) {
         $chapter = $this->objContextChapters->getChapter($id);
-        $ischapterlogged = $this->objContextActivityStreamer->deleteRecord($id);
+        if ($this->eventsEnabled) {
+            $ischapterlogged = $this->objContextActivityStreamer->deleteRecord($id);
+        }
         if ($chapter == FALSE) {
             return $this->nextAction(NULL, array('error' => 'editchapterdoesnotexist'));
         } else {
@@ -520,8 +522,9 @@ class contextcontent extends controller {
             return $this->nextAction(NULL, array('error' => 'noidprovided'));
         } else {
             //Remove previous records on activity streamer
-            $ischapterlogged = $this->objContextActivityStreamer->deleteRecord($id);
-
+            if ($this->eventsEnabled) {
+                $ischapterlogged = $this->objContextActivityStreamer->deleteRecord($id);
+            }
             $objChapterContent = $this->getObject('db_contextcontent_chaptercontent');
 
             $chapter = $objChapterContent->getRow('id', $chaptercontentid);
@@ -866,9 +869,11 @@ class contextcontent extends controller {
 
         //Log in activity streamer only if logged in (Public courses dont need login)
         if (!empty($this->userId)) {
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
-            if ($ischapterlogged == FALSE) {
-                $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $pageId, $this->contextCode);
+            if ($this->eventsEnabled) {
+                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
+                if ($ischapterlogged == FALSE) {
+                    $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $pageId, $this->contextCode);
+                }
             }
         }
 
@@ -954,7 +959,9 @@ class contextcontent extends controller {
             return $this->nextAction('switchcontext');
         } else {
             //Remove previous records on activity streamer
-            $ischapterlogged = $this->objContextActivityStreamer->deleteRecord($pageId);
+            if ($this->eventsEnabled) {
+                $ischapterlogged = $this->objContextActivityStreamer->deleteRecord($pageId);
+            }
             $page = $this->objContentOrder->getPage($pageId, $this->contextCode);
             $parentPage = $this->objContentOrder->getPage($parentnode, $this->contextCode);
 
@@ -1096,9 +1103,11 @@ class contextcontent extends controller {
     protected function viewChapter($id) {
 
         $firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
-        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $id, $this->contextCode);
-        if ($ischapterlogged == FALSE && $this->eventsEnabled) {
-            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $id, $this->contextCode);
+        if ($this->eventsEnabled) {
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $id, $this->contextCode);
+            if ($ischapterlogged == FALSE && $this->eventsEnabled) {
+                $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $id, $this->contextCode);
+            }
         }
         if ($firstPage == FALSE) {
 
@@ -1546,7 +1555,6 @@ class contextcontent extends controller {
                     'parent' => $parent,
                     'chapter' => $chapter));
     }
-
 
 }
 
