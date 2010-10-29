@@ -88,5 +88,79 @@
             </add>
         </data>
     </update>
+  <update>
+        <table>tbl_contextcontent_activitystreamer</table>
+        <version>1.587</version>
+        <description>Added a new field to store the session Id</description>
+        <data>
+            <add>
+                <name>sessionid</name>
+                <type>text</type>
+                <length>60</length>
+                <notnull>TRUE</notnull>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_contextcontent_activitystreamer</table>
+        <version>1.587</version>
+        <description>Added a new field to store module code</description>
+        <data>
+            <add>
+                <name>modulecode</name>
+                <type>text</type>
+                <length>25</length>
+                <notnull>TRUE</notnull>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_contextcontent_activitystreamer</table>
+        <version>1.587</version>
+        <description>Added a new field to store flag pageorchapter</description>
+        <data>
+            <add>
+                <name>pageorchapter</name>
+                <type>text</type>
+                <length>32</length>
+                <notnull>TRUE</notnull>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_contextcontent_activitystreamer</table>
+        <version>1.587</version>
+        <description>Added a new field to store the description</description>
+        <data>
+            <add>
+                <name>description</name>
+                <type>text</type>
+                <notnull>TRUE</notnull>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_contextcontent_activitystreamer</table>
+        <version>1.587</version>
+        <description>Added a new field to store the starttime</description>
+        <data>
+            <add>
+                <name>starttime</name>
+                <type>timestamp</type>
+                <notnull>TRUE</notnull>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_contextcontent_activitystreamer</table>
+        <version>1.587</version>
+        <description>Added a new field to store the endtime</description>
+        <data>
+            <add>
+                <name>endtime</name>
+                <type>timestamp</type>
+            </add>
+        </data>
+    </update>
 
 </updates>

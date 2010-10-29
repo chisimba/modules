@@ -266,6 +266,30 @@ class contextcontent extends controller {
                 return $this->uploadFile();
             case 'createpagefromfile':
                 return $this->createpagefromfile();
+            case 'viewlogs':
+                $this->setLayoutTemplate('layout_firstpage_tpl.php');
+                $action = "viewlogdetails";
+                $this->setVarByRef("action", $action);
+                return 'selectdates_tpl.php';
+            case 'viewlogdetails':
+                $this->setLayoutTemplate('layout_firstpage_tpl.php');
+                $this->setVarByRef("startdate", $this->getParam('startdate'));
+                $this->setVarByRef("enddate", $this->getParam('enddate'));
+                $this->setVarByRef("studentsonly", $this->getParam('studentsonly'));
+                return 'usersactivitylog_tpl.php';
+
+            case 'viewcontextcontentusage':
+                $this->setLayoutTemplate('layout_firstpage_tpl.php');
+                $action = "viewcontextcontentusagedetails";
+                $this->setVarByRef("action", $action);
+                return 'selectdates_tpl.php';
+
+            case 'viewcontextcontentusagedetails':
+                $this->setLayoutTemplate('layout_firstpage_tpl.php');
+                $this->setVarByRef("startdate", $this->getParam('startdate'));
+                $this->setVarByRef("enddate", $this->getParam('enddate'));
+                $this->setVarByRef("studentsonly", $this->getParam('studentsonly'));
+                return 'contextcontentusage_tpl.php';
             default:
                 //return $this->home_debug();
                 return $this->showContextChapters();
