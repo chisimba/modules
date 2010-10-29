@@ -271,21 +271,7 @@ class editform extends dbTable {
         return $objForm->show();
     }
 
-    public function listAll($userId) {
-        $userrec = $this->getAll("WHERE userid = '$userId'");
-        return $userrec;
-    }
-
-    /**
-     * Return a single record in the distance_tbl.
-     *
-     * @param $id is the id taken from the distance_tbl.
-     */
-    public function listSingle($id) {
-        $onerec = $this->getRow('id', $id);
-        return $onerec;
-    }
-
+     
     function insertRecord($surname, $initials, $title, $studentno, $postaladdress, $physicaladdress, $postalcode, $postalcode2, $telnoh, $telnow, $cell, $fax, $emailaddress, $course, $department, $supervisor) {
         $id = $this->insert(array(
                     'surname' => $surname,
@@ -308,29 +294,7 @@ class editform extends dbTable {
         return $id;
     }
 
-    function updateRecord($surname, $initials, $title, $studentno, $postaladdress, $physicaladdress, $postalcode, $postalcode2, $telnoh, $telnow, $cell, $fax, $emailaddress, $course, $department, $supervisor) {
-        $id = $this->update(array(
-                    'surname' => $surname,
-                    'initials' => $initials,
-                    'title' => $title,
-                    'studentno' => $studentno,
-                    'postaladdress' => $postaladdress,
-                    'physicaladdress' => $physicaladdress,
-                    'postalcode' => $postalcode,
-                    'postalcode2' => $postalcode2,
-                    'telnoh' => $telnoh,
-                    'telnow' => $telnow,
-                    'cell' => $cell,
-                    'fax' => $fax,
-                    'emailaddress' => $emailaddress,
-                    'course' => $course,
-                    'department' => $department,
-                    'supervisor' => $supervisor,
-                ));
-        return $id;
-    }
-
-    private function getFormAction() {
+private function getFormAction() {
         $formAction = $this->uri(array("action" => "save_addedit"), "libraryforms");
         return $formAction;
     }

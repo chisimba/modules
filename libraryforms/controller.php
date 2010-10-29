@@ -41,30 +41,8 @@ class libraryforms extends controller {
 
     public function dispatch($action) {
 
-        $action = $this->getParam('action');
-        $this->setLayoutTemplate('editadd_tpl.php');
-
-
-        $this->objMail->from = 'no-reply@uwc.ac.za';
-        $this->objMail->fromName = 'no-reply';
-
-        // Give the mail a subject and a body.
-        $this->objMail->subject = 'Book(s) Enquiry';
-        $this->objMail->body = 'it workes';
-
-        /* $name = $this->getParam('name');
-          $email=$this->getParam('email');
-          $msg=$this->getParam('msg'); */
-
-        // Send to a single address.
-        $this->objMail->to = 'arieluwc@uwc.ac.za';
-
-        // Send to multiple addresses.
-        $this->objMail->to = array('library@uwc.ac.za', 'pmalinga@uwc.ac.za', 'arieluwc@uwc.ac.za');
-
-        // Send the mail.
-        $this->objMail->send();
-
+        //$action = $this->getParam('action');
+       // $this->setLayoutTemplate('editadd_tpl.php');
 
         switch ($action) {
 
@@ -89,35 +67,22 @@ class libraryforms extends controller {
             case 'save_addedit':
                 $this->saveRecord();
                 return 'confirm_tpl.php';
-
-            case 'update_addedit':
-                return 'confirm_tpl.php';
-
+          
             case 'save_book':
                 return 'confirm_tpl.php';
-
-            case 'update_book':
-                return 'confirm_tpl.php';
+          
 
             case 'save_periodical':
                 return 'confirm_tpl.php';
-
-            case 'update_periodical':
-                return 'confirm_tpl.php';
-
-
+       
             case 'save_fdbk':
 
                 return 'fdbkconfirm_tpl.php';
-            case 'update_fdbk':
-                return 'fdbkconfirm_tpl.php';
-
+            
             case 'Back to Forms':
                 return 'editadd_tpl.php';
 
-            case 'Check if information entered is correct':
-
-                return 'checkinfo_tpl.php';
+           
         }// close for switch
     }
 
@@ -282,7 +247,7 @@ class libraryforms extends controller {
         $id = $this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell, $tell, $tellw,
                         $emailaddress, $entitynum, $studentno, $course);
 
-        $subject="Period";
+        $subject="Periodical Book Record";
         $this->sendEmailNotification($subject,
                 $message = $titleperiodical . '' . $volume . '' . $part . '' . $year . '' . $pages . '' .
                 $author . '' . $titlearticle . '' . $prof . '' . $address . '' . $cell . '' . $tell . '' .
@@ -328,7 +293,7 @@ class libraryforms extends controller {
     public function sendEmailNotification( $subject, $message) {
         $objMail = $this->getObject('email', 'mail');
         //send to multiple addressed   
-        $list = array("pmalinga@uwc.ac.za","shiluvam@gmail.com", "david.wafula@wits.ac.za");
+        $list = array("pmalinga@uwc.ac.za","afakier@uwc.ac.za", "david.wafula@wits.ac.za");
         $objMail->to = ($list);
         // specify whom the email is coming from
         $objMail->from = "no-reply@uwc.ac.za";
