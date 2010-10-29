@@ -144,6 +144,14 @@ class mcqtests extends controller {
         }
         // Now the main switch for $action
         switch ($action) {
+            case "deletersa":
+                $this->nextAction($id = $this->getParam('id', null), $this->dbQuestions->deleteQuestion($id));
+                // After processing return to categorylisting
+                return $this->nextAction('rsalisting');
+                break;
+            case 'rsalisting':
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                return 'rsalisting_tpl.php';
             case 'addrandomshortans':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 $id = $this->getParam('id', Null);
@@ -169,6 +177,7 @@ class mcqtests extends controller {
                 $fields['questiontext'] = $this->getParam('qntext', Null);
                 $fields['mark'] = $this->getParam('qngrade', Null);
                 $fields['penalty'] = $this->getParam('penaltyfactor', Null);
+                $fields['qtype'] = "RSA";
                 $fields['generalfeedback'] = $this->getParam('genfeedback', Null);
                 $qncount = $this->getParam('qncount', Null);
                 //Insert/Update Question

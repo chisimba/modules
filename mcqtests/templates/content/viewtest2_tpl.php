@@ -26,6 +26,7 @@ $viewjs = '<script language="JavaScript" src="' . $this->getResourceUri('js/view
 $this->appendArrayVar('headerParams', $viewjs);
 
 // set up language items
+$phraseRandomShortAns = $this->objLanguage->languageText('mod_mcqtests_randomshortans', 'mcqtests');
 $testdetailsLabel = $this->objLanguage->languageText('mod_mcqtests_testdetailsLabel', 'mcqtests');
 $addqestionslabel = $this->objLanguage->languageText('mod_mcqtests_addquestions', 'mcqtests');
 $head = $objLanguage->languageText('mod_mcqtests_test', 'mcqtests');
@@ -217,12 +218,12 @@ $existingQuestions->setId("existingQ");
 
 $existingQuestions->addOption('-', '[-' . $selectqntype . '-]');
 $existingQuestions->addOption('mcq', $simple);
-$existingQuestions->addOption('adddescription', $description);
+$existingQuestions->addOption('descriptionlist', $description);
 $existingQuestions->addOption('category', $category);
 //$existingQuestions->addOption('calcQ', $calcdqn);
 $existingQuestions->addOption('matchQ', $matchingqn);
 $existingQuestions->addOption('numericalQ', $numericalqns);
-
+$existingQuestions->addOption('showRSA', $phraseRandomShortAns);
 //$existingQuestions->addOption('shortansQ', 'Short Answer Questions');
 
 /*// choose questiontype
@@ -261,6 +262,8 @@ $str.="<div id='matchQDesc'><label>".$matchingqn.":&nbsp;</label>".$matchingDesc
 $str.="<div id='numericalQDesc'><label>".$numericalqns.":&nbsp;</label>".$numericalDesc."<br/>".$goButton->show()."</div>";
 $str.="<div id='shortansQDesc'><label>".$shortans.":&nbsp;</label>".$shortansDesc."<br/>".$goButton->show()."</div>";
 $str.="<div id='simpleDesc'><label>".$simple.":&nbsp;</label>".$simpleDesc."<br/>".$goButton->show()."</div>";
+$str.="<div id='RSA'><label>".$phraseRandomShortAns.":&nbsp;</label>".$phraseRandomShortAns."<br/>".$goButton->show()."</div>";
+
 
 // Confirmation message on saving a question
 $confirm = $this->getParam('confirm');
@@ -467,7 +470,8 @@ $myJS = '<script type="text/javascript">
                 numericalqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewnumericalquestions", "id"=>$this->getParam('id')))).'",
                 shortanswerqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewshortansquestions", "id"=>$this->getParam('id')))).'",
                 categoryUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"categorylisting", "id"=>$this->getParam('id')))).'",
-                descriptionUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"addeditdesc", "id"=>$this->getParam('id')))).'";
+                descriptionUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"mcqlisting", "id"=>$this->getParam('id')))).'";
+                rsaUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"rsalisting", "id"=>$this->getParam('id')))).'";
         </script>';
 echo $myJS;
 ?>

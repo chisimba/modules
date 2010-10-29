@@ -32,9 +32,13 @@ var goToPage = function(page) {
                 hideAll();
                 jQuery('#categoryDesc').show();
                 break;
-            case 'adddescription':
+            case 'descriptionlist':
                 hideAll();
                 jQuery('#adddescriptionDesc').show();
+                break;
+            case 'showRSA':
+                hideAll();
+                jQuery('#RSA').show();
                 break;
             default:
                 hideAll();
@@ -50,6 +54,7 @@ var hideAll = function() {
     jQuery('#categoryDesc').hide();
     jQuery('#adddescriptionDesc').hide();
     jQuery("#simpleDesc").hide();
+    jQuery("#RSA").hide();
 }
 
 var goAddQuestion = function() {
@@ -71,8 +76,11 @@ var goAddQuestion = function() {
             case 'category':
                 showCategory();
                 break;
-            case 'adddescription':
+            case 'descriptionlist':
                 showDescription();
+                break;
+            case 'showRSA':
+                showRSA();
                 break;
             default:
                 showSimpleMCQ();
@@ -106,4 +114,7 @@ var showNumericalQ = function() {
 
 var showShortAnsQ = function() {
     window.location.href = shortanswerqUrl;
+}
+var showRSA = function() {
+    window.location.href = rsaUrl;
 }

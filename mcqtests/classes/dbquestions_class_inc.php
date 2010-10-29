@@ -59,16 +59,13 @@ class dbquestions extends dbtable {
      * Method to get a set of questions for a particular test.
      *
      * @access public
-     * @param string $testId The id of the test being used.
      * @param string $filter An additional filter on the select statement.
-     * @return array $data The list of questions in the test.
+     * @return array $data The list of questions.
      */
-    public function getQuestions($testId, $filter = NULL) {
+    public function getQuestions($filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter) {
-            $sql.= " WHERE testid='$testId' AND $filter";
-        } else {
-            $sql.= " WHERE testid='$testId' ORDER BY questionorder";
+            $sql.= " WHERE ". $filter;
         }
         $data = $this->getArray($sql);
         if (!empty($data)) {

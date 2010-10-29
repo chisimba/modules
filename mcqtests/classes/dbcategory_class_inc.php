@@ -52,7 +52,31 @@ class dbcategory extends dbtable {
         $this->objContext = $this->newObject('dbcontext', 'context');
         $this->contextCode = $this->objContext->getContextCode();
     }
+    /**
+     * Method to get the questions in a certain context.
+     * @param string $contextCode Context Code
+     * @access public
+     * @return array
+     */
+    public function getContextQuestions($contextCode) {
+        $sql = 'SELECT tbl_test_category.id as categoryid, tbl_test_category.contextcode,
+            tbl_test_questions.id as questionid, tbl_test_questions.question, tbl_test_questions.name,
+            tbl_test_questions.mark, tbl_test_questions.penalty, tbl_test_questions.qtype,
+            tbl_test_questions.questiontext, tbl_test_randomshortansmatch.id as rsaid,
+            tbl_test_randomshortansmatch.choose
+        FROM tbl_test_category
+        INNER JOIN tbl_test_questions ON (tbl_test_category.id = tbl_test_questions.categoryid)
+        INNER JOIN tbl_test_randomshortansmatch ON (tbl_test_randomshortansmatch.questionid = tbl_test_questions.id)
+        WHERE tbl_test_category.contextcode=\''.$contextCode.'\'';
 
+        $results = $this->getArray($sql);
+
+        if (count($results) == 0) {
+            return FALSE;
+        } else {
+            return $results;
+        }
+    }
     /**
      * Method to insert or update a category in the database.
      *
