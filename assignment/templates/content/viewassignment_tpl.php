@@ -193,7 +193,7 @@ if ($this->isValid('markassignments')) {
 
 
     if (count($submissions) == 0) {
-        
+
     } else if (count($submissions) == 0) {
 
     } else {
@@ -333,6 +333,7 @@ if ($this->isValid('markassignments')) {
 
             $objSelectFile->name = 'assignment';
             $objSelectFile->restrictFileList = $allowedFileTypes;
+            $objSelectFile->setForceRestrictions(TRUE);
 
             $button = new button('submitform', 'Submit Assignment');
             $button->setToSubmit();
