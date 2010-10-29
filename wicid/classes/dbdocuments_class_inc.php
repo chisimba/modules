@@ -43,6 +43,7 @@ class dbdocuments extends dbtable {
         $this->resourcePath = $this->objConfig->getModulePath();
         $docRoot = $_SERVER['DOCUMENT_ROOT'];
         $location = "http://" . $_SERVER['HTTP_HOST'];
+        $replacewith = "";
         $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
     }
 
@@ -109,7 +110,7 @@ class dbdocuments extends dbtable {
 
             $currentuserid = $row['currentuserid'];
             $fullname = $this->objUser->fullname($currentuserid);
-            
+
             $docs[] = array(
                 'userid' => $row['userid'],
                 'owner' => $owner,
@@ -142,7 +143,7 @@ class dbdocuments extends dbtable {
      * @param <type> $path
      */
     public function addDocument(
-    $date, $refno, $department, $contact, $telephone, $title, $groupid, $path, $mode="default", $approved="N", $status="0", $currentuserid, $version, $ref_version
+    $date, $refno, $department, $contact, $telephone, $title, $groupid, $path, $currentuserid, $version, $ref_version, $mode="apo", $approved="N", $status="0"
     ) {
 
 
@@ -170,7 +171,7 @@ class dbdocuments extends dbtable {
             'status' => $status,
             'currentuserid' => $currentuserid,
             'ref_version' => $ref_version,
-            'version' => $ref_version
+            'version' => $version
         );
         $id = $this->insert($data);
         echo $refno . "-" . $ref_version . ',' . $id;
@@ -311,8 +312,8 @@ class dbdocuments extends dbtable {
         $this->update("id", $id, $data);
     }
 
-    function changeCurrentUser($userid, $docid) {
-        $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid'";
+    function changeCurrentUser($userid, $docid, $version) {
+        $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid' and version = '$version'";
         $this->sendEmailAlert($userid);
         return $this->getArray($sql);
     }
@@ -370,33 +371,53 @@ class dbdocuments extends dbtable {
         return $status;
     }
 
-    function setStatus($docid, $status) {
-        $sql = "update tbl_wicid_documents set status ='$status' where id = '$docid'";
+    function setStatus($docid, $status, $version) {
+        $sql = "update tbl_wicid_documents set status = '$status' where id = '$docid' and version = '$version'";
         return $this->getArray($sql);
     }
 
-    function increaseVersion($docid, $version) {
-        $versionNew = (int) $version + 1;
-        echo $versionNew;        
-        $sql = "select * from tbl_wicid_documents where id = '$docid' and version = '$version'";
-        $data = $this->getArray($sql);
-        $puid=$row['puid'];
-        $newPuid = (int) $puid+1;
-        $data = array(
-            'version' => $versionNew,
-            'puid'=> $newPuid
-        );
+    function increaseVersion($docid) {
+        (int) $versionOld = $this->getVersion($docid);
+        $versionNew = $versionOld + 1;
 
-        $this->insert($data);
+        $sql = "select * from tbl_wicid_documents where id = '$docid' and version = '$versionOld'";
+        $data = $this->getArray($sql);
+        
+        $dataNew = $data[0];
+        $dataNew['version'] = $versionNew;
+        if ($dataNew['ext'] == null) {
+            unset($dataNew['ext']);
+        }
+        if ($dataNew['upload'] == null) {
+            unset($dataNew['upload']);
+        }
+        if ($dataNew['department'] == null) {
+            unset($dataNew['department']);
+        }
+
+        $sql2 = "select max(puid) as puid from tbl_wicid_documents";
+        $puidA = $this->getArray($sql2);
+        $puid = (int) $puidA[0]['puid'];
+
+        $dataNew['puid'] = ((int)$puid)+1;
+        
+        $this->insert($dataNew);
+
+        echo $versionNew;
+        return $versionNew;
+
+        // return $versionNew;
     }
 
+
     function getVersion($docid) {
-        echo $docid;
-        $sql = "select version from tbl_wicid_documents where id='$docid'";
-        $version = $this->getArray($sql);
-        echo $version;
+        $sql = "select max(version) as version from tbl_wicid_documents where id='$docid'";
+        $version1 = $this->getArray($sql);
+        $version = (int) $version1[0]['version'];
+
         return $version;
     }
 
 }
+
 ?>
