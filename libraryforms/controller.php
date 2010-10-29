@@ -283,17 +283,21 @@ class libraryforms extends controller {
 
         //insert the data into DB
         $id = $this->dbfeedback->insertmsgRecord($name, $emaill, $msg);
-        // send email alert
-       // $this->sendEmailNotification($message = $name, $email, $msg);
-        $this->objMail->send();
-    }
+        
+	// send email alert
+        $subject="Feed Back";
+
+        $this->sendEmailNotification($subject,
+ 					$message = $name.''. $email.''.$msg);
+           }
+
 
 // end of Submitmsg
 
     public function sendEmailNotification( $subject, $message) {
         $objMail = $this->getObject('email', 'mail');
         //send to multiple addressed   
-        $list = array("pmalinga@uwc.ac.za","afakier@uwc.ac.za", "david.wafula@wits.ac.za");
+        $list = array("pmalinga@uwc.ac.za","afakier@uwc.ac.za", "library@uwc.ac.za");
         $objMail->to = ($list);
         // specify whom the email is coming from
         $objMail->from = "no-reply@uwc.ac.za";

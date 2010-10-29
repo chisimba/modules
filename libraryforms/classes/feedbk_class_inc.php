@@ -152,19 +152,16 @@ class feedbk extends dbTable {
     }
 
     function insertmsgRecord($name, $emaill, $msg) {
-        $id = $this->insert(array('name' => $name, 'emaill' => $emaill, 'msg' => $msg));
+        $id = $this->insert(array('name' => $name, 
+				  'emaill' => $emaill, 
+				  'msg' => $msg));
         return $id;
     }
 
     private function getFormAction() {
-        $action = $this->getParam("action", "addfeedbk");
-
-        if ($action == "addfeedbk") {
-            $formAction = $this->uri(array("action" => "save_fdbk"), "libraryforms");
-        } else {
-            $formAction = $this->uri(array("action" => "update_fdbk"), "libraryforms");
-        }
-        return $formAction;
+            
+     $formAction = $this->uri(array("action" => "save_fdbk"), "libraryforms");
+       return $formAction;
     }
 
     public function show() {
