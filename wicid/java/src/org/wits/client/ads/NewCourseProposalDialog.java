@@ -45,10 +45,11 @@ public class NewCourseProposalDialog {
     private final TextField<String> deptField = new TextField<String>();
     private final TextField<String> telField = new TextField<String>();
     private final TextField<String> numberField = new TextField<String>();
+    private final DateField dateField = new DateField();
     private Button saveButton = new Button("Save");
     private Button browseFacultiesButton = new Button("Browse Faculties");
     private TextArea facultyField = new TextArea();
-    private String newCourseProposalDialogData, dept, title, telephone;
+    private String newCourseProposalDialogData, dept, title, telephone, faculty;
     private TopicListingFrame facultyListingFrame;
     private ModelData selectedFaculty;
     private OverView oldOverView;
@@ -71,7 +72,7 @@ public class NewCourseProposalDialog {
         mainForm.setBodyBorder(false);
         mainForm.setWidth(480);
 
-        final DateField dateField = new DateField();
+
         dateField.setFieldLabel("Entry date");
         /*String date[] = document.getDate().split("/");
         try {
@@ -120,7 +121,7 @@ public class NewCourseProposalDialog {
         BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 150);
         eastData.setSplit(true);
         eastData.setMargins(new Margins(0, 0, 0, 5));
-        facultyField.setName("topic");
+        facultyField.setName("faculty");
         facultyField.setFieldLabel("Faculty");
         facultyField.setReadOnly(true);
 
@@ -178,19 +179,21 @@ public class NewCourseProposalDialog {
                 dept = deptField.getValue();// deptField.getValue().getId();
                 title = titleField.getValue();
 
+
                 try {
                     telephone = telField.getValue().toString();
                 } catch (NullPointerException npe) {
                     MessageBox.info("Missing telephone number", "Provide a telephone number.", null);
                 }
 
-                try {
-                    if (dateField.getDatePicker() != null) {
-                        date = dateField.getDatePicker().getValue();
-                    }
-                } catch (Exception ex) {
-                }
 
+                /*  try {
+                if (dateField.getDatePicker() != null) {
+                date = dateField.getDatePicker().getValue();
+                }
+                } catch (Exception ex) {
+                }*/
+                date = dateField.getValue();
 
                 if (dept == null) {
                     MessageBox.info("Missing department", "Provide originating department", null);
@@ -228,7 +231,7 @@ public class NewCourseProposalDialog {
                         GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
                         + "?module=wicid&action=registerdocument&date=" + fmt.format(date)
                         + "&number=" + number + "&department=" + dept + "&telephone=" + telephone
-                        + "&topic=" + facultyField.getValue() + "&title=" + title + "&group=" + group+"&version="+version;
+                        + "&topic=" + facultyField.getValue() + "&title=" + title + "&group=" + group + "&version=" + version;
 
                 createDocument(url);
                 //select documents panel
@@ -255,6 +258,32 @@ public class NewCourseProposalDialog {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+
+                dept = deptField.getValue();// deptField.getValue().getId();
+                title = titleField.getValue();
+                faculty = facultyField.getValue();
+                telephone = telField.getValue();
+                date = dateField.getValue();
+
+                if (telephone != null && title != null && faculty != null) {
+
+                    String number = "S";
+                    String group = "Draft";
+                    String version = "1";
+
+                    String url =
+                            GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+                            + "?module=wicid&action=registerdocument&date=" + fmt.format(date)
+                            + "&number=" + number + "&department=" + dept + "&telephone=" + telephone
+                            + "&topic=" + faculty + "&title=" + title + "&group=" + group + "&version=" + version;
+
+                    createDocument(url);
+                    //select documents panel
+                    Constants.main.selectDocumentsTab();
+                    // refresh the documentlist panel
+                    String defaultParams = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
+                    Constants.main.getDocumentListPanel().refreshDocumentList(defaultParams);
+                }
             }
         });
 
@@ -318,7 +347,9 @@ public class NewCourseProposalDialog {
 
                     newCourseProposalDialog.setVisible(false);
                     MessageBox.info("Save", "Your course proposal information is saved.\nYou can continue filling the rest of the forms by accessing it from the 'Documents' tab to make any changes", null);
-
+                    telField.setValue(null);
+                    titleField.setValue(null);
+                    facultyField.setValue(null);
                 }
             });
         } catch (Exception e) {
