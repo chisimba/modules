@@ -59,7 +59,7 @@ import org.wits.client.ads.ForwardTo;
  */
 public class EditDocumentDialog {
 
-    private static Dialog editDocumentDialog = new Dialog();
+    private Dialog editDocumentDialog = new Dialog();
     private ModelData selectedFolder;
     private FormPanel mainForm = new FormPanel();
     private FormData formData = new FormData("-20");
@@ -481,10 +481,6 @@ public class EditDocumentDialog {
 
     public void show() {
         editDocumentDialog.show();
-    }
-
-    public static void hide() {
-        editDocumentDialog.hide();
     }
 
     public void setOldOverView(OverView oldOverView) {
