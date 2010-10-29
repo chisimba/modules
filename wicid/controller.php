@@ -413,16 +413,15 @@ class wicid extends controller {
                 $title,
                 $group,
                 $selectedfolder,
-                $mode="default",
-                $approved="N",
-                $status="0",
                 $currentuserid,
                 $version,
-                $ref_version);
+                $ref_version,
+                $mode="apo",
+                $approved="N",
+                $status="0");
     }
 
     function __updatedocument() {
-        $date=$this->getParam('date');
         $number=$this->getParam('number');
         $dept=$this->getParam('dept');
         $title=$this->getParam('title');
@@ -433,7 +432,7 @@ class wicid extends controller {
         $status = $this->getParam('status',"0");
         $currentuserid = $this->getParam('currentuserid');
         $version = $this->getParam('version',"0");
-        $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group,"date_created"=>$date, "topic"=>$selectedfolder, "status"=>$status, "currentuserid"=>$currentuserid, "version" =>$version);
+        $data = array("department"=>$dept, "telephone"=>$telephone,"docname"=>$title, "groupid"=>$group, "topic"=>$selectedfolder, "status"=>$status, "currentuserid"=>$currentuserid, "version" =>$version);
         $this->documents->updateInfo($id, $data);
     }
     
@@ -779,7 +778,8 @@ class wicid extends controller {
     public function __setstatus(){
         $docid = $this->getParam('docid');
         $status= $this->getParam('status');
-        $this->documents->setStatus($docid, $status);
+        $version = $this->getParam('version');
+        $this->documents->setStatus($docid, $status, $version);
     }
 
     public function __addcommentdata(){
@@ -797,8 +797,7 @@ class wicid extends controller {
 
     public function __increaseversion(){
         $docid = $this->getParam('docid');
-        $version = $this->getParam('version');
-        $this->documents->increaseVersion($docid, $version);
+        $this->documents->increaseVersion($docid);
     }
 
     public function __getversion(){
