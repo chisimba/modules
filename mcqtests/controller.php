@@ -174,10 +174,12 @@ class mcqtests extends controller {
                 }
                 $fields['categoryid'] = $this->getParam('categoryid', Null);
                 $fields['name'] = $this->getParam('qnName', Null);
+                $fields['question'] = $this->getParam('qntext', Null);
                 $fields['questiontext'] = $this->getParam('qntext', Null);
                 $fields['mark'] = $this->getParam('qngrade', Null);
                 $fields['penalty'] = $this->getParam('penaltyfactor', Null);
                 $fields['qtype'] = "RSA";
+                $fields['questiontype'] = "RSA";
                 $fields['generalfeedback'] = $this->getParam('genfeedback', Null);
                 $qncount = $this->getParam('qncount', Null);
                 //Insert/Update Question
