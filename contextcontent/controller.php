@@ -1523,27 +1523,6 @@ class contextcontent extends controller {
                     'chapter' => $chapter));
     }
 
-    function showUserActivity() {
-        $startDate = $this->getParam('startdate');
-        $endDate = $this->getParam('enddate');
-        $studentsonly = $this->getParam('studentsonly');
-        $module = $this->getParam('moduleid');
-        $objUserActivity=$this->getObject('dbuseractivity');
-        
-        $groupOps = $this->getObject('groupops', 'groupadmin');
-        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
-        $contextGroupId = $objGroups->getId($this->contextCode . '^Students');
-        $usersInContext = $groupOps->getUsersInGroup($contextGroupId);
-        
-        $data=$objUserActivity->getUserActivityByModule($startDate, $endDate, $module, $studentsonly,$usersInContext,$this->contextCode);
-        $this->setVarByRef("data",$data);
-        $this->setVarbyRef("modulename",$module);
-        return "useractivity_tpl.php";
-    }
-
-    function userActivity() {
-        return "selectdates_tpl.php";
-    }
 
 }
 
