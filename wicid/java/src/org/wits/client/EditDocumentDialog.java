@@ -59,7 +59,7 @@ import org.wits.client.ads.ForwardTo;
  */
 public class EditDocumentDialog {
 
-    private Dialog editDocumentDialog = new Dialog();
+    private static Dialog editDocumentDialog = new Dialog();
     private ModelData selectedFolder;
     private FormPanel mainForm = new FormPanel();
     private FormData formData = new FormData("-20");
@@ -469,24 +469,22 @@ public class EditDocumentDialog {
         String title = titleField.getValue();
         String group = groupField.getValue().toString();
         String topic = topicField.getValue();
-        Date date = new Date();
-        try {
-            if (dateField.getDatePicker() != null) {
-                date = dateField.getDatePicker().getValue();
-            }
-        } catch (Exception ex) {
-        }
+       
 
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?"
                 + "module=wicid&action=updatedocument&dept=" + dept + "&topic=" + topic
-                + "&title=" + title + "&tel=" + tel + "&group=" + group + "&date="
-                + fmt.format(date) + "&docid=" + document.getId();
+                + "&title=" + title + "&tel=" + tel + "&group=" + group
+                + "&docid=" + document.getId();
 
         return url;
     }
 
     public void show() {
         editDocumentDialog.show();
+    }
+
+    public static void hide() {
+        editDocumentDialog.hide();
     }
 
     public void setOldOverView(OverView oldOverView) {
