@@ -87,7 +87,7 @@ public class DocumentListPanel extends LayoutContainer {
     private Main main;
     private String defaultParams = "", statusS;
     private int status;
-    static int version;
+    static int versionV;
     private SimpleComboBox<String> submitCombo = new SimpleComboBox<String>();
     private String mode = Constants.main.getMode();
     private boolean editing;
@@ -306,9 +306,8 @@ public class DocumentListPanel extends LayoutContainer {
 
     public static int getVersion() {
 
-
         String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=getversion&docids=" + Constants.docid;
+                + "?module=wicid&action=getversion&docid=" + Constants.docid;
         RequestBuilder builder =
                 new RequestBuilder(RequestBuilder.GET, url);
 
@@ -321,8 +320,7 @@ public class DocumentListPanel extends LayoutContainer {
 
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
-                        System.out.println(response.getText());
-                        // version = Integer.parseInt(response.getText());
+                        versionV = Integer.parseInt(response.getText());
                     } else {
                         MessageBox.info("Error", "Error occured on the server. Cannot get version", null);
                     }
@@ -332,7 +330,7 @@ public class DocumentListPanel extends LayoutContainer {
             MessageBox.info("Fatal Error", "Fatal Error: cannot reject document", null);
         }
 
-        return version;
+        return versionV;
     }
 
     private void submitDocument() {
@@ -399,6 +397,9 @@ public class DocumentListPanel extends LayoutContainer {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                increaseVersion();
+
+                int version = getVersion();
 
                 statusS = submitCombo.getValue().getValue();
                 if (statusS.equalsIgnoreCase("creator")) {
@@ -425,7 +426,7 @@ public class DocumentListPanel extends LayoutContainer {
                 if (status > -1) {
                     String url =
                             GWT.getHostPageBaseURL()
-                            + Constants.MAIN_URL_PATTERN + "?module=wicid&action=setstatus&docid=" + id + "&status=" + status;
+                            + Constants.MAIN_URL_PATTERN + "?module=wicid&action=setstatus&docid=" + id + "&status=" + status + "&version=" + version;
                     RequestBuilder builder =
                             new RequestBuilder(RequestBuilder.GET, url);
 
@@ -439,8 +440,8 @@ public class DocumentListPanel extends LayoutContainer {
                             public void onResponseReceived(Request request, Response response) {
                                 if (200 == response.getStatusCode()) {
                                     MessageBox.info("Done", "The document has been submitted to " + statusS, null);
-                                    org.wits.client.ads.ForwardTo.increaseVersion();
-                                    refreshDocumentList(defaultParams);
+                                    String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
+                                    Constants.main.getDocumentListPanel().refreshDocumentList(params);
                                 } else {
                                     MessageBox.info("Error", "Error occured on the server. Cannot set status", null);
                                 }
@@ -452,6 +453,8 @@ public class DocumentListPanel extends LayoutContainer {
                 } else {
                     MessageBox.info("Error", "Pleave select a party to submit to.", null);
                 }
+
+
             }
         });
 
@@ -465,6 +468,28 @@ public class DocumentListPanel extends LayoutContainer {
 
         submitDialog.add(submitForm);
         submitDialog.show();
+    }
+
+    public void increaseVersion() {
+
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=increaseversion&docid=" + Constants.docid);
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot get latest version", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    String newVersion = response.getText();
+                    MessageBox.info("Done", "The version for the document has been changed to "+newVersion, null);
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot get version", null);
+        }
     }
 
     public void stopEditing() {
