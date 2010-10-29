@@ -108,7 +108,6 @@ public class ForwardTo {
                 changeCurrentUser();               
 
                 forwardToDialog.hide();
-                EditDocumentDialog.hide();
                 String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
                 Constants.main.getDocumentListPanel().refreshDocumentList(params);
             }
