@@ -197,9 +197,7 @@ class bookthesis extends dbTable {
             ("mod_libraryforms_commentseries","libraryforms"),"series");
         $table->addCell($serieslLabel->show(), '', 'center', 'left', '');
         $table->addCell($objseries->show(), '', 'center', 'left', '');
-         $objForm->addRule('series',$this->objLanguage->languageText("mod_series_required", "libraryforms"),'required');
-        $table->endRow();
-        
+                 
         //create an istance for the photocopy
        
         $table->startRow();
@@ -444,63 +442,13 @@ class bookthesis extends dbTable {
     }
 
 
-    function UpdateRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname, $baddress, $bbcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
-        $id = $this->update(array(
-            //'userid' => $userid,
-            'bprint' => $bprint,
-            'bauthor' => $bauthor,
-            'btitle' => $btitle,
-            'bplace' => $bplace,
-            'bpublisher' => $bpublisher,
-            'bdate' =>$bdate,
-            'bedition' => $bedition,
-            'bisbn' => $bisbn,
-            'bseries' => $bseries,
-            'bcopy' => $bcopy,
-            'btitlepages' => $btitlepages,
-            'bpages' => $bpages,
-            'bthesis' => $bthesis,
-            'bname' => $bname,
-            'baddress' => $baddress,
-            'bcell' => $bcell,
-            'bfax' => $bfax,
-            'btel' => $btel,
-            'btelw' => $btelw,
-            'bemailaddress' => $bemailaddress,
-            'bentitynum' => $bentitynum,
-            'bstudentno' => $bstudentno,
-            'bcourse' => $bcourse,
-
-        ));
-        return $id;
-    }
-
-public function listAll($userId) {
-        $userrec = $this->getAll("WHERE userid = '$userId'");
-        return $userrec;
-    }
-    /**
-     * Return a single record in the tbl_phonebook.
-     *
-     * @param $id is the id taken from the tbl_phonebook
-     */
-    public function listSingle($id) {
-        $onerec = $this->getRow('id', $id);
-        return $onerec;
-    }
-
-    private function getFormAction() {
-
-        $action = $this->getParam("action", "addthesis");
-        if ($action == "addthesis") {
+    private function getFormAction() 
+        {
             $formAction = $this->uri(array("action" => "save_book"), "libraryforms");
-        } else {
-            $formAction = $this->uri(array("action" => "update_book"), "libraryforms");
-        }
+       
         return $formAction;
-
-
     }
+
     public function show() {
         return $this->buildForm();
 

@@ -356,39 +356,9 @@ class ILLperiodical extends dbTable {
         return $id;
     }
 
-    function updateRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
-        $id = $this->update(array(
-   
-           'titleperiodical' => $titleperiodical,
-            'volume' => $volume,
-            'part' => $part,
-            'year' => $year,
-            'pages' => $pages,
-            'author' =>$author,
-            'titlearticle' => $titlearticle,
-            'prof' => $prof,
-            'address' => $address,
-            'fax' => $fax,
-            'tell' => $tell,
-            'tellw' => $tellw,
-            'emailaddress' => $emailaddress,
-            'entitynum' => $entitynum,
-            'studentno' => $studentno,
-            'course' => $course,
-           
-        ));
-        return $id;
-    }
-
-    private function getFormAction() {
-
-        $action = $this->getParam("action", "addperiodical");
-        if ($action == "addperiodical") {
-            $formAction = $this->uri(array("action" => "save_periodical"), "libraryforms");
-        } else {
-            $formAction = $this->uri(array("action" => "update_periodical"), "libraryforms");
-        }
-        return $formAction;
+private function getFormAction() {
+        $formAction = $this->uri(array("action" => "save_periodical"), "libraryforms");
+         return $formAction;
 
 
     }

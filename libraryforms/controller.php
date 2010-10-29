@@ -259,11 +259,11 @@ class libraryforms extends controller {
     public function submitmsg() {
 
         if (!$_POST) { // Check that user has submitted a page
-            return $this->nextAction(NULL);
+           return $this->nextAction(NULL);
         }
         //get parametters
         $name = $this->getParam('name');
-        $emaill = $this->getParam('emaill');
+        $emaill = $this->getParam('email');
         $msg = $this->getParam('msg');
         $captcha = $this->getParam('feedback_captcha');
 
@@ -282,7 +282,7 @@ class libraryforms extends controller {
         }
 
         //insert the data into DB
-        $id = $this->dbfeedback->insertmsgRecord($name, $emaill, $msg);
+        $id = $this->dbfeedback->insertmsgRecord($name, $email, $msg);
         
 	// send email alert
         $subject="Feed Back";

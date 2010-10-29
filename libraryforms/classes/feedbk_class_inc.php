@@ -151,9 +151,9 @@ class feedbk extends dbTable {
         return $objForm->show();
     }
 
-    function insertmsgRecord($name, $emaill, $msg) {
+    function insertmsgRecord($name, $email, $msg) {
         $id = $this->insert(array('name' => $name, 
-				  'emaill' => $emaill, 
+				  'email' => $email, 
 				  'msg' => $msg));
         return $id;
     }
