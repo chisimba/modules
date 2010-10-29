@@ -309,12 +309,13 @@ class dbdocuments extends dbtable {
     }
 
     function updateInfo($id, $data) {
-        $this->update("id", $id, $data);
+        $version = getVersion($id);
+        $this->update("id", $id, "version", $version, $data);
     }
 
     function changeCurrentUser($userid, $docid, $version) {
         $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid' and version = '$version'";
-        $this->sendEmailAlert($userid);
+       // $this->sendEmailAlert($userid);
         return $this->getArray($sql);
     }
 
