@@ -182,7 +182,6 @@ class numerical_question extends object {
         $objRadio = new radio('onlyunitmarked');
         $objRadio->setBreakSpace('&nbsp;&nbsp;');
         $objRadio->addOption('onlynumunitmarked', $onlyNumericalAnswerLabel);
-        //$objRadio->setSelected('onlynumunitmarked');
         $objAnswerTable->startRow("showBorder");
         $objAnswerTable->addCell($unitNotMarkedLabel, '30%');
         $objAnswerTable->addCell($objRadio->show(), '70%');
@@ -192,7 +191,7 @@ class numerical_question extends object {
         $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
         $objRadio->addOption('yes', $lbYes);
         $objRadio->addOption('no', $lbNo);
-        //$objRadio->setSelected('no');
+        $objRadio->setSelected('no');
         $objAnswerTable->startRow();
         $objAnswerTable->addCell($dispUnit, '30%', $valign = "top", $align = null, $class = null, $attrib = Null, $border = '1');
         $objAnswerTable->addCell($objRadio->show(), '70%');
