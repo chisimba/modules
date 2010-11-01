@@ -260,7 +260,7 @@ class question_calculated_formmanager extends object {
         $objForm->addToForm($objAnswerFieldset);
         $objForm->addToForm("<br />" . $btnSave . " " . $btnCancel . "<br />");
         $objForm->addRule('qName', $qNameMsg, 'required');
-        $objForm->addRule('qText', $qTextMsg, 'required');
+        //$objForm->addRule('qText', $qTextMsg, 'required');
         $objForm->addRule('qMark', $qMarkMsg, 'required');
         $objForm->addRule('qPenalty', $qPenaltyMsg, 'required');
 
