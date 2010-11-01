@@ -385,8 +385,7 @@ class mcqtests extends controller {
                     }
                     if ($qType == 'tf') {
                         return $this->nextAction('addanswers', array(
-                            'questionId
-                                ' => $qId,
+                            'questionId' => $qId,
                             'testId' => $id,
                             'count' => $this->getParam('qOrder'),
                             'qNum' => 2,
@@ -425,7 +424,7 @@ class mcqtests extends controller {
 
             case 'savestep':
                 $currentstep = $this->getParam('currentstep');
-                
+
                 switch ($currentstep) {
                     case '1':
                         $this->setVar('mode', 'edit');
@@ -502,7 +501,7 @@ class mcqtests extends controller {
                         $fields['comLab'] = $this->getParam('comLab');
                         $fields['coursePermissions'] = $step_data1['coursePermissions'];
                         //saving the step data
-                        
+
                         $id = $this->StepAddTest($fields);
                         return $this->nextAction('view', array('id' => $id));
                         break;
@@ -1169,8 +1168,7 @@ class mcqtests extends controller {
                 }
             }
         }
-        $filter = "testid='".$this->getParam('id')."'";
-        $questions = $this->dbQuestions->getQuestions($filter);
+        $questions = $this->dbQuestions->getQuestions($this->getParam('id'));
         $this->setVarByRef('data', $data[0]);
         $this->setVarByRef('questions', $questions);
         $this->setVarByRef('qNum', $this->getParam('qNum'));
@@ -1197,8 +1195,7 @@ class mcqtests extends controller {
                 }
             }
         }
-        $filter = "testid='".$this->getParam('id')."'";
-        $questions = $this->dbQuestions->getQuestions($filter);
+        $questions = $this->dbQuestions->getQuestions($this->getParam('id'));
         $this->setVarByRef('data', $data[0]);
         $this->setVarByRef('questions', $questions);
         $this->setVarByRef('qNum', $this->getParam('qNum'));
