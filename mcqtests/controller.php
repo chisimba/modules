@@ -385,7 +385,8 @@ class mcqtests extends controller {
                     }
                     if ($qType == 'tf') {
                         return $this->nextAction('addanswers', array(
-                            'questionId' => $qId,
+                            'questionId
+                                ' => $qId,
                             'testId' => $id,
                             'count' => $this->getParam('qOrder'),
                             'qNum' => 2,
@@ -1168,7 +1169,7 @@ class mcqtests extends controller {
                 }
             }
         }
-        $filter = "id='".$this->getParam('id')."'";
+        $filter = "testid='".$this->getParam('id')."'";
         $questions = $this->dbQuestions->getQuestions($filter);
         $this->setVarByRef('data', $data[0]);
         $this->setVarByRef('questions', $questions);
@@ -1196,7 +1197,7 @@ class mcqtests extends controller {
                 }
             }
         }
-        $filter = "id='".$this->getParam('id')."'";
+        $filter = "testid='".$this->getParam('id')."'";
         $questions = $this->dbQuestions->getQuestions($filter);
         $this->setVarByRef('data', $data[0]);
         $this->setVarByRef('questions', $questions);
