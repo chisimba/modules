@@ -424,7 +424,7 @@ class mcqtests extends controller {
 
             case 'savestep':
                 $currentstep = $this->getParam('currentstep');
-
+                
                 switch ($currentstep) {
                     case '1':
                         $this->setVar('mode', 'edit');
@@ -501,7 +501,7 @@ class mcqtests extends controller {
                         $fields['comLab'] = $this->getParam('comLab');
                         $fields['coursePermissions'] = $step_data1['coursePermissions'];
                         //saving the step data
-
+                        
                         $id = $this->StepAddTest($fields);
                         return $this->nextAction('view', array('id' => $id));
                         break;
@@ -1168,7 +1168,8 @@ class mcqtests extends controller {
                 }
             }
         }
-        $questions = $this->dbQuestions->getQuestions($this->getParam('id'));
+        $filter = "id='".$this->getParam('id')."'";
+        $questions = $this->dbQuestions->getQuestions($filter);
         $this->setVarByRef('data', $data[0]);
         $this->setVarByRef('questions', $questions);
         $this->setVarByRef('qNum', $this->getParam('qNum'));
