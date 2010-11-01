@@ -123,15 +123,14 @@ class sasicontext extends controller {
             case 'adddata' :
                 $faculty = $this->getParam('faculty');
                 $department =  $this->getParam('dept');
-                $sasiCode =  $this->getParam('subjcode');
+                $sasiCode =  $this->getParam('mod');
                 $this->objSasicontext->addData($this->contextCode, $faculty, $department, $sasiCode);
                 if($this->objSasicontext->addData($this->contextCode, $faculty, $department, $sasiCode)) {
-                    echo '<h1>'.$this->objLanguage->code2Txt("mod_sasicontext_success", "sasicontext").'</h1>';
+                    return $this->nextAction( 'controlpanel', array(NULL), 'context');
                 }
                 else {
-                    echo '<center><h1>'.$this->objLanguage->code2Txt("mod_sasicontext_success", "sasicontext").'</h1></center>';
+                    return $this->nextAction( 'controlpanel', array(NULL), 'context');
                 }
-                //$this->nextAction('context', array ('action' => 'controlpanel'));
                 exit(0);
                 break;
             case 'synchronize':

@@ -176,7 +176,7 @@ class dbsasicontext extends dbtable {
 
 
     /**
-     * deletea sasi - context record
+     * delete a sasi - context record
      * @param <type> $id
      * @return <type>
      */

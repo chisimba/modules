@@ -166,6 +166,12 @@ class sasiwebserver extends object {
         return false;
     }
 
+    /*
+     * Method that get the faculty name
+     *
+     * @param string $faculty
+     * @return string facultyname
+     */
     public function getFacultyName($faculty) {
 
         //GET faculty title
@@ -175,6 +181,13 @@ class sasiwebserver extends object {
 
     }
 
+    /*
+     * Method that get the department name
+     *
+     * @param string $faculty
+     * @param string $department
+     * @return string departmentname
+     */
     public function getDeptName($faculty, $department) {
 
         //GET department title
@@ -184,6 +197,13 @@ class sasiwebserver extends object {
 
     }
 
+    /*
+     * Method that get the department name
+     *
+     * @param string $faculty
+     * @param string $department
+     * @return string departmentname
+     */
     public function getSubjectName($subject) {
 
         //GET subject title
@@ -204,6 +224,7 @@ class sasiwebserver extends object {
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
+        $starturi = $this->uri(array('action'=>'showfac'), 'sasicontext');
         if($data == 'faculty') {
             $simpledata = $this->getFaculties();
             $arr = '<h2>'.$this->objLanguage->code2Txt("mod_sasicontext_selectfaculty", "sasicontext").':</h2>';
@@ -214,11 +235,7 @@ class sasiwebserver extends object {
             foreach($simpledata as $smdata) {
                 $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
             }
-
-            $link = 'Start';
-
-            $str = $link;
-            return $str.$arr.$dropdown->show();
+            return $arr.$dropdown->show();
         }
 
         if($data == 'dept') {
@@ -233,9 +250,10 @@ class sasiwebserver extends object {
                 $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
             }
 
-            $link = new link ('#');
+            $link = new link ("#");
             $link->link = 'Start Over';
             $link->rel = 'facebox';
+            $link->href = 'javascript:loadData(\''.$starturi.'\')';
 
             $link2 = $this->getFacultyName($fac);
 
@@ -254,23 +272,33 @@ class sasiwebserver extends object {
                 $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
             }
             $objButton = new button('select', 'Done');
-            $objButton->extra = ' onclick="javascript:
-			var str = document.getElementById(\'input_mod\').value;
-			loadData(\''.$this->uri(array('action' => 'adddata', 'dept' => $dept, 'faculty' => $faculty)).'&subjcode='.'\'+str);
-			"';
-            $link = new link ('#');
+            //$objButton->extra = ' onclick="javascript:
+	//		var str = document.getElementById(\'input_mod\').value;
+	//		addData(\''.$this->uri(array('action' => 'adddata', 'dept' => $dept, 'faculty' => $faculty)).'&subjcode='.'\'+str);
+	//		"';
+            $objButton->setToSubmit();
+            $link = new link ('javascript:loadData(\''.$starturi.'\')');
             $link->link = 'Start Over';
             $link->rel = 'facebox';
 
             $link2 = new link ('#');
             $link2->link = $this->getFacultyName($faculty);
+            $facuri = $this->uri(array('action' => 'showfac',  'get' => 'dept', 'data' => $faculty));
+            $link2->href = 'javascript: loadData(\''.$facuri.'\')';
             $link2->rel = 'facebox';
 
             $link3 = $this->getDeptName($faculty, $dept);
             
-
             $str = $link->show().'  >>  '.$link2->show().'  >>  '.$link3;
-            return $str.$arr.$dropdown->show().'<br/>'.$objButton->show();
+            $this->loadClass('form', 'htmlelements');
+            $submitform = new form('linkcourse', $this->uri(array('action' => 'adddata', 'dept' => $dept, 'faculty' => $faculty), 'sasicontext'));
+            $submitform->addToForm($str);
+            $submitform->addToForm($arr);
+            $submitform->addToForm($dropdown->show());
+            $submitform->addToForm('<br/>');
+            $submitform->addToForm($objButton->show());
+            
+            return $submitform->show();
         }
     }
 }

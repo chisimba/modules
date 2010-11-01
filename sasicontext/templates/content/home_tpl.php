@@ -32,17 +32,16 @@ if ($addedArray['site'] != NULL and $addedArray['context'] != NULL and $addedArr
     $objTable->endRow();
 }
 
-//Role Selection
-$rad = new radio('role');
-$rad->addOption('guest', 'Guest');
-$rad->addOption('student', 'Student');
-$rad->addOption('lecturer', 'Lecturer');
-$rad->setSelected('student');
-$rad->breakSpace = '&nbsp;';
+// Get Context Details
+$contextDetails = $this->dbSasicontext->getSasicontextByField('contextcode', $this->contextCode);
+
+//Course extended information
+$str = '<p><strong>'.ucwords($this->objLanguage->code2Txt('mod_sasicontext_faculty', 'sasicontext')).'</strong>: '.$contextDetails['facultytitle'].'</p>';
+$str .= '<p><strong>'.ucwords($this->objLanguage->code2Txt('mod_sasicontext_department', 'sasicontext')).'</strong>: '.$contextDetails['departmenttitle'].'</p>';
+$str .= '<p><strong>'.ucwords($this->objLanguage->code2Txt('mod_sasicontext_subject', 'sasicontext')).'</strong>: '.$contextDetails['subjecttitle'].'</p>';
 
 $objTable->startRow();
-$objTable->addCell('Add User to Role?');
-$objTable->addCell($rad->showNormal());
+$objTable->addCell($str);
 $objTable->endRow();
 
 //Remove user selection
@@ -54,14 +53,14 @@ $rad->breakSpace = '&nbsp;';
 
 $objTable->startRow();
 $objTable->addCell('Remove users that are not on the Class list?');
-$objTable->addCell($rad->showNormal());
+$objTable->addCell('<p>'.$rad->show().'</p>');
 $objTable->endRow();
 
 $button = new button('synchronize', 'Synchronize Users');
 $button->setToSubmit();
 
 $objTable->startRow();
-$objTable->addCell($button->show());
+$objTable->addCell('<p>'.$button->show().'</p>');
 $objTable->endRow();
 
 $fieldset = new fieldset();
@@ -73,5 +72,5 @@ $form->addToForm($fieldset->show());
 
 $tab->tabId = TRUE;
 $tab->addTab(array('name'=> 'Synchronize Users','content' => $form->show()));
-echo  '<br/><center>'.$tab->show().'</center>';
+echo  '<br/><center><p>'.$tab->show().'</p></center>';
 ?>

@@ -6,6 +6,7 @@
             })
         })
     }
+
 </script>
 <?php
 $this->setVar('pageSuppressBanner', TRUE);

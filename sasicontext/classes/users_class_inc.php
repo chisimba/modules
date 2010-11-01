@@ -25,8 +25,6 @@
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link      http://avoir.uwc.ac.za
  */
-//$this->loadClass ( "abauth", "security" );
-//$this->loadClass ( "ifauth", "security" );
 
 class users extends object {// extends abauth implements ifauth {
 
