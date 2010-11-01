@@ -62,10 +62,13 @@ class dbquestions extends dbtable {
      * @param string $filter An additional filter on the select statement.
      * @return array $data The list of questions.
      */
-    public function getQuestions($filter = NULL) {
+    public function getQuestions($testId, $filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter) {
-            $sql.= " WHERE ". $filter;
+            $sql.= " WHERE testid='$testId' AND $filter";
+        }
+        else {
+            $sql.=" WHERE testid='$testId' ORDER BY questionorder";
         }
         $data = $this->getArray($sql);
         if (!empty($data)) {
