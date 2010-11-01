@@ -33,22 +33,11 @@ class dbnumericaloptions extends dbtable {
 
     public function addNumericalOptions($id, $data) {
         //insert into this table
-        $answers = $data['answer'];
-        $answerData = array();
-        $count = 1;
-        foreach($answers as $row) {
-            $mark = 'mark'.$count;
-            $answerData['answer'] = $row;
-            $answerData['questionid'] = $id;
-            $answerData['mark'] = $data['mark'][$mark];
-            $count++;
-            $this->insert($answerData);
-        }
+        return $this->insert($data);
     }
 
     public function updateNumericalQuestions($id, $data) {
-        $this->delete("questionid", $id);
-        $this->addNumericalOptions($id, $data);
+        $this->update('questionid', $id, $data);
     }
 
     public function deleteNumericalOptions($id) {
