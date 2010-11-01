@@ -99,6 +99,7 @@ class mcqtests extends controller {
         $this->objMultiAnswers = $this->newObject('dbquestion_multianswers');
         $this->objQuestionNumerical = $this->newObject('dbquestion_numerical');
         $this->objNumericalUnit = $this->newObject('dbnumericalunits');
+        $this->objNumericalOptions = $this->newObject('dbnumericalunitsoptions');
 
         // context
         $this->objContext = $this->newObject('dbcontext', 'context');
@@ -947,12 +948,15 @@ class mcqtests extends controller {
                     }
                     $questionId = $this->addGeneralFormQuestions($qtype, $edit);
                     $this->addNumericalQuestions($questionId, $edit);
+                    $this->addNumericalOptions($questionId, $edit);
                 } else {
                     $id = $this->addGeneralFormQuestions($qtype);
                     $this->addNumericalQuestions($id);
+                    $this->addNumericalOptions($id);
                 }
                 $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
                 return $this->nextAction('view2', array('id' => $this->getParam('id')));
+                break;
             case 'viewmatchingquestions':
                 return $this->viewMatchingQuestions();
             case 'viewnumericalquestions':
@@ -2050,12 +2054,7 @@ class mcqtests extends controller {
 
     public function addNumericalQuestions($questionid, $edit=false) {
         $numericalQuestionData = array();
-        // get info for unit marked
-        if (strlen($this->getParam('unitmarked')) > 0) {
-            $unitmarked = 'yes';
-        } else if ($this->getParam('dispUnit')) {
-            $dispUnit = 'yes';
-        }
+        
         $numericalQuestionData['answer'] = array('a1' => $this->getParam('aNumerical1'), 'a2' => $this->getParam('aNumerical2'), 'a3' => $this->getParam('aNumerical3'));
         $numericalQuestionData['mark'] = array('mark1' => $this->getParam('mark_1'), 'mark2' => $this->getParam('mark_2'), 'mark3' => $this->getParam('mark_3'));
         if ($edit) {
@@ -2070,6 +2069,30 @@ class mcqtests extends controller {
             $this->objNumericalUnit->updateNumericalUnits($questionid, $unitData);
         } else {
             $this->objNumericalUnit->addNumericalUnits($unitData);
+        }
+    }
+
+    public function addNumericalOptions($questionid, $edit=false) {
+        $optionsData = array();
+        // get info for unit marked
+        if (strlen($this->getParam('unitmarked')) > 0) {
+            $unitmarked = 'yes';
+        }
+        else {
+            $unitmarked = 'no';
+        }
+
+        $optionsData['questionid'] = $questionid;
+        $optionsData['unitgradingtype'] = $unitmarked;
+        $optionsData['showunits'] = $this->getParam('dispUnit');
+        $optionsData['instructions'] = $this->getParam('instructions');
+        $optionsData['unitpenalty'] = $this->getParam('penaltyUnit');print_r($optionsData);
+        
+        if($edit) {
+            $this->objNumericalOptions->updateNumericalOptions($questionid, $optionsData);
+        }
+        else {
+            $id = $this->objNumericalOptions->addNumericalOptions($optionsData);
         }
     }
 
