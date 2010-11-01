@@ -43,7 +43,7 @@ class numerical_question extends object {
         $objForm->addToForm($units);
         $objForm->addToForm("<br /><br />" . $btnSave . " " . $btnCancel . "<br /><br />");
         $objForm->addRule('qName', $qNameMsg, 'required');
-        $objForm->addRule('qText', $qTextMsg, 'required');
+        //$objForm->addRule('qText', $qTextMsg, 'required');
         $objForm->addRule('qMark', $qMarkMsg, 'required');
         $objForm->addRule('qPenalty', $qPenaltyMsg, 'required');
 
