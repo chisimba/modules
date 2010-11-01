@@ -1196,7 +1196,8 @@ class mcqtests extends controller {
                 }
             }
         }
-        $questions = $this->dbQuestions->getQuestions($this->getParam('id'));
+        $filter = "id='".$this->getParam('id')."'";
+        $questions = $this->dbQuestions->getQuestions($filter);
         $this->setVarByRef('data', $data[0]);
         $this->setVarByRef('questions', $questions);
         $this->setVarByRef('qNum', $this->getParam('qNum'));
