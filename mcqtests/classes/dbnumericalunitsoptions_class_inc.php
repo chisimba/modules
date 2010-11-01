@@ -17,7 +17,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @package mcqtests
  * @version 1.202
  */
-class dbnumericaloptions extends dbtable {
+class dbnumericalunitsoptions extends dbtable {
     /**
      * Method to construct the class and initialise the table.
      *
@@ -31,7 +31,7 @@ class dbnumericaloptions extends dbtable {
         $this->table = 'tbl_test_question_numericaloptions';
     }
 
-    public function addNumericalOptions($id, $data) {
+    public function addNumericalOptions($data) {
         //insert into this table
         return $this->insert($data);
     }
