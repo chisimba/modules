@@ -46,10 +46,6 @@ class feedbk extends dbTable {
         //Load the button object
         $this->loadClass('button', 'htmlelements');
 
-
-
-
-
         $strjs = '<script type="text/javascript">
 		//<![CDATA[
 
@@ -98,23 +94,29 @@ class feedbk extends dbTable {
         $this->loadClass('htmlheading', 'htmlelements');
         $fdbkHeading = new htmlheading();
         $fdbkHeading->type = 2;
-        $fdbkHeading->str = $this->objLanguage->languageText("mod_libraryforms_commenttitlefeedback", "libraryforms", "fdbk");
+        $fdbkHeading->str = $this->objLanguage->languageText
+						("mod_libraryforms_commenttitlefeedback", "libraryforms", "fdbk");
         $objForm->addToForm($fdbkHeading->show() . "<br/>");
+
 
         //Create a new textinput for the name
         $objname = new textinput('feedback_name');
-        $nameLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentnamefeedbk", "libraryforms"), "name");
+        $nameLabel = new label($this->objLanguage->languageText
+						("mod_libraryforms_commentnamefeedbk", "libraryforms"), "name");
         $objForm->addToForm($nameLabel->show() . "<br />");
         $objForm->addToForm($objname->show() . "<br />" . "<br />");
-        $objForm->addRule('feedback_name', $this->objLanguage->languageText("mod_libraryforms_commentnamerequired", "libraryforms", ''), 'required');
+        $objForm->addRule('feedback_name', $this->objLanguage->languageText
+						("mod_libraryforms_commentnamerequired", "libraryforms", ''), 'required');
 
 
         //Create a new textinput for the email
         $objemail = new textinput('fbkemail');
-        $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentemail", "libraryforms"), "fbkemail");
+        $emailLabel = new label($this->objLanguage->languageText
+						("mod_libraryforms_commentemail", "libraryforms"), "fbkemail");
         $objForm->addToForm($emailLabel->show() . "<br />");
         $objForm->addToForm($objemail->show() . "<br />" . "<br />");
         $objForm->addRule('fbkemail', 'Not a valid Email', 'email');
+
 
         //----------TEXTAREA--------------
         //Create a new textarea for the comment message
@@ -126,18 +128,8 @@ class feedbk extends dbTable {
         $objForm->addRule('msgbox', $this->objLanguage->languageText
                         ("mod_libraryform_commentmessage", "libraryforms", ''), 'required');
 
-        $objCaptcha = $this->getObject('captcha', 'utilities');
-        $captcha = new textinput('feedback_captcha');
-        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_feedback_captcha');
 
-        $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . '<br /><div id="feedbackcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() . $required . '  <a href="javascript:feedbackredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
-
-        $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
-        $objForm->addRule('feedback_captcha', $this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'), 'required');
-
-
-
-        //----------SUBMIT BUTTON--------------
+      //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
         // Set the button type to submit
@@ -146,7 +138,20 @@ class feedbk extends dbTable {
         // with the word save
 
         $objButton->setValue('' . $this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms") . ' ');
-        $objForm->addToForm($objButton->show());
+      
+
+
+
+        $objCaptcha = $this->getObject('captcha', 'utilities');
+        $captcha = new textinput('feedback_captcha');
+        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_feedback_captcha');
+
+        $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . '<br /><div id="feedbackcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() . $required . '  <a href="javascript:feedbackredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
+
+        $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
+        $objForm->addRule('feedback_captcha', $this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'), 'required');
+  $objForm->addToForm($objButton->show());
+   
 
         return $objForm->show();
     }

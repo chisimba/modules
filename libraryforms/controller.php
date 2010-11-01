@@ -69,14 +69,16 @@ class libraryforms extends controller {
                 return 'confirm_tpl.php';
           
             case 'save_book':
+		$this->saveBookthesisRecord();
                 return 'confirm_tpl.php';
           
 
             case 'save_periodical':
+                $this->saveperiodicalRecord();
                 return 'confirm_tpl.php';
        
             case 'save_fdbk':
-
+                   $this->submitmsg();
                 return 'fdbkconfirm_tpl.php';
             
             case 'Back to Forms':
@@ -115,7 +117,6 @@ class libraryforms extends controller {
         $course = $this->getParam('course');
         $department = $this->getParam('department');
         $supervisor = $this->getParam('supervisor');
-       // $this->objConfirm = $this->getObject('confirm', 'libraryforms');
         $captcha = $this->getParam('editformrequest_captcha');
 
         // Check whether user matched captcha
@@ -147,10 +148,7 @@ class libraryforms extends controller {
 // end of Save Records */
 
     function saveBookthesisRecord() {
-        if (!$_POST) { // Check that user has submitted a page
-            return $this->nextAction(NULL);
-        }
-
+        
         $bprint = $this->getParam('print');
         $bauthor = $this->getParam('author');
         $btitle = $this->getParam('title');
@@ -178,17 +176,15 @@ class libraryforms extends controller {
 
         // Check whether user matched captcha
         if (md5(strtoupper($captcha)) != $this->getParam('thesis_captcha') || empty($captcha)) {
-            $msg = 'badcaptcha';
+            $msg[] = 'badcaptcha';
         }
         //if form entry is in corect or invavalid
         if (count($msg) > 0) {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
-        } else {
-            return $this->nextAction('addthesis', array('save_book' => '2a'));
-            return $this->objConfirm->addthesisDetails();
-        }
+                }
+
         //insert into DB
         $id = $this->dbAddBookthesis->insertBookthesisRecord($bprint, $bauthor, $btitle, $bplace, $bpublisher, $bdate,
                         $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bpages, $bthesis,
@@ -207,10 +203,7 @@ class libraryforms extends controller {
 // end of bookthesisrecord
 
     public function saveperiodicalRecord() {
-        if (!$_POST) { // Check that user has submitted a page
-            return $this->nextAction(NULL);
-        }
-
+       
         $titleperiodical = $this->getParam('print');
         $volume = $this->getParam('author');
         $part = $this->getParam('title');
@@ -238,29 +231,24 @@ class libraryforms extends controller {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
-        } else {
-            return $this->nextAction('addperiodical', array('save_periodical' => '2a'));
-            return $this->objConfirm->addperiodDetails();
-        }
+         }
 
         //insert the data into DB
-        $id = $this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell, $tell, $tellw,
-                        $emailaddress, $entitynum, $studentno, $course);
+        $id = $this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages,
+		 					$author, $titlearticle, $prof, $address, $cell, $tell,
+ 							$tellw,$emailaddress, $entitynum, $studentno, $course);
 
         $subject="Periodical Book Record";
-        $this->sendEmailNotification($subject,
-                $message = $titleperiodical . '' . $volume . '' . $part . '' . $year . '' . $pages . '' .
-                $author . '' . $titlearticle . '' . $prof . '' . $address . '' . $cell . '' . $tell . '' .
-                $tellw . '' . $emailaddress . '' . $entitynum . '' . $studentno . '' . $course);
+        $this->sendEmailNotification($subject, 
+                $message = $titleperiodical . ' ' . $volume . ' ' . $part . ' ' . $year . ' ' . $pages . '' .
+                $author . ' ' . $titlearticle . ' ' . $prof . ' ' . $address . ' ' . $cell . ' ' . $tell . ' ' .
+                $tellw . ' ' . $emailaddress . ' ' . $entitynum . ' ' . $studentno . ' ' . $course);
     }
 
 //  end saveperiodicalRecord
 
     public function submitmsg() {
 
-        if (!$_POST) { // Check that user has submitted a page
-           return $this->nextAction(NULL);
-        }
         //get parametters
         $name = $this->getParam('name');
         $emaill = $this->getParam('email');
@@ -268,7 +256,7 @@ class libraryforms extends controller {
         $captcha = $this->getParam('feedback_captcha');
 
         if (md5(strtoupper($captcha)) != $this->getParam('feedback_captcha') || empty($captcha)) {
-            $msg = 'badcaptcha';
+            $msg[] = 'badcaptcha';
         }
 
         //if form entry is in corect or invavalid
@@ -276,9 +264,7 @@ class libraryforms extends controller {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
-        } else {
-            return $this->nextAction('addfeedbk', array('save_fdbk' => '2a'));
-            return $this->objConfirm->addfbDetails();
+       
         }
 
         //insert the data into DB
@@ -287,8 +273,7 @@ class libraryforms extends controller {
 	// send email alert
         $subject="Feed Back";
 
-        $this->sendEmailNotification($subject,
- 					$message = $name.''. $email.''.$msg);
+        $this->sendEmailNotification($subject, $message = $name.' '. $email.' '.$msg);
            }
 
 

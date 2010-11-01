@@ -84,7 +84,7 @@ $fields = array(
           
         'emailaddress'=>array(
                     'type'=>'text',
-                    'length'=>30
+                    'length'=>50
                     
                         ),
 
