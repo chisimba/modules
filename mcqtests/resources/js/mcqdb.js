@@ -205,3 +205,25 @@ function showQuestion(questionid){
     window.open( "?module=mcqtests&action=previewquestion&id="+questionid, "myWindow",
         "status = 1, height = 350, width = 800, resizable = 0" )
 }
+
+jQuery(document).ready(function() {
+    // check the type of question selected.
+    jQuery("#input_typemcq").bind('click',function(){
+        myVal = jQuery("#input_options").val();
+        jQuery("select[name=options] option[value=4]").attr("selected", true);
+        jQuery("select[name=options]").attr("disabled", "");
+    });
+
+    jQuery("#input_typetf").bind('click',function(){
+        myVal = jQuery("#input_options").val();
+        jQuery("select[name=options] option[value=2]").attr("selected", true);
+        jQuery("select[name=options]").attr("disabled", "disabled");
+    });
+
+    // when submitting the form, remove the hidden attribute if input type is true/false
+    jQuery('form').bind('submit', function() {
+        if(jQuery("#input_typetf:checked").val() == "tf") {
+            jQuery(this).find(':input').removeAttr('disabled');
+        }
+    });
+});
