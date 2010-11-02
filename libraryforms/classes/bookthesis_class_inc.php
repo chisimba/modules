@@ -33,7 +33,7 @@ class bookthesis extends dbTable {
 
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
-        parent::init('tbl_libraryforms_booksthesis');
+        parent::init('tbl_booksthesis');
 
     }
     private function loadElements() {
