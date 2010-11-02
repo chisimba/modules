@@ -15,13 +15,8 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-
-                                  
-        'bprint'=>array(
-                    'type'=>'text',
-                    'length'=>150
-                    ),
-  
+                                
+         
         'bauthor'=>array(
                     'type'=>'text',
                     'length'=>150

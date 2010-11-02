@@ -16,12 +16,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-              
-       'title' => array(
-		'type' => 'text',
-		'length' => 120
-		),
-
+      
      'name' => array(
 		'type' => 'text',
 		'length' => 30
