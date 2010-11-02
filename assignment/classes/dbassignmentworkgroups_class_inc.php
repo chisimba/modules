@@ -77,20 +77,23 @@ class dbassignmentworkgroups extends dbtable {
         from tbl_workgroup wg,tbl_assignment_workgroups lw
         WHERE lw.assignment_id ='{$id}' and wg.id=lw.workgroup_id
         ";
-        $str = "";
         $groups = $this->getArray($sql);
+        $str = "";
         $count=1;
         if (!empty($groups)) {
 
             foreach ($groups as $thisGr) {
+                /*
                 $link=new link($this->uri(array("action"=>"joinworkgroup","workgroup"=>$thisGr['id']),"workgroup"));
                 $link->link=$thisGr["description"].'<br/>';
                 $str .= $link->show();
+                */
+                $str .= $thisGr["description"].'<br />';
                 $count++;
             }
 
         } else {
-            $str = " ";
+            $str = "";
         }
         return $str;
     }

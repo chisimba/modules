@@ -131,7 +131,7 @@ if ($assignment['usegoals'] == '1') {
 if ($assignment['usegroups'] == '1') {
 
     $gfieldset = new fieldset();
-    $gfieldset->setLegend('<b>' . $this->objLanguage->languageText('mod_assignment_groups', 'assignment', 'Groups'));
+    $gfieldset->setLegend('<b>'.$this->objLanguage->languageText('mod_assignment_groups', 'assignment', 'Groups').'</b>');
     $gfieldset->addContent($groups);
 
     $table->startRow();
