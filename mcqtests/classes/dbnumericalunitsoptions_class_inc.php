@@ -36,12 +36,18 @@ class dbnumericalunitsoptions extends dbtable {
         return $this->insert($data);
     }
 
-    public function updateNumericalQuestions($id, $data) {
+    public function updateNumericalOptions($id, $data) {
         $this->update('questionid', $id, $data);
     }
 
     public function deleteNumericalOptions($id) {
         $this->delete('questionid', $id);
+    }
+
+    public function getNumericalOptions($id) {
+        $filter = "WHERE questionid='$id'";
+        $data = $this->getAll($filter);
+        return $data[0];
     }
 }
 ?>

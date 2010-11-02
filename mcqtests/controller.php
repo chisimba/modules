@@ -949,10 +949,12 @@ class mcqtests extends controller {
                     $questionId = $this->addGeneralFormQuestions($qtype, $edit);
                     $this->addNumericalQuestions($questionId, $edit);
                     $this->addNumericalOptions($questionId, $edit);
+                    $this->addNumericalUnits($questionId, $edit);
                 } else {
-                    $id = $this->addGeneralFormQuestions($qtype);
-                    $this->addNumericalQuestions($id);
-                    $this->addNumericalOptions($id);
+                    $questionId = $this->addGeneralFormQuestions($qtype);
+                    $this->addNumericalQuestions($questionId);
+                    $this->addNumericalOptions($questionId);
+                    $this->addNumericalUnits($questionId);
                 }
                 $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
                 return $this->nextAction('view2', array('id' => $this->getParam('id')));
@@ -2062,14 +2064,6 @@ class mcqtests extends controller {
         } else {
             $this->objQuestionNumerical->addNumericalQuestions($questionid, $numericalQuestionData);
         }
-        //insert unit data
-        $unitData = array();
-        $unitData['unit'] = $this->getParam('aUnit');
-        if ($edit) {
-            $this->objNumericalUnit->updateNumericalUnits($questionid, $unitData);
-        } else {
-            $this->objNumericalUnit->addNumericalUnits($unitData);
-        }
     }
 
     public function addNumericalOptions($questionid, $edit=false) {
@@ -2086,7 +2080,7 @@ class mcqtests extends controller {
         $optionsData['unitgradingtype'] = $unitmarked;
         $optionsData['showunits'] = $this->getParam('dispUnit');
         $optionsData['instructions'] = $this->getParam('instructions');
-        $optionsData['unitpenalty'] = $this->getParam('penaltyUnit');print_r($optionsData);
+        $optionsData['unitpenalty'] = $this->getParam('penaltyUnit');
         
         if($edit) {
             $this->objNumericalOptions->updateNumericalOptions($questionid, $optionsData);
@@ -2096,6 +2090,18 @@ class mcqtests extends controller {
         }
     }
 
+    public function addNumericalUnits($questionid, $edit=null) {echo $questionid;
+        //insert unit data
+        $unitData = array();
+        $unitData['unit'] = $this->getParam('aUnit');
+        if ($edit) {
+            $this->objNumericalUnit->updateNumericalUnits($questionid, $unitData);
+        }
+        else {
+            $unitData['questionid'] = $questionid;
+            $this->objNumericalUnit->addNumericalUnits($unitData);
+        }
+    }
     public function matchingQuestion() {
         return 'editmatchingquestion_tpl.php';
     }

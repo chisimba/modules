@@ -22,7 +22,7 @@ class numerical_question extends object {
         $btnSave = $this->objGeneralForm->saveButton();
         $btnCancel = $this->objGeneralForm->cancelButton($testid);
 
-        $unitsHandling = $this->getUnitHandling();
+        $unitsHandling = $this->getUnitHandling($data['id']);
 
         if(!empty($data)) {
             $units = $this->getUnit($data['id']);
@@ -126,7 +126,7 @@ class numerical_question extends object {
         return $retStr;
     }
 
-    public function getUnitHandling() {
+    public function getUnitHandling($questionid=null) {
         $unitsHandling = $this->objLanguage->languageText('mod_mcqtests_unitshandling', 'mcqtests');
         $unitMarkLabel = $this->objLanguage->languageText('mod_mcqtests_unitmark', 'mcqtests');
         $badUnitLabel = $this->objLanguage->languageText('mod_mcqtests_penaltybadunit', 'mcqtests');
@@ -138,9 +138,23 @@ class numerical_question extends object {
         $lbYes = $this->objLanguage->languageText('word_yes');
         $lbNo = $this->objLanguage->languageText('word_no');
 
-        $retStr = "";
-        $penaltyUnit = "";
-        $fieldExtra = "id='answerNumericalField_" . $i . "'";
+        $objUnitsHandling = $this->newObject('dbnumericalunitsoptions');
+        $numericalOptionsData = $objUnitsHandling->getNumericalOptions($questionid);
+        
+        if(!empty($numericalOptionsData)) {
+            $penaltyUnit = $numericalOptionsData['unitpenalty'];
+            $instructionsdata = $numericalOptionsData['instructions'];
+            $showunit = $numericalOptionsData['showunits'];
+            $numunitmarked = $numericalOptionsData['unitgradingtype'];
+        }
+        else {
+            $retStr = "";
+            $penaltyUnit = "";
+            $fieldExtra = "id='answerNumericalField_" . $i . "'";
+            $instructionsdata = "";
+            $showunit = "";
+            $numunitmarked = "";
+        }
 
         $objAnswerTable = new htmltable();
         $objAnswerTable->width = '800px';
@@ -151,7 +165,9 @@ class numerical_question extends object {
         $objRadio = new radio('unitmarked');
         $objRadio->setBreakSpace('&nbsp;&nbsp;');
         $objRadio->addOption('numunitmarked', $numericalAnswerLabel);
-        $objRadio->setSelected('numunitmarked');
+        if(!empty($numunitmarked) && $numunitmarked == 'yes' || empty($numunitmarked)) {
+            $objRadio->setSelected('numunitmarked');
+        }
         $objAnswerTable->startRow();
         $objAnswerTable->addCell('<b>' . $unitMarkLabel . '</b>:', '30%');
         $objAnswerTable->addCell($objRadio->show(), '70%');
@@ -171,7 +187,6 @@ class numerical_question extends object {
         $editor->height = '100px';
         $editor->width = '550px';
         $editor->setMCQToolBar();
-        $instructionsdata = '';
         $editor->setContent($instructionsdata);
         //Add Instructions to the table
         $objAnswerTable->startRow();
@@ -191,7 +206,12 @@ class numerical_question extends object {
         $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
         $objRadio->addOption('yes', $lbYes);
         $objRadio->addOption('no', $lbNo);
-        $objRadio->setSelected('no');
+        if(!empty($showunit)) {
+            $objRadio->setSelected($showunit);
+        }
+        else {
+            $objRadio->setSelected('no');
+        }
         $objAnswerTable->startRow();
         $objAnswerTable->addCell($dispUnit, '30%', $valign = "top", $align = null, $class = null, $attrib = Null, $border = '1');
         $objAnswerTable->addCell($objRadio->show(), '70%');
@@ -217,7 +237,7 @@ class numerical_question extends object {
         
         $fieldExtra = "id='answerNumericalField_1'";
 
-        $data = $objQuestionUnit->getNumericalUnits($questionid);
+        $data = $objQuestionUnit->getNumericalUnits($questionid);print_r($data);
         if(!empty($data)) {
             $unit = $data['unit'];
         }
