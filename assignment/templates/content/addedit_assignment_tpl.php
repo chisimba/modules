@@ -412,10 +412,12 @@ $objGroups->addOption('0', $this->objLanguage->languageText('mod_assignment_alls
 $objGroups->addOption('1', $this->objLanguage->languageText('mod_assignment_groupsofstudents', 'assignment', 'Groups of Students'));
 $objGroups->setSelected('0');
 
-
+/*
 $groupslink = new link($this->uri(array(), "workgroup"));
 $groupslink->link = $this->objLanguage->languageText('mod_assignment_managegroups', 'assignment', "Manage Groups") . '<br/>';
 $groupsList = $groupslink->show();
+*/
+$groupsList = '';
 
 $groupstoselect = array();
 if (is_array($workgroupsinassignment)) {
