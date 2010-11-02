@@ -112,6 +112,10 @@ $fields = array(
     'updated' => array(
         'type' => 'timestamp',
         ),
+    'login' => array(
+        'type' => 'text',
+        'length' => 1,
+        )
     );
 
 // create other indexes here...
