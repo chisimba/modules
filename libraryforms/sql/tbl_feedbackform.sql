@@ -1,6 +1,6 @@
 <?php
 //5ive definition
-$tablename = 'tbl_feedbackform';
+$tablename = 'tbl_libraryforms_feedbackform';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'table for feedback_comment', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -26,7 +26,7 @@ $fields = array(
 		'type' => 'text',
 		'length' =>60
 		),
-        'msgtxt' => array(
+      'msgtxt' => array(
 		'type' => 'clob'
 
 		),

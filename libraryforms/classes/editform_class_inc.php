@@ -31,7 +31,7 @@ class editform extends dbTable {
 
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
-        parent::init('tbl_distanceform');
+        parent::init('tbl_libraryforms_distanceform');
     }
 
     private function loadElements() {

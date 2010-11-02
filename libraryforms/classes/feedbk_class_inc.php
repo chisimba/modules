@@ -31,7 +31,7 @@ class feedbk extends dbTable {
 
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
-        parent::init('tbl_feedbackform');
+        parent::init('tbl_libraryforms_feedbackform');
     }
 
     private function loadElements() {

@@ -33,7 +33,7 @@ class ILLperiodical extends dbTable {
 
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
-        parent::init('tbl_illperiodical');
+        parent::init('tbl_libraryforms_illperiodical');
 
     }
     private function loadElements() {
