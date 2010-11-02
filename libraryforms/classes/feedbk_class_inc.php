@@ -95,24 +95,24 @@ class feedbk extends dbTable {
         $fdbkHeading = new htmlheading();
         $fdbkHeading->type = 2;
         $fdbkHeading->str = $this->objLanguage->languageText
-						("mod_libraryforms_commenttitlefeedback", "libraryforms", "fdbk");
+                        ("mod_libraryforms_commenttitlefeedback", "libraryforms", "fdbk");
         $objForm->addToForm($fdbkHeading->show() . "<br/>");
 
 
         //Create a new textinput for the name
         $objname = new textinput('feedback_name');
         $nameLabel = new label($this->objLanguage->languageText
-						("mod_libraryforms_commentnamefeedbk", "libraryforms"), "name");
+                                ("mod_libraryforms_commentnamefeedbk", "libraryforms"), "name");
         $objForm->addToForm($nameLabel->show() . "<br />");
         $objForm->addToForm($objname->show() . "<br />" . "<br />");
         $objForm->addRule('feedback_name', $this->objLanguage->languageText
-						("mod_libraryforms_commentnamerequired", "libraryforms", ''), 'required');
+                        ("mod_libraryforms_commentnamerequired", "libraryforms", ''), 'required');
 
 
         //Create a new textinput for the email
         $objemail = new textinput('fbkemail');
         $emailLabel = new label($this->objLanguage->languageText
-						("mod_libraryforms_commentemail", "libraryforms"), "fbkemail");
+                                ("mod_libraryforms_commentemail", "libraryforms"), "fbkemail");
         $objForm->addToForm($emailLabel->show() . "<br />");
         $objForm->addToForm($objemail->show() . "<br />" . "<br />");
         $objForm->addRule('fbkemail', 'Not a valid Email', 'email');
@@ -129,7 +129,7 @@ class feedbk extends dbTable {
                         ("mod_libraryform_commentmessage", "libraryforms", ''), 'required');
 
 
-      //----------SUBMIT BUTTON--------------
+        //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
         $objButton = new button('save');
         // Set the button type to submit
@@ -138,7 +138,7 @@ class feedbk extends dbTable {
         // with the word save
 
         $objButton->setValue('' . $this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms") . ' ');
-      
+
 
 
 
@@ -150,23 +150,23 @@ class feedbk extends dbTable {
 
         $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
         $objForm->addRule('feedback_captcha', $this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'), 'required');
-  $objForm->addToForm($objButton->show());
-   
+        $objForm->addToForm($objButton->show());
+
 
         return $objForm->show();
     }
 
     function insertmsgRecord($name, $email, $msg) {
-        $id = $this->insert(array('name' => $name, 
-				  'email' => $email, 
-				  'msg' => $msg));
+        $id = $this->insert(array('name' => $name,
+                    'email' => $email,
+                    'msgtxt' => $msg));
         return $id;
     }
 
     private function getFormAction() {
-            
-     $formAction = $this->uri(array("action" => "save_fdbk"), "libraryforms");
-       return $formAction;
+
+        $formAction = $this->uri(array("action" => "save_fdbk"), "libraryforms");
+        return $formAction;
     }
 
     public function show() {

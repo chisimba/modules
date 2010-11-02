@@ -42,7 +42,7 @@ class libraryforms extends controller {
     public function dispatch($action) {
 
         //$action = $this->getParam('action');
-       // $this->setLayoutTemplate('editadd_tpl.php');
+        // $this->setLayoutTemplate('editadd_tpl.php');
 
         switch ($action) {
 
@@ -67,24 +67,23 @@ class libraryforms extends controller {
             case 'save_addedit':
                 $this->saveRecord();
                 return 'confirm_tpl.php';
-          
+
             case 'save_book':
-		$this->saveBookthesisRecord();
+                $this->saveBookthesisRecord();
                 return 'confirm_tpl.php';
-          
+
 
             case 'save_periodical':
                 $this->saveperiodicalRecord();
                 return 'confirm_tpl.php';
-       
+
             case 'save_fdbk':
-                   $this->submitmsg();
+
+                $this->submitmsg();
                 return 'fdbkconfirm_tpl.php';
-            
+
             case 'Back to Forms':
                 return 'editadd_tpl.php';
-
-           
         }// close for switch
     }
 
@@ -129,15 +128,15 @@ class libraryforms extends controller {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
-        } 
+        }
         // insert into database
         $pid = $this->dbAddDistances->insertRecord($surname, $initials, $title, $studentno, $postaladdress,
                         $physicaladdress, $postalcode, $postalcode2, $telnoh,
                         $telnow, $cell, $fax, $emailaddress, $course, $department, $supervisor);
 
-       
+
         // send email alert
-        $subject="New user registered";
+        $subject = "New user registered";
 
         $this->sendEmailNotification($subject,
                 $message = $surname . ' ' . $initials . ' ' . $title . ' ' . $studentno . ' ' . $postaladdress . ' ' .
@@ -148,7 +147,7 @@ class libraryforms extends controller {
 // end of Save Records */
 
     function saveBookthesisRecord() {
-        
+
         $bprint = $this->getParam('print');
         $bauthor = $this->getParam('author');
         $btitle = $this->getParam('title');
@@ -183,7 +182,7 @@ class libraryforms extends controller {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
-                }
+        }
 
         //insert into DB
         $id = $this->dbAddBookthesis->insertBookthesisRecord($bprint, $bauthor, $btitle, $bplace, $bpublisher, $bdate,
@@ -192,8 +191,8 @@ class libraryforms extends controller {
                         $bentitynum, $bstudentno, $bcourse);
 
 // after inserting into db send email alert
-        $subject="Book thesis record";
-        $this->sendEmailNotification( $subject,
+        $subject = "Book thesis record";
+        $this->sendEmailNotification($subject,
                 $message = $bprint . ' ' . $bauthor . ' ' . $btitle . ' ' . $bplace . ' ' . $bpublisher . ' ' .
                 $bdate . ' ' . $bedition . ' ' . $bisbn . ' ' . $bseries . ' ' . $bcopy . ' ' . $btitlepages . ' ' .
                 $bpages . ' ' . $bthesis . ' ' . $bname . ' ' . $baddress . ' ' . $bcell . ' ' . $bfax . ' ' .
@@ -203,7 +202,7 @@ class libraryforms extends controller {
 // end of bookthesisrecord
 
     public function saveperiodicalRecord() {
-       
+
         $titleperiodical = $this->getParam('print');
         $volume = $this->getParam('author');
         $part = $this->getParam('title');
@@ -231,15 +230,15 @@ class libraryforms extends controller {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
-         }
+        }
 
         //insert the data into DB
         $id = $this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages,
-		 					$author, $titlearticle, $prof, $address, $cell, $tell,
- 							$tellw,$emailaddress, $entitynum, $studentno, $course);
+                        $author, $titlearticle, $prof, $address, $cell, $tell,
+                        $tellw, $emailaddress, $entitynum, $studentno, $course);
 
-        $subject="Periodical Book Record";
-        $this->sendEmailNotification($subject, 
+        $subject = "Periodical Book Record";
+        $this->sendEmailNotification($subject,
                 $message = $titleperiodical . ' ' . $volume . ' ' . $part . ' ' . $year . ' ' . $pages . '' .
                 $author . ' ' . $titlearticle . ' ' . $prof . ' ' . $address . ' ' . $cell . ' ' . $tell . ' ' .
                 $tellw . ' ' . $emailaddress . ' ' . $entitynum . ' ' . $studentno . ' ' . $course);
@@ -250,39 +249,40 @@ class libraryforms extends controller {
     public function submitmsg() {
 
         //get parametters
-        $name = $this->getParam('name');
-        $emaill = $this->getParam('email');
-        $msg = $this->getParam('msg');
+        $name = $this->getParam('feedback_name');
+        $emaill = $this->getParam('fbkemail');
+        $msg = $this->getParam('msgbox');
         $captcha = $this->getParam('feedback_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('feedback_captcha') || empty($captcha)) {
-            $msg[] = 'badcaptcha';
+        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
+            $errormsg[] = 'badcaptcha';
         }
 
         //if form entry is in corect or invavalid
-        if (count($msg) > 0) {
-            $this->setVarByRef('msg', $msg);
+        if (count($errormsg) > 0) {
+            $this->setVarByRef('errormsg', $errormsg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
-       
         }
+
+
 
         //insert the data into DB
         $id = $this->dbfeedback->insertmsgRecord($name, $email, $msg);
-        
-	// send email alert
-        $subject="Feed Back";
 
-        $this->sendEmailNotification($subject, $message = $name.' '. $email.' '.$msg);
-           }
+        // send email alert
+        $subject = "Feed Back";
 
+        $this->sendEmailNotification($subject, $message = $name . ' ' . $email . ' ' . $msg);
+    }
 
 // end of Submitmsg
 
-    public function sendEmailNotification( $subject, $message) {
+    public function sendEmailNotification($subject, $message) {
+        
         $objMail = $this->getObject('email', 'mail');
         //send to multiple addressed   
-        $list = array("pmalinga@uwc.ac.za","afakier@uwc.ac.za", "library@uwc.ac.za");
+        $list = array("pmalinga@uwc.ac.za", "afakier@uwc.ac.za", "library@uwc.ac.za");
         $objMail->to = ($list);
         // specify whom the email is coming from
         $objMail->from = "no-reply@uwc.ac.za";
