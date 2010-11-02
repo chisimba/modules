@@ -10,25 +10,26 @@ $objTl = $this->getObject('tools', 'toolbar');
 $bread = $this->uri(array(), "context");
 $bread2 = $this->uri(array('action' => 'controlpanel'), "context");
 $admin = $this->contextTitle;
-$links = array('<a href="' . $bread . '">' .$admin . '</a>', '<a href="' . $bread2 . '">Control Panel</a>');
+$links = array('<a href="' . $bread . '">' .$admin . '</a>', '<a href="' . $bread2 . '">'.$this->objLanguage->code2Txt("mod_sasicontext_controlpanel", "sasicontext").'</a>');
 $objTl->insertBreadCrumb($links);
 
 $objTable = new htmltable('');
 //Add notification
 if ($addedArray['site'] != NULL and $addedArray['context'] != NULL and $addedArray['removed'] != NULL) {
     $objTable->startRow();
-    $objTable->addCell('<span id="confirm"><b>'.$addedArray['site'].'</b>'.$this->objLanguage->code2Txt("mod_sasicontext_addtosite", "sasicontext").'<b> '.$objConfig->getsiteName().'</b></span>
-');
+    $objTable->addCell('<span id="confirm"><b>'.$this->objLanguage->code2Txt("mod_sasicontext_confirm", "sasicontext").'</b></span>');
     $objTable->endRow();
 
     $objTable->startRow();
-    $objTable->addCell('<span id="confirm"><b>'.$addedArray['context'].'</b>'.$this->objLanguage->code2Txt("mod_sasicontext_addtocontext", "sasicontext").'<b> '.$this->contextTitle.'</b></span>
-');
+    $objTable->addCell('<span id="confirm"><b>'.$addedArray['site'].'</b>'.$this->objLanguage->code2Txt("mod_sasicontext_addtosite", "sasicontext").'<b> '.$objConfig->getsiteName().'</b></span>');
     $objTable->endRow();
 
     $objTable->startRow();
-    $objTable->addCell('<span id="confirm"><b>'.$addedArray['removed'].'</b>'.$this->objLanguage->code2Txt("mod_sasicontext_deleted", "sasicontext").'<b> '.$this->contextTitle.'</b></span>
-');
+    $objTable->addCell('<span id="confirm"><b>'.$addedArray['context'].'</b>'.$this->objLanguage->code2Txt("mod_sasicontext_addtocontext", "sasicontext").'<b> '.$this->contextTitle.'</b></span>');
+    $objTable->endRow();
+
+    $objTable->startRow();
+    $objTable->addCell('<span id="confirm"><b>'.$addedArray['removed'].'</b>'.$this->objLanguage->code2Txt("mod_sasicontext_deleted", "sasicontext").'<b> '.$this->contextTitle.'</b></span>');
     $objTable->endRow();
 }
 
@@ -48,15 +49,15 @@ $objTable->endRow();
 $rad = new radio('remove');
 $rad->addOption('1', 'Yes');
 $rad->addOption('0', 'No');
-$rad->setSelected('1');
+$rad->setSelected('0');
 $rad->breakSpace = '&nbsp;';
 
 $objTable->startRow();
-$objTable->addCell('Remove users that are not on the Class list?');
+$objTable->addCell($this->objLanguage->code2Txt('mod_sasicontext_remove', 'sasicontext'));
 $objTable->addCell('<p>'.$rad->show().'</p>');
 $objTable->endRow();
 
-$button = new button('synchronize', 'Synchronize Users');
+$button = new button('synchronize', ucwords($this->objLanguage->code2Txt('mod_sasicontext_synchronise', 'sasicontext')));
 $button->setToSubmit();
 
 $objTable->startRow();
@@ -71,6 +72,6 @@ $form = new form('synchronize', $this->URI(array('action' => 'synchronize')));
 $form->addToForm($fieldset->show());
 
 $tab->tabId = TRUE;
-$tab->addTab(array('name'=> 'Synchronize Users','content' => $form->show()));
+$tab->addTab(array('name'=> ucwords($this->objLanguage->code2Txt('mod_sasicontext_synchronise', 'sasicontext')),'content' => $form->show()));
 echo  '<br/><center><p>'.$tab->show().'</p></center>';
 ?>

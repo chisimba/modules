@@ -233,8 +233,7 @@ class users extends object {// extends abauth implements ifauth {
                 }
             }
         }
-
-        //return user that has been added
+        return TRUE;
     }
 
     /*

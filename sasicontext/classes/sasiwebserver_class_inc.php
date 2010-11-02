@@ -106,6 +106,10 @@ class sasiwebserver extends object {
         $data = $this->getData('Browse_Module', $param);
         $simpledata = $data['Browse_ModuleResult']['ModLst_List']['row'];
         $arr = array();
+        if(empty($simpledata[0])) {
+            return false;
+        }
+
         foreach ($simpledata as $smdata) {
             $arr2 = array();
             $arr2['id'] = $smdata['column'][0];
@@ -171,7 +175,7 @@ class sasiwebserver extends object {
      *
      * @param string $faculty
      * @return string facultyname
-     */
+    */
     public function getFacultyName($faculty) {
 
         //GET faculty title
@@ -187,7 +191,7 @@ class sasiwebserver extends object {
      * @param string $faculty
      * @param string $department
      * @return string departmentname
-     */
+    */
     public function getDeptName($faculty, $department) {
 
         //GET department title
@@ -203,7 +207,7 @@ class sasiwebserver extends object {
      * @param string $faculty
      * @param string $department
      * @return string departmentname
-     */
+    */
     public function getSubjectName($subject) {
 
         //GET subject title
@@ -268,14 +272,7 @@ class sasiwebserver extends object {
             $dropdown = new dropdown('mod');
             $dropdown->size =  7;
 
-            foreach($simpledata as $smdata) {
-                $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
-            }
             $objButton = new button('select', 'Done');
-            //$objButton->extra = ' onclick="javascript:
-	//		var str = document.getElementById(\'input_mod\').value;
-	//		addData(\''.$this->uri(array('action' => 'adddata', 'dept' => $dept, 'faculty' => $faculty)).'&subjcode='.'\'+str);
-	//		"';
             $objButton->setToSubmit();
             $link = new link ('javascript:loadData(\''.$starturi.'\')');
             $link->link = 'Start Over';
@@ -288,16 +285,24 @@ class sasiwebserver extends object {
             $link2->rel = 'facebox';
 
             $link3 = $this->getDeptName($faculty, $dept);
-            
+
             $str = $link->show().'  >>  '.$link2->show().'  >>  '.$link3;
             $this->loadClass('form', 'htmlelements');
             $submitform = new form('linkcourse', $this->uri(array('action' => 'adddata', 'dept' => $dept, 'faculty' => $faculty), 'sasicontext'));
             $submitform->addToForm($str);
+
+            if(!$simpledata) {
+                $submitform->addToForm('<p>'.$this->objLanguage->code2Txt("mod_sasicontext_nosubject", "sasicontext").'</p>');
+                return $submitform->show();
+            }
+            foreach($simpledata as $smdata) {
+                $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
+            }
             $submitform->addToForm($arr);
             $submitform->addToForm($dropdown->show());
             $submitform->addToForm('<br/>');
             $submitform->addToForm($objButton->show());
-            
+
             return $submitform->show();
         }
     }
