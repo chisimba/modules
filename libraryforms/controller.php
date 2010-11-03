@@ -148,29 +148,28 @@ class libraryforms extends controller {
 
     function saveBookthesisRecord() {
 
-        $bprint = $this->getParam('print');
-        $bauthor = $this->getParam('author');
-        $btitle = $this->getParam('title');
-        $bplace = $this->getParam('place');
-        $bpublisher = $this->getParam('publisher');
-        $bdate = $this->getParam('date');
+        $bauthor = $this->getParam('aut');
+        $btitle = $this->getParam('thesis_titles');
+        $bplace = $this->getParam('thesis_place');
+        $bpublisher = $this->getParam('thesis_publisher');
+        $bdate = $this->getParam('year');
         $bedition = $this->getParam('edition');
-        $bisbn = $this->getParam('isbn');
+        $bisbn = $this->getParam('ISBN');
         $bseries = $this->getParam('series');
-        $bcopy = $this->getParam('copy');
-        $btitlepages = $this->getParam('titlepages');
+        $bcopy = $this->getParam('photocopy');
+        $btitlepages = $this->getParam('titles');
         $bpages = $this->getParam('pages');
         $bthesis = $this->getParam('thesis');
-        $bname = $this->getParam('name');
-        $baddress = $this->getParam('address');
-        $bcell = $this->getParam('cell');
+        $bname = $this->getParam('thesis_prof');
+        $baddress = $this->getParam('thesis_address');
+        $bcell = $this->getParam('thesis_cell');
         $bfax = $this->getParam('fax');
-        $btel = $this->getParam('tel');
-        $btelw = $this->getParam('telw');
-        $bemailaddress = $this->getParam('emailaddress');
-        $bentitynum = $this->getParam('entitynum');
-        $bstudentno = $this->getParam('studentno');
-        $bcourse = $this->getParam('course');
+        $btel = $this->getParam('thesis_tel');
+        $btelw = $this->getParam('thesis_w');
+        $bemailaddress = $this->getParam('thesis_email');
+        $bentitynum = $this->getParam('entity');
+        $bstudentno = $this->getParam('thesis_studentno');
+        $bcourse = $this->getParam('thesis_course');
         $captcha = $this->getParam('thesis_captcha');
 
         // Check whether user matched captcha

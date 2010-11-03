@@ -179,7 +179,7 @@ class bookthesis extends dbTable {
         $table->startRow();
         $table->addCell($editionLabel->show(), '', 'center', 'left', '');
         $table->addCell($objedition ->show(), '', 'center', 'left', '');
-        $objForm->addRule('edition',$this->objLanguage->languageText("mod_edition_required", 'libraryforms', 'Please enter a 		edition. Edition is missing.'),'required');
+        $objForm->addRule('edition',$this->objLanguage->languageText("mod_edition_required", 'libraryforms', 'Please enter a edition. Edition is missing.'),'required');
 
 
 
@@ -277,11 +277,11 @@ class bookthesis extends dbTable {
 
 
         //Create a new textinput for email
-        $objemail = new textinput('thesisemail');
+        $objemail = new textinput('thesis_email');
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"thesisemail");
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        $objForm->addRule('thesisemail', 'Not a valid Email', 'email');
+        $objForm->addRule('thesis_email', 'Not a valid Email', 'email');
         $table->endRow();
 
 
@@ -414,25 +414,25 @@ class bookthesis extends dbTable {
     function insertRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname,$baddress, $bbcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
         $id = $this->insert(array(
             //'userid' => $userid,
-            'bprint' => $bprint,
-            'bauthor' => $bauthor,
-            'btitle' => $btitle,
-            'bplace' => $bplace,
-            'bpublisher' => $bpublisher,
-            'bdate' =>$bdate,
-            'bedition' => $bedition,
-            'bisbn' => $bisbn,
-            'bseries' => $bseries,
-            'bcopy' => $bcopy,
-            'btitlepages' => $btitlepages,
-            'bpages' => $bpages,
-            'bthesis' => $bthesis,
-            'bname' => $bname,
-            'baddress' => $baddress,
-            'bcell' => $bcell,
-            'bfax' => $bfax,
-            'btel' => $btel,
-            'btelw' => $btelw,
+            'bprint' => $print,
+            'bauthor' => $author,
+            'btitle' => $title,
+            'bplace' => $place,
+            'bpublisher' => $publisher,
+            'bdate' =>$date,
+            'bedition' => $edition,
+            'bisbn' => $isbn,
+            'bseries' => $series,
+            'bcopy' => $copy,
+            'btitlepages' => $titlepages,
+            'bpages' => $pages,
+            'bthesis' => $thesis,
+            'bname' => $name,
+            'baddress' => $address,
+            'bcell' => $cell,
+            'bfax' => $fax,
+            'btel' => $tel,
+            'btelw' => $telw,
             'bemailaddress' => $bemailaddress,
             'bentitynum' => $bentitynum,
             'bstudentno' => $bstudentno,
@@ -444,9 +444,9 @@ class bookthesis extends dbTable {
 
     private function getFormAction() 
         {
-            $formAction = $this->uri(array("action" => "save_book"), "libraryforms");
+           	 $formAction = $this->uri(array("action" => "save_book"), "libraryforms");
        
-        return $formAction;
+        	return $formAction;
     }
 
     public function show() {
