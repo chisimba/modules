@@ -53,13 +53,17 @@ class dbdocuments extends dbtable {
                       left outer join tbl_wicid_fileuploads as B on A.id = B.docid
                   where A.active = 'N'
                   and A.deleteDoc = 'N'
-                  and A.rejectDoc = 'Y'"; // and mode ='$mode'";
+                  and A.rejectDoc = 'Y'
+                  and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
+                 // and A.version = max(version)"; // and mode ='$mode'";
         } else {
             $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
                   left outer join tbl_wicid_fileuploads as B on A.id = B.docid
               where A.active = 'N'
               and A.deleteDoc = 'N'
-              and A.rejectDoc = 'N'";
+              and A.rejectDoc = 'N'
+              and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
+             // and A.version = max(version)";
         }
         if (!$this->objUser->isadmin()) {
 
@@ -314,6 +318,7 @@ class dbdocuments extends dbtable {
     }
 
     function changeCurrentUser($userid, $docid, $version) {
+        print_r($docid." - ".$version." - ".$userid);
         $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid' and version = '$version'";
        // $this->sendEmailAlert($userid);
         return $this->getArray($sql);
@@ -417,6 +422,12 @@ class dbdocuments extends dbtable {
         $version = (int) $version1[0]['version'];
 
         return $version;
+    }
+
+    function reclaimDocument($userid, $docid, $version){
+        $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid' and version = '$version'";
+        return $this->getArray($sql);
+
     }
 
 }
