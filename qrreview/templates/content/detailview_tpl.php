@@ -42,10 +42,12 @@ $pdflink = new href($pdfurl, $pdfimg, NULL);
 
 $middleColumn .= $pdflink->show();
 
+$ratelink = new href($this->uri(array('action' => 'review', 'id' => $row['id']), 'qrreview'),$this->objLanguage->languageText("mod_qrreview_ratethis", "qrreview"));
+
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $table->addCell($row['longdesc']);
-$table->addCell('<img src="'.$row['qr'].'">', 50, NULL, 'right');
+$table->addCell('<img src="'.$row['qr'].'">'."<br />".$ratelink->show(), 50, NULL, 'right');
 $table->endRow();
 
 $middleColumn .= $table->show(); // $row['longdesc'];
