@@ -145,34 +145,6 @@ public class ForwardTo {
         }
     }
 
-    /* public int getVersion() {
-    String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-    + "?module=wicid&action=getversion&docid=" + Constants.docid;
-    RequestBuilder builder =
-    new RequestBuilder(RequestBuilder.GET, url);
-
-    try {
-    Request request = builder.sendRequest(null, new RequestCallback() {
-
-    public void onError(Request request, Throwable exception) {
-    MessageBox.info("Error", "Error, cannot getversion", null);
-    }
-
-    public void onResponseReceived(Request request, Response response) {
-    if (200 == response.getStatusCode()) {
-    System.out.println("response = " + response.getText());
-    versionV = Integer.parseInt(response.getText());
-    } else {
-    MessageBox.info("Error", "Error occured on the server. Cannot get version", null);
-    }
-    }
-    });
-    } catch (Exception e) {
-    MessageBox.info("Fatal Error", "Fatal Error: cannot get version", null);
-    }
-
-    return versionV;
-    }*/
     public void increaseVersion() {
 
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
