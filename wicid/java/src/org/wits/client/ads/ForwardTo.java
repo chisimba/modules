@@ -64,6 +64,7 @@ public class ForwardTo {
     private BaseListLoader<ListLoadResult<ModelData>> loader;
     private Grid<ModelData> emailGrid;
     private ColumnModel cm;
+    private int versionV;
 
     public ForwardTo() {
         creatUI();
@@ -105,8 +106,6 @@ public class ForwardTo {
             @Override
             public void componentSelected(ButtonEvent ce) {
                 increaseVersion();
-                changeCurrentUser();               
-
                 forwardToDialog.hide();
                 String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
                 Constants.main.getDocumentListPanel().refreshDocumentList(params);
@@ -124,12 +123,11 @@ public class ForwardTo {
         forwardToDialog.add(panel, formData);
     }
 
-    public void changeCurrentUser() {
-        int version = org.wits.client.DocumentListPanel.getVersion();
+    public void changeCurrentUser(int version) {
 
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
                 + Constants.MAIN_URL_PATTERN + "?module=wicid&action=changecurrentuser&userid="
-                + selectedUserid + "&docid=" + Constants.docid+"&version="+version);
+                + selectedUserid + "&docid=" + Constants.docid + "&version=" + version);
         try {
 
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -139,7 +137,7 @@ public class ForwardTo {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    MessageBox.info("Done", "The current user for document " + Constants.docid + " has been changed.", null);
+                    MessageBox.info("Done", "The current user for the document has been changed.", null);
                 }
             });
         } catch (Exception e) {
@@ -147,6 +145,34 @@ public class ForwardTo {
         }
     }
 
+    /* public int getVersion() {
+    String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+    + "?module=wicid&action=getversion&docid=" + Constants.docid;
+    RequestBuilder builder =
+    new RequestBuilder(RequestBuilder.GET, url);
+
+    try {
+    Request request = builder.sendRequest(null, new RequestCallback() {
+
+    public void onError(Request request, Throwable exception) {
+    MessageBox.info("Error", "Error, cannot getversion", null);
+    }
+
+    public void onResponseReceived(Request request, Response response) {
+    if (200 == response.getStatusCode()) {
+    System.out.println("response = " + response.getText());
+    versionV = Integer.parseInt(response.getText());
+    } else {
+    MessageBox.info("Error", "Error occured on the server. Cannot get version", null);
+    }
+    }
+    });
+    } catch (Exception e) {
+    MessageBox.info("Fatal Error", "Fatal Error: cannot get version", null);
+    }
+
+    return versionV;
+    }*/
     public void increaseVersion() {
 
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
@@ -160,8 +186,9 @@ public class ForwardTo {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    String newVersion = response.getText();
-                    MessageBox.info("Done", "The version for the document has been changed to "+newVersion, null);
+                    versionV = Integer.parseInt(response.getText());
+                    changeCurrentUser(versionV);
+                    MessageBox.info("Done", "The version for the document has been changed to " + versionV, null);
                 }
             });
         } catch (Exception e) {
