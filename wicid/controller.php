@@ -390,6 +390,7 @@ class wicid extends controller {
         if($status == '' || $status == NULL){
             $status="0";
         }
+        $currentuserid="";
         $version=  $this->getParam('version');
         /**
          * $date,
@@ -755,7 +756,7 @@ class wicid extends controller {
     public function __changecurrentuser(){
         $userid=$this->getParam('userid');
         $docid=$this->getParam('docid');
-        $version=  $this->getParam('version');
+        $version=$this->getParam('version');
         $this->documents->changeCurrentUser($userid, $docid, $version);
     }
 
@@ -803,5 +804,12 @@ class wicid extends controller {
     public function __getversion(){
         $docid = $this->getParam('docid');
         $this->documents->getVersion($docid);
+    }
+
+    public function __reclaimdocument(){
+        $userid=$this->getParam('userid');
+        $docid = $this->getParam('docid');
+        $version = $this->getParam('version');
+        $this->documents->reclaimDocument($userid,$docid,$version);
     }
 }
