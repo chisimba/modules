@@ -112,6 +112,8 @@ class reviewops extends object {
         $this->objDbQr       = $this->getObject('dbqr', 'qrcreator');
         $this->objCookie     = $this->getObject('cookie', 'utilities');
         $this->objDbReview   = $this->getObject('dbqrreview');
+        $this->objWashout    = $this->getObject('washout', 'utilities');
+        $this->loadClass('href', 'htmlelements');
     }
     
     public function addForm() {
@@ -130,6 +132,7 @@ class reviewops extends object {
         // add some rules
         $form->addRule('prodname', $this->objLanguage->languageText("mod_qrreview_needname", "qrreview"), 'required');
         
+        
         $table = $this->newObject('htmltable', 'htmlelements');
         
         // product/service name
@@ -140,6 +143,19 @@ class reviewops extends object {
         $table->addCell('&nbsp;', 5);
         $table->addCell($prodname->show().$required);
         $table->endRow();
+        
+        if(strtolower($this->objSysConfig->getValue('type', 'qrreview')) == "wine") {
+            $form->addRule('farmid', $this->objLanguage->languageText("mod_qrreview_needfarm", "qrreview"), 'required');
+            $farmlink = new href('http://spitorswallow.co.za/lookup.php', $this->objLanguage->languageText("mod_qrreview_farmlist", "qrreview"), '"target=_blank"');
+            // farm id
+            $table->startRow();
+            $farmid = new textinput('farmid');
+            $farmidLabel = new label($this->objLanguage->languageText('farmid', 'qrreview').'&nbsp;', 'input_farmid');
+            $table->addCell($farmidLabel->show(), 150, NULL, 'right');
+            $table->addCell('&nbsp;', 5);
+            $table->addCell($farmid->show().$required." ".$farmlink->show());
+            $table->endRow();
+        }
         
         // long desc field
         $defmsg = $this->objLanguage->languageText("mod_qrreview_longdesc", "qrreview");
@@ -185,7 +201,7 @@ class reviewops extends object {
         // insert the message to the database and generate a url to use via a browser
         $recordid = $this->objDbQr->insert(array('userid' => $userid, 'msg' => $msg, 'lat' => $lat, 'lon' => $lon, 'gmapsurl' => $gmapsurl));
         // curl the Google Charts API to create the code
-        $url = 'http://chart.apis.google.com/chart?chs=200x180&cht=qr&chl='.$msg;
+        $url = 'http://chart.apis.google.com/chart?chs=400x360&cht=qr&chl='.$msg;
         $image = $this->objCurl->exec($url);
         $basename = 'qr'.$recordid.'.png';
         $filename = $this->objConfig->getcontentBasePath().'users/'.$userid.'/'.$basename;
@@ -308,7 +324,7 @@ class reviewops extends object {
     }
     
     public function wineUpstream($data) {
-        $url = 'http://spitorswallow.co.za/api.php?action=vote&farm_id=8013&score='.$data['prodrate'].'&userid='.$data['phone'].'&apikey=a35zd29p7e';
+        $url = 'http://spitorswallow.co.za/api.php?action=vote&farm_id='.$data['farmid'].'&score='.$data['prodrate'].'&userid='.$data['phone'].'&apikey=a35zd29p7e';
         $objCurl = $this->getObject('curl', 'utilities');
         log_debug($objCurl->exec($url));
         
@@ -317,7 +333,12 @@ class reviewops extends object {
     public function reviewsPage() {
         $reviews = $this->objDbReview->getLastReviews(5);
         $revs = NULL;
-        
+        if(empty($reviews)) {
+            $revhead = new htmlHeading();
+            $revhead->str = $this->objLanguage->languageText("mod_qrreview_noreviews", "qrreview");
+            $revhead->type = 1;
+            return $revhead->show();
+        }
         foreach($reviews as $review) {
             $objFeatureBox = $this->newObject('featurebox', 'navigation');
             $prodid = $review['prodid'];
@@ -329,13 +350,15 @@ class reviewops extends object {
             $pname = $product['prodname'];
             $qr = $product['qr'];
             $added = $product['creationdate'];
-            
+            $rate = intval($rate) * 10;
+            $ratelink = new href($this->uri(array('action' => 'review', 'id' => $prodid), 'qrreview'),$this->objLanguage->languageText("mod_qrreview_ratethis", "qrreview"));
             $table = $this->newObject('htmltable', 'htmlelements');
             $table->startRow();
-            $table->addCell($rate."<br />".nl2br($prodcomments), 100, NULL, 'left');
-            $table->addCell('<img src="'.$qr.'" />', 50, NULL, 'right');
+            $table->addCell("[GAGE:max=100,actual=".$rate.",colors=red-green]".$this->objLanguage->languageText("mod_qrreview_rating", "qrreview")."[/GAGE] <br />", 50, NULL, 'left');
+            $table->addCell(nl2br($prodcomments), 100, NULL, 'left');
+            $table->addCell('<img src="'.$qr.'" />'."<br />".$ratelink->show(), 50, NULL, 'right');
             $table->endRow();
-            $revs .= $objFeatureBox->show($pname." ".$this->objLanguage->languageText("mod_qrreview_addedon", "qrreview")." ".$added, $table->show());
+            $revs .= $objFeatureBox->show($pname." ".$this->objLanguage->languageText("mod_qrreview_addedon", "qrreview")." ".$added, $this->objWashout->parseText($table->show()));
         }
         
         return $revs;   
@@ -343,27 +366,59 @@ class reviewops extends object {
     
     public function recentlyAdded() {
         $prods = $this->objDbReview->getLastProds(5);
-        $ret = NULL;
+        $products = NULL;
+        if(empty($prods)) {
+            $prodhead = new htmlHeading();
+            $prodhead->str = $this->objLanguage->languageText("mod_qrreview_noprods", "qrreview");
+            $prodhead->type = 1;
+            return $prodhead->show();
+        }
         foreach($prods as $product) {
             $objFeatureBox = $this->newObject('featurebox', 'navigation');
             $plongdesc = $product['longdesc'];
             $pname = $product['prodname'];
             $qr = $product['qr'];
             $added = $product['creationdate'];
+            $ratelink = new href($this->uri(array('action' => 'review', 'id' => $product['id']), 'qrreview'),$this->objLanguage->languageText("mod_qrreview_ratethis", "qrreview"));
             $table = $this->newObject('htmltable', 'htmlelements');
             $table->startRow();
-            $table->addCell(nl2br($plongdesc), 100, NULL, 'left');
-            $table->addCell('<img src="'.$qr.'" />', 50, NULL, 'right');
+            $table->addCell(nl2br($plongdesc), 250, NULL, 'left');
+            $table->addCell('<img src="'.$qr.'" />'."<br />".$ratelink->show(), 50, NULL, 'right');
             $table->endRow();
-            $prods .= $objFeatureBox->show($pname." ".$this->objLanguage->languageText("mod_qrreview_addedon", "qrreview")." ".$added, $table->show());
+            $products .= $objFeatureBox->show($pname." ".$this->objLanguage->languageText("mod_qrreview_addedon", "qrreview")." ".$added, $table->show());
             
         }
         
-        return $prods;
+        return $products;
     }
     
     public function topScorers() {
-        return 'top scores';
+        $prods = $this->objDbReview->getTopScore(5);
+        $products = NULL;
+        if(empty($prods)) {
+            $prodhead = new htmlHeading();
+            $prodhead->str = $this->objLanguage->languageText("mod_qrreview_noprods", "qrreview");
+            $prodhead->type = 1;
+            return $prodhead->show();
+        }
+        foreach($prods as $product) {
+            $objFeatureBox = $this->newObject('featurebox', 'navigation');
+            $plongdesc = $product['longdesc'];
+            $pname = $product['prodname'];
+            $qr = $product['qr'];
+            $added = $product['creationdate'];
+            $ratelink = new href($this->uri(array('action' => 'review', 'id' => $product['id']), 'qrreview'),$this->objLanguage->languageText("mod_qrreview_ratethis", "qrreview"));
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->startRow();
+            $table->addCell("[GAGE:max=100,actual=".$product['aggregate'].",colors=red-green]".$this->objLanguage->languageText("mod_qrreview_rating", "qrreview")."[/GAGE] <br />", 50, NULL, 'left');
+            $table->addCell(nl2br($plongdesc), 250, NULL, 'left');
+            $table->addCell('<img src="'.$qr.'" />'."<br />".$ratelink->show(), 50, NULL, 'right');
+            $table->endRow();
+            $products .= $objFeatureBox->show($pname." ".$this->objLanguage->languageText("mod_qrreview_addedon", "qrreview")." ".$added, $this->objWashout->parseText($table->show()));
+            
+        }
+        
+        return $products;
     }
     
     /**
@@ -378,8 +433,17 @@ class reviewops extends object {
         $tabs = $this->getObject('tabber', 'htmlelements');
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_qrerview_latestreviews", "qrreview"), 'content' => $this->reviewsPage(), 'onclick' => ''));
         $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_qrreview_recentlyadded", "qrreview"), 'content' => $this->recentlyAdded(), 'onclick' => ''));
-        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_events_topscorers", "qrreview"), 'content' => $this->topScorers(), 'onclick' => ''));
-
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_qrreview_topscorers", "qrreview"), 'content' => $this->topScorers(), 'onclick' => ''));
+        // check for login
+        if($this->objUser->isLoggedIn()) {
+            $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_qrreview_newprod", "qrreview"), 'content' => $this->addForm(), 'onclick' => ''));
+        }
+        else {
+            $signhead = new htmlHeading();
+            $signhead->str = $this->objLanguage->languageText("mod_qrreview_signintoadd", "qrreview");
+            $signhead->type = 1;
+            $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_qrreview_newprod", "qrreview"), 'content' => $signhead->show(), 'onclick' => ''));
+        }
         return $tabs->show();
     }
     

@@ -59,7 +59,7 @@ class dbqrreview extends dbTable
 	 }
 	 
 	 public function getLastProds($num) {
-	     return $this->getALL(" ORDER BY puid LIMIT 0,10"); 
+	     return $this->getALL("ORDER BY puid DESC LIMIT 0,$num"); 
 	 }
 	 
 	 public function updateQR($recid, $fileurl) {
@@ -81,10 +81,26 @@ class dbqrreview extends dbTable
 	 
 	 public function getLastReviews($num) {
 	     $this->changeTable('tbl_qrreview_reviews');
-	     $data = $this->getAll("LIMIT 0, $num");
+	     $data = $this->getAll("ORDER BY puid DESC LIMIT 0, $num");
 	     $this->changeTable('tbl_qrreview_prods');
 	     return $data;
 	     
+	 }
+	 
+	 public function getTopScore($num) {
+	     $data = $this->getAll("ORDER BY aggregate DESC LIMIT 0, $num");
+	     return $data;
+	 }
+	 
+	 public function updateScores($id, $score) {
+	     // first get the record
+	     $rec = $this->getRecord($id);
+	     $rec = $rec[0];
+	     $tscore = $score + $rec['score'];
+	     $numrev = $rec['numrev'] + 1;
+	     $aggregate = ($tscore / ($numrev*10))*100;
+	     $uparr = array('score' => $score, 'numrev' => $numrev, 'aggregate' => $aggregate);
+	     return $this->update('id', $rec['id'], $uparr);
 	 }
 }
 ?>

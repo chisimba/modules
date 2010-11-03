@@ -113,6 +113,7 @@ class qrreview extends controller
             case NULL:
 
             case 'viewtop' :
+                // $this->requiresLogin('viewtop');
                 return 'front_tpl.php';
                 break;
             
@@ -125,9 +126,10 @@ class qrreview extends controller
             case 'addprod' :
                 $longdesc = $this->getParam('longdesc');
                 $prodname = $this->getParam('prodname');
+                $farmid = $this->getParam('farmid');
                 $userid = $this->objUser->userId();
                 
-                $recarr = array('longdesc' => $longdesc, 'prodname' => $prodname, 'userid' => $userid);
+                $recarr = array('longdesc' => $longdesc, 'prodname' => $prodname, 'userid' => $userid, 'farmid' => $farmid);
                 $recid = $this->objDbReview->insertRecord($recarr);
                 
                 $url = $this->uri(array('id' => $recid, 'action' => 'mobireview'), 'qrreview');
@@ -178,14 +180,21 @@ class qrreview extends controller
                 $prodcomm = $this->getParam('prodcomm');
                 $phone = $this->getParam('phone');
                 $prodid = $this->getParam('prodid');
+                $product = $this->objDbReview->getRecord($prodid);
+                $farmid = $product[0]['farmid'];
                 // quick double check in case a phone browser doesn't support JS
                 if(strlen($phone) != 10 || $prodrate == '' || intval($phone) == 0) {
-                    echo $this->objLanguage->languageText("mod_qrreview_missingtext", "qrreview");
+                    $out = $this->objLanguage->languageText("mod_qrreview_missingtext", "qrreview");
+                    $homelink = new href($this->uri('', 'qrreview'),$this->objLanguage->languageText("mod_qrreview_home", "qrreview"));
+                    $out .= $homelink->show();
+                    echo $out;
                     break;
                 }
                 // make up the data array
-                $data = array('prodid' => $prodid, 'prodrate' => $prodrate, 'prodcomm' => $prodcomm, 'phone' => $phone);
+                $data = array('prodid' => $prodid, 'prodrate' => $prodrate, 'prodcomm' => $prodcomm, 'phone' => $phone, 'farmid' => $farmid);
                 $this->objDbReview->addComment($data);
+                // increment the scores
+                $this->objDbReview->updateScores($prodid, $prodrate);
                 // upstream to wine times if this is a wine review site
                 if($this->sysType == 'wine') {
                     $this->objReviewOps->wineUpstream($data);
@@ -198,6 +207,41 @@ class qrreview extends controller
                 
             case 'review' :
                 // case for on site reviews
+                $id = $this->getParam('id');
+                $row = $this->objDbReview->getRecord($id);
+                if(!isset($row[0])) {
+                    return 'notfound_tpl.php';
+                    break;
+                }
+                else {
+                    $row = $row[0];
+                }
+                $form = $this->objReviewOps->showReviewFormMobi($row);
+                $this->setVarByRef('form', $form);
+                $this->setVarByRef('row', $row);
+                return 'webreview_tpl.php';
+                break;
+                
+            case 'makepdf':
+                $id = $this->getParam('id');
+                $row = $this->objDbReview->getRecord($id);
+                if(!isset($row[0])) {
+                    return 'notfound_tpl.php';
+                    break;
+                }
+                else {
+                    $row = $row[0];
+                }
+                //create the pdf and send it out
+                $header = stripslashes($row['prodname']);
+                $body = '<br /><br /><center><img src="/collections/usrfiles/users/1/qrgen12Srv55Nme28_15624_1288156026.png" /></center><br />'.stripslashes($row['longdesc']);
+                $postdate = $row['creationdate'];
+                //put it all together
+                //get the pdfmaker classes
+                $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
+                $text = $header . "  " . $postdate . "\r\n\r\n" .$body;
+                $objPdf->WriteHTML($text, NULL, NULL, 'qrreview_'.$row['prodname'].'.pdf');
+                //$this->nextAction('');
                 break;
             
 
@@ -214,8 +258,8 @@ class qrreview extends controller
      * @param string $action Action being run
      * @return boolean Whether the action requires the user to be logged in or not
      */
-    function requiresLogin($action='review') {
-        $allowedActions = array('mobireview', 'details', 'addreview', 'viewtop');
+    function requiresLogin($action='viewtop') {
+        $allowedActions = array('mobireview', 'details', 'addreview', 'viewtop', NULL, 'review');
 
         if (in_array($action, $allowedActions)) {
             return FALSE;

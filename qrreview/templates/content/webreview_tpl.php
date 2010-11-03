@@ -1,6 +1,6 @@
 <?php
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(2);
+$cssLayout->setNumColumns(1);
 
 // get the sidebar object
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
@@ -11,16 +11,14 @@ $leftColumn = NULL;
 
 // Add in a heading
 $headern = new htmlHeading();
-$headern->str = $this->objLanguage->languageText('mod_qrreview_prodnotfound', 'qrreview');
+$headern->str = $row['prodname'];
 $headern->type = 1;
 
-$homelink = new href($this->uri('', 'qrreview'),$this->objLanguage->languageText("mod_qrreview_home", "qrreview"));
-
 $middleColumn .= $headern->show();
-$middleColumn .= $homelink->show();
+$middleColumn .= $form;
 
-$leftColumn .= $this->leftMenu->show();
+//$leftColumn .= $this->leftMenu->show();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
-$cssLayout->setLeftColumnContent($leftColumn);
+//$cssLayout->setLeftColumnContent($leftColumn);
 echo $cssLayout->show();

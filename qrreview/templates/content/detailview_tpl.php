@@ -1,9 +1,15 @@
 <?php
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
+$cssLayout->setNumColumns(2);
 $this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('href', 'htmlelements');
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
-        
+ 
+$pdfurl = $this->uri(array(
+                    'action' => 'makepdf',
+                    'module' => 'qrreview',
+                    'id' => $row['id']
+                ));      
 
 $leftColumn = NULL;
 $middleColumn = NULL;
@@ -25,11 +31,28 @@ $headern->str = $row['prodname'];
 $headern->type = 1;
 
 $middleColumn .= $headern->show();
-$middleColumn .= $row['longdesc'];
 
-$rightColumn .= $objFeatureBox->show($this->objLanguage->languageText("mod_qrreview_qrcode", "qrreview"), '<img src="'.$row['qr'].'">');
+$pdficon = $this->newObject('geticon', 'htmlelements');
+$pdficon->setIcon('filetypes/pdf');
+$lblView = $this->objLanguage->languageText("mod_qrreview_saveaspdf", "qrreview");
+$pdficon->alt = $lblView;
+$pdficon->align = false;
+$pdfimg = $pdficon->show();
+$pdflink = new href($pdfurl, $pdfimg, NULL);
+
+$middleColumn .= $pdflink->show();
+
+$table = $this->newObject('htmltable', 'htmlelements');
+$table->startRow();
+$table->addCell($row['longdesc']);
+$table->addCell('<img src="'.$row['qr'].'">', 50, NULL, 'right');
+$table->endRow();
+
+$middleColumn .= $table->show(); // $row['longdesc'];
+
+// $rightColumn .= $objFeatureBox->show($this->objLanguage->languageText("mod_qrreview_qrcode", "qrreview"), '<img src="'.$row['qr'].'">');
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);
-$cssLayout->setRightColumnContent($rightColumn);
+// $cssLayout->setRightColumnContent($rightColumn);
 echo $cssLayout->show();

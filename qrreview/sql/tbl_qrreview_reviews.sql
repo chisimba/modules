@@ -16,7 +16,7 @@ $fields = array(
 		'length' => 50,
 		),
 	'prodrate' => array(
-		'type' => 'text',
+		'type' => 'integer',
 		'length' => 10,
 		),
 	'prodcomm' => array(

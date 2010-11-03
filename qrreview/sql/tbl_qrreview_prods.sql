@@ -15,6 +15,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
+    'farmid' => array(
+        'type' => 'text', 
+        'length' => 50,
+        ),
 	'longdesc' => array(
 		'type' => 'clob',
 		),
@@ -25,7 +29,16 @@ $fields = array(
     'qr' => array(
         'type' => 'text',
         'length' => 255,
-    ),	
+       ),
+    'score' => array(
+        'type' => 'integer', 
+       ),
+    'numrev' => array(
+        'type' => 'integer',
+       ),	
+    'aggregate' => array(
+        'type' => 'integer',
+       ),
 	'creationdate' => array(
 		'type' => 'text',
 		'length' => 80,
