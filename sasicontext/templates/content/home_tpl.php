@@ -19,15 +19,18 @@ if ($addedArray['site'] != NULL and $addedArray['context'] != NULL and $addedArr
     $objTable->startRow();
     $objTable->addCell('<span id="confirm"><b>'.$this->objLanguage->code2Txt("mod_sasicontext_confirm", "sasicontext").'</b></span>');
     $objTable->endRow();
-
+}
+if ($addedArray['site'] != 0) {
     $objTable->startRow();
     $objTable->addCell('<span id="confirm"><b>'.$addedArray['site'].'</b>'.$this->objLanguage->code2Txt("mod_sasicontext_addtosite", "sasicontext").'<b> '.$objConfig->getsiteName().'</b></span>');
     $objTable->endRow();
-
+}
+if ($addedArray['context'] != 0) {
     $objTable->startRow();
     $objTable->addCell('<span id="confirm"><b>'.$addedArray['context'].'</b>'.$this->objLanguage->code2Txt("mod_sasicontext_addtocontext", "sasicontext").'<b> '.$this->contextTitle.'</b></span>');
     $objTable->endRow();
-
+}
+if ($addedArray['removed'] != 0) {
     $objTable->startRow();
     $objTable->addCell('<span id="confirm"><b>'.$addedArray['removed'].'</b>'.$this->objLanguage->code2Txt("mod_sasicontext_deleted", "sasicontext").'<b> '.$this->contextTitle.'</b></span>');
     $objTable->endRow();

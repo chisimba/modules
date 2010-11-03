@@ -89,7 +89,7 @@ class sasicontext extends controller {
             $this->objSasiUsers = $this->getObject('users');
             $this->contextCode = $this->objContext->getContextCode();
             $this->contextTitle = $this->objContext->getTitle();
-            if ($this->contextCode == 'root' || $this->contextCode == NULL) {
+            if ($this->contextCode == 'root' || $this->contextCode == NULL && (!$this->objUser->isAdmin() || !$this->objUser->isContextLecturer($this->objUser->userId(), $this->objContext->getContextCode()))) {
                 return $this->nextAction ( NULL, NULL, '_default' );
             }
         } catch (customException $e) {
