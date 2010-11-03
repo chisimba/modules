@@ -304,35 +304,7 @@ public class DocumentListPanel extends LayoutContainer {
         }
     }
 
-    /*   public static int getVersion() {
     
-    String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-    + "?module=wicid&action=getversion&docid=" + Constants.docid;
-    RequestBuilder builder =
-    new RequestBuilder(RequestBuilder.GET, url);
-    
-    try {
-    Request request = builder.sendRequest(null, new RequestCallback() {
-    
-    public void onError(Request request, Throwable exception) {
-    MessageBox.info("Error", "Error, cannot getversion", null);
-    }
-    
-    public void onResponseReceived(Request request, Response response) {
-    if (200 == response.getStatusCode()) {
-    System.out.println("response = "+response.getText());
-    //versionV = Integer.parseInt(response.getText());
-    } else {
-    MessageBox.info("Error", "Error occured on the server. Cannot get version", null);
-    }
-    }
-    });
-    } catch (RequestException e) {
-    MessageBox.info("Fatal Error", "Fatal Error: cannot reject document", null);
-    }
-    
-    return versionV;
-    }*/
     private void submitDocument() {
         String currentStatusS = "";
         status = getStatus();
@@ -424,8 +396,6 @@ public class DocumentListPanel extends LayoutContainer {
             id = row.get("docid");
         }
 
-        System.out.println(id);
-
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
                 + Constants.MAIN_URL_PATTERN + "?module=wicid&action=increaseversion&docid=" + id);
         try {
@@ -438,7 +408,6 @@ public class DocumentListPanel extends LayoutContainer {
 
                 public void onResponseReceived(Request request, Response response) {
                     versionV = Integer.parseInt(response.getText());
-                    System.out.println("version = " + versionV);
                     if (which.equals("changestatus")) {
                         changeStatus(versionV);
                     } else if (which.equals("reclaimdocument")) {
