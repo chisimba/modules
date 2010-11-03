@@ -51,13 +51,13 @@ $fields = array(
                   
         'bisbn'=>array(
                     'type'=>'text',
-                    'length'=>50
+                    'length'=>150
                     ),
                  
          
         'bseries'=> array(
                      'type' =>'text',
-                     'length'=>50
+                     'length'=>150
                      
 			),
                     

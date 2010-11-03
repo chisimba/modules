@@ -411,7 +411,7 @@ class bookthesis extends dbTable {
 
     
 
-    function insertRecord($bprint, $bauthor, $btitle, $bplace, $bdate, $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bthesis, $bname,$baddress, $bbcell,$bfax,$btel,$btelw,$bemailaddress,$bentitynum, $bstudentno,$bcourse) {
+    function insertBookthesisRecord($print, $author, $title, $place, $publisher, $date, $edition, $isbn, $series, $copy, $titlepages, $thesis, $name,$address, $cell,$fax,$tel,$telw,$emailaddress,$entitynum, $studentno,$course) {
         $id = $this->insert(array(
             //'userid' => $userid,
             'bprint' => $print,
@@ -436,7 +436,7 @@ class bookthesis extends dbTable {
             'bemailaddress' => $bemailaddress,
             'bentitynum' => $bentitynum,
             'bstudentno' => $bstudentno,
-            'bcourse' => $bcourse,t
+            'bcourse' => $bcourse,
         ));
         return $id;
     }

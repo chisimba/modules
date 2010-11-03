@@ -148,54 +148,54 @@ class libraryforms extends controller {
 
     function saveBookthesisRecord() {
 
-        $bauthor = $this->getParam('aut');
-        $btitle = $this->getParam('thesis_titles');
-        $bplace = $this->getParam('thesis_place');
-        $bpublisher = $this->getParam('thesis_publisher');
-        $bdate = $this->getParam('year');
-        $bedition = $this->getParam('edition');
-        $bisbn = $this->getParam('ISBN');
-        $bseries = $this->getParam('series');
-        $bcopy = $this->getParam('photocopy');
-        $btitlepages = $this->getParam('titles');
-        $bpages = $this->getParam('pages');
-        $bthesis = $this->getParam('thesis');
-        $bname = $this->getParam('thesis_prof');
-        $baddress = $this->getParam('thesis_address');
-        $bcell = $this->getParam('thesis_cell');
-        $bfax = $this->getParam('fax');
-        $btel = $this->getParam('thesis_tel');
-        $btelw = $this->getParam('thesis_w');
-        $bemailaddress = $this->getParam('thesis_email');
-        $bentitynum = $this->getParam('entity');
-        $bstudentno = $this->getParam('thesis_studentno');
-        $bcourse = $this->getParam('thesis_course');
+        $author = $this->getParam('aut');
+        $title = $this->getParam('thesis_titles');
+        $place = $this->getParam('thesis_place');
+        $publisher = $this->getParam('thesis_publisher');
+        $date = $this->getParam('year');
+        $edition = $this->getParam('edition');
+        $isbn = $this->getParam('ISBN');
+        $series = $this->getParam('series');
+        $copy = $this->getParam('photocopy');
+        $titlepages = $this->getParam('titles');
+        $pages = $this->getParam('pages');
+        $thesis = $this->getParam('thesis');
+        $name = $this->getParam('thesis_prof');
+        $address = $this->getParam('thesis_address');
+        $cell = $this->getParam('thesis_cell');
+        $fax = $this->getParam('fax');
+        $tel = $this->getParam('thesis_tel');
+        $telw = $this->getParam('thesis_w');
+        $emailaddress = $this->getParam('thesis_email');
+        $entitynum = $this->getParam('entity');
+        $studentno = $this->getParam('thesis_studentno');
+        $course = $this->getParam('thesis_course');
         $captcha = $this->getParam('thesis_captcha');
 
         // Check whether user matched captcha
-        if (md5(strtoupper($captcha)) != $this->getParam('thesis_captcha') || empty($captcha)) {
-            $msg[] = 'badcaptcha';
+        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
+            $erormsg [ ] = 'badcaptcha';
         }
         //if form entry is in corect or invavalid
-        if (count($msg) > 0) {
-            $this->setVarByRef('msg', $msg);
+        if (count($erormsg) > 0) {
+            $this->setVarByRef('erormsg', $erormsg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
         }
 
         //insert into DB
-        $id = $this->dbAddBookthesis->insertBookthesisRecord($bprint, $bauthor, $btitle, $bplace, $bpublisher, $bdate,
-                        $bedition, $bisbn, $bseries, $bcopy, $btitlepages, $bpages, $bthesis,
-                        $bname, $baddress, $bcell, $bfax, $btel, $btelw, $bemailaddress,
-                        $bentitynum, $bstudentno, $bcourse);
+        $id = $this->dbAddBookthesis->insertBookthesisRecord($author, $title, $place, $publisher, $date,
+                        $edition, $isbn, $series, $copy, $titlepages, $pages, $thesis,
+                        $name, $address, $cell, $fax, $tel, $telw, $emailaddress,
+                        $entitynum, $studentno, $course);
 
 // after inserting into db send email alert
         $subject = "Book thesis record";
         $this->sendEmailNotification($subject,
-                $message = $bprint . ' ' . $bauthor . ' ' . $btitle . ' ' . $bplace . ' ' . $bpublisher . ' ' .
-                $bdate . ' ' . $bedition . ' ' . $bisbn . ' ' . $bseries . ' ' . $bcopy . ' ' . $btitlepages . ' ' .
-                $bpages . ' ' . $bthesis . ' ' . $bname . ' ' . $baddress . ' ' . $bcell . ' ' . $bfax . ' ' .
-                $btel . ' ' . $btelw . ' ' . $bemailaddress . ' ' . $bentitynum . ' ' . $bstudentno . ' ' . $bcourse);
+                $message = $author . ' ' . $title . ' ' . $place . ' ' . $publisher . ' ' .
+                $date . ' ' . $edition . ' ' . $isbn . ' ' . $series . ' ' . $copy . ' ' . $titlepages . ' ' .
+                $pages . ' ' . $thesis . ' ' . $name . ' ' . $address . ' ' . $cell . ' ' . $fax . ' ' .
+                $tel . ' ' . $telw . ' ' . $emailaddress . ' ' . $entitynum . ' ' . $studentno . ' ' . $course);
     }
 
 // end of bookthesisrecord
@@ -221,12 +221,12 @@ class libraryforms extends controller {
         $captcha = $this->getParam('periodical_captcha');
 
         // Check whether user matched captcha
-        if (md5(strtoupper($captcha)) != $this->getParam('periodical_captcha') || empty($captcha)) {
-            $msg = 'badcaptcha';
+        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
+            $errormsg [ ] = 'badcaptcha';
         }
         //if form entry is in corect or invavalid
-        if (count($msg) > 0) {
-            $this->setVarByRef('msg', $msg);
+        if (count($errormsg) > 0) {
+            $this->setVarByRef('$errormsg', $errormsg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
         }
@@ -249,7 +249,7 @@ class libraryforms extends controller {
 
         //get parametters
         $name = $this->getParam('feedback_name');
-        $emaill = $this->getParam('fbkemail');
+        $email = $this->getParam('fbkemail');
         $msg = $this->getParam('msgbox');
         $captcha = $this->getParam('feedback_captcha');
 
