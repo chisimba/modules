@@ -87,7 +87,7 @@ public class DocumentListPanel extends LayoutContainer {
     private Main main;
     private String defaultParams = "", statusS;
     private int status;
-    static int versionV;
+    private int versionV;
     private SimpleComboBox<String> submitCombo = new SimpleComboBox<String>();
     private String mode = Constants.main.getMode();
     private boolean editing;
@@ -304,35 +304,35 @@ public class DocumentListPanel extends LayoutContainer {
         }
     }
 
-    public static int getVersion() {
-
-        String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
-                + "?module=wicid&action=getversion&docid=" + Constants.docid;
-        RequestBuilder builder =
-                new RequestBuilder(RequestBuilder.GET, url);
-
-        try {
-            Request request = builder.sendRequest(null, new RequestCallback() {
-
-                public void onError(Request request, Throwable exception) {
-                    MessageBox.info("Error", "Error, cannot getversion", null);
-                }
-
-                public void onResponseReceived(Request request, Response response) {
-                    if (200 == response.getStatusCode()) {
-                        versionV = Integer.parseInt(response.getText());
-                    } else {
-                        MessageBox.info("Error", "Error occured on the server. Cannot get version", null);
-                    }
-                }
-            });
-        } catch (RequestException e) {
-            MessageBox.info("Fatal Error", "Fatal Error: cannot reject document", null);
-        }
-
-        return versionV;
+    /*   public static int getVersion() {
+    
+    String url = GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN
+    + "?module=wicid&action=getversion&docid=" + Constants.docid;
+    RequestBuilder builder =
+    new RequestBuilder(RequestBuilder.GET, url);
+    
+    try {
+    Request request = builder.sendRequest(null, new RequestCallback() {
+    
+    public void onError(Request request, Throwable exception) {
+    MessageBox.info("Error", "Error, cannot getversion", null);
     }
-
+    
+    public void onResponseReceived(Request request, Response response) {
+    if (200 == response.getStatusCode()) {
+    System.out.println("response = "+response.getText());
+    //versionV = Integer.parseInt(response.getText());
+    } else {
+    MessageBox.info("Error", "Error occured on the server. Cannot get version", null);
+    }
+    }
+    });
+    } catch (RequestException e) {
+    MessageBox.info("Fatal Error", "Fatal Error: cannot reject document", null);
+    }
+    
+    return versionV;
+    }*/
     private void submitDocument() {
         String currentStatusS = "";
         status = getStatus();
@@ -361,7 +361,7 @@ public class DocumentListPanel extends LayoutContainer {
 
         submitCombo.setFieldLabel("Subit this document to");
         submitCombo.setEmptyText("Select who you want to submit to");
-
+        submitCombo.removeAll();
         submitCombo.add("Creator");
         submitCombo.add("APO");
         submitCombo.add("SubFaculty");
@@ -397,62 +397,9 @@ public class DocumentListPanel extends LayoutContainer {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                increaseVersion();
+                increaseVersion("changestatus");
 
-                int version = getVersion();
 
-                statusS = submitCombo.getValue().getValue();
-                if (statusS.equalsIgnoreCase("creator")) {
-                    status = 0;
-                }
-                if (statusS.equalsIgnoreCase("apo")) {
-                    status = 1;
-                }
-                if (statusS.equalsIgnoreCase("subfaculty")) {
-                    status = 2;
-                }
-                if (statusS.equalsIgnoreCase("faculty")) {
-                    status = 3;
-                }
-                if (statusS.equalsIgnoreCase("senate")) {
-                    status = 4;
-                }
-
-                String id = "";
-                for (ModelData row : selectedRows) {
-                    id = row.get("docid");
-                }
-
-                if (status > -1) {
-                    String url =
-                            GWT.getHostPageBaseURL()
-                            + Constants.MAIN_URL_PATTERN + "?module=wicid&action=setstatus&docid=" + id + "&status=" + status + "&version=" + version;
-                    RequestBuilder builder =
-                            new RequestBuilder(RequestBuilder.GET, url);
-
-                    try {
-                        Request request = builder.sendRequest(null, new RequestCallback() {
-
-                            public void onError(Request request, Throwable exception) {
-                                MessageBox.info("Error", "Error, cannot change status", null);
-                            }
-
-                            public void onResponseReceived(Request request, Response response) {
-                                if (200 == response.getStatusCode()) {
-                                    MessageBox.info("Done", "The document has been submitted to " + statusS, null);
-                                    String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
-                                    Constants.main.getDocumentListPanel().refreshDocumentList(params);
-                                } else {
-                                    MessageBox.info("Error", "Error occured on the server. Cannot set status", null);
-                                }
-                            }
-                        });
-                    } catch (RequestException e) {
-                        MessageBox.info("Fatal Error", "Fatal Error: cannot delete document", null);
-                    }
-                } else {
-                    MessageBox.info("Error", "Pleave select a party to submit to.", null);
-                }
 
 
             }
@@ -470,10 +417,17 @@ public class DocumentListPanel extends LayoutContainer {
         submitDialog.show();
     }
 
-    public void increaseVersion() {
+    public void increaseVersion(final String which) {
+
+        String id = "";
+        for (ModelData row : selectedRows) {
+            id = row.get("docid");
+        }
+
+        System.out.println(id);
 
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
-                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=increaseversion&docid=" + Constants.docid);
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=increaseversion&docid=" + id);
         try {
 
             Request request = builder.sendRequest(null, new RequestCallback() {
@@ -483,13 +437,76 @@ public class DocumentListPanel extends LayoutContainer {
                 }
 
                 public void onResponseReceived(Request request, Response response) {
-                    String newVersion = response.getText();
-                    MessageBox.info("Done", "The version for the document has been changed to "+newVersion, null);
+                    versionV = Integer.parseInt(response.getText());
+                    System.out.println("version = " + versionV);
+                    if (which.equals("changestatus")) {
+                        changeStatus(versionV);
+                    } else if (which.equals("reclaimdocument")) {
+                        reclaimDocument(versionV);
+                    }
+                    MessageBox.info("Done", "The version for the document has been changed to " + versionV, null);
                 }
             });
         } catch (Exception e) {
             MessageBox.info("Fatal Error", "Fatal Error: cannot get version", null);
         }
+    }
+
+    public void changeStatus(int version) {
+
+        statusS = submitCombo.getValue().getValue();
+        if (statusS.equalsIgnoreCase("creator")) {
+            status = 0;
+        }
+        if (statusS.equalsIgnoreCase("apo")) {
+            status = 1;
+        }
+        if (statusS.equalsIgnoreCase("subfaculty")) {
+            status = 2;
+        }
+        if (statusS.equalsIgnoreCase("faculty")) {
+            status = 3;
+        }
+        if (statusS.equalsIgnoreCase("senate")) {
+            status = 4;
+        }
+
+        String id = "";
+        for (ModelData row : selectedRows) {
+            id = row.get("docid");
+        }
+
+        if (status > -1) {
+            String url =
+                    GWT.getHostPageBaseURL()
+                    + Constants.MAIN_URL_PATTERN + "?module=wicid&action=setstatus&docid=" + id + "&status=" + status + "&version=" + version;
+            RequestBuilder builder =
+                    new RequestBuilder(RequestBuilder.GET, url);
+
+            try {
+                Request request = builder.sendRequest(null, new RequestCallback() {
+
+                    public void onError(Request request, Throwable exception) {
+                        MessageBox.info("Error", "Error, cannot change status", null);
+                    }
+
+                    public void onResponseReceived(Request request, Response response) {
+                        if (200 == response.getStatusCode()) {
+                            MessageBox.info("Done", "The document has been submitted to " + statusS, null);
+                            String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
+                            Constants.main.getDocumentListPanel().refreshDocumentList(params);
+                        } else {
+                            MessageBox.info("Error", "Error occured on the server. Cannot set status", null);
+                        }
+                    }
+                });
+            } catch (RequestException e) {
+                MessageBox.info("Fatal Error", "Fatal Error: cannot delete document", null);
+            }
+        } else {
+            MessageBox.info("Error", "Pleave select a party to submit to.", null);
+        }
+        submitCombo.clearSelections();
     }
 
     public void stopEditing() {
@@ -757,6 +774,42 @@ public class DocumentListPanel extends LayoutContainer {
             submitMenuItem.setEnabled(true);
         }
 
+     /*   MenuItem reclaimMenuItem = new MenuItem("Reclaim");
+        reclaimMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
+
+            public void componentSelected(MenuEvent ce) {
+                if (selectedRows.size() < 1) {
+                    MessageBox.info("No documents", "Please, select document(s) to reclaim", null);
+                } else {
+                    final MessageBox confirmReclaim = MessageBox.confirm("Reclaiming", "Are you sure you want to reclaim this document?", null);
+                    confirmReclaim.getDialog().getButtonById(Dialog.YES).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+                        @Override
+                        public void componentSelected(ButtonEvent ce) {
+                            increaseVersion("reclaimdocument");
+                        }
+                    });
+                    confirmReclaim.getDialog().getButtonById(Dialog.NO).addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+                        @Override
+                        public void componentSelected(ButtonEvent ce) {
+                            confirmReclaim.close();
+                        }
+                    });
+                }
+            }
+        });
+
+        String owner = "";
+        for (ModelData row : selectedRows) {
+            owner = row.get("owner");
+        }
+        //if(owner = userid){
+      //  reclaimMenuItem.enable();
+        /*} else{
+        reclaimMenuItem.disable();
+        }*/
+
         MenuItem deleteMenuItem = new MenuItem("Delete");
         deleteMenuItem.setIconStyle("delete");
         deleteMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
@@ -769,6 +822,8 @@ public class DocumentListPanel extends LayoutContainer {
                 }
             }
         });
+      //  contextMenu.add(reclaimMenuItem);
+
         contextMenu.add(editMenuItem);
         contextMenu.add(approveMenuItem);
         if (mode.equals("apo")) {
@@ -878,6 +933,32 @@ public class DocumentListPanel extends LayoutContainer {
         Constants.main.refreshRejectedDocs();
     }
 
+    public void reclaimDocument(int version) {
+        String owner = "";
+        for (ModelData row : selectedRows) {
+            owner = row.get("owner");
+        }
+
+        RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()
+                + Constants.MAIN_URL_PATTERN + "?module=wicid&action=reclaimdocument&userid="
+                + owner + "&docid=" + Constants.docid + "&version=" + version);
+        try {
+
+            Request request = builder.sendRequest(null, new RequestCallback() {
+
+                public void onError(Request request, Throwable exception) {
+                    MessageBox.info("Error", "Error, cannot change currentuser", null);
+                }
+
+                public void onResponseReceived(Request request, Response response) {
+                    MessageBox.info("Done", "The current user for the document has been changed.", null);
+                }
+            });
+        } catch (Exception e) {
+            MessageBox.info("Fatal Error", "Fatal Error: cannot change currentuser", null);
+        }
+    }
+
     public int getStatus() {
         for (ModelData row : selectedRows) {
             String statusTable = row.get("Status");
@@ -898,23 +979,23 @@ public class DocumentListPanel extends LayoutContainer {
 
     /*  private int checkStatus() {
     final String statusS = "";
-
+    
     String ids = "";
     for (ModelData row : selectedRows) {
     ids += row.get("docid") + ",";
     }
-
+    
     RequestBuilder builder =
     new RequestBuilder(RequestBuilder.GET, GWT.getHostPageBaseURL()+Constants.MAIN_URL_PATTERN +
     "?module=wicid&action=getstatus&docid=" + ids);
-
+    
     try {
     Request request = builder.sendRequest(null, new RequestCallback() {
-
+    
     public void onError(Request request, Throwable exception) {
     MessageBox.info("Error", "Error, Cannot retrieve document details", null);
     }
-
+    
     public void onResponseReceived(Request request, Response response) {
     try {
     String data = response.getText();
@@ -934,7 +1015,7 @@ public class DocumentListPanel extends LayoutContainer {
     } catch (NumberFormatException nfe) {
     MessageBox.info("Error", "Error, status is not an integer", null);
     }
-
+    
     }
     });
     } catch (RequestException e) {
