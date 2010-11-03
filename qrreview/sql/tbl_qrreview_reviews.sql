@@ -26,6 +26,10 @@ $fields = array(
         'type' => 'text',
         'length' => 12,
     ),	
+    'farmid' => array(
+        'type' => 'text', 
+        'length' => 50,
+        ),
 	'creationdate' => array(
 		'type' => 'text',
 		'length' => 80,
