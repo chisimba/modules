@@ -318,6 +318,8 @@ public class EditDocumentDialog {
                 updateDocument(url);
                 Constants.main.refreshDocumentList();
                 editDocumentDialog.hide();
+                String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
+                Constants.main.getDocumentListPanel().refreshDocumentList(params);
             }
         });
 
@@ -455,6 +457,8 @@ public class EditDocumentDialog {
                 if (main != null) {
                     main.refreshFileList();
                 }
+                String params = "?module=wicid&action=getdocuments&mode=" + Constants.main.getMode();
+                Constants.main.getDocumentListPanel().refreshDocumentList(params);
             }
         });
         editDocumentDialog.setButtonAlign(HorizontalAlignment.LEFT);
