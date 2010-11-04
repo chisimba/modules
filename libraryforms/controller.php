@@ -222,23 +222,23 @@ class libraryforms extends controller {
 
         // Check whether user matched captcha
         if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
-            $errormsg [ ] = 'badcaptcha';
+            $errormg[] = 'badcaptcha';
         }
         //if form entry is in corect or invavalid
-        if (count($errormsg) > 0) {
-            $this->setVarByRef('$errormsg', $errormsg);
+        if (count($errormg) > 0) {
+            $this->setVarByRef('$errormg', $errormg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
         }
 
         //insert the data into DB
-        $id = $this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages,
+        $id = $this->dbAddillperiodical->insertperiodicalRecord($titleperiodical , $volume, $part, $year, $pages,
                         $author, $titlearticle, $prof, $address, $cell, $tell,
                         $tellw, $emailaddress, $entitynum, $studentno, $course);
 
         $subject = "Periodical Book Record";
         $this->sendEmailNotification($subject,
-                $message = $titleperiodical . ' ' . $volume . ' ' . $part . ' ' . $year . ' ' . $pages . '' .
+                $message = $titleperiodical  . ' ' . $volume . ' ' . $part . ' ' . $year . ' ' . $pages . '' .
                 $author . ' ' . $titlearticle . ' ' . $prof . ' ' . $address . ' ' . $cell . ' ' . $tell . ' ' .
                 $tellw . ' ' . $emailaddress . ' ' . $entitynum . ' ' . $studentno . ' ' . $course);
     }

@@ -313,7 +313,7 @@ class ILLperiodical extends dbTable {
 
 	$objCaptcha = $this->getObject('captcha', 'utilities');
  	$captcha = new textinput('periodical_captcha');
-	$captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify 			Request'), 'input_periodical_captcha');
+	$captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_periodical_captcha');
  	        
         $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="illperiodicalcaptchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:illperiodicalredraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
 
