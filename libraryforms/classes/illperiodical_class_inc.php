@@ -105,7 +105,7 @@ class ILLperiodical extends dbTable {
 
 
         //Create a new textinput for the title
-        $objperiodical = new textinput('titleperiodical');
+        $objperiodical = new textinput('title_periodical');
         $periodicalLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttitleperiod","libraryforms"),"titleperiodical");
         $table->startRow();
         $table->addCell($periodicalLabel->show(), '', 'center', 'left', '');
@@ -334,7 +334,7 @@ class ILLperiodical extends dbTable {
         return $onerec;
     }
 
-    function insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
+    function insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell, $tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
         $id = $this->insert(array(
        
             'ptitleperiodical' => $titleperiodical,
@@ -346,7 +346,7 @@ class ILLperiodical extends dbTable {
             'ptitlearticle' => $titlearticle,
             'pprof' => $prof,
             'paddress' => $address,
-            'pfax' => $fax,
+            'pcell' => $cell,
             'ptell' => $tell,
             'ptellw' => $tellw,
             'pemailaddress' => $emailaddress,

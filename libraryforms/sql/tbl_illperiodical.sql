@@ -73,12 +73,7 @@ $fields = array(
                     
 			),
 
-         
-        'pfax'=> array(
-                     'type' =>'text',
-                     'length'=>15
-			),
-          
+               
         'ptell'=>array(
                     'type'=>'text',
                     'length'=>20

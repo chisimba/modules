@@ -202,7 +202,7 @@ class libraryforms extends controller {
 
     public function saveperiodicalRecord() {
 
-        $titleperiodical = $this->getParam('titleperiodical');
+        $titleperiodical = $this->getParam('title_periodical');
         $volume = $this->getParam('period_volume');
         $part = $this->getParam('period_part');
         $year = $this->getParam('period_year');
@@ -238,7 +238,7 @@ class libraryforms extends controller {
 
         $subject = "Periodical Book Record";
         $this->sendEmailNotification($subject,
-                $message = $titleperiodical  . ' ' . $volume . ' ' . $part . ' ' . $year . ' ' . $pages . '' .
+                $message = $titleperiodical  . ' ' . $volume . ' ' . $part . ' ' . $year . ' ' . $pages . ' ' .
                 $author . ' ' . $titlearticle . ' ' . $prof . ' ' . $address . ' ' . $cell . ' ' . $tell . ' ' .
                 $tellw . ' ' . $emailaddress . ' ' . $entitynum . ' ' . $studentno . ' ' . $course);
     }
