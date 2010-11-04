@@ -348,7 +348,8 @@ if (!empty($questions)) {
             'action' => 'deletequestion',
             'questionId' => $line['id'],
             'id' => $data['id'],
-            'mark' => $line['mark']
+            'mark' => $line['mark'],
+            'type' => $line['questiontype']
             )) , $lbConfirm);
         $icons.= $objConfirm->show();
         // link name to edit question - shorten the question to 100 characters or the first line break

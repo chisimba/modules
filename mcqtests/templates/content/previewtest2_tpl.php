@@ -161,7 +161,7 @@ if (!empty($data)) {
             }
             else if ($line['questiontype'] == 'numerical') {
                 $objTextInput = new textinput('ans'.$questionCounter, "");
-                $objTextInput->size = 10;
+                $objTextInput->size = 30;
             }
             else {
                 $objRadio = new radio('ans' . $questionCounter);

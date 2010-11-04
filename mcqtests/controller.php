@@ -865,6 +865,17 @@ class mcqtests extends controller {
                 $this->setVarByRef('check', $check);
                 $this->setVarByRef('resultId', $resultId);
                 return $this->setTest($testId);
+            case 'answertest2':
+                $testId = $this->getParam('id');
+                $check = $this->getSession('taketest', NULL);
+                if ($check != 'open') {
+                    $this->unsetSession('qData');
+                    $resultId = $this->closeTest($testId);
+                    $this->setSession('taketest', 'open');
+                }
+                $this->setVarByRef('check', $check);
+                $this->setVarByRef('resultId', $resultId);
+                return $this->setTest2($testId);
             case 'previewtest':
                 $testId = $this->getParam('id');
                 $num = $this->getParam('num');
@@ -965,7 +976,12 @@ class mcqtests extends controller {
                 return $this->viewNumericalQuestions();
             case 'viewcalcq':
                 return $this->viewCalcQ();
+            case 'studenthome2':
+                if ($this->objCond->isContextMember('Students') ) {
+                    return $this->studentHome2();
+                }
             default:
+
                 if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
                     return $this->studentHome();
@@ -1491,6 +1507,50 @@ class mcqtests extends controller {
         return 'student_home_tpl.php';
     }
 
+    private function studentHome2() {
+        $data = $this->dbTestadmin->getTests($this->contextCode);
+        if (!empty($data)) {
+            foreach ($data as $key => $line) {
+                $sql = "SELECT title FROM tbl_context_nodes WHERE ";
+                $sql.= "id = '" . $line['chapter'] . "'";
+                $nodes = $this->objContentNodes->getArray($sql);
+                $data[$key]['node'] = '';
+                if (!empty($nodes)) {
+                    $data[$key]['node'] = $nodes[0]['title'];
+                }
+                $result = $this->dbResults->getResult($this->userId, $line['id']);
+                //Get Total Mark
+                $totalMark = $this->dbQuestions->sumTotalmark($line['id']);
+                if (!empty($result)) {
+                    $data[$key]['mark'] = $result[0]['mark'];
+                } else {
+                    $data[$key]['mark'] = 'none';
+                }
+                if (!empty($totalMark)) {
+                    $data[$key]['totalmark'] = $totalMark;
+                } else {
+                    $data[$key]['totalmark'] = 'none';
+                }
+                if ($line['comlab'] != NULL) {
+                    $arrLabIps = $this->getIps($line['comlab']);
+                    $ipAddress = $_SERVER['REMOTE_ADDR'];
+                    if (in_array($ipAddress, $arrLabIps)) {
+                        $data[$key]['comlab'] = TRUE;
+                        $data[$key]['labname'] = '';
+                    } else {
+                        $data[$key]['comlab'] = FALSE;
+                        $data[$key]['labname'] = $line['comlab'];
+                    }
+                } else {
+                    $data[$key]['comlab'] = TRUE;
+                    $data[$key]['labname'] = '';
+                }
+            }
+        }
+        $this->setVarByRef('data', $data);
+        return 'student2_home_tpl.php';
+    }
+
     /**
      * Method to save the result with mark=0, to prevent reopening the test.
      *
@@ -1591,6 +1651,87 @@ class mcqtests extends controller {
         $this->setVar('suppressFooter', TRUE);
 
         return 'answertest_tpl.php';
+    }
+
+    /**
+     * Method to set up a test for answering.
+     *
+     * @access private
+     * @param string $testId The id of the test to be answered.
+     * @return The template displaying the test.
+     */
+    private function setTest2($testId, $num = 0) {
+        $data = array();
+        $fieldlist = 'id,name,totalmark,timed,duration,description,testtype,qsequence,asequence';
+        $test = $this->dbTestadmin->getTests('', $fieldlist, $this->getParam('id'));
+        $results = $this->dbMarked->getSelectedAnswers($this->userId, $testId);
+        // new code for scrambling tests
+        if ($test[0]['qsequence'] == 'Scrambled' || $test[0]['asequence'] == 'Scrambled') {
+            $qData = $this->getSession('qData');
+            if (isset($qData) && !empty($qData)) {
+                $data = array_slice($qData, $num, 10);
+                $data[0]['count'] = count($qData);
+                $data[0]['qnum'] = $num;
+                foreach ($data as $key => $line) {
+                    if (isset($results) && !empty($results)) {
+                        foreach ($results as $item) {
+                            foreach ($data[$key]['answers'] as $k => $val) {
+                                if (($item['questionid'] == $line['id']) && ($item['answerid'] == $val['id'])) {
+                                    $data[$key]['answers'][$k]['selected'] = $item['id'];
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                $qData = $this->dbQuestions->getQuestions($test[0]['id']);
+                if (!empty($qData)) {
+                    if ($test[0]['qsequence'] == 'Scrambled') {
+                        shuffle($qData);
+                    }
+                    foreach ($qData as $key => $line) {
+                        $qData[$key]['questionorder'] = ($key + 1);
+                    }
+                    $qData[0]['count'] = count($qData);
+                    foreach ($qData as $key => $line) {
+                        $answers = $this->dbAnswers->getAnswers($line['id']);
+                        if ($test[0]['asequence'] == 'Scrambled') {
+                            shuffle($answers);
+                        }
+                        $qData[$key]['answers'] = $answers;
+                    }
+                    $this->setSession('qData', $qData);
+                    $data = array_slice($qData, $num, 10);
+                    $data[0]['count'] = count($qData);
+                    $data[0]['qnum'] = $num;
+                }
+            }
+        } else {
+            // original code
+            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');
+            if (!empty($data)) {
+                foreach ($data as $key => $line) {
+                    $answers = $this->dbAnswers->getAnswers($line['id']);
+                    if (isset($results) && !empty($results)) {
+                        foreach ($results as $item) {
+                            foreach ($answers as $k => $val) {
+                                if (($item['questionid'] == $line['id']) && ($item['answerid'] == $val['id'])) {
+                                    $answers[$k]['selected'] = $item['id'];
+                                }
+                            }
+                        }
+                    }
+                    $data[$key]['answers'] = $answers;
+                }
+                $data[0]['qnum'] = $num;
+            }
+        }
+        $this->setVarByRef('test', $test[0]);
+        $this->setVarByRef('data', $data);
+
+        $this->setVar('suppressFooter', TRUE);
+
+        return 'answertest2_tpl.php';
     }
 
     /**
