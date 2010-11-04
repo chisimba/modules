@@ -155,9 +155,11 @@ class ILLperiodical extends dbTable {
         $table->endRow();
         $objForm->addRule('period_author',$this->objLanguage->languageText("mod_author2_required", "libraryforms"),'required');
 
-        $reqLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentrequest","libraryforms"),"request");
+        $titarticle =new textinput('periodical_titlearticle');
+        $reqLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentarticle","libraryforms"),"request");
         $table->startRow();
         $table->addCell($reqLabel->show(), '', 'center', 'left', '');
+ 	$table->addCell($titarticle->show(), '', 'center', 'left', '');
         $table->endRow();
 
 
@@ -196,7 +198,7 @@ class ILLperiodical extends dbTable {
         $table->addCell($objw->show(), '', 'center', 'left', '');
 
         //Create a new textinput for email
-        $objemail = new textinput('periodicalemaill');
+        $objemail = new textinput('periodicalemail');
         $emailLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentemail","libraryforms"),"email");
 
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
@@ -332,25 +334,25 @@ class ILLperiodical extends dbTable {
         return $onerec;
     }
 
-    function insertRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
+    function insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell,$tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
         $id = $this->insert(array(
        
-            'titleperiodical' => $titleperiodical,
-            'volume' => $volume,
-            'part' => $part,
-            'year' => $year,
-            'pages' => $pages,
-            'author' =>$author,
-            'titlearticle' => $titlearticle,
-            'prof' => $prof,
-            'address' => $address,
-            'fax' => $fax,
-            'tell' => $tell,
-            'tellw' => $tellw,
-            'emailaddress' => $emailaddress,
-            'entitynum' => $entitynum,
-            'studentno' => $studentno,
-            'course' => $course,
+            'ptitleperiodical' => $titleperiodical,
+            'pvolume' => $volume,
+            'ppart' => $part,
+            'pyear' => $year,
+            'ppages' => $pages,
+            'pauthor' =>$author,
+            'ptitlearticle' => $titlearticle,
+            'pprof' => $prof,
+            'paddress' => $address,
+            'pfax' => $fax,
+            'ptell' => $tell,
+            'ptellw' => $tellw,
+            'pemailaddress' => $emailaddress,
+            'pentitynum' => $entitynum,
+            'pstudentno' => $studentno,
+            'pcourse' => $course,
             
         ));
         return $id;

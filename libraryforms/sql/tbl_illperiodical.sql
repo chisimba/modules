@@ -15,103 +15,103 @@ $fields = array(
 		'length' => 5
 		),
                           
-        'titleperiodical'=>array(
+        'ptitleperiodical'=>array(
                     'type'=>'text',
                     'length'=>150
                     ),
 
-       'volume'=>array(
+       'pvolume'=>array(
                     'type'=>'text',
                     'length'=>50
                     ),
 
-        'part'=> array(
+        'ppart'=> array(
                      'type' =>'text',
                      'length'=>10
                       ),
           
-        'year'=>array(
+        'pyear'=>array(
                     'type'=>'text',
                     'length'=>30
                                      
                      ),
 
-        'pages'=> array(
+        'ppages'=> array(
                      'type' =>'text',
                      'length'=>5 
                         ),
           
-        'author'=>array(
+        'pauthor'=>array(
                     'type'=>'text',
                     'length'=>150
                                    
                      ),
 
-        'titlearticle'=> array(
+        'ptitlearticle'=> array(
                      'type' =>'text',
                      'length'=>150
                     
                          ),
           
-        'prof'=>array(
+        'pprof'=>array(
                     'type'=>'text',
                     'length'=>20
                      
 			),
                    
          
-        'address'=> array(
+        'paddress'=> array(
                      'type' =>'text',
                      'length'=>150
                      
 			),
                    
           
-        'cell'=>array(
+        'pcell'=>array(
                     'type'=>'text',
                     'length'=>15
                     
 			),
 
          
-        'fax'=> array(
+        'pfax'=> array(
                      'type' =>'text',
                      'length'=>15
 			),
           
-        'tell'=>array(
+        'ptell'=>array(
                     'type'=>'text',
                     'length'=>20
                   
 			),
            
           
-        'tellw'=>array(
+        'ptellw'=>array(
                     'type'=>'text',
                     'length'=>30
                     
 			),
 
    
-        'emailaddress'=>array(
+        'pemailaddress'=>array(
                     'type'=>'text',
                     'length'=>30
                    ),
        
           
-        'entitynum'=>array(
+        'pentitynum'=>array(
                     'type'=>'text',
                     'length'=>30,
                     'notnull'=>1
                         ),
           
-        'studentno'=>array(
+        'pstudentno'=>array(
                     'type'=>'text',
                     'length'=>50
                      ),
                
          
-        'course'=> array(
+        'pcourse'=> array(
                      'type' =>'text',
                      'length'=>50
                      )

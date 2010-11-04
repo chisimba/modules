@@ -202,22 +202,22 @@ class libraryforms extends controller {
 
     public function saveperiodicalRecord() {
 
-        $titleperiodical = $this->getParam('print');
-        $volume = $this->getParam('author');
-        $part = $this->getParam('title');
-        $year = $this->getParam('place');
-        $pages = $this->getParam('publisher');
-        $author = $this->getParam('date');
-        $titlearticle = $this->getParam('edition');
-        $prof = $this->getParam('isbn');
-        $address = $this->getParam('series');
-        $cell = $this->getParam('copy');
-        $tell = $this->getParam('pages');
-        $tellw = $this->getParam('thesis');
-        $emailaddress = $this->getParam('email');
-        $bentitynum = $this->getParam('entitynum');
-        $bstudentno = $this->getParam('studentno');
-        $bcourse = $this->getParam('course');
+        $titleperiodical = $this->getParam('titleperiodical');
+        $volume = $this->getParam('period_volume');
+        $part = $this->getParam('period_part');
+        $year = $this->getParam('period_year');
+        $pages = $this->getParam('period_pages');
+        $author = $this->getParam('period_author');
+        $titlearticle = $this->getParam('periodical_titlearticle');
+        $prof = $this->getParam('periodical_prof');
+        $address = $this->getParam('periodical_address');
+        $cell = $this->getParam('period_cell');
+        $tell = $this->getParam('periodical_tell');
+        $tellw = $this->getParam('periodical_w');
+        $emailaddress = $this->getParam('periodicalemail');
+        $bentitynum = $this->getParam('periodical_entity');
+        $bstudentno = $this->getParam('periodical_student');
+        $bcourse = $this->getParam('periodical_course');
         $captcha = $this->getParam('periodical_captcha');
 
         // Check whether user matched captcha
