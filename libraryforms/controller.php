@@ -222,11 +222,11 @@ class libraryforms extends controller {
 
         // Check whether user matched captcha
         if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
-            $errormg[] = 'badcaptcha';
+            $errormsg[] = 'badcaptcha';
         }
         //if form entry is in corect or invavalid
-        if (count($errormg) > 0) {
-            $this->setVarByRef('$errormg', $errormg);
+        if (count($errormsg) > 0) {
+            $this->setVarByRef('$errormsg', $errormsg);
             $this->setVarByRef('insarr', $insarr);
             return 'editadd_tpl.php';
         }
@@ -272,7 +272,7 @@ class libraryforms extends controller {
         // send email alert
         $subject = "Feed Back";
 
-        $this->sendEmailNotification($subject, $message = $name . ' ' . $email . ' ' . $msg);
+        $this->sendEmailNotification($subject, $message = 'Name' . $name . ' '  . '</ p>'. ' Email Adress '.$email . ' ' . ' Feeb Back Message' .$msg);
     }
 
 // end of Submitmsg
