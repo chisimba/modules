@@ -1720,6 +1720,10 @@ class mcqtests extends controller {
                                 }
                             }
                         }
+                    }else if ($data[$key]['questiontype'] == 'matching') { // to check other types of questions, not the simple mcq's
+                        $answers = $this->objQuestionMatching->getAnswers($line['id']);
+                    } else if ($data[$key]['questiontype'] == 'numerical') {
+                        $answers = $this->objQuestionNumerical->getAnswers($line['id']);
                     }
                     $data[$key]['answers'] = $answers;
                 }
