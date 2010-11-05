@@ -311,8 +311,9 @@ class mcqtests extends controller {
                 $count = $this->getParam('count');
                 $this->setVarByRef('testid', $id);
                 $this->setVarByRef('count', $count);
-                $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
-                $oldQuestions = $this->dbTestadmin->getContextQuestions($this->contextCode, $id);
+                $contextCode = $this->contextCode;
+                $test = $this->dbTestadmin->getTests($contextCode, 'id,name,totalmark', $id);
+                $oldQuestions = $this->dbTestadmin->getContextQuestions($contextCode, $id);
 
                 // Get the total number of questions if this isn't the first
                 if ($count > 1) {
@@ -329,8 +330,8 @@ class mcqtests extends controller {
             case 'addquestion':
                 $id = $this->getParam('id', NULL);
                 $count = $this->getParam('count');
-
-                $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
+                $contextCode = $this->contextCode;
+                $test = $this->dbTestadmin->getTests($contextCode, 'id,name,totalmark', $id);
 
                 // Get the total number of questions if this isn't the first
                 if ($count > 1) {
