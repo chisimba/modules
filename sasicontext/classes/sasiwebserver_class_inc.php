@@ -239,6 +239,7 @@ class sasiwebserver extends object {
             foreach($simpledata as $smdata) {
                 $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
             }
+            $dropdown->selected = $simpledata[0]['id'];
             return $arr.$dropdown->show();
         }
 
@@ -253,7 +254,7 @@ class sasiwebserver extends object {
             foreach($simpledata as $smdata) {
                 $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
             }
-
+            $dropdown->selected = $simpledata[0]['id'];
             $link = new link ("#");
             $link->link = 'Start Over';
             $link->rel = 'facebox';
@@ -298,6 +299,7 @@ class sasiwebserver extends object {
             foreach($simpledata as $smdata) {
                 $dropdown->addOption($smdata['id'], '['. $smdata['id'].'] - '. $smdata['title']);
             }
+            $dropdown->selected = $simpledata[0]['id'];
             $submitform->addToForm($arr);
             $submitform->addToForm($dropdown->show());
             $submitform->addToForm('<br/>');
