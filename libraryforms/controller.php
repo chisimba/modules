@@ -102,17 +102,17 @@ class libraryforms extends controller {
         }
         $surname = $this->getParam('surname');
         $initials = $this->getParam('initials');
-        $title = $this->getParam('title');
+        $title = $this->getParam('select_title');
         $studentno = $this->getParam('studentno');
-        $postaladdress = $this->getParam('postaladdress');
-        $physicaladdress = $this->getParam('physicaladdress');
+        $postaladdress = $this->getParam('postal');
+        $physicaladdress = $this->getParam('physical');
         $postalcode = $this->getParam('postalcode');
         $postalcode2 = $this->getParam('postalcode2');
-        $telnoh = $this->getParam('telnoh');
-        $telnow = $this->getParam('telnow');
+        $telnoh = $this->getParam('tel');
+        $telnow = $this->getParam('telw');
         $cell = $this->getParam('cell');
         $fax = $this->getParam('fax');
-        $emailaddress = $this->getParam('register_email');
+        $emailaddress = $this->getParam('emailaddress');
         $course = $this->getParam('course');
         $department = $this->getParam('department');
         $supervisor = $this->getParam('supervisor');
