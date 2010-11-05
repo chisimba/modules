@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template to display the test to the student for answering.
  * @package mcqtests
@@ -79,15 +80,15 @@ $alpha = array(
 // Get duration of test in minutes, convert to milliseconds, set timeout
 if ($test['timed']) {
     if (isset($testDuration) && !empty($testDuration)) {
-        $duration = $testDuration*60*1000;
+        $duration = $testDuration * 60 * 1000;
         $time = $testDuration;
     } else {
-        $duration = $test['duration']*60*1000;
+        $duration = $test['duration'] * 60 * 1000;
         $time = $test['duration'];
     }
     $javascript = "<script language=\"javascript\" type=\"text/javascript\">
         //<![CDATA[
-        var count = ".$time.";
+        var count = " . $time . ";
         function submitForm(val){
             document.getElementById('form_submittest').action.value=val;
             document.getElementById('form_submittest').submit();
@@ -111,7 +112,7 @@ if ($test['timed']) {
 
         function timeOut(){
             var c = window.setTimeout(\"countDown()\", 60000);
-            var t = window.setTimeout(\"submitForm('marktest')\", ".$duration.");
+            var t = window.setTimeout(\"submitForm('marktest')\", " . $duration . ");
         }
 
         function disableCtrlKeyCombination(e)
@@ -215,20 +216,20 @@ if ($test['timed']) {
     $this->setVarByRef('bodyParams', $body);
 }
 // Display the test details
-$str = '<font size="3"><b>'.$testLabel.':</b>&nbsp;&nbsp;'.$test['name'];
-$str.= '<br /><b>'.$totalLabel.':</b>&nbsp;&nbsp;'.$test['totalmark'];
-$str.= '<p><b>'.$descriptonLabel.':</b><br />'.$test['description'].'</p></font>';
+$str = '<font size="3"><b>' . $testLabel . ':</b>&nbsp;&nbsp;' . $test['name'];
+$str.= '<br /><b>' . $totalLabel . ':</b>&nbsp;&nbsp;' . $test['totalmark'];
+$str.= '<p><b>' . $descriptonLabel . ':</b><br />' . $test['description'] . '</p></font>';
 $counter = '';
 // Display the time left to the student
 if ($test['timed']) {
-    $durHour = floor($time/60);
-    $durMin = $time%60;
+    $durHour = floor($time / 60);
+    $durMin = $time % 60;
     if (strlen($durMin) == 1) {
-        $durMin = (0) .$durMin;
+        $durMin = (0) . $durMin;
     }
-    $counter.= '<font size="2"><b>'.$durationLabel.':</b>&nbsp;&nbsp;';
+    $counter.= '<font size="2"><b>' . $durationLabel . ':</b>&nbsp;&nbsp;';
 
-    $objInput = new textinput('countdown', $durHour.':'.$durMin);
+    $objInput = new textinput('countdown', $durHour . ':' . $durMin);
     $objInput->extra = 'readonly="readonly"';
     $objInput->size = 8;
     $counter.= $objInput->show();
@@ -251,84 +252,116 @@ $hidden1 = '';
 $count = 0;
 
 if (empty($data)) {
- $questionCounter = -1;
+    $questionCounter = -1;
 }
 // Display questions
 if (!empty($data)) {
     $i = $data[0]['questionorder'];
-    $count = count($data) +$i-1;
+    $count = count($data) + $i - 1;
     $questionCounter = $i;
     $qnum = $i;
-    foreach($data as $line) {
+    foreach ($data as $line) {
         $row = array();
-        $row[] = '<nobr><b>'.$questionLabel.' '.$questionCounter.':</b></nobr>';
+        $row[] = '<nobr><b>' . $questionLabel . ' ' . $questionCounter . ':</b></nobr>';
         $parsed = stripslashes($line['question']);
         $parsed = $this->objWashout->parseText($parsed);
-        $row[] = '<b>'.$parsed.'</b>';
+        $row[] = '<b>' . $parsed . '</b>';
         $objTable->addRow($row, 'odd" valign="top');
         $row = array();
-        $row[] = '<b>'.$markLabel.':</b>';
-        $row[] = '<b>'.$line['mark'].'</b>';
+        $row[] = '<b>' . $markLabel . ':</b>';
+        $row[] = '<b>' . $line['mark'] . '</b>';
         $objTable->addRow($row, 'odd');
         if (!empty($line['hint'])) {
             $row = array();
-            $row[] = '<b>'.$hintLabel.':</b>';
-            $row[] = '<b>'.$line['hint'].'</b>';
+            $row[] = '<b>' . $hintLabel . ':</b>';
+            $row[] = '<b>' . $line['hint'] . '</b>';
             $objTable->addRow($row, 'odd');
         }
         // hidden elements for the question
-        $objInput = new textinput('questionId'.$questionCounter, $line['id']);
+        $objInput = new textinput('questionId' . $questionCounter, $line['id']);
         $objInput->fldType = 'hidden';
         $hidden = $objInput->show();
 
 
         // Display answers
-         if (!empty($line['answers'])) {
-             if ($line['questiontype'] == 'freeform' ){
-                 $simple = array();
-                 foreach($line['answers'] as $key => $cloze ){
+        if (!empty($line['answers'])) {
+            if ($line['questiontype'] == 'freeform') {
+                $simple = array();
+                foreach ($line['answers'] as $key => $cloze) {
 
-                 $simple[] = $cloze['answer'];
-                 }
-                 $stringOut = implode(';',$simple);
-                 $objInput->textinput('freeform'.$line['questionorder'], $stringOut );
-                 $objInput->fldType = 'hidden';
-                 $hidden.= $objInput->show();
-                 $objRadio = new textinput('ans'.$line['questionorder'], '');
+                    $simple[] = $cloze['answer'];
+                }
+                $stringOut = implode(';', $simple);
+                $objInput->textinput('freeform' . $line['questionorder'], $stringOut);
+                $objInput->fldType = 'hidden';
+                $hidden.= $objInput->show();
+                $objRadio = new textinput('ans' . $line['questionorder'], '');
 
-                 $objInput = new textinput('qtype'.$line['questionorder'], 'freeform');
-                 $objInput->fldType = 'hidden';
-                 $hidden.= $objInput->show();
+                $objInput = new textinput('qtype' . $line['questionorder'], 'freeform');
+                $objInput->fldType = 'hidden';
+                $hidden.= $objInput->show();
+            } else if ($line['questiontype'] == 'matching') {
 
-                 }else{
+                $key = 0;
+                $myAnswers = "";
+                $matchTable = new htmltable();
+                foreach ($line['answers']['questions'] as $val) {
+                    $objDropNum = new dropdown('options' . ($key + 1));
+                    foreach ($line['answers']['answers'] as $value) {
+                        $objDropNum->addOption($value['id'], $value['answer']);
+                    }
 
-                  $objRadio = new radio('ans'.$questionCounter);
-                   //$objRadio = new radio('ans'.$line['id']);
-                   $objRadio->setBreakSpace('<br />');
+                    $objRadio = new radio('ans' . $questionCounter);
+                    $ansNum = '<b>&nbsp;' . $alpha[($key + 1)] . ')</b>&nbsp;&nbsp;';
+                    if (strlen(strip_tags(trim($val['subquestions']))) > 0) {
+                        $objRadio->addOption($val['id'], $ansNum . strip_tags($val['subquestions']));
+                    }
+                    $matchTable->startRow();
+                    $matchTable->addCell($objRadio->show(), '50%');
+                    $matchTable->addCell($objDropNum->show(), '50%');
+                    $matchTable->endRow();
 
-                 foreach($line['answers'] as $key => $val) {
-                       $ansNum = '<b>&nbsp;'.$alpha[($key+1) ].')</b>&nbsp;&nbsp;';
-                       $objRadio->addOption($val['id'], $ansNum.$val['answer']);
-                       if (isset($val['selected']) && !empty($val['selected'])) {
-                       $objRadio->setSelected($val['id']);
-                       $objInput->textinput('selected'.$line['questionorder'], $val['selected']);
-                       $objInput->fldType = 'hidden';
-                       $hidden.= $objInput->show();
-                       $objInput = new textinput('qtype'.$line['questionorder'], '');
-                     $objInput->fldType = 'hidden';
-                     $hidden.= $objInput->show();
+                    ++$key;
+                }
+            } else if ($line['questiontype'] == 'numerical') {
+                $objTextInput = new textinput('ans' . $questionCounter, "");
+                $objTextInput->size = 30;
+            } else {
 
-                        }
-                      }
-                 }
+                $objRadio = new radio('ans' . $questionCounter);
+                //$objRadio = new radio('ans'.$line['id']);
+                $objRadio->setBreakSpace('<br />');
+
+                foreach ($line['answers'] as $key => $val) {
+                    $ansNum = '<b>&nbsp;' . $alpha[($key + 1)] . ')</b>&nbsp;&nbsp;';
+                    $objRadio->addOption($val['id'], $ansNum . $val['answer']);
+                    if (isset($val['selected']) && !empty($val['selected'])) {
+                        $objRadio->setSelected($val['id']);
+                        $objInput->textinput('selected' . $line['questionorder'], $val['selected']);
+                        $objInput->fldType = 'hidden';
+                        $hidden.= $objInput->show();
+                        $objInput = new textinput('qtype' . $line['questionorder'], '');
+                        $objInput->fldType = 'hidden';
+                        $hidden.= $objInput->show();
+                    }
+                }
+            }
         }
         $row = array();
         $row[] = $hidden;
-        $row[] = $objRadio->show();
+        if($line['questiontype'] == 'matching') {
+            $row[] = $matchTable->show();
+        }
+        else if($line['questiontype'] == 'numerical') {
+            $row[] = $objTextInput->show();
+        }
+        else {
+            $row[] = $objRadio->show();
+        }
         $objTable->addRow($row, 'even');
         $questionCounter++;
     }
-      $qnum=--$questionCounter;
+    $qnum = --$questionCounter;
     // hidden element for the first question displayed
     $objInput = new textinput('first', $i);
     $objInput->fldType = 'hidden';
@@ -341,7 +374,7 @@ if (!empty($data)) {
 // hidden element for the test id
 $objInput = new textinput('id', $test['id']);
 $objInput->fldType = 'hidden';
-$hidden = $objInput->show() .$hidden1;
+$hidden = $objInput->show() . $hidden1;
 
 $objInput = new textinput('count', $count);
 $objInput->fldType = 'hidden';
@@ -358,35 +391,32 @@ $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
 // Submit buttons
 
-	if (!empty($data) && $questionCounter<$data[0]['count']) {
-	    $objButton = new button('savebutton', $continueLabel);
+if (!empty($data) && $questionCounter < $data[0]['count']) {
+    $objButton = new button('savebutton', $continueLabel);
 // after the onclick
 //document.getElementById(\'input_savebutton\').disabled=true;
 
-	    $objButton->extra = ' ondblclick="javascript:return false" onclick="document.getElementById(\'form_submittest\').submit();"';
-	    $action = 'continuetest';
-
-	} else{
-	    $objButton = new button('savebutton', $submitLabel);
-	    $objButton->extra = ' ondblclick="javascript:return false" onclick= document.getElementById(\'form_submittest\').submit(); "';
-	//	$objButton->setToSubmit();
-	    $action = 'marktest';
-	}
+    $objButton->extra = ' ondblclick="javascript:return false" onclick="document.getElementById(\'form_submittest\').submit();"';
+    $action = 'continuetest';
+} else {
+    $objButton = new button('savebutton', $submitLabel);
+    $objButton->extra = ' ondblclick="javascript:return false" onclick= document.getElementById(\'form_submittest\').submit(); "';
+    //	$objButton->setToSubmit();
+    $action = 'marktest';
+}
 
 $objInput = new textinput('action', $action);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
 if ($action == 'continuetest') {
     $objTable->startRow();
-    $objTable->addCell($hidden.$objButton->show() , '', '', 'left', '', '');
+    $objTable->addCell($hidden . $objButton->show(), '', '', 'left', '', '');
     $objTable->endRow();
-
 } else {
     $objTable->startRow();
     $objTable->addCell($hidden, '', '', 'right', '', '');
-    $objTable->addCell($objButton->show() , '', '', 'right', '', '');
+    $objTable->addCell($objButton->show(), '', '', 'right', '', '');
     $objTable->endRow();
-
 }
 // form to submit the test
 $objForm = new form('submittest', $this->uri(''));
@@ -404,13 +434,12 @@ $javascript = "<script language=\"javascript\" type=\"text/javascript\">
     //]]>
     </script>";
 echo $javascript;
-$nav = '<p align="center"><b>'.$gotoLabel.'</b></p><p align="center">';
-$nav.= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], 10) .'</p>';
+$nav = '<p align="center"><b>' . $gotoLabel . '</b></p><p align="center">';
+$nav.= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], 10) . '</p>';
 $str.= $nav;
 $objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->str = $str;
 $pageLayer = $objLayer->show();
 echo $pageLayer;
-
 ?>
