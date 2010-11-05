@@ -262,7 +262,7 @@ class mcqtests extends controller {
                 $fields['tags'] = $this->getParam('descofficialtags', Null);
                 $fields['othertags'] = $this->getParam('descothertags', Null);
                 $id = $this->dbDescription->addDescription($fields, $descId);
-                return $this->nextAction('view2', array('id' => $this->getParam('id')));
+                return $this->nextAction('mcqlisting', array('id' => $this->getParam('id')));
             case "deletedesc":
                 $this->nextAction($id = $this->getParam('id', null), $this->dbDescription->deleteDescription($id));
                 // After processing return to choosequestiontype2
