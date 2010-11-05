@@ -48,7 +48,7 @@ class dbquestion_matching extends dbtable {
             if(trim(strlen($questionData['subquestions'])  > 0)) {
                 $this->insert($questionData);
             }
-        }echo "<br>";
+        }
         $this->addAnswers($id, $matchingQuestionData);
     }
 
