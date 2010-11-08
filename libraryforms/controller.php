@@ -139,9 +139,11 @@ class libraryforms extends controller {
         $subject = "New user registered";
 
         $this->sendEmailNotification($subject,
-                $message = ' Surname: ' . $surname . '  ' . ' Initials:  '. $initials . '   ' . ' Title: '. $title . '   ' . ' Student no: '. $studentno . '   ' . ' Postal Adress: '.			 					$postaladdress . '   ' .  ' Physical Address: '.$physicaladdress . '   ' . ' Postal Code: ' . $postalcode . '   ' . ' Postal Code: ' .
-				$postalcode2 . '   ' . 'Tel home: ' . $telnoh . '   ' . ' Tel work: ' . $telnow . '   ' . ' Cell : ' . $cell . '   ' . ' Fax: '. $fax . '   ' . ' Email address: ' . 
-				$emailaddress . '   ' . ' Course: '.  $course . '   ' . ' Department: ' . $department . '   ' .  ' Supervisor: ' . $supervisor);
+                $message = ' Surname: ' . $surname . '  ' . ' Initials:  '. $initials . '   ' . ' Title: '. $title . '   ' . ' Student no: '.
+		 $studentno . '   ' . ' Postal Adress: '.	$postaladdress . '   ' .  ' Physical Address: '.$physicaladdress . '   ' . ' Postal Code: ' .
+		 $postalcode . '   ' . ' Postal Code: ' . $postalcode2 . '   ' . 'Tel home: ' . $telnoh . '   ' . ' Tel work: ' . 
+		 $telnow . '   ' . ' Cell : ' . $cell . '   ' . ' Fax: '. $fax . '   ' . ' Email address: ' . $emailaddress . '   ' . ' Course: '.  
+		 $course . '   ' . ' Department: ' . $department . '   ' .  ' Supervisor: ' . $supervisor );
     }
 
 
@@ -193,10 +195,11 @@ class libraryforms extends controller {
 // after inserting into db send email alert
         $subject = "Book thesis record";
         $this->sendEmailNotification($subject,
-                $message = $author . ' ' . $title . ' ' . $place . ' ' . $publisher . ' ' .
-                $date . ' ' . $edition . ' ' . $isbn . ' ' . $series . ' ' . $copy . ' ' . $titlepages . ' ' .
-                $pages . ' ' . $thesis . ' ' . $name . ' ' . $address . ' ' . $cell . ' ' . $fax . ' ' .
-                $tel . ' ' . $telw . ' ' . $emailaddress . ' ' . $entitynum . ' ' . $studentno . ' ' . $course);
+                $message = ' Author: '. $author . '  ' . ' Title : ' . $title . '  '  . ' Place: ' . $place . '  ' . ' Publisher:  '.$publisher . '  '  .  ' date: '.
+                $date . '   '  .  ' Edition: ' . $edition . '  ' . ' ISBN: ' . $isbn . '  ' . ' Series: ' . $series . '  ' . ' Copy: ' . $copy . '  ' . ' TItle:' . $titlepages . '  ' . ' Pages: '.
+                $pages . '  ' . ' Type of Thesis: ' . $thesis . '  ' . ' Name: ' . $name . '  ' . ' Address: ' . $address . '   ' . ' Cell: ' . $cell . '   ' . ' Fax: '.
+		$fax . '   ' . ' Tel(H): ' . $tel . '  ' . ' Tel (W): ' . $telw . '  ' . ' E-mail: ' .$emailaddress . '  ' . ' Entity num: '.$entitynum . '   ' . ' Student no: ' .
+                $studentno . '  ' .  ' Course: ' .$course);
     }
 
 // end of bookthesisrecord
@@ -282,7 +285,7 @@ class libraryforms extends controller {
         
         $objMail = $this->getObject('email', 'mail');
         //send to multiple addressed   
-        $list = array("pmalinga@uwc.ac.za", "qfenama@uwc.ac.za", "library@uwc.ac.za");
+        $list = array("pmalinga@uwc.ac.za", "library@uwc.ac.za");
         $objMail->to = ($list);
         // specify whom the email is coming from
         $objMail->from = "no-reply@uwc.ac.za";
