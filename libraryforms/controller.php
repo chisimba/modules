@@ -139,11 +139,11 @@ class libraryforms extends controller {
         $subject = "New user registered";
 
         $this->sendEmailNotification($subject,
-                $message = ' Surname: ' . $surname . '  ' . ' Initials:  '. $initials . '   ' . ' Title: '. $title . '   ' . ' Student no: '.
-		 $studentno . '   ' . ' Postal Adress: '.	$postaladdress . '   ' .  ' Physical Address: '.$physicaladdress . '   ' . ' Postal Code: ' .
-		 $postalcode . '   ' . ' Postal Code: ' . $postalcode2 . '   ' . 'Tel home: ' . $telnoh . '   ' . ' Tel work: ' . 
-		 $telnow . '   ' . ' Cell : ' . $cell . '   ' . ' Fax: '. $fax . '   ' . ' Email address: ' . $emailaddress . '   ' . ' Course: '.  
-		 $course . '   ' . ' Department: ' . $department . '   ' .  ' Supervisor: ' . $supervisor );
+                $message = ' Surname: ' . $surname . '  ' . "\n" . ' Initials:  '. $initials . '   ' . "\n" . ' Title: '. $title . '   ' . "\n" . ' Student no: '.
+		 $studentno . '   ' ."\n" . ' Postal Adress: '.	$postaladdress . '   ' . "\n" . ' Physical Address: '.$physicaladdress . '   ' . "\n" .' Postal Code: ' .
+		 $postalcode . '   ' ."\n" . ' Postal Code: ' . $postalcode2 . '   ' . "\n" .'Tel home: ' . $telnoh . '   ' . "\n" .' Tel work: ' . 
+		 $telnow . '   ' . "\n" .' Cell : ' . $cell . '   ' . "\n" .' Fax: '. $fax . '   ' . "\n" . ' Email address: ' . $emailaddress . '   ' . "\n" . ' Course: '.  
+		 $course . '   ' . "\n" .' Department: ' . $department . '   ' .  "\n" . ' Supervisor: ' . $supervisor );
     }
 
 
@@ -195,11 +195,12 @@ class libraryforms extends controller {
 // after inserting into db send email alert
         $subject = "Book thesis record";
         $this->sendEmailNotification($subject,
-                $message = ' Author: '. $author . '  ' . ' Title : ' . $title . '  '  . ' Place: ' . $place . '  ' . ' Publisher:  '.$publisher . '  '  .  ' date: '.
-                $date . '   '  .  ' Edition: ' . $edition . '  ' . ' ISBN: ' . $isbn . '  ' . ' Series: ' . $series . '  ' . ' Copy: ' . $copy . '  ' . ' TItle:' . $titlepages . '  ' . ' Pages: '.
-                $pages . '  ' . ' Type of Thesis: ' . $thesis . '  ' . ' Name: ' . $name . '  ' . ' Address: ' . $address . '   ' . ' Cell: ' . $cell . '   ' . ' Fax: '.
-		$fax . '   ' . ' Tel(H): ' . $tel . '  ' . ' Tel (W): ' . $telw . '  ' . ' E-mail: ' .$emailaddress . '  ' . ' Entity num: '.$entitynum . '   ' . ' Student no: ' .
-                $studentno . '  ' .  ' Course: ' .$course);
+        $message = ' Author: '. $author . '  ' .  "\n" . ' Title : ' . $title . '  '  .  "\n" .' Place: ' . $place . '  ' .  "\n" .' Publisher:  '.$publisher . '  '  .   "\n" . ' date: '.
+	$date . '   '  .   "\n" . ' Edition: ' . $edition . '  ' .  "\n" .' ISBN: ' . $isbn . '  ' .  "\n" . ' Series: ' . $series . '  ' .  "\n" .' Copy: ' . 
+ 	$copy . '  ' .  "\n" .' TItle:' .$titlepages . '  ' .  "\n" .' Pages: '. $pages . '  ' .  "\n" .' Type of Thesis: ' . $thesis . '  ' .  "\n" .' Name: ' . 
+	$name . '  ' .  "\n" .' Address: ' . $address . '   ' . "\n" . ' Cell: ' . $cell . '   ' . ' Fax: '. $fax . '   ' .  "\n" .' Tel(H): ' . 
+	$tel . '  ' .  "\n" .' Tel (W): ' . $telw . '  ' .  "\n" . ' E-mail: ' . $emailaddress . '  ' .  "\n" .' Entity num: '.
+	$entitynum . '   ' .  "\n" .' Student no: ' . $studentno . '  ' .   "\n" .' Course: ' .$course);
     }
 
 // end of bookthesisrecord
@@ -276,7 +277,7 @@ class libraryforms extends controller {
         // send email alert
         $subject = "Feed Back";
 
-        $this->sendEmailNotification($subject, $message = ' Name: ' . $name . '       '  .    ' Email Adress: ' . $email . '   ' .     ' Feed Back Message: ' . $msg);
+        $this->sendEmailNotification($subject, $message = ' Name: ' . $name . '       '  .  "\n" . ' Email Adress: ' . $email . '   ' .  "\n".   ' Feed Back Message: ' . $msg);
     }
 
 // end of Submitmsg
