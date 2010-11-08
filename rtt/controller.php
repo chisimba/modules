@@ -4,6 +4,7 @@
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
+
 // end security check
 /**
  * Realtime Controller
@@ -12,33 +13,36 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * 
  */
 class rtt extends controller {
- 
+
     function init() {
 
         $this->objUser = $this->newObject('user', 'security');
         $this->objRttUtil = $this->getObject('rttutil', 'rtt');
-        $this->objContext=$this->getObject('dbcontext','context');
-        $this->objLanguage=$this->getObject('language','language');
-        $this->objAltConfig=$this->getObject('altconfig','config');
-
-
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
     }
 
-
     public function dispatch($action) {
-        if(!$this->objContext->isInContext()) {
-            return "needtojoin_tpl.php";
+        $demomode = array('demo', 'joindemo');
+        if (in_array($action, $demomode)) {
+            
+        } else {
+            if (!$this->objContext->isInContext()) {
+                return "needtojoin_tpl.php";
+            }
         }
 
+
         /*
-    * Convert the action into a method (alternative to
-    * using case selections)
-        */
+         * Convert the action into a method (alternative to
+         * using case selections)
+         */
         $method = $this->getMethod($action);
         /*
-    * Return the template determined by the method resulting
-    * from action
-        */
+         * Return the template determined by the method resulting
+         * from action
+         */
         return $this->$method();
     }
 
@@ -54,9 +58,8 @@ class rtt extends controller {
      */
     function getMethod(& $action) {
         if ($this->validAction($action)) {
-            return '__'.$action;
-        }
-        else {
+            return '__' . $action;
+        } else {
             return '__home';
         }
     }
@@ -74,16 +77,15 @@ class rtt extends controller {
      *
      */
     function validAction(& $action) {
-        if (method_exists($this, '__'.$action)) {
+        if (method_exists($this, '__' . $action)) {
             return TRUE;
-        }
-        else {
+        } else {
             return FALSE;
         }
     }
 
     /**
-     *Takes us to default home pages
+     * Takes us to default home page
      * @return <type>
      */
     function __home() {
@@ -91,6 +93,37 @@ class rtt extends controller {
         return "home_tpl.php";
     }
 
+    /**
+     * Launches the demo mode
+     */
+    function __demo() {
+
+        return "demohome_tpl.php";
+    }
+
+    function __joindemo() {
+        /*$this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+        $this->setVar('pageSuppressToolbar', TRUE);*/
+        $nickname = $this->getParam("name");
+        $jnlpPath = $this->objRttUtil->generateDemoJNLP($nickname);
+
+        $this->setVarByRef("nickname", $nickname);
+        return "launchdemo_tpl.php";
+    }
+
+    /**
+     * Method to turn off login requirement for certain actions
+     */
+    public function requiresLogin($action) {
+        $requiresLogin = array('demo', 'joindemo');
+        if (in_array($action, $requiresLogin)) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
 
 }
+
 ?>
