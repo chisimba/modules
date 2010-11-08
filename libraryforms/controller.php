@@ -139,10 +139,11 @@ class libraryforms extends controller {
         $subject = "New user registered";
 
         $this->sendEmailNotification($subject,
-                $message = $surname . ' ' . $initials . ' ' . $title . ' ' . $studentno . ' ' . $postaladdress . ' ' .
-                $physicaladdress . ' ' . $postalcode . ' ' . $postalcode2 . ' ' . $telnoh . ' ' . $telnow . ' ' .
-                $cell . ' ' . $fax . ' ' . $emailaddress . ' ' . $course . ' ' . $department . ' ' . $supervisor);
+                $message = ' Surname: ' . $surname . '  ' . ' Initials:  '. $initials . '   ' . ' Title: '. $title . '   ' . ' Student no: '. $studentno . '   ' . ' Postal Adress: '.			 					$postaladdress . '   ' .  ' Physical Address: '.$physicaladdress . '   ' . ' Postal Code: ' . $postalcode . '   ' . ' Postal Code: ' .
+				$postalcode2 . '   ' . 'Tel home: ' . $telnoh . '   ' . ' Tel work: ' . $telnow . '   ' . ' Cell : ' . $cell . '   ' . ' Fax: '. $fax . '   ' . ' Email address: ' . 
+				$emailaddress . '   ' . ' Course: '.  $course . '   ' . ' Department: ' . $department . '   ' .  ' Supervisor: ' . $supervisor);
     }
+
 
 // end of Save Records */
 
@@ -272,7 +273,7 @@ class libraryforms extends controller {
         // send email alert
         $subject = "Feed Back";
 
-        $this->sendEmailNotification($subject, $message = 'Name' . $name . ' '  . '</ p>'. ' Email Adress '.$email . ' ' . ' Feeb Back Message' .$msg);
+        $this->sendEmailNotification($subject, $message = ' Name: ' . $name . '       '  .    ' Email Adress: ' . $email . '   ' .     ' Feed Back Message: ' . $msg);
     }
 
 // end of Submitmsg
@@ -281,7 +282,7 @@ class libraryforms extends controller {
         
         $objMail = $this->getObject('email', 'mail');
         //send to multiple addressed   
-        $list = array("pmalinga@uwc.ac.za", "afakier@uwc.ac.za", "library@uwc.ac.za");
+        $list = array("pmalinga@uwc.ac.za", "qfenama@uwc.ac.za", "library@uwc.ac.za");
         $objMail->to = ($list);
         // specify whom the email is coming from
         $objMail->from = "no-reply@uwc.ac.za";
