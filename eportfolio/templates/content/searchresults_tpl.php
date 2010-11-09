@@ -26,6 +26,8 @@ $this->appendArrayVar('bodyOnLoad', 'setUpLabelHighlight();');
 //Get Group Name
 $groupId = $this->getSession('groupId', $groupId);
 $groupName = $this->_objGroupAdmin->getName($groupId);
+$groupName = explode("^", $groupName);
+$groupName = $groupName[1];
 $header = new htmlheading();
 $header->type = 1;
 $header->str = $this->objLanguage->languageText('mod_eportfolio_wordGroup', "eportfolio") . " " . $groupName . ' - ' . $this->objLanguage->languageText('phrase_searchforuserstoadd', 'eportfolio');

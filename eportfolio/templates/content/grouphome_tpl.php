@@ -42,6 +42,8 @@ if (isset($showconfirmation) && $showconfirmation) {
 }
 //Get Group Name
 $groupName = $this->_objGroupAdmin->getName($group);
+$groupName = explode("^", $groupName);
+$groupName = $groupName[1];
 $header = new htmlheading();
 $header->type = 1;
 $header->str = $this->objLanguage->languageText('mod_eportfolio_wordManage', "eportfolio") . " " . $groupName . " " . $this->objLanguage->languageText('mod_eportfolio_wordGroup', "eportfolio");
