@@ -83,7 +83,9 @@ $simpleDesc = $this->objLanguage->languageText('mod_mcqtests_simpledesc', 'mcqte
 $numericalDesc = $this->objLanguage->languageText('mod_mcqtests_numericaldesc', 'mcqtests');
 $matchingDesc = $this->objLanguage->languageText('mod_mcqtests_matchingdesc', 'mcqtests');
 $shortansDesc = $this->objLanguage->languageText('mod_mcqtests_shortansdesc', 'mcqtests');
-
+$wdMCQ = $this->objLanguage->languageText('mod_mcqtests_wordmcq', 'mcqtests');
+$descTitle = $wdMCQ." ".$this->objLanguage->languageText('mod_mcqtests_descriptions', 'mcqtests');
+$categoryTitle = $wdMCQ." ".$this->objLanguage->languageText('mod_mcqtests_categories', 'mcqtests');
 
 //switch between the question descriptions and adding questions
 $mode = $this->getParam('mode');
@@ -218,8 +220,8 @@ $existingQuestions->setId("existingQ");
 
 $existingQuestions->addOption('-', '[-' . $selectqntype . '-]');
 $existingQuestions->addOption('mcq', $simple);
-$existingQuestions->addOption('descriptionlist', $description);
-$existingQuestions->addOption('category', $category);
+$existingQuestions->addOption('descriptionlist', $descTitle);
+$existingQuestions->addOption('category', $categoryTitle);
 //$existingQuestions->addOption('calcQ', $calcdqn);
 $existingQuestions->addOption('matchQ', $matchingqn);
 $existingQuestions->addOption('numericalQ', $numericalqns);
