@@ -220,9 +220,9 @@ class libraryforms extends controller {
         $tell = $this->getParam('periodical_tell');
         $tellw = $this->getParam('periodical_w');
         $emailaddress = $this->getParam('periodicalemail');
-        $bentitynum = $this->getParam('periodical_entity');
-        $bstudentno = $this->getParam('periodical_student');
-        $bcourse = $this->getParam('periodical_course');
+        $entitynum = $this->getParam('periodical_entity');
+        $studentno = $this->getParam('periodical_student');
+        $course = $this->getParam('periodical_course');
         $captcha = $this->getParam('periodical_captcha');
 
         // Check whether user matched captcha
@@ -243,9 +243,11 @@ class libraryforms extends controller {
 
         $subject = "Periodical Book Record";
         $this->sendEmailNotification($subject,
-                $message = $titleperiodical  . ' ' . $volume . ' ' . $part . ' ' . $year . ' ' . $pages . ' ' .
-                $author . ' ' . $titlearticle . ' ' . $prof . ' ' . $address . ' ' . $cell . ' ' . $tell . ' ' .
-                $tellw . ' ' . $emailaddress . ' ' . $entitynum . ' ' . $studentno . ' ' . $course);
+                $message = ' Title Periodical:   '.  $titleperiodical  . '   ' .  "\n". ' Volume:   '.  $volume . '   ' . "\n". ' Part:   '. $part . '   ' . "\n". ' Year:   '. 
+		$year . '   ' . "\n" . ' Pages:   '.$pages . '   ' . "\n". 'Author   '. $author . '   ' . "\n". ' Title Article   '. $titlearticle . '   ' . "\n". ' Prof:   '.
+		$prof . '   ' . "\n". 'Address:   '. $address . '  ' . "\n". 'Cell: '. $cell . '   ' .  "\n". ' Tel: '.$tell . '   ' . "\n". ' Tell (W) '.
+                $tellw . '  ' . "\n" .' Email Address:   '. $emailaddress . '   ' . "\n". ' Entity num:   '. $entitynum . '   ' . "\n". ' Student No:   '.
+		$studentno . '  ' . "\n". ' Course   '.$course);
     }
 
 //  end saveperiodicalRecord

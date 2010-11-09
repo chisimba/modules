@@ -337,22 +337,22 @@ class ILLperiodical extends dbTable {
     function insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell, $tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
         $id = $this->insert(array(
        
-            'ptitleperiodical' => $titleperiodical,
-            'pvolume' => $volume,
-            'ppart' => $part,
-            'pyear' => $year,
-            'ppages' => $pages,
-            'pauthor' =>$author,
-            'ptitlearticle' => $titlearticle,
-            'pprof' => $prof,
-            'paddress' => $address,
-            'pcell' => $cell,
-            'ptell' => $tell,
-            'ptellw' => $tellw,
-            'pemailaddress' => $emailaddress,
-            'pentitynum' => $entitynum,
-            'pstudentno' => $studentno,
-            'pcourse' => $course,
+            'titleperiodical' => $titleperiodical,
+            'volume' => $volume,
+            'part' => $part,
+            'year' => $year,
+            'pages' => $pages,
+            'author' =>$author,
+            'titlearticle' => $titlearticle,
+            'prof' => $prof,
+            'address' => $address,
+            'cell' => $cell,
+            'tell' => $tell,
+            'tellw' => $tellw,
+            'emailaddress' => $emailaddress,
+            'entitynum' => $entitynum,
+            'studentno' => $studentno,
+            'course' => $course,
             
         ));
         return $id;
