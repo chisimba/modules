@@ -574,17 +574,24 @@ class mcqtests extends controller {
 
             // delete a question
             case 'deletequestion':
+                $this->dbQuestions->deleteQuestion($this->getParam('questionId'));
+                $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
+                return $this->nextAction('view', array(
+                    'id' => $this->getParam('id')
+                ));
+
+            case 'deletequestion2':
                 $type = $this->getParam('type');
                 if ($type == 'matching') {
                     $this->objQuestionMatching->deleteQuestions($this->getParam('questionId'));
-                    $this->objMultiAnswers->deleteQuestions($this->getParam('questionId'));
+                    $this->objMultiAnswers->deleteAnswers($this->getParam('questionId'));
                 } else if ($type == 'numerical') {
                     $this->objQuestionNumerical->deleteNumericalQuestion($this->getParam('questionId'));
                     $this->objNumericalUnit->deleteNumericalUnit($this->getParam('questionId'));
                 }
                 $this->dbQuestions->deleteQuestion($this->getParam('questionId'));
                 $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
-                return $this->nextAction('view', array(
+                return $this->nextAction('view2', array(
                     'id' => $this->getParam('id')
                 ));
             case 'questionup':
@@ -1667,6 +1674,7 @@ class mcqtests extends controller {
         $test = $this->dbTestadmin->getTests('', $fieldlist, $this->getParam('id'));
         $results = $this->dbMarked->getSelectedAnswers($this->userId, $testId);
         // new code for scrambling tests
+        
         if ($test[0]['qsequence'] == 'Scrambled' || $test[0]['asequence'] == 'Scrambled') {
             $qData = $this->getSession('qData');
             if (isset($qData) && !empty($qData)) {
@@ -1712,7 +1720,15 @@ class mcqtests extends controller {
             $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');
             if (!empty($data)) {
                 foreach ($data as $key => $line) {
-                    $answers = $this->dbAnswers->getAnswers($line['id']);
+                    if ($line['questiontype'] == 'matching') { // to check other types of questions, not the simple mcq's
+                        $answers = $this->objQuestionMatching->getAnswers($line['id']);
+                    } else if ($line['questiontype'] == 'numerical') {
+                        $answers = $this->objQuestionNumerical->getAnswers($line['id']);
+                    }
+                    else {
+                        $answers = $this->dbAnswers->getAnswers($line['id']);
+                    }
+
                     if (isset($results) && !empty($results)) {
                         foreach ($results as $item) {
                             foreach ($answers as $k => $val) {
@@ -1721,11 +1737,8 @@ class mcqtests extends controller {
                                 }
                             }
                         }
-                    }else if ($data[$key]['questiontype'] == 'matching') { // to check other types of questions, not the simple mcq's
-                        $answers = $this->objQuestionMatching->getAnswers($line['id']);
-                    } else if ($data[$key]['questiontype'] == 'numerical') {
-                        $answers = $this->objQuestionNumerical->getAnswers($line['id']);
                     }
+
                     $data[$key]['answers'] = $answers;
                 }
                 $data[0]['qnum'] = $num;

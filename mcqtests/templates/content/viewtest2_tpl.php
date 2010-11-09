@@ -347,7 +347,7 @@ if (!empty($questions)) {
 
         $objConfirm = new confirm();
         $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
-            'action' => 'deletequestion',
+            'action' => 'deletequestion2',
             'questionId' => $line['id'],
             'id' => $data['id'],
             'mark' => $line['mark'],
