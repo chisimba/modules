@@ -390,7 +390,7 @@ class wicid extends controller {
         if($status == '' || $status == NULL){
             $status="0";
         }
-        $currentuserid="";
+        $currentuserid=$this->objUser->userid();
         $version=  $this->getParam('version');
         /**
          * $date,
@@ -423,6 +423,7 @@ class wicid extends controller {
                 $mode="apo",
                 $approved="N",
                 $status="0",
+                $currentuserid,
                 $version,
                 $ref_version
 
