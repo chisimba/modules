@@ -394,16 +394,19 @@ class wicid extends controller {
         $version=  $this->getParam('version');
         /**
          * $date,
-            $refno,
-            $department,
-            $contact,
-            $telephone,
-            $title,
-            $groupid,
-            $path,
-            $mode="default",
-            $approved="N",
-            $status="0"
+         *
+         *  $refno,
+         * $department,
+         *  $contact,
+         * $telephone,
+         *  $title,
+         *  $groupid,
+         *  $path,
+         * $mode="default",
+         *  $approved="N",
+         * $status="0",
+         *  $currentuserid, $version, $ref_version
+
          */
         $this->documents->addDocument(
                 $date,
@@ -419,7 +422,11 @@ class wicid extends controller {
                 $ref_version,
                 $mode="apo",
                 $approved="N",
-                $status="0");
+                $status="0",
+                $version,
+                $ref_version
+
+                );
     }
 
     function __updatedocument() {
