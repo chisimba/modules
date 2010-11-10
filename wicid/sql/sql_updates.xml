@@ -161,5 +161,19 @@
 
         </data>
     </update>
+   <update>
+        <table>tbl_wicid_documents</table>
+        <version>1.002</version>
+        <description>Added the rejectedDoc field</description>
+        <data>
+            <add>
+                <name>rejectedDoc</name>
+                <type>text</type>
+                <length>1</length>
+                <notnull>TRUE</notnull>
+                <default>N</default>
+            </add>
 
+        </data>
+    </update>
 </updates>
