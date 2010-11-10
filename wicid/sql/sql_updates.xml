@@ -163,11 +163,11 @@
     </update>
    <update>
         <table>tbl_wicid_documents</table>
-        <version>1.002</version>
+        <version>1.003</version>
         <description>Added the rejectedDoc field</description>
         <data>
             <add>
-                <name>rejectedDoc</name>
+                <name>rejectDoc</name>
                 <type>text</type>
                 <length>1</length>
                 <notnull>TRUE</notnull>
