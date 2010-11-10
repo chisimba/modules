@@ -3,19 +3,21 @@
 class dbrtt extends dbtable {
 
     function init() {
-        parent::init('tbl_stories');
+        parent::init('tbl_news_stories');
+        $this->objDbSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objWashout=$this->getObject('washout','utilities');
     }
 
     function getDemoContent() {
         $objTrim = $this->getObject('trimstr', 'strings');
-        $storyid = $this->objDbSysconfig->getValue('DEFAULT_STORY_ID', 'rtt');
+        $storyid = $this->objDbSysconfig->getValue('DEMO_STORY_ID', 'rtt');
         $data = $this->getStory($storyid);
         $content = '';
 
         $content = '
           
             
-            ' . $this->objWashout->parseText($data['maintext']) . '
+            ' . $this->objWashout->parseText($data['storytext']) . '
             
             <br/>
               ';
@@ -23,19 +25,14 @@ class dbrtt extends dbtable {
         return $content;
     }
 
-      function getDownloadsStory() {
+    public function getDownloadsStory() {
         $objTrim = $this->getObject('trimstr', 'strings');
-        $storyid = $this->objDbSysconfig->getValue('DEFAULT_STORY_ID', 'rtt');
+        $storyid = $this->objDbSysconfig->getValue('DOWNLOAD_STORY_ID', 'rtt');
+        
         $data = $this->getStory($storyid);
+      
         $content = '';
-
-        $content = '
-
-
-            ' . $this->objWashout->parseText($data['maintext']) . '
-
-            <br/>
-              ';
+        $content = $this->objWashout->parseText($data['storytext']) . '<br/>';
 
         return $content;
     }

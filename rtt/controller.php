@@ -18,6 +18,7 @@ class rtt extends controller {
 
         $this->objUser = $this->newObject('user', 'security');
         $this->objRttUtil = $this->getObject('rttutil', 'rtt');
+        $this->objDbRtt = $this->getObject('dbrtt', 'rtt');
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objAltConfig = $this->getObject('altconfig', 'config');
@@ -97,14 +98,16 @@ class rtt extends controller {
      * Launches the demo mode
      */
     function __demo() {
-
+        //$this->setVar('pageSuppressBand', TRUE);
+       // $this->setVar('suppressFooter', TRUE);
+       // $this->setVar('pageSuppressToolbar', TRUE);
         return "demohome_tpl.php";
     }
 
     function __joindemo() {
-        /*$this->setVar('pageSuppressBanner', TRUE);
-        $this->setVar('suppressFooter', TRUE);
-        $this->setVar('pageSuppressToolbar', TRUE);*/
+        /* $this->setVar('pageSuppressBanner', TRUE);
+          $this->setVar('suppressFooter', TRUE);
+          $this->setVar('pageSuppressToolbar', TRUE); */
         $nickname = $this->getParam("name");
         $jnlpPath = $this->objRttUtil->generateDemoJNLP($nickname);
 

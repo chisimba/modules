@@ -1,4 +1,5 @@
 <?php
+$this->setSession("canvas","rtt");
 
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -29,10 +30,10 @@ $heading = new htmlHeading();
 $heading->type = 1;
 $heading->str = $title;
 
-$cssLayout->setLeftColumnContent("");
+$cssLayout->setLeftColumnContent($this->objDbRtt->getDownloadsStory());
 
 // Add Right Column
-$cssLayout->setMiddleColumnContent( $heading->show().$form->show());
+$cssLayout->setMiddleColumnContent( $heading->show().$form->show().$this->objDbRtt->getDemoContent());
 
 //Output the content to the page
 echo $cssLayout->show();

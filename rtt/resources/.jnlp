@@ -17,8 +17,6 @@
         <jar href="quartz-all-1.6.0.jar" />
         <jar href="jta-rt.jar" />
         <jar href="PgsLookAndFeel.jar"/>
-        <jar href="DJNativeSwing.jar" />
-        <jar href="DJNativeSwing-SWT.jar" />
         <jar href="l2fprod-common-all.jar"/>
         <jar href="kunstsoff-rt.jar" />
         <jar href="smack.jar" />
@@ -33,18 +31,6 @@
         <jar href="realtime2-whiteboard.jar" />
 </resources>
 
-    <resources os="Windows" arch="x86">
-        <jar href="swt-win.jar" />
-    </resources>
-
-   <resources os="Linux">
-        <jar href="swt-linux.jar" />
-   </resources>
-
-  <resources os="Mac OS X">
-        <j2se version="1.5*" java-vm-args="-XstartOnFirstThread"/>
-        <jar href="swt-mac.jar"/>
-    </resources>
 
    <application-desc    main-class="org.avoir.realtime.core.Main">
     <argument>-slidesdir=/</argument>
@@ -61,11 +47,11 @@
     <argument>-username=</argument>
     <argument>-names=</argument>
     <argument>-email=@chisimba.com</argument>
-    <argument>-rtpPort=5222</argument>
+    <argument>-rtpPort=1935</argument>
     <argument>-sipPort=6060</argument>
-    <argument>-outboundProxy=sip:146.141.76.153;lr</argument>
+    <argument>-outboundProxy=sip:146.141.97.28;lr</argument>
     <argument>-password=1234</argument>
-    <argument>-domain=146.141.76.153</argument>
+    <argument>-domain=146.141.97.28</argument>
     <argument>-userpart=1000</argument>
     <argument>-roomname=chisimba</argument>
     </application-desc>

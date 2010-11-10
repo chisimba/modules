@@ -166,8 +166,6 @@ class rttutil extends object {
         <jar href="quartz-all-1.6.0.jar" />
         <jar href="jta-rt.jar" />
         <jar href="PgsLookAndFeel.jar"/>
-        <jar href="DJNativeSwing.jar" />
-        <jar href="DJNativeSwing-SWT.jar" />
         <jar href="l2fprod-common-all.jar"/>
         <jar href="kunstsoff-rt.jar" />
         <jar href="smack.jar" />
@@ -182,18 +180,6 @@ class rttutil extends object {
         <jar href="realtime2-whiteboard.jar" />
 </resources>
 
-    <resources os="Windows" arch="x86">
-        <jar href="swt-win.jar" />
-    </resources>
-
-   <resources os="Linux">
-        <jar href="swt-linux.jar" />
-   </resources>
-
-  <resources os="Mac OS X">
-        <j2se version="1.5*" java-vm-args="-XstartOnFirstThread"/>
-        <jar href="swt-mac.jar"/>
-    </resources>
 
    <application-desc    main-class="org.avoir.realtime.core.Main">
     <argument>-slidesdir=/</argument>
