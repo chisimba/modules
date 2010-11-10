@@ -72,7 +72,7 @@
 
     <update>
         <table>tbl_wicid_documents</table>
-        <version>0.033</version>
+        <version>1.001</version>
         <description>Added the deleteDoc field</description>
         <data>
             <add>
