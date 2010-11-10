@@ -41,13 +41,13 @@ if (count($msg) > 0) {
         echo $txt . '<br/>';
     }
 }
-echo '<div class="noRecordsMessage">' . $this->objLanguage->languageText("category_resource_seven", "libraryforms") . '</div>';
+echo '<div class="LibraryForms">' . $this->objLanguage->languageText("category_resource_seven", "libraryforms") . '</div>';
 
 $header = new htmlheading();
 $header->type = 2;
 $header = $this->objLanguage->languageText("mod_libraryforms_commentsnamerequired", "libraryforms", "heading2");
 if ($mode != 'fixerror') {
-    echo '<div class="noRecordsMessage">' . '<br /><span style="color:red;font-size:12px;">' . $header . '</span>' . '</div>';
+    echo '<div class="LibraryForms">' . '<br /><span style="color:red;font-size:12px;">' . $header . '</span>' . '</div>';
 }
 
 $category = 'user';
