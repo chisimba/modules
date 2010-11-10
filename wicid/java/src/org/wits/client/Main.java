@@ -158,7 +158,7 @@ public class Main {
         ToolBar toolBar = new ToolBar();
 
         newFolderButton.setIconStyle("folderadd");
-        if (mode.equals("apo")){
+        if (mode.equals("apo")) {
             newFolderButton.setText("New Faculty");
         }
         //newFolderButton.setEnabled(false);
@@ -614,11 +614,13 @@ public class Main {
     private void setMode() {
         newDocumentButton.setEnabled(mode.equals("default"));
         newCourseProposalButton.setEnabled(mode.equals("apo"));
+
     }
 
     private void promptFolderName() {
 
-        final MessageBox box = MessageBox.prompt("Name", "Please enter topic name:");
+        String type = mode.equals("default") ? "topic" : "faculty";
+        final MessageBox box = MessageBox.prompt("Name", "Please enter " + type + " name:");
         box.addCallback(new Listener<MessageBoxEvent>() {
 
             public void handleEvent(MessageBoxEvent be) {
@@ -737,7 +739,16 @@ public class Main {
                             }
 
                         }
-
+                        if (mode.equals("default")) {
+                            newFolderMenuItem.setText("New Topic");
+                            newFolderButton.setText("New Topic");
+                        } else if (mode.equals("apo")) {
+                            newFolderMenuItem.setText("New Faculty");
+                            newFolderButton.setText("New Faculty");
+                            tab.removeAll();
+                            docsTab.setText("Proposals");
+                            tab.add(docsTab);
+                        }
 
                         if (admin) {
                             folderUserButton.setEnabled(true);
@@ -809,6 +820,7 @@ public class Main {
 
                     public void handleEvent(SelectionChangedEvent<ModelData> md) {
                         selectedFolder = md.getSelectedItem();
+
                         center.setHeading((String) md.getSelectedItem().get("id"));
                         String id = (String) md.getSelectedItem().get("id");
                         currentPath = id;

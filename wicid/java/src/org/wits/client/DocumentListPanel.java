@@ -89,7 +89,7 @@ public class DocumentListPanel extends LayoutContainer {
     private int status;
     private int versionV;
     private SimpleComboBox<String> submitCombo = new SimpleComboBox<String>();
-    private String mode = Constants.main.getMode();
+   
     private boolean editing;
     private CellEditor activeEditor;
     private CellEditor ed;
@@ -173,7 +173,7 @@ public class DocumentListPanel extends LayoutContainer {
                         selectedRows = md.getSelection();
                         approveButton.setEnabled(selectedRows.size() > 0);
                         editButton.setEnabled(selectedRows.size() > 0);
-                        if (mode.equalsIgnoreCase("APO")) {
+                        if (Constants.main.getMode().equalsIgnoreCase("APO")) {
                             submitButton.setEnabled(selectedRows.size() > 0);
                         }
                         status = getStatus();
@@ -304,7 +304,6 @@ public class DocumentListPanel extends LayoutContainer {
         }
     }
 
-    
     private void submitDocument() {
         String currentStatusS = "";
         status = getStatus();
@@ -739,42 +738,42 @@ public class DocumentListPanel extends LayoutContainer {
                 submitDocument();
             }
         });
-        if (mode.equalsIgnoreCase("APO")) {
+        if (Constants.main.getMode().equalsIgnoreCase("APO")) {
             submitMenuItem.setEnabled(true);
         }
 
-     /*   MenuItem reclaimMenuItem = new MenuItem("Reclaim");
+        /*   MenuItem reclaimMenuItem = new MenuItem("Reclaim");
         reclaimMenuItem.addSelectionListener(new SelectionListener<MenuEvent>() {
 
-            public void componentSelected(MenuEvent ce) {
-                if (selectedRows.size() < 1) {
-                    MessageBox.info("No documents", "Please, select document(s) to reclaim", null);
-                } else {
-                    final MessageBox confirmReclaim = MessageBox.confirm("Reclaiming", "Are you sure you want to reclaim this document?", null);
-                    confirmReclaim.getDialog().getButtonById(Dialog.YES).addSelectionListener(new SelectionListener<ButtonEvent>() {
+        public void componentSelected(MenuEvent ce) {
+        if (selectedRows.size() < 1) {
+        MessageBox.info("No documents", "Please, select document(s) to reclaim", null);
+        } else {
+        final MessageBox confirmReclaim = MessageBox.confirm("Reclaiming", "Are you sure you want to reclaim this document?", null);
+        confirmReclaim.getDialog().getButtonById(Dialog.YES).addSelectionListener(new SelectionListener<ButtonEvent>() {
 
-                        @Override
-                        public void componentSelected(ButtonEvent ce) {
-                            increaseVersion("reclaimdocument");
-                        }
-                    });
-                    confirmReclaim.getDialog().getButtonById(Dialog.NO).addSelectionListener(new SelectionListener<ButtonEvent>() {
+        @Override
+        public void componentSelected(ButtonEvent ce) {
+        increaseVersion("reclaimdocument");
+        }
+        });
+        confirmReclaim.getDialog().getButtonById(Dialog.NO).addSelectionListener(new SelectionListener<ButtonEvent>() {
 
-                        @Override
-                        public void componentSelected(ButtonEvent ce) {
-                            confirmReclaim.close();
-                        }
-                    });
-                }
-            }
+        @Override
+        public void componentSelected(ButtonEvent ce) {
+        confirmReclaim.close();
+        }
+        });
+        }
+        }
         });
 
         String owner = "";
         for (ModelData row : selectedRows) {
-            owner = row.get("owner");
+        owner = row.get("owner");
         }
         //if(owner = userid){
-      //  reclaimMenuItem.enable();
+        //  reclaimMenuItem.enable();
         /*} else{
         reclaimMenuItem.disable();
         }*/
@@ -791,15 +790,19 @@ public class DocumentListPanel extends LayoutContainer {
                 }
             }
         });
-      //  contextMenu.add(reclaimMenuItem);
+        //  contextMenu.add(reclaimMenuItem);
 
         contextMenu.add(editMenuItem);
+
         contextMenu.add(approveMenuItem);
-        if (mode.equals("apo")) {
+
+        if (Constants.main.getMode().equals("apo")) {
             contextMenu.add(submitMenuItem);
         }
         contextMenu.add(new SeparatorMenuItem());
-        contextMenu.add(rejectMenuItem);
+        if (Constants.main.getMode().equals("default")) {
+            contextMenu.add(rejectMenuItem);
+        }
         contextMenu.add(deleteMenuItem);
     }
 
@@ -819,7 +822,7 @@ public class DocumentListPanel extends LayoutContainer {
         document.setStatus((String) selectedRows.get(0).get("status"));
 
 
-        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, mode, null);
+        EditDocumentDialog editDocumentDialog = new EditDocumentDialog(document, Constants.main.getMode(), null);
         editDocumentDialog.show();
     }
 
