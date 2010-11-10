@@ -55,19 +55,19 @@
     <argument>-skinclass=null </argument>
     <argument>-audiovideourl=146.141.76.164/:7070/red5</argument>
     <argument>-serverport=5222</argument>
-    <argument>-serverhost=146.141.76.164</argument>
+    <argument>-serverhost=localhost</argument>
     <argument>-mode=1</argument>
     <argument>-plugins=org.avoir.realtime.user.UserManager#org.avoir.realtime.roommanager.RoomManager#org.avoir.realtime.chat.ChatManager#org.avoir.realtime.presentations.PresentationManager#org.avoir.realtime.whiteboard.WhiteboardManager#org.avoir.realtime.audio.AudioManager</argument>
     <argument>-username=admin</argument>
     <argument>-names=Administrative User</argument>
     <argument>-email=david.wafula@wits.ac.za</argument>
-    <argument>-rtpPort=5222</argument>
+    <argument>-rtpPort=1935</argument>
     <argument>-sipPort=6060</argument>
-    <argument>-outboundProxy=sip:146.141.76.153;lr</argument>
+    <argument>-outboundProxy=sip:146.141.97.28;lr</argument>
     <argument>-password=1234</argument>
-    <argument>-domain=146.141.76.153</argument>
+    <argument>-domain=146.141.97.28</argument>
     <argument>-userpart=1000</argument>
-    <argument>-roomname=Filters</argument>
+    <argument>-roomname=pop123</argument>
     </application-desc>
 
     <security>

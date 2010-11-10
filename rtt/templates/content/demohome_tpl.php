@@ -9,7 +9,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 
 $form = new form('demo', $this->uri(array('action' => "joindemo")));
-$button = new button('join', $this->objLanguage->languageText('mod_rtt_join', 'rtt', 'Join'));
+$button = new button('join', $this->objLanguage->languageText('mod_rtt_try', 'rtt', 'Try'));
 $button->setToSubmit();
 
 

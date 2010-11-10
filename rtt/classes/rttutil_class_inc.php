@@ -7,6 +7,16 @@ class rttutil extends object {
         $this->objContext = $this->getObject('dbcontext', 'context');
     }
 
+    function genRandomString() {
+        $length = 10;
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        $string = '';
+        for ($p = 0; $p < $length; $p++) {
+            $string .= $characters[mt_rand(0, strlen($characters))];
+        }
+        return $string;
+    }
+
     function generateJNLP($roomname='') {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $servletURL = $objSysConfig->getValue('SERVLETURL', 'rtt');
@@ -123,7 +133,7 @@ class rttutil extends object {
         chmod($myFile, 0777);
     }
 
-    function generateDemoJNLP($nickname) {
+    function generateDemoJNLP($nickname,$username) {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $servletURL = $objSysConfig->getValue('SERVLETURL', 'rtt');
         $plugins = $objSysConfig->getValue('PLUGINS', 'rtt');
@@ -145,7 +155,7 @@ class rttutil extends object {
         $enableDraw = 'true';
         $roomname = 'chisimba';
         $password = '1234';
-        $callnumber='1000';
+        $callnumber = '1000';
         $str =
                 '<jnlp spec="1.0+" codebase="' . $codebase . '">
     <information>
@@ -193,7 +203,7 @@ class rttutil extends object {
     <argument>-serverhost=' . $openfireHost . '</argument>
     <argument>-mode=1</argument>
     <argument>-plugins=' . $plugins . '</argument>
-    <argument>-username=' . $nickname . '</argument>
+    <argument>-username=' . $username . '</argument>
     <argument>-names=' . $nickname . '</argument>
     <argument>-email=' . $nickname . '@chisimba.com</argument>
     <argument>-rtpPort=' . $rtpPort . '</argument>
@@ -212,7 +222,7 @@ class rttutil extends object {
 
 ';
 
-        $myFile = $modPath . '/rtt/resources/' . $nickname . '.jnlp';
+        $myFile = $modPath . '/rtt/resources/' . $username . '.jnlp';
         //chmod($modPath.'/rtt/resources/', 0777);
         $fh = fopen($myFile, 'w') or die("can't open file");
         fwrite($fh, $str);

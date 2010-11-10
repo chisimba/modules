@@ -8,9 +8,9 @@ class dbrtt extends dbtable {
         $this->objWashout=$this->getObject('washout','utilities');
     }
 
-    function getDemoContent() {
+    function getPostDemoContent() {
         $objTrim = $this->getObject('trimstr', 'strings');
-        $storyid = $this->objDbSysconfig->getValue('DEMO_STORY_ID', 'rtt');
+        $storyid = $this->objDbSysconfig->getValue('POST_DEMO_STORY_ID', 'rtt');
         $data = $this->getStory($storyid);
         $content = '';
 
@@ -25,6 +25,24 @@ class dbrtt extends dbtable {
         return $content;
     }
 
+
+
+    function getDemoContent() {
+        $objTrim = $this->getObject('trimstr', 'strings');
+        $storyid = $this->objDbSysconfig->getValue('DEMO_STORY_ID', 'rtt');
+        $data = $this->getStory($storyid);
+        $content = '';
+
+        $content = '
+
+
+            ' . $this->objWashout->parseText($data['storytext']) . '
+
+            <br/>
+              ';
+
+        return $content;
+    }
     public function getDownloadsStory() {
         $objTrim = $this->getObject('trimstr', 'strings');
         $storyid = $this->objDbSysconfig->getValue('DOWNLOAD_STORY_ID', 'rtt');

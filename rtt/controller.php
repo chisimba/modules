@@ -109,9 +109,9 @@ class rtt extends controller {
           $this->setVar('suppressFooter', TRUE);
           $this->setVar('pageSuppressToolbar', TRUE); */
         $nickname = $this->getParam("name");
-        $jnlpPath = $this->objRttUtil->generateDemoJNLP($nickname);
-
-        $this->setVarByRef("nickname", $nickname);
+        $username= $this->objRttUtil->genRandomString();
+        $this->objRttUtil->generateDemoJNLP($nickname,$username);
+        $this->setVarByRef("username", $username);
         return "launchdemo_tpl.php";
     }
 
