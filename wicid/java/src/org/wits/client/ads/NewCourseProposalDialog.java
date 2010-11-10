@@ -28,7 +28,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import java.util.Date;
 import org.wits.client.Constants;
 import org.wits.client.TopicListingFrame;
-import org.wits.client.util.WicidXML;
 
 /**
  *
@@ -253,7 +252,7 @@ public class NewCourseProposalDialog {
         newCourseProposalDialog.setHideOnButtonClick(true);
         newCourseProposalDialog.setButtons(Dialog.CLOSE);
         newCourseProposalDialog.setButtonAlign(HorizontalAlignment.LEFT);
-
+/*
         newCourseProposalDialog.getButtonById(Dialog.CLOSE).addSelectionListener(new SelectionListener<ButtonEvent>() {
 
             @Override
@@ -286,7 +285,7 @@ public class NewCourseProposalDialog {
                 }
             }
         });
-
+*/
         newCourseProposalDialog.add(mainForm);
         setDepartment();
 
