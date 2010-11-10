@@ -161,6 +161,9 @@ class dbdocuments extends dbtable {
         if (strcmp($fullname, $contact) == 0) {
             $contact = "";
         }
+        if($contact == NULL){
+            $contact="None";
+        }
 
         $data = array(
             'docname' => $title,
@@ -180,7 +183,7 @@ class dbdocuments extends dbtable {
             'version' => $version
         );
         $id = $this->insert($data);
-        echo $refno . "-" . $ref_version . ',' . $id;
+        echo $refno . "/" . $ref_version . ',' . $id;
         //echo "success|$id";
         return $id;
     }
