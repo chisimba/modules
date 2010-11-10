@@ -380,7 +380,7 @@ class wicid extends controller {
         //check wat is the largest count for this year.
         $ref_version = $this->documents->checkRefNo($number);
         $refno=$number.date("Y");//."-".($res;
-        $contact = $this->getParam('contact');
+        $contact = $this->getParam('contact','');
         if($contact == null || $contact == ''){
             $contact=$this->objUser->fullname();
         }
