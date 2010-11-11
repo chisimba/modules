@@ -922,7 +922,7 @@ class mcqtests extends controller {
                 return 'answertest_tpl.php';
             case 'marktest2':
                 echo $this->markTest($this->getParam('resultId', NULL));
-                //print_r($_POST);
+                print_r($_POST);
                 break;
             case 'showstudenttest':
                 return $this->showStudentTest();

@@ -317,7 +317,7 @@ if (!empty($data)) {
                         $objRadio->addOption($val['id'], $ansNum . strip_tags($val['subquestions']));
                     }
                     $matchTable->startRow();
-                    $matchTable->addCell($objRadio->show(), '50%');
+                    $matchTable->addCell($ansNum.strip_tags($val['subquestions']) /*$objRadio->show()*/, '50%');
                     $matchTable->addCell($objDropNum->show(), '50%');
                     $matchTable->endRow();
 
