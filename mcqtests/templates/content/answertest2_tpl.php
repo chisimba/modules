@@ -402,7 +402,7 @@ if (!empty($data) && $questionCounter < $data[0]['count']) {
     $objButton = new button('savebutton', $submitLabel);
     $objButton->extra = ' ondblclick="javascript:return false" onclick= document.getElementById(\'form_submittest\').submit(); "';
     //	$objButton->setToSubmit();
-    $action = 'marktest';
+    $action = 'marktest2';
 }
 
 $objInput = new textinput('action', $action);
