@@ -56,9 +56,9 @@ class dbquestion_matching extends dbtable {
         $answerData = array();
         $answerData['questionid'] = $id;
         foreach($matchingQuestionData['subanswers'] as $row) {
-            $answerData['answer'] = $row;
-            if(trim(strlen($answerData['answer'])  > 0)) {
-                $this->objMultiAnswers->addAnswers($answerData);
+            if(strlen(trim($row['answer'])) > 0) {
+                $row['questionid'] = $id;
+                $this->objMultiAnswers->addAnswers($row);
             }
         }
     }

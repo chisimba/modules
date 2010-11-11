@@ -20,7 +20,7 @@ $fields = array(
         ),
    'correctanswer' => array(
         'type' => 'text',
-        'length' => 5
+        'length' => 32
     )
 );
 ?>

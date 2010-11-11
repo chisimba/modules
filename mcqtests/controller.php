@@ -2204,7 +2204,11 @@ class mcqtests extends controller {
     public function addMatchingQuestions($id, $edit=false) {
         $matchingQuestionData = array();
         $matchingQuestionData['subquestions'] = array('q1' => trim($this->getParam('qmatching1')), 'q2' => trim($this->getParam('qmatching2')), 'q3' => trim($this->getParam('qmatching3')));
-        $matchingQuestionData['subanswers'] = array('a1' => $this->getParam('aMatching1'), 'a2' => $this->getParam('aMatching2'), 'a3' => $this->getParam('aMatching3'));
+        $matchingQuestionData['subanswers'] = 
+                array(array('answer' => $this->getParam('aMatching1'), 'correctanswer'=> strip_tags($this->getParam('qmatching1'))),
+                      array('answer' => $this->getParam('aMatching2'), 'correctanswer'=> strip_tags($this->getParam('qmatching2'))),
+                      array('answer' => $this->getParam('aMatching3'), 'correctanswer'=> strip_tags($this->getParam('qmatching3')))
+                );
 
         if ($edit) {
             $this->objQuestionMatching->updateMatchingQuestions($id, $matchingQuestionData);
