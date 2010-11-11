@@ -157,7 +157,7 @@ class faq extends controller {
      * @return bool FALSE
      */
     public function requiresLogin($action) {
-        $requiresLogin = array('add', 'addcategory');
+        $requiresLogin = array('add', 'addcategory','edit');
 
         if (in_array($action, $requiresLogin)) {
             return TRUE;
@@ -173,6 +173,9 @@ class faq extends controller {
      * @return boolean
      */
     public function isValid($action) {
+        if(!$this->objUser->isLoggedIn()){
+            return FALSE;
+        }
         if ($this->objUser->isAdmin() || $this->objContextGroups->isContextLecturer()) {
             return TRUE;
         } else {

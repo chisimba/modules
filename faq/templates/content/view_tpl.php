@@ -23,6 +23,13 @@ if ($contextId != 'root') {
         $isLecturer = true;
     }
 }
+
+if(!$this->objUser->isLoggedIn()){
+    $isLecturer=false;
+    $isAdmin=false;
+}
+
+
 //
 // Display error string if neccessary.
 if ($error != "") {
