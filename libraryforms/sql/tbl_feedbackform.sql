@@ -1,6 +1,6 @@
 <?php
 //5ive definition
-$tablename = 'tbl_libraryforms_feedbackform';
+$tablename = 'tbl_feedbackform';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'table for feedback_comment', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');

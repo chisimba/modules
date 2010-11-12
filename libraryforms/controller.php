@@ -173,7 +173,10 @@ class libraryforms extends controller {
         $entitynum = $this->getParam('entity');
         $studentno = $this->getParam('thesis_studentno');
         $course = $this->getParam('thesis_course');
+        $local = $this->getParam('label_local');
+        $postgrad=$this->getParam('label_graduates');
         $captcha = $this->getParam('thesis_captcha');
+ 
 
         // Check whether user matched captcha
         if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
@@ -190,7 +193,7 @@ class libraryforms extends controller {
         $id = $this->dbAddBookthesis->insertBookthesisRecord($author, $title, $place, $publisher, $date,
                         $edition, $isbn, $series, $copy, $titlepages, $pages, $thesis,
                         $name, $address, $cell, $fax, $tel, $telw, $emailaddress,
-                        $entitynum, $studentno, $course);
+                        $entitynum, $studentno, $course, $local, $postgrad);
 
 // after inserting into db send email alert
         $subject = "Book thesis record";
@@ -200,7 +203,7 @@ class libraryforms extends controller {
  	$copy . '  ' .  "\n" .' TItle:' .$titlepages . '  ' .  "\n" .' Pages: '. $pages . '  ' .  "\n" .' Type of Thesis: ' . $thesis . '  ' .  "\n" .' Name: ' . 
 	$name . '  ' .  "\n" .' Address: ' . $address . '   ' . "\n" . ' Cell: ' . $cell . '   ' . ' Fax: '. $fax . '   ' .  "\n" .' Tel(H): ' . 
 	$tel . '  ' .  "\n" .' Tel (W): ' . $telw . '  ' .  "\n" . ' E-mail: ' . $emailaddress . '  ' .  "\n" .' Entity num: '.
-	$entitynum . '   ' .  "\n" .' Student no: ' . $studentno . '  ' .   "\n" .' Course: ' .$course);
+	$entitynum . '   ' .  "\n" .' Student no: ' . $studentno . '  ' .   "\n" .' Course: ' .$course . "\n". ' Student Identification: ' . $local . "\n" . "Student" . $postgrad);
     }
 
 // end of bookthesisrecord

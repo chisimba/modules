@@ -50,7 +50,7 @@ class bookthesis extends dbTable {
         //Load the button object
         $this->loadClass('button', 'htmlelements');
         //load the checkbox object
-        $this->loadClass('checkbox', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
         // load the fieldset
 	$this->loadClass('fieldset', 'htmlelements');
 
@@ -314,77 +314,57 @@ class bookthesis extends dbTable {
             ("mod_libraryforms_commenttitlebox","libraryforms"),"box");
         $table->startRow();
         $table->addCell($bookbLabel->show(), '', 'center', 'left','');
-     
-              
+        $table->endRow();
          
-        $table->startRow();
-        $objCheck = new checkbox('arrayList[]');
-        $objCheck->setValue($userPerm['id']);
-        $objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-      
-        $uwcbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentuwc","libraryforms"),"uwc");
-        $table->addCell($objCheck->show(), '', 'center', 'left', '');
-        $table->addCell($uwcbLabel->show(), '', 'center', 'left', '');
-        $objForm->addRule('arrayList[]',$this->objLanguage->languageText("mod_surname_required", "libraryforms", 'Please enter a title. please tick one of the box.'),'required');
-
-        //
-        // create checkbox local only
-        $objCheck2 = new checkbox('arrayList[]');
-        $objCheck2->setValue($userPerm['id']);
-        $objCheck2->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $bLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
-        $table->addCell($objCheck2->show(), '', 'center', 'left', '');
-        $table->addCell($bLabel->show(), '', 'center', 'left', '');
+      /*  $table->startRow();
+        $objLlocal = new textinput('label_local');
+        $Labellocal=  new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"label_local");
+	$table->addCell($Labellocal->show(), '', 'center', 'left', '');
+        $table->addCell($objLlocal->show(), '', 'center', 'left', '');
 
 
-        $objCheck3 = new checkbox('arrayList[]');
-        $objCheck3->setValue($userPerm['id']);
-        $objCheck3->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        //Create a new label for oversears
-        $overLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentoverseas","libraryforms"),"overseas");
-        $table->addCell($objCheck3->show(), '', 'center', 'left', '');
-        $table->addCell($overLabel->show(), '', 'center', 'left', '');
-        $table->endRow();
+  	$objgraduates = new textinput('label_graduates');
+        $Labelgraduates=  new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"label_graduate");
+	$table->addCell($Labelgraduates->show(), '', 'center', 'left', '');
+        $table->addCell($objgraduates->show(), '', 'center', 'left', '');
+	$table->endRow();*/
 
-        //Create a new textinput for fax
-       
-        $table->startRow();
-	$objCheck4 = new checkbox('arrayList[]');
-        $objCheck4->setValue($userPerm['id']);
-       // $objCheck4->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $faxbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");
-        $table->addCell($objCheck4->show(), '', 'center', 'left', '');
-        $table->addCell($faxbLabel->show(), '', 'center', 'left', '');
+//Input and label for Department/Scool/Division
+$table->startRow();
 
-        //Create a new label for ug
+	$objlocal = new dropdown ('local');
+	$localLabel = new label("Select your distance");
+	$local=array("UWC Coppy Missing", "Local Only", "Overseas", "Fax");
+foreach ($local as $local)
+{
+    $objlocal->addOption($local,$local);
+    if($mode == 'save_book'){
+        $objlocal->setSelected($this->getParam('local'));
+    }
+   
+}
+	$table->addCell($localLabel ->show(), 150, NULL, 'left');
+	$table->addCell($objlocal ->show(), 150, NULL, 'left');
+//$table->endRow();
+// end of drop down
 
-        $objCheck5 = new checkbox('arrayList[]');
-        $objCheck5->setValue($userPerm['id']);
-       //$objCheck5->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $pgbbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"pg");
-        //$objForm->addToForm($pgbbLabel->show());
-        $table->addCell($objCheck5->show(), '', 'center', 'left', '');
-        $table->addCell($pgbbLabel->show(), '', 'center', 'left', '');
+//Input and label for Department/Scool/Division
+	$objpostgrad = new dropdown ('postgrad');
+	$postgradLabel = new label( "Select your Level");
+	$postgrad=array("Post Graduate", "Under Graduate", "Staff" );
+foreach ($postgrad as $postgrad)
+{
+    $objpostgrad->addOption($postgrad,$postgrad);
+    if($mode == 'save_book'){
+        $objlocal->setSelected($this->getParam('postgrad'));
+    	}
+   
+}
+	$table->addCell($postgradLabel ->show(), 150, NULL, 'left');
+	$table->addCell($objpostgrad ->show(), 150, NULL, 'left');
 
+	$table->endRow();
 
-
-        //Create a new label for staff
-
-        $objCheck6 = new checkbox('arrayList[]');
-        $objCheck6->setValue($userPerm['id']);
-       // $objCheck6->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $ugbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentug","libraryforms"),"ug");
-        $table->addCell($objCheck6->show(), '', 'center', 'left', '');
-        $table->addCell($ugbLabel->show(), '', 'center', 'left', '');
-         $table->endRow();
-          
-        $objCheck7= new checkbox('arrayList[]');
-        $objCheck7->setValue($userPerm['id']);
-        //$objCheck7->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-        $staffbLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstaff","libraryforms"),"staff");
-        $table->addCell($objCheck7->show(), '', 'center', 'left', '');
-        $table->addCell($staffbLabel->show(), '', 'center', 'left', '');
-        $table->endRow();
 
         $objForm->addToForm($table->show());
         $objCaptcha = $this->getObject('captcha', 'utilities');
@@ -437,6 +417,8 @@ class bookthesis extends dbTable {
             'bentitynum' => $bentitynum,
             'bstudentno' => $bstudentno,
             'bcourse' => $bcourse,
+            'blocal' =>$local,
+            'bpostgrad'=>$postgrad,
         ));
         return $id;
     }
