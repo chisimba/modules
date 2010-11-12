@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+
+    <update>
+        <table>tbl_booksthesis.sql</table>
+        <version>0.27</version>
+        <description>Added column blocal.</description>
+        <data>
+           	<add>
+       			<name>blocal</name>
+    	    	<type>text</type>
+       			<length>20</length>
+       			<notnull>FALSE</notnull>
+       			<default>NULL</default>
+    		</add>
+    	</data>
+	</update>
+
+
+<update>
+        <table>tbl_booksthesis.sql</table>
+        <version>0.26</version>
+        <description>Added column bpostgrad.</description>
+        <data>
+           	<add>
+       			<name>bpostgrad</name>
+    	    	<type>text</type>
+       			<length>20</length>
+       			<notnull>FALSE</notnull>
+       			<default>NULL</default>
+    		</add>
+    	</data>
+	</update>
+
+
+        </updates>
+
+
+
