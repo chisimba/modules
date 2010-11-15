@@ -9,11 +9,11 @@ $this->appendArrayVar('headerParams', '
 
 $javaVersion='
     <script>
-var minVersion="1.5";
+var minVersion="1.6";
 var javaVersionDiv = document.getElementById("javaversion");
 
 if(deployJava.isWebStartInstalled(minVersion)){
-javaVersionDiv.appendChild(document.createTextNode("You have minimum java installed."));
+javaVersionDiv.appendChild(document.createTextNode("You the required version of java installed."));
 
 }else{
 var answer = confirm("You need latest java installed to run Chisimba Realtime Tools Demo. Install latest java now?")
