@@ -267,13 +267,14 @@ class bookthesis extends dbTable {
         $telLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttele","libraryforms"),"thesis_tel");
         $table->addCell($telLabel->show(), '', 'center', 'left', '');
         $table->addCell($objtel->show(), '', 'center', 'left', '');
+        $objForm->addRule('thesis_tel',$this->objLanguage->languageText("mod_tel_required", "libraryforms"),'required');
 
 
         $objw = new textinput('thesis_w');
         $wLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentW","libraryforms"),"thesis_w");
         $table->addCell($wLabel->show(), '', 'center', 'left', '');
         $table->addCell($objw->show(), '', 'center', 'left', '');
-
+	$objForm->addRule('thesis_w',$this->objLanguage->languageText("mod_w_required", "libraryforms"),'required');
 
 
         //Create a new textinput for email
