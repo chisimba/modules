@@ -21,7 +21,7 @@ if ($action == 'edit') {
     $header->str=$this->objLanguage->languageText('mod_forum_editForumSettings', 'forum').': '.$forum['forum_name'];
     $formAction = 'editforumsave';
 } else {
-    $header->str=$this->objLanguage->languageText('mod_forum_createNewForum', 'forum').': '.$contextTitle;
+    $header->str=$this->objLanguage->languageText('mod_forum_createNewForum', 'forum','Create New Forum').': '.$contextTitle;
     $formAction = 'saveforum';
 }
 
