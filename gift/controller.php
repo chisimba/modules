@@ -1,22 +1,24 @@
 <?php
 
 class gift extends controller {
+
     public $id;
     public $msg;
-    public  $giftPolicyAccepted="false";
-    public  $clickedAdd="false";
+    public $giftPolicyAccepted = "false";
+    public $clickedAdd = "false";
+
     function init() {
         // Importing classes for use in controller
         $this->objLanguage = $this->getObject("language", "language");
-        $this->objDbGift   = $this->getObject("dbgift");
-        $this->objGift     = $this->getObject("giftops");
-        $this->objHome     = $this->getObject("home");
-        $this->objUser     = $this->getObject("user","security");
-        $this->objEdit     = $this->getObject("edit");
+        $this->objDbGift = $this->getObject("dbgift");
+        $this->objGift = $this->getObject("giftops");
+        $this->objHome = $this->getObject("home");
+        $this->objUser = $this->getObject("user", "security");
+        $this->objEdit = $this->getObject("edit");
         $this->objGiftUser = $this->getObject("dbuserstbl");
         $this->objConfig = $this->getObject('altconfig', 'config');
-        if($this->objGiftUser->policyAccepted() == 'Y') {
-            $this->giftPolicyAccepted="true";
+        if ($this->objGiftUser->policyAccepted() == 'Y') {
+            $this->giftPolicyAccepted = "true";
         }
         $test = "test";
         // Initialising $data (holds the data from database when edit link is called)
@@ -39,7 +41,7 @@ class gift extends controller {
             case 'userexists': return $this->userExists();
             case 'saveuser': return $this->saveUser();
             default:
-                $this->clickedAdd=$this->getParam('clickedadd');
+                $this->clickedAdd = $this->getParam('clickedadd');
 
                 return "home_tpl.php";
         }
@@ -47,7 +49,8 @@ class gift extends controller {
 
     /*
      * Search for a gift
-    */
+     */
+
     public function searchGift() {
         //echo $action;
         $searchkey = $this->getParam('giftname');
@@ -55,6 +58,7 @@ class gift extends controller {
         $this->setVarByRef('searchStr', $searchkey);
         return "home_tpl.php";
     }
+
     /**
      * Add link clicked from home page, calls this method
      * @return string
@@ -76,14 +80,32 @@ class gift extends controller {
         $value = $this->getParam('valuefield');              // Gift's value
         $listed = $this->getParam('gstatevalue');        // Archived status
 
-        $result = $this->objDbGift->addInfo($donor,$recipient,$name,$description,$value,$listed);
+        $result = $this->objDbGift->addInfo($donor, $recipient, $name, $description, $value, $listed);
 
-        if($result) {
-            $this->msg = $this->objLanguage->languageText('mod_addInfoSuccess','gift');
+        if ($result) {
+            $this->msg = $this->objLanguage->languageText('mod_addInfoSuccess', 'gift');
+        } else {
+            $this->msg = $this->objLanguage->languageText('mod_infoFailure', 'gift');
         }
-        else {
-            $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
+
+        $groupOps = $this->getObject('groupops', 'groupadmin');
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $groupId = $objGroups->getId('gift');
+        $users = $groupOps->getUsersInGroup($groupId);
+        $objMailer = $this->getObject('email', 'mail');
+        $recipients=array();
+        foreach ($users as $user) {
+            $recipients[]=$this->objUser->email($user['perm_user_id']);
         }
+        $objMailer->setValue('to', $recipients);
+        $objMailer->setValue('from', "no-reply@wits.ac.za");
+        $objMailer->setValue('fromName', $this->objUser->fullnames);
+        $objMailer->setValue('subject', 'New gift added');
+        $body=$this->objUser->fullname().' has added a new gift titled .'.$name;
+        $objMailer->setValue('body', strip_tags($body));
+        $objMailer->setValue('AltBody', strip_tags($body));
+
+        $objMailer->send();
 
         $recipient = $this->objUser->fullName();     // Recipient name
 
@@ -102,7 +124,7 @@ class gift extends controller {
     function result() {
         $recipient = $this->objUser->fullName();     // Recipient name
 
-        $qry = "SELECT * FROM tbl_gift";// WHERE recipient = '$recipient'";
+        $qry = "SELECT * FROM tbl_gift"; // WHERE recipient = '$recipient'";
         $this->data = $this->objDbGift->getInfo($qry);
 
         return "edit_tpl.php";
@@ -128,15 +150,14 @@ class gift extends controller {
         $description = $this->getParam('descripvalue');
         $value = $this->getParam('gvalue');
         $listed = $this->getParam('gstatevalue');
-        $id =$this->getParam('id');
+        $id = $this->getParam('id');
 
-        $result = $this->objDbGift->updateInfo($donor,$recipient,$name,$description,$value,$listed,$id);
+        $result = $this->objDbGift->updateInfo($donor, $recipient, $name, $description, $value, $listed, $id);
 
-        if($result) {
-            $this->msg = $this->objLanguage->languageText('mod_updateInfoSuccess','gift');
-        }
-        else {
-            $this->msg = $this->objLanguage->languageText('mod_infoFailure','gift');
+        if ($result) {
+            $this->msg = $this->objLanguage->languageText('mod_updateInfoSuccess', 'gift');
+        } else {
+            $this->msg = $this->objLanguage->languageText('mod_infoFailure', 'gift');
         }
 
         $qry = "SELECT * FROM tbl_gift WHERE recipient = '$recipient'";
@@ -144,7 +165,6 @@ class gift extends controller {
         $this->recentdata['id'] = $this->getParam('id');
 
         return $this->nextAction('result');
-
     }
 
     //shows the gift policy template
@@ -158,21 +178,23 @@ class gift extends controller {
     }
 
     function saveUser() {
-        $this->clickedAdd="true";
+        $this->clickedAdd = "true";
         //save the user info in the database
-        $data = array('userid'=>$this->objUser->userId(), 'time'=>strftime('%Y-%m-%d %H:%M:%S', mktime()));
+        $data = array('userid' => $this->objUser->userId(), 'time' => strftime('%Y-%m-%d %H:%M:%S', mktime()));
         $this->objGiftUser->addUser($data);
-        if($this->objGiftUser->policyAccepted() == 'Y') {
+        if ($this->objGiftUser->policyAccepted() == 'Y') {
             $this->nextAction('home');
-            $this->giftPolicyAccepted="true";
-        }else {
+            $this->giftPolicyAccepted = "true";
+        } else {
             $this->nextAction('viewPolicy');
         }
     }
 
     function acceptPolicy() {
         $this->objGiftUser->acceptPolicy();
-        $this->nextAction('home',array('clickedadd'=>'true'));
+        $this->nextAction('home', array('clickedadd' => 'true'));
     }
+
 }
+
 ?>

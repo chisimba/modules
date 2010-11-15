@@ -92,7 +92,7 @@ class dbgift extends dbtable {
     }
 
     public function getGifts() {
-        $sql="select * from tbl_gifttable";//." where userid = '".$userid."'";
+        $sql="select * from tbl_gift";//." where userid = '".$userid."'";
         $rows=$this->getArray($sql);
         return $rows;
     }
