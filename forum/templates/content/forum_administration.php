@@ -13,7 +13,7 @@ $objIcon = $this->getObject('geticon', 'htmlelements');
 
 $Header =& $this->getObject('htmlheading', 'htmlelements');
 $Header->type=1;
-$Header->str=$this->objLanguage->languageText('mod_forum_forumAdministration', 'forum').': '.$contextTitle;
+$Header->str=$this->objLanguage->languageText('mod_forum_forumAdministration', 'forum','Forum administration').': '.$contextTitle;
 
 echo ($Header->show());
 
@@ -169,7 +169,7 @@ $form->displayType = 3;
 
 $form->addToForm('<fieldset>');
 
-$forumLabel = new label('<nobr>* '.$this->objLanguage->languageText('mod_forum_defaultForum', 'forum').' &nbsp;&nbsp;/&nbsp;&nbsp; '.$this->objLanguage->languageText('mod_forum_setDefaultForum', 'forum').':</nobr>', 'input_forum');
+$forumLabel = new label('<nobr>* '.$this->objLanguage->languageText('mod_forum_defaultForum', 'forum','Default Forum').' &nbsp;&nbsp;/&nbsp;&nbsp; '.$this->objLanguage->languageText('mod_forum_setDefaultForum', 'forum','Set defualt forum').':</nobr>', 'input_forum');
 $form->addToForm($forumLabel->show(), 100);
 
 $discussionType = new dropdown('forum');
@@ -196,7 +196,7 @@ $form->addToForm('</fieldset>');
 echo $form->show();
 
 $editLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'createforum')));
-$editLink->link = $this->objLanguage->languageText('mod_forum_createNewForum', 'forum');
+$editLink->link = $this->objLanguage->languageText('mod_forum_createNewForum', 'forum','Create new forum');
 
 $backToForumListLink = new link($this->uri(NULL));
 $backToForumListLink->link = $this->objLanguage->languageText('mod_forum_backtoforumindex', 'forum');
