@@ -306,7 +306,7 @@ class mcqtests extends controller {
                 break;
             // create an interface to choose a questiontype
             case 'choosequestiontype2':
-                $this->viewtest();
+                $this->viewtest2();
                 $id = $this->getParam('id');
                 $count = $this->getParam('count');
                 $this->setVarByRef('testid', $id);
@@ -684,6 +684,7 @@ class mcqtests extends controller {
                 $this->addAnswers($postTestId, $postQuestionId, $_POST, $qNum);
                 $msg = $this->objLanguage->languageText('mod_mcqtests_confirmaddanswer', 'mcqtests');
                 $this->setSession('confirm', $msg);
+                
                 return $this->nextAction('view', array(
                     'id' => $postTestId,
                     'qNum' => $qNum

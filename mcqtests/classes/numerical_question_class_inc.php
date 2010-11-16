@@ -28,7 +28,7 @@ class numerical_question extends object {
             $units = $this->getUnit($data['id']);
         }
         else {
-            $units = "";
+            $units = $this->getUnit();
         }
 
         // Create form and add the table

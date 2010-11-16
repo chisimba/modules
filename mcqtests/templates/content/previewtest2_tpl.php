@@ -151,7 +151,7 @@ if (!empty($data)) {
                         $objRadio->addOption($val['id'], $ansNum.strip_tags($val['subquestions']));
                     }
                     $matchTable->startRow();
-                    $matchTable->addCell($objRadio->show(), '50%');
+                    $matchTable->addCell($ansNum.strip_tags($val['subquestions'])/*$objRadio->show()*/, '50%');
                     $matchTable->addCell($objDropNum->show(), '50%');
                     $matchTable->endRow();
 
@@ -254,7 +254,7 @@ $str.= $objForm->show();
 $javascript = "<script language=\"javascript\" type=\"text/javascript\">
     //<![CDATA[
     function submitform(val){
-        window.location.href = '" . str_replace("amp;", "", $this->uri(array('action' => 'previewtest', 'id' => $this->getParam('id'),
+        window.location.href = '" . str_replace("amp;", "", $this->uri(array('action' => 'previewtest2', 'id' => $this->getParam('id'),
                     'mode' => 'notoolbar'))) . "&num='+val;
         //document.submittest.submit();
     }
