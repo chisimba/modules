@@ -51,11 +51,11 @@ if ($mode != 'fixerror') {
 }
 
 $category = 'user';
-$tab->tabbedbox();
+//$tab->tabbedbox();
 //$tabcontent->addTab('Distance User Form','Book/ Thesis only Form','Periodical Request Form',$tab->show());
-$tab->addBoxContent($objEditForm->show());
-$tab->addTabLabel($this->objLanguage->languageText("category_resource_one", "libraryforms"));
-$tabcontent->addTab('Distance User Form', $tab->show());
+//$tab->addBoxContent($objEditForm->show());
+//$tab->addTabLabel($this->objLanguage->languageText("category_resource_one", "libraryforms"));
+//$tabcontent->addTab('Distance User Form', $tab->show());
 //$category->addTab('Distance',$tab->show());
 
 $tab->tabbedbox();

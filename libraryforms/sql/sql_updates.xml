@@ -14,7 +14,7 @@
 	</update>
 <update>
         <table>tbl_booksthesis</table>
-        <version>0.27</version>
+        <version>0.28</version>
         <description>Added column bpostgrad.</description>
         <data>
            	<add>
@@ -24,6 +24,34 @@
        	</add>
     	</data>
 	</update>
+
+
+<update>
+        <table>tbl_illperiodical</table>
+        <version>0.29</version>
+        <description>Added column poverseas.</description>
+        <data>
+           	<add>
+       			<name>poverseas</name>
+    	    	<type>text</type>
+       			<length>20</length>
+       	</add>
+    	</data>
+	</update>
+
+<update>
+        <table>tbl_illperiodical</table>
+        <version>0.29</version>
+        <description>Added column pundergrad.</description>
+        <data>
+           	<add>
+       			<name>pundergrad</name>
+    	    	<type>text</type>
+       			<length>20</length>
+       	</add>
+    	</data>
+	</update>
+
         </updates>
 
 

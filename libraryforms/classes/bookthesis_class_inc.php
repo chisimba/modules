@@ -206,25 +206,25 @@ class bookthesis extends dbTable {
             ("mod_libraryforms_commentphotocopy","libraryforms"),"photocopy");
         $table->addCell($photolLabel->show(), '', 'center', 'left', '');
         $table->addCell($objphoto->show(), '', 'center', 'left', '');
-        $table->endRow();
+       // $table->endRow();
 
       
 
       // create a textbox and label for title 
-        $table->startRow();
+        //$table->startRow();
         $objtit2 = new textinput('titles');
         $tit2lLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commenttitle3","libraryforms"),"titles");
         $table->addCell($tit2lLabel->show(), '', 'center', 'left', '');
         $table->addCell($objtit2 ->show(), '', 'center', 'left', '');
-        $table->endRow();
+        //$table->endRow();
         $objForm->addRule('titles',$this->objLanguage->languageText("mod_titlebook_required", "libraryforms", 'Please enter book title. Title is missing.'),'required');
 
          //create textbox and label for pages
         $objpag = new textinput('pages');
         $pagLabel = new label($this->objLanguage->languageText
             ("mod_libraryforms_commenttitlepages2","libraryforms"),"Pages");
-        $table->startRow();
+       // $table->startRow();
         $table->addCell($pagLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpag->show(), '', 'center', 'left', '');
         $table->endRow();
@@ -239,8 +239,7 @@ class bookthesis extends dbTable {
         $table->addCell($objthes->show(), '', 'center', 'left', '');
         $objForm->addRule('thesis',$this->objLanguage->languageText("mod_thesis_required", "libraryforms"),'required');
         $table->endRow();
-
-          
+         
 
         $objprof = new textinput('thesis_prof');
         $profLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentprof","libraryforms"),"thesis_prof");
@@ -299,7 +298,7 @@ class bookthesis extends dbTable {
         $studLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentno2","libraryforms"),"studentno");
         $table->addCell($studLabel->show(), '', 'center', 'left', '');
         $table->addCell($objstud->show(), '', 'center', 'left', '');
-        $objForm->addRule(array('name'=>'thesis_studentno','length'=>15), 'Your surname is too long',
+        $objForm->addRule(array('name'=>'thesis_studentno','length'=>10), 'Your surname is too long',
 	'maxlength');
 
 
@@ -317,7 +316,7 @@ class bookthesis extends dbTable {
         $table->addCell($bookbLabel->show(), '', 'center', 'left','');
         $table->endRow();
          
-      /*  $table->startRow();
+      /* $table->startRow();
         $objLlocal = new textinput('label_local');
         $Labellocal=  new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"label_local");
 	$table->addCell($Labellocal->show(), '', 'center', 'left', '');
@@ -331,17 +330,16 @@ class bookthesis extends dbTable {
 	$table->endRow();*/
 
 //Input and label for Department/Scool/Division
-$table->startRow();
-
+	$table->startRow();
 	$objlocal = new dropdown ('local');
 	$localLabel = new label("Select your distance");
-	$local=array("UWC Coppy Missing", "Local Only", "Overseas", "Fax");
-foreach ($local as $local)
+	$locals =array("UWC Coppy Missing", "Local Only", "Overseas", "Fax");
+foreach ($locals as $local)
 {
     $objlocal->addOption($local,$local);
-    if($mode == 'save_book'){
+   // if($mode == 'local'){
         $objlocal->setSelected($this->getParam('local'));
-    }
+   // }
    
 }
 	$table->addCell($localLabel ->show(), 150, NULL, 'left');
@@ -356,7 +354,7 @@ foreach ($local as $local)
 foreach ($postgrad as $postgrad)
 {
     $objpostgrad->addOption($postgrad,$postgrad);
-    if($mode == 'save_book'){
+    if($mode == 'addfixup'){
         $objlocal->setSelected($this->getParam('postgrad'));
     	}
    

@@ -173,11 +173,11 @@ class libraryforms extends controller {
         $entitynum = $this->getParam('entity');
         $studentno = $this->getParam('thesis_studentno');
         $course = $this->getParam('thesis_course');
-        $local = $this->getParam('label_local');
-        $postgrad=$this->getParam('label_graduates');
+        $local = $this->getParam('local');
+        $postgrad=$this->getParam('postgrad');
         $captcha = $this->getParam('thesis_captcha');
  
-
+//var_dump($_POST);die;
         // Check whether user matched captcha
         if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
             $erormsg [ ] = 'badcaptcha';
@@ -203,7 +203,7 @@ class libraryforms extends controller {
  	$copy . '  ' .  "\n" .' TItle:' .$titlepages . '  ' .  "\n" .' Pages: '. $pages . '  ' .  "\n" .' Type of Thesis: ' . $thesis . '  ' .  "\n" .' Name: ' . 
 	$name . '  ' .  "\n" .' Address: ' . $address . '   ' . "\n" . ' Cell: ' . $cell . '   ' . ' Fax: '. $fax . '   ' .  "\n" .' Tel(H): ' . 
 	$tel . '  ' .  "\n" .' Tel (W): ' . $telw . '  ' .  "\n" . ' E-mail: ' . $emailaddress . '  ' .  "\n" .' Entity num: '.
-	$entitynum . '   ' .  "\n" .' Student no: ' . $studentno . '  ' .   "\n" .' Course: ' .$course . "\n". ' Student Identification: ' . $local . "\n" . "Student" . $postgrad);
+	$entitynum . '   ' .  "\n" .' Student no: ' . $studentno . '  ' .   "\n" .' Course: ' .$course . "\n". ' Student Identification: ' . $local . "\n" .' Student Level:  ' . $postgrad);
     }
 
 // end of bookthesisrecord
@@ -226,6 +226,8 @@ class libraryforms extends controller {
         $entitynum = $this->getParam('periodical_entity');
         $studentno = $this->getParam('periodical_student');
         $course = $this->getParam('periodical_course');
+        $overseas =$this->getParam('overseas');
+ 	$undergrad =$this->getParam('undergrad');
         $captcha = $this->getParam('periodical_captcha');
 
         // Check whether user matched captcha
@@ -242,7 +244,7 @@ class libraryforms extends controller {
         //insert the data into DB
         $id = $this->dbAddillperiodical->insertperiodicalRecord($titleperiodical , $volume, $part, $year, $pages,
                         $author, $titlearticle, $prof, $address, $cell, $tell,
-                        $tellw, $emailaddress, $entitynum, $studentno, $course);
+                        $tellw, $emailaddress, $entitynum, $studentno, $course, $overseas,$undergrad);
 
         $subject = "Periodical Book Record";
         $this->sendEmailNotification($subject,
@@ -250,11 +252,10 @@ class libraryforms extends controller {
 		$year . '   ' . "\n" . ' Pages:   '.$pages . '   ' . "\n". 'Author   '. $author . '   ' . "\n". ' Title Article   '. $titlearticle . '   ' . "\n". ' Prof:   '.
 		$prof . '   ' . "\n". 'Address:   '. $address . '  ' . "\n". 'Cell: '. $cell . '   ' .  "\n". ' Tel: '.$tell . '   ' . "\n". ' Tell (W) '.
                 $tellw . '  ' . "\n" .' Email Address:   '. $emailaddress . '   ' . "\n". ' Entity num:   '. $entitynum . '   ' . "\n". ' Student No:   '.
-		$studentno . '  ' . "\n". ' Course   '.$course);
+		$studentno . '  ' . "\n". ' Course   '.$course . "\n" . ' Student Identification: ' . $overseas . "\n" . ' Level of User: ' . $undergrad );
     }
 
 //  end saveperiodicalRecord
-
     public function submitmsg() {
 
         //get parametters

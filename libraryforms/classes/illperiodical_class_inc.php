@@ -233,71 +233,43 @@ class ILLperiodical extends dbTable {
 
 
          //create an istance for the label
-        $labellLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlabel","libraryforms"),"label");
+        $labeloverseas = new label($this->objLanguage->languageText("mod_libraryforms_commentlabel","libraryforms"),"label");
         $table->startRow();
-        $table->addCell($labellLabel->show(), '', 'center', 'left', '');
+        $table->addCell($labeloverseas->show(), '', 'center', 'left', '');
         $table->endRow();
 
   	$table->startRow();
-        $objCheck = new checkbox('arrayList[]');
-        $objCheck->setValue($userPerm['id']);
-        
-	$localLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"local");
-        $table->addCell($objCheck->show(), '', 'center', 'left', '');
-        $table->addCell($localLabel->show(), '', 'center', 'left', '');
-        $objForm->addRule('id',$this->objLanguage->languageText("mod_part_required", "libraryforms", 'Please select the check box. checkbox not ticked.'),'required');
+       $objoversea = new dropdown ('overseas');
+	$overseaLabel = new label("Select your distance");
+	$overseas=array("UWC Coppy Missing", "Local Only", "Overseas", "Fax");
+	foreach ($overseas as $oversea)
+	{
+  	  $objoversea->addOption($oversea,$oversea);
+    	//if($mode == 'addfixup'){
+      	  $objoversea->setSelected($this->getParam('overseas'));
+    //}
+   
+}
+	$table->addCell($overseaLabel ->show(), 150, NULL, 'left');
+	$table->addCell($objoversea->show(), 150, NULL, 'left');
+//$table->endRow();
+// end of drop down
 
-
-
-        $objCheck2 = new checkbox('arrayList[]');
-        $objCheck2->setValue($userPerm['id']);
-        $objCheck2->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
-
-        //Create a new label for oversears
-        $overseaLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentoverseas","libraryforms"),"overseas");
-        $table->addCell($objCheck2->show(), '', 'center', 'left', '');
-        $table->addCell($overseaLabel->show(), '', 'center', 'left', '');
-
-
-
-        $objCheck3 = new checkbox('arrayList[]');
-        $objCheck3->setValue($userPerm['id']);
-        $faxLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentfax","libraryforms"),"fax");
-        $table->addCell($objCheck3->show(), '', 'center', 'left', '');
-        $table->addCell($faxLabel->show(), '', 'center', 'left', '');
-
-        //Create a new textinput for fax
-        $objCheck4 = new checkbox('arrayList[]');
-        $objCheck4->setValue($userPerm['id']);
-       
-        //Create a new label for pg
-        $uwcLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentuwc","libraryforms"),"uwc");
-        $table->addCell($objCheck4->show(), '', 'center', 'left', '');
-        $table->addCell($uwcLabel->show(), '', 'center', 'left', '');
-        $table->endRow();
-
-        $objCheck5 = new checkbox('arrayList[]');
-        $objCheck5->setValue($userPerm['id']);
-      
-
-        //Create a new label for ug
-        $pgLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"pg");
-        $table->startRow();
-        $table->addCell($objCheck5->show(), '', 'center', 'left', '');
-        $table->addCell($pgLabel->show(), '', 'center', 'left', '');
-
-        $objCheck6 = new checkbox('arrayList[]');
-        $objCheck6->setValue($userPerm['id']);
-        $ugLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentug","libraryforms"),"ug");
-        $table->addCell($objCheck6->show(), '', 'center', 'left', '');
-        $table->addCell($ugLabel->show(), '', 'center', 'left', '');
-
-        $objCheck7 = new checkbox('arrayList[]');
-        $objCheck7->setValue($userPerm['id']);
-        $staffLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstaff","libraryforms"),"staff");
-        $table->addCell($objCheck7->show(), '', 'center', 'left', '');
-        $table->addCell($staffLabel->show(), '', 'center', 'left', '');
-        $table->endRow();
+//Input and label for Department/Scool/Division
+	$objundergrad = new dropdown ('undergrad');
+	$undergradLabel = new label( "Select your Level");
+	$undergrads =array("Post Graduate", "Under Graduate", "Staff" );
+foreach ($undergrads as $undergrad)
+{
+    $objundergrad->addOption($undergrad, $undergrad);
+   // if($mode == 'addfixup'){
+        $objundergrad->setSelected($this->getParam('postgrad'));
+    //	}
+   
+}
+	$table->addCell($undergradLabel ->show(), 150, NULL, 'left');
+	$table->addCell($objundergrad ->show(), 150, NULL, 'left');
+ 	$table->endRow();
 
         //----------SUBMIT BUTTON--------------
         //Create a button for submitting the form
@@ -334,7 +306,7 @@ class ILLperiodical extends dbTable {
         return $onerec;
     }
 
-    function insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell, $tell,$tellw, $emailaddress,$entitynum,$studentno,$course) {
+    function insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages, $author, $titlearticle, $prof, $address, $cell, $tell,$tellw, $emailaddress,$entitynum,$studentno,$course, $overseas, $undergrad) {
         $id = $this->insert(array(
        
             'titleperiodical' => $titleperiodical,
@@ -353,6 +325,8 @@ class ILLperiodical extends dbTable {
             'entitynum' => $entitynum,
             'studentno' => $studentno,
             'course' => $course,
+            'poverseas' =>$overseas,
+            'pundergrad' =>$undergrad,
             
         ));
         return $id;
