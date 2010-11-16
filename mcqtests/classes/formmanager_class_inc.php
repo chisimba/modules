@@ -1937,7 +1937,10 @@ class formmanager extends object {
         $phraseRSAQuestions = $this->objLanguage->languageText("mod_mcqtests_rsaquestions", 'mcqtests', "RSA matching questions");
         $phraseAddBlankAnswers = $this->objLanguage->languageText("mod_mcqtests_addblankanswers", 'mcqtests', "Select the number of blank answers to add");
         $phraseAddBlankUnits = $this->objLanguage->languageText("mod_mcqtests_addblankunits", 'mcqtests', "Select the number of blank units to add");
-        
+        $wordAnswer = $this->objLanguage->languageText('mod_mcqtests_wordanswer', 'mcqtests', "Answer");
+        $phraseCorrectAnsFormula = $this->objLanguage->languageText('mod_mcqtests_corranswerlabel', 'mcqtests', "Correct Answer Formula");
+        $phraseIsRequired = $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests', "is required");
+
         $listTitle = $phraseListOf . " " . $phraseRSAQuestions;
         //Form Object
         $form = new form("adddescription", $this->uri(array(
@@ -2117,9 +2120,118 @@ class formmanager extends object {
 
         //Add fieldset to hold general stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
-        //$objFieldset->width = '800px';
-        //$objFieldset->align = 'center';
         $objFieldset->setLegend($wordGeneral);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+
+        //Add General Fieldset to form
+        $form->addToForm($objFieldset->show());
+
+        //Reset Fieldset
+        $objFieldset->reset();
+
+        //Create table to hold the answer
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+
+        //correct answer formula text box
+        if (!empty($qnData)) {
+            $ansformula = new textinput("ansformula", $qnData["name"]);
+        } else {
+            $ansformula = new textinput("ansformula", "");
+        }
+        $ansformula->size = 60;
+        $form->addRule('ansformula', $phraseCorrectAnsFormula." ".$phraseIsRequired, 'required');
+
+        //Add Answer-Formula to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseCorrectAnsFormula." = ", '20%');
+        $objTable->addCell($ansformula->show(), '80%');
+        $objTable->endRow();
+
+        //category drop down
+        if (!empty($qnData)) {
+            $categories = $this->dbCategory->generateDropDown($this->contextCode, $qnData["categoryid"]);
+        } else {
+            $categories = $this->dbCategory->generateDropDown($this->contextCode, Null);
+        }
+        //Add Category to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseSaveInCategory, '20%');
+        $objTable->addCell($categories, '80%');
+        $objTable->endRow();
+
+
+        //qn text
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = 'qntext';
+        $editor->height = '100px';
+        $editor->width = '550px';
+        $editor->setMCQToolBar();
+        if (!empty($qnData)) {
+            $qntext = $qnData["questiontext"];
+        } else {
+            $qntext = '';
+        }
+        $editor->setContent($qntext);
+        //Add Category to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseQnText, '20%');
+        $objTable->addCell($editor->show(), '80%');
+        $objTable->endRow();
+
+        //Add default qn grade
+        if (!empty($qnData)) {
+            $qngrade = new textinput("qngrade", $qnData["mark"]);
+        } else {
+            $qngrade = new textinput("qngrade", "");
+        }
+        $qngrade->size = 2;
+        $form->addRule('qngrade', $phraseQnGrade . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
+        //Add qn grade to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseQnGrade, '20%');
+        $objTable->addCell($qngrade->show(), '80%');
+        $objTable->endRow();
+
+        //Add Penalty factor
+        if (!empty($qnData)) {
+            $pfactor = new textinput("penaltyfactor", $qnData["penalty"]);
+        } else {
+            $pfactor = new textinput("penaltyfactor", "");
+        }
+        $pfactor->size = 2;
+        $form->addRule('penaltyfactor', $phrasePenaltyFactor . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
+        //Add penalty factor field to the table
+        $objTable->startRow();
+        $objTable->addCell($phrasePenaltyFactor, '20%');
+        $objTable->addCell($pfactor->show(), '80%');
+        $objTable->endRow();
+
+        //general feedback
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = 'genfeedback';
+        $editor->height = '100px';
+        $editor->width = '550px';
+        $editor->setMCQToolBar();
+        if (!empty($qnData)) {
+            $genfeedback = $qnData["generalfeedback"];
+        } else {
+            $genfeedback = '';
+        }
+        $editor->setContent($genfeedback);
+        //Add General Feedback to the table
+        $objTable->startRow();
+        $objTable->addCell($wordFeedback, '20%');
+        $objTable->addCell($editor->show(), '80%');
+        $objTable->endRow();
+
+        //Add fieldset to hold answer
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->setLegend($wordAnswer);
 
         //Add table to General Fieldset
         $objFieldset->addContent($objTable->show());
