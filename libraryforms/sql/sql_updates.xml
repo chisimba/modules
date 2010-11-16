@@ -28,7 +28,7 @@
 
 <update>
         <table>tbl_illperiodical</table>
-        <version>0.29</version>
+        <version>0.31</version>
         <description>Added column poverseas.</description>
         <data>
            	<add>
@@ -41,7 +41,7 @@
 
 <update>
         <table>tbl_illperiodical</table>
-        <version>0.29</version>
+        <version>0.31</version>
         <description>Added column pundergrad.</description>
         <data>
            	<add>
