@@ -16,7 +16,7 @@ $fields = array(
         'length' => 25,
         'notnull' => TRUE
         ),
-'sessionid' => array(
+    'sessionid' => array(
         'type' => 'text',
         'length' => 60,
         'notnull' => TRUE
@@ -26,7 +26,7 @@ $fields = array(
         'length' => 25,
         'notnull' => TRUE
         ),
-'modulecode' => array(
+    'modulecode' => array(
         'type' => 'text',
         'length' => 25,
         'notnull' => TRUE
@@ -40,8 +40,8 @@ $fields = array(
         'type' => 'timestamp',
         'notnull' => TRUE
         ),
- 'description' => array(
-        'type' => 'FALSE',
+    'description' => array(
+        'type' => 'text',
         'notnull' => TRUE
         ),
     'starttime' => array(
@@ -58,5 +58,4 @@ $fields = array(
         'notnull' => TRUE
         )
     );
-   
 ?>
