@@ -1,161 +1,129 @@
 <?php
-//echo '<pre>'.$buffer.'</pre>';
 /*
 * Template to view list of essays for a student.
 * @package essay
 */
 
-/**
-* @param array $data Array containing a list of essays and their details: mark & comment or submit icon
-*/
-
-// set layout template
 $this->setLayoutTemplate('essay_layout_tpl.php');
 
+$this->loadclass('htmltable','htmlelements');
+$this->loadClass('windowpop','htmlelements');
 $this->objDateformat = $this->newObject('dateandtime','utilities');
 
- $this->loadclass('htmltable','htmlelements');
-  $objPopup=&$this->loadClass('windowpop','htmlelements');
-
-// set up html elements
-//$objTable=$this->objTable;
-$objTable = new htmltable();
-$objLayer=$this->objLayer;
+$objLink = new link();
+$objIcon = $this->getObject('geticon','htmlelements');
 
 // set up language items
-$list=$this->objLanguage->languageText('word_list');
-$head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay').' '.$this->objLanguage->languageText('word_for').' '.$this->user;
-$topichead=$this->objLanguage->languageText('mod_essay_topic','essay');
-$essayhead=$this->objLanguage->languageText('mod_essay_essay','essay');
-$datehead=$this->objLanguage->languageText('mod_essay_closedate','essay');
-$bypasshead=$this->objLanguage->languageText('mod_essay_bypass', 'essay');
-$submithead=$this->objLanguage->languageText('mod_essay_datesubmitted','essay');
-$lblSubmitted=$this->objLanguage->languageText('mod_essay_submitted','essay');
-$markhead=$this->objLanguage->languageText('mod_essay_mark','essay');
-$submittitle=$this->objLanguage->languageText('mod_essay_upload','essay');
-$downloadhead=$this->objLanguage->languageText('mod_essay_download','essay');
-$loadhead=$submittitle.' / '.$downloadhead;
-$submittitle.=' '.$this->objLanguage->languageText('mod_essay_essay','essay');
-$downloadhead.=' '.$this->objLanguage->languageText('mod_essay_marked','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay');
-$commenthead=$this->objLanguage->languageText('word_view').' '.$this->objLanguage->languageText('mod_essay_comment','essay');
-$topiclist=$this->objLanguage->languageText('word_back').' '.strtolower($this->objLanguage->languageText('word_to')).' '.$topichead;
-$topichome=$this->objLanguage->languageText('mod_essay_name','essay').' '.$this->objLanguage->languageText('word_home');
-$lbClosed = $this->objLanguage->languageText('mod_essay_closed', 'essay');
+//$list=$this->objLanguage->languageText('word_list');
+//$head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay').' '.$this->objLanguage->languageText('word_for').' '.$this->user;
+//$topichead=$this->objLanguage->languageText('mod_essay_topic','essay');
+//$essayhead=$this->objLanguage->languageText('mod_essay_essay','essay');
+//$datehead=$this->objLanguage->languageText('mod_essay_closedate','essay');
+//$bypasshead=$this->objLanguage->languageText('mod_essay_bypass', 'essay');
+//$submithead=$this->objLanguage->languageText('mod_essay_datesubmitted','essay');
+//$lblSubmitted=
+//$markhead=$this->objLanguage->languageText('mod_essay_mark','essay');
+//$submittitle=$this->objLanguage->languageText('mod_essay_upload','essay');
+//$downloadhead=$this->objLanguage->languageText('mod_essay_download','essay');
+//$loadhead=$submittitle.' / '.$downloadhead;
+//$submittitle.=' '.$this->objLanguage->languageText('mod_essay_essay','essay');
+//$downloadhead.=' '.$this->objLanguage->languageText('mod_essay_marked','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay');
+//$commenthead=$this->objLanguage->languageText('word_view').' '.$this->objLanguage->languageText('mod_essay_comment','essay');
+//$topiclist=$this->objLanguage->languageText('word_back').' '.strtolower($this->objLanguage->languageText('word_to')).' '.$topichead;
+//$topichome=$this->objLanguage->languageText('mod_essay_name','essay').' '.$this->objLanguage->languageText('word_home');
+//$lbClosed = ;
 
-/********************* set up table ************************/
+$this->setVar('heading', $this->objLanguage->code2Txt('mod_essay_listofessaysfor', 'essay', array('STUDENT'=>$this->user)));
 
-$this->setVarByRef('heading',$head);
-
-$tableHd=array();
-$tableHd[]=$topichead;
-$tableHd[]=$essayhead;
-$tableHd[]=$datehead;
-$tableHd[]=$bypasshead;
-$tableHd[]=$submithead;
-$tableHd[]=$markhead;
-$tableHd[]=$loadhead;
-
+$objTable = new htmltable();
 $objTable->cellspacing=2;
 $objTable->cellpadding=5;
-$objTable->addHeader($tableHd,'heading');
 
-$objTable->row_attributes='height="5"';
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->endRow();
+$tableHeader=array();
+$tableHeader[] = $this->objLanguage->languageText('mod_essay_topicarea','essay');
+$tableHeader[] = $this->objLanguage->languageText('mod_essay_essay','essay');
+$tableHeader[] = $this->objLanguage->languageText('mod_essay_closedate','essay');
+$tableHeader[] = $this->objLanguage->languageText('mod_essay_bypass', 'essay');
+$tableHeader[] = $this->objLanguage->languageText('mod_essay_datesubmitted','essay');
+$tableHeader[] = $this->objLanguage->languageText('mod_essay_mark','essay');
+$tableHeader[] = $this->objLanguage->languageText('mod_essay_upload','essay').' / '.$this->objLanguage->languageText('mod_essay_download','essay');
+$objTable->addHeader($tableHeader, 'heading');
 
-/********************* display data *************************/
-$i=0;
-foreach($data as $item){
-    $class = ($i++%2) ? 'even':'odd';
-
-   if($item['mark']=='submit'){
-        // if essay hasn't been submitted: display submit icon
-        // check if closing date has passed
-//        echo "[{$item['date']}]";
-//        echo "[".date('Y-m-d H:i:s')."]";
-        if(date('Y-m-d H:i:s') > $item['date'] && $item['bypass'] == 'NO'){
-	            $mark='';
-	            $load = $lbClosed;
-        }else{
-	            $this->objLink->link($this->uri(array('action'=>'uploadessay','bookid'=>$item['id'])));
-                $this->objIcon->setIcon('submit2');
-	            $this->objIcon->extra='';
-                $this->objIcon->title=$submittitle;
-                $this->objLink->link=$this->objIcon->show();
-	            $mark='';
-	            $load = $this->objLink->show();
+if (!empty($data)) {
+    $i=0;
+    foreach ($data as $item) {
+        $class = ($i++%2) ? 'even':'odd';
+        if ($item['mark']=='submit') {
+            // if essay hasn't been submitted, display submit icon
+            // check if closing date has passed
+            //echo "[{$item['date']}]";
+            //echo "[".date('Y-m-d H:i:s')."]";
+            if (date('Y-m-d H:i:s') > $item['date'] && $item['bypass'] == 'NO') {
+    	            $mark = '';
+    	            $multiLink = $this->objLanguage->languageText('mod_essay_closed', 'essay');
+            } else {
+                    $objIcon->setIcon('submit2');
+                    $objIcon->title = $this->objLanguage->languageText('mod_essay_uploadessay','essay');
+    	            $objIcon->extra = '';
+    	            $objLink->link($this->uri(array('action'=>'uploadessay', 'bookid'=>$item['id'])));
+                    $objLink->link = $objIcon->show();
+    	            $mark = '';
+    	            $multiLink = $objLink->show();
+            }
+        } else if (!is_null($item['mark'])) {
+            // if mark exists, display mark, download icon and view comments icon
+    	    if (!is_null($item['lecturerfileid'])) {
+    	        $objIcon->setIcon('download');
+    	        $objIcon->title = $this->objLanguage->languageText('mod_essay_downloadessay','essay');
+    	        $objIcon->extra = '';
+    	        $objLink->link($this->uri(array('action'=>'download','fileid'=>$item['lecturerfileid'])));
+    	        $objLink->link = $objIcon->show();
+    	        $multiLink = $objLink->show();
+            } else {
+    	        $multiLink = $this->objLanguage->languageText('mod_essay_nomarkedessayavailable', 'essay');
+    		}
+            $objIcon->setIcon('comment_view');
+            $objIcon->title = $this->objLanguage->languageText('mod_essay_viewcomment','essay');
+       	 	$viewCommentIcon = $objIcon->show();
+            $objPopup = new windowpop();
+        	$objPopup->set('location', $this->uri(array('action'=>'showcomment', 'book'=>$item['id'], 'essay'=>$item['essay'])));
+        	$objPopup->set('linktext',$viewCommentIcon);
+        	$objPopup->set('width', '600');
+        	$objPopup->set('height', '350');
+        	$objPopup->set('left', '200');
+        	$objPopup->set('top', '200');
+            $objPopup->putJs();
+            /*
+        	//$objPopup=$objPopup->show();
+            //$this->objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay']))."', "essaycomment", "width=400", "height=200", "scrollbars=1")\" ";
+            //$this->objIcon->title=$commenthead;
+            //$this->objLink->link('#');
+            //$this->objLink->link=$this->objIcon->show();
+            */
+            $mark = $item['mark'].'&nbsp;%<br />'.$objPopup->show();
+        } else {
+            $mark = '';
+            $multiLink = $this->objLanguage->languageText('mod_essay_submitted','essay');
         }
-    }else if($item['mark']){
-        // if mark exists: display mark and download icon and view comments icon
-	    if (!is_null($item['lecturerfileid'])) {
-	        $this->objLink->link($this->uri(array('action'=>'download','fileid'=>$item['lecturerfileid'])));
-	        $this->objIcon->setIcon('download');
-	        $this->objIcon->extra='';
-	        $this->objIcon->title=$downloadhead;
-	        $this->objLink->link=$this->objIcon->show();
-	        $downlink=$this->objLink->show();
+        $objTable->startRow();
+        $objTable->addCell($item['name'],'','','',$class);
+        //$objTable->addCell($item['essayid'],'','','',$class);
+        $objTable->addCell($item['essay'],'','','',$class);
+        $objTable->addCell($this->objDateformat->formatDate($item['date']),'','','',$class);
+    	$objTable->addCell($item['bypass'],'','','',$class);
+        if (empty($item['submitdate'])) {
+            $objTable->addCell('','','','',$class);
+        } else {
+            $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
         }
-        else {
-	        $downlink=$this->objLanguage->languageText('mod_essay_nomarkedessayavailable', 'essay');
-		}
-        //$this->objLink->link('#');
-        //$this->objIcon->setIcon('comment_view');
-        $this->objIcon->title=$commenthead;
-    	$this->objIcon->setIcon('comment_view');
-   	 	$commentIcon = $this->objIcon->show();
-
-        $objPopup = new windowpop();
-    	$objPopup->set('location',$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay'])));
-    	$objPopup->set('linktext',$commentIcon);
-    	$objPopup->set('width','600');
-    	$objPopup->set('height','350');
-    	$objPopup->set('left','200');
-    	$objPopup->set('top','200');
-    	$objPopup->putJs(); // you only need to do this once per page
-    	//$observersEmailPopup=$objPopup->show();
- //       $this->objIcon->extra="onclick=\"javascript:window.open('" .$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay']))."', "essaycomment", "width=400", "height=200", "scrollbars=1")\" ";
-        //$this->objIcon->title=$commenthead;
-        //$this->objLink->link=$this->objIcon->show();
-
-        $mark=$item['mark'].'&nbsp;%<br />'.$objPopup->show();
-        $load=$downlink;
-    }else{
-        // if no mark
-        $mark = '';
-        $load = $lblSubmitted;
+        $objTable->addCell($mark,'','','',$class);
+        $objTable->addCell($multiLink,'','','center',$class);
+        $objTable->endRow();
     }
-
-    $objTable->startRow();
-    $objTable->addCell($item['name'],'','','',$class);
-    //$objTable->addCell($item['essayid'],'','','',$class);
-    $objTable->addCell($item['essay'],'','','',$class);
-    $objTable->addCell($this->objDateformat->formatDate($item['date']),'','','',$class);
-	$objTable->addCell($item['bypass'],'','','',$class);
-    if(!empty($item['submitdate'])){
-        $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
-    }else{
-        $objTable->addCell('','','','',$class);
-    }
-
-    $objTable->addCell($mark,'','','',$class);
-    $objTable->addCell($load,'','','center',$class);
-    $objTable->endRow();
 }
-
-$objTable->row_attributes='height="10"';
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->endRow();
-
-/********************* display table ************************/
 echo $objTable->show();
 
-// back button
-$this->objLink->link($this->uri(''));
-$this->objLink->link=$topichome;
-
-//$objLayer->align='center';
-$objLayer->str=$this->objLink->show();
-echo $objLayer->show();
+$objLink->link($this->uri(''));
+$objLink->link=$this->objLanguage->languageText('mod_essay_essayhome','essay');
+echo $objLink->show();
 ?>

@@ -4,35 +4,29 @@
 * @package essay
 */
 
-/**
-* @param string $leftNav The left panel on the page containing user information
+/*
+if (!$this->objContext->isInContext()) {
+    $contextMenu ='';
+} else {
+    $objContextUtils = $this->getObject('utilities','context');
+    $contextMenu = $objContextUtils->getHiddenContextMenu('essay','none');
+}
 */
 
-$this->_objDBContext = $this->getObject('dbcontext','context');
-if($this->_objDBContext->isInContext())
-{
-    $objContextUtils = & $this->getObject('utilities','context');
-    $cm = $objContextUtils->getHiddenContextMenu('essay','none');
-} else {
-    $cm ='';
-}
+$leftMenu = $this->getObject('contextsidebar', 'context');
 
-$leftMenu=& $this->getObject('contextsidebar', 'context');
+$objHeading = $this->newObject('htmlheading','htmlelements');
+$objLayer = $this->objLayer;
 
-$objLayer=$this->objLayer;
-$objHead=$this->newObject('htmlheading','htmlelements');
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
-
-$objHead->str=$heading;
-$objHead->type=1;
-$main = $objHead->show();
-
+$content = '';
+$objHeading->str = $heading;
+$objHeading->type = 1;
+$content .= $objHeading->show();
 $objLayer->str = $this->getContent();
+$content .= $objLayer->show();
 
-$main.=$objLayer->show();
-
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setLeftColumnContent($leftMenu->show());
-$cssLayout->setMiddleColumnContent($main);
-
+$cssLayout->setMiddleColumnContent($content);
 echo $cssLayout->show();
 ?>

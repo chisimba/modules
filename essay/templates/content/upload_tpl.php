@@ -4,75 +4,42 @@
 * @package essay
 */
 
-/**
-* @param array $data Array containing the mark and comment for the essay
-*/
-
-// set layout template
 $this->setLayoutTemplate('essay_layout_tpl.php');
-// set up the filemanager
-$objSelectFile = $this->newObject('selectfile','filemanager');
+
 // set up html elements
-$this->loadclass('htmltable','htmlelements');
-$objLayer=$this->objLayer;
-$objConfirm = $this->newObject('timeoutmessage','htmlelements');
+//$this->loadclass('htmltable','htmlelements');
+//$objLayer=$this->objLayer;
+
 // set up language items
-$essayhead=$this->objLanguage->languageText('mod_essay_essay', 'essay');
-$btnupload=$this->objLanguage->languageText('mod_essay_upload' ,'essay');
-$uploadhead=$btnupload.' '.$essayhead;
-$head=$uploadhead;
-$btnexit=$this->objLanguage->languageText('word_exit');
-$wordstudent=ucwords($this->objLanguage->languageText('mod_context_readonly'));
-/************************* set up table ******************************/
+//$essayhead=$this->objLanguage->languageText('mod_essay_essay', 'essay');
+//$btnupload=$this->objLanguage->languageText('mod_essay_upload' ,'essay');
+//$uploadhead=$btnupload.' '.$essayhead;
+//$head=$uploadhead;
+//$btnexit=;
+//$wordstudent=ucwords($this->objLanguage->languageText('mod_context_readonly'));
 
-// header
-$this->setVarByRef('heading',$head);
+// Get booked essays in topic area
+$data = $this->dbbook->getBooking("WHERE id='{$bookId}'");
+// Get essay data
+$essay = $this->dbessays->getEssay($data[0]['essayid'], 'topic');
+// Get essay title
+$essayTitle = $essay[0]['topic'];
 
-// get booked essays in topic
-$data=$this->dbbook->getBooking("where id='$bookId'");
+$this->setVar('heading', $this->objLanguage->languageText('mod_essay_uploadessay','essay'));
 
-// get essay title
-$essay=$this->dbessays->getEssay($data[0]['essayid'],'topic');
-$essaytitle=$essay[0]['topic'];
+$str = '';
 
-//setup filemanager
-$objSelectFile->name ='file';
-
-// display essay title
-$objTable = new htmltable();
-$objTable->startRow();
-$objTable->addCell('','','','','even');
-$objTable->addCell('<b>'.$essaytitle.'</b>','','','center','even',' colspan="2"');
-$objTable->addCell('','','','','even');
-$objTable->endRow();
-
-$objTable->row_attributes=' height="2"';
-$objTable->startRow();
-$objTable->addCell('','','','','',' colspan="4"');
-$objTable->endRow();
-
-$this->objButton = new button('submit', $btnexit);
-$this->objButton->setToSubmit();
-$btn4=$this->objButton->show();
+$str .= '<b>'.$this->objLanguage->languageText('mod_essay_essay','essay').':</b> '.$essayTitle.'<br />';
 
 // display confirmation message
-if(!empty($msg)){
-    $objConfirm->setMessage($msg);
-    $confirmMsg = $objConfirm->show();
-}else{
-    $confirmMsg = '';
+if (empty($message)) {
+    $confirmMessage = '';
+} else {
+    $objMessage = $this->newObject('timeoutmessage','htmlelements');
+    $objMessage->setMessage($message);
+    $confirmMessage = $objMessage->show();
 }
-$objTable->row_attributes=' height="40"';
-$objTable->startRow();
-$objTable->addCell('','20%');
-$objTable->addCell($confirmMsg,'60%','','center','',' colspan="2"');
-$objTable->addCell('','20%');
-$objTable->endRow();
-
-$objTable->row_attributes=' height="10"';
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->endRow();
+$str .= $confirmMessage;
 
 //new file upload functionality
 //$this->loadclass('selectfile','filemanager');
@@ -81,40 +48,24 @@ $objTable->endRow();
 //$objSelectFile->context = false;
 //$objSelectFile->workgroup = false;
 
-// file input field for file manager.
-$this->objInput = $objSelectFile->show();
+// File input field for file manager
+// Setup selectfile object
+$objSelectFile = $this->newObject('selectfile','filemanager');
+$objSelectFile->name = 'file';
+$str .= $objSelectFile->show().'<br />';
 
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->addCell($this->objInput,'','','center','',' colspan="2"');
-$objTable->endRow();
+$objUploadButton = new button('submit', $this->objLanguage->languageText('mod_essay_upload' ,'essay'));
+$objUploadButton->setToSubmit();
+$buttonUpload = $objUploadButton->show();
 
-// submit and exit buttons
-$this->objButton = new button('submit',$btnupload);
-$this->objButton->setToSubmit();
-$btn1=$this->objButton->show();
+$objSubmitButton = new button('submit', $this->objLanguage->languageText('word_exit'));
+$objSubmitButton->setToSubmit();
+$buttonSubmit = $objSubmitButton->show();
 
-$objTable->row_attributes=' height="10"';
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->endRow();
+$str .= '<br />'.$buttonUpload.'&nbsp;'.$buttonSubmit.'<br />';
 
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->addCell($btn1,'','','right');
-$objTable->addCell($btn4,'','','left');
-$objTable->endRow();
-
-$objTable->row_attributes=' height="10"';
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->endRow();
-
-/************************* set up form ******************************/
-//$bookId=$this->getParam('bookid');
-$this->objForm = new form('upload',$this->uri(array('action'=>'uploadsubmit','bookid'=>$bookId /*, 'fileid'=>$fileId*/)));
-$this->objForm->extra=" ENCTYPE='multipart/form-data'";
-$this->objForm->addToForm($objTable->show());
-/************************* display page ******************************/
-echo $this->objForm->show();
+$objForm = new form('upload', $this->uri(array('action'=>'uploadsubmit','bookid'=>$bookId)));
+$objForm->extra = " enctype='multipart/form-data'";
+$objForm->addToForm($str);
+echo $objForm->show();
 ?>

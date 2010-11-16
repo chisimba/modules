@@ -1,16 +1,4 @@
 <?php
-
-/**
-* File modulelinks extends object
-*
-* @author Paul Mungai
-* @copyright (c) 2009 UWC
-* @version 0.1
-*/
-
-
-
-/* -------------------- manageviews_essay class ----------------*/
 // security check - must be included in all scripts
 
 if (!$GLOBALS['kewl_entry_point_run'])
@@ -18,81 +6,68 @@ if (!$GLOBALS['kewl_entry_point_run'])
     die("You cannot view this page directly");
 }
 
+/**
+* Manageviews_essay
+* @package essay
+* @author Paul Mungai, Jeremy O'Connor
+* @copyright (c) 2009, 2010 Avoir
+* @version $Id: $
+*/
+
 class manageviews_essay extends object
 {
-
+    /**
+    * Initialization method.
+    */
     public function init()
     {
-        // Get instances of the module classes
-        $this->dbessays= $this->getObject('dbessays');
-        $this->dbtopic= $this->getObject('dbessay_topics');
-        $this->dbbook= $this->getObject('dbessay_book');
-        // Get an instance of the user object
-        $this->objUser= $this->getObject('user','security');
-        // Get an instance of the context object
-        $this->objContext= $this->getObject('dbcontext','context');
-
-        // get user details
+        $this->dbessays = $this->getObject('dbessays');
+        $this->dbtopic = $this->getObject('dbessay_topics');
+        $this->dbbook = $this->getObject('dbessay_book');
+        $this->objUser = $this->getObject('user','security');
         $this->userId=$this->objUser->userId();
-        // check if in context, and get code & title
+        $this->objContext = $this->getObject('dbcontext','context');
         if($this->objContext->isInContext()){
             $this->contextcode=$this->objContext->getContextCode();
             $this->context=$this->objContext->getTitle();
             $incontext=TRUE;
         }else{
             $incontext=FALSE;
-        }        
+        }
     }
+
     /**
     * Method to get booked and submitted essays for a student.
-    * @return array $data The students essays
+    * @param string $contextCode The context code
+    * @return array The student's essays
     **/
-    public function getStudentEssays($contextCode=Null)
+    public function getStudentEssays($contextCode = NULL)
     {
-    /**************** import data ********************/
         // get student booked essays
-        if(empty($contextCode)){
-        $data=$this->dbbook->getBooking("where context='".$this->contextcode
-        ."' and studentid='".$this->userId."'");
-	}else{
-        $data=$this->dbbook->getBooking("where context='".$contextCode
-        ."' and studentid='".$this->userId."'");
-        
-	}
-        if($data){
-            foreach($data as $key=>$item){
-	            //var_dump($item);
+        if (empty($contextCode)) {
+            $data = $this->dbbook->getBooking("WHERE context = '{$this->contextcode}'
+            AND studentid='{$this->userId}'");
+    	} else {
+            $data = $this->dbbook->getBooking("WHERE context='{$contextCode}'
+            AND studentid='{$this->userId}'");
+    	}
+        if (!empty($data)) {
+            foreach ($data as $key=>$item) {
                 // get essay info: topic, num
-                $essay=$this->dbessays->getEssay($item['essayid'],'id, topic');
-                //var_dump($essay);
-
-                $data[$key]['essay']=$essay[0]['topic'];
-                //var_dump($data[$key]);
-
-
-                // get topic info: closing date
-                $topic=$this->dbtopic->getTopic($item['topicid'],'name, closing_date, bypass');
-
-                $data[$key]['name']=$topic[0]['name'];
-                $data[$key]['date']=$topic[0]['closing_date'];
-                if($topic[0]['bypass']){
-                    $data[$key]['bypass']='YES';
-                }else{
-                    $data[$key]['bypass']='NO';
+                $essay = $this->dbessays->getEssay($item['essayid'], 'id, topic');
+                $data[$key]['essay'] = $essay[0]['topic'];
+                $topic = $this->dbtopic->getTopic($item['topicid'], 'name, closing_date, bypass');
+                $data[$key]['name'] = $topic[0]['name'];
+                $data[$key]['date'] = $topic[0]['closing_date'];
+                $data[$key]['bypass'] = $topic[0]['bypass']?'YES':'NO';
+                if (empty($item['studentfileid'])) {
+                    $data[$key]['mark'] = 'submit';
+                } else {
+                    $data[$key]['mark'] = $item['mark'];
                 }
-
-                // get booking info: check if submitted or marked
-                if(!empty($item['studentfileid'])){
-                    $data[$key]['mark']=$item['mark'];
-                }else{
-                    $data[$key]['mark']='submit';
-                }
-                //var_dump($data[$key]);
             }
         }
-
-    /**************** return data *******************/
         return $data;
-     }   
-}    
-
+     }
+}
+?>
