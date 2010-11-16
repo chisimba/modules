@@ -1038,7 +1038,7 @@ class formmanager extends object {
         $phraseOtherTags = $this->objLanguage->languageText('mod_mcqtests_othertags', 'mcqtests');
         $phraseOtherTagsDesc = $this->objLanguage->languageText('mod_mcqtests_othertagsdesc', 'mcqtests');
         $phraseQnGrade = $this->objLanguage->languageText('mod_mcqtests_defaultQnGrade', 'mcqtests');
-        $phrasePenaltyFactor = $this->objLanguage->languageText('mod_mcqtests_penaltylabel', 'mcqtests');
+        $phrasePenaltyFactor = $this->objLanguage->languageText('mod_mcqtests_penaltyfactor', 'mcqtests');
         $phraseCaseUnimportant = $this->objLanguage->languageText('mod_mcqtests_nocaseunimportant', 'mcqtests');
         $phraseCaseImportant = $this->objLanguage->languageText('mod_mcqtests_yescaseimportant', 'mcqtests');
         $phraseCaseSensitivity = $this->objLanguage->languageText('mod_mcqtests_caseSensitivity', 'mcqtests');
@@ -1530,7 +1530,7 @@ class formmanager extends object {
         $phraseOtherTags = $this->objLanguage->languageText('mod_mcqtests_othertags', 'mcqtests');
         $phraseOtherTagsDesc = $this->objLanguage->languageText('mod_mcqtests_othertagsdesc', 'mcqtests');
         $phraseQnGrade = $this->objLanguage->languageText('mod_mcqtests_defaultQnGrade', 'mcqtests');
-        $phrasePenaltyFactor = $this->objLanguage->languageText('mod_mcqtests_penaltylabel', 'mcqtests');
+        $phrasePenaltyFactor = $this->objLanguage->languageText('mod_mcqtests_penaltyfactor', 'mcqtests');
         $phraseNoQnsToSelect = $this->objLanguage->languageText('mod_mcqtests_noqnstoselect', 'mcqtests');
         $phraseSaveInCategory = $this->objLanguage->languageText('mod_mcqtests_saveincategory', 'mcqtests');
         $phraseCurrentCategory = $this->objLanguage->languageText('mod_mcqtests_currentcategory', 'mcqtests');
@@ -1873,7 +1873,440 @@ class formmanager extends object {
         $btnBackHome = $objBack->show();
 
         //Add Save and Cancel Buttons to form
-        $form->addToForm("<br />" . $btnSave . " " . $btnSaveAsnew. " " . $btnBackList . " " . $btnBackHome . "<br />");
+        $form->addToForm("<br />" . $btnSave . " " . $btnSaveAsnew . " " . $btnBackList . " " . $btnBackHome . "<br />");
+
+        return "<div>" . $form->show() . "</div>";
+    }
+
+    /**
+     * Method to create Simple Calculation Question form
+     *
+     * @access private
+     * @param  array $test Contains test data
+     * @param  string $id Contains the answer id
+     * @author Paul Mungai
+     */
+    public function createSimpleCalcQnForm($fields) {
+        //Load Classes
+        $this->loadClass("textinput", "htmlelements");
+        $this->loadClass("form", "htmlelements");
+        $this->loadClass("textarea", "htmlelements");
+        $this->loadClass("dropdown", "htmlelements");
+        $this->loadClass("checkbox", "htmlelements");
+
+        //Store values in variables
+        $test = $fields['test'];
+        $id = $fields['id'];
+        $anscount = $fields['anscount'];
+        $unitcount = $fields['unitcount'];
+        $mode = $fields['mode'];
+
+        //Form texts
+        $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
+        $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
+        $wordBack = $this->objLanguage->languageText("word_back");
+        $BackToList = $wordBack . " " . $wordTo . " " . $phraseListOf . " ";
+        $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
+        $backToHome = $wordBack . " " . $wordTo . " " . $mcqHome;
+        $addDescform = $this->objLanguage->languageText('mod_mcqtests_addDescription', 'mcqtests');
+        $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
+        $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
+        $phraseQnName = $this->objLanguage->languageText('mod_mcqtests_qnname', 'mcqtests');
+        $phraseQnText = $this->objLanguage->languageText('mod_mcqtests_qntext', 'mcqtests');
+        $wordFeedback = $this->objLanguage->languageText('mod_mcqtests_generalfeedback', 'mcqtests');
+        $wordTags = $this->objLanguage->languageText('mod_mcqtests_wordtags', 'mcqtests');
+        $phraseOfficialTags = $this->objLanguage->languageText('mod_mcqtests_officialtags', 'mcqtests');
+        $phraseMngOfficialTags = $this->objLanguage->languageText('mod_mcqtests_mngofficialtags', 'mcqtests');
+        $phraseOtherTags = $this->objLanguage->languageText('mod_mcqtests_othertags', 'mcqtests');
+        $phraseOtherTagsDesc = $this->objLanguage->languageText('mod_mcqtests_othertagsdesc', 'mcqtests');
+        $phraseQnGrade = $this->objLanguage->languageText('mod_mcqtests_defaultQnGrade', 'mcqtests');
+        $phrasePenaltyFactor = $this->objLanguage->languageText('mod_mcqtests_penaltyfactor', 'mcqtests');
+        $phraseNoQnsToSelect = $this->objLanguage->languageText('mod_mcqtests_noqnstoselect', 'mcqtests');
+        $phraseSaveInCategory = $this->objLanguage->languageText('mod_mcqtests_saveincategory', 'mcqtests');
+        $phraseCurrentCategory = $this->objLanguage->languageText('mod_mcqtests_currentcategory', 'mcqtests');
+        $phraseUseCategory = $this->objLanguage->languageText('mod_mcqtests_usecategory', 'mcqtests');
+        $phraseSimpleCalcQn = $this->objLanguage->languageText('mod_mcqtests_simplecalculatedqn', 'mcqtests');
+        $phraseAddingA = $this->objLanguage->languageText('mod_mcqtests_addinga', 'mcqtests');
+        $phraseEditingA = $this->objLanguage->languageText('mod_mcqtests_editinga', 'mcqtests');
+        $phraseLastSaved = $this->objLanguage->languageText('mod_mcqtests_lastsaved', 'mcqtests');
+        $phraseCreatedOrSaved = $this->objLanguage->languageText('mod_mcqtests_createdorsaved', 'mcqtests');
+        $phraseCreated = $this->objLanguage->languageText('mod_mcqtests_created', 'mcqtests');
+        $phrasePermissions = $this->objLanguage->languageText("mod_mcqtests_permissionsto", 'mcqtests');
+        $phraseSaveChanges = $this->objLanguage->languageText("mod_mcqtests_savechanges", 'mcqtests', "Save changes");
+        $phraseSaveAsNewQn = $this->objLanguage->languageText("mod_mcqtests_saveasnewqn", 'mcqtests', "Save as a new question");
+        $phraseRSAQuestions = $this->objLanguage->languageText("mod_mcqtests_rsaquestions", 'mcqtests', "RSA matching questions");
+        $phraseAddBlankAnswers = $this->objLanguage->languageText("mod_mcqtests_addblankanswers", 'mcqtests', "Select the number of blank answers to add");
+        $phraseAddBlankUnits = $this->objLanguage->languageText("mod_mcqtests_addblankunits", 'mcqtests', "Select the number of blank units to add");
+        
+        $listTitle = $phraseListOf . " " . $phraseRSAQuestions;
+        //Form Object
+        $form = new form("adddescription", $this->uri(array(
+                            'module' => 'mcqtest',
+                            'action' => 'addrandomshortansconfirm',
+                            'id' => $id
+                        )));
+        $qnData = $this->dbQuestions->getQuestion($id);
+
+        $randSAData = $this->dbRandomMatching->getRecords("questionid='" . $id . "'");
+        $qnData = $qnData[0];
+        $randSAData = $randSAData[0];
+
+        //Get the Qn tags
+        $tagInstData = $this->dbTagInstance->getInstances($id);
+        $tagStr = "";
+        $count = 0;
+        //Get the count of the array
+        $arrLength = count($tagInstData);
+        //Get each tag and store in a string for rendering on the form, comma separated
+        if (!empty($tagInstData)) {
+            foreach ($tagInstData as $thisTagInst) {
+                $tagData = $this->dbTag->getTag($thisTagInst["tagid"]);
+                $tagData = $tagData[0];
+                $tagStr .= $tagData["name"];
+
+                $count++;
+
+                if ($count < $arrLength)
+                    $tagStr .= ",";
+            }
+        }
+        //Form Heading/Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        if (!empty($id)) {
+            $objHeading->str = $phraseEditingA . " " . $phraseSimpleCalcQn;
+        } else {
+            $objHeading->str = $phraseAddingA . " " . $phraseSimpleCalcQn;
+        }
+
+        //Add heading/title to form
+        $form->addToForm($objHeading->show());
+
+        //Create table to hold the permissions
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+
+        //permissions listing to the table
+        $objTable->startRow();
+        $objTable->addCell("&nbsp;", '80%');
+        $objTable->endRow();
+
+        //Add fieldset to hold permissions listing
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        //$objFieldset->width = '800px';
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($phrasePermissions);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+
+        //Add General Fieldset to form
+        $form->addToForm($objFieldset->show());
+
+        //Reset Fieldset
+        $objFieldset->reset();
+
+        //Create table to hold the general stuff
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+
+        //use-category text box
+        $usecategory = new checkbox('currentcategory');
+        if (!empty($qnData)) {
+            $usecategory->setChecked(1);
+        } else {
+            $usecategory->setChecked(0);
+        }
+        $usecategory->setValue(1);
+
+        //Add Use-Category to the table
+
+        //category drop down
+        if (!empty($qnData)) {
+            $categories = $this->dbCategory->generateDropDown($this->contextCode, $qnData["categoryid"]);
+        } else {
+            $categories = $this->dbCategory->generateDropDown($this->contextCode, Null);
+        }
+        //Add Category to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseSaveInCategory, '20%');
+        $objTable->addCell($categories, '80%');
+        $objTable->endRow();
+
+        //question name text box
+        if (!empty($qnData)) {
+            $qnname = new textinput("qnName", $qnData["name"]);
+        } else {
+            $qnname = new textinput("qnName", "");
+        }
+        $qnname->size = 60;
+        $form->addRule('qnname', $this->objLanguage->languageText('mod_mcqtests_qnnamerequired', 'mcqtests'), 'required');
+        //Add Category to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseQnName, '20%');
+        $objTable->addCell($qnname->show(), '80%');
+        $objTable->endRow();
+
+        //qn text
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = 'qntext';
+        $editor->height = '100px';
+        $editor->width = '550px';
+        $editor->setMCQToolBar();
+        if (!empty($qnData)) {
+            $qntext = $qnData["questiontext"];
+        } else {
+            $qntext = '';
+        }
+        $editor->setContent($qntext);
+        //Add Category to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseQnText, '20%');
+        $objTable->addCell($editor->show(), '80%');
+        $objTable->endRow();
+
+        //Add default qn grade
+        if (!empty($qnData)) {
+            $qngrade = new textinput("qngrade", $qnData["mark"]);
+        } else {
+            $qngrade = new textinput("qngrade", "");
+        }
+        $qngrade->size = 2;
+        $form->addRule('qngrade', $phraseQnGrade . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
+        //Add qn grade to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseQnGrade, '20%');
+        $objTable->addCell($qngrade->show(), '80%');
+        $objTable->endRow();
+
+        //Add Penalty factor
+        if (!empty($qnData)) {
+            $pfactor = new textinput("penaltyfactor", $qnData["penalty"]);
+        } else {
+            $pfactor = new textinput("penaltyfactor", "");
+        }
+        $pfactor->size = 2;
+        $form->addRule('penaltyfactor', $phrasePenaltyFactor . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
+        //Add penalty factor field to the table
+        $objTable->startRow();
+        $objTable->addCell($phrasePenaltyFactor, '20%');
+        $objTable->addCell($pfactor->show(), '80%');
+        $objTable->endRow();
+
+        //general feedback
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = 'genfeedback';
+        $editor->height = '100px';
+        $editor->width = '550px';
+        $editor->setMCQToolBar();
+        if (!empty($qnData)) {
+            $genfeedback = $qnData["generalfeedback"];
+        } else {
+            $genfeedback = '';
+        }
+        $editor->setContent($genfeedback);
+        //Add General Feedback to the table
+        $objTable->startRow();
+        $objTable->addCell($wordFeedback, '20%');
+        $objTable->addCell($editor->show(), '80%');
+        $objTable->endRow();
+
+        //Add fieldset to hold general stuff
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        //$objFieldset->width = '800px';
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($wordGeneral);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+
+        //Add General Fieldset to form
+        $form->addToForm($objFieldset->show());
+
+        //Reset Fieldset
+        $objFieldset->reset();
+
+        //Create table to store no of answers dropdown
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+
+        $noofansdropdown = new dropdown("anscount");
+        $noofansdropdown->extra = "onchange='createAnsInputs(this)'";
+        $noofansdropdown->addOption("2", "2");
+        $noofansdropdown->addOption("3", "3");
+        $noofansdropdown->addOption("4", "4");
+        $noofansdropdown->addOption("5", "5");
+        $noofansdropdown->addOption("6", "6");
+        $noofansdropdown->addOption("7", "7");
+        $noofansdropdown->addOption("8", "8");
+        $noofansdropdown->addOption("9", "9");
+        $noofansdropdown->addOption("10", "10");
+        if (!empty($randSAData)) {
+            $noofansdropdown->setSelected($randSAData["choose"]);
+        } else {
+            $noofansdropdown->setSelected("0");
+        }
+
+        //Add Answers dropdown to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseAddBlankAnswers, '20%');
+        $objTable->addCell($noofansdropdown->show(), '80%');
+        $objTable->endRow();
+
+        //Add table to form
+        $form->addToForm($objTable->show());
+        
+        //Create table to store no of answers dropdown
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+
+        $noofunitsdropdown = new dropdown("unitcount");
+        $noofunitsdropdown->extra = "onchange='createUnitInputs(this)'";
+        $noofunitsdropdown->addOption("2", "2");
+        $noofunitsdropdown->addOption("3", "3");
+        $noofunitsdropdown->addOption("4", "4");
+        $noofunitsdropdown->addOption("5", "5");
+        $noofunitsdropdown->addOption("6", "6");
+        $noofunitsdropdown->addOption("7", "7");
+        $noofunitsdropdown->addOption("8", "8");
+        $noofunitsdropdown->addOption("9", "9");
+        $noofunitsdropdown->addOption("10", "10");
+        if (!empty($randSAData)) {
+            $noofunitsdropdown->setSelected($randSAData["choose"]);
+        } else {
+            $noofunitsdropdown->setSelected("0");
+        }
+
+        //Add Units dropdown to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseAddBlankUnits, '20%');
+        $objTable->addCell($noofunitsdropdown->show(), '80%');
+        $objTable->endRow();
+
+        //Add table to form
+        $form->addToForm($objTable->show());
+
+        //Create table to hold the tags
+        $objTable2 = new htmltable();
+        $objTable2->width = '800px';
+        $objTable2->attributes = " align='center' border='0'";
+        $objTable2->cellspacing = '12';
+
+        //tags text box
+        $officialtags = new textinput("officialtags", "");
+        $officialtags->size = 60;
+        $officialtags->extra = "disabled";
+
+        //Add Tags to the table
+        $objTable2->startRow();
+        $objTable2->addCell($wordTags, '20%');
+        $objTable2->addCell($phraseOfficialTags . " ( " . $phraseMngOfficialTags . " ) " . "<br />" . $officialtags->show(), '80%');
+        $objTable2->endRow();
+
+        //tags text box
+        $othertags = "";
+        $othertagsTA = new textarea();
+        $othertagsTA->setName("othertags");
+        if (!empty($tagInstData)) {
+            $othertagsTA->setValue($tagStr);
+        } else {
+            $othertagsTA->setValue("");
+        }
+        $othertagsTA->setRows('4');
+        $othertagsTA->setColumns('70');
+
+        //Add Tags to the table
+        $objTable2->startRow();
+        $objTable2->addCell('&nbsp;');
+        $objTable2->addCell($phraseOtherTags . " ( " . $phraseOtherTagsDesc . " ) " . "<br />" . $othertagsTA->show(), '80%');
+        $objTable2->endRow();
+
+        //Add fieldset to hold tags
+        $objFieldset->setLegend($wordTags);
+
+        //Add table to Tags Fieldset
+        $objFieldset->addContent($objTable2->show());
+
+        $form->addToForm($objFieldset->show());
+        //Reset Fieldset
+        $objFieldset->reset();
+
+        //Create table to hold the tags
+        $objTable3 = new htmltable();
+        $objTable3->width = '800px';
+        $objTable3->attributes = " align='center' border='0'";
+        $objTable3->cellspacing = '12';
+        //Add Last Saved to the table
+        $objTable3->startRow();
+        $objTable3->addCell($phraseCreated, '20%');
+        if (!empty($randSAData)) {
+            $objTable3->addCell($randSAData["timecreated"], '80%');
+        } else {
+            $objTable3->addCell("&nbsp;", '80%');
+        }
+        $objTable3->endRow();
+
+        //Add Last Saved to the table
+        $objTable3->startRow();
+        $objTable3->addCell($phraseLastSaved, '20%');
+        if (!empty($randSAData)) {
+            $objTable3->addCell($randSAData["timemodified"], '80%');
+        } else {
+            $objTable3->addCell("&nbsp;", '80%');
+        }
+        $objTable3->endRow();
+
+        //Add fieldset to hold last-saved
+        $objFieldset->setLegend($phraseCreatedOrSaved);
+
+        //Add table to Tags Fieldset
+        $objFieldset->addContent($objTable3->show());
+
+        $form->addToForm($objFieldset->show());
+        //Reset Fieldset
+        $objFieldset->reset();
+
+        // Create Save Button
+        $button = new button("submit", $phraseSaveChanges);
+        $button->setValue($phraseSaveChanges);
+        $button->setToSubmit();
+        $btnSave = $button->showSexy();
+
+        $button1 = new button("submit", $phraseSaveAsNewQn);
+        $button1->setValue($phraseSaveAsNewQn);
+        $button1->setToSubmit();
+        $btnSaveAsnew = $button1->showSexy();
+
+        // Create Back to list of RSA Button
+        $buttonBack = new button("submit", $listTitle);
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'rsalisting'
+                )));
+        $objBack->link = $buttonBack->showSexy();
+        $btnBackList = $objBack->show();
+
+        // Create Back to home Button
+        $buttonBack = new button("submit", $backToHome);
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'view2'
+                )));
+        $objBack->link = $buttonBack->showSexy();
+        $btnBackHome = $objBack->show();
+
+        //Add Save and Cancel Buttons to form
+        $form->addToForm("<br />" . $btnSave . " " . $btnSaveAsnew . " " . $btnBackList . " " . $btnBackHome . "<br />");
 
         return "<div>" . $form->show() . "</div>";
     }
@@ -1908,7 +2341,7 @@ class formmanager extends object {
         $phraseOtherTags = $this->objLanguage->languageText('mod_mcqtests_othertags', 'mcqtests');
         $phraseOtherTagsDesc = $this->objLanguage->languageText('mod_mcqtests_othertagsdesc', 'mcqtests');
         $phraseQnGrade = $this->objLanguage->languageText('mod_mcqtests_defaultQnGrade', 'mcqtests');
-        $phrasePenaltyFactor = $this->objLanguage->languageText('mod_mcqtests_penaltylabel', 'mcqtests');
+        $phrasePenaltyFactor = $this->objLanguage->languageText('mod_mcqtests_penaltyfactor', 'mcqtests');
         $phraseNoQnsToSelect = $this->objLanguage->languageText('mod_mcqtests_noqnstoselect', 'mcqtests');
         $phraseSaveInCategory = $this->objLanguage->languageText('mod_mcqtests_saveincategory', 'mcqtests');
         $phraseCurrentCategory = $this->objLanguage->languageText('mod_mcqtests_currentcategory', 'mcqtests');
