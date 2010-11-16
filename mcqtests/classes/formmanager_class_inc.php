@@ -2173,7 +2173,7 @@ class formmanager extends object {
         $noofunitsdropdown->addOption("2", "2");
         $noofunitsdropdown->addOption("3", "3");
         $noofunitsdropdown->addOption("4", "4");
-        $noofunitsdropdown->addOption("5", "5");
+        $noofunitsdropdown->addOption("5", "5"); 
         $noofunitsdropdown->addOption("6", "6");
         $noofunitsdropdown->addOption("7", "7");
         $noofunitsdropdown->addOption("8", "8");
