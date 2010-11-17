@@ -151,8 +151,9 @@ class mcqtests extends controller {
                 $id = $this->getParam('id', Null);
                 $test = $this->getParam('test', Null);                
                 $mode = $this->getParam('mode', 'add');
-                $answersCount = $this->getParam('anscount');
-                $unitCount = $this->getParam('unitcount');
+                $answersCount = $this->getParam('anscount', Null);
+                $frmanscount = $this->getParam('frmanscount', Null);
+                $unitCount = $this->getParam('unitcount', Null);
                 //Array to hold values to be passed to template
                 $fields = array();
                 $fields['id'] = $id;

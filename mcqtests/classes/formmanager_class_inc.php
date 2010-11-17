@@ -171,8 +171,6 @@ class formmanager extends object {
         $objInput->fldType = 'hidden';
         $headStr.= $objInput->show();
 
-
-
         //Create form
         $objForm = new form('addfreeformquestion', $this->uri(array('action' => 'applyaddquestion', 'formtype' => 'freeform')));
         $objForm->addToForm($headStr);
@@ -1893,6 +1891,8 @@ class formmanager extends object {
         $this->loadClass("textarea", "htmlelements");
         $this->loadClass("dropdown", "htmlelements");
         $this->loadClass("checkbox", "htmlelements");
+        $this->loadClass("hiddeninput", "htmlelements");
+        $this->loadClass("radio", "htmlelements");
 
         //Store values in variables
         $test = $fields['test'];
@@ -1919,6 +1919,7 @@ class formmanager extends object {
         $phraseMngOfficialTags = $this->objLanguage->languageText('mod_mcqtests_mngofficialtags', 'mcqtests');
         $phraseOtherTags = $this->objLanguage->languageText('mod_mcqtests_othertags', 'mcqtests');
         $phraseOtherTagsDesc = $this->objLanguage->languageText('mod_mcqtests_othertagsdesc', 'mcqtests');
+        $phraseWordGrade = $this->objLanguage->languageText('mod_mcqtests_wordgrade', 'mcqtests');
         $phraseQnGrade = $this->objLanguage->languageText('mod_mcqtests_defaultQnGrade', 'mcqtests');
         $phrasePenaltyFactor = $this->objLanguage->languageText('mod_mcqtests_penaltyfactor', 'mcqtests');
         $phraseNoQnsToSelect = $this->objLanguage->languageText('mod_mcqtests_noqnstoselect', 'mcqtests');
@@ -1940,6 +1941,10 @@ class formmanager extends object {
         $wordAnswer = $this->objLanguage->languageText('mod_mcqtests_wordanswer', 'mcqtests', "Answer");
         $phraseCorrectAnsFormula = $this->objLanguage->languageText('mod_mcqtests_corranswerlabel', 'mcqtests', "Correct Answer Formula");
         $phraseIsRequired = $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests', "is required");
+        $phraseTolerance = $this->objLanguage->languageText('mod_mcqtest_tolerancelabel', 'mcqtests', "Tolerance ±");
+        $phraseToleranceType = $this->objLanguage->languageText('mod_mcqtest_tolerancetype', 'mcqtests', "Tolerance type");
+        $phraseCorrectAnswerShows = $this->objLanguage->languageText('mod_mcqtest_correctAnswerShows', 'mcqtests', "Correct answer shows");
+        $wordFormat = $this->objLanguage->languageText('mod_mcqtests_formatlabel', 'mcqtests', "Format");
 
         $listTitle = $phraseListOf . " " . $phraseRSAQuestions;
         //Form Object
@@ -2027,7 +2032,6 @@ class formmanager extends object {
         $usecategory->setValue(1);
 
         //Add Use-Category to the table
-
         //category drop down
         if (!empty($qnData)) {
             $categories = $this->dbCategory->generateDropDown($this->contextCode, $qnData["categoryid"]);
@@ -2130,117 +2134,24 @@ class formmanager extends object {
 
         //Reset Fieldset
         $objFieldset->reset();
+        //Variable to store no of answer fieldsets to create
+        $anscount = 2;
+        if (!empty($fields['anscount']))
+            $anscount = $fields['anscount'];
 
-        //Create table to hold the answer
-        $objTable = new htmltable();
-        $objTable->width = '800px';
-        $objTable->attributes = " align='center' border='0'";
-        $objTable->cellspacing = '12';
-
-        //correct answer formula text box
-        if (!empty($qnData)) {
-            $ansformula = new textinput("ansformula", $qnData["name"]);
-        } else {
-            $ansformula = new textinput("ansformula", "");
-        }
-        $ansformula->size = 60;
-        $form->addRule('ansformula', $phraseCorrectAnsFormula." ".$phraseIsRequired, 'required');
-
-        //Add Answer-Formula to the table
-        $objTable->startRow();
-        $objTable->addCell($phraseCorrectAnsFormula." = ", '20%');
-        $objTable->addCell($ansformula->show(), '80%');
-        $objTable->endRow();
-
-        //category drop down
-        if (!empty($qnData)) {
-            $categories = $this->dbCategory->generateDropDown($this->contextCode, $qnData["categoryid"]);
-        } else {
-            $categories = $this->dbCategory->generateDropDown($this->contextCode, Null);
-        }
-        //Add Category to the table
-        $objTable->startRow();
-        $objTable->addCell($phraseSaveInCategory, '20%');
-        $objTable->addCell($categories, '80%');
-        $objTable->endRow();
-
-
-        //qn text
-        $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = 'qntext';
-        $editor->height = '100px';
-        $editor->width = '550px';
-        $editor->setMCQToolBar();
-        if (!empty($qnData)) {
-            $qntext = $qnData["questiontext"];
-        } else {
-            $qntext = '';
-        }
-        $editor->setContent($qntext);
-        //Add Category to the table
-        $objTable->startRow();
-        $objTable->addCell($phraseQnText, '20%');
-        $objTable->addCell($editor->show(), '80%');
-        $objTable->endRow();
-
-        //Add default qn grade
-        if (!empty($qnData)) {
-            $qngrade = new textinput("qngrade", $qnData["mark"]);
-        } else {
-            $qngrade = new textinput("qngrade", "");
-        }
-        $qngrade->size = 2;
-        $form->addRule('qngrade', $phraseQnGrade . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
-        //Add qn grade to the table
-        $objTable->startRow();
-        $objTable->addCell($phraseQnGrade, '20%');
-        $objTable->addCell($qngrade->show(), '80%');
-        $objTable->endRow();
-
-        //Add Penalty factor
-        if (!empty($qnData)) {
-            $pfactor = new textinput("penaltyfactor", $qnData["penalty"]);
-        } else {
-            $pfactor = new textinput("penaltyfactor", "");
-        }
-        $pfactor->size = 2;
-        $form->addRule('penaltyfactor', $phrasePenaltyFactor . " " . $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests'), 'required');
-        //Add penalty factor field to the table
-        $objTable->startRow();
-        $objTable->addCell($phrasePenaltyFactor, '20%');
-        $objTable->addCell($pfactor->show(), '80%');
-        $objTable->endRow();
-
-        //general feedback
-        $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = 'genfeedback';
-        $editor->height = '100px';
-        $editor->width = '550px';
-        $editor->setMCQToolBar();
-        if (!empty($qnData)) {
-            $genfeedback = $qnData["generalfeedback"];
-        } else {
-            $genfeedback = '';
-        }
-        $editor->setContent($genfeedback);
-        //Add General Feedback to the table
-        $objTable->startRow();
-        $objTable->addCell($wordFeedback, '20%');
-        $objTable->addCell($editor->show(), '80%');
-        $objTable->endRow();
-
-        //Add fieldset to hold answer
-        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
-        $objFieldset->setLegend($wordAnswer);
-
-        //Add table to General Fieldset
-        $objFieldset->addContent($objTable->show());
-
-        //Add General Fieldset to form
-        $form->addToForm($objFieldset->show());
-
-        //Reset Fieldset
-        $objFieldset->reset();
+        //Create dynamic answers
+        $count = 1;
+        do {
+            $ans = $this->createAnswerFields($count, $ansValues = Null);
+            $count++;
+            //Add form validations
+            $form->addRule('ansformula' . $count, $phraseCorrectAnsFormula . " " . $phraseIsRequired, 'required');
+            $form->addRule('grade' . $count, $phraseWordGrade . " " . $phraseIsRequired, 'required');
+            $form->addRule('tolerance' . $count, $phraseTolerance . " " . $phraseIsRequired, 'required');
+            $form->addRule('feedback' . $count, $phraseTolerance . " " . $phraseIsRequired, 'required');
+            //Add Answer Fieldset to form
+            $form->addToForm($ans);
+        } while ($count <= $anscount);
 
         //Create table to store no of answers dropdown
         $objTable = new htmltable();
@@ -2264,16 +2175,30 @@ class formmanager extends object {
         } else {
             $noofansdropdown->setSelected("0");
         }
-
+        $frmanscount = new hiddeninput("frmanscount", $anscount);
         //Add Answers dropdown to the table
         $objTable->startRow();
         $objTable->addCell($phraseAddBlankAnswers, '20%');
-        $objTable->addCell($noofansdropdown->show(), '80%');
+        $objTable->addCell($noofansdropdown->show() . $frmanscount->show(), '80%');
         $objTable->endRow();
 
         //Add table to form
         $form->addToForm($objTable->show());
+
+        //Load unit-handling
+        $unitHandling = $this->createUnitHandlingFields($unitValues=Null);
+
+        //Add unit-handling to form
+        $form->addToForm($unitHandling);
         
+        //Create table to store unit-handling
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+
+
+
         //Create table to store no of answers dropdown
         $objTable = new htmltable();
         $objTable->width = '800px';
@@ -2285,7 +2210,7 @@ class formmanager extends object {
         $noofunitsdropdown->addOption("2", "2");
         $noofunitsdropdown->addOption("3", "3");
         $noofunitsdropdown->addOption("4", "4");
-        $noofunitsdropdown->addOption("5", "5"); 
+        $noofunitsdropdown->addOption("5", "5");
         $noofunitsdropdown->addOption("6", "6");
         $noofunitsdropdown->addOption("7", "7");
         $noofunitsdropdown->addOption("8", "8");
@@ -2424,9 +2349,308 @@ class formmanager extends object {
     }
 
     /**
+     * Method to create a fieldset for capturing unit-handling details
+     *
+     * @access public
+     * @param  $unitValues array The values for the fields for the case of an edit
+     * @return object
+     * @author Paul Mungai
+     */
+    public function createUnitHandlingFields($unitValues=Null) {
+        //Load Classes
+        $this->loadClass("textinput", "htmlelements");
+        $this->loadClass("form", "htmlelements");
+        $this->loadClass("textarea", "htmlelements");
+        $this->loadClass("dropdown", "htmlelements");
+        $this->loadClass("checkbox", "htmlelements");
+        $this->loadClass("hiddeninput", "htmlelements");
+        $this->loadClass("radio", "htmlelements");
+
+        //Get the language text
+        $phraseUnitGraded = $this->objLanguage->languageText('mod_mcqtests_unitgraded', 'mcqtests', 'Unit graded');
+        $phraseUnitHandling = $this->objLanguage->languageText('mod_mcqtests_unithandling', 'mcqtests', 'Unit handling');
+        $phraseNumericalUnit = $this->objLanguage->languageText('mod_mcqtests_numericalunitgraded', 'mcqtests', "NUMERICAL ANSWER and UNIT ANSWER will be graded");
+        $phrasePenalty = $this->objLanguage->languageText('mod_mcqtests_penaltybadunit', 'mcqtests', "Penalty for bad unit");
+        $phraseUnitAnswer = $this->objLanguage->languageText('mod_mcqtests_unitanswerdisplay', 'mcqtests', "UNIT ANSWER displayed as a");
+        $phraseTextInputElement = $this->objLanguage->languageText('mod_mcqtests_textinputelement', 'mcqtests', "Text input element");
+        $wordMultichoice = $this->objLanguage->languageText('mod_mcqtests_multichoice', 'mcqtests', "Multichoice");
+        $phraseRadioElements = $this->objLanguage->languageText('mod_mcqtests_radioelements', 'mcqtests', "Radio elements");
+        $wordInstructions = $this->objLanguage->languageText('mod_mcqtests_instructions', 'mcqtests', 'Instructions');
+        $phraseUnitNotGraded = $this->objLanguage->languageText('mod_mcqtests_unitnotgraded', 'mcqtests', "Unit not graded");
+        $phraseOnlyNumerical = $this->objLanguage->languageText('mod_mcqtests_onlynumerical', 'mcqtests', "Only NUMERICAL ANSWER will be graded");
+        $wordNo = $this->objLanguage->languageText('word_no', 'system', 'No');
+        $wordYes = $this->objLanguage->languageText('word_yes', 'system', 'Yes');
+        $phraseUnitPosition = $this->objLanguage->languageText('mod_mcqtests_unitposition', 'mcqtests', "Unit position");
+        $phrasePenaltyResponseGrade = $this->objLanguage->languageText('mod_mcqtests_penaltyresponsegrade', 'mcqtests', "as a decimal fraction (0-1) of RESPONSE grade");
+        $phrasePenaltyQuestionGrade = $this->objLanguage->languageText('mod_mcqtests_penaltyquestiongrade', 'mcqtests', "as a decimal fraction (0-1) of QUESTION grade");
+        $wordOr = $this->objLanguage->languageText('mod_mcqtests_wordor', 'mcqtests', 'or');
+        $phraseDisplayUnit = $this->objLanguage->languageText('mod_mcqtests_displayunit', 'mcqtests', 'Display Unit');
+        
+        //Create table to hold the answer
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+        //unit-graded radio button
+        $unitgraded = new radio("ansformula");
+        $unitgraded->addOption(1,$phraseNumericalUnit);
+        if (!empty($unitValues)) {
+            $unitgraded->setSelected($unitValues["unitgraded"]);
+        }
+        //Add field to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseUnitGraded, '20%');
+        $objTable->addCell($unitgraded->show(), '80%');
+        $objTable->endRow();
+
+        //penalty-bad-unit text box
+        if (!empty($unitValues)) {
+            $penaltybadunit = new textinput("penaltybadunit", $unitValues["penaltybadunit"]);
+        } else {
+            $penaltybadunit = new textinput("penaltybadunit", "");
+        }
+        $penaltybadunit->size = 9;
+        //Dropdown - Penalty on question on response grade
+        $questionresponseddown = new dropdown("questionresponse");
+        $questionresponseddown->addOption("question", $phrasePenaltyQuestionGrade);
+        $questionresponseddown->addOption("response", $phrasePenaltyResponseGrade);
+        if (!empty($unitValues)) {
+            $questionresponseddown->setSelected($unitValues["questionresponse"]);
+        } else {
+            $questionresponseddown->setSelected("0");
+        }
+        //Add penalty-bad-unit to the table
+        $objTable->startRow();
+        $objTable->addCell($phrasePenalty, '20%');
+        $objTable->addCell($penaltybadunit->show()." ".$questionresponseddown->show(), '80%');
+        $objTable->endRow();
+
+        //unit-answer-display radio button
+        $unitansdisplay = new radio("unitansdisplay");
+        $unitansdisplay->addOption(1,$phraseTextInputElement." ".strtoupper($wordOr));
+        $unitansdisplay->addOption(2,$wordMultichoice." (".$phraseRadioElements.")");
+        if (!empty($unitValues)) {
+            $unitansdisplay->setSelected($unitValues["unitansdisplay"]);
+        }
+        //Add field to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseUnitGraded, '20%');
+        $objTable->addCell($unitansdisplay->show(), '80%');
+        $objTable->endRow();
+
+        //Instructions
+        $instructions = $this->newObject('htmlarea', 'htmlelements');
+        $instructions->name = 'instructions';
+        $instructions->height = '100px';
+        $instructions->width = '550px';
+        $instructions->setMCQToolBar();
+        if (!empty($ansValues)) {
+            $instructionsEd = $ansValues["instructions"];
+        } else {
+            $instructionsEd = '';
+        }
+        $instructions->setContent($instructionsEd);
+        //Add instructions to the table
+        $objTable->startRow();
+        $objTable->addCell($wordInstructions, '20%');
+        $objTable->addCell($instructions->show(), '80%');
+        $objTable->endRow();
+
+        //Dropdown - UNIT-NOT-GRADED
+        $unitnotgradeddropdown = new radio("unitnotgraded");
+        $unitnotgradeddropdown->addOption(1, $phraseOnlyNumerical);
+        if (!empty($unitValues)) {
+            $unitnotgradeddropdown->setSelected($unitValues["unitnotgraded"]);
+        } else {
+            $unitnotgradeddropdown->setSelected("0");
+        }
+        //Add UNIT-NOT-GRADED to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseUnitNotGraded, '20%');
+        $objTable->addCell($unitnotgradeddropdown->show(), '80%');
+        $objTable->endRow();
+
+        //Dropdown - DISPLAY-UNIT
+        $displayunitdropdown = new radio("displayunit");
+        $displayunitdropdown->addOption(1, $wordYes);
+        $displayunitdropdown->addOption(0, $wordNo);
+        if (!empty($unitValues)) {
+            $displayunitdropdown->setSelected($unitValues["displayunit"]);
+        } else {
+            $displayunitdropdown->setSelected("0");
+        }
+        //Add DISPLAY-UNIT to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseDisplayUnit, '20%');
+        $objTable->addCell($displayunitdropdown->show(), '80%');
+        $objTable->endRow();
+
+        //Add fieldset to hold table
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->setLegend($phraseUnitHandling);
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+
+        $theFieldset = $objFieldset->show();
+
+        $objFieldset->reset();
+        
+        return $theFieldset;
+    }
+
+    /**
+     * Method to create a fieldset for capturing answer details
+     *
+     * @access public
+     * @param  $ansno string Unique identifier for the answer as there are several per question
+     * @param  $ansValues array The values for the fields for the case of an edit
+     * @return object
+     * @author Paul Mungai
+     */
+    public function createAnswerFields($ansno=1, $ansValues=Null) {
+        $this->loadClass("textinput", "htmlelements");
+        $this->loadClass("dropdown", "htmlelements");
+        $this->loadClass("hiddeninput", "htmlelements");
+
+        //Get the language text
+        $wordFeedback = $this->objLanguage->languageText('mod_mcqtests_generalfeedback', 'mcqtests');
+        $wordFormat = $this->objLanguage->languageText('mod_mcqtests_formatlabel', 'mcqtests', "Format");
+        $wordAnswer = $this->objLanguage->languageText('mod_mcqtests_wordanswer', 'mcqtests', "Answer");
+        $phraseCorrectAnswerShows = $this->objLanguage->languageText('mod_mcqtest_correctAnswerShows', 'mcqtests', "Correct answer shows");
+        $phraseToleranceType = $this->objLanguage->languageText('mod_mcqtest_tolerancetype', 'mcqtests', "Tolerance type");
+        $phraseTolerance = $this->objLanguage->languageText('mod_mcqtest_tolerancelabel', 'mcqtests', "Tolerance ±");
+        $phraseWordGrade = $this->objLanguage->languageText('mod_mcqtests_wordgrade', 'mcqtests');
+        $phraseCorrectAnsFormula = $this->objLanguage->languageText('mod_mcqtests_corranswerlabel', 'mcqtests', "Correct Answer Formula");
+        $phraseIsRequired = $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests', "is required");
+        //Create table to hold the answer
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+
+        //correct answer formula text box
+        if (!empty($ansValues)) {
+            $ansformula = new textinput("ansformula" . $ansno, $ansValues["ansformula"]);
+        } else {
+            $ansformula = new textinput("ansformula" . $ansno, "");
+        }
+        $ansformula->size = 60;
+        //Add Answer-Formula to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseCorrectAnsFormula . " = ", '20%');
+        $objTable->addCell($ansformula->show(), '80%');
+        $objTable->endRow();
+
+        //grade text box
+        if (!empty($ansValues)) {
+            $grade = new textinput("grade" . $ansno, $ansValues["grade"]);
+        } else {
+            $grade = new textinput("grade" . $ansno, "");
+        }
+        $grade->size = 7;
+        //Add grade to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseWordGrade, '20%');
+        $objTable->addCell($grade->show() . " %", '80%');
+        $objTable->endRow();
+
+        //tolerance text box
+        if (!empty($ansValues)) {
+            $tolerance = new textinput("tolerance" . $ansno, $ansValues["tolerance"]);
+        } else {
+            $tolerance = new textinput("tolerance" . $ansno, "");
+        }
+        $tolerance->size = 7;
+        //Add tolerance to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseTolerance, '20%');
+        $objTable->addCell($tolerance->show(), '80%');
+        $objTable->endRow();
+
+        //tolerance type text box
+        $tolerancetype = new dropdown("tolerancetype" . $ansno);
+        $tolerancetype->addOption("Relative", "Relative");
+        $tolerancetype->addOption("Nominal", "Nominal");
+        if (!empty($ansValues)) {
+            $tolerancetype->setSelected($ansValues["tolerancetype"]);
+        }
+        //Add tolerance-type to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseToleranceType, '20%');
+        $objTable->addCell($tolerancetype->show(), '80%');
+        $objTable->endRow();
+
+        //correct-answer-shows text box
+        $correctAnswerShows = new dropdown("correctanswershows" . $ansno);
+        $correctAnswerShows->addOption("0", "0");
+        $correctAnswerShows->addOption("1", "1");
+        $correctAnswerShows->addOption("2", "2");
+        $correctAnswerShows->addOption("3", "3");
+        $correctAnswerShows->addOption("4", "4");
+        $correctAnswerShows->addOption("5", "5");
+        $correctAnswerShows->addOption("6", "6");
+        $correctAnswerShows->addOption("7", "7");
+        $correctAnswerShows->addOption("8", "8");
+        $correctAnswerShows->addOption("9", "9");
+        if (!empty($ansValues)) {
+            $correctAnswerShows->setSelected($ansValues["correctanswershows"]);
+        }
+        //Add correct-answer-shows to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseCorrectAnswerShows, '20%');
+        $objTable->addCell($correctAnswerShows->show(), '80%');
+        $objTable->endRow();
+
+        //format text box
+        $format = new dropdown("format" . $ansno);
+        $format->addOption("Decimals", "Decimals");
+        $format->addOption("Significant-values", "Significant values");
+        if (!empty($ansValues)) {
+            $format->setSelected($ansValues["format"]);
+        }
+        //Add format to the table
+        $objTable->startRow();
+        $objTable->addCell($wordFormat, '20%');
+        $objTable->addCell($format->show(), '80%');
+        $objTable->endRow();
+
+        //Feedback
+        $feedback = $this->newObject('htmlarea', 'htmlelements');
+        $feedback->name = 'feedback' . $ansno;
+        $feedback->height = '100px';
+        $feedback->width = '550px';
+        $feedback->setMCQToolBar();
+        if (!empty($ansValues)) {
+            $genfeedback = $ansValues["feedback"];
+        } else {
+            $genfeedback = '';
+        }
+        $feedback->setContent($genfeedback);
+        //Add Feedback to the table
+        $objTable->startRow();
+        $objTable->addCell($wordFeedback, '20%');
+        $objTable->addCell($feedback->show(), '80%');
+        $objTable->endRow();
+
+        //Add fieldset to hold answer
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->setLegend($wordAnswer . " " . $ansno);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+
+        $theFieldset = $objFieldset->show();
+
+        $objFieldset->reset();
+
+        //Return Fieldset
+        return $theFieldset;
+    }
+
+    /**
      * Method to create add short answer form
      *
-     * @access private
+     * @access public
      * @param  array $test Contains test data
      * @param  string $id Contains the answer id
      * @author Paul Mungai
