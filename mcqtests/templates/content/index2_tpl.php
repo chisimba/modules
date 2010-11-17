@@ -70,7 +70,7 @@ if (!empty($data)) {
         $class = (($i++%2) == 0) ? 'odd' : 'even';
         // link to view test and add questions
         $objLink = new link($this->uri(array(
-            'action' => 'view',
+            'action' => 'view2',
             'id' => $line['id']
         )));
         $objLink->title = $viewLabel;
@@ -121,10 +121,7 @@ if (!empty($data)) {
     $objTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
     $objTable->endRow();
 }
-$experimental = new link($this->uri(array('action'=>'home2')));
-$experimental->link = $this->objLanguage->languageText('mod_mcqtest_experimental', 'mcqtests');
-$experimental->extra  =  "style='color:yellow;'";
-echo "<h2>".$experimental->show()."</h2>";
+echo "<h2 style='color:yellow;'>".$this->objLanguage->languageText('mod_mcqtest_experimental', 'mcqtests')."</h2>";
 echo $objTable->show();
 if ($this->isValid('add'))
 {

@@ -199,14 +199,6 @@ $addQUrl = $this->uri(array(
 ));
 $addQ = $objIcon->getAddIcon($addQUrl);
 
-$addAdvancedQUrl = $this->uri(array('action' => 'view2', 'id' => $data['id']));
-$objLink = new link($addQUrl);
-$objLink->link = $addLabel;
-$addQLink = $objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-$objLink = new link($addAdvancedQUrl);
-$objLink->link = $addAdvancedLabel;
-$addQLink .= $objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-
 
 //=======================================================SPLIT=========================================================================
 
@@ -216,7 +208,7 @@ $str = null;
 $objHeading = new htmlheading();
 $objHeading->type = 3;
 $objHeading->str = $questionsLabel.' ('.$count.'):
-	&nbsp;&nbsp;&nbsp;&nbsp;'.$addQLink;//$addQ;
+	&nbsp;&nbsp;&nbsp;&nbsp;'.$addQ;
 $qHeading = $objHeading->show();
 $str.= $qHeading;
 
@@ -347,9 +339,6 @@ if (!empty($questions)) {
 $objLink = new link($addQUrl);
 $objLink->link = $addLabel;
 $homeLink = '<p>'.$objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-$objLink = new link($addAdvancedQUrl);
-$objLink->link = $addAdvancedLabel;
-$homeLink .= $objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 $objLink = new link($this->uri(array(
     ''
 )));

@@ -1019,6 +1019,8 @@ class mcqtests extends controller {
                 if ($this->objCond->isContextMember('Students')) {
                     return $this->studentHome2();
                 }
+            case 'home2':
+                return $this->home2();
             default:
 
                 if ($this->objCond->isContextMember('Students')) {
@@ -1068,6 +1070,32 @@ class mcqtests extends controller {
         $this->setVarByRef('testId', $testId);
         $this->setVarByRef('data', $data);
         return 'index_tpl.php';
+    }
+
+    /**
+     * Method to display a list of tests in the test home page.
+     *
+     * @access private
+     * @param string $testId The id of the test results were exported for
+     * @return
+     */
+    private function home2($testId = NULL) {
+        $data = $this->dbTestadmin->getTests2($this->contextCode);echo "hellow rold";
+        if (!empty($data)) {
+            foreach ($data as $key => $line) {
+                $sql = "SELECT title FROM tbl_context_nodes WHERE ";
+                $sql.= "id = '" . $line['chapter'] . "'";
+                $nodes = $this->objContentNodes->getArray($sql);
+                if (!empty($nodes)) {
+                    $data[$key]['node'] = $nodes[0]['title'];
+                } else {
+                    $data[$key]['node'] = '';
+                }
+            }
+        }
+        $this->setVarByRef('testId', $testId);
+        $this->setVarByRef('data', $data);
+        return 'index2_tpl.php';
     }
 
     /**
@@ -1547,7 +1575,7 @@ class mcqtests extends controller {
     }
 
     private function studentHome2() {
-        $data = $this->dbTestadmin->getTests($this->contextCode);
+        $data = $this->dbTestadmin->getTests2($this->contextCode);
         if (!empty($data)) {
             foreach ($data as $key => $line) {
                 $sql = "SELECT title FROM tbl_context_nodes WHERE ";
