@@ -85,6 +85,14 @@ class twitter extends controller
     public $objLog;
 
     /**
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objSysConfig;
+
+    /**
     *
     * Intialiser for the twitter controller
     * @access public
@@ -104,6 +112,8 @@ class twitter extends controller
         $this->objLog->log();
         // Load Zend Framework
         $this->getObject('zend', 'zend');
+        // Module configuration
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
 
@@ -251,6 +261,25 @@ class twitter extends controller
         //htmlentities($this->objTwitterRemote->getStatus());
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
+    }
+
+    /**
+     * Action starting the OAuth authentication process with Twitter.
+     *
+     * @access private
+     */
+    private function __authenticate()
+    {
+        $config = array();
+        $config['callbackUrl'] = 'http://chisimba.com/callback.php';
+        $config['consumerKey'] = $this->objSysConfig->getValue('mod_twitter_consumer_key', 'twitter');
+        $config['consumerSecret'] = $this->objSysConfig->getValue('mod_twitter_consumer_secret', 'twitter');
+        $config['siteUrl'] = 'http://twitter.com/oauth';
+
+        $consumer = new Zend_Oauth_Consumer($config);
+        $token = $consumer->getRequestToken();
+        $_SESSION['TWITTER_REQUEST_TOKEN'] = serialize($token);
+        $consumer->redirect();
     }
 
     /**
