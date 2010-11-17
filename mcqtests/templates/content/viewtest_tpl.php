@@ -36,6 +36,7 @@ $totalLabel = $objLanguage->languageText('mod_mcqtests_totalmarks', 'mcqtests');
 $backLabel = $objLanguage->languageText('mod_mcqtests_name', 'mcqtests') .' '.$objLanguage->languageText('word_home');
 $questionsLabel = $objLanguage->languageText('mod_mcqtests_questions', 'mcqtests');
 $questionLabel = $objLanguage->languageText('mod_mcqtests_question', 'mcqtests');
+$advancedquestionLabel = $objLanguage->languageText('mod_mcqtests_advancedquestion', 'mcqtests');
 $markLabel = $objLanguage->languageText('mod_mcqtests_mark', 'mcqtests');
 $numansLabel = $objLanguage->languageText('mod_mcqtests_numanswers', 'mcqtests');
 $actionLabel = $objLanguage->languageText('mod_mcqtests_actions', 'mcqtests');
@@ -48,6 +49,7 @@ $listLabel = ucwords($objLanguage->code2Txt('mod_mcqtests_liststudents', 'mcqtes
 $editIconLabel = $editLabel.' '.$head;
 $deleteLabel = $this->objLanguage->languageText('word_delete') .' '.$wordquestion;
 $addLabel = $this->objLanguage->languageText('word_add') .' '.$questionLabel;
+$addAdvancedLabel = $this->objLanguage->languageText('word_add') . ' '.$advancedquestionLabel;
 $upLabel = $this->objLanguage->languageText('word_up');
 $downLabel = $this->objLanguage->languageText('word_down');
 $durationLabel = $this->objLanguage->languageText('mod_mcqtests_duration', 'mcqtests');
@@ -197,8 +199,13 @@ $addQUrl = $this->uri(array(
 ));
 $addQ = $objIcon->getAddIcon($addQUrl);
 
-
-
+$addAdvancedQUrl = $this->uri(array('action' => 'view2', 'id' => $data['id']));
+$objLink = new link($addQUrl);
+$objLink->link = $addLabel;
+$addQLink = $objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$objLink = new link($addAdvancedQUrl);
+$objLink->link = $addAdvancedLabel;
+$addQLink .= $objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
 
 //=======================================================SPLIT=========================================================================
@@ -209,7 +216,7 @@ $str = null;
 $objHeading = new htmlheading();
 $objHeading->type = 3;
 $objHeading->str = $questionsLabel.' ('.$count.'):
-	&nbsp;&nbsp;&nbsp;&nbsp;'.$addQ;
+	&nbsp;&nbsp;&nbsp;&nbsp;'.$addQLink;//$addQ;
 $qHeading = $objHeading->show();
 $str.= $qHeading;
 
@@ -340,6 +347,9 @@ if (!empty($questions)) {
 $objLink = new link($addQUrl);
 $objLink->link = $addLabel;
 $homeLink = '<p>'.$objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$objLink = new link($addAdvancedQUrl);
+$objLink->link = $addAdvancedLabel;
+$homeLink .= $objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 $objLink = new link($this->uri(array(
     ''
 )));

@@ -282,7 +282,7 @@ if (!empty($data)) {
         $objInput->fldType = 'hidden';
         $hidden = $objInput->show();
 
-
+        
         // Display answers
         if (!empty($line['answers'])) {
             if ($line['questiontype'] == 'freeform') {
@@ -292,12 +292,12 @@ if (!empty($data)) {
                     $simple[] = $cloze['answer'];
                 }
                 $stringOut = implode(';', $simple);
-                $objInput->textinput('freeform' . $line['questionorder'], $stringOut);
+                $objInput->textinput('freeform' . $questionCounter, $stringOut);
                 $objInput->fldType = 'hidden';
                 $hidden.= $objInput->show();
-                $objRadio = new textinput('ans' . $line['questionorder'], '');
+                $objRadio = new textinput('ans' . $questionCounter, '');
 
-                $objInput = new textinput('qtype' . $line['questionorder'], 'freeform');
+                $objInput = new textinput('qtype' . $questionCounter, 'freeform');
                 $objInput->fldType = 'hidden';
                 $hidden.= $objInput->show();
             } else if ($line['questiontype'] == 'matching') {
@@ -390,14 +390,13 @@ $objInput = new textinput('resultId', $resultId);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
 // Submit buttons
-
 if (!empty($data) && $questionCounter < $data[0]['count']) {
     $objButton = new button('savebutton', $continueLabel);
 // after the onclick
 //document.getElementById(\'input_savebutton\').disabled=true;
 
     $objButton->extra = ' ondblclick="javascript:return false" onclick="document.getElementById(\'form_submittest\').submit();"';
-    $action = 'continuetest';
+    $action = 'continuetest2';
 } else {
     $objButton = new button('savebutton', $submitLabel);
     $objButton->extra = ' ondblclick="javascript:return false" onclick= document.getElementById(\'form_submittest\').submit(); "';
@@ -408,7 +407,7 @@ if (!empty($data) && $questionCounter < $data[0]['count']) {
 $objInput = new textinput('action', $action);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
-if ($action == 'continuetest') {
+if ($action == 'continuetest2') {
     $objTable->startRow();
     $objTable->addCell($hidden . $objButton->show(), '', '', 'left', '', '');
     $objTable->endRow();
@@ -427,7 +426,7 @@ $javascript = "<script language=\"javascript\" type=\"text/javascript\">
     //<![CDATA[
     function submitform(val){
         document.getElementById('input_qnum').value=val;
-        document.getElementById('form_submittest').action.value='continuetest';
+        document.getElementById('form_submittest').action.value='continuetest2';
         document.getElementById('form_submittest').submit();
         opener.location.reload();
     }

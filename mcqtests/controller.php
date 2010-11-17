@@ -928,6 +928,16 @@ class mcqtests extends controller {
                 $this->setVarByRef('resultId', $resultId);
                 $this->setVarByRef('mode', $mode);
                 return $this->setTest($this->getParam('id'), $this->getParam('qnum', ''));
+            case 'continuetest2':
+                $this->unsetSession('taketest');
+                $resultId = $this->getParam('resultId', NULL);
+                $resultId = $this->saveTest($resultId);
+                $testDuration = $this->getParam('testduration', NULL);
+                $mode = $this->getParam('mode', 'mode');
+                $this->setVarByRef('testDuration', $testDuration);
+                $this->setVarByRef('resultId', $resultId);
+                $this->setVarByRef('mode', $mode);
+                return $this->setTest2($this->getParam('id'), $this->getParam('qnum', ''));
             case 'marktest':
                 $this->unsetSession('qData');
                 $this->unsetSession('taketest');
@@ -941,9 +951,10 @@ class mcqtests extends controller {
                 $this->setVar('data', NULL);
                 return 'answertest_tpl.php';
             case 'marktest2':
-                echo $this->markTest($this->getParam('resultId', NULL));
-                print_r($_POST);
-                break;
+                $this->markTest($this->getParam('resultId', NULL));
+                return 'answertest2_tpl.php';
+                //print_r($_POST);
+                break;//die();
             case 'showstudenttest':
                 return $this->showStudentTest();
             case 'submitdbquestions':

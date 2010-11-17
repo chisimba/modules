@@ -150,6 +150,8 @@ if (!empty($data)) {
         }
     }
 }
+
+echo "<h3>".$this->objLanguage->languageText('mod_mcqtest_experimental', 'mcqtests')."</h3>";
 echo $objTable->show();
 // Link to Assignment Management if registered
 if ($this->assignment) {

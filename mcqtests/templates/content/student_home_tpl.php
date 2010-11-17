@@ -150,6 +150,10 @@ if (!empty($data)) {
         }
     }
 }
+$experimental = new link($this->uri(array('action'=>'studenthome2')));
+$experimental->link = $this->objLanguage->languageText('mod_mcqtest_experimental', 'mcqtests');
+$experimental->extra  =  "style='color:red;'";
+echo "<h2>".$experimental->show()."</h2>";
 echo $objTable->show();
 // Link to Assignment Management if registered
 if ($this->assignment) {
