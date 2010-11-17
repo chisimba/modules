@@ -67,7 +67,7 @@ class dbtestadmin extends dbtable {
         } else {
             $sql.= " WHERE context='$context'";
         }
-        $sql.= " and testtype not like 'Expe%' ORDER BY closingdate DESC, name";
+        $sql.= " and testtype not like 'Advanc%' ORDER BY closingdate DESC, name";
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;
@@ -90,7 +90,7 @@ class dbtestadmin extends dbtable {
         } else {
             $sql.= " WHERE context='$context'";
         }
-        $sql.= " and testtype like 'Expe%' ORDER BY closingdate DESC, name";
+        $sql.= " and testtype like 'Advanc%' ORDER BY closingdate DESC, name";
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;
