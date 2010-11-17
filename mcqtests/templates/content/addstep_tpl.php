@@ -67,7 +67,7 @@ $lbEqualPercent = $this->objLanguage->languageText('mod_mcqtests_settoequalperce
 $testTypeLabel = $this->objLanguage->languageText('mod_mcqtests_testtype', 'mcqtests');
 $formativeLabel = $this->objLanguage->languageText('word_formative');
 $summativeLabel = $this->objLanguage->languageText('word_summative');
-$experimentalLabel = $this->objLanguage->languageText('mod_mcqtest_word_experimental', 'mcqtests');
+$advancedLabel = $this->objLanguage->languageText('mod_mcqtest_word_advanced', 'mcqtests');
 $qSequenceLabel = $this->objLanguage->languageText('mod_mcqtests_questionorder', 'mcqtests');
 $aSequenceLabel = $this->objLanguage->languageText('mod_mcqtests_answerorder', 'mcqtests');
 $scrambledLabel = $this->objLanguage->languageText('word_scrambled');
@@ -217,7 +217,7 @@ switch($currentstep) {
         $objRadio = new dropdown('testType');
         $objRadio->addOption($formativeLabel, $formativeLabel);
         $objRadio->addOption($summativeLabel, $summativeLabel);
-        $objRadio->addOption($experimentalLabel, $experimentalLabel);
+        $objRadio->addOption($advancedLabel, $advancedLabel);
         if (isset($testType) && !empty($testType)) {
             $objRadio->setSelected($testType);
         } else {
