@@ -86,10 +86,19 @@ if (!empty($data)) {
         $objIcon->title = $deleteLabel;
 
         $objConfirm = new confirm();
-        $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
-            'action' => 'delete',
-            'id' => $line['id']
-        )) , $confirmLabel.' '.$line['name'].'?');
+        if($this->getParam("action") == "home2") {
+            $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
+                'action' => 'delete',
+                'id' => $line['id'],
+                'testtype'=>'advanced'
+            )) , $confirmLabel.' '.$line['name'].'?');
+        }
+        else {
+            $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
+                'action' => 'delete',
+                'id' => $line['id']
+            )) , $confirmLabel.' '.$line['name'].'?');
+        }
         $icons.= $objConfirm->show();
         $objIcon->setIcon('comment');
         $objIcon->title = $listLabel;

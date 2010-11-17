@@ -249,7 +249,7 @@ $str = null;
 $objHeading = new htmlheading();
 $objHeading->type = 3;
 $objHeading->str = $questionsLabel.' ('.$count.'):
-	&nbsp;&nbsp;&nbsp;&nbsp;'.$existingQuestions->show()."<label style='padding-left: 2em; color:#000099;'>NB:This is still experimental</label>";//$addQ;
+	&nbsp;&nbsp;&nbsp;&nbsp;'.$existingQuestions->show()."<label style='padding-left: 2em; color:#000099;'>NB: This is still experimental</label>";//$addQ;
 $qHeading = $objHeading->show();
 $str.= $qHeading;
 

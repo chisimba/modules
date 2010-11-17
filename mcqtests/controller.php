@@ -524,7 +524,13 @@ class mcqtests extends controller {
                         //saving the step data
 
                         $id = $this->StepAddTest($fields);
-                        return $this->nextAction('view', array('id' => $id));
+                        if(stristr($fields['testType'], 'advanced')) {
+                            return $this->nextAction('view2', array('id' => $id));
+                        }
+                        else {
+                            die();
+                            return $this->nextAction('view', array('id' => $id));
+                        }
                         break;
                 }
 
@@ -556,7 +562,13 @@ class mcqtests extends controller {
                                     ), $back));
                     break;
                 }
-                return $this->nextAction('');
+                
+                if(trim($this->getParam('testtype')) == "advanced") {
+                    return $this->nextAction('home2');
+                }
+                else {
+                    return $this->nextAction('');
+                }
             // display template showing the test and questions
 
 
