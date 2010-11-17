@@ -32,6 +32,7 @@ class dbquestions extends dbtable {
         $this->table = 'tbl_test_questions';
         $this->dbAnswers = &$this->newObject('dbanswers');
         $this->objWashout = $this->getObject('washout', 'utilities');
+        //$this->objUser = $this->newObject('user', 'security');
     }
 
     /**
@@ -46,10 +47,13 @@ class dbquestions extends dbtable {
     public function addQuestion($fields, $id = NULL, $saveAsNew = Null) {
         $fields['updated'] = date('Y-m-d H:i:s');
         if ($saveAsNew == 1) {
+            //$fields['createdby'] = $this->objUser->fullname();
             $id = $this->insert($fields);
-        } elseif ($id && $saveAsNew != 1) {
+        } else if ($id && $saveAsNew != 1) {
+            //$fields['modifiedby'] = $this->objUser->fullname();
             $this->update('id', $id, $fields);
         } else {
+            //$fields['createdby'] = $this->objUser->fullname();
             $id = $this->insert($fields);
         }
         return $id;
