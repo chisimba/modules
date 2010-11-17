@@ -2322,7 +2322,6 @@ class mcqtests extends controller {
     }
 
     public function addNumericalUnits($questionid, $edit=null) {
-        echo $questionid;
         //insert unit data
         $unitData = array();
         $unitData['unit'] = $this->getParam('aUnit');
