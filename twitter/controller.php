@@ -306,7 +306,7 @@ class twitter extends controller
 
         $consumer = new Zend_Oauth_Consumer($config);
         $token = $consumer->getAccessToken($_GET, unserialize($_SESSION['TWITTER_REQUEST_TOKEN']));
-        $_SESSION['TWITTER_ACCESS_TOKEN'] = serialize($token);
+        $this->objSysConfig->changeParam('mod_twitter_token', 'twitter', serialize($token));
         unset($_SESSION['TWITTER_REQUEST_TOKEN']);
 
         header('Location: ' . $this->uri());
@@ -319,7 +319,17 @@ class twitter extends controller
      */
     private function __update()
     {
+        $config = array();
+        $config['consumerKey'] = $this->objSysConfig->getValue('mod_twitter_consumer_key', 'twitter');
+        $config['consumerSecret'] = $this->objSysConfig->getValue('mod_twitter_consumer_secret', 'twitter');
+        $config['siteUrl'] = 'http://twitter.com/oauth';
 
+        $token = unserialize($this->objSysConfig->getValue('mod_twitter_token', 'twitter'));
+        $client = $token->getHttpClient($config);
+        $client->setUri('http://twitter.com/statuses/update.json');
+        $client->setMethod(Zend_Http_Client::POST);
+        $client->setParameterPost('status', file_get_contents('php://input'));
+        $response = $client->request();
     }
 
     /**
