@@ -534,7 +534,7 @@ class essay extends controller
 						else {
 			                $multiLink = '<b>'.$essay['topic'].'</b>';
 	                        if (is_null($essaymark)) {
-		                        $messsage = $this->objLanguage->languageText('mod_essay_statussubmitted', 'essay');
+		                        $message = $this->objLanguage->languageText('mod_essay_statussubmitted', 'essay');
 	                        }
 	                        else {
 	                            //$objMark = $this->getObject('markimage', 'utilities');
@@ -574,7 +574,7 @@ class essay extends controller
                 }
                 $objTable->startRow();
                 $objTable->addCell($i, '', '', '', $class);
-                $objTable->addCell($multiLink . '&nbsp;'.$message,'','','',$class);
+                $objTable->addCell($multiLink.'&nbsp;'.$message,'','','',$class);
                 $objTable->addCell($notes,'','','',$class);
                 $objTable->addCell($mark,'','','center',$class);
                 $objTable->addCell($icons,'','','',$class);
