@@ -67,7 +67,30 @@ class dbtestadmin extends dbtable {
         } else {
             $sql.= " WHERE context='$context'";
         }
-        $sql.= ' ORDER BY closingdate DESC, name';
+        $sql.= " and testtype not like 'Expe%' ORDER BY closingdate DESC, name";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return $data;
+        }
+        return FALSE;
+    }
+
+    /**
+     * Method to get a test or list of tests for experimental question types.
+     *
+     * @access public
+     * @param string $fields A list of fields to be returned. Default=*.
+     * @param string $id The id of the required test. Default=NULL.
+     * @return array $data The details of the test or list of tests.
+     */
+    public function getTests2($context, $fields = '*', $id = NULL) {
+        $sql = "SELECT $fields FROM " . $this->table;
+        if ($id) {
+            $sql.= " WHERE id='$id'";
+        } else {
+            $sql.= " WHERE context='$context'";
+        }
+        $sql.= " and testtype like 'Expe%' ORDER BY closingdate DESC, name";
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;

@@ -1080,7 +1080,7 @@ class mcqtests extends controller {
      * @return
      */
     private function home2($testId = NULL) {
-        $data = $this->dbTestadmin->getTests2($this->contextCode);echo "hellow rold";
+        $data = $this->dbTestadmin->getTests2($this->contextCode);
         if (!empty($data)) {
             foreach ($data as $key => $line) {
                 $sql = "SELECT title FROM tbl_context_nodes WHERE ";

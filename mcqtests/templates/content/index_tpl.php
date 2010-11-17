@@ -121,10 +121,10 @@ if (!empty($data)) {
     $objTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
     $objTable->endRow();
 }
-$experimental = new link($this->uri(array('action'=>'home2')));
-$experimental->link = $this->objLanguage->languageText('mod_mcqtest_experimental', 'mcqtests');
-$experimental->extra  =  "style='color:yellow;'";
-echo "<h2>".$experimental->show()."</h2>";
+$advanced = new link($this->uri(array('action'=>'home2')));
+$advanced->link = $this->objLanguage->languageText('mod_mcqtest_advanced', 'mcqtests');
+$advanced->extra  =  "style='color:yellow;'";
+echo "<h2>".$advanced->show()."</h2>";
 echo $objTable->show();
 if ($this->isValid('add'))
 {

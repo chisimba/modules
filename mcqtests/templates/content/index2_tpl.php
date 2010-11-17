@@ -121,7 +121,7 @@ if (!empty($data)) {
     $objTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
     $objTable->endRow();
 }
-echo "<h2 style='color:yellow;'>".$this->objLanguage->languageText('mod_mcqtest_experimental', 'mcqtests')."</h2>";
+echo "<h2 style='color:yellow;'>".$this->objLanguage->languageText('mod_mcqtest_advanced', 'mcqtests')."</h2>";
 echo $objTable->show();
 if ($this->isValid('add'))
 {
