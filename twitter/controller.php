@@ -102,6 +102,8 @@ class twitter extends controller
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
+        // Load Zend Framework
+        $this->getObject('zend', 'zend');
     }
 
 
@@ -176,7 +178,7 @@ class twitter extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
-    
+
 
     /**
     *
