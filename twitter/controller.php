@@ -93,6 +93,14 @@ class twitter extends controller
     private $objSysConfig;
 
     /**
+     * Instance of the altconfig class of the config module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objAltConfig;
+
+    /**
     *
     * Intialiser for the twitter controller
     * @access public
@@ -114,6 +122,8 @@ class twitter extends controller
         $this->getObject('zend', 'zend');
         // Module configuration
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        // System configuration
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
     }
 
 
