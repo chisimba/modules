@@ -316,20 +316,7 @@ class bookthesis extends dbTable {
         $table->addCell($bookbLabel->show(), '', 'center', 'left','');
         $table->endRow();
          
-      /* $table->startRow();
-        $objLlocal = new textinput('label_local');
-        $Labellocal=  new label($this->objLanguage->languageText("mod_libraryforms_commentlocalonly","libraryforms"),"label_local");
-	$table->addCell($Labellocal->show(), '', 'center', 'left', '');
-        $table->addCell($objLlocal->show(), '', 'center', 'left', '');
-
-
-  	$objgraduates = new textinput('label_graduates');
-        $Labelgraduates=  new label($this->objLanguage->languageText("mod_libraryforms_commentpg","libraryforms"),"label_graduate");
-	$table->addCell($Labelgraduates->show(), '', 'center', 'left', '');
-        $table->addCell($objgraduates->show(), '', 'center', 'left', '');
-	$table->endRow();*/
-
-//Input and label for Department/Scool/Division
+    //Input and label for Department/Scool/Division
 	$table->startRow();
 	$objlocal = new dropdown ('local');
 	$localLabel = new label("Select your distance");
@@ -337,15 +324,12 @@ class bookthesis extends dbTable {
 foreach ($locals as $local)
 {
     $objlocal->addOption($local,$local);
-   // if($mode == 'local'){
+ 
         $objlocal->setSelected($this->getParam('local'));
-   // }
-   
+ 
 }
 	$table->addCell($localLabel ->show(), 150, NULL, 'left');
 	$table->addCell($objlocal ->show(), 150, NULL, 'left');
-//$table->endRow();
-// end of drop down
 
 //Input and label for Department/Scool/Division
 	$objpostgrad = new dropdown ('postgrad');

@@ -203,7 +203,7 @@ class libraryforms extends controller {
  	$copy . '  ' .  "\n" .' TItle:' .$titlepages . '  ' .  "\n" .' Pages: '. $pages . '  ' .  "\n" .' Type of Thesis: ' . $thesis . '  ' .  "\n" .' Name: ' . 
 	$name . '  ' .  "\n" .' Address: ' . $address . '   ' . "\n" . ' Cell: ' . $cell . '   ' . ' Fax: '. $fax . '   ' .  "\n" .' Tel(H): ' . 
 	$tel . '  ' .  "\n" .' Tel (W): ' . $telw . '  ' .  "\n" . ' E-mail: ' . $emailaddress . '  ' .  "\n" .' Entity num: '.
-	$entitynum . '   ' .  "\n" .' Student no: ' . $studentno . '  ' .   "\n" .' Course: ' .$course . "\n". ' Student Identification: ' . $local . "\n" .' Student Level:  ' . $postgrad);
+	$entitynum . '   ' .  "\n" .' Student no: ' . $studentno . '  ' .   "\n" .' Course: ' .$course . "\n". ' User Identification: ' . $local . "\n" .' User Level:  ' . $postgrad);
     }
 
 // end of bookthesisrecord
@@ -292,7 +292,7 @@ class libraryforms extends controller {
         
         $objMail = $this->getObject('email', 'mail');
         //send to multiple addressed   
-        $list = array("pmalinga@uwc.ac.za", "library@uwc.ac.za");
+        $list = array("pmalinga@uwc.ac.za", "arieluwc.uwc.ac.za", "library@uwc.ac.za");
         $objMail->to = ($list);
         // specify whom the email is coming from
         $objMail->from = "no-reply@uwc.ac.za";
