@@ -293,6 +293,26 @@ class twitter extends controller
     }
 
     /**
+     * Action completing the OAuth authentication process with Twitter.
+     *
+     * @access private
+     */
+    private function __token()
+    {
+        $config = array();
+        $config['consumerKey'] = $this->objSysConfig->getValue('mod_twitter_consumer_key', 'twitter');
+        $config['consumerSecret'] = $this->objSysConfig->getValue('mod_twitter_consumer_secret', 'twitter');
+        $config['siteUrl'] = 'http://twitter.com/oauth';
+
+        $consumer = new Zend_Oauth_Consumer($config);
+        $token = $consumer->getAccessToken($_GET, unserialize($_SESSION['TWITTER_REQUEST_TOKEN']));
+        $_SESSION['TWITTER_ACCESS_TOKEN'] = serialize($token);
+        unset($_SESSION['TWITTER_REQUEST_TOKEN']);
+
+        header('Location: ' . $this->uri());
+    }
+
+    /**
     *
     * Method to return an error when the action is not a valid
     * action method
