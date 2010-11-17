@@ -1284,7 +1284,7 @@ class mcqtests extends controller {
      * @return
      */
     private function viewTest2() {
-        $data = $this->dbTestadmin->getTests($this->contextCode, '*', $this->getParam('id'));
+        $data = $this->dbTestadmin->getTests2($this->contextCode, '*', $this->getParam('id'));
         if (!empty($data)) {
             foreach ($data as $key => $line) {
                 $sql = "SELECT title FROM tbl_context_nodes WHERE ";
