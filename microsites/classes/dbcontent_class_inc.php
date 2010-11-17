@@ -75,18 +75,61 @@ class dbcontent extends dbTable{
         parent::init('tbl_microsites_content');
     }
     
+    /**
+    * Method for adding a new page
+    * @param array $params   
+    * @return pageid
+    */
     public function add($params){
-    
+        $fields = array();
+        $fields['site_id'] = $params['site_id'];
+        $fields['content_title'] = $params['content_title'];
+        $fields['content'] = $params['content'];
+        $fields['hits'] = 0;
+
+        return $this->insert($fields);        
     
     }
     
+    /**
+    * Method for updating the page content
+    * @param string $pageId 
+    * @param string $content
+    * @return timestamp
+    */
+    public function savePage($pageId, $content){
+        return $this->update('id', $pageId, array(
+                            'content' => $content,
+                            'modified' =>  date('Y-m-d H:i:s')
+                            ));
+    }
     
+    /**
+    * Method for getting the page content
+    * @param string $pageId     
+    * @return array
+    */
+    public function getPage($pageId){
+        return $this->getRow('id', $pageId);
+    }
+    
+    
+    /**
+    * Method for removing the page content
+    * @param string $pageId     
+    * @return boolean
+    */
     public function delete($id){
     
     }
     
-    public function getSiteInfo($id){
-    
+    /**
+    * Method for getting all the pages for a site
+    * @param string $siteId   
+    * @return array
+    */
+    public function getSiteContent($siteId){      
+        return $this->getAll("WHERE site_id='$siteId'");
     }
 	
 }

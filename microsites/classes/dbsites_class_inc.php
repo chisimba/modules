@@ -80,13 +80,17 @@ class dbsites extends dbTable{
         //we need get the userid of the client
         //and not the logged in user
         $objUser = $this->getObject('user', 'security');
-        var_dump ($objUser->userId());
+        
         $fields = array('site_name' => $params['sitename'],
                         'userid' => $objUser->userId(),
                         'url' => $params['url']);
                         
-        
-        return  $this->insert($fields);
+        if($params['sitename'] != "" && $params['url'] != "")
+        {
+            return  $this->insert($fields);
+        }else{
+            return false;
+        }
     
     }
     
@@ -97,6 +101,10 @@ class dbsites extends dbTable{
     
     public function getSiteInfo($id){
     
+    }
+    
+    public function getSites(){
+        return $this->getAll("WHERE 1");
     }
 	
 }

@@ -77,6 +77,7 @@ class microsites extends controller
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objOps = $this->getObject('ops');
         $this->objDBSites = $this->getObject('dbsites');
+        $this->objDBContent = $this->getObject('dbcontent');
     }
     
     /**
@@ -101,17 +102,24 @@ class microsites extends controller
     }
     
     
-    public function __json_getPageContent(){
+    public function __json_getpagecontent(){
         echo json_encode(array('content' => $this->objOps->getPage($this->getParam('pageid'))));
     }
+    public function __getpagecontent(){
+        $page = $this->objDBContent->getPage($this->getParam('pageid'));
+        echo $page['content'];
+         exit(0);
+    }
     
-    public function __savePageContent(){
-        
+    public function __savepagecontent(){
+        echo $this->objDBContent->savePage($this->getParam("pageid"), $this->getParam("content"));
+        exit(0);
     
     }
     
     public function __json_authenticate(){
-    
+        echo "1";
+        exit(0);
     }
     
     public function __updatePageContent(){
@@ -125,7 +133,37 @@ class microsites extends controller
                                               ));
     }
     
+    public function __showAddSite(){
+        return "addsite_tpl.php";
+    }
+    
+    public function __showAddContent(){
+        //get the list of pages      
+        $this->setVar("pagesArr", $this->objDBContent->getSiteContent($this->getParam('siteid')));
+        return "addcontent_tpl.php";
+    }
+    
+    public function __saveaddpage(){
+        $params = array();
+        $params['site_id']  = $this->getParam("siteid");
+        $params['content_title']  = $this->getParam("content_title");
+        $params['content']  = $this->getParam("content");
+        
+        $this->objDBContent->add($params);
+        return __home();
+    }
+    
+    public function __json_getsitecontent()
+    {
+        $siteId = $this->getParam('siteid');
+        echo json_encode(array('content' => $this->objDBContent->getSiteContent($siteId)));
+        exit(0);
+    
+    }
+    
     public function __home(){
+    
+        $this->setVar('sitesArr', $this->objDBSites->getSites());
         return 'main_tpl.php';
     }
     
@@ -208,7 +246,8 @@ class microsites extends controller
         if ($this->__validAction($action)) {
             return "__" . $action;
         } else {
-            return "__actionError";
+//            return "__actionError";
+            return "__home";
         }
     }
 
