@@ -281,7 +281,7 @@ class twitter extends controller
     private function __authenticate()
     {
         $config = array();
-        $config['callbackUrl'] = 'http://chisimba.com/callback.php';
+        $config['callbackUrl'] = $this->uri(array('action'=>'token'), 'twitter', '', FALSE, TRUE, TRUE);
         $config['consumerKey'] = $this->objSysConfig->getValue('mod_twitter_consumer_key', 'twitter');
         $config['consumerSecret'] = $this->objSysConfig->getValue('mod_twitter_consumer_secret', 'twitter');
         $config['siteUrl'] = 'http://twitter.com/oauth';
