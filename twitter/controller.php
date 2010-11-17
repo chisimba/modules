@@ -313,6 +313,16 @@ class twitter extends controller
     }
 
     /**
+     * Action updating the authenticated users's status on Twitter.
+     *
+     * @access private
+     */
+    private function __update()
+    {
+
+    }
+
+    /**
     *
     * Method to return an error when the action is not a valid
     * action method
@@ -389,7 +399,7 @@ class twitter extends controller
         $action=$this->getParam('action','NULL');
         switch ($action)
         {
-            case 'view':
+            case 'view': case 'update':
                 return FALSE;
                 break;
             default:
