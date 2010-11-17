@@ -108,14 +108,14 @@ class survey extends controller {
         // Now the main switch statement to pass values for $action
         switch ($action) {
             case 'addsurvey' :
-                // calls the add_edit template to add a survey record
+            // calls the add_edit template to add a survey record
                 $this->setVar('mode', 'add');
                 $this->setVar('error', FALSE);
                 return 'add_edit_tpl.php';
                 break;
 
             case 'editsurvey' :
-                // calls the add_edit template to add a survey record
+            // calls the add_edit template to add a survey record
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator') {
@@ -129,7 +129,7 @@ class survey extends controller {
                 break;
 
             case 'viewsurvey' :
-                // calls the view_survey template to view a survey record
+            // calls the view_survey template to view a survey record
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'None' || $userGroup == 'Respondents') {
@@ -141,7 +141,7 @@ class survey extends controller {
                 break;
 
             case 'deletesurvey' :
-                // deletes a survey
+            // deletes a survey
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator' || $this->isAdmin) {
@@ -154,9 +154,9 @@ class survey extends controller {
                 break;
 
             case 'validatesurvey' :
-                // validates the survey data
-                // calls the edit survey template if errors are found or
-                // calls the savesurvey action
+            // validates the survey data
+            // calls the edit survey template if errors are found or
+            // calls the savesurvey action
                 $arrSurveyData = $this->moveSurveyData();
                 $valid = $this->validate->checkSurveyData();
                 if ($valid) {
@@ -169,10 +169,10 @@ class survey extends controller {
                 break;
 
             case 'savesurvey' :
-                // saves the survey data
-                // calls the add groups template or
-                // calls the add question template if no questions exist or
-                // calls the question list template if questions exist
+            // saves the survey data
+            // calls the add groups template or
+            // calls the add question template if no questions exist or
+            // calls the question list template if questions exist
                 $arrSurveyData = $this->getSession('survey');
                 $mode = $arrSurveyData ['mode'];
                 $surveyId = $arrSurveyData ['survey_id'];
@@ -254,8 +254,10 @@ class survey extends controller {
                 break;
 
             case 'deletegroupusers' :
+
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
+
                 if ($userGroup == 'Creator') {
                     $arrUserIdList = $this->getParam('userId');
                     $group = $this->getParam('group');
@@ -267,7 +269,7 @@ class survey extends controller {
                 break;
 
             case 'listsurveys' :
-                // calls the default template to list all surveys
+            // calls the default template to list all surveys
                 $array = array('survey', 'question', 'row', 'column', 'error', 'deletedRows', 'deletedColumns', 'answer', 'page', 'deletedPages');
                 $this->session->deleteSessionData($array);
                 $arrSurveyList = $this->dbSurvey->listSurveys();
@@ -276,8 +278,8 @@ class survey extends controller {
                 break;
 
             case 'mailpopup' :
-                // send email to all members of the groups and calls the mail confirm template
-                // set up user list for all groups taking the survey
+            // send email to all members of the groups and calls the mail confirm template
+            // set up user list for all groups taking the survey
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator') {
@@ -291,6 +293,7 @@ class survey extends controller {
                 break;
 
             case 'sendemail' :
+
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator') {
@@ -300,7 +303,7 @@ class survey extends controller {
                     if ($mode == 'Respondents') {
                         $body .= "\n" . $this->getParam('link');
                         $body .= "\n" . $this->uri(array('action' => 'takesurvey', 'survey_id' => $surveyId));
-                        $groupId = $this->objGroupAdmin->getLeafId(array('Surveys', $surveyId, 'Respondents'));
+                        $groupId = $this->objGroupAdmin->getLeafId(array($surveyId, 'Respondents'));
                         $arrRespondentList = $this->objGroupAdmin->getGroupUsers($groupId, array('emailaddress'));
                         $addressList = array();
                         foreach ($arrRespondentList as $respondent) {
@@ -317,7 +320,7 @@ class survey extends controller {
                     } elseif ($mode == 'Observers') {
                         $body .= "\n" . $this->getParam('link');
                         $body .= "\n" . $this->uri(array(''));
-                        $groupId = $this->objGroupAdmin->getLeafId(array('Surveys', $surveyId, 'Observers'));
+                        $groupId = $this->objGroupAdmin->getLeafId(array($surveyId, 'Observers'));
                         $arrObserverList = $this->objGroupAdmin->getGroupUsers($groupId, array('emailaddress'));
                         $addressList = array();
                         foreach ($arrObserverList as $observer) {
@@ -327,13 +330,13 @@ class survey extends controller {
                         $this->objMailer->setValue('to', $addressList);
                         $this->objMailer->setValue('subject', $subject);
                         $this->objMailer->setValue('body', $body);
-                        $this->objMailer->send();
 
+                        $this->objMailer->send();
                         return $this->nextAction('surveygroups', array('survey_id' => $surveyId));
                     } else {
                         $body .= "\n" . $this->getParam('link');
                         $body .= "\n" . $this->uri('');
-                        $groupId = $this->objGroupAdmin->getLeafId(array('Surveys', $surveyId, 'Collaborators'));
+                        $groupId = $this->objGroupAdmin->getLeafId(array($surveyId, 'Collaborators'));
                         $arrCollaboratorList = $this->objGroupAdmin->getGroupUsers($groupId, array('emailaddress'));
                         $addressList = array();
                         foreach ($arrCollaboratorList as $collaborator) {
@@ -369,7 +372,7 @@ class survey extends controller {
                 break;
 
             case 'addquestion' :
-                // calls the add question template
+            // calls the add question template
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator' || $userGroup == 'Collaborators') {
@@ -385,7 +388,7 @@ class survey extends controller {
                 break;
 
             case 'editquestion' :
-                // calls the add question template
+            // calls the add question template
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator' || $userGroup == 'Collaborators') {
@@ -402,9 +405,9 @@ class survey extends controller {
                 break;
 
             case 'deletequestion' :
-                // deletes the question
-                // calls the question list template or
-                // calls the add question template if there are no questions
+            // deletes the question
+            // calls the question list template or
+            // calls the add question template if there are no questions
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator' || $userGroup == 'Collaborators') {
@@ -441,9 +444,9 @@ class survey extends controller {
                 break;
 
             case 'validatequestion' :
-                // moves the question data in to the session variable
-                // calls the add question template if errors are found or
-                // calls the  savequestion action
+            // moves the question data in to the session variable
+            // calls the add question template if errors are found or
+            // calls the  savequestion action
                 $surveyId = $this->getParam('survey_id');
                 $update = $this->getParam('update');
                 $mode = $this->getParam('mode');
@@ -510,7 +513,7 @@ class survey extends controller {
                 break;
 
             case 'listquestions' :
-                // calls the question list template to list questions for this survey
+            // calls the question list template to list questions for this survey
                 $array = array('survey', 'question', 'row', 'column', 'deletedRows', 'deletedColumns', 'error', 'answer', 'page', 'deletedPages');
                 $this->session->deleteSessionData($array);
                 $surveyId = $this->getParam('survey_id');
@@ -524,8 +527,8 @@ class survey extends controller {
                 break;
 
             case 'copyquestion' :
-                // copies a question on the database
-                // call the edit question template
+            // copies a question on the database
+            // call the edit question template
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator' || $userGroup == 'Collaborators') {
@@ -566,8 +569,8 @@ class survey extends controller {
                 break;
 
             case 'movequestion' :
-                // moves the question up or down in the question order
-                // calls the question list template
+            // moves the question up or down in the question order
+            // calls the question list template
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator' || $userGroup == 'Collaborators') {
@@ -589,7 +592,6 @@ class survey extends controller {
                     }
 
                     $arrSecondQuestionData = $this->dbQuestion->getQuestionByQuestionOrder($surveyId, $questionOrder);
-                    //var_dump($arrSecondQuestionData);
                     $arrSecondQuestionData = $arrSecondQuestionData ['0'];
                     $secondQuestionId = $arrSecondQuestionData ['id'];
                     $secondQuestionOrder = $arrSecondQuestionData ['question_order'];
@@ -603,7 +605,7 @@ class survey extends controller {
                 break;
 
             case 'previewsurvey' :
-                // calls the survey survey template top preview the survey
+            // calls the survey survey template top preview the survey
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup != 'None' && $userGroup != 'Respondents') {
@@ -619,9 +621,9 @@ class survey extends controller {
                 break;
 
             case 'takesurvey' :
-                // checks id the survey has pages
-                // calls the survey template to take the survey if no pages or
-                // calls the page survey template to take the survey
+            // checks id the survey has pages
+            // calls the survey template to take the survey if no pages or
+            // calls the page survey template to take the survey
                 $surveyId = $this->getParam('survey_id');
                 $dbsurveyData = $this->dbSurvey->getSurvey($surveyId);
                 $surveyData = $dbsurveyData[0];
@@ -667,10 +669,10 @@ class survey extends controller {
                 break;
 
             case 'validateresponse' :
-                //Checks weather the survey is active and informs the respondents accordingly
-                // moves the response data in to the session variable
-                // calls the survey template if errors are found or
-                // calls the  saveresponse action
+            //Checks weather the survey is active and informs the respondents accordingly
+            // moves the response data in to the session variable
+            // calls the survey template if errors are found or
+            // calls the  saveresponse action
                 $surveyId = $this->getParam('survey_id');
 
                 $surveyData = $this->dbSurvey->listSurveys($surveyId);
@@ -749,7 +751,7 @@ class survey extends controller {
                 break;
 
             case 'confirm' :
-                // calls the confirm template
+            // calls the confirm template
                 $mode = $this->getParam('mode');
                 $surveyId = $this->getParam('survey_id');
                 if ($mode == 'respond') {
@@ -764,7 +766,7 @@ class survey extends controller {
                 break;
 
             case 'viewresults' :
-                // calls the results template to view results
+            // calls the results template to view results
                 $surveyId = $this->getParam('survey_id');
                 $canViewResults = $this->canViewResults($surveyId);
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
@@ -777,7 +779,7 @@ class survey extends controller {
                 break;
 
             case 'viewresponses' :
-                // calls the response template to view responses
+            // calls the response template to view responses
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup != 'None' && $userGroup != 'Respondents') {
@@ -791,7 +793,7 @@ class survey extends controller {
                 break;
 
             case 'viewcomments' :
-                // calls the comments template to view comments on questions
+            // calls the comments template to view comments on questions
                 $surveyId = $this->getParam('survey_id');
                 $canViewResults = $this->canViewResults($surveyId);
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
@@ -805,7 +807,7 @@ class survey extends controller {
                 break;
 
             case 'viewopen' :
-                // calls the open template to view open ended results
+            // calls the open template to view open ended results
                 $surveyId = $this->getParam('survey_id');
                 $canViewResults = $this->canViewResults($surveyId);
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
@@ -819,7 +821,7 @@ class survey extends controller {
                 break;
 
             case 'managepages' :
-                // calls the pages template to manage survey pages
+            // calls the pages template to manage survey pages
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator' || $userGroup == 'Collaborators') {
@@ -834,9 +836,9 @@ class survey extends controller {
                 break;
 
             case 'validatepages' :
-                // moves the page data in to the session variable
-                // calls the pages template if errors are found or
-                // calls the  savepages action
+            // moves the page data in to the session variable
+            // calls the pages template if errors are found or
+            // calls the  savepages action
                 $surveyId = $this->getParam('survey_id');
                 $update = $this->getParam('update');
                 $arrPageIdData = $this->getParam('arrPageId', array('', '', ''));
@@ -871,8 +873,8 @@ class survey extends controller {
                 break;
 
             case 'assignquestions' :
-                // assigns questions to pages
-                // calls the questions list template
+            // assigns questions to pages
+            // calls the questions list template
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator' || $userGroup == 'Collaborators') {
@@ -908,8 +910,8 @@ class survey extends controller {
                 break;
 
             case 'movepagequestion' :
-                // moves the question up or down in the question order
-                // calls the question list template
+            // moves the question up or down in the question order
+            // calls the question list template
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
                 if ($userGroup == 'Creator' || $userGroup == 'Collaborators') {
@@ -972,7 +974,7 @@ class survey extends controller {
                 break;
 
             default :
-                // calls the default template to list all surveys
+            // calls the default template to list all surveys
                 return $this->nextAction('listsurveys');
                 break;
         }
@@ -1139,9 +1141,9 @@ class survey extends controller {
                 $surveyId = $this->getParam('survey_id');
                 $arrSurveyData = $this->dbSurvey->getSurvey($surveyId);
                 $arrSurveyData = $arrSurveyData['0'];
-               if($arrSurveyData['login'] == '1'){
-                   return TRUE;
-               }
+                if($arrSurveyData['login'] == '1') {
+                    return TRUE;
+                }
                 return FALSE;
                 break;
             case 'validateresponse' :
@@ -1156,12 +1158,10 @@ class survey extends controller {
             case 'confirm' :
                 return FALSE;
                 break;
-
             default:
                 return TRUE;
         }
     }
-
 }
 
 ?>

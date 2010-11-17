@@ -80,6 +80,7 @@ if (!$error) {
         $arrSurveyData['recorded_responses'] = '0';
         $arrSurveyData['single_responses'] = '0';
         $arrSurveyData['view_results'] = '0';
+        $arrSurveyData['login'] = '0';
         $arrSurveyData['intro_label'] = $introduction;
         $arrSurveyData['intro_text'] = $introductionNote;
         $arrSurveyData['thanks_label'] = $thankyou;
@@ -93,7 +94,7 @@ if (!$error) {
     $arrErrorMsg = $this->getSession('error');
     $arrSurveyData = $this->getSession('survey');
 }
-
+//error_log(var_export($arrSurveyData, true))
 // set up data variables
 $surveyId = $arrSurveyData['survey_id'];
 $surveyName = stripslashes($arrSurveyData['survey_name']);
