@@ -60,11 +60,21 @@ if (!empty($data)) {
             $end = '';
         }
         $objConfirm = new confirm();
-        $objConfirm->setConfirm($reopenLabel, $this->uri(array(
-            'action' => 'reopen',
-            'id' => $test['id'],
-            'studentId' => $line['studentid']
-        )) , 'reopen?');
+        if($this->getParam('action') == 'liststudents2') {
+            $objConfirm->setConfirm($reopenLabel, $this->uri(array(
+                'action' => 'reopen',
+                'id' => $test['id'],
+                'studentId' => $line['studentid'],
+                'testtype' => 'advanced'
+            )) , 'reopen?');
+        }
+        else {
+            $objConfirm->setConfirm($reopenLabel, $this->uri(array(
+                'action' => 'reopen',
+                'id' => $test['id'],
+                'studentId' => $line['studentid']
+            )) , 'reopen?');
+        }
         $openLink = $objConfirm->show();
         //         $objLink = new link($this->uri(array('action'=>'reopen', 'id'=>$test['id'],
         //             'studentId'=>$line['studentId'])));

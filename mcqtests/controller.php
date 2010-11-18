@@ -794,9 +794,16 @@ class mcqtests extends controller {
                 $studentId = $this->getParam('studentId');
                 $this->dbMarked->deleteMarked($studentId, $testId);
                 $this->dbResults->deleteResult($testId, $studentId);
-                return $this->nextAction('liststudents', array(
-                    'id' => $testId
-                ));
+                if($this->getParam('testtype') == 'advanced') {
+                    return $this->nextAction('liststudents2', array(
+                        'id' => $testId
+                    ));
+                }
+                else {
+                    return $this->nextAction('liststudents', array(
+                        'id' => $testId
+                    ));
+                }
             case 'export':
                 $testId = $this->getParam('testId');
                 $this->setVarByRef('testId', $testId);
