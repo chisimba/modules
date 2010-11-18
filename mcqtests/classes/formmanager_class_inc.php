@@ -1945,6 +1945,9 @@ class formmanager extends object {
         $phraseToleranceType = $this->objLanguage->languageText('mod_mcqtest_tolerancetype', 'mcqtests', "Tolerance type");
         $phraseCorrectAnswerShows = $this->objLanguage->languageText('mod_mcqtest_correctAnswerShows', 'mcqtests', "Correct answer shows");
         $wordFormat = $this->objLanguage->languageText('mod_mcqtests_formatlabel', 'mcqtests', "Format");
+        $wordUnit = $this->objLanguage->languageText('mod_mcqtests_wordunit', 'mcqtests', "Unit");
+        $wordMultiplier = $this->objLanguage->languageText('mod_mcqtest_wordmultiplier', 'mcqtests', "Multiplier");
+
 
         $listTitle = $phraseListOf . " " . $phraseRSAQuestions;
         //Form Object
@@ -2145,10 +2148,10 @@ class formmanager extends object {
             $ans = $this->createAnswerFields($count, $ansValues = Null);
             $count++;
             //Add form validations
-            $form->addRule('ansformula' . $count, $phraseCorrectAnsFormula . " " . $phraseIsRequired, 'required');
-            $form->addRule('grade' . $count, $phraseWordGrade . " " . $phraseIsRequired, 'required');
-            $form->addRule('tolerance' . $count, $phraseTolerance . " " . $phraseIsRequired, 'required');
-            $form->addRule('feedback' . $count, $phraseTolerance . " " . $phraseIsRequired, 'required');
+            $form->addRule('ansformula' . $count, $phraseCorrectAnsFormula . " " . $count . " " . $phraseIsRequired, 'required');
+            $form->addRule('grade' . $count, $phraseWordGrade . " " . $count . " " . $phraseIsRequired, 'required');
+            $form->addRule('tolerance' . $count, $phraseTolerance . " " . $count . " " . $phraseIsRequired, 'required');
+            $form->addRule('feedback' . $count, $phraseTolerance . " " . $count . " " . $phraseIsRequired, 'required');
             //Add Answer Fieldset to form
             $form->addToForm($ans);
         } while ($count <= $anscount);
@@ -2186,11 +2189,35 @@ class formmanager extends object {
         $form->addToForm($objTable->show());
 
         //Load unit-handling
-        $unitHandling = $this->createUnitHandlingFields($unitValues=Null);
+        $unitHandling = $this->createUnitHandlingFields($unitValues = Null);
 
         //Add unit-handling to form
         $form->addToForm($unitHandling);
+
+        //Load default unit-Multiplier
+        $unitMultiplier = $this->createUnitMultiplierFields(1, $unitValues = Null, $multiplier = 1);
+
+        //Add unit-Multiplier to form
+        $form->addToForm($unitMultiplier);
+
+        //Load other unit-Multiplier
+        $ucount = 2;
+        $unitcount = $fields['unitcount'];
+        if($unitcount>1)
+            $unitcount++;        
         
+        do {
+            echo $ucount;
+            $unitMultiplier = $this->createUnitMultiplierFields($ucount, $unitValues = Null, Null);
+            //Add form validations
+            $form->addRule('unit' . $ucount, $wordUnit . " " . $ucount . " " . $phraseIsRequired, 'required');
+            $form->addRule('multiplier' . $ucount, $wordMultiplier . " " . $ucount . " " . $phraseIsRequired, 'required');
+            //Add Answer Fieldset to form
+            $form->addToForm($unitMultiplier);
+            $ucount++;
+        } while ($ucount <= $unitcount);
+
+
         //Create table to store unit-handling
         $objTable = new htmltable();
         $objTable->width = '800px';
@@ -2385,7 +2412,7 @@ class formmanager extends object {
         $phrasePenaltyQuestionGrade = $this->objLanguage->languageText('mod_mcqtests_penaltyquestiongrade', 'mcqtests', "as a decimal fraction (0-1) of QUESTION grade");
         $wordOr = $this->objLanguage->languageText('mod_mcqtests_wordor', 'mcqtests', 'or');
         $phraseDisplayUnit = $this->objLanguage->languageText('mod_mcqtests_displayunit', 'mcqtests', 'Display Unit');
-        
+
         //Create table to hold the answer
         $objTable = new htmltable();
         $objTable->width = '800px';
@@ -2393,7 +2420,7 @@ class formmanager extends object {
         $objTable->cellspacing = '12';
         //unit-graded radio button
         $unitgraded = new radio("ansformula");
-        $unitgraded->addOption(1,$phraseNumericalUnit);
+        $unitgraded->addOption(1, $phraseNumericalUnit);
         if (!empty($unitValues)) {
             $unitgraded->setSelected($unitValues["unitgraded"]);
         }
@@ -2422,13 +2449,13 @@ class formmanager extends object {
         //Add penalty-bad-unit to the table
         $objTable->startRow();
         $objTable->addCell($phrasePenalty, '20%');
-        $objTable->addCell($penaltybadunit->show()." ".$questionresponseddown->show(), '80%');
+        $objTable->addCell($penaltybadunit->show() . " " . $questionresponseddown->show(), '80%');
         $objTable->endRow();
 
         //unit-answer-display radio button
         $unitansdisplay = new radio("unitansdisplay");
-        $unitansdisplay->addOption(1,$phraseTextInputElement." ".strtoupper($wordOr));
-        $unitansdisplay->addOption(2,$wordMultichoice." (".$phraseRadioElements.")");
+        $unitansdisplay->addOption(1, $phraseTextInputElement . " " . strtoupper($wordOr));
+        $unitansdisplay->addOption(2, $wordMultichoice . " (" . $phraseRadioElements . ")");
         if (!empty($unitValues)) {
             $unitansdisplay->setSelected($unitValues["unitansdisplay"]);
         }
@@ -2494,7 +2521,90 @@ class formmanager extends object {
         $theFieldset = $objFieldset->show();
 
         $objFieldset->reset();
-        
+
+        return $theFieldset;
+    }
+
+    /**
+     * Method to create a fieldset for capturing unit multiplier fields
+     *
+     * @access public
+     * @param  $ansno string Unique identifier for the answer as there are several per question
+     * @param  $ansValues array The values for the fields for the case of an edit
+     * @return object
+     * @author Paul Mungai
+     */
+    public function createUnitMultiplierFields($unitno=1, $unitValues=Null, $multiplier=Null) {
+        $this->loadClass("textinput", "htmlelements");
+        $this->loadClass("dropdown", "htmlelements");
+        $this->loadClass("hiddeninput", "htmlelements");
+
+        //Get the language text
+        $wordUnit = $this->objLanguage->languageText('mod_mcqtests_wordunit', 'mcqtests', "Unit");
+        $wordMultiplier = $this->objLanguage->languageText('mod_mcqtest_wordmultiplier', 'mcqtests', "Multiplier");
+        $phraseMultiplier1 = $this->objLanguage->languageText('mod_mcqtests_multiplierPhrase1', 'mcqtests', "The multiplier is the factor by which the correct numerical response will be multiplied.");
+        $phraseMultiplier2 = $this->objLanguage->languageText('mod_mcqtests_multiplierPhrase2', 'mcqtests', "first unit (Unit 1) has a default multiplier of 1. Thus if the correct numerical response is 5500 and you set W as unit at Unit 1 which has 1 as default multiplier, the correct response is 5500 W.");
+        $phraseMultiplier3 = $this->objLanguage->languageText('mod_mcqtests_multiplierPhrase3', 'mcqtests', "If you add the unit kW with a multiplier of 0.001, this will add a correct response of 5.5 kW. This means that the answers 5500W or 5.5kW would be marked correct.");
+        $phraseMultiplier4 = $this->objLanguage->languageText('mod_mcqtests_multiplierPhrase4', 'mcqtests', "Note that the accepted error is also multiplied, so an allowed error of 100W would become an error of 0.1kW.");
+        $phraseIsRequired = $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests', "is required");
+
+        $phraseCombined = $phraseMultiplier1 . " <br />" . $phraseMultiplier2 . " <br />" . $phraseMultiplier3 . " <br />" . $phraseMultiplier4 . " <br />";
+
+        //Create table to hold the unit
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+
+        //unit text box
+        if (!empty($unitValues)) {
+            $unitfield = new textinput("unit" . $unitno, $unitValues["unit"]);
+        } else {
+            $unitfield = new textinput("unit" . $unitno, "");
+        }
+        $unitfield->size = 7;
+        //Add Unit to the table
+        $objTable->startRow();
+        $objTable->addCell($wordUnit, '20%');
+        $objTable->addCell($unitfield->show(), '80%');
+        $objTable->endRow();
+
+        //Dont display textfield if $multiplier is not empty
+        if (!empty($multiplier)) {
+            $multiplierfield = new hiddeninput("multiplier" . $unitno, $multiplier);
+            $multiplierfield->size = 7;
+            //Add Multiplier to the table
+            $objTable->startRow();
+            $objTable->addCell($wordMultiplier, '20%');
+            $objTable->addCell($multiplier . " " . $multiplierfield->show(), '80%');
+            $objTable->endRow();
+        } else {
+            //multiplier text box
+            if (!empty($unitValues)) {
+                $multiplierfield = new textinput("multiplier" . $unitno, $unitValues["multiplier"]);
+            } else {
+                $multiplierfield = new textinput("unit" . $unitno, "");
+            }
+            $multiplierfield->size = 7;
+            //Add Multiplier to the table
+            $objTable->startRow();
+            $objTable->addCell($wordMultiplier, '20%');
+            $objTable->addCell($multiplierfield->show(), '80%');
+            $objTable->endRow();
+        }
+
+        //Add fieldset to hold answer
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->setLegend($wordUnit . " " . $unitno);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+
+        $theFieldset = $objFieldset->show();
+
+        $objFieldset->reset();
+
+        //Return Fieldset
         return $theFieldset;
     }
 
@@ -2517,8 +2627,8 @@ class formmanager extends object {
         $wordFormat = $this->objLanguage->languageText('mod_mcqtests_formatlabel', 'mcqtests', "Format");
         $wordAnswer = $this->objLanguage->languageText('mod_mcqtests_wordanswer', 'mcqtests', "Answer");
         $phraseCorrectAnswerShows = $this->objLanguage->languageText('mod_mcqtest_correctAnswerShows', 'mcqtests', "Correct answer shows");
-        $phraseToleranceType = $this->objLanguage->languageText('mod_mcqtest_tolerancetype', 'mcqtests', "Tolerance type");
-        $phraseTolerance = $this->objLanguage->languageText('mod_mcqtest_tolerancelabel', 'mcqtests', "Tolerance ±");
+        $phraseToleranceType = $this->objLanguage->languageText('mod_mcqtests_tolerancetype', 'mcqtests', "Tolerance type");
+        $phraseTolerance = $this->objLanguage->languageText('mod_mcqtests_tolerancelabel', 'mcqtests', "Tolerance ±");
         $phraseWordGrade = $this->objLanguage->languageText('mod_mcqtests_wordgrade', 'mcqtests');
         $phraseCorrectAnsFormula = $this->objLanguage->languageText('mod_mcqtests_corranswerlabel', 'mcqtests', "Correct Answer Formula");
         $phraseIsRequired = $this->objLanguage->languageText('mod_mcqtests_isrequired', 'mcqtests', "is required");
