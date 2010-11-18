@@ -349,10 +349,6 @@ class blog extends controller {
                 $this->requiresLogin(FALSE);
                 $blog_action = $this->objSysConfig->getValue('blog_action', 'blog');
                 $blog_postcount = $this->objSysConfig->getValue('blog_postcount', 'blog');
-                //var_dump($blog_action); die();
-                /*if (!empty($blog_action) && $blog_action != 'default') {
-                return $this->nextAction($blog_action);
-                }*/
                 if (!empty($blog_action) && $blog_action == 'single user') {
                     $suuserid = $this->objSysConfig->getValue('blog_singleuserid', 'blog');
                     //$this->nextAction('', array('userid' => $suuserid));
@@ -399,7 +395,6 @@ class blog extends controller {
                     $this->objLanguage = $this->getObject('language', 'language');
                     $this->blogPosts = $this->getObject('blogposts', 'blog');
                     $posts = $this->blogPosts->showLastTenPosts();
-                    // var_dump($posts);
                     $this->setVarByRef('posts', $posts);
 
                     // dummy vals so tpl doesn't complain
@@ -522,7 +517,6 @@ class blog extends controller {
                 $postid = $this->getParam('postid');
                 $userid = $this->getParam('userid');
                 $posts = $this->objDbBlog->getPostByPostID($postid);
-                //print_r($posts);
                 if (isset($userid)) {
                     $catarr = $this->objDbBlog->getCatsTree($userid);
                     $this->setVarByRef('cats', $catarr);
@@ -744,7 +738,6 @@ class blog extends controller {
                 $feedLink = htmlentities($feedLink);
                 //set up the url
                 $feedURL = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid . "action=feed&format=" . $format;
-                //print_r($feedURL);
                 $feedURL = htmlentities($feedURL);
                 //set up the feed
                 $this->objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
@@ -847,7 +840,6 @@ class blog extends controller {
                 $feedLink = htmlentities($feedLink);
                 //set up the url
                 $feedURL = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid . "action=feed&format=" . $format;
-                //print_r($feedURL);
                 $feedURL = htmlentities($feedURL);
                 //set up the feed
                 $this->objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
@@ -1313,10 +1305,10 @@ class blog extends controller {
                         $this->objDbBlog->removeAllTags($rmtags['id']);
                     }
                     if (!empty($tagarray) && $tagarray[0] != "") {
-                        
+
                         //if (count($tagarray) < count($etags)) {
                             //remove all the tags for the post so that we can populate with the new ones
-                            
+
                             $this->objDbBlog->insertTags($tagarray, $userid, $id);
                     }
                     /*    //clean out the duplicate tags
@@ -1424,7 +1416,6 @@ class blog extends controller {
                             'mode' => 'editpost'
                     ));
                 }
-                //print_r($delarr); die();
                 $this->setVarByRef('editid', $id);
                 $this->setVarByRef('userid', $userid);
                 // $this->setVar('pageSuppressXML', TRUE);
@@ -1737,7 +1728,6 @@ class blog extends controller {
                 }
                 $rsscache = curl_exec($ch);
                 curl_close($ch);
-                //var_dump($rsscache);
                 //put in a timestamp
                 $addtime = time();
                 $addarr = array(
@@ -1927,7 +1917,6 @@ class blog extends controller {
                     //ok we have the content, lets parse for the [img] bbcode tags and replace them with real imgsrc
                     preg_match_all('/\[img\](.*)\[\/img\]/U', $postcontent[0]['post_content'], $matches, PREG_PATTERN_ORDER);
                     unset($matches[0]);
-                    //print_r($matches);
                     $mcount = 0;
                     foreach($matches as $match) {
                         if(isset($match[$mcount])) {
@@ -1972,18 +1961,15 @@ class blog extends controller {
                 $params = array();
                 $params['place'] = urlencode($place);
                 $params['countrycode'] = urlencode($countrycode);
-                //print_r($params);
                 $return = $this->objblogOps->findGeoTag($params, '10');
                 if (empty($return)) {
                     break;
                 }
                 $doc = simplexml_load_string($return);
-                //var_dump($doc);
                 if ($doc->totalResultsCount > 1) {
                     foreach($doc->geoname as $items) {
                         print_r($items);
                     }
-                    //print_r($item); die();
                     die();
                 } else {
                     $country = $doc->geoname->countryName;
@@ -2008,7 +1994,6 @@ class blog extends controller {
                     chmod($filepath, 0777);
                 }
                 $somecontent = $tl[0];
-                //print_r($somecontent);
                 if (!file_exists($filename)) {
                     touch($filename);
                     chmod($filename, 0777);
