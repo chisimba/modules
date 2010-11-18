@@ -104,7 +104,7 @@ $objIcon->title = $listLabel;
 $objIcon->setIcon('comment');
 
 $objLink = new link($this->uri(array(
-    'action' => 'liststudents',
+    'action' => 'liststudents2',
     'id' => $data['id']
 )));
 $objLink->link = $objIcon->show();

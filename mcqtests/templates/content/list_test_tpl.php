@@ -87,10 +87,18 @@ if (!empty($data)) {
     }
 }
 $str.= $objTable->show();
-$objLink = new link($this->uri(array(
-    'action' => 'view',
-    'id' => $test['id']
-)));
+if($this->getParam('action') == 'liststudents2') {
+    $objLink = new link($this->uri(array(
+        'action' => 'view2',
+        'id' => $test['id']
+    )));
+}
+else {
+    $objLink = new link($this->uri(array(
+        'action' => 'view',
+        'id' => $test['id']
+    )));
+}
 $objLink->link = $exitLabel;
 $testLink = $objLink->show();
 // Add link to Assignment Management if its registered

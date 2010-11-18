@@ -103,7 +103,7 @@ if (!empty($data)) {
         $objIcon->setIcon('comment');
         $objIcon->title = $listLabel;
         $objLink = new link($this->uri(array(
-            'action' => 'liststudents',
+            'action' => 'liststudents2',
             'id' => $line['id']
         )));
         $objLink->link = $objIcon->show();
