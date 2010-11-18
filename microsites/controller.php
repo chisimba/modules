@@ -105,6 +105,12 @@ class microsites extends controller
     public function __json_getpagecontent(){
         echo json_encode(array('content' => $this->objOps->getPage($this->getParam('pageid'))));
     }
+    
+    public function getpagecontent(){
+        echo $this->objOps->getPage($this->getParam('pageid'));
+        exit(0);
+    }
+    
     public function __getpagecontent(){
         $page = $this->objDBContent->getPage($this->getParam('pageid'));
         echo $page['content'];
