@@ -1781,7 +1781,7 @@ class mcqtests extends controller {
     private function setTest2($testId, $num = 0) {
         $data = array();
         $fieldlist = 'id,name,totalmark,timed,duration,description,testtype,qsequence,asequence';
-        $test = $this->dbTestadmin->getTests('', $fieldlist, $this->getParam('id'));
+        $test = $this->dbTestadmin->getTests2('', $fieldlist, $this->getParam('id'));
         $results = $this->dbMarked->getSelectedAnswers($this->userId, $testId);
         // new code for scrambling tests
 
