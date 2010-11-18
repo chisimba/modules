@@ -529,7 +529,6 @@ class mcqtests extends controller {
                             return $this->nextAction('view2', array('id' => $id));
                         }
                         else {
-                            die();
                             return $this->nextAction('view', array('id' => $id));
                         }
                         break;
