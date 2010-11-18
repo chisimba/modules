@@ -151,7 +151,7 @@ if (!empty($data)) {
     }
 }
 
-echo "<h3>".$this->objLanguage->languageText('mod_mcqtest_advanced', 'mcqtests')."</h3>";
+echo "<h3 style='color:#000099;'>".$this->objLanguage->languageText('mod_mcqtest_advanced', 'mcqtests')."</h3>";
 echo $objTable->show();
 // Link to Assignment Management if registered
 if ($this->assignment) {
