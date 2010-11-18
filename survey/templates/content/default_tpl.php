@@ -103,7 +103,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
         foreach($arrSurveyList as $key=>$survey){
             $surveyId=$survey['id'];
             $userGroup=$this->groups->getUserGroup($this->userId,$surveyId);
-            $groupId=$this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Respondents'));
+            $groupId=$this->objGroupAdmin->getLeafId(array($surveyId,'Respondents'));
             $arrRespondentList=$this->objGroupAdmin->getGroupUsers($groupId,array('userId'));
             if(!empty($arrRespondentList)){
                 if($userGroup=='None' && !$this->isAdmin){
@@ -139,7 +139,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
             $owner=$this->objUser->fullName($creatorId);
             $commentCount=$survey['commentcount'];
 
-            $groupId=$this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Respondents'));
+            $groupId=$this->objGroupAdmin->getLeafId(array($surveyId,'Respondents'));
             $arrRespondentList=$this->objGroupAdmin->getGroupUsers($groupId,array('userId'));
             $userGroup=$this->groups->getUserGroup($this->userId,$surveyId);
             $canViewResults=$this->canViewResults($surveyId);
