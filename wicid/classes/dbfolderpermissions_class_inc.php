@@ -82,7 +82,7 @@ class dbfolderpermissions extends dbtable {
 
 
     public function isValidFolder($folderpath) {
-        
+        $folderpath=str_replace("'", "\'", $folderpath);
         $sql="select * from ".$this->tablename." where folderpath= '".$folderpath."'";
        
         $rows=$this->getArray($sql);
