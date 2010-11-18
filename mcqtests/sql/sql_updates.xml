@@ -1,6 +1,18 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
 	<update>
+		<table>tbl_test_question_numericaloptions</table>
+		<version>3.01</version>
+		<description>Added a instruction format field</description>
+		<data>
+			<add>
+				<name>instructionsformat</name>
+				<type>text</type>
+				<length>2</length>
+			</add>
+		</data>
+	</update>
+        <update>
 		<table>tbl_test_questions</table>
 		<version>1.030</version>
 		<description>add a question type field</description>

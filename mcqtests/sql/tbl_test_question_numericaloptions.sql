@@ -14,6 +14,10 @@ $fields = array(
         'type' => 'text',
         'length' => 32
         ),
+    'instructionsformat' => array(
+        'type'=>'text',
+        'length'=> 2
+        ),
     'instructions' => array(
         'type'=>'text',
         'length'=> 255

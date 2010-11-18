@@ -2508,7 +2508,7 @@ class formmanager extends object {
         }
         //Add DISPLAY-UNIT to the table
         $objTable->startRow();
-        $objTable->addCell($phraseDisplayUnit, '20%');
+        $objTable->addCell($phraseDisplayUnit."1", '20%');
         $objTable->addCell($displayunitdropdown->show(), '80%');
         $objTable->endRow();
 
