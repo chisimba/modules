@@ -71,7 +71,7 @@ class dbdocuments extends dbtable {
         $sql = "select * from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= '$rejected'";
         if (!$this->objUser->isadmin()) {
 
-            $sql.=" and userid = '" . $this->objUser->userid() . "'";
+            $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
         $sql.=' order by puid DESC';
 
@@ -142,8 +142,7 @@ class dbdocuments extends dbtable {
         $sql = "select count(id) as total from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'N'";
 
         if (!$this->objUser->isadmin()) {
-
-            $sql.=" and userid = '" . $this->objUser->userid() . "'";
+       $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
         $data = $this->getArray($sql);
         foreach ($data as $row) {
@@ -156,7 +155,7 @@ class dbdocuments extends dbtable {
         $sql = "select count(id) as total from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'Y'";
         if (!$this->objUser->isadmin()) {
 
-            $sql.=" and userid = '" . $this->objUser->userid() . "'";
+           $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
         $data = $this->getArray($sql);
         foreach ($data as $row) {
