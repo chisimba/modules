@@ -2203,9 +2203,9 @@ class formmanager extends object {
         //Load other unit-Multiplier
         $ucount = 2;
         $unitcount = $fields['unitcount'];
-        if($unitcount>1)
-            $unitcount++;        
-        
+        if ($unitcount > 1)
+            $unitcount++;
+
         do {
             echo $ucount;
             $unitMultiplier = $this->createUnitMultiplierFields($ucount, $unitValues = Null, Null);
@@ -2215,7 +2215,7 @@ class formmanager extends object {
             //Add Answer Fieldset to form
             $form->addToForm($unitMultiplier);
             $ucount++;
-        } while ($ucount <= $unitcount); 
+        } while ($ucount <= $unitcount);
 
 
         //Create table to store unit-handling
@@ -2419,7 +2419,7 @@ class formmanager extends object {
         $objTable->attributes = " align='center' border='0'";
         $objTable->cellspacing = '12';
         //unit-graded radio button
-        $unitgraded = new radio("ansformula");
+        $unitgraded = new radio("unitgradetype");
         $unitgraded->addOption(1, $phraseNumericalUnit);
         if (!empty($unitValues)) {
             $unitgraded->setSelected($unitValues["unitgraded"]);
@@ -2432,9 +2432,9 @@ class formmanager extends object {
 
         //penalty-bad-unit text box
         if (!empty($unitValues)) {
-            $penaltybadunit = new textinput("penaltybadunit", $unitValues["penaltybadunit"]);
+            $penaltybadunit = new textinput("unitpenalty", $unitValues["penaltybadunit"]);
         } else {
-            $penaltybadunit = new textinput("penaltybadunit", "");
+            $penaltybadunit = new textinput("unitpenalty", "");
         }
         $penaltybadunit->size = 9;
         //Dropdown - Penalty on question on response grade
@@ -2446,14 +2446,16 @@ class formmanager extends object {
         } else {
             $questionresponseddown->setSelected("0");
         }
+        //Store numericaloptions Id
+        $uhfield = new hiddeninput("uhid", $unitValues["uhid"]);
         //Add penalty-bad-unit to the table
         $objTable->startRow();
         $objTable->addCell($phrasePenalty, '20%');
-        $objTable->addCell($penaltybadunit->show() . " " . $questionresponseddown->show(), '80%');
+        $objTable->addCell($penaltybadunit->show() . " " . $questionresponseddown->show().$uhfield->show(), '80%');
         $objTable->endRow();
 
         //unit-answer-display radio button
-        $unitansdisplay = new radio("unitansdisplay");
+        $unitansdisplay = new radio("instructionsformat");
         $unitansdisplay->addOption(1, $phraseTextInputElement . " " . strtoupper($wordOr));
         $unitansdisplay->addOption(2, $wordMultichoice . " (" . $phraseRadioElements . ")");
         if (!empty($unitValues)) {
@@ -2484,7 +2486,7 @@ class formmanager extends object {
         $objTable->endRow();
 
         //Dropdown - UNIT-NOT-GRADED
-        $unitnotgradeddropdown = new radio("unitnotgraded");
+        $unitnotgradeddropdown = new radio("unitgradingtype");
         $unitnotgradeddropdown->addOption(1, $phraseOnlyNumerical);
         if (!empty($unitValues)) {
             $unitnotgradeddropdown->setSelected($unitValues["unitnotgraded"]);
@@ -2498,7 +2500,7 @@ class formmanager extends object {
         $objTable->endRow();
 
         //Dropdown - DISPLAY-UNIT
-        $displayunitdropdown = new radio("displayunit");
+        $displayunitdropdown = new radio("showunits");
         $displayunitdropdown->addOption(1, $wordYes);
         $displayunitdropdown->addOption(0, $wordNo);
         if (!empty($unitValues)) {
@@ -2508,7 +2510,7 @@ class formmanager extends object {
         }
         //Add DISPLAY-UNIT to the table
         $objTable->startRow();
-        $objTable->addCell($phraseDisplayUnit."1", '20%');
+        $objTable->addCell($phraseDisplayUnit . "1", '20%');
         $objTable->addCell($displayunitdropdown->show(), '80%');
         $objTable->endRow();
 
@@ -2563,10 +2565,12 @@ class formmanager extends object {
             $unitfield = new textinput("unit" . $unitno, "");
         }
         $unitfield->size = 7;
+        //Store numericaloptions Id
+        $uhfield = new hiddeninput("uhid", $unitValues["umid"]);
         //Add Unit to the table
         $objTable->startRow();
         $objTable->addCell($wordUnit, '20%');
-        $objTable->addCell($unitfield->show(), '80%');
+        $objTable->addCell($unitfield->show().$uhfield->show(), '80%');
         $objTable->endRow();
 
         //Dont display textfield if $multiplier is not empty

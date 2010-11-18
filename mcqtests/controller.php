@@ -149,7 +149,7 @@ class mcqtests extends controller {
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 //Get Fields
                 $id = $this->getParam('id', Null);
-                $test = $this->getParam('test', Null);                
+                $test = $this->getParam('test', Null);
                 $mode = $this->getParam('mode', 'add');
                 $answersCount = $this->getParam('anscount', Null);
                 $frmanscount = $this->getParam('frmanscount', Null);
@@ -163,6 +163,53 @@ class mcqtests extends controller {
                 $fields['unitcount'] = $unitCount;
                 //Set variables for use in the template
                 $this->setVarByRef('fields', $fields);
+
+                //Save the question
+                $fieldsQn = array();
+                $fieldsQn['categoryid'] = $this->getParam('categoryid', Null);
+                $fieldsQn['name'] = $this->getParam('qnName', Null);
+                $fieldsQn['question'] = $this->getParam('qntext', Null);
+                $fieldsQn['questiontext'] = $this->getParam('qntext', Null);
+                $fieldsQn['mark'] = $this->getParam('qngrade', Null);
+                $fieldsQn['penalty'] = $this->getParam('penaltyfactor', Null);
+                $fieldsQn['qtype'] = "SimpleCalculated";
+                $fieldsQn['questiontype'] = "SimpleCalculated";
+                $fieldsQn['generalfeedback'] = $this->getParam('genfeedback', Null);
+                $qncount = $this->getParam('qncount', Null);
+                //Insert/Update Question
+                if (!empty($fieldsQn)) {
+                    $id = $this->dbQuestions->addQuestion($fieldsQn, $id, $saveAsNew);
+                }
+
+                //Save Unit-Handling
+                $fieldsUH = array();
+                $uhid = $this->getParam('uhid', Null);
+                $fieldsQn['questionid'] = $this->getParam('questionid', Null);
+                $fieldsUH['unitgradingtype'] = $this->getParam('unitgradetype', Null);
+                $fieldsUH['unitpenalty'] = $this->getParam('unitpenalty', Null);
+                $fieldsUH['instructionsformat'] = $this->getParam('instructionsformat', Null);
+                $fieldsUH['instructions'] = $this->getParam('instructions', Null);
+                $fieldsUH['unitgradingtype'] = $this->getParam('unitgradingtype', Null);
+                $fieldsUH['showunits'] = $this->getParam('showunits', Null);
+                //Insert/Update Unit-Handling
+                if (!empty($fieldsQn)) {
+                    if (empty($uhid)) {
+                        $uhid = $this->objNumericalOptions->addNumericalOptions($fieldsUH);
+                    } else {
+                        $uhid = $this->objNumericalOptions->updateNumericalOptions($fieldsQn, $uhid);
+                    }
+                }
+                //Save the official tags
+                $officialTags = array();
+                $officialTags['tags'] = $this->getParam('officialtags', Null);
+                $othertags = $this->getParam('othertags', Null);
+                if (!empty($othertags) && !empty($id)) {
+                    $otTags = array();
+                    $otTags['tags'] = $othertags;
+                    //Insert/Update Tags
+                    $tagId = $this->dbTag->addTag($otTags, Null, $id);
+                }
+
                 return 'simplecalculatedqn_tpl.php';
                 break;
             case "deletersa":
@@ -525,10 +572,9 @@ class mcqtests extends controller {
                         //saving the step data
 
                         $id = $this->StepAddTest($fields);
-                        if(stristr($fields['testType'], 'advanced')) {
+                        if (stristr($fields['testType'], 'advanced')) {
                             return $this->nextAction('view2', array('id' => $id));
-                        }
-                        else {
+                        } else {
                             return $this->nextAction('view', array('id' => $id));
                         }
                         break;
@@ -545,12 +591,11 @@ class mcqtests extends controller {
                 }
                 $id = $this->applyAddTest();
                 $prevtest = $this->getParam('prevaction');
-                if($prevtest == 'edit2') {
+                if ($prevtest == 'edit2') {
                     return $this->nextAction('view2', array(
                         'id' => $id
                     ));
-                }
-                else {
+                } else {
                     return $this->nextAction('view', array(
                         'id' => $id
                     ));
@@ -576,11 +621,10 @@ class mcqtests extends controller {
                                     ), $back));
                     break;
                 }
-                
-                if(trim($this->getParam('testtype')) == "advanced") {
+
+                if (trim($this->getParam('testtype')) == "advanced") {
                     return $this->nextAction('home2');
-                }
-                else {
+                } else {
                     return $this->nextAction('');
                 }
             // display template showing the test and questions
@@ -729,7 +773,7 @@ class mcqtests extends controller {
                 $this->addAnswers($postTestId, $postQuestionId, $_POST, $qNum);
                 $msg = $this->objLanguage->languageText('mod_mcqtests_confirmaddanswer', 'mcqtests');
                 $this->setSession('confirm', $msg);
-                
+
                 return $this->nextAction('view', array(
                     'id' => $postTestId,
                     'qNum' => $qNum
@@ -793,12 +837,11 @@ class mcqtests extends controller {
                 $studentId = $this->getParam('studentId');
                 $this->dbMarked->deleteMarked($studentId, $testId);
                 $this->dbResults->deleteResult($testId, $studentId);
-                if($this->getParam('testtype') == 'advanced') {
+                if ($this->getParam('testtype') == 'advanced') {
                     return $this->nextAction('liststudents2', array(
                         'id' => $testId
                     ));
-                }
-                else {
+                } else {
                     return $this->nextAction('liststudents', array(
                         'id' => $testId
                     ));
@@ -995,7 +1038,7 @@ class mcqtests extends controller {
                 $this->markTest($this->getParam('resultId', NULL));
                 return 'answertest2_tpl.php';
                 //print_r($_POST);
-                break;//die();
+                break; //die();
             case 'showstudenttest':
                 return $this->showStudentTest();
             case 'submitdbquestions':
