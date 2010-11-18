@@ -545,13 +545,27 @@ class mcqtests extends controller {
                     return $this->nextAction('');
                 }
                 $id = $this->applyAddTest();
-                return $this->nextAction('view', array(
-                    'id' => $id
-                ));
+                $prevtest = $this->getParam('prevaction');
+                if($prevtest == 'edit2') {
+                    return $this->nextAction('view2', array(
+                        'id' => $id
+                    ));
+                }
+                else {
+                    return $this->nextAction('view', array(
+                        'id' => $id
+                    ));
+                }
+
             // display template to edit a test
 
             case 'edit':
                 return $this->editTest();
+
+            // display template to edit a test
+
+            case 'edit2':
+                return $this->editTest2();
 
             // delete a test
             case 'delete':
@@ -1352,6 +1366,30 @@ class mcqtests extends controller {
     private function editTest() {
         $testId = $this->getParam('id');
         $data = $this->dbTestadmin->getTests($this->contextCode, '*', $testId);
+        /* $nodesSQL = 'SELECT tbl_context_nodes.id AS chapter_id,
+          tbl_context_nodes.title AS chapter_title FROM tbl_context_nodes
+          INNER JOIN tbl_context_parentnodes ON ( tbl_context_parentnodes_id =
+          tbl_context_parentnodes.id )
+          WHERE tbl_context_parentnodes.tbl_context_parentnodes_has_tbl_context_tbl_context_contextCode
+          = "'.$this->contextCode.'"'; // AND parent_Node = "" ';
+         */
+        $allPercent = $this->dbTestadmin->getPercentage($this->contextCode, $testId);
+        $this->setVarByRef('allPercent', $allPercent);
+        //$this->setVarByRef('nodes', $nodes);
+        $this->setVarByRef('data', $data);
+        $this->setVar('mode', 'edit');
+        return 'addtest_tpl.php';
+    }
+
+    /**
+     * Method to set up test data for editing.
+     *
+     * @access private
+     * @return
+     */
+    private function editTest2() {
+        $testId = $this->getParam('id');
+        $data = $this->dbTestadmin->getTests2($this->contextCode, '*', $testId);
         /* $nodesSQL = 'SELECT tbl_context_nodes.id AS chapter_id,
           tbl_context_nodes.title AS chapter_title FROM tbl_context_nodes
           INNER JOIN tbl_context_parentnodes ON ( tbl_context_parentnodes_id =

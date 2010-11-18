@@ -46,6 +46,7 @@ $lbEqualPercent = $this->objLanguage->languageText('mod_mcqtests_settoequalperce
 $testTypeLabel = $this->objLanguage->languageText('mod_mcqtests_testtype', 'mcqtests');
 $formativeLabel = $this->objLanguage->languageText('word_formative');
 $summativeLabel = $this->objLanguage->languageText('word_summative');
+$advancedLabel = $this->objLanguage->languageText('mod_mcqtest_word_advanced', 'mcqtests');
 $qSequenceLabel = $this->objLanguage->languageText('mod_mcqtests_questionorder', 'mcqtests');
 $aSequenceLabel = $this->objLanguage->languageText('mod_mcqtests_answerorder', 'mcqtests');
 $scrambledLabel = $this->objLanguage->languageText('word_scrambled');
@@ -245,6 +246,7 @@ $objTable->addRow(array(
 $objRadio = new radio('testType');
 $objRadio->addOption($formativeLabel, $formativeLabel);
 $objRadio->addOption($summativeLabel, $summativeLabel);
+$objRadio->addOption($advancedLabel, $advancedLabel);
 if (isset($testType) && !empty($testType)) {
     $objRadio->setSelected($testType);
 } else {
@@ -351,9 +353,17 @@ $objTable->startRow();
 $objTable->addCell($btnSave, '30%', '', 'right');
 $objTable->addCell($btnExit, '70%', '', 'left');
 $objTable->endRow();
-$objForm = new form('savetest', $this->uri(array(
-    'action' => 'applyaddtest'
-)));
+if($this->getParam('action') == 'edit2') {
+    $objForm = new form('exit', $this->uri(array(
+        'action' => 'applyaddtest',
+        'prevaction' => 'edit2'
+    )));
+}else {
+    $objForm = new form('savetest', $this->uri(array(
+        'action' => 'applyaddtest'
+    )));
+}
+
 $objForm->addToForm($objTable->show());
 $objForm->addRule('name', $errName, 'required');
 //$objForm->addRule(array('close','start'),$errDates,'greaterthan');
@@ -362,9 +372,17 @@ $objLayer = new layer();
 $objLayer->str = $objForm->show();
 $objLayer->cssClass = 'odd';
 echo $objLayer->show();
-$objForm = new form('exit', $this->uri(array(
-    'action' => 'applyaddtest'
-)));
+if($this->getParam('action') == 'edit2') {
+    $objForm = new form('exit', $this->uri(array(
+        'action' => 'applyaddtest',
+        'prevaction' => 'edit2'
+    )));
+}
+else {
+    $objForm = new form('exit', $this->uri(array(
+        'action' => 'applyaddtest'
+    )));
+}
 $objInput = new textinput('save', $exitLabel);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();

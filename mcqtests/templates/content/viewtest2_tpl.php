@@ -96,7 +96,7 @@ $tabcontent = $this->newObject('tabcontent', 'htmlelements');
 
 // Heading for test
 $editUrl = $this->uri(array(
-    'action' => 'edit',
+    'action' => 'edit2',
     'id' => $data['id']
 ));
 $editLink = $objIcon->getEditIcon($editUrl);
