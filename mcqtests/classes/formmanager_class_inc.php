@@ -2215,7 +2215,7 @@ class formmanager extends object {
             //Add Answer Fieldset to form
             $form->addToForm($unitMultiplier);
             $ucount++;
-        } while ($ucount <= $unitcount);
+        } while ($ucount <= $unitcount); 
 
 
         //Create table to store unit-handling
