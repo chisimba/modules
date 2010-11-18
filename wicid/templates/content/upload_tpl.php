@@ -1,16 +1,16 @@
-<h1 style="color: #ffffff;">Upload a file</h1>
-<?php
 
-$this->setVar('pageSuppressSearch', TRUE);
-$this->setVar('pageSuppressBanner', TRUE);
-$this->setVar('pageSuppressToolbar', TRUE);
-$this->setVar('pageSuppressFooter', TRUE);
+<?php
+$this->loadClass('link','htmlelements');
+echo "Attaching a document to '$docname' in '$topic'";
+
 $this->loadClass('iframe', 'htmlelements');
 
 $objAjaxUpload = $this->newObject('ajaxuploader');
 
 echo $objAjaxUpload->show($topic,$docname,$docid);
-
+$link=new link($this->uri(array("action"=>"unapproveddocs","id"=>$docid)));
+$link->link="Back to documents";
+echo $link->show();
 ?>
 
 

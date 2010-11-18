@@ -47,34 +47,33 @@ class dbdocuments extends dbtable {
         $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
     }
 
-    public function getdocuments($mode="default", $userid, $rejected = "N") {
+    public function getdocuments($mode="default", $rejected = "N") {
+        /*
+          if (strcmp($rejected, 'Y') == 0) {
+          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
+          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
+          where A.active = 'N'
+          and A.deleteDoc = 'N'
+          and A.rejectDoc = 'Y'";
+          } else {
+          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
+          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
+          where A.active = 'N'
+          and A.deleteDoc = 'N'
+          and A.rejectDoc = 'N'";
 
-        if (strcmp($rejected, 'Y') == 0) {
-            $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
-                      left outer join tbl_wicid_fileuploads as B on A.id = B.docid
-                  where A.active = 'N'
-                  and A.deleteDoc = 'N'
-                  and A.rejectDoc = 'Y'";
-        } else {
-            $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
-                  left outer join tbl_wicid_fileuploads as B on A.id = B.docid
-              where A.active = 'N'
-              and A.deleteDoc = 'N'
-              and A.rejectDoc = 'N'";
-        }
+          }
 
-        if ($mode = "apo") {
-            $sql.=" and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
-        }
+          if ($mode = "apo") {
+          $sql.=" and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
+          } */
 
+        $sql = "select * from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= '$rejected'";
         if (!$this->objUser->isadmin()) {
 
-            //    $sql.=" and A.userid = '".$this->objUser->userid()."'";
+            $sql.=" and userid = '" . $this->objUser->userid() . "'";
         }
-        $sql.=' order by date_created DESC';
-
-        // echo $sql;
-        // die();
+        $sql.=' order by puid DESC';
 
         $rows = $this->getArray($sql);
         $docs = array();
@@ -88,7 +87,7 @@ class dbdocuments extends dbtable {
                 $owner = $row['contact_person'];
             }
 
-            if (trim(strlen($row['docid'])) == 0) {
+            if ($row['upload'] == '') {
                 $attachmentStatus = "No";
             } else {
                 $f = $row['filename'];
@@ -121,9 +120,9 @@ class dbdocuments extends dbtable {
                 'userid' => $row['userid'],
                 'owner' => $owner,
                 'refno' => $row['refno'] . "-" . $row['ref_version'],
-                'title' => $row['docname'],
+                'filename' => $row['docname'],
                 'group' => $row['groupid'],
-                'docid' => $row['id'],
+                'id' => $row['id'],
                 'topic' => $row['topic'],
                 'department' => $row['department'],
                 'telephone' => $row['telephone'],
@@ -135,8 +134,35 @@ class dbdocuments extends dbtable {
                 'ref_version' => $row['ref_version']
             );
         }
-        echo json_encode(array("documents" => $docs));
-        die();
+        //echo json_encode(array("documents" => $docs));
+        return $docs;
+    }
+
+    function getUnapprovedDocsCount() {
+        $sql = "select count(id) as total from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'N'";
+
+        if (!$this->objUser->isadmin()) {
+
+            $sql.=" and userid = '" . $this->objUser->userid() . "'";
+        }
+        $data = $this->getArray($sql);
+        foreach ($data as $row) {
+            return $row['total'];
+        }
+        return "0";
+    }
+
+    function getRejectedDocsCount() {
+        $sql = "select count(id) as total from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'Y'";
+        if (!$this->objUser->isadmin()) {
+
+            $sql.=" and userid = '" . $this->objUser->userid() . "'";
+        }
+        $data = $this->getArray($sql);
+        foreach ($data as $row) {
+            return $row['total'];
+        }
+        return "0";
     }
 
     /**
@@ -161,14 +187,14 @@ class dbdocuments extends dbtable {
         if (strcmp($fullname, $contact) == 0) {
             $contact = "";
         }
-        if($contact == NULL){
-            $contact="None";
+        if ($contact == NULL) {
+            $contact = $this->objUser->fullname();
         }
 
         $data = array(
             'docname' => $title,
             'date_created' => $date,
-            'userid' => $userid,
+            'userid' => $this->objUser->userId(),
             'refno' => $refno,
             'groupid' => $groupid,
             'department' => $department,
@@ -183,9 +209,16 @@ class dbdocuments extends dbtable {
             'version' => $version
         );
         $id = $this->insert($data);
-        echo $refno . "/" . $ref_version . ',' . $id;
-        //echo "success|$id";
-        return $id;
+        return $refno . "/" . $ref_version;
+    }
+
+    function documentExists(
+    $department, $refno, $title, $path, $version) {
+        $sql =
+                "select * from tbl_wicid_documents where version = '$version' and topic = '$path'
+         and docname = '$title' and refno ='$refno' and department = '$department'";
+        $data = $this->getArray($sql);
+        return count($data) > 0 ? TRUE : FALSE;
     }
 
     /**
@@ -226,11 +259,11 @@ class dbdocuments extends dbtable {
                     'userid' => $userid,
                     'parent' => $doc['topic'],
                     'docid' => $id,
-                    'refno' => $this->userutils->getRefNo(),
+                    'refno' => $this->userutils->getRefNo($id),
                     'filepath' => $doc['topic'] . '/' . $doc['docname'] . $ext);
                 $result = $this->objUploadTable->saveFileInfo($data);
             } else {
-                rename($filename, $newname);
+                   rename($filename, $newname);
             }
         }
     }
@@ -302,6 +335,15 @@ class dbdocuments extends dbtable {
         return $res['refno'];
     }
 
+    function getRefFullNo($id) {
+        $res = $this->getRow("id", $id);
+        return $res['refno'].'-'.$res['ref_version'];
+    }
+     function getRefVersion($id) {
+        $res = $this->getRow("id", $id);
+        return $res['ref_version'];
+    }
+
     function findexts($filename) {
         $filename = strtolower($filename);
         $exts = split("[/\\.]", $filename);
@@ -318,8 +360,9 @@ class dbdocuments extends dbtable {
     }
 
     function updateInfo($id, $data) {
-        $version = getVersion($id);
-        $this->update("id", $id, "version", $version, $data);
+        $version = $this->getVersion($id);
+        $data['version'] =$version;
+        return $this->update("id", $id,  $data);
     }
 
     function changeCurrentUser($userid, $docid, $version) {

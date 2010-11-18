@@ -42,6 +42,13 @@ class userutils extends object {
     public function init() {
         //instantiate the language object
         $this->loadClass('link', 'htmlelements');
+        $this->loadClass('treemenu', 'tree');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('treenode', 'tree');
+        $this->loadClass('htmllist', 'tree');
+        $this->loadClass('htmldropdown', 'tree');
+        $this->loadClass('dhtml', 'tree');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objPermittedTypes = $this->getObject('dbpermittedtypes');
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
@@ -54,12 +61,15 @@ class userutils extends object {
         $location = "http://" . $_SERVER['HTTP_HOST'];
         $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
         $this->folderPermissions = $this->getObject('dbfolderpermissions');
+
+        $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $this->modeLabel = "Topic";
     }
 
     public function getUserId() {
         $this->objUser = $this->getObject('user', 'security');
         $userid = $this->objUser->userId();
-        $userid = 1;
+        //$userid = 1;
         return $userid;
     }
 
@@ -131,7 +141,7 @@ class userutils extends object {
     }
 
     public function saveFile($path, $docname, $docid) {
-          
+
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $filepath = $dir . $path;
         $filepath = str_replace("//", "/", $filepath);
@@ -167,11 +177,11 @@ class userutils extends object {
                 'refno' => '1234',
                 'docid' => $docid,
                 'filepath' => $path);
-            
-          
+
+
 
             $result = $this->objUploadTable->saveFileInfo($data);
-           
+
 
             return "success";
         }
@@ -283,16 +293,15 @@ class userutils extends object {
                 'actualfilename' => $row['filename'],
                 'id' => $row['filepath'],
                 'docid' => $row['docid'],
-                'refno' => $row['refno'],
+                'telephone' => $row['telephone'],
+                'refno' => $this->getFullRefNo($row['docid']),
                 'owner' => $this->objUser->fullname($row['userid']),
                 'lastmod' => $row['date_uploaded'],
                 'filesize' => $size,
-                'thumbnailpath' => '<img src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '.png">',
+                'thumbnailpath' => '<img src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '.png" width="22" height="22">',
             );
         }
-        echo json_encode(array("files" => $files));
-
-        die();
+        return $files;
     }
 
     /* function getFiles() {
@@ -341,13 +350,13 @@ class userutils extends object {
     /**
      * retrieves folders that this user has access to
      */
-    function getFolders($mode) {
+    function getFolders($mode, $node="") {
         $objUser = $this->getObject("user", "security");
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $apodir = $this->objSysConfig->getValue('APO_DIR', 'wicid');
         $this->objUser = $this->getObject('user', 'security');
         $size = "";
-        $node = isset($_REQUEST['id']) ? $_REQUEST['id'] : "";
+
         $isadmin = $this->objUser->isAdmin() ? "true" : "false";
         $isadmin = "true";
         //is it apo?
@@ -358,7 +367,7 @@ class userutils extends object {
         if (strpos($node, '..') !== false) {
             die('Nice try buddy.');
         }
-        $result = "<items>";
+        $result = array();
         $cdir = $dir . '/' . $node;
         $cdir = str_replace("//", "/", $cdir);
 
@@ -383,27 +392,31 @@ class userutils extends object {
                     $userid = $this->getUserId();
                     $isowner = $userid == $permission['userid'] ? "true" : "false";
 
-                    $result.='<item
-                        folder="true"
-                        name="' . $f . '"
-                        id="' . $pdir . '"
-                        lastmodified="' . $lastmod . '"
-                        size="' . $size . '"
-                        viewfiles="' . $permission['viewfiles'] . '"
-                        uploadfiles="' . $permission['uploadfiles'] . '"
-                        createfolder="' . $permission['createfolder'] . '"
-                        isadmin="' . $isadmin . '"
-                        isowner="' . $isowner . '"
-                        parent="' . $node . '">
-                       </item>';
+                    $cfile = array(
+                        "folder" => "true",
+                        "name" => $f,
+                        "id" => $pdir,
+                        "lastmodified" => $lastmod,
+                        "size" => $size,
+                        "viewfiles" => $permission['viewfiles'],
+                        "uploadfiles" => $permission['uploadfiles'],
+                        "createfolder" => $permission['createfolder'],
+                        "isadmin" => $isadmin,
+                        "isowner" => $isowner,
+                        "parent" => $node);
+                    $result[] = $cfile;
                 }
+            } else {
+                $cfile = array(
+                    "folder" => "false",
+                    "name" => $f,
+                    "id" => $node);
+                $result[] = $cfile;
             }
         }
 
-        $result.="</items>";
         $d->close();
-        echo $result;
-        die();
+        return $result;
     }
 
     // from php manual page
@@ -441,26 +454,26 @@ class userutils extends object {
      * allows the user to donwload the selected file
      * @param <type> $filename
      */
-    function downloadFile($filename) {
-       
+    function downloadFile($filepath,$filename) {
+
         //check if user has access to the parent folder before accessing it
 
-        $download_path = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         // Detect missing filename
-        if (!$filename)
+        if (!$filename && !$filepath)
             die("I'm sorry, you must specify a file name to download.");
 
         // Make sure we can't download files above the current directory location.
-        if (eregi("\.\.", $filename))
+        if (eregi("\.\.", $filepath))
             die("I'm sorry, you may not download that file.");
-        $file = str_replace("..", "", $filename);
+        $file = str_replace("..", "", $filepath);
 
         // Make sure we can't download .ht control files.
-        if (eregi("\.ht.+", $filename))
+        if (eregi("\.ht.+", $filepath))
             die("I'm sorry, you may not download that file.");
 
         // Combine the download path and the filename to create the full path to the file.
-        $file = "$download_path/$file";
+        $file = $baseDir . $filepath;
 
         // Test to ensure that the file exists.
         if (!file_exists($file))
@@ -472,10 +485,11 @@ class userutils extends object {
         // Get a date and timestamp
         $today = date("F j, Y, g:i a");
         $time = time();
+       
 
         // Send file headers
         header("Content-type: $type");
-        header("Content-Disposition: attachment;filename=" . $this->getFileName($filename));
+        header("Content-Disposition: attachment;filename=" . urlencode($filename));
         header('Pragma: no-cache');
         header('Expires: 0');
 
@@ -611,5 +625,165 @@ class userutils extends object {
         return $refNo;
     }
 
+    function getFullRefNo($id) {
+        $objDocuments = $this->getObject('dbdocuments', 'wicid');
+        $refNo = $objDocuments->getRefFullNo($id);
+        return $refNo;
+    }
+
+    function listdir($dir='.') {
+        if (!is_dir($dir)) {
+            return false;
+        }
+
+        $files = array();
+        $this->listdiraux($dir, $files);
+
+        return $files;
+    }
+
+    function listdiraux($dir, &$files) {
+        $handle = opendir($dir);
+        while (($file = readdir($handle)) !== false) {
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
+            $filepath = $dir == '.' ? $file : $dir . '/' . $file;
+            if (is_link($filepath))
+                continue;
+            if (is_dir($filepath)) {
+                $cfile = substr($filepath, strlen($this->baseDir));
+                if ($this->folderPermissions->isValidFolder($cfile)) {
+                    $files[] = $filepath;
+                }
+                $this->listdiraux($filepath, $files);
+            }
+        }
+        closedir($handle);
+    }
+
+    function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
+        $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $folders = $this->listdir($baseFolder);
+
+        sort($folders, SORT_LOCALE_STRING);
+        if ($selected == '') {
+            $selected = $folders[0];
+        }
+        $baseFolderId = "0";
+        $objfolders = $this->getObject('dbfolderpermissions');
+
+
+        if ($treeType == 'htmldropdown') {
+            $allFilesNode = new treenode(array('text' => $this->modeLabel . 's', 'link' => $baseFolderId));
+        } else {
+            $allFilesNode = new treenode(array('text' => $this->modeLabel . 's', 'link' => $this->uri(array('action' => 'viewfolder', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+        }
+        $documents = $this->getObject('dbdocuments');
+        $count = $documents->getUnapprovedDocsCount();
+        if ($treeMode == 'side') {
+            $unapprovedDocs = "$count New documents";
+            if ($selected == 'unapproved') {
+                $unapprovedDocs = '<strong>' . $unapprovedDocs . '</strong>';
+                $cssClass = 'confirm';
+            } else {
+                $cssClass = '';
+            }
+            $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $count = $documents->getRejectedDocsCount();
+            $rejectedDocs = "$count Rejected documents";
+            if ($selected == 'rejecteddocuments') {
+                $rejectedDocs = '<strong>' . $rejectedDocs . '</strong>';
+                $cssClass = 'confirm';
+            } else {
+                $cssClass = '';
+            }
+            $rejectedDocsNode = new treenode(array('text' => $rejectedDocs, 'link' => $this->uri(array('action' => 'rejecteddocuments', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $allFilesNode->addItem($newDocsNode);
+            $allFilesNode->addItem($rejectedDocsNode);
+        }
+//Create a new tree
+        $menu = new treemenu();
+
+        $icon = 'folder.gif';
+        $expandedIcon = 'folder-expanded.gif';
+        $refArray = array();
+        $refArray[$baseFolder] = & $allFilesNode;
+
+        if (count($folders) > 0) {
+            foreach ($folders as $folder) {
+                $folderText = basename($folder);
+                $cfile = substr($folder, strlen($this->baseDir));
+
+                $folderShortText = substr(basename($folder), 0, 200) . '...';
+
+                if ($folder == $selected) {
+                    $folderText = '<strong>' . $folderText . '</strong>';
+                    $cssClass = 'confirm';
+                } else {
+                    $cssClass = '';
+                }
+                if ($treeType == 'htmldropdown') {
+                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $cfile, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+                } else {
+                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $this->uri(array('action' => 'viewfolder', 'folder' => $cfile)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+                }
+                $parent = dirname($folder);
+
+                //echo $folder['folderpath'].' - '.$parent.'<br />';
+                if (array_key_exists($parent, $refArray)) {
+                    $refArray[dirname($folder)]->addItem($node);
+                }
+
+                $refArray[$folder] = & $node;
+            }
+        }
+
+        $menu->addItem($allFilesNode);
+        if ($treeType == 'htmldropdown') {
+            $treeMenu = &new htmldropdown($menu, array('inputName' => 'parentfolder', 'id' => 'input_parentfolder', 'selected' => $selected));
+        } else {
+            $this->appendArrayVar('headerParams', $this->getJavascriptFile('TreeMenu.js', 'tree'));
+            $this->setVar('pageSuppressXML', TRUE);
+            $objSkin = & $this->getObject('skin', 'skin');
+            $treeMenu = &new dhtml($menu, array('images' => 'skins/_common/icons/tree', 'defaultClass' => 'treeMenuDefault'));
+        }
+
+        return $treeMenu->getMenu();
+    }
+
+    function showCreateFolderForm($folderPath, $selected) {
+        if ($folderPath == FALSE) {
+            return '';
+        }
+
+        $folderParts = explode('/', $folderPath);
+
+        $form = new form('createfolder', $this->uri(array('action' => 'createfolder')));
+
+        $label = new label('Create a ' . $this->modeLabel . ' in: ', 'input_parentfolder');
+
+
+        $form->addToForm($label->show() . $this->getTree('htmldropdown', $selected));
+
+        // $objInputMasks = $this->getObject('inputmasks', 'htmlelements');
+        // echo $objInputMasks->show();
+
+        $textinput = new textinput('foldername');
+        //$textinput->setCss('text input_mask anytext');
+
+        $label = new label('Name of ' . $this->modeLabel . ': ', 'input_foldername');
+
+        $form->addToForm(' &nbsp; ' . $label->show() . $textinput->show());
+
+        $button = new button('create', 'Create ' . $this->modeLabel);
+        $button->setToSubmit();
+
+        $form->addToForm(' ' . $button->show());
+
+        return $form->show();
+    }
+
 }
+
 ?>

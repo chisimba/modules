@@ -1,8 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <?php
-$mode = $this->__determinepermissions();
 $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
-$nav = $this->objUtils->getTree($baseFolder,$selected);
+$nav = $this->objUtils->getTree($baseFolder, $selected);
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -10,6 +8,8 @@ $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('htmltable', 'htmlelements');
+$this->loadClass('tabcontent', 'htmlelements');
 
 $searchForm = new form('filesearch', $this->uri(array('action' => 'search')));
 $searchForm->method = 'GET';
@@ -26,6 +26,7 @@ $button = new button('search', $this->objLanguage->languageText('word_search', '
 $button->setToSubmit();
 $searchForm->addToForm($button->show());
 
+//get file list
 // Create an Instance of the CSS Layout
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 
@@ -36,10 +37,10 @@ $header->str = $this->objLanguage->languageText('mod_wicid_name', 'wicid', 'WICI
 $leftColumn = $header->show();
 
 $leftColumn .= $searchForm->show();
-$leftColumn .= '<div class="filemanagertree">' . $nav. '</div>';
+$leftColumn .= '<div class="filemanagertree">' . $nav . '</div>';
 $cssLayout->setLeftColumnContent($leftColumn);
-// Set the Content of middle column
-$cssLayout->setMiddleColumnContent($this->objUtils->showCreateFolderForm("/"));
+
+$cssLayout->setMiddleColumnContent($this->getContent());
 // Display the Layout
 echo $cssLayout->show();
 ?>

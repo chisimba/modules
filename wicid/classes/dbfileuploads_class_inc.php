@@ -101,7 +101,7 @@ class dbfileuploads extends dbtable {
     }
 
     public function getNodeFiles($node) {
-        $sql = "select A.refno, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
+        $sql = "select A.refno,A.telephone, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
               from tbl_wicid_documents as A
                 join tbl_wicid_fileuploads as B on A.id = B.docid
               where B.filepath like '%$node%' and A.active ='Y' 

@@ -58,7 +58,15 @@ class dbfolderpermissions extends dbtable {
              $this->insert($data);
         }
     }
+
+    public  function getAllFolders(){
+        $sql=
+        "select * from ".$this->tablename;
+        return $this->getArray($sql);
+    }
+
     /**
+     *
      * gets all the users and the thier permissions for a specific folder
      * @param <type> $folderpath
      * @return <type>
@@ -68,6 +76,18 @@ class dbfolderpermissions extends dbtable {
         $sql="select * from ".$this->tablename." where userid = '".$this->userid."' and folderpath= '".$folderpath."'";
         $rows=$this->getArray($sql);
         return $rows;
+
+    }
+
+
+
+    public function isValidFolder($folderpath) {
+        
+        $sql="select * from ".$this->tablename." where folderpath= '".$folderpath."'";
+       
+        $rows=$this->getArray($sql);
+
+        return count($rows) > 0  ? TRUE: FALSE;
 
     }
     /**
