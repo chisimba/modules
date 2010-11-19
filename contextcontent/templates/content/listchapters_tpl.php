@@ -165,18 +165,16 @@ foreach ($chapters as $chapter) {
 
             $chapterLink = new link($this->uri(array('action'=>'viewscorm', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
             $chapterLink->link = $chapter['chaptertitle'];
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid']);
             if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
                 if ($ischapterlogged == FALSE) {
-                    $content = '<h1 class="streamerimg"> '.$streamerimg." ".$chapterLink->show();
-                    ;
+                    $content = '<h1 class="streamerimg"> '.$streamerimg." ".$chapterLink->show();                    
                 }else {
                     $content = '<h1 class="chapterlink">'.$chapterLink->show();
                 }
             } else {
                 if ($ischapterlogged == FALSE) {
-                    $content = '<h1 class="streamerimg">> '.$streamerimg." ".$chapterLink->show();
-                    ;
+                    $content = '<h1 class="streamerimg">> '.$streamerimg." ".$chapterLink->show();                    
                 }else {
                     $content = '<h1 class="chapterlink">'.$chapterLink->show();
                 }
@@ -227,7 +225,7 @@ foreach ($chapters as $chapter) {
             $chapterLink = new link($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
             $chapterLink->link = $chapter['chaptertitle'];
 
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid'], $this->contextCode);
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapter['chapterid']);
             if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
                 if ($ischapterlogged == FALSE) {
                     $content = '<h1> '.$streamerimg." ".$chapter['chaptertitle'];

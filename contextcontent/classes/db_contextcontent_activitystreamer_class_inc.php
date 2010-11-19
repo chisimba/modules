@@ -73,6 +73,7 @@ class db_contextcontent_activitystreamer extends dbtable {
 
         // Store Context Code
         $this->contextCode = $this->objContext->getContextCode();
+        $this->sessionId = session_id();
     }
 
     /**
@@ -90,22 +91,25 @@ class db_contextcontent_activitystreamer extends dbtable {
      * @param string $sessionstarttime session start time
      * @param string $sessionendtime session end time
      */
-    public function addRecord($userId, $sessionid, $contextItemId, $contextCode, $modulecode, $datecreated, $pageorchapter=NULL, $description=NULL, $sessionstarttime=NULL, $sessionendtime=NULL) {
+    public function addRecord($userId, $sessionid, $contextItemId, $contextCode, $modulecode, $datecreated=Null, $pageorchapter=NULL, $description=NULL, $sessionstarttime=NULL, $sessionendtime=NULL) {
         $row = array();
-        if($contextItemId == null || $contextItemId==""){
-            $contextItemId="x";
+        if ($contextItemId == null || $contextItemId == "") {
+            $contextItemId = "x";
         }
         $row['userid'] = $userId;
         $row['contextcode'] = $contextCode;
         $row['contextitemid'] = $contextItemId;
         $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
-        $row['sessionid'] = $sessionid;
+        $row['sessionid'] = $this->sessionId;
         $row['modulecode'] = $modulecode;
         $row['pageorchapter'] = $pageorchapter;
-        $row['description'] = $description;
-        $row['starttime'] = $sessionstarttime;
+        if ($pageorchapter == "chapter") {
+            $row['description'] = $this->objContentChapter->getContextChapterTitle($contextItemId);
+        } else {
+            $row['description'] = $description;
+        }
+        $row['starttime'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
         $row['endtime'] = $sessionendtime;
-
         return $this->insert($row);
     }
 
@@ -127,10 +131,15 @@ class db_contextcontent_activitystreamer extends dbtable {
      * @param string $userId User ID
      * @param string $contextItemId Context Item Id
      * @param string $contextCode Context Code
+     * @param string $sessionId Session Id
      * @return TRUE
      */
-    public function getRecord($userId, $contextItemId, $sessionid) {
-        $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid' AND endtime = NULL";
+    public function getRecord($userId, $contextItemId, $sessionid=Null) {
+        if (empty($sessionid)) {
+            $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId'";
+        } else {
+            $where = "WHERE userid = '$userId' AND contextitemid = '$contextItemId' AND sessionid = '$sessionid'";
+        }
         $results = $this->getAll($where);
         if (isset($results[0]['id'])) {
             return TRUE;
@@ -202,7 +211,7 @@ class db_contextcontent_activitystreamer extends dbtable {
         }
     }
 
-       public function getLoginCount($contextCode, $startdate, $enddate) {
+    public function getLoginCount($contextCode, $startdate, $enddate) {
         $sql =
                 "SELECT count(userid) as logincount,userid  FROM tbl_contextcontent_activitystreamer WHERE
         contextcode = '$contextCode'";
@@ -220,6 +229,7 @@ class db_contextcontent_activitystreamer extends dbtable {
             return $results;
         }
     }
+
     /**
      * Method to fetch distinct user sessions.
      *
@@ -548,7 +558,7 @@ class db_contextcontent_activitystreamer extends dbtable {
         $userData = array();
         foreach ($activeMembers as $member) {
             $thisArray = array();
-            $duration =$member['logincount'];// $this->computeUserSessionsDuration($member['userid'], $startdate, $enddate);
+            $duration = $member['logincount']; // $this->computeUserSessionsDuration($member['userid'], $startdate, $enddate);
             $username = $this->objUser->username($member['userid']);
             $thisArray['userid'] = $member['userid'];
             $thisArray['username'] = $username;
@@ -642,7 +652,7 @@ class db_contextcontent_activitystreamer extends dbtable {
         $logArray = array();
 
         foreach ($logs as $log) {
-             if ($studentsonly) {
+            if ($studentsonly) {
                 if ($this->objUser->isContextLecturer($log['userid'], $contextcode)) {
                     continue;
                 }

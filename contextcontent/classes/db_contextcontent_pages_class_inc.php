@@ -157,5 +157,4 @@ class db_contextcontent_pages extends dbtable
     }
 
 }
-
 ?>

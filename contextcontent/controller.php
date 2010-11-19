@@ -873,10 +873,10 @@ class contextcontent extends controller {
         //Log in activity streamer only if logged in (Public courses dont need login)
         if (!empty($this->userId)) {
             if ($this->eventsEnabled) {
-                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId, $this->contextCode);
-                if ($ischapterlogged == FALSE) {
-                    $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $pageId, $this->contextCode);
-                }
+                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $pageId);
+                //if ($ischapterlogged == FALSE || $ischapterlogged == TRUE) {
+                $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, Null, $pageId, $this->contextCode, "contextcontent", Null, "page", $page['menutitle']);
+                //}
             }
         }
 
@@ -1107,10 +1107,10 @@ class contextcontent extends controller {
 
         $firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
         if ($this->eventsEnabled) {
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $id, $this->contextCode);
-            if ($ischapterlogged == FALSE && $this->eventsEnabled) {
-                $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $id, $this->contextCode);
-            }
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $id);
+            //if ($ischapterlogged == FALSE || $ischapterlogged == TRUE) {
+            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, Null, $id, $this->contextCode, "contextcontent", Null, "chapter");
+            //}
         }
         if ($firstPage == FALSE) {
 
