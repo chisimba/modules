@@ -10,7 +10,6 @@ $this->loadClass('hiddeninput', 'htmlelements');
 $this->objAltConfig = $this->getObject('altconfig', 'config');
 $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 $enableViewActivityLog = $this->objSysConfig->getValue('ENABLE_VIEWACTIVITYLOGS', 'contextcontent');
-var_dump($enableViewActivityLog);
 $siteRoot = $this->objAltConfig->getsiteRoot();
 $moduleUri = $this->objAltConfig->getModuleURI();
 $imgPath = $siteRoot . "/" . $moduleUri . '/contextcontent/resources/img/new.png';
