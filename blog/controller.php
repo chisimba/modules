@@ -518,7 +518,7 @@ class blog extends controller {
                 $userid = $this->getParam('userid');
                 $posts = $this->objDbBlog->getPostByPostID($postid);
                 if (isset($posts[0]['post_title'])) {
-                    $this->setVar('pageTitle', $this->objConfig->getSiteName().': '.$posts[0]['post_title']);
+                    $this->setVar('pageTitle', $posts[0]['post_title']);
                 }
                 if (isset($userid)) {
                     $catarr = $this->objDbBlog->getCatsTree($userid);
