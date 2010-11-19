@@ -1,6 +1,5 @@
 <?php
 
-
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -8,17 +7,19 @@ $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
-$this->objAltConfig = $this->getObject('altconfig','config');
-$this->objAltConfig = $this->getObject('altconfig','config');
-$siteRoot=$this->objAltConfig->getsiteRoot();
-$moduleUri=$this->objAltConfig->getModuleURI();
-$imgPath=$siteRoot."/".$moduleUri.'/contextcontent/resources/img/new.png';
-$streamerimg ='<img  class="newcontentimg" src="'.$imgPath.'">';
+$this->objAltConfig = $this->getObject('altconfig', 'config');
+$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+$enableViewActivityLog = $this->objSysConfig->getValue('ENABLE_VIEWACTIVITYLOGS', 'contextcontent');
+var_dump($enableViewActivityLog);
+$siteRoot = $this->objAltConfig->getsiteRoot();
+$moduleUri = $this->objAltConfig->getModuleURI();
+$imgPath = $siteRoot . "/" . $moduleUri . '/contextcontent/resources/img/new.png';
+$streamerimg = '<img  class="newcontentimg" src="' . $imgPath . '">';
 
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
 
-$form = new form ('searchform', $this->uri(array('action'=>'search')));
+$form = new form('searchform', $this->uri(array('action' => 'search')));
 $form->method = 'GET';
 
 $hiddenInput = new hiddeninput('module', 'contextcontent');
@@ -27,8 +28,8 @@ $form->addToForm($hiddenInput->show());
 $hiddenInput = new hiddeninput('action', 'search');
 //$form->addToForm($hiddenInput->show());
 
-$textinput = new textinput ('contentsearch', $this->getParam('contentsearch'));
-$button = new button ('searchgo', 'Go');
+$textinput = new textinput('contentsearch', $this->getParam('contentsearch'));
+$button = new button('searchgo', 'Go');
 $button->setToSubmit();
 //Add toolbar
 $toolbar = $this->getObject('contextsidebar', 'context');
@@ -36,7 +37,7 @@ $toolbar = $this->getObject('contextsidebar', 'context');
 //$form->addToForm($textinput->show().' '.$button->show());
 
 $objFieldset = $this->newObject('fieldset', 'htmlelements');
-$label = new label ('Search for:', 'input_contentsearch');
+$label = new label('Search for:', 'input_contentsearch');
 
 //$objFieldset->setLegend($label->show());
 //$objFieldset->contents = $form->show();
@@ -46,7 +47,6 @@ $header->str = ucwords($this->objLanguage->code2Txt('mod_contextcontent_name', '
 $header->type = 2;
 $content = "";
 //$content .= $header->show();
-
 //$content .= $objFieldset->show();
 
 $content .= '<h3>Chapters:</h3>';
@@ -70,24 +70,24 @@ if (count($chapters) > 0) {
             $showChapter = TRUE;
         }
 
-                $releasedate = strtotime($chapter['releasedate']);
+        $releasedate = strtotime($chapter['releasedate']);
         $enddate = strtotime($chapter['enddate']);
 
 
         //compate dates here, then decide on visibility
         if (!empty($releasedate) && !empty($enddate)) {
-            if (($today <= $releasedate )) {
+            if (($today <= $releasedate)) {
                 $showChapter = FALSE;
-                if($this->isValid('addchapter')){
+                if ($this->isValid('addchapter')) {
                     $showChapter = TRUE;
-                    $chapter['chaptertitle']=$chapter['chaptertitle'].'&nbsp;('.$this->objLanguage->languageText('mod_contextcontent_hidden','contextcontent',' Hidden').')';
+                    $chapter['chaptertitle'] = $chapter['chaptertitle'] . '&nbsp;(' . $this->objLanguage->languageText('mod_contextcontent_hidden', 'contextcontent', ' Hidden') . ')';
                 }
             }
             if ($enddate < $today) {
                 $showChapter = FALSE;
-                 if($this->isValid('addchapter')){
+                if ($this->isValid('addchapter')) {
                     $showChapter = TRUE;
-                    $chapter['chaptertitle']=$chapter['chaptertitle'].'&nbsp;('.$this->objLanguage->languageText('mod_contextcontent_hidden','contextcontent',' Hidden').')';
+                    $chapter['chaptertitle'] = $chapter['chaptertitle'] . '&nbsp;(' . $this->objLanguage->languageText('mod_contextcontent_hidden', 'contextcontent', ' Hidden') . ')';
                 }
             }
         }
@@ -96,34 +96,34 @@ if (count($chapters) > 0) {
         if ($showChapter) {
 
             $bookmarkLink = new link("#{$chapter['chapterid']}");
-            $bookmarkLink->link ='';
-            $bookmarkLink->title = $this->objLanguage->languageText('mod_contextcontent_scrolltohapter','contextcontent');
+            $bookmarkLink->link = '';
+            $bookmarkLink->title = $this->objLanguage->languageText('mod_contextcontent_scrolltohapter', 'contextcontent');
 
             // Get List of Pages in the Chapter
             //$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
             $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid'], $this->contextCode);
-            if($ischapterlogged == FALSE) {
-                $showImg=$streamerimg;
-            }else {
-                $showImg="";
+            if ($ischapterlogged == FALSE) {
+                $showImg = $streamerimg;
+            } else {
+                $showImg = "";
             }
             //if ($chapter['pagecount'] == 0) {
             //    $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
             //} else {
 
             if ($chapter['scorm'] == 'Y') {
-                $link = new link ($this->uri(array('action'=>'viewscorm','mode'=>'chapter', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
-                $link->link = $chapter['chaptertitle'].$showImg;
-                $content .= '<li>'.$link->show();
-            }else {
-                $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
-                $link->link = $chapter['chaptertitle'].$showImg;
-                $content .= '<li>'.$link->show();
+                $link = new link($this->uri(array('action' => 'viewscorm', 'mode' => 'chapter', 'folderId' => $chapter['introduction'], 'chapterid' => $chapter['chapterid']), $module = 'scorm'));
+                $link->link = $chapter['chaptertitle'] . $showImg;
+                $content .= '<li>' . $link->show();
+            } else {
+                $link = new link($this->uri(array('action' => 'viewchapter', 'id' => $chapter['chapterid'])));
+                $link->link = $chapter['chaptertitle'] . $showImg;
+                $content .= '<li>' . $link->show();
             }
             //}
 
             if (isset($showScrollLinks) && $showScrollLinks) {
-                $content .= " ".$bookmarkLink->show().'</li>';
+                $content .= " " . $bookmarkLink->show() . '</li>';
             }
         }
     }
@@ -131,12 +131,22 @@ if (count($chapters) > 0) {
 }
 
 if ($this->isValid('addchapter')) {
-    $link = new link ($this->uri(array('action'=>'addchapter')));
-    $link->link = $this->objLanguage->languageText('mod_contextcontent_addanewchapter','contextcontent');
+    $link = new link($this->uri(array('action' => 'addchapter')));
+    $link->link = $this->objLanguage->languageText('mod_contextcontent_addanewchapter', 'contextcontent');
 
-    $content .=  '<br /><p>'.$link->show().'</p>';
+    $content .= '<br /><p>' . $link->show() . '</p>';
 }
+//Show logs if configured true
+if ($enableViewActivityLog == 'true' && $this->isValid('addchapter')) {
+    $link = new link($this->uri(array('action' => 'viewcontextcontentusage')));
+    $link->link = $trackerimg . '&nbsp;' . ucWords($this->objLanguage->code2Txt('mod_contextcontent_viewcontextcontentusage', 'contextcontent'));
 
+    $content .= '<br />' . $link->show() . '';
+    $link = new link($this->uri(array('action' => 'viewlogs')));
+    $link->link = $trackerimg . '&nbsp;' . $this->objLanguage->languageText('mod_contextcontent_useractivitylogs', 'contextcontent');
+
+    $content .= '<br />' . $link->show() . '';
+}
 $objFieldset->contents = $toolbar->show();
 $cssLayout->setLeftColumnContent($content);
 $cssLayout->setMiddleColumnContent($this->getContent());
