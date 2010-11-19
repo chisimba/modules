@@ -42,8 +42,6 @@ class dbquestion_answers extends dbtable
      */
     public function addAnswers($fields, $id = NULL)
     {
-        
-        $fields['updated'] = date('Y-m-d H:i:s');
         if ($id) {
             $this->update('id', $id, $fields);
         } else {

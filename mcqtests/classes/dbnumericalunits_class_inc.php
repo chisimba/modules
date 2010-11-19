@@ -32,15 +32,43 @@ class dbnumericalunits extends dbtable {
     }
 
     public function addNumericalUnits($data) {
-        $this->insert($data);
+        $id = $this->insert($data);
+        return $id;
     }
-
+    /**
+     * Method to add a unit to the database.
+     * If the $id field is not null then the answer is updated.
+     *
+     * @access public
+     * @param array $fields The fields to be inserted.
+     * @param string $id The id of the answer to be updated.
+     * @return string $id The id of the inserted or updated answer.
+     */
+    public function addNUnit($fields, $id = NULL)
+    {
+        if ($id) {
+            $this->update('id', $id, $fields);
+        } else {
+            $id = $this->insert($fields);
+        }
+        return $id;
+    }
+    
     public function updateNumericalUnits($id, $data) {
         $this->update('questionid', $id, $data);
+        return $id;
     }
 
     public function deleteNumericalUnit($id) {
         $this->delete('questionid', $id);
+    }
+    public function updateNU($id, $data) {
+        $this->update('id', $id, $data);
+        return $id;
+    }
+
+    public function deleteNU($id) {
+        $this->delete('id', $id);
     }
 
     public function getNumericalUnits($id) {

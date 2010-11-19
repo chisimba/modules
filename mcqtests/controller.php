@@ -57,6 +57,16 @@ class mcqtests extends controller {
      * @var object to hold formmanager class
      */
     public $objFormManager;
+    /**
+     *
+     * @var object to hold numericalunitsoptons class
+     */
+    public $objNumericalOptions;
+    /**
+     *
+     * @var object to hold question_answers class
+     */
+    public $objQnAnswers;
 
     /**
      * Method to construct the class.
@@ -98,8 +108,10 @@ class mcqtests extends controller {
         $this->objQuestionMatching = $this->newObject('dbquestion_matching');
         $this->objMultiAnswers = $this->newObject('dbquestion_multianswers');
         $this->objQuestionNumerical = $this->newObject('dbquestion_numerical');
+        $this->objQuestionCalculated = $this->newObject('dbquestion_calculated');
         $this->objNumericalUnit = $this->newObject('dbnumericalunits');
         $this->objNumericalOptions = $this->newObject('dbnumericalunitsoptions');
+        $this->objQnAnswers = $this->newObject('dbquestion_answers');
 
         // context
         $this->objContext = $this->newObject('dbcontext', 'context');
@@ -147,6 +159,13 @@ class mcqtests extends controller {
         switch ($action) {
             case 'addsimplecalculated':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                //Flag to determine if we save question as new or just update
+                $saveAsNew = 0;
+                if ($submitVal == "Save as a new question") {
+                    $saveAsNew = 1;
+                } elseif ($submitVal == "Save changes") {
+                    $saveAsNew = 1;
+                }
                 //Get Fields
                 $id = $this->getParam('id', Null);
                 $test = $this->getParam('test', Null);
@@ -163,53 +182,7 @@ class mcqtests extends controller {
                 $fields['unitcount'] = $unitCount;
                 //Set variables for use in the template
                 $this->setVarByRef('fields', $fields);
-
-                //Save the question
-                $fieldsQn = array();
-                $fieldsQn['categoryid'] = $this->getParam('categoryid', Null);
-                $fieldsQn['name'] = $this->getParam('qnName', Null);
-                $fieldsQn['question'] = $this->getParam('qntext', Null);
-                $fieldsQn['questiontext'] = $this->getParam('qntext', Null);
-                $fieldsQn['mark'] = $this->getParam('qngrade', Null);
-                $fieldsQn['penalty'] = $this->getParam('penaltyfactor', Null);
-                $fieldsQn['qtype'] = "SimpleCalculated";
-                $fieldsQn['questiontype'] = "SimpleCalculated";
-                $fieldsQn['generalfeedback'] = $this->getParam('genfeedback', Null);
-                $qncount = $this->getParam('qncount', Null);
-                //Insert/Update Question
-                if (!empty($fieldsQn)) {
-                    $id = $this->dbQuestions->addQuestion($fieldsQn, $id, $saveAsNew);
-                }
-
-                //Save Unit-Handling
-                $fieldsUH = array();
-                $uhid = $this->getParam('uhid', Null);
-                $fieldsQn['questionid'] = $this->getParam('questionid', Null);
-                $fieldsUH['unitgradingtype'] = $this->getParam('unitgradetype', Null);
-                $fieldsUH['unitpenalty'] = $this->getParam('unitpenalty', Null);
-                $fieldsUH['instructionsformat'] = $this->getParam('instructionsformat', Null);
-                $fieldsUH['instructions'] = $this->getParam('instructions', Null);
-                $fieldsUH['unitgradingtype'] = $this->getParam('unitgradingtype', Null);
-                $fieldsUH['showunits'] = $this->getParam('showunits', Null);
-                //Insert/Update Unit-Handling
-                if (!empty($fieldsQn)) {
-                    if (empty($uhid)) {
-                        $uhid = $this->objNumericalOptions->addNumericalOptions($fieldsUH);
-                    } else {
-                        $uhid = $this->objNumericalOptions->updateNumericalOptions($fieldsQn, $uhid);
-                    }
-                }
-                //Save the official tags
-                $officialTags = array();
-                $officialTags['tags'] = $this->getParam('officialtags', Null);
-                $othertags = $this->getParam('othertags', Null);
-                if (!empty($othertags) && !empty($id)) {
-                    $otTags = array();
-                    $otTags['tags'] = $othertags;
-                    //Insert/Update Tags
-                    $tagId = $this->dbTag->addTag($otTags, Null, $id);
-                }
-
+                $this->saveSimpleCalculated();
                 return 'simplecalculatedqn_tpl.php';
                 break;
             case "deletersa":
@@ -756,8 +729,6 @@ class mcqtests extends controller {
                     $this->dbAnswers->setCorrect($postAns, 1);
                     $this->dbAnswers->setCorrect($postCorId, 0);
                 }
-            // var_dump($postAns);
-            // var_dump($postCorId);
 
             case 'applyaddanswer':
                 $postSave = $this->getParam('save', '');
@@ -1114,6 +1085,97 @@ class mcqtests extends controller {
                     return $this->home();
                 }
         }
+    }
+
+    /**
+     * Method to save simple calculated question
+     *
+     * @return boolean
+     */
+    public function saveSimpleCalculated() {
+        //Save the question
+        $fieldsQn = array();
+        //$fieldsQn['categoryid'] = $this->getParam('categoryid', Null);
+        $fieldsQn['name'] = $this->getParam('qnName', Null);
+        $fieldsQn['question'] = $this->getParam('qntext', Null);
+        $fieldsQn['questiontext'] = $this->getParam('qntext', Null);
+        $fieldsQn['mark'] = $this->getParam('qngrade', Null);
+        $fieldsQn['penalty'] = $this->getParam('penaltyfactor', Null);
+        $fieldsQn['qtype'] = "SimpleCalculated";
+        $fieldsQn['questiontype'] = "SimpleCalculated";
+        $fieldsQn['generalfeedback'] = $this->getParam('genfeedback', Null);
+        $qncount = $this->getParam('qncount', Null);
+        //Insert/Update Question
+        if (!empty($fieldsQn)) {
+            $id = $this->dbQuestions->addQuestion($fieldsQn, $id, $saveAsNew);
+        }
+
+        //Save Unit-Handling
+        $fieldsUH = array();
+        $uhid = $this->getParam('uhid', Null);
+        $fieldsUH['questionid'] = $this->getParam('questionid', Null);
+        $fieldsUH['unitgradingtype'] = $this->getParam('unitgradetype', Null);
+        $fieldsUH['unitpenalty'] = $this->getParam('unitpenalty', Null);
+        $fieldsUH['instructionsformat'] = $this->getParam('instructionsformat', Null);
+        $fieldsUH['instructions'] = $this->getParam('instructions', Null);
+        $fieldsUH['unitgradingtype'] = $this->getParam('unitgradingtype', Null);
+        $fieldsUH['showunits'] = $this->getParam('showunits', Null);
+        //Insert/Update Unit-Handling
+        $uhid = $this->objNumericalOptions->addNOption($fieldsUH, $uhid);
+        //Save Units
+        $frmunitcount = $this->getParam('frmunitcount', Null);
+        if (!empty($frmunitcount)) {
+            $ucount = 1;
+            do {
+                $fieldsUnit = array();
+                $fieldsUnit['questionid'] = $id;
+                $unitid = $this->getParam('uhid' . $ucount, Null);
+                $fieldsUnit['unit'] = $this->getParam('unit' . $ucount, Null);
+                $fieldsUnit['multiplier'] = $this->getParam('multiplier' . $ucount, Null);
+                //Insert/Update Unit-Multiplier
+                $unitid = $this->objNumericalUnit->addNUnit($fieldsUnit, $unitid);
+                $ucount++;
+            } while ($ucount <= $frmunitcount);
+        }
+        //Save Answers
+        if (!empty($frmanscount)) {
+            $acount = 1;
+            do {
+                $fieldsAnsC = array();
+                $fieldsAnsC['questionid'] = $id;
+                $qncalcid = $this->getParam('qncalcid' . $acount, Null);
+                $fieldsAnsC['answer'] = $this->getParam('ansformula' . $acount, Null);
+                $fieldsAnsC['tolerance'] = $this->getParam('tolerance' . $acount, Null);
+                $fieldsAnsC['tolerancetype'] = $this->getParam('tolerancetype' . $acount, Null);
+                $fieldsAnsC['correctanswerlength'] = $this->getParam('correctanswerlength' . $acount, Null);
+                $fieldsAnsC['correctanswerformat'] = $this->getParam('correctanswerformat' . $acount, Null);
+                //Insert/Update Answer
+                $ansid = $this->objQuestionCalculated->addAnswers($fieldsAnsC, $qncalcid);
+
+                $fieldsAns = array();
+                $fieldsAns['questionid'] = $id;
+                $ansid = $this->getParam('uhid' . $acount, Null);
+                $fieldsAns['answer'] = $this->getParam('ansformula' . $acount, Null);
+                $fieldsAns['tolerance'] = $this->getParam('tolerance' . $acount, Null);
+                $fieldsAns['tolerancetype'] = $this->getParam('tolerancetype' . $acount, Null);
+                $fieldsAns['correctanswerlength'] = $this->getParam('correctanswerlength' . $acount, Null);
+                $fieldsAns['correctanswerformat'] = $this->getParam('correctanswerformat' . $acount, Null);
+                //Insert/Update Answer
+                $ansid = $this->objQnAnswers->addAnswers($fieldsAns, $ansid);
+                $acount++;
+            } while ($acount <= $frmanscount);
+        }
+        //Save the official tags
+        $officialTags = array();
+        $officialTags['tags'] = $this->getParam('officialtags', Null);
+        $othertags = $this->getParam('othertags', Null);
+        if (!empty($othertags) && !empty($id)) {
+            $otTags = array();
+            $otTags['tags'] = $othertags;
+            //Insert/Update Tags
+            $tagId = $this->dbTag->addTag($otTags, Null, $id);
+        }
+        return TRUE;
     }
 
     /**
@@ -1500,7 +1562,7 @@ class mcqtests extends controller {
             $fields['answer'] = $answers['answer' . $i];
             $fields['commenttext'] = $answers['comment' . $i];
             $fields['answerorder'] = $order++;
-            // var_dump($answers['correctans']);
+
             if ($questiontype == 'freeform') {
                 $fields['correct'] = 1;
                 $f++;
@@ -1510,7 +1572,6 @@ class mcqtests extends controller {
             } else {
                 $fields['correct'] = 0;
             }
-            //var_dump($fields['correct']);
             if ($answerId == '') {
                 $this->dbAnswers->addAnswers($fields);
             } else {

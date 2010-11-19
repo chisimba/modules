@@ -1388,7 +1388,6 @@ class formmanager extends object {
         } else {
             $data = $this->dbCategory->getContextQuestions($contextCode);
         }
-        //var_dump($data);
         //Form Heading/Title
         $objHeading = &$this->getObject('htmlheading', 'htmlelements');
         $objHeading->type = 1;
@@ -1951,9 +1950,9 @@ class formmanager extends object {
 
         $listTitle = $phraseListOf . " " . $phraseRSAQuestions;
         //Form Object
-        $form = new form("adddescription", $this->uri(array(
+        $form = new form("addsimplecalculated", $this->uri(array(
                             'module' => 'mcqtest',
-                            'action' => 'addrandomshortansconfirm',
+                            'action' => 'addsimplecalculated',
                             'id' => $id
                         )));
         $qnData = $this->dbQuestions->getQuestion($id);
@@ -2248,11 +2247,13 @@ class formmanager extends object {
         } else {
             $noofunitsdropdown->setSelected("0");
         }
+        //Store no of unit-multipliers
+        $frmunitcount = new hiddeninput("frmunitcount", $ucount);
 
         //Add Units dropdown to the table
         $objTable->startRow();
         $objTable->addCell($phraseAddBlankUnits, '20%');
-        $objTable->addCell($noofunitsdropdown->show(), '80%');
+        $objTable->addCell($noofunitsdropdown->show().$frmunitcount->show(), '80%');
         $objTable->endRow();
 
         //Add table to form
@@ -2566,7 +2567,7 @@ class formmanager extends object {
         }
         $unitfield->size = 7;
         //Store numericaloptions Id
-        $uhfield = new hiddeninput("uhid", $unitValues["umid"]);
+        $uhfield = new hiddeninput("uhid".$unitno, $unitValues["umid"]);
         //Add Unit to the table
         $objTable->startRow();
         $objTable->addCell($wordUnit, '20%');
@@ -2587,7 +2588,7 @@ class formmanager extends object {
             if (!empty($unitValues)) {
                 $multiplierfield = new textinput("multiplier" . $unitno, $unitValues["multiplier"]);
             } else {
-                $multiplierfield = new textinput("unit" . $unitno, "");
+                $multiplierfield = new textinput("multiplier" . $unitno, "");
             }
             $multiplierfield->size = 7;
             //Add Multiplier to the table
@@ -2668,6 +2669,18 @@ class formmanager extends object {
         $objTable->addCell($grade->show() . " %", '80%');
         $objTable->endRow();
 
+        //qncalcid text box
+        if (!empty($ansValues)) {
+            $qncalcid = new hiddeninput("qncalcid" . $ansno, $ansValues["qncalcid"]);
+        } else {
+            $qncalcid = new hiddeninput("qncalcid" . $ansno, "");
+        }
+        //ansid text box
+        if (!empty($ansValues)) {
+            $ansid = new hiddeninput("ansid" . $ansno, $ansValues["ansid"]);
+        } else {
+            $ansid = new hiddeninput("ansid" . $ansno, "");
+        }
         //tolerance text box
         if (!empty($ansValues)) {
             $tolerance = new textinput("tolerance" . $ansno, $ansValues["tolerance"]);
@@ -2678,7 +2691,7 @@ class formmanager extends object {
         //Add tolerance to the table
         $objTable->startRow();
         $objTable->addCell($phraseTolerance, '20%');
-        $objTable->addCell($tolerance->show(), '80%');
+        $objTable->addCell($tolerance->show().$qncalcid->show().$ansid->show(), '80%');
         $objTable->endRow();
 
         //tolerance type text box
@@ -2695,7 +2708,7 @@ class formmanager extends object {
         $objTable->endRow();
 
         //correct-answer-shows text box
-        $correctAnswerShows = new dropdown("correctanswershows" . $ansno);
+        $correctAnswerShows = new dropdown("correctanswerlength" . $ansno);
         $correctAnswerShows->addOption("0", "0");
         $correctAnswerShows->addOption("1", "1");
         $correctAnswerShows->addOption("2", "2");
@@ -2707,7 +2720,7 @@ class formmanager extends object {
         $correctAnswerShows->addOption("8", "8");
         $correctAnswerShows->addOption("9", "9");
         if (!empty($ansValues)) {
-            $correctAnswerShows->setSelected($ansValues["correctanswershows"]);
+            $correctAnswerShows->setSelected($ansValues["correctanswerlength"]);
         }
         //Add correct-answer-shows to the table
         $objTable->startRow();
@@ -2716,11 +2729,11 @@ class formmanager extends object {
         $objTable->endRow();
 
         //format text box
-        $format = new dropdown("format" . $ansno);
+        $format = new dropdown("correctanswerformat" . $ansno);
         $format->addOption("Decimals", "Decimals");
         $format->addOption("Significant-values", "Significant values");
         if (!empty($ansValues)) {
-            $format->setSelected($ansValues["format"]);
+            $format->setSelected($ansValues["correctanswerformat"]);
         }
         //Add format to the table
         $objTable->startRow();

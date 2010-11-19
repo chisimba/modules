@@ -30,20 +30,44 @@ class dbnumericalunitsoptions extends dbtable {
         parent::init('tbl_test_question_numericaloptions');
         $this->table = 'tbl_test_question_numericaloptions';
     }
-
+    /**
+     * Method to add/update a numerical-option to the database.
+     * If the $id field is not null then the answer is updated.
+     *
+     * @access public
+     * @param array $fields The fields to be inserted.
+     * @param string $id The id of the answer to be updated.
+     * @return string $id The id of the inserted or updated answer.
+     */
+    public function addNOption($fields, $id = NULL)
+    {
+        if ($id) {
+            $this->update('id', $id, $fields);
+        } else {
+            $id = $this->insert($fields);
+        }
+        return $id;
+    }
     public function addNumericalOptions($data) {
         //insert into this table
-        return $this->insert($data);
+        $id = $this->insert($data);
+        return $id;
     }
 
     public function updateNumericalOptions($id, $data) {
         $this->update('questionid', $id, $data);
+        return $id;
     }
-
+    public function updateNO($id, $data) {
+        $this->update('id', $id, $data);
+        return $id;
+    }
     public function deleteNumericalOptions($id) {
         $this->delete('questionid', $id);
     }
-
+    public function deleteNO($id) {
+        $this->delete('id', $id);
+    }
     public function getNumericalOptions($id) {
         $filter = "WHERE questionid='$id'";
         $data = $this->getAll($filter);
