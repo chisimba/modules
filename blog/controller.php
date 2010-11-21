@@ -709,7 +709,7 @@ class blog extends controller {
 
             case 'feed':
             //get the feed format parameter from the querystring
-                $format = $this->getParam('feedselector');
+                $format = $this->getParam('format');
                 //and the userid of the blog we are interested in
                 $userid = $this->getParam('userid');
                 $bloggerprofile = $this->objDbBlog->checkProfile($userid);
