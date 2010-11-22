@@ -22,8 +22,9 @@ class dbgift extends dbtable {
      * @return boolean
      */
     public function addInfo(
-    $donor, $recipient, $giftname, $description, $value, $listed, $division, $type) {
+    $donor, $recipient, $giftname, $description, $value, $listed, $division, $type, $comments, $date_recieved) {
         $donor = str_replace("'", "\'", $donor);
+        $comments = str_replace("'", "\'", $comments);
         $description = str_replace("'", "\'", $description);
 
         $data = array(
@@ -33,8 +34,10 @@ class dbgift extends dbtable {
             "description" => $description,
             "value" => $value,
             "listed" => $listed,
+            "comments" => $comments,
             "gift_type" => $type,
             "division" => $division,
+            "date_recieved" => $date_recieved,
             "tran_date" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
         $result = $this->insert($data);
         return $result;
@@ -53,7 +56,7 @@ class dbgift extends dbtable {
      * @return boolean
      * $donor, $recipient, $name, $description, $value, $listed, $id,$comments
      */
-    public function updateInfo($donor, $recipient, $giftname, $description, $value, $listed, $id, $comments) {
+    public function updateInfo($donor, $recipient, $giftname, $description, $value, $listed, $id, $comments, $date_recieved) {
         $data = array(
             "donor" => $donor,
             "recipient" => $recipient,
@@ -61,7 +64,8 @@ class dbgift extends dbtable {
             "description" => $description,
             "value" => $value,
             "listed" => $listed,
-            "comments" => $comments
+            "comments" => $comments,
+            "date_recieved" => $date_recieved
         );
 
 
@@ -132,6 +136,16 @@ class dbgift extends dbtable {
         return $this->getRecordCount();
     }
 
+    public function getGiftCountByDepartment($department) {
+        $qry = "SELECT count(id) as total FROM tbl_gift WHERE  division= '$department'";
+        $data = $this->getInfo($qry);
+       if(count($data) > 0){
+           $row=$data[0];
+           return $row['total'];
+       }
+        return "0";
+    }
+
     public function getGifts($department) {
         $recipient = $this->objUser->userid();     // Recipient name
 
@@ -142,9 +156,9 @@ class dbgift extends dbtable {
         $qry.=" and division= '$department'";
         if ($this->objUser->isAdmin()) {
             $qry = "SELECT * FROM tbl_gift";
-             $qry.=" where division= '$department'";
+            $qry.=" where division= '$department'";
         }
-       
+
         $data = $this->getInfo($qry);
 
         return $data;
@@ -168,7 +182,6 @@ class dbgift extends dbtable {
         return $this->getArray($sql);
     }
 
-
     function getUserActivity($startdate, $enddate, $module) {
         $sql =
                 "select * from tbl_useractivity
@@ -177,7 +190,6 @@ class dbgift extends dbtable {
         and module='$module' order by createdon";
         return $this->getArray($sql);
     }
-
 
 }
 

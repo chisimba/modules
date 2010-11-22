@@ -1,7 +1,7 @@
 <?php
 
 $nav =$this->objGift->getTree('dhtml', $selected);
-
+$this->setSession("selected",$selected);
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -26,7 +26,7 @@ $cssLayout = $this->newObject('csslayout', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 2;
-$header->str = $this->objLanguage->languageText('mod_wicid_name', 'wicid', 'WICID');
+$header->str = $this->objLanguage->languageText('mod_gift_name', 'gift', 'Gift Management System');
 
 $leftColumn = $header->show();
 

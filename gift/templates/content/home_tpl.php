@@ -38,7 +38,7 @@ if ($this->objUser->isAdmin()) {
 
 $top.='<h2 class="departmenthome">' . $departmentname . '</h2>';
 $button = new button('approve', "Add gift");
-$uri = $this->uri(array('action' => 'add', 'departmentname' => $departmentname));
+$uri = $this->uri(array('action' => 'add'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $top.=$button->show();
 
@@ -65,10 +65,14 @@ if (count($gifts) > 0) {
         $editGift = new link($this->uri(array('action' => 'edit', 'id' => $gift['id'])));
         $editGift->link = $objIcon->show();
 
+        $edit = "";
+        if ($this->objUser->isAdmin()) {
+            $edit = $editGift->show();
+        }
         $viewDetailsLink = new link($this->uri(array('action' => 'view', 'id' => $gift['id'])));
         $viewDetailsLink->link = $gift['giftname'];
         $table->startRow();
-        $table->addCell($viewDetailsLink->show() . $editGift->show());
+        $table->addCell($viewDetailsLink->show() . $edit);
         $table->addCell($this->objUser->fullname($gift["recipient"]));
         $table->addCell($gift["donor"]);
         $table->addCell($gift["value"]);

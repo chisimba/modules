@@ -7,7 +7,7 @@ $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 
 $this->loadClass('button', 'htmlelements');
-$this->setVarByRef("selected", $departmentname);
+
 if ($mode == "add") {
     $action = 'save';
 }
@@ -26,7 +26,7 @@ if ($mode == 'edit') {
 }
 $header = new htmlheading();
 $header->type = 2;
-$header->str = $xtitle;
+$header->str = $xtitle."&nbsp;-&nbsp;".$this->objDepartments->getDepartmentName($this->getSession("departmentid"));
 
 echo $header->show();
 
@@ -68,6 +68,18 @@ $table->endRow();
 
 
 
+$table->startRow();
+$table->addCell('<b>Date Received</b>');
+$objDateTime = $this->getObject('dateandtime', 'utilities');
+$objDatePicker = $this->newObject('datepicker', 'htmlelements');
+$objDatePicker->name = 'date_recieved';
+if ($mode == 'edit') {
+    $objDatePicker->setDefaultDate(substr($document['date_recieved'], 0, 10));
+}
+
+
+$table->addCell($objDatePicker->show());
+$table->endRow();
 $textinput = new textinput('donor');
 $textinput->size = 60;
 if ($mode == 'edit') {
@@ -111,16 +123,16 @@ $table->addCell("<b>Type</b>");
 $table->addCell($gtype->show());
 $table->endRow();
 
-
-$table->startRow();
-$table->addCell("<b>" . $this->divisionLabel . "</b>");
-
 if ($mode == 'edit') {
-    $departmentname = $this->objDepartments->getDepartmentName($gift['division']);
-}
-$table->addCell($this->objGift->getTree('htmldropdown', $departmentname));
-$table->endRow();
 
+    $table->startRow();
+    $table->addCell("<b>" . $this->divisionLabel . "</b>");
+
+    $departmentname = $this->objDepartments->getDepartmentName($gift['division']);
+
+    $table->addCell($this->objGift->getTree('htmldropdown', $departmentname));
+    $table->endRow();
+}
 
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'comments';
@@ -144,11 +156,11 @@ $table->endRow();
 
 if ($mode == 'edit') {
     $attchs = $this->objAttachments->getAttachments($gift['id']);
-    $attachs="";
-    foreach($attchs as $attach){
-        $link=new link($this->uri(array("action"=>"downloadattachment","giftid"=>$gift['id'],"filename"=>$attach['name'])));
-        $link->link=$attach['name'];
-        $attachs.=$link->show().'<br/>';
+    $attachs = "";
+    foreach ($attchs as $attach) {
+        $link = new link($this->uri(array("action" => "downloadattachment", "giftid" => $gift['id'], "filename" => $attach['name'])));
+        $link->link = $attach['name'];
+        $attachs.=$link->show() . '<br/>';
     }
     $table->startRow();
     $table->addCell("<b>Attachments</b>");
@@ -174,7 +186,8 @@ if ($mode == 'edit') {
     $form->addToForm($hiddenId->show());
 }
 
-
+$hiddenId = new hiddeninput('$epartmentid', $departmentid);
+$form->addToForm($hiddenId->show());
 $efs = new fieldset();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {

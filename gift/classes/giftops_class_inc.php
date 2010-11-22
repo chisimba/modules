@@ -30,6 +30,7 @@ class giftops extends object {
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objDepartments = $this->getObject('dbdepartments', 'gift');
         $this->divisionLabel = $this->objSysConfig->getValue('DIVISION_LABEL', 'gift');
+        $this->objUser = $this->getObject("user", "security");
     }
 
     /**
@@ -195,13 +196,15 @@ class giftops extends object {
 
     function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
         $depts = $this->objDepartments->getDepartments();
-
+        $objDbGift = $this->getObject("dbgift");
         if ($selected == '') {
 
-            if (count($depts) > 0) {
-                $defaultDept = $depts[0];
-                $selected = $defaultDept['name'];
-            }
+            $selected = $this->objDepartments->getDepartmentName($this->getSession("departmentid"));
+            /* if (count($depts) > 0) {
+              $defaultDept = $depts[0];
+              $selected = $defaultDept['name'];
+              $this->setSession("departmentid",$defaultDept['id']);
+              } */
         }
 
         if ($treeType == 'htmldropdown') {
@@ -221,6 +224,9 @@ class giftops extends object {
             foreach ($depts as $dept) {
                 $folderText = $dept['name'];
                 $folderShortText = substr($dept['name'], 0, 200) . '...';
+                if ($this->objUser->isAdmin()) {
+                    $folderShortText = "(".$objDbGift->getGiftCountByDepartment($dept['id']) . ")&nbsp;" . $folderShortText;
+                }
                 if ($dept['name'] == $selected) {
                     $folderText = '<strong>' . $folderText . '</strong>';
                     $cssClass = 'confirm';

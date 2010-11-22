@@ -66,4 +66,19 @@
             </add>
         </data>
     </update>
+
+
+
+        <update>
+        <table>tbl_gift</table>
+        <version>0.051</version>
+        <description>Added date received</description>
+        <data>
+            <add>
+                <name>date_recieved</name>
+                <type>timestamp</type>
+
+            </add>
+        </data>
+    </update>
 </updates>

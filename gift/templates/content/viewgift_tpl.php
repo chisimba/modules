@@ -25,6 +25,11 @@ $table->addCell($gift['description']);
 $table->endRow();
 
 $table->startRow();
+$table->addCell("<b>Date Recived</b>");
+$table->addCell($gift['date_recieved']);
+$table->endRow();
+
+$table->startRow();
 $table->addCell("<b>Date Added</b>");
 $table->addCell($gift['tran_date']);
 $table->endRow();
@@ -50,7 +55,7 @@ $table->endRow();
 
 $table->startRow();
 $table->addCell("<b>Department</b>");
-$table->addCell($gift['department']);
+$table->addCell($this->objDepartments->getDepartmentName($gift['division']));
 $table->endRow();
 
 

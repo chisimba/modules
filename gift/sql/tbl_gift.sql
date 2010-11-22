@@ -14,6 +14,7 @@ $fields = array(
 		'value'=>array('type'=>'integer','not null'),
                 'gift_type' => array('type' => 'text','length' => 32),
                 'tran_date'=>array('type'=>'timestamp'),
+                'date_recieved'=>array('type'=>'timestamp'),
 		'listed'=>array('type'=>'boolean','not null'),
                 'division' => array('type' => 'text','length' => 32),
                 'comments' => array('type' => 'text')

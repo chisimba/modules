@@ -9,6 +9,7 @@ class gift extends controller {
 
     function init() {
         // Importing classes for use in controller
+        $this->loadClass('link', 'htmlelements');
         $this->objLanguage = $this->getObject("language", "language");
         $this->objDbGift = $this->getObject("dbgift");
         $this->objGift = $this->getObject("giftops");
@@ -24,36 +25,12 @@ class gift extends controller {
         }
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->divisionLabel = $this->objSysConfig->getValue('DIVISION_LABEL', 'gift');
+        $this->adminEmail = $this->objSysConfig->getValue('DIVISION_LABEL', 'gift');
+        $this->minAmountToAlert = $this->objSysConfig->getValue('MIN_AMOUNT_FOR_ALERT', 'gift');
         $test = "test";
         // Initialising $data (holds the data from database when edit link is called)
         $this->data = array();
-     
     }
-
-    /*
-      function dispatch($action) {
-      $this->setLayoutTemplate("gift_layout_tpl.php");
-      switch ($action) {
-
-      case 'add': return $this->add();
-      case 'submitadd': return $this->submitAdd();
-      case 'result': return $this->result();
-      case 'edit': return $this->edit();
-      case 'archive': return $this->archive();
-      case 'submitedit': return $this->submitEdit();
-      case 'search': return $this->searchGift();
-      case 'viewpolicy': return $this->viewPolicy();
-      case 'acceptpolicy': return $this->acceptPolicy();
-      case 'userexists': return $this->userExists();
-      case 'saveuser': return $this->saveUser();
-      default:
-      $this->clickedAdd = $this->getParam('clickedadd');
-
-      return "home_tpl.php";
-
-      }
-      }
-     */
 
     /**
      * Standard Dispatch Function for Controller
@@ -117,7 +94,7 @@ class gift extends controller {
      */
     public function __home() {
         $departmentid = $this->getParam("departmentid");
-        $departmentname = $this->getParam("departmentname");
+        $departmentname = $this->objDepartments->getDepartmentName($departmentid);
         if ($departmentid == '') {
             $depts = $this->objDepartments->getDepartments();
 
@@ -128,8 +105,10 @@ class gift extends controller {
                 $departmentname = $defaultDept['name'];
                 $this->setVarByRef("departmentname", $departmentname);
                 $this->setVarByRef("departmentid", $departmentid);
+                 $this->setSession("departmentid",$departmentid);
             }
         } else {
+             $this->setSession("departmentid",$departmentid);
             $this->setVarByRef("departmentname", $departmentname);
             $this->setVarByRef("departmentid", $departmentid);
         }
@@ -172,11 +151,11 @@ class gift extends controller {
      * @return string
      */
     function __add() {
-        $departmentname = $this->getParam("departmentname");
+       
         $mode = "add";
         $this->setVarByRef("mode", $mode);
         if ($this->giftPolicyAccepted == "true") {
-            $this->setVarByRef("departmentname", $departmentname);
+           
             return "addeditgift_tpl.php";
         } else {
             return "giftpolicy_tpl.php";
@@ -229,16 +208,18 @@ class gift extends controller {
             $errormessages[] = "Value must be integer";
         }
 
-        $division = $this->getParam('selecteddepartment');
+        $division = $this->getSession('departmentid');
 
-        if ($division == "-1") {
-            $errormessages[] = "Select departments";
-        }
+       
         $type = $this->getParam('type');
         if ($type == "Select ...") {
             $errormessages[] = "Select gift type ";
         }
 
+        $comments = $this->getParam("comments");
+
+        $date_recieved = $this->getParam("date_recieved");
+        
         if (count($errormessages) > 0) {
             $this->setVarByRef("errormessages", $errormessages);
             $mode = "fixup";
@@ -246,9 +227,10 @@ class gift extends controller {
             $this->setVarByRef("name", $name);
             $this->setVarByRef("donor", $donor);
             $this->setVarByRef("type", $type);
+            $this->setVarByRef("comments", $comments);
             $this->setVarByRef("value", $value);
             $this->setVarByRef("description", $description);
-            $this->setVarByRef("department", $this->objDepartments->getDepartment($division));
+       
             return "addeditgift_tpl.php";
         }
         $result = $this->objDbGift->addInfo(
@@ -259,7 +241,9 @@ class gift extends controller {
                         $value,
                         $listed,
                         $division,
-                        $type);
+                        $type,
+                        $comments,
+                        $date_recieved);
 
         if ($result) {
             $this->msg = $this->objLanguage->languageText('mod_addInfoSuccess', 'gift');
@@ -267,38 +251,44 @@ class gift extends controller {
             $this->msg = $this->objLanguage->languageText('mod_infoFailure', 'gift');
         }
 
-        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $subject = $objSysConfig->getValue('EMAIL_SUBJECT', 'gift');
-        $subject = str_replace("{department}", $division, $subject);
-        $subject = str_replace("{names}", $this->objUser->fullname(), $subject);
-        $body = $objSysConfig->getValue('EMAIL_BODY', 'gift');
 
-        $body = str_replace("{department}", $division, $body);
-        $body = str_replace("{names}", $this->objUser->fullname(), $body);
+        if ($value >= $this->minAmountToAlert) {
+            $link = new link($this->uri(array("action" => "view", "id" => $result)));
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $subject = $objSysConfig->getValue('EMAIL_SUBJECT', 'gift');
+            $departmentName = $this->objDepartments->getDepartmentName($division);
+            $subject = str_replace("{department}", $departmentName, $subject);
+            $subject = str_replace("{names}", $this->objUser->fullname(), $subject);
+            $body = $objSysConfig->getValue('EMAIL_BODY', 'gift');
 
+            $body = str_replace("{department}", $departmentName, $body);
+            $body = str_replace("{names}", $this->objUser->fullname(), $body);
+            $body = str_replace("{giftname}", "'" . $name . "'", $body);
+            $body.=" " . $link->href;
 
-        $groupName = $objSysConfig->getValue('EMAIL_GROUP', 'gift');
-        $groupOps = $this->getObject('groupops', 'groupadmin');
-        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
-        $groupId = $objGroups->getId($groupName);
-        $users = $groupOps->getUsersInGroup($groupId);
-        $objMailer = $this->getObject('email', 'mail');
-        $recipients = array();
-        foreach ($users as $user) {
-            $recipients[] = $this->objUser->email($user['perm_user_id']);
+            $groupName = $objSysConfig->getValue('EMAIL_GROUP', 'gift');
+            $groupOps = $this->getObject('groupops', 'groupadmin');
+            $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+            $groupId = $objGroups->getId($groupName);
+            $users = $groupOps->getUsersInGroup($groupId);
+            $objMailer = $this->getObject('email', 'mail');
+            $recipients = array();
+            foreach ($users as $user) {
+                $recipients[] = $this->objUser->email($user['perm_user_id']);
+            }
+            $objMailer->setValue('to', $recipients);
+            $objMailer->setValue('from', $this->adminEmail);
+            $objMailer->setValue('fromName', $this->objUser->fullnames);
+
+            $objMailer->setValue('subject', $subject);
+
+            $objMailer->setValue('body', strip_tags($body));
+            $objMailer->setValue('AltBody', strip_tags($body));
+
+            $objMailer->send();
+         
         }
-        $objMailer->setValue('to', $recipients);
-        $objMailer->setValue('from', "no-reply@wits.ac.za");
-        $objMailer->setValue('fromName', $this->objUser->fullnames);
-
-        $objMailer->setValue('subject', $subject);
-
-        $objMailer->setValue('body', strip_tags($body));
-        $objMailer->setValue('AltBody', strip_tags($body));
-
-        $objMailer->send();
-
-        return $this->nextAction('home');
+        return $this->nextAction('home',array("departmentid"=>$division));
     }
 
     /**
@@ -419,7 +409,7 @@ class gift extends controller {
         $id = $this->getParam("id");
         $gift = $this->objDbGift->getGift($id);
         $this->setVarByRef("gift", $gift);
-        
+
         return "viewgift_tpl.php";
     }
 
