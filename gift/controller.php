@@ -521,7 +521,7 @@ class gift extends controller {
 
     function __acceptPolicy() {
         $this->objGiftUser->acceptPolicy();
-        $this->nextAction('home', array('clickedadd' => 'true'));
+        $this->nextAction('add');
     }
 
 }
