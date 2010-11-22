@@ -338,7 +338,7 @@ class essay extends controller
             }
         } else {
             $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_essay_notopics','essay'),'','','','noRecordsMessage','colspan="3"');
+            $objTable->addCell($this->objLanguage->code2Txt('mod_essay_notopics','essay'),'','','','noRecordsMessage','colspan="3"');
             $objTable->endRow();
         }
         $links = '';
