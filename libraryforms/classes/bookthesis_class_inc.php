@@ -319,8 +319,8 @@ class bookthesis extends dbTable {
     //Input and label for Department/Scool/Division
 	$table->startRow();
 	$objlocal = new dropdown ('local');
-	$localLabel = new label("Select your distance");
-	$locals =array("UWC Coppy Missing", "Local Only", "Overseas", "Fax");
+	$localLabel = new label("Please Select");
+	$locals =array("Local Only", "Overseas");
 foreach ($locals as $local)
 {
     $objlocal->addOption($local,$local);
