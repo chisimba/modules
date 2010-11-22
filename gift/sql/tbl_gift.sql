@@ -12,5 +12,7 @@ $fields = array(
 		'giftname'=>array('type'=>'text','length'=>128,'not null'),
 		'description'=>array('type'=>'blob','not null'),
 		'value'=>array('type'=>'integer','not null'),
+                'gift_type' => array('type' => 'text','length' => 32),
+                'tran_date'=>array('type'=>'timestamp'),
 		'listed'=>array('type'=>'boolean','not null'));
 ?>

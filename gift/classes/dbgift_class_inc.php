@@ -1,11 +1,13 @@
 <?php
+
 class dbgift extends dbtable {
-/**
- * Assign the table name in dbtable to be the table specified below
- */
+
+    /**
+     * Assign the table name in dbtable to be the table specified below
+     */
     public function init() {
         parent::init("tbl_gift");
-        $this->objUser     = $this->getObject("user","security");
+        $this->objUser = $this->getObject("user", "security");
     }
 
     /**
@@ -19,8 +21,21 @@ class dbgift extends dbtable {
      * @param boolean $listed
      * @return boolean
      */
-    public function addInfo($donor,$recipient,$giftname,$description,$value,$listed) {
-        $data=array("donor"=>$donor,"recipient"=>$recipient,"giftname"=>$giftname,"description"=>$description,"value"=>$value,"listed"=>$listed);
+    public function addInfo(
+    $donor, $recipient, $giftname, $description, $value, $listed, $division, $type) {
+        $donor = str_replace("'", "\'", $donor);
+        $description = str_replace("'", "\'", $description);
+
+        $data = array(
+            "donor" => $donor,
+            "recipient" => $recipient,
+            "giftname" => $giftname,
+            "description" => $description,
+            "value" => $value,
+            "listed" => $listed,
+            "gift_type" => $type,
+            "division" => $division,
+            "tran_date" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
         $result = $this->insert($data);
         return $result;
     }
@@ -36,11 +51,27 @@ class dbgift extends dbtable {
      * @param boolean $listed
      * @param string $id
      * @return boolean
+     * $donor, $recipient, $name, $description, $value, $listed, $id,$comments
      */
-    public function updateInfo($donor,$recipient,$giftname,$description,$value,$listed,$id) {
-        $data=array("donor"=>$donor,"recipient"=>$recipient,"giftname"=>$giftname,"description"=>$description,"value"=>$value,"listed"=>$listed);
-		
-        $result = $this->update('id',$id,$data);
+    public function updateInfo($donor, $recipient, $giftname, $description, $value, $listed, $id, $comments) {
+        $data = array(
+            "donor" => $donor,
+            "recipient" => $recipient,
+            "giftname" => $giftname,
+            "description" => $description,
+            "value" => $value,
+            "listed" => $listed,
+            "comments" => $comments
+        );
+
+
+
+        $result = $this->update('id', $id, $data);
+        return $result;
+    }
+
+    public function updateGift($id, $data) {
+        $result = $this->update('id', $id, $data);
         return $result;
     }
 
@@ -64,10 +95,9 @@ class dbgift extends dbtable {
     public function archive($id) {
         $listed = !$this->_getListedValue($id);
         $data['listed'] = $listed;
-        $result = $this->update('id',$id,$data);
+        $result = $this->update('id', $id, $data);
         return $result;
     }
-
 
     public function checkDuplicates($data) {
         $qry = "SELECT * FROM tbl_gift WHERE
@@ -87,38 +117,68 @@ class dbgift extends dbtable {
      * @return int;
      */
     private function _getListedValue($id) {
-        $result = $this->getRow('id',$id);
+        $result = $this->getRow('id', $id);
         return $result['listed'];
     }
 
-    public function getGifts() {
-        $sql="select * from tbl_gift";//." where userid = '".$userid."'";
-        $rows=$this->getArray($sql);
-        return $rows;
-    }
+    /*
+      public function getGifts() {
+      $sql = "select * from tbl_gift"; //." where userid = '".$userid."'";
+      $rows = $this->getArray($sql);
+      return $rows;
+      } */
 
     public function getNumberOfGifts() {
         return $this->getRecordCount();
     }
 
-    public function getMyGifts($query) {
-        $recipient = $this->objUser->fullname();     // Recipient name
-		
+    public function getGifts($department) {
+        $recipient = $this->objUser->userid();     // Recipient name
+
         $qry = "SELECT * FROM tbl_gift WHERE recipient = '$recipient'";
-    	if (isset($query)){
-   			 $qry .= " AND (giftname LIKE '%".addslashes($query)."%' )";
-   			 
-  		}
+        /* if (isset($query)) {
+          $qry .= " AND (giftname LIKE '%" . addslashes($query) . "%' )";
+          } */
+        $qry.=" and division= '$department'";
+        if ($this->objUser->isAdmin()) {
+            $qry = "SELECT * FROM tbl_gift";
+             $qry.=" where division= '$department'";
+        }
+       
         $data = $this->getInfo($qry);
 
         return $data;
     }
-	
-	//returns boolean
 
-	function userExists($userid){
-		return $this->valueExists('userid',$userid);
-	}
+    //returns boolean
+
+    function userExists($userid) {
+        return $this->valueExists('userid', $userid);
+    }
+
+    function getGift($id) {
+        return $this->getRow("id", $id);
+    }
+
+    function searchGifts($query) {
+        $sql =
+                "select * from tbl_gift where
+        donor like '%$query%' or giftname like '%$query%' or description like '%$query%'
+         or tran_date like '%$query%' or value like '%$query%'";
+        return $this->getArray($sql);
+    }
+
+
+    function getUserActivity($startdate, $enddate, $module) {
+        $sql =
+                "select * from tbl_useractivity
+        where  (createdon between '$startdate' and '$enddate')
+
+        and module='$module' order by createdon";
+        return $this->getArray($sql);
+    }
+
 
 }
+
 ?>

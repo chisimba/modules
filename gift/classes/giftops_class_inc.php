@@ -1,4 +1,5 @@
 <?php
+
 class giftops extends object {
 
     /**
@@ -12,10 +13,23 @@ class giftops extends object {
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
-        $this->loadClass('htmltable','htmlelements');
-        $this->loadClass("layer","htmlelements");
-        $this->loadClass("mouseoverpopup","htmlelements");
+        $this->loadClass('htmltable', 'htmlelements');
+        $this->loadClass("layer", "htmlelements");
+        $this->loadClass("mouseoverpopup", "htmlelements");
+        $this->loadClass('link', 'htmlelements');
+        $this->loadClass('treemenu', 'tree');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('fieldset', 'htmlelements');
+        $this->loadClass('treenode', 'tree');
+        $this->loadClass('htmllist', 'tree');
+        $this->loadClass('htmldropdown', 'tree');
+        $this->loadClass('dhtml', 'tree');
+
         $this->objLanguage = $this->getObject("language", "language");
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objDepartments = $this->getObject('dbdepartments', 'gift');
+        $this->divisionLabel = $this->objSysConfig->getValue('DIVISION_LABEL', 'gift');
     }
 
     /**
@@ -25,50 +39,49 @@ class giftops extends object {
      * @param array $data
      * @return string
      */
-    public function displayForm($data,$action) {
-        $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
-        $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-        $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
+    public function displayForm($data, $action) {
+        $extbase = '<script language="JavaScript" src="' . $this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js', 'htmlelements') . '" type="text/javascript"></script>';
+        $extalljs = '<script language="JavaScript" src="' . $this->getResourceUri('ext-3.0-rc2/ext-all.js', 'htmlelements') . '" type="text/javascript"></script>';
+        $extallcss = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css', 'htmlelements') . '"/>';
         $this->appendArrayVar('headerParams', $extbase);
         $this->appendArrayVar('headerParams', $extalljs);
         $this->appendArrayVar('headerParams', $extallcss);
 
         // set up language items
-        $dnlabel = $this->objLanguage->languageText('mod_addedit_donor','gift').":";
-        $rnlabel = $this->objLanguage->languageText("mod_addedit_receiver","gift").":";
-        $gnlabel = $this->objLanguage->languageText("mod_addedit_giftname","gift").":";
-        $descriplabel = $this->objLanguage->languageText("mod_addedit_description","gift").":";
-        $gvaluelabel = $this->objLanguage->languageText("mod_addedit_value","gift").":";
+        $dnlabel = $this->objLanguage->languageText('mod_addedit_donor', 'gift') . ":";
+        $rnlabel = $this->objLanguage->languageText("mod_addedit_receiver", "gift") . ":";
+        $gnlabel = $this->objLanguage->languageText("mod_addedit_giftname", "gift") . ":";
+        $descriplabel = $this->objLanguage->languageText("mod_addedit_description", "gift") . ":";
+        $gvaluelabel = $this->objLanguage->languageText("mod_addedit_value", "gift") . ":";
 
-        if(sizeof($data) == 0) {
+        if (sizeof($data) == 0) {
             $objForm = new form('contactdetailsform', $this->uri(array('action' => 'submitAdd')));
-        }
-        else {
-            $objForm = new form('contactdetailsform', $this->uri(array('action' => 'submitEdit','id' => $data['id'])));
+        } else {
+            $objForm = new form('contactdetailsform', $this->uri(array('action' => 'submitEdit', 'id' => $data['id'])));
         }
 
         $mainjs = "Ext.onReady(function(){
             new Ext.ToolTip({
             target: 'donortip',
-            html: '".$this->objLanguage->languageText('mod_add_donortip','gift')."',
+            html: '" . $this->objLanguage->languageText('mod_add_donortip', 'gift') . "',
             width: 200
             })
 
             new Ext.ToolTip({
             target: 'giftnametip',
-            html: '".$this->objLanguage->languageText('mod_add_giftnametip','gift')."',
+            html: '" . $this->objLanguage->languageText('mod_add_giftnametip', 'gift') . "',
             width: 200
             })
 
             new Ext.ToolTip({
             target: 'descriptiontip',
-            html: '".$this->objLanguage->languageText('mod_add_descriptiontip','gift')."',
+            html: '" . $this->objLanguage->languageText('mod_add_descriptiontip', 'gift') . "',
             width: 200
             })
 
             new Ext.ToolTip({
             target: 'valuetip',
-            html: '".$this->objLanguage->languageText('mod_add_valuetip','gift')."',
+            html: '" . $this->objLanguage->languageText('mod_add_valuetip', 'gift') . "',
             width: 200
             })
 
@@ -77,41 +90,41 @@ class giftops extends object {
         });";
 
         //Setting up input text boxes
-        $objInputh1 = new textinput('dnvalue',$data['donor'], '', '74');
-        $dnvalue = $objInputh1->show()."<br><br>";
-		
-        $hiddenid = "<input type=\"hidden\" name=\"id\" value=\"".$data['id']."\" />";
-			
-        $objInputh2b = new textinput('gname',$data['giftname'], '', '74');
-        $gnvalue = $objInputh2b->show()."<br><br>";
-			
-        $objInputh3a = new textarea('descripvalue',$data['description'], 15, 55);
-        $descripvalue = $objInputh3a->show()."<br><br>";
-			
-        $objInputh3b = new textinput('gvalue',$data['value'], '', '30');
-        $gvalue = $objInputh3b->show()."<br><br>";
-			
+        $objInputh1 = new textinput('dnvalue', $data['donor'], '', '74');
+        $dnvalue = $objInputh1->show() . "<br><br>";
+
+        $hiddenid = "<input type=\"hidden\" name=\"id\" value=\"" . $data['id'] . "\" />";
+
+        $objInputh2b = new textinput('gname', $data['giftname'], '', '74');
+        $gnvalue = $objInputh2b->show() . "<br><br>";
+
+        $objInputh3a = new textarea('descripvalue', $data['description'], 15, 55);
+        $descripvalue = $objInputh3a->show() . "<br><br>";
+
+        $objInputh3b = new textinput('gvalue', $data['value'], '', '30');
+        $gvalue = $objInputh3b->show() . "<br><br>";
+
         //Buttons OK and cancel
-        $this->objSubmitButton=new button('Submit');
-        $this->objSubmitButton->setValue($this->objLanguage->languageText("mod_addedit_btnSave","gift"));
+        $this->objSubmitButton = new button('Submit');
+        $this->objSubmitButton->setValue($this->objLanguage->languageText("mod_addedit_btnSave", "gift"));
         $this->objSubmitButton->setToSubmit();
-			
-        $this->objResetButton=new button('Reset');
-        $this->objResetButton->setValue($this->objLanguage->languageText("mod_addedit_btnReset","gift"));
+
+        $this->objResetButton = new button('Reset');
+        $this->objResetButton->setValue($this->objLanguage->languageText("mod_addedit_btnReset", "gift"));
         $this->objResetButton->setToReset();
-			
-        $this->objCancelButton=new button('cancel');
-        $this->objCancelButton->setValue($this->objLanguage->languageText("mod_addedit_btnCancel","gift"));
-        
-        if($action == 'add')
-            $this->objCancelButton->setOnClick("window.location='".$this->uri(NULL)."';");
+
+        $this->objCancelButton = new button('cancel');
+        $this->objCancelButton->setValue($this->objLanguage->languageText("mod_addedit_btnCancel", "gift"));
+
+        if ($action == 'add')
+            $this->objCancelButton->setOnClick("window.location='" . $this->uri(NULL) . "';");
         else
-            $this->objCancelButton->setOnClick("window.location='".$this->uri(array('action'=>'result'))."';");
-        
+            $this->objCancelButton->setOnClick("window.location='" . $this->uri(array('action' => 'result')) . "';");
+
         //Defining table
         $objTable = new htmltable();
         $objTable->cellpadding = '2';
-        $objTable->border='0';
+        $objTable->border = '0';
 
         $width = 100;
         $valign = 'top';
@@ -130,7 +143,7 @@ class giftops extends object {
         $objTable->startRow();
         $objTable->addCell($descriplabel, '', 'top');
         $objTable->addCell($descripvalue, '', '', '', '', 'colspan="3"');
-        $objTable->addCell('<div id="descriptiontip">[?]</div>',$width, NULL, 'left');
+        $objTable->addCell('<div id="descriptiontip">[?]</div>', $width, NULL, 'left');
         $objTable->endRow();
 
         $objTable->startRow();
@@ -140,45 +153,169 @@ class giftops extends object {
         $objTable->endRow();
 
         $infoTable = $objTable->show();
-			
+
         //Setting Up Form by adding all objects....
-        $objForm->addRule("dnvalue",$this->objLanguage->languageText("mod_addedit_donorrequired","gift"),"required");
-        $objForm->addRule("gname",$this->objLanguage->languageText("mod_addedit_giftnamerequired","gift"),"required");
-        $objForm->addRule("descripvalue",$this->objLanguage->languageText("mod_addedit_descriptionrequired","gift"),"required");
-        $objForm->addRule("gvalue",$this->objLanguage->languageText("mod_addedit_giftvaluerequired","gift"),"required");
-        $objForm->addRule("gvalue",$this->objLanguage->languageText("mod_addedit_giftvaluenumeric","gift"),"numeric");
+        $objForm->addRule("dnvalue", $this->objLanguage->languageText("mod_addedit_donorrequired", "gift"), "required");
+        $objForm->addRule("gname", $this->objLanguage->languageText("mod_addedit_giftnamerequired", "gift"), "required");
+        $objForm->addRule("descripvalue", $this->objLanguage->languageText("mod_addedit_descriptionrequired", "gift"), "required");
+        $objForm->addRule("gvalue", $this->objLanguage->languageText("mod_addedit_giftvaluerequired", "gift"), "required");
+        $objForm->addRule("gvalue", $this->objLanguage->languageText("mod_addedit_giftvaluenumeric", "gift"), "numeric");
 
         $objForm->addToForm($infoTable);
-			
+
         $objForm->addToForm('<br/> ');
         $objForm->addToForm($this->objSubmitButton);
         $objForm->addToForm($this->objResetButton);
         $objForm->addToForm($this->objCancelButton);
         $composeForm = $objForm->show();
-			
-        $pageData= $composeForm;
-			
+
+        $pageData = $composeForm;
+
         //Defining Layer
         $objLayer = new layer();
         $objLayer->padding = '10px';
         $objLayer->str = $pageData;
-        $pageLayer = $objLayer->show().'<script type="text/javascript">'.$mainjs.'</script>';
+        $pageLayer = $objLayer->show() . '<script type="text/javascript">' . $mainjs . '</script>';
 
         return $pageLayer;
     }
-    
-    function sendEmail($subject, $body) {
-		
-		$objSysconfig = $this->getObject('dbsysconfig','sysconfig');
-		$adminemail = $objSysconfig->getValue('adminmail','gifts');
-		$objMailer = $this->getObject('email', 'mail');
-		$to = array($adminemail,'ana.m.ferreira@wits.ac.za');
-		$objMailer->setValue('to', $to);
-		$objMailer->setValue('from', 'noreply@wits.ac.za');
-		$objMailer->setValue('subject', $subject);
-		$objMailer->setValue('body', $body);
-		$objMailer->send(FALSE);
 
-	}
+    function sendEmail($subject, $body) {
+
+        $objSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $adminemail = $objSysconfig->getValue('adminmail', 'gifts');
+        $objMailer = $this->getObject('email', 'mail');
+        $to = array($adminemail, 'ana.m.ferreira@wits.ac.za');
+        $objMailer->setValue('to', $to);
+        $objMailer->setValue('from', 'noreply@wits.ac.za');
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $body);
+        $objMailer->send(FALSE);
+    }
+
+    function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
+        $depts = $this->objDepartments->getDepartments();
+
+        if ($selected == '') {
+
+            if (count($depts) > 0) {
+                $defaultDept = $depts[0];
+                $selected = $defaultDept['name'];
+            }
+        }
+
+        if ($treeType == 'htmldropdown') {
+
+            $allFilesNode = new treenode(array('text' => $this->divisionLabel . 's', 'link' => '-1'));
+        } else {
+            $allFilesNode = new treenode(array('text' => $this->divisionLabel . 's', 'link' => $this->uri(array('action' => 'viewgifts')), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+        }
+
+//Create a new tree
+        $menu = new treemenu();
+
+        $icon = 'folder.gif';
+        $expandedIcon = 'folder-expanded.gif';
+
+        if (count($depts) > 0) {
+            foreach ($depts as $dept) {
+                $folderText = $dept['name'];
+                $folderShortText = substr($dept['name'], 0, 200) . '...';
+                if ($dept['name'] == $selected) {
+                    $folderText = '<strong>' . $folderText . '</strong>';
+                    $cssClass = 'confirm';
+                } else {
+                    $cssClass = '';
+                }
+                if ($treeType == 'htmldropdown') {
+                    // echo "css class == $cssClass<br/>";
+                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $dept['id'], 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+                } else {
+                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $this->uri(array('action' => 'home', 'departmentid' => $dept['id'], 'departmentname' => $dept['name'])), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+                }
+
+                $allFilesNode->addItem($node);
+            }
+        }
+
+        $menu->addItem($allFilesNode);
+        if ($treeType == 'htmldropdown') {
+            $treeMenu = &new htmldropdown($menu, array('inputName' => 'selecteddepartment', 'id' => 'input_parentfolder', 'selected' => $selected));
+        } else {
+            $this->appendArrayVar('headerParams', $this->getJavascriptFile('TreeMenu.js', 'tree'));
+            $this->setVar('pageSuppressXML', TRUE);
+            $objSkin = & $this->getObject('skin', 'skin');
+            $treeMenu = &new dhtml($menu, array('images' => 'skins/_common/icons/tree', 'defaultClass' => 'treeMenuDefault'));
+        }
+
+        return $treeMenu->getMenu();
+    }
+
+    function showCreateDepartmentForm() {
+
+        $form = new form('createdepartment', $this->uri(array('action' => 'createdepartment')));
+        $textinput = new textinput('departmentname');
+        $label = new label('Name of ' . $this->divisionLabel . ': ', 'input_departmentname');
+        $form->addToForm(' &nbsp; ' . $label->show() . $textinput->show());
+
+        $button = new button('create', 'Create ' . $this->divisionLabel);
+        $button->setToSubmit();
+
+        $form->addToForm(' ' . $button->show());
+
+        $fs = new fieldset();
+        $fs->setLegend($this->divisionLabel);
+        $fs->addContent($form->show());
+        return $fs->show();
+    }
+
+    /**
+     * allows the user to donwload the selected file
+     * @param <type> $filename
+     */
+    function downloadFile($filepath, $filename) {
+
+        //check if user has access to the parent folder before accessing it
+
+        $baseDir = $this->objSysConfig->getValue('UPLOADS_DIR', 'wicid');
+        // Detect missing filename
+        if (!$filename && !$filepath)
+            die("I'm sorry, you must specify a file name to download.");
+
+        // Make sure we can't download files above the current directory location.
+        if (eregi("\.\.", $filepath))
+            die("I'm sorry, you may not download that file.");
+        $file = str_replace("..", "", $filepath);
+
+        // Make sure we can't download .ht control files.
+        if (eregi("\.ht.+", $filepath))
+            die("I'm sorry, you may not download that file.");
+
+        // Combine the download path and the filename to create the full path to the file.
+        $file = $baseDir . $filepath;
+
+        // Test to ensure that the file exists.
+        if (!file_exists($file))
+            die("I'm sorry, the file doesn't seem to exist.");
+
+        // Extract the type of file which will be sent to the browser as a header
+        $type = filetype($file);
+
+        // Get a date and timestamp
+        $today = date("F j, Y, g:i a");
+        $time = time();
+
+
+        // Send file headers
+        header("Content-type: $type");
+        header("Content-Disposition: attachment;filename=" . urlencode($filename));
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // Send the file contents.
+        readfile($file);
+    }
+
 }
+
 ?>

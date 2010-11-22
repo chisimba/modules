@@ -1,6 +1,8 @@
-var addGiftWin;
-function initGrid(cols,url, myUserCheckUrl, saveUserUrl){
-		
+
+var divisionLabel;
+
+function initGrid(cols,url, myUserCheckUrl, saveUserUrl,xdivisionLabel){
+    divisionLabel=xdivisionLabel;
     ButtonPanel = Ext.extend(Ext.Panel, {
 
         layout:'table',
@@ -53,14 +55,6 @@ function initGrid(cols,url, myUserCheckUrl, saveUserUrl){
     },
 
     {
-        name: 'description'
-    },
-
-    {
-        name: 'donor'
-    },
-
-    {
         name: 'recipient'
     },
 
@@ -68,8 +62,9 @@ function initGrid(cols,url, myUserCheckUrl, saveUserUrl){
         name: 'value'
     },
 
+
     {
-        name: 'edit'
+        name: 'division'
     }
 		     
     ]);
@@ -77,10 +72,10 @@ function initGrid(cols,url, myUserCheckUrl, saveUserUrl){
     var store = new Ext.data.GroupingStore({
         id:'store',
         sortInfo:{
-            field: 'donor',
+            field: 'division',
             direction: 'ASC'
         },
-        groupField:'donor',		
+        groupField:'division',
         reader: reader,
         groupOnSort:true
     	 	
@@ -103,35 +98,25 @@ function initGrid(cols,url, myUserCheckUrl, saveUserUrl){
             width: 14,
             dataIndex: 'giftname'
         },
-
-        {
-            header: "Description",
-            width: 14,
-            dataIndex: 'description'
-        },
-
-        {
-            header:"Donor",
-            width: 14,
-            dataIndex: 'donor'
-        },
+      
 
         {
             header: "Recipient",
             width: 14,
             dataIndex: 'recipient'
         },
-
+      
         {
-            header: "Value",
+            header: "ZAR Value",
             width: 14,
             dataIndex: 'value'
         },
 
+      
         {
-            header: "Edit",
+            header:divisionLabel,
             width: 10,
-            dataIndex: 'edit'
+            dataIndex: 'division'
         }],
         stripeRows: true,
         autoExpandColumn: 'giftname',
@@ -171,6 +156,60 @@ function initGrid(cols,url, myUserCheckUrl, saveUserUrl){
 }
 
 function showAddGiftWin(url){
+    var divisions = [
+    ['AL', 'Finance'],
+    ['AK', 'Human Resources'],
+    ['AZ', 'ICT'],
+    ['AR', 'Public Relations']
+
+    ];
+
+    var types = [
+    ['1', 'Sponsorship'],
+    ['2', 'Group'],
+    ['3', 'Individual']
+    ]
+    var addGiftWin;
+
+    var divisionsStore = new Ext.data.ArrayStore({
+        fields: ['code', 'name'],
+        data :divisions
+    });
+    var divisionsCombo = new Ext.form.ComboBox({
+        store: divisionsStore,
+        displayField:'name',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select ...',
+        selectOnFocus:true,
+        valueField: 'code',
+        hiddenName: 'division',
+        fieldLabel: divisionLabel,
+        allowBlank: false
+    });
+
+    var typeStore = new Ext.data.ArrayStore({
+        fields: ['code', 'name'],
+        data :types
+    });
+    var typeCombo = new Ext.form.ComboBox({
+        store: typeStore,
+        displayField:'name',
+        typeAhead: true,
+        mode: 'local',
+        forceSelection: true,
+        triggerAction: 'all',
+        emptyText:'Select gift type...',
+        selectOnFocus:true,
+        valueField: 'code',
+        hiddenName: 'type',
+        fieldLabel: 'Gift Type',
+        allowBlank: false
+    });
+
+
     var form = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 75,
@@ -201,11 +240,14 @@ function showAddGiftWin(url){
             allowBlank: false
         },
         {
-            fieldLabel: 'Value',
+            fieldLabel: 'ZAR Value',
             name: 'valuefield',
             width:350,
             allowBlank: false
-        }
+        },
+        typeCombo,
+        divisionsCombo,
+
 
         ]
 
@@ -219,7 +261,7 @@ function showAddGiftWin(url){
             layout:'fit',
             title:'Enter Gift',
             width:500,
-            height:350,
+            height:400,
             x:250,
             y:50,
             closeAction:'hide',
