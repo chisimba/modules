@@ -240,8 +240,8 @@ class ILLperiodical extends dbTable {
 
   	$table->startRow();
        $objoversea = new dropdown ('overseas');
-	$overseaLabel = new label("Select your distance");
-	$overseas=array("UWC Coppy Missing", "Local Only", "Overseas", "Fax");
+	$overseaLabel = new label("Please select");
+	$overseas=array( "Local Only", "Overseas");
 	foreach ($overseas as $oversea)
 	{
   	  $objoversea->addOption($oversea,$oversea);
@@ -261,10 +261,10 @@ class ILLperiodical extends dbTable {
 	$undergrads =array("Post Graduate", "Under Graduate", "Staff" );
 foreach ($undergrads as $undergrad)
 {
-    $objundergrad->addOption($undergrad, $undergrad);
-   // if($mode == 'addfixup'){
+        $objundergrad->addOption($undergrad, $undergrad);
+  
         $objundergrad->setSelected($this->getParam('postgrad'));
-    //	}
+  
    
 }
 	$table->addCell($undergradLabel ->show(), 150, NULL, 'left');
