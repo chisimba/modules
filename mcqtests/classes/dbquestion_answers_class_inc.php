@@ -89,7 +89,7 @@ class dbquestion_answers extends dbtable
      */
     public function getAnswers($questionId)
     {
-        $answers = $this->getAll("WHERE questionid = '$questionId' ORDER BY answerorder");
+        $answers = $this->getAll("WHERE questionid = '$questionId'");
         return $answers;
     }
 
@@ -110,12 +110,9 @@ class dbquestion_answers extends dbtable
         $sql = "SELECT answer
         FROM tbl_test_question_answers
         WHERE testid='{$testId}'
-        AND questionid='{$questionId}'
-        AND answerorder <> 1
-        ORDER BY answerorder ASC";
+        AND questionid='{$questionId}'";
         $data = $this->getArray($sql);
         return empty($data)?FALSE:$data;
     }
-
 } // end of class
 ?>

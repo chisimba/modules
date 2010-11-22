@@ -8,11 +8,11 @@ $fields = array(
         ),
     'questionid' => array(
         'type' => 'text',
-        'length' => 10
+        'length' => 32
         ),
     'answer' => array(
         'type' => 'text',
-        'length' => 10
+        'length' => 100
         ),
     'tolerance' => array(
         'type' => 'text',

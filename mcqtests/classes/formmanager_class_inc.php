@@ -56,6 +56,9 @@ class formmanager extends object {
         $this->dbTagInstance = $this->newObject('dbtag_instance');
         $this->dbCategory = $this->newObject('dbcategory');
         $this->objContext = $this->newObject('dbcontext', 'context');
+        $this->objQnAnswers = $this->newObject('dbquestion_answers');
+        $this->objQuestionCalculated = $this->newObject('dbquestion_calculated');
+        $this->objNumericalOptions = $this->newObject('dbnumericalunitsoptions');
         $this->contextCode = $this->objContext->getContextCode();
     }
 
@@ -2136,25 +2139,73 @@ class formmanager extends object {
 
         //Reset Fieldset
         $objFieldset->reset();
-        //Variable to store no of answer fieldsets to create
-        $anscount = 2;
-        if (!empty($fields['anscount']))
-            $anscount = $fields['anscount'];
 
         //Create dynamic answers
-        $count = 1;
-        do {
-            $ans = $this->createAnswerFields($count, $ansValues = Null);
-            $count++;
-            //Add form validations
-            $form->addRule('ansformula' . $count, $phraseCorrectAnsFormula . " " . $count . " " . $phraseIsRequired, 'required');
-            $form->addRule('grade' . $count, $phraseWordGrade . " " . $count . " " . $phraseIsRequired, 'required');
-            $form->addRule('tolerance' . $count, $phraseTolerance . " " . $count . " " . $phraseIsRequired, 'required');
-            $form->addRule('feedback' . $count, $phraseTolerance . " " . $count . " " . $phraseIsRequired, 'required');
-            //Add Answer Fieldset to form
-            $form->addToForm($ans);
-        } while ($count <= $anscount);
+        $count = 0;
+        if (!empty($id)) {
+            $count = 1;
+            //Get the answers
+            $qnans = $this->objQnAnswers->getAnswers($id);
+            foreach ($qnans as $thisans) {
+                $calcqnans = $this->objQuestionCalculated->getAnswerRelated($thisans['id']);
+                $calcqnans = $calcqnans[0];
 
+                $ansValues = array();
+                $ansValues['ansid'] = $thisans['id'];
+                $ansValues['testid'] = $thisans['testid'];
+                $ansValues['questionid'] = $thisans['questionid'];
+                $ansValues['answer'] = $thisans['answer'];
+                $ansValues['answerformat'] = $thisans['answerformat'];
+                $ansValues['fraction'] = $thisans['fraction'];
+                $ansValues['feedback'] = $thisans['feedback'];
+                $ansValues['feedbackformat'] = $thisans['feedbackformat'];
+                $ansValues['calcid'] = $calcqnans['id'];
+                $ansValues['tolerance'] = $calcqnans['tolerance'];
+                $ansValues['tolerancetype'] = $calcqnans['tolerancetype'];
+                $ansValues['correctanswerformat'] = $calcqnans['correctanswerformat'];
+                $ans = $this->createAnswerFields("_update_" . $count, $ansValues);
+
+                //Add form validations
+                $form->addRule('ansformula' . "_update_" . $count, $phraseCorrectAnsFormula . " " . $count . " " . $phraseIsRequired, 'required');
+                $form->addRule('grade' . "_update_" . $count, $phraseWordGrade . " " . $count . " " . $phraseIsRequired, 'required');
+                $form->addRule('tolerance' . "_update_" . $count, $phraseTolerance . " " . $count . " " . $phraseIsRequired, 'required');
+                $form->addRule('feedback' . "_update_" . $count, $phraseTolerance . " " . $count . " " . $phraseIsRequired, 'required');
+                //Add Answer Fieldset to form
+                $form->addToForm($ans);
+                $count++;
+            }
+        }
+        //Store no of updated fields
+        $updateanscount = new hiddeninput("updateanscount", $count);
+
+        //Set variable
+        $anscount = 0;
+
+        //Set count to add to default ans fields if not an update with answers
+        if ($count == 0) {
+            //Variable to store no of answer fieldsets to create
+            $anscount = 2;
+            $count = 1;
+        }
+
+        //Fetch no of ans fields to add
+        if (!empty($fields['anscount'])) {
+            $anscount = $fields['anscount'];
+            $count = 1;
+        }
+        if ($anscount != 0) {
+            do {
+                $ans = $this->createAnswerFields($count, $ansValues = Null);
+                $count++;
+                //Add form validations
+                $form->addRule('ansformula' . $count, $phraseCorrectAnsFormula . " " . $count . " " . $phraseIsRequired, 'required');
+                $form->addRule('grade' . $count, $phraseWordGrade . " " . $count . " " . $phraseIsRequired, 'required');
+                $form->addRule('tolerance' . $count, $phraseTolerance . " " . $count . " " . $phraseIsRequired, 'required');
+                $form->addRule('feedback' . $count, $phraseTolerance . " " . $count . " " . $phraseIsRequired, 'required');
+                //Add Answer Fieldset to form
+                $form->addToForm($ans);
+            } while ($count <= $anscount);
+        }
         //Create table to store no of answers dropdown
         $objTable = new htmltable();
         $objTable->width = '800px';
@@ -2163,6 +2214,8 @@ class formmanager extends object {
 
         $noofansdropdown = new dropdown("anscount");
         $noofansdropdown->extra = "onchange='createAnsInputs(this)'";
+        $noofansdropdown->addOption("0", "0");
+        $noofansdropdown->addOption("1", "1");
         $noofansdropdown->addOption("2", "2");
         $noofansdropdown->addOption("3", "3");
         $noofansdropdown->addOption("4", "4");
@@ -2181,20 +2234,41 @@ class formmanager extends object {
         //Add Answers dropdown to the table
         $objTable->startRow();
         $objTable->addCell($phraseAddBlankAnswers, '20%');
-        $objTable->addCell($noofansdropdown->show() . $frmanscount->show(), '80%');
+        $objTable->addCell($noofansdropdown->show() . $frmanscount->show() . $updateanscount->show(), '80%');
         $objTable->endRow();
 
         //Add table to form
         $form->addToForm($objTable->show());
 
         //Load unit-handling
-        $unitHandling = $this->createUnitHandlingFields($unitValues = Null);
+        //Get Values if edit
+        $unitValues = Null;
+        if (!empty($id)) {
+            $unitValues = array();
+            $uh = $this->objNumericalOptions->getNumericalOptions($id);
+            $unitValues = $uh;
+            /* $uh['questionid'] = $id;
+              $uh['unitgradingtype'] = $uh[''];
+              $uh['unitpenalty'] = $uh[''];
+              $uh['instructionsformat'] = $uh[''];
+              $uh['instructions'] = $uh[''];
+              $uh['unitgradingtype'] = $uh[''];
+              $uh['showunits'] = $uh[''];
+              var_dump($uh); */
+        }
+        $unitHandling = $this->createUnitHandlingFields($unitValues);
 
         //Add unit-handling to form
         $form->addToForm($unitHandling);
+        //Get Values if edit
+        $unitValues = Null;
+        if (!empty($id)) {
 
-        //Load default unit-Multiplier
-        $unitMultiplier = $this->createUnitMultiplierFields(1, $unitValues = Null, $multiplier = 1);
+            $unitMultiplier = $this->createUnitMultiplierFields(1, $unitValues = Null, $multiplier = 1);
+        } else {
+            //Load default unit-Multiplier
+            $unitMultiplier = $this->createUnitMultiplierFields(1, $unitValues = Null, $multiplier = 1);
+        }
 
         //Add unit-Multiplier to form
         $form->addToForm($unitMultiplier);
@@ -2233,6 +2307,8 @@ class formmanager extends object {
 
         $noofunitsdropdown = new dropdown("unitcount");
         $noofunitsdropdown->extra = "onchange='createUnitInputs(this)'";
+        $noofunitsdropdown->addOption("0", "0");
+        $noofunitsdropdown->addOption("1", "1");
         $noofunitsdropdown->addOption("2", "2");
         $noofunitsdropdown->addOption("3", "3");
         $noofunitsdropdown->addOption("4", "4");
@@ -2253,7 +2329,7 @@ class formmanager extends object {
         //Add Units dropdown to the table
         $objTable->startRow();
         $objTable->addCell($phraseAddBlankUnits, '20%');
-        $objTable->addCell($noofunitsdropdown->show().$frmunitcount->show(), '80%');
+        $objTable->addCell($noofunitsdropdown->show() . $frmunitcount->show(), '80%');
         $objTable->endRow();
 
         //Add table to form
@@ -2423,7 +2499,7 @@ class formmanager extends object {
         $unitgraded = new radio("unitgradetype");
         $unitgraded->addOption(1, $phraseNumericalUnit);
         if (!empty($unitValues)) {
-            $unitgraded->setSelected($unitValues["unitgraded"]);
+            $unitgraded->setSelected($unitValues["unitgradingtype"]);
         }
         //Add field to the table
         $objTable->startRow();
@@ -2433,7 +2509,7 @@ class formmanager extends object {
 
         //penalty-bad-unit text box
         if (!empty($unitValues)) {
-            $penaltybadunit = new textinput("unitpenalty", $unitValues["penaltybadunit"]);
+            $penaltybadunit = new textinput("unitpenalty", $unitValues["unitpenalty"]);
         } else {
             $penaltybadunit = new textinput("unitpenalty", "");
         }
@@ -2443,24 +2519,24 @@ class formmanager extends object {
         $questionresponseddown->addOption("question", $phrasePenaltyQuestionGrade);
         $questionresponseddown->addOption("response", $phrasePenaltyResponseGrade);
         if (!empty($unitValues)) {
-            $questionresponseddown->setSelected($unitValues["questionresponse"]);
+            //$questionresponseddown->setSelected($unitValues["questionresponse"]);
         } else {
             $questionresponseddown->setSelected("0");
         }
         //Store numericaloptions Id
-        $uhfield = new hiddeninput("uhid", $unitValues["uhid"]);
+        $uhfield = new hiddeninput("uhid", $unitValues["id"]);
         //Add penalty-bad-unit to the table
         $objTable->startRow();
         $objTable->addCell($phrasePenalty, '20%');
-        $objTable->addCell($penaltybadunit->show() . " " . $questionresponseddown->show().$uhfield->show(), '80%');
+        $objTable->addCell($penaltybadunit->show() . " " . $questionresponseddown->show() . $uhfield->show(), '80%');
         $objTable->endRow();
 
         //unit-answer-display radio button
         $unitansdisplay = new radio("instructionsformat");
-        $unitansdisplay->addOption(1, $phraseTextInputElement . " " . strtoupper($wordOr));
-        $unitansdisplay->addOption(2, $wordMultichoice . " (" . $phraseRadioElements . ")");
+        $unitansdisplay->addOption('1', $phraseTextInputElement . " " . strtoupper($wordOr));
+        $unitansdisplay->addOption('2', $wordMultichoice . " (" . $phraseRadioElements . ")");
         if (!empty($unitValues)) {
-            $unitansdisplay->setSelected($unitValues["unitansdisplay"]);
+            $unitansdisplay->setSelected($unitValues["instructionsformat"]);
         }
         //Add field to the table
         $objTable->startRow();
@@ -2469,28 +2545,25 @@ class formmanager extends object {
         $objTable->endRow();
 
         //Instructions
-        $instructions = $this->newObject('htmlarea', 'htmlelements');
-        $instructions->name = 'instructions';
-        $instructions->height = '100px';
-        $instructions->width = '550px';
-        $instructions->setMCQToolBar();
-        if (!empty($ansValues)) {
-            $instructionsEd = $ansValues["instructions"];
-        } else {
-            $instructionsEd = '';
+        $instruction = $this->newObject('htmlarea', 'htmlelements');
+        $instruction->name = 'instructions';
+        $instruction->height = '100px';
+        $instruction->width = '550px';
+        if (!empty($unitValues["instructions"])) {
+            $instruction->setContent($unitValues["instructions"]);
         }
-        $instructions->setContent($instructionsEd);
+        $instruction->setMCQToolBar();
         //Add instructions to the table
         $objTable->startRow();
         $objTable->addCell($wordInstructions, '20%');
-        $objTable->addCell($instructions->show(), '80%');
+        $objTable->addCell($instruction->show(), '80%');
         $objTable->endRow();
 
         //Dropdown - UNIT-NOT-GRADED
         $unitnotgradeddropdown = new radio("unitgradingtype");
         $unitnotgradeddropdown->addOption(1, $phraseOnlyNumerical);
         if (!empty($unitValues)) {
-            $unitnotgradeddropdown->setSelected($unitValues["unitnotgraded"]);
+            $unitnotgradeddropdown->setSelected($unitValues["unitgradingtype"]);
         } else {
             $unitnotgradeddropdown->setSelected("0");
         }
@@ -2502,10 +2575,10 @@ class formmanager extends object {
 
         //Dropdown - DISPLAY-UNIT
         $displayunitdropdown = new radio("showunits");
-        $displayunitdropdown->addOption(1, $wordYes);
-        $displayunitdropdown->addOption(0, $wordNo);
+        $displayunitdropdown->addOption('1', $wordYes);
+        $displayunitdropdown->addOption('0', $wordNo);
         if (!empty($unitValues)) {
-            $displayunitdropdown->setSelected($unitValues["displayunit"]);
+            $displayunitdropdown->setSelected($unitValues["showunits"]);
         } else {
             $displayunitdropdown->setSelected("0");
         }
@@ -2567,11 +2640,11 @@ class formmanager extends object {
         }
         $unitfield->size = 7;
         //Store numericaloptions Id
-        $uhfield = new hiddeninput("uhid".$unitno, $unitValues["umid"]);
+        $uhfield = new hiddeninput("uhid" . $unitno, $unitValues["id"]);
         //Add Unit to the table
         $objTable->startRow();
         $objTable->addCell($wordUnit, '20%');
-        $objTable->addCell($unitfield->show().$uhfield->show(), '80%');
+        $objTable->addCell($unitfield->show() . $uhfield->show(), '80%');
         $objTable->endRow();
 
         //Dont display textfield if $multiplier is not empty
@@ -2626,7 +2699,12 @@ class formmanager extends object {
         $this->loadClass("textinput", "htmlelements");
         $this->loadClass("dropdown", "htmlelements");
         $this->loadClass("hiddeninput", "htmlelements");
-
+        if (!empty($ansValues)) {
+            $uniqueno = explode("_update_", $ansno);
+            $uniqueno = $uniqueno['1'];
+        } else {
+            $uniqueno = $ansno;
+        }
         //Get the language text
         $wordFeedback = $this->objLanguage->languageText('mod_mcqtests_generalfeedback', 'mcqtests');
         $wordFormat = $this->objLanguage->languageText('mod_mcqtests_formatlabel', 'mcqtests', "Format");
@@ -2645,7 +2723,7 @@ class formmanager extends object {
 
         //correct answer formula text box
         if (!empty($ansValues)) {
-            $ansformula = new textinput("ansformula" . $ansno, $ansValues["ansformula"]);
+            $ansformula = new textinput("ansformula" . $ansno, $ansValues["answer"]);
         } else {
             $ansformula = new textinput("ansformula" . $ansno, "");
         }
@@ -2658,7 +2736,7 @@ class formmanager extends object {
 
         //grade text box
         if (!empty($ansValues)) {
-            $grade = new textinput("grade" . $ansno, $ansValues["grade"]);
+            $grade = new textinput("grade" . $ansno, $ansValues["fraction"]);
         } else {
             $grade = new textinput("grade" . $ansno, "");
         }
@@ -2671,7 +2749,7 @@ class formmanager extends object {
 
         //qncalcid text box
         if (!empty($ansValues)) {
-            $qncalcid = new hiddeninput("qncalcid" . $ansno, $ansValues["qncalcid"]);
+            $qncalcid = new hiddeninput("qncalcid" . $ansno, $ansValues["calcid"]);
         } else {
             $qncalcid = new hiddeninput("qncalcid" . $ansno, "");
         }
@@ -2691,7 +2769,7 @@ class formmanager extends object {
         //Add tolerance to the table
         $objTable->startRow();
         $objTable->addCell($phraseTolerance, '20%');
-        $objTable->addCell($tolerance->show().$qncalcid->show().$ansid->show(), '80%');
+        $objTable->addCell($tolerance->show() . $qncalcid->show() . $ansid->show(), '80%');
         $objTable->endRow();
 
         //tolerance type text box
@@ -2759,9 +2837,21 @@ class formmanager extends object {
         $objTable->addCell($feedback->show(), '80%');
         $objTable->endRow();
 
+        //format text box
+        $fbformat = new dropdown("feedbackformat" . $ansno);
+        $fbformat->addOption("ht", "HTML Format");
+        if (!empty($ansValues)) {
+            $fbformat->setSelected($ansValues["feedbackformat"]);
+        }
+        //Add format to the table
+        $objTable->startRow();
+        $objTable->addCell("&nbsp;", '20%');
+        $objTable->addCell($fbformat->show(), '80%');
+        $objTable->endRow();
+
         //Add fieldset to hold answer
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
-        $objFieldset->setLegend($wordAnswer . " " . $ansno);
+        $objFieldset->setLegend($wordAnswer . " " . $uniqueno);
 
         //Add table to General Fieldset
         $objFieldset->addContent($objTable->show());

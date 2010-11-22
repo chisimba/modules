@@ -1105,75 +1105,119 @@ class mcqtests extends controller {
         $fieldsQn['questiontype'] = "SimpleCalculated";
         $fieldsQn['generalfeedback'] = $this->getParam('genfeedback', Null);
         $qncount = $this->getParam('qncount', Null);
-        //Insert/Update Question
-        if (!empty($fieldsQn)) {
-            $id = $this->dbQuestions->addQuestion($fieldsQn, $id, $saveAsNew);
-        }
+        $id = $this->getParam('id', Null);
+        //Avoid saving blank values
+        if (!empty($fieldsQn['name'])) {
+            //Insert/Update Question
+            if (!empty($fieldsQn)) {
+                $id = $this->dbQuestions->addQuestion($fieldsQn, $id, $saveAsNew);
+            }
+            //Store Question Id
+            $questionid = $id;
 
-        //Save Unit-Handling
-        $fieldsUH = array();
-        $uhid = $this->getParam('uhid', Null);
-        $fieldsUH['questionid'] = $this->getParam('questionid', Null);
-        $fieldsUH['unitgradingtype'] = $this->getParam('unitgradetype', Null);
-        $fieldsUH['unitpenalty'] = $this->getParam('unitpenalty', Null);
-        $fieldsUH['instructionsformat'] = $this->getParam('instructionsformat', Null);
-        $fieldsUH['instructions'] = $this->getParam('instructions', Null);
-        $fieldsUH['unitgradingtype'] = $this->getParam('unitgradingtype', Null);
-        $fieldsUH['showunits'] = $this->getParam('showunits', Null);
-        //Insert/Update Unit-Handling
-        $uhid = $this->objNumericalOptions->addNOption($fieldsUH, $uhid);
-        //Save Units
-        $frmunitcount = $this->getParam('frmunitcount', Null);
-        if (!empty($frmunitcount)) {
-            $ucount = 1;
-            do {
-                $fieldsUnit = array();
-                $fieldsUnit['questionid'] = $id;
-                $unitid = $this->getParam('uhid' . $ucount, Null);
-                $fieldsUnit['unit'] = $this->getParam('unit' . $ucount, Null);
-                $fieldsUnit['multiplier'] = $this->getParam('multiplier' . $ucount, Null);
-                //Insert/Update Unit-Multiplier
-                $unitid = $this->objNumericalUnit->addNUnit($fieldsUnit, $unitid);
-                $ucount++;
-            } while ($ucount <= $frmunitcount);
-        }
-        //Save Answers
-        if (!empty($frmanscount)) {
-            $acount = 1;
-            do {
-                $fieldsAnsC = array();
-                $fieldsAnsC['questionid'] = $id;
-                $qncalcid = $this->getParam('qncalcid' . $acount, Null);
-                $fieldsAnsC['answer'] = $this->getParam('ansformula' . $acount, Null);
-                $fieldsAnsC['tolerance'] = $this->getParam('tolerance' . $acount, Null);
-                $fieldsAnsC['tolerancetype'] = $this->getParam('tolerancetype' . $acount, Null);
-                $fieldsAnsC['correctanswerlength'] = $this->getParam('correctanswerlength' . $acount, Null);
-                $fieldsAnsC['correctanswerformat'] = $this->getParam('correctanswerformat' . $acount, Null);
-                //Insert/Update Answer
-                $ansid = $this->objQuestionCalculated->addAnswers($fieldsAnsC, $qncalcid);
+            //Save Unit-Handling
+            $fieldsUH = array();
+            $uhid = $this->getParam('uhid', Null);
+            $fieldsUH['questionid'] = $questionid;
+            $fieldsUH['unitgradingtype'] = $this->getParam('unitgradetype', Null);
+            $fieldsUH['unitpenalty'] = $this->getParam('unitpenalty', Null);
+            $fieldsUH['instructionsformat'] = $this->getParam('instructionsformat', Null);
+            $fieldsUH['instructions'] = $this->getParam('instructions', Null);
+            $fieldsUH['unitgradingtype'] = $this->getParam('unitgradingtype', Null);
+            $fieldsUH['showunits'] = $this->getParam('showunits', Null);
+            
+            //Insert/Update Unit-Handling
+            $uhid = $this->objNumericalOptions->addNOption($fieldsUH, $uhid);
+            //Save Units
+            $frmunitcount = $this->getParam('frmunitcount', Null);
+            if (!empty($frmunitcount)) {
+                $ucount = 1;
+                do {
+                    $fieldsUnit = array();
+                    $fieldsUnit['questionid'] = $questionid;
+                    $unitid = $this->getParam('uhid' . $ucount, Null);
+                    $fieldsUnit['unit'] = $this->getParam('unit' . $ucount, Null);
+                    $fieldsUnit['multiplier'] = $this->getParam('multiplier' . $ucount, Null);
+                    //Insert/Update Unit-Multiplier
+                    $unitid = $this->objNumericalUnit->addNUnit($fieldsUnit, $unitid);
+                    $ucount++;
+                } while ($ucount <= $frmunitcount);
+            }
+            //Save New Answers
+            $frmanscount = $this->getParam('frmanscount', Null);
+            if (!empty($frmanscount)) {
+                $acount = 1;
+                do {
+                    $fieldsAns = array();
+                    $fieldsAns['questionid'] = $questionid;
+                    $ansid = $this->getParam('ansid' . $acount, Null);
+                    $fieldsAns['answer'] = $this->getParam('ansformula' . $acount, Null);
+                    $fieldsAns['answerformat'] = $this->getParam('correctanswerformat' . $acount, Null);
+                    $fieldsAns['fraction'] = $this->getParam('grade' . $acount, Null);
+                    $fieldsAns['feedback'] = $this->getParam('feedback' . $acount, Null);
+                    $fieldsAns['feedbackformat'] = $this->getParam('feedbackformat' . $acount, Null);
+                    //Insert/Update Answer
+                    //Store only non-empty records
+                    if (!empty($fieldsAns['answer'])) {
+                        $ansid = $this->objQnAnswers->addAnswers($fieldsAns, $ansid);
 
-                $fieldsAns = array();
-                $fieldsAns['questionid'] = $id;
-                $ansid = $this->getParam('uhid' . $acount, Null);
-                $fieldsAns['answer'] = $this->getParam('ansformula' . $acount, Null);
-                $fieldsAns['tolerance'] = $this->getParam('tolerance' . $acount, Null);
-                $fieldsAns['tolerancetype'] = $this->getParam('tolerancetype' . $acount, Null);
-                $fieldsAns['correctanswerlength'] = $this->getParam('correctanswerlength' . $acount, Null);
-                $fieldsAns['correctanswerformat'] = $this->getParam('correctanswerformat' . $acount, Null);
-                //Insert/Update Answer
-                $ansid = $this->objQnAnswers->addAnswers($fieldsAns, $ansid);
-                $acount++;
-            } while ($acount <= $frmanscount);
-        }
-        //Save the official tags
-        $officialTags = array();
-        $officialTags['tags'] = $this->getParam('officialtags', Null);
-        $othertags = $this->getParam('othertags', Null);
-        if (!empty($othertags) && !empty($id)) {
-            $otTags = array();
-            $otTags['tags'] = $othertags;
-            //Insert/Update Tags
-            $tagId = $this->dbTag->addTag($otTags, Null, $id);
+                        $fieldsAnsC = array();
+                        $fieldsAnsC['questionid'] = $questionid;
+                        $qncalcid = $this->getParam('calcid' . $acount, Null);
+                        $fieldsAnsC['answer'] = $ansid;
+                        $fieldsAnsC['tolerance'] = $this->getParam('tolerance' . $acount, Null);
+                        $fieldsAnsC['tolerancetype'] = $this->getParam('tolerancetype' . $acount, Null);
+                        $fieldsAnsC['correctanswerlength'] = $this->getParam('correctanswerlength' . $acount, Null);
+                        $fieldsAnsC['correctanswerformat'] = $this->getParam('correctanswerformat' . $acount, Null);
+                        //Insert/Update Answer
+                        $qncalcid = $this->objQuestionCalculated->addAnswers($fieldsAnsC, $qncalcid);
+                    }
+
+                    $acount++;
+                } while ($acount <= $frmanscount);
+            }
+            //Update Answers
+            $updateanscount = $this->getParam('updateanscount', Null);
+            if (!empty($updateanscount)) {
+                $aucount = 1;
+                do {
+                    $fieldsAns = array();
+                    $fieldsAns['questionid'] = $questionid;
+                    $ansid = $this->getParam('ansid_update_' . $aucount, Null);
+                    $fieldsAns['answer'] = $this->getParam('ansformula_update_' . $aucount, Null);
+                    $fieldsAns['answerformat'] = $this->getParam('correctanswerformat_update_' . $aucount, Null);
+                    $fieldsAns['fraction'] = $this->getParam('grade_update_' . $aucount, Null);
+                    $fieldsAns['feedback'] = $this->getParam('feedback_update_' . $aucount, Null);
+                    $fieldsAns['feedbackformat'] = $this->getParam('feedbackformat_update_' . $aucount, Null);
+                    if (!empty($fieldsAns['answer'])) {
+                        //Insert/Update Answer
+                        $ansid = $this->objQnAnswers->addAnswers($fieldsAns, $ansid);
+
+                        $fieldsAnsC = array();
+                        $fieldsAnsC['questionid'] = $questionid;
+                        $qncalcid = $this->getParam('calcid_update_' . $aucount, Null);
+                        $fieldsAnsC['answer'] = $ansid;
+                        $fieldsAnsC['tolerance'] = $this->getParam('tolerance_update_' . $aucount, Null);
+                        $fieldsAnsC['tolerancetype'] = $this->getParam('tolerancetype_update_' . $aucount, Null);
+                        $fieldsAnsC['correctanswerlength'] = $this->getParam('correctanswerlength_update_' . $aucount, Null);
+                        $fieldsAnsC['correctanswerformat'] = $this->getParam('correctanswerformat_update_' . $aucount, Null);
+                        //Insert/Update Answer
+                        $qncalcid = $this->objQuestionCalculated->addAnswers($fieldsAnsC, $qncalcid);
+                    }
+
+                    $aucount++;
+                } while ($aucount <= $updateanscount);
+            }
+            //Save the official tags
+            $officialTags = array();
+            $officialTags['tags'] = $this->getParam('officialtags', Null);
+            $othertags = $this->getParam('othertags', Null);
+            if (!empty($othertags) && !empty($id)) {
+                $otTags = array();
+                $otTags['tags'] = $othertags;
+                //Insert/Update Tags
+                $tagId = $this->dbTag->addTag($otTags, Null, $id);
+            }
         }
         return TRUE;
     }

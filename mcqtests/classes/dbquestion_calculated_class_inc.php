@@ -40,9 +40,7 @@ class dbquestion_calculated extends dbtable
      * @return string $id The id of the inserted or updated answer.
      */
     public function addAnswers($fields, $id = NULL)
-    {
-
-        $fields['updated'] = date('Y-m-d H:i:s');
+    {        
         if ($id) {
             $this->update('id', $id, $fields);
         } else {
@@ -72,7 +70,19 @@ class dbquestion_calculated extends dbtable
      */
     public function getAnswers($questionId)
     {
-        $answers = $this->getAll("WHERE questionid = '$questionId' ORDER BY answerorder");
+        $answers = $this->getAll("WHERE questionid = '$questionId'");
+        return $answers;
+    }
+    /**
+     * Method to get the calculated-qn-answers for a specific question
+     *
+     * @access public
+     * @param string $answerId The id of the specified answer from tbl_test_question_answers.
+     * @return int $array The answers associated with the question.
+     */
+    public function getAnswerRelated($answerId)
+    {
+        $answers = $this->getAll("WHERE answer = '$answerId'");
         return $answers;
     }
 }
