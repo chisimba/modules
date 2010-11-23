@@ -157,6 +157,11 @@ class mcqtests extends controller {
         }
         // Now the main switch for $action
         switch ($action) {
+            case 'scqlisting':
+                $test = $this->getParam('test', "gen8Srv33Nme35_74470_1286793685");
+                $this->setVarByRef('testId', $test);
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                return 'scqlisting_tpl.php';
             case 'addsimplecalculated':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 //Flag to determine if we save question as new or just update
@@ -184,6 +189,7 @@ class mcqtests extends controller {
                 //Set variables for use in the template
                 $this->setVarByRef('fields', $fields);
                 $this->setVarByRef('id', $id);
+                $this->setVarByRef('test', $test);
                 return 'simplecalculatedqn_tpl.php';
                 break;
             case "deletersa":

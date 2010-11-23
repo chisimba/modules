@@ -1878,7 +1878,140 @@ class formmanager extends object {
 
         return "<div>" . $form->show() . "</div>";
     }
+    /**
+     * Method to create a list of random simple-calculated-questions
+     *
+     * @access private
+     * @param  string $contextCode Contains the context code
+     * @param  string $categoryId Contains the category identifier
+     * @author Paul Mungai
+     */
+    public function createSCQList($testId, $categoryId=Null) {
+        //Form text
+        $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
+        $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
+        $phraseAddA = $this->objLanguage->languageText("mod_mcqtests_phraseadda", 'mcqtests', "Add a");
+        $phraseSCQuestions = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqns", 'mcqtests', "RSA matching questions");
+        $phraseSCQuestion = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqn", 'mcqtests', "RSA matching question");
+        $wordBack = $this->objLanguage->languageText("word_back", Null, "Back");
+        $listTitle = $phraseListOf . " " . $phraseSCQuestions;
+        $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
+        $backToHome = $wordBack . " " . $wordTo . " " . $mcqHome;
+        $noRecords = $this->objLanguage->languageText('mod_mcqtests_norecords', 'mcqtests', "No records found");
+        $addSCQ = $phraseAddA." ".$phraseSCQuestion;
+        $wordDesc = $this->objLanguage->languageText('mod_mcqtests_description', 'mcqtests', "Description");
+        $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
+        $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
+        $phraseQnName = $this->objLanguage->languageText('mod_mcqtests_qnname', 'mcqtests');
 
+        if (!empty($categoryId)) {
+            //$data = $this->dbQuestions->getDescriptions($categoryId);
+        } else {
+            $data = $this->dbQuestions->getQuestions($testId, "questiontype='SimpleCalculated'");
+        }
+        //Form Heading/Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        $objHeading->str = $wordDesc;
+
+        //Add heading/title to string
+        $str = "";
+
+        //Create table to hold the general stuff
+        $objTable = new htmltable();
+        $objTable->width = '600px';
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
+        $objTable->cellspacing = '12';
+
+        //Add Heading to the table
+        $objTable->startRow();
+        $objTable->addCell("<b>" . $phraseQnName . "</b>", '80%');
+        $objTable->addCell(Null, '20%');
+        $objTable->endRow();
+
+        //question name text box
+        if (!empty($data)) {
+            foreach ($data as $descdata) {
+                if ($descdata['qtype'] == "SimpleCalculated") {
+                    // Show the edit link
+                    $iconEdit = $this->getObject('geticon', 'htmlelements');
+                    $iconEdit->setIcon('edit');
+                    $iconEdit->alt = $this->objLanguage->languageText("word_edit", 'system');
+                    $iconEdit->align = false;
+                    $objLink = &$this->getObject("link", "htmlelements");
+                    $objLink->link($this->uri(array(
+                                'module' => 'mcqtests',
+                                'action' => 'addsimplecalculated',
+                                'id' => $descdata['id']
+                            )));
+                    $objLink->link = $iconEdit->show();
+                    $linkEdit = $objLink->show();
+                    // Show the delete link
+                    $iconDelete = $this->getObject('geticon', 'htmlelements');
+                    $iconDelete->setIcon('delete');
+                    $iconDelete->alt = $this->objLanguage->languageText("word_delete", 'mcqtests');
+                    $iconDelete->align = false;
+                    $objConfirm = &$this->getObject("link", "htmlelements");
+                    $objConfirm = &$this->newObject('confirm', 'utilities');
+                    $objConfirm->setConfirm($iconDelete->show(), $this->uri(array(
+                                'module' => 'mcqtests',
+                                'action' => 'deletersa',
+                                'id' => $descdata["id"]
+                            )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
+                    $objTable->startRow();
+                    $objTable->addCell($descdata['question'], '80%');
+                    $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show(), '20%');
+                    $objTable->endRow();
+                }
+            }
+        } else {
+            $objTable->startRow();
+            $objTable->addCell($noRecords, '80%', $valign = "top", $align = 'left', $class = null, $attrib = "colspan='2'", $border = '0');
+            $objTable->endRow();
+        }
+        $str .= $objTable->show();
+
+        // Create Back Button
+        $buttonAdd = new button("submit", $addSCQ);
+        $objAdd = &$this->getObject("link", "htmlelements");
+        $objAdd->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'addsimplecalculated'
+                )));
+        $objAdd->link = $buttonAdd->showSexy();
+        $str .= " " . $objAdd->show();
+
+        // Create Back Button
+        $buttonBack = new button("submit", $backToHome);
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'view2'
+                )));
+        $objBack->link = $buttonBack->showSexy();
+        $str .= " " . $objBack->show();
+
+        //Add fieldset to hold Descriptions stuff
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->width = '600px';
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($listTitle);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($str);
+        //Form Object
+        $form = new form("adddescription", $this->uri(array(
+                            'module' => 'mcqtest',
+                            'action' => 'mcqlisting'
+                        )));
+        //Add General Fieldset to form
+        $form->addToForm($objFieldset->show());
+
+        //Reset Fieldset
+        $objFieldset->reset();
+        return $form->show();
+    }
     /**
      * Method to create Simple Calculation Question form
      *
@@ -1938,7 +2071,7 @@ class formmanager extends object {
         $phrasePermissions = $this->objLanguage->languageText("mod_mcqtests_permissionsto", 'mcqtests');
         $phraseSaveChanges = $this->objLanguage->languageText("mod_mcqtests_savechanges", 'mcqtests', "Save changes");
         $phraseSaveAsNewQn = $this->objLanguage->languageText("mod_mcqtests_saveasnewqn", 'mcqtests', "Save as a new question");
-        $phraseRSAQuestions = $this->objLanguage->languageText("mod_mcqtests_rsaquestions", 'mcqtests', "RSA matching questions");
+        $phraseSCQuestions = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqn", 'mcqtests', "RSA matching questions");
         $phraseAddBlankAnswers = $this->objLanguage->languageText("mod_mcqtests_addblankanswers", 'mcqtests', "Select the number of blank answers to add");
         $phraseAddBlankUnits = $this->objLanguage->languageText("mod_mcqtests_addblankunits", 'mcqtests', "Select the number of blank units to add");
         $wordAnswer = $this->objLanguage->languageText('mod_mcqtests_wordanswer', 'mcqtests', "Answer");
@@ -1952,7 +2085,7 @@ class formmanager extends object {
         $wordMultiplier = $this->objLanguage->languageText('mod_mcqtest_wordmultiplier', 'mcqtests', "Multiplier");
 
 
-        $listTitle = $phraseListOf . " " . $phraseRSAQuestions;
+        $listTitle = $phraseListOf . " " . $phraseSCQuestions;
         //Form Object
         $form = new form("addsimplecalculated", $this->uri(array(
                             'module' => 'mcqtest',
@@ -2438,7 +2571,7 @@ class formmanager extends object {
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'rsalisting'
+                    'action' => 'scqlisting'
                 )));
         $objBack->link = $buttonBack->showSexy();
         $btnBackList = $objBack->show();

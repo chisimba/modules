@@ -82,7 +82,6 @@ class dbquestions extends dbtable {
         }
         return FALSE;
     }
-
     /**
      * Method to get a set of questions with their correct answers for a particular test.
      *
