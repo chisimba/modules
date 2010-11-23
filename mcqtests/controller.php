@@ -174,6 +174,7 @@ class mcqtests extends controller {
                 $frmanscount = $this->getParam('frmanscount', Null);
                 $unitCount = $this->getParam('unitcount', Null);
                 //Array to hold values to be passed to template
+                $id = $this->saveSimpleCalculated();
                 $fields = array();
                 $fields['id'] = $id;
                 $fields['test'] = $test;
@@ -182,7 +183,7 @@ class mcqtests extends controller {
                 $fields['unitcount'] = $unitCount;
                 //Set variables for use in the template
                 $this->setVarByRef('fields', $fields);
-                $this->saveSimpleCalculated();
+                $this->setVarByRef('id', $id);
                 return 'simplecalculatedqn_tpl.php';
                 break;
             case "deletersa":
@@ -1090,7 +1091,7 @@ class mcqtests extends controller {
     /**
      * Method to save simple calculated question
      *
-     * @return boolean
+     * @return string
      */
     public function saveSimpleCalculated() {
         //Save the question
@@ -1256,7 +1257,7 @@ class mcqtests extends controller {
                 $tagId = $this->dbTag->addTag($otTags, Null, $id);
             }
         }
-        return TRUE;
+        return $id;
     }
 
     /**
