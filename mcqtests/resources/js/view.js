@@ -40,6 +40,10 @@ var goToPage = function(page) {
                 hideAll();
                 jQuery('#RSA').show();
                 break;
+            case 'showSCQ':
+                hideAll();
+                jQuery('#SCQ').show();
+                break;
             default:
                 hideAll();
         }
@@ -55,6 +59,7 @@ var hideAll = function() {
     jQuery('#adddescriptionDesc').hide();
     jQuery("#simpleDesc").hide();
     jQuery("#RSA").hide();
+    jQuery("#SCQ").hide();
 }
 
 var goAddQuestion = function() {
@@ -81,13 +86,17 @@ var goAddQuestion = function() {
                 break;
             case 'showRSA':
                 showRSA();
+            case 'showSCQ':
+                showSCQ();
                 break;
             default:
                 showSimpleMCQ();
         }
     }
 }
-
+var showSCQ = function() {
+    window.location.href = scqUrl;
+}
 var showCalcQ = function() {
     window.location.href = calqUrl;
 }

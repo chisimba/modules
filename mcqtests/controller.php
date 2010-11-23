@@ -182,14 +182,15 @@ class mcqtests extends controller {
                 $id = $this->saveSimpleCalculated();
                 $fields = array();
                 $fields['id'] = $id;
-                $fields['test'] = $test;
+                $fields['testid'] = $test;
                 $fields['mode'] = $mode;
                 $fields['anscount'] = $answersCount;
                 $fields['unitcount'] = $unitCount;
+
                 //Set variables for use in the template
                 $this->setVarByRef('fields', $fields);
                 $this->setVarByRef('id', $id);
-                $this->setVarByRef('test', $test);
+                $this->setVarByRef('testId', $test);
                 return 'simplecalculatedqn_tpl.php';
                 break;
             case "deletersa":
@@ -1522,6 +1523,7 @@ class mcqtests extends controller {
         $this->setVarByRef('data', $data[0]);
         $this->setVarByRef('questions', $questions);
         $this->setVarByRef('qNum', $this->getParam('qNum'));
+        $this->setVarByRef('test', $this->getParam('test'));
         return 'viewtest2_tpl.php';
     }
 

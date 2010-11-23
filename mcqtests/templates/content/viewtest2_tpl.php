@@ -26,6 +26,7 @@ $viewjs = '<script language="JavaScript" src="' . $this->getResourceUri('js/view
 $this->appendArrayVar('headerParams', $viewjs);
 
 // set up language items
+$phraseSCQuestions = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqns", 'mcqtests', "Simple Calculated Questions");
 $phraseRandomShortAns = $this->objLanguage->languageText('mod_mcqtests_randomshortans', 'mcqtests');
 $testdetailsLabel = $this->objLanguage->languageText('mod_mcqtests_testdetailsLabel', 'mcqtests');
 $addqestionslabel = $this->objLanguage->languageText('mod_mcqtests_addquestions', 'mcqtests');
@@ -226,6 +227,7 @@ $existingQuestions->addOption('category', $categoryTitle);
 $existingQuestions->addOption('matchQ', $matchingqn);
 $existingQuestions->addOption('numericalQ', $numericalqns);
 $existingQuestions->addOption('showRSA', $phraseRandomShortAns);
+$existingQuestions->addOption('showSCQ', $phraseSCQuestions);
 //$existingQuestions->addOption('shortansQ', 'Short Answer Questions');
 
 /*// choose questiontype
@@ -265,6 +267,7 @@ $str.="<div id='numericalQDesc'><label>".$numericalqns.":&nbsp;</label>".$numeri
 $str.="<div id='shortansQDesc'><label>".$shortans.":&nbsp;</label>".$shortansDesc."<br/>".$goButton->show()."</div>";
 $str.="<div id='simpleDesc'><label>".$simple.":&nbsp;</label>".$simpleDesc."<br/>".$goButton->show()."</div>";
 $str.="<div id='RSA'><label>".$phraseRandomShortAns.":&nbsp;</label>".$phraseRandomShortAns."<br/>".$goButton->show()."</div>";
+$str.="<div id='SCQ'><label>".$phraseSCQuestions.":&nbsp;</label>".$phraseSCQuestions."<br/>".$goButton->show()."</div>";
 
 
 // Confirmation message on saving a question
@@ -467,14 +470,15 @@ $form->addToForm($button->show().$previewButton->show());
 echo $form->show();
 
 $myJS = '<script type="text/javascript">
-            var mcqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"choosequestiontype2", "id"=>$this->getParam('id'), "count" => $count))).'",
-                calqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewcalcquestions", "id"=>$this->getParam('id'), "count" => $count))).'",
-                matchingqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewmatchingquestions", "id"=>$this->getParam('id'), "count" => $count))).'",
-                numericalqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewnumericalquestions", "id"=>$this->getParam('id'), "count" => $count))).'",
-                shortanswerqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewshortansquestions", "id"=>$this->getParam('id'), "count" => $count))).'",
-                categoryUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"categorylisting", "id"=>$this->getParam('id'), "count" => $count))).'",
-                descriptionUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"mcqlisting", "id"=>$this->getParam('id'), "count" => $count))).'";
-                rsaUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"rsalisting", "id"=>$this->getParam('id'), "count" => $count))).'";
+            var mcqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"choosequestiontype2", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'",
+                calqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewcalcquestions", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'",
+                matchingqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewmatchingquestions", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'",
+                numericalqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewnumericalquestions", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'",
+                shortanswerqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewshortansquestions", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'",
+                categoryUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"categorylisting", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'",
+                descriptionUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"mcqlisting", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'";
+                rsaUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"rsalisting", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'";
+                scqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"scqlisting", "id"=>$this->getParam('id'), "test"=>$test, "count" => $count))).'";
         </script>';
 echo $myJS;
 ?>

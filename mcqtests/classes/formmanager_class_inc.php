@@ -1891,8 +1891,8 @@ class formmanager extends object {
         $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
         $phraseAddA = $this->objLanguage->languageText("mod_mcqtests_phraseadda", 'mcqtests', "Add a");
-        $phraseSCQuestions = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqns", 'mcqtests', "RSA matching questions");
-        $phraseSCQuestion = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqn", 'mcqtests', "RSA matching question");
+        $phraseSCQuestions = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqns", 'mcqtests', "Simple Calculated Questions");
+        $phraseSCQuestion = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqn", 'mcqtests', "Simple Calculated Question");
         $wordBack = $this->objLanguage->languageText("word_back", Null, "Back");
         $listTitle = $phraseListOf . " " . $phraseSCQuestions;
         $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
@@ -2071,7 +2071,7 @@ class formmanager extends object {
         $phrasePermissions = $this->objLanguage->languageText("mod_mcqtests_permissionsto", 'mcqtests');
         $phraseSaveChanges = $this->objLanguage->languageText("mod_mcqtests_savechanges", 'mcqtests', "Save changes");
         $phraseSaveAsNewQn = $this->objLanguage->languageText("mod_mcqtests_saveasnewqn", 'mcqtests', "Save as a new question");
-        $phraseSCQuestions = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqn", 'mcqtests', "RSA matching questions");
+        $phraseSCQuestions = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqn", 'mcqtests', "Simple Calculated Question");
         $phraseAddBlankAnswers = $this->objLanguage->languageText("mod_mcqtests_addblankanswers", 'mcqtests', "Select the number of blank answers to add");
         $phraseAddBlankUnits = $this->objLanguage->languageText("mod_mcqtests_addblankunits", 'mcqtests', "Select the number of blank units to add");
         $wordAnswer = $this->objLanguage->languageText('mod_mcqtests_wordanswer', 'mcqtests', "Answer");
@@ -2090,7 +2090,7 @@ class formmanager extends object {
         $form = new form("addsimplecalculated", $this->uri(array(
                             'module' => 'mcqtest',
                             'action' => 'addsimplecalculated',
-                            'id' => $id
+                            'id' => $id, 'test' => $fields["testId"]
                         )));
         $qnData = $this->dbQuestions->getQuestion($id);
 
@@ -2571,7 +2571,8 @@ class formmanager extends object {
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'scqlisting'
+                    'action' => 'scqlisting',
+            'test' => $fields["testid"]
                 )));
         $objBack->link = $buttonBack->showSexy();
         $btnBackList = $objBack->show();
@@ -2581,7 +2582,8 @@ class formmanager extends object {
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'view2'
+                    'action' => 'view2',
+            'test' => $fields["testid"]
                 )));
         $objBack->link = $buttonBack->showSexy();
         $btnBackHome = $objBack->show();
