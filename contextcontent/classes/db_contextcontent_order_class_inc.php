@@ -29,12 +29,12 @@
  */
 // security check - must be included in all scripts
 if (!
-/**
- * Description for $GLOBALS
- * @global unknown $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * Description for $GLOBALS
+         * @global unknown $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -54,15 +54,29 @@ class db_contextcontent_order extends dbtable {
      */
     public function init() {
         parent::init('tbl_contextcontent_order');
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->objLanguage=$this->getObject('language','language');
-        $this->objConfig =& $this->getObject('altconfig', 'config');
+        $this->objUser = & $this->getObject('user', 'security');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objConfig = & $this->getObject('altconfig', 'config');
+        //Load Module Catalogue Class
+        $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+        //Load Activity Streamer
+
+        if ($this->objModuleCatalogue->checkIfRegistered('activitystreamer') && $this->objUser->isLoggedIn()) {
+            $this->eventsEnabled = TRUE;
+        } else {
+            $this->eventsEnabled = FALSE;
+        }
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $enableActivityStreamer = $objSysConfig->getValue('ENABLE_ACTIVITYSTREAMER', 'contextcontent');
+        if (strtoupper($enableActivityStreamer) == 'FALSE') {
+            $this->eventsEnabled = FALSE;
+        }
         $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer');
-        $this->loadClass('treemenu','tree');
-        $this->loadClass('treenode','tree');
-        $this->loadClass('htmllist','tree');
-        $this->loadClass('htmldropdown','tree');
-        $this->loadClass('dhtml','tree');
+        $this->loadClass('treemenu', 'tree');
+        $this->loadClass('treenode', 'tree');
+        $this->loadClass('htmllist', 'tree');
+        $this->loadClass('htmldropdown', 'tree');
+        $this->loadClass('dhtml', 'tree');
 
         $this->loadClass('link', 'htmlelements');
         // Load Context Object
@@ -76,7 +90,7 @@ class db_contextcontent_order extends dbtable {
      * @param string $contextCode Code of Context to get num pages
      */
     public function getNumContextPages($contextCode) {
-        return $this->getRecordCount('WHERE contextcode=\''.$contextCode.'\'');
+        return $this->getRecordCount('WHERE contextcode=\'' . $contextCode . '\'');
     }
 
     /**
@@ -89,7 +103,7 @@ class db_contextcontent_order extends dbtable {
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE contextcode=\''.$contextCode.'\' AND parentid = \'root\'
+        WHERE contextcode=\'' . $contextCode . '\' AND parentid = \'root\'
         ORDER BY lft, pageorder LIMIT 1';
 
         $results = $this->getArray($sql);
@@ -111,7 +125,7 @@ class db_contextcontent_order extends dbtable {
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE tbl_contextcontent_order.chapterid=\''.$chapter.'\' AND contextcode=\''.$contextCode.'\' AND parentid = \'root\'
+        WHERE tbl_contextcontent_order.chapterid=\'' . $chapter . '\' AND contextcode=\'' . $contextCode . '\' AND parentid = \'root\'
         ORDER BY lft, pageorder LIMIT 1';
 
         $results = $this->getArray($sql);
@@ -135,7 +149,7 @@ class db_contextcontent_order extends dbtable {
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE tbl_contextcontent_order.id=\''.$pageId.'\' AND contextcode=\''.$contextCode.'\'
+        WHERE tbl_contextcontent_order.id=\'' . $pageId . '\' AND contextcode=\'' . $contextCode . '\'
         ORDER BY lft LIMIT 1';
 
         $results = $this->getArray($sql);
@@ -147,7 +161,6 @@ class db_contextcontent_order extends dbtable {
         }
     }
 
-
     /**
      * Method to get the list of pages in a context / chapter
      * @param string $context Context Code
@@ -158,10 +171,10 @@ class db_contextcontent_order extends dbtable {
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.titleid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmarked FROM tbl_contextcontent_order
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id) 
-        WHERE tbl_contextcontent_order.contextcode= \''.$context.'\'  ';
+        WHERE tbl_contextcontent_order.contextcode= \'' . $context . '\'  ';
 
         if ($chapter != '') {
-            $sql .= ' AND tbl_contextcontent_order.chapterid= \''.$chapter.'\'';
+            $sql .= ' AND tbl_contextcontent_order.chapterid= \'' . $chapter . '\'';
         }
 
         $sql .= ' ORDER BY lft';
@@ -175,7 +188,7 @@ class db_contextcontent_order extends dbtable {
      * @return boolean
      */
     public function bookmarkPage($id) {
-        return $this->update('id', $id, array('isbookmarked'=>'Y'));
+        return $this->update('id', $id, array('isbookmarked' => 'Y'));
     }
 
     /**
@@ -184,7 +197,7 @@ class db_contextcontent_order extends dbtable {
      * @return boolean
      */
     public function removeBookmark($id) {
-        return $this->update('id', $id, array('isbookmarked'=>'N'));
+        return $this->update('id', $id, array('isbookmarked' => 'N'));
     }
 
     /**
@@ -199,11 +212,11 @@ class db_contextcontent_order extends dbtable {
         $results = $this->getContextPages($context, $chapter);
 
         $str = '<ul class="bookmarkedpages">';
-        foreach($results as $page) {
-            if($page['isbookmarked'] == 'Y') {
-                $link = new link($this->uri(array('action'=>'viewpage', 'id'=>$page['id'])));
+        foreach ($results as $page) {
+            if ($page['isbookmarked'] == 'Y') {
+                $link = new link($this->uri(array('action' => 'viewpage', 'id' => $page['id'])));
                 $link->link = $page['menutitle'];
-                $str .= '<li>'.$link->show().'</li>';
+                $str .= '<li>' . $link->show() . '</li>';
             }
         }
         $str .= '</ul>';
@@ -261,8 +274,6 @@ class db_contextcontent_order extends dbtable {
                 return $this->generateHtmllistTree($results, $defaultSelected, $module);
                 break;
         }
-
-
     }
 
     /**
@@ -277,30 +288,33 @@ class db_contextcontent_order extends dbtable {
 
         $nodeArray = array();
         //Icon for activity streamer
-        $this->objAltConfig = $this->getObject('altconfig','config');
-        $siteRoot=$this->objAltConfig->getsiteRoot();
-        $moduleUri=$this->objAltConfig->getModuleURI();
-        $newImgPath=$siteRoot."/".$moduleUri.'/contextcontent/resources/img/new.png';
-        $newimg='<img src="'.$newImgPath.'">';
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $siteRoot = $this->objAltConfig->getsiteRoot();
+        $moduleUri = $this->objAltConfig->getModuleURI();
+        $newImgPath = $siteRoot . "/" . $moduleUri . '/contextcontent/resources/img/new.png';
+        $newimg = '<img src="' . $newImgPath . '">';
 
         foreach ($results as $treeItem) {
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
+            $showImg = "";
+            if ($this->eventsEnabled) {
+                //Check if logged, works if config ENABLE_ACTIVITYSTREAMER is true
 
+                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
 
-            if($ischapterlogged == FALSE) {
-                $showImg=$newimg;
-            }else {
-                $showImg="";
+                if ($ischapterlogged == FALSE) {
+                    $showImg = $newimg;
+                } else {
+                    $showImg = "";
+                }
             }
-
-            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id']), $module),'icon'=>$showImg);
+            $nodeDetails = array('text' => htmlentities($treeItem['menutitle']) . $showImg, 'link' => $this->uri(array('action' => 'viewpage', 'id' => $treeItem['id']), $module), 'icon' => $showImg);
 
             if ($treeItem['id'] == $defaultSelected) {
                 $nodeDetails['cssClass'] = 'confirm';
             }
 
-            $node =& new treenode ($nodeDetails);
-            $nodeArray[$treeItem['id']] =& $node;
+            $node = & new treenode($nodeDetails);
+            $nodeArray[$treeItem['id']] = & $node;
 
             //if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
@@ -313,7 +327,7 @@ class db_contextcontent_order extends dbtable {
         }
         //}
 
-        $tree = &new htmllist($treeMenu, array('topMostListClass'=>'htmlliststyle'));
+        $tree = &new htmllist($treeMenu, array('topMostListClass' => 'htmlliststyle'));
 
         return $tree->getMenu();
     }
@@ -330,30 +344,34 @@ class db_contextcontent_order extends dbtable {
 
         $nodeArray = array();
 
-        $icon         = 'folder.gif';
+        $icon = 'folder.gif';
         $expandedIcon = 'folder-expanded.gif';
 
-        $this->objAltConfig = $this->getObject('altconfig','config');
-        $siteRoot=$this->objAltConfig->getsiteRoot();
-        $moduleUri=$this->objAltConfig->getModuleURI();
-        $newImgPath=$siteRoot."/".$moduleUri.'/contextcontent/resources/img/new.png';
-        $newimg='<img src="'.$newImgPath.'">';
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $siteRoot = $this->objAltConfig->getsiteRoot();
+        $moduleUri = $this->objAltConfig->getModuleURI();
+        $newImgPath = $siteRoot . "/" . $moduleUri . '/contextcontent/resources/img/new.png';
+        $newimg = '<img src="' . $newImgPath . '">';
+        $showImg = "";
 
-        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid']);
-        if($ischapterlogged == FALSE) {
-            $showImg=$newimg;
-        }else {
-            $showImg="";
+        if ($this->eventsEnabled) {
+
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid']);
+            if ($ischapterlogged == FALSE) {
+                $showImg = $newimg;
+            } else {
+                $showImg = "";
+            }
         }
         foreach ($results as $treeItem) {
-            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id']), $module), 'icon' => $showImg, 'expandedIcon' => $expandedIcon);
+            $nodeDetails = array('text' => htmlentities($treeItem['menutitle']) . $showImg, 'link' => $this->uri(array('action' => 'viewpage', 'id' => $treeItem['id']), $module), 'icon' => $showImg, 'expandedIcon' => $expandedIcon);
 
             if ($treeItem['id'] == $defaultSelected) {
                 $nodeDetails['cssClass'] = 'confirm';
             }
 
-            $node =& new treenode ($nodeDetails);
-            $nodeArray[$treeItem['id']] =& $node;
+            $node = & new treenode($nodeDetails);
+            $nodeArray[$treeItem['id']] = & $node;
 
             //if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
@@ -366,7 +384,7 @@ class db_contextcontent_order extends dbtable {
         }
         //}
 
-        $tree = &new htmllist($treeMenu, array('inputName'=>'parentnode', 'id'=>'input_parentnode'));
+        $tree = &new htmllist($treeMenu, array('inputName' => 'parentnode', 'id' => 'input_parentnode'));
 
         $treeMenu = &new dhtml($treeMenu, array('images' => 'kins/_common/icons/tree', 'defaultClass' => 'treeMenuDefault'));
 
@@ -386,29 +404,32 @@ class db_contextcontent_order extends dbtable {
 
         $nodeArray = array();
 
-        $rootnode =& new treenode (array('text'=>'[- Root -]'));
+        $rootnode = & new treenode(array('text' => '[- Root -]'));
         //Activity streamer icon
-        $this->objAltConfig = $this->getObject('altconfig','config');
-        $siteRoot=$this->objAltConfig->getsiteRoot();
-        $moduleUri=$this->objAltConfig->getModuleURI();
-        $newImgPath=$siteRoot."/".$moduleUri.'/contextcontent/resources/img/new.png';
-        $newimg='<img src="'.$newImgPath.'">';
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $siteRoot = $this->objAltConfig->getsiteRoot();
+        $moduleUri = $this->objAltConfig->getModuleURI();
+        $newImgPath = $siteRoot . "/" . $moduleUri . '/contextcontent/resources/img/new.png';
+        $newimg = '<img src="' . $newImgPath . '">';
+        $showImg = "";
 
         foreach ($results as $treeItem) {
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
-            if($ischapterlogged == FALSE) {
-                $showImg=$newimg;
-            }else {
-                $showImg="";
+            if ($this->eventsEnabled) {
+                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
+                if ($ischapterlogged == FALSE) {
+                    $showImg = $newimg;
+                } else {
+                    $showImg = "";
+                }
             }
-            $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']).$showImg, 'link'=>$treeItem['id'], 'icon' => $showImg);
+            $nodeDetails = array('text' => htmlentities($treeItem['menutitle']) . $showImg, 'link' => $treeItem['id'], 'icon' => $showImg);
 
             if ($hasDisabledNodes && $treeItem['lft'] >= $this->disabledNode['lft'] && $treeItem['rght'] <= $this->disabledNode['rght']) {
                 $nodeDetails['extra'] = 'disabled="disabled" title="This page is on a lower level than the current page you are editing"';
             }
 
-            $node =& new treenode ($nodeDetails);
-            $nodeArray[$treeItem['id']] =& $node;
+            $node = & new treenode($nodeDetails);
+            $nodeArray[$treeItem['id']] = & $node;
             //var_dump($treeItem);die;
             //if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
@@ -423,7 +444,7 @@ class db_contextcontent_order extends dbtable {
 
         $treeMenu->addItem($rootnode);
 
-        $tree = &new htmldropdown($treeMenu, array('inputName'=>'parentnode', 'id'=>'input_parentnode', 'selected'=>$defaultSelected));
+        $tree = &new htmldropdown($treeMenu, array('inputName' => 'parentnode', 'id' => 'input_parentnode', 'selected' => $defaultSelected));
 
         return $tree->getMenu();
     }
@@ -451,16 +472,16 @@ class db_contextcontent_order extends dbtable {
         if ($parentId == '') {
             $leftPointer++;
         }
-        $rightPointer = $leftPointer+1;
+        $rightPointer = $leftPointer + 1;
 
         if ($parentId == '') {
             $pageOrder = 1;
         } else {
-            $this->updateLeftRightPointers($chapter, $lastRight-1);
+            $this->updateLeftRightPointers($chapter, $lastRight - 1);
         }
 
         // get last order
-        $pageOrder = $this->getLastOrder($chapter, $parentId)+1;
+        $pageOrder = $this->getLastOrder($chapter, $parentId) + 1;
 
         // clear pdf
         $this->clearChapterPDF($chapter, $context);
@@ -480,7 +501,6 @@ class db_contextcontent_order extends dbtable {
         return $result;
     }
 
-
     /**
      * Method to add a page
      * @param string $context     Context page belongs to
@@ -497,23 +517,23 @@ class db_contextcontent_order extends dbtable {
      */
     private function insertTitle($context, $chapter, $titleId, $parentId, $left, $right, $pageOrder=1, $visibility='Y', $bookmark='', $isBookmark='N') {
         $lastId = $this->insert(array(
-                'contextcode' => $context,
-                'titleid' => $titleId,
-                'parentid' => $parentId,
-                'chapterid' => $chapter,
-                'lft' => $left,
-                'rght' => $right,
-                'pageorder' => $pageOrder,
-                'visibility' => $visibility,
-                'creatorid' => $this->objUser->userId(),
-                'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
-                'bookmark' => $bookmark,
-                'isbookmarked' => $isBookmark
-        ));
+                    'contextcode' => $context,
+                    'titleid' => $titleId,
+                    'parentid' => $parentId,
+                    'chapterid' => $chapter,
+                    'lft' => $left,
+                    'rght' => $right,
+                    'pageorder' => $pageOrder,
+                    'visibility' => $visibility,
+                    'creatorid' => $this->objUser->userId(),
+                    'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                    'bookmark' => $bookmark,
+                    'isbookmarked' => $isBookmark
+                ));
 
         // Extra Step to Prevent Null Values
         if ($parentId == '') {
-            $this->update('id', $lastId, array('parentid'=>'root'));
+            $this->update('id', $lastId, array('parentid' => 'root'));
         }
 
         // Delete existing PDF version
@@ -532,12 +552,12 @@ class db_contextcontent_order extends dbtable {
         // Prepare to add context to search index
         $objIndexData = $this->getObject('indexdata', 'search');
 
-        $docId = 'contextcontent_page_'.$context.'_'.$page['id'];
+        $docId = 'contextcontent_page_' . $context . '_' . $page['id'];
 
         $docDate = date('Y-m-d H:M:S');
-        $url = $this->uri(array('action'=>'viewpage', 'id'=>$page['id']), 'contextcontent');
+        $url = $this->uri(array('action' => 'viewpage', 'id' => $page['id']), 'contextcontent');
         $title = $page['menutitle'];
-        $contents = $page['menutitle'].' '.$page['pagecontent'];
+        $contents = $page['menutitle'] . ' ' . $page['pagecontent'];
 
         $objTrimStr = $this->getObject('trimstr', 'strings');
         $teaser = $objTrimStr->strTrim(strip_tags($page['pagecontent']), 500);
@@ -549,7 +569,6 @@ class db_contextcontent_order extends dbtable {
         $permissions = NULL;
 
         $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
-
     }
 
     /**
@@ -566,7 +585,7 @@ class db_contextcontent_order extends dbtable {
         $objCleanUrl = $this->getObject('cleanurl', 'filemanager');
 
         // Set path where file will be
-        $destination = $this->objConfig->getcontentBasePath().'/contextcontent/'.$contextCode.'/chapter_'.$chapterId.'.pdf';
+        $destination = $this->objConfig->getcontentBasePath() . '/contextcontent/' . $contextCode . '/chapter_' . $chapterId . '.pdf';
 
         // Clean Up file name
         $objCleanUrl->cleanUpUrl($destination);
@@ -580,9 +599,9 @@ class db_contextcontent_order extends dbtable {
 
     private function getLastRight($context, $parent='', $chapter='') {
         if ($parent == '') {
-            $result = $this->getAll('WHERE contextcode =\''.$context.'\' AND chapterid=\''.$chapter.'\' ORDER BY rght DESC LIMIT 1');
+            $result = $this->getAll('WHERE contextcode =\'' . $context . '\' AND chapterid=\'' . $chapter . '\' ORDER BY rght DESC LIMIT 1');
         } else {
-            $result = $this->getAll('WHERE id =\''.$parent.'\' AND contextcode =\''.$context.'\' AND chapterid=\''.$chapter.'\' ORDER BY rght DESC LIMIT 1');
+            $result = $this->getAll('WHERE id =\'' . $parent . '\' AND contextcode =\'' . $context . '\' AND chapterid=\'' . $chapter . '\' ORDER BY rght DESC LIMIT 1');
         }
 
 
@@ -598,7 +617,7 @@ class db_contextcontent_order extends dbtable {
             $parent = 'root';
         }
 
-        $sql = 'WHERE parentid =\''.$parent.'\' AND chapterid =\''.$chapter.'\' ORDER BY pageorder DESC LIMIT 1';
+        $sql = 'WHERE parentid =\'' . $parent . '\' AND chapterid =\'' . $chapter . '\' ORDER BY pageorder DESC LIMIT 1';
 
         $result = $this->getAll($sql);
 
@@ -610,21 +629,19 @@ class db_contextcontent_order extends dbtable {
     }
 
     private function updateLeftRightPointers($chapter, $base, $amount=2) {
-        $sqlLeft = 'UPDATE tbl_contextcontent_order SET rght=rght+'.$amount.' WHERE rght > '.$base.' AND chapterid=\''.$chapter.'\'';
-        $sqlRight = 'UPDATE tbl_contextcontent_order SET lft=lft+'.$amount.' WHERE lft > '.$base.' AND chapterid=\''.$chapter.'\'';
+        $sqlLeft = 'UPDATE tbl_contextcontent_order SET rght=rght+' . $amount . ' WHERE rght > ' . $base . ' AND chapterid=\'' . $chapter . '\'';
+        $sqlRight = 'UPDATE tbl_contextcontent_order SET lft=lft+' . $amount . ' WHERE lft > ' . $base . ' AND chapterid=\'' . $chapter . '\'';
 
         $this->query($sqlLeft);
         $this->query($sqlRight);
     }
 
-
-  public function getPrevPageId($context, $chapter, $leftValue='', $module='contextcontent')
-    {
+    public function getPrevPageId($context, $chapter, $leftValue='', $module='contextcontent') {
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_pages.menutitle
         FROM tbl_contextcontent_order
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id)
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\')
-        WHERE contextcode =\''.$context.'\' AND lft < '.$leftValue.' AND chapterid=\''.$chapter.'\'
+        WHERE contextcode =\'' . $context . '\' AND lft < ' . $leftValue . ' AND chapterid=\'' . $chapter . '\'
         ORDER BY lft DESC LIMIT 1';
 
         $results = $this->getArray($sql);
@@ -633,23 +650,23 @@ class db_contextcontent_order extends dbtable {
             $page = $this->getArray("SELECT chaptertitle FROM tbl_contextcontent_chaptercontent WHERE chapterid = '$chapter'");
             //If user is logged in specify action, otherwise for public courses, just go to contextcontent home
             $userId = $this->objUser->userId();
-            if(!empty($userId)){
-             $link = new link ($this->uri(array("action"=>"viewchapter","id"=>$chapter), $module));
-            }else{
-             $link = new link ($this->uri(Null, $module));
+            if (!empty($userId)) {
+                $link = new link($this->uri(array("action" => "viewchapter", "id" => $chapter), $module));
+            } else {
+                $link = new link($this->uri(Null, $module));
             }
-            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_backchapter','contextcontent').': '.htmlentities($page[0]['chaptertitle']);
+            $link->link = '&#171; ' . $this->objLanguage->languageText('mod_contextcontent_backchapter', 'contextcontent') . ': ' . htmlentities($page[0]['chaptertitle']);
             $pageId = Null;
         } else {
             $page = $results[0];
             $pageId = $page['id'];
-            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_prevpage','contextcontent').': '.htmlentities($page['menutitle']);
+            $link = new link($this->uri(array('action' => 'viewpage', 'id' => $page['id']), $module));
+            $link->link = '&#171; ' . $this->objLanguage->languageText('mod_contextcontent_prevpage', 'contextcontent') . ': ' . htmlentities($page['menutitle']);
         }
         return $pageId;
     }
-    public function getNextPageId($context, $chapter, $leftValue='')
-    {
+
+    public function getNextPageId($context, $chapter, $leftValue='') {
         $page = $this->getNextPageSQL($context, $chapter, $leftValue);
         if ($page == '') {
             return Null;
@@ -658,12 +675,13 @@ class db_contextcontent_order extends dbtable {
             return $pageId;
         }
     }
+
     public function getPreviousPage($context, $chapter, $leftValue='', $module='contextcontent') {
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_pages.menutitle
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE contextcode =\''.$context.'\' AND lft < '.$leftValue.' AND chapterid=\''.$chapter.'\'
+        WHERE contextcode =\'' . $context . '\' AND lft < ' . $leftValue . ' AND chapterid=\'' . $chapter . '\'
         ORDER BY lft DESC LIMIT 1';
 
         $results = $this->getArray($sql);
@@ -672,16 +690,16 @@ class db_contextcontent_order extends dbtable {
             $page = $this->getArray("SELECT chaptertitle FROM tbl_contextcontent_chaptercontent WHERE chapterid = '$chapter'");
             //If user is logged in specify action, otherwise for public courses, just go to contextcontent home
             $userId = $this->objUser->userId();
-            if(!empty($userId)) {
-                $link = new link ($this->uri(array("action"=>"showcontextchapters","chapterid"=>$chapter), $module));
-            }else {
-                $link = new link ($this->uri(Null, $module));
+            if (!empty($userId)) {
+                $link = new link($this->uri(array("action" => "showcontextchapters", "chapterid" => $chapter), $module));
+            } else {
+                $link = new link($this->uri(Null, $module));
             }
-            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_backchapter','contextcontent','Back to Chapter').': '.htmlentities($page[0]['chaptertitle']);
+            $link->link = '&#171; ' . $this->objLanguage->languageText('mod_contextcontent_backchapter', 'contextcontent', 'Back to Chapter') . ': ' . htmlentities($page[0]['chaptertitle']);
         } else {
             $page = $results[0];
-            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-            $link->link = '&#171; '.$this->objLanguage->languageText('mod_contextcontent_prevpage','contextcontent','Previous Page').': '.htmlentities($page['menutitle']);
+            $link = new link($this->uri(array('action' => 'viewpage', 'id' => $page['id']), $module));
+            $link->link = '&#171; ' . $this->objLanguage->languageText('mod_contextcontent_prevpage', 'contextcontent', 'Previous Page') . ': ' . htmlentities($page['menutitle']);
         }
         return $link->show();
     }
@@ -703,7 +721,7 @@ class db_contextcontent_order extends dbtable {
         } else {
             $parent = $this->getRow('id', $record['parentid']);
 
-            if ($parent['lft']+1 == $record['lft']) {
+            if ($parent['lft'] + 1 == $record['lft']) {
                 return TRUE;
             } else {
                 return FALSE;
@@ -731,7 +749,7 @@ class db_contextcontent_order extends dbtable {
         } else {
             $parent = $this->getRow('id', $record['parentid']);
 
-            if ($parent['rght'] == $record['rght']+1) {
+            if ($parent['rght'] == $record['rght'] + 1) {
                 return TRUE;
             } else {
                 return FALSE;
@@ -749,7 +767,7 @@ class db_contextcontent_order extends dbtable {
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE contextcode =\''.$context.'\' AND lft > '.$leftValue.' AND tbl_contextcontent_order.chapterid=\''.$chapter.'\'
+        WHERE contextcode =\'' . $context . '\' AND lft > ' . $leftValue . ' AND tbl_contextcontent_order.chapterid=\'' . $chapter . '\'
         ORDER BY lft LIMIT 1';
 
         $results = $this->getArray($sql);
@@ -772,8 +790,8 @@ class db_contextcontent_order extends dbtable {
         if ($page == '') {
             return '';
         } else {
-            $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
-            $link->link = $this->objLanguage->languageText('mod_contextcontent_nextpage','contextcontent').': '.htmlentities($page['menutitle']).' &#187;';
+            $link = new link($this->uri(array('action' => 'viewpage', 'id' => $page['id']), $module));
+            $link->link = $this->objLanguage->languageText('mod_contextcontent_nextpage', 'contextcontent') . ': ' . htmlentities($page['menutitle']) . ' &#187;';
             return $link->show();
         }
     }
@@ -791,7 +809,7 @@ class db_contextcontent_order extends dbtable {
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE contextcode =\''.$context.'\' AND chapterid =\''.$chapter.'\' AND lft <= '.$leftValue.' AND rght >= '.$rightValue.'
+        WHERE contextcode =\'' . $context . '\' AND chapterid =\'' . $chapter . '\' AND lft <= ' . $leftValue . ' AND rght >= ' . $rightValue . '
         ORDER BY lft ';
 
         //echo $sql;
@@ -809,7 +827,7 @@ class db_contextcontent_order extends dbtable {
                 if ($counter == count($results)) {
                     $returnString[] = htmlentities($page['menutitle']);
                 } else {
-                    $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id'])));
+                    $link = new link($this->uri(array('action' => 'viewpage', 'id' => $page['id'])));
                     $link->link = htmlentities($page['menutitle']);
                     $returnString[] = $link->show();
                 }
@@ -866,7 +884,7 @@ class db_contextcontent_order extends dbtable {
      */
     private function _rebuild_tree($context, $chapter, $parent, $left, $level) {
         // the right value of this node is the left value + 1
-        $right = $left+1;
+        $right = $left + 1;
 
         // if ($parent == 'root') {
         // $name = 'root';
@@ -880,27 +898,26 @@ class db_contextcontent_order extends dbtable {
         if (!array_key_exists($thisRow['parentid'], $this->orderArray)) {
             $this->orderArray[$thisRow['parentid']] = 1;
         } else {
-            $this->orderArray[$thisRow['parentid']] = $this->orderArray[$thisRow['parentid']]+1;
+            $this->orderArray[$thisRow['parentid']] = $this->orderArray[$thisRow['parentid']] + 1;
         }
 
 
         // get all children of this node
-        $result = $this->getAll(' WHERE  contextcode =\''.$context.'\' AND parentid=\''.$parent.'\' AND chapterid=\''.$chapter.'\' ORDER BY pageorder');
+        $result = $this->getAll(' WHERE  contextcode =\'' . $context . '\' AND parentid=\'' . $parent . '\' AND chapterid=\'' . $chapter . '\' ORDER BY pageorder');
 
         foreach ($result as $row) {
-            $right = $this->_rebuild_tree($context, $chapter, $row['id'], $right, $level+1);
-
+            $right = $this->_rebuild_tree($context, $chapter, $row['id'], $right, $level + 1);
         }
 
         if ($thisRow != FALSE) {
 
-            $this->update('id', $parent, array('lft'=>$left, 'rght'=>$right, 'pageorder'=>$this->orderArray[$thisRow['parentid']]));
+            $this->update('id', $parent, array('lft' => $left, 'rght' => $right, 'pageorder' => $this->orderArray[$thisRow['parentid']]));
         }
 
 
 
         // return the right value of this node + 1
-        return $right+1;
+        return $right + 1;
     }
 
     /**
@@ -919,7 +936,7 @@ class db_contextcontent_order extends dbtable {
 
             if ($result) {
                 $objIndexData = $this->getObject('indexdata', 'search');
-                $objIndexData->removeIndex('contextcontent_page_'.$page['contextcode'].'_'.$page['id']);
+                $objIndexData->removeIndex('contextcontent_page_' . $page['contextcode'] . '_' . $page['id']);
             }
 
             return $result;
@@ -938,7 +955,7 @@ class db_contextcontent_order extends dbtable {
             return FALSE;
         }
 
-        $nextPageSQL = ' WHERE parentid=\''.$page['parentid'].'\' AND contextcode =\''.$page['contextcode'].'\' AND pageorder < '.$page['pageorder'].' ORDER BY pageorder DESC';
+        $nextPageSQL = ' WHERE parentid=\'' . $page['parentid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder < ' . $page['pageorder'] . ' ORDER BY pageorder DESC';
         $nextPage = $this->getAll($nextPageSQL);
 
         if (count($nextPage) == 0) {
@@ -946,8 +963,8 @@ class db_contextcontent_order extends dbtable {
         } else {
             $nextPage = $nextPage[0];
 
-            $this->update('id', $page['id'], array('pageorder'=>$nextPage['pageorder']));
-            $this->update('id', $nextPage['id'], array('pageorder'=>$page['pageorder']));
+            $this->update('id', $page['id'], array('pageorder' => $nextPage['pageorder']));
+            $this->update('id', $nextPage['id'], array('pageorder' => $page['pageorder']));
 
             $this->rebuildContext($page['contextcode'], $page['chapterid']);
 
@@ -956,8 +973,6 @@ class db_contextcontent_order extends dbtable {
 
             return TRUE;
         }
-
-
     }
 
     /**
@@ -972,7 +987,7 @@ class db_contextcontent_order extends dbtable {
             return FALSE;
         }
 
-        $nextPageSQL = ' WHERE parentid=\''.$page['parentid'].'\' AND contextcode =\''.$page['contextcode'].'\' AND pageorder > '.$page['pageorder'].' ORDER BY pageorder ';
+        $nextPageSQL = ' WHERE parentid=\'' . $page['parentid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder > ' . $page['pageorder'] . ' ORDER BY pageorder ';
         $nextPage = $this->getAll($nextPageSQL);
 
         if (count($nextPage) == 0) {
@@ -980,8 +995,8 @@ class db_contextcontent_order extends dbtable {
         } else {
             $nextPage = $nextPage[0];
 
-            $this->update('id', $page['id'], array('pageorder'=>$nextPage['pageorder']));
-            $this->update('id', $nextPage['id'], array('pageorder'=>$page['pageorder']));
+            $this->update('id', $page['id'], array('pageorder' => $nextPage['pageorder']));
+            $this->update('id', $nextPage['id'], array('pageorder' => $page['pageorder']));
 
             $this->rebuildContext($page['contextcode'], $page['chapterid']);
 
@@ -990,8 +1005,6 @@ class db_contextcontent_order extends dbtable {
 
             return TRUE;
         }
-
-
     }
 
     /**
@@ -1018,7 +1031,7 @@ class db_contextcontent_order extends dbtable {
                 // Replace Obfuscator with proper underscore
                 $item = str_replace($obfuscator, '_', $item);
                 // Do Update
-                $this->update('id', $item, array('pageorder'=>$counter));
+                $this->update('id', $item, array('pageorder' => $counter));
                 // Increase Counter
                 $counter++;
             }
@@ -1037,10 +1050,10 @@ class db_contextcontent_order extends dbtable {
      *
      */
     function changeParent($context, $chapter, $node, $newParent) {
-        if ($newParent =='') {
+        if ($newParent == '') {
             $newParent = 'root';
         }
-        $this->update('id', $node, array('parentid'=>$newParent));
+        $this->update('id', $node, array('parentid' => $newParent));
         $this->rebuildContext($context, $chapter);
     }
 
@@ -1059,11 +1072,12 @@ class db_contextcontent_order extends dbtable {
         // Create Array for Nodes
         $nodeArray = array();
         //The Activity Streamer Icon
-        $this->objAltConfig = $this->getObject('altconfig','config');
-        $siteRoot=$this->objAltConfig->getsiteRoot();
-        $moduleUri=$this->objAltConfig->getModuleURI();
-        $newImgPath=$siteRoot."/".$moduleUri.'/contextcontent/resources/img/new.png';
-        $newimg='<img src="'.$newImgPath.'">';
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $siteRoot = $this->objAltConfig->getsiteRoot();
+        $moduleUri = $this->objAltConfig->getModuleURI();
+        $newImgPath = $siteRoot . "/" . $moduleUri . '/contextcontent/resources/img/new.png';
+        $newimg = '<img src="' . $newImgPath . '">';
+        $showImg = "";
 
 
         // Option 1 - Node is Root Node on First Level
@@ -1073,14 +1087,17 @@ class db_contextcontent_order extends dbtable {
 
             // Loop through siblings
             foreach ($firstLevelNodes as $treeItem) {
-                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
-                if($ischapterlogged == FALSE) {
-                    $showImg=$newimg;
-                }else {
-                    $showImg="";
+                $showImg = "";
+                if ($this->eventsEnabled) {
+                    $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
+                    if ($ischapterlogged == FALSE) {
+                        $showImg = $newimg;
+                    } else {
+                        $showImg = "";
+                    }
                 }
                 // Create Array with Node Details
-                $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])), 'icon' => $showImg);
+                $nodeDetails = array('text' => htmlentities($treeItem['menutitle']) . $showImg, 'link' => $this->uri(array('action' => 'viewpage', 'id' => $treeItem['id'])), 'icon' => $showImg);
                 //var_dump($nodeDetails);die;
                 // Add style if current node
                 if ($treeItem['id'] == $id) {
@@ -1089,28 +1106,31 @@ class db_contextcontent_order extends dbtable {
                 }
 
                 // Create Node
-                $node =& new treenode ($nodeDetails);
+                $node = & new treenode($nodeDetails);
 
                 // Check If current Item and has childen
-                if ($treeItem['id'] == $id && ($record['rght']-$record['lft']-1 > 0)) {
+                if ($treeItem['id'] == $id && ($record['rght'] - $record['lft'] - 1 > 0)) {
 
                     // Get immediate Children
-                    $childrenNodes = $this->getPages($chapter, $context, ' AND parentid=\''.$id.'\'');
+                    $childrenNodes = $this->getPages($chapter, $context, ' AND parentid=\'' . $id . '\'');
 
                     // Add Childen
                     foreach ($childrenNodes as $childNode) {
-                        $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $childNode['id']);
-                        if($ischapterlogged == FALSE) {
-                            $showImg=$newimg;
-                        }else {
-                            $showImg="";
+                        $showImg = "";
+                        if ($this->eventsEnabled) {
+                            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $childNode['id']);
+                            if ($ischapterlogged == FALSE) {
+                                $showImg = $newimg;
+                            } else {
+                                $showImg = "";
+                            }
                         }
 
                         // Create Array with Child Node Details
-                        $childNodeDetails = array('text'=>htmlentities($childNode['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$childNode['id'])), 'icon' => $showImg);
+                        $childNodeDetails = array('text' => htmlentities($childNode['menutitle']) . $showImg, 'link' => $this->uri(array('action' => 'viewpage', 'id' => $childNode['id'])), 'icon' => $showImg);
 
                         // Create Child Node
-                        $childTreeNode =& new treenode ($childNodeDetails);
+                        $childTreeNode = & new treenode($childNodeDetails);
 
                         // Add to Current Node
                         $node->addItem($childTreeNode);
@@ -1123,27 +1143,30 @@ class db_contextcontent_order extends dbtable {
             }
 
             // Create Menu Display
-            $tree = &new htmllist($treeMenu, array('topMostListClass'=>'twolevelstyle'));
+            $tree = &new htmllist($treeMenu, array('topMostListClass' => 'twolevelstyle'));
 
             // Return Menu Display
             return $tree->getMenu();
 
             // OPTION 2: Not Root node, but doesn't have children
-        } else if ($record['rght']-$record['lft']-1 == 0) {
+        } else if ($record['rght'] - $record['lft'] - 1 == 0) {
 
             // Get Siblings
-            $siblings = $this->getPages($chapter, $context, ' AND parentid=\''.$record['parentid'].'\'');
+            $siblings = $this->getPages($chapter, $context, ' AND parentid=\'' . $record['parentid'] . '\'');
 
             // Loop through siblings
             foreach ($siblings as $treeItem) {
-                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
-                if($ischapterlogged == FALSE) {
-                    $showImg=$newimg;
-                }else {
-                    $showImg="";
+                $showImg = "";
+                if ($this->eventsEnabled) {
+                    $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
+                    if ($ischapterlogged == FALSE) {
+                        $showImg = $newimg;
+                    } else {
+                        $showImg = "";
+                    }
                 }
                 // Create Array with Node Details
-                $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
+                $nodeDetails = array('text' => htmlentities($treeItem['menutitle']) . $showImg, 'link' => $this->uri(array('action' => 'viewpage', 'id' => $treeItem['id'])));
 
                 // Add style if current node
                 if ($treeItem['id'] == $id) {
@@ -1152,10 +1175,9 @@ class db_contextcontent_order extends dbtable {
                 }
 
                 // Create Node
-                $node =& new treenode ($nodeDetails);
+                $node = & new treenode($nodeDetails);
                 // Add to Menu
                 $treeMenu->addItem($node);
-
             }
 
             // Create Menu Display
@@ -1167,29 +1189,29 @@ class db_contextcontent_order extends dbtable {
             // Option 3 - Not Root Node, has Children
         } else {
 
-            $recordInfo = $this->getPages($chapter, $context, ' AND tbl_contextcontent_order.id=\''.$id.'\'');
+            $recordInfo = $this->getPages($chapter, $context, ' AND tbl_contextcontent_order.id=\'' . $id . '\'');
 
-            $nodeDetails = array('text'=>htmlentities($recordInfo[0]['menutitle']), 'cssClass'=>'confirm', 'link'=>'afasf');
+            $nodeDetails = array('text' => htmlentities($recordInfo[0]['menutitle']), 'cssClass' => 'confirm', 'link' => 'afasf');
 
             //$node = new treenode ($nodeDetails);
             //$node->text = htmlentities($recordInfo[0]['menutitle']);
-
-
-
             // Get Siblings
-            $siblings = $this->getPages($chapter, $context, ' AND parentid=\''.$record['parentid'].'\'');
+            $siblings = $this->getPages($chapter, $context, ' AND parentid=\'' . $record['parentid'] . '\'');
 
             // Loop through siblings
             foreach ($siblings as $treeItem) {
-                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
-                if($ischapterlogged == FALSE) {
-                    $showImg=$newimg;
-                }else {
-                    $showImg="";
+                $showImg = "";
+                if ($this->eventsEnabled) {
+                    $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $treeItem['id']);
+                    if ($ischapterlogged == FALSE) {
+                        $showImg = $newimg;
+                    } else {
+                        $showImg = "";
+                    }
                 }
 
                 // Create Array with Node Details
-                $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
+                $nodeDetails = array('text' => htmlentities($treeItem['menutitle']) . $showImg, 'link' => $this->uri(array('action' => 'viewpage', 'id' => $treeItem['id'])));
 
                 // Add style if current node
                 if ($treeItem['id'] == $id) {
@@ -1198,47 +1220,45 @@ class db_contextcontent_order extends dbtable {
                 }
 
                 // Create Node
-                $node =& new treenode ($nodeDetails);
+                $node = & new treenode($nodeDetails);
                 // Add to Menu
                 $treeMenu->addItem($node);
 
-                $nodeArray[$treeItem['id']] =& $node;
-
+                $nodeArray[$treeItem['id']] = & $node;
             }
 
             // Get immediate Children
-            $childrenNodes = $this->getPages($chapter, $context, ' AND parentid=\''.$id.'\'');
+            $childrenNodes = $this->getPages($chapter, $context, ' AND parentid=\'' . $id . '\'');
 
             // Add Childen
             foreach ($childrenNodes as $childNode) {
-                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $childNode['id']);
-                if($ischapterlogged == FALSE) {
-                    $showImg=$newimg;
-                }else {
-                    $showImg="";
+                $showImg = "";
+                if ($this->eventsEnabled) {
+                    $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $childNode['id']);
+                    if ($ischapterlogged == FALSE) {
+                        $showImg = $newimg;
+                    } else {
+                        $showImg = "";
+                    }
                 }
 
                 // Create Array with Child Node Details
-                $childNodeDetails = array('text'=>htmlentities($childNode['menutitle']).$showImg, 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$childNode['id'])));
+                $childNodeDetails = array('text' => htmlentities($childNode['menutitle']) . $showImg, 'link' => $this->uri(array('action' => 'viewpage', 'id' => $childNode['id'])));
 
                 // Create Child Node
-                $childTreeNode =& new treenode ($childNodeDetails);
+                $childTreeNode = & new treenode($childNodeDetails);
 
                 // Add to Current Node
                 $nodeArray[$id]->addItem($childTreeNode);
-
             }
 
             // Add to Menu
             //$treeMenu->addItem($node);
-
             // Create Menu Display
             $tree = &new htmllist($treeMenu);
 
             // Return Menu Display
             return $tree->getMenu();
-
-
         }
 
         return 'asfasf';
@@ -1249,8 +1269,8 @@ class db_contextcontent_order extends dbtable {
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE contextcode=\''.$contextCode.'\' AND tbl_contextcontent_order.chapterid=\''.$chapter.'\' '.$where.'
-        ORDER BY '.$order;
+        WHERE contextcode=\'' . $contextCode . '\' AND tbl_contextcontent_order.chapterid=\'' . $chapter . '\' ' . $where . '
+        ORDER BY ' . $order;
 
         return $this->getArray($sql);
     }
@@ -1278,12 +1298,12 @@ class db_contextcontent_order extends dbtable {
         }
 
         // Now it is ok to move page
-        $children = $this->getAll(' WHERE contextcode =\''.$context.'\' AND chapterid =\''.$page['chapterid'].'\' AND lft >= '.$page['lft'].' AND rght <= '.$page['rght'].'
+        $children = $this->getAll(' WHERE contextcode =\'' . $context . '\' AND chapterid =\'' . $page['chapterid'] . '\' AND lft >= ' . $page['lft'] . ' AND rght <= ' . $page['rght'] . '
         ORDER BY lft ');
 
         // Move Each Child One by One
         foreach ($children as $child) {
-            $this->update('id', $child['id'], array('chapterid'=>$chapter));
+            $this->update('id', $child['id'], array('chapterid' => $chapter));
         }
 
         // Rebuild Old Context
@@ -1296,7 +1316,9 @@ class db_contextcontent_order extends dbtable {
     }
 
     function getContextWithPages($titleId) {
-        return $this->getAll(' WHERE titleid=\''.$titleId.'\'');
+        return $this->getAll(' WHERE titleid=\'' . $titleId . '\'');
     }
+
 }
+
 ?>

@@ -98,13 +98,18 @@ if (count($chapters) > 0) {
             $bookmarkLink->link = '';
             $bookmarkLink->title = $this->objLanguage->languageText('mod_contextcontent_scrolltohapter', 'contextcontent');
 
-            // Get List of Pages in the Chapter
-            //$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
-            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid']);
-            if ($ischapterlogged == FALSE) {
-                $showImg = $streamerimg;
-            } else {
-                $showImg = "";
+            $showImg = "";
+
+            if ($this->eventsEnabled) {
+
+                // Get List of Pages in the Chapter
+                //$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
+                $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid']);
+                if ($ischapterlogged == FALSE) {
+                    $showImg = $streamerimg;
+                } else {
+                    $showImg = "";
+                }
             }
             //if ($chapter['pagecount'] == 0) {
             //    $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
