@@ -187,6 +187,7 @@ class rttutil extends object {
         <jar href="realtime2-presentations.jar" />
         <jar href="realtime2-audio.jar" />
         <jar href="realtime2-core.jar" />
+         <jar href="jspeex.jar" />
         <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
         <jar href="realtime2-usermanager.jar" />
         <jar href="realtime2-roommanager.jar" />
