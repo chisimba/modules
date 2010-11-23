@@ -58,6 +58,7 @@ class livechat extends controller {
 
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -69,11 +70,12 @@ class livechat extends controller {
      * which renders the module output.
      *
      */
-    public function dispatch() {
+    public function dispatch($action) {
         /*
          * Convert the action into a method (alternative to
          * using case selections)
          */
+
         $method = $this->__getMethod($action);
         /*
          * Return the template determined by the method resulting
@@ -130,7 +132,8 @@ class livechat extends controller {
      * @return stromg the name of the method
      *
      */
-    function __getMethod(& $action) {
+    function __getMethod($action) {
+
         if ($this->__validAction($action)) {
             return "__" . $action;
         } else {
@@ -145,6 +148,22 @@ class livechat extends controller {
         return "home_tpl.php";
     }
 
+    function __sendinvite() {
+        $dblivechat = $this->getObject("dblivechat");
+        $message = $this->objUser->fullnames . " wants to chat";
+        $from = $this->objUser->userid();
+        $usersParam = $this->getParam('users');
+        $users = explode(",", $usersParam);
+        foreach ($users as $user) {
+            if ($user != '') {
+                $dblivechat->addMessage($message, $from, $user);
+            }
+        }
+        echo "success";
+        die();
+    }
+
     /* ------------- END: Set of methods to replace case selection ------------ */
 }
+
 ?>
