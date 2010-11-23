@@ -133,13 +133,14 @@ class rttutil extends object {
         chmod($myFile, 0777);
     }
 
-    function generateDemoJNLP($nickname,$username) {
+    function generateDemoJNLP($nickname, $username) {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $servletURL = $objSysConfig->getValue('SERVLETURL', 'rtt');
         $plugins = $objSysConfig->getValue('PLUGINS', 'rtt');
         $openfireHost = $objSysConfig->getValue('OPENFIRE_HOST', 'rtt');
         $openfirePort = $objSysConfig->getValue('OPENFIRE_CLIENT_PORT', 'rtt');
-        $openfireHttpBindUrl = $objSysConfig->getValue('OPENFIRE_HTTP_BIND', 'rtt');
+        $openfireHttpBindUrlHost = $objSysConfig->getValue('OPENFIRE_HTTP_BIND_HOST', 'rtt');
+        $openfireHttpBindUrlPort = $objSysConfig->getValue('OPENFIRE_HTTP_BIND_PORT', 'rtt');
         $skinclass = $objSysConfig->getValue('SKINCLASS', 'rtt');
         $skinjars = $objSysConfig->getValue('SKINJAR', 'rtt');
         $rtpPort = $objSysConfig->getValue('RTPPORT', 'rtt');
@@ -178,13 +179,15 @@ class rttutil extends object {
         <jar href="PgsLookAndFeel.jar"/>
         <jar href="l2fprod-common-all.jar"/>
         <jar href="kunstsoff-rt.jar" />
-        <jar href="smack.jar" />
-        <jar href="smackx.jar" />
+        <jar href="smack-3.2.0-SNAPSHOT-jar-with-dependencies.jar" />
+        <jar href="smackx-3.2.0-SNAPSHOT-jar-with-dependencies.jar" />
+        <jar href="proxy-vole_20100914.jar" />
         <jar href="looks-2.3.0.jar" />
         <jar href="realtime2-chatmanager.jar" />
         <jar href="realtime2-presentations.jar" />
         <jar href="realtime2-audio.jar" />
         <jar href="realtime2-core.jar" />
+        <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
         <jar href="realtime2-usermanager.jar" />
         <jar href="realtime2-roommanager.jar" />
         <jar href="realtime2-whiteboard.jar" />
@@ -198,7 +201,8 @@ class rttutil extends object {
     <argument>-debug=true</argument>
     <argument>-enabledraw=' . $enableDraw . '</argument>
     <argument>-skinclass=null </argument>
-    <argument>-audiovideourl=' . $openfireHttpBindUrl . '</argument>
+    <argument>-httpbindhost=' . $openfireHttpBindUrlHost . '</argument>
+        <argument>-httpbindport=' . $openfireHttpBindUrlPort . '</argument>
     <argument>-serverport=' . $openfirePort . '</argument>
     <argument>-serverhost=' . $openfireHost . '</argument>
     <argument>-mode=1</argument>
@@ -208,6 +212,7 @@ class rttutil extends object {
     <argument>-email=' . $nickname . '@chisimba.com</argument>
     <argument>-rtpPort=' . $rtpPort . '</argument>
     <argument>-sipPort=' . $sipPort . '</argument>
+    <argument>-isdemo=true</argument>
     <argument>-outboundProxy=' . $outboundProxy . '</argument>
     <argument>-password=' . $password . '</argument>
     <argument>-domain=' . $sipDomain . '</argument>
