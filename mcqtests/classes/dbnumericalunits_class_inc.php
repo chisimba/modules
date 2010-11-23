@@ -71,9 +71,9 @@ class dbnumericalunits extends dbtable {
         $this->delete('id', $id);
     }
 
-    public function getNumericalUnits($id) {
-        $units = $this->getAll("WHERE questionid = '$id'");
-        return $units[0];
+    public function getNumericalUnits($qnid) {
+        $units = $this->getAll("WHERE questionid = '$qnid'");
+        return $units;
     }
 }
 

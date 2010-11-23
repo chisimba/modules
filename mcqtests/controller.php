@@ -1208,6 +1208,43 @@ class mcqtests extends controller {
                     $aucount++;
                 } while ($aucount <= $updateanscount);
             }
+            //Save New Units
+            $frmutcount = $this->getParam('frmunitcount', Null);
+            $frmupunitcount = $this->getParam('frmupunitcount', Null);
+            if (!empty($frmutcount)) {
+                $utcount = 1;
+                do {
+                    $fieldsUt = array();
+                    $fieldsUt['questionid'] = $questionid;
+                    $uid = $this->getParam('utid' . $utcount, Null);
+                    $fieldsUt['unit'] = $this->getParam('unit' . $utcount, Null);
+                    $fieldsUt['multiplier'] = $this->getParam('multiplier' . $utcount, Null);
+                    //Insert/Update Answer
+                    //Store only non-empty records
+                    if (!empty($fieldsUt['unit'])) {
+                        $ansid = $this->objNumericalUnit->addNUnit($fieldsUt, $uid);
+                    }
+
+                    $utcount++;
+                } while ($utcount <= $frmutcount);
+            }
+            if (!empty($frmupunitcount)) {
+                $upcount = 1;
+                do {
+                    $fieldsUt = array();
+                    $fieldsUt['questionid'] = $questionid;
+                    $utid = $this->getParam('utid_update_' . $upcount, Null);
+                    $fieldsUt['unit'] = $this->getParam('unit_update_' . $upcount, Null);
+                    $fieldsUt['multiplier'] = $this->getParam('multiplier_update_' . $upcount, Null);
+                    //Insert/Update Answer
+                    //Store only non-empty records
+                    if (!empty($fieldsUt['unit'])) {
+                        $ansupid = $this->objNumericalUnit->addNUnit($fieldsUt, $utid);
+                    }
+
+                    $upcount++;
+                } while ($upcount <= $frmupunitcount);
+            }
             //Save the official tags
             $officialTags = array();
             $officialTags['tags'] = $this->getParam('officialtags', Null);

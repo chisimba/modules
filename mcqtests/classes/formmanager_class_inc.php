@@ -59,6 +59,7 @@ class formmanager extends object {
         $this->objQnAnswers = $this->newObject('dbquestion_answers');
         $this->objQuestionCalculated = $this->newObject('dbquestion_calculated');
         $this->objNumericalOptions = $this->newObject('dbnumericalunitsoptions');
+        $this->objNumericalUnit = $this->newObject('dbnumericalunits');
         $this->contextCode = $this->objContext->getContextCode();
     }
 
@@ -2263,33 +2264,38 @@ class formmanager extends object {
         //Get Values if edit
         $unitValues = Null;
         if (!empty($id)) {
+            $uh = $this->objNumericalUnit->getNumericalUnits($id);
 
-            $unitMultiplier = $this->createUnitMultiplierFields(1, $unitValues = Null, $multiplier = 1);
+            $upcount = 1;
+            foreach ($uh as $thisUh) {                
+                $unitMultiplier = $this->createUnitMultiplierFields("_update_" . $upcount, $thisUh, $multiplier = Null);
+                //Add unit-Multiplier to form
+                $form->addToForm($unitMultiplier);
+
+                $upcount++;
+            }
         } else {
             //Load default unit-Multiplier
             $unitMultiplier = $this->createUnitMultiplierFields(1, $unitValues = Null, $multiplier = 1);
-        }
-
-        //Add unit-Multiplier to form
-        $form->addToForm($unitMultiplier);
-
-        //Load other unit-Multiplier
-        $ucount = 2;
-        $unitcount = $fields['unitcount'];
-        if ($unitcount > 1)
-            $unitcount++;
-
-        do {
-            echo $ucount;
-            $unitMultiplier = $this->createUnitMultiplierFields($ucount, $unitValues = Null, Null);
-            //Add form validations
-            $form->addRule('unit' . $ucount, $wordUnit . " " . $ucount . " " . $phraseIsRequired, 'required');
-            $form->addRule('multiplier' . $ucount, $wordMultiplier . " " . $ucount . " " . $phraseIsRequired, 'required');
-            //Add Answer Fieldset to form
+            //Add unit-Multiplier to form
             $form->addToForm($unitMultiplier);
-            $ucount++;
-        } while ($ucount <= $unitcount);
-
+        }
+        //Load other unit-Multiplier        
+        $unitcount = $fields['unitcount'];
+        $ucount = 0;
+        if ($unitcount > 1) {
+            $ucount = 1;
+            do {
+                echo $ucount;
+                $unitMultiplier = $this->createUnitMultiplierFields($ucount, $unitValues = Null, Null);
+                //Add form validations
+                $form->addRule('unit' . $ucount, $wordUnit . " " . $ucount . " " . $phraseIsRequired, 'required');
+                $form->addRule('multiplier' . $ucount, $wordMultiplier . " " . $ucount . " " . $phraseIsRequired, 'required');
+                //Add Answer Fieldset to form
+                $form->addToForm($unitMultiplier);
+                $ucount++;
+            } while ($ucount <= $unitcount);
+        }
 
         //Create table to store unit-handling
         $objTable = new htmltable();
@@ -2325,11 +2331,12 @@ class formmanager extends object {
         }
         //Store no of unit-multipliers
         $frmunitcount = new hiddeninput("frmunitcount", $ucount);
+        $frmupdateunitcount = new hiddeninput("frmupunitcount", $upcount);
 
         //Add Units dropdown to the table
         $objTable->startRow();
         $objTable->addCell($phraseAddBlankUnits, '20%');
-        $objTable->addCell($noofunitsdropdown->show() . $frmunitcount->show(), '80%');
+        $objTable->addCell($noofunitsdropdown->show() . $frmunitcount->show() . $frmupdateunitcount->show(), '80%');
         $objTable->endRow();
 
         //Add table to form
@@ -2640,7 +2647,7 @@ class formmanager extends object {
         }
         $unitfield->size = 7;
         //Store numericaloptions Id
-        $uhfield = new hiddeninput("uhid" . $unitno, $unitValues["id"]);
+        $uhfield = new hiddeninput("utid" . $unitno, $unitValues["id"]);
         //Add Unit to the table
         $objTable->startRow();
         $objTable->addCell($wordUnit, '20%');
@@ -2673,7 +2680,12 @@ class formmanager extends object {
 
         //Add fieldset to hold answer
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
-        $objFieldset->setLegend($wordUnit . " " . $unitno);
+        if (!empty($unitValues["id"])) {
+            $uno = explode("_update_", $unitno);
+            $objFieldset->setLegend($wordUnit . " " . $uno["1"]);
+        } else {
+            $objFieldset->setLegend($wordUnit . " " . $unitno);
+        }
 
         //Add table to General Fieldset
         $objFieldset->addContent($objTable->show());
