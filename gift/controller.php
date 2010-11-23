@@ -488,7 +488,7 @@ class gift extends controller {
 
     //shows the gift policy template
     function __viewPolicy() {
-        return 'giftPolicy_tpl.php';
+        return 'giftpolicy_tpl.php';
     }
 
     function __userExists() {
