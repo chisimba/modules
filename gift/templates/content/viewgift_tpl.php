@@ -1,5 +1,5 @@
 <?php
-
+$objIcon = $this->newObject('geticon', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
@@ -70,7 +70,12 @@ $attachs = "";
 foreach ($attchs as $attach) {
     $link = new link($this->uri(array("action" => "downloadattachment", "giftid" => $gift['id'], "filename" => $attach['name'])));
     $link->link = $attach['name'];
-    $attachs.=$link->show() . '<br/>';
+
+    $objIcon->setIcon("delete");
+    $deletelink = new link($this->uri(array("action" => "deleteattachment", "id" => $attach['id'], 'giftid' => $gift['id'])));
+    $deletelink->link = $objIcon->show();
+
+    $attachs.=$link->show().$deletelink->show() . '<br/>';
 }
 $table->startRow();
 $table->addCell("<b>Attachments</b>");
