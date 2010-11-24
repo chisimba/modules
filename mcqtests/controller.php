@@ -157,8 +157,15 @@ class mcqtests extends controller {
         }
         // Now the main switch for $action
         switch ($action) {
+            case 'newhome':
+                if ($this->objCond->isContextMember('Students')) {
+                    $this->unsetSession('taketest');
+                    return $this->studentHome();
+                } else {
+                    return $this->newHome();
+                }
             case 'scqlisting':
-                $test = $this->getParam('test', "gen8Srv33Nme35_74470_1286793685");
+                $test = $this->getParam('test', Null);
                 $this->setVarByRef('testId', $test);
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'scqlisting_tpl.php';
@@ -1306,7 +1313,31 @@ class mcqtests extends controller {
         $this->setVarByRef('data', $data);
         return 'index_tpl.php';
     }
-
+    /**
+     * Method to display a list of tests in the test home page.
+     *
+     * @access private
+     * @param string $testId The id of the test results were exported for
+     * @return
+     */
+    private function newHome($testId = NULL) {
+        $data = $this->dbTestadmin->getTests($this->contextCode);
+        if (!empty($data)) {
+            foreach ($data as $key => $line) {
+                $sql = "SELECT title FROM tbl_context_nodes WHERE ";
+                $sql.= "id = '" . $line['chapter'] . "'";
+                $nodes = $this->objContentNodes->getArray($sql);
+                if (!empty($nodes)) {
+                    $data[$key]['node'] = $nodes[0]['title'];
+                } else {
+                    $data[$key]['node'] = '';
+                }
+            }
+        }
+        $this->setVarByRef('testId', $testId);
+        $this->setVarByRef('data', $data);
+        return 'newindex_tpl.php';
+    }
     /**
      * Method to display a list of tests in the test home page.
      *

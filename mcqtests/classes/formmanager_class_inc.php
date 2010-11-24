@@ -1878,6 +1878,7 @@ class formmanager extends object {
 
         return "<div>" . $form->show() . "</div>";
     }
+
     /**
      * Method to create a list of random simple-calculated-questions
      *
@@ -1898,7 +1899,7 @@ class formmanager extends object {
         $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
         $backToHome = $wordBack . " " . $wordTo . " " . $mcqHome;
         $noRecords = $this->objLanguage->languageText('mod_mcqtests_norecords', 'mcqtests', "No records found");
-        $addSCQ = $phraseAddA." ".$phraseSCQuestion;
+        $addSCQ = $phraseAddA . " " . $phraseSCQuestion;
         $wordDesc = $this->objLanguage->languageText('mod_mcqtests_description', 'mcqtests', "Description");
         $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
         $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
@@ -1987,7 +1988,8 @@ class formmanager extends object {
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'view2'
+                    'action' => 'view2',
+                    'test' => $testId
                 )));
         $objBack->link = $buttonBack->showSexy();
         $str .= " " . $objBack->show();
@@ -2003,7 +2005,8 @@ class formmanager extends object {
         //Form Object
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
-                            'action' => 'mcqlisting'
+                            'action' => 'mcqlisting',
+                            'test' => $testId
                         )));
         //Add General Fieldset to form
         $form->addToForm($objFieldset->show());
@@ -2012,6 +2015,7 @@ class formmanager extends object {
         $objFieldset->reset();
         return $form->show();
     }
+
     /**
      * Method to create Simple Calculation Question form
      *
@@ -2400,7 +2404,7 @@ class formmanager extends object {
             $uh = $this->objNumericalUnit->getNumericalUnits($id);
 
             $upcount = 1;
-            foreach ($uh as $thisUh) {                
+            foreach ($uh as $thisUh) {
                 $unitMultiplier = $this->createUnitMultiplierFields("_update_" . $upcount, $thisUh, $multiplier = Null);
                 //Add unit-Multiplier to form
                 $form->addToForm($unitMultiplier);
@@ -2572,7 +2576,7 @@ class formmanager extends object {
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
                     'action' => 'scqlisting',
-            'test' => $fields["testid"]
+                    'test' => $fields["testid"]
                 )));
         $objBack->link = $buttonBack->showSexy();
         $btnBackList = $objBack->show();
@@ -2583,7 +2587,7 @@ class formmanager extends object {
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
                     'action' => 'view2',
-            'test' => $fields["testid"]
+                    'test' => $fields["testid"]
                 )));
         $objBack->link = $buttonBack->showSexy();
         $btnBackHome = $objBack->show();
