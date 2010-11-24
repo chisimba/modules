@@ -1,4 +1,5 @@
 <?php
+
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -74,8 +75,12 @@ foreach ($attchs as $attach) {
     $objIcon->setIcon("delete");
     $deletelink = new link($this->uri(array("action" => "deleteattachment", "id" => $attach['id'], 'giftid' => $gift['id'])));
     $deletelink->link = $objIcon->show();
+    $delete = "";
+    if ($this->objUser->isadmin()) {
+        $deletee = $deletelink->show();
+    }
 
-    $attachs.=$link->show().$deletelink->show() . '<br/>';
+    $attachs.=$link->show() . $delete . '<br/>';
 }
 $table->startRow();
 $table->addCell("<b>Attachments</b>");
