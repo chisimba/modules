@@ -237,7 +237,7 @@ class numerical_question extends object {
         
         $fieldExtra = "id='answerNumericalField_1'";
 
-        $data = $objQuestionUnit->getNumericalUnits($questionid);print_r($data);
+        $data = $objQuestionUnit->getNumericalUnits($questionid);
         if(!empty($data)) {
             $unit = $data['unit'];
         }
