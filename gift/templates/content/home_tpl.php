@@ -32,15 +32,42 @@ $objpolicyLink->link = 'Click here';
 $top = "";
 $top.=$heading->show() . $objpolicyLink->show() . $policy . '<br/>';
 
-if ($this->objUser->isAdmin()) {
-    $top.='<br/>' . $this->objGift->showCreateDepartmentForm();
+if (isset($errormessage)) {
+    $top.='<div class="error"><strong>' . $errormessage . '</strong></div>';
 }
 
-$top.='<h2 class="departmenthome">' . $departmentname . '</h2>';
+if ($this->objUser->isAdmin()) {
+    $top.= $this->objGift->showCreateDepartmentForm();
+}
+
+$editdepartmentlink = new link($this->uri(array("action" => "editdepartment", "id" => $departmentid)));
+$objIcon->setIcon('edit');
+$editdepartmentlink->link = $objIcon->show();
+
+$deletelink = new link($this->uri(array("action" => "deletedepartment", "id" => $departmentid)));
+$objIcon->setIcon('delete');
+$deletelink->link = $objIcon->show();
+
+
+$edit = "";
+$delete = "";
+if ($this->objUser->isAdmin()) {
+    $edit = $editdepartmentlink->show();
+    $delete = $deletelink->show();
+}
+
+$top.='<h2 class="departmenthome">' . $departmentname . $edit . $delete . '</h2>';
+
 $button = new button('approve', "Add gift");
 $uri = $this->uri(array('action' => 'add'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $top.=$button->show();
+
+$button = new button('filterbydate', "Filter by date");
+$uri = $this->uri(array('action' => 'filterbydate'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$top.='&nbsp;&nbsp;/&nbsp;&nbsp;' . $button->show();
+
 
 if ($this->objUser->isAdmin()) {
     $button = new button('audittrail', "Audit Trail");
@@ -53,30 +80,46 @@ echo $top;
 
 $table = $this->getObject('htmltable', 'htmlelements');
 $table->startHeaderRow();
-$table->addHeaderCell("Name");
-$table->addHeaderCell("Recipient");
+$table->addHeaderCell("Gift Name");
+$table->addHeaderCell("Type");
+$table->addHeaderCell("Description");
+
 $table->addHeaderCell("Donor");
-$table->addHeaderCell("Value");
-$table->addHeaderCell("Date");
+$table->addHeaderCell("Value (ZAR)&nbsp;", NULL, NULL, "right");
+$table->addHeaderCell("Recipient");
+$table->addHeaderCell("Date Recieved", NULL, NULL, "center");
 $table->endHeaderRow();
+
+
 if (count($gifts) > 0) {
     foreach ($gifts as $gift) {
 
-        $editGift = new link($this->uri(array('action' => 'edit', 'id' => $gift['id'])));
+        $objIcon->setIcon('edit');
+        $editGift = new link($this->uri(array('action' => 'editgift', 'id' => $gift['id'])));
         $editGift->link = $objIcon->show();
 
+        $objIcon->setIcon('delete');
+        $deleteGift = new link($this->uri(array('action' => 'confirmdeletegift', 'id' => $gift['id'])));
+        $deleteGift->link = $objIcon->show();
+
         $edit = "";
+        $delete = "";
         if ($this->objUser->isAdmin()) {
             $edit = $editGift->show();
+            $delete = $deleteGift->show();
         }
         $viewDetailsLink = new link($this->uri(array('action' => 'view', 'id' => $gift['id'])));
         $viewDetailsLink->link = $gift['giftname'];
         $table->startRow();
-        $table->addCell($viewDetailsLink->show() . $edit);
-        $table->addCell($this->objUser->fullname($gift["recipient"]));
+        $table->addCell($viewDetailsLink->show() . $edit . $delete);
+        $table->addCell($gift['gift_type']);
+        $table->addCell($gift['description']);
         $table->addCell($gift["donor"]);
-        $table->addCell($gift["value"]);
-        $table->addCell($gift["tran_date"]);
+        $value = $this->objGift->formatMoney($gift['value'], TRUE);
+        $table->addCell("R" . $value . '&nbsp;&nbsp;', NULL, null, "right");
+        $table->addCell($this->objUser->fullname($gift["recipient"]));
+
+        $table->addCell($gift["date_recieved"], null, NULL, "center");
         $table->endRow();
     }
 }

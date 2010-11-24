@@ -5,9 +5,9 @@ $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
-
+$this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
-
+$objIcon = $this->newObject('geticon', 'htmlelements');
 if ($mode == "add") {
     $action = 'save';
 }
@@ -26,7 +26,7 @@ if ($mode == 'edit') {
 }
 $header = new htmlheading();
 $header->type = 2;
-$header->str = $xtitle."&nbsp;-&nbsp;".$this->objDepartments->getDepartmentName($this->getSession("departmentid"));
+$header->str = $xtitle . "&nbsp;-&nbsp;" . $this->objDepartments->getDepartmentName($this->getSession("departmentid"));
 
 echo $header->show();
 
@@ -154,13 +154,29 @@ $table->addCell("<b>Comments</b>");
 $table->addCell($editor->show());
 $table->endRow();
 
+//$attachStr= '<input type="file" name="filename"   id="fileupload"size="40" /><br/> ';
+//$attachStr .= '<input type="file" name="fileupload2"   id="fileupload2"size="40" /><br/> ';
+//$attachStr.= '<input type="file" name="fileupload3"   id="fileupload3"size="40" /><br/> ';
+
+$checkbox = new checkbox('includeattachments', 'includeattachment');
+if ($mode == 'add') {
+    $table->startRow();
+    $table->addCell("<b>Include Attachments</b>");
+    $table->addCell($checkbox->show());
+    $table->endRow();
+}
+
 if ($mode == 'edit') {
     $attchs = $this->objAttachments->getAttachments($gift['id']);
     $attachs = "";
     foreach ($attchs as $attach) {
         $link = new link($this->uri(array("action" => "downloadattachment", "giftid" => $gift['id'], "filename" => $attach['name'])));
         $link->link = $attach['name'];
-        $attachs.=$link->show() . '<br/>';
+        $objIcon->setIcon("delete");
+        $deletelink = new link($this->uri(array("action" => "deleteattachment", "id" => $attach['id'],'giftid'=>$gift['id'])));
+        $deletelink->link = $objIcon->show();
+
+        $attachs.=$link->show().$deletelink->show() . '<br/>';
     }
     $table->startRow();
     $table->addCell("<b>Attachments</b>");
@@ -186,7 +202,7 @@ if ($mode == 'edit') {
     $form->addToForm($hiddenId->show());
 }
 
-$hiddenId = new hiddeninput('$epartmentid', $departmentid);
+$hiddenId = new hiddeninput('departmentid', $departmentid);
 $form->addToForm($hiddenId->show());
 $efs = new fieldset();
 $efs->setLegend('Errors');

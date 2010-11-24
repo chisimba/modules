@@ -81,4 +81,50 @@
             </add>
         </data>
     </update>
+
+
+
+        <update>
+        <table>tbl_gift</table>
+        <version>0.052</version>
+        <description>Added date received</description>
+        <data>
+            <add>
+                <name>deleted</name>
+                <type>text</type>
+                <length>1</length>
+            </add>
+        </data>
+    </update>
+
+
+
+        <update>
+        <table>tbl_gift_attachments</table>
+        <version>0.053</version>
+        <description>Added date received</description>
+        <data>
+            <add>
+                <name>deleted</name>
+                <type>text</type>
+                <length>1</length>
+            </add>
+        </data>
+    </update>
+
+
+
+        <update>
+        <table>tbl_gift_departments</table>
+        <version>0.053</version>
+        <description>Added date received</description>
+        <data>
+            <add>
+                <name>deleted</name>
+                <type>text</type>
+                <length>1</length>
+            </add>
+        </data>
+    </update>
+
 </updates>

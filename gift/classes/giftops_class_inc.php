@@ -225,7 +225,7 @@ class giftops extends object {
                 $folderText = $dept['name'];
                 $folderShortText = substr($dept['name'], 0, 200) . '...';
                 if ($this->objUser->isAdmin()) {
-                    $folderShortText = "(".$objDbGift->getGiftCountByDepartment($dept['id']) . ")&nbsp;" . $folderShortText;
+                    $folderShortText = "(" . $objDbGift->getGiftCountByDepartment($dept['id']) . ")&nbsp;" . $folderShortText;
                 }
                 if ($dept['name'] == $selected) {
                     $folderText = '<strong>' . $folderText . '</strong>';
@@ -273,6 +273,52 @@ class giftops extends object {
         $fs->setLegend($this->divisionLabel);
         $fs->addContent($form->show());
         return $fs->show();
+    }
+
+    function showSearchByDatesForm() {
+
+        $form = new form('searchbydatesform', $this->uri(array('action' => 'searchbydate')));
+
+        $objDateTime = $this->getObject('dateandtime', 'utilities');
+        $objDatePicker = $this->newObject('datepicker', 'htmlelements');
+        $objDatePicker->name = 'date_from';
+        $content = "Date From: &nbsp;" . $objDatePicker->show();
+
+        $objDatePicker = $this->newObject('datepicker', 'htmlelements');
+        $objDatePicker->name = 'date_to';
+        $content .= "Date To: &nbsp;" . $objDatePicker->show();
+
+        $form->addToForm($content);
+        $button = new button('view', 'View');
+        $button->setToSubmit();
+
+        $form->addToForm(' ' . $button->show());
+
+        $fs = new fieldset();
+        $fs->setLegend("View by date");
+        $fs->addContent($form->show());
+        return $fs->show();
+    }
+
+    /**
+     * formats money
+     * @param <type> $number
+     * @param <type> $fractional
+     * @return <type> 
+     */
+    function formatMoney($number, $fractional=false) {
+        if ($fractional) {
+            $number = sprintf('%.2f', $number);
+        }
+        while (true) {
+            $replaced = preg_replace('/(-?\d+)(\d\d\d)/', '$1,$2', $number);
+            if ($replaced != $number) {
+                $number = $replaced;
+            } else {
+                break;
+            }
+        }
+        return $number;
     }
 
     /**

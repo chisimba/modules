@@ -31,6 +31,7 @@ $header->str = $this->objLanguage->languageText('mod_gift_name', 'gift', 'Gift M
 $leftColumn = $header->show();
 
 $leftColumn .= $searchForm->show();
+
 $leftColumn .= '<div class="filemanagertree">' . $nav . '</div>';
 $cssLayout->setLeftColumnContent($leftColumn);
 

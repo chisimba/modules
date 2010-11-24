@@ -1,4 +1,5 @@
 <?php
+
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
@@ -25,7 +26,7 @@ $table->addCell($gift['description']);
 $table->endRow();
 
 $table->startRow();
-$table->addCell("<b>Date Recived</b>");
+$table->addCell("<b>Date Recieved</b>");
 $table->addCell($gift['date_recieved']);
 $table->endRow();
 
@@ -64,10 +65,28 @@ $table->addCell("<b>Comments</b>");
 $table->addCell($gift['comments']);
 $table->endRow();
 
-$fs=new fieldset();
+$attchs = $this->objAttachments->getAttachments($gift['id']);
+$attachs = "";
+foreach ($attchs as $attach) {
+    $link = new link($this->uri(array("action" => "downloadattachment", "giftid" => $gift['id'], "filename" => $attach['name'])));
+    $link->link = $attach['name'];
+    $attachs.=$link->show() . '<br/>';
+}
+$table->startRow();
+$table->addCell("<b>Attachments</b>");
+$table->addCell($attachs);
+$table->endRow();
+
+$button = new button('cancel', "Attach");
+$uri = $this->uri(array("action" => "attach", "id" => $gift['id']));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+
+$table->addCell($button->show());
+$table->endRow();
+$fs = new fieldset();
 $fs->setLegend("Gift Details");
 
-$fs->addContent( $table->show());
+$fs->addContent($table->show());
 echo $fs->show();
 //echo $homelink->show();
 ?>

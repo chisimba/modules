@@ -17,6 +17,7 @@ $fields = array(
                 'date_recieved'=>array('type'=>'timestamp'),
 		'listed'=>array('type'=>'boolean','not null'),
                 'division' => array('type' => 'text','length' => 32),
-                'comments' => array('type' => 'text')
+                'comments' => array('type' => 'text'),
+                'deleted' => array('type' => 'text','length' => 1)
 );
 ?>

@@ -105,10 +105,10 @@ class gift extends controller {
                 $departmentname = $defaultDept['name'];
                 $this->setVarByRef("departmentname", $departmentname);
                 $this->setVarByRef("departmentid", $departmentid);
-                 $this->setSession("departmentid",$departmentid);
+                $this->setSession("departmentid", $departmentid);
             }
         } else {
-             $this->setSession("departmentid",$departmentid);
+            $this->setSession("departmentid", $departmentid);
             $this->setVarByRef("departmentname", $departmentname);
             $this->setVarByRef("departmentid", $departmentid);
         }
@@ -117,10 +117,47 @@ class gift extends controller {
         return "home_tpl.php";
     }
 
+    public function __editdepartment() {
+        $departmentid = $this->getParam("id");
+        $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+        $this->setVarByRef("departmentname", $departmentname);
+        $this->setVarByRef("departmentid", $departmentid);
+        return "editdepartment_tpl.php";
+    }
+
+    public function __updatedepartment() {
+        $id = $this->getParam("id");
+        $name = $this->getParam("name");
+
+        if ($name == '') {
+            $errormessage = "Department Name required";
+            $this->setVarByRef("errormessage", $errormessage);
+            $this->setVarByRef("departmentname", $name);
+            $this->setVarByRef("departmentid", $id);
+            return "editdepartment_tpl.php";
+        }
+
+        $this->objDepartments->updateDepartment($id, $name);
+        $this->nextAction("home");
+    }
+
     public function __createdepartment() {
         $name = $this->getParam('departmentname');
-        $this->objDepartments->addDepartment($name);
-        return $this->nextAction("home");
+        if ($name == '') {
+            $errormessage = "Department Name required";
+            $this->setVarByRef("errormessage", $errormessage);
+            $gifts = $this->objDbGift->getGifts($departmentid);
+            $departmentid = $this->getSession("departmentid");
+            $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+            $this->setVarByRef("departmentname", $departmentname);
+            $this->setVarByRef("departmentid", $departmentid);
+
+            $this->setVarByRef("gifts", $gifts);
+            return "home_tpl.php";
+        } else {
+            $this->objDepartments->addDepartment($name);
+            return $this->nextAction("home");
+        }
     }
 
     function __search() {
@@ -151,11 +188,11 @@ class gift extends controller {
      * @return string
      */
     function __add() {
-       
+
         $mode = "add";
         $this->setVarByRef("mode", $mode);
         if ($this->giftPolicyAccepted == "true") {
-           
+
             return "addeditgift_tpl.php";
         } else {
             return "giftpolicy_tpl.php";
@@ -210,7 +247,7 @@ class gift extends controller {
 
         $division = $this->getSession('departmentid');
 
-       
+
         $type = $this->getParam('type');
         if ($type == "Select ...") {
             $errormessages[] = "Select gift type ";
@@ -219,7 +256,8 @@ class gift extends controller {
         $comments = $this->getParam("comments");
 
         $date_recieved = $this->getParam("date_recieved");
-        
+        $includeattachment = $this->getParam("includeattachments");
+
         if (count($errormessages) > 0) {
             $this->setVarByRef("errormessages", $errormessages);
             $mode = "fixup";
@@ -230,7 +268,7 @@ class gift extends controller {
             $this->setVarByRef("comments", $comments);
             $this->setVarByRef("value", $value);
             $this->setVarByRef("description", $description);
-       
+
             return "addeditgift_tpl.php";
         }
         $result = $this->objDbGift->addInfo(
@@ -245,11 +283,6 @@ class gift extends controller {
                         $comments,
                         $date_recieved);
 
-        if ($result) {
-            $this->msg = $this->objLanguage->languageText('mod_addInfoSuccess', 'gift');
-        } else {
-            $this->msg = $this->objLanguage->languageText('mod_infoFailure', 'gift');
-        }
 
 
         if ($value >= $this->minAmountToAlert) {
@@ -286,9 +319,14 @@ class gift extends controller {
             $objMailer->setValue('AltBody', strip_tags($body));
 
             $objMailer->send();
-         
         }
-        return $this->nextAction('home',array("departmentid"=>$division));
+
+        if ($result) {
+            if ($includeattachment == 'on') {
+                return $this->nextAction("attach", array("id" => $result));
+            }
+        }
+        return $this->nextAction('home', array("departmentid" => $division));
     }
 
     /**
@@ -417,7 +455,7 @@ class gift extends controller {
      * Edit link from edit template, calls this method
      * @return string
      */
-    function __edit() {
+    function __editgift() {
         $id = $this->getParam("id");
         $gift = $this->objDbGift->getGift($id);
         $this->setVarByRef("gift", $gift);
@@ -512,6 +550,42 @@ class gift extends controller {
     function __acceptPolicy() {
         $this->objGiftUser->acceptPolicy();
         $this->nextAction('add');
+    }
+
+    function __confirmdeletegift() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("giftid", $id);
+        return "deletegift_tpl.php";
+    }
+
+    function __deletegift() {
+        $id = $this->getParam("id");
+        $this->objDbGift->deleteGift($id);
+        return $this->nextAction("home", array("departmentid" => $this->getSession("departmentid")));
+    }
+
+    function __filterbydate() {
+        return "filterbydate_tpl.php";
+    }
+
+    function __searchbydate() {
+        $dateFrom = $this->getParam("date_from");
+        $dateTo = $this->getParam("date_to");
+        $gifts = $this->objDbGift->searchGiftsByDate($dateFrom, $dateTo);
+        $this->setVarByRef("gifts", $gifts);
+
+        return "home_tpl.php";
+    }
+
+    function __deleteattachment() {
+        $id = $this->getParam("id");
+        $this->objAttachments->deleteAttachment($id);
+        $giftid = $this->getParam("giftid");
+        $gift = $this->objDbGift->getGift($giftid);
+        $this->setVarByRef("gift", $gift);
+        $mode = "edit";
+        $this->setVarByRef("mode", $mode);
+        return "addeditgift_tpl.php";
     }
 
 }
