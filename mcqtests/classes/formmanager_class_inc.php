@@ -2385,14 +2385,6 @@ class formmanager extends object {
             $unitValues = array();
             $uh = $this->objNumericalOptions->getNumericalOptions($id);
             $unitValues = $uh;
-            /* $uh['questionid'] = $id;
-              $uh['unitgradingtype'] = $uh[''];
-              $uh['unitpenalty'] = $uh[''];
-              $uh['instructionsformat'] = $uh[''];
-              $uh['instructions'] = $uh[''];
-              $uh['unitgradingtype'] = $uh[''];
-              $uh['showunits'] = $uh[''];
-              var_dump($uh); */
         }
         $unitHandling = $this->createUnitHandlingFields($unitValues);
 
@@ -2478,6 +2470,13 @@ class formmanager extends object {
 
         //Add table to form
         $form->addToForm($objTable->show());
+
+        //Get Wild-Card fields
+        $wcardValues = Null;
+        $wcards = $this->createWildCardFields($wcardno=1, $wcardValues);
+
+        //Add Wild-card to form
+        $form->addToForm($wcards);
 
         //Create table to hold the tags
         $objTable2 = new htmltable();
@@ -2836,7 +2835,143 @@ class formmanager extends object {
         //Return Fieldset
         return $theFieldset;
     }
+     /**
+     * Method to create a fieldset for capturing wild-card fields
+     *
+     * @access public
+     * @param  $ansno string Unique identifier for the answer as there are several per question
+     * @param  $ansValues array The values for the fields for the case of an edit
+     * @return object
+     * @author Paul Mungai
+     */
+    public function createWildCardFields($wcardno=1, $wcardValues=Null) {
+        $this->loadClass("textinput", "htmlelements");
+        $this->loadClass("dropdown", "htmlelements");
+        $this->loadClass("hiddeninput", "htmlelements");
 
+        //Get the language text
+        $wordParam = $this->objLanguage->languageText('mod_mcqtests_wordparam', 'mcqtests', "Param");
+        $letterA = $this->objLanguage->languageText('mod_mcqtests_lettera', 'mcqtests', "A");
+        $letterB = $this->objLanguage->languageText('mod_mcqtests_letterb', 'mcqtests', "B");
+        $phraseWildCardParams = $this->objLanguage->languageText('mod_mcqtest_wildcardparams', 'mcqtests', "Wild cards parameters used to generate the values");
+        $phraseRangeOfValues = $this->objLanguage->languageText('mod_mcqtests_rangeofvals', 'mcqtests', "Range of values");
+        $phraseDecimalPlaces = $this->objLanguage->languageText('mod_mcqtests_decimalplaces', 'mcqtests', "Decimal places");
+        $phraseParamA = $wordParam." <b>{".$letterA."}</b> ";
+        $phraseParamB = $wordParam." <b>{".$letterB."}</b> ";
+
+        //Create table to hold the wild-card
+        $objTable = new htmltable();
+        $objTable->width = '800px';
+        $objTable->attributes = " align='center' border='0'";
+        $objTable->cellspacing = '12';
+
+        //Store wild-card Id
+        $wcfield = new hiddeninput("wcid" . $wcardno, $wcardValues["id"]);
+
+        //range-value-a text box
+        if (!empty($wcardValues)) {
+            $afromrangefield = new textinput("afromrange" . $wcardno, $wcardValues["unit"]);
+        } else {
+            $afromrangefield = new textinput("afromrange" . $wcardno, "");
+        }
+        //decimal-value-a text box
+        if (!empty($wcardValues)) {
+            $atorangefield = new textinput("atorange" . $wcardno, $wcardValues["unit"]);
+        } else {
+            $atorangefield = new textinput("atorange" . $wcardno, "");
+        }
+        $afromrangefield->size = 15;
+        $atorangefield->size = 15;
+        //a-decimal-places drop down list
+        $adecimalplaces = new dropdown("adecimalplaces" . $ansno);
+        $adecimalplaces->addOption("0", "0");
+        $adecimalplaces->addOption("1", "1");
+        $adecimalplaces->addOption("2", "2");
+        $adecimalplaces->addOption("3", "3");
+        $adecimalplaces->addOption("4", "4");
+        $adecimalplaces->addOption("5", "5");
+        $adecimalplaces->addOption("6", "6");
+        $adecimalplaces->addOption("7", "7");
+        $adecimalplaces->addOption("8", "8");
+        $adecimalplaces->addOption("9", "9");
+        $adecimalplaces->addOption("10", "10");
+        if (!empty($wcardValues)) {
+            $adecimalplaces->setSelected($ansValues["correctanswerlength"]);
+        }
+
+        //Add param-a-fields to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseParamA, '20%');
+        $objTable->addCell($wcfield->show(), '80%');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($phraseRangeOfValues, '20%');
+        $objTable->addCell($afromrangefield->show() ." - ". $atorangefield->show() . $wcfield->show(), '80%');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($phraseDecimalPlaces, '20%');
+        $objTable->addCell($adecimalplaces->show(), '80%');
+        $objTable->endRow();
+
+        //range-value-b text box
+        if (!empty($wcardValues)) {
+            $bfromrangefield = new textinput("bfromrange" . $wcardno, $wcardValues["unit"]);
+        } else {
+            $bfromrangefield = new textinput("bfromrange" . $wcardno, "");
+        }
+        //decimal-value-b text box
+        if (!empty($wcardValues)) {
+            $btorangefield = new textinput("btorange" . $wcardno, $wcardValues["unit"]);
+        } else {
+            $btorangefield = new textinput("btorange" . $wcardno, "");
+        }
+        $bfromrangefield->size = 15;
+        $btorangefield->size = 15;
+        
+        //b-decimal-places drop down list
+        $bdecimalplaces = new dropdown("bdecimalplaces" . $ansno);
+        $bdecimalplaces->addOption("0", "0");
+        $bdecimalplaces->addOption("1", "1");
+        $bdecimalplaces->addOption("2", "2");
+        $bdecimalplaces->addOption("3", "3");
+        $bdecimalplaces->addOption("4", "4");
+        $bdecimalplaces->addOption("5", "5");
+        $bdecimalplaces->addOption("6", "6");
+        $bdecimalplaces->addOption("7", "7");
+        $bdecimalplaces->addOption("8", "8");
+        $bdecimalplaces->addOption("9", "9");
+        $bdecimalplaces->addOption("10", "10");
+        if (!empty($wcardValues)) {
+            $bdecimalplaces->setSelected($ansValues["correctanswerlength"]);
+        }
+        //Add param-b-fields to the table
+        $objTable->startRow();
+        $objTable->addCell($phraseParamB, '20%');
+        $objTable->addCell("&nbsp;", '80%');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($phraseRangeOfValues, '20%');
+        $objTable->addCell($bfromrangefield->show() ." - ". $btorangefield->show(), '80%');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($phraseDecimalPlaces, '20%');
+        $objTable->addCell($bdecimalplaces->show(), '80%');
+        $objTable->endRow();
+        
+        //Add fieldset to hold wild-card
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->setLegend($phraseWildCardParams);
+
+        //Add table to wild-card Fieldset
+        $objFieldset->addContent($objTable->show());
+
+        $theFieldset = $objFieldset->show();
+
+        $objFieldset->reset();
+
+        //Return Fieldset
+        return $theFieldset;
+    }
     /**
      * Method to create a fieldset for capturing answer details
      *
