@@ -118,8 +118,10 @@ class bookthesis extends dbTable {
          
         $label2 = new label($this->objLanguage->languageText
             ("mod_libraryforms_commentlabell2","libraryforms"),"label2");
-       $objForm->addToForm($label2->show()."<br/>"."<br/>");
-
+        $objForm->addToForm($label2->show()."<br/>"."<br/>");
+         
+          $label3 = new label($this->objLanguage->languageText("mod_libraryforms_commentheading3","libraryforms"),"label3");
+    	  $objForm->addToForm($label3->show()."<br/>"."<br/>");
   
 
         // create label and text box for author
