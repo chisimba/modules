@@ -102,8 +102,10 @@ class ILLperiodical extends dbTable {
  
         $label2Label = new label($this->objLanguage->languageText("mod_libraryforms_commentlabel2","libraryforms"),"label2");
         $objForm->addToForm($label2Label->show()."<br/>"."<br/>");
-
-
+         
+        $labelheading3 = new label($this->objLanguage->languageText("mod_libraryforms_commentperiodicalheading2","libraryforms"),"label3");
+        $objForm->addToForm($labelheading3->show(). "<br/>"."<br/>");
+         
         //Create a new textinput for the title
         $objperiodical = new textinput('title_periodical');
         $periodicalLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttitleperiod","libraryforms"),"titleperiodical");
