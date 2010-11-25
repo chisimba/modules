@@ -108,8 +108,18 @@ $fields = array(
         'course'=> array(
                      'type' =>'text',
                      'length'=>50
-                     )
-);       
+                     ),
+
+         'poverseas'=>array(
+                      'type'=>'text',
+                       'length'=>20
+		),
+
+         'pundergrad'=>array(
+		      'type'=>'text',
+                      'length'=>20
+ 
+		));       
 
 
 ?>

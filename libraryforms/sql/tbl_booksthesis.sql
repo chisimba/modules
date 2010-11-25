@@ -145,7 +145,17 @@ $fields = array(
         'bcourse'=> array(
                      'type' =>'text',
                      'length'=>50
-                     
+                       ),
+
+         'blocal'=>array(
+                    'type'=>'text',
+                     'length'=>20
+		),
+
+        'bpostgrad'=>array(
+                       'type'=>'text',
+                        'length'=>20
+                
            ));       
 
 
