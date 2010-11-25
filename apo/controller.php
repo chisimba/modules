@@ -30,7 +30,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 // end security check
 
-class wicid extends controller {
+class apo extends controller {
 
     function init() {
         $this->loadclass('link', 'htmlelements');
