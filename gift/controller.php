@@ -352,17 +352,7 @@ class gift extends controller {
 
         $objUpload = $this->newObject('upload', 'files');
         $objUpload->permittedTypes = array(
-            'txt',
-            'doc',
-            'odt',
-            'pdf',
-            'docx',
-            'ppt',
-            'pptx',
-            'xml',
-            'xls',
-            'xlsx',
-            'launch'
+            'all'
         );
         $objUpload->overWrite = TRUE;
         $objUpload->uploadFolder = $destinationDir . '/';
@@ -586,6 +576,73 @@ class gift extends controller {
         $mode = "edit";
         $this->setVarByRef("mode", $mode);
         return "addeditgift_tpl.php";
+    }
+
+    function __exporttopdf() {
+        $objPdf = $this->getObject('fpdfwrapper', 'pdfmaker');
+        $departmentid = $this->getSession("departmentid");
+        $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+        $gifts = $this->objDbGift->getGifts($departmentid);
+        $text = "$departmentname\r\n";
+        if (count($gifts) > 0) {
+            foreach ($gifts as $gift) {
+                $value = $gift['value']; //$this->objGift->formatMoney($gift['value'], TRUE);
+                $rec = $this->objUser->fullname($gift['recipient']);
+                $text .= $gift['giftname'] . '\t' . $gift['gift_type'] . '\t' . strip_tags($gift['description']) . '\t' . $gift['donor'] . '\t' . $value . '\t' . $rec . '\t' . $gift['date_recieved'] . '\t' . $gift['tran_date'] . '\r\n';
+            }
+        }
+
+        //$text = $header . "  " . $postdate . "\r\n" . html_entity_decode(strip_tags($body));
+        $objPdf->simplePdf($text);
+    }
+
+    function __exportospreadsheet() {
+        $ex = $this->getObject('excelgenerator');
+
+        $departmentid = $this->getSession("departmentid");
+        $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+
+        $ex->generateExel($departmentid, $departmentname);
+        /*
+          $destinationDir = $this->objSysConfig->getValue('UPLOADS_DIR', 'gift');
+          $id = mktime() . rand();
+          $filename = $id;
+          $ext = "spreadsheet";
+
+          $objMkDir = $this->getObject('mkdir', 'files');
+          $objMkDir->mkdirs($destinationDir . "/$ext/");
+          $exportfile = $destinationDir . "/$ext/" . $filename . ".xls";
+
+          if (file_exists($exportfile)) {
+          unlink($exportfile);
+          }
+          $file = fopen($exportfile, "a");
+
+          $departmentid = $this->getSession("departmentid");
+          $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+
+          fputs($file, "$departmentname\r\n");
+          fputs($file, "\r\n");
+          fputs($file, "\r\n");
+          fputs($file, 'Gift_Name,Type,Description, Donor,Value_(ZAR), Recipient, Date_Recieved, Date_Recorded');
+          fputs($file, "\r\n");
+
+          $gifts = $this->objDbGift->getGifts($departmentid);
+          if (count($gifts) > 0) {
+          foreach ($gifts as $gift) {
+          $value = $gift['value']; //$this->objGift->formatMoney($gift['value'], TRUE);
+          $rec = $this->objUser->fullname($gift['recipient']);
+          $content = strip_tags($gift['giftname']) . ',' . $gift['gift_type'] . ',' . strip_tags($gift['description']) . ',' . $gift['donor'] . ',' . $value . ', ' . $rec . ',' . $gift['date_recieved'] . ',' . $gift['tran_date'] . '\r\n';
+          // echo $content.'<br/>';
+
+          fputs($file, $content);
+          }
+          }
+          //die();
+          fclose($file);
+          $filepath = $ext . '/' . $filename . '.xls';
+          return $this->objGift->downloadFile($filepath, $filename . ".xls");
+         */
     }
 
 }

@@ -70,6 +70,18 @@ $top.='&nbsp;&nbsp;/&nbsp;&nbsp;' . $button->show();
 
 
 if ($this->objUser->isAdmin()) {
+
+    $button = new button('spreadsheet', "Spreadsheet");
+    $uri = $this->uri(array('action' => 'exportospreadsheet'));
+    $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+    $top.='&nbsp;&nbsp;' . $button->show();
+
+      $button = new button('pdf', "PDF");
+    $uri = $this->uri(array('action' => 'exporttopdf'));
+    $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+//    $top.='&nbsp;&nbsp;' . $button->show();
+
+
     $button = new button('audittrail', "Audit Trail");
     $uri = $this->uri(array('action' => 'showuseractivity'));
     $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
