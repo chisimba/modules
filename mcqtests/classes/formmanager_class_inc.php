@@ -38,6 +38,21 @@ class formmanager extends object {
      * @var object to hold tag_instance db class
      */
     public $dbTagInstance;
+    /**
+     *
+     * @var object to hold dbdataset_definitions class
+     */
+    public $objDSDefinitions;
+    /**
+     *
+     * @var object to hold dbdataset_items class
+     */
+    public $objDSItems;
+    /**
+     *
+     * @var object to hold dbdataset class
+     */
+    public $objDBDataset;
 
     function init() {
         $this->loadClass('form', 'htmlelements');
@@ -61,6 +76,9 @@ class formmanager extends object {
         $this->objNumericalOptions = $this->newObject('dbnumericalunitsoptions');
         $this->objNumericalUnit = $this->newObject('dbnumericalunits');
         $this->contextCode = $this->objContext->getContextCode();
+        $this->objDSDefinitions = $this->newObject("dbdataset_definitions");
+        $this->objDSItems = $this->newObject("dbdataset_items");
+        $this->objDBDataset = $this->newObject("dbdatasets");
     }
 
     public function createAddFreeForm($test) {
@@ -1917,7 +1935,7 @@ class formmanager extends object {
         $objHeading = &$this->getObject('htmlheading', 'htmlelements');
         $objHeading->type = 1;
         $objHeading->str = $wordDesc;
-        
+
         //Add heading/title to string
         $str = "";
 
@@ -2102,7 +2120,7 @@ class formmanager extends object {
                             'id' => $id,
                             'test' => $test
                         )));
-        
+
         $qnData = $this->dbQuestions->getQuestion($id);
 
         $randSAData = $this->dbRandomMatching->getRecords("questionid='" . $id . "'");
@@ -2486,7 +2504,46 @@ class formmanager extends object {
 
 
         $wcardValues = Null;
+        //Get Values
+        if (!empty($id)) {
+            //Get id of the datasets affiliated to this question
+            $datasets = $this->objDBDataset->getRecords($id);
+            $datasetid = $datasets[0]['id'];
+            if (!empty($datasets)) {
+                //get the related definitions
+                $dataset_definitions = $this->objDSDefinitions->getRecords($datasetid);
+                //Populate values in array
+                if (!empty($dataset_definitions)) {
+                    $wcardValues = array();
+                    $wcardValues['datasetid'] = $datasetid;
+                    if ($dataset_definitions[0]["name"] == "A") {
+                        $wcardValues['a_definition_id'] = $dataset_definitions[0]['id'];
+                        //get min, max and decimal values from string
+                        $stuff = explode(":", $dataset_definitions[0]["options"]);
+                        //Get min and decimal
+                        $min_dec = explode(".", $stuff[0]);
+                        //Get max and decimal
+                        $max_dec = explode(".", $stuff[1]);
+                        $wcardValues['a_fromrange'] = $min_dec[0];
+                        $wcardValues['a_torange'] = $max_dec[0];
+                        $wcardValues['a_decimal'] = $max_dec[1];
 
+                        //Get Values for B
+                        //get min, max and decimal values from string
+                        $stuff = explode(":", $dataset_definitions[1]["options"]);
+                        //Get min and decimal
+                        $min_dec = explode(".", $stuff[0]);
+                        //Get max and decimal
+                        $max_dec = explode(".", $stuff[1]);
+                        $wcardValues['b_definition_id'] = $dataset_definitions[1]['id'];
+                        $wcardValues['b_fromrange'] = $min_dec[0];
+                        $wcardValues['b_torange'] = $max_dec[0];
+                        $wcardValues['b_decimal'] = $max_dec[1];
+                    }
+                }
+                var_dump($wcardValues);
+            }
+        }
         $wcards = $this->createWildCardFields($wcardno, $wcardValues);
 
         //Add Wild-card to form
@@ -2881,17 +2938,19 @@ class formmanager extends object {
         $objTable->cellspacing = '12';
 
         //Store wild-card Id
-        $wcfield = new hiddeninput("wcid_" . $wcardno, $wcardValues["id"]);
-
+        $dsetid = new hiddeninput("dsetid_" . $wcardno, $wcardValues["dsetid"]);
+        $a_definition_id = new hiddeninput("a_definition_id_" . $wcardno, $wcardValues["a_definition_id"]);
+        $b_definition_id = new hiddeninput("b_definition_id_" . $wcardno, $wcardValues["b_definition_id"]);
+        $wcfields = $dsetid->show()." ".$a_definition_id->show()." ".$b_definition_id->show();
         //range-value-a text box
         if (!empty($wcardValues)) {
-            $afromrangefield = new textinput("afromrange_" . $wcardno, $wcardValues["unit"]);
+            $afromrangefield = new textinput("afromrange_" . $wcardno, $wcardValues["a_fromrange"]);
         } else {
             $afromrangefield = new textinput("afromrange_" . $wcardno, "");
         }
         //decimal-value-a text box
         if (!empty($wcardValues)) {
-            $atorangefield = new textinput("atorange_" . $wcardno, $wcardValues["unit"]);
+            $atorangefield = new textinput("atorange_" . $wcardno, $wcardValues["a_torange"]);
         } else {
             $atorangefield = new textinput("atorange_" . $wcardno, "");
         }
@@ -2911,17 +2970,17 @@ class formmanager extends object {
         $adecimalplaces->addOption("9", "9");
         $adecimalplaces->addOption("10", "10");
         if (!empty($wcardValues)) {
-            $adecimalplaces->setSelected($ansValues["correctanswerlength"]);
+            $adecimalplaces->setSelected($wcardValues["a_decimal"]);
         }
 
         //Add param-a-fields to the table
         $objTable->startRow();
         $objTable->addCell($phraseParamA, '20%');
-        $objTable->addCell($wcfield->show(), '80%');
+        $objTable->addCell($wcfields, '80%');
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($phraseRangeOfValues, '20%');
-        $objTable->addCell($afromrangefield->show() . " - " . $atorangefield->show() . $wcfield->show(), '80%');
+        $objTable->addCell($afromrangefield->show() . " - " . $atorangefield->show(), '80%');
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($phraseDecimalPlaces, '20%');
@@ -2930,13 +2989,13 @@ class formmanager extends object {
 
         //range-value-b text box
         if (!empty($wcardValues)) {
-            $bfromrangefield = new textinput("bfromrange_" . $wcardno, $wcardValues["unit"]);
+            $bfromrangefield = new textinput("bfromrange_" . $wcardno, $wcardValues["b_fromrange"]);
         } else {
             $bfromrangefield = new textinput("bfromrange_" . $wcardno, "");
         }
         //decimal-value-b text box
         if (!empty($wcardValues)) {
-            $btorangefield = new textinput("btorange_" . $wcardno, $wcardValues["unit"]);
+            $btorangefield = new textinput("btorange_" . $wcardno, $wcardValues["b_torange"]);
         } else {
             $btorangefield = new textinput("btorange_" . $wcardno, "");
         }
@@ -2957,8 +3016,9 @@ class formmanager extends object {
         $bdecimalplaces->addOption("9", "9");
         $bdecimalplaces->addOption("10", "10");
         if (!empty($wcardValues)) {
-            $bdecimalplaces->setSelected($ansValues["correctanswerlength"]);
+            $bdecimalplaces->setSelected($wcardValues["b_decimal"]);
         }
+        
         //Add param-b-fields to the table
         $objTable->startRow();
         $objTable->addCell($phraseParamB, '20%');

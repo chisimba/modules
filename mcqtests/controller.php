@@ -82,6 +82,7 @@ class mcqtests extends controller {
      * @var object to hold dbdataset class
      */
     public $objDBDataset;
+
     /**
      * Method to construct the class.
      *
@@ -96,7 +97,7 @@ class mcqtests extends controller {
             $this->assignment = TRUE;
         }
 
-        // get the user object
+        // get the DB objects
         $this->objDSDefinitions = $this->newObject("dbdataset_definitions");
         $this->objDSItems = $this->newObject("dbdataset_items");
         $this->objDBDataset = $this->newObject("dbdatasets");
@@ -1131,7 +1132,7 @@ class mcqtests extends controller {
         $fieldsQn['qtype'] = "SimpleCalculated";
         $fieldsQn['questiontype'] = "SimpleCalculated";
         $fieldsQn['generalfeedback'] = $this->getParam('genfeedback', Null);
-        $test = $this->getParam('test', Null);        
+        $test = $this->getParam('test', Null);
         $qncount = $this->getParam('qncount', Null);
         $id = $this->getParam('id', Null);
         //Avoid saving blank values
@@ -1284,13 +1285,17 @@ class mcqtests extends controller {
                 $tagId = $this->dbTag->addTag($otTags, Null, $id);
             }
             //Save the wild-cards $this->objDSDefinitions $this->objDSItems $this->objDBDataset
-            //     
+            $wccount = $this->getParam('wccount', Null);
+            $dsetid = $this->getParam('dsetid_' . $wccount, Null);
+            $a_def_id = $this->getParam('a_definition_id_' . $wccount, Null);
+            $b_def_id = $this->getParam('a_definition_id_' . $wccount, Null);
+
             $dsetarr = array();
             $dsetarr['datasetdefinition'] = "";
             $dsetarr['questionid'] = $questionid;
-            
-            $dsetid = $this->objDBDataset->addRecord($dsetarr);
-            $wccount = $this->getParam('wccount', Null);
+            if (empty($dsetid)) {
+                $dsetid = $this->objDBDataset->addRecord($dsetarr);
+            }
 
             $fieldsUt['datasetdefinition'] = $this->getParam('unit_update_' . $wccount, Null);
             $afromrange = $this->getParam('afromrange_' . $wccount, Null);
@@ -1298,28 +1303,29 @@ class mcqtests extends controller {
             $adecimalplaces = $this->getParam('adecimalplaces_' . $wccount, Null);
             $bfromrange = $this->getParam('bfromrange_' . $wccount, Null);
             $btorange = $this->getParam('btorange_' . $wccount, Null);
-            $bdecimalplaces = $this->getParam('adecimalplaces_' . $wccount, Null);
-            
+            $bdecimalplaces = $this->getParam('bdecimalplaces_' . $wccount, Null);
+
             //Save Wild-Card A
             $arrdset_def = array();
             $arrdset_def['datasetid'] = $dsetid;
             $arrdset_def['categoryid'] = $test;
             $arrdset_def['name'] = "A";
             $arrdset_def['type'] = "1";
-            $arrdset_def['options'] = $afromrange.".".$adecimalplaces.":".$atorange.".".$adecimalplaces;
+            $arrdset_def['options'] = $afromrange . "." . $adecimalplaces . ":" . $atorange . "." . $adecimalplaces;
             $arrdset_def['itemcount'] = "10";
 
-            $adefid = $this->objDSDefinitions->addRecord($arrdset_def);
+            $adefid = $this->objDSDefinitions->addRecord($arrdset_def, $a_def_id);
+
             //Save Wild-Card B
             $arrdset_def = array();
             $arrdset_def['datasetid'] = $dsetid;
             $arrdset_def['categoryid'] = $test;
             $arrdset_def['name'] = "B";
             $arrdset_def['type'] = "1";
-            $arrdset_def['options'] = $bfromrange.".".$bdecimalplaces.":".$btorange.".".$bdecimalplaces;
+            $arrdset_def['options'] = $bfromrange . "." . $bdecimalplaces . ":" . $btorange . "." . $bdecimalplaces;
             $arrdset_def['itemcount'] = "10";
-            
-            $bdefid = $this->objDSDefinitions->addRecord($arrdset_def);
+
+            $bdefid = $this->objDSDefinitions->addRecord($arrdset_def, $b_def_id);
         }
         return $id;
     }
