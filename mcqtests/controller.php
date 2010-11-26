@@ -67,7 +67,21 @@ class mcqtests extends controller {
      * @var object to hold question_answers class
      */
     public $objQnAnswers;
-
+    /**
+     *
+     * @var object to hold dbdataset_definitions class
+     */
+    public $objDSDefinitions;
+    /**
+     *
+     * @var object to hold dbdataset_items class
+     */
+    public $objDSItems;
+    /**
+     *
+     * @var object to hold dbdataset class
+     */
+    public $objDBDataset;
     /**
      * Method to construct the class.
      *
@@ -83,6 +97,9 @@ class mcqtests extends controller {
         }
 
         // get the user object
+        $this->objDSDefinitions = $this->newObject("dbdataset_definitions");
+        $this->objDSItems = $this->newObject("dbdataset_items");
+        $this->objDBDataset = $this->newObject("dbdatasets");
         $this->dbRandomMatchingSA = $this->newObject("dbrandom_matching");
         $this->dbTag = $this->newObject('dbtag');
         $this->objFormManager = $this->getObject('formmanager');
@@ -178,21 +195,16 @@ class mcqtests extends controller {
                 } elseif ($submitVal == "Save changes") {
                     $saveAsNew = 1;
                 }
-                //Get Fields
-                $id = $this->getParam('id', Null);
-                $test = $this->getParam('test', Null);
-                $mode = $this->getParam('mode', 'add');
-                $answersCount = $this->getParam('anscount', Null);
-                $frmanscount = $this->getParam('frmanscount', Null);
-                $unitCount = $this->getParam('unitcount', Null);
-                //Array to hold values to be passed to template
+
                 $id = $this->saveSimpleCalculated();
+                //Array to hold values to be passed to template
                 $fields = array();
                 $fields['id'] = $id;
-                $fields['testid'] = $test;
-                $fields['mode'] = $mode;
-                $fields['anscount'] = $answersCount;
-                $fields['unitcount'] = $unitCount;
+                $fields['testid'] = $this->getParam('test', Null);
+                $fields['mode'] = $this->getParam('mode', 'add');
+                $fields['anscount'] = $this->getParam('anscount', Null);
+                $fields['frmanscount'] = $this->getParam('frmanscount', Null);
+                $fields['unitcount'] = $this->getParam('unitcount', Null);
 
                 //Set variables for use in the template
                 $this->setVarByRef('fields', $fields);
@@ -1119,6 +1131,7 @@ class mcqtests extends controller {
         $fieldsQn['qtype'] = "SimpleCalculated";
         $fieldsQn['questiontype'] = "SimpleCalculated";
         $fieldsQn['generalfeedback'] = $this->getParam('genfeedback', Null);
+        $test = $this->getParam('test', Null);        
         $qncount = $this->getParam('qncount', Null);
         $id = $this->getParam('id', Null);
         //Avoid saving blank values
@@ -1140,7 +1153,7 @@ class mcqtests extends controller {
             $fieldsUH['instructions'] = $this->getParam('instructions', Null);
             $fieldsUH['unitgradingtype'] = $this->getParam('unitgradingtype', Null);
             $fieldsUH['showunits'] = $this->getParam('showunits', Null);
-            
+
             //Insert/Update Unit-Handling
             $uhid = $this->objNumericalOptions->addNOption($fieldsUH, $uhid);
             //Save Units
@@ -1270,6 +1283,43 @@ class mcqtests extends controller {
                 //Insert/Update Tags
                 $tagId = $this->dbTag->addTag($otTags, Null, $id);
             }
+            //Save the wild-cards $this->objDSDefinitions $this->objDSItems $this->objDBDataset
+            //     
+            $dsetarr = array();
+            $dsetarr['datasetdefinition'] = "";
+            $dsetarr['questionid'] = $questionid;
+            
+            $dsetid = $this->objDBDataset->addRecord($dsetarr);
+            $wccount = $this->getParam('wccount', Null);
+
+            $fieldsUt['datasetdefinition'] = $this->getParam('unit_update_' . $wccount, Null);
+            $afromrange = $this->getParam('afromrange_' . $wccount, Null);
+            $atorange = $this->getParam('atorange_' . $wccount, Null);
+            $adecimalplaces = $this->getParam('adecimalplaces_' . $wccount, Null);
+            $bfromrange = $this->getParam('bfromrange_' . $wccount, Null);
+            $btorange = $this->getParam('btorange_' . $wccount, Null);
+            $bdecimalplaces = $this->getParam('adecimalplaces_' . $wccount, Null);
+            
+            //Save Wild-Card A
+            $arrdset_def = array();
+            $arrdset_def['datasetid'] = $dsetid;
+            $arrdset_def['categoryid'] = $test;
+            $arrdset_def['name'] = "A";
+            $arrdset_def['type'] = "1";
+            $arrdset_def['options'] = $afromrange.".".$adecimalplaces.":".$atorange.".".$adecimalplaces;
+            $arrdset_def['itemcount'] = "10";
+
+            $adefid = $this->objDSDefinitions->addRecord($arrdset_def);
+            //Save Wild-Card B
+            $arrdset_def = array();
+            $arrdset_def['datasetid'] = $dsetid;
+            $arrdset_def['categoryid'] = $test;
+            $arrdset_def['name'] = "B";
+            $arrdset_def['type'] = "1";
+            $arrdset_def['options'] = $bfromrange.".".$bdecimalplaces.":".$btorange.".".$bdecimalplaces;
+            $arrdset_def['itemcount'] = "10";
+            
+            $bdefid = $this->objDSDefinitions->addRecord($arrdset_def);
         }
         return $id;
     }
@@ -1313,6 +1363,7 @@ class mcqtests extends controller {
         $this->setVarByRef('data', $data);
         return 'index_tpl.php';
     }
+
     /**
      * Method to display a list of tests in the test home page.
      *
@@ -1338,6 +1389,7 @@ class mcqtests extends controller {
         $this->setVarByRef('data', $data);
         return 'newindex_tpl.php';
     }
+
     /**
      * Method to display a list of tests in the test home page.
      *

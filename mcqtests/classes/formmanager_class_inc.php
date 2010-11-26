@@ -1888,6 +1888,9 @@ class formmanager extends object {
      * @author Paul Mungai
      */
     public function createSCQList($testId, $categoryId=Null) {
+        //Initialize variables
+        $test = $testId;
+
         //Form text
         $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
@@ -1914,7 +1917,7 @@ class formmanager extends object {
         $objHeading = &$this->getObject('htmlheading', 'htmlelements');
         $objHeading->type = 1;
         $objHeading->str = $wordDesc;
-
+        
         //Add heading/title to string
         $str = "";
 
@@ -1944,7 +1947,8 @@ class formmanager extends object {
                     $objLink->link($this->uri(array(
                                 'module' => 'mcqtests',
                                 'action' => 'addsimplecalculated',
-                                'id' => $descdata['id']
+                                'id' => $descdata['id'],
+                                'test' => $testId
                             )));
                     $objLink->link = $iconEdit->show();
                     $linkEdit = $objLink->show();
@@ -1978,7 +1982,8 @@ class formmanager extends object {
         $objAdd = &$this->getObject("link", "htmlelements");
         $objAdd->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'addsimplecalculated'
+                    'action' => 'addsimplecalculated',
+                    'test' => $test
                 )));
         $objAdd->link = $buttonAdd->showSexy();
         $str .= " " . $objAdd->show();
@@ -2035,7 +2040,7 @@ class formmanager extends object {
         $this->loadClass("radio", "htmlelements");
 
         //Store values in variables
-        $test = $fields['test'];
+        $test = $fields['testid'];
         $id = $fields['id'];
         $anscount = $fields['anscount'];
         $unitcount = $fields['unitcount'];
@@ -2094,8 +2099,10 @@ class formmanager extends object {
         $form = new form("addsimplecalculated", $this->uri(array(
                             'module' => 'mcqtest',
                             'action' => 'addsimplecalculated',
-                            'id' => $id, 'test' => $fields["testId"]
+                            'id' => $id,
+                            'test' => $test
                         )));
+        
         $qnData = $this->dbQuestions->getQuestion($id);
 
         $randSAData = $this->dbRandomMatching->getRecords("questionid='" . $id . "'");
@@ -2472,11 +2479,18 @@ class formmanager extends object {
         $form->addToForm($objTable->show());
 
         //Get Wild-Card fields
+        //Store wild-card Id
+        $wcardno = 1;
+
+        $wc_count = new hiddeninput("wccount", $wcardno);
+
+
         $wcardValues = Null;
-        $wcards = $this->createWildCardFields($wcardno=1, $wcardValues);
+
+        $wcards = $this->createWildCardFields($wcardno, $wcardValues);
 
         //Add Wild-card to form
-        $form->addToForm($wcards);
+        $form->addToForm($wcards . " " . $wc_count->show());
 
         //Create table to hold the tags
         $objTable2 = new htmltable();
@@ -2835,7 +2849,8 @@ class formmanager extends object {
         //Return Fieldset
         return $theFieldset;
     }
-     /**
+
+    /**
      * Method to create a fieldset for capturing wild-card fields
      *
      * @access public
@@ -2856,8 +2871,8 @@ class formmanager extends object {
         $phraseWildCardParams = $this->objLanguage->languageText('mod_mcqtest_wildcardparams', 'mcqtests', "Wild cards parameters used to generate the values");
         $phraseRangeOfValues = $this->objLanguage->languageText('mod_mcqtests_rangeofvals', 'mcqtests', "Range of values");
         $phraseDecimalPlaces = $this->objLanguage->languageText('mod_mcqtests_decimalplaces', 'mcqtests', "Decimal places");
-        $phraseParamA = $wordParam." <b>{".$letterA."}</b> ";
-        $phraseParamB = $wordParam." <b>{".$letterB."}</b> ";
+        $phraseParamA = $wordParam . " <b>{" . $letterA . "}</b> ";
+        $phraseParamB = $wordParam . " <b>{" . $letterB . "}</b> ";
 
         //Create table to hold the wild-card
         $objTable = new htmltable();
@@ -2866,24 +2881,24 @@ class formmanager extends object {
         $objTable->cellspacing = '12';
 
         //Store wild-card Id
-        $wcfield = new hiddeninput("wcid" . $wcardno, $wcardValues["id"]);
+        $wcfield = new hiddeninput("wcid_" . $wcardno, $wcardValues["id"]);
 
         //range-value-a text box
         if (!empty($wcardValues)) {
-            $afromrangefield = new textinput("afromrange" . $wcardno, $wcardValues["unit"]);
+            $afromrangefield = new textinput("afromrange_" . $wcardno, $wcardValues["unit"]);
         } else {
-            $afromrangefield = new textinput("afromrange" . $wcardno, "");
+            $afromrangefield = new textinput("afromrange_" . $wcardno, "");
         }
         //decimal-value-a text box
         if (!empty($wcardValues)) {
-            $atorangefield = new textinput("atorange" . $wcardno, $wcardValues["unit"]);
+            $atorangefield = new textinput("atorange_" . $wcardno, $wcardValues["unit"]);
         } else {
-            $atorangefield = new textinput("atorange" . $wcardno, "");
+            $atorangefield = new textinput("atorange_" . $wcardno, "");
         }
         $afromrangefield->size = 15;
         $atorangefield->size = 15;
         //a-decimal-places drop down list
-        $adecimalplaces = new dropdown("adecimalplaces" . $ansno);
+        $adecimalplaces = new dropdown("adecimalplaces_" . $wcardno);
         $adecimalplaces->addOption("0", "0");
         $adecimalplaces->addOption("1", "1");
         $adecimalplaces->addOption("2", "2");
@@ -2906,7 +2921,7 @@ class formmanager extends object {
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($phraseRangeOfValues, '20%');
-        $objTable->addCell($afromrangefield->show() ." - ". $atorangefield->show() . $wcfield->show(), '80%');
+        $objTable->addCell($afromrangefield->show() . " - " . $atorangefield->show() . $wcfield->show(), '80%');
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($phraseDecimalPlaces, '20%');
@@ -2915,21 +2930,21 @@ class formmanager extends object {
 
         //range-value-b text box
         if (!empty($wcardValues)) {
-            $bfromrangefield = new textinput("bfromrange" . $wcardno, $wcardValues["unit"]);
+            $bfromrangefield = new textinput("bfromrange_" . $wcardno, $wcardValues["unit"]);
         } else {
-            $bfromrangefield = new textinput("bfromrange" . $wcardno, "");
+            $bfromrangefield = new textinput("bfromrange_" . $wcardno, "");
         }
         //decimal-value-b text box
         if (!empty($wcardValues)) {
-            $btorangefield = new textinput("btorange" . $wcardno, $wcardValues["unit"]);
+            $btorangefield = new textinput("btorange_" . $wcardno, $wcardValues["unit"]);
         } else {
-            $btorangefield = new textinput("btorange" . $wcardno, "");
+            $btorangefield = new textinput("btorange_" . $wcardno, "");
         }
         $bfromrangefield->size = 15;
         $btorangefield->size = 15;
-        
+
         //b-decimal-places drop down list
-        $bdecimalplaces = new dropdown("bdecimalplaces" . $ansno);
+        $bdecimalplaces = new dropdown("bdecimalplaces_" . $wcardno);
         $bdecimalplaces->addOption("0", "0");
         $bdecimalplaces->addOption("1", "1");
         $bdecimalplaces->addOption("2", "2");
@@ -2951,13 +2966,13 @@ class formmanager extends object {
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($phraseRangeOfValues, '20%');
-        $objTable->addCell($bfromrangefield->show() ." - ". $btorangefield->show(), '80%');
+        $objTable->addCell($bfromrangefield->show() . " - " . $btorangefield->show(), '80%');
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($phraseDecimalPlaces, '20%');
         $objTable->addCell($bdecimalplaces->show(), '80%');
         $objTable->endRow();
-        
+
         //Add fieldset to hold wild-card
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
         $objFieldset->setLegend($phraseWildCardParams);
@@ -2972,6 +2987,7 @@ class formmanager extends object {
         //Return Fieldset
         return $theFieldset;
     }
+
     /**
      * Method to create a fieldset for capturing answer details
      *
@@ -3211,7 +3227,8 @@ class formmanager extends object {
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
                             'action' => 'addrandomshortansconfirm',
-                            'id' => $id
+                            'id' => $id,
+                            'test' => $test
                         )));
 
         //Form Heading/Title
@@ -3677,7 +3694,8 @@ class formmanager extends object {
         $objCancel->link($this->uri(array(
                     'module' => 'mcqtests',
                     'action' => 'view',
-                    'id' => $id
+                    'id' => $id,
+                    'test' => $test
                 )));
         $objCancel->link = $buttonCancel->showSexy();
         $btnCancel = $objCancel->show();
