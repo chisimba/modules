@@ -1288,7 +1288,7 @@ class mcqtests extends controller {
             $wccount = $this->getParam('wccount', Null);
             $dsetid = $this->getParam('dsetid_' . $wccount, Null);
             $a_def_id = $this->getParam('a_definition_id_' . $wccount, Null);
-            $b_def_id = $this->getParam('a_definition_id_' . $wccount, Null);
+            $b_def_id = $this->getParam('b_definition_id_' . $wccount, Null);
 
             $dsetarr = array();
             $dsetarr['datasetdefinition'] = "";
@@ -1306,26 +1306,30 @@ class mcqtests extends controller {
             $bdecimalplaces = $this->getParam('bdecimalplaces_' . $wccount, Null);
 
             //Save Wild-Card A
-            $arrdset_def = array();
-            $arrdset_def['datasetid'] = $dsetid;
-            $arrdset_def['categoryid'] = $test;
-            $arrdset_def['name'] = "A";
-            $arrdset_def['type'] = "1";
-            $arrdset_def['options'] = $afromrange . "." . $adecimalplaces . ":" . $atorange . "." . $adecimalplaces;
-            $arrdset_def['itemcount'] = "10";
+            $arrdset_def_a = array();
+            if (empty($a_def_id)) {
+                $arrdset_def_a['datasetid'] = $dsetid;
+                $arrdset_def_a['categoryid'] = $test;
+                $arrdset_def_a['name'] = "A";
+            }
+            $arrdset_def_a['type'] = "1";
+            $arrdset_def_a['options'] = $afromrange . "." . $adecimalplaces . ":" . $atorange . "." . $adecimalplaces;
+            $arrdset_def_a['itemcount'] = "10";
 
-            $adefid = $this->objDSDefinitions->addRecord($arrdset_def, $a_def_id);
+            $adefid = $this->objDSDefinitions->addRecord($arrdset_def_a, $a_def_id);
 
             //Save Wild-Card B
-            $arrdset_def = array();
-            $arrdset_def['datasetid'] = $dsetid;
-            $arrdset_def['categoryid'] = $test;
-            $arrdset_def['name'] = "B";
-            $arrdset_def['type'] = "1";
-            $arrdset_def['options'] = $bfromrange . "." . $bdecimalplaces . ":" . $btorange . "." . $bdecimalplaces;
-            $arrdset_def['itemcount'] = "10";
+            $arrdset_def_b = array();
+            if (empty($b_def_id)) {
+                $arrdset_def_b['datasetid'] = $dsetid;
+                $arrdset_def_b['categoryid'] = $test;
+                $arrdset_def_b['name'] = "B";
+            }
+            $arrdset_def_b['type'] = "1";
+            $arrdset_def_b['options'] = $bfromrange . "." . $bdecimalplaces . ":" . $btorange . "." . $bdecimalplaces;
+            $arrdset_def_b['itemcount'] = "10";
 
-            $bdefid = $this->objDSDefinitions->addRecord($arrdset_def, $b_def_id);
+            $bdefid = $this->objDSDefinitions->addRecord($arrdset_def_b, $b_def_id);
         }
         return $id;
     }

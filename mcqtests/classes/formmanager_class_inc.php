@@ -2509,13 +2509,14 @@ class formmanager extends object {
             //Get id of the datasets affiliated to this question
             $datasets = $this->objDBDataset->getRecords($id);
             $datasetid = $datasets[0]['id'];
+
             if (!empty($datasets)) {
                 //get the related definitions
                 $dataset_definitions = $this->objDSDefinitions->getRecords($datasetid);
                 //Populate values in array
                 if (!empty($dataset_definitions)) {
                     $wcardValues = array();
-                    $wcardValues['datasetid'] = $datasetid;
+                    $wcardValues['dsetid'] = $datasetid;
                     if ($dataset_definitions[0]["name"] == "A") {
                         $wcardValues['a_definition_id'] = $dataset_definitions[0]['id'];
                         //get min, max and decimal values from string
@@ -2539,9 +2540,32 @@ class formmanager extends object {
                         $wcardValues['b_fromrange'] = $min_dec[0];
                         $wcardValues['b_torange'] = $max_dec[0];
                         $wcardValues['b_decimal'] = $max_dec[1];
+                    } elseif ($dataset_definitions[0]["name"] == "B") {
+                        $wcardValues['b_definition_id'] = $dataset_definitions[0]['id'];
+                        //Get Values for B
+                        //get min, max and decimal values from string
+                        $stuff = explode(":", $dataset_definitions[0]["options"]);
+                        //Get min and decimal
+                        $min_dec = explode(".", $stuff[0]);
+                        //Get max and decimal
+                        $max_dec = explode(".", $stuff[1]);
+                        $wcardValues['b_fromrange'] = $min_dec[0];
+                        $wcardValues['b_torange'] = $max_dec[0];
+                        $wcardValues['b_decimal'] = $max_dec[1];
+
+                        //Get Values for A
+                        //get min, max and decimal values from string
+                        $stuff = explode(":", $dataset_definitions[1]["options"]);
+                        //Get min and decimal
+                        $min_dec = explode(".", $stuff[0]);
+                        //Get max and decimal
+                        $max_dec = explode(".", $stuff[1]);
+                        $wcardValues['a_definition_id'] = $dataset_definitions[1]['id'];
+                        $wcardValues['a_fromrange'] = $min_dec[0];
+                        $wcardValues['a_torange'] = $max_dec[0];
+                        $wcardValues['a_decimal'] = $max_dec[1];
                     }
                 }
-                var_dump($wcardValues);
             }
         }
         $wcards = $this->createWildCardFields($wcardno, $wcardValues);
