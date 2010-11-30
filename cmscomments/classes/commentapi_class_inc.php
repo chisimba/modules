@@ -44,11 +44,14 @@ class commentapi extends object
 	public function init()
 	{
 		try {
-			$this->objLanguage = $this->getObject('language', 'language');
-			$this->objUser =  $this->getObject("user", "security");
-			$this->objDbBlog = $this->getObject("dbblog", "blog");
-			$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-            $this->showfullname = $this->sysConfig->getValue('show_fullname', 'blog');
+                    $this->objLanguage = $this->getObject('language', 'language');
+                    $this->objUser =  $this->getObject("user", "security");
+                    $this->objDbBlog = $this->getObject("dbblog", "blog");
+                    $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+                    $this->showfullname = $this->sysConfig->getValue('show_fullname', 'blog');
+                    // Load scriptaclous since we can no longer guarantee it is there
+                    $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+                    $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
 		}
 		catch (customException $e)
 		{
