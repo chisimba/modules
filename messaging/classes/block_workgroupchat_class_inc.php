@@ -75,6 +75,10 @@ class block_workgroupchat extends object
     */
     public function init()
     {
+        // Load scriptaclous since we can no longer guarantee it is there
+        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
+
         // load html element classes
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('layer', 'htmlelements');

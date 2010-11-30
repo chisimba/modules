@@ -16,9 +16,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
 * Author Kevin Cyster
 * */
 
-// add scriptaculous js libraries
-//$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-//$this->objScriptaculous->show();
+// Load scriptaclous since we can no longer guarantee it is there
+$scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+$this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
 
 // select all checkbox js library
 $headerParams = $this->getJavascriptFile('selectall.js', 'htmlelements');
