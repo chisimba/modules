@@ -157,6 +157,10 @@
 
                 $this->objDateTime = $this->getObject('dateandtime', 'utilities');
 
+                // Load scriptaclous since we can no longer guarantee it is there
+                $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+                $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
+
                 $this->loadClass('textinput', 'htmlelements');
                 $this->loadClass('checkbox', 'htmlelements');
                 $this->loadClass('radio', 'htmlelements');
