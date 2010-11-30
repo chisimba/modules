@@ -73,7 +73,10 @@ class ui extends object
     */
     public function init()
     {
-       $this->resourceBase = $this->getResourceUri('','presentation');
+        $this->resourceBase = $this->getResourceUri('','presentation');
+        // Load scriptaclous since we can no longer guarantee it is there
+        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
     }
     
     public function getCss()
