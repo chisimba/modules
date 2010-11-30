@@ -35,7 +35,7 @@ class timeline extends controller
     public $objLog;
 
     /**
-     * Intialiser for the stories controller
+     * Intialiser for the timeline controller
      *
      * @param byref $ string $engine the engine object
      */
@@ -45,10 +45,9 @@ class timeline extends controller
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
         $this->objConfig = $this->getObject('altconfig', 'config');
-        //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
-        //Log this module call
-        //$this->objLog->log();
+        // Load scriptaclous since we can no longer guarantee it is there
+        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
     }
     
     
@@ -113,23 +112,6 @@ class timeline extends controller
         $this->appendArrayVar('headerParams', $scriptTag);
 	}
 	
-    /**
-     * 
-     * Method to add the scriptaculous library to the page head
-     * @access private
-     * @return TRUE
-     * 
-     *
-     private function addScriptaculousToPage()
-     {
-     	$scripts = '<script src="core_modules/htmlelements/resources/script.aculos.us/lib/prototype.js" type="text/javascript"></script>
-          <script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
-          <script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
-        $this->appendArrayVar('headerParams',$scripts);
-        return TRUE;
-     }*/
-    /*------------- END : Methods for writing to the page body and header ---------------*/
-
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
 
