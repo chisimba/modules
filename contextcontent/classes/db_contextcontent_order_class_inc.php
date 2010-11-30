@@ -83,6 +83,12 @@ class db_contextcontent_order extends dbtable {
         $this->objContext = $this->getObject('dbcontext', 'context');
         // Store Context Code
         $this->contextCode = $this->objContext->getContextCode();
+
+        // @Todo Make this code less crappy
+        // @Todo Remove dependency on Scriptaculous
+        // Load scriptaclous since we can no longer guarantee it is there
+        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
     }
 
     /**
