@@ -48,6 +48,9 @@ class photogallery extends controller {
         $this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames', 'photogallery');
         $this->secretCode = "";
         $this->apiKey = "";
+        // Load scriptaclous since we can no longer guarantee it is there
+        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
     }
 
     /**
