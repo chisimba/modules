@@ -86,13 +86,9 @@ class internalmail extends controller
         $this->dbConfiguration = $this->newObject('dbconfiguration');
         $this->dbRules = $this->newObject('dbrules');
         $this->emailFiles = $this->newObject('emailfiles');
-        /*
-        //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity','logger');
-
-        //Log this module call
-        $this->objLog->log();
-        */
+        // Load scriptaclous since we can no longer guarantee it is there
+        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
     }
     
     
