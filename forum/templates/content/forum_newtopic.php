@@ -217,28 +217,28 @@ if ($forum['attachments'] == 'Y') {
     $objSelectFile = $this->newObject('selectfile', 'filemanager');
     $objSelectFile->name = 'attachment';
     $form->addToForm($objSelectFile->show());
-
+    // Fix undefined variable error for $id
+    if (!isset($id)) {
+        $id="";
+    }
     $hiddeninput = new hiddeninput('id', $id);
     $form->addToForm($hiddeninput->show());
 
     $button = new button('save_attachment_button', 'Attach File');
     $button->cssClass = 'save';
     $button->extra='onclick="saveAttachment(this.parentNode)"';
-    //$button->setToSubmit();
-    //$form->addToForm(' &nbsp; &nbsp; '.$button->show());
+    if (isset($files)) {
+        if (count($files) > 0) {
 
+            foreach ($files AS $file)
+            {
+                $icon = $objIcon->getDeleteIconWithConfirm($file['id'], array('action'=>'deleteattachment', 'id'=>$file['id'], 'attachmentwindow'=>$id), 'forum', 'Are you sure wou want to remove this attachment');
+                $link ='<li>'.$file['filename'].' '.$icon.'</li>';
+                $form->addToForm($link);
+            }
 
-
-    if (count($files) > 0) {
-
-    foreach ($files AS $file)
-    {
-        $icon = $objIcon->getDeleteIconWithConfirm($file['id'], array('action'=>'deleteattachment', 'id'=>$file['id'], 'attachmentwindow'=>$id), 'forum', 'Are you sure wou want to remove this attachment');
-        $link ='<li>'.$file['filename'].' '.$icon.'</li>';
-        $form->addToForm($link);
+        }
     }
-
-   }
     $hiddenForumInput = new hiddeninput('forum', $forumid);
     $form->addToForm($hiddenForumInput->show());
 

@@ -112,11 +112,17 @@ $ratingsForm->addToForm($topicHiddenInput->show());
 
 $hiddenForumInput = new textinput('forum');
 $hiddenForumInput->fldType = 'hidden';
-$hiddenForumInput->value = $forum['id'];
+if (isset($forum)) {
+    $hiddenForumInput->value = $forum['id'];
+}
+
 $ratingsForm->addToForm($hiddenForumInput->show());
 
 $hiddenTemporaryId = new textinput('temporaryId');
 $hiddenTemporaryId->fldType = 'hidden';
+if (!isset($temporaryId)) {
+    $temporaryId="";
+}
 $hiddenTemporaryId->value = $temporaryId;
 $ratingsForm->addToForm($hiddenTemporaryId->show());
 

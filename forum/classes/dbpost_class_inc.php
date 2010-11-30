@@ -607,11 +607,10 @@ class dbPost extends dbTable
             $return .= '<div id="'.$post['post_id'].'_child" style="display:block; ">'."\r\n";
             $this->numOpenThreadDisplayDivs +=1;
         }
-        //echo($this->forumRatingsArray);
 
-        // Load Scriptaculous and Prototype to Header
-        //$objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-        //$objScriptaculous->show();
+        // Load scriptaclous since we can no longer guarantee it is there
+        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
 
         // Load JavaScript Function
         $this->appendArrayVar('headerParams', $this->getTranslationAjaxScript());
