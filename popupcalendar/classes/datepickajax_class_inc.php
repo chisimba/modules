@@ -64,6 +64,9 @@ class datepickajax extends object
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
+        // Load scriptaclous since we can no longer guarantee it is there
+        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
     }
 
     /**
