@@ -16,9 +16,9 @@ cntfield.value = maxlimit - field.value.length;
 </script>
 <?php
 
-//$this->objScriptaculous =& $this->getObject('scriptaculous', 'ajaxwrapper');
-//$this->objScriptaculous->show();
-//$this->setVar('pageSuppressXML', TRUE);
+// Load scriptaclous since we can no longer guarantee it is there
+$scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+$this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
 
 if ($mode == 'fixup') {
     $number = $this->getParam('autocomplete_parameter');
