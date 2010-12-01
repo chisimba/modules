@@ -113,10 +113,8 @@ class codetesting extends controller
      */
     public function dispatch()
     {
-        //$this->appendArrayVar('headerParams', $ajax);
-	//$this->setVar('bodyParams', "onload='process()'");
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'truncate');
+        $action=$this->getParam('action', 'formtest');
         // retrieve the mode (edit/add/translate) from the querystring
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
@@ -131,6 +129,59 @@ class codetesting extends controller
         * from action
         */
         return $this->$method();
+    }
+
+    private function __formtest()
+    {
+        $objForm = $this->newObject('htmlform', 'htmldom');
+        $formAction = str_replace("&amp;", "&", $this->uri(array("action" => "formresults"), "codetest"));
+        $objForm->createForm("testform", "myform", $formAction);
+        $objForm->addElement("input", "blabla",  "blablabla", "Enter you's name, yea", array("maxlength" =>"2", "type" => "text", "class" => "sexybutton#search"));
+        $objForm->addElement("textarea", "something", "something2", "Enter your life story");
+        $optionsArray = array(array("One","FirstOne", FALSE), array("Two","SecondOne",TRUE), array("Three","Three",FALSE));
+        $objForm->addElement("select", "myselecttest", "wadawada", "Select your selection", array("options" => $optionsArray, "multiple" => TRUE, "size" => "2"));
+        $objForm->addButton("Le button de moi");
+        $str = $objForm->show();
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
+
+    private function __buttontest()
+    {
+
+        $time_start = microtime(true);
+        $this->loadClass('button', 'htmlelements');
+        $this->objButton=new button('buttonname');
+        $this->objButton->setOnClick('alert(\'An onclick Event\')');
+        $this->objButton->setValue('TEST OF HTMLELEMENTS');
+        $this->objButton->setId("what_a_long_id_hey2");
+        $str = "<br />" . $this->objButton->show() . "<br />";
+        $time_end = microtime(true);
+        $time = ($time_end - $time_start) * 1000;
+        $str = $str . "<br />" . $time . "<br />";
+
+        
+        $time_start = microtime(true);
+        $objButt = $this->newObject('htmlbutton', 'htmldom');
+        $objButt->setValue("cssId","what_a_long_id_hey");
+        //$objButt->setValue("sexyButtons",FALSE);
+        $objButt->setValue('onclick','javascript:alert("Some alert");');
+        $str .= $objButt->show("TEST SUCCESSFUL YAY YAY YIPPEE");
+        $time_end = microtime(true);
+        $time = ($time_end - $time_start) * 1000;
+        $str = $str . "<br />" . $time;
+        unset($objButt);
+
+
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
+
+
+    private function __blocktest()
+    {
+        $this->setVar('str', "Testing some block stuff.");
+        return "dump_tpl.php";
     }
 
 
