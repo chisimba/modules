@@ -1,23 +1,23 @@
 <?php
 /**
-* Template for listing submitted essays to be marked.
+* Template to display submitted/marked essays.
 * @package essayadmin
 */
 
-/**
-* @param array $topicdata Array contains details of topic to be marked. Set in controller action=marktopic
-* @param array $data Array contains the details of the essays in the topic. Set in controller action=marktopic
+/*
+echo '<pre>';
+var_dump($topicdata);
+var_dump($data);
+echo '</pre>';
+die;
 */
-
-/**************** Set Layout template ***************************/
-$this->setLayoutTemplate('essayadmin_layout_tpl.php');
 
 $this->objDateformat =  $this->newObject('dateandtime', 'utilities');
 $this->objFile= $this->newObject('upload','filemanager');
 
-$topic=$topicdata[0]['name'];
+//$topic=;
 //$duedate=0;
-$duedate=$topicdata[0]['closing_date'];
+//$duedate=$topicdata[0]['closing_date'];
 
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('link','htmlelements');
@@ -34,24 +34,24 @@ $objPop = $this->newObject('windowpop','htmlelements');
 $studentno = ucfirst($this->objLanguage->code2Txt('mod_essayadmin_studentno','essayadmin'));
 $studenthead=ucfirst($this->objLanguage->code2Txt('mod_essayadmin_student','essayadmin'));
 $topichead=$this->objLanguage->languageText('mod_essayadmin_topic','essayadmin');
-$essayhead=$this->objLanguage->languageText('mod_essayadmin_essaytitle','essayadmin');
+$essayhead=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin');
 //$essayhead.=' '.$this->objLanguage->languageText('mod_essayadmin_title','essayadmin');
 $submithead=$this->objLanguage->languageText('mod_essayadmin_datesubmitted','essayadmin');
 $markhead=$this->objLanguage->languageText('mod_essayadmin_mark','essayadmin').' (%)';
 $btnexit=$this->objLanguage->languageText('word_exit');
 $head=$this->objLanguage->languageText('mod_essayadmin_submitted','essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_essays', 'essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_in', 'essayadmin').' '.$topic;
-$titledownload=$this->objLanguage->languageText('mod_essayadmin_download','essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_essay', 'essayadmin');
+$titledownload=$this->objLanguage->languageText('mod_essayadmin_downloadessay','essayadmin'); //.' '.$this->objLanguage->languageText('mod_essayadmin_essay', 'essayadmin');
 $titleupload=$this->objLanguage->languageText('mod_essayadmin_upload','essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_marks', 'essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_and','essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_marked','essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin');
 $topiclist=$this->objLanguage->languageText('word_back').' '.strtolower($this->objLanguage->languageText('word_to')).' '.$topichead;
 $topichome=$this->objLanguage->languageText('mod_essayadmin_name', 'essayadmin').' '.$this->objLanguage->languageText('word_home');
 $noessays=$this->objLanguage->languageText('mod_essayadmin_nosubmittedessays', 'essayadmin');
-$rubricLabel = $this->objLanguage->languageText('mod_rubric_name');
-
+$rubricLabel = $this->objLanguage->languageText('mod_rubric_name', 'rubric');
 
 /**
 * new language items added 20/mar/06
 * @author: otim samuel, sotim@dicts.mak.ac.ug
 */
+
 //$unmarked=0;
 $unmarked=$this->objLanguage->languageText('mod_essayadmin_unmarked','essayadmin');
 //$markrow=0;
@@ -63,9 +63,6 @@ $downloadEssays=$this->objLanguage->languageText('mod_essayadmin_downloadessays'
 
 /****************** set up table headers ************************/
 
-$this->setVarByRef('heading',$head);
-
-
 $tableHd=array();
 $tableHd[]=$studentno;
 $tableHd[]=$studenthead;
@@ -75,10 +72,13 @@ $tableHd[]=$markhead;
 $tableHd[]='';
 
 $objTable->cellspacing=2;
-$objTable->cellpadding=3;
+$objTable->cellpadding=2;
+
 $objTable->addHeader($tableHd,'heading');
 
-$objTable->row_attributes=' height="5"';
+//$objTable->row_attributes=' height="5"';
+
+/*
 $objTable->startRow();
 $objTable->addCell('','10%','bottom');
 $objTable->addCell('','20%','bottom');
@@ -87,6 +87,7 @@ $objTable->addCell('','15%','bottom');
 $objTable->addCell('','15%','bottom');
 $objTable->addCell('','10%');
 $objTable->endRow();
+*/
 
 /******************** set up table data ***********************/
 
@@ -103,7 +104,7 @@ if(!empty($data)){
                 $submitdate = '*internal error*';
             }
             if($item['mark']){
-                $mark=$item['mark'].' %';
+                $mark=$item['mark'].'%';
             }else{
     			$uriMark = 0;
     			$uriMark = $this->uri(array('action'=>'upload','book'=>$item['id'],'id'=>$item['topicid']));
@@ -151,8 +152,8 @@ if(!empty($data)){
         $objTable->addCell($item['student'],'','','',$class);
         $objTable->addCell($item['essay']/*$topicdata[0]['name']*/,'','','',$class);
         $objTable->addCell($submitdate,'','','',$class);
-        $objTable->addCell($mark,'','','center',$class);
-        $objTable->addCell($loadicons,'','','center',$class,' colspan=2');
+        $objTable->addCell($mark,'','','',$class);
+        $objTable->addCell($loadicons,'','','',$class);
         $objTable->endRow();
 		//add the binary data for the zipped file
 		//$zippedStudent = 0;
@@ -162,6 +163,7 @@ if(!empty($data)){
 		* using the same algorithms as are found within download_page_tpl.php
 		* populate the variable $filedata which contains the binary data for the essay
 		*/
+        /*
 		$fId=0;
 		$fId=$item['studentfileid'];
 		$fdata=0;
@@ -182,7 +184,7 @@ if(!empty($data)){
 			$ftype=$fdata[0]['filetype'];
 			$fId2=0;
 			$fId2=$fdata[0]['fileId'];
-			/*$flist=$this->objFile->getArray("select id from tbl_essay_blob where fileId='$fId2' order by segment");
+			//$flist=$this->objFile->getArray("select id from tbl_essay_blob where fileId='$fId2' order by segment");
 
 			$line=array();
 			foreach ($flist as $line)
@@ -192,59 +194,57 @@ if(!empty($data)){
 				$ffiledata=array();
 				$ffiledata=$this->objFile->getArray("select * from tbl_essay_blob where id='$id'");
 				$filedata = $ffiledata[0]['filedata'];
-			} */
+			}
 		}
-
+        */
     }
 }else{
     $objTable->startRow();
-    $objTable->addCell($noessays,'','','','odd',' colspan="6"');
+    $objTable->addCell($noessays,'','','','noRecordsMessage','colspan="6"');
     $objTable->endRow();
 }
+
+/*
 $objTable->row_attributes='height="10"';
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->endRow();
-
-// back to topic
-$objLink->title = '';
-$objLink->link($this->uri(array('action'=>'view','id'=>$topicdata[0]['id'])));
-$objLink->link = $topiclist;
-$link1 = $objLink->show();
+*/
 
 /******************* Display table *******************/
 
 //show the due date for this essay
 //echo '<br><strong>'.$closingdate.':</strong> '.$this->formatDate($duedate);
 
-if($this->rubric){
-    $objPop->resizable = 'yes';
-    $objPop->scrollbars = 'yes';
-    $objPop->set('location',$this->uri('','rubric'));
-    $objPop->set('linktext',$rubricLabel);
-    echo '<p>'.$objPop->show();
-}
-
 echo $objTable->show();
 
+// back to topic area
+$strBackToTopicArea = $this->objLanguage->languageText('mod_essayadmin_backtotopicarea','essayadmin');
+$objLink->link($this->uri(array('action'=>'view','id'=>$topicdata[0]['id'])));
+$objLink->link = $strBackToTopicArea;
+$objLink->title = $strBackToTopicArea;
+$link1 = $objLink->show();
+
 // essay home
-$objLink->link($this->uri(array('')));
-$objLink->link=$topichome;
+$strHome = $this->objLanguage->languageText('mod_essayadmin_home', 'essayadmin');
+$objLink->link($this->uri(array()));
+$objLink->link = $strHome;
+$objLink->title = $strHome;
 $link2 = $objLink->show();
 
+/*
 //download submitted essays
 $filename = 0;
 //$filename = $essayadminpath.$zippedTopic.date("Y-m-d-Hms").".zip";
 
-
 $fileUploader = $this->getObject('fileuploader', 'files');
+
 // Set the Upload Restriction
 $fileUploader->allowedCategories = array('documents', 'images');
 
 // Set folder/path in usrfiles to save file
 // If the path does not exist, the class will create it for you
 $fileUploader->savePath = '/etd/essayadmin/'; // This will then be saved in usrfiles/etd/december
-
 
 // Set whether to overwrite file
 $fileUploader->overwriteExistingFile = TRUE;
@@ -253,22 +253,37 @@ $fileUploader->overwriteExistingFile = TRUE;
 $results = $fileUploader->uploadFile('fileupload1'); // This corresponds with the name of the input -
 //<input type="file"  name="fileupload1" />;
 
-
 //$fd = fopen($filename, "wb");
 //$out = fwrite ($fd, $this->objZip->file());
 //fclose ($fd);
-
-
 
 //make a record of this file
 //$this->objDbZip->insertData($zippedTopic.date("Y-m-d-Hms").".zip",$essayadminpath.$zippedTopic."/".$zippedTopic.date("Y-m-d-Hms").".zip",$essayadminDownloadLink.$zippedTopic."/".$zippedTopic.date("Y-m-d-Hms").".zip");
 
 //$this->objLink->link("$essayadminDownloadLink$zippedTopic".date("Y-m-d-Hms").".zip");
+*/
+
+/*
 $objLink->link =  $downloadEssays;
 $link3 = 0;
 $link3 = $objLink->show();
+*/
 
+/*
 $objLayer->align = 'center';
 $objLayer->str = $link3.'&nbsp;&nbsp;&nbsp;&nbsp;'.$link2.'&nbsp;&nbsp;&nbsp;&nbsp;'.$link1;
 echo $objLayer->show();
+*/
+
+echo $link1
+    .'<br />'.$link2;
+
+if($this->rubric){
+    $objPop->resizable = 'yes';
+    $objPop->scrollbars = 'yes';
+    $objPop->set('location', $this->uri(array(),'rubric'));
+    $objPop->set('linktext',$rubricLabel);
+    echo '<br />'.$objPop->show();
+}
+
 ?>

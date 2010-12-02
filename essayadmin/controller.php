@@ -1,12 +1,4 @@
 <?php
-/**
-* Controller class for the Essay Management Module.
-* @copyright (c) 2004 UWC
-* @package essayadmin
-* @version 0.9
-* @filestore
-*/
-
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']){
     die('You cannot view this page directly');
@@ -14,119 +6,109 @@ if (!$GLOBALS['kewl_entry_point_run']){
 // end security check
 
 /**
-* Controller class for the Essay Management Module.
-* Class essay provides functionality for lecturers to create, edit and delete topics. They can
-* create, edit and delete essays within the topics and download students submitted essays for
-* marking.
-*
-* Students are provided with functionality for booking an essay and uploading it for marking.
-* They are also able to download the marked essay.
+* Controller class for the Essay Management module.
+* Lecturers can create, edit and delete topics.
+* They can create, edit and delete essays
+* within each topic and download students'
+* submitted essays for marking. They can mark
+* essays and upload marked essays.
 *
 * @author Megan Watson
-* @copyright (c) 2004 UWC
+* @author Jeremy O'Connor
+* @copyright (c) 2004, 2010 Avoir
 * @package essayadmin
-* @version 0.9
+* @version $Id$
+*/
+
+/**
+* Controller class for the Essay Management module.
+* @package essayadmin
 */
 
 class essayadmin extends controller
 {
     /**
-    * Initialise objects used in the module
+    * Initialization method.
     */
     public function init()
     {
-        // Check if the module is registered and redirect if not.
-        // Check if the assignment module is registered and can be linked to.
-        $this->objModules = $this->newObject('modules','modulecatalogue');
-	    //   if(!$this->objModules->checkIfRegistered('Essay Management','essayadmin')){
-        //      return $this->nextAction('notregistered', array(), 'redirect');
-        //  }
-        $this->assignment = FALSE;
-        if($this->objModules->checkIfRegistered('Assignment Management', 'assignmentadmin')){
-            $this->assignment = TRUE;
-        }
-        $this->rubric = FALSE;
-        if($this->objModules->checkIfRegistered(NULL, 'rubric')){
-            $this->objRubric = $this->getObject('dbrubricassessments', 'rubric');
-            $this->rubric = TRUE;
-        }
-
-	    // Get instances of the module classes
-        $this->dbessays=  $this->getObject('dbessays', 'essay');
-        $this->dbtopic=  $this->getObject('dbessay_topics', 'essay');
-        $this->dbbook=  $this->getObject('dbessay_book', 'essay');
+        $this->objConfig = $this->newObject('altconfig', 'config');
+        $this->dbtopic = $this->getObject('dbessay_topics', 'essay');
+        $this->dbessays = $this->getObject('dbessays', 'essay');
+        $this->dbbook = $this->getObject('dbessay_book', 'essay');
         // Get instances of the html elements:
-        // form, table, link, textinput, button, icon, layer, checkbox, textarea, iframe
-        $this->loadclass('htmltable','htmlelements');
+        $this->loadclass('htmltable', 'htmlelements');
         $this->loadClass('checkbox', 'htmlelements');
-        $this->loadclass('form','htmlelements');
-        $this->loadClass('htmltable','htmlelements');
-        $this->loadClass('layer','htmlelements');
-        $this->loadClass('link','htmlelements');
-        $this->loadClass('textinput','htmlelements');
-        $this->loadClass('button','htmlelements');
-        //$checkBox = new checkbox('checkbox','htmlelements');
-        $this->loadClass('textarea','htmlelements');
-        $this->objIcon= $this->getObject('geticon','htmlelements');
-        $this->loadClass('iframe','htmlelements');
-        $this->loadClass('htmlHeading','htmlelements');
-		$this->objFile =  $this->newObject('upload','filemanager');
+        $this->loadclass('form', 'htmlelements');
+        $this->loadClass('layer', 'htmlelements');
+        $this->loadClass('link', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('iframe', 'htmlelements');
+        $this->loadClass('htmlHeading', 'htmlelements');
+        $this->objIcon = $this->getObject('geticon', 'htmlelements');
+        $this->objDate = $this->newObject('datepicker', 'htmlelements');
+		$this->objFile = $this->newObject('upload', 'filemanager');
         // Get an instance of the confirmation object
-        $this->objConfirm= $this->getObject('confirm','utilities');
-        // Get an instance of the language object
-        $this->objLanguage=  $this->getObject('language','language');
-        // Get an instance of the user object
-        $this->objUser=  $this->getObject('user','security');
-        // Get an instance of the context object
-        $this->objContext= $this->getObject('dbcontext','context');
-        $this->objHelp = $this->newObject('helplink','help');
+        $this->objConfirm = $this->getObject('confirm', 'utilities');
        	$this->objDateformat = $this->newObject('dateandtime','utilities');
-        $this->objDate = $this->newObject('datepicker','htmlelements');
+        // Get an instance of the language object
+        $this->objLanguage = $this->getObject('language', 'language');
+        // Get an instance of the user object
+        $this->objUser = $this->getObject('user', 'security');
+        // Get an instance of the context object
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+        $this->objHelp = $this->newObject('helplink', 'help');
+        $this->objModules = $this->newObject('modules', 'modulecatalogue');
+        //if(!$this->objModules->checkIfRegistered('Essay Management','essayadmin')){
+        //    return $this->nextAction('notregistered', array(), 'redirect');
+        //}
+        // Check if the assignment module is registered and can be linked to.
+        $this->assignment = $this->objModules->checkIfRegistered('assignment');
+        if (!$this->objModules->checkIfRegistered('rubric')) {
+            $this->rubric = FALSE;
+        } else {
+            $this->rubric = TRUE;
+            $this->objRubric = $this->getObject('dbrubricassessments', 'rubric');
+        }
         // Log this call if registered
-        if(!$this->objModules->checkIfRegistered('logger', 'logger')){
+        if ($this->objModules->checkIfRegistered('logger', 'logger')){
             //Get the activity logger class
-            $this->objLog=$this->newObject('logactivity', 'logger');
+            $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
             $this->objLog->log();
         }
-
-								$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
-								//Load the activity Streamer
-								if($this->objModules->checkIfRegistered('activitystreamer'))
-								{
-									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
-									$this->eventsEnabled = TRUE;
-								} else {
-									$this->eventsEnabled = FALSE;
-								}
-
+        // Load the activity Streamer
+        if (!$this->objModules->checkIfRegistered('activitystreamer'))
+        {
+        	$this->eventsEnabled = FALSE;
+        } else {
+        	$this->eventsEnabled = TRUE;
+        	$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+        	$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+        }
     }
 
     /**
     * The standard dispatch method for the module.
-    * The dispatch() method must return the name of a page body template which will render
-    * the module output (for more details see Modules and templating)
-    * @return string The template to display
+    * @return string The template
     */
     public function dispatch($action)
     {
+        $this->setVar('pageSuppressXML',true);
 		/**
 		* management of zip files, added 27/mar/06
 		* check if the essayadmin dir has been created
 		* @author: otim samuel, sotim@dicts.mak.ac.ug
 		*/
-      $this->setVar('pageSuppressXML',true);
-
-		$essayadmindir=0;
-		$essayadminpath=0;
-		$essayadmindir="usrfiles/essayadmin/";
-	//	$essayadminpath=KEWL_SITEROOT_PATH."usrfiles/essayadmin/";
-		//array may be comprised of the following: array('action' => 'editHeader')
-		$parametersArray=array('action' => $this->getParam("action", NULL), 'id' => $this->getParam("id", NULL));
-		//the download link, e.g. http://nextgen.mak.ac.ug/
-		$essayadminDownloadLink=0;
-		$essayadminDownloadLink=$this->uri($parametersArray);
+        //"usrfiles/essayadmin/"
+		$essayadmindir = $this->objConfig->getcontentBasePath().'essayadmin/';
+		if(!is_dir($essayadmindir)) {
+			mkdir($essayadmindir, 0777);
+		}
+		$this->setVar('essayadmindir',$essayadmindir);
 		/*
 		* $essayadminDownloadLink is currently made up of
 		* http://nextgen.mak.ac.ug/index.php?module=essayadmin
@@ -139,192 +121,266 @@ class essayadmin extends controller
 		* should give us http://nextgen.mak.ac.ug/ which can then be appended to
 		* $essayadmindir and the required download file for an accurate download link
 		*/
-		$essayadminReplacement=0;
-		$essayadminReplacement="index.php\?".$_SERVER['QUERY_STRING'];
-		$essayadminReplacement=ereg_replace("&","&amp;",$essayadminReplacement);
-		$essayadminDownloadLink=ereg_replace($essayadminReplacement,"",$essayadminDownloadLink);
-		$essayadminDownloadLink.=$essayadmindir;
-
-		if(!is_dir($essayadmindir)) {
-			mkdir($essayadmindir, 0777);
-		}
-		$this->setVar('essayadmindir',$essayadmindir);
-		$this->setVar('essayadminpath',$essayadminpath);
+		//$essayadminpath=0;
+    	//$essayadminpath=KEWL_SITEROOT_PATH."usrfiles/essayadmin/";
+		//array may be comprised of the following: array('action' => '')
+        //--
+		//$parametersArray = array('action' => $this->getParam("action", NULL), 'id' => $this->getParam("id", NULL));
+		//the download link, e.g. http://nextgen.mak.ac.ug/
+		//$essayadminDownloadLink=0;
+        //$essayadminDownloadLink=$this->uri($parametersArray);
+        ////$essayadminReplacement=0;
+        //$essayadminReplacement="index.php\?".$_SERVER['QUERY_STRING'];
+        //$essayadminReplacement=ereg_replace("&","&amp;",$essayadminReplacement);
+        //$essayadminDownloadLink=ereg_replace($essayadminReplacement,"",$essayadminDownloadLink);
+		$essayadminDownloadLink =
+		    $this->objConfig->getsiteRoot()
+		    .$this->objConfig->getcontentPath()
+		    .'essayadmin/';
+		//$this->setVar('essayadminpath',$essayadminpath);
 		$this->setVar('essayadminDownloadLink',$essayadminDownloadLink);
-
 		//remove all zip files older than 24hrs, or 86,400 seconds
 		//$this->objDbZip->deleteOldFiles();
-
-        // default context = lobby
-        $this->contextcode='root';
-        $this->context=$this->objLanguage->languageText('word_inlobby','Lobby');
-
-        // get user details
-        $this->userId=$this->objUser->userId();
-        $this->user=$this->objUser->fullname();
-
-        // check if in context, and get code & title
-        if($this->objContext->isInContext()){
-            $this->contextcode=$this->objContext->getContextCode();
-            $this->context=$this->objContext->getTitle();
-            $incontext=TRUE;
-        }else{
-            $incontext=FALSE;
+        // Get user details
+        $this->userId = $this->objUser->userId();
+        $this->user = $this->objUser->fullname();
+        // Check if in context, and get code & title
+        if ($this->objContext->isInContext()) {
+            $incontext = TRUE;
+            $this->contextcode = $this->objContext->getContextCode();
+            $this->context = $this->objContext->getTitle();
+        } else {
+            $incontext = FALSE;
         }
 
-        // set variable references in templates
-        $this->setVarByRef('context',$this->context);
-        $this->setVarByRef('contextcode',$this->contextcode);
+        if (!$this->objUser->isCourseAdmin($this->contextcode)) {
+            return 'noaccess_tpl.php';
+        }
 
-        // add left display panel
-        $topicid=$this->getParam('id');
+        // Set variable references in templates
+        $this->setVarByRef('contextcode', $this->contextcode);
+        $this->setVarByRef('context', $this->context);
 
+        //$topicid=$this->getParam('id');
         switch($action){
-            // add a new topic: pass empty variable $data
-            case 'addtopic':
-                $data=array();
-                $head=$this->objLanguage->languageText('mod_essayadmin_newtopic','essayadmin');
-                $this->setVarByRef('head',$head);
-                $this->setVarByRef('data',$data);
-                $template='topic_tpl.php';
-            break;
-
-        // save topic
-        case 'savetopic':
-//echo "<pre>";
-//print_r($_POST);
-//echo "</pre>";
-
-            if($this->getParam('save')==$this->objLanguage->languageText('word_save')){
-	            $id=isset($_POST['id'])?$_POST['id']:NULL;
-                //$id=$this->getParam('id',NULL);
-                //echo gettype($id)."[$id]";
-
-                // get time in correct format
-                $date=array_fill(0,3,0);
-                $delims='- ';
-                $postTimeStamp = $this->getParam('timestamp', 0);
-                $word=strtok($postTimeStamp, $delims);
-                $i=0;
-                while(is_string($word)){
-                    $date[$i]=$word;
-                    $i++;
-                    $word=strtok($delims);
-                }
-
-                $time=mktime(0,0,0,$date[1],$date[2],$date[0]);
-                $fields=array();
-                $fields['name']=$this->getParam('topicarea', '');
-                $fields['context']=$this->contextcode;
-                $fields['description']=$this->getParam('description', '');
-                $fields['instructions']=$this->getParam('instructions', '');
-                $fields['percentage']=$this->getParam('percentage', '');
-                $fields['closing_date']= $this->getParam('closing_date');
-
-                $bypass = $this->getParam('bypass',NULL);
-                $force = $this->getParam('force',NULL);
-                //echo "[$bypass]";
-                //echo "[$force]";
-                //die;
-
-                $fields['bypass'] = ($bypass == 'on')?'1':'0';
-	            $fields['forceone'] = ($force == 'on')?'1':'0';
-
-                if(is_null($id)){
-	                $this->dbtopic->addTopic($fields);
-                    $id=$this->dbtopic->getLastInsertId();
-                }
-                else {
-	                $this->dbtopic->addTopic($fields,$id);
-																}
-
-                // set confirmation message
-                $message = $this->objLanguage->languageText('mod_essayadmin_confirmtopic','essayadmin');
-                $this->setSession('confirm', $message);
-						         	//add to activity log
-						         	if($this->eventsEnabled)
-						         	{
-						         		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_essayadmin_hasaddedessay', 'essayadmin').": ".$fields['name']." ".$this->objLanguage->languageText('mod_essayadmin_in', 'essayadmin')." ".$this->objContext->getContextCode();
-						         	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-						 																				'link'=> $this->uri(array()),
-						 																				'contextcode' => $this->objContext->getContextCode(),
-						 																				'author' => $this->objUser->fullname(),
-						 																				'description'=>$message));
-						         	}
-
-                return $this->nextAction('view', array('id' => $id, 'confirm' => 'yes'));
-            }
-            $this->nextAction('');
-        break;
-
-        // view essays within a topic
-        case 'view':
-            // get id of topic being viewed
-            $id=$this->getParam('id');
-            // get topic name
-            $topic=$this->dbtopic->getTopic($id);
-            // get essays in topic
-            $essays=$this->dbessays->getEssays($id);
-            // get table display[0]['essayid']
-            $list=$this->getEssays($essays,$topic);
-            $this->setVarByRef('list',$list);
-            $template='essay_tpl.php';
-        break;
-
+        case 'addtopic':
+            // Add a new topic
+            $heading = $this->objLanguage->languageText('mod_essayadmin_newtopicarea','essayadmin');
+            $data = array();
+            $this->setVarByRef('heading', $heading);
+            $this->setVarByRef('data', $data);
+            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
+            return 'topic_tpl.php';
+        //break;
         // edit a topic
         case 'edit':
         case 'edittopic':
             // get topic id
             $id=$this->getParam('id');
             // get topic details
-            $data=$this->dbtopic->getTopic($id);
-            $head=$this->objLanguage->languageText('mod_essayadmin_edittopic','essayadmin').': '.$data[0]['name'];
-            $this->setVarByRef('head',$head);
+            $data = $this->dbtopic->getTopic($id);
+            $heading = $this->objLanguage->languageText('mod_essayadmin_edittopicarea','essayadmin').': '.$data[0]['name'];
+            $this->setVarByRef('heading',$heading);
             $this->setVarByRef('data',$data);
-            $template='topic_tpl.php';
-        break;
+            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
+            return 'topic_tpl.php';
+        //break;
+        // save topic
+        case 'savetopic':
+            //echo "<pre>";
+            //print_r($_POST);
+            //echo "</pre>";
+            //if($this->getParam('save')==$this->objLanguage->languageText('word_save')){
+            $id = $this->getParam('id', NULL);
+            //isset($_POST['id'])?$_POST['id']:NULL;
+            //$id=$this->getParam('id',NULL);
+            //echo gettype($id)."[$id]";
+            // get time in correct format
+            /*
+            $date = array_fill(0,3,0);
+            $delims='- ';
+            $postTimeStamp = $this->getParam('timestamp', 0);
+            $word=strtok($postTimeStamp, $delims);
+            $i=0;
+            while(is_string($word)){
+                $date[$i]=$word;
+                $i++;
+                $word=strtok($delims);
+            }
 
+            $time=mktime(0,0,0,$date[1],$date[2],$date[0]);
+            */
+            $fields = array();
+            $fields['context']=$this->contextcode;
+            $fields['name']=$this->getParam('topicarea', '');
+            $fields['description']=$this->getParam('description', '');
+            $fields['instructions']=$this->getParam('instructions', '');
+            $fields['percentage']=$this->getParam('percentage', '');
+            $fields['closing_date']= $this->getParam('closing_date');
+            $force = $this->getParam('force',NULL);
+            $bypass = $this->getParam('bypass',NULL);
+            $fields['forceone'] = ($force == 'on')?'1':'0';
+            $fields['bypass'] = ($bypass == 'on')?'1':'0';
+            if(is_null($id)){
+                $this->dbtopic->addTopic($fields);
+                $id=$this->dbtopic->getLastInsertId();
+            } else {
+                $this->dbtopic->addTopic($fields,$id);
+            }
+            // set confirmation message
+            $message = $this->objLanguage->languageText('mod_essayadmin_confirmtopicarea','essayadmin');
+            $this->setSession('confirm', $message);
+            //add to activity log
+            if($this->eventsEnabled)
+            {
+                $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_essayadmin_hasaddedessay', 'essayadmin').": ".$fields['name']." ".$this->objLanguage->languageText('mod_essayadmin_in', 'essayadmin')." ".$this->objContext->getContextCode();
+                $this->eventDispatcher->post(
+                    $this->objActivityStreamer,
+                    "context",
+                    array(
+                        'title'=>$message,
+                		'link'=>$this->uri(array()),
+                		'contextcode'=>$this->objContext->getContextCode(),
+                		'author'=>$this->objUser->fullname(),
+                		'description'=>$message)
+                );
+            }
+            return $this->nextAction('view', array('id' => $id, 'confirm' => 'yes'));
+            //}
+            //$this->nextAction('');
+        break;
+        // view essays within a topic
+        case 'view':
+            // get id of topic being viewed
+            $topicAreaId = $this->getParam('id');
+            // get table display[0]['essayid']
+            //$content=; //$essays,$topic
+            $this->setVar('content', $this->renderEssays($topicAreaId));
+            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
+            return 'essay_tpl.php';
+        //break;
         // delete a topic
         case 'delete':
         case 'deletetopic':
             // get topic id
-            $id=$this->getParam('id');
-            $this->dbtopic->deleteTopic($id);
-            $this->deleteEssay($id);
+            $topicAreaId=$this->getParam('id');
+            $this->dbtopic->deleteTopic($topicAreaId);
+            //$this->deleteEssay($id);
+            $rows=$this->dbessays->getEssays($topicAreaId);
+            if(!empty($rows)){
+                foreach($rows as $item){
+                    $essayId = $item['id'];
+                    $this->dbessays->deleteEssay($essayId);
+                    // delete bookings on essay
+                    $this->dbbook->deleteBooking(NULL, "WHERE topicid='{$topicAreaId}' AND essayid='{$essayId}'");
+                }
+            }
             $back=$this->getParam('back');
             if($back){
-                Header("Location: ".$this->uri(array('action'=>'viewbyletter'),'assignmentadmin'));
+                header("Location: ".$this->uri(array('action'=>'viewbyletter'),'assignmentadmin'));
+                return NULL;
             }else{
-                $this->nextAction('');
+                return $this->nextAction(NULL);
             }
-        break;
-
-        // list student essay submissions
-        case 'mark':
-
-
-        case 'viewmarktopic':
+        //break;
+        case 'addessay':
+            // Add essay
             // get topic id
-            $id=$this->getParam('id');
-            $topicdata=$this->dbtopic->getTopic($id,'id, name, closing_date');
-            // get booked essays in topic
-            $data=$this->dbbook->getBooking("where topicid='$id'");
+            $topicAreaId=$this->getParam('id');
+            // get topic data
+            $topic=$this->dbtopic->getTopic($topicAreaId,'name, id');
+            $heading = $this->objLanguage->languageText('mod_essayadmin_addessay','essayadmin').':&nbsp;'.$topic[0]['name'];
+            $data=array();
+            $this->setVarByRef('topicid',$topic[0]['id']);
+            $this->setVarByRef('topicname',$topic[0]['name']);
+            $this->setVarByRef('heading',$heading);
+            $this->setVarByRef('data',$data);
+            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
+            return 'addeditessay_tpl.php';
+        //break;
+        case 'editessay':
+            // edit essay
+            // get id of topic
+            $topicAreaId=$this->getParam('id');
+            // get id of essay
+            $essay=$this->getParam('essay');
+            // get topic data
+            $topic=$this->dbtopic->getTopic($topicAreaId,'id, name');
+            // get essay data
+            $data=$this->dbessays->getEssay($essay);
+            $heading = $this->objLanguage->languageText('mod_essayadmin_editessay','essayadmin').':&nbsp;'.$topic[0]['name'];
+            $this->setVarByRef('topicid',$topic[0]['id']);
+            $this->setVarByRef('topicname',$topic[0]['name']);
+            $this->setVarByRef('heading',$heading);
+            $this->setVarByRef('data',$data);
+            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
+            return 'addeditessay_tpl.php';
+        //break;
+        case 'saveessay':
+            // save essay
+            //$confirm = NULL;
+            //if($this->getParam('save')==$this->objLanguage->languageText('word_save')){
+            $topicAreaId = $this->getParam('id', '');
+            $id=$this->getParam('essay');
 
+            $fields=array();
+            $fields['topicid']=$topicAreaId;
+            $fields['topic']=$this->getParam('essaytopic', '');
+            $fields['notes']=$this->getParam('notes', '');
+            $this->dbessays->addEssay($fields,$id);
+            //if(empty($id)){
+            //$id=$this->dbessays->getLastInsertId();
+            //}
+            // set confirmation message
+            $message = $this->objLanguage->languageText('mod_essayadmin_confirmessay', 'essayadmin');
+            $this->setSession('confirm', $message);
+            //$confirm = ;
+            //}
+            return $this->nextAction('view',array('id'=>$topicAreaId, 'confirm' => 'yes'));
+        //break;
+        case 'deleteessay':
+            // delete an essay
+            // get topic id
+            $topicAreaId=$this->getParam('id');
+            // get essay id
+            $essayId=$this->getParam('essay');
+            //$this->deleteEssay($topicAreaId, $id);
+            $this->dbessays->deleteEssay($essayId);
+            // delete bookings on essay
+            $this->dbbook->deleteBooking(NULL,"WHERE topicid='{$topicAreaId}' and essayid='{$essayId}'");
+            return $this->nextAction('view',array('id'=>$topicAreaId));
+        //break;
+        case 'mark':
+        //case 'viewmarktopic':
+        case 'marktopic':
+            // list student essay submissions
+            // get topic id
+            $topicAreaId=$this->getParam('id');
+            $topicdata=$this->dbtopic->getTopic($topicAreaId,'id, name, closing_date');
+            // get booked essays in topic
+            $data=$this->dbbook->getBooking("WHERE topicid='{$topicAreaId}'");
+            /*
+            $this->setVarByRef('topicdata',$topicdata);
+            $this->setVarByRef('data',$data);
+            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
+            return 'mark_essays_tpl.php';
+            */
             // get essay titles and student names for each booked essay
             foreach($data as $key=>$item){
                 $essay=$this->dbessays->getEssay($item['essayid'],'topic');
                 $data[$key]['essay']=$essay[0]['topic'];
                 //$student=$this->objUser->fullname($item['studentid']);
                 //$data[$key]['student']=$student;//[0]['fullname'];
-                    $data[$key]['studentNo']=$this->objUser->getStaffNumber($item['studentid']); //[0]['fullname'];
-                    $data[$key]['student']=$this->objUser->fullname($item['studentid']); //$student;//[0]['fullname'];
-                }
+                $data[$key]['studentNo']=$this->objUser->getStaffNumber($item['studentid']); //[0]['fullname'];
+                $data[$key]['student']=$this->objUser->fullname($item['studentid']); //$student;//[0]['fullname'];
+            }
+            $this->setVar('heading', $this->objLanguage->code2Txt('mod_essayadmin_submittedessaysintopicarea','essayadmin', array('TOPICAREA'=>$topicdata[0]['name'])));
             $this->setVarByRef('topicdata',$topicdata);
             $this->setVarByRef('data',$data);
-            $template='mark_essays_tpl.php';
-        break;
-
-
+            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
+            return 'mark_essays_tpl.php';
+        //break;
+        /*
         case 'marktopic':
             // get topic id
             $id=$this->getParam('id');
@@ -332,144 +388,94 @@ class essayadmin extends controller
             // get booked essays in topic
             $data=$this->dbbook->getBooking("where topicid='$id'");
             // get essay titles and student names for each booked essay
-          // echo "<pre>"; print_r($data);  print_r($topicdata); echo "</pre>";
-
-
+            //echo "<pre>"; print_r($data);  print_r($topicdata); echo "</pre>";
 		    foreach($data as $key=>$item){
                 $essay=$this->dbessays->getEssay($item['essayid'],'topic');
                 $data[$key]['essay']=$essay[0]['topic'];
                 //$student=
 		        //$studentNo=$this->objUser->fullname($item['studentid']);
-                    $data[$key]['studentNo']=$this->objUser->getStaffNumber($item['studentid']); //[0]['fullname'];
-                    $data[$key]['student']=$this->objUser->fullname($item['studentid']); //$student;//[0]['fullname'];
+                $data[$key]['studentNo']=$this->objUser->getStaffNumber($item['studentid']); //[0]['fullname'];
+                $data[$key]['student']=$this->objUser->fullname($item['studentid']); //$student;//[0]['fullname'];
             }
             $this->setVarByRef('topicdata',$topicdata);
             $this->setVarByRef('data',$data);
             $template='mark_essays_tpl.php';
         break;
-
-        // add essay
-        case 'addessay':
-            $data=array();
-            // get id of topic
-            $id=$this->getParam('id');
-            // get topic name
-            $topic=$this->dbtopic->getTopic($id,'name, id');
-            $head=$this->objLanguage->languageText('mod_essayadmin_newessay','essayadmin');
-            $this->setVarByRef('topicname',$topic[0]['name']);
-            $this->setVarByRef('topicid',$topic[0]['id']);
-            $this->setVarByRef('head',$head);
-            $this->setVarByRef('data',$data);
-            $template='addessay_tpl.php';
-        break;
-
-        // save essay
-        case 'saveessay':
-            $confirm = NULL;
-            if($this->getParam('save')==$this->objLanguage->languageText('word_save')){
-                $id=$this->getParam('essay');
-
-                $fields=array();
-                $fields['topicid']=$this->getParam('id', '');
-                $fields['topic']=$this->getParam('essaytopic', '');
-                $fields['notes']=$this->getParam('notes', '');
-                $this->dbessays->addEssay($fields,$id);
-                //if(empty($id)){
-                  //  $id=$this->dbessays->getLastInsertId();
-                //}
-                // set confirmation message
-                $message = $this->objLanguage->languageText('mod_essayadmin_confirmessay', 'essayadmin');
-                $this->setSession('confirm', $message);
-                $confirm = 'yes';
-            }
-            $this->nextAction('view',array('id'=>$this->getParam('id'), 'confirm' => $confirm));
-        break;
-
-        // edit essay
-        case 'editessay':
-            // get id of topic
-            $id=$this->getParam('id');
-            // get topic name
-            $topic=$this->dbtopic->getTopic($id,'id, name');
-            // get id of essay
-            $essay=$this->getParam('essay');
-            // get essay details
-            $data=$this->dbessays->getEssay($essay);
-            $head=$this->objLanguage->languageText('mod_essayadmin_editessay','essayadmin');
-            $this->setVarByRef('topicname',$topic[0]['name']);
-            $this->setVarByRef('topicid',$topic[0]['id']);
-            $this->setVarByRef('data',$data);
-            $this->setVarByRef('head',$head);
-            $template='addessay_tpl.php';
-        break;
-
-        // delete an essay
-        case 'deleteessay':
-            // get id of essay
-            $id=$this->getParam('essay');
-            // get topic id
-            $topic=$this->getParam('id');
-            $this->deleteEssay($topic, $id);
-            $this->nextAction('view',array('id'=>$topic));
-        break;
-
-        // display students essays details
+        */
+        /*
         case 'viewessays':
+            // display students essays details
             $data=$this->getStudentEssays();
             $this->setVarByRef('data',$data);
             $template='view_essays_tpl.php';
         break;
-
-        case 'exitupload':
-            $id = $this->getParam('id', '');
-            return $this->nextAction('marktopic',array('id'=>$id));
-
-        // upload an essay for marking or a marked essay & marks & comment
-        case 'uploadsubmit':
-        	$book = $this->getParam('book');
-            // get topic id
+        */
+        case 'download':
+            $this->setVar('fileId', $this->getParam('fileid'));
+            //$this->setPageTemplate('download_page_tpl.php');
+            $this->setPageTemplate(NULL);
+            $this->setLayoutTemplate(NULL);
+            return 'download_tpl.php';
+        //break;
+        case 'upload':
+            // Upload essay
+            // Get topic area ID
             $topic=$this->getParam('id');
-            // exit upload form
-            $postSubmit = $this->getParam('save');
-
-            if($postSubmit ==$this->objLanguage->languageText('word_exit')){
+            // Get book ID
+            $id=$this->getParam('book');
+            // Get rubric ID
+            $rubric=$this->getParam('rubric');
+            //
+            $message = $this->getSession('message','');
+            $mark = $this->getSession('mark','0');
+            $comment = $this->getSession('comment','');
+            $this->unsetSession('message');
+            $this->unsetSession('mark');
+            $this->unsetSession('comment');
+            $this->setVar('message', $message);
+            $this->setVar('mark', $mark);
+            $this->setVar('comment', $comment);
+            //
+            $this->setVarByRef('heading', $this->objLanguage->languageText('mod_essayadmin_markessay','essayadmin'));
+            $this->setVar('topic', $topic);
+            $this->setVar('book', $id);
+            $this->setvar('rubric', $rubric);
+            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
+            return 'upload_tpl.php';
+        //break;
+        case 'uploadsubmit':
+            // Mark an essay and upload marked essay
+            // Get topic ID
+            $topic = $this->getParam('id');
+            // Get book ID
+        	$book = $this->getParam('book');
+            /*
+            $submit = $this->getParam('save');
+            */
+            /*
+            if ($submit == $this->objLanguage->languageText('word_save')){
+                $this->dbbook->bookEssay(array(
+                    'mark'=>$this->getParam('mark', ''),
+                    'comment'=>$this->getParam('comment', '')
+                ),
+                $book
+                );
                 return $this->nextAction('marktopic',array('id'=>$topic));
             }
-
-            // if form action is save (only performed by lecturers or admin)
-            if($postSubmit==$this->objLanguage->languageText('word_save')){
-                // get booking id
-                //$book=$this->getParam('book');
-                // get mark data
+            */
+            //if ($submit == $this->objLanguage->languageText('mod_essayadmin_upload','essayadmin')) {
                 $mark=$this->getParam('mark', '');
                 $comment=$this->getParam('comment', '');
-                // insert / update database
-                $fields=array('mark'=>$mark,'comment'=>$comment);
-                $this->dbbook->bookEssay($fields,$book);
-                //$msg='';
-                return $this->nextAction('marktopic',array('id'=>$topic));
-            }
-
-            // upload essay and return to form
-            if($postSubmit==$this->objLanguage->languageText('mod_essayadmin_upload','essayadmin')){
-                // get booking id
-                //$book=$this->getParam('book');
-
-                // get data
-                $mark=$this->getParam('mark', '');
-                $comment=$this->getParam('comment', '');
-
                 // get fileid
-//                $booking=$this->dbbook->getBooking("where id='$book'",'studentfileid');
-
+                //$booking=$this->dbbook->getBooking("where id='$book'",'studentfileid');
                 // upload file to database, overwrite original file
-                $arrayfiledetails = $this->objFile->uploadFile('file');
+                $fileDetails = $this->objFile->uploadFile('file');
 
-				if ($arrayfiledetails === FALSE){
-	            	$msg = $this->objLanguage->languageText('mod_essayadmin_uploadfailureunknown', 'essayadmin');
+				if ($fileDetails === FALSE){
+	            	$message = $this->objLanguage->languageText('mod_essayadmin_uploadfailureunknown', 'essayadmin');
 				}
-				else if (!$arrayfiledetails['success']) {
-					switch ($arrayfiledetails['reason']) {
+				else if (!$fileDetails['success']) {
+					switch ($fileDetails['reason']) {
 					case 'bannedfile':
 						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_bannedfile', 'essayadmin');
 						break;
@@ -491,7 +497,7 @@ class essayadmin extends controller
 					default:
 						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_unknownreason', 'essayadmin');
 					}
-	            	$msg = $this->objLanguage->languageText('mod_essayadmin_uploadfailure', 'essayadmin')."<br />"
+	            	$message = $this->objLanguage->languageText('mod_essayadmin_uploadfailure', 'essayadmin').":&nbsp;"
 					.$reason;
 					/*
 						." REASON: ".$arrayfiledetails['reason']."<br />"
@@ -503,42 +509,32 @@ class essayadmin extends controller
 					*/
 				}
 				else {
-					$fields=array('lecturerfileid'=>$arrayfiledetails['fileid'],'mark'=>$mark,'comment'=>$comment);
-                    $this->dbbook->bookEssay($fields,$book);
-
+					$fields = array(
+    					'mark'=>$mark,
+    					'comment'=>$comment,
+    					'lecturerfileid'=>$fileDetails['fileid']
+    				);
+                    $this->dbbook->bookEssay($fields, $book);
                 	// display success message
-                	$msg = $this->objLanguage->languageText('mod_essayadmin_uploadsuccess','essayadmin');
-                	//$this->setVarByRef('msg',$msg);
+                	//$message = $this->objLanguage->languageText('mod_essayadmin_uploadsuccess','essayadmin');
+				    $message = NULL;
             	}
-			}
-			$this->setSession('MSG',$msg);
-            return $this->nextAction('upload', array('book'=>$book,/*'msg'=>$msg,*/'id'=>$topic));
-        break;
-
-        // display page to upload essay
-        case 'upload':
-            // get message (if already submitted)
-//            $msg=$this->getParam('msg');
-			$msg = $this->getSession('MSG','');
-            $this->unsetSession('MSG');
-            $this->setVar('msg',$msg);
-            // get booking number
-            $id=$this->getParam('book');
-            $this->setVarByRef('book',$id);
-            $template='upload_tpl.php';
-        break;
-
-        case 'download':
-            $template='download_tpl.php';
-            $this->setPageTemplate('download_page_tpl.php');
-        break;
-
+			//}
+            if (!is_null($message)) {
+    			$this->setSession('message',$message);
+    			$this->setSession('mark',$mark);
+    			$this->setSession('comment',$comment);
+                return $this->nextAction('upload', array('id'=>$topic, 'book'=>$book));
+            }
+            else {
+                return $this->nextAction('marktopic', array('id'=>$topic));
+            }
+            //return $this->nextAction('upload', array('book'=>$book,/*'msg'=>$msg,*/'id'=>$topic));
+        //break;
         default:
-            $topics = $this->getTopicData();
-            $list=$this->getTopics($topics);
-            $this->setVarByRef('list',$list);
-
-            $template='essay_tpl.php';
+            $this->setVar('content', $this->renderTopics());
+            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
+            return 'essay_tpl.php';
         }
         return $template;
     }
@@ -549,205 +545,180 @@ class essayadmin extends controller
     * @param string $id The id of the essay to delete. Default=NULL if deleting all essays in the topic.
     * @return
     */
-    function deleteEssay($topic, $id=NULL)
+    /*
+    function deleteEssay($topicAreaId, $id=NULL)
     {
-        // if delete essay $id
-        if($id){
-            $this->dbessays->deleteEssay($id);
-            // delete bookings on essay
-            $this->dbbook->deleteBooking(NULL,"where topicid='$topic' and essayid='$id'");
-        }else{
-            // if deleting topic $topic: delete all essays within topic
-            // get essays in topic and delete 1 by 1
-            $rows=$this->dbessays->getEssays($topic);
-            if($rows){
-                foreach($rows as $item){
-                    $this->dbessays->deleteEssay($item['id']);
-                    // delete bookings on essay
-                    $this->dbbook->deleteBooking(NULL,"where topicid='$topic' and essayid='".$item['id']."'");
-                }
-            }
-        }
     }
+    */
 
     /**
-    * Method to get a list of topics from the database for display.
-    * @param array $topics Details of the essay topics
-    * @return string $objTable Table containing topic details for display in the template
+    * Renders the topics.
+    * @return string Rendered content.
     */
-    function getTopics($topics)
+    function renderTopics()
     {
-        // set up html elements
-        $objTable= $this->newObject('htmltable','htmlelements');
-        $objLayer= new layer;
-
-        $objIcon=$this->objIcon;
-        $objHead=$this->newObject('htmlheading','htmlelements');
-
+        // Get topic data
+        $rs = $this->dbtopic->getTopic(NULL, NULL, "context='{$this->contextcode}'");
+        $topics = array();
+        if(!empty($rs)){
+            foreach($rs as $key=>$item){
+                $bookings = $this->dbbook->getBooking("WHERE topicid='".$item['id']."'", "COUNT(studentfileid) AS submitted, COUNT(mark) AS marked");
+                $topics[$key]['id'] = $item['id'];
+                $topics[$key]['name'] = $item['name'];
+                $topics[$key]['closing_date'] = $item['closing_date'];
+                $topics[$key]['bypass'] = $item['bypass'];
+                $topics[$key]['percentage'] = $item['percentage'];
+                $topics[$key]['marked'] = $bookings[0]['marked'];
+                $topics[$key]['submitted'] = $bookings[0]['submitted'];
+            }
+        }
         // set up language items
-        $subhead=$this->objLanguage->languageText('mod_essayadmin_selecttopic','essayadmin');
-        $topicslabel=$this->objLanguage->languageText('mod_essayadmin_topics','essayadmin');
-        $duedate=$this->objLanguage->languageText('mod_essayadmin_closedate','essayadmin');
-        $iconlabel=$this->objLanguage->languageText('mod_essayadmin_editdelete','essayadmin');
-        $viewLabel=$this->objLanguage->languageText('word_view');
-        $essaysLabel=$this->objLanguage->languageText('mod_essayadmin_essays','essayadmin');
-        $title=$viewLabel.' '.$essaysLabel;
-        $title1=$this->objLanguage->languageText('word_edit');
-        $title2=$this->objLanguage->languageText('word_delete');
-        $title3=$this->objLanguage->languageText('mod_essayadmin_newtopic','essayadmin');
-        $title4=$this->objLanguage->languageText('mod_essayadmin_markessays','essayadmin');
-        $heading=$this->objLanguage->languageText('mod_essayadmin_name','essayadmin');
-        $submittedLabel=$this->objLanguage->languageText('mod_essayadmin_submitted','essayadmin');
-        $markedlabel=$this->objLanguage->languageText('mod_essayadmin_marked','essayadmin').' / '.$submittedLabel;
-        $viewSubmitted=$viewLabel.' '.$submittedLabel.' '.$essaysLabel;
-        $assignmentLabel = $this->objLanguage->languageText('mod_assignmentadmin_name','essayadmin');
-        $percentLbl=$this->objLanguage->languageText('mod_essayadmin_percentyrmark', 'essayadmin');
-        $noTopics = $this->objLanguage->code2Txt('mod_essayadmin_notopicsavailable', 'essayadmin');
+        //$subhead=$this->objLanguage->languageText('mod_essayadmin_selecttopic','essayadmin');
+        //$topicslabel=;
+        //;
+        //;
+        //$viewLabel=$this->objLanguage->languageText('word_view');
+        //$essaysLabel=$this->objLanguage->languageText('mod_essayadmin_essays','essayadmin');
+        //$title=$viewLabel.' '.$essaysLabel;
+        //$title1=;
+        //$title2=;
+        //$title3=;
+        //$title4=;
+        //
+        //$viewSubmitted=$viewLabel.' '.$submittedLabel.' '.$essaysLabel;
+        //;
+        //;
+        //$noTopics = ;
 
-        // icon for add new topic
-        $this->objIcon->title=$title3;
-        $addicon=$this->objIcon->getAddIcon($this->uri(array('action'=>'addtopic')));
-        $heading.= '&nbsp;&nbsp;'.$addicon;
+        // set up html elements
+        //$objHead=$this->newObject('htmlheading','htmlelements');
+
+        $heading = $this->objLanguage->languageText('mod_essayadmin_name','essayadmin');
+        $this->setVarByRef('heading', $heading);
+
+        $strAddNewTopic = $this->objLanguage->languageText('mod_essayadmin_addnewtopicarea','essayadmin');
+        // Icon for add new topic
+        $objIcon = $this->objIcon;
+        $objIcon->title = $strAddNewTopic;
+        $iconAddTopic = $objIcon->getAddIcon($this->uri(array('action'=>'addtopic')));
+        $heading .= '&nbsp;'.$iconAddTopic;
+
         $objLink = new link($this->uri(array('action'=>'addtopic')));
-        $objLink->link=$title3;
-        $linkbtn=$objLink->show();
+        $objLink->link = $strAddNewTopic;
+        $linkAddNewTopic = $objLink->show();
 
-        $this->setVarByRef('heading',$heading);
+        $objTable = $this->newObject('htmltable', 'htmlelements');
+        $objTable->cellpadding = 2;
+        $objTable->cellspacing = 2;
 
-        // table header
-        $objTable->cellpadding=4;
-        $objTable->cellspacing=2;
-
-        $tableHd=array();
-        $tableHd[]=$topicslabel;
-        $tableHd[] = $percentLbl;
-        $tableHd[]=$duedate;
-        $tableHd[]=$markedlabel;
-        $tableHd[]=$iconlabel;
-
-        $objTable->addHeader($tableHd,'heading');
-
-        $objTable->row_attributes=' height="0" ';
-        $objTable->startRow();
-        $objTable->addCell('','40%');
-        $objTable->addCell('','15%');
-        $objTable->addCell('','15%');
-        $objTable->addCell('','15%');
-        $objTable->addCell('','15%');
-        $objTable->endRow();
-        $objTable->row_attributes=' height="25"';
-
-        /**************** Display topic list in table *******************/
-
+        $tableHeader = array();
+        $tableHeader[] = $this->objLanguage->languageText('mod_essayadmin_topicarea','essayadmin');
+        $tableHeader[] = $this->objLanguage->languageText('mod_essayadmin_percentyearmark', 'essayadmin');
+        $tableHeader[] = $this->objLanguage->languageText('mod_essayadmin_closedate','essayadmin');
+        $tableHeader[] = $this->objLanguage->languageText('mod_essayadmin_submitted','essayadmin').' / '.$this->objLanguage->languageText('mod_essayadmin_marked','essayadmin');
+        $tableHeader[] = $this->objLanguage->languageText('mod_essayadmin_editdelete','essayadmin');
+        $objTable->addHeader($tableHeader, 'heading');
         $i=0;
-        if(!empty($topics)){
-            foreach($topics as $val){
+        if (!empty($topics)) {
+            foreach ($topics as $topic) {
                 $class = ($i++%2) ? 'even':'odd';
+                $strViewEssays = $this->objLanguage->languageText('mod_essayadmin_viewessays','essayadmin');
 
-                if($val['bypass']==0){
-                    $date = $this->objDateformat->formatDate($val['closing_date']);
-                }else{
-                    $date='';
+                $objLink = new link($this->uri(array('action'=>'view', 'id'=>$topic['id'])));
+                $objLink->link = $topic['name'];
+                $objLink->title = $strViewEssays;
+                $linkView = $objLink->show();
+
+                $objIcon->title = $this->objLanguage->languageText('word_edit');
+                $iconEdit = $objIcon->getEditIcon($this->uri(array('action'=>'edittopic', 'id'=>$topic['id'])));
+
+                $objIcon->title = $this->objLanguage->languageText('word_delete');
+                $objIcon->setIcon('delete');
+                $this->objConfirm->setConfirm($objIcon->show(), $this->uri(array('action'=>'deletetopic', 'id'=>$topic['id'])), $this->objLanguage->code2Txt('mod_essayadmin_deletetopic','essayadmin', array('TOPIC'=>$topic['name'])));
+                $iconDelete = $this->objConfirm->show();
+
+                $objIcon->setIcon('paper');
+                $objIcon->title = $strViewEssays;
+                $objIcon->alt = $strViewEssays;
+                $objLink = new link($this->uri(array('action'=>'view', 'id'=>$topic['id'])));
+                $objLink->link = $objIcon->show();
+                $iconView = $objLink->show();
+
+                if ($topic['submitted'] == 0) {
+                    $iconMark = '';
+                } else {
+                    $strMarkEssays = $this->objLanguage->languageText('mod_essayadmin_markessays','essayadmin');
+                    $objIcon->setIcon('comment');
+                    $objIcon->title = $strMarkEssays;
+                    $objIcon->alt = $strMarkEssays;
+                    $objLink = new link($this->uri(array('action'=>'marktopic', 'id'=>$topic['id'])));
+                    $objLink->link = $objIcon->show();
+                    $iconMark = $objLink->show();
                 }
 
-                // set up view essays in topic link
-                $objLink->link($this->uri(array('action'=>'view','id'=>$val['id'])));
-                $objLink->link=$val['name'];
-                $objLink->title=$title;
-                $view = $objLink->show();
+                $icons =
+                    $iconEdit
+                    .$iconDelete
+                    .$iconView
+                    .$iconMark;
 
-                $this->objIcon->setIcon('paper');
-                $this->objIcon->title=$title;
-                $this->objIcon->alt=$title;
-                $objLink->link=$this->objIcon->show();
-                $show = $objLink->show();
+                $percentage = $topic['percentage'];
 
-                if($val['submitted']==0){
-                    $mark='';
-                }else{
-                    $this->objIcon->setIcon('comment');
-                    $this->objIcon->title=$title4;
-                    $this->objIcon->alt=$title4;
-                    $objLink->link($this->uri(array('action'=>'marktopic','id'=>$val['id'])));
-                $objLink->link = $this->objIcon->show();
-                $mark = $objLink->show();
+//                $date = $this->objDateformat->formatDate($topic['closing_date']);
+                if ($topic['bypass'] == '1') {
+                    $date = '';
+                } else {
+                    $date = $this->objDateformat->formatDate($topic['closing_date']);
                 }
 
-                // set up edit & delete icons
-                $this->objIcon->title=$title1;
-                $edit=$this->objIcon->getEditIcon($this->uri(array('action'=>'edittopic','id'=>$val['id'])));
-                $this->objIcon->title=$title2;
-                $this->objIcon->setIcon('delete');
-                $this->objConfirm->setConfirm($this->objIcon->show(),$this->uri(array('action'=>'deletetopic','id'=>$val['id'])),$this->objLanguage->languageText('mod_essayadmin_deleterequest','essayadmin').' '.$val['name'].'?');
-                $delete=$this->objConfirm->show();
-                $icons=$edit.$delete.$show.$mark;
+                $markedSubmitted = $topic['submitted'].' / '.$topic['marked'];
 
-                $markSubmit = $val['marked'].' / '.$val['submitted'];
-
-                $percent = $val['percentage'];
-
-                // display in table
-                $date = $this->objDateformat->formatDate($val['closing_date']);
-                $objTable->row_attributes=' height="25"';
                 $objTable->startRow();
-                $objTable->addCell($view,'','center','',$class);
-                $objTable->addCell($percent,'','center','',$class);
-                $objTable->addCell($date,'','center','',$class);
-                $objTable->addCell($markSubmit,'','center','',$class);
-                $objTable->addCell($icons,'','center','left',$class);
+                $objTable->addCell($linkView, '', '', '', $class);
+                $objTable->addCell($percentage, '', '', '', $class);
+                $objTable->addCell($date, '', '', '', $class);
+                $objTable->addCell($markedSubmitted, '', '', '', $class);
+                $objTable->addCell($icons, '', '', '', $class);
                 $objTable->endRow();
             }
-        }else{
-            $objTable->row_attributes=' height="15"';
+        } else {
             $objTable->startRow();
-            $objTable->addCell($noTopics,'','','','noRecordsMessage',' colspan="5"');
+            $objTable->addCell($this->objLanguage->code2Txt('mod_essayadmin_notopicareasavailable', 'essayadmin'),'','','','noRecordsMessage','colspan="5"');
             $objTable->endRow();
         }
 
-        $objTable->row_attributes=' height="15"';
-        $objTable->startRow();
-        $objTable->addCell('','','','','',' colspan="4"');
-        $objTable->endRow();
+        $links = '';
+        $links .= $linkAddNewTopic;
 
-        $back = $linkbtn;
-
-        if($this->assignment){
-            $objLink->link($this->uri(array(''), 'assignmentadmin'));
-            $objLink->link = $assignmentLabel;
-            $back .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objLink->show();
+        if ($this->assignment) {
+            $objLink = new link($this->uri(array(), 'assignment'));
+            $objLink->link = $this->objLanguage->languageText('mod_assignment_name','assignment');
+            $links .= '<br />'.$objLink->show();
         }
-        $objLayer->align = 'center';
-        $objLayer->border = 0;
-        $objLayer->str = $back;
-
-        $str = $objTable->show();
-        $str .= $objLayer->show();
-
-        // return table
-        return $str;
+        return
+            $objTable->show()
+            .$links;
     }
 
     /**
-    * Method to get a list of essays associated with the given topic for display.
-    * @param array $essays Details of the essays in the topic
-    * @param array $topic The topic details
-    * @return string $str Table containing essay info for display.
+    * Renders the essays.
+    * @param string $topicAreaId The topic area ID
+    * @return string Rendered content
     */
-    function getEssays($essays,$topic)
+    function renderEssays($topicAreaId) //$essays,$topic
     {
-        // set up html elements
-        $objTable = new htmltable();
-        $objTable2 = new htmltable();
+        // get topic name
+        $topic=$this->dbtopic->getTopic($topicAreaId);
+        // get essays in topic
+        $essays=$this->dbessays->getEssays($topicAreaId);
         //$objTable=$this->objTable;
         //$objTable2=$this->objTable;
-        $objLayer = new layer;
         //$objLink = $this->objLink;
-        $objHead =  new htmlHeading;
-        $objMsg  = $this->newObject('timeoutmessage', 'htmlelements');
 
         // set up language elements
-        $head=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin').' ';
-        $head.=$this->objLanguage->languageText('mod_essayadmin_topic','essayadmin').':&nbsp;&nbsp;'.$topic[0]['name'];
+        //$head='';
+        //$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin').' ';
+        $head = $this->objLanguage->languageText('mod_essayadmin_topicarea','essayadmin').': '.$topic[0]['name'];
         $subhead=$this->objLanguage->languageText('mod_essayadmin_essays','essayadmin');
         $descriptionLabel=$this->objLanguage->languageText('mod_essayadmin_description','essayadmin');
         $instructionsLabel=$this->objLanguage->code2Txt('mod_essayadmin_instructions','essayadmin');
@@ -760,23 +731,30 @@ class essayadmin extends controller
         $viewSubmitted=$this->objLanguage->languageText('mod_essayadmin_viewbookedsubmitted','essayadmin');
         $assignLabel=$this->objLanguage->languageText('mod_assignment_name','essayadmin');
         $percentLbl=$this->objLanguage->languageText('mod_essayadmin_percentyrmark','essayadmin');
-        $noEssays = $this->objLanguage->code2Txt('mod_essayadmin_noessaysintopic','essayadmin');
+        $noEssays = $this->objLanguage->code2Txt('mod_essayadmin_noessaysintopicarea','essayadmin');
 
-        // add new essay icon
-        $this->objIcon->title=$title3;
-        $addicon=$this->objIcon->getAddIcon($this->uri(array('action'=>'addessay','id'=>$topic[0]['id'])));
-        $subhead.= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$addicon;
-        // edit & delete topic
+        // edit topic icon
         $this->objIcon->title=$title1;
         $topicEdit=$this->objIcon->getEditIcon($this->uri(array('action'=>'edittopic','id'=>$topic[0]['id'])));
+
+        // delete topic icon
         $this->objIcon->title=$title2;
         $this->objIcon->setIcon('delete');
-        $this->objConfirm->setConfirm($this->objIcon->show(),$this->uri(array('action'=>'deletetopic','id'=>$topic[0]['id'])),$this->objLanguage->languageText('mod_essayadmin_deleterequest','essayadmin').' '.$topic[0]['name'].'?');
+        $this->objConfirm->setConfirm(
+            $this->objIcon->show(),
+            $this->uri(
+                array(
+                    'action'=>'deletetopic',
+                    'id'=>$topic[0]['id']
+                )
+            ),
+            $this->objLanguage->code2Txt('mod_essayadmin_deletetopic', 'essayadmin', array('TOPIC'=>$topic[0]['name']))
+        );
         $topicDelete=$this->objConfirm->show();
-        $topicIcons=$topicEdit.'&nbsp;&nbsp;'.$topicDelete;
-        $head.='&nbsp;&nbsp;&nbsp;&nbsp;'.$topicIcons;
-        $formAction='marktopic';
 
+        $topicIcons = $topicEdit.$topicDelete;
+        $head.='&nbsp;'.$topicIcons;
+        //$formAction='marktopic';
         $this->setVarByRef('heading',$head);
 
         $str = '';
@@ -785,156 +763,166 @@ class essayadmin extends controller
         if($confirm == 'yes'){
             $msg = $this->getSession('confirm');
             $this->unsetSession('confirm');
+            $objMsg = $this->newObject('timeoutmessage', 'htmlelements');
             $objMsg->setMessage($msg.'&nbsp;'.date('d/m/Y H:i'));
-            $objMsg->setTimeOut(10000);
+            $objMsg->setTimeOut(15000);
             $str .= '<p>'.$objMsg->show().'</p>';
         }
 
-        /************************ Display Topic data *****************************/
-
+        // Display Topic data
+        $objTable2 = new htmltable();
         $objTable2->cellpadding=2;
+        $objTable2->cellspacing=2;
+
         $objTable2->startRow();
-        $objTable2->addCell('<b>'.$descriptionLabel.'</b>','20%','','','even');
-        $objTable2->addCell($topic[0]['description'],'80%','','','even');
+        $objTable2->addCell('<b>'.$descriptionLabel.'</b>','','','','even');
+        $objTable2->addCell($topic[0]['description'],'','','','even');
         $objTable2->endRow();
 
         $objTable2->startRow();
-        $objTable2->addCell('<b>'.$instructionsLabel.'</b>','20%','','','odd');
-        $objTable2->addCell($topic[0]['instructions'],'80%','','','odd');
+        $objTable2->addCell('<b>'.$instructionsLabel.'</b>','','','','odd');
+        $objTable2->addCell($topic[0]['instructions'],'','','','odd');
         $objTable2->endRow();
 
         $objTable2->startRow();
-        $objTable2->addCell('<b>'.$percentLbl.'</b>','20%','','','even');
-        $objTable2->addCell($topic[0]['percentage'].' %','80%','','','even');
+        $objTable2->addCell('<b>'.$percentLbl.'</b>','','','','even');
+        $objTable2->addCell($topic[0]['percentage'].'%','','','','even');
         $objTable2->endRow();
-
 
         $date = $this->objDateformat->formatDate($topic[0]['closing_date']);
         $objTable2->startRow();
-        $objTable2->addCell('<b>'.$duedate.'</b>','20%','','','odd');
-      //  $objTable2->addCell($topic[0]['closing_date'].' %','80%','','','even');
-        $objTable2->addCell($date,'80%','','','odd');
+        $objTable2->addCell('<b>'.$duedate.'</b>','','','','odd');
+        //$objTable2->addCell($topic[0]['closing_date'].' %','80%','','','even');
+        $objTable2->addCell($date,'','','','odd');
         $objTable2->endRow();
 
-        $objHead->type=4;
-        $objHead->str=$subhead;
-
         $objLayer = new layer;
-        $objLayer->border='';
-        $objLayer->str=$objTable2->show();
-        $str .= $objLayer->show().$objHead->show();
+        //$objLayer->border='';
+        $objLayer->str = $objTable2->show();
+        $str .=
+            $objLayer->show();
 
-        /************************* Display essay list in table ***********************/
+        // Heading
 
-        $i=0;
-        // set up table
-        $objTable->width='99%';
-        $objTable->cellpadding=5;
+        // add new essay icon
+        $this->objIcon->title=$title3;
+        $addicon=$this->objIcon->getAddIcon($this->uri(array('action'=>'addessay','id'=>$topic[0]['id'])));
+        $subhead.= '&nbsp;'.$addicon;
+
+        $objHead = new htmlHeading;
+        $objHead->type=3;
+        $objHead->str=$subhead;
+        $str .=
+            $objHead->show();
+
+        // Display essay list in table
+        $objTable = new htmltable();
+        //$objTable->width='99%';
+        $objTable->cellpadding=2;
         $objTable->cellspacing=2;
 
+        $tableHeader = array();
+        $tableHeader[] = '#';
+        $tableHeader[] = $this->objLanguage->languageText('mod_essayadmin_essay','essayadmin');
+        $tableHeader[] = $this->objLanguage->languageText('mod_essayadmin_notes','essayadmin');
+        $tableHeader[] = '&nbsp;';
+        $objTable->addHeader($tableHeader, 'heading');
+
         if(!empty($essays)){
-            foreach($essays as $val){
+            $i=0;
+            foreach($essays as $essay){
                 $class = ($i++%2)? 'even':'odd';
 
                 // edit essay
-                $objLink = new link;
-                $objLink->link($this->uri(array('action'=>'editessay','essay'=>$val['id'],'id'=>$topic[0]['id'])));
-                $objLink->link = $val['topic'];
+                $objLink = new link($this->uri(array('action'=>'editessay','essay'=>$essay['id'],'id'=>$topic[0]['id'])));
+                $objLink->link = $essay['topic'];
                 $objLink->title = $title1;
                 $view = $objLink->show();
 
                 $this->objIcon->title=$title1;
                 $this->objIcon->extra='';
-                $edit=$this->objIcon->getEditIcon($this->uri(array('action'=>'editessay','essay'=>$val['id'],'id'=>$topic[0]['id'])));
+                $edit=$this->objIcon->getEditIcon($this->uri(array('action'=>'editessay','essay'=>$essay['id'],'id'=>$topic[0]['id'])));
                 // delete essay display confirmation
                 $this->objIcon->title=$title2;
                 $this->objIcon->setIcon('delete');
-                $this->objConfirm->setConfirm($this->objIcon->show(),$this->uri(array('action'=>'deleteessay','essay'=>$val['id'],'id'=>$topic[0]['id'])),$this->objLanguage->languageText('mod_essayadmin_deleterequest','essayadmin').' '.$val['topic'].'?');
+                $this->objConfirm->setConfirm(
+                    $this->objIcon->show(),
+                    $this->uri(
+                        array(
+                            'action'=>'deleteessay',
+                            'essay'=>$essay['id'],
+                            'id'=>$topic[0]['id']
+                        )
+                    ),
+                    $this->objLanguage->code2Txt('mod_essayadmin_deleteessay', 'essayadmin', array('ESSAY'=>$essay['topic']))
+                );
                 $delete=$this->objConfirm->show();
                 $icons=$edit.$delete;
 
-                if(strlen($val['notes']) > 100){
-                    $pos = strpos($val['notes'], ' ', 100);
-                    $notes = substr($val['notes'], 0, $pos).'...';
+                if(strlen($essay['notes']) > 100){
+                    $pos = strpos($essay['notes'], ' ', 100);
+                    $notes = substr($essay['notes'], 0, $pos).'...';
                 }else{
-                    $notes = $val['notes'];
+                    $notes = $essay['notes'];
                 }
 
-                $objTable->row_attributes=' height="25"';
+                //$objTable->row_attributes=' height="25"';
                 $objTable->startRow();
-                $objTable->addCell($i, '2%','center','',$class);
-                $objTable->addCell($view,'30%','center','',$class);
-                $objTable->addCell($notes,'60%','center','',$class);
-                $objTable->addCell($icons,'8%','center','left',$class);
+                $objTable->addCell($i, '','','',$class);
+                $objTable->addCell($view,'','','',$class);
+                $objTable->addCell($notes,'','','',$class);
+                $objTable->addCell($icons,'','','',$class);
                 $objTable->endRow();
             }
         }else{
-            $objTable->row_attributes=' height="15"';
+            //$objTable->row_attributes=' height="15"';
             $objTable->startRow();
-            $objTable->addCell($noEssays,'','','','noRecordsMessage',' colspan="5"');
+            $objTable->addCell($noEssays,'','','','noRecordsMessage','colspan="4"');
             $objTable->endRow();
         }
-        $objTable->row_attributes=' height="10"';
+        //$objTable->row_attributes=' height="10"';
+        /*
         $objTable->startRow();
         $objTable->addCell('','','','','','colspan="4"');
         $objTable->endRow();
+        */
 
-        $str .= $objTable->show();
+        $str .=
+            $objTable->show();
 
-    /******************** Form to return to topic list ************************/
+        /*
+        echo '<pre>';
+        var_dump($topic);
+        echo '</pre>';
+        die;
+        */
+
+        $links = '';
 
         $objLink = new link($this->uri(array('action'=>'addessay','id'=>$topic[0]['id'])));
-        $objLink->title = $title3;
         $objLink->link = $title3;
-        $back = $objLink->show();
-	// removed this from the uri $formAction
+        $objLink->title = $title3;
+        $links .= $objLink->show();
 
-        $objLink = new link($this->uri(array('action'=>'viewmarktopic','id'=>$topic[0]['id'])));
-        $objLink->link=$viewSubmitted;
-        $back .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objLink->show();
+        $objLink = new link($this->uri(array('action'=>'marktopic', 'id'=>$topic[0]['id'])));
+        $objLink->link = $viewSubmitted;
+        $objLink->title = $viewSubmitted;
+        $links .= '<br />'.$objLink->show();
 
-        $objLink = new link($this->uri(array('')));
-        $objLink->title='';
-        $objLink->link=$topiclist;
-        $back .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objLink->show();
+        $strHome = $this->objLanguage->languageText('mod_essayadmin_home','essayadmin');
+        $objLink = new link($this->uri(array()));
+        $objLink->link = $strHome;
+        $objLink->title = $strHome;
+        $links .= '<br />'.$objLink->show();
 
-        $objLayer->align='center';
-        $objLayer->border=0;
-        $objLayer->str=$back;
+        //$objLayer = new layer;
+        //$objLayer->align='center';
+        //$objLayer->border=0;
+        //$objLayer->str=$back;
 
-        $str .= $objLayer->show();
+        $str .= $links; //$objLayer->show();
 
-        // return table
         return $str;
-    }
-
-    /**
-    * Method to get a list of topics, closing date and number of essays submitted in the topic and the number marked.
-    * @return array Topic data
-    **/
-   public function getTopicData()
-    {
-        // get topic info
-        $topics=$this->dbtopic->getTopic(NULL,NULL,"context='".$this->contextcode."'");
-        $data=array();
-
-        // count number of marked essays & number of submitted essays in each topic
-        if(!empty($topics)){
-            foreach($topics as $key=>$item){
-                $filter="where topicid='".$item['id']."'";
-                $fields="COUNT(studentfileid) as submitted, COUNT(mark) as marked";
-                $bookings=$this->dbbook->getBooking($filter,$fields);
-                $data[$key]['id']=$item['id'];
-                $data[$key]['name']=$item['name'];
-                $data[$key]['closing_date']=$item['closing_date'];
-                $data[$key]['bypass']=$item['bypass'];
-                $data[$key]['percentage']=$item['percentage'];
-                $data[$key]['marked']=$bookings[0]['marked'];
-                $data[$key]['submitted']=$bookings[0]['submitted'];
-            }
-        }
-        // return data
-        return $data;
     }
 
     /**
