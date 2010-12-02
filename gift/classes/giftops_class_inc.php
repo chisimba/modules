@@ -30,6 +30,7 @@ class giftops extends object {
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objDepartments = $this->getObject('dbdepartments', 'gift');
         $this->divisionLabel = $this->objSysConfig->getValue('DIVISION_LABEL', 'gift');
+        $this->rootTitle = $this->objSysConfig->getValue('ROOT_TITLE', 'gift');
         $this->objUser = $this->getObject("user", "security");
     }
 
@@ -207,19 +208,20 @@ class giftops extends object {
               } */
         }
 
+        $icon = 'folder.gif';
+        $expandedIcon = 'folder-expanded.gif';
+       $cssClass="";
         if ($treeType == 'htmldropdown') {
 
-            $allFilesNode = new treenode(array('text' => $this->divisionLabel . 's', 'link' => '-1'));
+            $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => '-1'));
         } else {
-            $allFilesNode = new treenode(array('text' => $this->divisionLabel . 's', 'link' => $this->uri(array('action' => 'viewgifts')), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'viewgifts')), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
         }
 
 //Create a new tree
         $menu = new treemenu();
 
-        $icon = 'folder.gif';
-        $expandedIcon = 'folder-expanded.gif';
-
+        
         if (count($depts) > 0) {
             foreach ($depts as $dept) {
                 $folderText = $dept['name'];
