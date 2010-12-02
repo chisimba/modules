@@ -117,25 +117,13 @@ class essay extends controller
             // View essays within a topic area
             // Get topic area id
             $topicAreaId = $this->getParam('id');
-            // Get topic area name
-            $topicArea = $this->dbtopic->getTopic($topicAreaId);
-            // Get essays in topic area
-            $essays = $this->dbessays->getEssays($topicAreaId);
-            // Check if 'force one student per essay' is set
-            if ($topicArea[0]['forceone']=='0') {
-                $allBookings = NULL;
-            } else {
-                // Fetch all bookings in topic area
-                $allBookings = $this->dbbook->getBooking("WHERE topicid='{$topicAreaId}'");
-            }
-            // Fetch current user's booking
-            $studentBooking = $this->dbbook->getBooking("WHERE topicid='{$topicAreaId}' AND studentid='{$this->userId}'");
             // Get table
             //display[0]['essayid']
             //ob_start();
-            $this->setVar('content', $this->renderEssays($topicArea, $essays, $studentBooking, $allBookings, $topicArea[0]['forceone']=='1'));
+            $this->setVar('content', $this->renderEssays($topicAreaId)); //$topicArea, $essays, $studentBooking, $allBookings, $topicArea[0]['forceone']=='1'
             //$this->setVar('buffer', ob_get_contents());
             //ob_end_clean();
+            $this->setLayoutTemplate('essay_layout_tpl.php');
             return 'essay_tpl.php';
         //break;
         case 'shownotes':
@@ -143,7 +131,8 @@ class essay extends controller
             $id = $this->getParam('essay');
             $data = $this->dbessays->getEssay($id,'topic, notes');
             $this->setVar('heading', $this->objLanguage->languageText('mod_essay_notes','essay'));
-            $this->setVarByRef('data', $data);
+            $this->setVar('topic', $data[0]['topic']);
+            $this->setVar('notes', $data[0]['notes']);
             $this->setVar('leftNav', '');
             return 'notes_tpl.php';
         //break;
@@ -155,15 +144,12 @@ class essay extends controller
             $id = $this->getParam('book');
             // Get comment form booking details
             $comment = $this->dbbook->getBooking("WHERE id='{$id}'", 'comment');
-            $data = array();
-            $data[0] = array();
-            $data[0]['topic'] = $essay;
-            $data[0]['notes'] = $comment[0]['comment'];
             $this->setVar('heading', $this->objLanguage->languageText('mod_essay_comment','essay'));
-            $this->setVarByRef('data', $data);
+            $this->setVar('topic', $essay);
+            $this->setVar('comment', $comment[0]['comment']);
             $this->setVar('leftNav', '');
             //$this->setPageTemplate('essay_page_tpl.php');
-            return 'notes_tpl.php';
+            return 'comment_tpl.php';
         //break;
         case 'bookessay':
             $this->dbbook->bookEssay(
@@ -195,6 +181,7 @@ class essay extends controller
             //ob_end_clean();
             //return "dump_tpl.php";
         	$this->setVarByRef('data', $data);
+            $this->setLayoutTemplate('essay_layout_tpl.php');
            	return 'view_essays_tpl.php';
        //break;
             /*
@@ -211,6 +198,7 @@ class essay extends controller
             $this->setVar('message', $message);
             $bookId=$this->getParam('bookid');
             $this->setVar('bookId', $bookId);
+            $this->setLayoutTemplate('essay_layout_tpl.php');
             return 'upload_tpl.php';
         //break;
         case 'uploadsubmit':
@@ -243,7 +231,8 @@ class essay extends controller
             }
         //break;
         case 'download':
-            $this->setPageTemplate('download_page_tpl.php');
+            $this->setPageTemplate(NULL);
+            $this->setLayoutTemplate(NULL);
             return 'download_tpl.php';
         break;
 
@@ -253,7 +242,8 @@ class essay extends controller
             $this->setVar('content',$this->renderTopics());
     		//$this->setVar('buffer', ob_get_contents());
     		//ob_end_clean();
-            return 'essay_tpl.php';
+            $this->setLayoutTemplate('essay_layout_tpl.php');
+            return 'topic_tpl.php';
         }
         //return $template;
     }
@@ -369,8 +359,25 @@ class essay extends controller
     * @param bool $forceOne Flag to indicate whether only one student can book an essay, if TRUE prevent another student booking it
     * @return string The essays page
     */
-    public function renderEssays($topicArea, $essays, $studentBooking = TRUE, $allBookings = TRUE, $forceOne = FALSE)
+    public function renderEssays($topicAreaId) //$topicArea, $essays, $studentBooking = TRUE, $allBookings = TRUE, $forceOne = FALSE
     {
+        // Get topic area name
+        $topicArea = $this->dbtopic->getTopic($topicAreaId);
+        /*
+        // Get essays in topic area
+        $essays = $this->dbessays->getEssays($topicAreaId);
+        // Fetch current user's booking
+        $studentBooking = $this->dbbook->getBooking("WHERE topicid='{$topicAreaId}' AND studentid='{$this->userId}'");
+        // Check if 'force one student per essay' is set
+        if ($topicArea[0]['forceone']=='0') {
+            $allBookings = NULL;
+        } else {
+            // Fetch all bookings in topic area
+            $allBookings = $this->dbbook->getBooking("WHERE topicid='{$topicAreaId}'");
+        }
+        $forceOne = $topicArea[0]['forceone']=='1';
+        //$topicArea, $essays, $studentBooking, $allBookings, $topicArea[0]['forceone']=='1'
+        */
         // Set up html elements
         //$objLink=$this->objLink;
 
@@ -436,6 +443,55 @@ class essay extends controller
 
         $str .= '<p>'.$this->objLanguage->languageText('mod_essay_explainbook', 'essay').'</p>';
 
+        $str .= $this->renderEssayTable($topicAreaId);
+
+        $links = '';
+
+        $objLink = new link($this->uri(array('action'=>'viewallessays', 'id'=>$topic[0]['id'])));
+        $text = $this->objLanguage->languageText('mod_essay_viewbookedsubmitted', 'essay');
+        $objLink->link=$text;
+        $objLink->title = $text;
+        $links .= '<br />'.$objLink->show();
+
+        $objLink = new link($this->uri(array()));
+        $text = $this->objLanguage->languageText('mod_essay_essayhome','essay');
+        $objLink->link = $text;
+        $objLink->title = $text;
+        $links .= '<br />'.$objLink->show();
+
+        $str .= $links;
+
+        $objLayer=$this->objLayer;
+        $objLayer->border = 0;
+        $objLayer->str = $str;
+
+        return $objLayer->show();
+    }
+
+    /**
+    * Method to render the essay table associated with the given topic area.
+    * @param array $topicArea The topic area data
+    * @param array $essays The essay data
+    * @param array $studentBooking Student's booking data
+    * @param array $allBookings All bookings data
+    * @param bool $forceOne Flag to indicate whether only one student can book an essay, if TRUE prevent another student booking it
+    * @return string The essay table
+    */
+    public function renderEssayTable($topicAreaId) {
+        // Get topic area name
+        $topicArea = $this->dbtopic->getTopic($topicAreaId);
+        // Get essays in topic area
+        $essays = $this->dbessays->getEssays($topicAreaId);
+        // Fetch current user's booking
+        $studentBooking = $this->dbbook->getBooking("WHERE topicid='{$topicAreaId}' AND studentid='{$this->userId}'");
+        // Check if 'force one student per essay' is set
+        $forceOne = $topicArea[0]['forceone']=='1';
+        if (!$forceOne) {
+            $allBookings = NULL;
+        } else {
+            // Fetch all bookings in topic area
+            $allBookings = $this->dbbook->getBooking("WHERE topicid='{$topicAreaId}'");
+        }
         // Check if essay has been booked, submitted and marked
         if (empty($studentBooking[0]['essayid'])) {
             $studentessay = FALSE;
@@ -455,16 +511,17 @@ class essay extends controller
         $objTable = new htmltable();
         $objTable->cellpadding=2;
         $objTable->cellspacing=2;
-        $i=0;
+
+        $tableHeader = array();
+        $tableHeader[] = '#';
+        $tableHeader[] = $this->objLanguage->languageText('mod_essay_essay','essay');
+        $tableHeader[] = $this->objLanguage->languageText('mod_essay_notes','essay');
+        $tableHeader[] = $this->objLanguage->languageText('mod_essay_mark','essay');
+        $tableHeader[] = '&nbsp;';
+        $objTable->addHeader($tableHeader, 'heading');
+
         if (!empty($essays)) {
-	        //$markLabel = '<b>'..':</b>';
-            $tableHeader = array();
-            $tableHeader[] = '#';
-            $tableHeader[] = $this->objLanguage->languageText('mod_essay_essay','essay');
-            $tableHeader[] = $this->objLanguage->languageText('mod_essay_notes','essay');
-            $tableHeader[] = $this->objLanguage->languageText('mod_essay_mark','essay');
-            $tableHeader[] = '&nbsp;';
-            $objTable->addHeader($tableHeader, 'heading');
+            $i=0;
             foreach ($essays as $essay) {
                 $class = ($i++%2)?'even':'odd';
                 $id = $essay['id'];
@@ -582,35 +639,12 @@ class essay extends controller
             }
         } else {
             $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_essay_noessaysintopic', 'essay'),'','','','noRecordsMessage','colspan="5"');
+            $objTable->addCell($this->objLanguage->languageText('mod_essay_noessaysintopicarea', 'essay'),'','','','noRecordsMessage','colspan="5"');
             $objTable->endRow();
 
 
         }
-
-        $str .= $objTable->show();
-
-        $links = '';
-
-        $objLink = new link($this->uri(array('')));
-        $text = $this->objLanguage->languageText('mod_essay_essayhome','essay');
-        $objLink->link = $text;
-        $objLink->title = $text;
-        $links .= $objLink->show();
-
-        $objLink = new link($this->uri(array('action'=>'viewallessays', 'id'=>$topic[0]['id'])));
-        $text = $this->objLanguage->languageText('mod_essay_viewbookedsubmitted', 'essay');
-        $objLink->link=$text;
-        $objLink->title = $text;
-        $links .= '<br />'.$objLink->show();
-
-        $str .= $links;
-
-        $objLayer=$this->objLayer;
-        $objLayer->border = 0;
-        $objLayer->str = $str;
-
-        return $objLayer->show();
+        return $objTable->show();
     }
 
     /**

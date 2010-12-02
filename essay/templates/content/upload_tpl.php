@@ -4,8 +4,6 @@
 * @package essay
 */
 
-$this->setLayoutTemplate('essay_layout_tpl.php');
-
 // set up html elements
 //$this->loadclass('htmltable','htmlelements');
 //$objLayer=$this->objLayer;

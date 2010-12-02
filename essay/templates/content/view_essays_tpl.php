@@ -4,8 +4,6 @@
 * @package essay
 */
 
-$this->setLayoutTemplate('essay_layout_tpl.php');
-
 $this->loadclass('htmltable','htmlelements');
 $this->loadClass('windowpop','htmlelements');
 $this->objDateformat = $this->newObject('dateandtime','utilities');

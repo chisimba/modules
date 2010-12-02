@@ -9,9 +9,6 @@ $this->setVar('pageSuppressBanner', TRUE);
 $this->setVar('pageSuppressToolbar', TRUE);
 $this->setVar('suppressFooter', TRUE);
 
-$topic = $data[0]['topic'];
-$notes = $data[0]['notes'];
-
 $objHeading = $this->newObject('htmlheading','htmlelements');
 $objHeading->type = 3;
 $objHeading->str = $topic;

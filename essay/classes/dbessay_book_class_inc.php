@@ -62,6 +62,7 @@ class dbessay_book extends dbTable
         if($filter){
             $sql.=' '.$filter;
         }
+        //trigger_error($sql);
         $rows=$this->getArray($sql);
         return $rows;
     }
