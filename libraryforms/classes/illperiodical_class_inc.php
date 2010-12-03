@@ -178,6 +178,7 @@ class ILLperiodical extends dbTable {
         $table->startRow();
         $table->addCell($addLabel->show(), '', 'center', 'left', '');
         $table->addCell($objadd->show(), '', 'center', 'left', '');
+        $objForm->addRule('periodical_address',$this->objLanguage->languageText("mod_periodicaladdress_required", "libraryforms"),'required');
         $table->endRow();
 
 
@@ -192,7 +193,7 @@ class ILLperiodical extends dbTable {
         $telLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttele","libraryforms"),"periodical_tell");
         $table->addCell($telLabel->show(), '', 'center', 'left', '');
         $table->addCell($objtel->show(), '', 'center', 'left', '');
-
+       $objForm->addRule('periodical_tell',$this->objLanguage->languageText("mod_tel_required", "libraryforms"),'required');
 
         $objw = new textinput('periodical_w');
         $wLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentW","libraryforms"),"periodical_w");
@@ -205,16 +206,15 @@ class ILLperiodical extends dbTable {
 
         $table->addCell($emailLabel->show(), '', 'center', 'left', '');
         $table->addCell($objemail->show(), '', 'center', 'left', '');
-        $objForm->addRule('periodicalemaill', 'Not a valid Email', 'email');
+        $objForm->addRule('periodicalemail', 'Not a valid Email', 'email');
         $table->endRow();
-
-
 
         //Create a new textinput for entity
         $objentity = new textinput('periodical_entity');
         $entityLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentcharge","libraryforms"),"periodical_entity");
         $table->addCell($entityLabel->show(), '', 'center', 'left', '');
         $table->addCell($objentity->show(), '', 'center', 'left', '');
+         $objForm->addRule('periodical_entity','Entity Must contain valid numbers','numeric');
 
         //Create a new textinput for student no
         $objstud = new textinput('periodical_student');
@@ -247,15 +247,11 @@ class ILLperiodical extends dbTable {
 	foreach ($overseas as $oversea)
 	{
   	  $objoversea->addOption($oversea,$oversea);
-    	//if($mode == 'addfixup'){
-      	  $objoversea->setSelected($this->getParam('overseas'));
-    //}
-   
+    	  $objoversea->setSelected($this->getParam('overseas'));
+     
 }
 	$table->addCell($overseaLabel ->show(), 150, NULL, 'left');
 	$table->addCell($objoversea->show(), 150, NULL, 'left');
-//$table->endRow();
-// end of drop down
 
 //Input and label for Department/Scool/Division
 	$objundergrad = new dropdown ('undergrad');
