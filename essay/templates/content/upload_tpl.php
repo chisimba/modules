@@ -29,6 +29,7 @@ $str = '';
 
 $str .= '<b>'.$this->objLanguage->languageText('mod_essay_essay','essay').':</b> '.$essayTitle.'<br />';
 
+/*
 // display confirmation message
 if (empty($message)) {
     $confirmMessage = '';
@@ -38,6 +39,7 @@ if (empty($message)) {
     $confirmMessage = $objMessage->show();
 }
 $str .= $confirmMessage;
+*/
 
 //new file upload functionality
 //$this->loadclass('selectfile','filemanager');
@@ -52,15 +54,22 @@ $objSelectFile = $this->newObject('selectfile','filemanager');
 $objSelectFile->name = 'file';
 $str .= $objSelectFile->show().'<br />';
 
-$objUploadButton = new button('submit', $this->objLanguage->languageText('mod_essay_upload' ,'essay'));
+$objUploadButton = new button('submit', $this->objLanguage->languageText('word_save')); //$this->objLanguage->languageText('mod_essay_upload' ,'essay')
 $objUploadButton->setToSubmit();
 $buttonUpload = $objUploadButton->show();
 
+/*
 $objSubmitButton = new button('submit', $this->objLanguage->languageText('word_exit'));
 $objSubmitButton->setToSubmit();
 $buttonSubmit = $objSubmitButton->show();
+*/
 
-$str .= '<br />'.$buttonUpload.'&nbsp;'.$buttonSubmit.'<br />';
+$objCancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$returnUrl = $this->uri(array('action' => 'viewallessays'));
+$objCancelButton->setOnClick("javascript: window.location='{$returnUrl}';");
+$buttonCancel = $objCancelButton->show();
+
+$str .= '<br />'.$buttonUpload.'&nbsp;'.$buttonCancel.'<br />'; //$buttonSubmit
 
 $objForm = new form('upload', $this->uri(array('action'=>'uploadsubmit','bookid'=>$bookId)));
 $objForm->extra = " enctype='multipart/form-data'";

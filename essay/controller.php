@@ -206,8 +206,8 @@ class essay extends controller
             */
         case 'uploadessay':
             // Display page to upload essay
-            $message = $this->getParam('msg');
-            $this->setVar('message', $message);
+            //$message = $this->getParam('msg');
+            //$this->setVar('message', $message);
             $bookId=$this->getParam('bookid');
             $this->setVar('bookId', $bookId);
             $this->setLayoutTemplate('essay_layout_tpl.php');
@@ -216,17 +216,18 @@ class essay extends controller
         case 'uploadsubmit':
             // Upload an essay for marking
             //--JO'C deprecated or a marked essay & marks & comment
-            // Get topic id
-            //$topic=$this->getParam('id');
-            // Get booking id
+            // Get booking ID
             $bookId = $this->getParam('bookid');
-            // Get file id
+            // Get file ID
             $fileId = $this->getParam('file');
-            $submit = $this->getParam('submit');
-            if ($submit == $this->objLanguage->languageText('word_exit')) {
+            $fields = array('studentfileid'=>$fileId, 'submitdate'=>date('Y-m-d H:i:s'));
+            $this->dbbook->bookEssay($fields, $bookId);
+            $this->objFileRegister->registerUse($fileId, 'essay', 'tbl_essay_book', $bookId, 'studentfileid', $this->contextcode, '', TRUE);
+            return $this->nextAction('viewallessays');
+            //$submit = $this->getParam('submit');
+            //if ($submit == $this->objLanguage->languageText('word_exit')) {
                 // Exit upload form
-                return $this->nextAction('viewallessays');
-            } else if ($submit == $this->objLanguage->languageText('mod_essay_upload', 'essay')) {
+            //} else if ($submit == $this->objLanguage->languageText('mod_essay_upload', 'essay')) {
                 // Upload essay and return to form
         		// change the file name to fullname_studentId
                 //$name = $this->user;
@@ -234,13 +235,10 @@ class essay extends controller
                 // upload file to database into the filemanager database
                 //$arrayfiledetails = $this->objFile->uploadFile('file');
         	    // Save file id and submit date to database
-                $fields = array('studentfileid'=>$fileId, 'submitdate'=>date('Y-m-d H:i:s'));
-                $this->dbbook->bookEssay($fields, $bookId);
-                $this->objFileRegister->registerUse($fileId, 'essay', 'tbl_essay_book', $bookId, 'studentfileid', $this->contextcode, '', TRUE);
                 // Display success message
-                $message = $this->objLanguage->languageText('mod_essay_uploadsuccess','essay');
-                return $this->nextAction('uploadessay', array('bookid'=>$bookId, 'msg'=>$message));
-            }
+                //$message = $this->objLanguage->languageText('mod_essay_uploadsuccess','essay');
+                //return $this->nextAction('uploadessay', array('bookid'=>$bookId, 'msg'=>$message));
+            //}
         //break;
         case 'download':
             $this->setPageTemplate(NULL);
