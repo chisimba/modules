@@ -2110,6 +2110,10 @@ class formmanager extends object {
         $wordFormat = $this->objLanguage->languageText('mod_mcqtests_formatlabel', 'mcqtests', "Format");
         $wordUnit = $this->objLanguage->languageText('mod_mcqtests_wordunit', 'mcqtests', "Unit");
         $wordMultiplier = $this->objLanguage->languageText('mod_mcqtest_wordmultiplier', 'mcqtests', "Multiplier");
+        $wordGenerate = $this->objLanguage->languageText('mod_mcqtests_wordunit', 'mcqtests', "Generate");
+        $wordDisplay = $this->objLanguage->languageText('mod_mcqtest_worddisplay', 'mcqtests', "Display");
+        $phraseGenerate = $this->objLanguage->languageText('mod_mcqtests_newsetwildcards', 'mcqtests', "new set(s) of wild card(s) values");
+        $phraseDisplay = $this->objLanguage->languageText('mod_mcqtest_setwildcards', 'mcqtests', "set(s) of wild card(s) values");
 
 
         $listTitle = $phraseListOf . " " . $phraseSCQuestions;
@@ -2457,8 +2461,6 @@ class formmanager extends object {
         $objTable->attributes = " align='center' border='0'";
         $objTable->cellspacing = '12';
 
-
-
         //Create table to store no of answers dropdown
         $objTable = new htmltable();
         $objTable->width = '800px';
@@ -2572,6 +2574,68 @@ class formmanager extends object {
 
         //Add Wild-card to form
         $form->addToForm($wcards . " " . $wc_count->show());
+
+        //Add Generate new set of wildcard values
+        $genwcard = new dropdown("genwcards");
+        $genwcard->extra = "onchange='generateWildCards(this)'";
+        $genwcard->addOption("0", "0");
+        $genwcard->addOption("1", "1");
+        $genwcard->addOption("2", "2");
+        $genwcard->addOption("3", "3");
+        $genwcard->addOption("4", "4");
+        $genwcard->addOption("5", "5");
+        $genwcard->addOption("6", "6");
+        $genwcard->addOption("7", "7");
+        $genwcard->addOption("8", "8");
+        $genwcard->addOption("9", "9");
+        $genwcard->addOption("10", "10");
+        if (!empty($fields["genwcards"])) {
+            $genwcard->setSelected($fields["generatewcards"]);
+        } else {
+            $genwcard->setSelected("0");
+        }
+        $genwcardcount = new hiddeninput("genwcardcount", $genwcardcount);
+
+        //Add Display new set of wildcard values
+        $displaywcard = new dropdown("displaywcards");
+        $displaywcard->extra = "onchange='displayWildCards(this)'";
+        $displaywcard->addOption("0", "0");
+        $displaywcard->addOption("1", "1");
+        $displaywcard->addOption("2", "2");
+        $displaywcard->addOption("3", "3");
+        $displaywcard->addOption("4", "4");
+        $displaywcard->addOption("5", "5");
+        $displaywcard->addOption("6", "6");
+        $displaywcard->addOption("7", "7");
+        $displaywcard->addOption("8", "8");
+        $displaywcard->addOption("9", "9");
+        $displaywcard->addOption("10", "10");
+        if (!empty($fields["dispwcards"])) {
+            $displaywcard->setSelected($fields["displaywcards"]);
+        } else {
+            $displaywcard->setSelected("0");
+        }
+        $displaywcardcount = new hiddeninput("displaywcardcount", $displaywcardcount);
+
+var_dump($fields["displaywcards"]);
+        //Create table to hold the wildcards
+        $objTableX = new htmltable();
+        $objTableX->width = '800px';
+        $objTableX->attributes = " align='center' border='0'";
+        $objTableX->cellspacing = '12';
+
+        //Add Generate Wildcards to the table
+        $objTableX->startRow();
+        $objTableX->addCell($wordGeneral." ".$genwcard->show()." ".$phraseGenerate.$genwcardcount->show(), '','','','','colspan=2');
+        $objTableX->endRow();
+
+        //Add Display Wildcards to the table
+        $objTableX->startRow();
+        $objTableX->addCell($wordDisplay." ".$displaywcard->show()." ".$phraseDisplay.$displaywcardcount->show(), '','','','','colspan=2');
+        $objTableX->endRow();
+
+        //Add Wild-card to form
+        $form->addToForm($objTableX->show());
 
         //Create table to hold the tags
         $objTable2 = new htmltable();
