@@ -31,6 +31,9 @@ class essay extends controller
     */
     public function init()
     {
+        // Load scriptaclous since we can no longer guarantee it is there
+        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
         //$this->objModules = $this->newObject('modules','modulecatalogue');
         $this->objModules = $this->newObject('modules','modulecatalogue');
         if(!$this->objModules->checkIfRegistered('essayadmin')){
@@ -152,26 +155,35 @@ class essay extends controller
             return 'comment_tpl.php';
         //break;
         case 'bookessay':
+            $topicAreaId = $this->getParam('id');
             $this->dbbook->bookEssay(
                 array(
                 	'context'=>$this->contextcode,
-                	'topicid'=>$this->getParam('id'),
+                	'topicid'=>$topicAreaId,
                 	'essayid'=>$this->getParam('essay'),
                 	'studentid'=>$this->userId
             ));
-            return $this->nextAction('view', array('id'=>$this->getParam('id')));
+            $this->setVar('content', $this->renderEssayTable($topicAreaId));
+            $this->setPageTemplate(NULL);
+            $this->setLayoutTemplate(NULL);
+            return 'essaytable_tpl.php';
+            //return $this->nextAction('view', array('id'=>$this->getParam('id')));
         //break;
         case 'unbookessay':
-            $topicId=$this->getParam('id');
+            $topicAreaId=$this->getParam('id');
             $essayId=$this->getParam('essay');
             $studentId=$this->userId;
             $this->dbbook->deleteBooking(
             	NULL,
             	"WHERE
-        		topicid='{$topicId}'
+        		topicid='{$topicAreaId}'
         		AND essayid='{$essayId}'
         		AND studentid='{$studentId}'");
-            return $this->nextAction('view',array('id'=>$this->getParam('id')));
+            $this->setVar('content', $this->renderEssayTable($topicAreaId));
+            $this->setPageTemplate(NULL);
+            $this->setLayoutTemplate(NULL);
+            return 'essaytable_tpl.php';
+            //return $this->nextAction('view',array('id'=>$this->getParam('id')));
         //break;
         case 'viewallessays':
             // Display student's essays' details
@@ -443,7 +455,47 @@ class essay extends controller
 
         $str .= '<p>'.$this->objLanguage->languageText('mod_essay_explainbook', 'essay').'</p>';
 
-        $str .= $this->renderEssayTable($topicAreaId);
+    	$javaScript = "<script language=\"JavaScript\" type=\"text/javascript\">
+function book(uri)
+{
+    document.getElementById('wait').style.visibility = 'visible';
+    new Ajax.Updater(
+        'essaytable',
+        uri,
+        {onSuccess: _onSuccess}
+    );
+    return false;
+}
+function unbook(uri)
+{
+    document.getElementById('wait').style.visibility = 'visible';
+    new Ajax.Updater(
+        'essaytable',
+        uri,
+        {onSuccess: _onSuccess}
+    );
+    return false;
+}
+function _onSuccess()
+{
+    document.getElementById('wait').style.visibility = 'hidden';
+}
+</script>";
+        $str .= $javaScript;
+
+        $objIcon = $this->objIcon;
+        $objIcon->setIcon('spinner');
+
+        $objLayer = $this->newObject('layer', 'htmlelements');
+        $objLayer->id = 'wait';
+        $objLayer->visibility = 'hidden';
+        $objLayer->addToStr($objIcon->show().'&nbsp;'.$this->objLanguage->languageText('mod_essay_pleasewait','essay'));
+        $str .= $objLayer->show();
+
+        $objLayer = $this->newObject('layer', 'htmlelements');
+        $objLayer->id = 'essaytable';
+        $objLayer->addToStr($this->renderEssayTable($topicAreaId));
+        $str .= $objLayer->show();
 
         $links = '';
 
@@ -508,6 +560,16 @@ class essay extends controller
         } else {
             $essaymark = $studentBooking[0]['mark'];
         }
+
+        $str = '';
+
+        /*
+        $objLink = new link();
+        $objLink->cssId = 'essaytableanchor';
+        $str .= $objLink->show();
+        */
+        $str .= "<a id=\"essaytableanchor\"></a>";
+
         $objTable = new htmltable();
         $objTable->cellpadding=2;
         $objTable->cellspacing=2;
@@ -561,28 +623,39 @@ class essay extends controller
                 $mark = '';
 				$icons = '';
 		    	if ($booked == ESSAY_CANBOOK) {
+
     		    	    $title = $this->objLanguage->languageText('mod_essay_bookessay', 'essay');
+
                         $objIcon->setIcon('bullet');
                         $objIcon->title = $title;
 	                    $objIcon->extra = '';
+
                         $objLink = new link($this->uri(array('action'=>'bookessay', 'essay'=>$id, 'id'=>$topicArea[0]['id'])));
+    		    	    $objLink->extra = "onclick=\"javascript: return book(this.href);\"";
                         $objLink->link = $essay['topic'];
                         $objLink->title = $title;
                         $multiLink = $objLink->show();
+
                         $objLink->link = $objIcon->show();
+                        $objLink->title = $title;
                         $bookIcon = $objLink->show();
+
 		                $icons .= $bookIcon;
                 }
 		    	if ($booked == ESSAY_BOOKEDBYSTUDENT) {
 	                    if (is_null($essaysubmit)) {
     	                    $title = $this->objLanguage->languageText('mod_essay_unbookessay', 'essay');
+
 	                        $objIcon->setIcon('bullet');
 	                        $objIcon->title = $title;
 	                        $objIcon->extra = '';
+
 	                        $objLink = new link($this->uri(array('action'=>'unbookessay', 'essay'=>$id, 'id'=>$topicArea[0]['id'])));
+        		    	    $objLink->extra = "onclick=\"javascript: return unbook(this.href);\"";
 	                        $objLink->link = $essay['topic'];
 	                        $objLink->title = $title;
 	                        $multiLink = $objLink->show();
+
 	                        $objLink->link=$objIcon->show();
 	                        $unbookIcon = $objLink->show();
 	                        $message .= $this->objLanguage->languageText('mod_essay_bookedby','essay').' '.$this->user;
@@ -644,7 +717,8 @@ class essay extends controller
 
 
         }
-        return $objTable->show();
+        $str .= $objTable->show();
+        return $str;
     }
 
     /**
