@@ -27,6 +27,7 @@ class gift extends controller {
         $this->divisionLabel = $this->objSysConfig->getValue('DIVISION_LABEL', 'gift');
         $this->adminEmail = $this->objSysConfig->getValue('DIVISION_LABEL', 'gift');
         $this->minAmountToAlert = $this->objSysConfig->getValue('MIN_AMOUNT_FOR_ALERT', 'gift');
+        $this->minAmount = $this->objSysConfig->getValue('MIN_AMOUNT', 'gift');
         $test = "test";
         // Initialising $data (holds the data from database when edit link is called)
         $this->data = array();
@@ -147,7 +148,10 @@ class gift extends controller {
             $errormessage = "Department Name required";
             $this->setVarByRef("errormessage", $errormessage);
             $gifts = $this->objDbGift->getGifts($departmentid);
-            $departmentid = $this->getSession("departmentid");
+            $departmentid = $this->getParam('selecteddepartment');
+            if ($departmentid == '') {
+                $departmentid = $this->getSession("departmentid");
+            }
             $departmentname = $this->objDepartments->getDepartmentName($departmentid);
             $this->setVarByRef("departmentname", $departmentname);
             $this->setVarByRef("departmentid", $departmentid);
@@ -155,7 +159,16 @@ class gift extends controller {
             $this->setVarByRef("gifts", $gifts);
             return "home_tpl.php";
         } else {
-            $this->objDepartments->addDepartment($name);
+            $parentid = $this->getParam('selecteddepartment');
+            $dept = $this->objDepartments->getDepartment($parentid);
+            $parent = $dept['path']; // $this->objGift->getParent($dept['path']);
+            $path = "";
+            if ($parent) {
+                $path = $parent . '/' . $name;
+            } else {
+                $path = $name;
+            }
+            $this->objDepartments->addDepartment($name, $path);
             return $this->nextAction("home");
         }
     }
@@ -169,6 +182,33 @@ class gift extends controller {
         $this->setVarByRef("gifts", $gifts);
 
         return "home_tpl.php";
+    }
+
+    function __confirmdeletedepartment() {
+        $id = $this->getParam("id");
+        $giftsCount = $this->objDbGift->getGiftCountByDepartment($id);
+        $subdeptscount= $this->objDepartments->getSubDepartmentsCount($id);
+        $departmentname = $this->objDepartments->getDepartmentName($id);
+        $deletevalid = true;
+        $errormessage = "";
+        if ($giftsCount > 0) {
+            $errormessage .= "<br/>Cannot delete " . strtolower($this->divisionLabel) . " named $departmentname, delete all the gifts that belong to this $this->divisionLabel first";
+            $deletevalid = false;
+        }
+        if ($subdeptscount > 1) {
+            $errormessage .= "<br/>Cannot delete " . strtolower($this->divisionLabel) . " named $departmentname, delete  the following sub-" . strtolower($this->divisionLabel) . "s that belong to this ".strtolower($this->divisionLabel)." first<br/>".$subdepts;
+            $deletevalid = false;
+        }
+        if (!$deletevalid) {
+            $this->setVarByRef("errormessage", $errormessage);
+            $gifts = $this->objDbGift->getGifts($departmentid);
+            $this->setVarByRef("gifts", $gifts);
+            return "home_tpl.php";
+        } else {
+
+            $this->setVarByRef("departmentid", $id);
+            return "deletedepartment_tpl.php";
+        }
     }
 
     /*
@@ -257,7 +297,9 @@ class gift extends controller {
 
         $date_recieved = $this->getParam("date_recieved");
         $includeattachment = $this->getParam("includeattachments");
-
+        if ($value < $this->minAmount) {
+            $errormessages[] = "You can only record a gift with value ZAR" . $this->minAmount . " or above";
+        }
         if (count($errormessages) > 0) {
             $this->setVarByRef("errormessages", $errormessages);
             $mode = "fixup";
@@ -271,6 +313,7 @@ class gift extends controller {
 
             return "addeditgift_tpl.php";
         }
+
         $result = $this->objDbGift->addInfo(
                         $donor,
                         $recipient,
@@ -542,6 +585,12 @@ class gift extends controller {
         $this->nextAction('add');
     }
 
+    function __deletedepartment() {
+        $id = $this->getParam("id");
+        $this->objDepartments->deleteDepartment($id);
+        return $this->nextAction("home"); //, array("departmentid" => $this->getSession("departmentid")));
+    }
+
     function __confirmdeletegift() {
         $id = $this->getParam("id");
         $this->setVarByRef("giftid", $id);
@@ -554,8 +603,41 @@ class gift extends controller {
         return $this->nextAction("home", array("departmentid" => $this->getSession("departmentid")));
     }
 
-    function __filterbydate() {
-        return "filterbydate_tpl.php";
+    function __filter() {
+
+        $filter = $this->getParam("filter");
+        switch ($filter) {
+            case 'By Date':
+                return "filterbydate_tpl.php";
+            case 'Gift Type':
+                return "filterbygifttype_tpl.php";
+            case 'Value':
+                return "filterbyvalue_tpl.php";
+            case 'Donor':
+                return "filterbydonor_tpl.php";
+        }
+    }
+
+    function __filterbydonor() {
+        $donor = $this->getParam("donor");
+        $gifts = $this->objDbGift->searchGiftsByDonor($donor);
+        $this->setVarByRef("gifts", $gifts);
+        return "home_tpl.php";
+    }
+
+    function __filterbygifttype() {
+        $type = $this->getParam("type");
+        $gifts = $this->objDbGift->searchGiftsByType($type);
+        $this->setVarByRef("gifts", $gifts);
+        return "home_tpl.php";
+    }
+
+    function __filterbyvalue() {
+        $giftminvalue = $this->getParam('giftminvalue');
+        $giftmaxvalue = $this->getParam('giftmaxvalue');
+        $gifts = $this->objDbGift->searchGiftsByValue($giftminvalue, $giftmaxvalue);
+        $this->setVarByRef("gifts", $gifts);
+        return "home_tpl.php";
     }
 
     function __searchbydate() {

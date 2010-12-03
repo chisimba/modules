@@ -1,7 +1,7 @@
 <?php
 
 require_once 'PHPExcel.php';
-
+require_once 'PHPExcel/IOFactory.php';
 class excelgenerator extends object {
 
     public function init() {
@@ -85,6 +85,7 @@ if (count($gifts) > 0) {
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
+        
     }
 
 }

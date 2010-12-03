@@ -37,7 +37,7 @@ class dbgift extends dbtable {
             "comments" => addslashes($comments),
             "gift_type" => $type,
             "division" => $division,
-            "deleted"=>'N',
+            "deleted" => 'N',
             "date_recieved" => $date_recieved,
             "tran_date" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
         $result = $this->insert($data);
@@ -189,11 +189,36 @@ class dbgift extends dbtable {
         return $this->getArray($sql);
     }
 
-    function searchGiftsByDate($dateFrom,$dateTo){
-        $sql=
-        "select * from tbl_gift where date_recieved between '$dateFrom 00:00:00.0' and '$dateTo 00:00:00.0' and (deleted='N' or deleted is null)";
-        $data= $this->getArray($sql);
-        
+    function searchGiftsByDate($dateFrom, $dateTo) {
+        $sql =
+                "select * from tbl_gift where date_recieved between '$dateFrom 00:00:00.0' and '$dateTo 00:00:00.0' and (deleted='N' or deleted is null)";
+        $data = $this->getArray($sql);
+
+        return $data;
+    }
+
+      function searchGiftsByDonor($donor) {
+        $sql =
+                "select * from tbl_gift where donor like '%$donor%'";
+        $data = $this->getArray($sql);
+
+        return $data;
+    }
+
+
+    function searchGiftsByType($type) {
+        $sql =
+                "select * from tbl_gift where gift_type='$type'";
+        $data = $this->getArray($sql);
+
+        return $data;
+    }
+
+    function searchGiftsByValue($min, $max) {
+        $sql =
+                "select * from tbl_gift where value >= '$min' and value <= '$max'";
+        $data = $this->getArray($sql);
+
         return $data;
     }
 

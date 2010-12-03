@@ -2,6 +2,7 @@
 
 //load class
 $this->loadclass('link', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 
 $this->setVarByRef("selected", $departmentname);
@@ -40,11 +41,13 @@ if ($this->objUser->isAdmin()) {
     $top.= $this->objGift->showCreateDepartmentForm();
 }
 
+
+
 $editdepartmentlink = new link($this->uri(array("action" => "editdepartment", "id" => $departmentid)));
 $objIcon->setIcon('edit');
 $editdepartmentlink->link = $objIcon->show();
 
-$deletelink = new link($this->uri(array("action" => "deletedepartment", "id" => $departmentid)));
+$deletelink = new link($this->uri(array("action" => "confirmdeletedepartment", "id" => $departmentid)));
 $objIcon->setIcon('delete');
 $deletelink->link = $objIcon->show();
 
@@ -58,15 +61,27 @@ if ($this->objUser->isAdmin()) {
 
 $top.='<h2 class="departmenthome">' . $departmentname . $edit . $delete . '</h2>';
 
-$button = new button('approve', "Add gift");
-$uri = $this->uri(array('action' => 'add'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$top.=$button->show();
 
-$button = new button('filterbydate', "Filter by date");
-$uri = $this->uri(array('action' => 'filterbydate'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$top.='&nbsp;&nbsp;/&nbsp;&nbsp;' . $button->show();
+$filter = new dropdown('filter');
+$filter->addOption("By Date");
+$filter->addOption("Gift Type");
+$filter->addOption("Value");
+$filter->addOption("Donor");
+
+$filterbutton = new button('filterbydate', "Search");
+$uri = $this->uri(array('action' => 'filter'));
+//$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$filterbutton->setToSubmit();
+
+$form = new form('filterform', $this->uri(array('action' => 'filter')));
+
+
+$addbutton = new button('addgift', "Add gift");
+$uri = $this->uri(array('action' => 'add'));
+$addbutton->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($addbutton->show());
+$form->addToForm('&nbsp;/&nbsp;&nbsp;Search By:&nbsp;' . $filter->show());
+$form->addToForm($filterbutton->show().'&nbsp;/&nbsp;');
 
 
 if ($this->objUser->isAdmin()) {
@@ -74,9 +89,9 @@ if ($this->objUser->isAdmin()) {
     $button = new button('spreadsheet', "Spreadsheet");
     $uri = $this->uri(array('action' => 'exportospreadsheet'));
     $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-    $top.='&nbsp;&nbsp;' . $button->show();
+    $form->addToForm('&nbsp;&nbsp;' . $button->show());
 
-      $button = new button('pdf', "PDF");
+    $button = new button('pdf', "PDF");
     $uri = $this->uri(array('action' => 'exporttopdf'));
     $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 //    $top.='&nbsp;&nbsp;' . $button->show();
@@ -85,8 +100,11 @@ if ($this->objUser->isAdmin()) {
     $button = new button('audittrail', "Audit Trail");
     $uri = $this->uri(array('action' => 'showuseractivity'));
     $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-    $top.='&nbsp;&nbsp;' . $button->show();
+    $form->addToForm('&nbsp;&nbsp;' . $button->show());
 }
+
+
+$top.=$form->show();
 
 echo $top;
 

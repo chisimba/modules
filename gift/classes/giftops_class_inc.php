@@ -197,20 +197,17 @@ class giftops extends object {
 
     function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
         $depts = $this->objDepartments->getDepartments();
-        $objDbGift = $this->getObject("dbgift");
-        if ($selected == '') {
 
+        $objDbGift = $this->getObject("dbgift");
+
+
+        if ($selected == '') {
             $selected = $this->objDepartments->getDepartmentName($this->getSession("departmentid"));
-            /* if (count($depts) > 0) {
-              $defaultDept = $depts[0];
-              $selected = $defaultDept['name'];
-              $this->setSession("departmentid",$defaultDept['id']);
-              } */
         }
 
         $icon = 'folder.gif';
         $expandedIcon = 'folder-expanded.gif';
-       $cssClass="";
+        $cssClass = "";
         if ($treeType == 'htmldropdown') {
 
             $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => '-1'));
@@ -218,13 +215,19 @@ class giftops extends object {
             $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'viewgifts')), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
         }
 
-//Create a new tree
+
+
+        $refArray = array();
+        $refArray[$this->rootTitle] = & $allFilesNode;
+
+        //Create a new tree
         $menu = new treemenu();
 
-        
+
         if (count($depts) > 0) {
             foreach ($depts as $dept) {
                 $folderText = $dept['name'];
+
                 $folderShortText = substr($dept['name'], 0, 200) . '...';
                 if ($this->objUser->isAdmin()) {
                     $folderShortText = "(" . $objDbGift->getGiftCountByDepartment($dept['id']) . ")&nbsp;" . $folderShortText;
@@ -242,10 +245,21 @@ class giftops extends object {
                     $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $this->uri(array('action' => 'home', 'departmentid' => $dept['id'], 'departmentname' => $dept['name'])), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
                 }
 
-                $allFilesNode->addItem($node);
+                $parent = $this->getParent($dept['path']);
+                // if(!($parent == $this->rootTitle)){
+                //echo $folderText . " parent== " . $parent . " path ==" . $dept['path'] . " level == " . $dept['level'] . '<br/>';
+                // }
+                if (array_key_exists($parent, $refArray)) {
+                    $refArray[$parent]->addItem($node);
+                }
+
+                $refArray[$dept['path']] = & $node;
+
+
+                //$allFilesNode->addItem($node);
             }
         }
-
+        
         $menu->addItem($allFilesNode);
         if ($treeType == 'htmldropdown') {
             $treeMenu = &new htmldropdown($menu, array('inputName' => 'selecteddepartment', 'id' => 'input_parentfolder', 'selected' => $selected));
@@ -259,17 +273,37 @@ class giftops extends object {
         return $treeMenu->getMenu();
     }
 
+    function getParent($path) {
+
+        $parent = "";
+        $parts = explode("/", $path);
+        $count = count($parts);
+        for ($i = 0; $i < $count - 1; $i++) {
+            if ($parent == '') {
+                $parent.= $parts[$i];
+            } else {
+                $parent.="/" . $parts[$i];
+            }
+        }
+        if ($parent == '') {
+            $parent = $this->rootTitle;
+        }
+        return $parent;
+    }
+
     function showCreateDepartmentForm() {
 
         $form = new form('createdepartment', $this->uri(array('action' => 'createdepartment')));
         $textinput = new textinput('departmentname');
         $label = new label('Name of ' . $this->divisionLabel . ': ', 'input_departmentname');
+        $form->addToForm("<br/>Create in " . $this->getTree('htmldropdown'));
         $form->addToForm(' &nbsp; ' . $label->show() . $textinput->show());
+
 
         $button = new button('create', 'Create ' . $this->divisionLabel);
         $button->setToSubmit();
 
-        $form->addToForm(' ' . $button->show());
+        $form->addToForm('<br/>' . $button->show());
 
         $fs = new fieldset();
         $fs->setLegend($this->divisionLabel);
