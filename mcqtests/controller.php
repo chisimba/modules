@@ -200,15 +200,19 @@ class mcqtests extends controller {
                 $id = $this->saveSimpleCalculated();
                 //Array to hold values to be passed to template
                 $fields = array();
+                if (empty($id)) {
+                    $id = $this->getParam('id', Null);
+                }
                 $fields['id'] = $id;
                 $fields['testid'] = $this->getParam('test', Null);
                 $fields['mode'] = $this->getParam('mode', 'add');
                 $fields['anscount'] = $this->getParam('anscount', Null);
                 $fields['frmanscount'] = $this->getParam('frmanscount', Null);
                 $fields['unitcount'] = $this->getParam('unitcount', Null);
-                $fields['genwcards'] = $this->getParam('genwcards', Null);
+                $fields['genwcards'] = $this->getParam('generatewcards', Null);
                 $fields['dispwcards'] = $this->getParam('displaywcards', Null);
-var_dump($this->getParam('genwcards', Null));
+                $fields['genwcardstore'] = $this->getParam('genwcardcount', Null);
+                $fields['dispwcardstore'] = $this->getParam('displaywcardcount', Null);
                 //Set variables for use in the template
                 $this->setVarByRef('fields', $fields);
                 $this->setVarByRef('id', $id);

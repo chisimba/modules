@@ -2110,7 +2110,7 @@ class formmanager extends object {
         $wordFormat = $this->objLanguage->languageText('mod_mcqtests_formatlabel', 'mcqtests', "Format");
         $wordUnit = $this->objLanguage->languageText('mod_mcqtests_wordunit', 'mcqtests', "Unit");
         $wordMultiplier = $this->objLanguage->languageText('mod_mcqtest_wordmultiplier', 'mcqtests', "Multiplier");
-        $wordGenerate = $this->objLanguage->languageText('mod_mcqtests_wordunit', 'mcqtests', "Generate");
+        $wordGenerate = $this->objLanguage->languageText('mod_mcqtests_wordgenerate', 'mcqtests', "Generate");
         $wordDisplay = $this->objLanguage->languageText('mod_mcqtest_worddisplay', 'mcqtests', "Display");
         $phraseGenerate = $this->objLanguage->languageText('mod_mcqtests_newsetwildcards', 'mcqtests', "new set(s) of wild card(s) values");
         $phraseDisplay = $this->objLanguage->languageText('mod_mcqtest_setwildcards', 'mcqtests', "set(s) of wild card(s) values");
@@ -2590,14 +2590,15 @@ class formmanager extends object {
         $genwcard->addOption("9", "9");
         $genwcard->addOption("10", "10");
         if (!empty($fields["genwcards"])) {
-            $genwcard->setSelected($fields["generatewcards"]);
+            $genwcard->setSelected($fields["genwcards"]);
+            $genwcardcount = new hiddeninput("genwcardcount", $fields["genwcards"]);
         } else {
-            $genwcard->setSelected("0");
+            $genwcard->setSelected($fields["genwcardstore"]);
+            $genwcardcount = new hiddeninput("genwcardcount", $fields["genwcardstore"]);
         }
-        $genwcardcount = new hiddeninput("genwcardcount", $genwcardcount);
 
         //Add Display new set of wildcard values
-        $displaywcard = new dropdown("displaywcards");
+        $displaywcard = new dropdown("dispwcards");
         $displaywcard->extra = "onchange='displayWildCards(this)'";
         $displaywcard->addOption("0", "0");
         $displaywcard->addOption("1", "1");
@@ -2611,13 +2612,15 @@ class formmanager extends object {
         $displaywcard->addOption("9", "9");
         $displaywcard->addOption("10", "10");
         if (!empty($fields["dispwcards"])) {
-            $displaywcard->setSelected($fields["displaywcards"]);
+            $displaywcard->setSelected($fields["dispwcards"]);
+            $displaywcardcount = new hiddeninput("displaywcardcount", $fields["dispwcards"]);
         } else {
-            $displaywcard->setSelected("0");
+            $displaywcard->setSelected($fields["dispwcardstore"]);
+            $displaywcardcount = new hiddeninput("displaywcardcount", $fields["dispwcardstore"]);
         }
-        $displaywcardcount = new hiddeninput("displaywcardcount", $displaywcardcount);
 
-var_dump($fields["displaywcards"]);
+
+        var_dump($fields["displaywcards"]);
         //Create table to hold the wildcards
         $objTableX = new htmltable();
         $objTableX->width = '800px';
@@ -2626,12 +2629,12 @@ var_dump($fields["displaywcards"]);
 
         //Add Generate Wildcards to the table
         $objTableX->startRow();
-        $objTableX->addCell($wordGeneral." ".$genwcard->show()." ".$phraseGenerate.$genwcardcount->show(), '','','','','colspan=2');
+        $objTableX->addCell($wordGenerate . " " . $genwcard->show() . " " . $phraseGenerate . $genwcardcount->show(), '', '', '', '', 'colspan=2');
         $objTableX->endRow();
 
         //Add Display Wildcards to the table
         $objTableX->startRow();
-        $objTableX->addCell($wordDisplay." ".$displaywcard->show()." ".$phraseDisplay.$displaywcardcount->show(), '','','','','colspan=2');
+        $objTableX->addCell($wordDisplay . " " . $displaywcard->show() . " " . $phraseDisplay . $displaywcardcount->show(), '', '', '', '', 'colspan=2');
         $objTableX->endRow();
 
         //Add Wild-card to form
@@ -3029,7 +3032,7 @@ var_dump($fields["displaywcards"]);
         $dsetid = new hiddeninput("dsetid_" . $wcardno, $wcardValues["dsetid"]);
         $a_definition_id = new hiddeninput("a_definition_id_" . $wcardno, $wcardValues["a_definition_id"]);
         $b_definition_id = new hiddeninput("b_definition_id_" . $wcardno, $wcardValues["b_definition_id"]);
-        $wcfields = $dsetid->show()." ".$a_definition_id->show()." ".$b_definition_id->show();
+        $wcfields = $dsetid->show() . " " . $a_definition_id->show() . " " . $b_definition_id->show();
         //range-value-a text box
         if (!empty($wcardValues)) {
             $afromrangefield = new textinput("afromrange_" . $wcardno, $wcardValues["a_fromrange"]);
@@ -3106,7 +3109,7 @@ var_dump($fields["displaywcards"]);
         if (!empty($wcardValues)) {
             $bdecimalplaces->setSelected($wcardValues["b_decimal"]);
         }
-        
+
         //Add param-b-fields to the table
         $objTable->startRow();
         $objTable->addCell($phraseParamB, '20%');

@@ -9,9 +9,9 @@ $siteRootPathAns = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcq
         "&anscount=".$fields['anscount'];
 $siteRootPathUnits = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['test'].
         "&unitcount=".$fields['unitcount'];
-$siteRootPathGenWCards = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['test']."&generatewcards=".$fields['genwcards']."&displaywcards=".$fields['dispwcards'];
-$siteRootPathDispWCards = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['test']."&displaywcards=".$fields['dispwcards']."&generatewcards=".$fields['genwcards'];
-
+$siteRootPathGenWCards = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['testid']."&generatewcards=";
+$siteRootPathDispWCards = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['testid']."&displaywcards=";
+//var_dump($fields);
 $this->appendArrayVar('headerParams', '<script language="JavaScript" type="text/javascript">
 function createAnsInputs(dropdown)
 {
