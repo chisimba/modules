@@ -141,7 +141,7 @@ class bookthesis extends dbTable {
         $titLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttitle2","libraryforms"),"tit");
         $table->addCell($titLabel->show(), '', 'center', 'left', '');
         $table->addCell($objtit ->show(), '', 'center', 'left', '');
-    $objForm->addRule('thesis_titles',$this->objLanguage->languageText("mod_title_unrequired", "libraryforms"),'required');
+    	$objForm->addRule('thesis_titles',$this->objLanguage->languageText("mod_title_unrequired", "libraryforms"),'required');
         $table->endRow();
 
 
@@ -275,7 +275,7 @@ class bookthesis extends dbTable {
         $wLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentW","libraryforms"),"thesis_w");
         $table->addCell($wLabel->show(), '', 'center', 'left', '');
         $table->addCell($objw->show(), '', 'center', 'left', '');
-	$objForm->addRule('thesis_w',$this->objLanguage->languageText("mod_w_required", "libraryforms"),'required');
+	//$objForm->addRule('thesis_w',$this->objLanguage->languageText("mod_w_required", "libraryforms"),'required');
 
 
         //Create a new textinput for email
