@@ -412,7 +412,6 @@ class essayadmin extends controller
         */
         case 'download':
             $this->setVar('fileId', $this->getParam('fileid'));
-            //$this->setPageTemplate('download_page_tpl.php');
             $this->setPageTemplate(NULL);
             $this->setLayoutTemplate(NULL);
             return 'download_tpl.php';
