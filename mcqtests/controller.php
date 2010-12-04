@@ -189,13 +189,6 @@ class mcqtests extends controller {
                 return 'scqlisting_tpl.php';
             case 'addsimplecalculated':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
-                //Flag to determine if we save question as new or just update
-                $saveAsNew = 0;
-                if ($submitVal == "Save as a new question") {
-                    $saveAsNew = 1;
-                } elseif ($submitVal == "Save changes") {
-                    $saveAsNew = 1;
-                }
 
                 $id = $this->saveSimpleCalculated();
                 //Array to hold values to be passed to template
@@ -1142,6 +1135,15 @@ class mcqtests extends controller {
         $test = $this->getParam('test', Null);
         $qncount = $this->getParam('qncount', Null);
         $id = $this->getParam('id', Null);
+        $submitVal = $this->getParam("submit", "Other");
+        //Flag to determine if we save question as new or just update
+        $saveAsNew = 0;
+        if ($submitVal == "Save as a new question") {
+            $saveAsNew = 1;
+        } elseif ($submitVal == "Save changes") {
+            $saveAsNew = 1;
+        }
+
         //Avoid saving blank values
         if (!empty($fieldsQn['name'])) {
             //Insert/Update Question
@@ -1300,10 +1302,14 @@ class mcqtests extends controller {
             $dsetarr = array();
             $dsetarr['datasetdefinition'] = "";
             $dsetarr['questionid'] = $questionid;
+            $qnid = $this->getParam("id", Null);
+            //Check if dataset for this question exists
+            $dsetid = $this->objDBDataset->getRecords($qnid);
             if (empty($dsetid)) {
                 $dsetid = $this->objDBDataset->addRecord($dsetarr);
+            } else {
+                $dsetid = $dsetid[0]['id'];
             }
-
             $fieldsUt['datasetdefinition'] = $this->getParam('unit_update_' . $wccount, Null);
             $afromrange = $this->getParam('afromrange_' . $wccount, Null);
             $atorange = $this->getParam('atorange_' . $wccount, Null);
@@ -1322,7 +1328,6 @@ class mcqtests extends controller {
             $arrdset_def_a['type'] = "1";
             $arrdset_def_a['options'] = $afromrange . "." . $adecimalplaces . ":" . $atorange . "." . $adecimalplaces;
             $arrdset_def_a['itemcount'] = "10";
-
             $adefid = $this->objDSDefinitions->addRecord($arrdset_def_a, $a_def_id);
 
             //Save Wild-Card B
@@ -1337,6 +1342,45 @@ class mcqtests extends controller {
             $arrdset_def_b['itemcount'] = "10";
 
             $bdefid = $this->objDSDefinitions->addRecord($arrdset_def_b, $b_def_id);
+            //Add items if none exists
+            $aitemsCheck = $this->objDSItems->getRecords($adefid);
+            $bitemsCheck = $this->objDSItems->getRecords($bdefid);
+            if (empty($aitemsCheck)) {
+                //Number of items to add
+                $itemcount = 10;
+                //Counter
+                $cnt = 1;
+                //Add A items
+                do {
+                    //Generate a random number
+                    $arand = rand($afromrange, $atorange);
+                    $arandeci = rand(0, $adecimalplaces);
+                    //Array to hold item values
+                    $fields = array();
+                    $fields['datasetid'] = $adefid;
+                    $fields['itemnumber'] = $cnt;
+                    $fields['value'] = $arand . "." . $arandeci;
+                    $this->objDSItems->addRecord($fields, $id = NULL);
+                    $cnt++;
+                } while ($cnt <= $itemcount);
+            }
+            if (empty($bitemsCheck)) {
+                //Counter
+                $cnt = 1;
+                //Add A items
+                do {
+                    //Generate a random number
+                    $brand = rand($bfromrange, $btorange);
+                    $brandeci = rand(0, $bdecimalplaces);
+                    //Array to hold item values
+                    $fields = array();
+                    $fields['datasetid'] = $bdefid;
+                    $fields['itemnumber'] = $cnt;
+                    $fields['value'] = $brand . "." . $brandeci;
+                    $this->objDSItems->addRecord($fields, $id = NULL);
+                    $cnt++;
+                } while ($cnt <= $itemcount);
+            }
         }
         return $id;
     }

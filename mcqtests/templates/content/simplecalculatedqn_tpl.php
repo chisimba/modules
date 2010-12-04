@@ -5,9 +5,9 @@ $contextCode = $this->getSession('contextCode');
 // objects that almost every template will use
 $objSysConfig = $this->getObject('altconfig', 'config');
 //Get the path to the site root
-$siteRootPathAns = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['test'].
+$siteRootPathAns = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['testid'].
         "&anscount=".$fields['anscount'];
-$siteRootPathUnits = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['test'].
+$siteRootPathUnits = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['testid'].
         "&unitcount=".$fields['unitcount'];
 $siteRootPathGenWCards = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['testid']."&generatewcards=";
 $siteRootPathDispWCards = $objConfig->getItem("KEWL_SITE_ROOT") . "index.php?module=mcqtests&action=addsimplecalculated&mode=".$mode."&test=".$fields['testid']."&displaywcards=";

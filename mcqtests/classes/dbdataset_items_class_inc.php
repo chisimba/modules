@@ -68,7 +68,7 @@ class dbdataset_items extends dbtable {
             $sql.= " WHERE datasetid='$datasetId' AND $filter";
         } else if ($filter != NULL) {
             $sql.= " WHERE datasetid='$datasetId'";
-        } else if ($questionId != NULL) {
+        } else if ($datasetId != NULL) {
             $sql.= " WHERE datasetid='$datasetId'";
         } else {
             $sql .= "";

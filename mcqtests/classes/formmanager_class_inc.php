@@ -2330,6 +2330,8 @@ class formmanager extends object {
                 $ansValues['tolerance'] = $calcqnans['tolerance'];
                 $ansValues['tolerancetype'] = $calcqnans['tolerancetype'];
                 $ansValues['correctanswerformat'] = $calcqnans['correctanswerformat'];
+                $ansValues['correctanswerlength'] = $calcqnans['correctanswerlength'];
+                
                 $ans = $this->createAnswerFields("_update_" . $count, $ansValues);
 
                 //Add form validations
@@ -2421,6 +2423,7 @@ class formmanager extends object {
         $form->addToForm($unitHandling);
         //Get Values if edit
         $unitValues = Null;
+        $upcount = 0;
         if (!empty($id)) {
             $uh = $this->objNumericalUnit->getNumericalUnits($id);
 
@@ -2505,14 +2508,15 @@ class formmanager extends object {
         $wc_count = new hiddeninput("wccount", $wcardno);
 
 
-        $wcardValues = Null;
+        $wcardValues = Null;        
         //Get Values
         if (!empty($id)) {
             //Get id of the datasets affiliated to this question
-            $datasets = $this->objDBDataset->getRecords($id);
+            $qnid = $this->getParam("id", Null);
+            $datasets = $this->objDBDataset->getRecords($qnid);
             $datasetid = $datasets[0]['id'];
 
-            if (!empty($datasets)) {
+            if (!empty($datasetid)) {
                 //get the related definitions
                 $dataset_definitions = $this->objDSDefinitions->getRecords($datasetid);
                 //Populate values in array
@@ -2619,8 +2623,6 @@ class formmanager extends object {
             $displaywcardcount = new hiddeninput("displaywcardcount", $fields["dispwcardstore"]);
         }
 
-
-        var_dump($fields["displaywcards"]);
         //Create table to hold the wildcards
         $objTableX = new htmltable();
         $objTableX->width = '800px';

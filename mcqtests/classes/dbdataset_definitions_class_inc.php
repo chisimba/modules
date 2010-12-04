@@ -29,6 +29,8 @@ class dbdataset_definitions extends dbtable {
     public $table;
     public $objUser;
     public $userId;
+    private $datasetId;
+    private $categoryId;
 
     public function init() {
         parent::init('tbl_test_dataset_definitions');
@@ -58,24 +60,24 @@ class dbdataset_definitions extends dbtable {
      * Method to get a set of definitions for a particular category
      *
      * @access public
-     * @param string $categoryId The Id of the category being used.
+     * @param string $datasetId The Id of the datasetid being used.
      * @param string $filter An additional filter on the select statement.
      * @return array $data The list of definitions for the category.
      */
-    public function getRecords($categoryId = NULL, $filter = NULL) {
+    public function getRecords($datasetId = NULL, $filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
-        if ($filter && $categoryId) {
-            $sql.= " WHERE categoryid='$categoryId' AND $filter";
+        if ($filter && $datasetId) {
+            $sql.= " WHERE datasetid='$datasetId' AND $filter";
         } else if ($filter != NULL) {
-            $sql.= " WHERE categoryid='$categoryId'";
-        } else if ($questionId != NULL) {
-            $sql.= " WHERE categoryid='$categoryId'";
+            $sql.= " WHERE datasetid='$datasetId'";
+        } else if ($datasetId != NULL) {
+            $sql.= " WHERE datasetid='$datasetId'";
         } else {
             $sql .= "";
         }
         $data = $this->getArray($sql);
         if (!empty($data)) {
-            $count = $this->countRecords($categoryId);
+            $count = $this->countRecords($datasetId);
             $data[0]['count'] = $count;
             return $data;
         }
@@ -117,7 +119,7 @@ class dbdataset_definitions extends dbtable {
      * @param string $categoryId The id of the specified question.
      * @return int $catnum The number of dataset-definitions for the category.
      */
-    public function countRecords($questionId) {
+    public function countRecords($categoryId) {
         $sql = "SELECT count(id) AS qnum FROM " . $this->table . " WHERE categoryid='$categoryId'";
         $data = $this->getArray($sql);
         if (!empty($data)) {
