@@ -71,7 +71,7 @@ class dbnumericalunitsoptions extends dbtable {
     public function getNumericalOptions($id) {
         $filter = "WHERE questionid='$id'";
         $data = $this->getAll($filter);
-        return $data[0];
+        return $data;
     }
 }
 ?>

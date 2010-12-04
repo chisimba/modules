@@ -2414,8 +2414,9 @@ class formmanager extends object {
         $unitValues = Null;
         if (!empty($id)) {
             $unitValues = array();
-            $uh = $this->objNumericalOptions->getNumericalOptions($id);
-            $unitValues = $uh;
+            $qnid = $this->getParam("id", Null);
+            $uh = $this->objNumericalOptions->getNumericalOptions($qnid);
+            $unitValues = $uh[0];
         }
         $unitHandling = $this->createUnitHandlingFields($unitValues);
 

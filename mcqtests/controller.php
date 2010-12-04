@@ -1151,7 +1151,8 @@ class mcqtests extends controller {
                 $id = $this->dbQuestions->addQuestion($fieldsQn, $id, $saveAsNew);
             }
             //Store Question Id
-            $questionid = $id;
+            $qnid = $this->getParam("id", Null);
+            $questionid = $qnid;
 
             //Save Unit-Handling
             $fieldsUH = array();
