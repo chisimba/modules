@@ -2065,6 +2065,13 @@ class formmanager extends object {
         $mode = $fields['mode'];
 
         //Form texts
+        $phraseWildCardValues = $this->objLanguage->languageText("mod_mcqtests_wcardvalues", 'mcqtests', "outside limits of true value");
+        $phraseOutsideLimits = $this->objLanguage->languageText("mod_mcqtests_outsidelimits", 'mcqtests', "outside limits of true value");
+        $phraseWithinLimits = $this->objLanguage->languageText("mod_mcqtests_withinlimits", 'mcqtests', "within limits of true value");
+        $phraseCorrectAns = $this->objLanguage->languageText("mod_mcqtests_correctans", 'mcqtests', "Correct answer");
+        $wordSet = $this->objLanguage->languageText("mod_mcqtests_wordset", 'mcqtests', "Set");
+        $wordMax = $this->objLanguage->languageText("mod_mcqtests_wordmax", 'mcqtests', "Max");
+        $wordMin = $this->objLanguage->languageText("mod_mcqtests_wordmin", 'mcqtests', "Min");
         $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
         $wordBack = $this->objLanguage->languageText("word_back");
@@ -2331,7 +2338,7 @@ class formmanager extends object {
                 $ansValues['tolerancetype'] = $calcqnans['tolerancetype'];
                 $ansValues['correctanswerformat'] = $calcqnans['correctanswerformat'];
                 $ansValues['correctanswerlength'] = $calcqnans['correctanswerlength'];
-                
+
                 $ans = $this->createAnswerFields("_update_" . $count, $ansValues);
 
                 //Add form validations
@@ -2509,7 +2516,7 @@ class formmanager extends object {
         $wc_count = new hiddeninput("wccount", $wcardno);
 
 
-        $wcardValues = Null;        
+        $wcardValues = Null;
         //Get Values
         if (!empty($id)) {
             //Get id of the datasets affiliated to this question
@@ -2526,6 +2533,8 @@ class formmanager extends object {
                     $wcardValues['dsetid'] = $datasetid;
                     if ($dataset_definitions[0]["name"] == "A") {
                         $wcardValues['a_definition_id'] = $dataset_definitions[0]['id'];
+                        $dsetDefA = $dataset_definitions[0]['id'];
+                        $dsetDefB = $dataset_definitions[1]['id'];
                         //get min, max and decimal values from string
                         $stuff = explode(":", $dataset_definitions[0]["options"]);
                         //Get min and decimal
@@ -2549,6 +2558,8 @@ class formmanager extends object {
                         $wcardValues['b_decimal'] = $max_dec[1];
                     } elseif ($dataset_definitions[0]["name"] == "B") {
                         $wcardValues['b_definition_id'] = $dataset_definitions[0]['id'];
+                        $dsetDefB = $dataset_definitions[0]['id'];
+                        $dsetDefA = $dataset_definitions[1]['id'];
                         //Get Values for B
                         //get min, max and decimal values from string
                         $stuff = explode(":", $dataset_definitions[0]["options"]);
@@ -2643,6 +2654,40 @@ class formmanager extends object {
 
         //Add Wild-card to form
         $form->addToForm($objTableX->show());
+
+        //Create table to display the wildcards
+        $objTableY = new htmltable();
+        $objTableY->width = '800px';
+        $objTableY->attributes = " align='center' border='0'";
+        $objTableY->cellspacing = '12';
+        $wcardcount = 1;
+        $wcardtotal = 10;
+        while ($wcardcount <= $wcardtotal) {
+            //Fetch the Values for A and B
+            $unitDataA = $this->objDSItems->getRecords($dsetDefA, $filter = "itemnumber='".$wcardcount."'");
+                        $no1 = $unitDataA[0]["value"];
+            $unitDataB = $this->objDSItems->getRecords($dsetDefB, $filter = "itemnumber='".$wcardcount."'");
+                        $no2 = $unitDataB[0]["value"];
+            //Add Generate Wildcards to the table
+            $objTableY->startRow();
+            $objTableY->addCell("<b>".$wordSet." ".$wcardcount."</b> {A}*{B}");
+            $thisAns = $no1*$no2;
+            $roundAns = round($thisAns,0);
+            $objTableY->addCell($no1."*".$no2." = ".$roundAns."<br />".$phraseOutsideLimits." ".$thisAns);
+            $objTableY->endRow();
+            $wcardcount++;
+        }
+
+        //Add fieldset to hold wild card(s) values
+        $objFieldset->setLegend($phraseWildCardValues);
+
+        //Add table to Fieldset
+        $objFieldset->addContent($objTableY->show());
+
+        $form->addToForm($objFieldset->show());
+        
+        //Reset Fieldset
+        $objFieldset->reset();
 
         //Create table to hold the tags
         $objTable2 = new htmltable();
