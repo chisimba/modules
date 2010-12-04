@@ -2582,7 +2582,6 @@ class formmanager extends object {
 
         //Add Generate new set of wildcard values
         $genwcard = new dropdown("genwcards");
-        $genwcard->extra = "onchange='generateWildCards(this)'";
         $genwcard->addOption("0", "0");
         $genwcard->addOption("1", "1");
         $genwcard->addOption("2", "2");
@@ -2596,15 +2595,10 @@ class formmanager extends object {
         $genwcard->addOption("10", "10");
         if (!empty($fields["genwcards"])) {
             $genwcard->setSelected($fields["genwcards"]);
-            $genwcardcount = new hiddeninput("genwcardcount", $fields["genwcards"]);
-        } else {
-            $genwcard->setSelected($fields["genwcardstore"]);
-            $genwcardcount = new hiddeninput("genwcardcount", $fields["genwcardstore"]);
         }
 
         //Add Display new set of wildcard values
         $displaywcard = new dropdown("dispwcards");
-        $displaywcard->extra = "onchange='displayWildCards(this)'";
         $displaywcard->addOption("0", "0");
         $displaywcard->addOption("1", "1");
         $displaywcard->addOption("2", "2");
@@ -2618,10 +2612,6 @@ class formmanager extends object {
         $displaywcard->addOption("10", "10");
         if (!empty($fields["dispwcards"])) {
             $displaywcard->setSelected($fields["dispwcards"]);
-            $displaywcardcount = new hiddeninput("displaywcardcount", $fields["dispwcards"]);
-        } else {
-            $displaywcard->setSelected($fields["dispwcardstore"]);
-            $displaywcardcount = new hiddeninput("displaywcardcount", $fields["dispwcardstore"]);
         }
 
         //Create table to hold the wildcards
@@ -2629,15 +2619,26 @@ class formmanager extends object {
         $objTableX->width = '800px';
         $objTableX->attributes = " align='center' border='0'";
         $objTableX->cellspacing = '12';
+        //Button Generate
+        $buttonX = new button("submit", $wordGenerate);
+        $buttonX->setValue($wordGenerate);
+        $buttonX->setToSubmit();
+        $btnGenerate = $buttonX->showSexy();
 
         //Add Generate Wildcards to the table
         $objTableX->startRow();
-        $objTableX->addCell($wordGenerate . " " . $genwcard->show() . " " . $phraseGenerate . $genwcardcount->show(), '', '', '', '', 'colspan=2');
+        $objTableX->addCell($btnGenerate . " " . $genwcard->show() . " " . $phraseGenerate, '', '', '', '', 'colspan=2');
         $objTableX->endRow();
+
+        //Button Generate
+        $buttonX = new button("submit", $wordDisplay);
+        $buttonX->setValue($wordDisplay);
+        $buttonX->setToSubmit();
+        $btnDisplay = $buttonX->showSexy();
 
         //Add Display Wildcards to the table
         $objTableX->startRow();
-        $objTableX->addCell($wordDisplay . " " . $displaywcard->show() . " " . $phraseDisplay . $displaywcardcount->show(), '', '', '', '', 'colspan=2');
+        $objTableX->addCell($btnDisplay . " " . $displaywcard->show() . " " . $phraseDisplay, '', '', '', '', 'colspan=2');
         $objTableX->endRow();
 
         //Add Wild-card to form

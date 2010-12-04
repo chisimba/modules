@@ -202,10 +202,8 @@ class mcqtests extends controller {
                 $fields['anscount'] = $this->getParam('anscount', Null);
                 $fields['frmanscount'] = $this->getParam('frmanscount', Null);
                 $fields['unitcount'] = $this->getParam('unitcount', Null);
-                $fields['genwcards'] = $this->getParam('generatewcards', Null);
-                $fields['dispwcards'] = $this->getParam('displaywcards', Null);
-                $fields['genwcardstore'] = $this->getParam('genwcardcount', Null);
-                $fields['dispwcardstore'] = $this->getParam('displaywcardcount', Null);
+                $fields['genwcards'] = $this->getParam('genwcards', Null);
+                $fields['dispwcards'] = $this->getParam('dispwcards', Null);
                 //Set variables for use in the template
                 $this->setVarByRef('fields', $fields);
                 $this->setVarByRef('id', $id);
