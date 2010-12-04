@@ -16,6 +16,7 @@ class gift extends controller {
         $this->objDepartments = $this->getObject("dbdepartments");
         $this->objAttachments = $this->getObject("dbattachments");
         $this->objHome = $this->getObject("home");
+        $this->objGroupAdminModel = & $this->getObject('groupadminmodel', 'groupadmin');
         $this->objUser = $this->getObject("user", "security");
         $this->objEdit = $this->getObject("edit");
         $this->objGiftUser = $this->getObject("dbuserstbl");
@@ -169,6 +170,7 @@ class gift extends controller {
                 $path = $name;
             }
             $this->objDepartments->addDepartment($name, $path);
+            $this->objGroupAdminModel->addGroup($name, $name);
             return $this->nextAction("home");
         }
     }
@@ -187,7 +189,7 @@ class gift extends controller {
     function __confirmdeletedepartment() {
         $id = $this->getParam("id");
         $giftsCount = $this->objDbGift->getGiftCountByDepartment($id);
-        $subdeptscount= $this->objDepartments->getSubDepartmentsCount($id);
+        $subdeptscount = $this->objDepartments->getSubDepartmentsCount($id);
         $departmentname = $this->objDepartments->getDepartmentName($id);
         $deletevalid = true;
         $errormessage = "";
@@ -196,7 +198,7 @@ class gift extends controller {
             $deletevalid = false;
         }
         if ($subdeptscount > 1) {
-            $errormessage .= "<br/>Cannot delete " . strtolower($this->divisionLabel) . " named $departmentname, delete  the following sub-" . strtolower($this->divisionLabel) . "s that belong to this ".strtolower($this->divisionLabel)." first<br/>".$subdepts;
+            $errormessage .= "<br/>Cannot delete " . strtolower($this->divisionLabel) . " named $departmentname, delete  the following sub-" . strtolower($this->divisionLabel) . "s that belong to this " . strtolower($this->divisionLabel) . " first<br/>" . $subdepts;
             $deletevalid = false;
         }
         if (!$deletevalid) {
@@ -660,24 +662,6 @@ class gift extends controller {
         return "addeditgift_tpl.php";
     }
 
-    function __exporttopdf() {
-        $objPdf = $this->getObject('fpdfwrapper', 'pdfmaker');
-        $departmentid = $this->getSession("departmentid");
-        $departmentname = $this->objDepartments->getDepartmentName($departmentid);
-        $gifts = $this->objDbGift->getGifts($departmentid);
-        $text = "$departmentname\r\n";
-        if (count($gifts) > 0) {
-            foreach ($gifts as $gift) {
-                $value = $gift['value']; //$this->objGift->formatMoney($gift['value'], TRUE);
-                $rec = $this->objUser->fullname($gift['recipient']);
-                $text .= $gift['giftname'] . '\t' . $gift['gift_type'] . '\t' . strip_tags($gift['description']) . '\t' . $gift['donor'] . '\t' . $value . '\t' . $rec . '\t' . $gift['date_recieved'] . '\t' . $gift['tran_date'] . '\r\n';
-            }
-        }
-
-        //$text = $header . "  " . $postdate . "\r\n" . html_entity_decode(strip_tags($body));
-        $objPdf->simplePdf($text);
-    }
-
     function __exportospreadsheet() {
         $ex = $this->getObject('excelgenerator');
 
@@ -685,46 +669,15 @@ class gift extends controller {
         $departmentname = $this->objDepartments->getDepartmentName($departmentid);
 
         $ex->generateExel($departmentid, $departmentname);
-        /*
-          $destinationDir = $this->objSysConfig->getValue('UPLOADS_DIR', 'gift');
-          $id = mktime() . rand();
-          $filename = $id;
-          $ext = "spreadsheet";
+    }
 
-          $objMkDir = $this->getObject('mkdir', 'files');
-          $objMkDir->mkdirs($destinationDir . "/$ext/");
-          $exportfile = $destinationDir . "/$ext/" . $filename . ".xls";
+    function __exportopdf() {
+        $ex = $this->getObject('pdfgenerator');
 
-          if (file_exists($exportfile)) {
-          unlink($exportfile);
-          }
-          $file = fopen($exportfile, "a");
+        $departmentid = $this->getSession("departmentid");
+        $departmentname = $this->objDepartments->getDepartmentName($departmentid);
 
-          $departmentid = $this->getSession("departmentid");
-          $departmentname = $this->objDepartments->getDepartmentName($departmentid);
-
-          fputs($file, "$departmentname\r\n");
-          fputs($file, "\r\n");
-          fputs($file, "\r\n");
-          fputs($file, 'Gift_Name,Type,Description, Donor,Value_(ZAR), Recipient, Date_Recieved, Date_Recorded');
-          fputs($file, "\r\n");
-
-          $gifts = $this->objDbGift->getGifts($departmentid);
-          if (count($gifts) > 0) {
-          foreach ($gifts as $gift) {
-          $value = $gift['value']; //$this->objGift->formatMoney($gift['value'], TRUE);
-          $rec = $this->objUser->fullname($gift['recipient']);
-          $content = strip_tags($gift['giftname']) . ',' . $gift['gift_type'] . ',' . strip_tags($gift['description']) . ',' . $gift['donor'] . ',' . $value . ', ' . $rec . ',' . $gift['date_recieved'] . ',' . $gift['tran_date'] . '\r\n';
-          // echo $content.'<br/>';
-
-          fputs($file, $content);
-          }
-          }
-          //die();
-          fclose($file);
-          $filepath = $ext . '/' . $filename . '.xls';
-          return $this->objGift->downloadFile($filepath, $filename . ".xls");
-         */
+        $ex->generatePdf($departmentid, $departmentname);
     }
 
 }

@@ -3,7 +3,7 @@
 require_once 'PHPExcel.php';
 require_once 'PHPExcel/IOFactory.php';
 
-class excelgenerator extends object {
+class pdfgenerator extends object {
 
     public function init() {
         $this->objDbGift = $this->getObject("dbgift");
@@ -13,7 +13,7 @@ class excelgenerator extends object {
         $this->objGift = $this->getObject("giftops");
     }
 
-    function generateExel($departmentid, $departmentname) {
+    function generatePdf($departmentid, $departmentname) {
         $gifts = $this->objDbGift->getGifts($departmentid);
         $objPHPExcel = new PHPExcel();
 
@@ -78,13 +78,12 @@ class excelgenerator extends object {
 // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $objPHPExcel->setActiveSheetIndex(0);
 
-
-// Redirect output to a client’s web browser (Excel2007)
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="giftregisterexport.xlsx"');
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment;filename="giftregisterexport.pdf"');
         header('Cache-Control: max-age=0');
 
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
+        $objWriter->setSheetIndex(0);
         $objWriter->save('php://output');
     }
 

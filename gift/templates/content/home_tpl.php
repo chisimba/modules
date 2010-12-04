@@ -92,9 +92,9 @@ if ($this->objUser->isAdmin()) {
     $form->addToForm('&nbsp;&nbsp;' . $button->show());
 
     $button = new button('pdf', "PDF");
-    $uri = $this->uri(array('action' => 'exporttopdf'));
+    $uri = $this->uri(array('action' => 'exportopdf'));
     $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-//    $top.='&nbsp;&nbsp;' . $button->show();
+   $form->addToForm('&nbsp;&nbsp;' . $button->show());
 
 
     $button = new button('audittrail', "Audit Trail");

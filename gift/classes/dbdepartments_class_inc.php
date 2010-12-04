@@ -1,9 +1,14 @@
 <?php
 
 class dbdepartments extends dbtable {
-
+private $objUser;
+private $objGroupAdminModel;
+private $objGroupOps;
     function init() {
         parent::init("tbl_gift_departments");
+        $this->objUser=$this->getObject('user','security');
+        $this->objGroupOps=$this->getObject('groupops','groupadmin');
+        $this->objGroupAdminModel=$this->getObject('groupadminmodel','groupadmin');
     }
 
     function addDepartment($name, $path) {
@@ -19,11 +24,24 @@ class dbdepartments extends dbtable {
         $id = $this->insert($data);
         return $id;
     }
-
-    function getDepartments() {
+ function getDepartments() {
         $sql =
                 "select * from tbl_gift_departments where (deleted='N' or deleted is null) order by level";
-        return $this->getArray($sql);
+        $data = $this->getArray($sql);
+        if ($this->objUser->isAdmin()) {
+            return $data;
+        }
+
+        $departments = array();
+        $userId = $this->objUser->userid(); // $this->getUserPuid($this->objUser->userid());
+
+        foreach ($data as $department) {
+            $groupId = $this->objGroupAdminModel->getId($department['name']);
+            if ($this->objGroupOps->isGroupMember($groupId, $userId)) {
+                $departments[] = $department;
+            }
+        }
+        return $departments;
     }
 
     function getParentPath($id) {

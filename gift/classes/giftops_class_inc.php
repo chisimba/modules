@@ -311,9 +311,9 @@ class giftops extends object {
         return $fs->show();
     }
 
-    function showSearchByDatesForm() {
+    function showSearchByDatesForm($action) {
 
-        $form = new form('searchbydatesform', $this->uri(array('action' => 'searchbydate')));
+        $form = new form('searchbydatesform', $this->uri(array('action' =>$action)));
 
         $objDateTime = $this->getObject('dateandtime', 'utilities');
         $objDatePicker = $this->newObject('datepicker', 'htmlelements');

@@ -1,5 +1,5 @@
 <?php
 
-echo $this->objGift->showSearchByDatesForm();
+echo $this->objGift->showSearchByDatesForm('searchbydate');
 
 ?>
