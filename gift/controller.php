@@ -251,6 +251,7 @@ class gift extends controller {
         $startDate = $this->getParam('startdate');
         $endDate = $this->getParam('enddate');
         $module = "gift";
+     
 
         $data = $this->objDbGift->getUserActivity($startDate, $endDate, $module);
         $this->setVarByRef("data", $data);

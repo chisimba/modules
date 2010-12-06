@@ -227,7 +227,7 @@ class dbgift extends dbtable {
                 "select * from tbl_useractivity
         where  (createdon between '$startdate' and '$enddate')
 
-        and module='$module' order by createdon";
+        and (module='$module' or module = 'security')order by createdon";
         return $this->getArray($sql);
     }
 
