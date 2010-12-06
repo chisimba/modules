@@ -294,8 +294,8 @@ $objModule = $this->getObject('modules','modulecatalogue');
 //See if the mathml module is registered and set params
 $isRegistered = $objModule->checkIfRegistered('realtime');
 if ($isRegistered) {
-    $sessionmanager= $this->getObject("sessionmanager", "realtime");
-    $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $sessionmanager->showSessionList($file['id'],$agenda,$this->objUser->fullname()));
+//    $sessionmanager= $this->getObject("sessionmanager", "realtime");
+ //   $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $sessionmanager->showSessionList($file['id'],$agenda,$this->objUser->fullname()));
 
 }
 
