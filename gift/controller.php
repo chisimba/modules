@@ -251,7 +251,7 @@ class gift extends controller {
         $startDate = $this->getParam('startdate');
         $endDate = $this->getParam('enddate');
         $module = "gift";
-     
+
 
         $data = $this->objDbGift->getUserActivity($startDate, $endDate, $module);
         $this->setVarByRef("data", $data);
@@ -306,7 +306,7 @@ class gift extends controller {
         if (count($errormessages) > 0) {
             $this->setVarByRef("errormessages", $errormessages);
             $mode = "fixup";
-            $action="save";
+            $action = "save";
             $this->setVarByRef("action", $action);
             $this->setVarByRef("mode", $mode);
             $this->setVarByRef("name", $name);
@@ -355,11 +355,8 @@ class gift extends controller {
             $objMailer = $this->getObject('email', 'mail');
             $recipients = array();
             foreach ($users as $user) {
-                print_r($user);
                 $recipients[] = $this->objUser->email($user['auth_user_id']);
             }
-            print_r($recipients);
-            die();
             $objMailer->setValue('to', $recipients);
             $objMailer->setValue('from', $this->adminEmail);
             $objMailer->setValue('fromName', $this->objUser->fullnames);
