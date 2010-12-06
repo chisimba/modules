@@ -83,12 +83,9 @@ if ($assignment['email_alert_onsubmit'] == '0') {
 } else {
     $table->addCell($this->objLanguage->languageText('mod_assignment_emailalerton', 'assignment', 'On'));
 }
-
-
 $table->endRow();
 
-
-if ($assignment['format'] != '0') {
+if ($assignment['format'] == '1') {
     $table->startRow();
     $filetypes = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
     if (empty($filetypes)) {
@@ -138,7 +135,6 @@ if ($assignment['usegroups'] == '1') {
     $table->addCell($gfieldset->show(), NULL, NULL, NULL, NULL, 'colspan="4"');
     $table->endRow();
 }
-
 echo $table->show();
 
 $htmlHeader = new htmlHeading();
@@ -186,17 +182,18 @@ if ($this->isValid('markassignments')) {
 
     echo $table->show();
 
-    // Show Student Views
 } else {
+    // Show Student Views
 
     $submissions = $this->objAssignmentSubmit->getStudentAssignment($this->objUser->userId(), $assignment['id']);
 
+//    if (count($submissions) == 0) {
 
-    if (count($submissions) == 0) {
+//    } else if (count($submissions) == 0) {
 
-    } else if (count($submissions) == 0) {
+//    } else {
 
-    } else {
+    if (count($submissions) != 0) {
 
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->startHeaderRow();
@@ -253,12 +250,8 @@ if ($this->isValid('markassignments')) {
         echo $table->show();
     }
 
-
-
-
     if ($this->objAssignmentSubmit->checkOkToSubmit($this->objUser->userId(), $assignment['id'])) {
         $hiddenInput = new hiddeninput('id', $assignment['id']);
-
 
         $header = new htmlHeading();
         $header->type = 1;
@@ -293,6 +286,7 @@ if ($this->isValid('markassignments')) {
             $form->extra = 'enctype="multipart/form-data"';
 
             $objUpload = $this->newObject('uploadinput', 'filemanager');
+            $objUpload->targetDirMode = TARGETDIRMODE_USER;
 
             $filetypes = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
             if (empty($filetypes)) {
@@ -313,11 +307,8 @@ if ($this->isValid('markassignments')) {
 
             $button = new button('submitform', $this->objLanguage->languageText('mod_assignment_uploadassignment', 'assignment', 'Upload Assignment'));
             $button->setToSubmit();
-            ;
 
             $form->addToForm($hiddenInput->show() . $objUpload->show() . '<br />' . $button->show());
-
-
             echo $form->show();
 
             $header = new htmlHeading();
@@ -327,10 +318,7 @@ if ($this->isValid('markassignments')) {
             echo $header->show();
 
             $form = new form('submitassignment', $this->uri(array('action' => 'submitassignment')));
-
-
             $objSelectFile = $this->newObject('selectfile', 'filemanager');
-
             $objSelectFile->name = 'assignment';
             $objSelectFile->restrictFileList = $allowedFileTypes;
             $objSelectFile->setForceRestrictions(TRUE);
@@ -339,7 +327,6 @@ if ($this->isValid('markassignments')) {
             $button->setToSubmit();
 
             $form->addToForm($hiddenInput->show() . $objSelectFile->show() . '<br />' . $button->show());
-
 
             echo $form->show();
         }
