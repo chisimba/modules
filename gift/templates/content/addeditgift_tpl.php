@@ -14,6 +14,7 @@ if ($mode == "add") {
 if ($mode == 'edit') {
     $action = "update";
 }
+echo "Action = $action";
 
 $this->loadClass('dropdown', 'htmlelements');
 

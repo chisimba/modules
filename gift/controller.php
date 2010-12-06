@@ -306,6 +306,8 @@ class gift extends controller {
         if (count($errormessages) > 0) {
             $this->setVarByRef("errormessages", $errormessages);
             $mode = "fixup";
+            $action="save";
+            $this->setVarByRef("action", $action);
             $this->setVarByRef("mode", $mode);
             $this->setVarByRef("name", $name);
             $this->setVarByRef("donor", $donor);
@@ -331,7 +333,7 @@ class gift extends controller {
 
 
 
-        if ($value >= $this->minAmountToAlert) {
+        if ($value > $this->minAmountToAlert) {
             $link = new link($this->uri(array("action" => "view", "id" => $result)));
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $subject = $objSysConfig->getValue('EMAIL_SUBJECT', 'gift');
@@ -355,6 +357,7 @@ class gift extends controller {
             foreach ($users as $user) {
                 $recipients[] = $this->objUser->email($user['perm_user_id']);
             }
+            
             $objMailer->setValue('to', $recipients);
             $objMailer->setValue('from', $this->adminEmail);
             $objMailer->setValue('fromName', $this->objUser->fullnames);
