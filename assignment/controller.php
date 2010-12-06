@@ -692,7 +692,7 @@ class assignment extends controller {
         }
     }
 
-    function __exportospreadsheet() {
+    function __exporttospreadsheet() {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $downloadfolder = $objSysConfig->getValue('DOWNLOAD_FOLDER', 'assignment');
         $this->objAltConfig = $this->getObject('altconfig', 'config');
@@ -771,7 +771,7 @@ class assignment extends controller {
 
         $assignmentId = $this->getParam("id");
         $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignmentId);
-        
+
         $zipname = $this->objAssignmentFunctions->createZipFromSubmissions($submissions, $assignmentId);
 
         if (file_exists($zipname)) {

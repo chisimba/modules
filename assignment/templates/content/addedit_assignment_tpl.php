@@ -45,12 +45,12 @@ function toggleType(el)
 {
     switch (el.value) {
     case \'0\':
-        //document.getElementById(\'uploadableOptions\').style.visibility = \'hidden\';
+        document.getElementById(\'uploadableOptions\').style.display = \'none\';
         setTypeOptionsToDefault();
         toggleTypeOptions(false);
         break;
     case \'1\':
-        //document.getElementById(\'uploadableOptions\').style.visibility = \'visible\';
+        document.getElementById(\'uploadableOptions\').style.display = \'inline\';
         toggleTypeOptions(true);
         break;
     default: ;
@@ -192,7 +192,7 @@ if (!$canChangeField) {
     $radio->extra = 'disabled="disabled"';
 }
 $radio->setBreakSpace('&nbsp;');
-if (!$canChangeField) {
+if ($mode == 'edit' && !$canChangeField) {
     $textinput = new textinput('type');
     $textinput->value = $assignment['format'];
     $textinput->fldType = "hidden";
@@ -229,7 +229,11 @@ if (is_null($allowedFileTypes)) {
     $arrAllowedFileTypes = explode(',', $allowedFileTypes);
 }
 if ($uploadableOptionsEnabled) {
-    $rs = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
+    if ($mode == 'edit') {
+        $rs = $this->objAssignmentUploadablefiletypes->getFiletypes($assignment['id']);
+    } else {
+        $rs = array();
+    }
     $arrAllowedFileTypesSelected = array();
     if (!empty($rs)) {
         foreach ($rs as $row) {
@@ -263,7 +267,9 @@ $radio = new radio('filenameconversion');
 $radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
 $radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
 if ($uploadableOptionsEnabled) {
-    $radio->setSelected($assignment['filename_conversion']);
+    if ($mode == 'edit') {
+        $radio->setSelected($assignment['filename_conversion']);
+    }
 } else {
     $radio->setSelected(1);
     $radio->extra = 'disabled="disabled"';
@@ -277,7 +283,7 @@ $fs->setLegend($this->objLanguage->languageText('mod_assignment_uploadoptions', 
 $fs->addContent($tableUploadableOptions->show());
 // Uploadable options cell
 $typetable->startRow();
-$typetable->addcell($fs->show(),NULL, NULL, NULL, NULL, 'colspan="2"');
+$typetable->addcell('<span id="uploadableOptions"'.($uploadableOptionsEnabled?'':' style="display: none;"').'>'.$fs->show().'</span>',NULL, NULL, NULL, NULL, 'colspan="2"');
 $typetable->endRow();
 // Reflection
 $typetable->startRow();
@@ -306,10 +312,10 @@ if (!$canChangeField) {
     $radio->extra = 'disabled="disabled"';
 }
 $radio->setBreakSpace('&nbsp;');
-if (!$canChangeField) {
+if ($mode == 'edit' && !$canChangeField) {
     $textinput = new textinput('assesment_type');
-    $textinput->value = $assignment['assesment_type'];
     $textinput->fldType = "hidden";
+    $textinput->value = $assignment['assesment_type'];
 }
 /*
 $typetable->addCell($radio->show());

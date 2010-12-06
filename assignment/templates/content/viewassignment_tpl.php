@@ -346,21 +346,21 @@ if ($this->isValid('markassignments')) {
     }
 }
 
-$backLink = new link($this->uri(NULL));
-$backLink->link = $this->objLanguage->languageText('mod_assignment_backtolist', 'assignment', 'Back to List of Assignments');
-$exportStr = "";
-$downloadAllStr = "";
-if ($this->isValid('edit')) {
+$links = '';
 
-    $exportLink = new link($this->uri(array("action" => "exportospreadsheet", "assignmentid" => $assignment['id'])));
-    $exportLink->link = $this->objLanguage->languageText('mod_assignment_export', 'assignment', 'Export to spreadsheet');
-    $exportStr = '&nbsp;&nbsp;|&nbsp;&nbsp' . $exportLink->show();
+$backLink = new link($this->uri(array()));
+$backLink->link = $this->objLanguage->languageText('mod_assignment_backtolist', 'assignment', 'Back to List of Assignments');
+$links .= $backLink->show();
+
+if ($this->isValid('edit')) {
+    $exportLink = new link($this->uri(array("action" => "exporttospreadsheet", "assignmentid" => $assignment['id'])));
+    $exportLink->link = $this->objLanguage->languageText('mod_assignment_exporttospreadsheet', 'assignment');
+    $links .= '<br />'.$exportLink->show();
     if ($assignment['format'] == '1') {
         $downloadalllink = new link($this->uri(array("action" => "downloadall", 'id' => $assignment['id'])));
-        $downloadalllink->link = $this->objLanguage->languageText('mod_assignment_downloadall', 'assignment', 'Download All');
-        $downloadAllStr = '&nbsp;&nbsp;|&nbsp;&nbsp' . $downloadalllink->show();
+        $downloadalllink->link = $this->objLanguage->languageText('mod_assignment_downloadall', 'assignment');
+        $links .= '<br />'.$downloadalllink->show();
     }
 }
-echo '<br />';
-echo '<p>' . $backLink->show() . '&nbsp;' . $exportStr . $downloadAllStr . '</p>';
+echo $links;
 ?>
