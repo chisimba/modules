@@ -357,7 +357,8 @@ class gift extends controller {
             foreach ($users as $user) {
                 $recipients[] = $this->objUser->email($user['perm_user_id']);
             }
-            
+            print_r($recipients);
+            die();
             $objMailer->setValue('to', $recipients);
             $objMailer->setValue('from', $this->adminEmail);
             $objMailer->setValue('fromName', $this->objUser->fullnames);
