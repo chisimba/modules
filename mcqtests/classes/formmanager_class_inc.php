@@ -2074,6 +2074,7 @@ class formmanager extends object {
         $wordMin = $this->objLanguage->languageText("mod_mcqtests_wordmin", 'mcqtests', "Min");
         $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
+        $wordError = $this->objLanguage->languageText("mod_mcqtests_worderror", 'mcqtests', "Error");
         $wordBack = $this->objLanguage->languageText("word_back");
         $BackToList = $wordBack . " " . $wordTo . " " . $phraseListOf . " ";
         $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
@@ -2436,6 +2437,7 @@ class formmanager extends object {
             $uh = $this->objNumericalUnit->getNumericalUnits($id);
 
             $upcount = 1;
+            //No need for multiple unit multipliers, if needed, uncomment and comment code below
             foreach ($uh as $thisUh) {
                 $unitMultiplier = $this->createUnitMultiplierFields("_update_" . $upcount, $thisUh, $multiplier = Null);
                 //Add unit-Multiplier to form
@@ -2661,20 +2663,131 @@ class formmanager extends object {
         $objTableY->attributes = " align='center' border='0'";
         $objTableY->cellspacing = '12';
         $wcardcount = 1;
-        $wcardtotal = 10;
+
+        //Set the number of wild card(s) values to display based on the highest
+        if ($fields["genwcards"] > $fields["dispwcards"]) {
+            $wcardtotal = $fields["genwcards"];
+        } elseif (!empty($fields["dispwcards"])) {
+            $wcardtotal = $fields["dispwcards"];
+        } else {
+            $wcardtotal = 10;
+        }
+
         while ($wcardcount <= $wcardtotal) {
-            //Fetch the Values for A and B
-            $unitDataA = $this->objDSItems->getRecords($dsetDefA, $filter = "itemnumber='".$wcardcount."'");
-                        $no1 = $unitDataA[0]["value"];
-            $unitDataB = $this->objDSItems->getRecords($dsetDefB, $filter = "itemnumber='".$wcardcount."'");
-                        $no2 = $unitDataB[0]["value"];
-            //Add Generate Wildcards to the table
-            $objTableY->startRow();
-            $objTableY->addCell("<b>".$wordSet." ".$wcardcount."</b> {A}*{B}");
-            $thisAns = $no1*$no2;
-            $roundAns = round($thisAns,0);
-            $objTableY->addCell($no1."*".$no2." = ".$roundAns."<br />".$phraseOutsideLimits." ".$thisAns);
-            $objTableY->endRow();
+            //Create dynamic answers
+            $count = 0;
+            if (!empty($id)) {
+                $count = 1;
+                //Get the answers
+                $qnans = $this->objQnAnswers->getAnswers($id);
+                foreach ($qnans as $thisans) {
+                    $calcqnans = $this->objQuestionCalculated->getAnswerRelated($thisans['id']);
+                    $calcqnans = $calcqnans[0];
+
+                    $ansValues = array();
+                    $ansValues['ansid'] = $thisans['id'];
+                    $ansValues['testid'] = $thisans['testid'];
+                    $ansValues['questionid'] = $thisans['questionid'];
+                    $ansValues['answer'] = $thisans['answer'];
+                    $ansValues['answerformat'] = $thisans['answerformat'];
+                    $ansValues['fraction'] = $thisans['fraction'];
+                    $ansValues['feedback'] = $thisans['feedback'];
+                    $ansValues['feedbackformat'] = $thisans['feedbackformat'];
+                    $ansValues['calcid'] = $calcqnans['id'];
+                    $ansValues['tolerance'] = $calcqnans['tolerance'];
+                    $ansValues['tolerancetype'] = $calcqnans['tolerancetype'];
+                    $ansValues['correctanswerformat'] = $calcqnans['correctanswerformat'];
+                    $ansValues['correctanswerlength'] = $calcqnans['correctanswerlength'];
+
+                    //Fetch the Values for A and B
+                    $unitDataA = $this->objDSItems->getRecords($dsetDefA, $filter = "itemnumber='" . $wcardcount . "'");
+                    $no1 = $unitDataA[0]["value"];
+                    $unitDataB = $this->objDSItems->getRecords($dsetDefB, $filter = "itemnumber='" . $wcardcount . "'");
+                    $no2 = $unitDataB[0]["value"];
+
+                    //Add values to wildcards
+                    $newFormula = str_replace("A", floatval($no1), $ansValues['answer']);
+                    $newFormula = str_replace("B", floatval($no2), $newFormula);
+
+                    // remove any non-numbers chars; exception for math operators
+                    $myformula = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $newFormula);
+                    $compute = create_function("", "return (" . $myformula . ");");
+                    $computed = 0 + $compute();
+                    $roundAns = (float)round($computed, 0);
+
+                    /*
+                     * COMPUTE THE TOLERANCE
+                     * Use Nominal -for add(+) operation -- mark correct if dx < t
+                     * Example:
+                     * With value 200 and tolerance level of 0.5
+                     * Upper Limit => 200+0.5 = 200.5
+                     * Lower Limit => 200-0.5 = 199.5
+                     * Use Relative - for multiplication, division and subtraction operations
+                     * Example:
+                     * With value 200 and tolerance level of 0.5
+                     * Upper Limit => 200+(200*0.5)
+                     * Lower Limit => 200-(200*0.5)
+                     */
+                    //check if using add operation
+                    $addPos = strpos($myformula, "+");
+                    if ($addPos === false) {
+                        //Compute the minimal tolerance value
+                        $minVal = $computed - $ansValues['tolerance'];
+                        // remove any non-numbers chars; exception for math operators
+                        $minVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $minVal);
+                        $minVal = create_function("", "return (" . $minVal . ");");
+                        $minVal = 0 + $minVal();
+
+                        //Compute the maximum tolerance value
+                        $maxVal = $computed + $ansValues['tolerance'];
+                        // remove any non-numbers chars; exception for math operators
+                        $maxVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $maxVal);
+                        $maxVal = create_function("", "return (" . $maxVal . ");");
+                        $maxVal = 0 + $maxVal();
+                    } else {
+                        //Correct answer * tolerance value
+                        $tolerance = $computed * $ansValues['tolerance'];
+                        //Compute the minimal tolerance value
+                        $minVal = $computed - $tolerance;
+                        // remove any non-numbers chars; exception for math operators
+                        $minVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $minVal);
+                        $minVal = create_function("", "return (" . $minVal . ");");
+                        $minVal = 0 + $minVal();
+
+                        //Compute the maximum tolerance value
+                        $maxVal = $computed + $tolerance;
+                        // remove any non-numbers chars; exception for math operators
+                        $maxVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $maxVal);
+                        $maxVal = create_function("", "return (" . $maxVal . ");");
+                        $maxVal = 0 + $maxVal();
+                    }
+                    //Mark Correct
+                    $markCorrect = false;
+                    $phraseLimits = "";
+                    if ($roundAns >= $minVal || $roundAns <= $maxVal) {
+                        $markCorrect = true;
+                        $phraseLimits = $phraseWithinLimits;
+                        $rowAttributes = '<div> '.$phraseCorrectAns." ";
+                        } else {
+                        $markCorrect = false;
+                        $phraseLimits = $phraseOutsideLimits;
+                        $rowAttributes = '<div style="color:#FF0000"> '.$wordError." ".$phraseCorrectAns." ";
+                    }
+                    //Render results in a table row
+                    $objTableY->startRow();
+                    if ($count == 1) {
+                        $objTableY->addCell("<b>" . $wordSet . " " . $wcardcount . "</b> ", "", "top", "right");
+                    } else {
+                        $objTableY->addCell("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                    }
+                    $objTableY->addCell($ansValues['answer']);
+                    //End row holding the set values
+                    $objTableY->addCell($myformula . " = " . $roundAns . " " . $uh[0]["unit"] . "<br />".$rowAttributes . $phraseLimits . " " . $computed . " " . $uh[0]["unit"]
+                            . "</div>" . "Min: " . $minVal . " Max: " . $maxVal);
+                    $objTableY->endRow();
+                    $count++;
+                }
+            }
             $wcardcount++;
         }
 
@@ -2685,7 +2798,7 @@ class formmanager extends object {
         $objFieldset->addContent($objTableY->show());
 
         $form->addToForm($objFieldset->show());
-        
+
         //Reset Fieldset
         $objFieldset->reset();
 
