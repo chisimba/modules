@@ -4,11 +4,16 @@ $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
+$this->loadClass('htmlheading', 'htmlelements');
 
 
 $form = new form('outcomesandassessmentthreeform');
 
 $table = $this->newObject('htmltable', 'htmlelements');
+
+$table->startRow();
+$table->addCell("<b><i>D.5. Specify the notional study hours expected for the duration of the course/unit using the spreadsheet provided.</b></i>");
+$table->endRow();
 
 $textinput = new textinput('a');
 $textinput->size = 10;
@@ -47,7 +52,7 @@ $table->endRow();
 
 $table->startRow();
 $table->addCell("<b>Total contact time</b>");
-$table->addCell("");
+$table->addCell("<b>123</b>");
 $table->endRow();
 
 $textinput = new textinput('f');
@@ -59,7 +64,7 @@ $table->endRow();
 
 $table->startRow();
 $table->addCell("<b>Total notional study hours (excluding the exams)</b>");
-$table->addCell("");
+$table->addCell("<b>123</b>");
 $table->endRow();
 
 $textinput = new textinput('g');
@@ -78,7 +83,7 @@ $table->endRow();
 
 $table->startRow();
 $table->addCell("<b>Total exam time per year</b>");
-$table->addCell("");
+$table->addCell("<b>123</b>");
 $table->endRow();
 
 $textinput = new textinput('i');
@@ -90,12 +95,12 @@ $table->endRow();
 
 $table->startRow();
 $table->addCell("<b>Total notional study hours</b>");
-$table->addCell("");
+$table->addCell("<b>123</b>");
 $table->endRow();
 
 $table->startRow();
 $table->addCell("<b>Total SAQA Credits</b>");
-$table->addCell("");
+$table->addCell("<b>123</b>");
 $table->endRow();
 
 $legend = "<b>D: Outcomes and Assessment (page 3)</b>";
