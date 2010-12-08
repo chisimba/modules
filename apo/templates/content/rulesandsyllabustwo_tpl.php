@@ -30,11 +30,14 @@ $table->addCell("B.5.a. At what level is the course/unit taught?");
 $table->addCell($radio->show());
 $table->endRow();
 
-$textinput = new textinput('b5b');
-$textinput->size = 50;
+$editor = $this->newObject('htmlarea', 'htmlelements');
+$editor->name = 'b5b';
+$editor->height = '70px';
+$editor->width = '500px';
+$editor->setMCQToolBar();
 $table->startRow();
 $table->addCell("B.5.b. In which year/s of study is the course/unit to be taught? ");
-$table->addCell($textinput->show());
+$table->addCell($editor->show());
 $table->endRow();
 
 $radio = new radio ('b6a');
@@ -55,11 +58,14 @@ $table->addCell("B.6.a. This is a:");
 $table->addCell($radio->show());
 $table->endRow();
 
-$textinput = new textinput('b6b');
-$textinput->size = 50;
+$editor = $this->newObject('htmlarea', 'htmlelements');
+$editor->name = 'b6b';
+$editor->height = '70px';
+$editor->width = '500px';
+$editor->setMCQToolBar();
 $table->startRow();
 $table->addCell("B.6.b. If ‘other’, provide details of the course/unit duration and/or the number of lectures which comprise the course/unit:");
-$table->addCell($textinput->show());
+$table->addCell($editor->show());
 $table->endRow();
 
 $radio = new radio ('b6c');
