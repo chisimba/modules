@@ -975,6 +975,18 @@ class apo extends controller {
     public function __addrulesandsyllabustwo(){
         return "rulesandsyllabustwo_tpl.php";
     }
+    
+    public function __addsubsidyrequirements(){
+        return "subsidyrequirements_tpl.php";
+    }
+
+    public function __addoutcomesandassessmentone(){
+        return "outcomesandassessmentone_tpl.php";
+    }
+
+    public function __addoutcomesandassessmenttwo(){
+        return "outcomesandassessmenttwo_tpl.php";
+    }
 
     public function __addoutcomesandassessmentthree(){
         return "outcomesandassessmentthree_tpl.php";
@@ -982,6 +994,14 @@ class apo extends controller {
 
     public function __addresources(){
         return "resources_tpl.php";
+    }
+
+    public function __addcollaborationandcontracts(){
+        return "collaborationandcontracts_tpl.php";
+    }
+
+    public function __addreview(){
+        return "review_tpl.php";
     }
 
     public function  __addcontactdetails() {
