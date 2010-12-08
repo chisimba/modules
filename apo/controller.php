@@ -960,4 +960,8 @@ class apo extends controller {
         return "addeditdocument_tpl.php";
     }
 
+    public function __addreview(){
+        return "review_tpl.php";
+    }
+
 }
