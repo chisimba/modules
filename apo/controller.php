@@ -964,4 +964,28 @@ class apo extends controller {
         return "review_tpl.php";
     }
 
+    public function __addoverview(){
+        return "overview_tpl.php";
+    }
+
+    public function __addrulesandsyllabusone(){
+        return "rulesandsyllabusone_tpl.php";
+    }
+
+    public function __addrulesandsyllabustwo(){
+        return "rulesandsyllabustwo_tpl.php";
+    }
+
+    public function __addoutcomesandassessmentthree(){
+        return "outcomesandassessmentthree_tpl.php";
+    }
+
+    public function __addresources(){
+        return "resources_tpl.php";
+    }
+
+    public function  __addcontactdetails() {
+        return "contactdetails_tpl.php";
+    }
+
 }
