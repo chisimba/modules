@@ -69,10 +69,12 @@ class rttutil extends object {
         <jar href="smack.jar" />
         <jar href="smackx.jar" />
         <jar href="looks-2.3.0.jar" />
+      
         <jar href="realtime2-chatmanager.jar" />
         <jar href="realtime2-presentations.jar" />
         <jar href="realtime2-audio.jar" />
         <jar href="realtime2-core.jar" />
+
         <jar href="realtime2-usermanager.jar" />
         <jar href="realtime2-roommanager.jar" />
         <jar href="realtime2-whiteboard.jar" />
@@ -179,16 +181,30 @@ class rttutil extends object {
         <jar href="PgsLookAndFeel.jar"/>
         <jar href="l2fprod-common-all.jar"/>
         <jar href="kunstsoff-rt.jar" />
-        <jar href="smack-3.2.0-SNAPSHOT-jar-with-dependencies.jar" />
-        <jar href="smackx-3.2.0-SNAPSHOT-jar-with-dependencies.jar" />
+
+<!--
+        <jar href="httpmime-4.0.3.jar" />
+        <jar href="httpcore-4.0.1.jar" />
+        <jar href="httpclient-4.0.3.jar" />
+
+        <jar href="asmack-jse.jar" />
+        <jar href="xmlpull_1_1_3_4c.jar" />
+        <jar href="xpp3-1.1.3.4.C.jar"/>
+-->
+
+        <jar href="smack-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+        <jar href="smackx-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+        <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+
+
         <jar href="proxy-vole_20100914.jar" />
         <jar href="looks-2.3.0.jar" />
         <jar href="realtime2-chatmanager.jar" />
         <jar href="realtime2-presentations.jar" />
         <jar href="realtime2-audio.jar" />
         <jar href="realtime2-core.jar" />
-         <jar href="jspeex.jar" />
-        <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+        <jar href="jspeex.jar" />
+        
         <jar href="realtime2-usermanager.jar" />
         <jar href="realtime2-roommanager.jar" />
         <jar href="realtime2-whiteboard.jar" />
