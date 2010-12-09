@@ -879,6 +879,11 @@ class apo extends controller {
         $filter = $this->getParam('filter');
         $this->forwardto->getUsers($filter);
     }
+    public function __retrievedocument() {
+        $userid = $this->getParam('userid');
+        $docid = $this->getParam('docid');
+        $this->documents->retrieveDocument($userid, $docid);
+    }
 
     public function __changecurrentuser() {
         $userid = $this->getParam('userid');
@@ -960,11 +965,22 @@ class apo extends controller {
         return "addeditdocument_tpl.php";
     }
 
-    public function __addreview(){
-        return "review_tpl.php";
-    }
-
     public function __addoverview(){
+        $errormessages = array();
+
+        $a1 = $this->getParam('a1');
+        $a3 = $this->getParam('a3');
+        $a4 = $this->getParam('a4');
+        if ($a1==null){
+            $errormessages[] = "Please provide an answer for A.1";
+        }
+        if ($a3==null){
+            $errormessages[] = "Please provide an answer for A.3";
+        }
+        if ($a4==null){
+            $errormessages[] = "Please provide an answer for A.4";
+        }
+
         return "overview_tpl.php";
     }
 
