@@ -1,14 +1,10 @@
 <?php
-$this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
-$this->loadClass('hiddeninput', 'htmlelements');
-$this->loadClass('label', 'htmlelements');
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
-$this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
-
+$this->loadClass('textarea', 'htmlelements');
 
 $form = new form('overviewform');
 
@@ -31,24 +27,20 @@ $table->addCell("A.2. This is a:");
 $table->addCell($radio->show());
 $table->endRow();
 
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'a3';
-$editor->height = '70px';
-$editor->width = '500px';
-$editor->setMCQToolBar();
+$textarea = new textarea('a3');
+$textarea->height = '70px';
+//$textarea->width = '500px';
 $table->startRow();
-$table->addCell("A.3. Provide a brief motivation for the introduction/ amendment of the course/unit:");
-$table->addCell($editor->show());
+$table->addCell("A.3. Provide a brief motivation for the introduction/amendment of the course/unit:");
+$table->addCell($textarea->show());
 $table->endRow();
 
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'a4';
-$editor->height = '70px';
-$editor->width = '500px';
-$editor->setMCQToolBar();
+$textarea = new textarea('a4');
+$textarea->height = '70px';
+$textarea->width = '500px';
 $table->startRow();
 $table->addCell("A.4. Towards which qualification(s) can the course/unit be taken?");
-$table->addCell($editor->show());
+$table->addCell($textarea->show());
 $table->endRow();
 
 $radio = new radio ('a5');
@@ -83,6 +75,7 @@ $form->addToForm($button->show());
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array());
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+
 $form->addToForm($button->show());
 
 echo $form->show();

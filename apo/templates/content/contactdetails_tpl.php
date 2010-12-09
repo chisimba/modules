@@ -9,7 +9,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
-$this->loadClass('link', 'htmlelements');
+$this->loadClass('textarea', 'htmlelements');
 
 
 /*$objbackLink = new link($this->uri(array('action'=>'back')));
@@ -19,54 +19,44 @@ $form = new form('contactdetailsform');
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'h1';
-$editor->height = '70px';
-$editor->width = '500px';
-$editor->setMCQToolBar();
+$textarea = new textarea('h1');
+$textarea->height = '70px';
+$textarea->width = '500px';
 $table->startRow();
 $table->addCell("H.1. Name of academic proposing the course/unit:");
-$table->addCell($editor->show());
+$table->addCell($textarea->show());
 $table->endRow();
 
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'h2a';
-$editor->height = '70px';
-$editor->width = '500px';
-$editor->setMCQToolBar();
+$textarea = new textarea('h2a');
+$textarea->height = '70px';
+$textarea->width = '500px';
 $table->startRow();
 $table->addCell("H.2.a. Name of the School which will be the home for the course/unit:");
-$table->addCell($editor->show());
+$table->addCell($textarea->show());
 $table->endRow();
 
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'h2b';
-$editor->height = '70px';
-$editor->width = '500px';
-$editor->setMCQToolBar();
+$textarea = new textarea('h2b');
+$textarea->height = '70px';
+$textarea->width = '500px';
 $table->startRow();
 $table->addCell("H.2.b. School approval signature (Head of School or appropriate School committee chair) and date:");
-$table->addCell($editor->show());
+$table->addCell($textarea->show());
 $table->endRow();
 
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'h3a';
-$editor->height = '70px';
-$editor->width = '500px';
-$editor->setMCQToolBar();
+$textarea = new textarea('h3a');
+$textarea->height = '70px';
+$textarea->width = '500px';
 $table->startRow();
 $table->addCell("H.3.a. Telephone contact numbers:");
-$table->addCell($editor->show());
+$table->addCell($textarea->show());
 $table->endRow();
 
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'h3b';
-$editor->height = '70px';
-$editor->width = '500px';
-$editor->setMCQToolBar();
+$textarea = new textarea('h3b');
+$textarea->height = '70px';
+$textarea->width = '500px';
 $table->startRow();
 $table->addCell("H.3.b. Email addresses:");
-$table->addCell($editor->show());
+$table->addCell($textarea->show());
 $table->endRow();
 
 $legend = "<b>H: Contact Details</b>";

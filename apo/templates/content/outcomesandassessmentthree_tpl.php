@@ -4,16 +4,19 @@ $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
-$this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('textarea', 'htmlelements');
+$this->loadClass('label', 'htmlelements');
 
 
 $form = new form('outcomesandassessmentthreeform');
 
-$table = $this->newObject('htmltable', 'htmlelements');
+$label = new label();
+$label->labelValue = "<b><i>D.5. Specify the notional study hours expected for the duration of the course/unit using the spreadsheet provided.</b></i>";
 
-$table->startRow();
-$table->addCell("<b><i>D.5. Specify the notional study hours expected for the duration of the course/unit using the spreadsheet provided.</b></i>");
-$table->endRow();
+$table = $this->newObject('htmltable', 'htmlelements');
+$table->border = 2;
+$table->cellpadding = '';
+$table->cellspacing='1';
 
 $textinput = new textinput('a');
 $textinput->size = 10;
@@ -106,6 +109,7 @@ $table->endRow();
 $legend = "<b>D: Outcomes and Assessment (page 3)</b>";
 $fs = new fieldset();
 $fs->setLegend($legend);
+$fs->addContent($label->show());
 $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
