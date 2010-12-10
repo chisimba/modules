@@ -73,6 +73,20 @@ $table->addCell("B.4.c. If it is both a compulsory and optional course/unit, pro
 $table->addCell($textarea->show());
 $table->endRow();
 
+$efs = new fieldset();
+$efs->setLegend('Errors');
+if (count($errormessages) > 0) {
+
+    $errorstr = '<ul>';
+
+    foreach ($errormessages as $errormessage) {
+        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+    }
+    $errorstr.='</li>';
+    $efs->addContent($errorstr);
+    $form->addToForm($efs);
+}
+
 $legend = "<b>B: Rules and Syllabus (page 1)</b>";
 $fs = new fieldset();
 $fs->setLegend($legend);
@@ -80,17 +94,17 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array());
+$uri = $this->uri(array('action' => 'addrulesandsyllabustwo'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array());
+$uri = $this->uri(array('action' => 'addoverview'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-$uri = $this->uri(array());
+$uri = $this->uri(array('action' => 'home'));;
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

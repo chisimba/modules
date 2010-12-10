@@ -190,6 +190,13 @@ $form->addToForm($fs->show());
 
 $button = new button('save', $this->objLanguage->languageText('mod_wicid_save', 'wicid', 'Save Document'));
 $button->setToSubmit();
+
+if ($mode == 'edit'){
+    $button = new button('next', $this->objLanguage->languageText('word_next'));
+    $uri = $this->uri(array('action' => 'addoverview'));
+    $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+}
+
 $form->addToForm('<br/>' . $button->show());
 
 if ($this->objUser->isAdmin()) {
@@ -206,7 +213,7 @@ if ($this->objUser->isAdmin()) {
     }
 }
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-$uri = $this->uri(array());
+$uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

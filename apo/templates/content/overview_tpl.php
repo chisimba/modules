@@ -12,6 +12,12 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 $textinput = new textinput('a1');
 $textinput->size = 50;
+if ($mode == 'edit') {
+    $textinput->value = $document['docname'];
+}
+if ($mode == "fixup") {
+    $textinput->value = $a1;
+}
 $table->startRow();
 $table->addCell("A.1. Name of course/unit:");
 $table->addCell($textinput->show());
@@ -56,6 +62,20 @@ $table->addCell("A.5. This new or amended course proposal is:");
 $table->addCell($radio->show());
 $table->endRow();
 
+$efs = new fieldset();
+$efs->setLegend('Errors');
+if (count($errormessages) > 0) {
+
+    $errorstr = '<ul>';
+
+    foreach ($errormessages as $errormessage) {
+        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+    }
+    $errorstr.='</li>';
+    $efs->addContent($errorstr);
+    $form->addToForm($efs);
+}
+
 $legend = "<b>A: Overview</b>";
 $fs = new fieldset();
 $fs->setLegend($legend);
@@ -63,19 +83,18 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array());
+$uri = $this->uri(array('action' => 'addrulesandsyllabusone'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array());
+$uri = $this->uri(array('action' => 'editdocument'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-$uri = $this->uri(array());
+$uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-
 $form->addToForm($button->show());
 
 echo $form->show();
