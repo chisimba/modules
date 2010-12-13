@@ -2475,7 +2475,6 @@ class formmanager extends object {
         if ($unitcount >= 1) {
             $ucount = 1;
             do {
-                echo $ucount;
                 $unitMultiplier = $this->createUnitMultiplierFields($ucount, $unitValues = Null, Null);
                 //Add form validations
                 $form->addRule('unit' . $ucount, $wordUnit . " " . $ucount . " " . $phraseIsRequired, 'required');
