@@ -58,6 +58,14 @@ $category = 'user';
 //$tabcontent->addTab('Distance User Form', $tab->show());
 //$category->addTab('Distance',$tab->show());
 
+
+
+$tab->tabbedbox();
+$tab->addTabLabel($this->objLanguage->languageText("category_resource_four", "libraryforms"));
+$tab->addBoxContent($objFeedbk->show());
+
+$tabcontent->addTab('FeedbackForm', $tab->show());
+
 $tab->tabbedbox();
 $tab->addTabLabel($this->objLanguage->languageText("category_resource_two", "libraryforms"));
 $tab->addBoxContent($objBookThesis->show());
@@ -70,11 +78,6 @@ $tab->addBoxContent($objILLperiodical->show());
 
 $tabcontent->addTab('Periodical Request Form', $tab->show());
 
-$tab->tabbedbox();
-$tab->addTabLabel($this->objLanguage->languageText("category_resource_four", "libraryforms"));
-$tab->addBoxContent($objFeedbk->show());
-
-$tabcontent->addTab('FeedbackForm', $tab->show());
 
 
 //captcha

@@ -91,12 +91,22 @@ class feedbk extends dbTable {
         //----------TEXT INPUT and Labels--------------
         //Create a new textinput for the title
 
-        $this->loadClass('htmlheading', 'htmlelements');
+      /*  $this->loadClass('htmlheading', 'htmlelements');
         $fdbkHeading = new htmlheading();
         $fdbkHeading->type = 2;
-        $fdbkHeading->str = $this->objLanguage->languageText
-                        ("mod_libraryforms_commenttitlefeedback", "libraryforms", "fdbk");
+        $fdbkHeading->str = $this->objLanguage->languageText ("mod_libraryforms_commenttitlefeedback", "libraryforms", "fdbk");
         $objForm->addToForm($fdbkHeading->show() . "<br/>");
+            
+        $fdbkheading2 = new htmlheading();
+        $fdbkheading2->type=2;
+        $fdbkheading2->str = $this->objLanguage->LanguageText ("mod_libraryforms_commenttitle2feedback", 'libraryforms', 'fbdk2');
+        $objForm->addToForm( $fdbkheading2->show() . "<br/>");*/
+
+	  $fdbkHeading = new label($this->objLanguage->languageText("mod_libraryforms_commenttitlefeedback", "libraryforms"), "fdbk");
+   	  $objForm->addToForm(  $fdbkHeading->show()."<br />");
+
+	  $fdbkheading2 = new label($this->objLanguage->languageText("mod_libraryforms_commenttitle2feedback", 'libraryforms'), 'fbdk2');
+   	  $objForm->addToForm(  $fdbkheading2->show()."<br />". "<br />");
 
 
         //Create a new textinput for the name
