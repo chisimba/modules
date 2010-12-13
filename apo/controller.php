@@ -961,9 +961,17 @@ class apo extends controller {
         $this->setVarByRef("selected", $selected);
         return "addeditdocument_tpl.php";
     }
+//jackies
+    public function _collaborationAndContracsForm(){
+        $selected = $this->getParam('selected');
+        $this->setVarByRef("selected", $selected);
+        return "collaborationAndContracts_tpl.php";
+//--------
+    }
 
-    public function __addoverview() {
 
+    
+    public function __addoverview(){
         return "overview_tpl.php";
     }
 
@@ -1067,16 +1075,8 @@ class apo extends controller {
         return "rulesandsyllabustwo_tpl.php";
     }
 
-    public function __addsubsidyrequirements() {
-        return "subsidyrequirements_tpl.php";
-    }
-
     public function __addoutcomesandassessmentone() {
         return "outcomesandassessmentone_tpl.php";
-    }
-
-    public function __addoutcomesandassessmenttwo() {
-        return "outcomesandassessmenttwo_tpl.php";
     }
 
     public function __addoutcomesandassessmentthree() {
@@ -1190,11 +1190,7 @@ class apo extends controller {
     public function __addcollaborationandcontracts() {
         return "collaborationandcontracts_tpl.php";
     }
-
-    public function __addreview() {
-        return "review_tpl.php";
-    }
-
+    
     public function __addcontactdetails() {
         $errormessages = array();
 
@@ -1275,6 +1271,30 @@ class apo extends controller {
         $this->objformdata->saveData($formname, $formdata, $docid);
 
         return "contactdetails_tpl.php";
+    }
+
+    public function __addnewcourseproposal(){
+        return "addNewCourseProposal_tpl.php";
+    }
+
+    public function __addsubsidyrequirements(){
+        return "addsubsidyrequirements_tpl.php";
+    }
+
+    public function __addoutcomesassessment(){
+        return "addOutcomesAssessment_tpl.php";
+    }
+
+    public function __addcollaborationandcontacts(){
+        return "addcollaborationandcontacts_tpl.php";
+    }
+
+    public function __addreview(){
+        return "addreview_tpl.php";
+    }
+
+    public function __addoutcomesandassessmenttwo(){
+        return "addoutcomesandassessmenttwo_tpl.php";
     }
 
     public function __finishdocument() {
