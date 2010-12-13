@@ -75,8 +75,6 @@ class dbdatasets extends dbtable {
         }
         $data = $this->getArray($sql);
         if (!empty($data)) {
-            $count = $this->countRecords($questionId);
-            $data[0]['count'] = $count;
             return $data;
         }
         return FALSE;

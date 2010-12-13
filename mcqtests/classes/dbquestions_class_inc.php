@@ -45,18 +45,17 @@ class dbquestions extends dbtable {
      * @return string $id The id of the inserted or updated question.
      */
     public function addQuestion($fields, $id = NULL, $saveAsNew = Null) {
-        $fields['updated'] = date('Y-m-d H:i:s');
+        $fields['updated'] = date('Y-m-d H:i:s');                
         if ($saveAsNew == 1) {
-            //$fields['createdby'] = $this->objUser->fullname();
-            $id = $this->insert($fields);
-        } else if ($id && $saveAsNew != 1) {
-            //$fields['modifiedby'] = $this->objUser->fullname();
-            $this->update('id', $id, $fields);
+            $qnid = $this->insert($fields);
+        } else if (!empty($id) && $saveAsNew == 0) {            
+            $qnid = $this->update('id', $id, $fields);
         } else {
-            //$fields['createdby'] = $this->objUser->fullname();
-            $id = $this->insert($fields);
+            $qnid = $this->insert($fields);
         }
-        return $id;
+        if(empty($qnid))
+            $qnid = $id;
+        return $qnid;
     }
 
     /**
@@ -70,8 +69,7 @@ class dbquestions extends dbtable {
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter) {
             $sql.= " WHERE testid='$testId' AND $filter";
-        }
-        else {
+        } else {
             $sql.=" WHERE testid='$testId' ORDER BY questionorder";
         }
         $data = $this->getArray($sql);
@@ -82,6 +80,7 @@ class dbquestions extends dbtable {
         }
         return FALSE;
     }
+
     /**
      * Method to get a set of questions with their correct answers for a particular test.
      *

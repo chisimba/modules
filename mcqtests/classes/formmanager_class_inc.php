@@ -1979,7 +1979,8 @@ class formmanager extends object {
                     $objConfirm = &$this->newObject('confirm', 'utilities');
                     $objConfirm->setConfirm($iconDelete->show(), $this->uri(array(
                                 'module' => 'mcqtests',
-                                'action' => 'deletersa',
+                                'action' => 'scqlisting',
+                                'test' => $testId,
                                 'id' => $descdata["id"]
                             )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
                     $objTable->startRow();
@@ -2059,11 +2060,13 @@ class formmanager extends object {
 
         //Store values in variables
         $test = $fields['testid'];
+        if (empty($test))
+            $test = $this->getParam("test", Null);
+        
         $id = $fields['id'];
         $anscount = $fields['anscount'];
         $unitcount = $fields['unitcount'];
         $mode = $fields['mode'];
-
         //Form texts
         $phraseWildCardValues = $this->objLanguage->languageText("mod_mcqtests_wcardvalues", 'mcqtests', "outside limits of true value");
         $phraseOutsideLimits = $this->objLanguage->languageText("mod_mcqtests_outsidelimits", 'mcqtests', "outside limits of true value");
@@ -2407,6 +2410,7 @@ class formmanager extends object {
         } else {
             $noofansdropdown->setSelected("0");
         }
+        
         $frmanscount = new hiddeninput("frmanscount", $anscount);
         //Add Answers dropdown to the table
         $objTable->startRow();
@@ -2424,7 +2428,11 @@ class formmanager extends object {
             $unitValues = array();
             $qnid = $this->getParam("id", Null);
             $uh = $this->objNumericalOptions->getNumericalOptions($qnid);
-            $unitValues = $uh[0];
+            if (!empty($uh)) {
+                $unitValues = $uh[0];
+            } else {
+                $unitValues = Null;
+            }
         }
         $unitHandling = $this->createUnitHandlingFields($unitValues);
 
@@ -2437,12 +2445,15 @@ class formmanager extends object {
             $uh = $this->objNumericalUnit->getNumericalUnits($id);
 
             $upcount = 1;
+            $upcounter = 0;
             //No need for multiple unit multipliers, if needed, uncomment and comment code below
             foreach ($uh as $thisUh) {
                 $unitMultiplier = $this->createUnitMultiplierFields("_update_" . $upcount, $thisUh, $multiplier = Null);
                 //Add unit-Multiplier to form
                 $form->addToForm($unitMultiplier);
 
+                //Increment counters
+                $upcounter++;
                 $upcount++;
             }
         } else {
@@ -2453,8 +2464,15 @@ class formmanager extends object {
         }
         //Load other unit-Multiplier        
         $unitcount = $fields['unitcount'];
+        //Get the param if empty in array
+        if (empty($unitcount))
+            $unitcount = $this->getParam("unitcount", Null);
+        //Default to 1 unit if array and getParam fetch nothing
+        if (empty($unitcount) && $upcounter == 0)
+            $unitcount = 1;
+
         $ucount = 0;
-        if ($unitcount > 1) {
+        if ($unitcount >= 1) {
             $ucount = 1;
             do {
                 echo $ucount;
@@ -2524,7 +2542,7 @@ class formmanager extends object {
             //Get id of the datasets affiliated to this question
             $qnid = $this->getParam("id", Null);
             $datasets = $this->objDBDataset->getRecords($qnid);
-            $datasetid = $datasets[0]['id'];
+            $datasetid = $datasets[0]['id'];            
 
             if (!empty($datasetid)) {
                 //get the related definitions
@@ -2713,7 +2731,7 @@ class formmanager extends object {
                     $myformula = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $newFormula);
                     $compute = create_function("", "return (" . $myformula . ");");
                     $computed = 0 + $compute();
-                    $roundAns = (float)round($computed, 0);
+                    $roundAns = (float) round($computed, 0);
 
                     /*
                      * COMPUTE THE TOLERANCE
@@ -2767,11 +2785,11 @@ class formmanager extends object {
                     if ($roundAns >= $minVal || $roundAns <= $maxVal) {
                         $markCorrect = true;
                         $phraseLimits = $phraseWithinLimits;
-                        $rowAttributes = '<div> '.$phraseCorrectAns." ";
-                        } else {
+                        $rowAttributes = '<div> ' . $phraseCorrectAns . " ";
+                    } else {
                         $markCorrect = false;
                         $phraseLimits = $phraseOutsideLimits;
-                        $rowAttributes = '<div style="color:#FF0000"> '.$wordError." ".$phraseCorrectAns." ";
+                        $rowAttributes = '<div style="color:#FF0000"> ' . $wordError . " " . $phraseCorrectAns . " ";
                     }
                     //Render results in a table row
                     $objTableY->startRow();
@@ -2781,8 +2799,9 @@ class formmanager extends object {
                         $objTableY->addCell("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
                     }
                     $objTableY->addCell($ansValues['answer']);
+                    
                     //End row holding the set values
-                    $objTableY->addCell($myformula . " = " . $roundAns . " " . $uh[0]["unit"] . "<br />".$rowAttributes . $phraseLimits . " " . $computed . " " . $uh[0]["unit"]
+                    $objTableY->addCell($myformula . " = " . $roundAns . " " . $uh[0]["unit"] . "<br />" . $rowAttributes . $phraseLimits . " " . $computed . " " . $uh[0]["unit"]
                             . "</div>" . "Min: " . $minVal . " Max: " . $maxVal);
                     $objTableY->endRow();
                     $count++;

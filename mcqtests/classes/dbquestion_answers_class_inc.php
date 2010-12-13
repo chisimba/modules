@@ -42,7 +42,7 @@ class dbquestion_answers extends dbtable
      */
     public function addAnswers($fields, $id = NULL)
     {
-        if ($id) {
+        if (!empty($id)) {
             $this->update('id', $id, $fields);
         } else {
             $id = $this->insert($fields);

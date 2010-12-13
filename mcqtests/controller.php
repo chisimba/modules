@@ -201,6 +201,25 @@ class mcqtests extends controller {
                 $fields['mode'] = $this->getParam('mode', 'add');
                 $fields['anscount'] = $this->getParam('anscount', Null);
                 $fields['frmanscount'] = $this->getParam('frmanscount', Null);
+                $fields['unitcount'] = $this->getParam(Null);
+                $fields['genwcards'] = $this->getParam('genwcards', Null);
+                $fields['dispwcards'] = $this->getParam('dispwcards', Null);
+                //Set variables for use in the template
+                $this->setVarByRef('fields', $fields);
+                $this->setVarByRef('id', $id);
+                $this->setVarByRef('testId', $test);
+                return 'simplecalculatedqn_tpl.php';
+                break;
+            case 'addsimplecalculatedunit':
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                //Fetch the question Id
+                $id = $this->getParam('id', Null);
+                //Array to hold values to be passed to template
+                $fields['id'] = $id;
+                $fields['testid'] = $this->getParam('test', Null);
+                $fields['mode'] = $this->getParam('mode', 'add');
+                $fields['anscount'] = $this->getParam('anscount', Null);
+                $fields['frmanscount'] = $this->getParam('frmanscount', Null);
                 $fields['unitcount'] = $this->getParam('unitcount', Null);
                 $fields['genwcards'] = $this->getParam('genwcards', Null);
                 $fields['dispwcards'] = $this->getParam('dispwcards', Null);
@@ -1118,11 +1137,13 @@ class mcqtests extends controller {
      * @return string
      */
     public function saveSimpleCalculated() {
+        $test = $this->getParam('test', Null);
         //Save the question
         $fieldsQn = array();
         //$fieldsQn['categoryid'] = $this->getParam('categoryid', Null);
         $fieldsQn['name'] = $this->getParam('qnName', Null);
         $fieldsQn['question'] = $this->getParam('qntext', Null);
+        $fieldsQn['testid'] = $test;
         $fieldsQn['questiontext'] = $this->getParam('qntext', Null);
         $fieldsQn['mark'] = $this->getParam('qngrade', Null);
         $fieldsQn['penalty'] = $this->getParam('penaltyfactor', Null);
@@ -1130,7 +1151,6 @@ class mcqtests extends controller {
         $fieldsQn['questiontype'] = "SimpleCalculated";
         $fieldsQn['generalfeedback'] = $this->getParam('genfeedback', Null);
 
-        $test = $this->getParam('test', Null);
         $qncount = $this->getParam('qncount', Null);
         $id = $this->getParam('id', Null);
         $submitVal = $this->getParam("submit", "Other");
@@ -1139,23 +1159,26 @@ class mcqtests extends controller {
         if ($submitVal == "Save as a new question") {
             $saveAsNew = 1;
         } elseif ($submitVal == "Save changes") {
-            $saveAsNew = 1;
+            $saveAsNew = 0;
         }
-
         //Avoid saving blank values
         if (!empty($fieldsQn['name'])) {
             //Insert/Update Question
             if (!empty($fieldsQn)) {
-                $id = $this->dbQuestions->addQuestion($fieldsQn, $id, $saveAsNew);
+                if ($saveAsNew == 1) {
+                    $id = Null;
+                    $id = $this->dbQuestions->addQuestion($fieldsQn, Null, $saveAsNew);
+                } else {
+                    $id = $this->dbQuestions->addQuestion($fieldsQn, $id, $saveAsNew);
+                }
             }
             //Store Question Id
-            $qnid = $this->getParam("id", Null);
-            $questionid = $qnid;
+            $qnid = $id;
 
             //Save Unit-Handling
             $fieldsUH = array();
             $uhid = $this->getParam('uhid', Null);
-            $fieldsUH['questionid'] = $questionid;
+            $fieldsUH['questionid'] = $qnid;
             $fieldsUH['unitgradingtype'] = $this->getParam('unitgradetype', Null);
             $fieldsUH['unitpenalty'] = $this->getParam('unitpenalty', Null);
             $fieldsUH['instructionsformat'] = $this->getParam('instructionsformat', Null);
@@ -1171,12 +1194,13 @@ class mcqtests extends controller {
                 $ucount = 1;
                 do {
                     $fieldsUnit = array();
-                    $fieldsUnit['questionid'] = $questionid;
+                    $fieldsUnit['questionid'] = $qnid;
                     $unitid = $this->getParam('uhid' . $ucount, Null);
                     $fieldsUnit['unit'] = $this->getParam('unit' . $ucount, Null);
                     $fieldsUnit['multiplier'] = $this->getParam('multiplier' . $ucount, Null);
-                    //Insert/Update Unit-Multiplier
-                    $unitid = $this->objNumericalUnit->addNUnit($fieldsUnit, $unitid);
+                    //Insert/Update Unit-Multiplier if not empty
+                    if (!empty($fieldsUnit['unit']) && !empty($fieldsUnit['multiplier']))
+                        $unitid = $this->objNumericalUnit->addNUnit($fieldsUnit, $unitid);
                     $ucount++;
                 } while ($ucount <= $frmunitcount);
             }
@@ -1186,7 +1210,8 @@ class mcqtests extends controller {
                 $acount = 1;
                 do {
                     $fieldsAns = array();
-                    $fieldsAns['questionid'] = $questionid;
+                    $fieldsAns['questionid'] = $qnid;
+                    $fieldsAns['testid'] = $test;
                     $ansid = $this->getParam('ansid' . $acount, Null);
                     $fieldsAns['answer'] = $this->getParam('ansformula' . $acount, Null);
                     $fieldsAns['answerformat'] = $this->getParam('correctanswerformat' . $acount, Null);
@@ -1199,7 +1224,7 @@ class mcqtests extends controller {
                         $ansid = $this->objQnAnswers->addAnswers($fieldsAns, $ansid);
 
                         $fieldsAnsC = array();
-                        $fieldsAnsC['questionid'] = $questionid;
+                        $fieldsAnsC['questionid'] = $qnid;
                         $qncalcid = $this->getParam('calcid' . $acount, Null);
                         $fieldsAnsC['answer'] = $ansid;
                         $fieldsAnsC['tolerance'] = $this->getParam('tolerance' . $acount, Null);
@@ -1209,7 +1234,6 @@ class mcqtests extends controller {
                         //Insert/Update Answer
                         $qncalcid = $this->objQuestionCalculated->addAnswers($fieldsAnsC, $qncalcid);
                     }
-
                     $acount++;
                 } while ($acount <= $frmanscount);
             }
@@ -1219,7 +1243,7 @@ class mcqtests extends controller {
                 $aucount = 1;
                 do {
                     $fieldsAns = array();
-                    $fieldsAns['questionid'] = $questionid;
+                    $fieldsAns['questionid'] = $qnid;
                     $ansid = $this->getParam('ansid_update_' . $aucount, Null);
                     $fieldsAns['answer'] = $this->getParam('ansformula_update_' . $aucount, Null);
                     $fieldsAns['answerformat'] = $this->getParam('correctanswerformat_update_' . $aucount, Null);
@@ -1231,7 +1255,7 @@ class mcqtests extends controller {
                         $ansid = $this->objQnAnswers->addAnswers($fieldsAns, $ansid);
 
                         $fieldsAnsC = array();
-                        $fieldsAnsC['questionid'] = $questionid;
+                        $fieldsAnsC['questionid'] = $qnid;
                         $qncalcid = $this->getParam('calcid_update_' . $aucount, Null);
                         $fieldsAnsC['answer'] = $ansid;
                         $fieldsAnsC['tolerance'] = $this->getParam('tolerance_update_' . $aucount, Null);
@@ -1252,7 +1276,7 @@ class mcqtests extends controller {
                 $utcount = 1;
                 do {
                     $fieldsUt = array();
-                    $fieldsUt['questionid'] = $questionid;
+                    $fieldsUt['questionid'] = $qnid;
                     $uid = $this->getParam('utid' . $utcount, Null);
                     $fieldsUt['unit'] = $this->getParam('unit' . $utcount, Null);
                     $fieldsUt['multiplier'] = $this->getParam('multiplier' . $utcount, Null);
@@ -1269,7 +1293,7 @@ class mcqtests extends controller {
                 $upcount = 1;
                 do {
                     $fieldsUt = array();
-                    $fieldsUt['questionid'] = $questionid;
+                    $fieldsUt['questionid'] = $qnid;
                     $utid = $this->getParam('utid_update_' . $upcount, Null);
                     $fieldsUt['unit'] = $this->getParam('unit_update_' . $upcount, Null);
                     $fieldsUt['multiplier'] = $this->getParam('multiplier_update_' . $upcount, Null);
@@ -1286,11 +1310,11 @@ class mcqtests extends controller {
             $officialTags = array();
             $officialTags['tags'] = $this->getParam('officialtags', Null);
             $othertags = $this->getParam('othertags', Null);
-            if (!empty($othertags) && !empty($id)) {
+            if (!empty($othertags) && !empty($qnid)) {
                 $otTags = array();
                 $otTags['tags'] = $othertags;
                 //Insert/Update Tags
-                $tagId = $this->dbTag->addTag($otTags, Null, $id);
+                $tagId = $this->dbTag->addTag($otTags, Null, $qnid);
             }
             //Save the wild-cards $this->objDSDefinitions $this->objDSItems $this->objDBDataset
             $wccount = $this->getParam('wccount', Null);
@@ -1300,8 +1324,7 @@ class mcqtests extends controller {
 
             $dsetarr = array();
             $dsetarr['datasetdefinition'] = "";
-            $dsetarr['questionid'] = $questionid;
-            $qnid = $this->getParam("id", Null);
+            $dsetarr['questionid'] = $qnid;
             //Check if dataset for this question exists
             $dsetid = $this->objDBDataset->getRecords($qnid);
             if (empty($dsetid)) {
@@ -1359,7 +1382,7 @@ class mcqtests extends controller {
                     $fields['datasetid'] = $adefid;
                     $fields['itemnumber'] = $cnt;
                     $fields['value'] = $arand . "." . $arandeci;
-                    $this->objDSItems->addRecord($fields, $id = NULL);
+                    $this->objDSItems->addRecord($fields, NULL);
                     $cnt++;
                 } while ($cnt <= $itemcount);
             }
@@ -1376,12 +1399,14 @@ class mcqtests extends controller {
                     $fields['datasetid'] = $bdefid;
                     $fields['itemnumber'] = $cnt;
                     $fields['value'] = $brand . "." . $brandeci;
-                    $this->objDSItems->addRecord($fields, $id = NULL);
+                    $this->objDSItems->addRecord($fields, NULL);
                     $cnt++;
                 } while ($cnt <= $itemcount);
             }
         }
-        return $id;
+        if (empty($qnid))
+            $qnid = $id;
+        return $qnid;
     }
 
     /**
@@ -2704,7 +2729,7 @@ class mcqtests extends controller {
         $optionsData['instructions'] = $this->getParam('instructions');
         $optionsData['unitpenalty'] = $this->getParam('penaltyUnit');
 
-        if ($edit) {
+        if ($edit == true) {
             $this->objNumericalOptions->updateNumericalOptions($questionid, $optionsData);
         } else {
             $id = $this->objNumericalOptions->addNumericalOptions($optionsData);
