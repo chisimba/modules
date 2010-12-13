@@ -22,6 +22,37 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class dbquestions extends dbtable {
 
     /**
+     *
+     * @var object to hold question_answers class
+     */
+    public $dbAnswers;
+    /**
+     *
+     * @var object to hold dbdataset_definitions class
+     */
+    public $objDSDefinitions;
+    /**
+     *
+     * @var object to hold dbdataset_items class
+     */
+    public $objDSItems;
+    /**
+     *
+     * @var object to hold dbdataset class
+     */
+    public $objDBDataset;
+    /**
+     *
+     * @var object to hold dbtag class
+     */
+    public $dbTag;
+    /**
+     *
+     * @var object to hold dbtag_instance class
+     */
+    public $dbTagInstance;
+
+    /**
      * Method to construct the class and initialise the table.
      *
      * @access public
@@ -30,8 +61,15 @@ class dbquestions extends dbtable {
     public function init() {
         parent::init('tbl_test_questions');
         $this->table = 'tbl_test_questions';
-        $this->dbAnswers = &$this->newObject('dbanswers');
         $this->objWashout = $this->getObject('washout', 'utilities');
+        // get the DB objects
+        $this->dbAnswers = &$this->newObject('dbanswers');
+        $this->objDSDefinitions = $this->newObject("dbdataset_definitions");
+        $this->objDSItems = $this->newObject("dbdataset_items");
+        $this->objDBDataset = $this->newObject("dbdatasets");
+        $this->dbTag = $this->newObject('dbtag');
+        $this->dbTagInstance = $this->newObject('dbtag_instance');
+
         //$this->objUser = $this->newObject('user', 'security');
     }
 
@@ -45,15 +83,15 @@ class dbquestions extends dbtable {
      * @return string $id The id of the inserted or updated question.
      */
     public function addQuestion($fields, $id = NULL, $saveAsNew = Null) {
-        $fields['updated'] = date('Y-m-d H:i:s');                
+        $fields['updated'] = date('Y-m-d H:i:s');
         if ($saveAsNew == 1) {
             $qnid = $this->insert($fields);
-        } else if (!empty($id) && $saveAsNew == 0) {            
+        } else if (!empty($id) && $saveAsNew == 0) {
             $qnid = $this->update('id', $id, $fields);
         } else {
             $qnid = $this->insert($fields);
         }
-        if(empty($qnid))
+        if (empty($qnid))
             $qnid = $id;
         return $qnid;
     }
@@ -154,22 +192,14 @@ class dbquestions extends dbtable {
      * @return
      */
     public function deleteQuestion($id) {
-        $question = $this->getQuestion($id);
-        if (!empty($question)) {
-            if (strlen($question[0]['questionorder']) > 0) {
-                $filter = 'questionorder > ' . $question[0]['questionorder'] . ' ORDER BY questionorder';
-                $data = $this->getQuestions($question[0]['testid'], $filter);
-                if (!empty($data)) {
-                    foreach ($data as $line) {
-                        $fields = array();
-                        $fields['questionorder'] = $line['questionorder'] - 1;
-                        $this->addQuestion($fields, $line['id']);
-                    }
-                }
-            }
-        }
+        //Get All answers and delete
+        $this->dbAnswers->removeAnswers('questionid', $id);
+        //Get all question tag instances and delete
+        $this->dbTagInstance->deleteInstance($id);
+        //Delete all related datasets
+        $this->objDBDataset->deleteQnRecord($id);
+        //Delete Question
         $this->delete('id', $id);
-        $this->dbAnswers->delete('questionid', $id);
     }
 
     /**

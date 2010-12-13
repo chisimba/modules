@@ -105,6 +105,16 @@ class dbdataset_items extends dbtable {
     public function deleteRecord($id) {
         $this->delete('id', $id);
     }
+    /**
+     * Method to delete all dataset-definition-instances.
+     *
+     * @access public
+     * @param string $dsetid The id of the dataset definition
+     * @return
+     */
+    public function deleteDSetDefRecs($dsetid) {
+        $this->delete('datasetid', $dsetid);
+    }
 }
 // end of class
 ?>

@@ -111,7 +111,7 @@ class dbtag_instance extends dbtable {
      * @param string $id The id of the instance to be deleted.
      * @return
      */
-    public function deleteInstance($id) {
+    public function deleteTagInstance($id) {
         $desc = $this->getInstance($id);
         if (!empty($desc)) {
             $filter = 'sortorder > ' . $desc[0]['sortorder'] . ' ORDER BY sortorder';
@@ -125,6 +125,16 @@ class dbtag_instance extends dbtable {
             }
         }
         $this->delete('id', $id);
+    }
+    /**
+     * Method to delete a question instance.
+     *
+     * @access public
+     * @param string $id The id of the item to be deleted.
+     * @return
+     */
+    public function deleteInstance($itemid) {
+        $this->delete('itemid', $itemid);
     }
 
     /**

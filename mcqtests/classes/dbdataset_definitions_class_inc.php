@@ -31,12 +31,18 @@ class dbdataset_definitions extends dbtable {
     public $userId;
     private $datasetId;
     private $categoryId;
+    /**
+     *
+     * @var object to hold dbdataset_items class
+     */
+    public $objDSItems;
 
     public function init() {
         parent::init('tbl_test_dataset_definitions');
         $this->table = 'tbl_test_dataset_definitions';
         $this->objUser = &$this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
+        $this->objDSItems = $this->newObject("dbdataset_items");
     }
 
     /**
@@ -113,6 +119,22 @@ class dbdataset_definitions extends dbtable {
     }
 
     /**
+     * Method to delete a dataset-definition.
+     *
+     * @access public
+     * @param string $id The id of the definition.
+     * @return
+     */
+    public function deleteDataSetDef($dsetid) {
+        //Get records related to the dset
+        $defs = $this->getRecords($dsetid);
+        foreach ($defs as $thisdef) {
+            $this->objDSItems->deleteDSetDefRecs($thisdef['id']);
+            $this->deleteRecord($thisdef['id']);
+        }
+    }
+
+    /**
      * Method to count the number of dataset-definitions for the specified category.
      *
      * @access public
@@ -128,6 +150,8 @@ class dbdataset_definitions extends dbtable {
         }
         return FALSE;
     }
+
 }
+
 // end of class
 ?>

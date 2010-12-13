@@ -29,12 +29,18 @@ class dbdatasets extends dbtable {
     public $table;
     public $objUser;
     public $userId;
+    /**
+     *
+     * @var object to hold dbdataset_definitions class
+     */
+    public $objDSDefinitions;
 
     public function init() {
         parent::init('tbl_test_datasets');
         $this->table = 'tbl_test_datasets';
         $this->objUser = &$this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
+        $this->objDSDefinitions = $this->newObject("dbdataset_definitions");
     }
 
     /**
@@ -96,18 +102,35 @@ class dbdatasets extends dbtable {
         }
         return FALSE;
     }
-
     /**
      * Method to delete a dataset.
      *
      * @access public
      * @param string $id The id of the dataset.
-     * @return
+     * @return boolean
      */
     public function deleteRecord($id) {
         $this->delete('id', $id);
     }
-
+    /**
+     * Method to delete a dataset.
+     *
+     * @access public
+     * @param string $qnId The id of the deleted question.
+     * @return boolean
+     */
+    public function deleteQnRecord($qnId) {
+        //Get related dataset id's
+        $dsets = $this->getRecords($qnId);
+        foreach ($dsets as $dset) {
+            //Delete related instance
+            $this->objDSDefinitions->deleteDataSetDef($dset['id']);
+            //Delete dataset
+            $this->deleteRecord($dset['id']);
+        }
+        //Delete dataset
+        //$this->delete('questionid', $qnId);
+    }
     /**
      * Method to count the number of datasets for the specified question.
      *

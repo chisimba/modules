@@ -182,6 +182,12 @@ class mcqtests extends controller {
                 } else {
                     return $this->newHome();
                 }
+            case "deletescq":
+                $this->deleteSCQuestions($id = $this->getParam('id', null));
+                $test = $this->getParam('test', Null);
+                // After processing return to scqlisting
+                return $this->nextAction('scqlisting',array('test'=>$test, 'deletemsg'=>'deletedsuccessfully'));
+                break;
             case 'scqlisting':
                 $test = $this->getParam('test', Null);
                 $this->setVarByRef('testId', $test);
@@ -1129,6 +1135,16 @@ class mcqtests extends controller {
                     return $this->home();
                 }
         }
+    }
+
+    /*
+     * Method to delete simple calculated question
+     *
+     * @param string $qnId The Question Id
+     * @return True|False
+     */
+    public function deleteSCQuestions($qnId) {
+        $delQn = $this->dbQuestions->deleteQuestion($qnId);
     }
 
     /**

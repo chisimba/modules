@@ -1979,7 +1979,7 @@ class formmanager extends object {
                     $objConfirm = &$this->newObject('confirm', 'utilities');
                     $objConfirm->setConfirm($iconDelete->show(), $this->uri(array(
                                 'module' => 'mcqtests',
-                                'action' => 'scqlisting',
+                                'action' => 'deletescq',
                                 'test' => $testId,
                                 'id' => $descdata["id"]
                             )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
