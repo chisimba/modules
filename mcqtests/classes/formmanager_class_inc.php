@@ -1905,11 +1905,13 @@ class formmanager extends object {
      * @param  string $categoryId Contains the category identifier
      * @author Paul Mungai
      */
-    public function createSCQList($testId, $categoryId=Null) {
+    public function createSCQList($testId, $categoryId=Null, $deletemsg = Null) {
         //Initialize variables
         $test = $testId;
 
         //Form text
+        $deleteSuccess = $this->objLanguage->languageText("mod_mcqtests_deletesuccess", 'mcqtests', "The Record was deleted successfully");
+        $deletefail = $this->objLanguage->languageText("mod_mcqtests_deletefail", 'mcqtests', "Ooops! There was a problem. The Record was NOT deleted successfully");
         $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
         $phraseAddA = $this->objLanguage->languageText("mod_mcqtests_phraseadda", 'mcqtests', "Add a");
@@ -1946,6 +1948,24 @@ class formmanager extends object {
         $objTable->attributes = " align='left' border='0'";
         $objTable->cellspacing = '12';
 
+        //Show confirm message when deleted
+        echo '<div id="confirmationmessage">';
+        if ($deletemsg == "deletesuccess") {
+            echo '<br /><span class="confirm">' . $deleteSuccess . '</span><br /><br />';
+        }
+        echo "</div>";
+        //Javascript to control the display-time of the confirm message
+        echo '
+    <script type="text/javascript">
+
+    function hideConfirmation()
+    {
+        document.getElementById(\'confirmationmessage\').style.display="none";
+    }
+
+    setTimeout("hideConfirmation()", 10000);
+    </script>
+    ';
         //Add Heading to the table
         $objTable->startRow();
         $objTable->addCell("<b>" . $phraseQnName . "</b>", '80%');
@@ -1973,7 +1993,7 @@ class formmanager extends object {
                     // Show the delete link
                     $iconDelete = $this->getObject('geticon', 'htmlelements');
                     $iconDelete->setIcon('delete');
-                    $iconDelete->alt = $this->objLanguage->languageText("word_delete", 'mcqtests');
+                    $iconDelete->alt = $this->objLanguage->languageText("word_delete", 'system');
                     $iconDelete->align = false;
                     $objConfirm = &$this->getObject("link", "htmlelements");
                     $objConfirm = &$this->newObject('confirm', 'utilities');
@@ -2062,7 +2082,7 @@ class formmanager extends object {
         $test = $fields['testid'];
         if (empty($test))
             $test = $this->getParam("test", Null);
-        
+
         $id = $fields['id'];
         $anscount = $fields['anscount'];
         $unitcount = $fields['unitcount'];
@@ -2410,7 +2430,7 @@ class formmanager extends object {
         } else {
             $noofansdropdown->setSelected("0");
         }
-        
+
         $frmanscount = new hiddeninput("frmanscount", $anscount);
         //Add Answers dropdown to the table
         $objTable->startRow();
@@ -2541,7 +2561,7 @@ class formmanager extends object {
             //Get id of the datasets affiliated to this question
             $qnid = $this->getParam("id", Null);
             $datasets = $this->objDBDataset->getRecords($qnid);
-            $datasetid = $datasets[0]['id'];            
+            $datasetid = $datasets[0]['id'];
 
             if (!empty($datasetid)) {
                 //get the related definitions
@@ -2798,7 +2818,7 @@ class formmanager extends object {
                         $objTableY->addCell("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
                     }
                     $objTableY->addCell($ansValues['answer']);
-                    
+
                     //End row holding the set values
                     $objTableY->addCell($myformula . " = " . $roundAns . " " . $uh[0]["unit"] . "<br />" . $rowAttributes . $phraseLimits . " " . $computed . " " . $uh[0]["unit"]
                             . "</div>" . "Min: " . $minVal . " Max: " . $maxVal);

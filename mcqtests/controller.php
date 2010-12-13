@@ -186,11 +186,13 @@ class mcqtests extends controller {
                 $this->deleteSCQuestions($id = $this->getParam('id', null));
                 $test = $this->getParam('test', Null);
                 // After processing return to scqlisting
-                return $this->nextAction('scqlisting',array('test'=>$test, 'deletemsg'=>'deletedsuccessfully'));
+                return $this->nextAction('scqlisting',array('test'=>$test, 'deletemsg'=>'deletesuccess'));
                 break;
             case 'scqlisting':
                 $test = $this->getParam('test', Null);
+                $deletemsg = $this->getParam('deletemsg', Null);
                 $this->setVarByRef('testId', $test);
+                $this->setVarByRef('deletemsg', $deletemsg);
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'scqlisting_tpl.php';
             case 'addsimplecalculated':
