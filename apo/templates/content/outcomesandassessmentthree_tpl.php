@@ -53,9 +53,10 @@ $table->addCell("e. How many other contact sessions are there each week includin
 $table->addCell($textinput->show());
 $table->endRow();
 
+$totalcontacttime = "";
 $table->startRow();
 $table->addCell("<b>Total contact time</b>");
-$table->addCell("<b>123</b>");
+$table->addCell("<b>".$totalcontacttime."</b>");
 $table->endRow();
 
 $textinput = new textinput('f');
@@ -65,9 +66,10 @@ $table->addCell("f. For every hour of lectures or contact with a staff member, h
 $table->addCell($textinput->show());
 $table->endRow();
 
+$studyhoursnoexam = "";
 $table->startRow();
 $table->addCell("<b>Total notional study hours (excluding the exams)</b>");
-$table->addCell("<b>123</b>");
+$table->addCell("<b>".$studyhoursnoexam."</b>");
 $table->endRow();
 
 $textinput = new textinput('g');
@@ -84,9 +86,10 @@ $table->addCell("h. How long is each exam?");
 $table->addCell($textinput->show());
 $table->endRow();
 
+$examtime = "";
 $table->startRow();
 $table->addCell("<b>Total exam time per year</b>");
-$table->addCell("<b>123</b>");
+$table->addCell("<b>".$examtime."</b>");
 $table->endRow();
 
 $textinput = new textinput('i');
@@ -96,14 +99,16 @@ $table->addCell("i. How many hours of preparation for the exams is the student e
 $table->addCell($textinput->show());
 $table->endRow();
 
+$totalstudyhours = "";
 $table->startRow();
 $table->addCell("<b>Total notional study hours</b>");
-$table->addCell("<b>123</b>");
+$table->addCell("<b>".$totalstudyhours."</b>");
 $table->endRow();
 
+$saqa = "";
 $table->startRow();
 $table->addCell("<b>Total SAQA Credits</b>");
-$table->addCell("<b>123</b>");
+$table->addCell("<b>".$saqa."</b>");
 $table->endRow();
 
 $button = new button('calculate', "Calculate");

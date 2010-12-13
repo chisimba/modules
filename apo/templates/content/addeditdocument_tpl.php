@@ -191,7 +191,7 @@ $form->addToForm($fs->show());
 $button = new button('save', $this->objLanguage->languageText('mod_wicid_save', 'wicid', 'Save Document'));
 $button->setToSubmit();
 
-if ($mode == 'edit'){
+if ($mode == 'edit') {
     $button = new button('next', $this->objLanguage->languageText('word_next'));
     $uri = $this->uri(array('action' => 'addoverview'));
     $button->setOnClick('javascript: window.location=\'' . $uri . '\'');

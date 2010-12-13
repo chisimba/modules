@@ -6,7 +6,11 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 
-$form = new form('overviewform');
+$this->setVar('pageSuppressXML', TRUE);
+$this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+$action = 'getformdata';
+
+$form = new form('overviewform', $this->uri(array('action' => $action)));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
