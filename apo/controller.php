@@ -973,13 +973,11 @@ class apo extends controller {
         return $xml;
     }
 
-//jackies
-    public function _collaborationAndContracsForm() {
-        
-//--------
-    }
-
     public function __addoverview() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         return "overview_tpl.php";
     }
 
@@ -1027,6 +1025,10 @@ class apo extends controller {
     }
 
     public function __addrulesandsyllabusone() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         return "rulesandsyllabusone_tpl.php";
     }
 
@@ -1085,6 +1087,10 @@ class apo extends controller {
     }
 
     public function __addrulesandsyllabustwo() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         return "rulesandsyllabustwo_tpl.php";
     }
 
@@ -1125,26 +1131,198 @@ class apo extends controller {
     }
 
     public function __addsubsidyrequirements() {
-        return "addsubsidyrequirements_tpl.php";
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+        return "subsidyrequirements_tpl.php";
+    }
+
+    public function __savesubsidyrequirements(){
+        // $errormessages = array();
+
+        $c1 = $this->getParam("c1");
+        $c2a = $this->getParam("c2a");
+        $c2b = $this->getParam("c2b");
+        $c3 = $this->getParam("c3");
+        $c4a = $this->getParam("c4a");
+        $c4b = $this->getParam("c4b");
+       /* if ($c1 == null) {
+            $errormessages[] = "Please provide an answer for C.1";
+        }
+        if ($c2a == null) {
+            $errormessages[] = "Please provide an answer for C.2.a";
+        }
+        if ($c2b == null) {
+            $errormessages[] = "Please provide an answer for C.2.b";
+        }
+        if ($c3 == null) {
+            $errormessages[] = "Please provide an answer for C.3";
+        }
+        if ($c4a == null) {
+            $errormessages[] = "Please provide an answer for C.4.1";
+        }
+        if ($c4b == null) {
+            $errormessages[] = "Please provide an answer for C.4.b";
+        }
+
+        if (count($errormessages) > 0) {
+
+            $this->setVarByRef("errormessages", $errormessages);
+            $this->setVarByRef("c1", $c1);
+            $this->setVarByRef("c2a", $c2a);
+            $this->setVarByRef("c2b", $c2b);
+            $this->setVarByRef("c3", $c3);
+            $this->setVarByRef("c4a", $c4a);
+            $this->setVarByRef("c4b", $c4b);
+            $mode = "fixup";
+            $this->setVarByRef("mode", $mode);
+            return "rulesandsyllabustwo_tpl.php";
+        }
+
+        $formdata = "<c1>" . $c1 . "</c1>";
+        $formdata .= "<c2a>" . $c2a . "</c2a>";
+        $formdata .= "<c2b>" . $c2b . "</c2b>";
+        $formdata .= "<c3>" . $c3 . "</c3>";
+        $formdata .= "<c4a>" . $c4a . "</c4a>";
+        $formdata .= "<c4b>" . $c4b . "</c4b>";
+        $this->objformdata->saveData($formname, $formdata, $docid);*/
     }
 
     public function __addoutcomesandassessmentone() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         return "outcomesandassessmentone_tpl.php";
     }
 
     public function __saveoutcomesandassessmentone(){
+        // $errormessages = array();
 
+        $d1a = $this->getParam("d1a");
+        $d1b = $this->getParam("d1b");
+        $d2a = $this->getParam("d2a");
+        $d2b = $this->getParam("d2b");
+        $d2c = $this->getParam("d2c");
+        $d3 = $this->getParam("d3");
+       /* if ($d1a == null) {
+            $errormessages[] = "Please provide an answer for D.1.a";
+        }
+        if ($d1b == null) {
+            $errormessages[] = "Please provide an answer for D.1.b";
+        }
+        if ($d2a == null) {
+            $errormessages[] = "Please provide an answer for D.2.a";
+        }
+        if ($d2b == null) {
+            $errormessages[] = "Please provide an answer for D.2.b";
+        }
+        if ($d2c == null) {
+            $errormessages[] = "Please provide an answer for D.2.c";
+        }
+        if ($d3 == null) {
+            $errormessages[] = "Please provide an answer for D.3";
+        }
+
+        if (count($errormessages) > 0) {
+
+            $this->setVarByRef("errormessages", $errormessages);
+            $this->setVarByRef("d1a", $d1a);
+            $this->setVarByRef("d1b", $d1b);
+            $this->setVarByRef("d2a", $d2a);
+            $this->setVarByRef("d2b", $d2b);
+            $this->setVarByRef("d2c", $d2c);
+            $this->setVarByRef("d3", $d3);
+            $mode = "fixup";
+            $this->setVarByRef("mode", $mode);
+            return "rulesandsyllabustwo_tpl.php";
+        }
+
+        $formdata = "<d1a>" . $d1a . "</d1a>";
+        $formdata .= "<d1b>" . $d1b . "</d1b>";
+        $formdata .= "<d2a>" . $d2a . "</d2a>";
+        $formdata .= "<d2b>" . $d2b . "</d2b>";
+        $formdata .= "<d2c>" . $d2c . "</d2c>";
+        $formdata .= "<d3>" . $d3 . "</d3>";
+        $this->objformdata->saveData($formname, $formdata, $docid);*/
     }
 
     public function __addoutcomesandassessmenttwo() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         return "outcomesandassessmenttwo_tpl.php";
     }
 
     public function __saveoutcomesandassessmenttwo(){
+        // $errormessages = array();
 
+        $a = $this->getParam("a");
+        $b = $this->getParam("b");
+        $c = $this->getParam("c");
+        $d = $this->getParam("d");
+        $e = $this->getParam("e");
+        $f = $this->getParam("f");
+        $g = $this->getParam("g");
+        $h = $this->getParam("h");
+       /* if ($a == null) {
+            $errormessages[] = "Please provide an answer for a";
+        }
+        if ($b == null) {
+            $errormessages[] = "Please provide an answer for b";
+        }
+        if ($c == null) {
+            $errormessages[] = "Please provide an answer for c";
+        }
+        if ($d == null) {
+            $errormessages[] = "Please provide an answer for d";
+        }
+        if ($e == null) {
+            $errormessages[] = "Please provide an answer for e";
+        }
+        if ($f == null) {
+            $errormessages[] = "Please provide an answer for f";
+        }
+        if ($g == null) {
+            $errormessages[] = "Please provide an answer for g";
+        }
+        if ($h == null) {
+            $errormessages[] = "Please provide an answer for h";
+        }
+
+        if (count($errormessages) > 0) {
+            $this->setVarByRef("errormessages", $errormessages);
+            $this->setVarByRef("a", $a);
+            $this->setVarByRef("b", $b);
+            $this->setVarByRef("c", $c);
+            $this->setVarByRef("d", $d);
+            $this->setVarByRef("e", $e);
+            $this->setVarByRef("f", $f);
+            $this->setVarByRef("g", $g);
+            $this->setVarByRef("h", $h);
+            $mode = "fixup";
+            $this->setVarByRef("mode", $mode);
+            return "outcomesandassessmentthree_tpl.php";
+        }
+
+        $formdata = "<a>" . $a . "</a>";
+        $formdata .= "<b>" . $b . "</b>";
+        $formdata .= "<c>" . $c . "</c>";
+        $formdata .= "<d>" . $d . "</d>";
+        $formdata .= "<e>" . $e . "</e>";
+        $formdata .= "<f>" . $f . "</f>";
+        $formdata .= "<g>" . $g . "</g>";
+        $formdata .= "<h>" . $h . "</h>";
+        $this->objformdata->saveData($formname, $formdata, $docid);*/
     }
 
     public function __addoutcomesandassessmentthree() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         return "outcomesandassessmentthree_tpl.php";
     }
 
@@ -1218,6 +1396,10 @@ class apo extends controller {
     }
 
     public function __addresources() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         return "resources_tpl.php";
     }
 
@@ -1305,23 +1487,145 @@ class apo extends controller {
 
     public function __addcollaborationandcontracts() {
         $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
         return "collaborationAndContracts_tpl.php";
     }
 
     public function savecollaborationandcontracts(){
+        // $errormessages = array();
 
+        $f1a = $this->getParam("f1a");
+        $f1b = $this->getParam("f1b");
+        $f2a = $this->getParam("f2a");
+        $f2b = $this->getParam("f2b");
+        $f3a = $this->getParam("f3a");
+        $f3b = $this->getParam("f3b");
+        $f4 = $this->getParam("f4");
+       /* if ($f1a == null) {
+            $errormessages[] = "Please provide an answer for F.1.a";
+        }
+        if ($f1b == null) {
+            $errormessages[] = "Please provide an answer for F.1.b";
+        }
+        if ($f2a == null) {
+            $errormessages[] = "Please provide an answer for F.2.a";
+        }
+        if ($f2b == null) {
+            $errormessages[] = "Please provide an answer for F.2.b";
+        }
+        if ($f3a == null) {
+            $errormessages[] = "Please provide an answer for F.3.a";
+        }
+        if ($f3b == null) {
+            $errormessages[] = "Please provide an answer for F.3.b";
+        }
+        if ($f4 == null) {
+            $errormessages[] = "Please provide an answer for F.4";
+        }
+
+        if (count($errormessages) > 0) {
+
+            $this->setVarByRef("errormessages", $errormessages);
+            $this->setVarByRef("f1a", $f1a);
+            $this->setVarByRef("f1b", $f1b);
+            $this->setVarByRef("f2a", $f2a);
+            $this->setVarByRef("f2b", $f2b);
+            $this->setVarByRef("f3a", $f3a);
+            $this->setVarByRef("f3b", $f3b);
+            $this->setVarByRef("f4", $f4);
+            $mode = "fixup";
+            $this->setVarByRef("mode", $mode);
+            return "rulesandsyllabustwo_tpl.php";
+        }
+
+        $formdata = "<f1a>" . $f1a . "</f1a>";
+        $formdata .= "<f1b>" . $f1b . "</f1b>";
+        $formdata .= "<f2a>" . $f2a . "</f2a>";
+        $formdata .= "<f2b>" . $f2b . "</f2b>";
+        $formdata .= "<f3a>" . $f3a . "</f3a>";
+        $formdata .= "<f3b>" . $f3b . "</f3b>";
+        $formdata .= "<f4>" . $f4 . "</f4>";
+        $this->objformdata->saveData($formname, $formdata, $docid);*/
     }
 
     public function __addreview() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         return "addreview_tpl.php";
     }
 
     public function __savereview(){
+        // $errormessages = array();
 
+        $g1a = $this->getParam("g1a");
+        $g1b = $this->getParam("g1b");
+        $g2a = $this->getParam("g2a");
+        $g2b = $this->getParam("g2b");
+        $g3a = $this->getParam("g3a");
+        $g3b = $this->getParam("g3b");
+        $g4a = $this->getParam("g4a");
+        $g4b = $this->getParam("g4b");
+       /* if ($g1a == null) {
+            $errormessages[] = "Please provide an answer for G.1.a";
+        }
+        if ($g1b == null) {
+            $errormessages[] = "Please provide an answer for G.1.b";
+        }
+        if ($g2a == null) {
+            $errormessages[] = "Please provide an answer for G.2.a";
+        }
+        if ($g2b == null) {
+            $errormessages[] = "Please provide an answer for G.2.b";
+        }
+        if ($g3a == null) {
+            $errormessages[] = "Please provide an answer for G.3.a";
+        }
+        if ($g3b == null) {
+            $errormessages[] = "Please provide an answer for G.3.b";
+        }
+        if ($g4a == null) {
+            $errormessages[] = "Please provide an answer for G.4.a";
+        }
+        if ($g4b == null) {
+            $errormessages[] = "Please provide an answer for G.4.b";
+        }
+
+        if (count($errormessages) > 0) {
+
+            $this->setVarByRef("errormessages", $errormessages);
+            $this->setVarByRef("g1a", $g1a);
+            $this->setVarByRef("g1b", $g1b);
+            $this->setVarByRef("g2a", $g2a);
+            $this->setVarByRef("g2b", $g2b);
+            $this->setVarByRef("g3a", $g3a);
+            $this->setVarByRef("g3b", $g3b);
+            $this->setVarByRef("g4a", $g4a);
+            $this->setVarByRef("g4b", $g4b);
+            $mode = "fixup";
+            $this->setVarByRef("mode", $mode);
+            return "rulesandsyllabustwo_tpl.php";
+        }
+
+        $formdata = "<g1a>" . $g1a . "</g1a>";
+        $formdata .= "<g1b>" . $g1b . "</g1b>";
+        $formdata .= "<g2a>" . $g2a . "</g2a>";
+        $formdata .= "<g2b>" . $g2b . "</g2b>";
+        $formdata .= "<g3a>" . $g3a . "</g3a>";
+        $formdata .= "<g3b>" . $g3b . "</g3b>";
+        $formdata .= "<g4a>" . $g4a . "</g4a>";
+        $formdata .= "<g4b>" . $g4b . "</g4b>";
+        $this->objformdata->saveData($formname, $formdata, $docid);*/
     }
 
     public function __addcontactdetails() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         return "contactdetails_tpl.php";
     }
 
