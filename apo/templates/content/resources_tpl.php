@@ -41,7 +41,7 @@ $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&n
         "<b>Resources</b>" . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
         $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '<br/>';
 $fs = new fieldset();
-$fs->setLegend('Forms');
+$fs->setLegend('<b>Forms</b>');
 $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
