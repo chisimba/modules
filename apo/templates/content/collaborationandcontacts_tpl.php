@@ -1,0 +1,152 @@
+<?php
+$this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('fieldset', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+$this->loadClass('hiddeninput', 'htmlelements');
+$this->loadClass('label', 'htmlelements');
+$this->loadClass('iframe', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('radio', 'htmlelements');
+$this->loadClass('textarea', 'htmlelements');
+
+$this->setVar('pageSuppressXML', TRUE);
+
+$xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section F: Collaboration and Contacts');
+
+$header = new htmlheading();
+$header->type = 2;
+$header->str = $xtitle;
+
+echo $header->show();
+
+$legend = "Collaboration and Contacts";
+
+$form = new form('collaborationandcontactsform');
+
+$table = $this->newObject('htmltable', 'htmlelements');
+
+$F1a = new dropdown('f1a');
+$F1a->addOption("Yes");
+$F1a->addOption("No");
+
+if ($mode == 'fixup') {
+    $documentNumber->setSelected($f2a);
+}
+if ($mode == 'edit') {
+    $documentNumber->setSelected(substr($document['refno'], 0, 1));
+}
+$table->startRow();
+$table->addCell("<b>F.1.a Is approval for the course/unit required from a professional body?:</b>");
+if ($mode == 'edit') {
+    $table->addCell($document['refno'] . '-' . $document['version']);
+} else {
+    $table->addCell($F1a->show());
+}
+$table->endRow();
+
+$textarea = new textarea('f1b');
+
+$table->startRow();
+$table->addCell('<b>F.1.b If yes, state the name of the professional body and provide details of the bodys prerequisites and/or contacts.:</b>');
+$table->addCell($textarea->show());
+$table->endRow();
+
+$F2a = new dropdown('f2a');
+$F2a->addOption("Yes");
+$F2a->addOption("No");
+
+if ($mode == 'fixup') {
+    $documentNumber->setSelected($f2a);
+}
+if ($mode == 'edit') {
+    $documentNumber->setSelected(substr($document['refno'], 0, 1));
+}
+$table->startRow();
+$table->addCell("<b>F.2.a Are other Schools or Faculties involved in and/or have interest in the course?:</b>");
+if ($mode == 'edit') {
+    $table->addCell($document['refno'] . '-' . $document['version']);
+} else {
+    $table->addCell($F2a->show());
+}
+$table->endRow();
+
+$textarea = new textarea('f2b');
+
+$table->startRow();
+$table->addCell('<b>F.2.b If yes, provide the details of the other Schools or Fucalties involvement/interest, including support and provision for the course/unit.:</b>');
+$table->addCell($textarea->show());
+$table->endRow();
+
+$F3a = new dropdown('f3a');
+$F3a->addOption("Yes");
+$F3a->addOption("No");
+
+if ($mode == 'fixup') {
+    $documentNumber->setSelected($f2a);
+}
+if ($mode == 'edit') {
+    $documentNumber->setSelected(substr($document['refno'], 0, 1));
+}
+$table->startRow();
+$table->addCell("<b>F.3.a Does the course/unit provide service learning?:</b>");
+if ($mode == 'edit') {
+    $table->addCell($document['refno'] . '-' . $document['version']);
+} else {
+    $table->addCell($F3a->show());
+}
+$table->endRow();
+
+$textarea = new textarea('f3b');
+
+$table->startRow();
+$table->addCell('<b>F.3.b If yes, provide the details on the nature as well as the provisioning for the service learning component and methodology.:</b>');
+$table->addCell($textarea->show());
+$table->endRow();
+
+$textarea = new textarea('f4');
+
+$table->startRow();
+$table->addCell('<b>F.4 Specify whether collaboration, contacts or other cooperation agreements have been, or will need to be, entered into with entities outside of the university?:</b>');
+$table->addCell($textarea->show());
+$table->endRow();
+
+
+$efs = new fieldset();
+
+$efs->setLegend('Errors');
+if (count($errormessages) > 0) {
+
+    $errorstr = '<ul>';
+
+    foreach ($errormessages as $errormessage) {
+        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+    }
+    $errorstr.='</li>';
+    $efs->addContent($errorstr);
+    $form->addToForm($efs);
+}
+
+$fs = new fieldset();
+$fs->setLegend($legend);
+$fs->addContent($table->show());
+$form->addToForm($fs->show());
+
+$button = new button('next', $this->objLanguage->languageText('word_next'));
+$uri = $this->uri(array('action' => 'addoutcomesandassessmentthree'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm('<br/>' .$button->show());
+
+$button = new button('back', $this->objLanguage->languageText('word_back'));
+$uri = $this->uri(array('action' => 'addrulesandsyllabusone'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
+
+$button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$uri = $this->uri(array('action' => 'home'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
+
+
+echo $form->show();
+?>

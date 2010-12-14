@@ -12,7 +12,7 @@ $this->loadClass('textarea', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 
-$xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section G: Review');
+$xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section D: Outcomes and Assessments - Page Two');
 
 $header = new htmlheading();
 $header->type = 2;
@@ -20,67 +20,27 @@ $header->str = $xtitle;
 
 echo $header->show();
 
+$legend = "Outcomes and Assessment";
 
-$legend = "Review";
-
-$form = new form('reviewform');
+$form = new form('outcomesandassessmenttwoform');
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
-$textarea = new textarea('g1a');
-
+$radio = new radio ('d4');
+$radio->addOption('1'," Identify and solve problems in which responses display that responsible decisions using critical and creative thinking have been made.");
+$radio->addOption('2',"Work effectively with others as a member of a team, group, organisation, community.");
+$radio->addOption('3',"Organise and manage oneself and one’s activities responsibly and effectively.");
+$radio->addOption('4',"Collect, analyse, organise and critically evaluate information.");
+$radio->addOption('5',"Communicate effectively using visual, mathematical and/or language skills in the modes of oral and/ or written presentation.");
+$radio->addOption('6',"	Use science and technology effectively and critically, showing responsibility towards the environment and health of others.");
+$radio->addOption('7',"Demonstrate an understanding of the world as a set of related systems by recognising that problem-solving contexts do not exist in isolation.");
+$radio->addOption('8',"	In order to contribute to the full personal development of each learner and the social economic development of the society at large, it must be the intention underlying any programme of learning to make an individual aware of the importance of:");
+//.'<b>- Reflecting on and exploring a variety of strategies to learn more effectively;</b>');
+$radio->setSelected('1');
+$radio->setBreakSpace('</p><p>');
 $table->startRow();
-$table->addCell('<b>G.1.a How will the course/unit syllabus be reviewed?:</b>');
-$table->addCell($textarea->show());
-$table->endRow();
-
-$textarea = new textarea('g1b');
-
-$table->startRow();
-$table->addCell('<b>G.1.b How often will the course/unit syllabus be reviewed?:</b>');
-$table->addCell($textarea->show());
-$table->endRow();
-
-$textarea = new textarea('g2a');
-
-$table->startRow();
-$table->addCell('<b>G.2.a How will integration of course/unit outcome, syllabus, teaching methods and assessment methods be evaluated?:</b>');
-$table->addCell($textarea->show());
-$table->endRow();
-
-$textarea = new textarea('g2b');
-
-$table->startRow();
-$table->addCell('<b>G.2.b How often will the above integration be reviewed?:</b>');
-$table->addCell($textarea->show());
-$table->endRow();
-
-$textarea = new textarea('g3a');
-
-$table->startRow();
-$table->addCell('<b>G.3.a How will the course/unit through-put rate be evaluated?:</b>');
-$table->addCell($textarea->show());
-$table->endRow();
-
-$textarea = new textarea('g3b');
-
-$table->startRow();
-$table->addCell('<b>G.3.b How often will the course/unit through-put be reviewed?:</b>');
-$table->addCell($textarea->show());
-$table->endRow();
-
-$textarea = new textarea('g4a');
-
-$table->startRow();
-$table->addCell('<b>G.4.a How will theteaching on the course/unit be evaluated from a students perspective and from a lectures perspective?:</b>');
-$table->addCell($textarea->show());
-$table->endRow();
-
-$textarea = new textarea('g4b');
-
-$table->startRow();
-$table->addCell('<b>G.4.b How often will the teaching on the course/unit be evaluated from these two perspectives?:</b>');
-$table->addCell($textarea->show());
+$table->addCell("D.4 Specify the critical cross-field outcomes (CCFOs) integrated into the course/unit using the list provided.:");
+$table->addCell($radio->show());
 $table->endRow();
 
 $efs = new fieldset();
