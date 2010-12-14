@@ -30,7 +30,6 @@ $cfile = substr($selected, strlen($this->baseDir));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Register New Document');
 if ($mode == 'edit') {
-
     $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Edit Document');
 }
 $header = new htmlheading();
@@ -38,6 +37,43 @@ $header->type = 2;
 $header->str = $xtitle;
 
 echo $header->show();
+
+if ($mode == 'edit') {
+    $overviewlink = new link($this->uri(array("action" => "addoverview")));
+    $overviewlink->link = "Overview";
+    $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
+    $rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
+    $rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
+    $rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
+    $subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequirements")));
+    $subsidyrequirementslink->link = "Subsidy Requirements";
+    $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
+    $outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
+    $outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
+    $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
+    $outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+    $resourceslink = new link($this->uri(array("action" => "addresources")));
+    $resourceslink->link = "Resources";
+    $collaborationandcontractslink = new link($this->uri(array("action" => "addcollaborationandcontracts")));
+    $collaborationandcontractslink->link = "Collaboration and Contracts";
+    $reviewlink = new link($this->uri(array("action" => "addreview")));
+    $reviewlink->link = "Review";
+    $contactdetailslink = new link($this->uri(array("action" => "addcontactdetails")));
+    $contactdetailslink->link = "Contact Details";
+
+    $links = "<b>Document</b>" . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
+            $rulesandsyllabusonelink->show() . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
+            $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
+            $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
+            $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
+            $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '<br/>';
+    $fs = new fieldset();
+    $fs->setLegend('Forms');
+    $fs->addContent($links);
+
+    echo $fs->show() . '<br/>';
+}
 
 // Opening date
 $table = $this->newObject('htmltable', 'htmlelements');

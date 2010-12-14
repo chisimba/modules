@@ -20,6 +20,40 @@ $header->str = $xtitle;
 
 echo $header->show();
 
+$doclink = new link($this->uri(array("action" => "editdocument")));
+$doclink->link = "Document";
+$overviewlink = new link($this->uri(array("action" => "addoverview")));
+$overviewlink->link = "Overview";
+$rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
+$rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
+$rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
+$rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
+$subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequirements")));
+$subsidyrequirementslink->link = "Subsidy Requirements";
+$outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
+$outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+$outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
+$outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
+$outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
+$outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+$resourceslink = new link($this->uri(array("action" => "addresources")));
+$resourceslink->link = "Resources";
+$collaborationandcontractslink = new link($this->uri(array("action" => "addcollaborationandcontracts")));
+$collaborationandcontractslink->link = "Collaboration and Contracts";
+$contactdetailslink = new link($this->uri(array("action" => "addcontactdetails")));
+$contactdetailslink->link = "Contact Details";
+
+$links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
+        $rulesandsyllabusonelink->show() . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
+        $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
+        $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
+        $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
+        "<b>Review</b>" . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '<br/>';
+$fs = new fieldset();
+$fs->setLegend('Forms');
+$fs->addContent($links);
+
+echo $fs->show() . '<br/>';
 
 $legend = "Review";
 
