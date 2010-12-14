@@ -63,7 +63,7 @@ if ($mode == 'edit') {
     $contactdetailslink->link = "Contact Details";
 
     $links = "<b>Document</b>" . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
-            $rulesandsyllabusonelink->show() . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
+            $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
             $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
             $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
             $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .

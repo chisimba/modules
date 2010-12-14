@@ -6,9 +6,17 @@ $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
-
+$this->loadClass('htmlheading', 'htmlelements');
 
 $form = new form('outcomesandassessmentthreeform');
+
+$xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section D: Outcomes and Assessment');
+
+$header = new htmlheading();
+$header->type = 2;
+$header->str = $xtitle;
+
+echo $header->show();
 
 $doclink = new link($this->uri(array("action" => "editdocument")));
 $doclink->link = "Document";
@@ -34,7 +42,7 @@ $contactdetailslink = new link($this->uri(array("action" => "addcontactdetails")
 $contactdetailslink->link = "Contact Details";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
-        $rulesandsyllabusonelink->show() . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
+        $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . "<b>Outcomes and Assessment (page three)</b>" . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .

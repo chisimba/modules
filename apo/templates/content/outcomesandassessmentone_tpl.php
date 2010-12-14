@@ -43,7 +43,7 @@ $contactdetailslink = new link($this->uri(array("action" => "addcontactdetails")
 $contactdetailslink->link = "Contact Details";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
-        $rulesandsyllabusonelink->show() . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
+        $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . "<b>Outcomes and Assessment (page one)</b>" . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .

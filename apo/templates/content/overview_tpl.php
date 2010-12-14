@@ -7,12 +7,21 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
+$this->loadClass('htmlheading', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 $action = 'addrulesandsyllabusone';
 
 $form = new form('overviewform', $this->uri(array('action' => $action)));
+
+$xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section A: Overview');
+
+$header = new htmlheading();
+$header->type = 2;
+$header->str = $xtitle;
+
+echo $header->show();
 
 $doclink = new link($this->uri(array("action" => "editdocument")));
 $doclink->link = "Document";
@@ -38,7 +47,7 @@ $contactdetailslink = new link($this->uri(array("action" => "addcontactdetails")
 $contactdetailslink->link = "Contact Details";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . "<b>Overview</b>" . '&nbsp;|&nbsp;' .
-        $rulesandsyllabusonelink->show() . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
+        $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .

@@ -12,6 +12,14 @@ $this->loadClass('textarea', 'htmlelements');
 
 $form = new form('rulesandsyllabustwoform');
 
+$xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section B: Rules and Syllabus');
+
+$header = new htmlheading();
+$header->type = 2;
+$header->str = $xtitle;
+
+echo $header->show();
+
 $doclink = new link($this->uri(array("action" => "editdocument")));
 $doclink->link = "Document";
 $overviewlink = new link($this->uri(array("action" => "addoverview")));
@@ -36,7 +44,7 @@ $contactdetailslink = new link($this->uri(array("action" => "addcontactdetails")
 $contactdetailslink->link = "Contact Details";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
-        $rulesandsyllabusonelink->show() . "<b>Rules and Syllabus (page two)</b>" . '&nbsp;|&nbsp;' .
+        $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . "<b>Rules and Syllabus (page two)</b>" . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .

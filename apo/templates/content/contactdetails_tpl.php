@@ -11,11 +11,15 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 
-
-/*$objbackLink = new link($this->uri(array('action'=>'back')));
-$objbackLink-> link = 'Back';*/
-
 $form = new form('contactdetailsform');
+
+$xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section H: Contact Details');
+
+$header = new htmlheading();
+$header->type = 2;
+$header->str = $xtitle;
+
+echo $header->show();
 
 $doclink = new link($this->uri(array("action" => "editdocument")));
 $doclink->link = "Document";
@@ -41,7 +45,7 @@ $reviewlink = new link($this->uri(array("action" => "addreview")));
 $reviewlink->link = "Review";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
-        $rulesandsyllabusonelink->show() . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
+        $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
