@@ -107,6 +107,7 @@ class weatherbot extends controller
         } else {
             echo 'Could not contact the weather service.';
         }
+        exit;
     }
 
     /**

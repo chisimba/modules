@@ -103,6 +103,7 @@ class currencybot extends controller
         } else {
             echo "Please use the following format: amount from to\nExample: 100 euro rand";
         }
+        exit;
     }
 
     /**
