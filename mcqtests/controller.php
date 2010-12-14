@@ -186,7 +186,7 @@ class mcqtests extends controller {
                 $this->deleteSCQuestions($id = $this->getParam('id', null));
                 $test = $this->getParam('test', Null);
                 // After processing return to scqlisting
-                return $this->nextAction('scqlisting',array('test'=>$test, 'deletemsg'=>'deletesuccess'));
+                return $this->nextAction('scqlisting', array('test' => $test, 'deletemsg' => 'deletesuccess'));
                 break;
             case 'scqlisting':
                 $test = $this->getParam('test', Null);
@@ -197,11 +197,12 @@ class mcqtests extends controller {
                 return 'scqlisting_tpl.php';
             case 'addsimplecalculated':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
-
-                $id = $this->saveSimpleCalculated();
-                //Array to hold values to be passed to template
-                $fields = array();
-                if (empty($id)) {
+                $submitVal = $this->getParam("submit", "Other");
+                $id = Null;
+                //Check if submit button was clicked
+                if ($submitVal == "Save as a new question" || $submitVal == "Save changes") {
+                    $id = $this->saveSimpleCalculated();
+                } else {
                     $id = $this->getParam('id', Null);
                 }
                 $fields['id'] = $id;
@@ -1145,6 +1146,7 @@ class mcqtests extends controller {
      * @param string $qnId The Question Id
      * @return True|False
      */
+
     public function deleteSCQuestions($qnId) {
         $delQn = $this->dbQuestions->deleteQuestion($qnId);
     }
@@ -1195,7 +1197,12 @@ class mcqtests extends controller {
 
             //Save Unit-Handling
             $fieldsUH = array();
-            $uhid = $this->getParam('uhid', Null);
+            //Empty uhid if saving question as new, else update
+            if ($saveAsNew == 1) {
+                $uhid = Null;
+            } else {
+                $uhid = $this->getParam('uhid', Null);
+            }
             $fieldsUH['questionid'] = $qnid;
             $fieldsUH['unitgradingtype'] = $this->getParam('unitgradetype', Null);
             $fieldsUH['unitpenalty'] = $this->getParam('unitpenalty', Null);
@@ -1262,7 +1269,13 @@ class mcqtests extends controller {
                 do {
                     $fieldsAns = array();
                     $fieldsAns['questionid'] = $qnid;
-                    $ansid = $this->getParam('ansid_update_' . $aucount, Null);
+                    //If saving question as new
+                    if ($saveAsNew == 1) {
+                        $fieldsAns['testid'] = $test;
+                        $ansid = Null;
+                    } else {
+                        $ansid = $this->getParam('ansid_update_' . $aucount, Null);
+                    }
                     $fieldsAns['answer'] = $this->getParam('ansformula_update_' . $aucount, Null);
                     $fieldsAns['answerformat'] = $this->getParam('correctanswerformat_update_' . $aucount, Null);
                     $fieldsAns['fraction'] = $this->getParam('grade_update_' . $aucount, Null);
@@ -1274,7 +1287,13 @@ class mcqtests extends controller {
 
                         $fieldsAnsC = array();
                         $fieldsAnsC['questionid'] = $qnid;
-                        $qncalcid = $this->getParam('calcid_update_' . $aucount, Null);
+                        //If saving question as new
+                        if ($saveAsNew == 1) {
+                            $fieldsAns['testid'] = $test;
+                            $qncalcid = Null;
+                        } else {
+                            $qncalcid = $this->getParam('calcid_update_' . $aucount, Null);
+                        }
                         $fieldsAnsC['answer'] = $ansid;
                         $fieldsAnsC['tolerance'] = $this->getParam('tolerance_update_' . $aucount, Null);
                         $fieldsAnsC['tolerancetype'] = $this->getParam('tolerancetype_update_' . $aucount, Null);
@@ -1334,7 +1353,7 @@ class mcqtests extends controller {
                 //Insert/Update Tags
                 $tagId = $this->dbTag->addTag($otTags, Null, $qnid);
             }
-            //Save the wild-cards $this->objDSDefinitions $this->objDSItems $this->objDBDataset
+            //Save the wild-cards
             $wccount = $this->getParam('wccount', Null);
             $dsetid = $this->getParam('dsetid_' . $wccount, Null);
             $a_def_id = $this->getParam('a_definition_id_' . $wccount, Null);
@@ -1345,8 +1364,21 @@ class mcqtests extends controller {
             $dsetarr['questionid'] = $qnid;
             //Check if dataset for this question exists
             $dsetid = $this->objDBDataset->getRecords($qnid);
-            if (empty($dsetid)) {
+            if (empty($dsetid) || $saveAsNew == 1) {
                 $dsetid = $this->objDBDataset->addRecord($dsetarr);
+                //Save Wild-Card A
+                $arrdset_def_a = array();
+                $a_def_id = Null;
+                $arrdset_def_a['datasetid'] = $dsetid;
+                $arrdset_def_a['categoryid'] = $test;
+                $arrdset_def_a['name'] = "A";
+
+                //Save Wild-Card B
+                $arrdset_def_b = array();
+                $b_def_id = Null;
+                $arrdset_def_b['datasetid'] = $dsetid;
+                $arrdset_def_b['categoryid'] = $test;
+                $arrdset_def_b['name'] = "B";
             } else {
                 $dsetid = $dsetid[0]['id'];
             }
@@ -1358,30 +1390,25 @@ class mcqtests extends controller {
             $btorange = $this->getParam('btorange_' . $wccount, Null);
             $bdecimalplaces = $this->getParam('bdecimalplaces_' . $wccount, Null);
 
-            //Save Wild-Card A
-            $arrdset_def_a = array();
-            if (empty($a_def_id)) {
-                $arrdset_def_a['datasetid'] = $dsetid;
-                $arrdset_def_a['categoryid'] = $test;
-                $arrdset_def_a['name'] = "A";
-            }
             $arrdset_def_a['type'] = "1";
             $arrdset_def_a['options'] = $afromrange . "." . $adecimalplaces . ":" . $atorange . "." . $adecimalplaces;
             $arrdset_def_a['itemcount'] = "10";
-            $adefid = $this->objDSDefinitions->addRecord($arrdset_def_a, $a_def_id);
-
-            //Save Wild-Card B
-            $arrdset_def_b = array();
-            if (empty($b_def_id)) {
-                $arrdset_def_b['datasetid'] = $dsetid;
-                $arrdset_def_b['categoryid'] = $test;
-                $arrdset_def_b['name'] = "B";
+            if ($saveAsNew == 1) {
+                $adefid = $this->objDSDefinitions->addRecord($arrdset_def_a, Null);
+            } else {
+                $adefid = $this->objDSDefinitions->addRecord($arrdset_def_a, $a_def_id);
             }
+
+
             $arrdset_def_b['type'] = "1";
             $arrdset_def_b['options'] = $bfromrange . "." . $bdecimalplaces . ":" . $btorange . "." . $bdecimalplaces;
             $arrdset_def_b['itemcount'] = "10";
 
-            $bdefid = $this->objDSDefinitions->addRecord($arrdset_def_b, $b_def_id);
+            if ($saveAsNew == 1) {
+                $bdefid = $this->objDSDefinitions->addRecord($arrdset_def_b, Null);
+            } else {
+                $bdefid = $this->objDSDefinitions->addRecord($arrdset_def_b, $b_def_id);
+            }
             //Add items if none exists
             $aitemsCheck = $this->objDSItems->getRecords($adefid);
             $bitemsCheck = $this->objDSItems->getRecords($bdefid);
