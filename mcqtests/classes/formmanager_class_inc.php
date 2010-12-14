@@ -1905,7 +1905,7 @@ class formmanager extends object {
      * @param  string $categoryId Contains the category identifier
      * @author Paul Mungai
      */
-    public function createSCQList($testId, $categoryId=Null, $deletemsg = Null) {
+    public function createSCQList($testId, $categoryId=Null, $deletemsg = Null, $addmsg = Null) {
         //Initialize variables
         $test = $testId;
 
@@ -1953,8 +1953,7 @@ class formmanager extends object {
         echo '<div id="confirmationmessage">';
         if ($deletemsg == "deletesuccess") {
             echo '<br /><span class="confirm">' . $deleteSuccess . '</span><br /><br />';
-        }
-        $addmsg = $this->getParam('addmsg', Null);
+        }        
         if ($addmsg == "addsuccess") {
             echo '<br /><span class="confirm">' . $addSuccess . '</span><br /><br />';
         }

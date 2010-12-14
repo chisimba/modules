@@ -200,12 +200,16 @@ class mcqtests extends controller {
             case 'addsimplecalculated':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 $submitVal = $this->getParam("submit", "Other");
+                //Empty the qn id
                 $id = Null;
                 //Check if submit button was clicked
                 if ($submitVal == "Save as a new question" || $submitVal == "Save changes") {
-                    $id = $this->saveSimpleCalculated();
+                    $arr = $this->saveSimpleCalculated();
+                    $id = $arr['id'];
+                    $exists = $arr['exists'];
                 } else {
                     $id = $this->getParam('id', Null);
+                    $exists = 1;
                 }
                 $fields['id'] = $id;
                 $test = $this->getParam('test', Null);
@@ -220,7 +224,7 @@ class mcqtests extends controller {
                 $this->setVarByRef('fields', $fields);
                 $this->setVarByRef('id', $id);
                 $this->setVarByRef('testId', $test);
-                if ($submitVal == "Save as a new question") {
+                if ($submitVal == "Save as a new question" || $exists == 2) {
                     return $this->nextAction('scqlisting', array('test' => $test, 'addmsg' => 'addsuccess'));
                 } else {
                     return 'simplecalculatedqn_tpl.php';
@@ -1161,7 +1165,7 @@ class mcqtests extends controller {
     /**
      * Method to save simple calculated question
      *
-     * @return string
+     * @return array
      */
     public function saveSimpleCalculated() {
         $test = $this->getParam('test', Null);
@@ -1188,6 +1192,8 @@ class mcqtests extends controller {
         } elseif ($submitVal == "Save changes") {
             $saveAsNew = 0;
         }
+        //Flag to indicate if new or existing question;
+        $exists = 1;
 
         //Avoid saving blank values
         if (!empty($fieldsQn['name'])) {
@@ -1196,6 +1202,9 @@ class mcqtests extends controller {
                 if ($saveAsNew == 1) {
                     $id = Null;
                     $id = $this->dbQuestions->addQuestion($fieldsQn, Null, $saveAsNew);
+                } else if (empty($id)) {
+                    $exists = 2;
+                    $id = $this->dbQuestions->addNewQuestion($fieldsQn);
                 } else {
                     //Do not replace var id with result as is an object ;-)
                     $myid = $this->dbQuestions->addQuestion($fieldsQn, $id);
@@ -1376,8 +1385,12 @@ class mcqtests extends controller {
             $dsetarr['datasetdefinition'] = "";
             $dsetarr['questionid'] = $qnid;
             //Check if dataset for this question exists
-            $dsetid = $this->objDBDataset->getRecords($qnid);
-            if (empty($dsetid) || $saveAsNew == 1) {
+            if ($exists == 1) {
+                $dsetid = $this->objDBDataset->getRecords($qnid);
+            } else if ($exists == 2) {
+                $dsetid = Null;
+            }
+            if (empty($dsetid) || $saveAsNew == 1 || $exists == 2) {
                 $dsetid = $this->objDBDataset->addRecord($dsetarr);
                 //Save Wild-Card A
                 $arrdset_def_a = array();
@@ -1406,7 +1419,7 @@ class mcqtests extends controller {
             $arrdset_def_a['type'] = "1";
             $arrdset_def_a['options'] = $afromrange . "." . $adecimalplaces . ":" . $atorange . "." . $adecimalplaces;
             $arrdset_def_a['itemcount'] = "10";
-            if ($saveAsNew == 1) {
+            if ($saveAsNew == 1 || $exists == 2) {
                 $adefid = $this->objDSDefinitions->addRecord($arrdset_def_a, Null);
             } else {
                 $adefid = $this->objDSDefinitions->addRecord($arrdset_def_a, $a_def_id);
@@ -1417,7 +1430,7 @@ class mcqtests extends controller {
             $arrdset_def_b['options'] = $bfromrange . "." . $bdecimalplaces . ":" . $btorange . "." . $bdecimalplaces;
             $arrdset_def_b['itemcount'] = "10";
 
-            if ($saveAsNew == 1) {
+            if ($saveAsNew == 1 || $exists == 2) {
                 $bdefid = $this->objDSDefinitions->addRecord($arrdset_def_b, Null);
             } else {
                 $bdefid = $this->objDSDefinitions->addRecord($arrdset_def_b, $b_def_id);
@@ -1464,7 +1477,11 @@ class mcqtests extends controller {
         }
         if (empty($qnid))
             $qnid = $id;
-        return $qnid;
+        //Array to return
+        $arr = array();
+        $arr['id'] = $qnid;
+        $arr['exists'] = $exists;
+        return $arr;
     }
 
     /**

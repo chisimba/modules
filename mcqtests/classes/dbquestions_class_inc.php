@@ -97,6 +97,19 @@ class dbquestions extends dbtable {
     }
 
     /**
+     * Method to insert or update a question in the database.
+     *
+     * @access public
+     * @param array $fields The table fields to be added.
+     * @return string $id The id of the new question.
+     */
+    public function addNewQuestion($fields) {
+        $fields['updated'] = date('Y-m-d H:i:s');
+        $id = $this->insert($fields);
+        return $id;
+    }
+
+    /**
      * Method to get a set of questions for a particular test.
      *
      * @access public
