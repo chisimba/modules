@@ -31,8 +31,7 @@ $fields = array(
         'length'=> 5
         ),
     'unitpenalty' => array(
-        'type'=>'integer',
-        'length'=>10
+        'type'=>'float'
         )
 );
 ?>

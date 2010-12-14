@@ -191,8 +191,10 @@ class mcqtests extends controller {
             case 'scqlisting':
                 $test = $this->getParam('test', Null);
                 $deletemsg = $this->getParam('deletemsg', Null);
+                $addmsg = $this->getParam('addmsg', Null);
                 $this->setVarByRef('testId', $test);
                 $this->setVarByRef('deletemsg', $deletemsg);
+                $this->setVarByRef('addmsg', $addmsg);
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'scqlisting_tpl.php';
             case 'addsimplecalculated':
@@ -206,7 +208,8 @@ class mcqtests extends controller {
                     $id = $this->getParam('id', Null);
                 }
                 $fields['id'] = $id;
-                $fields['testid'] = $this->getParam('test', Null);
+                $test = $this->getParam('test', Null);
+                $fields['testid'] = $test;
                 $fields['mode'] = $this->getParam('mode', 'add');
                 $fields['anscount'] = $this->getParam('anscount', Null);
                 $fields['frmanscount'] = $this->getParam('frmanscount', Null);
@@ -217,7 +220,11 @@ class mcqtests extends controller {
                 $this->setVarByRef('fields', $fields);
                 $this->setVarByRef('id', $id);
                 $this->setVarByRef('testId', $test);
-                return 'simplecalculatedqn_tpl.php';
+                if ($submitVal == "Save as a new question") {
+                    return $this->nextAction('scqlisting', array('test' => $test, 'addmsg' => 'addsuccess'));
+                } else {
+                    return 'simplecalculatedqn_tpl.php';
+                }
                 break;
             case 'addsimplecalculatedunit':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
@@ -1181,6 +1188,7 @@ class mcqtests extends controller {
         } elseif ($submitVal == "Save changes") {
             $saveAsNew = 0;
         }
+
         //Avoid saving blank values
         if (!empty($fieldsQn['name'])) {
             //Insert/Update Question
@@ -1189,12 +1197,12 @@ class mcqtests extends controller {
                     $id = Null;
                     $id = $this->dbQuestions->addQuestion($fieldsQn, Null, $saveAsNew);
                 } else {
-                    $id = $this->dbQuestions->addQuestion($fieldsQn, $id, $saveAsNew);
+                    //Do not replace var id with result as is an object ;-)
+                    $myid = $this->dbQuestions->addQuestion($fieldsQn, $id);
                 }
             }
             //Store Question Id
             $qnid = $id;
-
             //Save Unit-Handling
             $fieldsUH = array();
             //Empty uhid if saving question as new, else update
@@ -1220,7 +1228,12 @@ class mcqtests extends controller {
                 do {
                     $fieldsUnit = array();
                     $fieldsUnit['questionid'] = $qnid;
-                    $unitid = $this->getParam('uhid' . $ucount, Null);
+                    //Check if saving question as a new one
+                    if ($saveAsNew == 1) {
+                        $unitid = Null;
+                    } else {
+                        $unitid = $this->getParam('uhid' . $ucount, Null);
+                    }
                     $fieldsUnit['unit'] = $this->getParam('unit' . $ucount, Null);
                     $fieldsUnit['multiplier'] = $this->getParam('multiplier' . $ucount, Null);
                     //Insert/Update Unit-Multiplier if not empty

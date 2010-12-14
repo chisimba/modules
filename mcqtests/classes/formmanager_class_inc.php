@@ -1910,6 +1910,7 @@ class formmanager extends object {
         $test = $testId;
 
         //Form text
+        $addSuccess = $this->objLanguage->languageText("mod_mcqtests_addsuccess", 'mcqtests', "The Record was added successfully");
         $deleteSuccess = $this->objLanguage->languageText("mod_mcqtests_deletesuccess", 'mcqtests', "The Record was deleted successfully");
         $deletefail = $this->objLanguage->languageText("mod_mcqtests_deletefail", 'mcqtests', "Ooops! There was a problem. The Record was NOT deleted successfully");
         $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
@@ -1952,6 +1953,10 @@ class formmanager extends object {
         echo '<div id="confirmationmessage">';
         if ($deletemsg == "deletesuccess") {
             echo '<br /><span class="confirm">' . $deleteSuccess . '</span><br /><br />';
+        }
+        $addmsg = $this->getParam('addmsg', Null);
+        if ($addmsg == "addsuccess") {
+            echo '<br /><span class="confirm">' . $addSuccess . '</span><br /><br />';
         }
         echo "</div>";
         //Javascript to control the display-time of the confirm message
@@ -2161,7 +2166,6 @@ class formmanager extends object {
         $randSAData = $this->dbRandomMatching->getRecords("questionid='" . $id . "'");
         $qnData = $qnData[0];
         $randSAData = $randSAData[0];
-
         //Get the Qn tags
         $tagInstData = $this->dbTagInstance->getInstances($id);
         $tagStr = "";
@@ -2461,6 +2465,7 @@ class formmanager extends object {
         //Get Values if edit
         $unitValues = Null;
         $upcount = 0;
+        $upcounter = 0;
         if (!empty($id)) {
             $uh = $this->objNumericalUnit->getNumericalUnits($id);
 
@@ -2818,6 +2823,9 @@ class formmanager extends object {
                         $objTableY->addCell("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
                     }
                     $objTableY->addCell($ansValues['answer']);
+                    //Change min and max vals to float
+                    $minVal = floatval($minVal);
+                    $maxVal = floatval($maxVal);
 
                     //End row holding the set values
                     $objTableY->addCell($myformula . " = " . $roundAns . " " . $uh[0]["unit"] . "<br />" . $rowAttributes . $phraseLimits . " " . $computed . " " . $uh[0]["unit"]

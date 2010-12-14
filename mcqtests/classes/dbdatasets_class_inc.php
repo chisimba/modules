@@ -71,11 +71,11 @@ class dbdatasets extends dbtable {
     public function getRecords($questionId = NULL, $filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter && $questionId) {
-            $sql.= " WHERE questionid='$questionId' AND $filter";
+            $sql.= " WHERE questionid='".$questionId."' AND ".$filter;
         } else if ($filter != NULL) {
-            $sql.= " WHERE questionid='$questionId'";
-        } else if ($questionId != NULL) {
-            $sql.= " WHERE questionid='$questionId'";
+            $sql.= " WHERE ".$filter;
+        } else if ($questionId != NULL) {            
+            $sql.= " WHERE questionid='".$questionId."'";
         } else {
             $sql .= "";
         }

@@ -71,11 +71,11 @@ class dbtag_instance extends dbtable {
 
         $sql = 'SELECT * FROM ' . $this->table;
         if ($filter && $itemId) {
-            $sql .= " WHERE itemid='$itemId' AND " . $filter;
+            $sql .= " WHERE itemid='" . $itemId . "' AND " . $filter;
         } else if ($filter != NULL) {
-            $sql.= " WHERE " . $filter . " ORDER BY sortorder";
+            $sql.= " WHERE " . $filter;
         } else if ($itemId != NULL) {
-            $sql.= " WHERE itemid='$itemId' ORDER BY sortorder";
+            $sql.= " WHERE itemid='".$itemId."'";
         } else {
             $sql .= "";
         }
@@ -126,6 +126,7 @@ class dbtag_instance extends dbtable {
         }
         $this->delete('id', $id);
     }
+
     /**
      * Method to delete a question instance.
      *
