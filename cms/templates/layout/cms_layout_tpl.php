@@ -60,13 +60,7 @@ switch($currentAction){
 // Add left blocks    
 if(!empty($leftPageBlocks)) {
     foreach($leftPageBlocks as $pbks) {
-        
-		if($objModule->checkIfRegistered('textblock')) {
-			$blockDisplay = $this->newObject('textblockbase', 'textblock');
-			$blockDisplay->setData($pbks['blockid']);
-			$leftSide .= $blockDisplay->show();
-		}
-		/*$blockId = $pbks['blockid'];
+        $blockId = $pbks['blockid'];
         $blockToShow = $objDbBlocks->getBlock($blockId);
 
 		
@@ -77,6 +71,7 @@ if(!empty($leftPageBlocks)) {
 		$cssClass = 'featurebox';
 
 		//If a textblock is being used then check the show title fields
+		if($objModule->checkIfRegistered('textblock')) {
 			$txtBlockArr = $objTextBlock->getBlock($blockId);
 
 			if (isset($txtBlockArr['show_title']) && $txtBlockArr['show_title'] != '1') {
@@ -97,7 +92,6 @@ if(!empty($leftPageBlocks)) {
 		//TODO: Add support for hiding fields to core block module
 
 		$leftSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid'], NULL, 20, TRUE, $showToggle, 'default', $showTitle, $cssClass, $cssId);
-		*/
     }
 }
 
@@ -120,12 +114,7 @@ $rightSide = '';
 if(!empty($pageBlocks)) {
     $hasBlocks = TRUE;
     foreach($pageBlocks as $pbks) {
-		if($objModule->checkIfRegistered('textblock')) {
-			$blockDisplay = $this->newObject('textblockbase', 'textblock');
-			$blockDisplay->setData($pbks['blockid']);
-			$rightSide .= $blockDisplay->show();
-		}
-        /*$blockId = $pbks['blockid'];
+        $blockId = $pbks['blockid'];
         $blockToShow = $objDbBlocks->getBlock($blockId);
 
 		$showToggle = TRUE;
@@ -156,8 +145,10 @@ if(!empty($pageBlocks)) {
 		//TODO: Add support for hiding fields to core block module
 
 		$rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid'], NULL, 20, TRUE, $showToggle, 'default', $showTitle, $cssClass, $cssId);
-		*/
     }
+}
+if ($objModule) {
+	
 }
 
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
