@@ -53,7 +53,12 @@ class formmanager extends object {
      * @var object to hold dbdataset class
      */
     public $objDBDataset;
-
+    /**
+     *
+     * @var object to hold dbTestadmin class
+     */
+    public $dbTestadmin;
+    
     function init() {
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
@@ -63,6 +68,7 @@ class formmanager extends object {
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
+        $this->dbTestadmin = $this->getObject('dbtestadmin');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->dbDescription = $this->newObject('dbdescription');
         $this->dbQuestions = $this->newObject('dbquestions');
@@ -406,8 +412,7 @@ class formmanager extends object {
         return $objFormEdit->show();
     }
 
-    public function createDatabaseQuestions($oldQuestions, $id) {
-        $this->dbTestadmin = $this->newObject('dbtestadmin');
+    public function createDatabaseQuestions($oldQuestions, $id) {      
 
         $gridjs =
                 "<script type='text/javascript' language='javascript'>
@@ -1898,6 +1903,170 @@ class formmanager extends object {
     }
 
     /**
+     * Method to create a random view for random simple-calculated-questions
+     *
+     * @access private
+     * @param array $data Contains values from controller
+     * @author Paul Mungai
+     */
+    public function randomSCQView($data) {
+        //Load classes
+        $objPopup = &$this->loadClass('windowpop', 'htmlelements');
+        $this->loadClass("hiddeninput", "htmlelements");
+
+        //Initialize variables
+        $test = $data['testId'];
+        $qnId = $data['qnId'];
+        $itemNo = $data['itemNo'];
+
+        //Form text
+        $addSuccess = $this->objLanguage->languageText("mod_mcqtests_addsuccess", 'mcqtests', "The Record was added successfully");
+        $deleteSuccess = $this->objLanguage->languageText("mod_mcqtests_deletesuccess", 'mcqtests', "The Record was deleted successfully");
+        $deletefail = $this->objLanguage->languageText("mod_mcqtests_deletefail", 'mcqtests', "Ooops! There was a problem. The Record was NOT deleted successfully");
+        $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
+        $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
+        $phraseAddA = $this->objLanguage->languageText("mod_mcqtests_phraseadda", 'mcqtests', "Add a");
+        $phraseSCQuestions = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqns", 'mcqtests', "Simple Calculated Questions");
+        $phraseSCQuestion = $this->objLanguage->languageText("mod_mcqtests_simplecalculatedqn", 'mcqtests', "Simple Calculated Question");
+        $wordBack = $this->objLanguage->languageText("word_back", Null, "Back");
+        $listTitle = $phraseListOf . " " . $phraseSCQuestions;
+        $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
+        $backToHome = $wordBack . " " . $wordTo . " " . $mcqHome;
+        $noRecords = $this->objLanguage->languageText('mod_mcqtests_norecords', 'mcqtests', "No records found");
+        $addSCQ = $phraseAddA . " " . $phraseSCQuestion;
+        $wordDesc = $this->objLanguage->languageText('mod_mcqtests_description', 'mcqtests', "Description");
+        $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
+        $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
+        $phraseQnName = $this->objLanguage->languageText('mod_mcqtests_qnname', 'mcqtests');
+        $wordUnit = $this->objLanguage->languageText('mod_mcqtests_wordunit', 'mcqtests', "Unit");
+        $wordAnswer = $this->objLanguage->languageText('mod_mcqtests_wordanswer', 'mcqtests', "Answer");
+        $wordNumber = $this->objLanguage->languageText('mod_mcqtests_wordnumber', 'mcqtests', "Number");
+        //Form Object
+        $form = new form("adddescription", $this->uri(array(
+                            'module' => 'mcqtest',
+                            'action' => 'mcqlisting',
+                            'test' => $test
+                        )));
+        //fetch question data
+        if (!empty($data['qnId'])) {
+            $qn = $this->dbQuestions->getQuestion($qnId);
+            $qn = $qn[0];
+        } else if (!empty($data['testId'])) {
+            $qn = $this->dbQuestions->getQuestions($test, "questiontype='SimpleCalculated'");
+            $qn = $qn[0];
+        }
+        
+        //Form Heading/Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        $objHeading->str = $wordDesc;
+        if (empty($itemNo)) {
+            //Generate no. between 1-10, get random data
+            $itemnumber = rand(1, 10);
+        } else {
+            $itemnumber = $itemNo;
+        }
+
+        //Get test name
+        $testName = $this->dbTestadmin->getTestName($test);
+
+        //Add heading/title to string
+        $str = "";
+
+        //Create table to hold the general stuff
+        $objTable = new htmltable();
+        $objTable->width = '600px';
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
+        $objTable->cellspacing = '12';
+        //answer text box
+        if (!empty($data)) {
+            $ansfield = new textinput("answer", "");
+        } else {
+            $ansfield = new textinput("answer", "");
+        }
+        $ansfield->size = 7;
+        //unit text box
+        if (!empty($data)) {
+            $unitfield = new textinput("answer", "");
+        } else {
+            $unitfield = new textinput("answer", "");
+        }
+        $unitfield->size = 7;
+        //Store the dataset item number Id
+
+        //Store the dataset item number Id
+        $itemno = new hiddeninput("itemnumber", $itemNo);
+
+        //Add Question to the table
+        $objTable->startRow();
+        $objTable->addCell("<b>" . $qn["questiontext"] . "</b>".$itemno->show(), '80%', '', '', '', 'colspan="5"');
+        $objTable->endRow();
+        
+        //Add Answer to the table
+        $objTable->startRow();
+        $objTable->addCell($wordAnswer.": ", '20%','','left');
+        $objTable->addCell($wordNumber, '20%','','right');
+        $objTable->addCell($ansfield->show(), '20%','','left');
+        $objTable->addCell($wordUnit, '20%','','right');
+        $objTable->addCell($unitfield->show(), '20%','left');
+        $objTable->endRow();        
+        $str .= $objTable->show();
+        //Add fieldset to hold Descriptions stuff
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->width = '600px';
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($testName);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($str);
+        //Add General Fieldset to form
+        $form->addToForm($objFieldset->show());
+        //Reset Fieldset
+        $objFieldset->reset();
+        //Reset str
+        $str = "";
+
+        // Create Back Button
+        $buttonAdd = new button("submit", $addSCQ);
+        $objAdd = &$this->getObject("link", "htmlelements");
+        $objAdd->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'addsimplecalculated',
+                    'test' => $test
+                )));
+        $objAdd->link = $buttonAdd->showSexy();
+        $str .= " " . $objAdd->show();
+
+        // Create Back Button
+        $buttonBack = new button("submit", $backToHome);
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'view2',
+                    'test' => $test
+                )));
+        $objBack->link = $buttonBack->showSexy();
+        $str .= " " . $objBack->show();
+
+        //Add fieldset to hold Descriptions stuff
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->width = '600px';
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($listTitle);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($str);
+
+        //Add General Fieldset to form
+        $form->addToForm($objFieldset->show());
+
+        //Reset Fieldset
+        $objFieldset->reset();
+        return $form->show();
+    }
+
+    /**
      * Method to create a list of random simple-calculated-questions
      *
      * @access private
@@ -1906,6 +2075,9 @@ class formmanager extends object {
      * @author Paul Mungai
      */
     public function createSCQList($testId, $categoryId=Null, $deletemsg = Null, $addmsg = Null) {
+        //Load classes
+        $objPopup = &$this->loadClass('windowpop', 'htmlelements');
+
         //Initialize variables
         $test = $testId;
 
@@ -1953,7 +2125,7 @@ class formmanager extends object {
         echo '<div id="confirmationmessage">';
         if ($deletemsg == "deletesuccess") {
             echo '<br /><span class="confirm">' . $deleteSuccess . '</span><br /><br />';
-        }        
+        }
         if ($addmsg == "addsuccess") {
             echo '<br /><span class="confirm">' . $addSuccess . '</span><br /><br />';
         }
@@ -2007,9 +2179,30 @@ class formmanager extends object {
                                 'test' => $testId,
                                 'id' => $descdata["id"]
                             )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
+                    // Show the edit link
+                    $iconPreview = $this->getObject('geticon', 'htmlelements');
+                    $iconPreview->setIcon('preview');
+                    $iconPreview->alt = $this->objLanguage->languageText("word_preview", 'system');
+                    $iconPreview->align = false;
+                    //Show the view Icon
+                    $objPopup = new windowpop();
+                    $objPopup->set('location', $this->uri(array(
+                                'action' => 'randomscqview',
+                                'id' => $descdata['id'],
+                                'test' => $testId
+                                    ), 'mcqtests'));
+                    $objPopup->set('linktext', $iconPreview->show());
+                    $objPopup->set('width', '700');
+                    $objPopup->set('height', '540');
+                    $objPopup->set('left', '200');
+                    $objPopup->set('top', '200');
+                    $objPopup->set('scrollbars', 'yes');
+                    $objPopup->set('resizable', 'yes');
+                    $objPopup->putJs(); // you only need to do this once per page
+                    $linkPreview = $objPopup->show();
                     $objTable->startRow();
                     $objTable->addCell($descdata['question'], '80%');
-                    $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show(), '20%');
+                    $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show() . "&nbsp;&nbsp;" . $linkPreview, '20%');
                     $objTable->endRow();
                 }
             }

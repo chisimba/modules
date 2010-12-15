@@ -188,6 +188,24 @@ class mcqtests extends controller {
                 // After processing return to scqlisting
                 return $this->nextAction('scqlisting', array('test' => $test, 'deletemsg' => 'deletesuccess'));
                 break;
+            case 'randomscqview':
+                $itemno = $this->getParam('itemnumber', TRUE);
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressSearch', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                $test = $this->getParam('test', Null);
+                $category = $this->getParam('category', Null);
+                $itemNo = $this->getParam('itemno', Null);
+                $qnId = $this->getParam('id', Null);
+                $data = array();
+                $data['itemNo'] = $itemNo;
+                $data['testId'] = $test;
+                $data['qnId'] = $qnId;
+                $data['categoryId'] = $category;
+                $this->setVarByRef('data', $data);
+                return 'scqview_tpl.php';
             case 'scqlisting':
                 $test = $this->getParam('test', Null);
                 $deletemsg = $this->getParam('deletemsg', Null);
