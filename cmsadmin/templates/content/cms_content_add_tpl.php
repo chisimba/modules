@@ -98,7 +98,16 @@ $isRegistered = $this->objModule->checkIfRegistered('blocks');
 // set up link to view block form
 $objBlocksLink = new link('#');
 $objBlocksLink->link = $blockIcon;
-$objBlocksLink->extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'positionblock', 'sectionid' => $sectionId, 'pageid' => $pageId, 'blockcat' => 'content')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
+
+//Check if the page is a front page/content
+$isFrontPage = $this->_objBlocks->isFrontPage($pageId);
+if($isFrontPage){
+$content = 'frontpage';
+}else{
+$content = 'content';
+}
+
+$objBlocksLink->extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'positionblock', 'sectionid' => $sectionId, 'pageid' => $pageId, 'blockcat' => $content)) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
 
 if ($this->_objSecurity->canUserWriteContent($pageId)){
     $objBlocksLinkDisplay = '&nbsp;&nbsp;'.$objBlocksLink->show();

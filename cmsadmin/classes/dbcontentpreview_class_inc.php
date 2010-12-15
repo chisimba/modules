@@ -5,7 +5,6 @@
         die("You cannot view this page directly");
     }
     // end security check
-
 /**
 * Data access class for the cmsadmin module. Used to access data in the content table.
 *
