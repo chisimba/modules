@@ -185,6 +185,11 @@ if ($this->objUser->isAdmin()) {
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array());
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm('<b/>'.$button->show());
+
+$button = new button('save', $this->objLanguage->languageText('word_save'));
+$uri = $this->uri(array());
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 echo $form->show();

@@ -66,7 +66,7 @@ $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
 
-$legend = "Review";
+$legend = "<b>Review</b>";
 
 $form = new form('reviewform');
 
@@ -75,56 +75,56 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $textarea = new textarea('g1a');
 
 $table->startRow();
-$table->addCell('<b>G.1.a How will the course/unit syllabus be reviewed?:</b>');
+$table->addCell('G.1.a How will the course/unit syllabus be reviewed?:');
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g1b');
 
 $table->startRow();
-$table->addCell('<b>G.1.b How often will the course/unit syllabus be reviewed?:</b>');
+$table->addCell('G.1.b How often will the course/unit syllabus be reviewed?:');
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g2a');
 
 $table->startRow();
-$table->addCell('<b>G.2.a How will integration of course/unit outcome, syllabus, teaching methods and assessment methods be evaluated?:</b>');
+$table->addCell('G.2.a How will integration of course/unit outcome, syllabus, teaching methods and assessment methods be evaluated?:');
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g2b');
 
 $table->startRow();
-$table->addCell('<b>G.2.b How often will the above integration be reviewed?:</b>');
+$table->addCell('G.2.b How often will the above integration be reviewed?:');
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g3a');
 
 $table->startRow();
-$table->addCell('<b>G.3.a How will the course/unit through-put rate be evaluated?:</b>');
+$table->addCell('G.3.a How will the course/unit through-put rate be evaluated?:');
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g3b');
 
 $table->startRow();
-$table->addCell('<b>G.3.b How often will the course/unit through-put be reviewed?:</b>');
+$table->addCell('G.3.b How often will the course/unit through-put be reviewed?:');
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g4a');
 
 $table->startRow();
-$table->addCell('<b>G.4.a How will theteaching on the course/unit be evaluated from a students perspective and from a lectures perspective?:</b>');
+$table->addCell('G.4.a How will theteaching on the course/unit be evaluated from a students perspective and from a lectures perspective?:');
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g4b');
 
 $table->startRow();
-$table->addCell('<b>G.4.b How often will the teaching on the course/unit be evaluated from these two perspectives?:</b>');
+$table->addCell('G.4.b How often will the teaching on the course/unit be evaluated from these two perspectives?:');
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -149,12 +149,12 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => 'addoutcomesandassessmentthree'));
+$uri = $this->uri(array('action' => 'addcontactdetails'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm('<br/>' .$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'addrulesandsyllabusone'));
+$uri = $this->uri(array('action' => 'addcollaborationandcontracts'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

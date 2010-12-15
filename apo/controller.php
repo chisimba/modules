@@ -447,9 +447,9 @@ class apo extends controller {
         }
         $selectedfolder = $this->getParam('parentfolder');
 
-        if ($selectedfolder == '0') {
+        /*if ($selectedfolder == '0') {
             $errormessages[] = "Select topic";
-        }
+        }*/
         //check wat is the largest count for this year.
         $ref_version = $this->documents->checkRefNo($number);
         $refno = $number . date("Y"); //."-".($res;
@@ -1147,6 +1147,7 @@ class apo extends controller {
         $c3 = $this->getParam("c3");
         $c4a = $this->getParam("c4a");
         $c4b = $this->getParam("c4b");
+        $c4c = $this->getParam("c4c");
        /* if ($c1 == null) {
             $errormessages[] = "Please provide an answer for C.1";
         }
@@ -1258,7 +1259,9 @@ class apo extends controller {
 
     public function __saveoutcomesandassessmenttwo(){
         // $errormessages = array();
-
+   $groups = $this->getParam('groups');
+   echo $groups;
+   die();
         $a = $this->getParam("a");
         $b = $this->getParam("b");
         $c = $this->getParam("c");
@@ -1490,7 +1493,7 @@ class apo extends controller {
         $mode = "new";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
-        return "collaborationAndContracts_tpl.php";
+        return "collaborationandcontracts_tpl.php";
     }
 
     public function savecollaborationandcontracts(){
@@ -1555,7 +1558,7 @@ class apo extends controller {
         $mode = "new";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
-        return "addreview_tpl.php";
+        return "review_tpl.php";
     }
 
     public function __savereview(){

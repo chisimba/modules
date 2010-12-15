@@ -22,7 +22,7 @@ if ($this->objUser->isAdmin()) {
 echo $createFolder;
 
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
-$newdoclink->link = "Register New Document";
+$newdoclink->link = "Register New Course Proposal";
 
 $unapproveddocs = new link($this->uri(array("action" => "unapproveddocs")));
 $unapproveddocs->link = "Unapproved/New documents";

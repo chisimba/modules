@@ -28,9 +28,9 @@ $this->loadClass('dropdown', 'htmlelements');
 
 $cfile = substr($selected, strlen($this->baseDir));
 
-$xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Register New Document');
+$xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'New Course Proposal');
 if ($mode == 'edit') {
-    $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Edit Document');
+    $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Edit Course Proposal');
 }
 $header = new htmlheading();
 $header->type = 2;
@@ -199,7 +199,7 @@ $table->addCell("<b>Topic</b>");
 $table->addCell($this->objUtils->getTree('htmldropdown', $cfile, "none"));
 $table->endRow();
 
-$legend = "New Document";
+$legend = "New Course Proposal";
 if ($mode == 'edit') {
     $legend = "Edit document";
 }

@@ -197,10 +197,10 @@ $form->addToForm($fs->show());
 $button = new button('next', $this->objLanguage->languageText('word_next'));
 $uri = $this->uri(array('action' => 'addresources'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'addrulesandsyllabustwo'));
+$uri = $this->uri(array('action' => 'addoutcomesandassessmenttwo'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
@@ -212,8 +212,3 @@ $form->addToForm($button->show());
 echo $form->show();
 ?>
 
-/*controller :
-        if (!is_numeric($value)) {
-            $errormessages[] = "Value must be integer";
-        }
-        */

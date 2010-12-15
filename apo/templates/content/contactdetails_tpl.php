@@ -132,10 +132,10 @@ $form->addToForm($fs->show());
 $button = new button('finish', "Finish");
 $uri = $this->uri(array('action' => 'finishdocument'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'addresources'));
+$uri = $this->uri(array('action' => 'addreview'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
