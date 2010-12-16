@@ -1175,6 +1175,35 @@ class mcqtests extends controller {
         $qnId = $this->getParam('id', Null);
         $numberVal = $this->getParam('number', Null);
         $unitVal = $this->getParam('unit', Null);
+        $aVal = $this->getParam('aVal', Null);
+        $bVal = $this->getParam('bVal', Null);
+        //Generate a random number if numberVal is empty
+        if (empty($itemNo)) {
+            $itemNo = rand(1, 10);
+        }
+        //Get the dataset id
+        $dSetId = $this->objDBDataset->getRecords($qnId);
+        //Get dataset definitions for the dataset
+        $dSetDefs = $this->objDSDefinitions->getRecords($dSetId[0]['id']);
+        //Get A Id
+        if ($dSetDefs[0]['name'] == "A") {
+            $dSetDefA = $dSetDefs[0]['id'];
+        } else {
+            $dSetDefB = $dSetDefs[0]['id'];
+        }
+        //Get B Id
+        if ($dSetDefs[1]['name'] == "B") {
+            $dSetDefB = $dSetDefs[1]['id'];
+        } else {
+            $dSetDefA = $dSetDefs[1]['id'];
+        }
+        //get A number for dataset in the chosen no.
+        $aItemVal = $this->objDSItems->getRecords($dSetDefA, "itemnumber=".$itemNo);
+        $aIVal = $aItemVal[0]["value"];
+        //get A number for dataset in the chosen no.
+        $bItemVal = $this->objDSItems->getRecords($dSetDefB, "itemnumber='" . $itemNo . "'");
+        $bIVal = $bItemVal[0]["value"];
+
         $data = array();
         $data['itemNo'] = $itemNo;
         $data['testId'] = $test;
@@ -1182,6 +1211,9 @@ class mcqtests extends controller {
         $data['categoryId'] = $category;
         $data['numberVal'] = $numberVal;
         $data['unitVal'] = $unitVal;
+        $data['aVal'] = $aIVal;
+        $data['bVal'] = $bIVal;
+
         return $data;
     }
 

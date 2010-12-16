@@ -2033,9 +2033,14 @@ class formmanager extends object {
         //Store the dataset item number Id
         $itemno = new hiddeninput("itemnumber", $itemNo);
 
+        $question = $qn["questiontext"];
+        //Replace wild card values with Number
+        $question = str_replace("{A}", $data["aVal"], $question);
+        $question = str_replace("{B}", $data["bVal"], $question);
+
         //Add Question to the table
         $objTable->startRow();
-        $objTable->addCell("<b>" . $qn["questiontext"] . "</b>" . $itemno->show(), '80%', '', '', '', 'colspan="5"');
+        $objTable->addCell("<b>" . $question . "</b>" . $itemno->show(), '80%', '', '', '', 'colspan="5"');
         $objTable->endRow();
         $str .= $objTable->show();
 
