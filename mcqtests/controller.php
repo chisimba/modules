@@ -1198,11 +1198,22 @@ class mcqtests extends controller {
             $dSetDefA = $dSetDefs[1]['id'];
         }
         //get A number for dataset in the chosen no.
-        $aItemVal = $this->objDSItems->getRecords($dSetDefA, "itemnumber=".$itemNo);
+        $aItemVal = $this->objDSItems->getRecords($dSetDefA, "itemnumber=" . $itemNo);
         $aIVal = $aItemVal[0]["value"];
         //get A number for dataset in the chosen no.
         $bItemVal = $this->objDSItems->getRecords($dSetDefB, "itemnumber='" . $itemNo . "'");
         $bIVal = $bItemVal[0]["value"];
+
+        //Compute the Vals
+        //Array to store data to be computed
+        $computeData = array();
+
+        $computeData["aVal"] = $aIVal;
+        $computeData["bVal"] = $bIVal;
+        $computeData["formula"] = $computed;
+        $computeData["tolerance"] = $roundAns;
+
+        //$computed = $this->formManager->computeMaxMinVals($computeData);
 
         $data = array();
         $data['itemNo'] = $itemNo;

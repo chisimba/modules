@@ -1947,7 +1947,7 @@ class formmanager extends object {
         $wordFeedback = $this->objLanguage->languageText('mod_mcqtests_wordfeedback', 'mcqtests', "Feedback");
         $wordSubmit = $this->objLanguage->languageText('word_submit', 'system', "Submit");
         $wordExit = $this->objLanguage->languageText('mod_systext_exit', 'system', "Exit");
-        
+
         //Form Object
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
@@ -1955,7 +1955,7 @@ class formmanager extends object {
                             'test' => $test,
                             'id' => $qnId
                         )));
-        
+
         //fetch question data
         if (!empty($qnId)) {
             $qn = $this->dbQuestions->getQuestion($qnId);
@@ -1964,15 +1964,15 @@ class formmanager extends object {
             $qn = $this->dbQuestions->getQuestions($test, "questiontype='SimpleCalculated'");
             $qn = $qn[0];
         }
-        
+
         //Get qn Unit-Handling data
         $uhData = $this->objNumericalOptions->getNumericalOptions($qnId);
         $count = 1;
-        
+
         //Get the answers (Use only first answer for now)
         $qnans = $this->objQnAnswers->getAnswers($qnId);
         $thisans = $qnans[0];
-        
+
         //Get the calculated vals for answer 1
         $calcqnans = $this->objQuestionCalculated->getAnswerRelated($thisans['id']);
         $calcqnans = $calcqnans[0];
@@ -3236,6 +3236,91 @@ class formmanager extends object {
         $form->addToForm("<br />" . $btnSave . " " . $btnSaveAsnew . " " . $btnBackList . " " . $btnBackHome . "<br />");
 
         return "<div>" . $form->show() . "</div>";
+    }
+
+    /**
+     * Method to compute max
+     *
+     * @access public
+     * @param  $data array The values for to be computed and tolerance..all not null
+     * @return object
+     * @author Paul Mungai
+     */
+    public function computeMaxMinVals($data) {
+        $no1 = $data['aVal'];
+        $no2 = $data['bVal'];
+        $newFormula = $data['formula'];
+        $newTolerance = $data['tolerance'];
+        //Add values to wildcards
+        $newFormula = str_replace("A", floatval($no1), $newFormula);
+        $newFormula = str_replace("B", floatval($no2), $newFormula);
+
+        // remove any non-numbers chars; exception for math operators
+        $myformula = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $newFormula);
+        $compute = create_function("", "return (" . $myformula . ");");
+        $computed = 0 + $compute();
+        $roundAns = (float) round($computed, 0);
+
+        /*
+         * COMPUTE THE TOLERANCE
+         * Use Nominal -for add(+) operation -- mark correct if dx < t
+         * Example:
+         * With value 200 and tolerance level of 0.5
+         * Upper Limit => 200+0.5 = 200.5
+         * Lower Limit => 200-0.5 = 199.5
+         * Use Relative - for multiplication, division and subtraction operations
+         * Example:
+         * With value 200 and tolerance level of 0.5
+         * Upper Limit => 200+(200*0.5)
+         * Lower Limit => 200-(200*0.5)
+         */
+        //check if using add operation
+        $addPos = strpos($myformula, "+");
+        if ($addPos === false) {
+            //Compute the minimal tolerance value
+            $minVal = $computed - $newTolerance;
+            
+            // remove any non-numbers chars; exception for math operators
+            $minVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $minVal);
+            $minVal = create_function("", "return (" . $minVal . ");");
+            $minVal = 0 + $minVal();
+
+            //Compute the maximum tolerance value
+            $maxVal = $computed + $newTolerance;
+            
+            // remove any non-numbers chars; exception for math operators
+            $maxVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $maxVal);
+            $maxVal = create_function("", "return (" . $maxVal . ");");
+            $maxVal = 0 + $maxVal();
+        } else {
+            //Correct answer * tolerance value
+            $tolerance = $computed * $newTolerance;
+
+            //Compute the minimal tolerance value
+            $minVal = $computed - $tolerance;
+
+            // remove any non-numbers chars; exception for math operators
+            $minVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $minVal);
+            $minVal = create_function("", "return (" . $minVal . ");");
+            $minVal = 0 + $minVal();
+
+            //Compute the maximum tolerance value
+            $maxVal = $computed + $tolerance;
+
+            // remove any non-numbers chars; exception for math operators
+            $maxVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $maxVal);
+            $maxVal = create_function("", "return (" . $maxVal . ");");
+            $maxVal = 0 + $maxVal();
+            
+            //Array to store data to return
+            $newData = array();
+            $newData["minVal"] = $minVal;
+            $newData["maxVal"] = $maxVal;
+            $newData["tolerance"] = $tolerance;
+            $newData["computedAns"] = $computed;
+            $newData["roundedAns"] = $roundAns;
+            return $newData;
+        }
     }
 
     /**
