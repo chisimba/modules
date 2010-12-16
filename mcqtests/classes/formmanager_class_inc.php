@@ -58,7 +58,7 @@ class formmanager extends object {
      * @var object to hold dbTestadmin class
      */
     public $dbTestadmin;
-    
+
     function init() {
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
@@ -412,7 +412,7 @@ class formmanager extends object {
         return $objFormEdit->show();
     }
 
-    public function createDatabaseQuestions($oldQuestions, $id) {      
+    public function createDatabaseQuestions($oldQuestions, $id) {
 
         $gridjs =
                 "<script type='text/javascript' language='javascript'>
@@ -1918,6 +1918,8 @@ class formmanager extends object {
         $test = $data['testId'];
         $qnId = $data['qnId'];
         $itemNo = $data['itemNo'];
+        $unitVal = $data['unitVal'];
+        $numberVal = $data['numberVal'];
 
         //Form text
         $addSuccess = $this->objLanguage->languageText("mod_mcqtests_addsuccess", 'mcqtests', "The Record was added successfully");
@@ -1941,21 +1943,55 @@ class formmanager extends object {
         $wordUnit = $this->objLanguage->languageText('mod_mcqtests_wordunit', 'mcqtests', "Unit");
         $wordAnswer = $this->objLanguage->languageText('mod_mcqtests_wordanswer', 'mcqtests', "Answer");
         $wordNumber = $this->objLanguage->languageText('mod_mcqtests_wordnumber', 'mcqtests', "Number");
+        $wordInstructions = $this->objLanguage->languageText('mod_mcqtests_instructions', 'mcqtests', "Instructions");
+        $wordFeedback = $this->objLanguage->languageText('mod_mcqtests_wordfeedback', 'mcqtests', "Feedback");
+        $wordSubmit = $this->objLanguage->languageText('word_submit', 'system', "Submit");
+        $wordExit = $this->objLanguage->languageText('mod_systext_exit', 'system', "Exit");
+        
         //Form Object
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
-                            'action' => 'mcqlisting',
-                            'test' => $test
+                            'action' => 'randomscqview',
+                            'test' => $test,
+                            'id' => $qnId
                         )));
+        
         //fetch question data
-        if (!empty($data['qnId'])) {
+        if (!empty($qnId)) {
             $qn = $this->dbQuestions->getQuestion($qnId);
             $qn = $qn[0];
-        } else if (!empty($data['testId'])) {
+        } else if (!empty($test)) {
             $qn = $this->dbQuestions->getQuestions($test, "questiontype='SimpleCalculated'");
             $qn = $qn[0];
         }
         
+        //Get qn Unit-Handling data
+        $uhData = $this->objNumericalOptions->getNumericalOptions($qnId);
+        $count = 1;
+        
+        //Get the answers (Use only first answer for now)
+        $qnans = $this->objQnAnswers->getAnswers($qnId);
+        $thisans = $qnans[0];
+        
+        //Get the calculated vals for answer 1
+        $calcqnans = $this->objQuestionCalculated->getAnswerRelated($thisans['id']);
+        $calcqnans = $calcqnans[0];
+
+        $ansValues = array();
+        $ansValues['ansid'] = $thisans['id'];
+        $ansValues['testid'] = $thisans['testid'];
+        $ansValues['questionid'] = $thisans['questionid'];
+        $ansValues['answer'] = $thisans['answer'];
+        $ansValues['answerformat'] = $thisans['answerformat'];
+        $ansValues['fraction'] = $thisans['fraction'];
+        $ansValues['feedback'] = $thisans['feedback'];
+        $ansValues['feedbackformat'] = $thisans['feedbackformat'];
+        $ansValues['calcid'] = $calcqnans['id'];
+        $ansValues['tolerance'] = $calcqnans['tolerance'];
+        $ansValues['tolerancetype'] = $calcqnans['tolerancetype'];
+        $ansValues['correctanswerformat'] = $calcqnans['correctanswerformat'];
+        $ansValues['correctanswerlength'] = $calcqnans['correctanswerlength'];
+
         //Form Heading/Title
         $objHeading = &$this->getObject('htmlheading', 'htmlelements');
         $objHeading->type = 1;
@@ -1980,41 +2016,115 @@ class formmanager extends object {
         $objTable->attributes = " align='left' border='0'";
         $objTable->cellspacing = '12';
         //answer text box
-        if (!empty($data)) {
-            $ansfield = new textinput("answer", "");
+        if (!empty($numberVal)) {
+            $ansfield = new textinput("number", $numberVal);
         } else {
-            $ansfield = new textinput("answer", "");
+            $ansfield = new textinput("number", "");
         }
         $ansfield->size = 7;
         //unit text box
-        if (!empty($data)) {
-            $unitfield = new textinput("answer", "");
+        if (!empty($unitVal)) {
+            $unitfield = new textinput("unit", $unitVal);
         } else {
-            $unitfield = new textinput("answer", "");
+            $unitfield = new textinput("unit", "");
         }
         $unitfield->size = 7;
         //Store the dataset item number Id
-
         //Store the dataset item number Id
         $itemno = new hiddeninput("itemnumber", $itemNo);
 
         //Add Question to the table
         $objTable->startRow();
-        $objTable->addCell("<b>" . $qn["questiontext"] . "</b>".$itemno->show(), '80%', '', '', '', 'colspan="5"');
+        $objTable->addCell("<b>" . $qn["questiontext"] . "</b>" . $itemno->show(), '80%', '', '', '', 'colspan="5"');
         $objTable->endRow();
-        
+        $str .= $objTable->show();
+
+        //Create table to hold the answer and unit
+        $objTable = new htmltable();
+        $objTable->width = '600px';
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
+        $objTable->cellspacing = '12';
         //Add Answer to the table
         $objTable->startRow();
-        $objTable->addCell($wordAnswer.": ", '20%','','left');
-        $objTable->addCell($wordNumber, '20%','','right');
-        $objTable->addCell($ansfield->show(), '20%','','left');
-        $objTable->addCell($wordUnit, '20%','','right');
-        $objTable->addCell($unitfield->show(), '20%','left');
-        $objTable->endRow();        
-        $str .= $objTable->show();
-        //Add fieldset to hold Descriptions stuff
+        //$objTable->addCell($wordAnswer.": ", '20%','','left');
+        $objTable->addCell($wordNumber, '50px', '', 'right');
+        $objTable->addCell($ansfield->show(), '100px', '', 'left');
+        $objTable->addCell($wordUnit, '50px', '', 'right');
+        $objTable->addCell($unitfield->show(), '400px', 'left');
+        $objTable->endRow();
+        //Add fieldset to hold Answer stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
         $objFieldset->width = '600px';
+
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($wordAnswer);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+        //Add General Fieldset to form
+        $str .= $objFieldset->show();
+        //Reset Fieldset
+        $objFieldset->reset();
+
+        //Create table to hold the Instructions
+        $objTable = new htmltable();
+        $objTable->width = '600px';
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
+        $objTable->cellspacing = '12';
+        //Add Answer to the table
+        $objTable->startRow();
+        $objTable->addCell($uhData[0]["instructions"], '600px', 'left');
+        $objTable->endRow();
+        //Add fieldset to hold Instructions
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->width = '600px';
+
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($wordInstructions);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+        //Add General Fieldset to form
+        $str .= $objFieldset->show();
+        //Reset Fieldset
+        $objFieldset->reset();
+
+        //Create table to hold the Feedback
+        $objTable = new htmltable();
+        $objTable->width = '600px';
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
+        $objTable->cellspacing = '12';
+        //Add Feedback to the table
+        $objTable->startRow();
+        $objTable->addCell($ansValues['feedback'], '600px', 'left');
+        $objTable->endRow();
+        //Add fieldset to hold the Feedback
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->width = '600px';
+
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($wordFeedback);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+        //Add General Fieldset to form
+        $str .= $objFieldset->show();
+        //Reset Fieldset
+        $objFieldset->reset();
+
+        // Create Submit Btn
+        $buttonSubmit = new button("submit", $wordSubmit);
+        $buttonSubmit->setValue($wordSubmit);
+        $buttonSubmit->setToSubmit();
+        $str .= " " . $buttonSubmit->show();
+
+        // Create Submit
+        $buttonBack = new button("submit", $wordExit, "window.close()");
+        $str .= " " . $buttonBack->showSexy();
+
         //$objFieldset->align = 'center';
         $objFieldset->setLegend($testName);
 
@@ -2024,42 +2134,6 @@ class formmanager extends object {
         $form->addToForm($objFieldset->show());
         //Reset Fieldset
         $objFieldset->reset();
-        //Reset str
-        $str = "";
-
-        // Create Back Button
-        $buttonAdd = new button("submit", $addSCQ);
-        $objAdd = &$this->getObject("link", "htmlelements");
-        $objAdd->link($this->uri(array(
-                    'module' => 'mcqtests',
-                    'action' => 'addsimplecalculated',
-                    'test' => $test
-                )));
-        $objAdd->link = $buttonAdd->showSexy();
-        $str .= " " . $objAdd->show();
-
-        // Create Back Button
-        $buttonBack = new button("submit", $backToHome);
-        $objBack = &$this->getObject("link", "htmlelements");
-        $objBack->link($this->uri(array(
-                    'module' => 'mcqtests',
-                    'action' => 'view2',
-                    'test' => $test
-                )));
-        $objBack->link = $buttonBack->showSexy();
-        $str .= " " . $objBack->show();
-
-        //Add fieldset to hold Descriptions stuff
-        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
-        $objFieldset->width = '600px';
-        //$objFieldset->align = 'center';
-        $objFieldset->setLegend($listTitle);
-
-        //Add table to General Fieldset
-        $objFieldset->addContent($str);
-
-        //Add General Fieldset to form
-        $form->addToForm($objFieldset->show());
 
         //Reset Fieldset
         $objFieldset->reset();

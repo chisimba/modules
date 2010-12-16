@@ -195,15 +195,8 @@ class mcqtests extends controller {
                 $this->setVar('pageSuppressBanner', TRUE);
                 $this->setVar('pageSuppressSearch', TRUE);
                 $this->setVar('suppressFooter', TRUE);
-                $test = $this->getParam('test', Null);
-                $category = $this->getParam('category', Null);
-                $itemNo = $this->getParam('itemno', Null);
-                $qnId = $this->getParam('id', Null);
-                $data = array();
-                $data['itemNo'] = $itemNo;
-                $data['testId'] = $test;
-                $data['qnId'] = $qnId;
-                $data['categoryId'] = $category;
+                //Get Vals and Compute where values have been issued
+                $data = $this->randomSCQCompute();
                 $this->setVarByRef('data', $data);
                 return 'scqview_tpl.php';
             case 'scqlisting':
@@ -1167,6 +1160,29 @@ class mcqtests extends controller {
                     return $this->home();
                 }
         }
+    }
+
+    /*
+     * Method to handle view of a simple calculated question
+     *
+     * @return array
+     */
+
+    public function randomSCQCompute() {
+        $test = $this->getParam('test', Null);
+        $category = $this->getParam('category', Null);
+        $itemNo = $this->getParam('itemno', Null);
+        $qnId = $this->getParam('id', Null);
+        $numberVal = $this->getParam('number', Null);
+        $unitVal = $this->getParam('unit', Null);
+        $data = array();
+        $data['itemNo'] = $itemNo;
+        $data['testId'] = $test;
+        $data['qnId'] = $qnId;
+        $data['categoryId'] = $category;
+        $data['numberVal'] = $numberVal;
+        $data['unitVal'] = $unitVal;
+        return $data;
     }
 
     /*
