@@ -159,6 +159,20 @@ class gift extends controller {
 
             $this->setVarByRef("gifts", $gifts);
             return "home_tpl.php";
+        } else if ($this->objDepartments->exists($name)) {
+            $errormessage = "Department Name already exists";
+            $this->setVarByRef("errormessage", $errormessage);
+            $gifts = $this->objDbGift->getGifts($departmentid);
+            $departmentid = $this->getParam('selecteddepartment');
+            if ($departmentid == '') {
+                $departmentid = $this->getSession("departmentid");
+            }
+            $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+            $this->setVarByRef("departmentname", $departmentname);
+            $this->setVarByRef("departmentid", $departmentid);
+            $this->setVarByRef("editdepartmentname", $name);
+            $this->setVarByRef("gifts", $gifts);
+            return "home_tpl.php";
         } else {
             $parentid = $this->getParam('selecteddepartment');
             $dept = $this->objDepartments->getDepartment($parentid);
@@ -271,12 +285,14 @@ class gift extends controller {
         $name = $this->getParam('giftname');                // Gift's name
 
         if ($name == '') {
-            $errormessages[] = "Gift Name required";
+            $errormessages[] = "Gift Name";
         }
+
+        
 
         $donor = $this->getParam('donor');             // Donor name
         if ($donor == '') {
-            $errormessages[] = "Donor required";
+            $errormessages[] = "Donors";
         }
         $recipient = $this->objUser->userid();         // Recipient name
 
@@ -284,25 +300,29 @@ class gift extends controller {
 
         $value = $this->getParam('giftvalue');
 
-        if (!is_numeric($value)) {
-            $errormessages[] = "Value must be integer";
+        if ($value < $this->minAmount) {
+            $errormessages[] = "Value should be greater or equal to ZAR" . $this->minAmount . "";
         }
+        /*if (!is_numeric($value)) {
+            $errormessages[] = "Value must be integer";
+        }*/
 
         $division = $this->getSession('departmentid');
 
 
+        if( $this->objDbGift->exists($name,$division)){
+            $errormessages[]="Gift name supplied already used";
+        }
         $type = $this->getParam('type');
         if ($type == "Select ...") {
-            $errormessages[] = "Select gift type ";
+            $errormessages[] = "Gift type ";
         }
 
         $comments = $this->getParam("comments");
 
         $date_recieved = $this->getParam("date_recieved");
         $includeattachment = $this->getParam("includeattachments");
-        if ($value < $this->minAmount) {
-            $errormessages[] = "You can only record a gift with value ZAR" . $this->minAmount . " or above";
-        }
+        
         if (count($errormessages) > 0) {
             $this->setVarByRef("errormessages", $errormessages);
             $mode = "fixup";
@@ -440,7 +460,6 @@ class gift extends controller {
 
     function __downloadattachment() {
         $filename = $this->getParam("filename");
-
         $giftid = $this->getParam("giftid");
         $filepath = $giftid . '/' . $filename;
         return $this->objGift->downloadFile($filepath, $filename);

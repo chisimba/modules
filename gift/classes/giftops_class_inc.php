@@ -32,6 +32,7 @@ class giftops extends object {
         $this->divisionLabel = $this->objSysConfig->getValue('DIVISION_LABEL', 'gift');
         $this->rootTitle = $this->objSysConfig->getValue('ROOT_TITLE', 'gift');
         $this->objUser = $this->getObject("user", "security");
+        $this->objDbGift = $this->getObject('dbgift');
     }
 
     /**
@@ -230,7 +231,16 @@ class giftops extends object {
 
                 $folderShortText = substr($dept['name'], 0, 200) . '...';
                 if ($this->objUser->isAdmin()) {
-                    $folderShortText = "(" . $objDbGift->getGiftCountByDepartment($dept['id']) . ")&nbsp;" . $folderShortText;
+                    $initialCount = $this->objDbGift->getGiftCountByDepartment($dept['id']);
+                    $displayCount = $initialCount;
+
+                    //then get total count for child depts, if any
+                    if ($dept['level'] == '1') {
+                        $childcount = $this->getChildGiftCount($dept['path']);
+                        $displayCount = $initialCount + $childcount;
+
+                    }
+                    $folderShortText = "(" . $displayCount . ")&nbsp;" . $folderShortText;
                 }
                 if ($dept['name'] == $selected) {
                     $folderText = '<strong>' . $folderText . '</strong>';
@@ -259,7 +269,7 @@ class giftops extends object {
                 //$allFilesNode->addItem($node);
             }
         }
-        
+
         $menu->addItem($allFilesNode);
         if ($treeType == 'htmldropdown') {
             $treeMenu = &new htmldropdown($menu, array('inputName' => 'selecteddepartment', 'id' => 'input_parentfolder', 'selected' => $selected));
@@ -271,6 +281,18 @@ class giftops extends object {
         }
 
         return $treeMenu->getMenu();
+    }
+
+    function getChildGiftCount($path) {
+        $count = 0;
+        $depts = $this->objDepartments->getDepartmentsLike($path);
+        foreach ($depts as $dept) {
+            if ($path != $dept['path']) {
+                $count += $this->objDbGift->getGiftCountByDepartment($dept['id']);
+            }
+        }
+
+        return $count;
     }
 
     function getParent($path) {
@@ -291,10 +313,11 @@ class giftops extends object {
         return $parent;
     }
 
-    function showCreateDepartmentForm() {
+    function showCreateDepartmentForm($name='') {
 
         $form = new form('createdepartment', $this->uri(array('action' => 'createdepartment')));
         $textinput = new textinput('departmentname');
+        $textinput->value=$name;
         $label = new label('Name of ' . $this->divisionLabel . ': ', 'input_departmentname');
         $form->addToForm("<br/>Create in " . $this->getTree('htmldropdown'));
         $form->addToForm(' &nbsp; ' . $label->show() . $textinput->show());
@@ -313,7 +336,7 @@ class giftops extends object {
 
     function showSearchByDatesForm($action) {
 
-        $form = new form('searchbydatesform', $this->uri(array('action' =>$action)));
+        $form = new form('searchbydatesform', $this->uri(array('action' => $action)));
 
         $objDateTime = $this->getObject('dateandtime', 'utilities');
         $objDatePicker = $this->newObject('datepicker', 'htmlelements');
@@ -380,7 +403,7 @@ class giftops extends object {
             die("I'm sorry, you may not download that file.");
 
         // Combine the download path and the filename to create the full path to the file.
-        $file = $baseDir . $filepath;
+        $file = $baseDir . '/' . $filepath;
 
         // Test to ensure that the file exists.
         if (!file_exists($file))

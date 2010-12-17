@@ -96,6 +96,16 @@ class dbgift extends dbtable {
         return $data;
     }
 
+    function exists($name,$departmentid) {
+        $sql =
+                "select * from tbl_gift where giftname ='$name' and division='$departmentid'";
+        $rows = $this->getArray($sql);
+        if (count($rows) > 0) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
     /**
      * Replaces the archived status value with the opposite value.
      * (i.e. if listed is 0, then listed becomes 1 and vice versa)
@@ -145,25 +155,26 @@ class dbgift extends dbtable {
 
     public function getGiftCountByDepartment($department) {
         $qry = "SELECT count(id) as total FROM tbl_gift WHERE  division= '$department' and (deleted='N' or deleted is null)";
+        $total = 0;
         $data = $this->getInfo($qry);
         if (count($data) > 0) {
             $row = $data[0];
-            return $row['total'];
+            $total = $row['total'];
         }
-        return "0";
+        return $total;
     }
 
     public function getGifts($department) {
         $recipient = $this->objUser->userid();     // Recipient name
 
-        $qry = "SELECT * FROM tbl_gift WHERE recipient = '$recipient' and (deleted='N' or deleted is null)";
+        $qry = "SELECT * FROM tbl_gift WHERE recipient = '$recipient'";// and (deleted='N' or deleted is null)";
         /* if (isset($query)) {
           $qry .= " AND (giftname LIKE '%" . addslashes($query) . "%' )";
           } */
         $qry.=" and division= '$department'";
         if ($this->objUser->isAdmin()) {
             $qry = "SELECT * FROM tbl_gift";
-            $qry.=" where division= '$department' and (deleted='N' or deleted is null)";
+            $qry.=" where division= '$department'";// and (deleted='N' or deleted is null)";
         }
 
         $data = $this->getInfo($qry);
@@ -185,26 +196,25 @@ class dbgift extends dbtable {
         $sql =
                 "select * from tbl_gift where
         donor like '%$query%' or giftname like '%$query%' or description like '%$query%'
-         or date_recieved like '%$query%' or value like '%$query%' and (deleted='N' or deleted is null)";
+         or date_recieved like '%$query%' or value like '%$query%'";// and (deleted='N' or deleted is null)";
         return $this->getArray($sql);
     }
 
     function searchGiftsByDate($dateFrom, $dateTo) {
         $sql =
-                "select * from tbl_gift where date_recieved between '$dateFrom 00:00:00.0' and '$dateTo 00:00:00.0' and (deleted='N' or deleted is null)";
+                "select * from tbl_gift where date_recieved between '$dateFrom 00:00:00.0' and '$dateTo 00:00:00.0'";// and (deleted='N' or deleted is null)";
         $data = $this->getArray($sql);
 
         return $data;
     }
 
-      function searchGiftsByDonor($donor) {
+    function searchGiftsByDonor($donor) {
         $sql =
                 "select * from tbl_gift where donor like '%$donor%'";
         $data = $this->getArray($sql);
 
         return $data;
     }
-
 
     function searchGiftsByType($type) {
         $sql =

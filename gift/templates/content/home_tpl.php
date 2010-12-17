@@ -38,7 +38,7 @@ if (isset($errormessage)) {
 }
 
 if ($this->objUser->isAdmin()) {
-    $top.= $this->objGift->showCreateDepartmentForm();
+    $top.= $this->objGift->showCreateDepartmentForm($editdepartmentname);
 }
 
 
@@ -81,7 +81,7 @@ $uri = $this->uri(array('action' => 'add'));
 $addbutton->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($addbutton->show());
 $form->addToForm('&nbsp;/&nbsp;&nbsp;Search By:&nbsp;' . $filter->show());
-$form->addToForm($filterbutton->show().'&nbsp;/&nbsp;');
+$form->addToForm($filterbutton->show() . '&nbsp;/&nbsp;');
 
 
 if ($this->objUser->isAdmin()) {
@@ -94,7 +94,7 @@ if ($this->objUser->isAdmin()) {
     $button = new button('pdf', "PDF");
     $uri = $this->uri(array('action' => 'exportopdf'));
     $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-   $form->addToForm('&nbsp;&nbsp;' . $button->show());
+    $form->addToForm('&nbsp;&nbsp;' . $button->show());
 
 
     $button = new button('audittrail', "Audit Trail");
@@ -132,16 +132,26 @@ if (count($gifts) > 0) {
         $deleteGift = new link($this->uri(array('action' => 'confirmdeletegift', 'id' => $gift['id'])));
         $deleteGift->link = $objIcon->show();
 
+        $objIcon->setIcon('redflag');
+        $deletedGift = new link($this->uri(array('action' => 'confirmdeletegift', 'id' => $gift['id'])));
+        $deletedGift->link = $objIcon->show();
+
         $edit = "";
         $delete = "";
         if ($this->objUser->isAdmin()) {
             $edit = $editGift->show();
             $delete = $deleteGift->show();
         }
+        $deleted = "";
+        $class = "";
+        if ($gift['deleted'] == 'Y') {
+            $deleted=$deletedGift->show();
+            $class = "error";
+        }
         $viewDetailsLink = new link($this->uri(array('action' => 'view', 'id' => $gift['id'])));
         $viewDetailsLink->link = $gift['giftname'];
-        $table->startRow();
-        $table->addCell($viewDetailsLink->show() . $edit . $delete);
+        $table->startRow($class);
+        $table->addCell($deleted . $viewDetailsLink->show() . $edit );
         $table->addCell($gift['gift_type']);
         $table->addCell($gift['description']);
         $table->addCell($gift["donor"]);
@@ -149,7 +159,7 @@ if (count($gifts) > 0) {
         $table->addCell("R" . $value . '&nbsp;&nbsp;', NULL, null, "right");
         $table->addCell($this->objUser->fullname($gift["recipient"]));
 
-        $table->addCell($gift["date_recieved"], null, NULL, "center");
+        $table->addCell($deleted . $gift["date_recieved"], null, NULL, "center");
         $table->endRow();
     }
 }

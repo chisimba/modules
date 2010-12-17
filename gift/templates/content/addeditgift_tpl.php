@@ -14,7 +14,6 @@ if ($mode == "add") {
 if ($mode == 'edit') {
     $action = "update";
 }
-echo "Action = $action";
 
 $this->loadClass('dropdown', 'htmlelements');
 
@@ -160,7 +159,7 @@ $table->endRow();
 //$attachStr.= '<input type="file" name="fileupload3"   id="fileupload3"size="40" /><br/> ';
 
 $checkbox = new checkbox('includeattachments', 'includeattachment');
-if ($mode == 'add') {
+if ($mode == 'add' || $mode == 'fixup') {
     $table->startRow();
     $table->addCell("<b>Include Attachments</b>");
     $table->addCell($checkbox->show());
@@ -206,7 +205,7 @@ if ($mode == 'edit') {
 $hiddenId = new hiddeninput('departmentid', $departmentid);
 $form->addToForm($hiddenId->show());
 $efs = new fieldset();
-$efs->setLegend('Errors');
+$efs->setLegend('Please, note that the following fields are mandatory');
 if (count($errormessages) > 0) {
 
     // $errorstr = '<ul>';
