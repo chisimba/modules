@@ -82,7 +82,11 @@ class mcqtests extends controller {
      * @var object to hold dbdataset class
      */
     public $objDBDataset;
-
+    /**
+     *
+     * @var object to hold formmanager class
+     */
+    public $formManager;
     /**
      * Method to construct the class.
      *
@@ -98,6 +102,7 @@ class mcqtests extends controller {
         }
 
         // get the DB objects
+        $this->formManager = $this->newObject('formmanager');
         $this->objDSDefinitions = $this->newObject("dbdataset_definitions");
         $this->objDSItems = $this->newObject("dbdataset_items");
         $this->objDBDataset = $this->newObject("dbdatasets");
@@ -1177,6 +1182,8 @@ class mcqtests extends controller {
         $unitVal = $this->getParam('unit', Null);
         $aVal = $this->getParam('aVal', Null);
         $bVal = $this->getParam('bVal', Null);
+        $formula = $this->getParam('formula', Null);
+        $tolerance = $this->getParam('tolerance', Null);
         //Generate a random number if numberVal is empty
         if (empty($itemNo)) {
             $itemNo = rand(1, 10);
@@ -1207,14 +1214,13 @@ class mcqtests extends controller {
         //Compute the Vals
         //Array to store data to be computed
         $computeData = array();
-
         $computeData["aVal"] = $aIVal;
         $computeData["bVal"] = $bIVal;
-        $computeData["formula"] = $computed;
-        $computeData["tolerance"] = $roundAns;
+        $computeData["formula"] = $formula;
+        $computeData["tolerance"] = $tolerance;
 
-        //$computed = $this->formManager->computeMaxMinVals($computeData);
-
+        $computed = $this->formManager->computeMaxMinVals($computeData);
+var_dump($computed);
         $data = array();
         $data['itemNo'] = $itemNo;
         $data['testId'] = $test;

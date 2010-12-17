@@ -2029,9 +2029,13 @@ class formmanager extends object {
             $unitfield = new textinput("unit", "");
         }
         $unitfield->size = 7;
-        //Store the dataset item number Id
+
         //Store the dataset item number Id
         $itemno = new hiddeninput("itemnumber", $itemNo);
+        //Store the formula
+        $formula = new hiddeninput("formula", $ansValues['answer']);
+        //Store the tolerance
+        $tolerance = new hiddeninput("tolerance", $ansValues['tolerance']);
 
         $question = $qn["questiontext"];
         //Replace wild card values with Number
@@ -2040,7 +2044,7 @@ class formmanager extends object {
 
         //Add Question to the table
         $objTable->startRow();
-        $objTable->addCell("<b>" . $question . "</b>" . $itemno->show(), '80%', '', '', '', 'colspan="5"');
+        $objTable->addCell("<b>" . $question . "</b>" . $itemno->show() . $formula->show() . $tolerance->show(), '80%', '', '', '', 'colspan="5"');
         $objTable->endRow();
         $str .= $objTable->show();
 
@@ -3279,7 +3283,7 @@ class formmanager extends object {
         if ($addPos === false) {
             //Compute the minimal tolerance value
             $minVal = $computed - $newTolerance;
-            
+
             // remove any non-numbers chars; exception for math operators
             $minVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $minVal);
             $minVal = create_function("", "return (" . $minVal . ");");
@@ -3287,7 +3291,7 @@ class formmanager extends object {
 
             //Compute the maximum tolerance value
             $maxVal = $computed + $newTolerance;
-            
+
             // remove any non-numbers chars; exception for math operators
             $maxVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $maxVal);
             $maxVal = create_function("", "return (" . $maxVal . ");");
@@ -3311,16 +3315,15 @@ class formmanager extends object {
             $maxVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $maxVal);
             $maxVal = create_function("", "return (" . $maxVal . ");");
             $maxVal = 0 + $maxVal();
-            
-            //Array to store data to return
-            $newData = array();
-            $newData["minVal"] = $minVal;
-            $newData["maxVal"] = $maxVal;
-            $newData["tolerance"] = $tolerance;
-            $newData["computedAns"] = $computed;
-            $newData["roundedAns"] = $roundAns;
-            return $newData;
         }
+        //Array to store data to return
+        $newData = array();
+        $newData["minVal"] = $minVal;
+        $newData["maxVal"] = $maxVal;
+        $newData["tolerance"] = $newTolerance;
+        $newData["computedAns"] = $computed;
+        $newData["roundedAns"] = $roundAns;
+        return $newData;
     }
 
     /**
