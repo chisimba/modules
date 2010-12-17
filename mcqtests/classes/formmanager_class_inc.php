@@ -1913,7 +1913,7 @@ class formmanager extends object {
         //Load classes
         $objPopup = &$this->loadClass('windowpop', 'htmlelements');
         $this->loadClass("hiddeninput", "htmlelements");
-        //var_dump($data);
+        
         //Initialize variables
         $test = $data['testId'];
         $qnId = $data['qnId'];
@@ -2077,25 +2077,25 @@ class formmanager extends object {
         $objTable->addCell($wordUnit, '50px', '', 'right');
         $objTable->addCell($unitfield->show(), '250px', 'left');
         $objTable->endRow();
+        //Flag for correct answer
+        $markCorrect = false;
         //Add row to show results if submitted
         if (!empty($unitVal)) {
             //Get Object
             $this->objIcon = &$this->newObject('geticon', 'htmlelements');
             //Correct Icon
-            $this->objIcon->setIcon('check');
+            $this->objIcon->setIcon('greentick', $type = 'gif', $iconfolder = 'icons/');
             $correct = $this->objIcon->show();
             //Wrong Icon
-            $this->objIcon->setIcon('cancel');
+            $this->objIcon->setIcon('redcross', $type = 'gif', $iconfolder = 'icons/');
             $wrong = $this->objIcon->show();
 
-            if ($unitVal >= $minVal || $unitVal <= $maxVal) {
+            if ($numberVal >= $minVal && $numberVal <= $maxVal) {
                 $markCorrect = true;
-                $phraseLimits = $phraseWithinLimits;
-                $rowAttributes = '<div> ' . $correct . " " . $phraseCorrectAns . " ";
+                $markNumber = '<div> ' . $correct . " " . $phraseCorrectAns . " ";
             } else {
                 $markCorrect = false;
-                $phraseLimits = $phraseOutsideLimits;
-                $rowAttributes = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseIncorrectAns . " ";
+                $markNumber = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseIncorrectAns . " ";
             }
             if ($unit == $unitVal) {
                 $unitCheck = '<div> ' . $correct . " ";
@@ -2106,7 +2106,7 @@ class formmanager extends object {
             $objTable->startRow();
             //$objTable->addCell($wordAnswer.": ", '20%','','left');
             $objTable->addCell("", '50px', '', 'right');
-            $objTable->addCell($rowAttributes, '250px', '', 'left');
+            $objTable->addCell($markNumber, '250px', '', 'left');
             $objTable->addCell("", '50px', '', 'right');
             $objTable->addCell($unitCheck, '250px', 'left');
             $objTable->endRow();
@@ -2149,33 +2149,42 @@ class formmanager extends object {
         //Reset Fieldset
         $objFieldset->reset();
 
-        //Create table to hold the Feedback
-        $objTable = new htmltable();
-        $objTable->width = '600px';
-        $objTable->border = '0';
-        $objTable->attributes = " align='left' border='0'";
-        $objTable->cellspacing = '12';
-        //Add Feedback to the table
-        $objTable->startRow();
-        $objTable->addCell($ansValues['feedback'], '600px', 'left');
-        $objTable->endRow();
-        //Add fieldset to hold the Feedback
-        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
-        $objFieldset->width = '600px';
+        //Show feedback if correct
+        if ($markCorrect == true) {
 
-        //$objFieldset->align = 'center';
-        $objFieldset->setLegend($wordFeedback);
+            //Create table to hold the Feedback
+            $objTable = new htmltable();
+            $objTable->width = '600px';
+            $objTable->border = '0';
+            $objTable->attributes = " align='left' border='0'";
+            $objTable->cellspacing = '12';
+            //Add Feedback to the table
+            $objTable->startRow();
+            $objTable->addCell($ansValues['feedback'], '600px', 'left');
+            $objTable->endRow();
+            //Add fieldset to hold the Feedback
+            $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+            $objFieldset->width = '600px';
 
-        //Add table to General Fieldset
-        $objFieldset->addContent($objTable->show());
-        //Add General Fieldset to form
-        $str .= $objFieldset->show();
-        //Reset Fieldset
-        $objFieldset->reset();
+            //$objFieldset->align = 'center';
+            $objFieldset->setLegend($wordFeedback);
+
+            //Add table to General Fieldset
+            $objFieldset->addContent($objTable->show());
+            //Add General Fieldset to form
+            $str .= $objFieldset->show();
+            //Reset Fieldset
+            $objFieldset->reset();
+        }
 
         // Create Submit Btn
         $buttonSubmit = new button("submit", $wordSubmit);
         $buttonSubmit->setValue($wordSubmit);
+        $buttonSubmit->setToSubmit();
+        $str .= " " . $buttonSubmit->show();
+        // Create Start-again Btn
+        $buttonSubmit = new button("submit", $phraseStartAgain);
+        $buttonSubmit->setValue($phraseStartAgain);
         $buttonSubmit->setToSubmit();
         $str .= " " . $buttonSubmit->show();
 
@@ -2195,6 +2204,7 @@ class formmanager extends object {
 
         //Reset Fieldset
         $objFieldset->reset();
+        
         return $form->show();
     }
 

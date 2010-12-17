@@ -1185,10 +1185,18 @@ class mcqtests extends controller {
         $bVal = $this->getParam('bVal', Null);
         $formula = $this->getParam('formula', Null);
         $tolerance = $this->getParam('tolerance', Null);
+        $submit = $this->getParam('submit', Null);
+
         //Generate a random number if numberVal is empty
-        if (empty($itemNo)) {
+        if (empty($itemNo) || $submit == "Start again") {
             $itemNo = rand(1, 10);
         }
+        //Reset values for number and unit if starting again
+        if ($submit == "Start again") {
+            $numberVal = Null;
+            $unitVal = Null;
+        }
+
         //Get the dataset id
         $dSetId = $this->objDBDataset->getRecords($qnId);
         //Get dataset definitions for the dataset
@@ -1215,7 +1223,7 @@ class mcqtests extends controller {
         $bIVal = $bItemVal[0]["value"];
 
         $data = array();
-        if (!empty($formula) && !empty($tolerance)) {
+        if (!empty($formula) && !empty($tolerance) && $submit == "Submit") {
             //Array to store data to be computed
             $computeData = array();
             $computeData["aVal"] = $aIVal;
@@ -1230,7 +1238,7 @@ class mcqtests extends controller {
             $data["tolerance"] = $computed["tolerance"];
             $data["computedAns"] = $computed["computedAns"];
             $data["roundedAns"] = $computed["roundedAns"];
-            $data["unit"] = $computed["unit"];            
+            $data["unit"] = $computed["unit"];
         } else {
             $data["minVal"] = Null;
             $data["maxVal"] = Null;
@@ -1247,6 +1255,7 @@ class mcqtests extends controller {
         $data['unitVal'] = $unitVal;
         $data['aVal'] = $aIVal;
         $data['bVal'] = $bIVal;
+        $data['submit'] = $submit;
 
         return $data;
     }
