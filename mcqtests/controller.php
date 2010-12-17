@@ -87,6 +87,7 @@ class mcqtests extends controller {
      * @var object to hold formmanager class
      */
     public $formManager;
+
     /**
      * Method to construct the class.
      *
@@ -1176,7 +1177,7 @@ class mcqtests extends controller {
     public function randomSCQCompute() {
         $test = $this->getParam('test', Null);
         $category = $this->getParam('category', Null);
-        $itemNo = $this->getParam('itemno', Null);
+        $itemNo = $this->getParam('itemnumber', Null);
         $qnId = $this->getParam('id', Null);
         $numberVal = $this->getParam('number', Null);
         $unitVal = $this->getParam('unit', Null);
@@ -1192,6 +1193,8 @@ class mcqtests extends controller {
         $dSetId = $this->objDBDataset->getRecords($qnId);
         //Get dataset definitions for the dataset
         $dSetDefs = $this->objDSDefinitions->getRecords($dSetId[0]['id']);
+        //Get Numerical Units
+        $uh = $this->objNumericalUnit->getNumericalUnits($qnId);
         //Get A Id
         if ($dSetDefs[0]['name'] == "A") {
             $dSetDefA = $dSetDefs[0]['id'];
@@ -1211,17 +1214,31 @@ class mcqtests extends controller {
         $bItemVal = $this->objDSItems->getRecords($dSetDefB, "itemnumber='" . $itemNo . "'");
         $bIVal = $bItemVal[0]["value"];
 
-        //Compute the Vals
-        //Array to store data to be computed
-        $computeData = array();
-        $computeData["aVal"] = $aIVal;
-        $computeData["bVal"] = $bIVal;
-        $computeData["formula"] = $formula;
-        $computeData["tolerance"] = $tolerance;
-
-        $computed = $this->formManager->computeMaxMinVals($computeData);
-var_dump($computed);
         $data = array();
+        if (!empty($formula) && !empty($tolerance)) {
+            //Array to store data to be computed
+            $computeData = array();
+            $computeData["aVal"] = $aIVal;
+            $computeData["bVal"] = $bIVal;
+            $computeData["formula"] = $formula;
+            $computeData["tolerance"] = $tolerance;
+            $computeData["unit"] = $uh[0]["unit"];
+            //Compute the Vals
+            $computed = $this->formManager->computeMaxMinVals($computeData);
+            $data["minVal"] = $computed["minVal"];
+            $data["maxVal"] = $computed["maxVal"];
+            $data["tolerance"] = $computed["tolerance"];
+            $data["computedAns"] = $computed["computedAns"];
+            $data["roundedAns"] = $computed["roundedAns"];
+            $data["unit"] = $computed["unit"];            
+        } else {
+            $data["minVal"] = Null;
+            $data["maxVal"] = Null;
+            $data["tolerance"] = Null;
+            $data["computedAns"] = Null;
+            $data["roundedAns"] = Null;
+            $data["unit"] = Null;
+        }
         $data['itemNo'] = $itemNo;
         $data['testId'] = $test;
         $data['qnId'] = $qnId;

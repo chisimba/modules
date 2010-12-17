@@ -1913,13 +1913,17 @@ class formmanager extends object {
         //Load classes
         $objPopup = &$this->loadClass('windowpop', 'htmlelements');
         $this->loadClass("hiddeninput", "htmlelements");
-
+        //var_dump($data);
         //Initialize variables
         $test = $data['testId'];
         $qnId = $data['qnId'];
         $itemNo = $data['itemNo'];
         $unitVal = $data['unitVal'];
         $numberVal = $data['numberVal'];
+        $unit = $data['unit'];
+        $computed = $data['computedAns'];
+        $minVal = $data['minVal'];
+        $maxVal = $data['maxVal'];
 
         //Form text
         $addSuccess = $this->objLanguage->languageText("mod_mcqtests_addsuccess", 'mcqtests', "The Record was added successfully");
@@ -1947,7 +1951,18 @@ class formmanager extends object {
         $wordFeedback = $this->objLanguage->languageText('mod_mcqtests_wordfeedback', 'mcqtests', "Feedback");
         $wordSubmit = $this->objLanguage->languageText('word_submit', 'system', "Submit");
         $wordExit = $this->objLanguage->languageText('mod_systext_exit', 'system', "Exit");
-
+        $phraseSubmitPage = $this->objLanguage->languageText('mod_mcqtests_submitpage', 'mcqtests', "Submit page");
+        $phrasePrevState = $this->objLanguage->languageText('mod_mcqtests_prevstate', 'mcqtests', "Previous State");
+        $phraseStartAgain = $this->objLanguage->languageText('mod_mcqtests_startagain', 'mcqtests', "Start again");
+        $phraseFillWithCorrect = $this->objLanguage->languageText('mod_mcqtests_fillwithcorrect', 'mcqtests', "Fill with correct");
+        $phrasePenaltyOf = $this->objLanguage->languageText('mod_mcqtests_penaltyof', 'mcqtests', "This submission attracted a penalty of");
+        $wordMarks = $this->objLanguage->languageText('mod_mcqtests_wordmarks', 'mcqtests', "Marks");
+        $phraseMarksForSubmission = $this->objLanguage->languageText('mod_mcqtests_marksforsubmission', 'mcqtests', "Marks for this submission");
+        $phraseValidFormats = $this->objLanguage->languageText('mod_mcqtests_validformats', 'mcqtests', "Valid number formats");
+        $phraseCorrectAns = $this->objLanguage->languageText('mod_mcqtests_correctans', 'mcqtests', "Correct Answer");
+        $phraseIncorrectAns = $this->objLanguage->languageText('mod_mcqtests_incorrectans', 'mcqtests', "Incorrect Answer");
+        $phraseInstructions = $this->objLanguage->languageText('mod_mcqtests_instructions', 'mcqtests', "Instructions");
+        $phraseUndefined = $this->objLanguage->languageText('mod_mcqtests_undefinedunit', 'mcqtests', "Undefined unit");
         //Form Object
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
@@ -2031,7 +2046,7 @@ class formmanager extends object {
         $unitfield->size = 7;
 
         //Store the dataset item number Id
-        $itemno = new hiddeninput("itemnumber", $itemNo);
+        $itemno = new hiddeninput("itemnumber", $itemnumber);
         //Store the formula
         $formula = new hiddeninput("formula", $ansValues['answer']);
         //Store the tolerance
@@ -2058,10 +2073,44 @@ class formmanager extends object {
         $objTable->startRow();
         //$objTable->addCell($wordAnswer.": ", '20%','','left');
         $objTable->addCell($wordNumber, '50px', '', 'right');
-        $objTable->addCell($ansfield->show(), '100px', '', 'left');
+        $objTable->addCell($ansfield->show(), '250px', '', 'left');
         $objTable->addCell($wordUnit, '50px', '', 'right');
-        $objTable->addCell($unitfield->show(), '400px', 'left');
+        $objTable->addCell($unitfield->show(), '250px', 'left');
         $objTable->endRow();
+        //Add row to show results if submitted
+        if (!empty($unitVal)) {
+            //Get Object
+            $this->objIcon = &$this->newObject('geticon', 'htmlelements');
+            //Correct Icon
+            $this->objIcon->setIcon('check');
+            $correct = $this->objIcon->show();
+            //Wrong Icon
+            $this->objIcon->setIcon('cancel');
+            $wrong = $this->objIcon->show();
+
+            if ($unitVal >= $minVal || $unitVal <= $maxVal) {
+                $markCorrect = true;
+                $phraseLimits = $phraseWithinLimits;
+                $rowAttributes = '<div> ' . $correct . " " . $phraseCorrectAns . " ";
+            } else {
+                $markCorrect = false;
+                $phraseLimits = $phraseOutsideLimits;
+                $rowAttributes = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseIncorrectAns . " ";
+            }
+            if ($unit == $unitVal) {
+                $unitCheck = '<div> ' . $correct . " ";
+            } else {
+                $unitCheck = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseUndefined . " ";
+            }
+
+            $objTable->startRow();
+            //$objTable->addCell($wordAnswer.": ", '20%','','left');
+            $objTable->addCell("", '50px', '', 'right');
+            $objTable->addCell($rowAttributes, '250px', '', 'left');
+            $objTable->addCell("", '50px', '', 'right');
+            $objTable->addCell($unitCheck, '250px', 'left');
+            $objTable->endRow();
+        }
         //Add fieldset to hold Answer stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
         $objFieldset->width = '600px';
@@ -3022,62 +3071,24 @@ class formmanager extends object {
                     $unitDataB = $this->objDSItems->getRecords($dsetDefB, $filter = "itemnumber='" . $wcardcount . "'");
                     $no2 = $unitDataB[0]["value"];
 
-                    //Add values to wildcards
-                    $newFormula = str_replace("A", floatval($no1), $ansValues['answer']);
-                    $newFormula = str_replace("B", floatval($no2), $newFormula);
+                    //Array to store data to be computed
+                    $computeData = array();
+                    $computeData["aVal"] = $no1;
+                    $computeData["bVal"] = $no2;
+                    $computeData["formula"] = $ansValues['answer'];
+                    $computeData["tolerance"] = $ansValues['tolerance'];
+                    $computeData["unit"] = $uh[0]["unit"];
+                    //Compute the Vals
+                    $newVals = $this->computeMaxMinVals($computeData);
 
-                    // remove any non-numbers chars; exception for math operators
-                    $myformula = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $newFormula);
-                    $compute = create_function("", "return (" . $myformula . ");");
-                    $computed = 0 + $compute();
-                    $roundAns = (float) round($computed, 0);
+                    $minVal = $newVals["minVal"];
+                    $maxVal = $newVals["maxVal"];
+                    $tolerance = $newVals["tolerance"];
+                    $computed = $newVals["computedAns"];
+                    $roundAns = $newVals["roundedAns"];
+                    $myformula = $newVals["formula"];
+                    $unit = $newVals["unit"];
 
-                    /*
-                     * COMPUTE THE TOLERANCE
-                     * Use Nominal -for add(+) operation -- mark correct if dx < t
-                     * Example:
-                     * With value 200 and tolerance level of 0.5
-                     * Upper Limit => 200+0.5 = 200.5
-                     * Lower Limit => 200-0.5 = 199.5
-                     * Use Relative - for multiplication, division and subtraction operations
-                     * Example:
-                     * With value 200 and tolerance level of 0.5
-                     * Upper Limit => 200+(200*0.5)
-                     * Lower Limit => 200-(200*0.5)
-                     */
-                    //check if using add operation
-                    $addPos = strpos($myformula, "+");
-                    if ($addPos === false) {
-                        //Compute the minimal tolerance value
-                        $minVal = $computed - $ansValues['tolerance'];
-                        // remove any non-numbers chars; exception for math operators
-                        $minVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $minVal);
-                        $minVal = create_function("", "return (" . $minVal . ");");
-                        $minVal = 0 + $minVal();
-
-                        //Compute the maximum tolerance value
-                        $maxVal = $computed + $ansValues['tolerance'];
-                        // remove any non-numbers chars; exception for math operators
-                        $maxVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $maxVal);
-                        $maxVal = create_function("", "return (" . $maxVal . ");");
-                        $maxVal = 0 + $maxVal();
-                    } else {
-                        //Correct answer * tolerance value
-                        $tolerance = $computed * $ansValues['tolerance'];
-                        //Compute the minimal tolerance value
-                        $minVal = $computed - $tolerance;
-                        // remove any non-numbers chars; exception for math operators
-                        $minVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $minVal);
-                        $minVal = create_function("", "return (" . $minVal . ");");
-                        $minVal = 0 + $minVal();
-
-                        //Compute the maximum tolerance value
-                        $maxVal = $computed + $tolerance;
-                        // remove any non-numbers chars; exception for math operators
-                        $maxVal = ereg_replace('[^0-9\+-\*\/\(\) ]', '', $maxVal);
-                        $maxVal = create_function("", "return (" . $maxVal . ");");
-                        $maxVal = 0 + $maxVal();
-                    }
                     //Mark Correct
                     $markCorrect = false;
                     $phraseLimits = "";
@@ -3103,7 +3114,7 @@ class formmanager extends object {
                     $maxVal = floatval($maxVal);
 
                     //End row holding the set values
-                    $objTableY->addCell($myformula . " = " . $roundAns . " " . $uh[0]["unit"] . "<br />" . $rowAttributes . $phraseLimits . " " . $computed . " " . $uh[0]["unit"]
+                    $objTableY->addCell($myformula . " = " . $roundAns . " " . $unit . "<br />" . $rowAttributes . $phraseLimits . " " . $computed . " " . $unit
                             . "</div>" . "Min: " . $minVal . " Max: " . $maxVal);
                     $objTableY->endRow();
                     $count++;
@@ -3323,6 +3334,8 @@ class formmanager extends object {
         $newData["tolerance"] = $newTolerance;
         $newData["computedAns"] = $computed;
         $newData["roundedAns"] = $roundAns;
+        $newData["formula"] = $myformula;
+        $newData["unit"] = $data['unit'];
         return $newData;
     }
 
