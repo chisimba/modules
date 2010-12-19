@@ -201,38 +201,38 @@ class blogcomments extends controller
                 $this->objDbcomm->addComm2Db($addinfo);
 
                 $this->nextAction('viewsingle',array('postid' => $addinfo['postid'], 'userid' => $this->objUser->userId()), $addinfo['mod']);
-                
+
             case 'updatecomment':
                 $commid = $this->getParam('commid');
                 $edits = nl2br($this->getParam('newcomment'));
                 echo $this->objDbcomm->updateComment($commid, $edits);
                 break;
-                
+
             case 'deletecomment':
                 $commentid = $this->getParam('commentid');
                 $postid = $this->getParam('postid');
                 $module = 'blog';
                 $this->objDbcomm->deletecomment($commentid);
-                
+
                 $this->nextAction('viewsingle',array('postid' => $postid), $module);
-            
+
             case 'moderate':
                 $this->setVar('pageSuppressXML', TRUE);
-                // Case to moderate comments based on a user id. 
+                // Case to moderate comments based on a user id.
                 $userid = $this->objUser->userId();
                 // grab all comments made against this userid...
                 $comm4me = $this->objDbcomm->grabCommentsByUser($userid);
                 // grab all comments made by me...
-                $meemail = $this->objUser->email($userid); 
+                $meemail = $this->objUser->email($userid);
                 // grab comments made by me from blogcomments table
                 $mycomments = $this->objDbcomm->getMyComments($meemail);
                 // set the two datasets as refs and send to the template
                 $this->setVarByRef('mycomments', $mycomments);
-                $this->setVarByRef('comm4me', $comm4me);         
+                $this->setVarByRef('comm4me', $comm4me);
                 // Interface to handle the moderation.
                 return 'moderation_tpl.php';
                 break;
-                
+
             case 'getcomments':
                 $itemid = $this->getParam('itemid', 'test');
                 $data = $this->objDbcomm->grabComments($itemid);
@@ -240,21 +240,26 @@ class blogcomments extends controller
                 $response = $this->getParam("jsoncallback") . "(" . json_encode($data) . ")";
                 echo $response;
                 break;
-                
+
             case 'savecomment':
                 $name = $this->getParam('author');
                 $comment = $this->getParam('comment');
                 $itemid = $this->getParam('itemid');
-                $ins = array('userid' => $this->objUser->userId(), 'comment_author' => $name, 'comment_content' => $comment, 'comment_parentid' => $itemid, 'comment_date' => time()); 
+                $ins = array('userid' => $this->objUser->userId(), 'comment_author' => $name, 'comment_content' => $comment, 'comment_parentid' => $itemid, 'comment_date' => time());
                 $this->objDbcomm->insert($ins);
                 break;
-                    
+
+            case 'unapproved':
+                $comments = $this->objDbcomm->grabUnapprovedComments();
+                $this->setVarByRef('comments', $comments);
+                return 'unapproved_tpl.php';
+
             default:
                 die("unknown action");
                 break;
         }
     }
-    
+
     /**
      * Ovveride the login object in the parent class
      *
