@@ -132,6 +132,17 @@ class dbblogcomments extends dbTable
     }
 
     /**
+     * Method to return all unmoderated comments.
+     *
+     * @access public
+     * @return array
+     */
+    public function grabUnapprovedComments()
+    {
+        return $this->getAll('WHERE comment_approved = 0 ORDER BY comment_date DESC');
+    }
+
+    /**
      * Method to return the comments for the user
      * You need to supply a user id to the method. This will get all the extra data
      * attached to that user from the blogcomments table.
