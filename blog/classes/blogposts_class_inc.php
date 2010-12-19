@@ -1486,17 +1486,5 @@ class blogposts extends object
         	$this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
         	$this->appendArrayVar('bodyOnLoad', "init();");
     }
-
-    /**
-     * Returns a blog post.
-     *
-     * @access public
-     * @param  integer $id The id of the blog post.
-     * @return array
-     */
-    public function getPost($id)
-    {
-        return $this->objDbBlog->getRow('id', $id);
-    }
 }
 ?>
