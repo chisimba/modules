@@ -1,6 +1,7 @@
 <?php
 
-$html = '<h1 style="text-align:center">Moderate Unapproved Comments</h1>';
+$html = '<h1 style="text-align:center">'.$this->objLanguage->languageText('mod_blogcomments_moderate_unapproved_comments', 'blogcomments').'</h1>';
+
 foreach ($comments as $comment) {
     $html .= '<div style="margin-top:20px;border-top:2px solid black">';
     $html .= '<ul>';
@@ -15,4 +16,5 @@ foreach ($comments as $comment) {
     $html .= $comment['comment_content'];
     $html .= '</div>';
 }
+
 echo $html;
