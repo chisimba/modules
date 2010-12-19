@@ -47,6 +47,14 @@ class blogcomments extends controller
     public $objDbcomm;
 
     /**
+     * Instance of the dbblog class of the blog module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objDbBlog;
+
+    /**
      * Instance of the modules class of the modulecatalogue module.
      *
      * @access private
@@ -88,6 +96,7 @@ class blogcomments extends controller
     {
         try {
             $this->objDbcomm = $this->getObject('dbblogcomments');
+            $this->objDbBlog = $this->getObject('dbblog', 'blog');
             $this->objComm = $this->getObject('commentapi');
             //Retrieve the action parameter from the querystring
             $this->action = $this->getParam('action', Null);
@@ -251,6 +260,11 @@ class blogcomments extends controller
 
             case 'unapproved':
                 $comments = $this->objDbcomm->grabUnapprovedComments();
+                foreach ($comments as &$comment) {
+                    $post = $this->objDbBlog->getPostById($comment['comment_parentid']);
+                    $comment['post'] = $post[0];
+                    $comment['link'] = $this->uri(array('action'=>'viewsingle', 'postid'=>$comment['comment_parentid']), 'blog');
+                }
                 $this->setVarByRef('comments', $comments);
                 return 'unapproved_tpl.php';
 
