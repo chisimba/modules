@@ -1496,7 +1496,7 @@ class blogposts extends object
      */
     public function getPost($id)
     {
-        return $this->getRow('id', $id);
+        return $this->objDbBlog->getRow('id', $id);
     }
 }
 ?>
