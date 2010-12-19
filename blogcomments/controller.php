@@ -275,15 +275,15 @@ class blogcomments extends controller
     }
 
     /**
-     * Ovveride the login object in the parent class
+     * Determines of the action requested requires the user to be logged in.
      *
-     * @param void
-     * @return bool
      * @access public
+     * @param  string $action The name of the action requested.
+     * @return boolean
      */
-    public function requiresLogin()
+    public function requiresLogin($action)
     {
-        return FALSE;
+        return $action == 'unapproved';
     }
 }
 ?>
