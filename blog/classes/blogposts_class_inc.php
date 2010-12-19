@@ -124,7 +124,7 @@ class blogposts extends object
 
             $results.=trim($line).' ';
             }
-           
+
            }
          }
         $results2="";
@@ -142,8 +142,8 @@ class blogposts extends object
              $line2.='</a>';
             }
             $results2.=trim($line2).'<br/>';
-            }  
-         }      
+            }
+         }
       $results2=str_replace('=20','',$results2);
       $results2=str_replace('= ','',$results2);
       return $results2;
@@ -194,7 +194,7 @@ class blogposts extends object
                     	));
                 $related = $this->sysConfig->getValue('retweet_related', 'blog');
                 $status = $this->sysConfig->getValue('retweet_status', 'blog');
-                $style = $this->sysConfig->getValue('retweet_style', 'blog'); 
+                $style = $this->sysConfig->getValue('retweet_style', 'blog');
                 $text = $this->sysConfig->getValue('retweet_text', 'blog');
                 $type = $this->sysConfig->getValue('retweet_type', 'blog');
                 $via = $this->sysConfig->getValue('retweet_via', 'blog');
@@ -212,7 +212,7 @@ class blogposts extends object
                     }
                     $rt = $this->objTweetButton->getButton($text, $style, $via, $related, htmlspecialchars_decode($url));
                 }
-                $post['post_content'] = $cleanpost; 
+                $post['post_content'] = $cleanpost;
                 if($cleanPost  == 'true'){
                     $post['post_content'] = $this->cleanPost($post['post_content']);
                 }
@@ -260,7 +260,7 @@ class blogposts extends object
                         'userid' => $post['userid']
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
-                    $head = $objStickyIcon->show() . $headLink->show() 
+                    $head = $objStickyIcon->show() . $headLink->show()
                       . " $rt $icons<br /><span class='blog-head-date'>$dt</span>";
                 } else {
                 	if($post['post_status'] == 1)
@@ -278,7 +278,7 @@ class blogposts extends object
                         	'userid' => $post['userid']
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
-                    $head = $headLink->show() 
+                    $head = $headLink->show()
                       . " $rt $icons<br /><span class='blog-head-date'>$dt</span><br />";
                 }
                 // dump in the post content and voila! you have it...
@@ -576,7 +576,7 @@ class blogposts extends object
                     }
                     $ret.= $objFeatureBox->showContent($head, $post['post_content']
                       . $this->cleaner->cleanHtml("<br /><hr /><div class='blog-item-base'><center><em><b>"
-                      . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog") 
+                      . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog")
                       . "</b><br />" . $linkstr . "</em><hr />"
                       .  $tblnl->show() . "</center></div>" ));
                 }
@@ -1485,6 +1485,18 @@ class blogposts extends object
         	// add the lot to the headerparams...
         	$this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
         	$this->appendArrayVar('bodyOnLoad', "init();");
+    }
+
+    /**
+     * Returns a blog post.
+     *
+     * @access public
+     * @param  integer $id The id of the blog post.
+     * @return array
+     */
+    public function getPost($id)
+    {
+        return $this->getRow('id', $id);
     }
 }
 ?>
