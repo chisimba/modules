@@ -1913,7 +1913,7 @@ class formmanager extends object {
         //Load classes
         $objPopup = &$this->loadClass('windowpop', 'htmlelements');
         $this->loadClass("hiddeninput", "htmlelements");
-        
+
         //Initialize variables
         $test = $data['testId'];
         $qnId = $data['qnId'];
@@ -1924,6 +1924,8 @@ class formmanager extends object {
         $computed = $data['computedAns'];
         $minVal = $data['minVal'];
         $maxVal = $data['maxVal'];
+        $mypenalty = $data['mypenalty'];
+        $myunitpenalty = $data['myunitpenalty'];
 
         //Form text
         $addSuccess = $this->objLanguage->languageText("mod_mcqtests_addsuccess", 'mcqtests', "The Record was added successfully");
@@ -1963,6 +1965,7 @@ class formmanager extends object {
         $phraseIncorrectAns = $this->objLanguage->languageText('mod_mcqtests_incorrectans', 'mcqtests', "Incorrect Answer");
         $phraseInstructions = $this->objLanguage->languageText('mod_mcqtests_instructions', 'mcqtests', "Instructions");
         $phraseUndefined = $this->objLanguage->languageText('mod_mcqtests_undefinedunit', 'mcqtests', "Undefined unit");
+        $phraseWithPrevPenalties = $this->objLanguage->languageText('mod_mcqtests_prevpenalties', 'mcqtests', "With previous penalties, this gives");
         //Form Object
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
@@ -2079,8 +2082,11 @@ class formmanager extends object {
         $objTable->endRow();
         //Flag for correct answer
         $markCorrect = false;
+        //Get the mark for this qn
+        $qnmark = $qn['mark'];
+        $themark = $qnmark;
         //Add row to show results if submitted
-        if (!empty($unitVal)) {
+        if (!empty($unitVal) || !empty($numberVal)) {
             //Get Object
             $this->objIcon = &$this->newObject('geticon', 'htmlelements');
             //Correct Icon
@@ -2089,26 +2095,50 @@ class formmanager extends object {
             //Wrong Icon
             $this->objIcon->setIcon('redcross', $type = 'gif', $iconfolder = 'icons/');
             $wrong = $this->objIcon->show();
+            //Get previous penalty if any
+            $mypenalty = $data['mypenalty'];
+            $myunitpenalty = $data['myunitpenalty'];
 
+            //Mark answer and penalise accordingly
             if ($numberVal >= $minVal && $numberVal <= $maxVal) {
                 $markCorrect = true;
                 $markNumber = '<div> ' . $correct . " " . $phraseCorrectAns . " ";
             } else {
+                //Compute the mark-penalty
+                $qnpenalty = $qn['penalty'];
+                if (empty($mypenalty)) {
+                    $mypenalty = $qnpenalty;
+                }
                 $markCorrect = false;
                 $markNumber = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseIncorrectAns . " ";
             }
             if ($unit == $unitVal) {
                 $unitCheck = '<div> ' . $correct . " ";
             } else {
+                $markCorrect = false;
+                //Compute the unit-penalty
+                $unitpenalty = $uhData[0]['unitpenalty'];
+                if (empty($myunitpenalty)) {
+                    $myunitpenalty = $unitpenalty;
+                }
                 $unitCheck = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseUndefined . " ";
             }
+            //Compute mark
+            if (!empty($mypenalty))
+                $qnmark = $qnmark - $mypenalty;
+            if (!empty($myunitpenalty))
+                $qnmark = $qnmark - $myunitpenalty;
+            //Store the penalty
+            $mypenalties = new hiddeninput("mypenalty", $mypenalty);
+            //Store the unit-penalty
+            $myunitpenalties = new hiddeninput("myunitpenalty", $myunitpenalty);
 
             $objTable->startRow();
             //$objTable->addCell($wordAnswer.": ", '20%','','left');
             $objTable->addCell("", '50px', '', 'right');
-            $objTable->addCell($markNumber, '250px', '', 'left');
+            $objTable->addCell($markNumber . " " . $mypenalties->show(), '250px', '', 'left');
             $objTable->addCell("", '50px', '', 'right');
-            $objTable->addCell($unitCheck, '250px', 'left');
+            $objTable->addCell($unitCheck . " " . $myunitpenalties->show(), '250px', 'left');
             $objTable->endRow();
         }
         //Add fieldset to hold Answer stuff
@@ -2149,20 +2179,40 @@ class formmanager extends object {
         //Reset Fieldset
         $objFieldset->reset();
 
+        //Create table to hold the Feedback
+        $objTable = new htmltable();
+        $objTable->width = '600px';
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
+        $objTable->cellspacing = '12';
+
+        //String to hold results
+        $results = $phraseMarksForSubmission . $qnmark . "/" . $themark . ". ";
+
+        $penalties = $mypenalty + $myunitpenalty;
+        $checkFeedback = 0;
         //Show feedback if correct
         if ($markCorrect == true) {
-
-            //Create table to hold the Feedback
-            $objTable = new htmltable();
-            $objTable->width = '600px';
-            $objTable->border = '0';
-            $objTable->attributes = " align='left' border='0'";
-            $objTable->cellspacing = '12';
             //Add Feedback to the table
             $objTable->startRow();
             $objTable->addCell($ansValues['feedback'], '600px', 'left');
             $objTable->endRow();
-            //Add fieldset to hold the Feedback
+            if ($qnmark != $themark) {
+                $results .= $phraseWithPrevPenalties . " " . $penalties . ". ";
+            }
+            //Add Results to the table
+            $objTable->startRow();
+            $objTable->addCell($results, '600px', 'left');
+            $objTable->endRow();
+        } else if (!empty($penalties)) {
+            $results .= $phrasePenaltyOf . " " . $penalties . ". ";
+            //Add Results to the table
+            $objTable->startRow();
+            $objTable->addCell('<div style="color:#FF0000"> ' . $results . '</div>', '600px', 'left');
+            $objTable->endRow();
+        }
+        //Add fieldset to hold the Feedback
+        if ($markCorrect == true || !empty($penalties)) {
             $objFieldset = &$this->getObject('fieldset', 'htmlelements');
             $objFieldset->width = '600px';
 
@@ -2204,7 +2254,7 @@ class formmanager extends object {
 
         //Reset Fieldset
         $objFieldset->reset();
-        
+
         return $form->show();
     }
 

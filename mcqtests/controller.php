@@ -1186,6 +1186,9 @@ class mcqtests extends controller {
         $formula = $this->getParam('formula', Null);
         $tolerance = $this->getParam('tolerance', Null);
         $submit = $this->getParam('submit', Null);
+        $mypenalty = $this->getParam('mypenalty', Null);
+        $myunitpenalty = $this->getParam('myunitpenalty', Null);
+
 
         //Generate a random number if numberVal is empty
         if (empty($itemNo) || $submit == "Start again") {
@@ -1246,6 +1249,8 @@ class mcqtests extends controller {
             $data["computedAns"] = Null;
             $data["roundedAns"] = Null;
             $data["unit"] = Null;
+            $data['mypenalty'] = Null;
+            $data['myunitpenalty'] = Null;
         }
         $data['itemNo'] = $itemNo;
         $data['testId'] = $test;
@@ -1256,6 +1261,19 @@ class mcqtests extends controller {
         $data['aVal'] = $aIVal;
         $data['bVal'] = $bIVal;
         $data['submit'] = $submit;
+        $data['mypenalty'] = $mypenalty;
+        $data['myunitpenalty'] = $myunitpenalty;
+        /* $mymark = $mark;
+          if(!empty($penalty)){
+          $mypenalty = $mypenalty;
+          $mymark = $mark * $penalty;
+          }
+          if(!empty($unitpenalty)){
+          $myunitpenalty = $unitpenalty;
+          $mymark = $mark * $unitpenalty;
+          } */
+        $data['mypenalty'] = $mypenalty;
+        $data['myunitpenalty'] = $myunitpenalty;
 
         return $data;
     }
