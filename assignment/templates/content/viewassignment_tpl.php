@@ -277,7 +277,7 @@ if ($this->isValid('markassignments')) {
             echo $form->show();
         } else { // Upload Assignment
             $header = new htmlHeading();
-            $header->str = $this->objLanguage->languageText('mod_filemanager_uploadnewfile', 'filemanager', $this->objLanguage->languageText('mod_filemanager_uploadnewfile', 'filemanager', 'Upload new file'));
+            $header->str = $this->objLanguage->languageText('mod_assignment_uploadnewfile', 'assignment'); //$this->objLanguage->languageText('mod_filemanager_uploadnewfile', 'filemanager', 'Upload new file')
             $header->type = 4;
 
             echo $header->show();

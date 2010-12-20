@@ -57,7 +57,7 @@ $table->endRow();
 $table->startRow();
 $table->addCell('<strong>'.ucwords($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]')).':</strong>', 130);
 $table->addCell($this->objUser->fullName($assignment['userid']));
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark').'</strong>', 130);
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_totalmark', 'assignment').'</strong>', 130);
 $table->addCell($assignment['mark']);
 $table->endRow();
 $table->startRow();
@@ -212,7 +212,7 @@ if ($assignment['format'] == '1') {
     }
     if ($submission['mark'] != NULL && ($assignment['closing_date'] < date('Y-m-d H:i:s') || $this->isValid('edit'))) {
         $header = new htmlHeading();
-        $header->str = $this->objLanguage->languageText('mod_worksheet_result', 'worksheet', 'Result');
+        $header->str = $this->objLanguage->languageText('mod_assignment_result', 'assignment');
         $header->type = 3;
         echo $header->show();
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -320,7 +320,7 @@ else {
     if ($submission['mark'] != NULL  && ($assignment['closing_date'] < date('Y-m-d H:i:s') || $this->isValid('edit'))) {
         // Header
         $header = new htmlHeading();
-        $header->str = $this->objLanguage->languageText('mod_worksheet_result', 'worksheet', 'Result');
+        $header->str = $this->objLanguage->languageText('mod_assignment_result', 'assignment');
         $header->type = 3;
         echo $header->show();
         // Table

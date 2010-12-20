@@ -30,7 +30,7 @@ $table->endRow();
 $table->startRow();
 $table->addCell('<strong>'.$this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]').':</strong>', 130);
 $table->addCell($this->objUser->fullName($assignment['userid']));
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark').'</strong>', 130);
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_assignment_totalmark', 'assignment').'</strong>', 130);
 $table->addCell($assignment['mark']);
 $table->endRow();
 
@@ -56,7 +56,7 @@ echo $table->show();
 
 $htmlHeader = new htmlHeading();
 $htmlHeader->type = 1;
-$htmlHeader->str = $this->objLanguage->languageText('mod_contextcontent_confirmdelcontextpages', 'contextcontent', 'Confirm Delete');
+$htmlHeader->str = $this->objLanguage->languageText('mod_assignment_confirmdelete', 'assignment');
 echo '<hr />'.$htmlHeader->show();
 
 $form = new form ('deleteassignment', $this->uri(array('action'=>'deleteconfirm')));

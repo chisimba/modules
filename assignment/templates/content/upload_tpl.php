@@ -29,7 +29,7 @@ $wordstudent=ucwords($this->objLanguage->languageText('mod_context_readonly'));
 
 
 $header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_filemanager_uploadnewfile', 'filemanager', 'Upload new file');
+$header->str = $this->objLanguage->languageText('mod_assignment_uploadnewfile', 'assignment');
 $header->type = 4;
 
 echo $header->show();
