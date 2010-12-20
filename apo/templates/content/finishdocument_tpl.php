@@ -1,4 +1,9 @@
 <?php
+ /*
+ * @category  Chisimba
+ * @package   apo (Academic Planning Office)
+ * @author    Jacqueline Gil
+ */
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
