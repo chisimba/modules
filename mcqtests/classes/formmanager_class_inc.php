@@ -1926,6 +1926,7 @@ class formmanager extends object {
         $maxVal = $data['maxVal'];
         $mypenalty = $data['mypenalty'];
         $myunitpenalty = $data['myunitpenalty'];
+        $submit = $data['submit'];
 
         //Form text
         $addSuccess = $this->objLanguage->languageText("mod_mcqtests_addsuccess", 'mcqtests', "The Record was added successfully");
@@ -2086,60 +2087,62 @@ class formmanager extends object {
         $qnmark = $qn['mark'];
         $themark = $qnmark;
         //Add row to show results if submitted
-        if (!empty($unitVal) || !empty($numberVal)) {
-            //Get Object
-            $this->objIcon = &$this->newObject('geticon', 'htmlelements');
-            //Correct Icon
-            $this->objIcon->setIcon('greentick', $type = 'gif', $iconfolder = 'icons/');
-            $correct = $this->objIcon->show();
-            //Wrong Icon
-            $this->objIcon->setIcon('redcross', $type = 'gif', $iconfolder = 'icons/');
-            $wrong = $this->objIcon->show();
-            //Get previous penalty if any
-            $mypenalty = $data['mypenalty'];
-            $myunitpenalty = $data['myunitpenalty'];
+        if ($submit != "Fill with correct") {
+            if (!empty($unitVal) || !empty($numberVal)) {
+                //Get Object
+                $this->objIcon = &$this->newObject('geticon', 'htmlelements');
+                //Correct Icon
+                $this->objIcon->setIcon('greentick', $type = 'gif', $iconfolder = 'icons/');
+                $correct = $this->objIcon->show();
+                //Wrong Icon
+                $this->objIcon->setIcon('redcross', $type = 'gif', $iconfolder = 'icons/');
+                $wrong = $this->objIcon->show();
+                //Get previous penalty if any
+                $mypenalty = $data['mypenalty'];
+                $myunitpenalty = $data['myunitpenalty'];
 
-            //Mark answer and penalise accordingly
-            if ($numberVal >= $minVal && $numberVal <= $maxVal) {
-                $markCorrect = true;
-                $markNumber = '<div> ' . $correct . " " . $phraseCorrectAns . " ";
-            } else {
-                //Compute the mark-penalty
-                $qnpenalty = $qn['penalty'];
-                if (empty($mypenalty)) {
-                    $mypenalty = $qnpenalty;
+                //Mark answer and penalise accordingly
+                if ($numberVal >= $minVal && $numberVal <= $maxVal) {
+                    $markCorrect = true;
+                    $markNumber = '<div> ' . $correct . " " . $phraseCorrectAns . " ";
+                } else {
+                    //Compute the mark-penalty
+                    $qnpenalty = $qn['penalty'];
+                    if (empty($mypenalty)) {
+                        $mypenalty = $qnpenalty;
+                    }
+                    $markCorrect = false;
+                    $markNumber = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseIncorrectAns . " ";
                 }
-                $markCorrect = false;
-                $markNumber = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseIncorrectAns . " ";
-            }
-            if ($unit == $unitVal) {
-                $unitCheck = '<div> ' . $correct . " ";
-            } else {
-                $markCorrect = false;
-                //Compute the unit-penalty
-                $unitpenalty = $uhData[0]['unitpenalty'];
-                if (empty($myunitpenalty)) {
-                    $myunitpenalty = $unitpenalty;
+                if ($unit == $unitVal) {
+                    $unitCheck = '<div> ' . $correct . " ";
+                } else {
+                    $markCorrect = false;
+                    //Compute the unit-penalty
+                    $unitpenalty = $uhData[0]['unitpenalty'];
+                    if (empty($myunitpenalty)) {
+                        $myunitpenalty = $unitpenalty;
+                    }
+                    $unitCheck = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseUndefined . " ";
                 }
-                $unitCheck = '<div style="color:#FF0000"> ' . $wrong . " " . $phraseUndefined . " ";
-            }
-            //Compute mark
-            if (!empty($mypenalty))
-                $qnmark = $qnmark - $mypenalty;
-            if (!empty($myunitpenalty))
-                $qnmark = $qnmark - $myunitpenalty;
-            //Store the penalty
-            $mypenalties = new hiddeninput("mypenalty", $mypenalty);
-            //Store the unit-penalty
-            $myunitpenalties = new hiddeninput("myunitpenalty", $myunitpenalty);
+                //Compute mark
+                if (!empty($mypenalty))
+                    $qnmark = $qnmark - $mypenalty;
+                if (!empty($myunitpenalty))
+                    $qnmark = $qnmark - $myunitpenalty;
+                //Store the penalty
+                $mypenalties = new hiddeninput("mypenalty", $mypenalty);
+                //Store the unit-penalty
+                $myunitpenalties = new hiddeninput("myunitpenalty", $myunitpenalty);
 
-            $objTable->startRow();
-            //$objTable->addCell($wordAnswer.": ", '20%','','left');
-            $objTable->addCell("", '50px', '', 'right');
-            $objTable->addCell($markNumber . " " . $mypenalties->show(), '250px', '', 'left');
-            $objTable->addCell("", '50px', '', 'right');
-            $objTable->addCell($unitCheck . " " . $myunitpenalties->show(), '250px', 'left');
-            $objTable->endRow();
+                $objTable->startRow();
+                //$objTable->addCell($wordAnswer.": ", '20%','','left');
+                $objTable->addCell("", '50px', '', 'right');
+                $objTable->addCell($markNumber . " " . $mypenalties->show(), '250px', '', 'left');
+                $objTable->addCell("", '50px', '', 'right');
+                $objTable->addCell($unitCheck . " " . $myunitpenalties->show(), '250px', 'left');
+                $objTable->endRow();
+            }
         }
         //Add fieldset to hold Answer stuff
         $objFieldset = &$this->getObject('fieldset', 'htmlelements');
@@ -2212,26 +2215,35 @@ class formmanager extends object {
             $objTable->endRow();
         }
         //Add fieldset to hold the Feedback
-        if ($markCorrect == true || !empty($penalties)) {
-            $objFieldset = &$this->getObject('fieldset', 'htmlelements');
-            $objFieldset->width = '600px';
+        if ($submit != "Fill with correct") {
+            if ($markCorrect == true || !empty($penalties)) {
+                $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+                $objFieldset->width = '600px';
 
-            //$objFieldset->align = 'center';
-            $objFieldset->setLegend($wordFeedback);
+                //$objFieldset->align = 'center';
+                $objFieldset->setLegend($wordFeedback);
 
-            //Add table to General Fieldset
-            $objFieldset->addContent($objTable->show());
-            //Add General Fieldset to form
-            $str .= $objFieldset->show();
-            //Reset Fieldset
-            $objFieldset->reset();
+                //Add table to General Fieldset
+                $objFieldset->addContent($objTable->show());
+                //Add General Fieldset to form
+                $str .= $objFieldset->show();
+                //Reset Fieldset
+                $objFieldset->reset();
+            }
         }
 
         // Create Submit Btn
         $buttonSubmit = new button("submit", $wordSubmit);
         $buttonSubmit->setValue($wordSubmit);
         $buttonSubmit->setToSubmit();
+        $str .= "<br />" . $buttonSubmit->show() . "<br /><br />";
+
+        // Create Fill-With-Correct Btn
+        $buttonSubmit = new button("submit", $phraseFillWithCorrect);
+        $buttonSubmit->setValue($phraseFillWithCorrect);
+        $buttonSubmit->setToSubmit();
         $str .= " " . $buttonSubmit->show();
+
         // Create Start-again Btn
         $buttonSubmit = new button("submit", $phraseStartAgain);
         $buttonSubmit->setValue($phraseStartAgain);
@@ -2240,7 +2252,7 @@ class formmanager extends object {
 
         // Create Submit
         $buttonBack = new button("submit", $wordExit, "window.close()");
-        $str .= " " . $buttonBack->showSexy();
+        $str .= " " . $buttonBack->showSexy()." <br /><br />";
 
         //$objFieldset->align = 'center';
         $objFieldset->setLegend($testName);
@@ -2385,7 +2397,7 @@ class formmanager extends object {
                                     ), 'mcqtests'));
                     $objPopup->set('linktext', $iconPreview->show());
                     $objPopup->set('width', '700');
-                    $objPopup->set('height', '540');
+                    $objPopup->set('height', '650');
                     $objPopup->set('left', '200');
                     $objPopup->set('top', '200');
                     $objPopup->set('scrollbars', 'yes');

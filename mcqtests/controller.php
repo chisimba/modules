@@ -1226,6 +1226,18 @@ class mcqtests extends controller {
         $bIVal = $bItemVal[0]["value"];
 
         $data = array();
+        $data['itemNo'] = $itemNo;
+        $data['testId'] = $test;
+        $data['qnId'] = $qnId;
+        $data['categoryId'] = $category;
+        $data['numberVal'] = $numberVal;
+        $data['unitVal'] = $unitVal;
+        $data['aVal'] = $aIVal;
+        $data['bVal'] = $bIVal;
+        $data['submit'] = $submit;
+        $data['mypenalty'] = $mypenalty;
+        $data['myunitpenalty'] = $myunitpenalty;
+
         if (!empty($formula) && !empty($tolerance) && $submit == "Submit") {
             //Array to store data to be computed
             $computeData = array();
@@ -1242,6 +1254,24 @@ class mcqtests extends controller {
             $data["computedAns"] = $computed["computedAns"];
             $data["roundedAns"] = $computed["roundedAns"];
             $data["unit"] = $computed["unit"];
+        } else if (!empty($formula) && !empty($tolerance) && $submit == "Fill with correct") {
+            //Array to store data to be computed
+            $computeData = array();
+            $computeData["aVal"] = $aIVal;
+            $computeData["bVal"] = $bIVal;
+            $computeData["formula"] = $formula;
+            $computeData["tolerance"] = $tolerance;
+            $computeData["unit"] = $uh[0]["unit"];
+            //Compute the Vals
+            $computed = $this->formManager->computeMaxMinVals($computeData);
+            $data["minVal"] = $computed["minVal"];
+            $data["maxVal"] = $computed["maxVal"];
+            $data["tolerance"] = $computed["tolerance"];
+            $data["computedAns"] = $computed["computedAns"];
+            $data["roundedAns"] = $computed["roundedAns"];
+            $data["unit"] = $computed["unit"];
+            $data['numberVal'] = $computed["computedAns"];
+            $data['unitVal'] = $computed["unit"];
         } else {
             $data["minVal"] = Null;
             $data["maxVal"] = Null;
@@ -1252,17 +1282,6 @@ class mcqtests extends controller {
             $data['mypenalty'] = Null;
             $data['myunitpenalty'] = Null;
         }
-        $data['itemNo'] = $itemNo;
-        $data['testId'] = $test;
-        $data['qnId'] = $qnId;
-        $data['categoryId'] = $category;
-        $data['numberVal'] = $numberVal;
-        $data['unitVal'] = $unitVal;
-        $data['aVal'] = $aIVal;
-        $data['bVal'] = $bIVal;
-        $data['submit'] = $submit;
-        $data['mypenalty'] = $mypenalty;
-        $data['myunitpenalty'] = $myunitpenalty;
         /* $mymark = $mark;
           if(!empty($penalty)){
           $mypenalty = $mypenalty;
