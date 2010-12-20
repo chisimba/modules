@@ -46,7 +46,7 @@ $table->endRow();
 $table->startRow();
 $table->addCell('<strong>' . ucfirst($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]')) . '</strong>', 130);
 $table->addCell($this->objUser->fullName($assignment['userid']));
-$table->addCell('<strong>' . $this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark') . '</strong>', 130);
+$table->addCell('<strong>' . $this->objLanguage->languageText('mod_assignment_totalmark', 'assignment') . '</strong>', 130);
 $table->addCell($assignment['mark']);
 $table->endRow();
 
@@ -147,7 +147,7 @@ if ($this->isValid('markassignments')) {
     $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignment['id']);
     $table = $this->newObject('htmltable', 'htmlelements');
     $table->startHeaderRow();
-    $table->addHeaderCell(ucwords($this->objLanguage->code2Txt('mod_assignment_studname', 'assignment', NULL, '[-readonly-] Name')));
+    $table->addHeaderCell(ucfirst($this->objLanguage->code2Txt('mod_assignment_studname', 'assignment', NULL, '[-readonly-] name')));
     $table->addHeaderCell($this->objLanguage->languageText('mod_assignment_datesubmitted', 'assignment', 'Date Submitted'));
     $table->addHeaderCell($this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark'));
     $table->addHeaderCell($this->objLanguage->languageText('mod_assignment_comment', 'assignment', 'Comment'));
