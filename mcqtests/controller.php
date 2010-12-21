@@ -192,7 +192,7 @@ class mcqtests extends controller {
                 $this->deleteSCQuestions($id = $this->getParam('id', null));
                 $test = $this->getParam('test', Null);
                 // After processing return to scqlisting
-                return $this->nextAction('scqlisting', array('test' => $test, 'deletemsg' => 'deletesuccess'));
+                return $this->nextAction('questionbank', array('test' => $test, 'deletemsg' => 'deletesuccess'));
                 break;
             case 'randomscqview':
                 $itemno = $this->getParam('itemnumber', TRUE);
@@ -214,7 +214,25 @@ class mcqtests extends controller {
                 $this->setVarByRef('addmsg', $addmsg);
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'scqlisting_tpl.php';
-            case 'addsimplecalculated':
+            case 'questionbank':
+                $test = $this->getParam('test', Null);
+                $deletemsg = $this->getParam('deletemsg', Null);
+                $addmsg = $this->getParam('addmsg', Null);
+                $this->setVarByRef('testId', $test);
+                $this->setVarByRef('deletemsg', $deletemsg);
+                $this->setVarByRef('addmsg', $addmsg);
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                return 'qbanklisting_tpl.php';
+                case 'mcqlisting':
+                $test = $this->getParam('test', Null);
+                $deletemsg = $this->getParam('deletemsg', Null);
+                $addmsg = $this->getParam('addmsg', Null);
+                $this->setVarByRef('testId', $test);
+                $this->setVarByRef('deletemsg', $deletemsg);
+                $this->setVarByRef('addmsg', $addmsg);
+                $this->setLayoutTemplate("mcqtests_layout_tpl.php");
+                return 'mcqlisting_tpl.php';
+                case 'addsimplecalculated':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 $submitVal = $this->getParam("submit", "Other");
                 //Empty the qn id
@@ -242,7 +260,7 @@ class mcqtests extends controller {
                 $this->setVarByRef('id', $id);
                 $this->setVarByRef('testId', $test);
                 if ($submitVal == "Save as a new question" || $exists == 2) {
-                    return $this->nextAction('scqlisting', array('test' => $test, 'addmsg' => 'addsuccess'));
+                    return $this->nextAction('questionbank', array('test' => $test, 'addmsg' => 'addsuccess'));
                 } else {
                     return 'simplecalculatedqn_tpl.php';
                 }

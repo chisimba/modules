@@ -2546,6 +2546,8 @@ class formmanager extends object {
         $wordDisplay = $this->objLanguage->languageText('mod_mcqtest_worddisplay', 'mcqtests', "Display");
         $phraseGenerate = $this->objLanguage->languageText('mod_mcqtests_newsetwildcards', 'mcqtests', "new set(s) of wild card(s) values");
         $phraseDisplay = $this->objLanguage->languageText('mod_mcqtest_setwildcards', 'mcqtests', "set(s) of wild card(s) values");
+        $phraseQuestionBank = $this->objLanguage->languageText('mod_mcqtest_questionbank', 'mcqtests', "Question bank");
+        $phraseBackToQnBank = $this->objLanguage->languageText('mod_mcqtest_backtoqnbank', 'mcqtests', "Back to question bank");
 
 
         $listTitle = $phraseListOf . " " . $phraseSCQuestions;
@@ -3297,7 +3299,7 @@ class formmanager extends object {
         $button1->setToSubmit();
         $btnSaveAsnew = $button1->showSexy();
 
-        // Create Back to list of RSA Button
+        // Create Back to list of SCQ Button
         $buttonBack = new button("submit", $listTitle);
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
@@ -3307,6 +3309,17 @@ class formmanager extends object {
                 )));
         $objBack->link = $buttonBack->showSexy();
         $btnBackList = $objBack->show();
+
+        // Create Back to list of SCQ Button
+        $buttonBack = new button("submit", $phraseBackToQnBank);
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'questionbank',
+                    'test' => $fields["testid"]
+                )));
+        $objBack->link = $buttonBack->showSexy();
+        $btnBackQBank = $objBack->show();
 
         // Create Back to home Button
         $buttonBack = new button("submit", $backToHome);
@@ -3320,7 +3333,7 @@ class formmanager extends object {
         $btnBackHome = $objBack->show();
 
         //Add Save and Cancel Buttons to form
-        $form->addToForm("<br />" . $btnSave . " " . $btnSaveAsnew . " " . $btnBackList . " " . $btnBackHome . "<br />");
+        $form->addToForm("<br />" . $btnSave . " " . $btnSaveAsnew . " " . $btnBackQBank . " " . $btnBackHome . "<br />");
 
         return "<div>" . $form->show() . "</div>";
     }
