@@ -778,9 +778,30 @@ class formmanager extends object {
                             'id' => $descdata["id"],
                             'test' => $test
                         )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
+                    // Show the preview link
+                    $iconPreview = $this->getObject('geticon', 'htmlelements');
+                    $iconPreview->setIcon('preview');
+                    $iconPreview->alt = $this->objLanguage->languageText("word_preview", 'system');
+                    $iconPreview->align = false;
+                    //Show the view Icon
+                    $objPopup = new windowpop();
+                    $objPopup->set('location', $this->uri(array(
+                                'action' => 'viewdescription',
+                                'id' => $descdata['id'],
+                                'test' => $test
+                                    ), 'mcqtests'));
+                    $objPopup->set('linktext', $iconPreview->show());
+                    $objPopup->set('width', '700');
+                    $objPopup->set('height', '350');
+                    $objPopup->set('left', '200');
+                    $objPopup->set('top', '200');
+                    $objPopup->set('scrollbars', 'yes');
+                    $objPopup->set('resizable', 'yes');
+                    $objPopup->putJs(); // you only need to do this once per page
+                    $linkPreview = $objPopup->show();
                 $objTable->startRow();
                 $objTable->addCell($descdata['questionname'], '80%');
-                $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show(), '20%');
+                $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show() . "&nbsp;&nbsp;" . $linkPreview, '20%');
                 $objTable->endRow();
             }
         } else {
@@ -1055,6 +1076,103 @@ class formmanager extends object {
         return "<div>" . $form->show() . "</div>";
     }
 
+    /**
+     * Method to view a description
+     *
+     * @access private
+     * @param  array $test Contains test data
+     * @param  string $id Contains the test id
+     * @author Paul Mungai
+     */
+    public function viewDescription($test, $id) {
+        //Load Classes
+        $this->loadClass("textinput", "htmlelements");
+        $this->loadClass("form", "htmlelements");
+        $this->loadClass("textarea", "htmlelements");
+
+        //Form text
+        $wordExit = $this->objLanguage->languageText('mod_systext_exit', 'system', "Exit");
+        $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
+        $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
+        $wordDescriptions = $this->objLanguage->languageText("mod_mcqtests_descriptions", 'mcqtests', "Descriptions");
+        $wordDescription = $this->objLanguage->languageText("mod_mcqtests_description", 'mcqtests', "Description");
+        $wordBack = $this->objLanguage->languageText("word_back");
+        $BackToList = $wordBack . " " . $wordTo . " " . $phraseListOf . " " . $wordDescriptions;
+        $mcqHome = $this->objLanguage->languageText("mod_mcqtests_mcqhome", "mcqtests", "MCQ Home");
+        $backToHome = $wordBack . " " . $wordTo . " " . $mcqHome;
+        $addDescform = $this->objLanguage->languageText('mod_mcqtests_addDescription', 'mcqtests');
+        $wordCategory = $this->objLanguage->languageText('mod_mcqtests_wordcategory', 'mcqtests');
+        $wordGeneral = $this->objLanguage->languageText('mod_mcqtests_wordgeneral', 'mcqtests');
+        $phraseQnName = $this->objLanguage->languageText('mod_mcqtests_qnname', 'mcqtests');
+        $phraseQnText = $this->objLanguage->languageText('mod_mcqtests_qntext', 'mcqtests');
+        $wordFeedback = $this->objLanguage->languageText('mod_mcqtests_generalfeedback', 'mcqtests');
+        $wordTags = $this->objLanguage->languageText('mod_mcqtests_wordtags', 'mcqtests');
+        $phraseOfficialTags = $this->objLanguage->languageText('mod_mcqtests_officialtags', 'mcqtests');
+        $phraseMngOfficialTags = $this->objLanguage->languageText('mod_mcqtests_mngofficialtags', 'mcqtests');
+        $phraseOtherTags = $this->objLanguage->languageText('mod_mcqtests_othertags', 'mcqtests');
+        $phraseOtherTagsDesc = $this->objLanguage->languageText('mod_mcqtests_othertagsdesc', 'mcqtests');
+        $phraseQuestionBank = $this->objLanguage->languageText('mod_mcqtest_questionbank', 'mcqtests', "Question bank");
+        $phraseBackToQnBank = $this->objLanguage->languageText('mod_mcqtest_backtoqnbank', 'mcqtests', "Back to question bank");
+
+        //Form Object
+        $form = new form("adddescription", $this->uri(array(
+                            'module' => 'mcqtest',
+                            'action' => 'viewdescription',
+                            'id' => $id,
+                            'test' => $test
+                        )));
+        $data = "";
+        if (!empty($id)) {
+            $data = $this->dbDescription->getDescription($id);
+            $data = $data[0];
+        }
+        //Form Heading/Title
+        $objHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $objHeading->type = 1;
+        $objHeading->str = $addDescform;
+
+        //Create table to hold the general stuff
+        $objTable = new htmltable();
+        $objTable->width = '650px';
+        $objTable->border = '0';
+        $objTable->attributes = " align='left' border='0'";
+        $objTable->cellspacing = '12';
+
+
+        //Add Category to the table
+        $objTable->startRow();
+        $objTable->addCell($data['questionname'], '100%');
+        $objTable->endRow();
+
+        //Add Category to the table
+        $objTable->startRow();
+        $objTable->addCell($data['questiontext'], '100%');
+        $objTable->endRow();
+
+        //Add fieldset to hold general stuff
+        $objFieldset = &$this->getObject('fieldset', 'htmlelements');
+        $objFieldset->width = '700px';
+        //$objFieldset->align = 'center';
+        $objFieldset->setLegend($wordDescription);
+
+        //Add table to General Fieldset
+        $objFieldset->addContent($objTable->show());
+
+        //Add General Fieldset to form
+        $form->addToForm($objFieldset->show());
+
+        //Reset Fieldset
+        $objFieldset->reset();
+
+        // Create close button
+        $buttonClose = new button("submit", $wordExit, "window.close()");
+        $buttonClose = $buttonClose->showSexy();
+
+        //Add Close Button to form
+        $form->addToForm("<br />" . $buttonClose . "<br />");
+
+        return "<div>" . $form->show() . "</div>";
+    }
     /**
      * Method to create add short answer form
      *
@@ -2270,7 +2388,7 @@ class formmanager extends object {
         $buttonSubmit->setToSubmit();
         $str .= " " . $buttonSubmit->show();
 
-        // Create Submit
+        // Create close button
         $buttonBack = new button("submit", $wordExit, "window.close()");
         $str .= " " . $buttonBack->showSexy() . " <br /><br />";
 

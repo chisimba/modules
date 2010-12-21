@@ -377,6 +377,22 @@ class mcqtests extends controller {
                 //return $this->nextAction('mcqlisting');
                 $this->nextAction('questionbank', array('test' => $this->getParam('test', null)));
                 break;
+            case 'viewdescription':
+                $this->setLayoutTemplate(NULL);
+                $this->setVar('pageSuppressToolbar', TRUE);
+                $this->setVar('pageSuppressBanner', TRUE);
+                $this->setVar('pageSuppressSearch', TRUE);
+                $this->setVar('suppressFooter', TRUE);
+                //Get the testid & qn id
+                $id = $this->getParam('id', Null);
+                $test = $this->getParam('test', Null);
+                //Get desc id if its an edit
+                $descId = $this->getParam('descid', Null);
+                $this->setVarByRef('id', $id);
+                $this->setVarByRef('descId', $descId);
+                $this->setVarByRef('test', $test);
+                return 'viewdescription_tpl.php';
+                break;
             case 'addeditdesc':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 //Get the testid & qn id
