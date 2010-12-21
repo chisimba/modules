@@ -29,7 +29,7 @@ class dbworksheetquestions extends dbTable
     {
         parent::init('tbl_worksheet_questions');
         $this->table='tbl_worksheet_questions';
-        
+
         $this->objUser = $this->getObject('user', 'security');
         $this->objWashout = $this->getObject('washout','utilities');
     }
@@ -58,15 +58,15 @@ class dbworksheetquestions extends dbTable
                 'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
                 'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
             ));
-        
+
         if ($result != FALSE) {
             $objWorksheet = $this->getObject('dbworksheet');
             $objWorksheet->updateTotalMark($worksheet_id);
         }
-        
+
         return $result;
     }
-    
+
     public function updateQuestion($question_id, $question, $answer, $question_worth)
     {
         $result = $this->update('id', $question_id, array(
@@ -77,16 +77,16 @@ class dbworksheetquestions extends dbTable
                 'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
                 'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
             ));
-        
+
         if ($result != FALSE) {
             $objWorksheet = $this->getObject('dbworksheet');
             $question = $this->getQuestion($question_id);
             $objWorksheet->updateTotalMark($question['worksheet_id']);
         }
-        
+
         return $result;
     }
-    
+
     /**
     * Method to get the number of the last question in the worksheet.
     * @param string $worksheet_id The id of the current worksheet.
@@ -95,9 +95,9 @@ class dbworksheetquestions extends dbTable
     public function getLastOrder($worksheet_id)
     {
         $sql = "SELECT question_order FROM tbl_worksheet_questions WHERE worksheet_id='{$worksheet_id}' ORDER BY question_order DESC LIMIT 1";
-        
+
         $result = $this->getArray($sql);
-        
+
         if (count($result) == 0) {
             return 0;
         } else {
@@ -132,8 +132,25 @@ class dbworksheetquestions extends dbTable
         return $this->delete('id',$id);
     }
 
-
-
+    /**
+    * Delete questions in a worksheet.
+    * @param string $worksheetId The ID of the worksheet
+    * @return void
+    */
+    public function deleteQuestions($worksheetId)
+    {
+        $sql = "SELECT id FROM {$this->_tableName} WHERE worksheet_id = '{$worksheetId}'";
+        $rs = $this->getArray($sql);
+        if (!empty($rs)) {
+            $dbWorksheetAnswers = $this->getObject('dbworksheetanswers');
+            foreach ($rs as $row){
+                $questionId = $row['id'];
+                $dbWorksheetAnswers->deleteAnswers($questionId);
+                $this->delete('id', $questionId);
+            }
+        }
+        return;
+    }
 
     /**
     * Method to get the number of questions in the worksheet.
@@ -147,7 +164,7 @@ class dbworksheetquestions extends dbTable
         INNER JOIN tbl_worksheet ON ( tbl_worksheet_questions.worksheet_id = tbl_worksheet.id )
         WHERE tbl_worksheet.id = "'.$worksheet_id.'" ';
 
-        $result = $this->getArray($sql);    
+        $result = $this->getArray($sql);
  	      return $result[0]['questioncount'];
     }
 
@@ -272,13 +289,13 @@ class dbworksheetquestions extends dbTable
                 'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
                 'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
             ));
-       
+
         if ($result != FALSE) {
             $objWorksheetquestions = $this->getObject('dbworksheetquestions');
             $question = $this->getQuestion($question_id);
             $objWorksheet->saveRecord($question['worksheet_id']);
 
-        
+
        return $result;
     }
 */

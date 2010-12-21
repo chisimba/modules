@@ -28,8 +28,8 @@ class dbworksheetresults extends dbtable
         parent::init('tbl_worksheet_results');
         $this->table='tbl_worksheet_results';
     }
-    
-    
+
+
     public function setWorksheetCompleted($userId, $worksheet)
     {
         return $this->insert(array(
@@ -40,29 +40,29 @@ class dbworksheetresults extends dbtable
                 'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
             ));
     }
-    
+
     public function checkWorksheetCompleted($userId, $worksheet)
     {
         $result = $this->getRecordCount(" WHERE worksheet_id='{$worksheet}' AND userid='{$userId}' AND completed='Y' LIMIT 1");
-        
+
         if (count($result) == 1) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
-    
+
     public function getWorksheetResult($userId, $worksheet)
     {
         $result = $this->getAll(" WHERE worksheet_id='{$worksheet}' AND userid='{$userId}' AND completed='Y' LIMIT 1");
-        
+
         if (count($result) == 1) {
             return $result[0];
         } else {
             return FALSE;
         }
     }
-    
+
     /**
     * Method to insert a students results into the database.
     * @param array $fields The values to be inserted.
@@ -153,7 +153,7 @@ class dbworksheetresults extends dbtable
         }
         return FALSE;
     }
-	
+
 	 /**
     * Method to reset a submited users test.
     * @param string $userId The id of the user whose result is being reset.
@@ -161,11 +161,29 @@ class dbworksheetresults extends dbtable
     * @author James Kariuki
     * @return string $id The id of the result
     */
-    public function reset4Student($userId,$worksheet_id)	
+    public function reset4Student($userId,$worksheet_id)
     {
 		$id=$this->getId($userId,$worksheet_id);
 		$this->update('id',$id,array('completed'=>'N'));
         return False;
     }
+
+    /**
+    * Delete results in a worksheet.
+    * @param string $worksheetId The ID of the worksheet
+    * @return void
+    */
+    public function deleteResults($worksheetId)
+    {
+        $sql = "SELECT id FROM {$this->_tableName} WHERE worksheet_id = '{$worksheetId}'";
+        $rs = $this->getArray($sql);
+        if (!empty($rs)) {
+            foreach ($rs as $row){
+                $this->delete('id', $row['id']);
+            }
+        }
+        return;
+    }
+
 }
 ?>

@@ -141,7 +141,7 @@ class worksheet extends controller
      */
     public function isValid($action)
     {
-        $lecturerActions = array('add', 'saveworksheet', 'worksheetinfo', 'managequestions', 'savequestion', 'activate', 'updatestatus', 'viewstudentworksheet', 'editquestion', 'preview');
+        $lecturerActions = array('add', 'deleteworksheet', 'saveworksheet', 'worksheetinfo', 'managequestions', 'savequestion', 'activate', 'updatestatus', 'viewstudentworksheet', 'editquestion', 'preview');
 
         if (in_array($action, $lecturerActions)) {
             if ($this->objUser->isContextLecturer($this->objUser->userid(),$this->contextCode)) {
@@ -320,6 +320,17 @@ class worksheet extends controller
         $id = $this->objWorksheet->insertWorkSheet($this->contextCode, NULL, $title, $activity_status, $percentage, $closing_date, $description );
 
         return $this->nextAction('managequestions', array('id'=>$id));
+    }
+
+    /**
+    * Delete the worksheet
+    * @access private
+    */
+    private function __deleteworksheet()
+    {
+        $id = $this->getParam('id');
+        $this->objWorksheet->deleteWorksheet($id);
+        return $this->nextAction('home', array());
     }
 
     /**

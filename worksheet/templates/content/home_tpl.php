@@ -29,8 +29,8 @@ if (count($worksheets) == 0) {
     echo '<div class="noRecordsMessage">No Worksheets at present</div>';
 } else {
     $table = $this->newObject('htmltable', 'htmlelements');
-    
-    
+
+
     if ($this->isValid('worksheetinfo')) {
         $table->startHeaderRow();
             $table->addHeaderCell($this->objLanguage->languageText('mod_worksheet_worksheetname', 'worksheet', 'Worksheet Name'));
@@ -41,7 +41,7 @@ if (count($worksheets) == 0) {
             $table->addHeaderCell($this->objLanguage->languageText('mod_worksheet_closingdate', 'worksheet', 'Closing Date'));
             $table->addHeaderCell("&nbsp;");
         $table->endHeaderRow();
-        
+
         foreach ($worksheets as $worksheet)
         {
             $table->startRow();
@@ -53,19 +53,37 @@ if (count($worksheets) == 0) {
                 $table->addCell($worksheet['percentage']);
                 $table->addCell($worksheet['total_mark']);
                 $table->addCell($worksheet['closing_date']);
+
+                // View icon
+				$viewLink = new link ($this->uri(array('action'=>'preview', 'id'=>$worksheet['id'])));
+				$objIcon->setIcon('view');
+				$objIcon->alt = "";
+				$objIcon->title = "";
+                $viewLink->link = $objIcon->show();
+
+                // Edit icon
 				$editLink = new link ($this->uri(array('action'=>'edit', 'id' => $worksheet['id'] )));
 				$objIcon->setIcon('edit');
 				$objIcon->alt = "";
 				$objIcon->title = "";
 				$editLink->link = $objIcon->show();
-				$viewLink = new link ($this->uri(array('action'=>'preview', 'id'=>$worksheet['id'])));
-				$objIcon->setIcon('view');
-				$objIcon->alt = "";
-				$objIcon->title = "";
-        $viewLink->link = $objIcon->show();
-				$table->addCell($viewLink->show() . $editLink->show());
-				$editLink = null;
+
+                // Delete icon
+                $deleteIcon = $objIcon->getDeleteIconWithConfirm(
+                    NULL,
+                    array(
+                        'action'=>'deleteworksheet',
+                        'id'=>$worksheet['id']
+                    ),
+                    'worksheet',
+                    $this->objLanguage->languageText('mod_worksheet_confirmdeleteworksheet', 'worksheet')
+                );
+
+				$table->addCell($viewLink->show() . $editLink->show().$deleteIcon);
+
 				$viewLink = null;
+                $editLink = null;
+                $deleteIcon = null;
             $table->endRow();
         }
     } else {
@@ -77,10 +95,10 @@ if (count($worksheets) == 0) {
             $table->addHeaderCell($this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark'));
             $table->addHeaderCell($this->objLanguage->languageText('mod_worksheet_closingdate', 'worksheet', 'Closing Date'));
         $table->endHeaderRow();
-        
+
         $counter = 0;
         $studentViewStatus = array('open', 'closed', 'marked');
-        
+
         foreach ($worksheets as $worksheet)
         {
             if (in_array($worksheet['activity_status'], $studentViewStatus)) {
@@ -94,7 +112,7 @@ if (count($worksheets) == 0) {
                             $link = $link->show();
                             break;
                         case 'open':
-                            
+
                             // Fix automatic closure
                             /*if (strtotime(date('Y-m-d  H:i:s')) > strtotime($worksheet['closing_date'])) {
                                 $worksheet['activity_status'] = 'closed';
@@ -104,13 +122,13 @@ if (count($worksheets) == 0) {
                                 $link->link = $worksheet['name'];
                                 $link = $link->show();
                             //}
-                            
+
                             break;
                         default:
                             $link = $worksheet['name'];
                             break;
                     }
-                    
+
                     $table->addCell($link);
                     $table->addCell($worksheet['questions']);
                     $table->addCell($this->objWorksheet->getStatusText($worksheet['activity_status']));
@@ -120,19 +138,19 @@ if (count($worksheets) == 0) {
                 $table->endRow();
             }
         }
-        
+
         if ($counter == 0) {
-            
+
         }
     }
-    
+
     echo $table->show();
 }
 
 if ($this->isValid('add')) {
     $addLink = new link ($this->uri(array('action'=>'add')));
     $addLink->link = $this->objLanguage->languageText('mod_worksheet_createnewworksheet', 'worksheet', 'Create New Worksheet');
-    
+
     echo '<p>'.$addLink->show().'</p>';
 }
 

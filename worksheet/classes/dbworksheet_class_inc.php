@@ -28,7 +28,7 @@ class dbworksheet extends dbTable
     {
         parent::init('tbl_worksheet');
         $this->table = 'tbl_worksheet';
-        
+
         $this->objUser = $this->getObject('user', 'security');
     }
 
@@ -39,18 +39,18 @@ class dbworksheet extends dbTable
     */
     public function getWorksheetsInContext($context)
     {
-        
+
         $sql = 'SELECT ws.id, ws.context, ws.chapter, ws.name, ws.activity_status, ws.percentage, ws.total_mark, ';
         $sql .='ws.closing_date, ws. description, count(quest.worksheet_id) AS questions ';
         $sql .= 'FROM tbl_worksheet AS ws ';
         $sql .= 'LEFT JOIN tbl_worksheet_questions AS quest ON (quest.worksheet_id = ws.id) ';
         $sql .= "WHERE ws.context='{$context}' ";
         $sql .= "GROUP BY quest.worksheet_id, ws.activity_status, ws.context, ws.name, ws.id";
-        
+
         $result = $this->getArray($sql);
         return $result;
     }
-    
+
     public function getStatusText($status)
     {
         $this->objLanguage = $this->getObject('language', 'language');
@@ -206,26 +206,41 @@ class dbworksheet extends dbTable
             return $this->update("id", $id, array('total_mark' => $total));
         }
     }
-    
+
     public function updateTotalMark($id)
     {
         $worksheetQuestions = $this->getObject('dbworksheetquestions');
         $questions = $worksheetQuestions->getQuestions($id, 0, FALSE);
-        
+
         $total = 0;
-        
+
         foreach ($questions as $question)
         {
             $total += $question['question_worth'];
         }
-        
+
         return $this->setTotal($id, $total, FALSE);
     }
-    
+
     public function updateStatus($id, $status, $closingDate)
     {
         return $this->update('id', $id, array('activity_status'=>$status, 'closing_date'=>$closingDate));
     }
-    
+
+    /**
+    * Delete a worksheet.
+    * @param string $id The ID of the worksheet
+    * @return void
+    */
+    public function deleteWorksheet($id)
+    {
+        $dbWorksheetQuestions = $this->getObject('dbworksheetquestions');
+        $dbWorksheetQuestions->deleteQuestions($id);
+        $dbWorksheetResults = $this->getObject('dbworksheetresults');
+        $dbWorksheetResults->deleteResults($id);
+        $this->delete('id',$id);
+        return;
+    }
+
 } //end of class
 ?>

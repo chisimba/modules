@@ -29,20 +29,20 @@ class dbworksheetanswers extends dbTable
         parent::init('tbl_worksheet_answers');
         $this->table='tbl_worksheet_answers';
     }
-    
-    
+
+
     public function saveAnswers($worksheetId, $userId)
     {
         $objWorksheetQuestion = $this->getObject('dbworksheetquestions');
-        
+
         $questions = $objWorksheetQuestion->getQuestions($worksheetId, 0, FALSE);
-        
+
         foreach ($questions as $question)
         {
             $answer = $this->getParam($question['id']);
-            
+
             $id = $this->answerExists($question['id'], $userId);
-            
+
             if ($id == FALSE) {
                 $this->insert(array(
                         'question_id' => $question['id'],
@@ -62,13 +62,13 @@ class dbworksheetanswers extends dbTable
             }
         }
     }
-    
+
     public function saveMarks($student, $worksheet, $lecturer)
     {
         $studentAnswers = $this->getStudentAnswers($worksheet, $student);
-        
+
         $finalMark = 0;
-        
+
         foreach ($studentAnswers as $answer)
         {
             $result = $this->update('id', $answer['id'], array(
@@ -81,12 +81,12 @@ class dbworksheetanswers extends dbTable
                 $finalMark += $this->getParam($answer['id'], 0);
             }
         }
-        
+
         $objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');
         $resultId = $objWorksheetResults->getWorksheetResult($student, $worksheet);
-        
+
         return $objWorksheetResults->addResult(array('mark'=>$finalMark), $resultId['id']);
-        
+
     }
 
     /**
@@ -137,7 +137,7 @@ class dbworksheetanswers extends dbTable
         AND ".$this->table.".question_id = tbl_worksheet_questions.id)
         WHERE ".$this->table.".student_id='$student_id'
         ORDER BY tbl_worksheet_questions.question_order";
-        
+
         return $this->getArray($sql);
     }
 
@@ -228,5 +228,22 @@ class dbworksheetanswers extends dbTable
         }
         return FALSE;
     }
+
+    /**
+    * Delete answers in a worksheet.
+    * @param string $questionId The ID of the question
+    * @return void
+    */
+    public function deleteAnswers($questionId)
+    {
+        $sql = "SELECT id FROM {$this->_tableName} WHERE question_id = '{$questionId}'";
+        $rs = $this->getArray($sql);
+        if (!empty($rs)) {
+            foreach ($rs as $row){
+                $this->delete('id',$row['id']);
+            }
+        }
+    }
+
 } //end of class
 ?>
