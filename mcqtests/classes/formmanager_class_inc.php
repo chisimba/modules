@@ -701,10 +701,11 @@ class formmanager extends object {
      *
      * @access private
      * @param  array $test Contains test data
-     * @param  string $id Contains the test id
+     * @param  string $id Contains the category id
+     * @param  string $test Contains the test id
      * @author Paul Mungai
      */
-    public function createDescriptionList($categoryId) {
+    public function createDescriptionList($categoryId, $test=Null) {
         //Form text
         $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
@@ -759,7 +760,8 @@ class formmanager extends object {
                 $objLink->link($this->uri(array(
                             'module' => 'mcqtests',
                             'action' => 'addeditdesc',
-                            'id' => $descdata['id']
+                            'id' => $descdata['id'],
+                            'test' => $test
                         )));
                 $objLink->link = $iconEdit->show();
                 $linkEdit = $objLink->show();
@@ -773,7 +775,8 @@ class formmanager extends object {
                 $objConfirm->setConfirm($iconDelete->show(), $this->uri(array(
                             'module' => 'mcqtests',
                             'action' => 'deletedesc',
-                            'id' => $descdata["id"]
+                            'id' => $descdata["id"],
+                            'test' => $test
                         )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
                 $objTable->startRow();
                 $objTable->addCell($descdata['questionname'], '80%');
@@ -792,7 +795,8 @@ class formmanager extends object {
         $objAdd = &$this->getObject("link", "htmlelements");
         $objAdd->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'addeditdesc'
+                    'action' => 'addeditdesc',
+                    'test' => $test
                 )));
         $objAdd->link = $buttonAdd->showSexy();
         $str .= " " . $objAdd->show();
@@ -802,7 +806,8 @@ class formmanager extends object {
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'view2'
+                    'action' => 'view2',
+                    'test' => $test
                 )));
         $objBack->link = $buttonBack->showSexy();
         $str .= " " . $objBack->show();
@@ -818,7 +823,8 @@ class formmanager extends object {
         //Form Object
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
-                            'action' => 'mcqlisting'
+                            'action' => 'questionbank',
+                            'test' => $test
                         )));
         //Add General Fieldset to form
         $form->addToForm($objFieldset->show());
@@ -861,12 +867,15 @@ class formmanager extends object {
         $phraseMngOfficialTags = $this->objLanguage->languageText('mod_mcqtests_mngofficialtags', 'mcqtests');
         $phraseOtherTags = $this->objLanguage->languageText('mod_mcqtests_othertags', 'mcqtests');
         $phraseOtherTagsDesc = $this->objLanguage->languageText('mod_mcqtests_othertagsdesc', 'mcqtests');
+        $phraseQuestionBank = $this->objLanguage->languageText('mod_mcqtest_questionbank', 'mcqtests', "Question bank");
+        $phraseBackToQnBank = $this->objLanguage->languageText('mod_mcqtest_backtoqnbank', 'mcqtests', "Back to question bank");
 
         //Form Object
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
                             'action' => 'adddescconfirm',
-                            'id' => $id
+                            'id' => $id,
+                            'test' => $test
                         )));
         $data = "";
         if (!empty($id)) {
@@ -1029,8 +1038,19 @@ class formmanager extends object {
                 )));
         $objBack->link = $buttonBack->showSexy();
         $btnBack = $objBack->show();
+
+        // Create Back Button
+        $buttonBack = new button("submit", $phraseBackToQnBank);
+        $objBack = &$this->getObject("link", "htmlelements");
+        $objBack->link($this->uri(array(
+                    'module' => 'mcqtests',
+                    'action' => 'questionbank',
+                    'test' => $test
+                )));
+        $objBack->link = $buttonBack->showSexy();
+        $btnBackQBank = $objBack->show();
         //Add Save and Cancel Buttons to form
-        $form->addToForm("<br />" . $btnSave . " " . $btnBack . " " . $btnCancel . "<br />");
+        $form->addToForm("<br />" . $btnSave . " " . $btnBackQBank . " " . $btnCancel . "<br />");
 
         return "<div>" . $form->show() . "</div>";
     }
@@ -2252,7 +2272,7 @@ class formmanager extends object {
 
         // Create Submit
         $buttonBack = new button("submit", $wordExit, "window.close()");
-        $str .= " " . $buttonBack->showSexy()." <br /><br />";
+        $str .= " " . $buttonBack->showSexy() . " <br /><br />";
 
         //$objFieldset->align = 'center';
         $objFieldset->setLegend($testName);

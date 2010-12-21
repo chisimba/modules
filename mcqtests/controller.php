@@ -373,23 +373,26 @@ class mcqtests extends controller {
                 return 'mcqlisting_tpl.php';
             case "deletedesc":
                 $this->nextAction($id = $this->getParam('id', null), $this->dbDescription->deleteDescription($id));
-                // After processing return to choosequestiontype2
-                return $this->nextAction('mcqlisting');
+                // After processing return to question bank
+                //return $this->nextAction('mcqlisting');
+                $this->nextAction('questionbank', array('test' => $this->getParam('test', null)));
                 break;
             case 'addeditdesc':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
-                //Get the test id
+                //Get the testid & qn id
                 $id = $this->getParam('id', Null);
+                $test = $this->getParam('test', Null);
                 //Get desc id if its an edit
                 $descId = $this->getParam('descid', Null);
-                $test = $this->getParam('test', Null);
                 $this->setVarByRef('id', $id);
                 $this->setVarByRef('descId', $descId);
                 $this->setVarByRef('test', $test);
                 return 'description_tpl.php';
+                break;
             case 'adddescconfirm':
                 //Get the test id
                 $id = $this->getParam('id', Null);
+                $test = $this->getParam('test', Null);
                 //Get desc id if its an edit
                 $descId = $this->getParam('descid', Null);
                 //Fetch the form data into an array for insertion/update
@@ -401,7 +404,8 @@ class mcqtests extends controller {
                 $fields['tags'] = $this->getParam('descofficialtags', Null);
                 $fields['othertags'] = $this->getParam('descothertags', Null);
                 $id = $this->dbDescription->addDescription($fields, $descId);
-                return $this->nextAction('mcqlisting', array('id' => $this->getParam('id')));
+                $this->nextAction('questionbank', array('test' => $test));
+                break;
             case "deletedesc":
                 $this->nextAction($id = $this->getParam('id', null), $this->dbDescription->deleteDescription($id));
                 // After processing return to choosequestiontype2
