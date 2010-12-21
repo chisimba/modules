@@ -86,6 +86,7 @@ var goAddQuestion = function() {
                 break;
             case 'showRSA':
                 showRSA();
+                break;
             case 'showSCQ':
                 showSCQ();
                 break;
@@ -125,5 +126,5 @@ var showShortAnsQ = function() {
     window.location.href = shortanswerqUrl;
 }
 var showRSA = function() {
-    window.location.href = rsaUrl;
+    window.location.href = randomSAUrl;
 }

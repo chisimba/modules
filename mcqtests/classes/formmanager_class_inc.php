@@ -1647,7 +1647,7 @@ class formmanager extends object {
         //Form Object
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
-                            'action' => 'mcqlisting'
+                            'action' => 'rsalisting'
                         )));
         //Add General Fieldset to form
         $form->addToForm($objFieldset->show());

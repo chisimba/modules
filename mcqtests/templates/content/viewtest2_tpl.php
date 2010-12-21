@@ -477,7 +477,7 @@ $myJS = '<script type="text/javascript">
                 shortanswerqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"viewshortansquestions", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'",
                 categoryUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"categorylisting", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'",
                 descriptionUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"mcqlisting", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'";
-                rsaUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"rsalisting", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'";
+                randomSAUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"rsalisting", "id"=>$this->getParam('id'), "count" => $count, "test"=>$test))).'";
                 scqUrl = "'.str_replace("amp;", "", $this->uri(array("action"=>"scqlisting", "id"=>$this->getParam('id'), "test"=>$test, "count" => $count))).'";
         </script>';
 echo $myJS;

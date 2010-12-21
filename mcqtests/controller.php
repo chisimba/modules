@@ -292,6 +292,7 @@ class mcqtests extends controller {
             case 'rsalisting':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'rsalisting_tpl.php';
+                break;
             case 'addrandomshortans':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 $id = $this->getParam('id', Null);
