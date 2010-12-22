@@ -17,7 +17,7 @@ $addLink->link = $objIcon->show();
 
 $header = new htmlheading();
 $header->type = 1;
-$header->str = $this->objContext->getTitle().': '.$this->objLanguage->languageText('mod_worksheet_worksheets', 'worksheet', 'Worksheets');
+$header->str = $this->objLanguage->languageText('mod_worksheet_name', 'worksheet'); //$this->objContext->getTitle().': '.
 
 if ($this->isValid('add')) {
     $header->str .= ' '.$addLink->show();
