@@ -25,10 +25,7 @@ $objIcon = $this->newObject('geticon', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 1;
-
-$header->str = $worksheet['name'];
-
- 
+$header->str = $worksheet['name'].' : '.$this->objLanguage->languageText('mod_worksheet_activatedeactivate', 'worksheet');
 
 $objStepMenu = $this->newObject('stepmenu', 'navigation');
 
@@ -58,58 +55,59 @@ echo $table->show();
 
 echo '<hr />';
 
+/*
 $header = new htmlheading();
 $header->type = 1;
-$header->str = $this->objLanguage->languageText('mod_worksheet_activatedeactivateworksheet', 'worksheet', 'Activate / Deactivate Worksheet');
-
+$header->str = ;
 echo $header->show();
+*/
 
+/*
+$this->loadClass('fieldset', 'htmlelements');
+*/
 
 $form = new form ('activate', $this->uri(array('action'=>'updatestatus')));
 
-
-    $objElement = new radio('activity_status');
-    $objElement->addOption('inactive', $this->objWorksheet->getStatusText('inactive'));
-    $objElement->addOption('open', $this->objWorksheet->getStatusText('open'));
-    $objElement->addOption('closed', $this->objWorksheet->getStatusText('closed'));
-    $objElement->addOption('marked', $this->objWorksheet->getStatusText('marked'));
-
-    $objElement->setSelected($worksheet['activity_status']);
-    $objElement->setBreakSpace('<br />');
+$objElement = new radio('activity_status');
+$objElement->addOption('inactive', $this->objWorksheet->getStatusText('inactive'));
+$objElement->addOption('open', $this->objWorksheet->getStatusText('open'));
+$objElement->addOption('closed', $this->objWorksheet->getStatusText('closed'));
+$objElement->addOption('marked', $this->objWorksheet->getStatusText('marked'));
+$objElement->setSelected($worksheet['activity_status']);
+$objElement->setBreakSpace('<br />');
 
 $table = $this->newObject('htmltable', 'htmlelements');
+$table->width = '99%';
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_worksheet_ws_status', 'worksheet', 'Worksheet Status'), 200);
-$table->addCell($objElement->show(), NULL, NULL, NULL, NULL, 'colspan="2"');
+$table->addCell($this->objLanguage->languageText('mod_worksheet_status', 'worksheet'));
+$table->addCell($objElement->show());
 $table->endRow();
 
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_worksheet_closingdatetime', 'worksheet', 'Closing Date and Time'));
+//$form->addToForm($table->show());
+//$table = $this->newObject('htmltable', 'htmlelements');
 
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_worksheet_closingdatetime', 'worksheet'));
 $objDatePicker = $this->newObject('datepicker', 'htmlelements');
 $objDatePicker->setDefaultDate(substr($worksheet['closing_date'], 0, 10));
-
-
 $objTimePicker = $this->newObject('timepicker', 'htmlelements');
 $objTimePicker->setSelected(substr($worksheet['closing_date'], 11));
 
-$table->addCell($objDatePicker->show(), 250);
-$table->addCell($objTimePicker->show());
+$innerTable = $this->newObject('htmltable', 'htmlelements');
+$innerTable->width = '99%';
+$innerTable->startRow();
+$innerTable->addCell($objDatePicker->show());
+$innerTable->addCell($objTimePicker->show());
+$innerTable->endRow();
+$table->addCell($innerTable->show());
+
 $table->endRow();
 
-
 $table->startRow();
-$table->addCell('&nbsp;', NULL, NULL, NULL, NULL, 'colspan="3"');
-$table->endRow();
-
-
-$table->startRow();
-$table->addCell('&nbsp;');
-
-$button = new button('updateworksheet', $this->objLanguage->languageText('mod_worksheet_update_ws_status', 'worksheet', 'Update Worksheet Status'));
+$button = new button('updateworksheet', $this->objLanguage->languageText('mod_worksheet_update', 'worksheet'));
 $button->setToSubmit();
-
-$table->addCell($button->show(), NULL, NULL, NULL, NULL, 'colspan="2"');
+$table->addCell('&nbsp;');
+$table->addCell($button->show());
 $table->endRow();
 
 $form->addToForm($table->show());
@@ -117,18 +115,24 @@ $form->addToForm($table->show());
 $hiddenInput = new hiddeninput('id', $id);
 $form->addToForm($hiddenInput->show());
 
+/*
+$fieldset = new fieldset();
+$fieldset->setLegend($this->objLanguage->languageText('mod_worksheet_statusclosingdateandtime', 'worksheet'));
+$fieldset->addContent($form->show());
+echo $fieldset->show();
+*/
+
 echo $form->show();
-
-
 
 echo '<hr />';
 
-
+/*
 $editLink = new link ($this->uri(array('action'=>'editworksheet', 'id'=>$id)));
 $editLink->link = $this->objLanguage->languageText('mod_worksheet_editworksheet', 'worksheet', 'Edit Worksheet');
 
 $deleteLink = new link ($this->uri(array('action'=>'deleteworksheet', 'id'=>$id)));
 $deleteLink->link = $this->objLanguage->languageText('mod_worksheet_deleteworksheet', 'worksheet', 'Delete Worksheet');
+*/
 
 $infoLink = new link ($this->uri(array('action'=>'worksheetinfo', 'id'=>$id)));
 $infoLink->link = $this->objLanguage->languageText('mod_worksheet_worksheetinfo', 'worksheet', 'Worksheet Information');

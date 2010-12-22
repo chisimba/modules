@@ -25,10 +25,7 @@ $objIcon = $this->newObject('geticon', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 1;
-
-$header->str = $this->objLanguage->languageText('mod_worksheet_ws_questions', 'worksheet', 'Worksheet Questions').' - '.$worksheet['name'] . ' (' . $preview->show() . ')';
-
-
+$header->str = $worksheet['name'].' : '.ucfirst($this->objLanguage->languageText('mod_worksheet_questions', 'worksheet')).' (' . $preview->show() . ')';
 
 $objStepMenu = $this->newObject('stepmenu', 'navigation');
 $objStepMenu->addStep($this->objLanguage->languageText('mod_worksheet_worksheetinfo', 'worksheet', 'Worksheet Information'), $this->objLanguage->languageText('mod_worksheet_worksheetinfo_desc', 'worksheet', 'Add Information about the Worksheet'), $this->uri(array('action'=>'worksheetinfo', 'id'=>$id)));

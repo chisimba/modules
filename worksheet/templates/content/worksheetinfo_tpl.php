@@ -23,10 +23,7 @@ $objIcon = $this->newObject('geticon', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 1;
-
-$header->str = $worksheet['name'];
-
- 
+$header->str = $worksheet['name'].' : '.ucfirst($this->objLanguage->languageText('mod_worksheet_information','worksheet'));
 
 $objStepMenu = $this->newObject('stepmenu', 'navigation');
 $objStepMenu->addStep($this->objLanguage->languageText('mod_worksheet_worksheetinfo', 'worksheet', 'Worksheet Information'), $this->objLanguage->languageText('mod_worksheet_worksheetinfo_desc', 'worksheet', 'Add Information about the Worksheet'));
@@ -83,7 +80,7 @@ if (count($worksheetResults) == 0 || $worksheetResults == FALSE) {
     echo '<div class="noRecordsMessage">'.$this->objLanguage->code2Txt('mod_worksheet_notstudentsattempt', 'worksheet', NULL, 'No [-readonlys-] have attempted the worksheet yet').'.</div>';
 } else {
     $table = $this->newObject('htmltable', 'htmlelements');
-    
+
     $table->startHeaderRow();
         $table->addHeaderCell($this->objLanguage->code2Txt('mod_worksheet_studnumber', 'worksheet', NULL, '[-readonly-] Number'), 200);
         $table->addHeaderCell($this->objLanguage->code2Txt('mod_worksheet_student', 'worksheet', NULL, '[-readonly-]'));
@@ -91,29 +88,29 @@ if (count($worksheetResults) == 0 || $worksheetResults == FALSE) {
         $table->addHeaderCell($this->objLanguage->languageText('mod_worksheet_datecompleted', 'worksheet', 'Date Completed'), 200);
         $table->addHeaderCell($this->objLanguage->languageText('word_view', 'system', 'View'), 100);
     $table->endHeaderRow();
-    
+
     foreach ($worksheetResults as $result)
     {
         $table->startRow();
             $table->addCell($this->objUser->getStaffNumber($result['userid']));
             $table->addCell($this->objUser->fullName($result['userid']));
-            
+
             if ($result['mark'] == '-1') {
                 $mark = '<span class="error">'.$this->objLanguage->languageText('mod_worksheet_notmarked', 'worksheet', 'Not Marked').'</span>';
             } else {
                 $mark = $result['mark'];
             }
-            
+
             $table->addCell($mark);
             $table->addCell($objDateTime->formatDate($result['last_modified']));
-            
+
             $link = new link ($this->uri(array('action'=>'viewstudentworksheet', 'id'=>$result['id'])));
             $link->link = $this->objLanguage->languageText('word_view', 'system', 'View');
-            
+
             $table->addCell($link->show());
         $table->endRow();
     }
-    
+
     echo $table->show();
 }
 
