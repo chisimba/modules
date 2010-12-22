@@ -176,14 +176,15 @@ class dbBlocks extends dbTable {
             $arrData = array();
             $arrData['categoryid'] = $arrayData['categoryid'];
             $arrData['visible'] = $this->TRUE;
-            $arrData['datelastupdated'] = $this->now();
+            $arrData['datelastupdated'] = date('Y-m-d H:i:s');
             $arrData['updatedby'] = $this->objUser->userId();
             $arrData['title'] = $arrayData['title'];
             $arrData['side'] = $arrayData['side'];
             $arrData['isblock'] = $arrayData['isblock'];
             $arrData['blockname'] = $arrayData['blockname'];
+            $arrData['content'] = $arrayData['content'];
             $arrData['blockmodule'] = $arrayData['blockmodule'];
-            $arrData['position'] = $this->getNextPos($arrayData['side']);
+            $arrData['position'] = $this->getNextPos($arrayData['side'],$arrayData['categoryid']);
             $arrData['userid'] = $this->objUser->userId();
             //var_dump($arrData);
             return $this->insert($arrData);

@@ -23,6 +23,11 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class mcqtests extends controller {
 
     /**
+     *
+     * @var object to hold tbl blocks class
+     */
+    public $dbBlocks;
+    /**
      * @var string $user The full name of the current logged in user
      */
     protected $user;
@@ -102,7 +107,8 @@ class mcqtests extends controller {
             $this->assignment = TRUE;
         }
 
-        // get the DB objects
+        // get the DB & Other objects
+        $this->dbBlocks = $this->newObject('dbblocks');
         $this->formManager = $this->newObject('formmanager');
         $this->objDSDefinitions = $this->newObject("dbdataset_definitions");
         $this->objDSItems = $this->newObject("dbdataset_items");

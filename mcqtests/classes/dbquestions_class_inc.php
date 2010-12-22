@@ -23,6 +23,16 @@ class dbquestions extends dbtable {
 
     /**
      *
+     * @var object to hold the user class
+     */
+    public $objUser;
+    /**
+     *
+     * @var object to hold tbl blocks class
+     */
+    public $dbBlocks;
+    /**
+     *
      * @var object to hold question_answers class
      */
     public $dbAnswers;
@@ -63,6 +73,8 @@ class dbquestions extends dbtable {
         $this->table = 'tbl_test_questions';
         $this->objWashout = $this->getObject('washout', 'utilities');
         // get the DB objects
+        $this->objUser = $this->getObject('user', 'security');
+        $this->dbBlocks = $this->newObject('dbblocks');
         $this->dbAnswers = &$this->newObject('dbanswers');
         $this->objDSDefinitions = $this->newObject("dbdataset_definitions");
         $this->objDSItems = $this->newObject("dbdataset_items");
@@ -84,15 +96,32 @@ class dbquestions extends dbtable {
      */
     public function addQuestion($fields, $id = NULL, $saveAsNew = Null) {
         $fields['updated'] = date('Y-m-d H:i:s');
+        $inserting = 0;
         if ($saveAsNew == 1) {
-            $qnid = $this->insert($fields);
+            $inserting = 1;
+            $id = $this->insert($fields);
         } else if (!empty($id) && $saveAsNew == 0) {
-            $qnid = $this->update('id', $id, $fields);
+            $upid = $this->update('id', $id, $fields);
         } else {
-            $qnid = $this->insert($fields);
+            $inserting = 1;
+            $id = $this->insert($fields);
         }
+
         if (empty($qnid))
             $qnid = $id;
+
+        //Add record to blocks
+        if ($inserting == 1) {
+            $arrData = array();
+            $arrData['categoryid'] = $fields['testid'];
+            $arrData['title'] = $fields['qtype'];
+            $arrData['side'] = "main";
+            $arrData['isblock'] = "1";
+            $arrData['content'] = $id;
+            $arrData['blockname'] = $fields['qtype'];
+            $arrData['blockmodule'] = "mcqtests";
+            $this->dbBlocks->insertBlock($arrData);
+        }
         return $qnid;
     }
 
@@ -106,6 +135,17 @@ class dbquestions extends dbtable {
     public function addNewQuestion($fields) {
         $fields['updated'] = date('Y-m-d H:i:s');
         $id = $this->insert($fields);
+        //Add record to blocks        
+        $arrData = array();
+        $arrData['categoryid'] = $fields['testid'];
+        $arrData['title'] = $fields['qtype'];
+        $arrData['side'] = "main";
+        $arrData['isblock'] = "1";
+        $arrData['content'] = $id;
+        $arrData['blockname'] = $fields['qtype'];
+        $arrData['blockmodule'] = "mcqtests";
+        $this->dbBlocks->insertBlock($arrData);
+
         return $id;
     }
 

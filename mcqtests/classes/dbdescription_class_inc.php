@@ -26,6 +26,11 @@ class dbdescription extends dbtable {
      * @access public
      * @return
      */
+    /**
+     *
+     * @var object to hold tbl blocks class
+     */
+    public $dbBlocks;
     public $table;
     public $objUser;
     public $userId;
@@ -33,6 +38,8 @@ class dbdescription extends dbtable {
     public function init() {
         parent::init('tbl_test_description');
         $this->table = 'tbl_test_description';
+        //Get Objects
+        $this->dbBlocks = $this->newObject('dbblocks');
         $this->objUser = &$this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
     }
