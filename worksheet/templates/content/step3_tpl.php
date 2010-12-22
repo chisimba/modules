@@ -144,4 +144,9 @@ $questionLink->link = $this->objLanguage->languageText('mod_worksheet_addremoveq
 
 echo '<p>'.$infoLink->show().' | './*$editLink->show().' | '.$deleteLink->show().' | '.*/$questionLink->show().' | '.$activateDeactivate.'</p>';
 
+$link = new link ($this->uri(NULL));
+$link->link = $this->objLanguage->languageText('mod_worksheet_backtoworksheets', 'worksheet', 'Back to Worksheets');
+
+echo '<p>'.$link->show().'</p>';
+
 ?>

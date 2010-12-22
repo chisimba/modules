@@ -190,4 +190,9 @@ $addRemove = $this->objLanguage->languageText('mod_worksheet_addremovequestions'
 
 echo '<p>'.$infoLink->show().' | './*$editLink->show().' | '.$deleteLink->show().' | '.*/$addRemove.' | '.$activateLink->show().'</p>';
 
+$link = new link ($this->uri(NULL));
+$link->link = $this->objLanguage->languageText('mod_worksheet_backtoworksheets', 'worksheet', 'Back to Worksheets');
+
+echo '<p>'.$link->show().'</p>';
+
 ?>
