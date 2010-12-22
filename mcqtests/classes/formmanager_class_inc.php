@@ -778,27 +778,27 @@ class formmanager extends object {
                             'id' => $descdata["id"],
                             'test' => $test
                         )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
-                    // Show the preview link
-                    $iconPreview = $this->getObject('geticon', 'htmlelements');
-                    $iconPreview->setIcon('preview');
-                    $iconPreview->alt = $this->objLanguage->languageText("word_preview", 'system');
-                    $iconPreview->align = false;
-                    //Show the view Icon
-                    $objPopup = new windowpop();
-                    $objPopup->set('location', $this->uri(array(
-                                'action' => 'viewdescription',
-                                'id' => $descdata['id'],
-                                'test' => $test
-                                    ), 'mcqtests'));
-                    $objPopup->set('linktext', $iconPreview->show());
-                    $objPopup->set('width', '700');
-                    $objPopup->set('height', '350');
-                    $objPopup->set('left', '200');
-                    $objPopup->set('top', '200');
-                    $objPopup->set('scrollbars', 'yes');
-                    $objPopup->set('resizable', 'yes');
-                    $objPopup->putJs(); // you only need to do this once per page
-                    $linkPreview = $objPopup->show();
+                // Show the preview link
+                $iconPreview = $this->getObject('geticon', 'htmlelements');
+                $iconPreview->setIcon('preview');
+                $iconPreview->alt = $this->objLanguage->languageText("word_preview", 'system');
+                $iconPreview->align = false;
+                //Show the view Icon
+                $objPopup = new windowpop();
+                $objPopup->set('location', $this->uri(array(
+                            'action' => 'viewdescription',
+                            'id' => $descdata['id'],
+                            'test' => $test
+                                ), 'mcqtests'));
+                $objPopup->set('linktext', $iconPreview->show());
+                $objPopup->set('width', '700');
+                $objPopup->set('height', '350');
+                $objPopup->set('left', '200');
+                $objPopup->set('top', '200');
+                $objPopup->set('scrollbars', 'yes');
+                $objPopup->set('resizable', 'yes');
+                $objPopup->putJs(); // you only need to do this once per page
+                $linkPreview = $objPopup->show();
                 $objTable->startRow();
                 $objTable->addCell($descdata['questionname'], '80%');
                 $objTable->addCell($linkEdit . "&nbsp;&nbsp;" . $objConfirm->show() . "&nbsp;&nbsp;" . $linkPreview, '20%');
@@ -1173,6 +1173,7 @@ class formmanager extends object {
 
         return "<div>" . $form->show() . "</div>";
     }
+
     /**
      * Method to create add short answer form
      *
@@ -1530,9 +1531,10 @@ class formmanager extends object {
      * @access private
      * @param  string $contextCode Contains the context code
      * @param  string $categoryId Contains the category identifier
+     * @param  string $tests Contains the test identifier
      * @author Paul Mungai
      */
-    public function createRSAList($contextCode, $categoryId=Null) {
+    public function createRSAList($contextCode, $categoryId=Null, $test=Null) {
         //Form text
         $phraseListOf = $this->objLanguage->languageText("mod_mcqtests_listof", 'mcqtests', "List of");
         $wordTo = $this->objLanguage->languageText("mod_mcqtests_wordto", 'mcqtests', "to");
@@ -1587,7 +1589,8 @@ class formmanager extends object {
                     $objLink->link($this->uri(array(
                                 'module' => 'mcqtests',
                                 'action' => 'addrandomshortans',
-                                'id' => $descdata['questionid']
+                                'id' => $descdata['questionid'],
+                                'test' => $test
                             )));
                     $objLink->link = $iconEdit->show();
                     $linkEdit = $objLink->show();
@@ -1601,7 +1604,8 @@ class formmanager extends object {
                     $objConfirm->setConfirm($iconDelete->show(), $this->uri(array(
                                 'module' => 'mcqtests',
                                 'action' => 'deletersa',
-                                'id' => $descdata["questionid"]
+                                'id' => $descdata["questionid"],
+                                'test' => $test
                             )), $this->objLanguage->languageText('mod_mcqtests_deletetest', 'mcqtests') . "?");
                     $objTable->startRow();
                     $objTable->addCell($descdata['name'], '80%');
@@ -1621,7 +1625,8 @@ class formmanager extends object {
         $objAdd = &$this->getObject("link", "htmlelements");
         $objAdd->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'addrandomshortans'
+                    'action' => 'addrandomshortans',
+                    'test' => $test
                 )));
         $objAdd->link = $buttonAdd->showSexy();
         $str .= " " . $objAdd->show();
@@ -1631,7 +1636,8 @@ class formmanager extends object {
         $objBack = &$this->getObject("link", "htmlelements");
         $objBack->link($this->uri(array(
                     'module' => 'mcqtests',
-                    'action' => 'view2'
+                    'action' => 'view2',
+                    'test' => $test
                 )));
         $objBack->link = $buttonBack->showSexy();
         $str .= " " . $objBack->show();
@@ -1647,7 +1653,8 @@ class formmanager extends object {
         //Form Object
         $form = new form("adddescription", $this->uri(array(
                             'module' => 'mcqtest',
-                            'action' => 'rsalisting'
+                            'action' => 'questionbank',
+                            'test' => $test
                         )));
         //Add General Fieldset to form
         $form->addToForm($objFieldset->show());

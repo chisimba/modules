@@ -223,7 +223,7 @@ class mcqtests extends controller {
                 $this->setVarByRef('addmsg', $addmsg);
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'qbanklisting_tpl.php';
-                case 'mcqlisting':
+            case 'mcqlisting':
                 $test = $this->getParam('test', Null);
                 $deletemsg = $this->getParam('deletemsg', Null);
                 $addmsg = $this->getParam('addmsg', Null);
@@ -232,7 +232,7 @@ class mcqtests extends controller {
                 $this->setVarByRef('addmsg', $addmsg);
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 return 'mcqlisting_tpl.php';
-                case 'addsimplecalculated':
+            case 'addsimplecalculated':
                 $this->setLayoutTemplate("mcqtests_layout_tpl.php");
                 $submitVal = $this->getParam("submit", "Other");
                 //Empty the qn id
