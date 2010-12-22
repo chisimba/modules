@@ -20,7 +20,7 @@ if ($mode == 'add') {
 	$id = "";
 	$activity_status = "";
 } else {
-	
+
     $header->str = 'Edit Worksheet';
     $formAction = 'updateworksheet';
 	$formAction = 'saveworksheetedit';
@@ -65,13 +65,13 @@ $table->addCell($this->objLanguage->languageText('mod_worksheet_closingdatetime'
 $objDatePicker = $this->newObject('datepicker', 'htmlelements');
 $objTimePicker = $this->newObject('timepicker', 'htmlelements');
 
-if($mode == 'edit') 
+if($mode == 'edit')
 {
 	$dt = split(" ", $worksheet['closing_date']);
 	$date = split(":", $dt[0]);
 	$datestr = $date[0]."-".$date[1]."-".$date[2];
 	$time = split(":", $dt[1]);
-	
+
 	$objDatePicker->setDefaultDate($dt[0]);
 	$objTimePicker->setSelected($dt[1]);
 }
@@ -91,10 +91,14 @@ $table->endRow();
 $table->startRow();
 $table->addCell('&nbsp;');
 
-$button = new button('saveworksheet', $this->objLanguage->languageText('mod_worksheet_saveworksheet', 'worksheet', 'Save Worksheet'));
-$button->setToSubmit();
+$submitButton = new button('saveworksheet', $this->objLanguage->languageText('mod_worksheet_save', 'worksheet'));
+$submitButton->setToSubmit();
 
-$table->addCell($button->show(), NULL, NULL, NULL, NULL, 'colspan="2"');
+$cancelButton = new button('cancel', $this->objLanguage->languageText('mod_worksheet_cancel', 'worksheet'));
+$returnUrl = $this->uri(array('action' => 'home'));
+$cancelButton->setOnClick("javascript: window.location='{$returnUrl}';");
+
+$table->addCell($submitButton->show().'&nbsp;'.$cancelButton->show(), NULL, NULL, NULL, NULL, 'colspan="2"');
 $table->endRow();
 
 $form->addToForm($table->show());

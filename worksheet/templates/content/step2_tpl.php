@@ -153,7 +153,7 @@ if ($worksheet['activity_status'] == 'inactive') {
     $table->startRow();
     $table->addCell('&nbsp;');
 
-    $button = new button ('savequestion', $this->objLanguage->languageText('mod_worksheet_savequestion', 'worksheet', 'Save Question'));
+    $button = new button ('savequestion', $this->objLanguage->languageText('mod_worksheet_save', 'worksheet'));
     $button->setToSubmit();
 
     $table->addCell($button->show());
@@ -173,12 +173,13 @@ if ($worksheet['activity_status'] == 'inactive') {
 
 echo '<hr />';
 
-
+/*
 $editLink = new link ($this->uri(array('action'=>'editworksheet', 'id'=>$id)));
 $editLink->link = $this->objLanguage->languageText('mod_worksheet_editworksheet', 'worksheet', 'Edit Worksheet');
 
 $deleteLink = new link ($this->uri(array('action'=>'deleteworksheet', 'id'=>$id)));
 $deleteLink->link = $this->objLanguage->languageText('mod_worksheet_deleteworksheet', 'worksheet', 'Delete Worksheet');
+*/
 
 $infoLink = new link ($this->uri(array('action'=>'worksheetinfo', 'id'=>$id)));
 $infoLink->link = $this->objLanguage->languageText('mod_worksheet_worksheetinfo', 'worksheet', 'Worksheet Information');

@@ -52,12 +52,13 @@ echo $table->show();
 
 echo '<hr />';
 
-
+/*
 $editLink = new link ($this->uri(array('action'=>'editworksheet', 'id'=>$id)));
 $editLink->link = $this->objLanguage->languageText('mod_worksheet_editworksheet', 'worksheet', 'Edit Worksheet');
 
 $deleteLink = new link ($this->uri(array('action'=>'deleteworksheet', 'id'=>$id)));
 $deleteLink->link = $this->objLanguage->languageText('mod_worksheet_deleteworksheet', 'worksheet', 'Delete Worksheet');
+*/
 
 $questionLink = new link ($this->uri(array('action'=>'managequestions', 'id'=>$id)));
 $questionLink->link = $this->objLanguage->languageText('mod_worksheet_addremovequestions', 'worksheet', 'Add/ Edit / Remove Questions');
