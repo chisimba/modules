@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<defaultdata>
+  <!-- Table tbl_wall_posts -->
+   <tbl_wall_posts>
+        <id>init_1</id>
+        <wallpost>If you have any trouble sounding condescending, find a Unix user to show you how it done.</wallpost>
+        <datecreated>2005-03-10 22:16:25</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_2</id>
+        <wallpost>There are three kinds of death: heart death, brain death, and being off the network.</wallpost>
+        <datecreated>2005-03-10 22:17:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_3</id>
+        <wallpost>If you put garbage in a computer nothing comes out but garbage. But this garbage, having passed through a very expensive machine, is somehow ennobled and none dare criticize it</wallpost>
+        <datecreated>2005-03-10 22:18:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_4</id>
+        <wallpost>Multimedia? As far as I'm concerned, it's reading with a radio on!</wallpost>
+        <datecreated>2005-03-10 22:19:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_5</id>
+        <wallpost>Men have become the tools of their tools</wallpost>
+        <datecreated>2005-03-10 22:20:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+ 
+    <tbl_wall_posts>
+        <id>init_6</id>
+        <wallpost>http://www.youtube.com/watch?v=U6mcSXge4Qo</wallpost>
+        <datecreated>2005-03-11 22:20:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_7</id>
+        <wallpost>http://www.flickr.com/photos/dkeats/5285637280/</wallpost>
+        <datecreated>2005-03-11 22:20:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier>sitewall</identifier>
+        <walltype>0</walltype>
+   </tbl_wall_posts>
+
+   <tbl_wall_posts>
+        <id>init_8</id>
+        <wallpost>Like it or not you have to like it or not.</wallpost>
+        <datecreated>2005-03-11 22:20:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier>sitewall</identifier>
+        <walltype>0</walltype>
+   </tbl_wall_posts>
+
+</defaultdata>
