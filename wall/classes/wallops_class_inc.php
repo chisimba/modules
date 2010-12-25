@@ -63,6 +63,7 @@ class wallops extends object
 
     public $objDbwall;
     public $objUser;
+    public $objLanguage;
 
 
     /**
@@ -73,16 +74,18 @@ class wallops extends object
     */
     public function init()
     {
-        // Create an instance of the database class
+        // Create an instance of the database class.
         $this->objDbwall = & $this->getObject('dbwall', 'wall');
-        // Load jQuery Oembed
+        // Load jQuery Oembed.
         $oEmb = $this->getObject('jqoembed', 'oembed');
         $oEmb->loadOembedPlugin();
-        // Load the functions specific to this module
+        // Load the functions specific to this module.
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('functions.js'));
         $this->loadScript();
-        // Instantiate the user object
+        // Instantiate the user object.
         $this->objUser = $this->getObject('user', 'security');
+        // Instantiate the language object.
+        $this->objLanguage = & $this->getObject('language', 'language');
     }
 
     /**
@@ -98,9 +101,18 @@ class wallops extends object
     {
         $ret ="\n\n<div id='wrapper'>\n" . $this->showPostBox() . "<div id='wall'>\n";
         $posts = $this->objDbwall->getWall($wallType, $num);
+        $objDd = $this->getObject('translatedatedifference', 'utilities');
         foreach ($posts as $post) {
             $img = $this->objUser->getSmallUserImage($post['posterid'], FALSE);
-            $ret .= "<div class='msg'>\n" . $img . $post['wallpost'] . "</div>\n";
+            $ownerId = $post['ownerid'];
+            $posterId = $post['posterid'];
+            $when = $post['datecreated'];
+            $fullName = $this->objUser->fullName($posterId);
+            // Render the content for display.
+            $ret .= "<div class='msg'>\n" . $img 
+              . "<span class='wallposter'>" . $fullName . "</span><br />"
+              . $post['wallpost'] . "<br />" . $when
+              . "</div>\n";
         }
         $ret .="</div>\n</div>\n\n";
         return $ret;
@@ -116,11 +128,17 @@ class wallops extends object
     private function showPostBox()
     {
         if ( $this->objUser->isLoggedIn() ) {
+            $onlyText = $this->objLanguage->languageText("mod_wall_onlytext",
+              "wall", "No HTML, only links and text");
+            $enterText =  $this->objLanguage->languageText("mod_wall_entertext",
+              "wall", "Enter your message here...");
+            $shareText =  $this->objLanguage->languageText("mod_wall_share",
+              "wall", "Share");
             $ret = '<div id=\'updateBox\'>
-            Enter Your Message here...
+            ' . $enterText . '
             <textarea id=\'wallpost\'></textarea>
-            <button id=\'shareBtn\'>Share</button>
-            (No HTML, only links and text)
+            <button id=\'shareBtn\'>' . $shareText . '</button>
+            (' . $onlyText . ')
             <div class=\'clear\'></div>
             </div>';
         } else {
@@ -140,6 +158,7 @@ class wallops extends object
     {
         $objGuessWall = $this->getObject('wallguesser','wall');
         $wallType = $objGuessWall->guessWall();
+
         
         $target = $this->uri(array(
             'action' => 'save',

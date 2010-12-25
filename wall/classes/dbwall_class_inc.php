@@ -88,6 +88,7 @@ class dbwall extends dbtable
      */
     public function getWall($wallType, $num=10)
     {
+                        
         if ($wallType == '2') {
             // Next check if they are in a context.
             $objContext = $this->getObject('dbcontext', 'context');
@@ -95,8 +96,12 @@ class dbwall extends dbtable
                 $currentContextcode = $objContext->getcontextcode();
                 $filter = "WHERE walltype = '$wallType' AND identifier = '$currentContextcode' ORDER BY datecreated DESC LIMIT {$num}";
             }
+        } elseif ($wallType == '1') {
+            $ownerId = $this->objUser->userId();
+            $filter = "WHERE walltype = '$wallType' AND ownerid= '$ownerId' ORDER BY datecreated DESC LIMIT {$num}";
         } else {
             $filter = "WHERE walltype = '$wallType' ORDER BY datecreated DESC LIMIT {$num}";
+            
         }
         $posts = $this->getAll($filter);
         return $posts;
