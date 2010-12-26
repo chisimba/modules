@@ -158,10 +158,11 @@ class wallops extends object
     {
         $objGuessWall = $this->getObject('wallguesser','wall');
         $wallType = $objGuessWall->guessWall();
-
-        
+        $objGuessUser = $this->getObject('bestguess', 'utilities');
+        $ownerId = $objGuessUser->guessUserId();
         $target = $this->uri(array(
             'action' => 'save',
+            'ownerid' => $ownerId,
             'walltype' => $wallType
         ), 'wall');
         $target = str_replace('&amp;', "&", $target);

@@ -97,7 +97,8 @@ class dbwall extends dbtable
                 $filter = "WHERE walltype = '$wallType' AND identifier = '$currentContextcode' ORDER BY datecreated DESC LIMIT {$num}";
             }
         } elseif ($wallType == '1') {
-            $ownerId = $this->objUser->userId();
+            $objGuessUser = $this->getObject('bestguess', 'utilities');
+            $ownerId = $objGuessUser->guessUserId();
             $filter = "WHERE walltype = '$wallType' AND ownerid= '$ownerId' ORDER BY datecreated DESC LIMIT {$num}";
         } else {
             $filter = "WHERE walltype = '$wallType' ORDER BY datecreated DESC LIMIT {$num}";
@@ -121,7 +122,7 @@ class dbwall extends dbtable
     {
         $wallPost = $this->getParam('wallpost', 'empty');
         $posterId = $this->objUser->userId();
-        $ownerId = $this->objUser->userId(); // CHANGE TO BEST GUESS APPROACH
+        $ownerId = $this->getParam('ownerid', NULL);
         $objGuessWall = $this->getObject('wallguesser','wall');
         $wallType = $objGuessWall->guessWall();
         if ($wallType == '2') {
