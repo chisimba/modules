@@ -153,5 +153,23 @@ class dbimages extends dbTable
     {
         return $this->update('id', $id, array($field => $value));
     }
+
+    public function getRecentByUser($userId, $num=5)
+    {
+        $sql = 'SELECT tbl_photogallery_albums.user_id,
+          tbl_photogallery_albums.thumbnail,
+          tbl_photogallery_images.album_id,
+          tbl_photogallery_images.file_id,
+          tbl_files.id, tbl_files.path, tbl_files.filename,
+          tbl_files.datecreated,
+          tbl_files.timecreated
+        FROM tbl_photogallery_albums, tbl_photogallery_images, tbl_files
+        WHERE tbl_photogallery_albums.id = tbl_photogallery_images.album_id
+        AND tbl_photogallery_images.file_id = tbl_files.id
+        AND user_id=\'' . $userId . '\'
+        ORDER BY tbl_files.datecreated, tbl_files.timecreated DESC
+        LIMIT ' . $num;
+        return $this->getArray($sql);
+    }
 }
 ?>
