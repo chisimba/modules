@@ -158,8 +158,10 @@ class dbimages extends dbTable
     {
         $sql = 'SELECT tbl_photogallery_albums.user_id,
           tbl_photogallery_albums.thumbnail,
+          tbl_photogallery_albums.title,
           tbl_photogallery_images.album_id,
           tbl_photogallery_images.file_id,
+          tbl_photogallery_images.id AS imagecode,
           tbl_files.id, tbl_files.path, tbl_files.filename,
           tbl_files.datecreated,
           tbl_files.timecreated

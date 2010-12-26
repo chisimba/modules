@@ -117,6 +117,8 @@ class block_latestphotos extends object
     {
         $objThumbnail = $this->getObject('thumbnails','filemanager');
         $objDbGal = $this->getObject('dbimages', 'photogallery');
+
+
         // Figure out whose profile it is.
         $objGuessUser = $this->getObject('bestguess', 'utilities');
         $userId = $objGuessUser->guessUserId();
@@ -124,12 +126,15 @@ class block_latestphotos extends object
 
         $imgStrip = "<div class='gallerystrip'>";
         foreach ($photos as $photo) {
-            $path = $photo['path'];
+            $link = $this->newObject('link','htmlelements');
+            $link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $photo['album_id'],'imageid' => $photo['imagecode']));
             $fileId = $photo['file_id'];
             $filename = $photo['filename'];
             $thumbNail = $objThumbnail->getThumbnail($fileId,$filename);
-            $img = "<img src='$thumbNail' />";
-            $imgStrip .= $img;
+            $link->link = '<img class="pgthumbimage" title="' . $photo['title'] . '" src="'
+              . $thumbNail .'" alt="' . $photo['title'].'"  />';
+            $imgStrip .= "<div class='pgthumbnail'>" . $link->show() . "</div>";
+            unset($link);
         }
         $imgStrip = $imgStrip . "</div>";
         return $imgStrip;
