@@ -106,7 +106,7 @@ class wallops extends object
             $img = $this->objUser->getSmallUserImage($post['posterid'], FALSE);
             $ownerId = $post['ownerid'];
             $posterId = $post['posterid'];
-            $when = $post['datecreated'];
+            $when = $objDd->getDifference($post['datecreated']);
             $fullName = $this->objUser->fullName($posterId);
             // Render the content for display.
             $ret .= "<div class='msg'>\n" . $img 

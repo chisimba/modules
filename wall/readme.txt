@@ -46,6 +46,11 @@ wall, open
 http://localhost/ch/index.php?module=wall&walltype=personal
 Also use it as a wideblock.
 
+You can also now do
+http://localhost/ch/index.php?module=wall&walltype=personal&username=username
+or
+http://localhost/ch/index.php?module=wall&walltype=personal&userid=userid
+
 REQUIREMENTS:
 - You must update the canvas skin in the core skins
 - You must update the security module for the user images to work correctly
