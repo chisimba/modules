@@ -128,42 +128,71 @@ class dbwall extends dbtable
     */
     public function savePost()
     {
-        $wallPost = $this->getParam('wallpost', 'empty');
-        $posterId = $this->objUser->userId();
-        $ownerId = $this->getParam('ownerid', NULL);
-        $objGuessWall = $this->getObject('wallguesser','wall');
-        $wallType = $objGuessWall->guessWall();
-        if ($wallType == '2') {
-            $objContext = $this->getObject('dbcontext', 'context');
-            if($objContext->isInContext()){
-                $identifier = $objContext->getcontextcode();
+        if ($this->objUser->isLoggedIn()) {
+            $wallPost = $this->getParam('wallpost', 'empty');
+            $posterId = $this->objUser->userId();
+            $ownerId = $this->getParam('ownerid', NULL);
+            $objGuessWall = $this->getObject('wallguesser','wall');
+            $wallType = $objGuessWall->guessWall();
+            if ($wallType == '2') {
+                $objContext = $this->getObject('dbcontext', 'context');
+                if($objContext->isInContext()){
+                    $identifier = $objContext->getcontextcode();
+                } else {
+                    $identifier = NULL;
+                }
+            } elseif ($wallType == '0') {
+                $identifier="sitewall";
             } else {
-                $identifier = NULL;
+                $identifier=NULL;
             }
-        } elseif ($wallType == '0') {
-            $identifier="sitewall";
-        } else {
-            $identifier=NULL;
-        }
-        if ($wallPost !=='empty') {
-            try
-            {
-                $this->insert(array(
-                    'wallpost' => $wallPost,
-                    'posterid' => $posterId,
-                    'ownerid' => $ownerId,
-                    'identifier' => $identifier,
-                    'walltype' => $wallType,
-                    'datecreated' => $this->now()));
-                return 'true';
-            } catch (customException $e)
-            {
-        	echo customException::cleanUp($e);
-        	die();
+            if ($wallPost !=='empty') {
+                try
+                {
+                    $this->insert(array(
+                        'wallpost' => $wallPost,
+                        'posterid' => $posterId,
+                        'ownerid' => $ownerId,
+                        'identifier' => $identifier,
+                        'walltype' => $wallType,
+                        'datecreated' => $this->now()));
+                    return 'true';
+                } catch (customException $e)
+                {
+                    echo customException::cleanUp($e);
+                    die();
+                }
+            } else {
+                return 'empty';
             }
         } else {
-            return 'empty';
+            return 'spoofattemptfailure';
         }
+    }
+
+    /**
+     *
+     * Delete a wall post
+     *
+     * @param string $id The id key of the record to delete
+     * @return string An indication of the reuslts ('true' or 'norights')
+     *
+     */
+    public function deletePost($id)
+    {
+        $chSql = "SELECT id, posterid, ownerid FROM tbl_wall_posts WHERE id='$id'";
+        $ar = $this->getArray($chSql);
+        $me = $this->objUser->userId();
+        $posterid = $ar[0]['posterid'];
+        $ownerid =  $ar[0]['ownerid'];
+        if ($me == $posterid || $me = $ownerid) {
+            // I can delete
+            $this->delete('id', $id);
+            return "true";
+        } else {
+            return 'norights';
+        }
+
     }
 }
 ?>

@@ -82,6 +82,7 @@ class wallops extends object
         // Load the functions specific to this module.
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('functions.js'));
         $this->loadScript();
+        $this->loadDeleteScript();
         // Instantiate the user object.
         $this->objUser = $this->getObject('user', 'security');
         // Instantiate the language object.
@@ -102,15 +103,47 @@ class wallops extends object
         $ret ="\n\n<div id='wrapper'>\n" . $this->showPostBox() . "<div id='wall'>\n";
         $posts = $this->objDbwall->getWall($wallType, $num);
         $objDd = $this->getObject('translatedatedifference', 'utilities');
+        // See if they are in myprofile else default link to wall
+        $currentModule = $this->getParam('module', 'wall');
+        // Get the current user Id
+        $myUserId = $this->objUser->userId();
         foreach ($posts as $post) {
             $img = $this->objUser->getSmallUserImage($post['posterid'], FALSE);
             $when = $objDd->getDifference($post['datecreated']);
             $fullName = $post['firstname'] . " " . $post['surname'];
+            if ($currentModule == 'myprofile') {
+                $fnLink = $this->uri(array(
+                    'username' => $post['username']
+                ), 'myprofile');
+            } else {
+                $fnLink = $this->uri(array(
+                    'walltype' => 'personal',
+                    'username' => $post['username']
+                ), 'wall');
+            }
+
+            $fullName = '<a href="' . $fnLink . '">' . $fullName . '</a>';
+            // Get the id for the id of the display div
+            $id = $post['id'];
+            if ($myUserId == $post['posterid']) {
+                $delLink = $this->uri(array(
+                  'action' => 'delete',
+                  'id' => $id
+                ), 'wall');
+                $delLink="#";
+                $delLink = str_replace('&amp;', '&', $delLink);
+                $del = '<a class="delpost" id="'
+                  . $id . '" href="' . $delLink . '">X</a>';
+            } else {
+                $del = NULL;
+            }
+
             // Render the content for display.
-            $ret .= "<div class='msg'>\n" . $img 
-              . "<span class='wallposter'>" . $fullName . "</span><br />"
+            $ret .= "<div class='wallpostrow'>$del<div class='msg'>\n" . $img
+              . "<span class='wallposter'>" . $fullName 
+              . "</span><br />"
               . $post['wallpost'] . "<br />" . $when
-              . "</div>\n";
+              . "</div>\n</div>\n"; //"  "
         }
         $ret .="</div>\n</div>\n\n";
         return $ret;
@@ -200,6 +233,38 @@ jQuery(function(){
 });
 </script>';
         $this->appendArrayVar('headerParams', $script);
+    }
+
+    public function loadDeleteScript()
+    {
+        $script = '<script type="text/javascript">
+            jQuery(function() {
+            jQuery(".delpost").click(function() {
+            var commentContainer = jQuery(this).parent();
+            var id = jQuery(this).attr("id");
+            var string = \'id=\'+ id ;
+
+            jQuery.ajax({
+               type: "POST",
+               url: "index.php?module=wall&action=delete&id=" + id,
+               data: string,
+               cache: false,
+               success: function(ret){
+                   if(ret == "true") {
+                       commentContainer.slideUp(\'slow\', function() {jQuery(this).remove();});
+                   } else {
+                       alert(ret);
+                   }
+              }
+
+             });
+
+            return false;
+                    });
+            });
+
+            </script>';
+    $this->appendArrayVar('headerParams', $script);
     }
 }
 ?>

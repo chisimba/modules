@@ -161,12 +161,12 @@ class wall extends controller
     */
     private function __delete()
     {
-        // retrieve the confirmation code from the querystring
-        $confirm=$this->getParam("confirm", "no");
-        if ($confirm=="yes") {
-            $this->deleteItem();
-            return $this->nextAction(NULL);
+        //*/*/ retrieve the confirmation code from the querystring
+        $id=$this->getParam("id", FALSE);
+        if ($id) {
+            echo $this->objDbwall->deletePost($id);
         }
+        die();
     }
     
     
