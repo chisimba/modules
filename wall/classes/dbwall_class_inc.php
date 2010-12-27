@@ -88,23 +88,31 @@ class dbwall extends dbtable
      */
     public function getWall($wallType, $num=10)
     {
+
+        $baseSql = 'SELECT tbl_wall_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username
+            FROM tbl_wall_posts, tbl_users
+            WHERE tbl_wall_posts.posterId = tbl_users.userid';
                         
         if ($wallType == '2') {
             // Next check if they are in a context.
             $objContext = $this->getObject('dbcontext', 'context');
             if($objContext->isInContext()){
                 $currentContextcode = $objContext->getcontextcode();
-                $filter = "WHERE walltype = '$wallType' AND identifier = '$currentContextcode' ORDER BY datecreated DESC LIMIT {$num}";
+                $filter = " AND walltype = '$wallType' AND identifier = '$currentContextcode' ORDER BY datecreated DESC LIMIT {$num}";
             }
         } elseif ($wallType == '1') {
             $objGuessUser = $this->getObject('bestguess', 'utilities');
             $ownerId = $objGuessUser->guessUserId();
-            $filter = "WHERE walltype = '$wallType' AND ownerid= '$ownerId' ORDER BY datecreated DESC LIMIT {$num}";
+            $filter = " AND walltype = '$wallType' AND ownerid= '$ownerId' ORDER BY datecreated DESC LIMIT {$num}";
         } else {
-            $filter = "WHERE walltype = '$wallType' ORDER BY datecreated DESC LIMIT {$num}";
+            $filter = " AND walltype = '$wallType' ORDER BY datecreated DESC LIMIT {$num}";
             
         }
-        $posts = $this->getAll($filter);
+        $posts = $this->getArray($baseSql . $filter);
         return $posts;
     }
 

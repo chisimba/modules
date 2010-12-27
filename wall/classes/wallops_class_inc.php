@@ -104,10 +104,8 @@ class wallops extends object
         $objDd = $this->getObject('translatedatedifference', 'utilities');
         foreach ($posts as $post) {
             $img = $this->objUser->getSmallUserImage($post['posterid'], FALSE);
-            $ownerId = $post['ownerid'];
-            $posterId = $post['posterid'];
             $when = $objDd->getDifference($post['datecreated']);
-            $fullName = $this->objUser->fullName($posterId);
+            $fullName = $post['firstname'] . " " . $post['surname'];
             // Render the content for display.
             $ret .= "<div class='msg'>\n" . $img 
               . "<span class='wallposter'>" . $fullName . "</span><br />"
