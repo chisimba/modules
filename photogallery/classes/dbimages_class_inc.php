@@ -154,6 +154,17 @@ class dbimages extends dbTable
         return $this->update('id', $id, array($field => $value));
     }
 
+    /**
+     *
+     * Get the most recent image uploads by a given user, hopefully using
+     * reasonably optimal SQL method. This just returns the data, not the
+     * actual images.
+     *
+     * @param string $userId The id of the user for whom to return images
+     * @param integer $num The number of images to return
+     * @return string array An array of image information
+     * 
+     */
     public function getRecentByUser($userId, $num=5)
     {
         $sql = 'SELECT tbl_photogallery_albums.user_id,
