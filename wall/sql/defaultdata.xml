@@ -69,11 +69,133 @@
    <tbl_wall_posts>
         <id>init_8</id>
         <wallpost>Like it or not you have to like it or not.</wallpost>
-        <datecreated>2005-03-11 22:20:32</datecreated>
+        <datecreated>2010-12-26 22:20:32</datecreated>
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier>sitewall</identifier>
         <walltype>0</walltype>
    </tbl_wall_posts>
 
+   <tbl_wall_posts>
+        <id>init_9</id>
+        <wallpost>Morbi cursus consectetur hendrerit. Integer varius nisi nec lorem placerat in malesuada est elementum. Nullam id nibh vel diam scelerisque fringilla non vitae magna.</wallpost>
+        <datecreated>2010-12-26 00:20:32</datecreated>
+        <posterid>2</posterid>
+        <ownerid>1</ownerid>
+        <identifier>sitewall</identifier>
+        <walltype>0</walltype>
+   </tbl_wall_posts>
+
+   <tbl_wall_posts>
+        <id>init_10</id>
+        <wallpost>Cras sed libero diam, non feugiat risus. Sed porttitor lacus id purus eleifend ultricies id at ligula. </wallpost>
+        <datecreated>2010-12-26 02:20:32</datecreated>
+        <posterid>3</posterid>
+        <ownerid>1</ownerid>
+        <identifier>sitewall</identifier>
+        <walltype>0</walltype>
+   </tbl_wall_posts>
+
+
+
+  <!-- Table tbl_wall_comments where the comments live -->
+   <tbl_wall_comments>
+       <id>init_1</id>
+       <parentid>init_8</parentid>
+       <wallcomment>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ultrices lacinia interdum. </wallcomment>
+       <datecreated>2010-12-27 22:20:32</datecreated>
+       <posterid>1</posterid>
+   </tbl_wall_comments>
+
+   <tbl_wall_comments>
+       <id>init_1</id>
+       <parentid>init_8</parentid>
+       <wallcomment>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. </wallcomment>
+       <datecreated>2010-12-27 22:21:33</datecreated>
+       <posterid>1</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_1</id>
+       <parentid>init_1</parentid>
+       <wallcomment>Nullam non justo lectus. Etiam volutpat, nibh non iaculis tempor, risus purus sagittis magna, ac egestas massa purus ut nulla.</wallcomment>
+       <datecreated>2010-12-27 22:21:33</datecreated>
+       <posterid>2</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_2</id>
+       <parentid>init_2</parentid>
+       <wallcomment>Donec nec nibh eros, ac imperdiet augue. Phasellus sed ornare risus. Duis vehicula malesuada est, et venenatis leo faucibus nec. </wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>3</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_2</id>
+       <parentid>init_2</parentid>
+       <wallcomment>Fusce posuere rutrum mi quis semper. Proin nibh tellus, luctus sit amet tincidunt sed, scelerisque a diam. </wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>2</posterid>
+   </tbl_wall_comments>
+
+
+
+
+
+
+
+
+  <!-- Table tbl_users create some test users for the comments-->
+    <tbl_users>
+        <id>init_2</id>
+        <userId>2</userId>
+        <username>ekeats</username>
+        <title>Dr</title>
+        <firstName>Esther</firstName>
+        <surname>Keats</surname>
+        <PASS>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</PASS>
+        <creationDate>2006-01-01</creationDate>
+        <emailAddress>ekeats@localhost.local</emailAddress>
+        <logins>0</logins>
+        <sex>F</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isActive>1</isActive>
+        <howCreated>install</howCreated>
+        <updated>2006-07-12</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_3</id>
+        <userId>3</userId>
+        <username>jkeats</username>
+        <title>Dr</title>
+        <firstName>Jamie</firstName>
+        <surname>Keats</surname>
+        <PASS>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</PASS>
+        <creationDate>2006-01-01</creationDate>
+        <emailAddress>jkeats@localhost.local</emailAddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isActive>1</isActive>
+        <howCreated>install</howCreated>
+        <updated>2006-07-12</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_4</id>
+        <userId>4</userId>
+        <username>mkeats</username>
+        <title>Dr</title>
+        <firstName>Melissa</firstName>
+        <surname>Keats</surname>
+        <PASS>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</PASS>
+        <creationDate>2006-01-01</creationDate>
+        <emailAddress>mkeats@localhost.local</emailAddress>
+        <logins>0</logins>
+        <sex>F</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isActive>1</isActive>
+        <howCreated>install</howCreated>
+        <updated>2006-07-12</updated>
+    </tbl_users>
 </defaultdata>

@@ -81,12 +81,12 @@ class wallops extends object
         $oEmb->loadOembedPlugin();
         // Load the functions specific to this module.
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('functions.js'));
-        $this->loadScript();
-        $this->loadDeleteScript();
         // Instantiate the user object.
         $this->objUser = $this->getObject('user', 'security');
         // Instantiate the language object.
         $this->objLanguage = & $this->getObject('language', 'language');
+        $this->loadScript();
+        $this->loadDeleteScript();
     }
 
     /**
@@ -111,6 +111,7 @@ class wallops extends object
             $img = $this->objUser->getSmallUserImage($post['posterid'], FALSE);
             $when = $objDd->getDifference($post['datecreated']);
             $fullName = $post['firstname'] . " " . $post['surname'];
+            $replies = $post['replies'];
             if ($currentModule == 'myprofile') {
                 $fnLink = $this->uri(array(
                     'username' => $post['username']
@@ -143,7 +144,7 @@ class wallops extends object
               . "<span class='wallposter'>" . $fullName 
               . "</span><br />"
               . $post['wallpost'] . "<br />" . $when
-              . "</div>\n</div>\n"; //"  "
+              . "</div>\n" . $this->getReplyLink($id) . ">>>" . $replies . "<<<<" .  $this->getReplies() . "</div>\n"; //"  "
         }
         $ret .="</div>\n</div>\n\n";
         return $ret;
@@ -197,6 +198,25 @@ class wallops extends object
             'walltype' => $wallType
         ), 'wall');
         $target = str_replace('&amp;', "&", $target);
+        $myUserId = $this->objUser->userId();
+        $me = $this->objUser->fullName();
+        //$un = $this->objUser->userName();
+        //$currentModule = $this->getParam('module', 'wall');
+        //if ($currentModule == 'myprofile') {
+        //    $fnLink = $this->uri(array(
+        //        'username' => $un
+        //    ), 'myprofile');
+        //} else {
+        //    $fnLink = $this->uri(array(
+        //        'walltype' => 'personal',
+        //        'username' => $un
+        //    ), 'wall');
+        //}
+
+        //$me = '<a href="' . $fnLink . '">' . $fn . '</a>';
+
+        $img = $this->objUser->getSmallUserImage();
+        $me =  "<span class='wallposter'>" . $me . "</span>";
         $script = '<script type=\'text/javascript\'>
 jQuery(function(){
 	jQuery(".msg a").oembed(null, {
@@ -219,7 +239,7 @@ jQuery(function(){
 					jQuery("#wallpost").val("");
 					jQuery("#wallpost").attr("disabled", "");
 					if(msg == "true") {
-						jQuery("#wall").prepend("<div class=\'msg\'>"+status_text+"</div>");
+						jQuery("#wall").prepend("<div class=\'wallpostrow\'>' . $me . '<div class=\'msg\'>"+status_text+"</div></div>");
 						jQuery(".msg:first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
 					} else {
                                                 alert(msg);
@@ -235,6 +255,16 @@ jQuery(function(){
         $this->appendArrayVar('headerParams', $script);
     }
 
+    /**
+     *
+     * Load the script for deleting a post into the page header.
+     *
+     * @TODO change it to work with comments too
+     *
+     * @return VOID
+     * @access public
+     *
+     */
     public function loadDeleteScript()
     {
         $script = '<script type="text/javascript">
@@ -264,7 +294,18 @@ jQuery(function(){
             });
 
             </script>';
-    $this->appendArrayVar('headerParams', $script);
+        $this->appendArrayVar('headerParams', $script);
+    }
+
+
+    public function getReplies()
+    {
+        return "<ol class='wall_replies'><li>First reply</li><li>Second reply</li></ol>";
+    }
+
+    public function getReplyLink($id)
+    {
+        return "<div class='wall_replylink'>Reply $id</div>";
     }
 }
 ?>

@@ -89,13 +89,26 @@ class dbwall extends dbtable
     public function getWall($wallType, $num=10)
     {
 
-        $baseSql = 'SELECT tbl_wall_posts.*,
+        $baseSql_______OLD = 'SELECT tbl_wall_posts.*,
               tbl_users.userid,
               tbl_users.firstname,
               tbl_users.surname,
               tbl_users.username
             FROM tbl_wall_posts, tbl_users
             WHERE tbl_wall_posts.posterId = tbl_users.userid';
+
+        $baseSql = 'SELECT tbl_wall_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username,
+              (SELECT COUNT(tbl_wall_comments.parentid)
+                   FROM tbl_wall_comments
+                   WHERE tbl_wall_comments.parentid = tbl_wall_posts.id
+              ) AS replies
+              FROM tbl_wall_posts, tbl_users, tbl_wall_comments
+              WHERE tbl_wall_posts.posterId = tbl_users.userid';
+
                         
         if ($wallType == '2') {
             // Next check if they are in a context.

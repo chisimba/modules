@@ -31,8 +31,7 @@ $fields = array(
 		'length' => 50,
 		),
 	'wallpost' => array(
-		'type' => 'text',
-		'length' => 255,
+		'type' => 'clob',
 		),
 	);
 
