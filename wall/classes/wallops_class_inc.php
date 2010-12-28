@@ -100,18 +100,59 @@ class wallops extends object
      */
     public function showWall($wallType, $num=10)
     {
+        $comments = NULL;
         $ret ="\n\n<div id='wrapper'>\n" . $this->showPostBox() . "<div id='wall'>\n";
         $posts = $this->objDbwall->getWall($wallType, $num);
         $objDd = $this->getObject('translatedatedifference', 'utilities');
+        $objCommentDb = $this->getObject('dbcomment', 'wall');
         // See if they are in myprofile else default link to wall
         $currentModule = $this->getParam('module', 'wall');
         // Get the current user Id
         $myUserId = $this->objUser->userId();
         foreach ($posts as $post) {
+            $comments = NULL;
             $img = $this->objUser->getSmallUserImage($post['posterid'], FALSE);
             $when = $objDd->getDifference($post['datecreated']);
             $fullName = $post['firstname'] . " " . $post['surname'];
+            $id = $post['id'];
             $replies = $post['replies'];
+            // If there are fewer than 3 replies, show them all, otherwise get last 3
+            if ($replies > 0) {
+                // Get the last three replies.
+                $commentAr = $objCommentDb->getComments($id, 3);
+                if ($replies > 3) {
+                    // Let us know that there are more
+                    $showMoreReplies = "View all $replies replies."; // MULTILINGUALISE-------------------------------------------------------
+                } else {
+                    $showMoreReplies = NULL;
+                }
+                $comments = "<ol class='wall_replies'>";
+                foreach ($commentAr as $comment) {
+                    $commentWhen = $objDd->getDifference($post['datecreated']);
+                    $commentFn = $comment['firstname']. " " . $comment['surname'];
+                    if ($currentModule == 'myprofile') {
+                        $cfnLink = $this->uri(array(
+                            'username' => $comment['username']
+                        ), 'myprofile');
+                    } else {
+                        $cfnLink = $this->uri(array(
+                            'walltype' => 'personal',
+                            'username' => $comment['username']
+                        ), 'wall');
+                    }
+                    $commentFn = '<a href="' . $cfnLink . '">' . $commentFn . '</a>';
+                    $comments .= "<li><span class='wall_comment_author'>" 
+                    . $commentFn . "</span>&nbsp;&nbsp;" . $comment['wallcomment']
+                    . "<br /><span class='wall_comment_when'>"
+                    . $commentWhen . "</span></li>";
+                }
+                $comments = $comments . "</ol>";
+                $repliesNotice = $replies . ' '
+                  . $this->objLanguage->languageText('mod_wall_replies', 'wall', 'replies');
+            } else {
+                $repliesNotice = $this->objLanguage->languageText('mod_wall_noreplies', 'wall', 'No replies');
+            }
+
             if ($currentModule == 'myprofile') {
                 $fnLink = $this->uri(array(
                     'username' => $post['username']
@@ -124,8 +165,6 @@ class wallops extends object
             }
 
             $fullName = '<a href="' . $fnLink . '">' . $fullName . '</a>';
-            // Get the id for the id of the display div
-            $id = $post['id'];
             if ($myUserId == $post['posterid']) {
                 $delLink = $this->uri(array(
                   'action' => 'delete',
@@ -144,7 +183,8 @@ class wallops extends object
               . "<span class='wallposter'>" . $fullName 
               . "</span><br />"
               . $post['wallpost'] . "<br />" . $when
-              . "</div>\n" . $this->getReplyLink($id) . ">>>" . $replies . "<<<<" .  $this->getReplies() . "</div>\n"; //"  "
+              . "&nbsp;&nbsp;&nbsp;&nbsp;" . $repliesNotice
+              . "</div>\n" . $comments . $this->getReplyLink($id) . "</div>\n"; //"  "
         }
         $ret .="</div>\n</div>\n\n";
         return $ret;

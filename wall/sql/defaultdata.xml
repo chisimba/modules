@@ -13,7 +13,7 @@
    <tbl_wall_posts>
         <id>init_2</id>
         <wallpost>There are three kinds of death: heart death, brain death, and being off the network.</wallpost>
-        <datecreated>2005-03-10 22:17:32</datecreated>
+        <datecreated>2010-12-10 22:17:32</datecreated>
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
@@ -22,7 +22,7 @@
    <tbl_wall_posts>
         <id>init_3</id>
         <wallpost>If you put garbage in a computer nothing comes out but garbage. But this garbage, having passed through a very expensive machine, is somehow ennobled and none dare criticize it</wallpost>
-        <datecreated>2005-03-10 22:18:32</datecreated>
+        <datecreated>2010-12-23 22:18:32</datecreated>
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
@@ -85,18 +85,42 @@
         <identifier>sitewall</identifier>
         <walltype>0</walltype>
    </tbl_wall_posts>
-
    <tbl_wall_posts>
         <id>init_10</id>
         <wallpost>Cras sed libero diam, non feugiat risus. Sed porttitor lacus id purus eleifend ultricies id at ligula. </wallpost>
         <datecreated>2010-12-26 02:20:32</datecreated>
         <posterid>3</posterid>
         <ownerid>1</ownerid>
-        <identifier>sitewall</identifier>
-        <walltype>0</walltype>
+        <identifier></identifier>
+        <walltype>1</walltype>
    </tbl_wall_posts>
-
-
+   <tbl_wall_posts>
+        <id>init_11</id>
+        <wallpost>Phasellus molestie, augue vitae rhoncus suscipit, massa libero vehicula urna, vel fringilla ipsum risus a eros. </wallpost>
+        <datecreated>2010-12-28 15:20:32</datecreated>
+        <posterid>5</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_12</id>
+        <wallpost>Donec nisl eros, pharetra vitae rutrum ut, eleifend eu sapien. Sed fermentum pellentesque nibh sed lacinia.</wallpost>
+        <datecreated>2010-12-28 15:20:32</datecreated>
+        <posterid>5</posterid>
+        <ownerid>2</ownerid>
+        <identifier></identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_12</id>
+        <wallpost>Aliquam erat turpis, lacinia eu sollicitudin vitae, condimentum quis nunc. Mauris risus turpis.</wallpost>
+        <datecreated>2010-12-28 15:20:32</datecreated>
+        <posterid>4</posterid>
+        <ownerid>2</ownerid>
+        <identifier></identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
 
   <!-- Table tbl_wall_comments where the comments live -->
    <tbl_wall_comments>
@@ -104,36 +128,56 @@
        <parentid>init_8</parentid>
        <wallcomment>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ultrices lacinia interdum. </wallcomment>
        <datecreated>2010-12-27 22:20:32</datecreated>
-       <posterid>1</posterid>
+       <posterid>2</posterid>
    </tbl_wall_comments>
-
    <tbl_wall_comments>
-       <id>init_1</id>
+       <id>init_2</id>
        <parentid>init_8</parentid>
        <wallcomment>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. </wallcomment>
        <datecreated>2010-12-27 22:21:33</datecreated>
-       <posterid>1</posterid>
+       <posterid>3</posterid>
    </tbl_wall_comments>
    <tbl_wall_comments>
-       <id>init_1</id>
+       <id>init_3</id>
        <parentid>init_1</parentid>
        <wallcomment>Nullam non justo lectus. Etiam volutpat, nibh non iaculis tempor, risus purus sagittis magna, ac egestas massa purus ut nulla.</wallcomment>
        <datecreated>2010-12-27 22:21:33</datecreated>
        <posterid>2</posterid>
    </tbl_wall_comments>
    <tbl_wall_comments>
-       <id>init_2</id>
+       <id>init_4</id>
        <parentid>init_2</parentid>
        <wallcomment>Donec nec nibh eros, ac imperdiet augue. Phasellus sed ornare risus. Duis vehicula malesuada est, et venenatis leo faucibus nec. </wallcomment>
        <datecreated>2010-12-27 22:24:33</datecreated>
        <posterid>3</posterid>
    </tbl_wall_comments>
    <tbl_wall_comments>
-       <id>init_2</id>
+       <id>init_5</id>
        <parentid>init_2</parentid>
        <wallcomment>Fusce posuere rutrum mi quis semper. Proin nibh tellus, luctus sit amet tincidunt sed, scelerisque a diam. </wallcomment>
        <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>4</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_6</id>
+       <parentid>init_2</parentid>
+       <wallcomment>Cras hendrerit leo eros. In sit amet dolor et elit commodo gravida a at enim. Curabitur mollis nulla at ligula pretium lobortis.</wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>3</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_7</id>
+       <parentid>init_2</parentid>
+       <wallcomment>Integer aliquam sapien sit amet urna gravida sed consequat urna pharetra. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
        <posterid>2</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_8</id>
+       <parentid>init_3</parentid>
+       <wallcomment>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur facilisis augue in leo euismod interdum. </wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>5</posterid>
    </tbl_wall_comments>
 
 
@@ -192,6 +236,42 @@
         <emailAddress>mkeats@localhost.local</emailAddress>
         <logins>0</logins>
         <sex>F</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isActive>1</isActive>
+        <howCreated>install</howCreated>
+        <updated>2006-07-12</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_5</id>
+        <userId>5</userId>
+        <username>szulu</username>
+        <title>Dr</title>
+        <firstName>Shaka</firstName>
+        <surname>Zulu</surname>
+        <PASS>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</PASS>
+        <creationDate>2006-01-01</creationDate>
+        <emailAddress>szulu@localhost.local</emailAddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isActive>1</isActive>
+        <howCreated>install</howCreated>
+        <updated>2006-07-12</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_6</id>
+        <userId>6</userId>
+        <username>tmbeki</username>
+        <title>Dr</title>
+        <firstName>Thabo</firstName>
+        <surname>Mbeki</surname>
+        <PASS>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</PASS>
+        <creationDate>2006-01-01</creationDate>
+        <emailAddress>szulu@localhost.local</emailAddress>
+        <logins>0</logins>
+        <sex>M</sex>
         <country>ZA</country>
         <accesslevel>1</accesslevel>
         <isActive>1</isActive>

@@ -54,7 +54,7 @@ $GLOBALS['kewl_entry_point_run'])
 * @package wall
 *
 */
-class dbwall extends dbtable
+class dbcomment extends dbtable
 {
     /**
     *
@@ -73,53 +73,52 @@ class dbwall extends dbtable
     public function init()
     {
         //Set the parent table here
-        parent::init('tbl_wall_posts');
+        parent::init('tbl_wall_comments');
         $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
      *
-     * Default method to get the wall data as an array
+     * Default method to get the comment data as an array
      *
      * @param string $wallType The wall type (0=site wall, 1=personal or user wall, 2=context wall)
      * @param integer $num The number of results to return, defaulting to 10
      * @return string array An array of posts
      *
      */
-    public function getWall($wallType, $num=10)
+    public function getComments($id, $num=10)
     {
-        // The base SQL, uses joins to avoid going back and forth to the db
-        $baseSql = 'SELECT tbl_wall_posts.*,
-              tbl_users.userid,
-              tbl_users.firstname,
-              tbl_users.surname,
-              tbl_users.username,
-              (SELECT COUNT(tbl_wall_comments.parentid)
-                   FROM tbl_wall_comments
-                   WHERE tbl_wall_comments.parentid = tbl_wall_posts.id
-              ) AS replies
-              FROM tbl_wall_posts, tbl_users
-              WHERE tbl_wall_posts.posterId = tbl_users.userid';
+        $sql = 'SELECT tbl_wall_comments.*,
+          tbl_users.userid,
+          tbl_users.firstname,
+          tbl_users.surname,
+          tbl_users.username
+        FROM tbl_wall_comments, tbl_users
+        WHERE tbl_wall_comments.posterId = tbl_users.userid
+        AND tbl_wall_comments.parentid = \'' .$id . '\'
+        ORDER BY datecreated DESC
+        LIMIT ' . $num;
+        return $this->getArray($sql);
 
-                        
-        if ($wallType == '2') {
-            // Next check if they are in a context.
-            $objContext = $this->getObject('dbcontext', 'context');
-            if($objContext->isInContext()){
-                $currentContextcode = $objContext->getcontextcode();
-                $filter = " AND walltype = '$wallType' AND identifier = '$currentContextcode' ORDER BY datecreated DESC LIMIT {$num}";
-            }
-        } elseif ($wallType == '1') {
-            $objGuessUser = $this->getObject('bestguess', 'utilities');
-            $ownerId = $objGuessUser->guessUserId();
-            $filter = " AND walltype = '$wallType' AND ownerid= '$ownerId' ORDER BY datecreated DESC LIMIT {$num}";
-        } else {
-            $filter = " AND walltype = '$wallType' ORDER BY datecreated DESC LIMIT {$num}";
-            
-        }
-        $posts = $this->getArray($baseSql . $filter);
-        return $posts;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     /**
     *
