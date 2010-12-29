@@ -259,6 +259,19 @@ class blogcomments extends controller
                 break;
 
             case 'unapproved':
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $comments = $this->getParam('comment', array());
+                    foreach ($comments as $id => $action) {
+                        switch ($action) {
+                            case 'approve':
+                                $this->objDbcomm->approveComment($id);
+                                break;
+                            case 'delete':
+                                $this->objDbcomm->deleteComment($id);
+                                break;
+                        }
+                    }
+                }
                 $comments = $this->objDbcomm->grabUnapprovedComments();
                 foreach ($comments as &$comment) {
                     $post = $this->objDbBlog->getPostById($comment['comment_parentid']);
