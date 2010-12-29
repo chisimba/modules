@@ -90,7 +90,7 @@ class wall extends controller
         // Create an instance of the database class.
         $this->objDbwall = & $this->getObject('dbwall', 'wall');
         $this->objLanguage = & $this->getObject('language', 'language');
-        $this->setVar('JQUERY_VERSION', '1.4.4');
+        $this->setVar('JQUERY_VERSION', '1.4.2');
     }
     
     
