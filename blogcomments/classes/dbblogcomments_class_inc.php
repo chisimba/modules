@@ -135,11 +135,18 @@ class dbblogcomments extends dbTable
      * Method to return all unmoderated comments.
      *
      * @access public
+     * @param  string $userid The user id to filter by. Null for all.
      * @return array
      */
-    public function grabUnapprovedComments()
+    public function grabUnapprovedComments($userid=NULL)
     {
-        return $this->getAll('WHERE comment_approved = 0 ORDER BY comment_date DESC');
+        if (is_string($userid)) {
+            $sql = 'WHERE comment_approved = 0 AND userid = "'.$userid.'" ORDER BY comment_date DESC';
+        } else {
+            $sql = 'WHERE comment_approved = 0 ORDER BY comment_date DESC';
+        }
+
+        return $this->getAll($sql);
     }
 
     /**
