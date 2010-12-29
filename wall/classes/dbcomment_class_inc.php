@@ -142,45 +142,18 @@ class dbcomment extends dbtable
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
     /**
      *
-     * Delete a wall post
+     * Delete all comments associated with a wall post
      *
      * @param string $id The id key of the record to delete
      * @return string An indication of the reuslts ('true' or 'norights')
      *
      */
-    public function deletePost($id)
+    public function deleteAssociatedComments($id)
     {
-        $chSql = "SELECT id, posterid, ownerid FROM tbl_wall_posts WHERE id='$id'";
-        $ar = $this->getArray($chSql);
-        $me = $this->objUser->userId();
-        $posterid = $ar[0]['posterid'];
-        $ownerid =  $ar[0]['ownerid'];
-        if ($me == $posterid || $me = $ownerid) {
-            // I can delete
-            $this->delete('id', $id);
-            return "true";
-        } else {
-            return 'norights';
-        }
-
+        $this->delete('parentid', $id);
+        return "true";
     }
 }
 ?>

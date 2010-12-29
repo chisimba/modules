@@ -146,7 +146,7 @@ class wallops extends object
                     . "<br /><div class='wall_comment_when'>"
                     . $commentWhen . "</div></li>";
                 }
-                $comments = $this->createCommentBlock($comments);
+                $comments = $this->createCommentBlock($comments, $id);
                 $repliesNotice = $replies . ' '
                   . $this->objLanguage->languageText(
                      'mod_wall_replies', 'wall', 'replies');
@@ -181,7 +181,7 @@ class wallops extends object
             }
 
             // Render the content for display.
-            $ret .= "<div class='wallpostrow'>$del<div class='msg'>\n" . $img
+            $ret .= "<div class='wallpostrow' id='wpr__" . $id . "'>$del<div class='msg'>\n" . $img
               . "<span class='wallposter'>" . $fullName 
               . "</span><br />"
               . $post['wallpost'] . "</div><div class='wall_post_info'>" . $when
@@ -195,9 +195,19 @@ class wallops extends object
     }
 
 
-    public function createCommentBlock($comments)
+    /**
+     *
+     * Build the coment block
+     *
+     * @param string $comments The contents of the comment block
+     * @return string The rendered block
+     *
+     */
+    public function createCommentBlock($comments, $id)
     {
-        $blockTop = "\n\n<div class='wall_comments_top'></div><ol class='wall_replies'>";
+        // Tag it with the ID so we can write back to it from Javascript
+        $blockTop = "\n\n<div class='wall_comments_top'></div>" 
+          . "<ol class='wall_replies' id='wct_" . $id . "'>";
         $blockBottom = "</ol><div class='wall_comments_bottom'></div>\n\n";
         return $blockTop . "\n" . $comments . "\n" . $blockBottom;
     }
@@ -372,17 +382,30 @@ jQuery(function(){
                     if(comment_text.length == 0) {
                         return;
                     } else {
+                        jQuery("#ct_"+id).attr("disabled", "disabled");
                         jQuery.ajax({
                             type: "POST",
                             url: "index.php?module=wall&action=addcomment&id=" + id,
                             data: "comment_text="+comment_text,
                             success: function(ret) {
                                 if(ret == "true") {
-                                   alert("comment posted");
+                                    jQuery("#ct_"+id).attr("disabled", "");
+                                    var fixedid = id.replace("cb_", "");
+                                    // The comment blocks have ids starting with wct_
+                                    if ( jQuery("#wct_"+fixedid).length > 0 ) {
+                                        jQuery("#wct_"+fixedid).prepend(\'<li><b><span class="wall_comment_author">You said</span></b>&nbsp; \'+comment_text+\'&nbsp;<div class="wall_comment_when"><strong>a few seconds ago</strong></div></li>\');
+                                    } else {
+                                        if ( jQuery("#wpr__"+fixedid).length > 0 ) {
+                                            jQuery("#wpr__"+fixedid).append(\'<br /><br /><div class="wall_comments_top"></div><ol class="wall_replies" id="wct_\'+fixedid+\'"><li><b><span class="wall_comment_author">You said</span></b>&nbsp;\'+comment_text+\'<div class="wall_comment_when"><strong>a few seconds ago</strong></div></li></ol>\');
+                                            jQuery("#c__"+fixedid).slideToggle(300);
+                                        } else {
+                                            alert(\'Nothing to append to\');
+                                        }
+                                    }
+                                    jQuery("#ct_"+id).val("");
                                 } else {
-                                   alert(ret);
+                                    alert(ret);
                                 }
-                                alert(msg);
                             }
                         });
                         return false;

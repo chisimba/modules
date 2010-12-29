@@ -193,6 +193,9 @@ class dbwall extends dbtable
         if ($me == $posterid || $me = $ownerid) {
             // I can delete
             $this->delete('id', $id);
+            // Delete any comments as well
+            $this->dbComments = $this->getObject('dbcomment', 'wall');
+            $this->dbComments->deleteAssociatedComments($id);
             return "true";
         } else {
             return 'norights';
