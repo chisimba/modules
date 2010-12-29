@@ -1,26 +1,39 @@
 <?php
 
-$html = '<h1 style="text-align:center">'.$this->objLanguage->languageText('mod_blogcomments_moderate_unapproved_comments', 'blogcomments').'</h1>';
+$heading = $this->objLanguage->languageText('mod_blogcomments_moderate_unapproved_comments', 'blogcomments');
+$post = $this->objLanguage->languageText('mod_blogcomments_post', 'blogcomments');
+$author = $this->objLanguage->languageText('mod_blogcomments_author', 'blogcomments');
+$email = $this->objLanguage->languageText('mod_blogcomments_email', 'blogcomments');
+$url = $this->objLanguage->languageText('mod_blogcomments_url', 'blogcomments');
+$date = $this->objLanguage->languageText('mod_blogcomments_date', 'blogcomments');
+$ip = $this->objLanguage->languageText('mod_blogcomments_ip', 'blogcomments');
+$userAgent = $this->objLanguage->languageText('mod_blogcomments_user_agent', 'blogcomments');
+$approve = $this->objLanguage->languageText('mod_blogcomments_approve', 'blogcomments');
+$delete = $this->objLanguage->languageText('mod_blogcomments_delete', 'blogcomments');
+$noAction = $this->objLanguage->languageText('mod_blogcomments_no_action', 'blogcomments');
+$moderate = $this->objLanguage->languageText('mod_blogcomments_moderate', 'blogcomments');
+
+$html = '<h1 style="text-align:center">'.$heading.'</h1>';
 $html .= '<form method="post">';
 
 foreach ($comments as $comment) {
     $html .= '<div style="margin-top:20px;border-top:2px solid black">';
     $html .= '<ul>';
-    $html .= '<li>Post: <a href="'.$comment['link'].'">'.htmlspecialchars($comment['post']['post_title']).'</a></li>';
-    $html .= '<li>Author: '.htmlspecialchars($comment['comment_author']).'</li>';
-    $html .= '<li>Email: '.htmlspecialchars($comment['comment_author_email']).'</li>';
-    $html .= '<li>URL: '.htmlspecialchars($comment['comment_author_url']).'</li>';
-    $html .= '<li>Date: '.date('Y-m-d H:i:s', $comment['comment_date']).'</li>';
-    $html .= '<li>IP: '.htmlspecialchars($comment['comment_author_ip']).'</li>';
-    $html .= '<li>User Agent: '.htmlspecialchars($comment['comment_agent']).'</li>';
+    $html .= '<li>'.$post.': <a href="'.$comment['link'].'">'.htmlspecialchars($comment['post']['post_title']).'</a></li>';
+    $html .= '<li>'.$author.': '.htmlspecialchars($comment['comment_author']).'</li>';
+    $html .= '<li>'.$email.': '.htmlspecialchars($comment['comment_author_email']).'</li>';
+    $html .= '<li>'.$url.': '.htmlspecialchars($comment['comment_author_url']).'</li>';
+    $html .= '<li>'.$date.': '.date('Y-m-d H:i:s', $comment['comment_date']).'</li>';
+    $html .= '<li>'.$ip.': '.htmlspecialchars($comment['comment_author_ip']).'</li>';
+    $html .= '<li>'.$userAgent.': '.htmlspecialchars($comment['comment_agent']).'</li>';
     $html .= '</ul>';
     $html .= $comment['comment_content'];
-    $html .= '<p><input name="comment['.$comment['id'].']" type="radio" value="approve" /> Approve';
-    $html .= '<input name="comment['.$comment['id'].']" type="radio" value="delete" /> Delete';
-    $html .= '<input name="comment['.$comment['id'].']" type="radio" value="" checked /> No Action</p>';
+    $html .= '<p><input name="comment['.$comment['id'].']" type="radio" value="approve" /> '.$approve;
+    $html .= '<input name="comment['.$comment['id'].']" type="radio" value="delete" /> '.$delete;
+    $html .= '<input name="comment['.$comment['id'].']" type="radio" value="" checked /> '.$noAction.'</p>';
     $html .= '</div>';
 }
 
-$html .= '<p style="margin-top:20px;padding-top:20px;border-top:2px solid black"><input type="submit" value="Moderate" /></p></form>';
+$html .= '<p style="margin-top:20px;padding-top:20px;border-top:2px solid black"><input type="submit" value="'.$moderate.'" /></p></form>';
 
 echo $html;
