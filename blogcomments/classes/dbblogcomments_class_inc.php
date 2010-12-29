@@ -143,6 +143,18 @@ class dbblogcomments extends dbTable
     }
 
     /**
+     * Flags a comment as approved.
+     *
+     * @access public
+     * @param  string  $id The id of the comment.
+     * @return boolean True on success, false on failure.
+     */
+    public function approveComment($id)
+    {
+        return $this->update('id', $id, array('comment_approved' => 1));
+    }
+
+    /**
      * Method to return the comments for the user
      * You need to supply a user id to the method. This will get all the extra data
      * attached to that user from the blogcomments table.
