@@ -93,7 +93,7 @@ class dbblogcomments extends dbTable
             $bodyText = $this->objLanguage->languageText("mod_blog_inblogentitled", "blogcomments") . ' "' . $blogtitle . '" ' .
                         $commentauthor . " " .  $this->objLanguage->languageText("mod_blog_word_wrote", "blogcomments") . ": \r\n" .
                         $commenttext . "\r\n";
-            if (!$approved) {
+            if ($approved) {
                 $bodyText .= $this->objLanguage->languageText("mod_blog_clickonurl", "blogcomments") . ": " . $posturl;
             } else {
                 $bodyText .= $this->objLanguage->languageText("mod_blogcomments_flagged_as_spam", "blogcomments") .
