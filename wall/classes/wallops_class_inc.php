@@ -410,7 +410,7 @@ class wallops extends object
         $script = '<script type="text/javascript" >
             jQuery(function() {
                 // Show the post box and submit button
-                jQuery(".wall_comment_button").click(function(){
+                jQuery(".wall_comment_button").live("click", function(){
                     var element = jQuery(this);
                     var id = element.attr("id");
                     jQuery("#c__"+id).slideToggle(300);
@@ -434,7 +434,7 @@ class wallops extends object
                 });
 
                 // Delete a comment
-                jQuery(".wall_delcomment").click(function(){
+                jQuery(".wall_delcomment").live("click", function(){
                     var id = jQuery(this).attr("id");
                     jQuery.ajax({
                         type: "POST",
@@ -451,7 +451,7 @@ class wallops extends object
                 });
 
                 // Post the comment
-                jQuery(".comment_submit").click(function(){
+                jQuery(".comment_submit").live("click", function(){
                     var id = jQuery(this).attr("id");
                     var comment_text = jQuery("#ct_"+id).val();
                     if(comment_text.length == 0) {
