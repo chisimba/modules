@@ -210,7 +210,6 @@ class wallops extends object
         $comments = NULL;
         foreach ($commentAr as $comment) {
             $commentWhen = $this->objDd->getDifference($comment['datecreated']);
-            
             $commentFn = $comment['firstname']. " " . $comment['surname'];
             if ($currentModule == 'myprofile') {
                 $cfnLink = $this->uri(array(
@@ -233,7 +232,6 @@ class wallops extends object
         }
         return $comments;
     }
-
 
     /**
      *
@@ -421,7 +419,7 @@ class wallops extends object
                 });
                 
                 // Get additional comments via ajax
-                jQuery(".wall_comments_more").click(function(){
+                jQuery(".wall_comments_more").live("click", function(){
                     var id = jQuery(this).attr("id");
                     var fixedid = id.replace("mrep__", "");
                     jQuery.ajax({
