@@ -42,4 +42,10 @@ if (count($comments) > 0) {
     $html .= '<p style="margin-top:20px;">'.$noModComments.'</p>';
 }
 
-echo $html;
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(2);
+$objUi = $this->getObject('blogui', 'blog');
+$left = $objUi->leftBlocks($this->objUser->userid());
+$cssLayout->setMiddleColumnContent($html);
+$cssLayout->setLeftColumnContent($left);
+echo $cssLayout->show();
