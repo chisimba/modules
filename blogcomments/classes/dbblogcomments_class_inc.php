@@ -92,8 +92,13 @@ class dbblogcomments extends dbTable
             //$bodyText = $cont;
             $bodyText = $this->objLanguage->languageText("mod_blog_inblogentitled", "blogcomments") . ' "' . $blogtitle . '" ' .
                         $commentauthor . " " .  $this->objLanguage->languageText("mod_blog_word_wrote", "blogcomments") . ": \r\n" .
-                        $commenttext . "\r\n" .
-                        $this->objLanguage->languageText("mod_blog_clickonurl", "blogcomments") . ": " . $posturl;
+                        $commenttext . "\r\n";
+            if (!$approved) {
+                $bodyText .= $this->objLanguage->languageText("mod_blog_clickonurl", "blogcomments") . ": " . $posturl;
+            } else {
+                $bodyText .= $this->objLanguage->languageText("mod_blogcomments_flagged_as_spam", "blogcomments") .
+                            "\r\n" . $this->uri(array('action' => 'unapproved'));
+            }
             //convert the html breaks to newlines
             //$bodyText = str_replace("<br />", "\r\n", $bodyText);
             //echo $bodyText; die();
