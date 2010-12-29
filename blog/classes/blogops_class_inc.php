@@ -83,7 +83,7 @@ class blogops extends object
      * @access public
      * @return NULL
      */
-    public function init() 
+    public function init()
     {
         try {
             $this->objLanguage = $this->getObject('language', 'language');
@@ -104,14 +104,14 @@ class blogops extends object
      * @param  bool   $featurebox
      * @return string
      */
-    public function loginBox($featurebox = FALSE) 
+    public function loginBox($featurebox = FALSE)
     {
         $objBlocks = $this->getObject('blocks', 'blocks');
         if ($featurebox == FALSE) {
             return $objBlocks->showBlock('login', 'security') . "<br />" . $objBlocks->showBlock('register', 'security');
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objBlocks->showBlock('login', 'security', 'none')  
+            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objBlocks->showBlock('login', 'security', 'none')
               . "<br />" . $objBlocks->showBlock('register', 'security', 'none') );
         }
     }
@@ -122,7 +122,7 @@ class blogops extends object
      * @param  bool   $featurebox
      * @return string
      */
-    public function showBlogsLink($featurebox = FALSE) 
+    public function showBlogsLink($featurebox = FALSE)
     {
         // set up a link to the other users blogs...
         $oblogs = new href($this->uri(array(
@@ -135,13 +135,13 @@ class blogops extends object
         $ositeblogs = new href($this->uri(array(
             'action' => 'siteblog'
         )) , $this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , NULL);
-        $ositeblogsTxt = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" 
+        $ositeblogsTxt = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
           . $ositeblogs->show() . "<br /></span>";
 
         $defmodLink = new href($this->uri(array() , '_default'),
            $this->objLanguage->languageText("mod_blog_returntosite", "blog"),
            NULL);
-        $defmodLinkTxt = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" 
+        $defmodLinkTxt = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
           . $defmodLink->show()  . "<br /></span>";
 
         if ($featurebox == FALSE) {
@@ -168,7 +168,7 @@ class blogops extends object
      * @param  bool   $featurebox
      * @return string
      */
-    public function showAdminSection($featurebox = FALSE, $blogadmin = FALSE, $showOrHide = 'none') 
+    public function showAdminSection($featurebox = FALSE, $blogadmin = FALSE, $showOrHide = 'none')
     {
         // admin section
         if ($featurebox == FALSE) {
@@ -206,6 +206,9 @@ class blogops extends object
             'action' => 'blogadmin',
             'mode' => 'editpost'
         )) , $this->objLanguage->languageText("mod_blog_word_editposts", "blog"));
+        // moderate comments
+        $moderatecomments = new href($this->uri(array('action' => 'unapproved'), 'blogcomments'),
+            $this->objLanguage->languageText("mod_blog_moderate_comments", "blog"));
         // edit/create cats
         $editcats = new href($this->uri(array(
             'action' => 'blogadmin',
@@ -251,6 +254,7 @@ class blogops extends object
                     $mailsetup,
                     $newpost,
                     $editpost,
+                    $moderatecomments,
                     $editcats,
                     $rssedits,
                     $linksedits,
@@ -264,6 +268,7 @@ class blogops extends object
                     $import,
                     $newpost,
                     $editpost,
+                    $moderatecomments,
                     $editcats,
                     $rssedits,
                     $linksedits,
@@ -274,7 +279,7 @@ class blogops extends object
             foreach($linksarr as $links) {
                 $objFeatureBox = $this->newObject('featurebox', 'navigation');
                 // Make it stylable #BLOGSTYLE.
-                $linkTxt = "<span class=\"featureboxlink\">" 
+                $linkTxt = "<span class=\"featureboxlink\">"
                   . $links->show() . "</span>";
                 $ret.= $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_admin", "blog") , $linkTxt);
             }
@@ -289,6 +294,8 @@ class blogops extends object
                       . $newpost->show() . "<br /></span>"
                       . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
                       . $editpost->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
+                      . $moderatecomments->show() . "<br /></span>"
                       . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
                       . $viewmyblog->show() . "</span>";
                     $ret.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">"
@@ -308,6 +315,7 @@ class blogops extends object
                     // Make it stylable #BLOGSTYLE.
                     $topper = "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $newpost->show() . "<br /></span>"
                       . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $editpost->show() . "<br /></span>"
+                      . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $moderatecomments->show() . "<br /></span>"
                       . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $viewmyblog->show() . "</span>";
                     $ret.= "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $admin->show() . "<br /></span>"
                       . "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" . $profile->show() . "<br /></span>"
@@ -324,6 +332,7 @@ class blogops extends object
                 // Make it stylable #BLOGSTYLE.
                 $topper =  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$newpost->show() . "<br /></span>"
                   .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$editpost->show() . "<br /></span>"
+                  .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$moderatecomments->show() . "<br /></span>"
                   .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$viewmyblog->show() . "</span></span>";
                 $ret.=  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$admin->show() . "<br /></span>"
                   .  "<div class=\"fblinkbefore\"></div><span class=\"featureboxlink\">" .$profile->show() . "<br /></span>"
@@ -358,7 +367,7 @@ class blogops extends object
      * @param  string $document
      * @return string
      */
-    function html2txt($document, $scrub = TRUE) 
+    function html2txt($document, $scrub = TRUE)
     {
         if ($scrub == TRUE) {
             $search = array(
@@ -369,7 +378,7 @@ class blogops extends object
                 // Strip style tags properly
                 '@<![\s\S]*?--[ \t\n\r]*>@'
                 // Strip multi-line comments including CDATA
-                
+
             );
         } else {
             $search = array(
@@ -379,7 +388,7 @@ class blogops extends object
                 // Strip style tags properly
                 '@<![\s\S]*?--[ \t\n\r]*>@', // Strip multi-line comments including CDATA
                 '!(\n*(.+)\n*!x', // Strip out newlines
-                
+
             );
         }
         $text = preg_replace($search, '', $document);
@@ -398,7 +407,7 @@ class blogops extends object
      * @param  array  $rec
      * @return string
      */
-    public function buildBloggertable($rec) 
+    public function buildBloggertable($rec)
     {
         $lastentry = $this->objDbBlog->getLatestPost($rec['id']);
         if(!empty($lastentry))
@@ -427,7 +436,7 @@ class blogops extends object
             $txt.= $txt . "...";
             $txt = $this->cleaner->cleanHtml($txt);
         }
-        
+
         if(!empty($lastentry))
         {
         	$lastpost = $link->show() . "<br />" . $txt;
@@ -456,7 +465,7 @@ class blogops extends object
      * @param  mixed selected date $sel_date
      * @return array
      */
-    public function retDates($sel_date = NULL) 
+    public function retDates($sel_date = NULL)
     {
         if ($sel_date == NULL) {
             $sel_date = mktime(0, 0, 0, date("m", time()) , 1, date("y", time()));
