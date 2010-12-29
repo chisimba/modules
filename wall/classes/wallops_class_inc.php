@@ -87,6 +87,7 @@ class wallops extends object
         $this->objLanguage = & $this->getObject('language', 'language');
         $this->loadScript();
         $this->loadDeleteScript();
+        $this->loadCommentScript();
     }
 
     /**
@@ -111,6 +112,7 @@ class wallops extends object
         $myUserId = $this->objUser->userId();
         foreach ($posts as $post) {
             $comments = NULL;
+            $showMoreReplies = NULL;
             $img = $this->objUser->getSmallUserImage($post['posterid'], FALSE);
             $when = $objDd->getDifference($post['datecreated']);
             $fullName = $post['firstname'] . " " . $post['surname'];
@@ -122,11 +124,9 @@ class wallops extends object
                 $commentAr = $objCommentDb->getComments($id, 3);
                 if ($replies > 3) {
                     // Let us know that there are more
-                    $showMoreReplies = "View all $replies replies."; // MULTILINGUALISE-------------------------------------------------------
-                } else {
-                    $showMoreReplies = NULL;
+                    $moreReplies = $replies - 3;
+                    $showMoreReplies = "View all $moreReplies replies."; // MULTILINGUALISE-------------------------------------------------------
                 }
-                $comments = "<ol class='wall_replies'>";
                 foreach ($commentAr as $comment) {
                     $commentWhen = $objDd->getDifference($post['datecreated']);
                     $commentFn = $comment['firstname']. " " . $comment['surname'];
@@ -143,14 +143,16 @@ class wallops extends object
                     $commentFn = '<a href="' . $cfnLink . '">' . $commentFn . '</a>';
                     $comments .= "<li><span class='wall_comment_author'>" 
                     . $commentFn . "</span>&nbsp;&nbsp;" . $comment['wallcomment']
-                    . "<br /><span class='wall_comment_when'>"
-                    . $commentWhen . "</span></li>";
+                    . "<br /><div class='wall_comment_when'>"
+                    . $commentWhen . "</div></li>";
                 }
-                $comments = $comments . "</ol>";
+                $comments = $this->createCommentBlock($comments);
                 $repliesNotice = $replies . ' '
-                  . $this->objLanguage->languageText('mod_wall_replies', 'wall', 'replies');
+                  . $this->objLanguage->languageText(
+                     'mod_wall_replies', 'wall', 'replies');
             } else {
-                $repliesNotice = $this->objLanguage->languageText('mod_wall_noreplies', 'wall', 'No replies');
+                $repliesNotice = $this->objLanguage->languageText(
+                        'mod_wall_noreplies', 'wall', 'No replies');
             }
 
             if ($currentModule == 'myprofile') {
@@ -182,12 +184,22 @@ class wallops extends object
             $ret .= "<div class='wallpostrow'>$del<div class='msg'>\n" . $img
               . "<span class='wallposter'>" . $fullName 
               . "</span><br />"
-              . $post['wallpost'] . "<br />" . $when
-              . "&nbsp;&nbsp;&nbsp;&nbsp;" . $repliesNotice
-              . "</div>\n" . $comments . $this->getReplyLink($id) . "</div>\n"; //"  "
+              . $post['wallpost'] . "</div><div class='wall_post_info'>" . $when
+              . "&nbsp;&nbsp;&nbsp;&nbsp;" . $repliesNotice . "&nbsp;&nbsp;&nbsp;&nbsp;"
+              . $this->getCommentDisplayButton($id) . "</div>\n"
+              . $this->getReplyLink($id) . $comments . " "
+              . $showMoreReplies . "</div>\n"; //"  "
         }
         $ret .="</div>\n</div>\n\n";
         return $ret;
+    }
+
+
+    public function createCommentBlock($comments)
+    {
+        $blockTop = "\n\n<div class='wall_comments_top'></div><ol class='wall_replies'>";
+        $blockBottom = "</ol><div class='wall_comments_bottom'></div>\n\n";
+        return $blockTop . "\n" . $comments . "\n" . $blockBottom;
     }
 
     /**
@@ -295,6 +307,7 @@ jQuery(function(){
         $this->appendArrayVar('headerParams', $script);
     }
 
+
     /**
      *
      * Load the script for deleting a post into the page header.
@@ -309,43 +322,107 @@ jQuery(function(){
     {
         $script = '<script type="text/javascript">
             jQuery(function() {
-            jQuery(".delpost").click(function() {
-            var commentContainer = jQuery(this).parent();
-            var id = jQuery(this).attr("id");
-            var string = \'id=\'+ id ;
-
-            jQuery.ajax({
-               type: "POST",
-               url: "index.php?module=wall&action=delete&id=" + id,
-               data: string,
-               cache: false,
-               success: function(ret){
-                   if(ret == "true") {
-                       commentContainer.slideUp(\'slow\', function() {jQuery(this).remove();});
-                   } else {
-                       alert(ret);
-                   }
-              }
-
-             });
-
-            return false;
+                jQuery(".delpost").click(function() {
+                    var commentContainer = jQuery(this).parent();
+                    var id = jQuery(this).attr("id");
+                    var string = \'id=\'+ id ;
+                    jQuery.ajax({
+                       type: "POST",
+                       url: "index.php?module=wall&action=delete&id=" + id,
+                       data: string,
+                       cache: false,
+                       success: function(ret){
+                           if(ret == "true") {
+                               commentContainer.slideUp(\'slow\', function() {jQuery(this).remove();});
+                           } else {
+                               alert(ret);
+                           }
+                      }
                     });
+                    return false;
+                });
             });
-
-            </script>';
+        </script>';
         $this->appendArrayVar('headerParams', $script);
     }
 
-
-    public function getReplies()
+    /**
+     *
+     * Load the javascript for running the comments. It appends the script to the
+     * page header
+     *
+     * @access public
+     * @return VOID
+     *
+     */
+    public function loadCommentScript()
     {
-        return "<ol class='wall_replies'><li>First reply</li><li>Second reply</li></ol>";
+        $script = '<script type="text/javascript" >
+            jQuery(function() {
+                jQuery(".wall_comment_button").click(function(){
+                    var element = jQuery(this);
+                    var id = element.attr("id");
+                    jQuery("#c__"+id).slideToggle(300);
+                    jQuery(this).toggleClass("active");
+                    return false;
+                });
+                jQuery(".comment_submit").click(function(){
+                    var id = jQuery(this).attr("id");
+                    var comment_text = jQuery("#ct_"+id).val();
+                    if(comment_text.length == 0) {
+                        return;
+                    } else {
+                        jQuery.ajax({
+                            type: "POST",
+                            url: "index.php?module=wall&action=addcomment&id=" + id,
+                            data: "comment_text="+comment_text,
+                            success: function(ret) {
+                                if(ret == "true") {
+                                   alert("comment posted");
+                                } else {
+                                   alert(ret);
+                                }
+                                alert(msg);
+                            }
+                        });
+                        return false;
+                    }
+                });
+            });
+            </script>';
+         $this->appendArrayVar('headerParams', $script);
     }
 
+    /**
+     *
+     * Return the comment box area or panel. There is a bit of trickery here with
+     * the use of $id to generate the code to pass to the Ajax.
+     *
+     * @param string $id The parent id of the wall post to which the comment applies
+     * @return string The formatted panel.
+     *
+     */
     public function getReplyLink($id)
     {
-        return "<div class='wall_replylink'>Reply $id</div>";
+        $panel = '<div class=\'wall_panel\' id="c__' . $id . '">'
+          . '<textarea id=\'ct_cb_' . $id . '\' style="width:390px;height:23px"></textarea><br />
+            <input type="submit" value=" Comment " class="comment_submit" id="cb_' . $id . '"/>
+            </div>';
+        return $panel;
+    }
+
+    /**
+     *
+     * Render the comment link
+     *
+     * @param string $id The parent id of the wall post to which the comment applies
+     * @return string  The formatted button
+     *
+     */
+    public function getCommentDisplayButton($id)
+    {
+        $button = '<a href="#" class="wall_comment_button" id="' . $id . '">Comment</a>';
+        return $button;
     }
 }
 ?>

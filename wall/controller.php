@@ -67,6 +67,8 @@ class wall extends controller
     */
     public $objDbWall;
 
+    public $objLanguage;
+
     /**
     * 
     * Intialiser for the wall controller
@@ -77,6 +79,7 @@ class wall extends controller
     {
         // Create an instance of the database class.
         $this->objDbwall = & $this->getObject('dbwall', 'wall');
+        $this->objLanguage = & $this->getObject('language', 'language');
     }
     
     
@@ -130,7 +133,6 @@ class wall extends controller
             case "1":
                 return "personal_tpl.php";
                 break;
-
         }
         
     }
@@ -146,6 +148,35 @@ class wall extends controller
     private function __save()
     {
         echo $this->objDbwall->savePost();
+        die();
+    }
+
+    /**
+     * Get a comment sent via ajax and return some text to be presented
+     * to the user in an alert on failure
+     *
+     * @access public
+     * @return VOID
+     * 
+     */
+    public function __addcomment()
+    {
+        $objDbComment = $this->getObject('dbcomment', 'wall');
+        $msg = $objDbComment->saveComment();
+        switch($msg) {
+            case 'true':
+                echo 'true';
+                break;
+            case 'empty':
+                echo "Something empty";
+                break;
+            case 'spoofattemptfailure':
+                echo "Sooofffyyyyyy";
+                break;
+            default:
+                echo $msg;
+                break;
+        }
         die();
     }
     
@@ -181,6 +212,7 @@ class wall extends controller
     */
     private function __actionError()
     {
+        $action=$this->getParam('action', NULL);
         $this->setVar('str', "<h3>"
           . $this->objLanguage->languageText("phrase_unrecognizedaction")
           .": " . $action . "</h3>");

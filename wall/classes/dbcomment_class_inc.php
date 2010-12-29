@@ -102,6 +102,44 @@ class dbcomment extends dbtable
 
     }
 
+    /**
+    *
+    * Save a comment and return something to send back to the ajax request.
+    *
+    *
+    * @return string The results of the save (true, empty, false)
+    *
+    */
+    public function saveComment()
+    {
+        if ($this->objUser->isLoggedIn()) {
+            $parentId = $this->getParam('id', NULL);
+            // Trim off the bit added for sanity in Javascript
+            $parentId = str_replace('cb_', NULL, $parentId);
+            $wallComment = $this->getParam('comment_text', FALSE);
+            $posterId = $this->objUser->userId();
+            try
+            {
+                if ($wallComment) {
+                    $this->insert(array(
+                        'wallcomment' => $wallComment,
+                        'posterid' => $posterId,
+                        'parentid' => $parentId,
+                        'datecreated' => $this->now()));
+                    return 'true';
+                } else {
+                    return 'empty';
+                }
+            }
+            catch (customException $e)
+            {
+                echo customException::cleanUp($e);
+                die();
+            }
+        } else {
+            return 'spoofattemptfailure';
+        }
+    }
 
 
 
@@ -119,60 +157,6 @@ class dbcomment extends dbtable
 
 
     
-
-    /**
-    *
-    * Save a post and return something to send back to the ajax request.
-    *
-    * Note that walltypes can be 0 for site wall, 1 for personal wall, and
-    * 2 for context wall.
-    *
-    * @return string The results of the save (true, empty, false)
-    *
-    */
-    public function savePost()
-    {
-        if ($this->objUser->isLoggedIn()) {
-            $wallPost = $this->getParam('wallpost', 'empty');
-            $posterId = $this->objUser->userId();
-            $ownerId = $this->getParam('ownerid', NULL);
-            $objGuessWall = $this->getObject('wallguesser','wall');
-            $wallType = $objGuessWall->guessWall();
-            if ($wallType == '2') {
-                $objContext = $this->getObject('dbcontext', 'context');
-                if($objContext->isInContext()){
-                    $identifier = $objContext->getcontextcode();
-                } else {
-                    $identifier = NULL;
-                }
-            } elseif ($wallType == '0') {
-                $identifier="sitewall";
-            } else {
-                $identifier=NULL;
-            }
-            if ($wallPost !=='empty') {
-                try
-                {
-                    $this->insert(array(
-                        'wallpost' => $wallPost,
-                        'posterid' => $posterId,
-                        'ownerid' => $ownerId,
-                        'identifier' => $identifier,
-                        'walltype' => $wallType,
-                        'datecreated' => $this->now()));
-                    return 'true';
-                } catch (customException $e)
-                {
-                    echo customException::cleanUp($e);
-                    die();
-                }
-            } else {
-                return 'empty';
-            }
-        } else {
-            return 'spoofattemptfailure';
-        }
-    }
 
     /**
      *
