@@ -4,7 +4,16 @@
  * A simple wall module operations object
  *
  * A simple wall module that makes use of OEMBED and that tries to look a bit
- * like Facebook's wall. This is the operations class.
+ * like Facebook's wall. This is the operations class. The module creates wall
+ * posts (status messages) and comments (or replies) linked to each post or
+ * status message
+ *   WALL POST MESSAGE
+ *       Reply to it
+ *       Reply to it
+ *   ANOTHER WALL POST MESSAGE
+ *       Reply to it
+ *
+ *   ...etc...
  *
  * PHP version 5
  *
@@ -64,6 +73,7 @@ class wallops extends object
     public $objDbwall;
     public $objUser;
     public $objLanguage;
+    public $objDd;
 
 
     /**
@@ -85,6 +95,9 @@ class wallops extends object
         $this->objUser = $this->getObject('user', 'security');
         // Instantiate the language object.
         $this->objLanguage = & $this->getObject('language', 'language');
+        // Get an instance of the humanize date class.
+        $this->objDd = $this->getObject('translatedatedifference', 'utilities');
+        // Load all javascripts
         $this->loadScript();
         $this->loadDeleteScript();
         $this->loadCommentScript();
@@ -104,17 +117,19 @@ class wallops extends object
         $comments = NULL;
         $ret ="\n\n<div id='wrapper'>\n" . $this->showPostBox() . "<div id='wall'>\n";
         $posts = $this->objDbwall->getWall($wallType, $num);
-        $objDd = $this->getObject('translatedatedifference', 'utilities');
         $objCommentDb = $this->getObject('dbcomment', 'wall');
         // See if they are in myprofile else default link to wall
         $currentModule = $this->getParam('module', 'wall');
         // Get the current user Id
         $myUserId = $this->objUser->userId();
         foreach ($posts as $post) {
+            // Set variables to NULL because they are used with .= later.
             $comments = NULL;
             $showMoreReplies = NULL;
+            // Retrieve a small version of the user's avatar image.
             $img = $this->objUser->getSmallUserImage($post['posterid'], FALSE);
-            $when = $objDd->getDifference($post['datecreated']);
+            // Convert the post date into human time.
+            $when = $this->objDd->getDifference($post['datecreated']);
             $fullName = $post['firstname'] . " " . $post['surname'];
             $id = $post['id'];
             $replies = $post['replies'];
@@ -123,30 +138,16 @@ class wallops extends object
                 // Get the last three replies.
                 $commentAr = $objCommentDb->getComments($id, 3);
                 if ($replies > 3) {
-                    // Let us know that there are more
+                    // Let us know that there are more and build a link to get them via ajax
                     $moreReplies = $replies - 3;
-                    $showMoreReplies = "View all $moreReplies replies."; // MULTILINGUALISE-------------------------------------------------------
+                    $reps = $this->objLanguage->languageText("mod_wall_replies", "wall", "more replies");
+                    $showMoreReplies = $moreReplies ." " . $reps . ".";
+                    $showMoreReplies = "<a class='wall_comments_more' id='mrep__$id' href='javascript:void(0);'>" . $showMoreReplies . "</a>";
                 }
-                foreach ($commentAr as $comment) {
-                    $commentWhen = $objDd->getDifference($post['datecreated']);
-                    $commentFn = $comment['firstname']. " " . $comment['surname'];
-                    if ($currentModule == 'myprofile') {
-                        $cfnLink = $this->uri(array(
-                            'username' => $comment['username']
-                        ), 'myprofile');
-                    } else {
-                        $cfnLink = $this->uri(array(
-                            'walltype' => 'personal',
-                            'username' => $comment['username']
-                        ), 'wall');
-                    }
-                    $commentFn = '<a href="' . $cfnLink . '">' . $commentFn . '</a>';
-                    $comments .= "<li><span class='wall_comment_author'>" 
-                    . $commentFn . "</span>&nbsp;&nbsp;" . $comment['wallcomment']
-                    . "<br /><div class='wall_comment_when'>"
-                    . $commentWhen . "</div></li>";
-                }
+                // Render the comments into LI tags.
+                $comments = $this->loadComments($commentAr, $currentModule);
                 $comments = $this->createCommentBlock($comments, $id);
+                // The replies notice which goes at the bottom of the wall post
                 $repliesNotice = $replies . ' '
                   . $this->objLanguage->languageText(
                      'mod_wall_replies', 'wall', 'replies');
@@ -192,6 +193,45 @@ class wallops extends object
         }
         $ret .="</div>\n</div>\n\n";
         return $ret;
+    }
+
+    /**
+     *
+     * Method to load the comments into LI tags and add additional
+     * data for rendering to display.
+     *
+     * @param string Array $commentAr An array of comments retrieved from the database
+     * @param string $currentModule The current module we are in
+     * @return string The rendered comments
+     *
+     */
+    public function loadComments($commentAr, $currentModule='wall')
+    {
+        $comments = NULL;
+        foreach ($commentAr as $comment) {
+            $commentWhen = $this->objDd->getDifference($comment['datecreated']);
+            
+            $commentFn = $comment['firstname']. " " . $comment['surname'];
+            if ($currentModule == 'myprofile') {
+                $cfnLink = $this->uri(array(
+                    'username' => $comment['username']
+                ), 'myprofile');
+            } else {
+                $cfnLink = $this->uri(array(
+                    'walltype' => 'personal',
+                    'username' => $comment['username']
+                ), 'wall');
+            }
+            $targetId = $comment['id'];
+            $commentor = $comment['posterid'];
+            $del = $this->getDelCommentLink($targetId, $commentor);
+            $commentFn = '<a href="' . $cfnLink . '">' . $commentFn . '</a>';
+            $comments .= "<li id='cmt__" . $targetId . "'>" . $del . "<span class='wall_comment_author'>"
+            . $commentFn . "</span>&nbsp;&nbsp;" . $comment['wallcomment']
+            . "<br /><div class='wall_comment_when'>"
+            . $commentWhen . "</div></li>";
+        }
+        return $comments;
     }
 
 
@@ -280,40 +320,40 @@ class wallops extends object
         $img = $this->objUser->getSmallUserImage();
         $me =  "<span class='wallposter'>" . $me . "</span>";
         $script = '<script type=\'text/javascript\'>
-jQuery(function(){
+        jQuery(function(){
 	jQuery(".msg a").oembed(null, {
 	embedMethod: "append",
 	maxWidth: 480
 	});
 	jQuery("#shareBtn").click(function(){
-		status_text = jQuery("#wallpost").val();
-		if(status_text.length == 0) {
-			return;
-		} else {
-			jQuery("#wallpost").attr("disabled", "disabled");
-			status_text = stripHTML(status_text); // clean all html tags
-			status_text = replaceURLWithHTMLLinks(status_text); // replace links with HTML anchor tags.
-			jQuery.ajax({
-				url: "' . $target . '",
-				type: "POST",
-				data: "wallpost="+status_text,
-				success: function(msg) {
-					jQuery("#wallpost").val("");
-					jQuery("#wallpost").attr("disabled", "");
-					if(msg == "true") {
-						jQuery("#wall").prepend("<div class=\'wallpostrow\'>' . $me . '<div class=\'msg\'>"+status_text+"</div></div>");
-						jQuery(".msg:first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
-					} else {
-                                                alert(msg);
-						//alert("Cannot be posted at the moment! Please try again later.");
-					}
-				}
-			});
-			return false;
+            status_text = jQuery("#wallpost").val();
+            if(status_text.length == 0) {
+                    return;
+            } else {
+                jQuery("#wallpost").attr("disabled", "disabled");
+                status_text = stripHTML(status_text); // clean all html tags
+                status_text = replaceURLWithHTMLLinks(status_text); // replace links with HTML anchor tags.
+                jQuery.ajax({
+                        url: "' . $target . '",
+                        type: "POST",
+                        data: "wallpost="+status_text,
+                        success: function(msg) {
+                            jQuery("#wallpost").val("");
+                            jQuery("#wallpost").attr("disabled", "");
+                            if(msg == "true") {
+                                jQuery("#wall").prepend("<div class=\'wallpostrow\'>' . $me . '<div class=\'msg\'>"+status_text+"</div></div>");
+                                jQuery(".msg:first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
+                            } else {
+                                alert(msg);
+                                //alert("Cannot be posted at the moment! Please try again later.");
+                            }
+                        }
+                });
+                return false;
 		}
 	});
-});
-</script>';
+        });
+        </script>';
         $this->appendArrayVar('headerParams', $script);
     }
 
@@ -367,8 +407,11 @@ jQuery(function(){
      */
     public function loadCommentScript()
     {
+        $youSaid = $this->objLanguage->languageText("mod_wall_yousaid", "wall", "You said");
+        $secsAgo = $this->objLanguage->languageText("mod_wall_secsago", "wall", "a few seconds ago");
         $script = '<script type="text/javascript" >
             jQuery(function() {
+                // Show the post box and submit button
                 jQuery(".wall_comment_button").click(function(){
                     var element = jQuery(this);
                     var id = element.attr("id");
@@ -376,6 +419,40 @@ jQuery(function(){
                     jQuery(this).toggleClass("active");
                     return false;
                 });
+                
+                // Get additional comments via ajax
+                jQuery(".wall_comments_more").click(function(){
+                    var id = jQuery(this).attr("id");
+                    var fixedid = id.replace("mrep__", "");
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "index.php?module=wall&action=morecomments&id=" + fixedid,
+                        success: function(ret) {
+                            jQuery("#wct_"+fixedid).append(ret);
+                            jQuery("#"+id).slideToggle(300);
+                        }
+                    });
+
+                });
+
+                // Delete a comment
+                jQuery(".wall_delcomment").click(function(){
+                    var id = jQuery(this).attr("id");
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "index.php?module=wall&action=deletecomment&id="+id,
+                        success: function(ret) {
+                            if (ret==\'true\') {
+                                //alert("#wct__"+id);
+                                jQuery("#cmt__"+id).slideToggle(300);
+                            } else {
+                                alert(ret);
+                            }
+                        }
+                    });
+                });
+
+                // Post the comment
                 jQuery(".comment_submit").click(function(){
                     var id = jQuery(this).attr("id");
                     var comment_text = jQuery("#ct_"+id).val();
@@ -393,13 +470,21 @@ jQuery(function(){
                                     var fixedid = id.replace("cb_", "");
                                     // The comment blocks have ids starting with wct_
                                     if ( jQuery("#wct_"+fixedid).length > 0 ) {
-                                        jQuery("#wct_"+fixedid).prepend(\'<li><b><span class="wall_comment_author">You said</span></b>&nbsp; \'+comment_text+\'&nbsp;<div class="wall_comment_when"><strong>a few seconds ago</strong></div></li>\');
+                                        jQuery("#wct_"+fixedid).prepend(\'<li><b><span class="wall_comment_author">' 
+                                          . $youSaid . '</span></b>&nbsp; \'+comment_text+\'&nbsp;<div class="wall_comment_when"><strong>'
+                                          . $secsAgo . '</strong></div></li>\');
+                                        jQuery("#c__"+fixedid).slideToggle(300);
                                     } else {
                                         if ( jQuery("#wpr__"+fixedid).length > 0 ) {
-                                            jQuery("#wpr__"+fixedid).append(\'<br /><br /><div class="wall_comments_top"></div><ol class="wall_replies" id="wct_\'+fixedid+\'"><li><b><span class="wall_comment_author">You said</span></b>&nbsp;\'+comment_text+\'<div class="wall_comment_when"><strong>a few seconds ago</strong></div></li></ol>\');
+                                            jQuery("#wpr__"+fixedid).append(\'<br /><br />'
+                                              . '<div class="wall_comments_top"></div><ol class="wall_replies" id="wct_\'+fixedid+\'">'
+                                              . '<li><b><span class="wall_comment_author">' . $youSaid
+                                              . '</span></b>&nbsp;\'+comment_text+\'<div class="wall_comment_when"><strong>'
+                                              . $secsAgo . '</strong></div></li></ol>\');
                                             jQuery("#c__"+fixedid).slideToggle(300);
                                         } else {
-                                            alert(\'Nothing to append to\');
+                                            // We should never be able to get here
+                                            alert(\'There is nothing to append to. Reload the page and try again.\');
                                         }
                                     }
                                     jQuery("#ct_"+id).val("");
@@ -444,8 +529,27 @@ jQuery(function(){
      */
     public function getCommentDisplayButton($id)
     {
-        $button = '<a href="#" class="wall_comment_button" id="' . $id . '">Comment</a>';
+        $button = '<a href="#" class="wall_comment_button" id="'
+          . $id . '">Comment</a>';
         return $button;
+    }
+
+    public function getDelCommentLink($id, $commentor)
+    {
+        $userId = $this->objUser->userId();
+        if ($userId == $commentor) {
+            $delLink = $this->uri(array(
+              'action' => 'deletecomment',
+              'id' => $id
+            ), 'wall');
+            $delLink="javascript:void(0);";
+            $delLink = str_replace('&amp;', '&', $delLink);
+            return '<a class="wall_delcomment" id="'
+              . $id . '" href="'
+              . $delLink . '">x</a>';
+        } else {
+            return NULL;
+        }
     }
 }
 ?>

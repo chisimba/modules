@@ -86,7 +86,7 @@ class dbcomment extends dbtable
      * @return string array An array of posts
      *
      */
-    public function getComments($id, $num=10)
+    public function getComments($id, $num=10, $startPosition=0)
     {
         $sql = 'SELECT tbl_wall_comments.*,
           tbl_users.userid,
@@ -97,7 +97,7 @@ class dbcomment extends dbtable
         WHERE tbl_wall_comments.posterId = tbl_users.userid
         AND tbl_wall_comments.parentid = \'' .$id . '\'
         ORDER BY datecreated DESC
-        LIMIT ' . $num;
+        LIMIT ' . $startPosition . ", " . $num;
         return $this->getArray($sql);
 
     }
@@ -153,6 +153,11 @@ class dbcomment extends dbtable
     public function deleteAssociatedComments($id)
     {
         $this->delete('parentid', $id);
+        return "true";
+    }
+
+    public function deleteComment($id) {
+        $this->delete('id', $id);
         return "true";
     }
 }

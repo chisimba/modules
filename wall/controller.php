@@ -4,7 +4,16 @@
  * A simple wall module
  * 
  * A simple wall module that makes use of OEMBED and that tries to look a bit
- * like Facebook's wall from a couple of years ago.
+ * like Facebook's wall. This is the operations class. The module creates wall
+ * posts (status messages) and comments (or replies) linked to each post or
+ * status message
+ *   WALL POST MESSAGE
+ *       Reply to it
+ *       Reply to it
+ *   ANOTHER WALL POST MESSAGE
+ *       Reply to it
+ *
+ *   ...etc...
  * 
  * PHP version 5
  * 
@@ -73,6 +82,7 @@ class wall extends controller
     * 
     * Intialiser for the wall controller
     * @access public
+    * @return VOID
     * 
     */
     public function init()
@@ -90,6 +100,9 @@ class wall extends controller
      * parameter of the  querystring and executes the appropriate method, 
      * returning its appropriate template. This template contains the code 
      * which renders the module output.
+     *
+     * @access public
+     * @return A call to the appropriate method
      * 
      */
     public function dispatch()
@@ -119,6 +132,7 @@ class wall extends controller
     * wall module itself
     *
     * @access private
+    * @return string Template
     * 
     */
     private function __view()
@@ -143,6 +157,7 @@ class wall extends controller
     * only ever called by an ajax request.
     * 
     * @access private
+    * @return VOID
     * 
     */
     private function __save()
@@ -179,6 +194,35 @@ class wall extends controller
         }
         die();
     }
+
+    /**
+     *
+     * Ajax response method to get the remaining comments and send them
+     * back in response to an ajax request.
+     *
+     * @access public
+     * @return VOID
+     *
+     */
+    public function __morecomments()
+    {
+        $id = $this->getParam('id', FALSE);
+        if ($id) {
+            $objDbComment = $this->getObject('dbcomment', 'wall');
+            $commentAr = $objDbComment->getComments($id, 100, 3);
+            $ct = count($commentAr);
+            $currentModule = $this->getParam('module', 'wall');
+            $objUi = $this->getObject('wallops', 'wall');
+            $comments = $objUi->loadComments($commentAr, $currentModule);
+            echo $comments;
+            die();
+        } else {
+            echo "ID NOT FOUND";
+            die();
+        }
+
+
+    }
     
     /**
     * 
@@ -198,6 +242,19 @@ class wall extends controller
             echo $this->objDbwall->deletePost($id);
         }
         die();
+    }
+
+    private function __deletecomment()
+    {
+        $id=$this->getParam("id", FALSE);
+        if ($id) {
+            $objDbComment = $this->getObject('dbcomment', 'wall');
+            echo $objDbComment->deleteComment($id);
+            die();
+        } else {
+            die('deletefailed');
+        }
+        
     }
     
     
