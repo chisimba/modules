@@ -262,17 +262,27 @@ class blogcomments extends controller
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $comments = $this->getParam('comment', array());
                     foreach ($comments as $id => $action) {
-                        switch ($action) {
-                            case 'approve':
-                                $this->objDbcomm->approveComment($id);
-                                break;
-                            case 'delete':
-                                $this->objDbcomm->deleteComment($id);
-                                break;
+                        $comment = $this->objDbcomm->getCommentById($id);
+                        if (isset($comment[0])) {
+                            $post = $this->objDbBlog->getPostById($comment[0]['id']);
+                            if ($this->objUser->isAdmin() || (isset($post[0]) && $post[0]['userid'] == $this->objUser->userId())) {
+                                switch ($action) {
+                                    case 'approve':
+                                        $this->objDbcomm->approveComment($id);
+                                        break;
+                                    case 'delete':
+                                        $this->objDbcomm->deleteComment($id);
+                                        break;
+                                }
+                            }
                         }
                     }
                 }
-                $comments = $this->objDbcomm->grabUnapprovedComments();
+                if ($this->objUser->isAdmin()) {
+                    $comments = $this->objDbcomm->grabUnapprovedComments();
+                } else {
+                    $comments = $this->objDbcomm->grabUnapprovedComments($this->objUser->userId());
+                }
                 foreach ($comments as &$comment) {
                     $post = $this->objDbBlog->getPostById($comment['comment_parentid']);
                     $comment['post'] = $post[0];
