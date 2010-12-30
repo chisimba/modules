@@ -84,6 +84,8 @@ class wallops extends object
     */
     public function init()
     {
+        // Set the jQuery version to the latest functional
+        $this->setVar('JQUERY_VERSION', '1.4.2');
         // Create an instance of the database class.
         $this->objDbwall = & $this->getObject('dbwall', 'wall');
         // Load jQuery Oembed.
@@ -91,6 +93,8 @@ class wallops extends object
         $oEmb->loadOembedPlugin();
         // Load the functions specific to this module.
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('functions.js'));
+        // Load the jQuery pluging showloading
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/showloading/js/jquery.showLoading.min.js', 'jquery'));
         // Instantiate the user object.
         $this->objUser = $this->getObject('user', 'security');
         // Instantiate the language object.
@@ -168,7 +172,7 @@ class wallops extends object
             }
 
             $fullName = '<a href="' . $fnLink . '">' . $fullName . '</a>';
-            if ($myUserId == $post['posterid']) {
+            if ($myUserId == $post['posterid'] || $myUserId == $post['ownerid'] ) {
                 $delLink = $this->uri(array(
                   'action' => 'delete',
                   'id' => $id
@@ -223,7 +227,10 @@ class wallops extends object
             }
             $targetId = $comment['id'];
             $commentor = $comment['posterid'];
-            $del = $this->getDelCommentLink($targetId, $commentor);
+            $wallOwner = $comment['wallowner'];
+            $wallType = $comment['walltype'];
+            $del = $this->getDelCommentLink($targetId, $commentor,
+              $wallOwner, $wallType);
             $commentFn = '<a href="' . $cfnLink . '">' . $commentFn . '</a>';
             $comments .= "<li id='cmt__" . $targetId . "'>" . $del . "<span class='wall_comment_author'>"
             . $commentFn . "</span>&nbsp;&nbsp;" . $comment['wallcomment']
@@ -373,7 +380,7 @@ class wallops extends object
                 jQuery(".delpost").click(function() {
                     var commentContainer = jQuery(this).parent();
                     var id = jQuery(this).attr("id");
-                    var string = \'id=\'+ id ;
+                    var string = \'id=\'+ id;
                     jQuery.ajax({
                        type: "POST",
                        url: "index.php?module=wall&action=delete&id=" + id,
@@ -407,6 +414,12 @@ class wallops extends object
     {
         $youSaid = $this->objLanguage->languageText("mod_wall_yousaid", "wall", "You said");
         $secsAgo = $this->objLanguage->languageText("mod_wall_secsago", "wall", "a few seconds ago");
+        // Get an ajax Loading icon.
+        $icon = $this->newObject('getIcon','htmlelements');
+        //$icon->setIcon("loading_circles_big");
+        $icon->setIcon("loading_bar");
+        $loadingImage = $icon->show();
+        $loadingImage = str_replace('"', '\'', $loadingImage);
         $script = '<script type="text/javascript" >
             jQuery(function() {
                 // Show the post box and submit button
@@ -453,19 +466,23 @@ class wallops extends object
                 // Post the comment
                 jQuery(".comment_submit").live("click", function(){
                     var id = jQuery(this).attr("id");
+                    var fixedid = id.replace("cb_", "");
                     var comment_text = jQuery("#ct_"+id).val();
                     if(comment_text.length == 0) {
                         return;
                     } else {
+
                         jQuery("#ct_"+id).attr("disabled", "disabled");
+                        var tmpHolder = jQuery("#c__"+fixedid).html();
+                        jQuery("#c__"+fixedid).html("' . $loadingImage . '");
+
+
                         jQuery.ajax({
                             type: "POST",
                             url: "index.php?module=wall&action=addcomment&id=" + id,
                             data: "comment_text="+comment_text,
                             success: function(ret) {
                                 if(ret == "true") {
-                                    jQuery("#ct_"+id).attr("disabled", "");
-                                    var fixedid = id.replace("cb_", "");
                                     // The comment blocks have ids starting with wct_
                                     if ( jQuery("#wct_"+fixedid).length > 0 ) {
                                         jQuery("#wct_"+fixedid).prepend(\'<li><b><span class="wall_comment_author">' 
@@ -485,10 +502,13 @@ class wallops extends object
                                             alert(\'There is nothing to append to. Reload the page and try again.\');
                                         }
                                     }
-                                    jQuery("#ct_"+id).val("");
+
                                 } else {
                                     alert(ret);
                                 }
+                                jQuery("#c__"+fixedid).html(tmpHolder);
+                                jQuery("#ct_"+id).val("");
+                                jQuery("#ct_"+id).attr("disabled", "");
                             }
                         });
                         return false;
@@ -532,21 +552,36 @@ class wallops extends object
         return $button;
     }
 
-    public function getDelCommentLink($id, $commentor)
+    public function getDelCommentLink($id, $commentor, $wallOwner, $wallType)
     {
         $userId = $this->objUser->userId();
-        if ($userId == $commentor) {
-            $delLink = $this->uri(array(
-              'action' => 'deletecomment',
-              'id' => $id
-            ), 'wall');
-            $delLink="javascript:void(0);";
-            $delLink = str_replace('&amp;', '&', $delLink);
-            return '<a class="wall_delcomment" id="'
-              . $id . '" href="'
-              . $delLink . '">x</a>';
-        } else {
-            return NULL;
+        $delLink = $this->uri(array(
+          'action' => 'deletecomment',
+          'id' => $id
+        ), 'wall');
+        $delLink="javascript:void(0);";
+        $delLink = str_replace('&amp;', '&', $delLink);
+        $delLink = '<a class="wall_delcomment" id="'
+          . $id . '" href="'
+          . $delLink . '">x</a>';
+
+        switch ($wallType) {
+            case '0':
+                if ($userId == $commentor || $this->objUser->isAdmin()) {
+                    return $delLink;
+                } else {
+                    return NULL;
+                }
+            case '1':
+                if ($userId == $commentor || $userId == $wallOwner) {
+                    return $delLink;
+                } else {
+                    return NULL;
+                }
+                break;
+            default:
+                return NULL;
+                break;
         }
     }
 }

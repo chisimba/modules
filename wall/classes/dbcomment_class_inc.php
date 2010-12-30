@@ -92,12 +92,16 @@ class dbcomment extends dbtable
           tbl_users.userid,
           tbl_users.firstname,
           tbl_users.surname,
-          tbl_users.username
-        FROM tbl_wall_comments, tbl_users
+          tbl_users.username,
+          tbl_wall_posts.walltype,
+          tbl_wall_posts.ownerid AS wallowner
+        FROM tbl_wall_comments, tbl_users, tbl_wall_posts
         WHERE tbl_wall_comments.posterId = tbl_users.userid
         AND tbl_wall_comments.parentid = \'' .$id . '\'
+        AND tbl_wall_posts.id = tbl_wall_comments.parentid
         ORDER BY datecreated DESC
         LIMIT ' . $startPosition . ", " . $num;
+
         return $this->getArray($sql);
 
     }

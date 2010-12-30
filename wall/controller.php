@@ -90,7 +90,6 @@ class wall extends controller
         // Create an instance of the database class.
         $this->objDbwall = & $this->getObject('dbwall', 'wall');
         $this->objLanguage = & $this->getObject('language', 'language');
-        $this->setVar('JQUERY_VERSION', '1.4.2');
     }
     
     
@@ -237,7 +236,7 @@ class wall extends controller
     */
     private function __delete()
     {
-        //*/*/ retrieve the confirmation code from the querystring
+        // retrieve the confirmation code from the querystring
         $id=$this->getParam("id", FALSE);
         if ($id) {
             echo $this->objDbwall->deletePost($id);
