@@ -17,7 +17,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 * */
 
 // Load scriptaclous since we can no longer guarantee it is there
-$scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+$scriptaculous = $this->getObject('scriptaculous', 'prototype');
 $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
 
 // select all checkbox js library
