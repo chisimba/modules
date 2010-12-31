@@ -87,7 +87,7 @@ class db_contextcontent_order extends dbtable {
         // @Todo Make this code less crappy
         // @Todo Remove dependency on Scriptaculous
         // Load scriptaclous since we can no longer guarantee it is there
-        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $scriptaculous = $this->getObject('scriptaculous', 'prototype');
         $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
     }
 
