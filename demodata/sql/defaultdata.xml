@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<defaultdata>
+
+  <!-- MODULE: DEMODATA, Table tbl_demodata_info create data used by this module -->
+    <tbl_demodata_info>
+        <id>init_1</id>
+        <creationdate>2010-12-31</creationdate>
+        <creatorid>1</creatorid>
+        <infobytes>
+            Welcome to the demodata module. This module populates your system with
+            data that can be used for testing, or for putting on a demo of a system
+            with some reasonable data that can be used.
+        </infobytes>
+    </tbl_demodata_info>
+
+  <!-- MODULE: SECURITY Table tbl_users create some test users  -->
+    <tbl_users>
+        <id>init_2</id>
+        <userid>2</userid>
+        <username>dkeats</username>
+        <title>Dr</title>
+        <firstname>Derek</firstname>
+        <surname>Keats</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2006-01-01</creationdate>
+        <emailaddress>ekeats@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2006-07-12</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_3</id>
+        <userid>3</userid>
+        <username>jskeats</username>
+        <title>Dr</title>
+        <firstname>Jamie</firstname>
+        <surname>Keats</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2006-01-01</creationdate>
+        <emailaddress>jkeats@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2006-07-12</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_4</id>
+        <userid>4</userid>
+        <username>jkeats</username>
+        <title>Dr</title>
+        <firstname>John</firstname>
+        <surname>Keats</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2006-01-01</creationdate>
+        <emailaddress>jkeats@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2006-07-12</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_5</id>
+        <userid>5</userid>
+        <username>szulu</username>
+        <title>Dr</title>
+        <firstname>Shaka</firstname>
+        <surname>Zulu</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2010-12-31</creationdate>
+        <emailaddress>szulu@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2010-12-31</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_6</id>
+        <userid>6</userid>
+        <username>wchurchill</username>
+        <title>Dr</title>
+        <firstname>Winston</firstname>
+        <surname>Churchill</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2010-12-31</creationdate>
+        <emailaddress>wchurch@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>UK</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2010-12-31</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_7</id>
+        <userid>7</userid>
+        <username>ocromwell</username>
+        <title>Dr</title>
+        <firstname>Oliver</firstname>
+        <surname>Cromwell</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2010-12-29</creationdate>
+        <emailaddress>ocromwell@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>UK</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2010-12-30</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_8</id>
+        <userid>8</userid>
+        <username>fnightingale</username>
+        <title>Dr</title>
+        <firstname>Florence</firstname>
+        <surname>Nightingale</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2010-12-29</creationdate>
+        <emailaddress>fnightingale@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>F</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2010-12-30</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_9</id>
+        <userid>9</userid>
+        <username>ekeats</username>
+        <title>Ms</title>
+        <firstname>Esther</firstname>
+        <surname>Keats</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2006-01-01</creationdate>
+        <emailaddress>ekeats@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>F</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2006-07-12</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_10</id>
+        <userid>10</userid>
+        <username>fbrawne</username>
+        <title>Ms</title>
+        <firstname>Fanny</firstname>
+        <surname>Brawne</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2010-12-31</creationdate>
+        <emailaddress>ekeats@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>F</sex>
+        <country>UK</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2010-12-31</updated>
+    </tbl_users>
+
+
+
+  <!-- MODULE: WALL, Table tbl_wall_posts -->
+   <tbl_wall_posts>
+        <id>init_1</id>
+        <wallpost>If you have any trouble sounding condescending, find a Unix user to show you how it done.</wallpost>
+        <datecreated>2005-03-10 22:16:25</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_2</id>
+        <wallpost>There are three kinds of death: heart death, brain death, and being off the network.</wallpost>
+        <datecreated>2010-12-10 22:17:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_3</id>
+        <wallpost>If you put garbage in a computer nothing comes out but garbage. But this garbage, having passed through a very expensive machine, is somehow ennobled and none dare criticize it</wallpost>
+        <datecreated>2010-12-23 22:18:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_4</id>
+        <wallpost>Multimedia? As far as I'm concerned, it's reading with a radio on!</wallpost>
+        <datecreated>2005-03-10 22:19:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_5</id>
+        <wallpost>Men have become the tools of their tools</wallpost>
+        <datecreated>2005-03-10 22:20:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+    <tbl_wall_posts>
+        <id>init_6</id>
+        <wallpost>
+            &lt;a href='http://www.youtube.com/watch?v=U6mcSXge4Qo' target='_blank'&gt;
+                http://www.youtube.com/watch?v=U6mcSXge4Qo&lt;/a&gt;
+        </wallpost>
+        <datecreated>2010-12-31 15:42:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_7</id>
+        <wallpost>
+            &lt;a href='http://www.flickr.com/photos/dkeats/5285637280/' target='_blank'&gt;
+                http://www.flickr.com/photos/dkeats/5285637280/&lt;/a&gt;
+        </wallpost>
+        <datecreated>2005-03-11 22:20:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier>sitewall</identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_8</id>
+        <wallpost>Like it or not you have to like it or not.</wallpost>
+        <datecreated>2010-12-26 22:20:32</datecreated>
+        <posterid>1</posterid>
+        <ownerid>1</ownerid>
+        <identifier>sitewall</identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_9</id>
+        <wallpost>Morbi cursus consectetur hendrerit. Integer varius nisi nec lorem placerat in malesuada est elementum. Nullam id nibh vel diam scelerisque fringilla non vitae magna.</wallpost>
+        <datecreated>2010-12-26 00:20:32</datecreated>
+        <posterid>2</posterid>
+        <ownerid>1</ownerid>
+        <identifier>sitewall</identifier>
+        <walltype>1</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_10</id>
+        <wallpost>Cras sed libero diam, non feugiat risus. Sed porttitor lacus id purus eleifend ultricies id at ligula. </wallpost>
+        <datecreated>2010-12-26 02:20:32</datecreated>
+        <posterid>3</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_11</id>
+        <wallpost>Phasellus molestie, augue vitae rhoncus suscipit, massa libero vehicula urna, vel fringilla ipsum risus a eros. </wallpost>
+        <datecreated>2010-12-28 15:20:32</datecreated>
+        <posterid>5</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_12</id>
+        <wallpost>Donec nisl eros, pharetra vitae rutrum ut, eleifend eu sapien. Sed fermentum pellentesque nibh sed lacinia.</wallpost>
+        <datecreated>2010-12-28 15:20:32</datecreated>
+        <posterid>5</posterid>
+        <ownerid>2</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_13</id>
+        <wallpost>Aliquam erat turpis, lacinia eu sollicitudin vitae, condimentum quis nunc. Mauris risus turpis.</wallpost>
+        <datecreated>2010-12-28 15:20:32</datecreated>
+        <posterid>4</posterid>
+        <ownerid>2</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_14</id>
+        <wallpost>
+            &lt;a href='http://www.flickr.com/photos/dkeats/3058943779/' target='_blank'&gt;
+            http://www.flickr.com/photos/dkeats/3058943779/&lt;/a&gt;
+        </wallpost>
+        <datecreated>2010-12-31 06:16:25</datecreated>
+        <posterid>8</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_15</id>
+        <wallpost>
+            Nam nec tellus elit. Integer eget suscipit enim. Nulla vel ligula mattis
+            neque consequat auctor. Sed sapien nibh, tempus id convallis eu, viverra
+            sit amet dolor. Maecenas neque magna, sagittis vel accumsan non, aliquet
+            eget augue. Morbi placerat turpis vitae diam porta eget ornare ipsum tempor.
+            Vivamus porta, felis eu sodales dapibus, justo lectus pharetra tellus, in
+            iaculis dui dolor non sapien. Donec eget dolor mattis enim elementum dictum.
+            In luctus turpis et lorem dapibus sed eleifend eros mollis. Etiam pretium
+            lorem at massa porta eget pulvinar purus condimentum. Praesent quis sagittis
+            erat. Aenean nulla nisi, convallis facilisis aliquam eget, fermentum a
+            urna. Nam ultrices nunc sed felis dapibus vel hendrerit sem cursus.
+        </wallpost>
+        <datecreated>2010-12-31 07:16:25</datecreated>
+        <posterid>9</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+   <tbl_wall_posts>
+        <id>init_16</id>
+        <wallpost>
+             Aliquam vel augue fringilla metus vulputate facilisis et in arcu.
+             Cras ac purus sit amet neque pretium sodales. Praesent turpis felis,
+             molestie at pharetra at, porttitor mollis dui. Duis eu tortor nec
+             neque auctor consequat ac sodales orci. Sed tincidunt, leo id
+             laoreet imperdiet, dolor ipsum dapibus urna, vitae auctor ipsum
+             velit vel massa. 
+        </wallpost>
+        <datecreated>2010-12-31 07:16:25</datecreated>
+        <posterid>10</posterid>
+        <ownerid>1</ownerid>
+        <identifier></identifier>
+        <walltype>2</walltype>
+   </tbl_wall_posts>
+
+  <!-- MODULE: WALL, Table tbl_wall_comments where the comments live -->
+   <tbl_wall_comments>
+       <id>init_1</id>
+       <parentid>init_8</parentid>
+       <wallcomment>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ultrices lacinia interdum. </wallcomment>
+       <datecreated>2010-12-27 22:20:32</datecreated>
+       <posterid>2</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_2</id>
+       <parentid>init_8</parentid>
+       <wallcomment>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. </wallcomment>
+       <datecreated>2010-12-27 22:21:33</datecreated>
+       <posterid>3</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_3</id>
+       <parentid>init_1</parentid>
+       <wallcomment>Nullam non justo lectus. Etiam volutpat, nibh non iaculis tempor, risus purus sagittis magna, ac egestas massa purus ut nulla.</wallcomment>
+       <datecreated>2010-12-27 22:21:33</datecreated>
+       <posterid>2</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_4</id>
+       <parentid>init_2</parentid>
+       <wallcomment>Donec nec nibh eros, ac imperdiet augue. Phasellus sed ornare risus. Duis vehicula malesuada est, et venenatis leo faucibus nec. </wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>3</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_5</id>
+       <parentid>init_2</parentid>
+       <wallcomment>Fusce posuere rutrum mi quis semper. Proin nibh tellus, luctus sit amet tincidunt sed, scelerisque a diam. </wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>4</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_6</id>
+       <parentid>init_2</parentid>
+       <wallcomment>Cras hendrerit leo eros. In sit amet dolor et elit commodo gravida a at enim. Curabitur mollis nulla at ligula pretium lobortis.</wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>3</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_7</id>
+       <parentid>init_2</parentid>
+       <wallcomment>Integer aliquam sapien sit amet urna gravida sed consequat urna pharetra. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>2</posterid>
+   </tbl_wall_comments>
+   <tbl_wall_comments>
+       <id>init_8</id>
+       <parentid>init_3</parentid>
+       <wallcomment>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur facilisis augue in leo euismod interdum. </wallcomment>
+       <datecreated>2010-12-27 22:24:33</datecreated>
+       <posterid>5</posterid>
+   </tbl_wall_comments>
+
+
+<!-- MODULE: TEXTBLOCK, Table tbl_textblock to add some text blocks to the site -->
+<tbl_textblock>
+    <id>init_1</id>
+    <blocktext>This site is set up containing demonstration data. It does not
+    contain any content of actual people, except insofar as the site administrator
+    has logged in as one or more of the fictional users and created content, or
+    where the content is included within the demonstration data provided in the
+    DEMODATA module.</blocktext>
+    <title>About this site</title>
+    <blockid>text1</blockid>
+    <show_title>1</show_title>
+    <css_id></css_id>
+    <css_class></css_class>
+    <datecreated>2010-12-31 17:51:26</datecreated>
+    <creatorid>2</creatorid>
+    <datemodified></datemodified>
+    <modifierid></modifierid>
+    <modified>2010-12-31 17:51:26</modified>
+</tbl_textblock>
+
+</defaultdata>
