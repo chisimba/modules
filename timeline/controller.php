@@ -46,7 +46,7 @@ class timeline extends controller
         // Create the configuration object
         $this->objConfig = $this->getObject('altconfig', 'config');
         // Load scriptaclous since we can no longer guarantee it is there
-        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $scriptaculous = $this->getObject('scriptaculous', 'prototype');
         $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
     }
     
@@ -248,7 +248,6 @@ class timeline extends controller
     	$objDb = $this->getObject("dbstructure", "timeline");
     	$ar = $objDb->getRow("id", $id);
         $this->setVar("ar", $ar);
-        //$this->addScriptaculousToPage(); -------------------------DEPRECATED LEAVE FOR NOW
         return "editadd_tpl.php";
     }
     
@@ -264,7 +263,6 @@ class timeline extends controller
     */
     private function __addstructure()
     {
-    	//$this->addScriptaculousToPage();--------------------------DEPRECATED LEAVE FOR NOW
         return "editadd_tpl.php";
     }
     
