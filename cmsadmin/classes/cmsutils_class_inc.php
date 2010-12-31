@@ -158,7 +158,7 @@
                 $this->objDateTime = $this->getObject('dateandtime', 'utilities');
 
                 // Load scriptaclous since we can no longer guarantee it is there
-                $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+                $scriptaculous = $this->getObject('scriptaculous', 'prototype');
                 $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
 
                 $this->loadClass('textinput', 'htmlelements');
