@@ -78,7 +78,7 @@ class block_contextwall extends object
     public function show() 
     {
         $objWallOps = $this->getObject('wallops', 'wall');
-        return $objWallOps->showWall(2, 10);
+        return $objWallOps->showWall(3, 10);
     }
 }
 ?>

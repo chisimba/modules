@@ -13,13 +13,16 @@ $objFix->fixThree();
         }
     </div>
     <div id="Canvas_Content_Body_Region3">
-You can put some content here if you want.
+The wall module is not meant to be accessed by users. It provides
+a developer testing interface for use in working on the wall module.
+Rather the wall should be accessed by providing one of its blocks to
+another module.
     </div>
     <div id="Canvas_Content_Body_Region2">
         {
             "display" : "block",
             "module" : "wall",
-            "block" : "sitewall"
+            "block" : "genericwall"
         }
     </div>
 </div>

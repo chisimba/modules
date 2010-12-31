@@ -8,7 +8,7 @@
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
    <tbl_wall_posts>
         <id>init_2</id>
@@ -17,7 +17,7 @@
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
    <tbl_wall_posts>
         <id>init_3</id>
@@ -26,7 +26,7 @@
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
    <tbl_wall_posts>
         <id>init_4</id>
@@ -35,7 +35,7 @@
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
    <tbl_wall_posts>
         <id>init_5</id>
@@ -44,7 +44,7 @@
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
  
     <tbl_wall_posts>
@@ -54,7 +54,7 @@
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
    <tbl_wall_posts>
         <id>init_7</id>
@@ -63,7 +63,7 @@
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier>sitewall</identifier>
-        <walltype>0</walltype>
+        <walltype>1</walltype>
    </tbl_wall_posts>
 
    <tbl_wall_posts>
@@ -73,7 +73,7 @@
         <posterid>1</posterid>
         <ownerid>1</ownerid>
         <identifier>sitewall</identifier>
-        <walltype>0</walltype>
+        <walltype>1</walltype>
    </tbl_wall_posts>
 
    <tbl_wall_posts>
@@ -83,7 +83,7 @@
         <posterid>2</posterid>
         <ownerid>1</ownerid>
         <identifier>sitewall</identifier>
-        <walltype>0</walltype>
+        <walltype>1</walltype>
    </tbl_wall_posts>
    <tbl_wall_posts>
         <id>init_10</id>
@@ -92,7 +92,7 @@
         <posterid>3</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
    <tbl_wall_posts>
         <id>init_11</id>
@@ -101,7 +101,7 @@
         <posterid>5</posterid>
         <ownerid>1</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
    <tbl_wall_posts>
         <id>init_12</id>
@@ -110,7 +110,7 @@
         <posterid>5</posterid>
         <ownerid>2</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
    <tbl_wall_posts>
         <id>init_12</id>
@@ -119,7 +119,7 @@
         <posterid>4</posterid>
         <ownerid>2</ownerid>
         <identifier></identifier>
-        <walltype>1</walltype>
+        <walltype>2</walltype>
    </tbl_wall_posts>
 
   <!-- Table tbl_wall_comments where the comments live -->

@@ -22,7 +22,7 @@ another module.
         {
             "display" : "block",
             "module" : "wall",
-            "block" : "userwall"
+            "block" : "sitewall"
         }
     </div>
 </div>

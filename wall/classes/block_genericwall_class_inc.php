@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * A userwall block
+ * A contextwall block
  *
- * A userwall block for rendering the user's own wall
+ * A contextwall block for rendering a context wall (e.g. a course wall)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A hello demonstration bloc
+ * A generic wa;; block
  *
- * A hello demonstration block for an auto generated new CHISIMBA module
+ * A generic block for rendering a wall depending on querystring parameters  
  *
  * @category  Chisimba
  * @author    Derek Keats
@@ -50,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2010 AVOIR
  *
  */
-class block_userwall extends object
+class block_genericwall extends object
 {
     /**
      * The title of the block
@@ -68,9 +68,9 @@ class block_userwall extends object
      */
     public function init() 
     {
-        $this->title = "User wall";
+        $wallType=$this->getParam('walltype', NULL);
+        $this->title = "Generic wall " . $wallType;
     }
-    
     /**
      * Standard block show method.
      *
@@ -79,7 +79,7 @@ class block_userwall extends object
     public function show() 
     {
         $objWallOps = $this->getObject('wallops', 'wall');
-        return $objWallOps->showWall(2, 10);
+        return $objWallOps->showWall(FALSE, 10);
     }
 }
 ?>

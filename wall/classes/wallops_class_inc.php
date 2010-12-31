@@ -74,6 +74,7 @@ class wallops extends object
     public $objUser;
     public $objLanguage;
     public $objDd;
+    public $wallType = FALSE;
 
 
     /**
@@ -118,6 +119,7 @@ class wallops extends object
      */
     public function showWall($wallType, $num=10)
     {
+        $this->wallType = $wallType;
         $comments = NULL;
         $ret ="\n\n<div id='wrapper'>\n" . $this->showPostBox() . "<div id='wall'>\n";
         $posts = $this->objDbwall->getWall($wallType, $num);
@@ -295,8 +297,14 @@ class wallops extends object
      */
     private function loadScript()
     {
-        $objGuessWall = $this->getObject('wallguesser','wall');
-        $wallType = $objGuessWall->guessWall();
+        if (!$this->wallType) {
+            $objGuessWall = $this->getObject('wallguesser','wall');
+            $wallType = $objGuessWall->guessWall();
+            $this->wallType = $wallType;
+        } else {
+            $wallType = $this->wallType;
+        }
+        
         $objGuessUser = $this->getObject('bestguess', 'utilities');
         $ownerId = $objGuessUser->guessUserId();
         $target = $this->uri(array(
@@ -552,7 +560,7 @@ class wallops extends object
         return $button;
     }
 
-    public function getDelCommentLink($id, $commentor, $wallOwner, $wallType)
+    public function getDelCommentLink($id, $commentor, $wallOwner, $wallType, $identifier=NULL)
     {
         $userId = $this->objUser->userId();
         $delLink = $this->uri(array(
@@ -567,16 +575,29 @@ class wallops extends object
 
         switch ($wallType) {
             case '0':
-                if ($userId == $commentor || $this->objUser->isAdmin()) {
+                if ( $userId == $commentor
+                  || $this->objUser->isAdmin() ) {
                     return $delLink;
                 } else {
                     return NULL;
                 }
             case '1':
-                if ($userId == $commentor || $userId == $wallOwner) {
+                if ( $userId == $commentor
+                  || $userId == $wallOwner ) {
                     return $delLink;
                 } else {
                     return NULL;
+                }
+                break;
+            case '2':
+                if (
+                  $userId == $commentor
+                  || $this->objUser->isAdmin()
+                  || $this->objUser->isContextAuthor()
+                  || $this->objUser->isContextEditor) {
+                    return $delLink;
+               } else {
+                   return NULL;
                 }
                 break;
             default:
@@ -584,5 +605,26 @@ class wallops extends object
                 break;
         }
     }
+
+    /**
+     *
+     *
+     */
+
+    /**
+     *
+     * A parameter value setter
+     *
+     * @param string $param The parameter to set
+     * @param mixed $value The value of the parameter
+     * @return boolean TRUE
+     *
+     */
+    public function setValue($param, $value)
+    {
+        $this->param = $value;
+        return true;
+    }
+
 }
 ?>

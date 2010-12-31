@@ -11,6 +11,8 @@ $objFix->fixThree();
             "module" : "security",
             "block" : "login"
         }
+        Context wall cannot be rendered outside of a context. <br />
+        <a href="index.php?module=wall">Wall</wall>
     </div>
     <div id="Canvas_Content_Body_Region3">
 The wall module is not meant to be accessed by users. It provides
@@ -19,11 +21,8 @@ Rather the wall should be accessed by providing one of its blocks to
 another module.
     </div>
     <div id="Canvas_Content_Body_Region2">
-        {
-            "display" : "block",
-            "module" : "wall",
-            "block" : "userwall"
-        }
+You cannot render a context wall in this way. Sorry. You have to be in a context,
+for example a course, and use it as a block in the context.
     </div>
 </div>
 <?php

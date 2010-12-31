@@ -140,12 +140,17 @@ class wall extends controller
         $objGuessWall = $this->getObject('wallguesser','wall');
         $wallType = $objGuessWall->guessWall();
         switch ($wallType) {
-            case "0":
-            default:
-                return "main_tpl.php";
+            case "3":
+                return "context_tpl.php";
+                break;
+            case "2":
+                return "personal_tpl.php";
                 break;
             case "1":
-                return "personal_tpl.php";
+                return "site_tpl.php";
+                break;
+            default:
+                return "main_tpl.php";
                 break;
         }
         

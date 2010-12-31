@@ -102,14 +102,14 @@ class dbwall extends dbtable
               WHERE tbl_wall_posts.posterId = tbl_users.userid';
 
                         
-        if ($wallType == '2') {
+        if ($wallType == '3') {
             // Next check if they are in a context.
             $objContext = $this->getObject('dbcontext', 'context');
             if($objContext->isInContext()){
                 $currentContextcode = $objContext->getcontextcode();
                 $filter = " AND walltype = '$wallType' AND identifier = '$currentContextcode' ORDER BY datecreated DESC LIMIT {$num}";
             }
-        } elseif ($wallType == '1') {
+        } elseif ($wallType == '2') {
             $objGuessUser = $this->getObject('bestguess', 'utilities');
             $ownerId = $objGuessUser->guessUserId();
             $filter = " AND walltype = '$wallType' AND ownerid= '$ownerId' ORDER BY datecreated DESC LIMIT {$num}";
@@ -139,14 +139,14 @@ class dbwall extends dbtable
             $ownerId = $this->getParam('ownerid', NULL);
             $objGuessWall = $this->getObject('wallguesser','wall');
             $wallType = $objGuessWall->guessWall();
-            if ($wallType == '2') {
+            if ($wallType == '3') {
                 $objContext = $this->getObject('dbcontext', 'context');
                 if($objContext->isInContext()){
                     $identifier = $objContext->getcontextcode();
                 } else {
                     $identifier = NULL;
                 }
-            } elseif ($wallType == '0') {
+            } elseif ($wallType == '1') {
                 $identifier="sitewall";
             } else {
                 $identifier=NULL;

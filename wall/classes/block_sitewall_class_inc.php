@@ -79,7 +79,7 @@ class block_sitewall extends object
     public function show() 
     {
         $objWallOps = $this->getObject('wallops', 'wall');
-        return $objWallOps->showWall(0, 10);
+        return $objWallOps->showWall(1, 10);
     }
 }
 ?>

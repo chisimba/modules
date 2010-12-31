@@ -92,8 +92,10 @@ class wallguesser extends object
      */
     public function guessWall()
     {
+        
         // First check if walltype is set in querystring.
-        if ($wallType = $this->getParam('walltype', FALSE)) {
+        $wallType = $this->getParam('walltype', FALSE);
+        if ($wallType) {
             return $this->getNumeric($wallType);
         }
         
@@ -101,12 +103,12 @@ class wallguesser extends object
         $objBestGuess = $this->getObject('bestguess', 'utilities');
         $currentModule = $objBestGuess->identifyModule();
         if ($currentModule == "wall") {
-            return 0;
+            return 1;
         }
 
         // If they are not logged in, it must be the site wall.
         if (!$this->objUser->isLoggedIn() == TRUE) {
-            return 0;
+            return 1;
         }
 
         // Next check if they are in a context.
@@ -114,13 +116,16 @@ class wallguesser extends object
         if($objContext->isInContext()){
             $this->currentContextCode = $objContext->getcontextcode();
             // Returning a wall type of context (2).
-            return 2;
+            return 3;
         } else {
             $objBestGuess = $this->getObject('bestguess', 'utilities');
             $userId = $objBestGuess->guessUserId();
             $this->ownerId = $userId;
-            return 1;
+            return 2;
         }
+
+        // As a last resort, return site wall
+        return 1;
 
     }
 
@@ -136,20 +141,20 @@ class wallguesser extends object
         switch($wallType) {
 
             case "site":
-            case "0":
-                return 0;
-                break;
-            case "personal":
             case "1":
                 return 1;
                 break;
-            case "context":
+            case "personal":
             case "2":
                 return 2;
                 break;
+            case "context":
+            case "3":
+                return 3;
+                break;
             default:
                 // Default to site wall
-                return 0;
+                return 1;
         }
     }
 }
