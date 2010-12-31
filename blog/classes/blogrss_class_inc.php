@@ -436,6 +436,7 @@ class blogrss extends object
         // $this->setVar('pageSuppressXML',true);
         $objIcon = &$this->getObject('geticon', 'htmlelements');
         $objIcon->setIcon('toggle');
+        // Does this use scriptaculous ---- ?????????@TODO Change to jQuery [[scriptaculous]]
         $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide');\">" . $this->objLanguage->languageText("mod_blog_moreoptions", "blog") . "</a>";
         // $objIcon->show() . "</a>";
         $topper = $rss2feed . $atomfeed;
