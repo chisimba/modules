@@ -90,8 +90,8 @@ class wallops extends object
         // Create an instance of the database class.
         $this->objDbwall = & $this->getObject('dbwall', 'wall');
         // Load jQuery Oembed.
-        //$oEmb = $this->getObject('jqoembed', 'oembed');
-        //$oEmb->loadOembedPlugin();
+        $oEmb = $this->getObject('jqoembed', 'oembed');
+        $oEmb->loadOembedPlugin();
         // Load the functions specific to this module.
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('functions.js'));
         // Instantiate the user object.
@@ -453,11 +453,10 @@ class wallops extends object
         $me =  "<span class='wallposter'>" . $me . "</span>";
         $script = '<script type=\'text/javascript\'>
         jQuery(function(){
-            //jQuery(".msg a").oembed(null, {
-            //embedMethod: "append",
-            //maxWidth: 480
-
-	//});
+            jQuery(".msg a").oembed(null, {
+                embedMethod: "append",
+                maxWidth: 480
+            });
         // Function for getting additional wall posts.
         jQuery("#wall_more_posts").live("click", function(){
                 var page = ' . $page . ';
@@ -496,7 +495,7 @@ class wallops extends object
                             jQuery("#wallpost").attr("disabled", "");
                             if(msg == "true") {
                                 jQuery("#wall").prepend("<div class=\'wallpostrow\'>' . $me . '<div class=\'msg\'>"+status_text+"</div></div>");
-                                //jQuery(".msg:first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
+                                jQuery(".msg:first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
                             } else {
                                 alert(msg);
                                 //alert("Cannot be posted at the moment! Please try again later.");
