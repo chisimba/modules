@@ -695,8 +695,12 @@ class wallops extends object
      */
     public function getCommentDisplayButton($id)
     {
-        $button = '<a href="#" class="wall_comment_button" id="'
-          . $id . '">Comment</a>';
+        if ($this->objUser->isLoggedIn()) {
+            $button = '<a href="#" class="wall_comment_button" id="'
+              . $id . '">Comment</a>';
+        } else {
+            $button = NULL;
+        }
         return $button;
     }
 
