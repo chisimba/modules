@@ -90,12 +90,10 @@ class wallops extends object
         // Create an instance of the database class.
         $this->objDbwall = & $this->getObject('dbwall', 'wall');
         // Load jQuery Oembed.
-        $oEmb = $this->getObject('jqoembed', 'oembed');
-        $oEmb->loadOembedPlugin();
+        //$oEmb = $this->getObject('jqoembed', 'oembed');
+        //$oEmb->loadOembedPlugin();
         // Load the functions specific to this module.
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('functions.js'));
-        // Load the jQuery pluging showloading
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/showloading/js/jquery.showLoading.min.js', 'jquery'));
         // Instantiate the user object.
         $this->objUser = $this->getObject('user', 'security');
         // Instantiate the language object.
@@ -455,10 +453,11 @@ class wallops extends object
         $me =  "<span class='wallposter'>" . $me . "</span>";
         $script = '<script type=\'text/javascript\'>
         jQuery(function(){
-            jQuery(".msg a").oembed(null, {
-            embedMethod: "append",
-            maxWidth: 480
-	});
+            //jQuery(".msg a").oembed(null, {
+            //embedMethod: "append",
+            //maxWidth: 480
+
+	//});
         // Function for getting additional wall posts.
         jQuery("#wall_more_posts").live("click", function(){
                 var page = ' . $page . ';
