@@ -70,6 +70,8 @@ class block_sitewall extends object
     public function init() 
     {
         $this->title = "Site wall";
+        // Expose this block to external sites.
+        $this->expose = TRUE;
     }
     /**
      * Standard block show method.
