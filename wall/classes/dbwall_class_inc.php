@@ -101,25 +101,116 @@ class dbwall extends dbtable
               FROM tbl_wall_posts, tbl_users
               WHERE tbl_wall_posts.posterId = tbl_users.userid';
 
-                        
+        $filter = $this->getFilter($wallType, $num) . " ORDER BY datecreated DESC LIMIT {$num}";
+        $posts = $this->getArray($baseSql . $filter);
+        return $posts;
+    }
+
+    public function getMorePosts($wallType, $page, $keyName, $keyValue, $num=10)
+    {
+        // The base SQL, uses joins to avoid going back and forth to the db
+        $baseSql = 'SELECT tbl_wall_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username,
+              (SELECT COUNT(tbl_wall_comments.parentid)
+                   FROM tbl_wall_comments
+                   WHERE tbl_wall_comments.parentid = tbl_wall_posts.id
+              ) AS replies
+              FROM tbl_wall_posts, tbl_users
+              WHERE tbl_wall_posts.posterId = tbl_users.userid ';
+        $filter = " AND walltype = '$wallType' ";
+        if ($keyName !== NULL && $keyValue !==NULL) {
+            $filter .= " AND " . $keyName . " = '" . $keyValue . "'";
+        }
+        $startPoint = $page * $num;
+        $tail =  " ORDER BY datecreated DESC LIMIT {$startPoint}, {$num} ";
+        $posts = $this->getArray($baseSql . $filter . $tail);
+        return $posts;
+    }
+    
+    /**
+     *
+     * Count the number of posts per wall type, user or total
+     *
+     * @param string $wallType The wall type (0=site wall, 1=personal or user wall, 2=context wall)
+     * @param boolean $total Whether or not to count total posts
+     * @return integer The number of posts
+     *
+     */
+    public function countPosts($wallType, $total=FALSE)
+    {
+        $baseSql = 'SELECT COUNT(id) AS totalposts FROM tbl_wall_posts ';
+        $filter = NULL;
+        if ($total) {
+            $sql = $baseSql;
+        } else {
+            $filter = $this->getCountFilter($wallType);
+        }
+        $countAr = $this->getArray($baseSql . $filter);
+        return $countAr[0]['totalposts'];
+    }
+
+    /**
+     *
+     * Get the filter to be used in counting posts
+     *
+     * @param integer $wallType The wall type to count for
+     * @return string The filter
+     *
+     */
+    public function getCountFilter($wallType)
+    {
+        // Create the filter based on walltype
         if ($wallType == '3') {
             // Next check if they are in a context.
             $objContext = $this->getObject('dbcontext', 'context');
             if($objContext->isInContext()){
                 $currentContextcode = $objContext->getcontextcode();
-                $filter = " AND walltype = '$wallType' AND identifier = '$currentContextcode' ORDER BY datecreated DESC LIMIT {$num}";
+                $filter = " WHERE walltype = '$wallType' AND identifier = '$currentContextcode' ";
             }
         } elseif ($wallType == '2') {
             $objGuessUser = $this->getObject('bestguess', 'utilities');
             $ownerId = $objGuessUser->guessUserId();
-            $filter = " AND walltype = '$wallType' AND ownerid= '$ownerId' ORDER BY datecreated DESC LIMIT {$num}";
+            $filter = " WHERE walltype = '$wallType' AND ownerid= '$ownerId' ";
         } else {
-            $filter = " AND walltype = '$wallType' ORDER BY datecreated DESC LIMIT {$num}";
-            
+            $filter = " WHERE walltype = '$wallType' ";
+
         }
-        $posts = $this->getArray($baseSql . $filter);
-        return $posts;
+        return $filter;
     }
+
+    /**
+     *
+     * Get the filter to be used in selecting posts
+     *
+     * @param integer $wallType The wall type to select for
+     * @param integer $num The number of posts to return
+     * @return string The filter
+     *
+     */
+    public function getFilter($wallType, $num=10)
+    {
+        // Create the filter based on walltype
+        if ($wallType == '3') {
+            // Next check if they are in a context.
+            $objContext = $this->getObject('dbcontext', 'context');
+            if($objContext->isInContext()){
+                $currentContextcode = $objContext->getcontextcode();
+                $filter = " AND walltype = '$wallType' AND identifier = '$currentContextcode' ";
+            }
+        } elseif ($wallType == '2') {
+            $objGuessUser = $this->getObject('bestguess', 'utilities');
+            $ownerId = $objGuessUser->guessUserId();
+            $filter = " AND walltype = '$wallType' AND ownerid= '$ownerId' ";
+        } else {
+            $filter = " AND walltype = '$wallType' ";
+
+        }
+        return $filter;
+    }
+
 
     /**
     *

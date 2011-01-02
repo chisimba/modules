@@ -249,6 +249,13 @@ class wall extends controller
         die();
     }
 
+    /**
+     *
+     * Delete a specified comment and return a message for Ajax consumption
+     * @access private
+     * @return VOID
+     *
+     */
     private function __deletecomment()
     {
         $id=$this->getParam("id", FALSE);
@@ -261,8 +268,35 @@ class wall extends controller
         }
         
     }
-    
-    
+
+    /**
+     *
+     * Return a count of the total posts for consumption by Ajax
+     * @access private
+     * @return VOID
+     *
+     */
+    private function __countPosts()
+    {
+        echo $this->objDbwall->countPosts(2, FALSE);
+        die();
+    }
+
+    /**
+     *
+     * Get the next batch of posts for consumption by Ajax
+     * @access private
+     * @return VOID
+     *
+     */
+    private function __getmoreposts()
+    {
+        $objWallOps = $this->getObject('wallops', 'wall');
+        echo $objWallOps->nextPosts();
+        die();
+    }
+
+
     /**
     * 
     * Method to return an error when the action is not a valid 
@@ -342,6 +376,9 @@ class wall extends controller
         switch ($action)
         {
             case 'view':
+            case 'getmoreposts':
+            case 'countposts':
+            case 'morecomments':
                 return FALSE;
                 break;
             default:
