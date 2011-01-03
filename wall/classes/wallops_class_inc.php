@@ -241,8 +241,6 @@ class wallops extends object
         $currentModule = $this->getParam('module', 'wall');
         // Get the current user Id
         $myUserId = $this->objUser->userId();
-        // Instantiate the washout class for parsing filters
-        $objWasher = $this->getObject('washout','utilities');
         foreach ($posts as $post) {
             // Set variables to NULL because they are used with .= later.
             $comments = NULL;
@@ -305,14 +303,11 @@ class wallops extends object
                 $del = NULL;
             }
 
-            // Get the wall post and parse filters
-            $wallPost = $objWasher->parseText($post['wallpost']);
-
             // Render the content for display.
             $ret .= "<div class='wallpostrow' id='wpr__" . $id . "'>$del<div class='msg'>\n" . $img
               . "<span class='wallposter'>" . $fullName
               . "</span><br />"
-              . $wallPost . "</div><div class='wall_post_info'>" . $when
+              . $post['wallpost'] . "</div><div class='wall_post_info'>" . $when
               . "&nbsp;&nbsp;&nbsp;&nbsp;" . $repliesNotice . "&nbsp;&nbsp;&nbsp;&nbsp;"
               . $this->getCommentDisplayButton($id) . "</div>\n"
               . $this->getReplyLink($id) . $comments . " "
