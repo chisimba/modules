@@ -102,7 +102,13 @@ class dbwall extends dbtable
               WHERE tbl_wall_posts.posterId = tbl_users.userid';
 
         $filter = $this->getFilter($wallType, $num) . " ORDER BY datecreated DESC LIMIT {$num}";
+        //$filter = $this->getFilter($wallType, $num) . " ORDER BY datecreated DESC ";
+        $sql = $baseSql . $filter;
+        $sql = "SELECT * FROM tbl_wall_posts ";
         $posts = $this->getArray($baseSql . $filter);
+        //$posts = $this->getArrayWithLimit($sql, 0, $num);
+        //var_dump($posts);
+        //die();
         return $posts;
     }
 

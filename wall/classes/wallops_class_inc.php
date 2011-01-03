@@ -142,6 +142,20 @@ class wallops extends object
 
     /**
      *
+     * Adds output to the wall DIV for the wall.
+     *
+     * @param string $str The string to wrap
+     * @return string The wrapped string
+     * @access private
+     *
+     */
+    private function addToWall($str)
+    {
+        return "\n\n<div id='wall'>\n" . $str . "\n</div>\n\n";
+    }
+
+    /**
+     *
      * Get the next 50 older posts.
      *
      * @return string The next 50 posts formatted for Ajax read
@@ -203,8 +217,8 @@ class wallops extends object
     public function showPosts($posts, $numPosts, $wallType, $num=10, $hideMorePosts=FALSE) {
         // Initialize the comments string.
         $comments = NULL;
-        // Set up the wrapper and wall divs
-        $ret ="<div id='wall'>\n";
+        $ret=NULL;
+        // Build the more posts link
         if (!$hideMorePosts) {
             // It might be less than $num so count the posts returned.
             $numPostsReturned = count($posts);
@@ -227,6 +241,8 @@ class wallops extends object
         $currentModule = $this->getParam('module', 'wall');
         // Get the current user Id
         $myUserId = $this->objUser->userId();
+        // Instantiate the washout class for parsing filters
+        $objWasher = $this->getObject('washout','utilities');
         foreach ($posts as $post) {
             // Set variables to NULL because they are used with .= later.
             $comments = NULL;
@@ -289,17 +305,20 @@ class wallops extends object
                 $del = NULL;
             }
 
+            // Get the wall post and parse filters
+            $wallPost = $objWasher->parseText($post['wallpost']);
+
             // Render the content for display.
             $ret .= "<div class='wallpostrow' id='wpr__" . $id . "'>$del<div class='msg'>\n" . $img
               . "<span class='wallposter'>" . $fullName
               . "</span><br />"
-              . $post['wallpost'] . "</div><div class='wall_post_info'>" . $when
+              . $wallPost . "</div><div class='wall_post_info'>" . $when
               . "&nbsp;&nbsp;&nbsp;&nbsp;" . $repliesNotice . "&nbsp;&nbsp;&nbsp;&nbsp;"
               . $this->getCommentDisplayButton($id) . "</div>\n"
               . $this->getReplyLink($id) . $comments . " "
-              . $showMoreReplies . "</div>\n"; //"  "
+              . $showMoreReplies . "</div>\n";
         }
-        $ret .="</div>\n" . $numPostsTxt;
+        $ret = $this->addToWall($ret . $numPostsTxt);
         return $ret;
     }
 
