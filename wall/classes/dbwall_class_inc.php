@@ -266,7 +266,7 @@ class dbwall extends dbtable
                 try
                 {
                     $this->insert(array(
-                        'wallpost' => $wallPost,
+                        'wallpost' => nl2br($wallPost),
                         'posterid' => $posterId,
                         'ownerid' => $ownerId,
                         'identifier' => $identifier,
