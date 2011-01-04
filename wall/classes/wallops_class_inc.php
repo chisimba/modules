@@ -547,7 +547,6 @@ class wallops extends object
                 jQuery("#shareBtn").attr("disabled", "disabled");
                 var tmpOnlytxt = jQuery("#wall_onlytext").html();
                 jQuery("#wall_onlytext").html(\'' . $this->loadingImage . '\');
-                    alert(tmpOnlytxt);
                 status_text = stripHTML(status_text); // clean all html tags
                 status_text = replaceURLWithHTMLLinks(status_text); // replace links with HTML anchor tags.
                 jQuery.ajax({
