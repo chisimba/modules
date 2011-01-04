@@ -112,6 +112,20 @@ class dbwall extends dbtable
         return $posts;
     }
 
+    /**
+     *
+     * Get more older posts for appending to the bottom of existing posts
+     * by Ajax
+     *
+     * @param integer $wallType The wall type (1,2,3)
+     * @param integer $page The starting page
+     * @param string $keyName The name of the key (contextcode usually)
+     * @param string $keyValue The value of the key (usually contextcode)
+     * @param integer $num The number of records to return (pagesize)
+     * @return string array An array of posts if any
+     * @access public
+     *
+     */
     public function getMorePosts($wallType, $page, $keyName, $keyValue, $num=10)
     {
         // The base SQL, uses joins to avoid going back and forth to the db

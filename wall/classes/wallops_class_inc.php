@@ -70,17 +70,55 @@ $GLOBALS['kewl_entry_point_run'])
 class wallops extends object
 {
 
+    /**
+     *
+     * @var string Object $objDbwall String for the model object
+     * @access public
+     *
+     */
     public $objDbwall;
+    /**
+     *
+     * @var string Object $objUser String for the user object
+     * @access public
+     *
+     */
     public $objUser;
+    /**
+     *
+     * @var string Object $objLanguage String for the language object
+     * @access public
+     *
+     */
     public $objLanguage;
+    /**
+     *
+     * @var string Object $objDd String for the date-difference object (for human dates)
+     * @access public
+     *
+     */
     public $objDd;
+    /**
+     *
+     * @var integer $wallType The wall type (1,2,3)
+     * @access public
+     * 
+     */
     public $wallType = FALSE;
+    /**
+     *
+     * @var string $loadingImage The gif animation for loading
+     * @access public
+     *
+     */
+    public $loadingImage;
 
 
     /**
     *
     * Intialiser for the wall database connector
     * @access public
+    * @return VOID
     *
     */
     public function init()
@@ -104,6 +142,12 @@ class wallops extends object
         $this->loadScript();
         $this->loadDeleteScript();
         $this->loadCommentScript();
+        // Get an ajax Loading icon and make it a property of the class.
+        $icon = $this->newObject('getIcon','htmlelements');
+        //$icon->setIcon("loading_circles_big");
+        $icon->setIcon("loading_bar");
+        $this->loadingImage = $icon->show();
+        $this->loadingImage = str_replace('"', '\'', $this->loadingImage);
     }
 
     /**
@@ -156,18 +200,16 @@ class wallops extends object
 
     /**
      *
-     * Get the next 50 older posts.
+     * Get the next 10 older posts.
      *
-     * @return string The next 50 posts formatted for Ajax read
+     * @return string The next 10 posts formatted for Ajax read
+     * @access public
      *
      */
     public function nextPosts()
     {
-        $ret="";
+        // Retrieve the wall type.
         $wallType = $this->getParam('walltype', FALSE);
-        $page = $this->getParam('page', 1);
-        $source = $this->getParam('source', 'NONE GIVEN');
-        //echo "<h1>Page is: " . $page . " and Source: " . $source . "</h1><br /><br /><br /><br /><br />";
         if ($wallType) {
             switch ($wallType) {
                 case "2":
@@ -193,9 +235,29 @@ class wallops extends object
                     $keyname = NULL;
                     break;
             }
-            $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue);
+            // Initialise the return string.
+            $ret="";
+            // Retrieve the page number or set it to zero if none.
+            $page = $this->getParam('page', 0);
+            // Stick with pagesize of 10 for now.
+            $pageSize =10;
+            // Count the number of records that correspond to our needs.
             $numPosts = $this->objDbwall->countPosts($wallType);
-            $ret .= $this->showPosts($posts, $numPosts, $wallType, 50, TRUE);
+            // Calculate the number of pages.
+            $totalPages = intval($numPosts / $pageSize) + 1;
+            // set the next page to display.
+            $pageDisp = $page + 1;
+            // First record to show from the recordset
+            $startRow = $page * $pageSize;
+            // We are on the last page
+            if ($pageDisp == $totalPages-1) {
+                $hideMoreLink = TRUE;
+            } else {
+                $hideMoreLink = FALSE;
+            }
+            $rem = $totalPages-$pageDisp;
+            $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue);
+            $ret .= $this->showPosts($posts, $numPosts, $wallType, 10, $hideMoreLink);
         } else {
             $ret = "No wall type given.";
         }
@@ -220,17 +282,8 @@ class wallops extends object
         $ret=NULL;
         // Build the more posts link
         if (!$hideMorePosts) {
-            // It might be less than $num so count the posts returned.
-            $numPostsReturned = count($posts);
-            if ($numPosts > $numPostsReturned){
-                $postsRemaining = $numPosts - $numPostsReturned;
-                $numPostsTxt = $postsRemaining . " more wall posts";
-                $numPostsTxt =  "<a class='wall_posts_more' "
-                          . "id='wall_more_posts' href='javascript:void(0);'>"
-                          . $numPostsTxt . "</a>";
-            } else {
-                $numPostsTxt=NULL;
-            }
+            $numPostsTxt =  "<a class='wall_posts_more' "
+                  . "id='wall_more_posts' href='javascript:void(0);'>Older posts</a>";
         } else {
             $numPostsTxt=NULL;
         }
@@ -478,26 +531,18 @@ class wallops extends object
                 embedMethod: "append",
                 maxWidth: 480
             });
-        // Function for getting additional wall posts.
-        jQuery("#wall_more_posts").live("click", function(){
-                var page = ' . $page . ';
-                var dataStrBase = "walltype=' . $wallType . '&key=' . $keyValue . '&page=";
+            // Function for getting additional wall posts.
+            var page = ' . $page . ';
+            var dataStrBase = "walltype=' . $wallType . '&key=' . $keyValue . '&page=";
+            jQuery("#wall_more_posts").live("click", function(){
                 jQuery.ajax({
                     url: "index.php?module=wall&action=getmoreposts",
-                    type: "POST",
+                    type: "GET",
                     data: dataStrBase+page+"&source=ORIGINAL",
                     success: function(ret) {
                         ret =\'<div class="wall_post_append">\'+ret+\'</div>\';
                         jQuery("#wall").append(ret);
-                        //jQuery("#wall_more_posts").html("Replace this with the new value");
-                        //jQuery("#msg:first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
-                        jQuery("#wall_more_posts").slideToggle(300);
-                        //alert(this.data);
-                        //page=page+1;
-                        //alert("page "+page);
-                        ///this.data=dataStrBase+page+"&source=MODIFIED";
-                        //alert(this.data);
-
+                        page=page+1;
                     }
                 });
         });
@@ -585,12 +630,6 @@ class wallops extends object
     {
         $youSaid = $this->objLanguage->languageText("mod_wall_yousaid", "wall", "You said");
         $secsAgo = $this->objLanguage->languageText("mod_wall_secsago", "wall", "a few seconds ago");
-        // Get an ajax Loading icon.
-        $icon = $this->newObject('getIcon','htmlelements');
-        //$icon->setIcon("loading_circles_big");
-        $icon->setIcon("loading_bar");
-        $loadingImage = $icon->show();
-        $loadingImage = str_replace('"', '\'', $loadingImage);
         $script = '<script type="text/javascript" >
             jQuery(function() {
                 // Show the post box and submit button
@@ -645,7 +684,7 @@ class wallops extends object
 
                         jQuery("#ct_"+id).attr("disabled", "disabled");
                         var tmpHolder = jQuery("#c__"+fixedid).html();
-                        jQuery("#c__"+fixedid).html("' . $loadingImage . '");
+                        jQuery("#c__"+fixedid).html("' . $this->loadingImage . '");
 
 
                         jQuery.ajax({
@@ -688,6 +727,20 @@ class wallops extends object
             });
             </script>';
          $this->appendArrayVar('headerParams', $script);
+    }
+
+    public function getNewer($lastDate)
+    {
+        $script = '
+        <script type=\'text/javascript\'>
+        jQuery(function(){
+            jQuery(".msg a").oembed(null, {
+                embedMethod: "append",
+                maxWidth: 480
+            });
+        )};
+        </script>
+        ';
     }
 
     /**
@@ -806,6 +859,131 @@ class wallops extends object
     {
         $this->param = $value;
         return true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+     /**
+     *
+     * Take an array of posts, and render the Chisimba wall.
+     *
+     * @param string array $posts An array of posts
+     * @param integer $numPosts The number of posts that exist in the database
+     * @param integer $wallType The wall type (1, 2, 3)
+     * @param integer $num The number of posts to return
+     * @param boolean $hideMorePosts TRUE|FALSE whether or not to hide the link to more posts
+     * @return string The formatted wall posts and their comments
+     *
+     */
+    public function showPostsTheNewWay($posts, $numPosts, $wallType, $num=10, $hideMorePosts=FALSE) {
+        // Initialize the comments string.
+        $comments = NULL;
+        $ret=NULL;
+        // Build the more posts link
+        if (!$hideMorePosts) {
+            // It might be less than $num so count the posts returned.
+            $numPostsReturned = count($posts);
+            if ($numPosts > $numPostsReturned){
+                $postsRemaining = $numPosts - $numPostsReturned;
+                $numPostsTxt = $postsRemaining . " more wall posts";
+                $numPostsTxt =  "<a class='wall_posts_more' "
+                          . "id='wall_more_posts' href='javascript:void(0);'>"
+                          . $numPostsTxt . "</a>";
+            } else {
+                $numPostsTxt=NULL;
+            }
+        } else {
+            $numPostsTxt=NULL;
+        }
+
+
+        $objCommentDb = $this->getObject('dbcomment', 'wall');
+        // See if they are in myprofile else default link to wall
+        $currentModule = $this->getParam('module', 'wall');
+        // Get the current user Id
+        $myUserId = $this->objUser->userId();
+        foreach ($posts as $post) {
+            // Set variables to NULL because they are used with .= later.
+            $comments = NULL;
+            $showMoreReplies = NULL;
+            // Retrieve a small version of the user's avatar image.
+            $img = $this->objUser->getSmallUserImage($post['posterid'], FALSE);
+            // Convert the post date into human time.
+            $when = $this->objDd->getDifference($post['datecreated']);
+            $fullName = $post['firstname'] . " " . $post['surname'];
+            $id = $post['id'];
+            $replies = $post['replies'];
+            // If there are fewer than 3 replies, show them all, otherwise get last 3.
+            if ($replies > 0) {
+                // Get the last three replies.
+                $commentAr = $objCommentDb->getComments($id, 3);
+                if ($replies > 3) {
+                    // Let us know that there are more and build a link to get them via ajax.
+                    $moreReplies = $replies - 3;
+                    $reps = $this->objLanguage->languageText("mod_wall_replies", "wall", "more replies");
+                    $showMoreReplies = $moreReplies ." " . $reps . ".";
+                    $showMoreReplies = "<table class='tb_comments_more'><tr>"
+                      . "<td align='right'><a class='wall_comments_more' "
+                      . "id='mrep__$id' href='javascript:void(0);'>"
+                      . $showMoreReplies . "</a></td></tr></table>";
+                }
+                // Render the comments into LI tags.
+                $comments = $this->loadComments($commentAr, $currentModule);
+                $comments = $this->createCommentBlock($comments, $id);
+                // The replies notice which goes at the bottom of the wall post.
+                $repliesNotice = $replies . ' '
+                  . $this->objLanguage->languageText(
+                     'mod_wall_replies', 'wall', 'replies');
+            } else {
+                $repliesNotice = $this->objLanguage->languageText(
+                        'mod_wall_noreplies', 'wall', 'No replies');
+            }
+
+            if ($currentModule == 'myprofile') {
+                $fnLink = $this->uri(array(
+                    'username' => $post['username']
+                ), 'myprofile');
+            } else {
+                $fnLink = $this->uri(array(
+                    'walltype' => 'personal',
+                    'username' => $post['username']
+                ), 'wall');
+            }
+
+            $fullName = '<a href="' . $fnLink . '">' . $fullName . '</a>';
+            if ($myUserId == $post['posterid'] || $myUserId == $post['ownerid'] ) {
+                $delLink = $this->uri(array(
+                  'action' => 'delete',
+                  'id' => $id
+                ), 'wall');
+                $delLink="#";
+                $delLink = str_replace('&amp;', '&', $delLink);
+                $del = '<a class="delpost" id="'
+                  . $id . '" href="' . $delLink . '">X</a>';
+            } else {
+                $del = NULL;
+            }
+
+            // Render the content for display.
+            $ret .= "<li class='wall_post_li'><div class='wallpostrow' id='wpr__" . $id . "'>$del<div class='msg'>\n" . $img
+              . "<span class='wallposter'>" . $fullName
+              . "</span><br />"
+              . $post['wallpost'] . "</div><div class='wall_post_info'>" . $when
+              . "&nbsp;&nbsp;&nbsp;&nbsp;" . $repliesNotice . "&nbsp;&nbsp;&nbsp;&nbsp;"
+              . $this->getCommentDisplayButton($id) . "</div>\n"
+              . $this->getReplyLink($id) . $comments . " "
+              . $showMoreReplies . "</div></li>\n";
+        }
+        $ret = $this->addToWall($ret . $numPostsTxt);
+        return $ret;
     }
 
 }
