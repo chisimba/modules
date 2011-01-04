@@ -111,7 +111,7 @@ class wallops extends object
      * @access public
      *
      */
-    public $loadingImage;
+    public $loadingImage='<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />';
 
 
     /**
@@ -142,12 +142,6 @@ class wallops extends object
         $this->loadScript();
         $this->loadDeleteScript();
         $this->loadCommentScript();
-        // Get an ajax Loading icon and make it a property of the class.
-        $icon = $this->newObject('getIcon','htmlelements');
-        //$icon->setIcon("loading_circles_big");
-        $icon->setIcon("loading_bar");
-        $this->loadingImage = $icon->show();
-        $this->loadingImage = str_replace('"', '\'', $this->loadingImage);
     }
 
     /**
@@ -448,7 +442,7 @@ class wallops extends object
             ' . $enterText . '
             <textarea id=\'wallpost\'></textarea>
             <button id=\'shareBtn\'>' . $shareText . '</button>
-            (' . $onlyText . ')
+            <div id="wall_onlytext">' . $onlyText . '</div>
             <div class=\'clear\'></div>
             </div>';
         } else {
@@ -472,8 +466,7 @@ class wallops extends object
             $this->wallType = $wallType;
         } else {
             $wallType = $this->wallType;
-        }
-        
+        }      
         $objGuessUser = $this->getObject('bestguess', 'utilities');
         $ownerId = $objGuessUser->guessUserId();
         $target = $this->uri(array(
@@ -551,7 +544,10 @@ class wallops extends object
             if(status_text.length == 0) {
                     return;
             } else {
-                jQuery("#wallpost").attr("disabled", "disabled");
+                jQuery("#shareBtn").attr("disabled", "disabled");
+                var tmpOnlytxt = jQuery("#wall_onlytext").html();
+                jQuery("#wall_onlytext").html(\'' . $this->loadingImage . '\');
+                    alert(tmpOnlytxt);
                 status_text = stripHTML(status_text); // clean all html tags
                 status_text = replaceURLWithHTMLLinks(status_text); // replace links with HTML anchor tags.
                 jQuery.ajax({
@@ -560,7 +556,8 @@ class wallops extends object
                         data: "wallpost="+status_text,
                         success: function(msg) {
                             jQuery("#wallpost").val("");
-                            jQuery("#wallpost").attr("disabled", "");
+                            jQuery("#shareBtn").attr("disabled", "");
+                            jQuery("#wall_onlytext").html(tmpOnlytxt);
                             if(msg == "true") {
                                 jQuery("#wall").prepend("<div class=\'wallpostrow\'>' . $me . '<div class=\'msg\'>"+status_text+"</div></div>");
                                 jQuery(".msg:first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
@@ -684,7 +681,7 @@ class wallops extends object
 
                         jQuery("#ct_"+id).attr("disabled", "disabled");
                         var tmpHolder = jQuery("#c__"+fixedid).html();
-                        jQuery("#c__"+fixedid).html("' . $this->loadingImage . '");
+                        jQuery("#c__"+fixedid).html(\'' . $this->loadingImage . '\');
 
 
                         jQuery.ajax({

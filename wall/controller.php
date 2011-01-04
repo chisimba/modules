@@ -76,6 +76,12 @@ class wall extends controller
     */
     public $objDbWall;
 
+    /**
+    *
+    * @var string $objLanguage String object property for holding the language object
+    * @access public
+    *
+    */
     public $objLanguage;
 
     /**

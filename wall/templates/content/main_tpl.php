@@ -6,6 +6,10 @@ $objFix->fixThree();
 
 <div id="threecolumn">
     <div id="Canvas_Content_Body_Region1">
+The wall module is not meant to be accessed by users. It provides
+a developer testing interface for use in working on the wall module.
+Rather the wall should be accessed by providing one of its blocks to
+another module.
         {
             "display" : "block",
             "module" : "security",
@@ -13,10 +17,11 @@ $objFix->fixThree();
         }
     </div>
     <div id="Canvas_Content_Body_Region3">
-The wall module is not meant to be accessed by users. It provides
-a developer testing interface for use in working on the wall module.
-Rather the wall should be accessed by providing one of its blocks to
-another module.
+        {
+            "display" : "block",
+            "module" : "blog",
+            "block" : "latest"
+        }
     </div>
     <div id="Canvas_Content_Body_Region2">
         {
