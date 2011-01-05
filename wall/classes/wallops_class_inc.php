@@ -552,6 +552,7 @@ class wallops extends object
                 jQuery("#wall_onlytext").html(\'' . $this->loadingImage . '\');
                 status_text = stripHTML(status_text); // clean all html tags
                 status_text = replaceURLWithHTMLLinks(status_text); // replace links with HTML anchor tags.
+                status_text = status_text.replace(/\n/g,\'<br />\');
                 jQuery.ajax({
                         url: "' . $target . '",
                         type: "POST",
