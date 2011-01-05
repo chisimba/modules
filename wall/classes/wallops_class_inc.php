@@ -225,8 +225,8 @@ class wallops extends object
                 case "1":
                 case "sitewall":
                 default:
-                    $keyValue = NULL;
-                    $keyname = NULL;
+                    $keyValue = '1';
+                    $keyName = 'walltype';
                     break;
             }
             // Initialise the return string.
@@ -535,6 +535,7 @@ class wallops extends object
                     type: "GET",
                     data: dataStrBase+page+"&source=ORIGINAL",
                     success: function(ret) {
+                        jQuery(".wall_posts_more").html("");
                         ret =\'<div class="wall_post_append">\'+ret+\'</div>\';
                         jQuery("#wall").append(ret);
                         page=page+1;
