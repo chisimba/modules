@@ -243,8 +243,10 @@ class wallops extends object
             $pageDisp = $page + 1;
             // First record to show from the recordset
             $startRow = $page * $pageSize;
+            // The point at which we display no more links
+            $stopPoint =  $totalPages;
             // We are on the last page
-            if ($pageDisp == $totalPages-1) {
+            if ($pageDisp == $stopPoint) {
                 $hideMoreLink = TRUE;
             } else {
                 $hideMoreLink = FALSE;
