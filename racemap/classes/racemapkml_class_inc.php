@@ -97,6 +97,13 @@ class racemapkml extends object {
         $this->objDbRace     = $this->getObject('dbracemap');
     }
     
+    /**
+     * Method to create a valid KML document from a stored GPS track
+     *
+     * @param string $id the track ID
+     * @access public
+     * @return string $metaid the metadata id used
+     */
     public function kmlFromTrk($id) {
         $meta = $this->objDbRace->getMetaFromId($id);
         // var_dump($meta); die();

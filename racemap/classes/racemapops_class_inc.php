@@ -121,6 +121,7 @@ class racemapops extends object {
     /**
      * Form used to invite friends to the site via mail invite
      *
+     * @access public
      * @return string
      */
     public function showInviteForm() { 
@@ -188,6 +189,9 @@ class racemapops extends object {
     
     /**
      * Method to do an elevation profile across a bunch of points
+     * 
+     * @access public
+     * @return header params
      */
      public function profileMap() {
          $gmapsrc = '<script src="http://maps.google.com/maps/api/js?sensor=false"></script><script type="text/javascript" src="http://www.google.com/jsapi"></script> ';
@@ -206,6 +210,12 @@ class racemapops extends object {
         $this->appendArrayVar('bodyOnLoad', "initialize();");
      }
      
+     /**
+      * Method to provide a map to digitise points along a line
+      * 
+      * @access public
+      * @return string $ret return form
+      */
      public function digiPtMap() {
         // Put the map together
         $olsrc = NULL;
@@ -282,6 +292,12 @@ class racemapops extends object {
         return $ret;
      }
      
+     /**
+      * Method to provide a map to digitise points along a line
+      * 
+      * @access public
+      * @return string $ret return form
+      */
      public function digiLineMap() {
         $olsrc = NULL;
         $css = NULL;
@@ -322,6 +338,12 @@ class racemapops extends object {
         $this->appendArrayVar('bodyOnLoad', "init();");
      }
      
+     /**
+      * Method to provide a map to display a full profile
+      * 
+      * @access public
+      * @return string $ret header params
+      */
      public function profileMapFull($metaid, $lat, $lon) {   
          $olsrc = NULL;
          $css = NULL;
@@ -746,6 +768,12 @@ class racemapops extends object {
         return $metaid;
     }
     
+    /**
+     * Method to parse and insert a GPX file from a generic device to the database
+     *
+     * @param $file file to parse
+     * @return void
+     */
     public function gpxParseTrk($file, $metaid) {
         $userid = $this->objUser->userId();
         $gpx = simplexml_load_file($file);
@@ -799,6 +827,18 @@ class racemapops extends object {
         }
     }
     
+    /**
+     * Method to draw a full map profile
+     *
+     * @param $metaid - metadata id
+     * @param $width - width in px
+     * @param $height - height in px
+     * @param $title - title of graph
+     * @param $subtitle - subtitle of graph
+     * @param $xtitle - x axis title
+     * @param $ytitle - y axis title
+     * @return $file - filename of graph
+     */
     public function drawProfile($metaid, $width = 550, $height = 350, $title = 'Untitled', $subtitle = '(subtitle)', $xtitle = 'time in seconds', $ytitle = 'altitude') {
         $stop = $this->objDbRace->countPoints($metaid);
         $ptids = NULL;
@@ -818,6 +858,18 @@ class racemapops extends object {
         return $file;
     }
     
+    /**
+     * Method to draw a full speed profile
+     *
+     * @param $metaid - metadata id
+     * @param $width - width in px
+     * @param $height - height in px
+     * @param $title - title of graph
+     * @param $subtitle - subtitle of graph
+     * @param $xtitle - x axis title
+     * @param $ytitle - y axis title
+     * @return $file - filename of graph
+     */
     public function drawSpeed($metaid, $width = 550, $height = 350, $title = 'Untitled', $subtitle = '(subtitle)', $xtitle = 'time in seconds', $ytitle = 'speed') {
         $stop = $this->objDbRace->countPoints($metaid);
         $ptids = NULL;
@@ -836,6 +888,12 @@ class racemapops extends object {
         return $file;
     }
     
+    /**
+     * Method to output a simple menu
+     * 
+     * @access public
+     * @return string
+     */
     public function showMenu() {
         $menu = NULL;
         $this->loadClass('href', 'htmlelements');
@@ -850,6 +908,12 @@ class racemapops extends object {
         return $menu;
     }
     
+    /**
+     * Method to output an upload form
+     * 
+     * @access public
+     * @return string
+     */ 
     public function uploadForm() {
         $objSelectFile = $this->newObject('selectfile', 'filemanager');
         $objSelectFile->name = 'file';
@@ -887,6 +951,13 @@ class racemapops extends object {
         return $form->show();
     }
     
+    /**
+     * Method to output a form to edit the metadata
+     * 
+     * @access public
+     * @param array $metainfo metadata info
+     * @return string
+     */
     public function editMeta($metainfo) {
         // form for editing metadata on gps tracks
         $metainfo = $metainfo[0];

@@ -1,6 +1,6 @@
 <?php
 /**
- * QRCreator controller class
+ * Racemap controller class
  *
  * Class to control the QRCreator module
  *
@@ -20,7 +20,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  chisimba
- * @package   qrcreator
+ * @package   racemap
  * @author    Paul Scott <pscott@uwc.ac.za>
  * @copyright 2010 Paul Scott
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -41,12 +41,12 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * qrcreator controller class
+ * racemap controller class
  *
  * Class to control the qrcreator module.
  *
  * @category  Chisimba
- * @package   qrcreator
+ * @package   racemap
  * @author    Paul Scott <pscott@uwc.ac.za>
  * @copyright 2010 Paul Scott
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
