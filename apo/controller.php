@@ -1754,10 +1754,10 @@ class apo extends controller {
         $this->setVarByRef("i", $i);
 
         $this->setVarByRef("totalcontacttime", $totalContactTime);
-        $this->setVarByRef("totalstudyhours", $totalstudyhoursNoexam);
-        $this->setVarByRef("c", $totalExamTime);
-        $this->setVarByRef("d", $totalstudyhoursExam);
-        $this->setVarByRef("e", $totalSAQAcredits);
+        $this->setVarByRef("studyhoursnoexam", $totalstudyhoursNoexam);
+        $this->setVarByRef("totalexamtime", $totalExamTime);
+        $this->setVarByRef("totalstudyhours", $totalstudyhoursExam);
+        $this->setVarByRef("saqa", $totalSAQAcredits);
 
         return "outcomesandassessmentthree_tpl.php";
     }
