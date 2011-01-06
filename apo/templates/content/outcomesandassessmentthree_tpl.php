@@ -111,10 +111,11 @@ $table->addCell("e. How many other contact sessions are there each week includin
 $table->addCell($textinput->show());
 $table->endRow();
 
-$totalcontacttime = "";
+$totalcontacttime = new label();
+$totalcontacttime->forId = 'totalcontacttime';
 $table->startRow();
 $table->addCell("<b>Total contact time</b>");
-$table->addCell("<b>".$totalcontacttime."</b>");
+$table->addCell("<b>".$totalcontacttime->labelValue."</b>");
 $table->endRow();
 
 $textinput = new textinput('f');
@@ -124,10 +125,10 @@ $table->addCell("f. For every hour of lectures or contact with a staff member, h
 $table->addCell($textinput->show());
 $table->endRow();
 
-$studyhoursnoexam = "";
+$studyhoursnoexam = new label();
 $table->startRow();
 $table->addCell("<b>Total notional study hours (excluding the exams)</b>");
-$table->addCell("<b>".$studyhoursnoexam."</b>");
+$table->addCell("<b>".$studyhoursnoexam->labelValue."</b>");
 $table->endRow();
 
 $textinput = new textinput('g');
@@ -144,10 +145,10 @@ $table->addCell("h. How long is each exam?");
 $table->addCell($textinput->show());
 $table->endRow();
 
-$examtime = "";
+$totalexamtime = new label();
 $table->startRow();
 $table->addCell("<b>Total exam time per year</b>");
-$table->addCell("<b>".$examtime."</b>");
+$table->addCell("<b>".$totalexamtime->labelValue."</b>");
 $table->endRow();
 
 $textinput = new textinput('i');
@@ -157,16 +158,16 @@ $table->addCell("i. How many hours of preparation for the exams is the student e
 $table->addCell($textinput->show());
 $table->endRow();
 
-$totalstudyhours = "";
+$totalstudyhours = new label();
 $table->startRow();
 $table->addCell("<b>Total notional study hours</b>");
-$table->addCell("<b>".$totalstudyhours."</b>");
+$table->addCell("<b>".$totalstudyhours->labelValue."</b>");
 $table->endRow();
 
-$saqa = "";
+$saqa = new label();
 $table->startRow();
 $table->addCell("<b>Total SAQA Credits</b>");
-$table->addCell("<b>".$saqa."</b>");
+$table->addCell("<b>".$saqa->labelValue."</b>");
 $table->endRow();
 
 $button = new button('calculate', "Calculate");
