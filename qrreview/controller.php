@@ -210,7 +210,7 @@ class qrreview extends controller
                     $row = $row[0];
                 }
                 if($this->apionly == TRUE) {
-                    echo json_encode($this->objReviewOps->showReviewFormMobi($row));
+                    echo $this->objReviewOps->showReviewFormMobi($row);
                 }
                 else {
                     echo $this->objReviewOps->showReviewFormMobi($row);
@@ -261,9 +261,14 @@ class qrreview extends controller
                     $row = $row[0];
                 }
                 $form = $this->objReviewOps->showReviewFormMobi($row);
-                $this->setVarByRef('form', $form);
-                $this->setVarByRef('row', $row);
-                return 'webreview_tpl.php';
+                if($this->apionly == TRUE) {
+                    echo $form;
+                }
+                else {
+                    $this->setVarByRef('form', $form);
+                    $this->setVarByRef('row', $row);
+                    return 'webreview_tpl.php';
+                }
                 break;
                 
             case 'makepdf':
