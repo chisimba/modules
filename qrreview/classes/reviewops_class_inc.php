@@ -253,7 +253,7 @@ class reviewops extends object {
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
-        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'qrreview', 'Required').'</span>';
+        $required = '<span class="warning"> * </span>';
         
         // start the form
         $form = new form ('rev', $this->uri(array('action'=>'addreview', 'prodid' => $row['id']), 'qrreview'));
@@ -282,7 +282,7 @@ class reviewops extends object {
         $prodrateLabel = new label($this->objLanguage->languageText('prodrate', 'qrreview').'&nbsp;', 'input_prodrate');
         $table->addCell($prodrateLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($prodrate->show()." out of 10".$required);
+        $table->addCell($prodrate->show()." out of 5".$required);
         $table->endRow();
         
         // phone number
