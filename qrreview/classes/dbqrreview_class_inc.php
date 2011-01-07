@@ -96,7 +96,7 @@ class dbqrreview extends dbTable
 	     // first get the record
 	     $rec = $this->getRecord($id);
 	     $rec = $rec[0];
-	     $tscore = $score + $rec['score'];
+	     $tscore = $score + intval($rec['score']);
 	     $numrev = $rec['numrev'] + 1;
 	     $aggregate = ($tscore / ($numrev*10))*100;
 	     $uparr = array('score' => $score, 'numrev' => $numrev, 'aggregate' => $aggregate);

@@ -84,6 +84,13 @@ class qrreview extends controller
             $this->objSysConfig  = $this->getObject('dbsysconfig', 'sysconfig');
             
             $this->sysType       = $this->objSysConfig->getValue('type', 'qrreview');
+            $this->apionly       = strtolower($this->objSysConfig->getValue('apionly', 'qrreview'));
+            if($this->apionly == 'true') {
+                $this->apionly = TRUE;
+            }
+            else {
+                $this->apionly = FALSE;
+            }
 			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
@@ -119,6 +126,11 @@ class qrreview extends controller
             
             case 'new' :
                 $createbasic = $this->objReviewOps->addForm();
+                //echo $createbasic;
+                if($this->apionly == TRUE) {
+                    echo $createbasic;
+                    break;
+                }
                 $this->setVarByRef('createbasic', $createbasic);
                 return 'newproduct_tpl.php';
                 break;
@@ -127,7 +139,12 @@ class qrreview extends controller
                 $longdesc = $this->getParam('longdesc');
                 $prodname = $this->getParam('prodname');
                 $farmid = $this->getParam('farmid');
-                $userid = $this->objUser->userId();
+                if($this->apionly == TRUE) {
+                    $userid = 1;
+                }
+                else {
+                    $userid = $this->objUser->userId();
+                }
                 
                 $recarr = array('longdesc' => $longdesc, 'prodname' => $prodname, 'userid' => $userid, 'farmid' => $farmid);
                 $recid = $this->objDbReview->insertRecord($recarr);
@@ -154,11 +171,32 @@ class qrreview extends controller
                 else {
                     $row = $row[0];
                 }
-                
-                $this->setVarByRef('row', $row);
-                $this->setVarByRef('filename', $filename);
-                return 'detailview_tpl.php';
+                if($this->apionly == TRUE) {
+                    $this->nextAction('makepdf', array('id' => $id));
+                }
+                else {
+                    $this->setVarByRef('row', $row);
+                    $this->setVarByRef('filename', $filename);
+                    return 'detailview_tpl.php';
+                }
                 break;
+
+            case 'json_getdata' :
+                $id = $this->getParam('id');
+                $row = $this->objDbReview->getRecord($id);
+                if(!isset($row[0])) {
+                    echo "Not found";
+                    break;
+                }
+                else {
+                    $row = $row[0];
+                }
+                if($this->apionly == TRUE) {
+                    header("Content-Type: application/json");
+                    echo json_encode($row); 
+                }
+                break;
+
                 
             case 'mobireview' :
                 // mobile clients will come here via the QR code
@@ -171,7 +209,12 @@ class qrreview extends controller
                 else {
                     $row = $row[0];
                 }
-                echo $this->objReviewOps->showReviewFormMobi($row);
+                if($this->apionly == TRUE) {
+                    echo json_encode($this->objReviewOps->showReviewFormMobi($row));
+                }
+                else {
+                    echo $this->objReviewOps->showReviewFormMobi($row);
+                }
                 break;
                 
             case 'addreview' :
@@ -263,7 +306,7 @@ class qrreview extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='viewtop') {
-        $allowedActions = array('mobireview', 'details', 'addreview', 'viewtop', NULL, 'review');
+        $allowedActions = array('mobireview', 'details', 'addreview', 'viewtop', NULL, 'review', 'json_getdata');
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
