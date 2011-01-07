@@ -270,11 +270,11 @@ class reviewops extends object {
         $prodrate->addOption(3, 3);
         $prodrate->addOption(4, 4);
         $prodrate->addOption(5, 5);
-        $prodrate->addOption(6, 6);
-        $prodrate->addOption(7, 7);
-        $prodrate->addOption(8, 8);
-        $prodrate->addOption(9, 9);
-        $prodrate->addOption(10, 10);
+        //$prodrate->addOption(6, 6);
+        //$prodrate->addOption(7, 7);
+        //$prodrate->addOption(8, 8);
+        //$prodrate->addOption(9, 9);
+        //$prodrate->addOption(10, 10);
         
         $table->startRow();
         //$prodrate = new textinput('prodrate');

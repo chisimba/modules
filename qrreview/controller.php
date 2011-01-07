@@ -177,6 +177,7 @@ class qrreview extends controller
             case 'addreview' :
                 // for either mobi or site based reviews, end point is the same
                 $prodrate = $this->getParam('prodrate');
+                $prodrate = intval($prodrate)*2;
                 $prodcomm = $this->getParam('prodcomm');
                 $phone = $this->getParam('phone');
                 $prodid = $this->getParam('prodid');
@@ -232,16 +233,19 @@ class qrreview extends controller
                 else {
                     $row = $row[0];
                 }
+                // var_dump($row);
+                
                 //create the pdf and send it out
                 $header = stripslashes($row['prodname']);
-                $body = '<br /><br /><center><img src="/collections/usrfiles/users/1/qrgen12Srv55Nme28_15624_1288156026.png" /></center><br />'.stripslashes($row['longdesc']);
+                $body = '<br /><br /><center><img src="'.$row['qr'].'" /></center><br />'.stripslashes($row['longdesc']);
                 $postdate = $row['creationdate'];
                 //put it all together
                 //get the pdfmaker classes
-                $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
+                //$objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
                 $text = $header . "  " . $postdate . "\r\n\r\n" .$body;
-                $objPdf->WriteHTML($text, NULL, NULL, 'qrreview_'.$row['prodname'].'.pdf');
+                //$objPdf->WriteHTML($text, NULL, NULL, 'qrreview_'.$row['prodname'].'.pdf');
                 //$this->nextAction('');
+                echo $text;
                 break;
             
 
