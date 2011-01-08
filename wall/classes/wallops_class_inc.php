@@ -135,7 +135,7 @@ class wallops extends object
         // Instantiate the user object.
         $this->objUser = $this->getObject('user', 'security');
         // Instantiate the language object.
-        $this->objLanguage = & $this->getObject('language', 'language');
+        $this->objLanguage = $this->getObject('language', 'language');
         // Get an instance of the humanize date class.
         $this->objDd = $this->getObject('translatedatedifference', 'utilities');
         // Load all javascripts

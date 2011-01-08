@@ -63,6 +63,13 @@ class dbwall extends dbtable
     * 
     */
     public $objUser;
+    /**
+     *
+     * @var string Object $objLanguage String for the language object
+     * @access public
+     *
+     */
+    public $objLanguage;
 
     /**
     *
@@ -75,6 +82,9 @@ class dbwall extends dbtable
         //Set the parent table here
         parent::init('tbl_wall_posts');
         $this->objUser = $this->getObject('user', 'security');
+        // Instantiate the language object.
+        $this->objLanguage = $this->getObject('language', 'language');
+
     }
 
     /**
@@ -247,22 +257,35 @@ class dbwall extends dbtable
             $wallPost = $this->getParam('wallpost', 'empty');
             $posterId = $this->objUser->userId();
             $ownerId = $this->getParam('ownerid', NULL);
+            // Get the owner full name for the activity stream.
+            if ($ownerId != NULL) {
+                $ownerFullName = $this->objUser->fullName($ownerId);
+            } else {
+                $ownerFullName = NULL;
+            }
+            // Figure out the wall.
             $objGuessWall = $this->getObject('wallguesser','wall');
             $wallType = $objGuessWall->guessWall();
+            // Do stuff depending on wall type.
             if ($wallType == '3') {
                 $objContext = $this->getObject('dbcontext', 'context');
                 if($objContext->isInContext()){
                     $identifier = $objContext->getcontextcode();
-                    $postedWhere = " on -context- wall ";
+                    $rep = array('contextcode' => $identifier);
+                    $postedWhere = $this->objLanguage->code2Txt("mod_wall_oncontextwall", "wall", $rep);
                 } else {
+                    // Edge case, should never happen.
                     $identifier = NULL;
+                    $postedWhere = NULL;
                 }
             } elseif ($wallType == '1') {
                 $identifier="sitewall";
-                $postedWhere = " on site wall ";
+                 $postedWhere = $this->objLanguage->languageText("mod_wall_onsitewallwall", "wall");
             } else {
                 $identifier=NULL;
                 $postedWhere = " on $ownerId wall ";
+                $rep = array('owner' => $ownerFullName);
+                $postedWhere = $this->objLanguage->code2Txt("mod_wall_onwall", "wall" , $rep);
             }
             if ($wallPost !=='empty') {
                 try
@@ -274,14 +297,22 @@ class dbwall extends dbtable
                         'identifier' => $identifier,
                         'walltype' => $wallType,
                         'datecreated' => $this->now()));
-                    // Log in the activity stream
+                    // Log in the activity stream.
                     $objModuleCat = $this->getObject('modules', 'modulecatalogue');
                     if($objModuleCat->checkIfRegistered('activitystreamer')) {
-                        $message = $this->objUser->fullName() . " "
-                         . $this->objLanguage->languageText("mod_wall_wrote", 
-                           "wall",  "wrote") . " " . $postedWhere;
+                        // Record a title, even though we don't need it.
                         $title = $this->objLanguage->languageText("mod_wall_wallpost", "wall",  "Wall post");
+
+                        // Construct the message to store as the activity.
+                        $rep = array(
+                            'activity_doer' => $this->objUser->fullName(),
+                            'activity' => $postedWhere
+                          );
+                        $message = $this->objLanguage->code2Txt("mod_wall_activity", "wall" , $rep);
+
+                        // Construct the link to view the wall post.
                         $link = "index.php?module=wall";
+                        // Log the activity to the activity stream.
                         $objActStream = $this->getObject('activityops','activitystreamer');
                         $this->eventDispatcher->addObserver(array($objActStream, 'postmade' ));
                         $this->eventDispatcher->post(
