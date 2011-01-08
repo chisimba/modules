@@ -158,10 +158,17 @@ class wallops extends object
         $this->wallType = $wallType;
         $posts = $this->objDbwall->getWall($wallType, $num);
         $numPosts = $this->objDbwall->countPosts($wallType);
-        return $this->addToWrapper(
+        if ($numPosts <= 10) {
+            return $this->addToWrapper(
+            $this->showPostBox()
+            . $this->showPosts($posts, $numPosts, $wallType, $num, TRUE)
+            );
+        } else {
+            return $this->addToWrapper(
               $this->showPostBox()
               . $this->showPosts($posts, $numPosts, $wallType, $num)
             );
+         }
 
     }
 
