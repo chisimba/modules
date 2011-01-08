@@ -226,7 +226,6 @@ class dbwall extends dbtable
             $filter = " AND walltype = '$wallType' AND ownerid= '$ownerId' ";
         } else {
             $filter = " AND walltype = '$wallType' ";
-
         }
         return $filter;
     }
@@ -254,13 +253,16 @@ class dbwall extends dbtable
                 $objContext = $this->getObject('dbcontext', 'context');
                 if($objContext->isInContext()){
                     $identifier = $objContext->getcontextcode();
+                    $postedWhere = " on -context- wall ";
                 } else {
                     $identifier = NULL;
                 }
             } elseif ($wallType == '1') {
                 $identifier="sitewall";
+                $postedWhere = " on site wall ";
             } else {
                 $identifier=NULL;
+                $postedWhere = " on $ownerId wall ";
             }
             if ($wallPost !=='empty') {
                 try
@@ -272,6 +274,26 @@ class dbwall extends dbtable
                         'identifier' => $identifier,
                         'walltype' => $wallType,
                         'datecreated' => $this->now()));
+                    // Log in the activity stream
+                    $objModuleCat = $this->getObject('modules', 'modulecatalogue');
+                    if($objModuleCat->checkIfRegistered('activitystreamer')) {
+                        $message = $this->objUser->fullName() . " "
+                         . $this->objLanguage->languageText("mod_wall_wrote", 
+                           "wall",  "wrote") . " " . $postedWhere;
+                        $title = $this->objLanguage->languageText("mod_wall_wallpost", "wall",  "Wall post");
+                        $link = "index.php?module=wall";
+                        $objActStream = $this->getObject('activityops','activitystreamer');
+                        $this->eventDispatcher->addObserver(array($objActStream, 'postmade' ));
+                        $this->eventDispatcher->post(
+                          $objActStream, 'wall',
+                          array(
+                              'title' => $title,
+                              'link' => $link,
+                              'contextcode' => $identifier,
+                              'description' => $message
+                          )
+                        );
+                    }
                     return 'true';
                 } catch (customException $e)
                 {

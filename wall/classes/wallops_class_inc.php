@@ -255,7 +255,7 @@ class wallops extends object
             $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue);
             $ret .= $this->showPosts($posts, $numPosts, $wallType, 10, $hideMoreLink);
         } else {
-            $ret = "No wall type given.";
+            $ret = $this->objLanguage->languageText("mod_wall_nowalltype", "wall", "No wall type given");
         }
         return $ret;
     }
@@ -279,7 +279,11 @@ class wallops extends object
         // Build the more posts link
         if (!$hideMorePosts) {
             $numPostsTxt =  "<a class='wall_posts_more' "
-                  . "id='wall_more_posts' href='javascript:void(0);'>Older posts</a>";
+              . "id='wall_more_posts' href='javascript:void(0);'>"
+              . $this->objLanguage->languageText("mod_wall_olderposts", 
+                      "wall", "Older posts") 
+              . "</a>";
+
         } else {
             $numPostsTxt=NULL;
         }
@@ -630,6 +634,8 @@ class wallops extends object
     {
         $youSaid = $this->objLanguage->languageText("mod_wall_yousaid", "wall", "You said");
         $secsAgo = $this->objLanguage->languageText("mod_wall_secsago", "wall", "a few seconds ago");
+        $nothingApppendTo = $this->objLanguage->languageText("mod_wall_nothingappendto", "wall",
+          "There is nothing to append to. Reload the page and try again.");
         $script = '<script type="text/javascript" >
             jQuery(function() {
                 // Show the post box and submit button
@@ -709,7 +715,7 @@ class wallops extends object
                                             jQuery("#c__"+fixedid).slideToggle(300);
                                         } else {
                                             // We should never be able to get here
-                                            alert(\'There is nothing to append to. Reload the page and try again.\');
+                                            alert(\'' . $nothingApppendTo . '\');
                                         }
                                     }
 
