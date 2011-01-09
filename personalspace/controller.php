@@ -35,7 +35,7 @@ class personalspace extends controller
         $this->userId = $this->objUser->userId();
         
         $this->objPersonalSpaceBlocks = $this->getObject('dbpersonalspaceblocks');
-        
+
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         $this->objLog->log();
@@ -53,7 +53,7 @@ class personalspace extends controller
         // Method to set the layout template for the given action
         $this->setLayoutTemplate('contextlayout_tpl.php');
         
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery.livequery.js', 'jquery'));
 
         /*
         * Convert the action into a method (alternative to
