@@ -83,6 +83,11 @@ class myprofile extends controller
     */
     public $objLog;
 
+    public $objModule;
+    public $objContextBlocks;
+    public $objDynamicBlocks;
+    public $userId;
+
     /**
     * 
     * Intialiser for the myprofile controller
@@ -92,11 +97,15 @@ class myprofile extends controller
     public function init()
     {
         $this->objUser = $this->getObject('user', 'security');
+        $this->userId = $this->objUser->userId();
         $this->objLanguage = $this->getObject('language', 'language');
-        // Create the configuration object
+        // Create the configuration object.
         $this->objConfig = $this->getObject('config', 'config');
-        // Create an instance of the database class
+        // Create an instance of the database class.
         $this->objDbmyprofile = & $this->getObject('dbmyprofile', 'myprofile');
+        // Create an instance of the module object for checking registration.
+        $this->objModule = $this->getObject('modules', 'modulecatalogue');
+
     }
     
     
@@ -118,8 +127,6 @@ class myprofile extends controller
         * using case selections)
         */
         $method = $this->__getMethod($action);
-        // Set the layout template to compatible one
-        $this->setLayoutTemplate('layout_template.php');
         /*
         * Return the template determined by the method resulting 
         * from action
@@ -141,69 +148,108 @@ class myprofile extends controller
     private function __view()
     {
         // All the action is in the blocks
+        return "main_tpl.php";
+    }
+
+    private function __dynamic()
+    {
+        // Set the layout template to compatible one
+        $this->setLayoutTemplate('layout_template.php');
         return "demo_tpl.php";
     }
     
+
     /**
-    * 
-    * Method corresponding to the edit action. It sets the mode to 
-    * edit and returns the edit template.
-    * @access private
-    * 
-    */
-    private function __edit()
+     * Method to render a block
+     */
+    protected function __renderblock()
     {
-        $this->setvar('mode', "edit");
-        return 'editform_tpl.php';
+        $blockId = $this->getParam('blockid');
+        $side = $this->getParam('side');
+
+        $block = explode('|', $blockId);
+
+        $this->setVar('pageSuppressSkin', TRUE);
+        $this->setVar('pageSuppressContainer', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+
+        $blockId = $side.'___'.str_replace('|', '___', $blockId);
+
+        if ($block[0] == 'block') {
+            $objBlocks = $this->getObject('blocks', 'blocks');
+            $block = '<div id="'.$blockId.'" class="block highlightblock">'.$objBlocks->showBlock($block[1], $block[2], NULL, 20, TRUE, FALSE).'</div>';
+
+
+
+            echo $block;
+        } if ($block[0] == 'dynamicblock') {
+            $block = '<div id="'.$blockId.'" class="block highlightblock">'.$this->objDynamicBlocks->showBlock($block[1]).'</div>';
+
+            echo $block;
+        } else {
+            echo '';
+        }
     }
 
     /**
-    * 
-    * Method corresponding to the add action. It sets the mode to 
-    * add and returns the edit content template.
-    * @access private
-    * 
-    */
-    private function __add()
+     * Method to add a block
+     */
+    protected function __addblock()
     {
-        $this->setvar('mode', 'add');
-        return 'editform_tpl.php';
+        $blockId = $this->getParam('blockid');
+        $side = $this->getParam('side');
+
+        $block = explode('|', $blockId);
+
+        if ($block[0] == 'block' || $block[0] == 'dynamicblock') {
+            // Add Block
+            $result = $this->objDbmyprofile->addBlock($blockId, $side, $this->userId, $block[2]);
+
+            if ($result == FALSE) {
+                echo '';
+            } else {
+                echo $result;
+            }
+        } else {
+            echo '';
+        }
     }
-    
-   
+
     /**
-    * 
-    * Method corresponding to the save action. It gets the mode from 
-    * the querystring to and saves the data then sets nextAction to be 
-    * null, which returns the {yourmodulename} module in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __save()
+     * Method to remove a context block
+     */
+    protected function __removeblock()
     {
-        $mode = $this->getParam("mode", NULL);
-        $this->objDbmyprofile->save($mode);
-        return $this->nextAction(NULL);
+        $blockId = $this->getParam('blockid');
+
+        $result = $this->objDbmyprofile->removeBlock($blockId);
+
+        if ($result) {
+            echo 'ok';
+        } else {
+            echo 'notok';
+        }
     }
-    
+
     /**
-    * 
-    * Method corresponding to the delete action. It requires a 
-    * confirmation, and then delets the item, and then sets 
-    * nextAction to be null, which returns the {yourmodulename} module 
-    * in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __delete()
+     * Method to move a context block
+     */
+    protected function __moveblock()
     {
-        // retrieve the confirmation code from the querystring
-        $confirm=$this->getParam("confirm", "no");
-        if ($confirm=="yes") {
-            $this->deleteItem();
-            return $this->nextAction(NULL);
+        $blockId = $this->getParam('blockid');
+        $direction = $this->getParam('direction');
+
+        if ($direction == 'up') {
+            $result = $this->objDbmyprofile->moveBlockUp($blockId, $this->userId);
+        } else {
+            $result = $this->objDbmyprofile->moveBlockDown($blockId, $this->userId);
+        }
+
+        if ($result) {
+            echo 'ok';
+        } else {
+            echo 'notok';
         }
     }
     
