@@ -501,72 +501,72 @@
     <!-- MODULE: FOAF, Table tbl_foaf_friends where the FOAF friends data live -->
     <tbl_foaf_friends>
         <id>ff_init_1</id>
-        <userid>init_1</userid>
-        <fuserid>init_2</fuserid>
+        <userid>1</userid>
+        <fuserid>2</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_2</id>
-        <userid>init_1</userid>
-        <fuserid>init_3</fuserid>
+        <userid>1</userid>
+        <fuserid>3</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_3</id>
-        <userid>init_1</userid>
-        <fuserid>init_4</fuserid>
+        <userid>1</userid>
+        <fuserid>4</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_4</id>
-        <userid>init_1</userid>
-        <fuserid>init_5</fuserid>
+        <userid>1</userid>
+        <fuserid>5</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_5</id>
-        <userid>init_1</userid>
-        <fuserid>init_6</fuserid>
+        <userid>1</userid>
+        <fuserid>6</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_6</id>
-        <userid>init_2</userid>
-        <fuserid>init_1</fuserid>
+        <userid>2</userid>
+        <fuserid>1</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_7</id>
-        <userid>init_3</userid>
-        <fuserid>init_1</fuserid>
+        <userid>3</userid>
+        <fuserid>1</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_8</id>
-        <userid>init_4</userid>
-        <fuserid>init_1</fuserid>
+        <userid>4</userid>
+        <fuserid>1</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_9</id>
-        <userid>init_2</userid>
-        <fuserid>init_3</fuserid>
+        <userid>2</userid>
+        <fuserid>3</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_10</id>
-        <userid>init_2</userid>
-        <fuserid>init_8</fuserid>
+        <userid>2</userid>
+        <fuserid>8</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_11</id>
-        <userid>init_8</userid>
-        <fuserid>init_1</fuserid>
+        <userid>8</userid>
+        <fuserid>1</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_12</id>
-        <userid>init_8</userid>
-        <fuserid>init_2</fuserid>
+        <userid>8</userid>
+        <fuserid>2</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_13</id>
-        <userid>init_7</userid>
-        <fuserid>init_2</fuserid>
+        <userid>7</userid>
+        <fuserid>2</fuserid>
     </tbl_foaf_friends>
     <tbl_foaf_friends>
         <id>ff_init_14</id>
-        <userid>init_6</userid>
-        <fuserid>init_5</fuserid>
+        <userid>6</userid>
+        <fuserid>5</fuserid>
     </tbl_foaf_friends>
 </defaultdata>
