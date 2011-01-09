@@ -1,4 +1,4 @@
 <?php
-$objBuildCanvas = $this->getObject('buildcanvas', 'myprofile');
+$objBuildCanvas = $this->getObject('buildcanvas', 'canvas');
 echo $objBuildCanvas->show();
 ?>

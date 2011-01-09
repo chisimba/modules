@@ -3,7 +3,9 @@
  * 
  * My profile
  * 
- * A profile module for users that provides basic profile functionality allowing for others to view, and comment on your profile and recent update information.
+ * A profile module for users that provides basic profile functionality
+ * allowing for others to view, and comment on your profile and recent
+ * update information.
  * 
  * PHP version 5
  * 
@@ -48,7 +50,11 @@ $GLOBALS['kewl_entry_point_run'])
 
 /**
 * 
-* Controller class for Chisimba for the module myprofile
+* My profile
+*
+* A profile module for users that provides basic profile functionality
+* allowing for others to view, and comment on your profile and recent
+* update information.
 *
 * @author Derek Keats
 * @package myprofile
@@ -56,37 +62,23 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class myprofile extends controller
 {
-    
-    /**
-    * 
-    * @var string $objConfig String object property for holding the 
-    * configuration object
-    * @access public;
-    * 
-    */
-    public $objConfig;
-    
-    /**
-    * 
-    * @var string $objLanguage String object property for holding the 
-    * language object
-    * @access public
-    * 
-    */
-    public $objLanguage;
+
     /**
     *
     * @var string $objLog String object property for holding the 
     * logger object for logging user activity
-    * @access public
+    * @access private
     * 
     */
-    public $objLog;
+    private $objLog;
 
-    public $objModule;
-    public $objContextBlocks;
-    public $objDynamicBlocks;
-    public $userId;
+    /**
+     *
+     * @var string object Holds the ajax generation object
+     * @access private
+     *
+     */
+    private $objAjax;
 
     /**
     * 
@@ -96,15 +88,13 @@ class myprofile extends controller
     */
     public function init()
     {
-        $this->objUser = $this->getObject('user', 'security');
-        $this->userId = $this->objUser->userId();
-        $this->objLanguage = $this->getObject('language', 'language');
-        // Create the configuration object.
-        $this->objConfig = $this->getObject('config', 'config');
-        // Create an instance of the database class.
-        $this->objDbmyprofile = & $this->getObject('dbmyprofile', 'myprofile');
-        // Create an instance of the module object for checking registration.
-        $this->objModule = $this->getObject('modules', 'modulecatalogue');
+
+        // Load the ajax stuff from the canvas module
+        $this->objAjax = $this->getObject('dyncanvasajax', 'canvas');
+        // Get the activity logger class.
+        $this->objLog=$this->newObject('logactivity', 'logger');
+        // Log this module call.
+        $this->objLog->log();
 
     }
     
@@ -116,6 +106,9 @@ class myprofile extends controller
      * parameter of the  querystring and executes the appropriate method, 
      * returning its appropriate template. This template contains the code 
      * which renders the module output.
+     *
+     * @access public
+     * @return string The method is called and executed and its results returned
      * 
      */
     public function dispatch()
@@ -133,124 +126,81 @@ class myprofile extends controller
         */
         return $this->$method();
     }
-    
-    
-    /*------------- BEGIN: Set of methods to replace case selection ------------*/
 
     /**
     * 
     * Method corresponding to the view action. It shows the default
-    * dynamic canvas template, showing you how to create block based
-    * view templates
+    * dynamic canvas template populated by whatever blocks are added
+    * by the owner of the profile.
+    *
+    * @return string The populated template
     * @access private
     * 
     */
     private function __view()
     {
-        // All the action is in the blocks
+        // All the action is in the blocks, so just return the template.
         return "main_tpl.php";
     }
 
-    private function __dynamic()
-    {
-        // Set the layout template to compatible one
-        $this->setLayoutTemplate('layout_template.php');
-        return "demo_tpl.php";
-    }
-    
+   
 
     /**
-     * Method to render a block
-     */
+    *
+    * Method to render a block for use by the ajax methods when 
+    * 'Turn editing on' is enabled.
+    *
+    * @return string The rendered block
+    * @access protected
+    *
+    */
     protected function __renderblock()
     {
-        $blockId = $this->getParam('blockid');
-        $side = $this->getParam('side');
-
-        $block = explode('|', $blockId);
-
-        $this->setVar('pageSuppressSkin', TRUE);
-        $this->setVar('pageSuppressContainer', TRUE);
-        $this->setVar('pageSuppressBanner', TRUE);
-        $this->setVar('suppressFooter', TRUE);
-
-        $blockId = $side.'___'.str_replace('|', '___', $blockId);
-
-        if ($block[0] == 'block') {
-            $objBlocks = $this->getObject('blocks', 'blocks');
-            $block = '<div id="'.$blockId.'" class="block highlightblock">'.$objBlocks->showBlock($block[1], $block[2], NULL, 20, TRUE, FALSE).'</div>';
-
-
-
-            echo $block;
-        } if ($block[0] == 'dynamicblock') {
-            $block = '<div id="'.$blockId.'" class="block highlightblock">'.$this->objDynamicBlocks->showBlock($block[1]).'</div>';
-
-            echo $block;
-        } else {
-            echo '';
-        }
+        echo $this->objAjax->renderblock();
+        die();
     }
 
     /**
-     * Method to add a block
-     */
+    *
+    * Method to add a block for use by the ajax methods when
+    * 'Turn editing on' is enabled.
+    *
+    * @return string The results of the add action
+    * @access protected
+    *
+    */
     protected function __addblock()
     {
-        $blockId = $this->getParam('blockid');
-        $side = $this->getParam('side');
-
-        $block = explode('|', $blockId);
-
-        if ($block[0] == 'block' || $block[0] == 'dynamicblock') {
-            // Add Block
-            $result = $this->objDbmyprofile->addBlock($blockId, $side, $this->userId, $block[2]);
-
-            if ($result == FALSE) {
-                echo '';
-            } else {
-                echo $result;
-            }
-        } else {
-            echo '';
-        }
+        echo $this->objAjax->addblock();
+        die();
     }
 
     /**
-     * Method to remove a context block
-     */
+     * Method to remove a context block for use by the ajax methods when
+    * 'Turn editing on' is enabled.
+    *
+    * @return string The results of the remove action
+    * @access protected
+    *
+    */
     protected function __removeblock()
     {
-        $blockId = $this->getParam('blockid');
-
-        $result = $this->objDbmyprofile->removeBlock($blockId);
-
-        if ($result) {
-            echo 'ok';
-        } else {
-            echo 'notok';
-        }
+        echo $this->objAjax->removeblock();
+        die();
     }
 
     /**
-     * Method to move a context block
-     */
+     * Method to move a context block for use by the ajax methods when
+    * 'Turn editing on' is enabled.
+    *
+    * @return string The results of the move action
+    * @access protected
+    *
+    */
     protected function __moveblock()
     {
-        $blockId = $this->getParam('blockid');
-        $direction = $this->getParam('direction');
-
-        if ($direction == 'up') {
-            $result = $this->objDbmyprofile->moveBlockUp($blockId, $this->userId);
-        } else {
-            $result = $this->objDbmyprofile->moveBlockDown($blockId, $this->userId);
-        }
-
-        if ($result) {
-            echo 'ok';
-        } else {
-            echo 'notok';
-        }
+        echo $this->objAjax->moveblock();
+        die();
     }
     
     
@@ -265,8 +215,10 @@ class myprofile extends controller
     */
     private function __actionError()
     {
+        // Load an instance of the language object.
+        $objLanguage = $this->getObject('language', 'language');
         $this->setVar('str', "<h3>"
-          . $this->objLanguage->languageText("phrase_unrecognizedaction")
+          . $objLanguage->languageText("phrase_unrecognizedaction")
           .": " . $action . "</h3>");
         return 'dump_tpl.php';
     }
@@ -310,10 +262,6 @@ class myprofile extends controller
             return "__actionError";
         }
     }
-    
-    /*------------- END: Set of methods to replace case selection ------------*/
-    
-
 
     /**
     *
