@@ -26,6 +26,11 @@ $objFix->fixThree();
         Welcome to the demodata module. This module populates your system with
         data that can be used for testing, or for putting on a demo of a system
         with some reasonable data that can be used.
+        {
+            "display" : "block",
+            "module" : "textblock",
+            "block" : "text2"
+        }
     </div>
 </div>
 <?php

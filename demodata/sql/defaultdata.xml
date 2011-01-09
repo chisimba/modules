@@ -17,13 +17,13 @@
     <tbl_users>
         <id>init_2</id>
         <userid>2</userid>
-        <username>dkeats</username>
+        <username>derek</username>
         <title>Dr</title>
         <firstname>Derek</firstname>
         <surname>Keats</surname>
         <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
         <creationdate>2006-01-01</creationdate>
-        <emailaddress>ekeats@localhost.local</emailaddress>
+        <emailaddress>derek@localhost.local</emailaddress>
         <logins>0</logins>
         <sex>M</sex>
         <country>ZA</country>
@@ -41,7 +41,7 @@
         <surname>Keats</surname>
         <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
         <creationdate>2006-01-01</creationdate>
-        <emailaddress>jkeats@localhost.local</emailaddress>
+        <emailaddress>jskeats@localhost.local</emailaddress>
         <logins>0</logins>
         <sex>M</sex>
         <country>ZA</country>
@@ -176,7 +176,60 @@
         <howcreated>install</howcreated>
         <updated>2010-12-31</updated>
     </tbl_users>
-
+    <tbl_users>
+        <id>init_11</id>
+        <userid>11</userid>
+        <username>llovelace</username>
+        <title>Ms</title>
+        <firstname>Linda</firstname>
+        <surname>Lovelace</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2011-01-09</creationdate>
+        <emailaddress>llovelace@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>F</sex>
+        <country>US</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2011-01-09</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_12</id>
+        <userid>12</userid>
+        <username>ttucker</username>
+        <title>Ms</title>
+        <firstname>Tara</firstname>
+        <surname>Tucker</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2011-01-09</creationdate>
+        <emailaddress>ttucker@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>F</sex>
+        <country>CA</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2011-01-09</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_13</id>
+        <userid>13</userid>
+        <username>bbutt</username>
+        <title>Ms</title>
+        <firstname>Bertha</firstname>
+        <surname>Butt</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2011-01-09</creationdate>
+        <emailaddress>bbutt@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>F</sex>
+        <country>ZA</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2011-01-09</updated>
+    </tbl_users>
 
 
   <!-- MODULE: WALL, Table tbl_wall_posts -->
@@ -411,24 +464,109 @@
    </tbl_wall_comments>
 
 
-<!-- MODULE: TEXTBLOCK, Table tbl_textblock to add some text blocks to the site -->
-<tbl_textblock>
-    <id>init_1</id>
-    <blocktext>This site is set up containing demonstration data. It does not
-    contain any content of actual people, except insofar as the site administrator
-    has logged in as one or more of the fictional users and created content, or
-    where the content is included within the demonstration data provided in the
-    DEMODATA module.</blocktext>
-    <title>About this site</title>
-    <blockid>text1</blockid>
-    <show_title>1</show_title>
-    <css_id></css_id>
-    <css_class></css_class>
-    <datecreated>2010-12-31 17:51:26</datecreated>
-    <creatorid>2</creatorid>
-    <datemodified></datemodified>
-    <modifierid></modifierid>
-    <modified>2010-12-31 17:51:26</modified>
-</tbl_textblock>
+    <!-- MODULE: TEXTBLOCK, Table tbl_textblock to add some text blocks to the site -->
+    <tbl_textblock>
+        <id>init_1</id>
+        <blocktext>This site is set up containing demonstration data. It does not
+        contain any content of actual people, except insofar as the site administrator
+        has logged in as one or more of the fictional users and created content, or
+        where the content is included within the demonstration data provided in the
+        DEMODATA module.</blocktext>
+        <title>About this site</title>
+        <blockid>text1</blockid>
+        <show_title>1</show_title>
+        <css_id></css_id>
+        <css_class></css_class>
+        <datecreated>2010-12-31 17:51:26</datecreated>
+        <creatorid>2</creatorid>
+        <datemodified></datemodified>
+        <modifierid></modifierid>
+        <modified>2010-12-31 17:51:26</modified>
+    </tbl_textblock>
+    <tbl_textblock>
+        <id>init_2</id>
+        <blocktext>&lt;!-- Facebook Badge START --&gt;&lt;a href=&quot;http://en-gb.facebook.com/dkeats&quot; target=&quot;_TOP&quot; style=&quot;font-family: &amp;quot;lucida grande&amp;quot;,tahoma,verdana,arial,sans-serif; font-size: 11px; font-variant: normal; font-style: normal; font-weight: normal; color: #3B5998; text-decoration: none;&quot; title=&quot;Derek Keats&quot;&gt;Derek Keats&lt;/a&gt;&lt;span style=&quot;font-family: &amp;quot;lucida grande&amp;quot;,tahoma,verdana,arial,sans-serif; font-size: 11px; line-height: 16px; font-variant: normal; font-style: normal; font-weight: normal; color: #555555; text-decoration: none;&quot;&gt;&amp;nbsp;|&amp;nbsp;&lt;/span&gt;&lt;a href=&quot;http://en-gb.facebook.com/badges/&quot; target=&quot;_TOP&quot; style=&quot;font-family: &amp;quot;lucida grande&amp;quot;,tahoma,verdana,arial,sans-serif; font-size: 11px; font-variant: normal; font-style: normal; font-weight: normal; color: #3B5998; text-decoration: none;&quot; title=&quot;Make your own badge!&quot;&gt;Create your badge&lt;/a&gt;&lt;br/&gt;&lt;a href=&quot;http://en-gb.facebook.com/dkeats&quot; target=&quot;_TOP&quot; title=&quot;Derek Keats&quot;&gt;&lt;img src=&quot;http://badge.facebook.com/badge/812410106.4706.778010882.png&quot; width=&quot;648&quot; height=&quot;84&quot; style=&quot;border: 0px;&quot; /&gt;&lt;/a&gt;&lt;!-- Facebook Badge END --&gt;</blocktext>
+        <title>My Facebook photos</title>
+        <blockid>text2</blockid>
+        <show_title>0</show_title>
+        <css_id></css_id>
+        <css_class></css_class>
+        <datecreated>2010-12-31 17:51:26</datecreated>
+        <creatorid>2</creatorid>
+        <datemodified></datemodified>
+        <modifierid></modifierid>
+        <modified>2010-12-31 17:51:26</modified>
+    </tbl_textblock>
 
+    <!-- MODULE: FOAF, Table tbl_foaf_friends where the FOAF friends data live -->
+    <tbl_foaf_friends>
+        <id>ff_init_1</id>
+        <userid>init_1</userid>
+        <fuserid>init_2</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_2</id>
+        <userid>init_1</userid>
+        <fuserid>init_3</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_3</id>
+        <userid>init_1</userid>
+        <fuserid>init_4</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_4</id>
+        <userid>init_1</userid>
+        <fuserid>init_5</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_5</id>
+        <userid>init_1</userid>
+        <fuserid>init_6</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_6</id>
+        <userid>init_2</userid>
+        <fuserid>init_1</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_7</id>
+        <userid>init_3</userid>
+        <fuserid>init_1</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_8</id>
+        <userid>init_4</userid>
+        <fuserid>init_1</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_9</id>
+        <userid>init_2</userid>
+        <fuserid>init_3</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_10</id>
+        <userid>init_2</userid>
+        <fuserid>init_8</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_11</id>
+        <userid>init_8</userid>
+        <fuserid>init_1</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_12</id>
+        <userid>init_8</userid>
+        <fuserid>init_2</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_13</id>
+        <userid>init_7</userid>
+        <fuserid>init_2</fuserid>
+    </tbl_foaf_friends>
+    <tbl_foaf_friends>
+        <id>ff_init_14</id>
+        <userid>init_6</userid>
+        <fuserid>init_5</fuserid>
+    </tbl_foaf_friends>
 </defaultdata>
