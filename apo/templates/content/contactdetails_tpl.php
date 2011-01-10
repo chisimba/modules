@@ -137,17 +137,17 @@ $form->addToForm($fs->show());
 
 $button = new button('finish', "Finish");
 $uri = $this->uri(array('action' => 'finishdocument'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'addreview'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 echo $form->show();
 ?>

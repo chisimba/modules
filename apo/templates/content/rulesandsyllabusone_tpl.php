@@ -155,17 +155,17 @@ $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
 $uri = $this->uri(array('action' => 'addrulesandsyllabustwo'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'addoverview'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));;
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 echo $form->show();
