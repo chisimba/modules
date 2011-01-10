@@ -149,8 +149,9 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => $action));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+//$uri = $this->uri(array('action' => $action));
+//$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));

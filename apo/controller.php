@@ -1025,6 +1025,8 @@ class apo extends controller {
     }
 
     public function __addrulesandsyllabusone() {
+        print_r($_POST);
+        die();
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
