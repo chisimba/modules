@@ -20,52 +20,54 @@ class elsiskintoolbar extends object {
 
 	/**
      * Method to show the Toolbar
-     * @return string
+     * @return string $retstr containing all the toolbar links.
      */
 	 
 	 public function show() {
-		
-		/*$menuOptions = array(
-        	array('action' => 'login', 'text' => 'About', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'login'),
-            array('action' => 'login', 'text' => 'Staff', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'login'),,
-            array('action' => 'login', 'text' => 'About', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'login'),
-            array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin'),
-        );*/
-		$menuOptions = array(
-				array('action' => 'login', 'text' => 'About', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'login')
+		 $menuOptions = array(
+				array('action' => 'about', 'text' => 'About', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'loggedin'),
+				array('action' => 'staff', 'text' => 'Staff', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'loggedin')//,
+				//array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin')
 			);
-		
-		$str = ""; 
-		/*foreach ($menuOptions as $option) {
-			// If Module And Action Matches, item will be set as current action
-			$isDefault = ($actionCheck && $moduleCheck) ? TRUE : FALSE;
-	
+		$str = "";
+		$count = 1;
+		foreach ($menuOptions as $option) {
+			
+			if($this->getParam('action') == $option['action']) {
+				$isDefault = TRUE;
+			}
+			
 			if ($isDefault) {
 				$usedDefault = TRUE;
 			}
-	
+			
 			// Add to Navigation
-			$str .= $this->generateItem($option['action'], $option['module'], $option['text'], $isDefault);
-		}*/
+			$str .= $this->generateItem($option['action'], $option['module'], $option['text'], $isDefault, $count);
+			$count++;
+		}
 		
 		// Check whether Navigation has Current/Highlighted item
         // Invert Result for Home Link
         $usedDefault = $usedDefault ? FALSE : TRUE;
-
-        // Add Home Link
-        $home = $this->generateItem(NULL, '_default', 'Home', $usedDefault);
-		/*
-		<ul id="tabnav">
-                        <li class="tab1"><a href="index.html">Home</a></li>
-                        <li class="tab2"><a href="about/index.html">About</a></li>
-                        <li class="tab3"><a href="staff/index.html">Staff</a></li>
-                    </ul>*/
-
-        // Return Toolbar
-        return '<div class="org_nav"><div id="Topnav><div id="Topnav"><ul id="tabnav">' . $home . $str . '</ul>';
 		
-	 }
-
+		// Add Home Link
+        $home = $this->generateItem('home', '_default', 'Home', $usedDefault);
+		
+		 // Return Toolbar
+        $retstr =  '
+			<div class="org_nav">
+			<!-- Start: Topnav -->
+				<div id="Topnav">
+					<ul id="tabnav">' . $home . $str . '
+					</ul>
+				</div>
+			<!-- End: Topnav -->
+			</div>
+			<!-- End: .grid_4 -->';
+			
+		return $retstr;
+	 }	
+		
     /**
      * Method to show the Toolbar
      * @return string
@@ -144,13 +146,21 @@ class elsiskintoolbar extends object {
         return '<div id="chromestyle"><ul>' . $home . $str . '</ul>';
     }
 
-    private function generateItem($action='', $module='_default', $text, $isActive=FALSE) {
+    private function generateItem($action='', $module='_default', $text, $isActive=FALSE, $count=NULL) {
         switch ($module) {
             case '_default' : $isRegistered = TRUE;
                 break;
             default: $isRegistered = $this->objModules->checkIfRegistered($module);
                 break;
         }
+		$tabClass = "";
+		if($count > 0) {
+			$tabClass .= ' class="tab'.++$count.'"';
+		}
+		
+		if($text == "Home") {
+			$tabClass .= ' class="tab1"';	
+		}
 
         if ($isRegistered) {
             $link = new link($this->uri(array('action' => $action), $module));
@@ -158,11 +168,28 @@ class elsiskintoolbar extends object {
 
             $isActive = $isActive ? ' id="current"' : '';
 
-            return '<li' . $isActive . '>' . $link->show() . '</li>';
+            return '
+						<li' . $isActive . $tabClass.'>' . $link->show() . '</li>';
         } else {
             return '';
         }
     }
+	
+	public function getContactLink() {
+		$module = 'elsiskin';
+		$action = 'contact';
+
+		$isRegistered = $this->objModules->checkIfRegistered($module);
+		if($isRegistered) {
+			$link = new link($this->uri(array('action' => $action), $module));
+			$link->link = 'Contact Us';
+		}
+		else {
+			$link = "";
+		}
+		
+		return $link->show();
+	}
 
 }
 ?>
