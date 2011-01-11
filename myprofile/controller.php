@@ -90,7 +90,7 @@ class myprofile extends controller
     {
 
         // Load the ajax stuff from the canvas module
-        $this->objAjax = $this->getObject('dyncanvasajax', 'canvas');
+        $this->objAjax = $this->getObject('userblockajax', 'canvas');
         // Get the activity logger class.
         $this->objLog=$this->newObject('logactivity', 'logger');
         // Log this module call.

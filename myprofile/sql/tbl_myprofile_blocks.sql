@@ -1,7 +1,7 @@
 <?php
 
 //Table Name
-$tablename = 'tbl_myprofile_blocks';
+$tablename = 'tbl_myprofile_userblocks';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'This table holds data pertaining to the blocks displayed on the myprofile module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -40,7 +40,7 @@ $fields = array(
         ),
     );
     
-$name = 'tbl_myprofile_blocks_idx';
+$name = 'tbl_myprofile_userblocks_idx';
 
 $indexes = array(
                 'fields' => array(
