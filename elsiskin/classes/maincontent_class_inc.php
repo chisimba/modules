@@ -14,11 +14,24 @@ class maincontent extends object {
 	// path to root folder of skin
 	private $skinpath;
 	
+	// news stories object
+	private $objNews;
+	
+	// news category object
+	private $objCategory;
+	
+	// file manager object
+	private $objFileManager;
+
+	
 	/**
      * Constructor
      */
     public function init() {
-		$this->currentAction = 'home';	
+		$this->currentAction = 'home';
+		$this->objNews = $this->getObject('dbnewsstories','news');
+		$this->objCategory = $this->getObject('dbnewscategories', 'news');
+		$this->objFileManager = $this->getObject('dbfile', 'filemanager');
 	}
 	
 	/* Method to set the current action of the page
@@ -52,24 +65,28 @@ class maincontent extends object {
 	 }
 			
 	 private function showHomeMain() {		
-			$retstr = '<div class="grid_1">
-							<img src="'.$this->skinpath.'images/sm_xolani.jpg"><h4>eLearning</h4>
-							<p>Augment your  teaching and learning programme with digital resources.</p>
-						</div>
-	
-						<!-- end .grid_1 -->
-						<div class="grid_1">
-							<img src="'.$this->skinpath.'images/mulalo_matshusa.png"><h4>Support</h4>
-							<p>Our training workshops will give you hands on experience with new learning technologies</p>
-						</div>
-						<!-- end .grid_1 -->
-						<div class="grid_1">
-							<img src="'.$this->skinpath.'images/sm_wafula_gill.jpg" width="220" height="91"><h4>Innovation</h4>
-	
-							<p>Explore  and develop new and emerging technologies in your teaching &amp; research. </p>
-						</div>
-						<!-- end .grid_1 -->
-						<div class="clear">&nbsp;</div>
+		$exists = $this->objCategory->categoryExists('home_body_content');
+		 if($exists) {
+			$categoryid = $this->objCategory->getCategoryById('home_body_content');
+			$stories = $this->objNews->getCategoryStories($categoryid);
+		 }
+		//print_r($stories);
+		
+		$retstr = "";
+		foreach($stories as $row) {
+			$fileDetails = $this->objFileManager->getFile($row['storyimage']);
+			$path = $fileDetails['path'];
+			$retstr .= '<div class="grid_1">
+						<img src="usrfiles/'.$path.'">';
+			$retstr .= '<h4>'.$row['storytitle'].'</h4>
+						<p>'.$row['storytext'].'</p>
+					</div>';
+		}
+		
+		$retstr .= '<!-- end .grid_1 -->';						
+		
+			
+		$retstr .= '<div class="clear">&nbsp;</div>
 						<div class="grid_2">
 							<div class="info-box-holder">
 								<div class="left_wrap">
@@ -106,7 +123,7 @@ class maincontent extends object {
 	
 						</div>
 	
-					</div>';
+					</div>';	
 		return $retstr;
 	 }
 	 
