@@ -47,6 +47,12 @@ class elsicontent extends object {
 	
 	// instance of the main contents of a page
 	private $mainContent;
+	
+	// news stories object
+	private $objNews;
+	
+	// news category object
+	private $objCategory;
 
 
     /**
@@ -56,6 +62,8 @@ class elsicontent extends object {
     public function init() {
 		$this->sidebar = $this->getObject('sidebar');
 		$this->mainContent = $this->getObject('maincontent');	
+		$this->objNews = $this->getObject('dbnewsstories','news');
+		$this->objCategory = $this->getObject('dbnewscategories', 'news');
 	}
 
 	/**
@@ -130,29 +138,45 @@ class elsicontent extends object {
 					<div class="clear">&nbsp;</div>'; 
 		 }
 		 else {
+			 $exists = $this->objCategory->categoryExists('home_content');
+			 if($exists) {
+			 	$categoryid = $this->objCategory->getCategoryById('home_content');
+				$stories = $this->objNews->getCategoryStories($categoryid);
+			 }
 			 $ret = '<div class="clear">&nbsp;
 				</div>
 				<div class="grid_1">
 	
-					<h3><a href="">Welcome to eLSI</a></h3>
+					<h3><a href="">';
+					foreach($stories as $row) {
+						if(stristr($row['storytitle'],'welcome') != FALSE) {
+							$ret .= $row['storytitle'];
+						}
+					}
+			$ret .= '</a></h3>
 					
 					</div>
 					<div class="grid_3">
-						<h2><a href="">How can we help?</a></h2>
-					</div>
-					<!-- end .grid_1 -->
-					<div class="clear">&nbsp;
-					</div>
-	
-					<div class="grid_1">
-					&nbsp;
-					</div>
-					<div class="grid_3">
-						<p>The eLearning, Support and Innovation (eLSI) Unit has been established to explore, contribute to and expand the online education capacities of students and staff at the University of Witwatersrand. The unit intends to promote competent and appropriate use of digital technologies and develop an academic digital literacy amongst students and staff. </p>
-					</div>
-					<!-- end .grid_1 -->
-	
-					<div class="clear">&nbsp;</div>';
+						<h2><a href="">';
+					foreach($stories as $row) {
+						if(stristr($row['storytitle'],'help') != FALSE) {
+							$ret .= $row['storytitle'];
+							
+							$ret .= '</a></h2>
+							</div>
+							<!-- end .grid_1 -->
+							<div class="clear">&nbsp;
+							</div>
+			
+							<div class="grid_1">
+							&nbsp;
+							</div>
+							<div class="grid_3">'.$row['storytext'].'</div>
+							<!-- end .grid_1 -->
+			
+							<div class="clear">&nbsp;</div>';
+						}
+					}
 		}
 		 
 	 	return $ret;
