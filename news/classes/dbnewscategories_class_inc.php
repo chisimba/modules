@@ -182,6 +182,19 @@ class dbnewscategories extends dbtable
         return $this->getAll(' ORDER BY '.$orderBy);
     }
 
+
+    /**
+      * Method to get category id based on category name
+      *
+      *
+      * @param string $name The name of the category
+      */
+    public function getCategoryById($name) {
+        $category = $this->getRow('categoryname', $name);
+
+        return $category['id'];
+    }
+
     public function categoryExists($name)
     {
         $count = $this->getRecordCount('WHERE categoryname=\''.$name.'\'');
