@@ -11,12 +11,28 @@ class rotatingidentity extends object {
 	
 	// path to root folder of skin
 	private $skinpath;
+	
+	// news stories object
+	private $objNews;
+	
+	// news category object
+	private $objCategory;
+	
+	// file manager object
+	private $objFileManager;
+	
+	// stories for rotating banners at the top
+	private $stories;
 
 
     /**
      * Constructor
      */
-    public function init() {}
+    public function init() {
+		$this->objCategory = $this->getObject('dbnewscategories', 'news');
+		$this->objNews = $this->getObject('dbnewsstories','news');
+		$this->objFileManager = $this->getObject('dbfile', 'filemanager');
+	}
 
 	/**
      * Method to show the Toolbar
@@ -32,6 +48,16 @@ class rotatingidentity extends object {
       * @return string
       */
 	public function show($action) {
+		 switch($action) {
+			default:$category = 'rotating_identity';
+		 }
+		 
+		 $exists = $this->objCategory->categoryExists($category);
+		 if($exists) {
+			$categoryid = $this->objCategory->getCategoryById($category);
+			$this->stories = $this->objNews->getCategoryStories($categoryid);;
+		 }
+		 
 		 $retstr = '<div id="Identity_image"> 
             <div class="clear">&nbsp;</div>
                 <div class="grid_1 push_3"><a onmouseover="MM_swapImage(\'Login\',\'\',\''.$this->skinpath.'images/login_1.png\',1)" onmouseout="MM_swapImgRestore()" href="https://elearn.wits.ac.za/">
@@ -68,9 +94,8 @@ class rotatingidentity extends object {
 			else {
 				$retstr .= '
                         <div class="text-holder">
-                            <span class="head-main">WELCOME TO ELSI</span>
-                            <span class="head-text">eLearning, Support and Innovation lab offers Wits anywhere, anytime and anyplace
-                                learning.<br>
+                            <span class="head-main">'.$this->stories[0]['storytitle'].'</span>
+                            <span class="head-text">'.$this->stories[0]['storytext'].'<br>
                                 <img width="16" height="16" src="'.$this->skinpath.'images/plus_more.gif">&nbsp;<a href="about/index.html">Latest New</a>s<br>
                                 <img width="16" height="16" src="'.$this->skinpath.'images/plus_more.gif">&nbsp;<br>
                             </span>
@@ -109,18 +134,17 @@ class rotatingidentity extends object {
 	}
 	
 	public function showHomeBanner() {
-		$restr = '<div style="z-index: 1; position: relative; width: 700px; height: 245px;" class="slideshow">
-                    <img src="'.$this->skinpath.'images/front_identity/home_dread.jpg" 
-						 style="position: absolute; top: 0px; left: 0px; display: none; z-index: 4; opacity: 0; width: 700px; height: 245px;">
-                    <img src="'.$this->skinpath.'images/front_identity/mlearning_website.png" 
-					     style="position: absolute; top: 0px; left: 0px; display: none; z-index: 4; opacity: 0; width: 700px; height: 245px;">
-                    <img src="'.$this->skinpath.'images/front_identity/oaweek_website.png"
-					     style="position: absolute; top: 0px; left: 0px; display: block; z-index: 5; opacity: 1; width: 700px; height: 245px;">
-                    <img src="'.$this->skinpath.'images/front_identity/passport_website.png" 
-					     style="position: absolute; top: 0px; left: 0px; display: none; z-index: 4; opacity: 0; width: 700px; height: 245px;">
-                </div>';
-				
-		return $restr;	
+		$retstr = '<div style="z-index: 1; position: relative; width: 700px; height: 245px;" class="slideshow">';
+		
+		foreach($this->stories as $row) {
+			$fileDetails = $this->objFileManager->getFile($row['storyimage']);
+			$path = $fileDetails['path'];
+			$retstr .= '<img src="usrfiles/'.$path.'"  
+						 style="position: absolute; top: 0px; left: 0px; display: none; z-index: 4; opacity: 0; width: 700px; height: 245px;">';
+		}
+		$retstr .= '</div>';
+		
+		return $retstr;
 	}
 	
 	
