@@ -84,6 +84,8 @@ class dkeatscom2 extends controller
     */
     public function init()
     {
+        // Load the module block ajax helper.
+        $this->objAjax = $this->getObject('moduleblockajax', 'canvas');
         // Get the activity logger class.
         $this->objLog=$this->newObject('logactivity', 'logger');
         // Log this module call.
@@ -132,28 +134,8 @@ class dkeatscom2 extends controller
     */
     private function __view()
     {
-        $this->objAjax = $this->getObject('moduleblockajax', 'canvas');
         // All the action is in the blocks, so just return the template.
         return "main_tpl.php";
-    }
-
-    /**
-    *
-    * Method corresponding to the personalized action. It shows the default
-    * dynamic canvas template populated by whatever blocks are added
-    * by the owner of the profile. This uses personal blocks, so the
-    * page will only have content for particular users who have added
-    * content.
-    *
-    * @return string The populated template
-    * @access private
-    *
-    */
-    private function __personalized()
-    {
-        $this->objAjax = $this->getObject('userblockajax', 'canvas');
-        // All the action is in the blocks, so just return the template.
-        return "personalized_tpl.php";
     }
 
     /**
