@@ -1,4 +1,5 @@
 <?php
+
 /*
  *
  * A module to get the content of the elsi website. The content displayed will depends on the
@@ -38,72 +39,78 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end of security
 
 class elsicontent extends object {
-	
-	// path to root folder of skin
-	private $skinpath;
-	
-	// instance of sidebar
-	private $sidebar;
-	
-	// instance of the main contents of a page
-	private $mainContent;
-	
-	// news stories object
-	private $objNews;
-	
-	// news category object
-	private $objCategory;
 
+    // path to root folder of skin
+    private $skinpath;
+    // instance of sidebar
+    private $sidebar;
+    // instance of the main contents of a page
+    private $mainContent;
+    // news stories object
+    private $objNews;
+    // news category object
+    private $objCategory;
 
     /**
      * Constructor
      */
-	 
     public function init() {
-		$this->sidebar = $this->getObject('sidebar');
-		$this->mainContent = $this->getObject('maincontent');	
-		$this->objNews = $this->getObject('dbnewsstories','news');
-		$this->objCategory = $this->getObject('dbnewscategories', 'news');
-	}
+        $this->sidebar = $this->getObject('sidebar');
+        $this->mainContent = $this->getObject('maincontent');
+        $this->objNews = $this->getObject('dbnewsstories', 'news');
+        $this->objCategory = $this->getObject('dbnewscategories', 'news');
+    }
 
-	/**
-     * Method to show the Toolbar
-     * @return string $retstr containing all the toolbar links.
+    /**
+     * Method to set the skin path
+     * @return none
+     * @access public
      */
-	 
-	 public function setSkinPath($skinpath) {
-		 $this->skinpath = $skinpath;
-	 }
-	 
-	 /**
-      * Method to show the rotating images with news right below the toolbar
-      * @return string
-      */
-	 public function show($action) {
-		 // set current action
-		$this->sidebar->setCurrentAction($action);
-		$this->sidebar->setSkinPath($this->skinpath);
-		$this->mainContent->setCurrentAction($action);
-		$this->mainContent->setSkinPath($this->skinpath);
+    public function setSkinPath($skinpath) {
+        $this->skinpath = $skinpath;
+    }
 
-		return $this->getContent($action);
-	 }
-	 
-	 private function getContent($action) {	
-		// get the content of the page
-		$retstr = '<div id="Content">';
-		$retstr .= $this->getIntroText($action);	
-		$retstr .= $this->sidebar->show();
-		$retstr .= '<div id="Main">'.$this->mainContent->show().'</div>
+    /**
+     * Method to show the rotating images with news right below the toolbar
+     * @return string  string $retstr with all the content and sidebar info.
+     * @access public
+     */
+    public function show($action) {
+        // set current action
+        $this->sidebar->setCurrentAction($action);
+        $this->sidebar->setSkinPath($this->skinpath);
+        $this->mainContent->setCurrentAction($action);
+        $this->mainContent->setSkinPath($this->skinpath);
+
+        return $this->getContent($action);
+    }
+
+    /* Method to display the content of the page
+     * @return string  string $retstr with all the content and sidebar info.
+     * @access private
+     */
+
+    private function getContent($action) {
+        // get the content of the page
+        $retstr = '<div id="Content">';
+        $retstr .= $this->getIntroText($action);
+        $retstr .= $this->sidebar->show();
+        $retstr .= '<div id="Main">' . $this->mainContent->show() . '</div>
 					<!-- End: Main -->
 				<!-- End: Content -->';
 
-	    return $retstr;
-	 }
-	 
-	 private function getIntroText($action) {
-		 if($action == 'about') {
-			 $ret = '<div class="clear">&nbsp;</div>
+        return $retstr;
+    }
+
+    /*
+     * Method for displaying intro text for the main content of a page.
+     * @return string $retstring content for the main part of the page inside the div main.
+     * @access private
+     */
+
+    private function getIntroText($action) {
+        if ($action == 'about') {
+            $ret = '<div class="clear">&nbsp;</div>
 					 <div class="grid_1">
 						<h3><a href="">Welcome to eLSI</a></h3>
 					</div>
@@ -113,19 +120,17 @@ class elsicontent extends object {
 					 <div class="grid_1 pull_3">
 						<h3>More about eLSI</h3>
 				  	 </div><div class="clear">&nbsp;</div>';
-		 }
-		 else if($action == 'staff') {
-			$ret = '<div class="clear">&nbsp;</div>
+        } else if ($action == 'staff') {
+            $ret = '<div class="clear">&nbsp;</div>
 					<div class="grid_1 ">
 						<h3><a href="">Staff at eLSI</a></h3>
 				    </div>
 				    <div class="grid_3">
 						<h2><a href="">Who works at ELSI?</a></h2>
 			  		</div>
-					<div class="clear">&nbsp;</div>'; 
-		 }
-		 else if($action == 'contact') {
-			$ret = '<div class="clear">&nbsp;</div>
+					<div class="clear">&nbsp;</div>';
+        } else if ($action == 'contact') {
+            $ret = '<div class="clear">&nbsp;</div>
 					<div class="grid_1">
 						<h3><a href="index.html">Contact eLSI</a></h3>
 				    </div>
@@ -135,34 +140,33 @@ class elsicontent extends object {
 					<div class="grid_1 pull_3">
 						<h3>More about eLSI</h3>
 				  	</div>
-					<div class="clear">&nbsp;</div>'; 
-		 }
-		 else {
-			 $exists = $this->objCategory->categoryExists('home_content');
-			 if($exists) {
-			 	$categoryid = $this->objCategory->getCategoryById('home_content');
-				$stories = $this->objNews->getCategoryStories($categoryid);
-			 }
-			 $ret = '<div class="clear">&nbsp;
+					<div class="clear">&nbsp;</div>';
+        } else {
+            $exists = $this->objCategory->categoryExists('home_content');
+            if ($exists) {
+                $categoryid = $this->objCategory->getCategoryById('home_content');
+                $stories = $this->objNews->getCategoryStories($categoryid);
+            }
+            $ret = '<div class="clear">&nbsp;
 				</div>
 				<div class="grid_1">
 	
 					<h3><a href="">';
-					foreach($stories as $row) {
-						if(stristr($row['storytitle'],'welcome') != FALSE) {
-							$ret .= $row['storytitle'];
-						}
-					}
-			$ret .= '</a></h3>
+            foreach ($stories as $row) {
+                if (stristr($row['storytitle'], 'welcome') != FALSE) {
+                    $ret .= $row['storytitle'];
+                }
+            }
+            $ret .= '</a></h3>
 					
 					</div>
 					<div class="grid_3">
 						<h2><a href="">';
-					foreach($stories as $row) {
-						if(stristr($row['storytitle'],'help') != FALSE) {
-							$ret .= $row['storytitle'];
-							
-							$ret .= '</a></h2>
+            foreach ($stories as $row) {
+                if (stristr($row['storytitle'], 'help') != FALSE) {
+                    $ret .= $row['storytitle'];
+
+                    $ret .= '</a></h2>
 							</div>
 							<!-- end .grid_1 -->
 							<div class="clear">&nbsp;
@@ -171,14 +175,15 @@ class elsicontent extends object {
 							<div class="grid_1">
 							&nbsp;
 							</div>
-							<div class="grid_3">'.$row['storytext'].'</div>
+							<div class="grid_3">' . $row['storytext'] . '</div>
 							<!-- end .grid_1 -->
 			
 							<div class="clear">&nbsp;</div>';
-						}
-					}
-		}
-		 
-	 	return $ret;
-	 }
+                }
+            }
+        }
+
+        return $ret;
+    }
+
 }
