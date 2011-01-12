@@ -158,25 +158,27 @@ class maincontent extends object {
 	 }
 	 
 	 public function showAboutMain() {
-		$retstr = '<div class="grid_3">
-						<p>The eLearning, Support and Innovation (eLSI) Unit has been established to assist staff at the University of Witwatersrand to integrate ICT into their courses and to enable academics,  students and others to freely share their teaching and learning resources with others. </p>
-					
-					<p>eLSI has been set up to explore, contribute to and engage critically with the worldwide learning community. The unit intends to 
-					 </p><ol id="list_alpha">
-						<li><p>Promote competent and appropriate use of digital technologies and develop an academic digital literacy amongst students and staff</p></li>
-						<li><p>Design and develop content to further the use of interactive educational resources </p></li>
-						<li><p>Engage with academic staff and design pedagogically appropriate</p></li>
-						<li><p>Participate in educational networks and research, lead or contribute to African eLearning initiatives </p></li>
-						<li><p>Deploy, maintain and develop Open Source Learning Systems</p></li>
-					</ol>
-				  </div>';
-		return $retstr; 
+            $exists = $this->objCategory->categoryExists('about_body_content');
+            if($exists) {
+                $categoryid = $this->objCategory->getCategoryById('about_body_content');
+                $stories = $this->objNews->getCategoryStories($categoryid);
+            }
+
+            $retstr = '<div class="grid_3">
+                            <p>The eLearning, Support and Innovation (eLSI) Unit has been established to assist staff at the University of Witwatersrand to integrate ICT into their courses and to enable academics,  students and others to freely share their teaching and learning resources with others. </p>
+                            <p>eLSI has been set up to explore, contribute to and engage critically with the worldwide learning community. The unit intends to</p>';
+            $retstr .= '<ol id="'.$stories[0][storytitle].'">';
+            foreach($stories as $row) {
+                $retstr .= '<li>'.$row['storytext'].'</li>';
+            }
+
+            $retstr .= '</ol></div><!-- End: grid_3 -->';
+
+            return $retstr;
 	 }
 	 
 	 public function showStaffMain() {
 		$retstr = '<div class="grid_3">
-						
-					
 					<p>ELSI staff have an interest and the ability to assist with the effective educational use of ICTs 
 					</p><div id="container">
 					
@@ -325,20 +327,30 @@ class maincontent extends object {
 	 }
 	 
 	 public function showContactMain() {
-		$retstr = '<div class="grid_3">
+            $topics = array(
+                array('text'=>'I\'d like to make ...'),
+                array('value'=>'General', 'text'=>'A general enquiry '),
+                array('value'=>'Admissions', 'text'=>'An admissions enquiry'),
+                array('value'=>'Finance', 'text'=>'A financial enquiry'),
+                array('value'=>'Other', 'text'=>'An enquiry about another matter')
+            );
+
+             $retstr = '<div class="grid_3">
 				   <h4>Fill in the form</h4>
 					
 				   <form onsubmit="return ContactDetails_Field_Validator(this)" id="loginform" name="loginform" method="POST" action="./?sub=process">
 					<fieldset id="topdialogue">
 					<legend><span>Please</span>  would you</legend>
 					<label>Subject</label> 
-					<select size="1" name="c_topic">
-						<option selected="selected">I\'d like to make ...</option>
-						<option value="General">A general enquiry </option>
-						<option value="Admissions">An admissions enquiry</option>
-						<option value="Finance">A financial enquiry</option>
-						<option value="Other">An enquiry about another matter</option>
-				    </select> 
+					<select size="1" name="c_topic">';
+
+                                        foreach($topics as $row) {
+                                            $retstr .= '
+                                                <option value="'.$row['value'].'">'.$row['text'].'</option>';
+                                        }
+                                        
+                                        $retstr .= '
+                                            </select>
 					<br>
 					<label>Your Name</label>
 					<input type="text" name="c_name" maxlength="256" size="35">

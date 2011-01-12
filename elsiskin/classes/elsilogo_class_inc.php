@@ -30,7 +30,6 @@ class elsilogo extends object {
 	 public function show() {
 		 $retstr = '<div class="clear">&nbsp;</div>
             <div class="grid_3">
-
                 <img src="' . $this->skinpath . 'images/logo_wits.png">
             </div>
     		<!-- end .grid_3 -->
