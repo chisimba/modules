@@ -24,7 +24,7 @@
  * @author    Nguni Phakela nonkululeko.phakela@wits.ac.za
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: maincontent_class_inc.php,v 1.1 2007-11-25 09:13:27 nguni52 Exp $
+ * @version   CVS: $Id: maincontent_class_inc.php,v 1.1 2011-01-12 09:13:27 nguni52 Exp $
  * @link      http://avoir.uwc.ac.za
  *
  *
