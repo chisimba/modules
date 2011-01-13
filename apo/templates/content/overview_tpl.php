@@ -1,5 +1,6 @@
 <?php
- /*
+
+/*
  * @category  Chisimba
  * @package   apo (Academic Planning Office)
  * @author    Jacqueline Gil
@@ -79,11 +80,11 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $textinput = new textinput('a1');
 $textinput->size = 50;
 if ($mode == 'edit') {
-  $textinput->value = $document['docname'];
-  }/*
-  if ($mode == "fixup") {
-  $textinput->value = $a1;
-  } */
+    $textinput->value = $document['docname'];
+}
+if ($mode == "fixup") {
+    $textinput->value = $a1;
+}
 $table->startRow();
 $table->addCell("A.1. Name of course/unit:");
 $table->addCell($textinput->show());
@@ -94,6 +95,12 @@ $radio->addOption('1', "proposal for a new course/unit ");
 $radio->addOption('2', "change to the outcomes or credit value of a course/unit");
 $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
+if ($mode == 'edit') {
+    //$radio->setSelected($a2);
+}
+if ($mode == "fixup") {
+    $radio->setSelected($a2);
+}
 $table->startRow();
 $table->addCell("A.2. This is a:");
 $table->addCell($radio->show());
@@ -101,7 +108,9 @@ $table->endRow();
 
 $textarea = new textarea('a3');
 $textarea->height = '70px';
-//$textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $a3;
+}
 $table->startRow();
 $table->addCell("A.3. Provide a brief motivation for the introduction/amendment of the course/unit:");
 $table->addCell($textarea->show());
@@ -110,6 +119,9 @@ $table->endRow();
 $textarea = new textarea('a4');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $a4;
+}
 $table->startRow();
 $table->addCell("A.4. Towards which qualification(s) can the course/unit be taken?");
 $table->addCell($textarea->show());
@@ -123,24 +135,27 @@ $radio->addOption('4', "linked to a recent qualification/ programme amendment, o
 $radio->addOption('5', "not linked to any other recent academic developments, nor those currently in development");
 $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
+if ($mode == "fixup") {
+    $radio->setSelected($a5);
+}
 $table->startRow();
 $table->addCell("A.5. This new or amended course proposal is:");
 $table->addCell($radio->show());
 $table->endRow();
 
-/* $efs = new fieldset();
-  $efs->setLegend('Errors');
-  if (count($errormessages) > 0) {
+$efs = new fieldset();
+$efs->setLegend('Errors');
+if (count($errormessages) > 0) {
 
-  $errorstr = '<ul>';
+    $errorstr = '<ul>';
 
-  foreach ($errormessages as $errormessage) {
-  $errorstr.='<li class="error">' . $errormessage . '<li/>';
-  }
-  $errorstr.='</li>';
-  $efs->addContent($errorstr);
-  $form->addToForm($efs);
-  } */
+    foreach ($errormessages as $errormessage) {
+        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+    }
+    $errorstr.='</li>';
+    $efs->addContent($errorstr);
+    $form->addToForm($efs);
+}
 
 $legend = "<b>A: Overview</b>";
 $fs = new fieldset();
@@ -152,7 +167,7 @@ $button = new button('next', $this->objLanguage->languageText('word_next'));
 //$uri = $this->uri(array('action' => $action));
 //$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $button->setToSubmit();
-$form->addToForm('<br/>'.$button->show());
+$form->addToForm('<br/>' . $button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'addeditdocument'));

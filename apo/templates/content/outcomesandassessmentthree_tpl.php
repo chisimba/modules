@@ -12,7 +12,11 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
-$form = new form('outcomesandassessmentthreeform');
+$this->setVar('pageSuppressXML', TRUE);
+$this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+$action = 'addresources';
+
+$form = new form('outcomesandassessmentthreeform', $this->uri(array('action' => $action)));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section D: Outcomes and Assessment');
 
@@ -78,6 +82,9 @@ $table->cellspacing='3';
 
 $textinput = new textinput('a');
 $textinput->size = 10;
+if ($mode == "fixup") {
+    $textarea->value = $a;
+}
 $table->startRow();
 $table->addCell("a. Over how many weeks will this course run?");
 $table->addCell($textinput->show());
@@ -85,6 +92,9 @@ $table->endRow();
 
 $textinput = new textinput('b');
 $textinput->size = 10;
+if ($mode == "fixup") {
+    $textarea->value = $b;
+}
 $table->startRow();
 $table->addCell("b. How many hours of teaching will a particular student experience for this specific course in a single week?");
 $table->addCell($textinput->show());
@@ -92,6 +102,9 @@ $table->endRow();
 
 $textinput = new textinput('c');
 $textinput->size = 10;
+if ($mode == "fixup") {
+    $textarea->value = $c;
+}
 $table->startRow();
 $table->addCell("c. How many hours of tutorials will a particular student experience for this specific course in a single week?");
 $table->addCell($textinput->show());
@@ -99,6 +112,9 @@ $table->endRow();
 
 $textinput = new textinput('d');
 $textinput->size = 10;
+if ($mode == "fixup") {
+    $textarea->value = $d;
+}
 $table->startRow();
 $table->addCell("d. How many lab hours will a particular student experience for this specific course in a single week? (Note: the assumption is that there is only one staff contact hour per lab, the remaining lab time is student self-study)");
 $table->addCell($textinput->show());
@@ -106,33 +122,48 @@ $table->endRow();
 
 $textinput = new textinput('e');
 $textinput->size = 10;
+if ($mode == "fixup") {
+    $textarea->value = $e;
+}
 $table->startRow();
 $table->addCell("e. How many other contact sessions are there each week including periods used for testd or other assessments which have not been included in the number of lecture, tutorial or laboratory sessions.");
 $table->addCell($textinput->show());
 $table->endRow();
 
-$totalcontacttime = new label();
-$totalcontacttime->forId = 'totalcontacttime';
+$label = new label();
+$label->forId = 'totalcontacttime';
+if ($mode == "fixup") {
+    $label->labelValue = $totalContactTime;
+}
 $table->startRow();
 $table->addCell("<b>Total contact time</b>");
-$table->addCell("<b>".$totalcontacttime->labelValue."</b>");
+$table->addCell("<b>".$label->labelValue."</b>");
 $table->endRow();
 
 $textinput = new textinput('f');
 $textinput->size = 10;
+if ($mode == "fixup") {
+    $textarea->value = $f;
+}
 $table->startRow();
 $table->addCell("f. For every hour of lectures or contact with a staff member, how many hours should the student spend studying by her/himself?");
 $table->addCell($textinput->show());
 $table->endRow();
 
-$studyhoursnoexam = new label();
+$label = new label();
+if ($mode == "fixup") {
+    $label->labelValue = $totalstudyhoursNoexam;
+}
 $table->startRow();
 $table->addCell("<b>Total notional study hours (excluding the exams)</b>");
-$table->addCell("<b>".$studyhoursnoexam->labelValue."</b>");
+$table->addCell("<b>".$label->labelValue."</b>");
 $table->endRow();
 
 $textinput = new textinput('g');
 $textinput->size = 10;
+if ($mode == "fixup") {
+    $textarea->value = $g;
+}
 $table->startRow();
 $table->addCell("g. How many exams are there per year?");
 $table->addCell($textinput->show());
@@ -140,34 +171,49 @@ $table->endRow();
 
 $textinput = new textinput('h');
 $textinput->size = 10;
+if ($mode == "fixup") {
+    $textarea->value = $h;
+}
 $table->startRow();
 $table->addCell("h. How long is each exam?");
 $table->addCell($textinput->show());
 $table->endRow();
 
-$totalexamtime = new label();
+$label = new label();
+if ($mode == "fixup") {
+    $label->labelValue = $totalExamTime;
+}
 $table->startRow();
 $table->addCell("<b>Total exam time per year</b>");
-$table->addCell("<b>".$totalexamtime->labelValue."</b>");
+$table->addCell("<b>".$label->labelValue."</b>");
 $table->endRow();
 
 $textinput = new textinput('i');
 $textinput->size = 10;
+if ($mode == "fixup") {
+    $textarea->value = $i;
+}
 $table->startRow();
 $table->addCell("i. How many hours of preparation for the exams is the student expected to undertake?");
 $table->addCell($textinput->show());
 $table->endRow();
 
-$totalstudyhours = new label();
+$label = new label();
+if ($mode == "fixup") {
+    $label->labelValue = $totalstudyhoursExam;
+}
 $table->startRow();
 $table->addCell("<b>Total notional study hours</b>");
-$table->addCell("<b>".$totalstudyhours->labelValue."</b>");
+$table->addCell("<b>".$label->labelValue."</b>");
 $table->endRow();
 
-$saqa = new label();
+$label = new label();
+if ($mode == "fixup") {
+    $label->labelValue = $totalSAQAcredits;
+}
 $table->startRow();
 $table->addCell("<b>Total SAQA Credits</b>");
-$table->addCell("<b>".$saqa->labelValue."</b>");
+$table->addCell("<b>".$label->labelValue."</b>");
 $table->endRow();
 
 $button = new button('calculate', "Calculate");
@@ -178,7 +224,7 @@ $table->addCell(" ");
 $table->addCell($button->show());
 $table->endRow();
 
-/*$efs = new fieldset();
+$efs = new fieldset();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {
 
@@ -190,7 +236,7 @@ if (count($errormessages) > 0) {
     $errorstr.='</li>';
     $efs->addContent($errorstr);
     $form->addToForm($efs);
-}*/
+}
 
 $legend = "<b>D: Outcomes and Assessment (page 3)</b>";
 $fs = new fieldset();
@@ -200,8 +246,7 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => 'addresources'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));

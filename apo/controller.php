@@ -981,18 +981,19 @@ class apo extends controller {
         return "overview_tpl.php";
     }
 
-    public function __saveoverview(){
-        //$errormessages = array();
+    public function __addrulesandsyllabusone() {
+       // print_r($_POST);
+        //die();
+
+        $errormessages = array();
 
         $a1 = $this->getParam("a1");
         $a2 = $this->getParam("a2");
         $a3 = $this->getParam("a3");
         $a4 = $this->getParam("a4");
         $a5 = $this->getParam("a5");
-        print_r("a1 = ".$a1);
-        die();
 
-       /* if ($a1 == null) {
+        if ($a1 == null) {
             $errormessages[] = "Please provide an answer for A.1";
         }
         if ($a3 == null) {
@@ -1015,18 +1016,14 @@ class apo extends controller {
             return "overview_tpl.php";
         }
 
-        $formdata = new SimpleXMLElement();
+       /* $formdata = new SimpleXMLElement();
         $formdata->addChild('a1', $a1);
         $formdata->addChild('a2', $a2);
         $formdata->addChild('a3', $a3);
         $formdata->addChild('a4', $a4);
-        $formdata->addChild('a5', $a5);
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-    }
+        $formdata->addChild('a5', $a5);        
+       // $this->objformdata->saveData($formname, $formdata, $docid);*/
 
-    public function __addrulesandsyllabusone() {
-        print_r($_POST);
-        die();
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1034,8 +1031,8 @@ class apo extends controller {
         return "rulesandsyllabusone_tpl.php";
     }
 
-    public function __saverulesandsyllabusone(){
-        // $errormessages = array();
+   public function __addrulesandsyllabustwo() {
+        $errormessages = array();
 
         $b1 = $this->getParam("b1");
         $b2 = $this->getParam("b2");
@@ -1044,7 +1041,8 @@ class apo extends controller {
         $b4a = $this->getParam("b4a");
         $b4b = $this->getParam("b4b");
         $b4c = $this->getParam("b4c");
-      /*  if ($b1 == null) {
+
+        if ($b1 == null) {
             $errormessages[] = "Please provide an answer for B.1";
         }
         if ($b2 == null) {
@@ -1078,17 +1076,15 @@ class apo extends controller {
             return "rulesandsyllabusone_tpl.php";
         }
 
-        $formdata = "<b1>" . $b1 . "</b1>";
+    /*    $formdata = "<b1>" . $b1 . "</b1>";
         $formdata .= "<b2>" . $b2 . "</b2>";
         $formdata .= "<b3a>" . $b3a . "</b3a>";
         $formdata .= "<b3b>" . $b3b . "</b3b>";
         $formdata .= "<b4a>" . $b4a . "</b4a>";
         $formdata .= "<b4b>" . $b4b . "</b4b>";
         $formdata .= "<b4c>" . $b4c . "</b4c>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-    }
-
-    public function __addrulesandsyllabustwo() {
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1096,19 +1092,29 @@ class apo extends controller {
         return "rulesandsyllabustwo_tpl.php";
     }
 
-    public function __saverulesandsyllabustwo(){
+    public function __addsubsidyrequirements() {
         // $errormessages = array();
 
         $b5a = $this->getParam("b5a");
         $b5b = $this->getParam("b5b");
-        $b5a = $this->getParam("b5a");
+        $b6a = $this->getParam("b6a");
         $b6b = $this->getParam("b6b");
-        $b5c = $this->getParam("b5c");
-       /* if ($b5b == null) {
+        $b6c = $this->getParam("b6c");
+
+        if ($b5a == null) {
+            $errormessages[] = "Please provide an answer for B.5.a";
+        }
+        if ($b5b == null) {
             $errormessages[] = "Please provide an answer for B.5.b";
         }
+        if ($b6a == null) {
+            $errormessages[] = "Please provide an answer for B.6.a";
+        }
         if ($b6b == null) {
-            $errormessages[] = "Please provide an answer for B.6.6";
+            $errormessages[] = "Please provide an answer for B.6.b";
+        }
+        if ($b6c == null) {
+            $errormessages[] = "Please provide an answer for B.6.c";
         }
 
         if (count($errormessages) > 0) {
@@ -1124,15 +1130,13 @@ class apo extends controller {
             return "rulesandsyllabustwo_tpl.php";
         }
 
-        $formdata = "<b5a>" . $b5a . "</b5a>";
+  /*      $formdata = "<b5a>" . $b5a . "</b5a>";
         $formdata .= "<b5b>" . $b5b . "</b5b>";
         $formdata .= "<b6a>" . $b6a . "</b6a>";
         $formdata .= "<b6b>" . $b6b . "</b6b>";
         $formdata .= "<b6c>" . $b6c . "</b6c>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-    }
-
-    public function __addsubsidyrequirements() {
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1140,8 +1144,8 @@ class apo extends controller {
         return "subsidyrequirements_tpl.php";
     }
 
-    public function __savesubsidyrequirements(){
-        // $errormessages = array();
+    public function __addoutcomesandassessmentone() {
+        $errormessages = array();
 
         $c1 = $this->getParam("c1");
         $c2a = $this->getParam("c2a");
@@ -1150,7 +1154,8 @@ class apo extends controller {
         $c4a = $this->getParam("c4a");
         $c4b = $this->getParam("c4b");
         $c4c = $this->getParam("c4c");
-       /* if ($c1 == null) {
+
+        if ($c1 == null) {
             $errormessages[] = "Please provide an answer for C.1";
         }
         if ($c2a == null) {
@@ -1180,19 +1185,17 @@ class apo extends controller {
             $this->setVarByRef("c4b", $c4b);
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
-            return "rulesandsyllabustwo_tpl.php";
+            return "subsidyrequirements_tpl.php";
         }
 
-        $formdata = "<c1>" . $c1 . "</c1>";
+  /*      $formdata = "<c1>" . $c1 . "</c1>";
         $formdata .= "<c2a>" . $c2a . "</c2a>";
         $formdata .= "<c2b>" . $c2b . "</c2b>";
         $formdata .= "<c3>" . $c3 . "</c3>";
         $formdata .= "<c4a>" . $c4a . "</c4a>";
         $formdata .= "<c4b>" . $c4b . "</c4b>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-    }
-
-    public function __addoutcomesandassessmentone() {
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1200,8 +1203,8 @@ class apo extends controller {
         return "outcomesandassessmentone_tpl.php";
     }
 
-    public function __saveoutcomesandassessmentone(){
-        // $errormessages = array();
+    public function __addoutcomesandassessmenttwo() {
+        $errormessages = array();
 
         $d1a = $this->getParam("d1a");
         $d1b = $this->getParam("d1b");
@@ -1209,7 +1212,8 @@ class apo extends controller {
         $d2b = $this->getParam("d2b");
         $d2c = $this->getParam("d2c");
         $d3 = $this->getParam("d3");
-       /* if ($d1a == null) {
+
+        if ($d1a == null) {
             $errormessages[] = "Please provide an answer for D.1.a";
         }
         if ($d1b == null) {
@@ -1242,16 +1246,14 @@ class apo extends controller {
             return "rulesandsyllabustwo_tpl.php";
         }
 
-        $formdata = "<d1a>" . $d1a . "</d1a>";
+  /*      $formdata = "<d1a>" . $d1a . "</d1a>";
         $formdata .= "<d1b>" . $d1b . "</d1b>";
         $formdata .= "<d2a>" . $d2a . "</d2a>";
         $formdata .= "<d2b>" . $d2b . "</d2b>";
         $formdata .= "<d2c>" . $d2c . "</d2c>";
         $formdata .= "<d3>" . $d3 . "</d3>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-    }
-
-    public function __addoutcomesandassessmenttwo() {
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1259,11 +1261,11 @@ class apo extends controller {
         return "outcomesandassessmenttwo_tpl.php";
     }
 
-    public function __saveoutcomesandassessmenttwo(){
-        // $errormessages = array();
-   $groups = $this->getParam('groups');
+    public function __addoutcomesandassessmentthree() {
+        $errormessages = array();
+   /*$groups = $this->getParam('groups');
    echo $groups;
-   die();
+   die();*/
         $a = $this->getParam("a");
         $b = $this->getParam("b");
         $c = $this->getParam("c");
@@ -1272,7 +1274,8 @@ class apo extends controller {
         $f = $this->getParam("f");
         $g = $this->getParam("g");
         $h = $this->getParam("h");
-       /* if ($a == null) {
+
+        if ($a == null) {
             $errormessages[] = "Please provide an answer for a";
         }
         if ($b == null) {
@@ -1312,7 +1315,7 @@ class apo extends controller {
             return "outcomesandassessmentthree_tpl.php";
         }
 
-        $formdata = "<a>" . $a . "</a>";
+  /*      $formdata = "<a>" . $a . "</a>";
         $formdata .= "<b>" . $b . "</b>";
         $formdata .= "<c>" . $c . "</c>";
         $formdata .= "<d>" . $d . "</d>";
@@ -1320,10 +1323,8 @@ class apo extends controller {
         $formdata .= "<f>" . $f . "</f>";
         $formdata .= "<g>" . $g . "</g>";
         $formdata .= "<h>" . $h . "</h>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-    }
-
-    public function __addoutcomesandassessmentthree() {
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1331,8 +1332,8 @@ class apo extends controller {
         return "outcomesandassessmentthree_tpl.php";
     }
 
-    public function __saveoutcomesandassessmentthree(){
-        // $errormessages = array();
+    public function __addresources() {
+        $errormessages = array();
 
         $a = $this->getParam("a");
         $b = $this->getParam("b");
@@ -1343,7 +1344,8 @@ class apo extends controller {
         $g = $this->getParam("g");
         $h = $this->getParam("h");
         $i = $this->getParam("i");
-       /* if ($a == null) {
+
+        if ($a == null) {
             $errormessages[] = "Please provide an answer for a";
         }
         if ($b == null) {
@@ -1387,7 +1389,7 @@ class apo extends controller {
             return "outcomesandassessmentthree_tpl.php";
         }
 
-        $formdata = "<a>" . $a . "</a>";
+  /*      $formdata = "<a>" . $a . "</a>";
         $formdata .= "<b>" . $b . "</b>";
         $formdata .= "<c>" . $c . "</c>";
         $formdata .= "<d>" . $d . "</d>";
@@ -1396,11 +1398,8 @@ class apo extends controller {
         $formdata .= "<g>" . $g . "</g>";
         $formdata .= "<h>" . $h . "</h>";
         $formdata .= "<i>" . $i . "</i>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-
-    }
-
-    public function __addresources() {
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1408,8 +1407,8 @@ class apo extends controller {
         return "resources_tpl.php";
     }
 
-    public function __saveresources(){
-        // $errormessages = array();
+    public function __addcollaborationandcontracts() {
+        $errormessages = array();
 
         $e1a = $this->getParam("e1a");
         $e1b = $this->getParam("e1b");
@@ -1422,8 +1421,8 @@ class apo extends controller {
         $e4 = $this->getParam("e4");
         $e5a = $this->getParam("e5a");
         $e5b = $this->getParam("e5b");
-        print_r($e1a);
-       /* if ($e1a == null) {
+
+        if ($e1a == null) {
             $errormessages[] = "Please provide an answer for E.1.a";
         }
         if ($e1b == null) {
@@ -1475,7 +1474,7 @@ class apo extends controller {
             return "resources_tpl.php";
         }
 
-        $formdata = "<e1a>" . $e1a . "</e1a>";
+  /*      $formdata = "<e1a>" . $e1a . "</e1a>";
         $formdata .= "<e1b>" . $e . "</e1b>";
         $formdata .= "<e2a>" . $e . "</e2a>";
         $formdata .= "<e2b>" . $e . "</e2b>";
@@ -1486,11 +1485,8 @@ class apo extends controller {
         $formdata .= "<e4>" . $e . "</e4>";
         $formdata .= "<e5a>" . $e . "</e5a>";
         $formdata .= "<e5b>" . $e . "</e5b>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-
-    }
-
-    public function __addcollaborationandcontracts() {
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1498,8 +1494,8 @@ class apo extends controller {
         return "collaborationandcontracts_tpl.php";
     }
 
-    public function savecollaborationandcontracts(){
-        // $errormessages = array();
+    public function __addreview() {
+        $errormessages = array();
 
         $f1a = $this->getParam("f1a");
         $f1b = $this->getParam("f1b");
@@ -1508,7 +1504,8 @@ class apo extends controller {
         $f3a = $this->getParam("f3a");
         $f3b = $this->getParam("f3b");
         $f4 = $this->getParam("f4");
-       /* if ($f1a == null) {
+
+        if ($f1a == null) {
             $errormessages[] = "Please provide an answer for F.1.a";
         }
         if ($f1b == null) {
@@ -1545,17 +1542,15 @@ class apo extends controller {
             return "rulesandsyllabustwo_tpl.php";
         }
 
-        $formdata = "<f1a>" . $f1a . "</f1a>";
+  /*      $formdata = "<f1a>" . $f1a . "</f1a>";
         $formdata .= "<f1b>" . $f1b . "</f1b>";
         $formdata .= "<f2a>" . $f2a . "</f2a>";
         $formdata .= "<f2b>" . $f2b . "</f2b>";
         $formdata .= "<f3a>" . $f3a . "</f3a>";
         $formdata .= "<f3b>" . $f3b . "</f3b>";
         $formdata .= "<f4>" . $f4 . "</f4>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-    }
-
-    public function __addreview() {
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1563,8 +1558,8 @@ class apo extends controller {
         return "review_tpl.php";
     }
 
-    public function __savereview(){
-        // $errormessages = array();
+    public function __addcontactdetails() {
+        $errormessages = array();
 
         $g1a = $this->getParam("g1a");
         $g1b = $this->getParam("g1b");
@@ -1574,7 +1569,8 @@ class apo extends controller {
         $g3b = $this->getParam("g3b");
         $g4a = $this->getParam("g4a");
         $g4b = $this->getParam("g4b");
-       /* if ($g1a == null) {
+
+        if ($g1a == null) {
             $errormessages[] = "Please provide an answer for G.1.a";
         }
         if ($g1b == null) {
@@ -1615,7 +1611,7 @@ class apo extends controller {
             return "rulesandsyllabustwo_tpl.php";
         }
 
-        $formdata = "<g1a>" . $g1a . "</g1a>";
+  /*      $formdata = "<g1a>" . $g1a . "</g1a>";
         $formdata .= "<g1b>" . $g1b . "</g1b>";
         $formdata .= "<g2a>" . $g2a . "</g2a>";
         $formdata .= "<g2b>" . $g2b . "</g2b>";
@@ -1623,10 +1619,8 @@ class apo extends controller {
         $formdata .= "<g3b>" . $g3b . "</g3b>";
         $formdata .= "<g4a>" . $g4a . "</g4a>";
         $formdata .= "<g4b>" . $g4b . "</g4b>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-    }
-
-    public function __addcontactdetails() {
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1634,15 +1628,16 @@ class apo extends controller {
         return "contactdetails_tpl.php";
     }
 
-    public function __savecontactdetails(){
-        //  $errormessages = array();
+    public function __finishdocument() {   
+        $errormessages = array();
 
         $h1 = $this->getParam("h1");
         $h2a = $this->getParam("h2a");
         $h2b = $this->getParam("h2b");
         $h3a = $this->getParam("h3a");
         $h3b = $this->getParam("h3b");
-     /*   if ($h1 == null) {
+
+        if ($h1 == null) {
             $errormessages[] = "Please provide an answer for H.1";
         }
         if ($h2a == null) {
@@ -1671,20 +1666,18 @@ class apo extends controller {
             return "contactdetails_tpl.php";
         }
 
-        $formdata = "<h1>" . $h1 . "</h1>";
+  /*      $formdata = "<h1>" . $h1 . "</h1>";
         $formdata .= "<h2a>" . $h2a . "</h2a>";
         $formdata .= "<h2b>" . $h2b . "</h2b>";
         $formdata .= "<h3a>" . $h3a . "</h3a>";
         $formdata .= "<h3b>" . $h3b . "</h3b>";
-        $this->objformdata->saveData($formname, $formdata, $docid);*/
-    }
-
-    public function __finishdocument() {   
+        $this->objformdata->saveData($formname, $formdata, $docid);
+*/
         return "finishdocument_tpl.php";
     }
 
     public function __calculatespreedsheet() {
-      //  $errormessages = array();
+        $errormessages = array();
 
         $a = $this->getParam("a");
         $b = $this->getParam("b");
@@ -1695,7 +1688,8 @@ class apo extends controller {
         $g = $this->getParam("g");
         $h = $this->getParam("h");
         $i = $this->getParam("i");
-      /*  if ($a == null) {
+
+        if ($a == null) {
             $errormessages[] = "Please provide an answer for a";
         }
         if ($b == null) {
@@ -1737,7 +1731,7 @@ class apo extends controller {
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
             return "outcomesandassessmentthree_tpl.php";
-        }*/
+        }
 
         $totalContactTime = ($b + $c + $d + $e) * $a;
         $totalstudyhoursNoexam = $totalContactTime * $f;

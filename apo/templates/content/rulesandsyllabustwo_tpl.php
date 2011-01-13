@@ -15,7 +15,11 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 
-$form = new form('rulesandsyllabustwoform');
+$this->setVar('pageSuppressXML', TRUE);
+$this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+$action = 'addsubsidyrequirements';
+
+$form = new form('rulesandsyllabustwoform', $this->uri(array('action' => $action)));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section B: Rules and Syllabus');
 
@@ -85,6 +89,9 @@ $radio->addOption('8',"a postgraduate diploma unit");
 $radio->addOption('9',"a masters unit");
 $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
+if ($mode == "fixup") {
+    $radio->setSelected($b5a);
+}
 $table->startRow();
 $table->addCell("B.5.a. At what level is the course/unit taught?");
 $table->addCell($radio->show());
@@ -93,6 +100,9 @@ $table->endRow();
 $textarea = new textarea('b5b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $b5b;
+}
 $table->startRow();
 $table->addCell("B.5.b. In which year/s of study is the course/unit to be taught? ");
 $table->addCell($textarea->show());
@@ -111,6 +121,9 @@ $radio->addOption('9',"attendance course/unit");
 $radio->addOption('9',"other");
 $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
+if ($mode == "fixup") {
+    $radio->setSelected($b6a);
+}
 $table->startRow();
 $table->addCell("B.6.a. This is a:");
 $table->addCell($radio->show());
@@ -119,6 +132,9 @@ $table->endRow();
 $textarea = new textarea('b6b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $b6b;
+}
 $table->startRow();
 $table->addCell("B.6.b. If ‘other’, provide details of the course/unit duration and/or the number of lectures which comprise the course/unit:");
 $table->addCell($textarea->show());
@@ -129,12 +145,15 @@ $radio->addOption('y',"yes");
 $radio->addOption('n',"no");
 $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
+if ($mode == "fixup") {
+    $radio->setSelected($b6c);
+}
 $table->startRow();
 $table->addCell("B.6.c.Is the unit assessed:");
 $table->addCell($radio->show());
 $table->endRow();
 
-/*$efs = new fieldset();
+$efs = new fieldset();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {
 
@@ -146,7 +165,7 @@ if (count($errormessages) > 0) {
     $errorstr.='</li>';
     $efs->addContent($errorstr);
     $form->addToForm($efs);
-}*/
+}
 
 $legend = "<b>B: Rules and Syllabus (page 1)</b>";
 $fs = new fieldset();
@@ -155,8 +174,7 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => 'addsubsidyrequirements'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));

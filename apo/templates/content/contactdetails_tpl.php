@@ -17,7 +17,11 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 
-$form = new form('contactdetailsform');
+$this->setVar('pageSuppressXML', TRUE);
+$this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+$action = 'finishdocument';
+
+$form = new form('contactdetailsform', $this->uri(array('action' => $action)));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section H: Contact Details');
 
@@ -136,8 +140,7 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('finish', "Finish");
-$uri = $this->uri(array('action' => 'finishdocument'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
