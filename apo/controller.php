@@ -1455,6 +1455,7 @@ class apo extends controller {
         if ($e5b == null) {
             $errormessages[] = "Please provide an answer for E.5.b";
         }
+
         if (count($errormessages) > 0) {
 
             $this->setVarByRef("errormessages", $errormessages);

@@ -83,7 +83,7 @@ $table->cellspacing='3';
 $textinput = new textinput('a');
 $textinput->size = 10;
 if ($mode == "fixup") {
-    $textarea->value = $a;
+    $textinput->value = $a;
 }
 $table->startRow();
 $table->addCell("a. Over how many weeks will this course run?");
@@ -93,7 +93,7 @@ $table->endRow();
 $textinput = new textinput('b');
 $textinput->size = 10;
 if ($mode == "fixup") {
-    $textarea->value = $b;
+    $textinput->value = $b;
 }
 $table->startRow();
 $table->addCell("b. How many hours of teaching will a particular student experience for this specific course in a single week?");
@@ -103,7 +103,7 @@ $table->endRow();
 $textinput = new textinput('c');
 $textinput->size = 10;
 if ($mode == "fixup") {
-    $textarea->value = $c;
+    $textinput->value = $c;
 }
 $table->startRow();
 $table->addCell("c. How many hours of tutorials will a particular student experience for this specific course in a single week?");
@@ -113,7 +113,7 @@ $table->endRow();
 $textinput = new textinput('d');
 $textinput->size = 10;
 if ($mode == "fixup") {
-    $textarea->value = $d;
+    $textinput->value = $d;
 }
 $table->startRow();
 $table->addCell("d. How many lab hours will a particular student experience for this specific course in a single week? (Note: the assumption is that there is only one staff contact hour per lab, the remaining lab time is student self-study)");
@@ -123,7 +123,7 @@ $table->endRow();
 $textinput = new textinput('e');
 $textinput->size = 10;
 if ($mode == "fixup") {
-    $textarea->value = $e;
+    $textinput->value = $e;
 }
 $table->startRow();
 $table->addCell("e. How many other contact sessions are there each week including periods used for testd or other assessments which have not been included in the number of lecture, tutorial or laboratory sessions.");
@@ -143,7 +143,7 @@ $table->endRow();
 $textinput = new textinput('f');
 $textinput->size = 10;
 if ($mode == "fixup") {
-    $textarea->value = $f;
+    $textinput->value = $f;
 }
 $table->startRow();
 $table->addCell("f. For every hour of lectures or contact with a staff member, how many hours should the student spend studying by her/himself?");
@@ -162,7 +162,7 @@ $table->endRow();
 $textinput = new textinput('g');
 $textinput->size = 10;
 if ($mode == "fixup") {
-    $textarea->value = $g;
+    $textinput->value = $g;
 }
 $table->startRow();
 $table->addCell("g. How many exams are there per year?");
@@ -172,7 +172,7 @@ $table->endRow();
 $textinput = new textinput('h');
 $textinput->size = 10;
 if ($mode == "fixup") {
-    $textarea->value = $h;
+    $textinput->value = $h;
 }
 $table->startRow();
 $table->addCell("h. How long is each exam?");
@@ -191,7 +191,7 @@ $table->endRow();
 $textinput = new textinput('i');
 $textinput->size = 10;
 if ($mode == "fixup") {
-    $textarea->value = $i;
+    $textinput->value = $i;
 }
 $table->startRow();
 $table->addCell("i. How many hours of preparation for the exams is the student expected to undertake?");

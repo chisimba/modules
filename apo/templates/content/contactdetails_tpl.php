@@ -82,6 +82,9 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $textarea = new textarea('h1');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $h1;
+}
 $table->startRow();
 $table->addCell("H.1. Name of academic proposing the course/unit:");
 $table->addCell($textarea->show());
@@ -90,6 +93,9 @@ $table->endRow();
 $textarea = new textarea('h2a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $h2a;
+}
 $table->startRow();
 $table->addCell("H.2.a. Name of the School which will be the home for the course/unit:");
 $table->addCell($textarea->show());
@@ -98,6 +104,9 @@ $table->endRow();
 $textarea = new textarea('h2b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $h2b;
+}
 $table->startRow();
 $table->addCell("H.2.b. School approval signature (Head of School or appropriate School committee chair) and date:");
 $table->addCell($textarea->show());
@@ -106,6 +115,9 @@ $table->endRow();
 $textarea = new textarea('h3a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $h3a;
+}
 $table->startRow();
 $table->addCell("H.3.a. Telephone contact numbers:");
 $table->addCell($textarea->show());
@@ -114,6 +126,9 @@ $table->endRow();
 $textarea = new textarea('h3b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $h3b;
+}
 $table->startRow();
 $table->addCell("H.3.b. Email addresses:");
 $table->addCell($textarea->show());

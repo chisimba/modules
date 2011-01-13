@@ -75,6 +75,9 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $textarea = new textarea('e1a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $he1a;
+}
 $table->startRow();
 $table->addCell("E.1.a. Is there currently adequate teaching capacity with regard to the introduction of the course/unit? ");
 $table->addCell($textarea->show());
@@ -83,6 +86,9 @@ $table->endRow();
 $textarea = new textarea('e1b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e1b;
+}
 $table->startRow();
 $table->addCell("E.1.b. Who will teach the course/unit?");
 $table->addCell($textarea->show());
@@ -91,6 +97,9 @@ $table->endRow();
 $textarea = new textarea('e2a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e2a;
+}
 $table->startRow();
 $table->addCell("E.2.a. How many students will the course/unit attract?");
 $table->addCell($textarea->show());
@@ -99,6 +108,9 @@ $table->endRow();
 $textarea = new textarea('e2b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e2b;
+}
 $table->startRow();
 $table->addCell("E.2.b. How has this been factored into the enrolment planning in your Faculty?");
 $table->addCell($textarea->show());
@@ -107,6 +119,9 @@ $table->endRow();
 $textarea = new textarea('e2c');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e2c;
+}
 $table->startRow();
 $table->addCell("E.2.c. How has it been determined if the course/unit is sustainable in the long term, or short term if of topical interest?");
 $table->addCell($textarea->show());
@@ -115,6 +130,9 @@ $table->endRow();
 $textarea = new textarea('e3a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e3a;
+}
 $table->startRow();
 $table->addCell("E.3.a. Specify the space requirements for the course/unit:");
 $table->addCell($textarea->show());
@@ -123,6 +141,9 @@ $table->endRow();
 $textarea = new textarea('e3b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e3b;
+}
 $table->startRow();
 $table->addCell("E.3.b. Specify the IT teaching resources required for the course/unit:");
 $table->addCell($textarea->show());
@@ -131,6 +152,9 @@ $table->endRow();
 $textarea = new textarea('e3c');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e3c;
+}
 $table->startRow();
 $table->addCell("E.3.c. Specify the library resources required to teach the course/unit:");
 $table->addCell($textarea->show());
@@ -139,6 +163,9 @@ $table->endRow();
 $textarea = new textarea('e4');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e4;
+}
 $table->startRow();
 $table->addCell("E.4. Does the School intend to offer the course/unit in addition to its current course/unit offerings, or is the intention to eliminate an existing course/unit?");
 $table->addCell($textarea->show());
@@ -147,6 +174,9 @@ $table->endRow();
 $textarea = new textarea('e5a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e5a;
+}
 $table->startRow();
 $table->addCell("E.5.a. Specify the name of the course/unit co-ordinator:");
 $table->addCell($textarea->show());
@@ -155,12 +185,15 @@ $table->endRow();
 $textarea = new textarea('e5b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+if ($mode == "fixup") {
+    $textarea->value = $e5b;
+}
 $table->startRow();
 $table->addCell("E.5.b. State the Staff number of the course/unit coordinator (consult your Faculty Registrar):");
 $table->addCell($textarea->show());
 $table->endRow();
 
-/*$efs = new fieldset();
+$efs = new fieldset();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {
 
@@ -172,7 +205,7 @@ if (count($errormessages) > 0) {
     $errorstr.='</li>';
     $efs->addContent($errorstr);
     $form->addToForm($efs);
-}*/
+}
 
 $legend = "<b>E: Resources</b>";
 $fs = new fieldset();
