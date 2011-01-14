@@ -56,7 +56,7 @@ $contactdetailslink->link = "Contact Details";
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
         $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
-        "<b>Outcomes and Assessment (page two)</b>" . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
+        "<b>Outcomes and Assessment - Page Two</b>" . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
         $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '<br/>';
 
@@ -66,7 +66,7 @@ $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
 
-$legend = "Outcomes and Assessment";
+$legend = "<b>Section D: Outcomes and Assessment - Page Two</b>";
 
 $form = new form('outcomesandassessmenttwoform');
 

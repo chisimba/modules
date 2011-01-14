@@ -71,7 +71,7 @@ $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
 
-$legend = "<b>Review</b>";
+$legend = "<b>Section G: Review</b>";
 
 $form = new form('reviewform');
 

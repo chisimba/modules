@@ -32,19 +32,19 @@ $overviewlink = new link($this->uri(array("action" => "addoverview")));
 $overviewlink->link = "Overview";
 
 $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
-$rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
+$rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
 $rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
-$rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
+$rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
 $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
-$outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+$outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
 $outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
-$outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
+$outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
 
 $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
-$outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+$outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
 $resourceslink = new link($this->uri(array("action" => "addresources")));
 $resourceslink->link = "Resources";
@@ -82,7 +82,7 @@ $table->addCell('C.1. The mode of instruction is understood to be contact/face-t
 $table->addCell($textarea->show());
 $table->endRow();
 
-$radio = new radio ('c2');
+$radio = new radio ('c2a');
 $radio->addOption('1',"off-campus");
 $radio->addOption('2',"on-campus");
 $radio->setSelected('1');
@@ -135,7 +135,7 @@ $table->addCell('Percentage each teaches.:');
 $table->addCell($textarea->show());
 $table->endRow();
 
-$legend = "<b>Subsidy Requirements</b>";
+$legend = "<b>Section C: Subsidy Requirements</b>";
 
 $fs = new fieldset();
 $fs->setLegend($legend);

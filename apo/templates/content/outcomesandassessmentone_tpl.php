@@ -2,17 +2,16 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
+$this->loadClass('textarea', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
-$this->loadClass('radio', 'htmlelements');
-$this->loadClass('textarea', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 
-$xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section F: Collaboration and Contacts');
+$xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section D: Outcomes and Assessment - Page One');
 
 $header = new htmlheading();
 $header->type = 2;
@@ -47,17 +46,20 @@ $outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
 $resourceslink = new link($this->uri(array("action" => "addresources")));
 $resourceslink->link = "Resources";
 
+$collaborationandcontractslink = new link($this->uri(array("action" => "addcollaborationandcontracts")));
+$collaborationandcontractslink->link = "Collaboration and Contracts";
+
 $reviewlink = new link($this->uri(array("action" => "addreview")));
 $reviewlink->link = "Review";
 
 $contactdetailslink = new link($this->uri(array("action" => "addcontactdetails")));
 $contactdetailslink->link = "Contact Details";
 
-$links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
+$links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show(). '&nbsp;|&nbsp;' .
         $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
-        $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
+        $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' ." <b> Outcomes and Assessments - Page one </b>" . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
-        $resourceslink->show() . '&nbsp;|&nbsp;' . "<b>Collaboration and Contracts</b>" . '&nbsp;|&nbsp;' .
+        $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
         $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '<br/>';
 
 $fs = new fieldset();
@@ -66,125 +68,121 @@ $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
 
-$legend = "Collaboration and Contacts";
+$legend = "<b>Section D: Outcomes and Assessments - Page One</b>";
 
-$form = new form('collaborationandcontactsform');
+//Section D.1.
+
+$d1a = new dropdown('d1a');
+$d1a->addOption("NQF 5");
+$d1a->addOption("NQF 6");
+$d1a->addOption("NQF 7");
+$d1a->addOption("NQF 8");
+
+/*if ($mode == 'fixup') {
+    $documentNumber->setSelected($oldNGF);
+}
+if ($mode == 'edit') {
+    $documentNumber->setSelected(substr($document['refno'], 0, 1));
+}*/
 
 $table = $this->newObject('htmltable', 'htmlelements');
+$table->startRow();
+$table->addCell("D.1.a. On which OLD NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7 & 8) is the course/unit positioned?:");
+if ($mode == 'edit') {
+    $table->addCell($document['refno'] . '-' . $document['version']);
+} else {
+    $table->addCell($d1a->show());
+}
+$table->endRow();
 
-$F1a = new dropdown('f1a');
-$F1a->addOption("Yes");
-$F1a->addOption("No");
+$d1b = new dropdown('d1b');
+$d1b->addOption("<b>NQF 5</b>");
+$d1b->addOption("NQF 6");
+$d1b->addOption("NQF 7");
+$d1b->addOption("NQF 8");
+$d1b->addOption("NQF 9");
+$d1b->addOption("NQF 10");
+
 
 if ($mode == 'fixup') {
-    $documentNumber->setSelected($f2a);
+    $documentNumber->setSelected($newNGF);
 }
 if ($mode == 'edit') {
     $documentNumber->setSelected(substr($document['refno'], 0, 1));
 }
+
+//$table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
-$table->addCell("<b>F.1.a Is approval for the course/unit required from a professional body?:</b>");
+$table->addCell("D.1.b. On which NEW NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7, 8, 9 & 10) is the course/unit positioned?:");
 if ($mode == 'edit') {
     $table->addCell($document['refno'] . '-' . $document['version']);
 } else {
-    $table->addCell($F1a->show());
+    $table->addCell($d1b->show());
 }
 $table->endRow();
 
-$textarea = new textarea('f1b');
+//Section D.2.
 
 $table->startRow();
-$table->addCell('<b>F.1.b If yes, state the name of the professional body and provide details of the bodys prerequisites and/or contacts.:</b>');
+$table->addCell('D.2. Specify the course/unit outcomes, assessment criteria and methods of assessment in the tables below.');
+$table->endRow();
+
+$textarea = new textarea('d2a');
+$textarea->size = 60;
+$textarea->value = $courseOutcomes;
+
+$table->startRow();
+$table->addCell('Learning Outcomes of the Course/Unit');
 $table->addCell($textarea->show());
 $table->endRow();
 
-$F2a = new dropdown('f2a');
-$F2a->addOption("Yes");
-$F2a->addOption("No");
-
-if ($mode == 'fixup') {
-    $documentNumber->setSelected($f2a);
-}
-if ($mode == 'edit') {
-    $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}
-$table->startRow();
-$table->addCell("<b>F.2.a Are other Schools or Faculties involved in and/or have interest in the course?:</b>");
-if ($mode == 'edit') {
-    $table->addCell($document['refno'] . '-' . $document['version']);
-} else {
-    $table->addCell($F2a->show());
-}
-$table->endRow();
-
-$textarea = new textarea('f2b');
+$textarea = new textarea('d2b');
+$textarea->size = 60;
+$textarea->value = $assessCriteria;
 
 $table->startRow();
-$table->addCell('<b>F.2.b If yes, provide the details of the other Schools or Fucalties involvement/interest, including support and provision for the course/unit.:</b>');
+$table->addCell('Assessment Criteria for the Learning Outcomes');
 $table->addCell($textarea->show());
 $table->endRow();
 
-$F3a = new dropdown('f3a');
-$F3a->addOption("Yes");
-$F3a->addOption("No");
-
-if ($mode == 'fixup') {
-    $documentNumber->setSelected($f2a);
-}
-if ($mode == 'edit') {
-    $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}
-$table->startRow();
-$table->addCell("<b>F.3.a Does the course/unit provide service learning?:</b>");
-if ($mode == 'edit') {
-    $table->addCell($document['refno'] . '-' . $document['version']);
-} else {
-    $table->addCell($F3a->show());
-}
-$table->endRow();
-
-$textarea = new textarea('f3b');
+$textarea = new textarea('d2c');
+$textarea->size = 60;
+$textarea->value = $assessMethods;
 
 $table->startRow();
-$table->addCell('<b>F.3.b If yes, provide the details on the nature as well as the provisioning for the service learning component and methodology.:</b>');
+$table->addCell('Assessment Methods to be Used');
 $table->addCell($textarea->show());
 $table->endRow();
 
-$textarea = new textarea('f4');
+//Section D.3.
+$textarea = new textarea('d3');
+$textarea->size = 60;
+$textarea->value = $overallAchieve;
 
 $table->startRow();
-$table->addCell('<b>F.4 Specify whether collaboration, contacts or other cooperation agreements have been, or will need to be, entered into with entities outside of the university?:</b>');
+$table->addCell('D.3. How do the course/unit outcomes contribute to the acheivement of the overall qualification/programme outcomes?:');
 $table->addCell($textarea->show());
 $table->endRow();
 
-
-$efs = new fieldset();
-
-$efs->setLegend('Errors');
-if (count($errormessages) > 0) {
-
-    $errorstr = '<ul>';
-
-    foreach ($errormessages as $errormessage) {
-        $errorstr.='<li class="error">' . $errormessage . '<li/>';
-    }
-    $errorstr.='</li>';
-    $efs->addContent($errorstr);
-    $form->addToForm($efs);
-}
-
+//Form
 $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($table->show());
+
+$form = new form('outcomesassessmentform', $this->uri(array('action' => $action)));
+
+$hiddenSelected = new hiddeninput('selected', $cfile);
+$form->addToForm($hiddenSelected->show());
+
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => 'addoutcomesandassessmentthree'));
+$uri = $this->uri(array('action' => 'addoutcomesandassessmenttwo'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm('<br/>' .$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'addrulesandsyllabusone'));
+$uri = $this->uri(array('action' => 'addsubsidyrequirements'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
@@ -193,6 +191,6 @@ $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
-
 echo $form->show();
+
 ?>
