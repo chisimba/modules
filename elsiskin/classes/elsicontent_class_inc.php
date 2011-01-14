@@ -96,8 +96,8 @@ class elsicontent extends object {
         $retstr .= $this->getIntroText($action);
         $retstr .= $this->sidebar->show();
         $retstr .= '<div id="Main">' . $this->mainContent->show() . '</div>
-					<!-- End: Main -->
-				<!-- End: Content -->';
+                    <!-- End: Main -->
+            <!-- End: Content -->';
 
         return $retstr;
     }
@@ -109,78 +109,74 @@ class elsicontent extends object {
      */
 
     private function getIntroText($action) {
-        if ($action == 'about') {
+        $this->loadclass('link','htmlelements');
+        
+        switch($action) {
+            case 'about': $category = 'about_content_heading';
+                          break;
+            case 'staff': $category = 'staff_content_heading';
+                          break;
+            case 'contact': $category = 'contact_content_heading';
+                          break;
+            default:      $category = 'home_content';
+        }
+
+        $exists = $this->objCategory->categoryExists($category);
+        if ($exists) {
+            $categoryid = $this->objCategory->getCategoryById($category);
+            $stories = $this->objNews->getCategoryStories($categoryid);
+        }
+
+        if($action == 'home') {
             $ret = '<div class="clear">&nbsp;</div>
-					 <div class="grid_1">
-						<h3><a href="">Welcome to eLSI</a></h3>
-					</div>
-					<div class="grid_3">
-						<h2><a href="">About ELSI</a></h2>
-					 </div>
-					 <div class="grid_1 pull_3">
-						<h3>More about eLSI</h3>
-				  	 </div><div class="clear">&nbsp;</div>';
-        } else if ($action == 'staff') {
-            $ret = '<div class="clear">&nbsp;</div>
-					<div class="grid_1 ">
-						<h3><a href="">Staff at eLSI</a></h3>
-				    </div>
-				    <div class="grid_3">
-						<h2><a href="">Who works at ELSI?</a></h2>
-			  		</div>
-					<div class="clear">&nbsp;</div>';
-        } else if ($action == 'contact') {
-            $ret = '<div class="clear">&nbsp;</div>
-					<div class="grid_1">
-						<h3><a href="index.html">Contact eLSI</a></h3>
-				    </div>
-					<div class="grid_3">
-						<h2><a href="index.html">Can ELSI be of assistance?</a></h2>
-					</div>
-					<div class="grid_1 pull_3">
-						<h3>More about eLSI</h3>
-				  	</div>
-					<div class="clear">&nbsp;</div>';
-        } else {
-            $exists = $this->objCategory->categoryExists('home_content');
-            if ($exists) {
-                $categoryid = $this->objCategory->getCategoryById('home_content');
-                $stories = $this->objNews->getCategoryStories($categoryid);
-            }
-            $ret = '<div class="clear">&nbsp;
-				</div>
-				<div class="grid_1">
-	
-					<h3><a href="">';
+		    <div class="grid_1">
+			<h3><a href="">';
             foreach ($stories as $row) {
                 if (stristr($row['storytitle'], 'welcome') != FALSE) {
                     $ret .= $row['storytitle'];
                 }
             }
             $ret .= '</a></h3>
-					
-					</div>
-					<div class="grid_3">
-						<h2><a href="">';
+		    </div>
+		    <div class="grid_3">
+                        <h2><a href="">';
             foreach ($stories as $row) {
                 if (stristr($row['storytitle'], 'help') != FALSE) {
                     $ret .= $row['storytitle'];
 
                     $ret .= '</a></h2>
-							</div>
-							<!-- end .grid_1 -->
-							<div class="clear">&nbsp;
-							</div>
-			
-							<div class="grid_1">
-							&nbsp;
-							</div>
-							<div class="grid_3">' . $row['storytext'] . '</div>
-							<!-- end .grid_1 -->
-			
-							<div class="clear">&nbsp;</div>';
+                    </div>
+                    <!-- end .grid_1 -->
+                    <div class="clear">&nbsp;</div>
+
+                    <div class="grid_1">&nbsp;</div>
+                    <div class="grid_3">' . $row['storytext'] . '</div>
+                    <!-- end .grid_1 -->
+                    <div class="clear">&nbsp;</div>';
                 }
             }
+        }
+        else {
+            $ret = '<div class="clear">&nbsp;</div>';
+            foreach($stories as $row) {
+                $titleLink= new link($this->uri(array('module'=>'elskiskin','action'=>'about')));
+                $titleLink->link = $row['storytitle'];
+                $textLink = new link($this->uri(array('module'=>'elskiskin','action'=>'about')));
+                $textLink->link = $row['storytext'];
+
+                $ret .= '<div class="grid_1">
+                                <h3>'.$titleLink->show().'</h3>
+                         </div>
+                         <div class="grid_3">
+                            <h2>'.$textLink->show().'</h2>
+                         </div>';
+            }
+            if($action != 'staff') {
+                $ret .= '<div class="grid_1 pull_3">
+                            <h3>More about eLSI</h3>
+                         </div>';
+            }
+            $ret .= '<div class="clear">&nbsp;</div>';
         }
 
         return $ret;

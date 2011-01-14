@@ -53,6 +53,8 @@ class maincontent extends object {
 	// file manager object
 	private $objFileManager;
 
+        // object for language elements
+        private $objLanguage;
 	
 	/**
      * Constructor
@@ -62,6 +64,7 @@ class maincontent extends object {
 		$this->objNews = $this->getObject('dbnewsstories','news');
 		$this->objCategory = $this->getObject('dbnewscategories', 'news');
 		$this->objFileManager = $this->getObject('dbfile', 'filemanager');
+                $this->objLanguage = $this->getObject("language","language");
 	}
 	
 	/* Method to set the current action of the page
@@ -117,57 +120,63 @@ class maincontent extends object {
 		
 			
 		$retstr .= '<div class="clear">&nbsp;</div>
-						<div class="grid_2">
-							<div class="info-box-holder">
-								<div class="left_wrap">
-	
-									<h2>ELSI Staff Blog</h2>
-								</div>
-							</div>
-						</div>
-						<div class="grid_2">
-							<p>&nbsp;</p>
-						</div>
-						<!-- end .grid_1 --> <div class="clear">&nbsp;</div>
-	
-						<div class="grid_2">
-							<p>Blogs Outline goes here</p>
-						</div>
-						<div class="grid_2">
-							<div class="info-box-holder">
-								<div class="right_wrap">
-									<h2>Support and Help</h2>
-								</div>
-	
-							</div>
-							<p>Placeholder for support and documentation</p>
-	
-	
-						</div>
-						<div class="clear">&nbsp;</div>
-						<div class="grid_2">
-							<p>&nbsp;</p>
-						</div>
-	
-						<div class="grid_2">
-	
-						</div>
-	
-					</div>';	
+                                    <div class="grid_2">
+                                            <div class="info-box-holder">
+                                                    <div class="left_wrap">
+                                                            <h2>ELSI Staff Blog</h2>
+                                                    </div>
+                                            </div>
+                                    </div>
+                                    <div class="grid_2">
+                                            <p>&nbsp;</p>
+                                    </div>
+                                    <!-- end .grid_1 --> <div class="clear">&nbsp;</div>
+
+                                    <div class="grid_2">
+                                            <p>Blogs Outline goes here</p>
+                                    </div>
+                                    <div class="grid_2">
+                                            <div class="info-box-holder">
+                                                    <div class="right_wrap">
+                                                            <h2>Support and Help</h2>
+                                                    </div>
+
+                                            </div>
+                                            <p>Placeholder for support and documentation</p>
+
+
+                                    </div>
+                                    <div class="clear">&nbsp;</div>
+                                    <div class="grid_2">
+                                            <p>&nbsp;</p>
+                                    </div>
+
+                                    <div class="grid_2">
+
+                                    </div>
+
+                            </div>';
 		return $retstr;
 	 }
 	 
 	 public function showAboutMain() {
+            $exists = $this->objCategory->categoryExists('about_content');
+            if($exists) {
+                $categoryid = $this->objCategory->getCategoryById('about_content');
+                $stories = $this->objNews->getCategoryStories($categoryid);
+            }
+
+            $retstr .= '<div class="grid_3">';
+            foreach($stories as $row) {
+                $retstr .= $row['storytext'];
+            }
+            $retstr .= '<ol id="'.$stories[0]['storytitle'].'">';
             $exists = $this->objCategory->categoryExists('about_body_content');
             if($exists) {
                 $categoryid = $this->objCategory->getCategoryById('about_body_content');
                 $stories = $this->objNews->getCategoryStories($categoryid);
             }
 
-            $retstr = '<div class="grid_3">
-                            <p>The eLearning, Support and Innovation (eLSI) Unit has been established to assist staff at the University of Witwatersrand to integrate ICT into their courses and to enable academics,  students and others to freely share their teaching and learning resources with others. </p>
-                            <p>eLSI has been set up to explore, contribute to and engage critically with the worldwide learning community. The unit intends to</p>';
-            $retstr .= '<ol id="'.$stories[0][storytitle].'">';
             foreach($stories as $row) {
                 $retstr .= '<li>'.$row['storytext'].'</li>';
             }
@@ -340,7 +349,7 @@ class maincontent extends object {
 					
 				   <form onsubmit="return ContactDetails_Field_Validator(this)" id="loginform" name="loginform" method="POST" action="./?sub=process">
 					<fieldset id="topdialogue">
-					<legend><span>Please</span>  would you</legend>
+					<legend><span>'.$this->objLanguage->languagetext('mod_elsiskin_contactdetailsspan','elsiskin').'</legend>
 					<label>Subject</label> 
 					<select size="1" name="c_topic">';
 
@@ -351,8 +360,10 @@ class maincontent extends object {
                                         
                                         $retstr .= '
                                             </select>
-					<br>
-					<label>Your Name</label>
+					<br>';
+                                        $myLabel = new label($this->objLanguage->languageText('mod_elsiskin_namelabel','elsiskin'));
+					
+                                        $retstr .= $myLabel->show().'
 					<input type="text" name="c_name" maxlength="256" size="35">
 					<br>
 					<label>Email</label>
