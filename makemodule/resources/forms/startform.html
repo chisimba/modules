@@ -1,0 +1,60 @@
+<div id="form_wrapper">
+<form id="start_form" class="makemodule_form" action="javascript:void(0);">
+<fieldset>
+	<legend>Create your module</legend>
+	<table width="2" id="start_form_table" class="start_form_table_layer">
+		<tr>
+			<TD>
+				Module code
+			</TD>
+			<td>
+				<INPUT type="text" id="modulecode" name="modulecode">
+			</td>
+		</tr>
+		<tr>
+			<TD>
+				Module name
+			</TD>
+			<td>
+				<INPUT type="text" name="modulename" size="37" id="modulename">
+			</td>
+		</tr>
+		<tr>
+			<TD valign="top">
+				Module long description
+			</TD>
+			<td>
+				<textarea name="description" cols="47" rows="20" id="description"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<TD>
+				Type of templates
+			</TD>
+			<td>
+				<SELECT name="templatetype" id="templatetype">
+					<option value="json" selected="selected" label="JSON templates">
+						JSON templates
+					</option>
+					<option value="dynamiccanvas" label="Dynamic canvas">
+						Dynamic canvas
+					</option>
+				</SELECT>
+			</td>
+		</tr>
+        </table>
+        <div id="canvastyes"></div>
+        <table width="437px">
+		<tr>
+			<TD>
+				&nbsp;
+			</TD>
+			<td align="right">
+				<INPUT type="button" name="create" value="Create module" id="createmodule" class="createmodule_button">
+			</td>
+		</tr>
+	</table>
+
+</fieldset>
+</form>
+</div>
