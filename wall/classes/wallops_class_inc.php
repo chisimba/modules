@@ -138,10 +138,8 @@ class wallops extends object
         $this->objLanguage = $this->getObject('language', 'language');
         // Get an instance of the humanize date class.
         $this->objDd = $this->getObject('translatedatedifference', 'utilities');
-        // Load all javascripts
+        // Load all javascript values so they are available to the included script
         $this->loadScript();
-        $this->loadDeleteScript();
-        $this->loadCommentScript();
     }
 
     /**
@@ -479,7 +477,7 @@ class wallops extends object
             $this->wallType = $wallType;
         } else {
             $wallType = $this->wallType;
-        }      
+        }
         $objGuessUser = $this->getObject('bestguess', 'utilities');
         $ownerId = $objGuessUser->guessUserId();
         $target = $this->uri(array(
@@ -490,6 +488,12 @@ class wallops extends object
         $target = str_replace('&amp;', "&", $target);
         $myUserId = $this->objUser->userId();
         $me = $this->objUser->fullName();
+        $youSaid = $this->objLanguage->languageText("mod_wall_yousaid", "wall", "You said");
+        $secsAgo = $this->objLanguage->languageText("mod_wall_secsago", "wall", "a few seconds ago");
+        $nothingApppendTo = $this->objLanguage->languageText("mod_wall_nothingappendto", "wall",
+          "There is nothing to append to. Reload the page and try again.");
+
+
         //$un = $this->objUser->userName();
         //$currentModule = $this->getParam('module', 'wall');
         //if ($currentModule == 'myprofile') {
@@ -504,7 +508,6 @@ class wallops extends object
         //}
 
         //$me = '<a href="' . $fnLink . '">' . $fn . '</a>';
-
         switch ($wallType) {
             case "2":
             case "personal":
@@ -516,13 +519,13 @@ class wallops extends object
                     $currentContextcode = $objContext->getcontextcode();
                     $keyValue = $currentContextcode;
                 } else {
-                    $keyValue = null;
+                    $keyValue = -99;
                 }
                 break;
             case "1":
             case "sitewall":
             default:
-                $keyValue = NULL;
+                $keyValue = -99;
                 break;
 
 
@@ -530,217 +533,21 @@ class wallops extends object
         }
         $page = $this->getParam('page', '1');
         $img = $this->objUser->getSmallUserImage();
-        $me =  "<span class='wallposter'>" . $me . "</span>";
-        $script = '<script type=\'text/javascript\'>
-        jQuery(function(){
-            jQuery(".msg a").oembed(null, {
-                embedMethod: "append",
-                maxWidth: 480
-            });
-            // Function for getting additional wall posts.
-            var page = ' . $page . ';
-            var dataStrBase = "walltype=' . $wallType . '&key=' . $keyValue . '&page=";
-            jQuery("#wall_more_posts").live("click", function(){
-                jQuery.ajax({
-                    url: "index.php?module=wall&action=getmoreposts",
-                    type: "GET",
-                    data: dataStrBase+page+"&source=ORIGINAL",
-                    success: function(ret) {
-                        jQuery(".wall_posts_more").html("");
-                        ret =\'<div class="wall_post_append">\'+ret+\'</div>\';
-                        jQuery("#wall").append(ret);
-                        page=page+1;
-                    }
-                });
-        });
-	jQuery("#shareBtn").click(function(){
-            status_text = jQuery("#wallpost").val();
-            if(status_text.length == 0) {
-                    return;
-            } else {
-                jQuery("#shareBtn").attr("disabled", "disabled");
-                var tmpOnlytxt = jQuery("#wall_onlytext").html();
-                jQuery("#wall_onlytext").html(\'' . $this->loadingImage . '\');
-                status_text = stripHTML(status_text); // clean all html tags
-                status_text = replaceURLWithHTMLLinks(status_text); // replace links with HTML anchor tags.
-                status_text = status_text.replace(/\n/g,\'<br />\');
-                jQuery.ajax({
-                        url: "' . $target . '",
-                        type: "POST",
-                        data: "wallpost="+status_text,
-                        success: function(msg) {
-                            jQuery("#wallpost").val("");
-                            jQuery("#shareBtn").attr("disabled", "");
-                            jQuery("#wall_onlytext").html(tmpOnlytxt);
-                            if(msg == "true") {
-                                jQuery("#wall").prepend("<div class=\'wallpostrow\'>' . $me . '<div class=\'msg\'>"+status_text+"</div></div>");
-                                jQuery(".msg:first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
-                            } else {
-                                alert(msg);
-                                //alert("Cannot be posted at the moment! Please try again later.");
-                            }
-                        }
-                });
-                return false;
-		}
-            });
-        });
-        </script>';
-        $this->appendArrayVar('headerParams', $script);
+        $myName = $me;
+        $me =  "\n\n<span class='wallposter'>" . $me . "</span>";
+        $newScript = "<script type='text/javascript'>\n";
+        $newScript .= "var page=" . $page .";\n";
+        $newScript .= "var wallType=" . $wallType .";\n";
+        $newScript .= "var keyValue=" . $keyValue .";\n";
+        $newScript .= "var me='" . $myName ."';\n";
+        $newScript .= "var target='" . $target ."';\n";
+        $newScript .= "var youSaid='" . $youSaid ."';\n";
+        $newScript .= "var secsAgo='" . $secsAgo ."';\n";
+        $newScript .= "var nothingApppendTo='" . $nothingApppendTo ."';\n";
+        $newScript .= "</script>\n\n";
+        $this->appendArrayVar('headerParams', $newScript);
     }
 
-
-    /**
-     *
-     * Load the script for deleting a post into the page header.
-     *
-     * @TODO change it to work with comments too
-     *
-     * @return VOID
-     * @access public
-     *
-     */
-    public function loadDeleteScript()
-    {
-        $script = '<script type="text/javascript">
-            jQuery(function() {
-                jQuery(".delpost").click(function() {
-                    var commentContainer = jQuery(this).parent();
-                    var id = jQuery(this).attr("id");
-                    var string = \'id=\'+ id;
-                    jQuery.ajax({
-                       type: "POST",
-                       url: "index.php?module=wall&action=delete&id=" + id,
-                       data: string,
-                       cache: false,
-                       success: function(ret){
-                           if(ret == "true") {
-                               commentContainer.slideUp(\'slow\', function() {jQuery(this).remove();});
-                           } else {
-                               alert(ret);
-                           }
-                      }
-                    });
-                    return false;
-                });
-            });
-        </script>';
-        $this->appendArrayVar('headerParams', $script);
-    }
-
-    /**
-     *
-     * Load the javascript for running the comments. It appends the script to the
-     * page header
-     *
-     * @access public
-     * @return VOID
-     *
-     */
-    public function loadCommentScript()
-    {
-        $youSaid = $this->objLanguage->languageText("mod_wall_yousaid", "wall", "You said");
-        $secsAgo = $this->objLanguage->languageText("mod_wall_secsago", "wall", "a few seconds ago");
-        $nothingApppendTo = $this->objLanguage->languageText("mod_wall_nothingappendto", "wall",
-          "There is nothing to append to. Reload the page and try again.");
-        $script = '<script type="text/javascript" >
-            jQuery(function() {
-                // Show the post box and submit button
-                jQuery(".wall_comment_button").live("click", function(){
-                    var element = jQuery(this);
-                    var id = element.attr("id");
-                    jQuery("#c__"+id).slideToggle(300);
-                    jQuery(this).toggleClass("active");
-                    return false;
-                });
-                
-                // Get additional comments via ajax
-                jQuery(".wall_comments_more").live("click", function(){
-                    var id = jQuery(this).attr("id");
-                    var fixedid = id.replace("mrep__", "");
-                    jQuery.ajax({
-                        type: "POST",
-                        url: "index.php?module=wall&action=morecomments&id=" + fixedid,
-                        success: function(ret) {
-                            jQuery("#wct_"+fixedid).append(ret);
-                            jQuery("#"+id).slideToggle(300);
-                        }
-                    });
-
-                });
-
-                // Delete a comment
-                jQuery(".wall_delcomment").live("click", function(){
-                    var id = jQuery(this).attr("id");
-                    jQuery.ajax({
-                        type: "POST",
-                        url: "index.php?module=wall&action=deletecomment&id="+id,
-                        success: function(ret) {
-                            if (ret==\'true\') {
-                                //alert("#wct__"+id);
-                                jQuery("#cmt__"+id).slideToggle(300);
-                            } else {
-                                alert(ret);
-                            }
-                        }
-                    });
-                });
-
-                // Post the comment
-                jQuery(".comment_submit").live("click", function(){
-                    var id = jQuery(this).attr("id");
-                    var fixedid = id.replace("cb_", "");
-                    var comment_text = jQuery("#ct_"+id).val();
-                    if(comment_text.length == 0) {
-                        return;
-                    } else {
-
-                        jQuery("#ct_"+id).attr("disabled", "disabled");
-                        var tmpHolder = jQuery("#c__"+fixedid).html();
-                        jQuery("#c__"+fixedid).html(\'' . $this->loadingImage . '\');
-
-
-                        jQuery.ajax({
-                            type: "POST",
-                            url: "index.php?module=wall&action=addcomment&id=" + id,
-                            data: "comment_text="+comment_text,
-                            success: function(ret) {
-                                if(ret == "true") {
-                                    // The comment blocks have ids starting with wct_
-                                    if ( jQuery("#wct_"+fixedid).length > 0 ) {
-                                        jQuery("#wct_"+fixedid).prepend(\'<li><b><span class="wall_comment_author">' 
-                                          . $youSaid . '</span></b>&nbsp; \'+comment_text+\'&nbsp;<div class="wall_comment_when"><strong>'
-                                          . $secsAgo . '</strong></div></li>\');
-                                        jQuery("#c__"+fixedid).slideToggle(300);
-                                    } else {
-                                        if ( jQuery("#wpr__"+fixedid).length > 0 ) {
-                                            jQuery("#wpr__"+fixedid).append(\'<br /><br />'
-                                              . '<div class="wall_comments_top"></div><ol class="wall_replies" id="wct_\'+fixedid+\'">'
-                                              . '<li><b><span class="wall_comment_author">' . $youSaid
-                                              . '</span></b>&nbsp;\'+comment_text+\'<div class="wall_comment_when"><strong>'
-                                              . $secsAgo . '</strong></div></li></ol>\');
-                                            jQuery("#c__"+fixedid).slideToggle(300);
-                                        } else {
-                                            // We should never be able to get here
-                                            alert(\'' . $nothingApppendTo . '\');
-                                        }
-                                    }
-
-                                } else {
-                                    alert(ret);
-                                }
-                                jQuery("#c__"+fixedid).html(tmpHolder);
-                                jQuery("#ct_"+id).val("");
-                                jQuery("#ct_"+id).attr("disabled", "");
-                            }
-                        });
-                        return false;
-                    }
-                });
-            });
-            </script>';
-         $this->appendArrayVar('headerParams', $script);
-    }
 
     /**
      *
