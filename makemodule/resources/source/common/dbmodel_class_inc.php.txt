@@ -71,7 +71,22 @@ class db_MODULECODE extends dbtable
     */
     public function init()
     {
-        //Set the parent table here
+        //Set the parent table to our demo table
+        parent::init('tbl__MODULECODE_text');
+    }
+
+    /**
+     *
+     * Get the text of the init_overview that we have in the sample database.
+     *
+     * @return string The text of the init_overview
+     * @access public
+     *
+     */
+    public function getOverview()
+    {
+        return $this->getAll(' WHERE id=\'init_overview\' ');
+
     }
 
 }

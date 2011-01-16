@@ -21,12 +21,13 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  * @category  Chisimba
- * @package   helloforms
+ * @package   _MODULECODE
  * @author    _AUTHORNAME _EMAIL
- * @copyright 2007 AVOIR
+ * @copyright 2011 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: controller.php,v 1.4 2007-11-25 09:13:27 dkeats Exp $
- * @link      http://avoir.uwc.ac.za
+ * @version   0.001
+ * @link      http://www.chisimba.com
+ *
  */
  
 // security check - must be included in all scripts

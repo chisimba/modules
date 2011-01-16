@@ -29,7 +29,8 @@ jQuery(function() {
 
     jQuery('#templatetype').live("change", function(){
         if (jQuery("#templatetype").val() == 'dynamiccanvas') {
-            alert("Dynamic canvas is not ready yet");
+            //alert("Dynamic canvas is not ready yet");
+            jQuery("#canvastyes").load('packages/makemodule/resources/forms/dynamictype.html')
         }
     });
 
@@ -40,16 +41,19 @@ jQuery(function() {
         var modulename=jQuery("#modulename").val();
         var description=jQuery("#description").val();
         var templatetype=jQuery("#templatetype").val();
-        if (templatetype=='dynamiccanvis') {
+        if (jQuery("#templatetype").val() == 'dynamiccanvas') {
             templatetype=jQuery("#canvastype").val();
         }
-        var mydata = "modulecode="+modulecode+"&modulename="+modulename+"&description="+description+"templatetype="+templatetype;
+        //alert(templatetype);
+        //alert(jQuery("#canvastype").val());
+        var mydata = "modulecode="+modulecode+"&modulename="+modulename+"&description="+description+"&templatetype="+templatetype;
         jQuery("#form_wrapper").html(loadingImage);
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=makemodule&action=save",
             data: mydata,
             success: function(ret) {
+                //alert(mydata);
                 switch(ret) {
                     case "ok":
                         var txt = "<div class='warning'>Your module has been created. You can now go to module catalogue and install it. Make sure that you click 'Update catalogue' before you search for your new module.</div>"

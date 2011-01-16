@@ -139,6 +139,8 @@ class makemoduleops extends object
      */
     public function createModule()
     {
+        $templateType = $this->getParam('templatetype', 'error');
+        //die($templateType);
         $moduleCode = $this->getParam('modulecode', FALSE);
         if ($moduleCode) {
             $moduleCode = strtolower($moduleCode);
@@ -148,8 +150,8 @@ class makemoduleops extends object
             if (!mkdir($baseDir, 0777)) {
                 return 'failedtocreate';
             }
-            $this->writeRegisterConf($workingDir);
-            $this->writeController($workingDir);
+            $this->writeRegisterConf($workingDir, $templateType);
+            $this->writeController($workingDir, $templateType);
 
             // Create the classes directory.
             $classesDir = $workingDir . 'classes';
@@ -157,7 +159,7 @@ class makemoduleops extends object
                 return 'failedtocreate';
             }
             // Add the class files.
-            $this->writeBlocks($classesDir . "/", $moduleCode);
+            $this->writeBlocks($classesDir . "/", $moduleCode, $templateType);
             $this->writeDbClass($classesDir . "/", $moduleCode);
 
             // Create the templates directory.
@@ -201,10 +203,60 @@ class makemoduleops extends object
             }
             $this->writeSql($sqlDir . "/", $moduleCode);
 
+            // Create the dynamic canvas specific code
+            //$templateType = $this->getParam('templatetype', 'json');
+            switch ($templateType) {
+                case 'userlevel':
+                    $this->writeAllDyn($workingDir, $moduleCode, 'userlevel');
+                    break;
+                case 'pagelevel':
+                    $this->writeAllDyn($workingDir, $moduleCode, 'pagelevel');
+                    break;
+                case 'modulelevel':
+                    $this->writeAllDyn($workingDir, $moduleCode, 'modulelevel');
+                    break;
+                case 'json':
+                default:
+                    // Nothing to do here.
+                    break;
+            }
+
             return 'ok';
         } else {
             return 'nomodulecode';
         }
+    }
+
+    /**
+     *
+     * Write the main template and register.conf files for dyanamic canvas.
+     *
+     * @param string $workingDir The starting directory for the source files
+     * @param string $moduleCode The module code for the module we are creating
+     * @param string $level  The dynamic canvas level (userlevel, pagelevel, modulelevel)
+     * @access public
+     * @return VOID
+     * 
+     */
+    public function writeAllDyn($workingDir, $moduleCode, $level)
+    {
+
+        $targetFile = $workingDir . '/templates/content/main_tpl.php';
+        $fPath = $this->objConfig->getModulePath()
+          . 'makemodule/resources/source/' . $level
+          . '/main_tpl.php.txt';
+        $fText = file_get_contents($fPath);
+        $this->writeFile($targetFile, $fText);
+
+        // The data sql file for the page/user/module blocks
+        $blockType = str_replace('level', '', $level);
+        $targetFile = $workingDir . '/sql/tbl_' .  $moduleCode 
+          . '_' . $blockType . 'blocks.sql';
+        $fPath = $this->objConfig->getModulePath()
+          . 'makemodule/resources/source/' . $level
+          . '/tbl_MODULECODE_blocks.sql.txt';
+        $fText = file_get_contents($fPath);
+        $this->writeFile($targetFile, $fText);
     }
 
     /**
@@ -216,10 +268,12 @@ class makemoduleops extends object
      * @return VOID
      *
      */
-    public function writeRegisterConf($targetDir)
+    public function writeRegisterConf($targetDir, $templateType)
     {
         $targetFile = $targetDir . 'register.conf';
-        $fPath = $this->objConfig->getModulePath(). 'makemodule/resources/source/register.conf.txt';
+        $fPath = $this->objConfig->getModulePath()
+           . 'makemodule/resources/source/'
+           . $templateType . '/register.conf.txt';
         $fText = file_get_contents($fPath);
         $this->writeFile($targetFile, $fText);
     }
@@ -233,10 +287,9 @@ class makemoduleops extends object
      * @return VOID
      *
      */
-    public function writeController($targetDir)
+    public function writeController($targetDir, $templateType)
     {
         $targetFile = $targetDir . 'controller.php';
-        $templateType = $this->getParam('templatetype', 'json');
         $fPath = $this->objConfig->getModulePath()
           . 'makemodule/resources/source/'
           . $templateType . '/controller.php.txt';
@@ -254,14 +307,13 @@ class makemoduleops extends object
      * @return VOID
      *
      */
-    public function writeBlocks($targetDir, $moduleCode)
+    public function writeBlocks($targetDir, $moduleCode, $templateType)
     {
         // Do the middle block.
         $targetFile = $targetDir . 'block_' . $moduleCode . 'middle_class_inc.php';
-        $templateType = $this->getParam('templatetype', 'json');
+       // $templateType = $this->getParam('templatetype', 'json');
         $fPath = $this->objConfig->getModulePath()
-          . 'makemodule/resources/source/'
-          . $templateType . '/block_middle_class_inc.php.txt';
+          . 'makemodule/resources/source/common/block_middle_class_inc.php.txt';
         $fText = file_get_contents($fPath);
         $this->writeFile($targetFile, $fText);
 
@@ -269,8 +321,7 @@ class makemoduleops extends object
         $targetFile = $targetDir . 'block_' . $moduleCode . 'left_class_inc.php';
         $templateType = $this->getParam('templatetype', 'json');
         $fPath = $this->objConfig->getModulePath()
-          . 'makemodule/resources/source/'
-          . $templateType . '/block_left_class_inc.php.txt';
+          . 'makemodule/resources/source/common/block_left_class_inc.php.txt';
         $fText = file_get_contents($fPath);
         $this->writeFile($targetFile, $fText);
 
@@ -278,8 +329,7 @@ class makemoduleops extends object
         $targetFile = $targetDir . 'block_' . $moduleCode . 'right_class_inc.php';
         $templateType = $this->getParam('templatetype', 'json');
         $fPath = $this->objConfig->getModulePath()
-          . 'makemodule/resources/source/'
-          . $templateType . '/block_right_class_inc.php.txt';
+          . 'makemodule/resources/source/common/block_right_class_inc.php.txt';
         $fText = file_get_contents($fPath);
         $this->writeFile($targetFile, $fText);
     }
@@ -299,8 +349,7 @@ class makemoduleops extends object
         $targetFile = $targetDir . 'db' . $moduleCode . '_class_inc.php';
         $templateType = $this->getParam('templatetype', 'json');
         $fPath = $this->objConfig->getModulePath()
-          . 'makemodule/resources/source/'
-          . $templateType . '/dbmodel_class_inc.php.txt';
+          . 'makemodule/resources/source/common/dbmodel_class_inc.php.txt';
         $fText = file_get_contents($fPath);
         $this->writeFile($targetFile, $fText);
      }
@@ -341,8 +390,7 @@ class makemoduleops extends object
         $targetFile = $targetDir . 'layout_tpl.php';
         $templateType = $this->getParam('templatetype', 'json');
         $fPath = $this->objConfig->getModulePath()
-          . 'makemodule/resources/source/'
-          . $templateType . '/layout_tpl.php.txt';
+          . 'makemodule/resources/source/common/layout_tpl.php.txt';
         $fText = file_get_contents($fPath);
         $this->writeFile($targetFile, $fText);
      }
