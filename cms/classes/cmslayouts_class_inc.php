@@ -123,8 +123,12 @@ class cmslayouts extends object {
             $leftSide .= '<br />';
             $leftSide .= $objAdminLink->show();
         } else if ($this->getParam('id','')=='') {
-
-            $leftSide='';
+            $objMenu = $this->getObject('dbpagemenu', 'cmsadmin');
+            $menuKey = $this->getParam('menustate','');
+            $menucontent = $objMenu->getMenuText($menuKey);
+            if($menucontent == '') {
+                $leftSide='';
+            }
         }
 
 
