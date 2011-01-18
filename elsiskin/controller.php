@@ -96,7 +96,7 @@ class elsiskin extends controller {
 
     /**
      * landing page.
-     * @return 
+     * @return
      */
     function __home() {
               return "home_tpl.php";
