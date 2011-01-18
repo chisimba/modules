@@ -734,7 +734,7 @@ class pbrender extends dbTable
         $objContext = $this->getObject('dbcontext', 'context');
         if($objContext->isInContext()){
             //Check if they have edit/author rights
-            if ($this->objUser->isContextAuthor() || $this->objUser->isContextEditor) {
+            if ($this->objUser->isContextAuthor() || $this->objUser->isContextEditor()) {
             	$curContext = TRUE;
             } else {
             	$curContext = FALSE;
