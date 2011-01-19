@@ -19,7 +19,7 @@
  *
  * @category  Chisimba
  * @package   wicid (document management system)
- * @author    Nguni Phakela, david wafula
+
  *
   =
  */
@@ -1094,7 +1094,7 @@ class apo extends controller {
 
     public function __addsubsidyrequirements() {
         // $errormessages = array();
-
+/*
         $b5a = $this->getParam("b5a");
         $b5b = $this->getParam("b5b");
         $b6a = $this->getParam("b6a");
@@ -1128,7 +1128,7 @@ class apo extends controller {
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
             return "rulesandsyllabustwo_tpl.php";
-        }
+        }*/
 
   /*      $formdata = "<b5a>" . $b5a . "</b5a>";
         $formdata .= "<b5b>" . $b5b . "</b5b>";

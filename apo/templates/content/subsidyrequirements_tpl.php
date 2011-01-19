@@ -77,8 +77,12 @@ echo $fs->show() . '<br/>';
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $textarea = new textarea('c1');
+$textarea->cols=100;
 $table->startRow();
 $table->addCell('C.1. The mode of instruction is understood to be contact/face-to-face lecturing. Provide details if any other mode of delivery is to be used:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
