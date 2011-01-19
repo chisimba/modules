@@ -69,7 +69,7 @@ echo $fs->show() . '<br/>';
 $legend = "<b>Section D: Outcomes and Assessment - Page Two</b>";
 $action = 'addoutcomesandassessmentthree';
 
-$form = new form('outcomesandassessmenttwoform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'outcomesandassessmenttwo')));
+$form = new form('outcomesandassessmenttwoform', $this->uri(array('action' => $action, )));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 

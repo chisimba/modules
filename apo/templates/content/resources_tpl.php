@@ -270,7 +270,7 @@ $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 echo $form->show();
