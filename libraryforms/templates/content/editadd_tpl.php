@@ -66,27 +66,28 @@ $tab->addBoxContent($objFeedbk->show());
 
 $tabcontent->addTab('FeedbackForm', $tab->show());
 
-$tab->tabbedbox();
-$tab->addTabLabel($this->objLanguage->languageText("category_resource_two", "libraryforms"));
-$tab->addBoxContent($objBookThesis->show());
+//$tab->tabbedbox();
+//$tab->addTabLabel($this->objLanguage->languageText("category_resource_two", "libraryforms"));
+//$tab->addBoxContent($objBookThesis->show());
 
-$tabcontent->addTab('Book / Thesis only Form', $tab->show());
+//$tabcontent->addTab('Book / Thesis only Form', $tab->show());
 
-$tab->tabbedbox();
-$tab->addTabLabel($this->objLanguage->languageText("category_resource_three", "libraryforms"));
-$tab->addBoxContent($objILLperiodical->show());
+//$tab->tabbedbox();
+//$tab->addTabLabel($this->objLanguage->languageText("category_resource_three", "libraryforms"));
+//$tab->addBoxContent($objILLperiodical->show());
 
-$tabcontent->addTab('Periodical Request Form', $tab->show());
+//$tabcontent->addTab('Periodical Request Form', $tab->show());
 
 
 
-//captcha
+/*captcha
 $table->startRow();
 $objCaptcha = $this->getObject('captcha', 'utilities');
 $captcha = new textinput('request_captcha');
 $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'libraryforms', 'Verify Request'), 'request_captcha');
 
 $table->addCell($captchaLabel->show(), 150, NULL, 'left');
+
 $content = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.'));
 $table->addCell($content, 150, NULL, 'left');
 $table->endRow();
@@ -99,18 +100,8 @@ $objForm->addRule('request_captcha', $this->objLanguage->languageText("mod_blogc
 $table->startRow();
 $table->addCell(NULL, 150, NULL, 'left');
 $table->addCell($captcha->show() . '<a href="javascript:redraw();">' . $this->objLanguage->languageText('word_redraw', 'library forms', 'Redraw') . '</a>', 150, NULL, 'left');
-$table->endRow();
+$table->endRow();*/
 
-
-/* Get the CSS layout to make two column layout
-  $cssLayout = $this->newObject('csslayout', 'htmlelements');
-  //Add some text to the left column
-  $cssLayout->setLeftColumnContent("Place holder text");
-  //get the editform object and instantiate it
-  $objEditForm = $this->getObject('editform', 'libraryforms');
-  //Add the form to the middle (right in two column layout) area
-  $cssLayout->setMiddleColumnContent($objEditForm->show());
-  echo $cssLayout->show(); */
 
 //$objTable->addRow(array($objFeedbk->show());
 //$tabcontent->addTab($this->objLanguage->languageText('mod_toolbar_'.$category,'toolbar'),$tab->show());

@@ -13,22 +13,23 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 
-$h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
-$objIcon =  $this->newObject('geticon', 'htmlelements');
-//$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('category_resource_six','libraryforms','');
+$objBookThesis = $this->getObject('bookthesis', 'libraryforms');
+$tab = $this->newObject('tabbedbox', 'htmlelements');
+$table = $this->newObject('htmltable', 'htmlelements');
+$tabcontent = $this->newObject('tabcontent', 'htmlelements');
+$objTable = $this->newObject('htmltable', 'htmlelements');
+$this->loadClass('form', 'htmlelements');
 
-$objLayer->str = $h3->show();
-$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
-$header = $objLayer->show();
+$category = 'user';
 
-$display = '<p>'.$header.'</p><hr />';
 
-//Show Header
-echo $display;
-echo '<div class="noRecordsMessage">'. $this->objLanguage->languageText('category_resource_six','libraryforms','');
-echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_libraryforms_thesisconfirmsent', 'libraryforms', '').'</div>';
-$objBlocks = $this->getObject('blocks', 'blocks');
-$this->loadClass('link', 'htmlelements');
+$tab->tabbedbox();
+$tab->addTabLabel($this->objLanguage->languageText("category_resource_two", "libraryforms"));
+$tab->addBoxContent($objBookThesis->show());
+
+$tabcontent->addTab('Book / Thesis only Form', $tab->show());
+$tabcontent->width = '90%';
+echo '<br/><center>' . $tabcontent->show() . '</center>';
 
 ?>

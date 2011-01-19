@@ -47,7 +47,7 @@ class libraryforms extends controller {
         switch ($action) {
 
             default:
-                return "editadd_tpl.php";
+                return "default_layout_tpl.php";
 
             case 'addeditform':
                 return $this->saveRecord();
@@ -127,7 +127,7 @@ class libraryforms extends controller {
         if (count($msg) > 0) {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
-            return 'editadd_tpl.php';
+            return 'default_layout_tpl.php';
         }
         // insert into database
         $pid = $this->dbAddDistances->insertRecord($surname, $initials, $title, $studentno, $postaladdress,
@@ -186,7 +186,7 @@ class libraryforms extends controller {
         if (count($erormsg) > 0) {
             $this->setVarByRef('erormsg', $erormsg);
             $this->setVarByRef('insarr', $insarr);
-            return 'editadd_tpl.php';
+            return 'default_layout_tpl.php';
         }
 
         //insert into DB
@@ -238,7 +238,7 @@ class libraryforms extends controller {
         if (count($errormsg) > 0) {
             $this->setVarByRef('$errormsg', $errormsg);
             $this->setVarByRef('insarr', $insarr);
-            return 'editadd_tpl.php';
+            return 'default_layout_tpl.php';
         }
 
         //insert the data into DB
@@ -272,7 +272,7 @@ class libraryforms extends controller {
         if (count($errormsg) > 0) {
             $this->setVarByRef('errormsg', $errormsg);
             $this->setVarByRef('insarr', $insarr);
-            return 'editadd_tpl.php';
+            return 'default_layout_tpl.php';
         }
 
 
