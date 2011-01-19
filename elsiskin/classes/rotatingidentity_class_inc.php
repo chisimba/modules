@@ -68,6 +68,17 @@ class rotatingidentity extends object {
      * @return string
      */
     public function show($action) {
+        $category = $action."_news";
+        $exists = $this->objCategory->categoryExists($category);
+        //$exists = FALSE;
+        if($exists) {
+            $categoryId = $this->objCategory->getCategoryId($category);
+            $news = $this->objNews->getCategoryStories($categoryId);
+        }
+        else {
+            $news = "";
+        }
+        
         $retstr = '<div id="Identity_image">
                     <div class="clear">&nbsp;</div>
                     <div class="grid_1 push_3">
@@ -101,7 +112,35 @@ class rotatingidentity extends object {
                            <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="">Directions</a></span>
                        </div>';
         } else {
-            $retstr .= '
+            
+            if(!empty($news)) {
+                $retstr .= '
+                            <div class="text-holder">
+                                <div id="s7">';
+                foreach($news as $row) {
+                    $retstr .= '
+                                
+                                    <div>
+                                        <span class="head-main">'.trim(strip_tags($row['storytitle'])).'</span>';
+                        $retstr .= '    <span class="head-text">'.trim(strip_tags($row['storytext'])).'<br>
+                                            <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<a href="about/index.html">Latest New</a>s<br>
+                                            <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<br>
+                                        </span>
+                                    </div>';
+                }
+                $retstr .= '
+                                </div>
+                            </div>';
+            }
+            else {
+                $retstr .= '<div class="text-holder">
+                    <span class="head-main">WELCOME TO ELSI</span>
+                    <span class="head-text">No Current News.<br>
+                        
+                    </span>
+                </div>';
+            }
+            /*$retstr .= '
                             <div class="text-holder">
                                 <span class="head-main">WELCOME TO ELSI</span>
                                 <span class="head-text">eLearning, Support and Innovation lab offers Wits anywhere, anytime and anyplace
@@ -109,7 +148,7 @@ class rotatingidentity extends object {
                                     <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<a href="about/index.html">Latest New</a>s<br>
                                     <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<br>
                                 </span>
-                            </div>';
+                            </div>';*/
         }
         $retstr .= '
                     </div>
@@ -123,7 +162,7 @@ class rotatingidentity extends object {
                 break;
             case 'contact': $retstr .= $this->showContactBanner();
                 break;
-            default: $retstr .= $this->showHomeBanner();
+            default: $retstr .= $this->showHomeBanner($news);
         }
 
         $retstr .= '
@@ -143,14 +182,24 @@ class rotatingidentity extends object {
         return $retstr;
     }
 
-    public function showHomeBanner() {
-        $retstr = '<div class="slideshow" style="z-index:1;">
-                       <img src="' . $this->skinpath . 'images/front_identity/home_dread.jpg">
-                       <img src="' . $this->skinpath . 'images/front_identity/mlearning_website.png">
-                       <img src="' . $this->skinpath . 'images/front_identity/oaweek_website.png">
-                       <img src="' . $this->skinpath . 'images/front_identity/passport_website.png">
-                   </div>';
-
+    public function showHomeBanner($news) {
+        if(!empty($news)) {
+            $objFile = $this->getObject('dbfile', 'filemanager');
+            $retstr = '<div class="slideshow" style="z-index:1;">';
+            foreach($news as $row) {
+                $myFile = $objFile->getFile($row['storyimage']);
+                $retstr .= '<img src="usrfiles/' .$myFile['path'].'">';
+            }
+            $retstr .= '</div>';
+        }
+        else {
+            $retstr = '<div class="slideshow" style="z-index:1;">
+                           <img src="' . $this->skinpath . 'images/front_identity/home_dread.jpg">
+                           <img src="' . $this->skinpath . 'images/front_identity/mlearning_website.png">
+                           <img src="' . $this->skinpath . 'images/front_identity/oaweek_website.png">
+                           <img src="' . $this->skinpath . 'images/front_identity/passport_website.png">
+                       </div>';
+        }
         return $retstr;
     }
 
