@@ -189,7 +189,7 @@ class dbnewscategories extends dbtable
       *
       * @param string $name The name of the category
       */
-    public function getCategoryById($name) {
+    public function getCategoryId($name) {
         $category = $this->getRow('categoryname', $name);
 
         return $category['id'];
