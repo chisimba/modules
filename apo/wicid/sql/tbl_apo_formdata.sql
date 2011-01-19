@@ -1,5 +1,5 @@
 <?php
-    $tablename = 'tbl_wicid_formdata';
+    $tablename = 'tbl_apo_formdata';
     $options = array('comment' => 'Table for saving the form data', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
     $fields = array('id' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'formname' => array('type' => 'text', 'notnull'=>TRUE),

@@ -30,7 +30,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class dbdocuments extends dbtable {
 
-    var $tablename = "tbl_wicid_documents";
+    var $tablename = "tbl_apo_documents";
     var $userid;
 
     public function init() {
@@ -50,14 +50,14 @@ class dbdocuments extends dbtable {
     public function getdocuments($start, $end, $mode="default", $rejected = "N") {
         /*
           if (strcmp($rejected, 'Y') == 0) {
-          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
-          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
+          $sql = "select A.*, B.docid, B.filename from tbl_apo_documents as A
+          left outer join tbl_apo_fileuploads as B on A.id = B.docid
           where A.active = 'N'
           and A.deleteDoc = 'N'
           and A.rejectDoc = 'Y'";
           } else {
-          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
-          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
+          $sql = "select A.*, B.docid, B.filename from tbl_apo_documents as A
+          left outer join tbl_apo_fileuploads as B on A.id = B.docid
           where A.active = 'N'
           and A.deleteDoc = 'N'
           and A.rejectDoc = 'N'";
@@ -65,10 +65,10 @@ class dbdocuments extends dbtable {
           }
 
           if ($mode = "apo") {
-          $sql.=" and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
+          $sql.=" and A.version = (select max(version) from tbl_apo_documents as C where C.id=A.id)";
           } */
 
-        $sql = "select * from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= '$rejected'";
+        $sql = "select * from tbl_apo_documents where deleteDoc = 'N' and  active='N' and rejectDoc= '$rejected'";
         if (!$this->objUser->isadmin()) {
 
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
@@ -140,7 +140,7 @@ class dbdocuments extends dbtable {
     }
 
     function getUnapprovedDocsCount() {
-        $sql = "select count(id) as total from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'N'";
+        $sql = "select count(id) as total from tbl_apo_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'N'";
 
         if (!$this->objUser->isadmin()) {
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
@@ -153,7 +153,7 @@ class dbdocuments extends dbtable {
     }
 
     function getRejectedDocsCount() {
-        $sql = "select count(id) as total from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'Y'";
+        $sql = "select count(id) as total from tbl_apo_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'Y'";
         if (!$this->objUser->isadmin()) {
 
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
@@ -215,7 +215,7 @@ class dbdocuments extends dbtable {
     function documentExists(
     $department, $refno, $title, $path, $version) {
         $sql =
-                "select * from tbl_wicid_documents where version = '$version' and topic = '$path'
+                "select * from tbl_apo_documents where version = '$version' and topic = '$path'
          and docname = '$title' and refno ='$refno' and department = '$department'";
         $data = $this->getArray($sql);
         return count($data) > 0 ? TRUE : FALSE;
@@ -368,7 +368,7 @@ class dbdocuments extends dbtable {
 
     function changeCurrentUser($userid, $docid, $version) {
         print_r($docid . " - " . $version . " - " . $userid);
-        $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid' and version = '$version'";
+        $sql = "update tbl_apo_documents set currentuserid = '$userid' where id = '$docid' and version = '$version'";
         // $this->sendEmailAlert($userid);
         return $this->getArray($sql);
     }
@@ -395,13 +395,13 @@ class dbdocuments extends dbtable {
     }
 
     function retrieveDocument($userid, $docid) {
-        $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid'";
+        $sql = "update tbl_apo_documents set currentuserid = '$userid' where id = '$docid'";
         $this->sendEmailAlert($userid);
         return $this->getArray($sql);
     }
 
     function checkUsers($docid) {
-        $sql = "select userid, currentuserid from tbl_wicid_documents where id='$docid'";
+        $sql = "select userid, currentuserid from tbl_apo_documents where id='$docid'";
         $userid = "";
         $currentuserid = "";
         $rows = $this->getArray($sql);
@@ -416,7 +416,7 @@ class dbdocuments extends dbtable {
     }
 
     function getStatus($docid) {
-        $sql = "select status from tbl_wicid_documents where id='$docid'";
+        $sql = "select status from tbl_apo_documents where id='$docid'";
         $rows = $this->getArray($sql);
 
         foreach ($rows as $row) {
@@ -427,7 +427,7 @@ class dbdocuments extends dbtable {
     }
 
     function setStatus($docid, $status, $version) {
-        $sql = "update tbl_wicid_documents set status = '$status' where id = '$docid' and version = '$version'";
+        $sql = "update tbl_apo_documents set status = '$status' where id = '$docid' and version = '$version'";
         return $this->getArray($sql);
     }
 
@@ -435,7 +435,7 @@ class dbdocuments extends dbtable {
         (int) $versionOld = $this->getVersion($docid);
         $versionNew = $versionOld + 1;
 
-        $sql = "select * from tbl_wicid_documents where id = '$docid' and version = '$versionOld'";
+        $sql = "select * from tbl_apo_documents where id = '$docid' and version = '$versionOld'";
         $data = $this->getArray($sql);
 
         $dataNew = $data[0];
@@ -450,7 +450,7 @@ class dbdocuments extends dbtable {
             unset($dataNew['department']);
         }
 
-        $sql2 = "select max(puid) as puid from tbl_wicid_documents";
+        $sql2 = "select max(puid) as puid from tbl_apo_documents";
         $puidA = $this->getArray($sql2);
         $puid = (int) $puidA[0]['puid'];
 
@@ -465,7 +465,7 @@ class dbdocuments extends dbtable {
     }
 
     function getVersion($docid) {
-        $sql = "select max(version) as version from tbl_wicid_documents where id='$docid'";
+        $sql = "select max(version) as version from tbl_apo_documents where id='$docid'";
         $version1 = $this->getArray($sql);
         $version = (int) $version1[0]['version'];
 
@@ -473,7 +473,7 @@ class dbdocuments extends dbtable {
     }
 
     function reclaimDocument($userid, $docid, $version) {
-        $sql = "update tbl_wicid_documents set currentuserid = '$userid' where id = '$docid' and version = '$version'";
+        $sql = "update tbl_apo_documents set currentuserid = '$userid' where id = '$docid' and version = '$version'";
         return $this->getArray($sql);
     }
 

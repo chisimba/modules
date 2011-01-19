@@ -3,7 +3,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 class dbforwardto extends dbtable {
-    var $tablename = "tbl_wicid_forward";
+    var $tablename = "tbl_apo_forward";
     var $userid;
 
     public function init() {

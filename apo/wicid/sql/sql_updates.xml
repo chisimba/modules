@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
     <update>
-        <table>tbl_wicid_fileuploads</table>
+        <table>tbl_apo_fileuploads</table>
         <version>0.016</version>
         <description>Added the document id field</description>
         <data>
@@ -15,7 +15,7 @@
     </update>
 
     <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>0.016</version>
         <description>Added the group id field</description>
         <data>
@@ -29,7 +29,7 @@
     </update>
 
     <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>0.017</version>
         <description>Added the ext field</description>
         <data>
@@ -43,7 +43,7 @@
     </update>
     
     <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>0.018</version>
         <description>Added the ext field</description>
         <data>
@@ -57,7 +57,7 @@
     </update>
 
         <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>0.019</version>
         <description>Added the mode field</description>
         <data>
@@ -71,7 +71,7 @@
     </update>
 
     <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>1.001</version>
         <description>Added the deleteDoc field</description>
         <data>
@@ -87,7 +87,7 @@
     </update>
 
     <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>0.034</version>
         <description>Added the contact person field</description>
         <data>
@@ -102,7 +102,7 @@
     </update>
 
     <update>
-        <table>tbl_wicid_formdata</table>
+        <table>tbl_apo_formdata</table>
         <version>0.049</version>
         <description>Added the version column</description>
         <data>
@@ -118,7 +118,7 @@
     </update>
 
     <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>0.053</version>
         <description>Added the reference version column</description>
         <data>
@@ -133,7 +133,7 @@
     </update>
 
     <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>0.053</version>
         <description>Added the status column</description>
         <data>
@@ -149,7 +149,7 @@
     </update>
 
     <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>0.054</version>
         <description>Added the currentuserid field</description>
         <data>
@@ -162,7 +162,7 @@
         </data>
     </update>
    <update>
-        <table>tbl_wicid_documents</table>
+        <table>tbl_apo_documents</table>
         <version>1.003</version>
         <description>Added the rejectedDoc field</description>
         <data>

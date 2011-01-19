@@ -25,7 +25,7 @@
  */
 class dbfileuploads extends dbtable {
 
-    var $tablename = "tbl_wicid_fileuploads";
+    var $tablename = "tbl_apo_fileuploads";
     var $userid;
 
     public function init() {
@@ -102,8 +102,8 @@ class dbfileuploads extends dbtable {
 
     public function getNodeFiles($node) {
         $sql = "select A.refno,A.telephone, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
-              from tbl_wicid_documents as A
-                join tbl_wicid_fileuploads as B on A.id = B.docid
+              from tbl_apo_documents as A
+                join tbl_apo_fileuploads as B on A.id = B.docid
               where B.filepath like '%$node%' and A.active ='Y' 
               order by A.date_created DESC";
 
@@ -127,7 +127,7 @@ class dbfileuploads extends dbtable {
      */
     public function getFileInfo($filename, $filepath) {
         $filepath = str_replace("//", "/", $filepath);
-        $sql = "select * from $this->tablename  fls,tbl_wicid_documents docs
+        $sql = "select * from $this->tablename  fls,tbl_apo_documents docs
                 where fls.filename = '$filename' and fls.filepath = '$filepath'
                 and fls.docid=docs.id and docs.active='Y'";
 
@@ -137,7 +137,7 @@ class dbfileuploads extends dbtable {
 
     function deleteNAFile($filepath, $filename) {
         $sql =
-                "delete from tbl_wicid_fileuploads where filename ='$filename' and filepath='$filepath'";
+                "delete from tbl_apo_fileuploads where filename ='$filename' and filepath='$filepath'";
         $this->getArray($sql);
     }
 
@@ -150,14 +150,14 @@ class dbfileuploads extends dbtable {
 
             if ((substr($filter, $start, $length) >= $today['year'] - 10) && (substr($filter, $start, $length) <= $today['year'])) {
                 $sql = "  select A.refno, A.date_created, A.userid, A.groupid, B.date_uploaded, B.filename, B.filepath, B.docid
-                        from tbl_wicid_documents as A
-                            join tbl_wicid_fileuploads as B on A.id = B.docid
+                        from tbl_apo_documents as A
+                            join tbl_apo_fileuploads as B on A.id = B.docid
                         where A.refno like '%$filter%'
                         and A.groupid = 'Public'
                         order by A.date_created DESC";
             } else {
                 $sql = "select *
-                      from tbl_wicid_fileuploads
+                      from tbl_apo_fileuploads
                       where filename like '%$filter%'";
 
                 $sql.=' order by date_uploaded DESC';
@@ -294,7 +294,7 @@ class dbfileuploads extends dbtable {
             $filter .= "active = '" . $data['active'] . "'";
         }
 
-        $sql = "select * from tbl_wicid_documents " . $filter;
+        $sql = "select * from tbl_apo_documents " . $filter;
         $sql = $first ? " where " : " and " . " groupid = 'Public'";
         $rows = $this->getArray($sql);
 

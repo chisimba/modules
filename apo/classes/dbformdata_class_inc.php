@@ -4,7 +4,7 @@
  * and open the template in the editor.
 */
 class dbformdata extends dbtable {
-    var $tablename = "tbl_wicid_formdata";
+    var $tablename = "tbl_apo_formdata";
     var $userid;
 
     public function init() {
@@ -48,7 +48,7 @@ class dbformdata extends dbtable {
     }
 
     function  exists($docid, $formname) {
-        $sql="select * from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
+        $sql="select * from tbl_apo_formdata where formname='$formname' and docid='$docid'";
         $xmStr="";
         $rows=$this->getArray($sql);
         if(count($rows) > 0) {
@@ -61,7 +61,7 @@ class dbformdata extends dbtable {
 
     public function  getFormData($formname, $docid) {
 
-        $sql="select * from tbl_wicid_formdata where formname='$formname' and docid='$docid'";
+        $sql="select * from tbl_apo_formdata where formname='$formname' and docid='$docid'";
         $xmStr="";
         $rows=$this->getArray($sql);
 
