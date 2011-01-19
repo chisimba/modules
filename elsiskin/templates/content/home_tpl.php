@@ -1,12 +1,17 @@
-<?php 
-
-//$cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
-//$cssLayout->setNumColumns(2);
-//$cssLayout->setLeftColumnContent($viewer->getTweets());
-// Add Right Column
-//$cssLayout->setMiddleColumnContent($content.'<div id="stories">' . $objTable->show() . "</div>");
-
-//Output the content to the page
-//echo $cssLayout->show();
-
+<?php
+    $bannerimagepath = 'skins/elsiskin/';
+    $action = $this->getParam('action');
+    if(!empty($action)) {
+        $action = $this->getParam('action');
+    }
+    else {
+        $action = 'home';
+    }
+    $objRotatingIdentity = $this->getObject('rotatingidentity', 'elsiskin');
+    $objRotatingIdentity->setSkinPath($bannerimagepath);
+    echo $objRotatingIdentity->show($action);
+    echo'<!-- Start: Content -->';
+    $objContent = $this->getObject('elsicontent', 'elsiskin');
+    $objContent->setSkinPath($bannerimagepath);
+    echo $objContent->show($action);
 ?>
