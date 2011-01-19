@@ -38,22 +38,22 @@ $overviewlink = new link($this->uri(array("action" => "addoverview")));
 $overviewlink->link = "Overview";
 
 $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
-$rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
+$rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
 $rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
-$rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
+$rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
 $subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequirements")));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
 $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
-$outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+$outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
 $outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
-$outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
+$outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
 
 $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
-$outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+$outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
 $resourceslink = new link($this->uri(array("action" => "addresources")));
 $resourceslink->link = "Resources";
@@ -82,55 +82,75 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $textarea = new textarea('h1');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h1;
 }
 $table->startRow();
 $table->addCell("H.1. Name of academic proposing the course/unit:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('h2a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h2a;
 }
 $table->startRow();
 $table->addCell("H.2.a. Name of the School which will be the home for the course/unit:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('h2b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h2b;
 }
 $table->startRow();
 $table->addCell("H.2.b. School approval signature (Head of School or appropriate School committee chair) and date:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('h3a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h3a;
 }
 $table->startRow();
 $table->addCell("H.3.a. Telephone contact numbers:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('h3b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h3b;
 }
 $table->startRow();
 $table->addCell("H.3.b. Email addresses:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -148,7 +168,7 @@ if (count($errormessages) > 0) {
     $form->addToForm($efs);
 }
 
-$legend = "<b>H: Contact Details</b>";
+$legend = "<b>Section H: Contact Details</b>";
 $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($table->show());
@@ -160,7 +180,7 @@ $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'addreview'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));

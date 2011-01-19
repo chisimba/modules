@@ -78,7 +78,7 @@ echo $fs->show() . '<br/>';
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $textinput = new textinput('a1');
-$textinput->size = 50;
+$textinput->size = 100;
 if ($mode == 'edit') {
     $textinput->value = $document['docname'];
 }
@@ -86,7 +86,10 @@ if ($mode == "fixup") {
     $textinput->value = $a1;
 }
 $table->startRow();
-$table->addCell("A.1. Name of course/unit:","100");
+$table->addCell("A.1. Name of course/unit:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -103,27 +106,38 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("A.2. This is a:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($radio->show());
 $table->endRow();
 
 $textarea = new textarea('a3');
 $textarea->height = '70px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $a3;
 }
 $table->startRow();
-$table->addCell("A.3. Provide a brief motivation for the introduction/amendment of the course/unit:","100");
+$table->addCell("A.3. Provide a brief motivation for the introduction/amendment of the course/unit:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('a4');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $a4;
 }
 $table->startRow();
-$table->addCell("A.4. Towards which qualification(s) can the course/unit be taken?","100");
+$table->addCell("A.4. Towards which qualification(s) can the course/unit be taken?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -140,6 +154,9 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("A.5. This new or amended course proposal is:","100");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($radio->show());
 $table->endRow();
 
@@ -171,15 +188,16 @@ $button->setToSubmit();
 
 $form->addToForm('<br/>' . $button->show());
 
+
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'addeditdocument'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 //$button->setToSubmit();
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 echo $form->show();

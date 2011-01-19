@@ -42,13 +42,13 @@ $subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequ
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
 $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
-$outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+$outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
 $outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
-$outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
+$outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
 
 $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
-$outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+$outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
 $resourceslink = new link($this->uri(array("action" => "addresources")));
 $resourceslink->link = "Resources";
@@ -94,17 +94,24 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("B.5.a. At what level is the course/unit taught?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($radio->show());
 $table->endRow();
 
 $textarea = new textarea('b5b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b5b;
 }
 $table->startRow();
 $table->addCell("B.5.b. In which year/s of study is the course/unit to be taught? ");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -126,17 +133,24 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("B.6.a. This is a:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($radio->show());
 $table->endRow();
 
 $textarea = new textarea('b6b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b6b;
 }
 $table->startRow();
 $table->addCell("B.6.b. If ‘other’, provide details of the course/unit duration and/or the number of lectures which comprise the course/unit:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -150,6 +164,9 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("B.6.c.Is the unit assessed:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($radio->show());
 $table->endRow();
 
@@ -167,7 +184,7 @@ if (count($errormessages) > 0) {
     $form->addToForm($efs);
 }
 
-$legend = "<b>B: Rules and Syllabus - Page Two</b>";
+$legend = "<b>Section B: Rules and Syllabus - Page Two</b>";
 $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($table->show());
@@ -179,12 +196,12 @@ $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'addrulesandsyllabusone'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 echo $form->show();

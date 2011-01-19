@@ -1,5 +1,5 @@
 <?php
-    $tablename = 'tbl_wicid_documents';
+    $tablename = 'tbl_apo_documents';
     $options = array('comment' => 'Table for saving document information', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
     $fields = array('id' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'docname' => array('type' => 'text', 'notnull'=>TRUE),

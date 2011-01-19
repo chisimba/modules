@@ -32,22 +32,22 @@ $overviewlink = new link($this->uri(array("action" => "addoverview")));
 $overviewlink->link = "Overview";
 
 $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
-$rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
+$rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
 $rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
-$rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
+$rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
 $subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequirements")));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
 $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
-$outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+$outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
 $outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
-$outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
+$outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
 
 $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
-$outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+$outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
 $resourceslink = new link($this->uri(array("action" => "addresources")));
 $resourceslink->link = "Resources";
@@ -75,62 +75,95 @@ $legend = "<b>Section G: Review</b>";
 
 $action = 'addcontactdetails';
 $form = new form('reviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'review')));
+$form = new form('reviewform', $this->uri(array('action' => 'addcontactdetails')));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $textarea = new textarea('g1a');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('G.1.a How will the course/unit syllabus be reviewed?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g1b');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('G.1.b How often will the course/unit syllabus be reviewed?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g2a');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('G.2.a How will integration of course/unit outcome, syllabus, teaching methods and assessment methods be evaluated?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g2b');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('G.2.b How often will the above integration be reviewed?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g3a');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('G.3.a How will the course/unit through-put rate be evaluated?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g3b');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('G.3.b How often will the course/unit through-put be reviewed?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g4a');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('G.4.a How will theteaching on the course/unit be evaluated from a students perspective and from a lectures perspective?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g4b');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('G.4.b How often will the teaching on the course/unit be evaluated from these two perspectives?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 

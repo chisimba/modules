@@ -1,4 +1,9 @@
 <?php
+/*
+ * @category  Chisimba
+ * @package   apo (Academic Planning Office)
+ * @author    Palesa Mokwena
+ */
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -26,22 +31,22 @@ $overviewlink = new link($this->uri(array("action" => "addoverview")));
 $overviewlink->link = "Overview";
 
 $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
-$rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
+$rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
 $rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
-$rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
+$rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
 $subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequirements")));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
 $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
-$outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+$outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
 $outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
-$outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
+$outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
 
 $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
-$outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+$outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
 $resourceslink = new link($this->uri(array("action" => "addresources")));
 $resourceslink->link = "Resources";
@@ -73,6 +78,8 @@ $legend = "<b>Section D: Outcomes and Assessments - Page One</b>";
 //Section D.1.
 
 $d1a = new dropdown('d1a');
+//$dropdown->size = 150;
+$d1a->addOption('');
 $d1a->addOption("NQF 5");
 $d1a->addOption("NQF 6");
 $d1a->addOption("NQF 7");
@@ -88,14 +95,21 @@ if ($mode == 'edit') {
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $table->addCell("D.1.a. On which OLD NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7 & 8) is the course/unit positioned?:");
-if ($mode == 'edit') {
-    $table->addCell($document['refno'] . '-' . $document['version']);
-} else {
-    $table->addCell($d1a->show());
-}
 $table->endRow();
 
+if ($mode == 'edit') {
+    $table->startRow();
+    $table->addCell($document['refno'] . '-' . $document['version']);
+    $table->startRow();
+} else {
+    $table->startRow();
+    $table->addCell($d1a->show());
+    $table->endRow();
+}
+
+
 $d1b = new dropdown('d1b');
+$d1b->addOption('');
 $d1b->addOption("<b>NQF 5</b>");
 $d1b->addOption("NQF 6");
 $d1b->addOption("NQF 7");
@@ -104,23 +118,26 @@ $d1b->addOption("NQF 9");
 $d1b->addOption("NQF 10");
 
 
-if ($mode == 'fixup') {
-    $documentNumber->setSelected($newNGF);
+/*if ($mode == 'fixup') {
+    $documentNumber->setSelected($d1b);
 }
 if ($mode == 'edit') {
     $documentNumber->setSelected(substr($document['refno'], 0, 1));
 }
-
+*/
 //$table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $table->addCell("D.1.b. On which NEW NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7, 8, 9 & 10) is the course/unit positioned?:");
-if ($mode == 'edit') {
-    $table->addCell($document['refno'] . '-' . $document['version']);
-} else {
-    $table->addCell($d1b->show());
-}
 $table->endRow();
-
+if ($mode == 'edit') {
+    $table->startRow();
+    $table->addCell($document['refno'] . '-' . $document['version']);
+    $table->endRow();
+} else {
+    $table->startRow();
+    $table->addCell($d1b->show());
+    $table->endRow();
+}
 //Section D.2.
 
 $table->startRow();
@@ -130,27 +147,39 @@ $table->endRow();
 $textarea = new textarea('d2a');
 $textarea->size = 60;
 $textarea->value = $courseOutcomes;
+$textarea->cols=100;
 
 $table->startRow();
 $table->addCell('Learning Outcomes of the Course/Unit');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('d2b');
 $textarea->size = 60;
 $textarea->value = $assessCriteria;
+$textarea->cols=100;
 
 $table->startRow();
 $table->addCell('Assessment Criteria for the Learning Outcomes');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('d2c');
 $textarea->size = 60;
 $textarea->value = $assessMethods;
+$textarea->cols=100;
 
 $table->startRow();
 $table->addCell('Assessment Methods to be Used');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -158,9 +187,13 @@ $table->endRow();
 $textarea = new textarea('d3');
 $textarea->size = 60;
 $textarea->value = $overallAchieve;
+$textarea->cols=100;
 
 $table->startRow();
 $table->addCell('D.3. How do the course/unit outcomes contribute to the acheivement of the overall qualification/programme outcomes?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -174,6 +207,20 @@ $form = new form('outcomesassessmentform', $this->uri(array('action' => $action,
 
 $hiddenSelected = new hiddeninput('selected', $cfile);
 $form->addToForm($hiddenSelected->show());
+
+$efs = new fieldset();
+$efs->setLegend('Errors');
+if (count($errormessages) > 0) {
+
+    $errorstr = '<ul>';
+
+    foreach ($errormessages as $errormessage) {
+        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+    }
+    $errorstr.='</li>';
+    $efs->addContent($errorstr);
+    $form->addToForm($efs);
+}
 
 $form->addToForm($fs->show());
 

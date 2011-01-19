@@ -81,44 +81,60 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $textarea = new textarea('b1');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b1;
 }
 $table->startRow();
 $table->addCell("B.1. How does this course/unit change the rules for the curriculum?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b2');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b2;
 }
 $table->startRow();
 $table->addCell("B.2. Describe the course/unit syllabus:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b3a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b3a;
 }
 $table->startRow();
 $table->addCell("B.3. a. What are the pre-requisites for the course/unit if any?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b3b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b3b;
 }
 $table->startRow();
 $table->addCell("B.3.b. What are the co-requisites for the course/unit if any?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -133,28 +149,39 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("B.4.a. This is:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($radio->show());
 $table->endRow();
 
 $textarea = new textarea('b4b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b4b;
 }
 $table->startRow();
 $table->addCell("B.4.b. If it is a compulsory course/unit, which course/unit is it replacing, or is the course/unit to be taken by students in addition to the current workload of courses/unit?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b4c');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b4c;
 }
 $table->startRow();
 $table->addCell("B.4.c. If it is both a compulsory and optional course/unit, provide details explaining for which qualifications/ programmes the course/unit would be optional and for which it would be compulsory:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -186,12 +213,12 @@ $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'addoverview'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));;
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 echo $form->show();

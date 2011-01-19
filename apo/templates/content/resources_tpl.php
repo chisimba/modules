@@ -32,22 +32,22 @@ $overviewlink = new link($this->uri(array("action" => "addoverview")));
 $overviewlink->link = "Overview";
 
 $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
-$rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
+$rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
 $rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
-$rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
+$rulesandsyllabustwolink->link = "Rules and Syllabus - Page two";
 
 $subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequirements")));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
 $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
-$outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+$outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
 $outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
-$outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
+$outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
 
 $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
-$outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+$outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
 $collaborationandcontractslink = new link($this->uri(array("action" => "addcollaborationandcontracts")));
 $collaborationandcontractslink->link = "Collaboration and Contracts";
@@ -76,121 +76,166 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $textarea = new textarea('e1a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $he1a;
 }
 $table->startRow();
 $table->addCell("E.1.a. Is there currently adequate teaching capacity with regard to the introduction of the course/unit? ");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e1b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
+
 if ($mode == "fixup") {
     $textarea->value = $e1b;
 }
 $table->startRow();
 $table->addCell("E.1.b. Who will teach the course/unit?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e2a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e2a;
 }
 $table->startRow();
 $table->addCell("E.2.a. How many students will the course/unit attract?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e2b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e2b;
 }
 $table->startRow();
 $table->addCell("E.2.b. How has this been factored into the enrolment planning in your Faculty?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e2c');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e2c;
 }
 $table->startRow();
 $table->addCell("E.2.c. How has it been determined if the course/unit is sustainable in the long term, or short term if of topical interest?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e3a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e3a;
 }
 $table->startRow();
 $table->addCell("E.3.a. Specify the space requirements for the course/unit:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e3b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e3b;
 }
 $table->startRow();
 $table->addCell("E.3.b. Specify the IT teaching resources required for the course/unit:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e3c');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e3c;
 }
 $table->startRow();
 $table->addCell("E.3.c. Specify the library resources required to teach the course/unit:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e4');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e4;
 }
 $table->startRow();
 $table->addCell("E.4. Does the School intend to offer the course/unit in addition to its current course/unit offerings, or is the intention to eliminate an existing course/unit?");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e5a');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e5a;
 }
 $table->startRow();
 $table->addCell("E.5.a. Specify the name of the course/unit co-ordinator:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e5b');
 $textarea->height = '70px';
 $textarea->width = '500px';
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e5b;
 }
 $table->startRow();
 $table->addCell("E.5.b. State the Staff number of the course/unit coordinator (consult your Faculty Registrar):");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -208,7 +253,7 @@ if (count($errormessages) > 0) {
     $form->addToForm($efs);
 }
 
-$legend = "<b>E: Resources</b>";
+$legend = "<b>Section E: Resources</b>";
 $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($table->show());
@@ -220,7 +265,7 @@ $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'addoutcomesandassessmentthree'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));

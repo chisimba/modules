@@ -1,5 +1,5 @@
 <?php
-    $tablename = 'tbl_wicid_folderpermissions';
+    $tablename = 'tbl_apo_folderpermissions';
     $options = array('comment' => 'Table for holder folder permissions information', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
     $fields = array('id' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                     'folderpath' => array('type' => 'text', 'notnull'=>TRUE),

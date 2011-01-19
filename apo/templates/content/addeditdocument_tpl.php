@@ -101,7 +101,7 @@ if ($mode == 'edit') {
 $table->addCell($objDatePicker->show());
 $table->endRow();
 
-$documentNumber = new dropdown('number');
+/*$documentNumber = new dropdown('number');
 $documentNumber->addOption("Select ...");
 $documentNumber->addOption("S");
 $documentNumber->addOption("C");
@@ -121,6 +121,9 @@ if ($mode == 'edit') {
     $table->addCell($documentNumber->show());
 }
 $table->endRow();
+*/
+
+$number = 'A';
 
 $textinput = new textinput('department');
 $textinput->size = 60;
@@ -173,7 +176,7 @@ if ($mode == 'edit') {
     $textinput->value = $title;
 }
 $table->startRow();
-$table->addCell("<b>Document Title</b>");
+$table->addCell("<b>Course Title</b>");
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -235,7 +238,7 @@ if (count($errormessages) > 0) {
 }
 $form->addToForm($fs->show());
 
-$button = new button('save', $this->objLanguage->languageText('mod_wicid_save', 'wicid', 'Save Document'));
+$button = new button('save', $this->objLanguage->languageText('mod_wicid_save', 'wicid', 'Create Document'));
 $button->setToSubmit();
 
 if ($mode == 'edit') {

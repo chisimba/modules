@@ -27,22 +27,22 @@ $overviewlink = new link($this->uri(array("action" => "addoverview")));
 $overviewlink->link = "Overview";
 
 $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
-$rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
+$rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
 $rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
-$rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
+$rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
 $subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequirements")));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
 $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
-$outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+$outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
 $outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
-$outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
+$outcomesandassessmenttwolink->link = "Outcomes and Assessment  - Page Two";
 
 $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
-$outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+$outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
 $resourceslink = new link($this->uri(array("action" => "addresources")));
 $resourceslink->link = "Resources";
@@ -73,87 +73,120 @@ $form = new form('collaborationandcontactsform', $this->uri(array('action' => $a
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $F1a = new dropdown('f1a');
+$F1a->addOption('');
 $F1a->addOption("Yes");
 $F1a->addOption("No");
 
-if ($mode == 'fixup') {
-    $documentNumber->setSelected($f2a);
+/*if ($mode == 'fixup') {
+    $documentNumber->setSelected($F1a);
 }
 if ($mode == 'edit') {
     $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}
+}*/
 $table->startRow();
 $table->addCell("F.1.a Is approval for the course/unit required from a professional body?:");
-if ($mode == 'edit') {
-    $table->addCell($document['refno'] . '-' . $document['version']);
-} else {
-    $table->addCell($F1a->show());
-}
 $table->endRow();
 
+if ($mode == 'edit') {
+    $table->startRow();
+    $table->addCell($document['refno'] . '-' . $document['version']);
+    $table->endRow();
+} else {
+    $table->startRow();
+    $table->addCell($F1a->show());
+    $table->endRow();
+}
+
+
 $textarea = new textarea('f1b');
+$teaxtarea->cols = 100;
 
 $table->startRow();
 $table->addCell('F.1.b If yes, state the name of the professional body and provide details of the bodys prerequisites and/or contacts.:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $F2a = new dropdown('f2a');
+$F2a->addOption('');
 $F2a->addOption("Yes");
 $F2a->addOption("No");
 
-if ($mode == 'fixup') {
+/*if ($mode == 'fixup') {
     $documentNumber->setSelected($f2a);
 }
 if ($mode == 'edit') {
     $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}
+}*/
 $table->startRow();
 $table->addCell("F.2.a Are other Schools or Faculties involved in and/or have interest in the course?:");
-if ($mode == 'edit') {
-    $table->addCell($document['refno'] . '-' . $document['version']);
-} else {
-    $table->addCell($F2a->show());
-}
 $table->endRow();
+if ($mode == 'edit') {
+    $table->startRow();
+    $table->addCell($document['refno'] . '-' . $document['version']);
+    $table->endRow();
+} else {
+    $table->startRow();
+    $table->addCell($F2a->show());
+    $table->endRow();
+}
 
 $textarea = new textarea('f2b');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('F.2.b If yes, provide the details of the other Schools or Fucalties involvement/interest, including support and provision for the course/unit.:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $F3a = new dropdown('f3a');
+$F3a->addOption('');
 $F3a->addOption("Yes");
 $F3a->addOption("No");
 
-if ($mode == 'fixup') {
+/*if ($mode == 'fixup') {
     $documentNumber->setSelected($f2a);
 }
 if ($mode == 'edit') {
     $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}
+}*/
 $table->startRow();
 $table->addCell("F.3.a Does the course/unit provide service learning?:");
-if ($mode == 'edit') {
-    $table->addCell($document['refno'] . '-' . $document['version']);
-} else {
-    $table->addCell($F3a->show());
-}
 $table->endRow();
+if ($mode == 'edit') {
+    $table->startRow();
+    $table->addCell($document['refno'] . '-' . $document['version']);
+    $table->endRow();
+} else {
+    $table->startRow();
+    $table->addCell($F3a->show());
+    $table->endRow();
+}
 
 $textarea = new textarea('f3b');
+$teaxtarea->cols = 100;
 
 $table->startRow();
 $table->addCell('F.3.b If yes, provide the details on the nature as well as the provisioning for the service learning component and methodology.:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('f4');
+$textarea->cols = 100;
 
 $table->startRow();
 $table->addCell('F.4 Specify whether collaboration, contacts or other cooperation agreements have been, or will need to be, entered into with entities outside of the university?:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 

@@ -27,19 +27,19 @@ $overviewlink = new link($this->uri(array("action" => "addoverview")));
 $overviewlink->link = "Overview";
 
 $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
-$rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
+$rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
 $rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
-$rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
+$rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
 $subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequirements")));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
 $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
-$outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
+$outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
 $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
-$outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
+$outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
 $resourceslink = new link($this->uri(array("action" => "addresources")));
 $resourceslink->link = "Resources";
@@ -103,25 +103,12 @@ $groups[]=array('id'=>'8','description'=>"	In order to contribute to the full pe
 
         $groupsList .= ' ' . $checkbox->show() . $label->show() . '<br />';
     }
-/*
-$radio = new radio ('d4');
-$radio->addOption('1'," Identify and solve problems in which responses display that responsible decisions using critical and creative thinking have been made.");
-$radio->addOption('2',"Work effectively with others as a member of a team, group, organisation, community.");
-$radio->addOption('3',"Organise and manage oneself and one’s activities responsibly and effectively.");
-$radio->addOption('4',"Collect, analyse, organise and critically evaluate information.");
-$radio->addOption('5',"Communicate effectively using visual, mathematical and/or language skills in the modes of oral and/ or written presentation.");
-$radio->addOption('6',"	Use science and technology effectively and critically, showing responsibility towards the environment and health of others.");
-$radio->addOption('7',"Demonstrate an understanding of the world as a set of related systems by recognising that problem-solving contexts do not exist in isolation.");
-$radio->addOption('8',"	In order to contribute to the full personal development of each learner and the social economic development of the society at large, it must be the intention underlying any programme of learning to make an individual aware of the importance of:
-<br>- Reflecting on and exploring a variety of strategies to learn more effectively;
-<br>- Participating as responsible citizens in the life of local, national and global communities;
-<br>- Being culturally and aesthetically sensitive across a range of social contexts;
-<br>- Exploring education and career opportunities; and
-<br>- Developing entrepreneurial opportunities.");
-$radio->setSelected('1');
-$radio->setBreakSpace('</p><p>');*/
+
 $table->startRow();
 $table->addCell("D.4 Specify the critical cross-field outcomes (CCFOs) integrated into the course/unit using the list provided.:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($groupsList);
 $table->endRow();
 

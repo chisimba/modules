@@ -92,13 +92,20 @@ $radio->addOption('2',"on-campus");
 $radio->setSelected('1');
 $table->startRow();
 $table->addCell("C.2.a. The course/unit is taught:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($radio->show());
 $table->endRow();
 
 
 $textarea = new textarea('c2b');
+$textarea->cols=100;
 $table->startRow();
 $table->addCell('C.2.b. If the course/unit is taught off-campus provide details:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -109,6 +116,9 @@ $textinput->size = 60;
 $textinput->value = $c3;
 $table->startRow();
 $table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from http://intranet.wits.ac.za/Academic/APO/CESMs.htm):');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -119,6 +129,9 @@ $radio->addOption('2',"No");
 $radio->setSelected('1');
 $table->startRow();
 $table->addCell("C.4.a. Is any other School/Entity involved in teaching this unit?:");
+$table->endRow();
+
+$table->startRow();
 $table->addCell($radio->show());
 $table->endRow();
 
@@ -126,16 +139,24 @@ $table->endRow();
 $textarea = new textarea('c4b');
 $textarea->size = 60;
 $textarea->value = $c4b;
+$textarea->cols=100;
 $table->startRow();
 $table->addCell('C.4.b. If yes, state the name of the School/Entity:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
 $textarea = new textarea('c4c');
 $textarea->size = 60;
 $textarea->value = $c4c;
+$textarea->cols=100;
 $table->startRow();
 $table->addCell('Percentage each teaches.:');
+$table->endRow();
+
+$table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
@@ -150,6 +171,25 @@ $form = new form('subsidyrequirementsform', $this->uri(array('action' => $action
 
 $hiddenSelected = new hiddeninput('selected', $cfile);
 $form->addToForm($hiddenSelected->show());
+
+if ($mode == 'edit') {
+    $hiddenId = new hiddeninput('docid', $document['id']);
+    $form->addToForm($hiddenId->show());
+}
+
+$efs = new fieldset();
+$efs->setLegend('Errors');
+if (count($errormessages) > 0) {
+
+    $errorstr = '<ul>';
+
+    foreach ($errormessages as $errormessage) {
+        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+    }
+    $errorstr.='</li>';
+    $efs->addContent($errorstr);
+    $form->addToForm($efs);
+}
 
 $form->addToForm($fs->show());
 

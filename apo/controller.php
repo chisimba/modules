@@ -447,9 +447,9 @@ class apo extends controller {
         }
         $selectedfolder = $this->getParam('parentfolder');
 
-        /*if ($selectedfolder == '0') {
-            $errormessages[] = "Select topic";
-        }*/
+        /* if ($selectedfolder == '0') {
+          $errormessages[] = "Select topic";
+          } */
         //check wat is the largest count for this year.
         $ref_version = $this->documents->checkRefNo($number);
         $refno = $number . date("Y"); //."-".($res;
@@ -991,8 +991,6 @@ class apo extends controller {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
 
-        $errormessages = array();
-
         $a1 = $this->getParam("a1");
         $a2 = $this->getParam("a2");
         $a3 = $this->getParam("a3");
@@ -1139,7 +1137,7 @@ class apo extends controller {
             $errormessages[] = "Please provide an answer for B.6.c";
         }
 
-        if (count($errormessages) > 0) {
+          if (count($errormessages) > 0) {
 
             $this->setVarByRef("errormessages", $errormessages);
             $this->setVarByRef("b5a", $b5a);
@@ -1172,6 +1170,8 @@ class apo extends controller {
         $formname = $this->getParam('formname');
         
         $errormessages = array();
+
+        /*$errormessages = array();
 
         $c1 = $this->getParam("c1");
         $c2a = $this->getParam("c2a");
@@ -1310,41 +1310,42 @@ class apo extends controller {
         if ($a == null) {
             $errormessages[] = "Please provide an answer for a";
         }
-        if ($b == null) {
-            $errormessages[] = "Please provide an answer for b";
-        }
-        if ($c == null) {
-            $errormessages[] = "Please provide an answer for c";
-        }
-        if ($d == null) {
-            $errormessages[] = "Please provide an answer for d";
-        }
-        if ($e == null) {
-            $errormessages[] = "Please provide an answer for e";
-        }
-        if ($f == null) {
-            $errormessages[] = "Please provide an answer for f";
-        }
-        if ($g == null) {
-            $errormessages[] = "Please provide an answer for g";
-        }
-        if ($h == null) {
-            $errormessages[] = "Please provide an answer for h";
+
+        $d1b = $this->getParam("d1b");
+        if ($d1b == '') {
+            $errormessages[] = "Select NEW NQF level";
         }
 
-        if (count($errormessages) > 0) {
+        $d2a = $this->getParam("d2a");
+        if ($d2a == '' ) {
+            $errormessages[] = "Specify Learning Outcomes of the Course/Unit";
+        }
+
+        $d2b = $this->getParam("d2b");
+        if ($d2b == ''){
+            $errormessages[]= "Assessment Criteria for the Learning Outcomes";
+
+        }
+
+        $d2c = $this->getParam("d2c");
+        if ($d2c == ''){
+            $errormessages[]= "Specify Assessment Methods to be Used";
+
+        }
+
+        $d3 = $this->getParam("d3");
+        if ($d3 == ''){
+            $errormessages[]= "Please Provide answer for D.3.";
+
+        }
+
+         if (count($errormessages) > 0) {
+
             $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("a", $a);
-            $this->setVarByRef("b", $b);
-            $this->setVarByRef("c", $c);
-            $this->setVarByRef("d", $d);
-            $this->setVarByRef("e", $e);
-            $this->setVarByRef("f", $f);
-            $this->setVarByRef("g", $g);
-            $this->setVarByRef("h", $h);
+
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
-            return "outcomesandassessmentthree_tpl.php";
+            return "outcomesandassessmenttwo_tpl.php";
         }
 
         $formdata = "<a>" . $a . "</a>";
@@ -1409,21 +1410,21 @@ class apo extends controller {
             $errormessages[] = "Please provide an answer for i";
         }
 
-        if (count($errormessages) > 0) {
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("a", $a);
-            $this->setVarByRef("b", $b);
-            $this->setVarByRef("c", $c);
-            $this->setVarByRef("d", $d);
-            $this->setVarByRef("e", $e);
-            $this->setVarByRef("f", $f);
-            $this->setVarByRef("g", $g);
-            $this->setVarByRef("h", $h);
-            $this->setVarByRef("i", $i);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "outcomesandassessmentthree_tpl.php";
-        }
+          if (count($errormessages) > 0) {
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("a", $a);
+          $this->setVarByRef("b", $b);
+          $this->setVarByRef("c", $c);
+          $this->setVarByRef("d", $d);
+          $this->setVarByRef("e", $e);
+          $this->setVarByRef("f", $f);
+          $this->setVarByRef("g", $g);
+          $this->setVarByRef("h", $h);
+          $this->setVarByRef("i", $i);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "outcomesandassessmentthree_tpl.php";
+          }
 
         $formdata = "<a>" . $a . "</a>";
         $formdata .= "<b>" . $b . "</b>";
@@ -1498,22 +1499,22 @@ class apo extends controller {
 
         if (count($errormessages) > 0) {
 
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("e1a", $e1a);
-            $this->setVarByRef("e1b", $e1b);
-            $this->setVarByRef("e2a", $e2a);
-            $this->setVarByRef("e2b", $e2b);
-            $this->setVarByRef("e2c", $e2c);
-            $this->setVarByRef("e3a", $e3a);
-            $this->setVarByRef("e3b", $e3b);
-            $this->setVarByRef("e3c", $e3c);
-            $this->setVarByRef("e4", $e4);
-            $this->setVarByRef("e5a", $e5a);
-            $this->setVarByRef("e5b", $e5b);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "resources_tpl.php";
-        }
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("e1a", $e1a);
+          $this->setVarByRef("e1b", $e1b);
+          $this->setVarByRef("e2a", $e2a);
+          $this->setVarByRef("e2b", $e2b);
+          $this->setVarByRef("e2c", $e2c);
+          $this->setVarByRef("e3a", $e3a);
+          $this->setVarByRef("e3b", $e3b);
+          $this->setVarByRef("e3c", $e3c);
+          $this->setVarByRef("e4", $e4);
+          $this->setVarByRef("e5a", $e5a);
+          $this->setVarByRef("e5b", $e5b);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "resources_tpl.php";
+          }
 
         $formdata = "<e1a>" . $e1a . "</e1a>";
         $formdata .= "<e1b>" . $e . "</e1b>";
@@ -1553,38 +1554,44 @@ class apo extends controller {
         if ($f1a == null) {
             $errormessages[] = "Please provide an answer for F.1.a";
         }
-        if ($f1b == null) {
-            $errormessages[] = "Please provide an answer for F.1.b";
+
+        /*$f1b = $this->getParam("F1b");
+        if ($f1b == '' ) {
+            $errormessages[] = "Provide answer for F.1.b.";
         }
-        if ($f2a == null) {
-            $errormessages[] = "Please provide an answer for F.2.a";
+
+        $f2a = $this->getParam("F2a");
+        if (empty($_POST['f2a'])) {
+            $errormessages[] = "Provide answer for F.2.a.";
         }
-        if ($f2b == null) {
-            $errormessages[] = "Please provide an answer for F.2.b";
+
+       /* $f2b = $this->getParam("F2b");
+        if ($f2b == '') {
+            $errormessages[] = "Provide answer for F.2.b.";
         }
-        if ($f3a == null) {
-            $errormessages[] = "Please provide an answer for F.3.a";
+
+        $f3a = $this->getParam("F3a");
+        if (empty($_POST['f3a']) ) {
+            $errormessages[] = "Provide answer for F.3.a.";
         }
-        if ($f3b == null) {
-            $errormessages[] = "Please provide an answer for F.3.b";
+
+       /* $f3b = $this->getParam("F3b");
+        if ($f3b == '') {
+            $errormessages[] = "Provide answer for F.3.b.";
         }
-        if ($f4 == null) {
-            $errormessages[] = "Please provide an answer for F.4";
+
+        $f4 = $this->getParam("F4");
+        if (empty($_POST['f4'])) {
+            $errormessages[] = "Provide answer for F.4.";
         }
 
         if (count($errormessages) > 0) {
 
             $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("f1a", $f1a);
-            $this->setVarByRef("f1b", $f1b);
-            $this->setVarByRef("f2a", $f2a);
-            $this->setVarByRef("f2b", $f2b);
-            $this->setVarByRef("f3a", $f3a);
-            $this->setVarByRef("f3b", $f3b);
-            $this->setVarByRef("f4", $f4);
+
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
-            return "rulesandsyllabustwo_tpl.php";
+            return "collaborationandcontracts_tpl.php";
         }
 
         $formdata = "<f1a>" . $f1a . "</f1a>";
@@ -1622,42 +1629,49 @@ class apo extends controller {
         if ($g1a == null) {
             $errormessages[] = "Please provide an answer for G.1.a";
         }
-        if ($g1b == null) {
-            $errormessages[] = "Please provide an answer for G.1.b";
+
+        $g1b = $this->getParam("g1b");
+        if ($g1b == '') {
+            $errormessages[] = "Provide answer for G.1.b.";
         }
-        if ($g2a == null) {
-            $errormessages[] = "Please provide an answer for G.2.a";
+
+        $g2a = $this->getParam("g2a");
+        if ($g2a == '' ) {
+            $errormessages[] = "Provide answer for G.2.a.";
         }
-        if ($g2b == null) {
-            $errormessages[] = "Please provide an answer for G.2.b";
+
+        $g2b = $this->getParam("g2b");
+        if ($g2b == ''){
+            $errormessages[]= "Provide answer for G.2.b.";
         }
-        if ($g3a == null) {
-            $errormessages[] = "Please provide an answer for G.3.a";
+
+         $g3a = $this->getParam("g3a");
+        if ($g3a == '' ) {
+            $errormessages[] = "Provide answer for G.3.a.";
         }
-        if ($g3b == null) {
-            $errormessages[] = "Please provide an answer for G.3.b";
+
+        $g3b = $this->getParam("g3b");
+        if ($g3b == ''){
+            $errormessages[]= "Provide answer for G.3.b.";
         }
-        if ($g4a == null) {
-            $errormessages[] = "Please provide an answer for G.4.a";
+
+         $g4a = $this->getParam("g4a");
+        if ($g4a == '' ) {
+            $errormessages[] = "Provide answer for G.4.a. ";
         }
-        if ($g4b == null) {
-            $errormessages[] = "Please provide an answer for G.4.b";
+
+        $g4b = $this->getParam("g4b");
+        if ($g4b == ''){
+            $errormessages[]= "Provide answer for G.4.b.";
         }
 
         if (count($errormessages) > 0) {
 
             $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("g1a", $g1a);
-            $this->setVarByRef("g1b", $g1b);
-            $this->setVarByRef("g2a", $g2a);
-            $this->setVarByRef("g2b", $g2b);
-            $this->setVarByRef("g3a", $g3a);
-            $this->setVarByRef("g3b", $g3b);
-            $this->setVarByRef("g4a", $g4a);
-            $this->setVarByRef("g4b", $g4b);
+
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
-            return "rulesandsyllabustwo_tpl.php";
+            return "review_tpl.php";
         }
 
         $formdata = "<g1a>" . $g1a . "</g1a>";
@@ -1706,18 +1720,18 @@ class apo extends controller {
             $errormessages[] = "Please provide an answer for H.3.b";
         }
 
-        if (count($errormessages) > 0) {
+          if (count($errormessages) > 0) {
 
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("h1", $h1);
-            $this->setVarByRef("h2a", $h2a);
-            $this->setVarByRef("h2b", $h2b);
-            $this->setVarByRef("h3a", $h3a);
-            $this->setVarByRef("h3b", $h3b);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "contactdetails_tpl.php";
-        }
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("h1", $h1);
+          $this->setVarByRef("h2a", $h2a);
+          $this->setVarByRef("h2b", $h2b);
+          $this->setVarByRef("h3a", $h3a);
+          $this->setVarByRef("h3b", $h3b);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "contactdetails_tpl.php";
+          }
 
         $formdata = "<h1>" . $h1 . "</h1>";
         $formdata .= "<h2a>" . $h2a . "</h2a>";
@@ -1833,6 +1847,31 @@ class apo extends controller {
 
         $this->setVarByRef("id", $id);
         return "outcomesandassessmentthree_tpl.php";
+    }
+
+    public function __addeditCourseProposal() {
+
+        $telephone = $this->getParam("telephone");
+        $title = $this->getParam("title");
+        $owner = $this->getParam("contact");
+        $department = $this->getParam("department");
+        $id = $this->getParam('docid');
+
+        $this->setVarByRef("telephone", $telephone);
+        $this->setVarByRef("title", $title);
+        $this->setVarByRef("contact", $contact);
+        $this->setVarByRef("department", $department);
+
+
+        /*$selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);*/
+        return "editCourseProposal_tpl.php";
+    }
+
+    public function __saveeditcourseproposal() {
+        
     }
 
 }
