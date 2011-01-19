@@ -51,8 +51,19 @@ class maincontent extends object {
     private $objFileManager;
     // object for language elements
     private $objLanguage;
-    private $objBlog;
 
+    private $objDbBlog;
+
+    private $objUser;
+
+    /**
+     * Blog posts object
+     *
+     * @var    object
+     * @access public
+     */
+    public $objblogPosts;
+    
     /**
      * Constructor
      */
@@ -62,7 +73,10 @@ class maincontent extends object {
         $this->objCategory = $this->getObject('dbnewscategories', 'news');
         $this->objFileManager = $this->getObject('dbfile', 'filemanager');
         $this->objLanguage = $this->getObject("language", "language");
-        $this->objBlog = $this->getObject('block_lastsix', 'blog');
+        $this->objDbBlog = $this->getObject('dbblog', 'blog');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+        $this->objblogPosts = $this->getObject('blogposts', 'blog');
     }
 
     /* Method to set the current action of the page
@@ -90,11 +104,17 @@ class maincontent extends object {
             case 'about': return $this->showAboutMain();
             case 'staff': return $this->showStaffMain();
             case 'contact': return $this->showContactMain();
+            case 'viewsingle':return $this->showSingleBlog();
             default: return $this->showHomeMain();
         }
     }
 
     public function showHomeMain() {
+        $bloginfo = $this->getBlogs();
+        //$bloginfo = "";
+        if(empty($bloginfo)) {
+            $bloginfo = "There are no blogs yet.";
+        }
         $retstr = '<div class="grid_1">
                         <img src="'.$this->skinpath.'images/sm_xolani.jpg"><h4>eLearning</h4>
                         <p>Augment your  teaching and learning programme with digital resources.</p>
@@ -121,7 +141,7 @@ class maincontent extends object {
                     <div class="grid_2"><p>&nbsp;</p></div>
                     <!-- end .grid_1 --> <div class="clear">&nbsp;</div>
                     <div class="grid_2">
-                        <p>Blogs Outline goes here</p>
+                        <div id="blog">'.$bloginfo.'</div>
                     </div>
                     <div class="grid_2">
                         <div class="info-box-holder">
@@ -308,7 +328,7 @@ class maincontent extends object {
 		return $retstr;
 	 }
 
-         public function showContactMain() {
+    public function showContactMain() {
 
             $this->loadClass('label','htmlelements');
             $this->loadClass('button', 'htmlelements');
@@ -365,4 +385,66 @@ class maincontent extends object {
             return $retstr;
 	 }
 
+     private function getBlogs() {
+        $this->loadClass('href', 'htmlelements');
+        $num = 6;
+        $data = $this->objDbBlog->getLastPosts($num);
+        $ret = "";
+        if (!empty($data)) {
+            $count = 1;
+            $ret = "<table width='100%'>";
+            foreach ($data as $item) {
+                $linkuri = $this->uri(array(
+                            'action' => 'viewsingle',
+                            'postid' => $item['id'],
+                            'userid' => $item['userid']
+                        ));
+                $link = new href($linkuri, stripslashes($item['post_title']));
+                $posterName = '<div class="blogpreviewuser">'
+                        . $this->objUser->fullname($item['userid'])
+                        . '</div>';
+                $fixedTime = strtotime($item['post_date']);
+                $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+                $postDate = $this->objHumanizeDate->getDifference($fixedTime);
+                $postExcerpt = $item['post_excerpt'];
+                if ($count == 1) {
+                    $before = "<tr>";
+                    $after = "";
+                } elseif ($count % 3 == 0) {
+                    $before = "";
+                    $after = "</tr><tr>";
+                } else {
+                    $before = "";
+                    $after = "";
+                }
+                $ret .= $before . "<td width='33.3%' valign='top'><div class='blogpreview'>"
+                        . "<div class='blogpreviewtitle'>" . $link->show() . "</div>"
+                        . $postExcerpt . "<br />" . $posterName
+                        . "<div class='blogpreviewpostdate'>"
+                        . $postDate . "</div>"
+                        . "</div></td>" . $after;
+                $count++;
+            }
+            if ($count < 6) {
+                while ($count <= 6) {
+                    $ret .= "<td><div class='blogpreviewnodata'>&nbsp;</div></td>";
+                    $count++;
+                }
+                $ret .= "</tr>";
+            }
+            $ret = $ret . "</table>";
+        }
+        
+        return $ret;
+    }
+
+    private function showSingleBlog() {
+        $postid = $this->getParam('postid');
+        $posts = $this->objDbBlog->getPostByPostID($postid);
+        $retstr = '<div class="grid_3">';
+        $retstr .= $this->objblogPosts->showPosts($posts, TRUE);
+        $retstr .= '</div>';
+
+        return $retstr;
+    }
 }

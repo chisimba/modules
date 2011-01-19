@@ -151,6 +151,14 @@ class elsicontent extends object {
                 <!-- end .grid_1.pull_3 -->
                 <div class="clear">&nbsp;</div>';
         }
+        if($action == 'viewsingle'){
+            $ret = '
+                <div class="clear">&nbsp;</div>
+                <div class="grid_3">
+
+                </div>
+                <div class="clear">&nbsp;</div>';
+        }
         else {
             
             $ret = '

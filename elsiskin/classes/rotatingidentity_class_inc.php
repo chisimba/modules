@@ -68,7 +68,12 @@ class rotatingidentity extends object {
      * @return string
      */
     public function show($action) {
-        $category = $action."_news";
+        if($action == 'viewsingle') {
+            $category = 'home_news';
+        }
+        else {
+            $category = $action."_news";
+        }
         $exists = $this->objCategory->categoryExists($category);
         //$exists = FALSE;
         if($exists) {
