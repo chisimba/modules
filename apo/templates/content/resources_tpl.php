@@ -14,7 +14,8 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 
-$form = new form('resourcesform');
+$action='addcollaborationandcontracts';
+$form = new form('resourcesform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'resources')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section E: Resources');
 
@@ -200,7 +201,7 @@ if (count($errormessages) > 0) {
     $errorstr = '<ul>';
 
     foreach ($errormessages as $errormessage) {
-        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+        $errorstr.='<li class="error">' . $errormessage ;//. '<li/>';
     }
     $errorstr.='</li>';
     $efs->addContent($errorstr);
@@ -214,8 +215,7 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => 'addcollaborationandcontracts'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));

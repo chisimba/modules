@@ -14,9 +14,10 @@ $this->loadClass('htmlheading', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
-$action = 'addresources';
+$id=$this->getParam('id');
 
-$form = new form('outcomesandassessmentthreeform', $this->uri(array('action' => $action)));
+$action = 'addresources';
+$form = new form('outcomesandassessmentthreeform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'outcomesandassessmentthree')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section D: Outcomes and Assessment');
 
@@ -151,6 +152,7 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 $label = new label();
+$label->forId = 'studyhoursnoexam';
 if ($mode == "fixup") {
     $label->labelValue = $totalstudyhoursNoexam;
 }
@@ -180,6 +182,7 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 $label = new label();
+$label->forId = 'totalexamtime';
 if ($mode == "fixup") {
     $label->labelValue = $totalExamTime;
 }
@@ -199,6 +202,7 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 $label = new label();
+$label->forId = 'totalstudyhours';
 if ($mode == "fixup") {
     $label->labelValue = $totalstudyhoursExam;
 }
@@ -208,6 +212,7 @@ $table->addCell("<b>".$label->labelValue."</b>");
 $table->endRow();
 
 $label = new label();
+$label->forId = 'saqa';
 if ($mode == "fixup") {
     $label->labelValue = $totalSAQAcredits;
 }
@@ -231,7 +236,7 @@ if (count($errormessages) > 0) {
     $errorstr = '<ul>';
 
     foreach ($errormessages as $errormessage) {
-        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+        $errorstr.='<li class="error">' . $errormessage ;//. '<li/>';
     }
     $errorstr.='</li>';
     $efs->addContent($errorstr);
@@ -251,12 +256,12 @@ $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'addoutcomesandassessmenttwo'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
-$button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 echo $form->show();

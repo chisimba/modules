@@ -21,7 +21,7 @@ $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 $action = 'finishdocument';
 
-$form = new form('contactdetailsform', $this->uri(array('action' => $action)));
+$form = new form('contactdetailsform', $this->uri(array('action' => $action, 'id'=>$id, 'formname'=>'contactdetails')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section H: Contact Details');
 
@@ -141,7 +141,7 @@ if (count($errormessages) > 0) {
     $errorstr = '<ul>';
 
     foreach ($errormessages as $errormessage) {
-        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+        $errorstr.='<li class="error">' . $errormessage ;//. '<li/>';
     }
     $errorstr.='</li>';
     $efs->addContent($errorstr);

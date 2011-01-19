@@ -19,7 +19,7 @@ $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 $action = 'addrulesandsyllabusone';
 
-$form = new form('overviewform', $this->uri(array('action' => $action)));
+$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section A: Overview');
 
@@ -143,6 +143,7 @@ $table->addCell("A.5. This new or amended course proposal is:","100");
 $table->addCell($radio->show());
 $table->endRow();
 
+
 $efs = new fieldset();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {
@@ -150,7 +151,7 @@ if (count($errormessages) > 0) {
     $errorstr = '<ul>';
 
     foreach ($errormessages as $errormessage) {
-        $errorstr.='<li class="error">' . $errormessage . '<li/>';
+        $errorstr.='<li class="error">' . $errormessage; //. '<li/>';
     }
     $errorstr.='</li>';
     $efs->addContent($errorstr);

@@ -169,7 +169,8 @@ $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($table->show());
 
-$form = new form('outcomesassessmentform', $this->uri(array('action' => $action)));
+$action = 'addoutcomesandassessmenttwo';
+$form = new form('outcomesassessmentform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'outcomesandassessmentone')));
 
 $hiddenSelected = new hiddeninput('selected', $cfile);
 $form->addToForm($hiddenSelected->show());
@@ -177,8 +178,7 @@ $form->addToForm($hiddenSelected->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => 'addoutcomesandassessmenttwo'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit();
 $form->addToForm('<br/>' .$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));

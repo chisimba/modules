@@ -67,8 +67,8 @@ $fs->addContent($links);
 echo $fs->show() . '<br/>';
 
 $legend = "<b>Section F: Collaboration and Contacts</b>";
-
-$form = new form('collaborationandcontactsform');
+$action = 'addreview';
+$form = new form('collaborationandcontactsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'collaborationandcontracts')));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -179,8 +179,7 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => 'addreview'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit();
 $form->addToForm('<br/>' .$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));

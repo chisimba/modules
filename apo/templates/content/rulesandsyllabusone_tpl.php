@@ -20,7 +20,7 @@ $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 $action = 'addrulesandsyllabustwo';
 
-$form = new form('rulesandsyllabusoneform', $this->uri(array('action' => $action)));
+$form = new form('rulesandsyllabusoneform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'rulesandsyllabusone')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section B: Rules and Syllabus');
 

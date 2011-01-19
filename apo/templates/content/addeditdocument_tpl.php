@@ -208,7 +208,7 @@ $fs->setLegend($legend);
 $fs->addContent($table->show());
 
 // Form
-$form = new form('registerdocumentform', $this->uri(array('action' => $action)));
+$form = new form('registerdocumentform', $this->uri(array('action' => $action, 'id' => $hiddenId->value)));
 
 $hiddenSelected = new hiddeninput('selected', $cfile);
 $form->addToForm($hiddenSelected->show());
@@ -240,7 +240,7 @@ $button->setToSubmit();
 
 if ($mode == 'edit') {
     $button = new button('next', $this->objLanguage->languageText('word_next'));
-    $uri = $this->uri(array('action' => 'addoverview'));
+    $uri = $this->uri(array('action' => 'addoverview', 'id' => $document['id']));
     $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 }
 

@@ -73,7 +73,8 @@ echo $fs->show() . '<br/>';
 
 $legend = "<b>Section G: Review</b>";
 
-$form = new form('reviewform');
+$action = 'addcontactdetails';
+$form = new form('reviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'review')));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -154,8 +155,7 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => 'addcontactdetails'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit();
 $form->addToForm('<br/>' .$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));

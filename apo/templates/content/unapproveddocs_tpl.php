@@ -60,6 +60,7 @@ if (count($documents) > 0) {
         $table->addCell($document['topic']);
         $table->addCell($document['telephone']);
         // w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
+               //
                //         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
 
 

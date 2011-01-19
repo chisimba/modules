@@ -67,8 +67,9 @@ $fs->addContent($links);
 echo $fs->show() . '<br/>';
 
 $legend = "<b>Section D: Outcomes and Assessment - Page Two</b>";
+$action = 'addoutcomesandassessmentthree';
 
-$form = new form('outcomesandassessmenttwoform');
+$form = new form('outcomesandassessmenttwoform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'outcomesandassessmenttwo')));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -145,8 +146,7 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
-$uri = $this->uri(array('action' => 'addoutcomesandassessmentthree'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$button->setToSubmit();
 $form->addToForm('<br/>' .$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
