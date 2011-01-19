@@ -68,6 +68,7 @@ class rotatingidentity extends object {
      * @return string
      */
     public function show($action) {
+        $this->loadClass('link', 'htmlelements');
         if($action == 'viewsingle') {
             $category = 'home_news';
         }
@@ -123,11 +124,13 @@ class rotatingidentity extends object {
                             <div class="text-holder">
                                 <div id="s7">';
                 foreach($news as $row) {
+                    $moreLink = new link($this->uri(array('module'=>'elsiskin', 'action'=>'viewnewspost', 'id'=>$row['id'])));
+                    $moreLink->link = " more...";
                     $retstr .= '
                                 
                                     <div>
                                         <span class="head-main">'.trim(strip_tags($row['storytitle'])).'</span>';
-                        $retstr .= '    <span class="head-text">'.trim(strip_tags($row['storytext'])).'<br>
+                        $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 75).$moreLink->show().'<br>
                                             <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<a href="about/index.html">Latest New</a>s<br>
                                             <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<br>
                                         </span>
