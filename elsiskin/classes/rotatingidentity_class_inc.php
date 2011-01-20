@@ -124,15 +124,15 @@ class rotatingidentity extends object {
                             <div class="text-holder">
                                 <div id="s7">';
                 foreach($news as $row) {
-                    $moreLink = new link($this->uri(array('module'=>'elsiskin', 'action'=>'viewnewspost', 'id'=>$row['id'])));
-                    $moreLink->link = " more...";
+                    //$moreLink = new link($this->uri(array('module'=>'elsiskin', 'action'=>'viewnewspost', 'id'=>$row['id'])));
+                    //$moreLink->link = " more...";
                     $retstr .= '
                                 
                                     <div>
                                         <span class="head-main">'.trim(strip_tags($row['storytitle'])).'</span>';
-                        $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 75).$moreLink->show().'<br>
+                        $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 100).' ...<br>
                                             <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<a href="about/index.html">Latest New</a>s<br>
-                                            <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<br>
+                                            <!---<img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<br>--->
                                         </span>
                                     </div>';
                 }
@@ -148,15 +148,6 @@ class rotatingidentity extends object {
                     </span>
                 </div>';
             }
-            /*$retstr .= '
-                            <div class="text-holder">
-                                <span class="head-main">WELCOME TO ELSI</span>
-                                <span class="head-text">eLearning, Support and Innovation lab offers Wits anywhere, anytime and anyplace
-                                    learning.<br>
-                                    <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<a href="about/index.html">Latest New</a>s<br>
-                                    <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<br>
-                                </span>
-                            </div>';*/
         }
         $retstr .= '
                     </div>
