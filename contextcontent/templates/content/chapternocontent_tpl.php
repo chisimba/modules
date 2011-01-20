@@ -27,7 +27,7 @@ $editLink->link = $editIcon;
 $deleteLink = new link($this->uri(array('action'=>'deletechapter', 'id'=>$chapter['chapterid'])));
 $deleteLink->link = $deleteIcon;
 
-$addPageLink = new link($this->uri(array('action'=>'addpage', 'chapterid'=>$chapter['chapterid'])));
+$addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
 $addPageLink->link = $addPageIcon;
 
 
