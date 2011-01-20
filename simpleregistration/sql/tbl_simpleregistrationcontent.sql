@@ -50,6 +50,17 @@ $fields = array(
     'event_id' => array(
     'type' => 'text',
     'length' => 128
+    ),
+ 'event_staffreg' => array(
+    'type' => 'text',
+    'length' => 12
+    ),
+ 'event_visitorreg' => array(
+    'type' => 'text',
+    'length' => 12
     )
     );
+
+
+
 ?>

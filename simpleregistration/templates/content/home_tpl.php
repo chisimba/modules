@@ -5,7 +5,7 @@ if($this->objUser->isLoggedIn()){
 $this->nextAction('expresssignin',array('eventid'=>$eventid));
 }
 $maincss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('css/simpleregistration.css').'"/>';
-$this->appendArrayVar('headerParams', $maincss);
+//$this->appendArrayVar('headerParams', $maincss);
 $table=$this->getObject('htmltable','htmlelements');
 $table->cellpadding = 5;
 $table->cellpadding = 5;

@@ -106,7 +106,10 @@ class simpleregistration extends controller {
         $this->setVarByRef('mode',$mode);
 
         $this->setVarByRef('eventid',$this->eventid);
+        //echo $this->eventid;
         $content=$this->dbeventscontent->getEventContent($this->eventid);
+        //print_r($content);
+        //die();
         $this->setVarByRef('eventcontent',$content);
         return "home_tpl.php";
     }
@@ -158,7 +161,22 @@ class simpleregistration extends controller {
         $eventtitle=$this->getParam('eventtitlefield');
         $eventdate=$this->getParam('eventdatefield');
         $sn=$this->getParam('shortnamefield');
-        $this->dbevents->addEvent($eventtitle,$sn,$eventdate);
+        $id=$this->dbevents->addEvent($eventtitle,$sn,$eventdate);
+        $this->dbeventscontent->addEventContent(
+                $id,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "");
         $this->nextAction('eventlisting');
     }
 
@@ -198,8 +216,12 @@ class simpleregistration extends controller {
         $staffreg=$this->getParam('staffregfield');
         $visitorreg=$this->getParam('visitorregfield');
         $mode=$this->getParam('mode');
+      //  print_r($_POST);
+
+     //   echo $eventid.",".$venue;
+       // die();
         
-        if($mode == "new") {
+        /*if($mode == "new") {
             $this->dbeventscontent->addEventContent(
                 $eventid,
                 $venue,
@@ -220,7 +242,7 @@ class simpleregistration extends controller {
         }
 
         if($mode == "edit") {
-            $this->dbeventscontent->updateEventContent(
+          */  $this->dbeventscontent->updateEventContent(
                 $eventid,
                 $venue,
                 $content,
@@ -235,7 +257,7 @@ class simpleregistration extends controller {
                 $emailattachments,
                 $staffreg,
                 $visitorreg);
-        }
+       // }
         $this->nextAction('eventlisting');
     }
 
