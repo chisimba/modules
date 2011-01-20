@@ -1221,7 +1221,13 @@ class apo extends controller {
         $formdata .= "<c4a>" . $c4a . "</c4a>";
         $formdata .= "<c4b>" . $c4b . "</c4b>";
         $this->objformdata->saveData($formname, $formdata, $id);*/
+//$formname = $this->getParam('form');
+//$c3 = $this->getParam("c3");
 
+//$c3->label='CEMS (must be 6 characters)';
+//$surname->label='Surname (must be less than 15 characters)';
+//$formname->addRule(array('name'=>'c3','length'=>6), 'Check CESM manual','maxlength');
+//$objForm->addRule(array('name'=>'surname','length'=>6), 'Your surname is too long',
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);

@@ -74,13 +74,13 @@ $form = new form('outcomesandassessmenttwoform', $this->uri(array('action' => $a
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $groups=array();
-$groups[]=array('id'=>'1','description'=>" Identify and solve problems in which responses display that responsible decisions using critical and creative thinking have been made.");
-$groups[]=array('id'=>'2','description'=>"Work effectively with others as a member of a team, group, organisation, community.");
-$groups[]=array('id'=>'3','description'=>"Organise and manage oneself and one’s activities responsibly and effectively.");
-$groups[]=array('id'=>'4','description'=>"Collect, analyse, organise and critically evaluate information.");
-$groups[]=array('id'=>'5','description'=>"Communicate effectively using visual, mathematical and/or language skills in the modes of oral and/ or written presentation.");
-$groups[]=array('id'=>'6','description'=>"	Use science and technology effectively and critically, showing responsibility towards the environment and health of others.");
-$groups[]=array('id'=>'7','description'=>"Demonstrate an understanding of the world as a set of related systems by recognising that problem-solving contexts do not exist in isolation.");
+$groups[]=array('id'=>'1','description'=>" Identify and solve problems in which responses display that responsible decisions using critical and creative thinking have been made.<br>");
+$groups[]=array('id'=>'2','description'=>"Work effectively with others as a member of a team, group, organisation, community.<br>");
+$groups[]=array('id'=>'3','description'=>"Organise and manage oneself and one’s activities responsibly and effectively.<br>");
+$groups[]=array('id'=>'4','description'=>"Collect, analyse, organise and critically evaluate information.<br>");
+$groups[]=array('id'=>'5','description'=>"Communicate effectively using visual, mathematical and/or language skills in the modes of oral and/ or written presentation.<br>");
+$groups[]=array('id'=>'6','description'=>"	Use science and technology effectively and critically, showing responsibility towards the environment and health of others.<br>");
+$groups[]=array('id'=>'7','description'=>"Demonstrate an understanding of the world as a set of related systems by recognising that problem-solving contexts do not exist in isolation.<br>");
 $groups[]=array('id'=>'8','description'=>"	In order to contribute to the full personal development of each learner and the social economic development of the society at large, it must be the intention underlying any programme of learning to make an individual aware of the importance of:
 <br>- Reflecting on and exploring a variety of strategies to learn more effectively;
 <br>- Participating as responsible citizens in the life of local, national and global communities;
@@ -104,8 +104,14 @@ $groups[]=array('id'=>'8','description'=>"	In order to contribute to the full pe
         $groupsList .= ' ' . $checkbox->show() . $label->show() . '<br />';
     }
 
+
+    $table->border = 2;
+$table->cellpadding = '2';
+$table->cellspacing='3';
+
 $table->startRow();
-$table->addCell("D.4 Specify the critical cross-field outcomes (CCFOs) integrated into the course/unit using the list provided.:");
+$table->addCell("D.4 Specify the critical cross-field outcomes (CCFOs) integrated into the course/unit using the list provided.:<br>");
+//$table->addCell("<b>".$label->labelValue."</b>");
 $table->endRow();
 
 $table->startRow();

@@ -71,10 +71,16 @@ $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
 
+$action = 'addoutcomesandassessmentone';
+$form = new form('subsidyrequirementsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'subsidyrequirements')));
 /* if ($mode == 'edit') {
   $legend = "Edit document";
   } */
 $table = $this->newObject('htmltable', 'htmlelements');
+//$table->border = 2;
+//$table->cellpadding = '2';
+//$table->cellspacing='3';
+
 
 $textarea = new textarea('c1');
 $textarea->cols=100;
@@ -90,6 +96,7 @@ $radio = new radio ('c2a');
 $radio->addOption('1',"off-campus");
 $radio->addOption('2',"on-campus");
 $radio->setSelected('1');
+$radio->setBreakSpace('</p><p>');
 $table->startRow();
 $table->addCell("C.2.a. The course/unit is taught:");
 $table->endRow();
@@ -111,11 +118,14 @@ $table->endRow();
 
 //Section C.3.
 
-$textinput = new textinput('c3');
-$textinput->size = 60;
+$textinput= new textinput('c3');
+//$maxlength = "6";
+//$c3->label='CEMS (must be 6 characters)';
+//$form->addRule(array('name'=>'c3','length'=>6), 'Check CESM manual','maxlength');
+$textinput->size = 6;
 $textinput->value = $c3;
 $table->startRow();
-$table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from http://intranet.wits.ac.za/Academic/APO/CESMs.htm):');
+$table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from http://intranet.wits.ac.za/Academic/APO/CESMs.htm):', '100');
 $table->endRow();
 
 $table->startRow();
@@ -127,6 +137,7 @@ $radio = new radio ('c4a');
 $radio->addOption('1',"Yes");
 $radio->addOption('2',"No");
 $radio->setSelected('1');
+$radio->setBreakSpace('</p><p>');
 $table->startRow();
 $table->addCell("C.4.a. Is any other School/Entity involved in teaching this unit?:");
 $table->endRow();
