@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * A module to display the logo of the elsi skin. 
+ * A class to display the logo of the elsi skin.
  *
  * PHP version 5
  *

@@ -2,7 +2,7 @@
 
 /*
  *
- * A module to get the content of the elsi website. The content displayed will depends on the
+ * A class to get the content of the elsi website. The content displayed will depends on the
  * page being displayed. It could be content for home page, about us, staff or contact us.
  *
  * PHP version 5

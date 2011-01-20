@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * A module to display the toolbar for the elsi skin.
+ * A class to display the toolbar for the elsi skin.
  *
  * PHP version 5
  *

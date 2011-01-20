@@ -1,5 +1,34 @@
 <?php
-
+/*
+ *
+ * A class to display the sidebar of the different pages of the elsi skin
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   elsiskin
+ * @author    Nguni Phakela nonkululeko.phakela@wits.ac.za
+ * @copyright 2007 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id: sidebar_class_inc.php,v 1.1 2007-11-25 09:13:27 nguni52 Exp $
+ * @link      http://avoir.uwc.ac.za
+ *
+ *
+ *
+ */
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -21,21 +50,28 @@ class sidebar extends object {
 
     }
 
+    /**
+     * Method to set the current action based on url parameter action
+     * @return none
+     * @access public
+     */
     public function setCurrentAction($action) {
         $this->currentAction = $action;
     }
 
     /**
-     * Method to show the Toolbar
-     * @return string $retstr containing all the toolbar links.
+     * Method to set the base skin path
+     * @return none
+     * @access public
      */
     public function setSkinPath($skinpath) {
         $this->skinpath = $skinpath;
     }
 
     /**
-     * Method to show the rotating images with news right below the toolbar
+     * Method to control which sidebar will display
      * @return string
+     * @access public
      */
     public function show() {
         switch ($this->currentAction) {
@@ -50,8 +86,9 @@ class sidebar extends object {
     }
 
     /**
-     * Method to show the rotating images with news right below the toolbar
-     * @return string
+     * Method to show the home page sidebar
+     * @return string $retstr with the home sidebar content
+     * @access public
      */
     public function showHomeSidebar() {
         $retstr = '<!-- Start: Sidebar -->
@@ -80,6 +117,11 @@ class sidebar extends object {
         return $retstr;
     }
 
+    /**
+     * Method to show the about us page sidebar
+     * @return string $retstr with the about us sidebar content
+     * @access public
+     */
     public function showAboutSidebar() {
         $retstr = '<!-- Start: Sidebar -->
                 <div id="Sidebar">
@@ -93,6 +135,11 @@ class sidebar extends object {
         return $retstr;
     }
 
+    /**
+     * Method to show the staff page sidebar
+     * @return string $retstr with the staff sidebar content
+     * @access public
+     */
     public function showStaffSidebar() {
         $retstr = '<!-- Start: Sidebar -->
                 <div id="Sidebar">
@@ -105,6 +152,11 @@ class sidebar extends object {
         return $retstr;
     }
 
+    /**
+     * Method to show the contact us page sidebar
+     * @return string $retstr with the contact us sidebar content
+     * @access public
+     */
     public function showContactSidebar() {
         $retstr = '<!-- Start: Sidebar -->
                 <div id="Sidebar">

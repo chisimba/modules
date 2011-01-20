@@ -190,6 +190,13 @@ class rotatingidentity extends object {
         return $retstr;
     }
 
+    /*
+     * Method to display the home banner
+     * @param $news containing the array with the different news for the day
+     * @access public
+     * @return string $retstr contaning the div with the rotating images with
+     * the news linked to them
+     */
     public function showHomeBanner($news) {
         if(!empty($news)) {
             $objFile = $this->getObject('dbfile', 'filemanager');
@@ -211,6 +218,11 @@ class rotatingidentity extends object {
         return $retstr;
     }
 
+    /*
+     * Method to display the about us page banner.
+     * @access public
+     * @return string $retstr containing the banner for about us page
+     */
     public function showAboutBanner() {
         $retstr = '
                     <ul class="slideshow">
@@ -222,12 +234,22 @@ class rotatingidentity extends object {
         return $retstr;
     }
 
+    /*
+     * Method to display the staff page banner.
+     * @access public
+     * @return string $retstr containing the banner for staff page
+     */
     public function showStaffBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/staff_cubicles.jpg">';
 
         return $retstr;
     }
 
+    /*
+     * Method to display the contact us page banner.
+     * @access public
+     * @return string $retstr containing the banner for contact us page
+     */
     public function showContactBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/contact_address.jpg">';
 

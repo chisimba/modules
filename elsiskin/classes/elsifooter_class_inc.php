@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * A module to display the footer of the elsi skin. It retrieves the url actions from the
+ * A class to display the footer of the elsi skin. It retrieves the url actions from the
  * news module category footer. The title of the newstory would be inside the <a> tags,
  * and the href of the tag would be the storytext from the news module query.
  *

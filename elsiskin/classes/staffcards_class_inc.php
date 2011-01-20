@@ -1,5 +1,36 @@
 <?php
 
+/*
+ *
+ * A class to display the staff cards that pop up as modal windows when the staff
+ * link is clicked on the staff page
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   elsiskin
+ * @author    Nguni Phakela nonkululeko.phakela@wits.ac.za
+ * @copyright 2007 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id: staffcards_class_inc.php,v 1.1 2007-11-25 09:13:27 nguni52 Exp $
+ * @link      http://avoir.uwc.ac.za
+ *
+ *
+ *
+ */
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -8,32 +39,34 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end of security
 
 class staffcards extends object {
-	
-	// path to root folder of skin
-	private $skinpath;
 
+    // path to root folder of skin
+    private $skinpath;
 
     /**
      * Constructor
      */
-    public function init() {}
+    public function init() {
+        
+    }
 
-	/**
-     * Method to show the Toolbar
-     * @return string $retstr containing all the toolbar links.
+    /**
+     * Method to set the base skin path
+     * @return none
+     * @access public
      */
+    public function setSkinPath($skinpath) {
+        $this->skinpath = $skinpath;
+    }
 
-	/**
-     * Method to show the Toolbar
-     * @return string $retstr containing all the toolbar links.
+    /*
+     * Method to show the staff cards modal windows
+     * @access public
+     * @return string $retstr containing the different modal window pop ups for the different
+     * elsi staff
      */
-	 
-	public function setSkinPath($skinpath) {
-		$this->skinpath = $skinpath;
-	}
-
-	public function show() {
-		$retstr = '
+    public function show() {
+        $retstr = '
 		<!-- #dialog is the id of a DIV defined in the code below -->
 		<div id="boxes">
 			<!-- #customize your modal window here -->
@@ -57,7 +90,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Instructional Designer</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/THungwe.jpg" class="left" alt="Taurai Hungwe"></p> 
+							<p><img src="' . $this->skinpath . 'images/THungwe.jpg" class="left" alt="Taurai Hungwe"></p>
 							<p class="bio">I am a career learner. Teaching and technology is my passion. My interest vary from blended learning, mobile technology, data mining and basketball.</p>
 					</div>            
 				</div>
@@ -91,7 +124,7 @@ class staffcards extends object {
 						</p>
 						<p class="email">Email: <a class="value" href="Taurai.Hungwe@wits.ac.za">Taurai.Hungwe@wits.ac.za</a></p>
 						<p class="skype">Skype: Taurai.Hungwe</p>
-						<a href=""><img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
+						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
 					</div>
 				</div>
 			</div>
@@ -117,7 +150,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>eLearning Manager</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/RDagada.jpg" class="left" alt="Rabelani Dagada"></p> 
+							<p><img src="' . $this->skinpath . 'images/RDagada.jpg" class="left" alt="Rabelani Dagada"></p>
 							<p class="bio"></p>
 					</div>            
 				</div>
@@ -150,7 +183,7 @@ class staffcards extends object {
 						</p>
 						<p class="email">Email: <a class="value" href="Rabelani.Dagada@wits.ac.za">Rabelani.Dagada@wits.ac.za</a></p>
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 				</div>
@@ -181,7 +214,7 @@ class staffcards extends object {
 		
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/NkululekoPhakela.jpg" class="left" alt="Nkululeko Phakela"></p> 
+							<p><img src="' . $this->skinpath . 'images/NkululekoPhakela.jpg" class="left" alt="Nkululeko Phakela"></p>
 					  <p class="bio">Bio: Born and Bred in Lesotho. I have had the pleasures of being able to travel the world a bit, and Africa is where my heart is. Johannesburg provides for me the world class services that I have come to expect. I am enjoying my time here. Working for the ELSI unit at Wits University. 
 		
 					  </p>
@@ -197,8 +230,8 @@ class staffcards extends object {
 					<h2><span class="fn">Nkululeko Phakela\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://www.facebook.com/nphakela"><img src="'.$this->skinpath.'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/nguni52/"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="http://www.facebook.com/nphakela"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://twitter.com/nguni52/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 		
 						  </ul>
 						  <div class="clear"></div>
@@ -231,7 +264,7 @@ class staffcards extends object {
 		
 							<a href="">
 		
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 				</div>
@@ -270,7 +303,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Content Developer</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/dmoore.jpg" class="left" alt="Derek Moore"></p> 
+							<p><img src="' . $this->skinpath . 'images/dmoore.jpg" class="left" alt="Derek Moore"></p>
 							<p class="bio">Teacher, learning designer & aspiring heutagogist exploring the wild & wooly frontiers of electronic education.
 							Working for the ELSI unit at Wits University.
 							</p>
@@ -286,13 +319,13 @@ class staffcards extends object {
 					<h2><span class="fn">Derek Moore\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://twitter.com/weblearning/"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="http://twitter.com/weblearning/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 		
-							<li><a href="http://www.facebook.com/weblearning"><img src="'.$this->skinpath.'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>            
-							<li><a href="http://za.linkedin.com/in/weblearning"><img src="'.$this->skinpath.'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
-							<li><a href="http://www.delicious.com/weblearning/"><img src="'.$this->skinpath.'images/profiles/delicious.png"><strong>Delicious</strong>delicious.com</a></li>
-							<li><a href="http://www.flickr.com/photos/weblearning"><img src="'.$this->skinpath.'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
-							<li><a href="http://www.weblearning.co.za/blog/"><img src="'.$this->skinpath.'images/profiles/wordpress.png"><strong>Wordpress</strong>My Blog</a></li>
+							<li><a href="http://www.facebook.com/weblearning"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://za.linkedin.com/in/weblearning"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
+							<li><a href="http://www.delicious.com/weblearning/"><img src="' . $this->skinpath . 'images/profiles/delicious.png"><strong>Delicious</strong>delicious.com</a></li>
+							<li><a href="http://www.flickr.com/photos/weblearning"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
+							<li><a href="http://www.weblearning.co.za/blog/"><img src="' . $this->skinpath . 'images/profiles/wordpress.png"><strong>Wordpress</strong>My Blog</a></li>
 		
 						  </ul>
 						  <div class="clear"></div>
@@ -320,7 +353,7 @@ class staffcards extends object {
 						</p>
 						<p class="email">Email: <a class="value" href="derek.moore@wits.ac.za">derek.moore@wits.ac.za</a></p>
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 				</div>
@@ -356,7 +389,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/Profile_Pic_James.gif" class="left" alt="James Smurthwaite"></p> 
+							<p><img src="' . $this->skinpath . 'images/Profile_Pic_James.gif" class="left" alt="James Smurthwaite"></p>
 							<p class="bio">A background in journalism, media studies, communication and graphic design, with a keen interest in harnessing technology for creating and communicating information rich content.
 							</p>
 							
@@ -371,7 +404,7 @@ class staffcards extends object {
 		
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://twitter.com/JimmyNts/"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="http://twitter.com/JimmyNts/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 						  </ul>
 						  <div class="clear"></div>
 						</div>
@@ -400,7 +433,7 @@ class staffcards extends object {
 						<p class="email">Email: <a class="value" href="james.smurthwaite@wits.ac.za">james.smurthwaite@wits.ac.za</a></p>
 						<p class="skype">Skype: jimmy.smurthwaite</p>
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 		
 							</a>
 					</div>
@@ -436,7 +469,7 @@ class staffcards extends object {
 		
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/schoonara.jpg" class="left" alt="Shakira Choonara"></p> 
+							<p><img src="' . $this->skinpath . 'images/schoonara.jpg" class="left" alt="Shakira Choonara"></p>
 					  <p class="bio">
 					  </p>
 							
@@ -480,7 +513,7 @@ class staffcards extends object {
 						<p class="email">Email: <a class="value" href="Shakira.Choonara2@wits.ac.za">Shakira.Choonara2@wits.ac.za</a></p>
 											<a href="">
 		
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 				</div>
@@ -513,7 +546,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Team Leader: Learning Design</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/frahiman.jpg" class="left" alt="Fatima Rahiman"></p> 
+							<p><img src="' . $this->skinpath . 'images/frahiman.jpg" class="left" alt="Fatima Rahiman"></p>
 							<p class="bio">Fatima\'s  oscillating career path has stabilized, laying her hat at her alma mater where she is presently  reading her Masters in Educational Technology by night,  whilst advocating online learning by day. 
 		An innate curiosity about the machinations of a mind , a curiosity fueled by its betrayal in earlier academic years which left her a medical manqué , coupled with previous stints as an educator, citizen journalism portal manager, and as a project manager of a primary school broadcast channel, has endowed her with a keen propensity for Information Technology tools - an aid in her desire to assist in the augmentation of effective learning and teaching practices. 
 		In addition, she has completed a certificate course in Instructional Design and Content writing, and has a BSc in Life Sciences as well as a  BA Hons in Journalism and Media studies.  </p>
@@ -525,7 +558,7 @@ class staffcards extends object {
 					<h2><span class="fn">Fatima Rahiman\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://twitter.com/fatima1507/"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="http://twitter.com/fatima1507/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 						  </ul>
 		
 						  <div class="clear"></div>
@@ -555,7 +588,7 @@ class staffcards extends object {
 						 <p class="skype">Skype: fatimar1507</p>
 		
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 		
 					</div>
@@ -591,7 +624,7 @@ class staffcards extends object {
 		
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/otabane.jpg" alt="Ofentse Tabane" width="75" height="90" class="left"></p> 
+							<p><img src="' . $this->skinpath . 'images/otabane.jpg" alt="Ofentse Tabane" width="75" height="90" class="left"></p>
 					  <p class="bio">On earth to acquire as much knowledge as my mind can absorb in any form
 					  </p>
 				  </div>            
@@ -602,7 +635,7 @@ class staffcards extends object {
 					<h2><span class="fn">Ofentse Tabane\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://twitter.com/KeOfentse/"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="http://twitter.com/KeOfentse/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 						  </ul>
 						  <div class="clear"></div>
 		
@@ -633,7 +666,7 @@ class staffcards extends object {
 						
 		
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 				</div>
@@ -668,7 +701,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Team Leader, Software Development.</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/DavidWafula.jpg" alt="Ofentse Tabane" width="100" height="120" class="left"></p> 
+							<p><img src="' . $this->skinpath . 'images/DavidWafula.jpg" alt="Ofentse Tabane" width="100" height="120" class="left"></p>
 					  <p class="bio">Specializing in Java, PHP, Realtime Communications Outside computer world: an avid runner
 					  </p>
 				  </div>            
@@ -707,7 +740,7 @@ class staffcards extends object {
 						<p class="email">Email: <a class="value" href="davidwafula.wanyonyi@wits.ac.za">davidwafula.wanyonyi@wits.ac.za</a></p>
 				  
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 		
 							</a>
 					</div>
@@ -760,7 +793,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/AgnesChigona.jpg" class="left" alt="Agnes Chigona"></p> 
+							<p><img src="' . $this->skinpath . 'images/AgnesChigona.jpg" class="left" alt="Agnes Chigona"></p>
 							<p class="bio">I have studied in different countries including South Africa (PhD.); Germany (MA); New Zealand (Graduate Dipl. in Women & Gender Studies); Malawi (B.Ed.). 
 				  Research interests: ICTs and Education; African Women and ICTs 
 		
@@ -807,7 +840,7 @@ class staffcards extends object {
 						 <p class="skype">Skype: Agnes.Chigona</p>
 		
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 				</div>
@@ -842,7 +875,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Research Assistant</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/Neo.Petlele.jpg" class="left" alt="Neo Petlele"></p> 
+							<p><img src="' . $this->skinpath . 'images/Neo.Petlele.jpg" class="left" alt="Neo Petlele"></p>
 							<p class="bio">Research Assistant for the eLSI unit. Currently serving on the ZAW 2011 Conference Organising Committee as well as the Wits LMS evaluation Working Group Committee.
 		
 		
@@ -855,10 +888,10 @@ class staffcards extends object {
 					<h2><span class="fn">Neo Petlele\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul> 
-							<li><a href="http://za.linkedin.com/pub/neo-petlele/b/7b9/61b"><img src="'.$this->skinpath.'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li> 
-							<li><a href="http://twitter.com/newis/"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="http://za.linkedin.com/pub/neo-petlele/b/7b9/61b"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
+							<li><a href="http://twitter.com/newis/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 		
-							<li><a href="http://www.facebook.com/Neo%20Petlele#!/profile.php?id=730956553"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://www.facebook.com/Neo%20Petlele#!/profile.php?id=730956553"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Facebook</strong>facebook.com</a></li>
 						  </ul>
 						  <div class="clear"></div>
 						</div>
@@ -886,7 +919,7 @@ class staffcards extends object {
 						<span class="type">Cell</span>: <span class="value">+ 27 8 2533914</span>
 		
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 				</div>
@@ -923,7 +956,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/PaulMungai.jpg" class="left" alt="Paul Mungai"></p> 
+							<p><img src="' . $this->skinpath . 'images/PaulMungai.jpg" class="left" alt="Paul Mungai"></p>
 							<p class="bio">I specialize in building simple tools that can assist in teaching and learning.
 							</p>
 				  </div>            
@@ -934,10 +967,10 @@ class staffcards extends object {
 		
 						<div id="networkmedia">
 						  <ul>   
-							<li><a href="http://www.facebook.com/#!/paulwando "><img src="'.$this->skinpath.'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/pwando/"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-							<li><a href="http://www.linkedin.com/profile/view?id=33772766"><img src="'.$this->skinpath.'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
-							<li><a href="http://www.flickr.com/photos/52238056@N04/"><img src="'.$this->skinpath.'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>                  </ul>
+							<li><a href="http://www.facebook.com/#!/paulwando "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://twitter.com/pwando/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="http://www.linkedin.com/profile/view?id=33772766"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
+							<li><a href="http://www.flickr.com/photos/52238056@N04/"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>                  </ul>
 		
 						  <div class="clear"></div>
 						</div>
@@ -966,7 +999,7 @@ class staffcards extends object {
 		
 		
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 				</div>
@@ -1004,7 +1037,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/regimoledi.jpg" class="left" alt="Reginald Moledi"></p> 
+							<p><img src="' . $this->skinpath . 'images/regimoledi.jpg" class="left" alt="Reginald Moledi"></p>
 							<p class="bio">Facilitator and trainer for lecturers and students in the use of LMS for teaching and learning.
 		Certified Trainer(Blackboard), IT(UJ), Project Management(TSA).
 							</p>
@@ -1016,9 +1049,9 @@ class staffcards extends object {
 		
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://www.facebook.com/#!/nmbana "><img src="'.$this->skinpath.'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/Chosen_Ukwanda/"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-							<li><a href="http://za.linkedin.com/pub/noxolo-mbana/a/281/283"><img src="'.$this->skinpath.'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
+							<li><a href="http://www.facebook.com/#!/nmbana "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://twitter.com/Chosen_Ukwanda/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="http://za.linkedin.com/pub/noxolo-mbana/a/281/283"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
 						  </ul>
 		
 						  <div class="clear"></div>
@@ -1048,7 +1081,7 @@ class staffcards extends object {
 		
 		
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 				</div>
@@ -1087,7 +1120,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="'.$this->skinpath.'images/noxolombana.jpg" class="left" alt="Noxolo Kahlana-Mbana"></p> 
+							<p><img src="' . $this->skinpath . 'images/noxolombana.jpg" class="left" alt="Noxolo Kahlana-Mbana"></p>
 							<p class="bio">Community developer, perpetual student, transformation, change management and sustainability enthusiast, working on eLearning Research for eLSI unit at Wits.
 		
 		
@@ -1100,9 +1133,9 @@ class staffcards extends object {
 		
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://www.facebook.com/#!/nmbana "><img src="'.$this->skinpath.'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/Chosen_Ukwanda/"><img src="'.$this->skinpath.'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-							<li><a href="http://za.linkedin.com/pub/noxolo-mbana/a/281/283"><img src="'.$this->skinpath.'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
+							<li><a href="http://www.facebook.com/#!/nmbana "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://twitter.com/Chosen_Ukwanda/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="http://za.linkedin.com/pub/noxolo-mbana/a/281/283"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
 						  </ul>
 		
 						  <div class="clear"></div>
@@ -1132,7 +1165,7 @@ class staffcards extends object {
 						 <p class="skype">Skype: nox7910</p>
 		
 							<a href="">
-								<img src="'.$this->skinpath.'images/Icon_vCard.png" alt="download vcard icon" align="right">
+								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
 					</div>
 		
@@ -1145,7 +1178,8 @@ class staffcards extends object {
 			
 			<!-- Do not remove div#mask, because you\'ll need it to fill the whole screen -->	
 			<div id="mask"></div>';
-			
-			return $retstr;
-		}
+
+        return $retstr;
+    }
+
 }
