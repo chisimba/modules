@@ -75,12 +75,18 @@ class elsicontent extends object {
      * @return string  string $retstr with all the content and sidebar info.
      * @access public
      */
-    public function show($action) {
+    public function show($action, $id=null) {
         // set current action
         $this->sidebar->setCurrentAction($action);
         $this->sidebar->setSkinPath($this->skinpath);
         $this->mainContent->setCurrentAction($action);
         $this->mainContent->setSkinPath($this->skinpath);
+        if($action == 'viewstory') {
+            $id = $this->getParam('id');
+            if(!empty($id)) {
+                $this->mainContent->setNewsId($id);
+            }
+        }
 
         return $this->getContent($action);
     }
@@ -151,7 +157,7 @@ class elsicontent extends object {
                 <!-- end .grid_1.pull_3 -->
                 <div class="clear">&nbsp;</div>';
         }
-        if($action == 'viewsingle'){
+        if($action == 'viewsingle' || $action == 'viewstory'){
             $ret = '
                 <div class="clear">&nbsp;</div>
                 <div class="grid_3">

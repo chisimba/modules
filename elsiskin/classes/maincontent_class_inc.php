@@ -56,6 +56,8 @@ class maincontent extends object {
 
     private $objUser;
 
+    private $newsId;
+
     /**
      * Blog posts object
      *
@@ -99,6 +101,10 @@ class maincontent extends object {
         $this->skinpath = $skinpath;
     }
 
+    public function setNewsId($newsId) {
+        $this->newsId = $newsId;
+    }
+
     /**
      * Method to show the rotating images with news right below the toolbar
      * @return string
@@ -110,6 +116,7 @@ class maincontent extends object {
             case 'staff': return $this->showStaffMain();
             case 'contact': return $this->showContactMain();
             case 'viewsingle':return $this->showSingleBlog();
+            case 'viewstory': return $this->showNewsStory();
             default: return $this->showHomeMain();
         }
     }
@@ -480,5 +487,47 @@ class maincontent extends object {
         $retstr .= '</div>';
 
         return $retstr;
+    }
+
+    /**
+     * Method to show single news story
+     * @return string
+     * @access private
+     */
+    private function showNewsStory() {
+        $this->loadClass('link', 'htmlelements');
+        $this->loadClass('htmlheading', 'htmlelements');
+        $objNews = $this->getObject('dbnewsstories','news');
+        $objWashout = $this->getObject('washout', 'utilities');
+        $objTrimString = $this->getObject('trimstr', 'strings');
+        $story = $objNews->getStory($this->newsId);
+
+        $objDateTime = $this->getObject('dateandtime', 'utilities');
+
+        $categoryLink = new link ($this->uri(array('action'=>'viewcategory', 'id'=>$category['id'])));
+        $categoryLink->link = $category['categoryname'];
+
+        //$this->objMenuTools->addToBreadCrumbs(array($categoryLink->show(), $story['storytitle']));
+
+        $header = new htmlheading();
+        $header->type = 1;
+        $header->cssClass="newsstorytitleh1";
+        $header->str = $story['storytitle'];
+        //$this->setVar('pageTitle', $story['storytitle']);
+
+        $str ='<div id="newsstoryheader">'. $header->show();
+
+        $str .= '<p>'.$objDateTime->formatDateOnly($story['storydate']).'</p></div>';
+
+        $objWashOut = $this->getObject('washout', 'utilities');
+
+        $str .='<div id="newsstorybody">'. $objWashOut->parseText($story['storytext']).'</div>';
+
+        $objSocialBookmarking = $this->getObject('socialbookmarking', 'utilities');
+
+        $str .= $objSocialBookmarking->diggThis();
+        $str .= $objSocialBookmarking->show();
+
+        return $str;
     }
 }
