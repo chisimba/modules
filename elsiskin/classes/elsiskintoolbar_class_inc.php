@@ -1,5 +1,34 @@
 <?php
-
+/*
+ *
+ * A module to display the toolbar for the elsi skin.
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   elsiskin
+ * @author    Nguni Phakela nonkululeko.phakela@wits.ac.za
+ * @copyright 2007 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id: elsiskintoolbar_class_inc.php,v 1.1 2011-01-12 09:13:27 nguni52 Exp $
+ * @link      http://avoir.uwc.ac.za
+ *
+ *
+ *
+ */
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -99,6 +128,16 @@ class elsiskintoolbar extends object {
         return $retstr;
     }
 
+    /*
+     * Method to generate each item on the toolbar based on different attributes
+     * @param $action the action to which this menu item is associated
+     * @param $module the module to which this menu item is associated
+     * @param $text The actual text that will appear on the page
+     * @param isActive whether the menuitem is active or not
+     * @param $count keeps track of how many tabs so far
+     * @access private
+     * @return string toolbar
+     */
     private function generateItem($action='', $module='_default', $text, $isActive=FALSE, $count=NULL) {
         switch ($module) {
             case '_default' : $isRegistered = TRUE;
@@ -128,6 +167,12 @@ class elsiskintoolbar extends object {
         }
     }
 
+    /*
+     * Method to display the contact us link
+     * @access public
+     * @return string $link which has the contact us link
+     *
+     */
     public function getContactLink() {
         $module = 'elsiskin';
         $action = 'contact';
