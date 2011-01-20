@@ -80,7 +80,9 @@ class maincontent extends object {
     }
 
     /* Method to set the current action of the page
-     *
+     * @param $action the current page that is being loaded
+     * @return none
+     * @access public
      */
 
     public function setCurrentAction($action) {
@@ -89,7 +91,9 @@ class maincontent extends object {
 
     /**
      * Method to show the Toolbar
-     * @return string $retstr containing all the toolbar links.
+     * @param string $skinpath the default skinpath for elsi skin
+     * @return none
+     * @access public
      */
     public function setSkinPath($skinpath) {
         $this->skinpath = $skinpath;
@@ -98,6 +102,7 @@ class maincontent extends object {
     /**
      * Method to show the rotating images with news right below the toolbar
      * @return string
+     * @access public
      */
     public function show() {
         switch ($this->currentAction) {
@@ -109,6 +114,11 @@ class maincontent extends object {
         }
     }
 
+    /**
+     * Method to show the main content of the home page
+     * @return string
+     * @access public
+     */
     public function showHomeMain() {
         $bloginfo = $this->getBlogs();
         //$bloginfo = "";
@@ -160,6 +170,11 @@ class maincontent extends object {
         return $retstr;
     }
 
+    /**
+     * Method to show the main content of the about page
+     * @return string
+     * @access public
+     */
     public function showAboutMain() {
         $retstr .= '<div class="grid_3">
                     <p>The eLearning, Support and Innovation (eLSI) Unit has been established to assist staff at the University of Witwatersrand to integrate ICT into their courses and to enable academics,  students and others to freely share their teaching and learning resources with others. </p>
@@ -178,6 +193,11 @@ class maincontent extends object {
         return $retstr;
     }
 
+    /**
+     * Method to show the main content of the staff page
+     * @return string
+     * @access public
+     */
     public function showStaffMain() {
 		$retstr = '
                     <div class="grid_3">
@@ -327,8 +347,12 @@ class maincontent extends object {
 
 		return $retstr;
 	 }
-
-    public function showContactMain() {
+        /**
+         * Method to show the main content of the contact us page
+         * @return string
+         * @access public
+         */
+        public function showContactMain() {
 
             $this->loadClass('label','htmlelements');
             $this->loadClass('button', 'htmlelements');
@@ -385,6 +409,11 @@ class maincontent extends object {
             return $retstr;
 	 }
 
+     /**
+     * Method to show the most recent blogs, six of them
+     * @return string
+     * @access private
+     */
      private function getBlogs() {
         $this->loadClass('href', 'htmlelements');
         $num = 6;
@@ -438,6 +467,11 @@ class maincontent extends object {
         return $ret;
     }
 
+    /**
+     * Method to show single blog content
+     * @return string
+     * @access private
+     */
     private function showSingleBlog() {
         $postid = $this->getParam('postid');
         $posts = $this->objDbBlog->getPostByPostID($postid);
