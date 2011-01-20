@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This class contains utilities for doing common functions in wicid
+ * This class contains utilities for doing common functions in apo
  *  PHP version 5
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   wicid (document management system)
+ * @package   apo (document management system)
  * @author    Nguni Phakela, david wafula
  * @copyright 2010
   =
@@ -62,7 +62,7 @@ class userutils extends object {
         $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
         $this->folderPermissions = $this->getObject('dbfolderpermissions');
 
-        $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         $this->modeLabel = "Topic";
     }
 
@@ -142,14 +142,14 @@ class userutils extends object {
 
     public function saveFile($path, $docname, $docid) {
 
-        $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         $filepath = $dir . $path;
         $filepath = str_replace("//", "/", $filepath);
         $objUser = $this->getObject('user', 'security');
         $userid = $this->getUserId();
         $this->objUploadTable->setUserId($userid);
         $destinationDir = $filepath;
-        $objFileUpload = $this->getObject('wicidupload');
+        $objFileUpload = $this->getObject('apoupload');
         $objFileUpload->overWrite = TRUE;
         $objFileUpload->uploadFolder = $destinationDir . '/';
         $result = $objFileUpload->doUpload($docname, $docid);
@@ -262,9 +262,9 @@ class userutils extends object {
         $permission = $fileData['shared'];
 
         if ($permission == 1) {
-            $myFile = $this->objConfig->getcontentBasePath() . '/wicidUploadFiles/' . $userid . '/shared/' . $filename;
+            $myFile = $this->objConfig->getcontentBasePath() . '/apoUploadFiles/' . $userid . '/shared/' . $filename;
         } else {
-            $myFile = $this->objConfig->getcontentBasePath() . '/wicidUploadFiles/' . $userid . '/' . $filename;
+            $myFile = $this->objConfig->getcontentBasePath() . '/apoUploadFiles/' . $userid . '/' . $filename;
         }
 
         if (file_exists($myFile) && is_file($myFile)) {
@@ -289,7 +289,7 @@ class userutils extends object {
             $size = "0"; //$this->formatBytes(filesize($dir . $node . '/' . $f), 2);
             // $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
             $files[] = array(
-                'text' => '<img src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '-16x16.png">&nbsp;' . $row['filename'],
+                'text' => '<img src="' . $this->sitePath . '/apo/resources/images/ext/' . $this->findexts($row['filename']) . '-16x16.png">&nbsp;' . $row['filename'],
                 'actualfilename' => $row['filename'],
                 'id' => $row['filepath'],
                 'docid' => $row['docid'],
@@ -298,7 +298,7 @@ class userutils extends object {
                 'owner' => $this->objUser->fullname($row['userid']),
                 'lastmod' => $row['date_uploaded'],
                 'filesize' => $size,
-                'thumbnailpath' => '<img src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '.png" width="22" height="22">',
+                'thumbnailpath' => '<img src="' . $this->sitePath . '/apo/resources/images/ext/' . $this->findexts($row['filename']) . '.png" width="22" height="22">',
             );
         }
         return $files;
@@ -306,7 +306,7 @@ class userutils extends object {
 
     /* function getFiles() {
       $this->objUser = $this->getObject("user", "security");
-      $dir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
+      $dir=$this->objSysConfig->getValue('FILES_DIR', 'apo');
       $this->objUploadTable = $this->getObject('dbfileuploads');
 
       $node = isset($_REQUEST['node'])?$_REQUEST['node']:"";
@@ -335,7 +335,7 @@ class userutils extends object {
       'owner'=>$this->objUser->fullname($file['userid']),
       'lastmod'=>$lastmod,
       'filesize'=>$size,
-      'thumbnailpath'=>$this->sitePath.'/wicid/resources/images/ext/'.$this->findexts($f).'.png'
+      'thumbnailpath'=>$this->sitePath.'/apo/resources/images/ext/'.$this->findexts($f).'.png'
       );
       }
       }
@@ -352,8 +352,8 @@ class userutils extends object {
      */
     function getFolders($mode, $node="") {
         $objUser = $this->getObject("user", "security");
-        $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
-        $apodir = $this->objSysConfig->getValue('APO_DIR', 'wicid');
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
+        $apodir = $this->objSysConfig->getValue('APO_DIR', 'apo');
         $this->objUser = $this->getObject('user', 'security');
         $size = "";
 
@@ -458,7 +458,7 @@ class userutils extends object {
 
         //check if user has access to the parent folder before accessing it
 
-        $baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $baseDir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         // Detect missing filename
         if (!$filename && !$filepath)
             die("I'm sorry, you must specify a file name to download.");
@@ -504,7 +504,7 @@ class userutils extends object {
      */
     public function createfolder($folderpath, $foldername) {
         $this->objMkdir = $this->getObject('mkdir', 'files');
-        $path = $this->objSysConfig->getValue('FILES_DIR', 'wicid') . '/' . $folderpath . '/' . $foldername;
+        $path = $this->objSysConfig->getValue('FILES_DIR', 'apo') . '/' . $folderpath . '/' . $foldername;
         $result = $this->objMkdir->mkdirs($path);
         $userid = $this->getUserId();
         //if($result != FALSE) {
@@ -522,8 +522,8 @@ class userutils extends object {
     public function renamefolder($folderpath, $foldername) {
         $folderpath = str_replace("//", "", $folderpath);
 
-        $prevpath = $this->objSysConfig->getValue('FILES_DIR', 'wicid') . '/' . $folderpath;
-        $newpath = $this->objSysConfig->getValue('FILES_DIR', 'wicid') . '/' . $foldername;
+        $prevpath = $this->objSysConfig->getValue('FILES_DIR', 'apo') . '/' . $folderpath;
+        $newpath = $this->objSysConfig->getValue('FILES_DIR', 'apo') . '/' . $foldername;
 
         // do a move using command line interface from previous location to new location.
         $command = "mv " . $prevpath . " " . $newpath;
@@ -548,7 +548,7 @@ class userutils extends object {
         $ext = $exts[$n];
 
         //check if icon for this exists, else return unknown
-        $filePath = $this->objConfig->getModulePath() . '/wicid/resources/images/ext/' . $ext . '.png';
+        $filePath = $this->objConfig->getModulePath() . '/apo/resources/images/ext/' . $ext . '.png';
         if (file_exists($filePath)) {
             return $ext;
         } else {
@@ -563,7 +563,7 @@ class userutils extends object {
      */
     public function deleteFolder($folderpath) {
         $folderpath = str_replace("//", "", $folderpath);
-        $fullpath = $this->objSysConfig->getValue('FILES_DIR', 'wicid') . '/' . $folderpath;
+        $fullpath = $this->objSysConfig->getValue('FILES_DIR', 'apo') . '/' . $folderpath;
 
         if (is_dir($fullpath)) {
             $res = rmdir($fullpath);
@@ -619,14 +619,14 @@ class userutils extends object {
     }
 
     function getRefNo($id) {
-        $objDocuments = $this->getObject('dbdocuments', 'wicid');
+        $objDocuments = $this->getObject('dbdocuments', 'apo');
         $refNo = $objDocuments->getRefNo($id);
 
         return $refNo;
     }
 
     function getFullRefNo($id) {
-        $objDocuments = $this->getObject('dbdocuments', 'wicid');
+        $objDocuments = $this->getObject('dbdocuments', 'apo');
         $refNo = $objDocuments->getRefFullNo($id);
         return $refNo;
     }
@@ -663,7 +663,7 @@ class userutils extends object {
     }
 
     function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
-        $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         $folders = $this->listdir($baseFolder);
 
         sort($folders, SORT_LOCALE_STRING);

@@ -18,7 +18,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   wicid (docume3nt management system)
+ * @package   apo (docume3nt management system)
  * @author    Nguni Phakela, david wafula
  * @copyright 2010
 
@@ -68,14 +68,16 @@ class dbdocuments extends dbtable {
           $sql.=" and A.version = (select max(version) from tbl_apo_documents as C where C.id=A.id)";
           } */
 
-        $sql = "select * from tbl_apo_documents where deleteDoc = 'N' and  active='N' and rejectDoc= '$rejected'";
+        $sql = "select * from tbl_apo_documents where deleteDoc = 'N'";
         if (!$this->objUser->isadmin()) {
 
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
 
         $sql.=' order by puid DESC';
-        $sql.=" limit $start, $end";
+       // $sql.=" limit $start, $end";
+        //echo $sql;
+        //die();
         $rows = $this->getArray($sql);
         $docs = array();
         //print_r($rows);
@@ -92,7 +94,7 @@ class dbdocuments extends dbtable {
                 $attachmentStatus = "No";
             } else {
                 $f = $row['filename'];
-                $attachmentStatus = 'Yes&nbsp;<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($f) . '-16x16.png">';
+                $attachmentStatus = 'Yes&nbsp;<img  src="' . $this->sitePath . '/apo/resources/images/ext/' . $this->findexts($f) . '-16x16.png">';
             }
 
             $statusS = $row['status'];
@@ -202,6 +204,7 @@ class dbdocuments extends dbtable {
             'telephone' => $telephone,
             'topic' => $path,
             'mode' => $mode,
+            'deleteDoc'=>"N",
             'active' => $approved,
             'status' => $status,
             'currentuserid' => $currentuserid,
@@ -230,7 +233,7 @@ class dbdocuments extends dbtable {
         $ids = explode(",", $docids);
         $userid = $this->userutils->getUserId();
         $ext = '.na';
-        $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         foreach ($ids as $id) {
             $this->update('id', $id, $data);
             $doc = $this->getDocument($id);
@@ -241,7 +244,7 @@ class dbdocuments extends dbtable {
             $newname = $dir . '/' . $doc['topic'] . '/' . $doc['docname'] . '.' . $doc['ext'];
             $newname = str_replace("//", "/", $newname);
 
-            /*  $fh = fopen("/dwaf/wicidtest/log.txt", 'w') or die("can't open file ".$doc['docname']);
+            /*  $fh = fopen("/dwaf/apotest/log.txt", 'w') or die("can't open file ".$doc['docname']);
               $stringData = "renaming on approve $filename\n$newname\n===================";
               fwrite($fh, $stringData);
               fclose($fh);
@@ -276,7 +279,7 @@ class dbdocuments extends dbtable {
 
         $ids = explode(",", $docids);
         $ext = '.na';
-        $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         foreach ($ids as $id) {
             if (strlen($id) > 0) {
                 $data = array('rejectDoc' => 'Y');
@@ -293,7 +296,7 @@ class dbdocuments extends dbtable {
 
         $ids = explode(",", $docids);
         $ext = '.na';
-        $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         foreach ($ids as $id) {
             if (strlen($id) > 0) {
                 $doc = $this->getDocument($id);
@@ -352,7 +355,7 @@ class dbdocuments extends dbtable {
         $ext = $exts[$n];
 
         //check if icon for this exists, else return unknown
-        $filePath = $this->objConfig->getModulePath() . '/wicid/resources/images/ext/' . $ext . '-16x16.png';
+        $filePath = $this->objConfig->getModulePath() . '/apo/resources/images/ext/' . $ext . '-16x16.png';
         if (file_exists($filePath)) {
             return $ext;
         } else {

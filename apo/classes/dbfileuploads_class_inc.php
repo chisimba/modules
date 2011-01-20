@@ -18,7 +18,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   wicid (document management system)
+ * @package   apo (document management system)
  * @author    Nguni Phakela, david wafula
  * @copyright 2010
 
@@ -179,7 +179,7 @@ class dbfileuploads extends dbtable {
                     //'lastmod'=>$lastmod,
                     'lastmod' => $row['date_uploaded'],
                     'filesize' => $size,
-                    'thumbnailpath' => '<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '-16x16.png">'
+                    'thumbnailpath' => '<img  src="' . $this->sitePath . '/apo/resources/images/ext/' . $this->findexts($row['filename']) . '-16x16.png">'
                 );
             }
 
@@ -235,7 +235,7 @@ class dbfileuploads extends dbtable {
         $ext = $exts[$n];
 
         //check if icon for this exists, else return unknown
-        $filePath = $this->objConfig->getModulePath() . '/wicid/resources/images/ext/' . $ext . '.png';
+        $filePath = $this->objConfig->getModulePath() . '/apo/resources/images/ext/' . $ext . '.png';
         if (file_exists($filePath)) {
             return $ext;
         } else {
@@ -312,7 +312,7 @@ class dbfileuploads extends dbtable {
                     'owner' => $this->objUser->fullname($row['userid']),
                     'lastmod' => $lastmod,
                     'filesize' => $size,
-                    'thumbnailpath' => $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '.png'
+                    'thumbnailpath' => $this->sitePath . '/apo/resources/images/ext/' . $this->findexts($row['filename']) . '.png'
                 );
             }
         }

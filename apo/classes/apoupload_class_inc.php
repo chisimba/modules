@@ -17,7 +17,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   wicid (document management system)
+ * @package   apo (document management system)
  * @author    Nguni Phakela, david wafula
  * @copyright 2010
  =
@@ -31,7 +31,7 @@ if (!
 $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
-class wicidupload extends object {
+class apoupload extends object {
     /**
      * @var array $permittedTypes The permitted file types
      */
@@ -78,7 +78,7 @@ class wicidupload extends object {
         $this->objLanguage =  $this->getObject('language', 'language');
         $this->objPermittedTypes = $this->getObject('dbpermittedtypes');
         $this->permittedTypes = $this->getTypes();
-        //Set the default overwrite  $dir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        //Set the default overwrite  $dir=$this->objSysConfig->getValue('FILES_DIR', 'apo');
 
         $this->overWrite = FALSE;
         $this->objUploadTable = $this->getObject('dbfileuploads');
@@ -125,7 +125,7 @@ class wicidupload extends object {
                     $this->isError = TRUE;
                     return array(
                             'success' => FALSE,
-                            'message' => $this->objLanguage->languageText("error_UPLOAD_NOOVERWRITE", 'wicid'),
+                            'message' => $this->objLanguage->languageText("error_UPLOAD_NOOVERWRITE", 'apo'),
                     );
 
                 }
@@ -136,7 +136,7 @@ class wicidupload extends object {
                     if($this->checkExists()) {
                         return array(
                                 'success' => TRUE,
-                                'message' => $this->objLanguage->languageText("error_UPLOAD_ERR_OK", 'wicid'),
+                                'message' => $this->objLanguage->languageText("error_UPLOAD_ERR_OK", 'apo'),
                                 'filename' => $this->fileName,
                                 'clonename' =>$this->clonename,
                                 'mimetype' => $this->type,
@@ -146,7 +146,7 @@ class wicidupload extends object {
                     else {
                         return array(
                                 'success' => FALSE,
-                                'message' => $this->objLanguage->languageText("error_UPLOAD_FILENOTUPLOADED", 'wicid'),
+                                'message' => $this->objLanguage->languageText("error_UPLOAD_FILENOTUPLOADED", 'apo'),
                         );
                     }
                 }
@@ -160,7 +160,7 @@ class wicidupload extends object {
                     $this->isError = TRUE;
                     return array(
                         'success' => FALSE,
-                        'message' => $this->objLanguage->languageText("error_UPLOAD_NOOVERWRITE", 'wicid'),
+                        'message' => $this->objLanguage->languageText("error_UPLOAD_NOOVERWRITE", 'apo'),
                         );
                     
                 }
@@ -171,7 +171,7 @@ class wicidupload extends object {
                     if($this->checkExists()) {
                         return array(
                             'success' => TRUE,
-                            'message' => $this->objLanguage->languageText("error_UPLOAD_ERR_OK", 'wicid'),
+                            'message' => $this->objLanguage->languageText("error_UPLOAD_ERR_OK", 'apo'),
                             'filename' => $this->fileName,
                             'mimetype' => $this->type,
                             'extension' => 'others',
@@ -180,14 +180,14 @@ class wicidupload extends object {
                     else {
                       return array(
                             'success' => FALSE,
-                            'message' => $this->objLanguage->languageText("error_UPLOAD_FILENOTUPLOADED", 'wicid'),
+                            'message' => $this->objLanguage->languageText("error_UPLOAD_FILENOTUPLOADED", 'apo'),
                       );
                     }
                 }*/
 
                 return array(
                         'success' => FALSE,
-                        'message' => $this->objLanguage->languageText("error_UPLOAD_DISALLOWEDEXTENSION", 'wicid'),
+                        'message' => $this->objLanguage->languageText("error_UPLOAD_DISALLOWEDEXTENSION", 'apo'),
                 );
             }
         }
@@ -243,27 +243,27 @@ class wicidupload extends object {
         switch ($errCode) {
 
             case 0:
-                return $this->objLanguage->languageText("mod_files_err_0", 'wicid');
+                return $this->objLanguage->languageText("mod_files_err_0", 'apo');
                 break;
 
             case 1:
-                return $this->objLanguage->languageText("mod_files_err_1", 'wicid');
+                return $this->objLanguage->languageText("mod_files_err_1", 'apo');
                 break;
 
             case 2:
-                return $this->objLanguage->languageText("mod_files_err_2", 'wicid');
+                return $this->objLanguage->languageText("mod_files_err_2", 'apo');
                 break;
 
             case 3:
-                return $this->objLanguage->languageText("mod_files_err_3", 'wicid');
+                return $this->objLanguage->languageText("mod_files_err_3", 'apo');
                 break;
 
             case 4:
-                return $this->objLanguage->languageText("mod_files_err_4", 'wicid');
+                return $this->objLanguage->languageText("mod_files_err_4", 'apo');
                 break;
 
             default:
-                return $this->objLanguage->languageText("mod_files_err_default", 'wicid');
+                return $this->objLanguage->languageText("mod_files_err_default", 'apo');
                 break;
         }
 

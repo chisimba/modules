@@ -17,9 +17,10 @@ $this->loadClass('htmlheading', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
-$action = 'addrulesandsyllabusone';
+$action = 'saveoverview';
+$nextaction="addrulesandsyllabus";
 
-$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview')));
+$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview','nextaction'=>$nextaction)));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section A: Overview');
 

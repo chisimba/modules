@@ -101,27 +101,6 @@ if ($mode == 'edit') {
 $table->addCell($objDatePicker->show());
 $table->endRow();
 
-/*$documentNumber = new dropdown('number');
-$documentNumber->addOption("Select ...");
-$documentNumber->addOption("S");
-$documentNumber->addOption("C");
-$documentNumber->addOption("A");
-
-if ($mode == 'fixup') {
-    $documentNumber->setSelected($number);
-}
-if ($mode == 'edit') {
-    $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}
-$table->startRow();
-$table->addCell("<b>Number</b>");
-if ($mode == 'edit') {
-    $table->addCell($document['refno'] . '-' . $document['version']);
-} else {
-    $table->addCell($documentNumber->show());
-}
-$table->endRow();
-*/
 
 $number = 'A';
 
@@ -158,9 +137,7 @@ $textinput = new textinput('telephone');
 $textinput->size = 40;
 if ($mode == 'edit') {
     $textinput->value = $document['telephone'];
-} else {
-    $textinput->value = $telephone;
-}
+} 
 $table->startRow();
 $table->addCell("<b>Telephone number</b>");
 $table->addCell($textinput->show());
@@ -181,27 +158,6 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 
-$group = new dropdown('group');
-$group->addOption("Select ...");
-$group->addOption("Public");
-$group->addOption("Council");
-$group->addOption("Administration");
-if ($mode == 'fixup') {
-    $group->setSelected($groupid);
-}
-if ($mode == 'edit') {
-    $group->setSelected($document['groupid']);
-}
-$table->startRow();
-$table->addCell("<b>Group</b>");
-$table->addCell($group->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell("<b>Topic</b>");
-$table->addCell($this->objUtils->getTree('htmldropdown', $cfile, "none"));
-$table->endRow();
-
 $legend = "New Course Proposal";
 if ($mode == 'edit') {
     $legend = "Edit document";
@@ -211,7 +167,10 @@ $fs->setLegend($legend);
 $fs->addContent($table->show());
 
 // Form
-$form = new form('registerdocumentform', $this->uri(array('action' => $action, 'id' => $hiddenId->value)));
+$form = new form('registerdocumentform', $this->uri(array('action' => $action)));
+$numberfield = new hiddeninput('number', $number);
+$form->addToForm($numberfield->show());
+
 
 $hiddenSelected = new hiddeninput('selected', $cfile);
 $form->addToForm($hiddenSelected->show());

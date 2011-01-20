@@ -17,7 +17,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   wicid (document management system)
+ * @package   apo (document management system)
  * @author    Nguni Phakela, david wafula
  * @copyright 2010
 =

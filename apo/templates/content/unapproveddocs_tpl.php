@@ -37,11 +37,9 @@ echo $fs->show() . '<br/>';
 $table = $this->getObject("htmltable", "htmlelements");
 $table->startHeaderRow();
 $table->addHeaderCell("Title");
-$table->addHeaderCell("Ref No");
+$table->addHeaderCell("Department");
 $table->addHeaderCell("Owner");
-$table->addHeaderCell("Topic");
 $table->addHeaderCell("Telephone");
-$table->addHeaderCell("Attachment");
 $table->addHeaderCell("Date");
 
 $table->endHeaderRow();
@@ -50,24 +48,16 @@ $objIcon->setIcon('edit');
 if (count($documents) > 0) {
     foreach ($documents as $document) {
         //$topic=  substr($document['topic'], strlen($this->baseDir));
-        $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'])));
+        $link = new link($this->uri(array("action" => "addoverview", "id" => $document['id'])));
         $link->link = $document['filename'];
         $table->startRow();
 
         $table->addCell($link->show());
-        $table->addCell($document['refno']);
+        $table->addCell($document['department']);
         $table->addCell($document['owner']);
-        $table->addCell($document['topic']);
+       
         $table->addCell($document['telephone']);
-        // w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
-               //
-               //         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
-
-
-        $uplink = new link($this->uri(array("action" => "uploadfile","docname"=>$document['filename'], "docid" => $document['id'],"topic"=>$document['topic'])));
-        $uplink->link = $objIcon->show();
-
-        $table->addCell($document['attachmentstatus'] . $uplink->show());
+   
         $table->addCell($document['date']);
         $table->endRow();
     }
