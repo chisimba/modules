@@ -129,7 +129,7 @@ class rotatingidentity extends object {
                     
                     $retstr .= '
                                 
-                                    <div class="news" id=\''.$row['id'].'\'>
+                                    <div class = "news" id=\''.$row['id'].'\'>
                                         <span class="head-main">'.trim(strip_tags($row['storytitle'])).'</span>';
                         $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 100).' ...<br>
                                             <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<a href="about/index.html">Latest New</a>s<br>
