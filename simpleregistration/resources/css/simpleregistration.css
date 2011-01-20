@@ -62,9 +62,11 @@ h2 {
 #footer p {
     margin:0;
 }
+
 * html #footer {
     height:1px;
 }
+
 
 
 #header{
