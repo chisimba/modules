@@ -42,13 +42,13 @@ class libraryforms extends controller {
     public function dispatch($action) {
 
         //$action = $this->getParam('action');
-        // $this->setLayoutTemplate('editadd_tpl.php');
+         $this->setLayoutTemplate('default_layout_tpl.php');
+     
+          if($_POST){
 
         switch ($action) {
 
-            default:
-                return "default_layout_tpl.php";
-
+           
             case 'addeditform':
                 return $this->saveRecord();
 
@@ -83,13 +83,36 @@ class libraryforms extends controller {
                 return 'fdbkconfirm_tpl.php';
 
             case 'Back to Forms':
-                return 'editadd_tpl.php';
+                return 'homepage_tpl.php';
         }// close for switch
-    }
-
-//end of function dispatch
+    }//end of function dispatch
 
 
+    else {
+       switch ($action)
+	{
+         default:
+                return "homepage_tpl.php";
+                
+           case 'home':
+             return 'homepage_tpl.php';
+            
+            case 'Feed back':
+                 'editadd_tpl.php';  
+            
+              case 'Periodical books': 
+                 return 'periodconfirm_tpl.php';
+             
+              case 'Thesis books':
+                  return 'thesisconfirm_tpl.php';
+		
+		
+	} // end switch
+	
+} // end else 	
+
+}
+         
 
     /*
      * Public Method that checks if all required fields are filled
