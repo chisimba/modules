@@ -56,7 +56,8 @@ class elsifooter extends object {
 
     /*
      * Method to display the footer of elsiskin
-     *
+     * @return string $retstr which has the footer for the skin
+     * @access public
      */
     public function show() {
         $retstr ='
