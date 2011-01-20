@@ -122,7 +122,7 @@ $textinput= new textinput('c3');
 //$maxlength = "6";
 //$c3->label='CEMS (must be 6 characters)';
 //$form->addRule(array('name'=>'c3','length'=>6), 'Check CESM manual','maxlength');
-$textinput->size = 6;
+$textinput->size = 100;
 $textinput->value = $c3;
 $table->startRow();
 $table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from http://intranet.wits.ac.za/Academic/APO/CESMs.htm):', '100');
