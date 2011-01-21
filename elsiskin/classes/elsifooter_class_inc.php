@@ -71,7 +71,8 @@ class elsifooter extends object {
                     <a href="index.html" class="current">Home</a> | <a href="about/index.html">About Us</a> | <a href="staff/index.html">Staff A - Z</a> | <a href="news/index.html">News</a>|<a href="research/index.html" >Research</a>|<a href="support/index.html">Support</a>|<a href="projects/index.html">Projects</a></div>
 
             </div>
-            <!-- End: Footer -->';
+            <!-- End: Footer -->
+            <div class="clear">&nbsp;</div>';
 
         return $retstr;
     }
