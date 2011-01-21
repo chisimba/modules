@@ -10,7 +10,7 @@ $this->setVar('pageSuppressXML', TRUE);
 
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
-$action = 'registerdocument';
+//$action = 'registerdocument';
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 if ($mode == 'edit') {
     $action = "updatedocument";
@@ -102,7 +102,7 @@ $table->addCell($objDatePicker->show());
 $table->endRow();
 
 
-$number = 'A';
+$number = 'S';
 
 $textinput = new textinput('department');
 $textinput->size = 60;
