@@ -84,13 +84,35 @@ class rotatingidentity extends object {
         else {
             $news = "";
         }
-        
+        $objUser = $this->getObject('user', 'security');
+        $userIsLoggedIn = $objUser->isLoggedIn();
+
         $retstr = '<div id="Identity_image">
                     <div class="clear">&nbsp;</div>
                     <div class="grid_1 push_3">
-                        <a onmouseover="MM_swapImage(\'Login\',\'\',\'' . $this->skinpath . 'images/login_1.png\',1)" onmouseout="MM_swapImgRestore()" href="'.$this->uri(array("action"=>"home"),"postlogin").'">
-                            <img border="0" width="220" height="245" name="Login" alt="Login" src="' . $this->skinpath . 'images/login.png">
-                        </a>
+                        <a onmouseover="MM_swapImage(\'Login\',\'\',\'' . $this->skinpath . 'images/';
+                        if($userIsLoggedIn) {
+                            $retstr .= 'logout_1.png\',1)"';
+                        }
+                        else {
+                            $retstr .= '/login_1.png';
+                        }
+                        $retstr .= '\',1)" onmouseout="MM_swapImgRestore()" href="';
+                        if($userIsLoggedIn) {
+                          $retstr .= $this->uri(array("action"=>"logoff"),"security").'">';
+                        }
+                        else {
+                          $retstr .= $this->uri(array("action"=>"home"),"postlogin").'">';
+                        }
+                        $retstr.='   <img border="0" width="220" height="245" name="Login" alt="Login" src="' . $this->skinpath . 'images/';
+                        if($userIsLoggedIn) {
+                            $retstr .='logout.png">';
+                        }
+                        else {
+                            $retstr .='login.png">';
+                        }
+
+       $retstr .='                 </a>
                     </div>
                     <!-- end .grid_1 .push_3 -->
                     <div class="grid_3 pull_1">

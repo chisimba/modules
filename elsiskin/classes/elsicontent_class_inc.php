@@ -55,8 +55,8 @@ class elsicontent extends object {
      * Constructor
      */
     public function init() {
-        $this->sidebar = $this->getObject('sidebar');
-        $this->mainContent = $this->getObject('maincontent');
+        $this->sidebar = $this->getObject('sidebar', 'elsiskin');
+        $this->mainContent = $this->getObject('maincontent', 'elsiskin');
         $this->objNews = $this->getObject('dbnewsstories', 'news');
         $this->objCategory = $this->getObject('dbnewscategories', 'news');
     }

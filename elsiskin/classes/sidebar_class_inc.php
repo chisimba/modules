@@ -169,5 +169,4 @@ class sidebar extends object {
 
         return $retstr;
     }
-
 }
