@@ -60,6 +60,7 @@ class elsiskintoolbar extends object {
             array('action' => 'logoff', 'text' => 'Logout', 'actioncheck' => array(), 'module' => 'security', 'status' => 'loggedin')
         );
         $str = "";
+        $usedDefault = FALSE;
         $count = 1;
         foreach ($menuOptions as $option) {
             if ($option['status'] == 'both') {

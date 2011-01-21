@@ -88,7 +88,7 @@ class rotatingidentity extends object {
         $retstr = '<div id="Identity_image">
                     <div class="clear">&nbsp;</div>
                     <div class="grid_1 push_3">
-                        <a onmouseover="MM_swapImage(\'Login\',\'\',\'' . $this->skinpath . 'images/login_1.png\',1)" onmouseout="MM_swapImgRestore()" href="https://elearn.wits.ac.za/">
+                        <a onmouseover="MM_swapImage(\'Login\',\'\',\'' . $this->skinpath . 'images/login_1.png\',1)" onmouseout="MM_swapImgRestore()" href="'.$this->uri(array("module"=>"prelogin")).'">
                             <img border="0" width="220" height="245" name="Login" alt="Login" src="' . $this->skinpath . 'images/login.png">
                         </a>
                     </div>
