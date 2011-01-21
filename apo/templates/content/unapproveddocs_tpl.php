@@ -48,7 +48,7 @@ $objIcon->setIcon('edit');
 if (count($documents) > 0) {
     foreach ($documents as $document) {
         //$topic=  substr($document['topic'], strlen($this->baseDir));
-        $link = new link($this->uri(array("action" => "addoverview", "id" => $document['id'])));
+        $link = new link($this->uri(array("action" => "showoverview", "id" => $document['id'])));
         $link->link = $document['filename'];
         $table->startRow();
 

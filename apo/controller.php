@@ -55,6 +55,11 @@ class apo extends controller {
         $this->forwardto = $this->getObject('dbforwardto');
         $this->mode = $this->objSysConfig->getValue('MODE', 'apo');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
+
+        /**
+         * Form DB objects
+         */
+        $this->dboverview = $this->getObject('dboverview');
     }
 
     /**
@@ -476,7 +481,7 @@ class apo extends controller {
             $this->setVarByRef("number", $number);
 
             $mode = "fixup";
-           // $action = "registerdocument";
+            // $action = "registerdocument";
             $this->setVarByRef("mode", $mode);
             $this->setVarByRef("action", $action);
             return "addeditdocument_tpl.php";
@@ -1880,39 +1885,16 @@ class apo extends controller {
         
     }
 
-    public function __registeroverview() {
+    public function __saveoverview() {
 
         $a1 = $this->getParam("a1");
         $a2 = $this->getParam("a2");
         $a3 = $this->getParam("a3");
         $a4 = $this->getParam("a4");
         $a5 = $this->getParam("a5");
+        $docid = $this->getParam("id");
 
-        $ext = "doc";
-        $selectedfolder = $this->getParam('topic');
-        $docid = $this->documents->addDocument(
-                        $a1,
-                        $a2,
-                        $a3,
-                        $a4,
-                        $a5);
-        /* $basedir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
-          $template=$this->objSysConfig->getValue('GENERAL_TEMPLATE', 'wicid');
-          $source=$basedir.'/resources/'.$template;
-          $dest=$basedir.'/'.$selectedfolder.'/'.$title.'.'.$ext; */
-
-        //copy($source, $dest);
-        // save the file information into the database
-        $data = array(
-            'filename' => $title . '.' . $ext,
-            'filetype' => $ext,
-            'date_uploaded' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
-            'userid' => $this->userutils->getUserId(),
-            'parent' => "/",
-            'refno' => $refno,
-            'docid' => $docid,
-            'filepath' => $selectedfolder . '/' . $title . '.' . $ext);
-        $this->objUploadTable->saveFileInfo($data);
+        $this->dboverview->saveOverview();
     }
 
 }

@@ -39,7 +39,7 @@ $header->str = $xtitle;
 echo $header->show();
 
 if ($mode == 'edit') {
-    $overviewlink = new link($this->uri(array("action" => "addoverview")));
+    $overviewlink = new link($this->uri(array("action" => "showoverview")));
     $overviewlink->link = "Overview";
 
     $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
