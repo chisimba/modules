@@ -994,7 +994,7 @@ class apo extends controller {
     }
 
     public function __addrulesandsyllabusone() {
-        /* $id = $this->getParam("id");
+          $docid = $this->getParam("id");
           $formname = $this->getParam('formname');
 
           $a1 = $this->getParam("a1");
@@ -1014,7 +1014,6 @@ class apo extends controller {
           }
 
           if (count($errormessages) > 0) {
-
           $this->setVarByRef("errormessages", $errormessages);
           $this->setVarByRef("a1", $a1);
           $this->setVarByRef("a2", $a2);
@@ -1025,9 +1024,18 @@ class apo extends controller {
           $this->setVarByRef("mode", $mode);
           return "overview_tpl.php";
           }
+
           $formname = "overview";
 
-          $formdata = new SimpleXMLElement();
+          $formdata["a1"] = $a1;
+          $formdata["a2"] = $a2;
+          $formdata["a3"] = $a3;
+          $formdata["a4"] = $a4;
+          $formdata["a5"] = $a5;
+
+          $this->objformdata->saveData($formname, $formdata, $docid);
+
+          /*$formdata = new SimpleXMLElement();
           $formdata->addChild('a1', $a1);
           $formdata->addChild('a2', $a2);
           $formdata->addChild('a3', $a3);
