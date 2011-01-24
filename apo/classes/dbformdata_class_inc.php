@@ -1,76 +1,91 @@
 <?php
-/* 
+
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
-*/
+ */
+
 class dbformdata extends dbtable {
+
     var $tablename = "tbl_apo_formdata";
     var $userid;
 
     public function init() {
         parent::init($this->tablename);
-
     }
 
-    public function saveData( $formname, $formdata, $docid) {
-        $this->objUser=$this->getObject('user','security');
+    public function saveData($formname, $formdata, $docid) {
+        $tablename = "tbl_apo_" . $formname;
+        $this->objUser = $this->getObject('user', 'security');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objUploadTable = $this->getObject('dbfileuploads');
-        $this->userutils=$this->getObject('userutils');
-        $data=array(
+        $this->userutils = $this->getObject('userutils');
+        $data["id"] = $docid;
+        $datalength = count($data);
+        for ($i = 0; $i < $datalength; $i++) {
+            $data[$formdata[$i][$i]] = $formdata[$i][$i + 1];
+        }
 
-                'formname'=>$formname,
-                'formdata'=>$formdata,
-                'docid'=>$docid,
-                'userid'=>$this->userutils->getUserId()
-        );
+        /*    'a1' => $formdata["a1"],
+          'a2' => $formdata["a2"],
+          'a3' => $formdata["a3"],
+          'a4' => $formdata["a4"],
+          'a5' => $formdata["a5"] */
+//'userid'=>$this->userutils->getUserId()
+        //);
 
-        if ($this->exists($docid,$formname)) {
+        if ($this->exists($docid)) {
             print_r("exists");
-                $existingdata=$this->getAll("where formname='$formname' and docid='$docid'");
+            $existingdata = $this->getAll("where id='$docid'");
 
-            if(count($existingdata) > 0) {
+            if (count($existingdata) > 0) {
                 print_r("count > 0");
-                $updatedata=array(
-
-                        'formdata'=>$formdata,
-                        'userid'=>$this->userutils->getUserId() 
-
-                );
-                $this->update('id',$existingdata[0]['id'], $updatedata);
+                $updatedata = array();
+                for ($i = 0; $i < $datalength; $i++) {
+                    $updatedata[$formdata[$i][$i]] = $formdata[$i][$i + 1];
+                }
+               /* 'a1' => $formdata["a1"],
+                'a2' => $formdata["a2"],
+                'a3' => $formdata["a3"],
+                'a4' => $formdata["a4"],
+                'a5' => $formdata["a5"]
+//'userid' => $this->userutils->getUserId()
+                );*/
+                $this->update('id', $existingdata[0]['id'], $updatedata);
                 print_r("updated");
             }
         }
         else
-            $this->insert($data);//$formname, $formdata, $docid
+            $this->insert($data); //$formname, $formdata, $docid
 
-        echo 'success';
+            echo 'success';
     }
 
-    function  exists($docid, $formname) {
-        $sql="select * from tbl_apo_formdata where formname='$formname' and docid='$docid'";
-        $xmStr="";
-        $rows=$this->getArray($sql);
-        if(count($rows) > 0) {
+    function exists($docid, $formname) {
+        $sql = "select * from tbl_apo_'.$formname.' where docid='$docid'";
+        $xmStr = "";
+        $rows = $this->getArray($sql);
+        if (count($rows) > 0) {
             return TRUE;
         }
-        else 
+        else
             return FALSE;
-        
     }
 
-    public function  getFormData($formname, $docid) {
+    public function getFormData($formname, $docid) {
 
-        $sql="select * from tbl_apo_formdata where formname='$formname' and docid='$docid'";
-        $xmStr="";
-        $rows=$this->getArray($sql);
+        $sql = "select * from tbl_apo_'.$formname.' where docid='$docid'";
+        $xmStr = "";
+        $rows = $this->getArray($sql);
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             print_r($row);
-            $xmlStr=$row['formdata'];
+            $xmlStr = $row['formdata'];
         }
 
         return $xmlStr;
     }
+
 }
+
 ?>
