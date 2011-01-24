@@ -1,3 +1,4 @@
+<h1>This is for test purposes only</h1>
 <?php
 if (isset($str)) {
    echo $str; 

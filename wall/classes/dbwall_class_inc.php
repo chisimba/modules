@@ -253,6 +253,7 @@ class dbwall extends dbtable
     */
     public function savePost()
     {
+
         if ($this->objUser->isLoggedIn()) {
             $wallPost = $this->getParam('wallpost', 'empty');
             $posterId = $this->objUser->userId();
@@ -278,9 +279,12 @@ class dbwall extends dbtable
                     $identifier = NULL;
                     $postedWhere = NULL;
                 }
+            } elseif ($wallType == '4') {
+                $identifier = $this->getParam('keyValue', NULL);
+                $postedWhere = $this->objLanguage->languageText("mod_wall_onsimpleblogwall", "wall", "Wrote on a blog post wall.");
             } elseif ($wallType == '1') {
                 $identifier="sitewall";
-                 $postedWhere = $this->objLanguage->languageText("mod_wall_onsitewallwall", "wall");
+                $postedWhere = $this->objLanguage->languageText("mod_wall_onsitewallwall", "wall");
             } else {
                 $identifier=NULL;
                 $postedWhere = " on $ownerId wall ";

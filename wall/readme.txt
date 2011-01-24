@@ -69,19 +69,3 @@ KNOWN ISSUES:
   only be visible to buddies / classmates? If so, is anyone working on making
   buddies a proper social module?
 
-
-placeholder.........>
-
-
-        jQuery().live("", function() {
-            var page = "index.php?module=wall&action=checkforupdates";
-            jQuery.ajax({
-                url: page,
-                type: "GET",
-                async: true,
-                data: dataStrBase+page+"&source=ORIGINAL",
-                success: function(ret) {
-
-                }
-            });
-        });

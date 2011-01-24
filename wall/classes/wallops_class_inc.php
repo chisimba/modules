@@ -154,7 +154,17 @@ class wallops extends object
     public function showWall($wallType, $num=10)
     {
         $this->wallType = $wallType;
-        $posts = $this->objDbwall->getWall($wallType, $num);
+
+
+
+        if ($wallType == "4") {
+            $keyName = 'identifier';
+            $keyValue = $this->getParam($keyName, NULL);
+            $page = 0;
+            $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num);
+        } else {
+            $posts = $this->objDbwall->getWall($wallType, $num);
+        }
         $numPosts = $this->objDbwall->countPosts($wallType);
         if ($numPosts <= 10) {
             return $this->addToWrapper(
@@ -178,9 +188,9 @@ class wallops extends object
      * @access private
      *
      */
-    private function addToWrapper($str)
+    private function addToWrapper($str, $wallid="_default")
     {
-        return "\n\n<div id='wall_wrapper'>\n" . $str . "\n</div>\n\n";
+        return "\n\n<div class='wall_wrapper' id='wall_wrapper_{$wallid}'>\n" . $str . "\n</div>\n\n";
     }
 
     /**
@@ -192,9 +202,9 @@ class wallops extends object
      * @access private
      *
      */
-    private function addToWall($str)
+    private function addToWall($str, $wallid="_default")
     {
-        return "\n\n<div id='wall'>\n" . $str . "\n</div>\n\n";
+        return "\n\n<div class='wall' id='wall_{$wallid}'>\n{$str}\n</div>\n\n";
     }
 
     /**
@@ -227,6 +237,10 @@ class wallops extends object
                         $keyname = NULL;
                     }
                     break;
+                case "4";
+                    $keyValue = $this->getParam('', FALSE);
+                    $keyName = 'identifier';
+                    break;
                 case "1":
                 case "sitewall":
                 default:
@@ -257,6 +271,7 @@ class wallops extends object
                 $hideMoreLink = FALSE;
             }
             $rem = $totalPages-$pageDisp;
+            //die($keyname . ' = ' . $keyValue);
             $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue);
             $ret .= $this->showPosts($posts, $numPosts, $wallType, 10, $hideMoreLink);
         } else {
@@ -440,7 +455,7 @@ class wallops extends object
     * @return string The input box and button
     *
     */
-    private function showPostBox()
+    private function showPostBox($wallid="_default")
     {
         if ( $this->objUser->isLoggedIn() ) {
             $onlyText = $this->objLanguage->languageText("mod_wall_onlytext",
@@ -451,9 +466,9 @@ class wallops extends object
               "wall", "Share");
             $ret = '<div id=\'updateBox\'>
             ' . $enterText . '
-            <textarea id=\'wallpost\'></textarea>
-            <button id=\'shareBtn\'>' . $shareText . '</button>
-            <div id="wall_onlytext">' . $onlyText . '</div>
+            <textarea class=\'wallpost\' id=\'wallpost_' . $wallid . '\'></textarea>
+            <button class=\'shareBtn\' id=\''. $wallid . '\'>' . $shareText . '</button>
+            <div class="wall_onlytext" id="wall_onlytext_' . $wallid . '">' . $onlyText . '</div>
             <div class=\'clear\'></div>
             </div>';
         } else {
@@ -522,6 +537,10 @@ class wallops extends object
                     $keyValue = -99;
                 }
                 break;
+            case "4":
+                $keyValue = $this->getParam('identifier', -99);
+                $target .= '&keyValue=' . $keyValue;
+                break;
             case "1":
             case "sitewall":
             default:
@@ -538,7 +557,7 @@ class wallops extends object
         $newScript = "<script type='text/javascript'>\n";
         $newScript .= "var page=" . $page .";\n";
         $newScript .= "var wallType=" . $wallType .";\n";
-        $newScript .= "var keyValue=" . $keyValue .";\n";
+        $newScript .= "var keyValue='" . $keyValue ."';\n";
         $newScript .= "var me='" . $myName ."';\n";
         $newScript .= "var target='" . $target ."';\n";
         $newScript .= "var youSaid='" . $youSaid ."';\n";

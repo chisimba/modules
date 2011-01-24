@@ -19,6 +19,9 @@ function replaceURLWithHTMLLinks(source) {
 
 jQuery(function() {
 
+    var id;
+    var status_text;
+
     // Function to do the oembed magic
     jQuery(".msg a").oembed(null, {
         embedMethod: "append",
@@ -42,14 +45,17 @@ jQuery(function() {
     });
 
     // Function for posting a wall post
-    jQuery("#shareBtn").click(function(){
-        status_text = jQuery("#wallpost").val();
+    jQuery(".shareBtn").click(function(){
+        id=jQuery(this).attr("id");
+        //alert(id);
+        status_text = jQuery("#wallpost_"+id).val();
+        alert(status_text);
         if(status_text.length == 0) {
                 return;
         } else {
-            jQuery("#shareBtn").attr("disabled", "disabled");
-            var tmpOnlytxt = jQuery("#wall_onlytext").html();
-            jQuery("#wall_onlytext").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
+            jQuery(".shareBtn").attr("disabled", "disabled");
+            var tmpOnlytxt = jQuery("#wall_onlytext_"+id).html();
+            jQuery("#wall_onlytext_"+id).html('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
             status_text = stripHTML(status_text); // clean all html tags
             status_text = replaceURLWithHTMLLinks(status_text); // replace links with HTML anchor tags.
             status_text = status_text.replace(/\n/g,'<br />');
@@ -58,11 +64,11 @@ jQuery(function() {
                     type: "POST",
                     data: "wallpost="+status_text,
                     success: function(msg) {
-                        jQuery("#wallpost").val("");
-                        jQuery("#shareBtn").attr("disabled", "");
-                        jQuery("#wall_onlytext").html(tmpOnlytxt);
+                        jQuery("#wallpost_"+id).val("");
+                        jQuery(".shareBtn").attr("disabled", "");
+                        jQuery("#wall_onlytext_"+id).html(tmpOnlytxt);
                         if(msg == "true") {
-                            jQuery("#wall").prepend("<div class='wallpostrow'><span class='wallposter'>"+me+"</span><div class='msg'>"+status_text+"</div></div>");
+                            jQuery("#wall_"+id).prepend("<div class='wallpostrow'><span class='wallposter'>"+me+"</span><div class='msg'>"+status_text+"</div></div>");
                             jQuery(".msg:first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
                         } else {
                             alert(msg);

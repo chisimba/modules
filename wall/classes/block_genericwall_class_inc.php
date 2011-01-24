@@ -79,7 +79,7 @@ class block_genericwall extends object
     public function show() 
     {
         $objWallOps = $this->getObject('wallops', 'wall');
-        return $objWallOps->showWall(FALSE, 10);
+        return $objWallOps->showWall(4, 10);
     }
 }
 ?>

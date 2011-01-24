@@ -115,7 +115,7 @@ class wallguesser extends object
         $objContext = $this->getObject('dbcontext', 'context');
         if($objContext->isInContext()){
             $this->currentContextCode = $objContext->getcontextcode();
-            // Returning a wall type of context (2).
+            // Returning a wall type of context (3).
             return 3;
         } else {
             $objBestGuess = $this->getObject('bestguess', 'utilities');
@@ -148,9 +148,15 @@ class wallguesser extends object
             case "2":
                 return 2;
                 break;
+            // Wall is being used in a context (e.g. a course)
             case "context":
             case "3":
                 return 3;
+                break;
+            // Wall is being used as a comment mechanism in simpleblog
+            case "simpleblog":
+            case "4":
+                return 4;
                 break;
             default:
                 // Default to site wall

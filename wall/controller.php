@@ -120,8 +120,6 @@ class wall extends controller
         * using case selections)
         */
         $method = $this->__getMethod($action);
-        // Set the layout template to compatible one
-        $this->setLayoutTemplate('layout_template.php');
         /*
         * Return the template determined by the method resulting 
         * from action
@@ -143,6 +141,9 @@ class wall extends controller
     */
     private function __view()
     {
+        // Set the layout template to compatible one
+        $this->setLayoutTemplate('layout_template.php');
+        // Figure out what type of wall we want
         $objGuessWall = $this->getObject('wallguesser','wall');
         $wallType = $objGuessWall->guessWall();
         switch ($wallType) {
@@ -160,6 +161,17 @@ class wall extends controller
                 break;
         }
         
+    }
+
+    private function __getsimpleblogwall()
+    {
+        $objGuessWall = $this->getObject('wallguesser','wall');
+        $wallType = $objGuessWall->guessWall();
+        $objWallOps = $this->getObject('wallops', 'wall');
+        $str = $objWallOps->showWall($wallType);
+        die($str);
+        //$this->setVarByRef('str', $str);
+        //return "dump_tpl.php";
     }
  
     /**
