@@ -50,6 +50,7 @@ class elsicontent extends object {
     private $objNews;
     // news category object
     private $objCategory;
+    private $objLanguage;
 
     /**
      * Constructor
@@ -59,6 +60,7 @@ class elsicontent extends object {
         $this->mainContent = $this->getObject('maincontent', 'elsiskin');
         $this->objNews = $this->getObject('dbnewsstories', 'news');
         $this->objCategory = $this->getObject('dbnewscategories', 'news');
+        $this->objLanguage = $this->getObject("language", "language");
     }
 
     /**
@@ -115,41 +117,55 @@ class elsicontent extends object {
      */
 
     private function getIntroText($action) {
+        $this->loadClass("link", "htmlelements");
+
         if($action == 'about') {
+            $aboutLink = new link($this->uri(array("action"=>"about")));
+            $aboutLink->link = $this->objLanguage->languageText('mod_elsiskin_welcome', 'elsiskin');
             $ret = '
                 <div class="clear">&nbsp;</div>
                 <div class="grid_1">
-                    <h3><a href="">Welcome to eLSI</a></h3>
-                </div>
+                    <h3>'.$aboutLink->show().'</h3>
+                </div>';
+            $aboutLink->link = $this->objLanguage->languageText('mod_elsiskin_aboutelsi', 'elsiskin');
+            $ret .= '
                 <div class="grid_3">
-                    <h2><a href="">About ELSI</a></h2>
+                    <h2>'.$aboutLink->show().'</h2>
                 </div>
                 <div class="grid_1 pull_3">
-                    <h3>More about eLSI</h3>
+                    <h3>'.$this->objLanguage->languageText('mod_elsiskin_moreaboutelsi', 'elsiskin').'</h3>
                 </div>
                 <!-- end .grid_1.pull_3 -->
                 <div class="clear">&nbsp;</div>';
         }
         else if($action == 'staff') {
+            $staffLink = new link($this->uri(array("action"=>"staff")));
+            $staffLink->link = $this->objLanguage->languageText('mod_elsiskin_elsistaff', 'elsiskin');
             $ret = '
                 <div class="clear">&nbsp;</div>
                 <div class="grid_1 ">
-                    <h3><a href="">Staff at eLSI</a></h3>
-                </div>
+                    <h3>'.$staffLink->show().'</h3>
+                </div>';
+            $staffLink->link = $this->objLanguage->languageText('mod_elsiskin_elsiwhoworks', 'elsiskin');
+            $ret .='
                 <div class="grid_3">
-                    <h2><a href="">Who works at ELSI?</a></h2>
+                    <h2><a href="">'.$staffLink->show().'</a></h2>
                 </div>
                 <!-- end .grid_1.pull_3 -->
                 <div class="clear">&nbsp;</div>';
         }
         else if($action == 'contact') {
+            $contactLink = new link($this->uri(array("action"=>"contact")));
+            $contactLink->link = $this->objLanguage->languageText('mod_elsiskin_contactus', 'elsiskin');
             $ret = '
                 <div class="clear">&nbsp;</div>
                 <div class="grid_1">
-                    <h3><a href="index.html">Contact eLSI</a></h3>
-                </div>
+                    <h3>'.$contactLink->show().'</h3>
+                </div>';
+            $contactLink->link = $this->objLanguage->languageText('mod_elsiskin_contactassist', 'elsiskin');
+            $ret .='
                 <div class="grid_3">
-                    <h2><a href="index.html">Can ELSI be of assistance?</a></h2>
+                    <h2>'.$contactLink->show().'</h2>
                 </div>
                 <div class="grid_1 pull_3">
                     <h3>More about eLSI</h3>
@@ -157,7 +173,7 @@ class elsicontent extends object {
                 <!-- end .grid_1.pull_3 -->
                 <div class="clear">&nbsp;</div>';
         }
-        if($action == 'viewsingle' || $action == 'viewstory'){
+        else if($action == 'viewsingle' || $action == 'viewstory'){
             $ret = '
                 <div class="clear">&nbsp;</div>
                 <div class="grid_3">
@@ -166,14 +182,17 @@ class elsicontent extends object {
                 <div class="clear">&nbsp;</div>';
         }
         else {
-            
+            $homeLink = new link($this->uri(array("action"=>"home")));
+            $homeLink->link = $this->objLanguage->languageText('mod_elsiskin_welcome', 'elsiskin');
             $ret = '
                 <div class="clear">&nbsp;</div>
                 <div class="grid_1">
-                    <h3><a href="">Welcome to eLSI</a></h3>
-                </div>
+                    <h3>'.$homeLink->show().'</h3>
+                </div>';
+           $homeLink->link = $this->objLanguage->languageText('mod_elsiskin_homehowtohelp', 'elsiskin');
+            $ret.='
                 <div class="grid_3">
-                    <h2><a href="">How can we help?</a></h2>
+                    <h2>'.$homeLink->show().'</h2>
                 </div>
                 <!-- end .grid_1 -->
                 <div class="clear">&nbsp;</div>

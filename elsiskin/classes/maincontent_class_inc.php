@@ -79,6 +79,7 @@ class maincontent extends object {
         $this->objUser = $this->getObject('user', 'security');
         $this->objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
         $this->objblogPosts = $this->getObject('blogposts', 'blog');
+        $this->objLanguage = $this->getObject("language", "language");
     }
 
     /* Method to set the current action of the page
