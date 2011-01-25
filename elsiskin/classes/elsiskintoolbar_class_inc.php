@@ -42,7 +42,6 @@ class elsiskintoolbar extends object {
      * Constructor
      */
     public function init() {
-
         $this->loadClass('link', 'htmlelements');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
     }
@@ -57,6 +56,8 @@ class elsiskintoolbar extends object {
         $menuOptions = array(
             array('action' => 'about', 'text' => 'About', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
             array('action' => 'staff', 'text' => 'Staff', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
+            array('action' => 'news', 'text' => 'News', 'actioncheck' => array(), 'module' => 'news', 'status' => 'loggedin'),
+            array('action' => 'blog', 'text' => 'Blog', 'actioncheck' => array(), 'module' => 'blog', 'status' => 'loggedin'),
             array('action' => 'logoff', 'text' => 'Logout', 'actioncheck' => array(), 'module' => 'security', 'status' => 'loggedin')
         );
         $str = "";
@@ -115,7 +116,19 @@ class elsiskintoolbar extends object {
         $home = $this->generateItem('home', 'elsiskin', 'Home', $usedDefault);
 
         // Return Toolbar
-        $retstr = '
+        $retstr = '<!-- Start: header -->
+        <div id="header">
+            <div class="org_nav">
+                <!-- Start: contactnav -->
+
+                <div id="contactnav">'
+                    .$this->getContactLink().
+                '</div>
+                <!-- End: contactnav -->
+            </div>
+            <div class="clear">&nbsp;</div>
+            <div class="org_nav">
+                <!-- Start: Topnav -->
 			<div class="org_nav">
 			<!-- Start: Topnav -->
 				<div id="Topnav">

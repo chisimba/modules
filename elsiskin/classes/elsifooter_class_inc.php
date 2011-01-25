@@ -76,7 +76,7 @@ class elsifooter extends object {
                     $retstr .= $eachLink->show()." | ";
                 }   
       $retstr .= '
-                </div>;
+                </div>
 
             </div>
             <!-- End: Footer -->

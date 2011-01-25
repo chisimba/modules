@@ -65,7 +65,7 @@ class maincontent extends object {
      * @access public
      */
     public $objblogPosts;
-    
+
     /**
      * Constructor
      */
@@ -471,7 +471,7 @@ class maincontent extends object {
             }
             $ret = $ret . "</table>";
         }
-        
+
         return $ret;
     }
 
