@@ -58,6 +58,11 @@ class maincontent extends object {
 
     private $newsId;
 
+    // default message if no content
+    private $documentation;
+
+    private $category;
+
     /**
      * Blog posts object
      *
@@ -71,6 +76,7 @@ class maincontent extends object {
      */
     public function init() {
         $this->currentAction = 'home';
+        $this->documentation = "Content has not yet been set up";
         $this->objNews = $this->getObject('dbnewsstories', 'news');
         $this->objCategory = $this->getObject('dbnewscategories', 'news');
         $this->objFileManager = $this->getObject('dbfile', 'filemanager');
@@ -80,6 +86,7 @@ class maincontent extends object {
         $this->objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
         $this->objblogPosts = $this->getObject('blogposts', 'blog');
         $this->objLanguage = $this->getObject("language", "language");
+
     }
 
     /* Method to set the current action of the page
@@ -133,23 +140,25 @@ class maincontent extends object {
         if(empty($bloginfo)) {
             $bloginfo = "There are no blogs yet.";
         }
+        $alllink = new link($this->uri(array("action"=>"siteblog"), "blog"));
+        $alllink->link = 'View all blogs';
         $retstr = '<div class="grid_1">
                         <img src="'.$this->skinpath.'images/sm_xolani.jpg"><h4>eLearning</h4>
                         <p>Augment your  teaching and learning programme with digital resources.</p>
-                    </div>
-                    <!-- end .grid_1 -->
-                    <div class="grid_1">
+                   </div>
+                   <!-- end .grid_1 -->
+                   <div class="grid_1">
                         <img src="'.$this->skinpath.'images/mulalo_matshusa.png"><h4>Support</h4>
                         <p>Our training workshops will give you hands on experience with new learning technologies</p>
-                    </div>
-                    <!-- end .grid_1 -->
-                    <div class="grid_1">
+                   </div>
+                   <!-- end .grid_1 -->
+                   <div class="grid_1">
                         <img src="'.$this->skinpath.'images/sm_wafula_gill.jpg" width="220" height="91"><h4>Innovation</h4>
                         <p>Explore  and develop new and emerging technologies in your teaching &amp; research. </p>
-                    </div>
-                    <!-- end .grid_1 -->
-                    <div class="clear">&nbsp;</div>
-                    <div class="grid_2">
+                   </div>
+                   <!-- end .grid_1 -->
+                   <div class="clear">&nbsp;</div>
+                   <div class="grid_2">
                         <div class="info-box-holder">
                             <div class="left_wrap">
                                 <h2>ELSI Staff Blog</h2>
@@ -159,15 +168,15 @@ class maincontent extends object {
                     <div class="grid_2"><p>&nbsp;</p></div>
                     <!-- end .grid_1 --> <div class="clear">&nbsp;</div>
                     <div class="grid_2">
-                        <div id="blog">'.$bloginfo.'</div>
+                        <div id="blog"><h3>'.$alllink->show().'</h3>'.$bloginfo.'</div>
                     </div>
                     <div class="grid_2">
                         <div class="info-box-holder">
                             <div class="right_wrap">
                                 <h2>Support and Help</h2>
                             </div>
-                        </div>
-                        <p>Placeholder for support and documentation</p>
+                        </div><div id="supportandhelp">
+                        '.$this->getSupportAndDocumentation().'</div>
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="grid_2"><p>&nbsp;</p></div>
@@ -185,16 +194,7 @@ class maincontent extends object {
      */
     public function showAboutMain() {
         $retstr .= '<div class="grid_3">
-                    <p>The eLearning, Support and Innovation (eLSI) Unit has been established to assist staff at the University of Witwatersrand to integrate ICT into their courses and to enable academics,  students and others to freely share their teaching and learning resources with others. </p>
-                    <p>eLSI has been set up to explore, contribute to and engage critically with the worldwide learning community. The unit intends to </br>
-                        <ol id="list_alpha">
-                            <li><p>Promote competent and appropriate use of digital technologies and develop an academic digital literacy amongst students and staff</p></li>
-                            <li><p>Design and develop content to further the use of interactive educational resources </p></li>
-                            <li><p>Engage with academic staff and design pedagogically appropriate</p></li>
-                            <li><p>Participate in educational networks and research, lead or contribute to African eLearning initiatives </p></li>
-                            <li><p>Deploy, maintain and develop Open Source Learning Systems</p></li>
-                        </ol>
-                    </p>
+                        '.$this->getAboutContent().'
                     </div>
                     <!-- end .grid_3 -->';
 
@@ -530,5 +530,36 @@ class maincontent extends object {
         $str .= $objSocialBookmarking->show();
 
         return $str;
+    }
+
+    private function getSupportAndDocumentation() {
+        $this->category = "documentation";
+        $this->documentation = "No documents have been set up";
+        return $this->getContent();
+    }
+
+    private function getAboutContent() {
+        $this->category = "about_Content";
+        $this->documentation = "Content has not yet been set up";
+        return $this->getContent();
+    }
+
+    private function getContent() {
+        $retstr = "";
+        $objCategories = $this->getObject("dbnewscategories", "news");
+        $news = $this->getObject("dbnewsstories", "news");
+        $categories = $objCategories->getCategories();
+
+        foreach ($categories as $cat) {
+
+            if ($cat['categoryname'] == $this->category) {//'documentation') {
+                $documentationId = $cat['id'];
+                $documentationStories = $news->getCategoryStories($documentationId);
+                $this->documentation = $documentationStories[0]['storytext'];
+            }
+        }
+
+        $retstr .= $this->documentation;
+        return $retstr;
     }
 }

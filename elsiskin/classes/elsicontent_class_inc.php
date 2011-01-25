@@ -198,13 +198,35 @@ class elsicontent extends object {
                 <div class="clear">&nbsp;</div>
                 <div class="grid_1">&nbsp;</div>
                 <div class="grid_3">
-                    <p>The eLearning, Support and Innovation (eLSI) Unit has been established to explore, contribute to and expand the online education capacities of students and staff at the University of Witwatersrand. The unit intends to promote competent and appropriate use of digital technologies and develop an academic digital literacy amongst students and staff. </p>
+                    '.$this->getHomeIntroTextContent().'
                 </div>
                 <!-- end .grid_1 -->
                 <div class="clear">&nbsp;</div>';
         }
         
         return $ret;
+    }
+
+    public function getHomeIntrotextContent() {
+        $retstr = "";
+        $objCategories = $this->getObject("dbnewscategories", "news");
+        $news = $this->getObject("dbnewsstories", "news");
+        $categories = $objCategories->getCategories();
+
+        $documentation = "Introduction Text for the home page has not yet been set up";
+
+        foreach ($categories as $cat) {
+
+            if ($cat['categoryname'] == 'home_intro_text') {
+                $documentationId = $cat['id'];
+                $documentationStories = $news->getCategoryStories($documentationId);
+                $documentation = $documentationStories[0]['storytext'];
+            }
+        }
+
+        $retstr .= $documentation;
+
+        return $retstr;
     }
 
 }
