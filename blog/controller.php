@@ -328,6 +328,9 @@ class blog extends controller {
             $this->objblogTrackbacks = $this->getObject('blogtrackbacks');
             $this->objTermsDialogue = $this->getObject('blogtermsdialogue', 'blog');
             $this->objUserParams = $this->getObject('dbuserparamsadmin', 'userparamsadmin');
+            // Load scriptaclous since we can no longer guarantee it is there
+            $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+            $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
         }
         catch(customException $e) {
             //oops, something not there - bail out
@@ -759,8 +762,9 @@ class blog extends controller {
                     $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
                     //feed author
                     $itemAuthor = htmlentities($this->objUser->userName($userid)."<".$this->objUser->email($userid).">");
+                    $itemDate = strtotime($feeditems['post_date']);
                     //add this item to the feed
-                    $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
+                    $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor, $itemDate);
                 }
                 //check which format was chosen and output according to that
                 switch ($format) {
