@@ -7,7 +7,7 @@
 
 class dbformdata extends dbtable {
 
-    var $tablename = "tbl_apo_overview";
+    //var $tablename = "tbl_apo_overview";
     var $userid;
 
     public function init() {
@@ -24,7 +24,8 @@ class dbformdata extends dbtable {
         $data = array();
         $data["id"] = $docid;
         $formdatanew = array_merge($data, $formdata);
-
+        print_r($tablename);
+        die();
         /* $datalength = count($data);
           for ($i = 0; $i < $datalength; $i++) {
           $data[$formdata[$i][0]] = $formdata[$i][1];
@@ -52,12 +53,13 @@ class dbformdata extends dbtable {
                   'a5' => $formdata["a5"]
                   //'userid' => $this->userutils->getUserId()
                   ); */
-                $this->update('id', $existingdata[0]['id'], $formdata);
+ 
+                $this->update('id', $existingdata[0]['id'], $formdata, $tablename);
                 print_r("updated");
             }
         }
         else
-            $this->insert($formdatanew); //$formname, $formdata, $docid
+            $this->insert($formdatanew, $tablename); //$formname, $formdata, $docid
 
             echo 'success';
     }
