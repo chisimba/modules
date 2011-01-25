@@ -105,6 +105,22 @@ class thumperops extends object
     private $vhost;
 
     /**
+     * Instance of the Thumper Producer class.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objProducer;
+
+    /**
+     * Instance of the Thumper Consumer class.
+     *
+     * @access private
+     * @var    object
+     */
+    private $objConsumer;
+
+    /**
      * Initialises the object properties.
      *
      * @access public
@@ -117,5 +133,37 @@ class thumperops extends object
         $this->user = $this->objSysConfig->getValue('user', 'thumper');
         $this->pass = $this->objSysConfig->getValue('pass', 'thumper');
         $this->vhost = $this->objSysConfig->getValue('vhost', 'thumper');
+    }
+
+    /**
+     * Returns an instance of the Thumper Producer class.
+     *
+     * @access public
+     * @return object
+     */
+    public function getProducer()
+    {
+        if (!is_object($this->objProducer)) {
+            include $this->getResourcePath('Thumper/Producer.php');
+            $this->objProducer = new Producer($this->host, $this->port, $this->user, $this->pass, $this->vhost);
+        }
+
+        return $this->objProducer;
+    }
+
+    /**
+     * Returns an instance of the Thumper Consumer class.
+     *
+     * @access public
+     * @return object
+     */
+    public function getConsumer()
+    {
+        if (!is_object($this->objConsumer)) {
+            include $this->getResourcePath('Thumper/Consumer.php');
+            $this->objConsumer = new Consumer($this->host, $this->port, $this->user, $this->pass, $this->vhost);
+        }
+
+        return $this->objConsumer;
     }
 }
