@@ -495,7 +495,7 @@ class apo extends controller {
         $selectedfolder = "/";
         $version = $this->getParam('version', "1");
 
-        $refNo = $this->documents->showDocument(
+        $refNo = $this->documents->addDocument(
                         $date,
                         $refno,
                         $dept,
@@ -575,7 +575,6 @@ class apo extends controller {
      */
 
     function __showeditdocument() {
-
         $id = $this->getParam("id");
         $document = $this->documents->getDocument($id);
         $mode = "edit";
@@ -982,7 +981,7 @@ class apo extends controller {
         return $xml;
     }
 
-    public function __saveFormData() {
+    public function __savingFormData() {
         $docid = $this->getParam("id");
         $formname = $this->getParam('formname');
 
@@ -1007,23 +1006,22 @@ class apo extends controller {
         }
         else if ($formname == "resources") {
         }
-        else if ($formname == "") {
+        else if ($formname == "collaborationsandcontracts") {
         }
-        else if ($formname == "overview") {
+        else if ($formname == "review") {
         }
-        else if ($formname == "overview") {
+        else if ($formname == "contact details") {
         }
         $this->objformdata->saveData($docid, $formname, $formdata);
     }
 
     public function __showoverview() {
-        // $id = $this->getParam('id');
-        //$formname = $this->getParam('formname');
+        $id = $this->getParam('id');
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
-        // $this->setVarByRef("id", $id);
+        $this->setVarByRef("id", $id);
         return "overview_tpl.php";
     }
 
@@ -1037,6 +1035,7 @@ class apo extends controller {
         $a4 = $this->getParam("a4");
         $a5 = $this->getParam("a5");
 
+        $errormessages = array();
         if ($a1 == null) {
             $errormessages[] = "Please provide an answer for A.1";
         }
@@ -1059,13 +1058,16 @@ class apo extends controller {
             return "overview_tpl.php";
         }
 
+        $formdata = array();
         $formdata["a1"] = $a1;
         $formdata["a2"] = $a2;
         $formdata["a3"] = $a3;
         $formdata["a4"] = $a4;
         $formdata["a5"] = $a5;
 
-        $this->objformdata->saveData($formname, $formdata, $docid);
+        $formdata = serialize($formdata);
+
+        $this->objformdata->saveData($docid, $formname, $formdata);
 
         /* $formdata = new SimpleXMLElement();
           $formdata->addChild('a1', $a1);
