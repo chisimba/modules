@@ -29,6 +29,7 @@ $GLOBALS['kewl_entry_point_run']) {
 class bookthesis extends dbTable {
 
     public $objLanguage;
+     var $required;
 
 
     public function init() {
@@ -313,7 +314,7 @@ class bookthesis extends dbTable {
        
         // create label for the box heading
 	$bookbLabel = new label($this->objLanguage->languageText
-            ("mod_libraryforms_commenttitlebox","libraryforms"),"box");
+            ("mod_libraryforms_commentlabelnb","libraryforms"),"box");
         $table->startRow();
         $table->addCell($bookbLabel->show(), '', 'center', 'left','');
         $table->endRow();
@@ -323,13 +324,13 @@ class bookthesis extends dbTable {
 	$objlocal = new dropdown ('local');
 	$localLabel = new label("Please Select");
 	$locals =array("Local Only", "Overseas");
-foreach ($locals as $local)
-{
-    $objlocal->addOption($local,$local);
+	foreach ($locals as $local)
+	{
+   	 $objlocal->addOption($local,$local);
  
         $objlocal->setSelected($this->getParam('local'));
  
-}
+	}
 	$table->addCell($localLabel ->show(), 150, NULL, 'left');
 	$table->addCell($objlocal ->show(), 150, NULL, 'left');
 
@@ -337,14 +338,14 @@ foreach ($locals as $local)
 	$objpostgrad = new dropdown ('postgrad');
 	$postgradLabel = new label( "Select your Level");
 	$postgrad=array("Post Graduate", "Under Graduate", "Staff" );
-foreach ($postgrad as $postgrad)
-{
-    $objpostgrad->addOption($postgrad,$postgrad);
-    if($mode == 'addfixup'){
+	foreach ($postgrad as $postgrad)
+	{
+   	 $objpostgrad->addOption($postgrad,$postgrad);
+   // if($mode == 'addfixup'){
         $objlocal->setSelected($this->getParam('postgrad'));
-    	}
+    	//}
    
-}
+	}
 	$table->addCell($postgradLabel ->show(), 150, NULL, 'left');
 	$table->addCell($objpostgrad ->show(), 150, NULL, 'left');
 
@@ -398,7 +399,7 @@ foreach ($postgrad as $postgrad)
             'bfax' => $fax,
             'btel' => $tel,
             'btelw' => $telw,
-            'bemailaddress' => $bemailaddress,
+            'bemailaddress' => $emailaddress,
             'bentitynum' => $bentitynum,
             'bstudentno' => $bstudentno,
             'bcourse' => $bcourse,

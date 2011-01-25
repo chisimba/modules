@@ -24,12 +24,13 @@ $this->loadClass('form', 'htmlelements');
 $category = 'user';
 
 
-$tab->tabbedbox();
-$tab->addTabLabel($this->objLanguage->languageText("category_resource_two", "libraryforms"));
-$tab->addBoxContent($objBookThesis->show());
+//$tab->tabbedbox();
+//$tab->addBoxContent($objBookThesis->show());
 
-$tabcontent->addTab('Book / Thesis only Form', $tab->show());
-$tabcontent->width = '90%';
-echo '<br/><center>' . $tabcontent->show() . '</center>';
-
+//$tabcontent->addTab('',$tab->show());
+//$tabcontent->width = '100%';
+echo '<br/><center>' . $objBookThesis->show() . '</center>';
+//echo '<br/><center>' . $tabcontent->show() . '</center>';
+//$postalLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpostaladdress", "libraryforms"), "postaladdress");
 ?>
+

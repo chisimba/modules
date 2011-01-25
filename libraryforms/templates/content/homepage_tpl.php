@@ -8,10 +8,6 @@ $link =  $this->newObject('link', 'htmlelements');
 $objIcon =  $this->newObject('geticon', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $objLayer =$this->newObject('layer','htmlelements');
-$this->loadClass('dropdown', 'htmlelements');
-$this->loadClass('textinput', 'htmlelements');
-$this->loadClass('checkbox', 'htmlelements');
-$this->loadClass('button', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
@@ -22,8 +18,6 @@ $table->cellspacing = '2';
 $table->cellpadding = '5';
 
 //setup the table headings
-
-
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
@@ -43,7 +37,7 @@ echo $display;
 
 $bodyContent = $this->objLanguage->languageText('', '', '<p> Welcome to Library forms the ........ </p>
 <p>
-This system is privided for students those who are Local and overseas\'s to make books inquiries the system simple.</p>
+This system is provided for students those who are Local and overseas\'s to make books inquiries the system simple.</p>
 <p> The form will simple\' send email notification to the administrators, then they will attend you.</p>');
 echo $bodyContent;
 

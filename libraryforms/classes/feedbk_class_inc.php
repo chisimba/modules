@@ -28,6 +28,7 @@ if (!
 class feedbk extends dbTable {
 
     public $objLanguage;
+    public $required;
 
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
@@ -151,12 +152,12 @@ class feedbk extends dbTable {
 
 
 
-
+        
         $objCaptcha = $this->getObject('captcha', 'utilities');
         $captcha = new textinput('feedback_captcha');
         $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_feedback_captcha');
 
-        $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . '<br /><div id="feedbackcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() . $required . '  <a href="javascript:feedbackredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
+    $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . '<br /><div id="feedbackcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() . $required . '  <a href="javascript:feedbackredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
 
         $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
         $objForm->addRule('feedback_captcha', $this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'), 'required');
@@ -165,6 +166,7 @@ class feedbk extends dbTable {
 
         return $objForm->show();
     }
+
 
     function insertmsgRecord($name, $email, $msg) {
         $id = $this->insert(array('name' => $name,

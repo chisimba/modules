@@ -20,6 +20,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class libraryforms extends controller {
 
     public $objLanguage;
+    public $required;
     protected $objMail;
 
     public function init() {
@@ -82,9 +83,7 @@ class libraryforms extends controller {
                 $this->submitmsg();
                 return 'fdbkconfirm_tpl.php';
 
-            case 'Back to Forms':
-                return 'homepage_tpl.php';
-        }// close for switch
+          }// close for switch
     }//end of function dispatch
 
 
@@ -92,18 +91,19 @@ class libraryforms extends controller {
        switch ($action)
 	{
          default:
-                return "homepage_tpl.php";
+                return 'homepage_tpl.php';
                 
            case 'home':
+
              return 'homepage_tpl.php';
             
-            case 'Feed back':
-                 'editadd_tpl.php';  
+            case 'tellus':
+                 return 'editadd_tpl.php';  
             
-              case 'Periodical books': 
+              case 'periodicalbooks': 
                  return 'periodconfirm_tpl.php';
              
-              case 'Thesis books':
+              case 'thesisbooks':
                   return 'thesisconfirm_tpl.php';
 		
 		
@@ -192,7 +192,7 @@ class libraryforms extends controller {
         $fax = $this->getParam('fax');
         $tel = $this->getParam('thesis_tel');
         $telw = $this->getParam('thesis_w');
-        $emailaddress = $this->getParam('thesis_email');
+        $emailaddress= $this->getParam('thesis_email');
         $entitynum = $this->getParam('entity');
         $studentno = $this->getParam('thesis_studentno');
         $course = $this->getParam('thesis_course');

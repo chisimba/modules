@@ -21,13 +21,9 @@ $tabcontent = $this->newObject('tabcontent', 'htmlelements');
 $objTable = $this->newObject('htmltable', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 
-$tab->tabbedbox();
-$tab->addTabLabel($this->objLanguage->languageText("category_resource_three", "libraryforms"));
-$tab->addBoxContent($objILLperiodical->show());
+$category = 'user';
 
-$tabcontent->addTab('Periodical Request Form', $tab->show());
 
-$tabcontent->width = '90%';
-echo '<br/><center>' . $tabcontent->show() . '</center>';
+echo '<br/><center>' . $objILLperiodical->show() . '</center>';
 
 ?>

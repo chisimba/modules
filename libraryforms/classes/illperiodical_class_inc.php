@@ -29,6 +29,7 @@ $GLOBALS['kewl_entry_point_run']) {
 class ILLperiodical extends dbTable {
 
     public $objLanguage;
+   var $required;
 
 
     public function init() {
@@ -144,7 +145,7 @@ class ILLperiodical extends dbTable {
         $pageslLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentpages","libraryforms"),"pages");
         $table->addCell($pageslLabel->show(), '', 'center', 'left', '');
         $table->addCell($objpages->show(), '', 'center', 'left', '');
-       $objForm->addRule('period_pages','pages Must contain valid numbers','numeric');
+        $objForm->addRule('period_pages','pages Must contain valid numbers','numeric');
         $table->endRow();
 
 
@@ -235,7 +236,7 @@ class ILLperiodical extends dbTable {
 
 
          //create an istance for the label
-        $labeloverseas = new label($this->objLanguage->languageText("mod_libraryforms_commentlabel","libraryforms"),"label");
+        $labeloverseas = new label($this->objLanguage->languageText("mod_libraryforms_commentlabelnb","libraryforms"),"label");
         $table->startRow();
         $table->addCell($labeloverseas->show(), '', 'center', 'left', '');
         $table->endRow();
