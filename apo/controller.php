@@ -1188,13 +1188,11 @@ class apo extends controller {
         }
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["b5a"] = $b5a;
+        $formdata["b5b"] = $b5b;
+        $formdata["b6a"] = $b6a;
+        $formdata["b6b"] = $b6b;
+        $formdata["b6c"] = $b6c;
 
         $formdata = serialize($formdata);
 
@@ -1257,13 +1255,12 @@ class apo extends controller {
         }
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["c1"] = $c1;
+        $formdata["c2a"] = $c2a;
+        $formdata["c2b"] = $c2b;
+        $formdata["c3"] = $c3;
+        $formdata["c4a"] = $c4a;
+        $formdata["c4b"] = $c4b;
 
         $formdata = serialize($formdata);
 

@@ -7,7 +7,7 @@
 
 class dbformdata extends dbtable {
 
-    //var $tablename = "tbl_apo_overview";
+    var $tablename = "tbl_apo_overview";
     var $userid;
 
     public function init() {
@@ -25,7 +25,7 @@ class dbformdata extends dbtable {
         $data["id"] = $docid;
         $formdatanew = array_merge($data, $formdata);
         print_r($tablename);
-        die();
+
         /* $datalength = count($data);
           for ($i = 0; $i < $datalength; $i++) {
           $data[$formdata[$i][0]] = $formdata[$i][1];
