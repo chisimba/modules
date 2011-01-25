@@ -1218,8 +1218,8 @@ class apo extends controller {
         $c2b = $this->getParam("c2b");
         $c3 = $this->getParam("c3");
         $c4a = $this->getParam("c4a");
-        $c4b = $this->getParam("c4b");
-        $c4c = $this->getParam("c4c");
+        $c4b1 = $this->getParam("c4b1");
+        $c4b2 = $this->getParam("c4b2");
 
         if ($c1 == null) {
             $errormessages[] = "Please provide an answer for C.1";
@@ -1234,7 +1234,7 @@ class apo extends controller {
             $errormessages[] = "Please provide an answer for C.3";
         }
         if ($c4a == null) {
-            $errormessages[] = "Please provide an answer for C.4.1";
+            $errormessages[] = "Please provide an answer for C.4.a";
         }
         if ($c4b == null) {
             $errormessages[] = "Please provide an answer for C.4.b";
@@ -1248,7 +1248,8 @@ class apo extends controller {
             $this->setVarByRef("c2b", $c2b);
             $this->setVarByRef("c3", $c3);
             $this->setVarByRef("c4a", $c4a);
-            $this->setVarByRef("c4b", $c4b);
+            $this->setVarByRef("c4b1", $c4b1);
+            $this->setVarByRef("c4b2", $c4b2);
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
             return "subsidyrequirements_tpl.php";
@@ -1260,7 +1261,8 @@ class apo extends controller {
         $formdata["c2b"] = $c2b;
         $formdata["c3"] = $c3;
         $formdata["c4a"] = $c4a;
-        $formdata["c4b"] = $c4b;
+        $formdata["c4b1"] = $c4b1;
+        $formdata["c4b2"] = $c4b2;
 
         $formdata = serialize($formdata);
 
@@ -1326,13 +1328,12 @@ class apo extends controller {
         }
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["d1a"] = $d1a;
+        $formdata["d1b"] = $d1b;
+        $formdata["d2a"] = $d2a;
+        $formdata["d2b"] = $d2b;
+        $formdata["d2c"] = $d2c;
+        $formdata["d3"] = $d3;
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
 
@@ -1398,13 +1399,14 @@ class apo extends controller {
         }
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["a"] = $a;
+        $formdata["b"] = $b;
+        $formdata["c"] = $c;
+        $formdata["d"] = $d;
+        $formdata["e"] = $e;
+        $formdata["f"] = $f;
+        $formdata["g"] = $g;
+        $formdata["h"] = $h;
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
 
@@ -1477,13 +1479,15 @@ class apo extends controller {
         }
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["a"] = $a;
+        $formdata["b"] = $b;
+        $formdata["c"] = $c;
+        $formdata["d"] = $d;
+        $formdata["e"] = $e;
+        $formdata["f"] = $f;
+        $formdata["g"] = $g;
+        $formdata["h"] = $h;
+        $formdata["i"] = $i;
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
 
@@ -1567,13 +1571,17 @@ class apo extends controller {
         }
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["e1a"] = $e1a;
+        $formdata["e1b"] = $e1b;
+        $formdata["e2a"] = $e2a;
+        $formdata["e2b"] = $e2b;
+        $formdata["e2c"] = $e2c;
+        $formdata["e3a"] = $e3a;
+        $formdata["e3b"] = $e3b;
+        $formdata["e3c"] = $e3c;
+        $formdata["e4"] = $e4;
+        $formdata["e5a"] = $e5a;
+        $formdata["e5b"] = $e5b;
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
 
@@ -1636,20 +1644,26 @@ class apo extends controller {
         if (count($errormessages) > 0) {
 
             $this->setVarByRef("errormessages", $errormessages);
-
+            $this->setVarByRef("f1a", $f1a);
+            $this->setVarByRef("f1b", $f1b);
+            $this->setVarByRef("f2a", $f2a);
+            $this->setVarByRef("f2b", $f2b);
+            $this->setVarByRef("f3a", $f3a);
+            $this->setVarByRef("f3b", $f3b);
+            $this->setVarByRef("f4", $f4);
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
             return "collaborationandcontracts_tpl.php";
         }
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["f1a"] = $f1a;
+        $formdata["f1b"] = $f1b;
+        $formdata["f2a"] = $f2a;
+        $formdata["f2b"] = $f2b;
+        $formdata["f3a"] = $f3a;
+        $formdata["f3b"] = $f3b;
+        $formdata["f4"] = $f4;
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
 
@@ -1718,20 +1732,28 @@ class apo extends controller {
         if (count($errormessages) > 0) {
 
             $this->setVarByRef("errormessages", $errormessages);
-
+            $this->setVarByRef("g1a", $g1a);
+            $this->setVarByRef("g1b", $g1b);
+            $this->setVarByRef("g2a", $g2a);
+            $this->setVarByRef("g2b", $g2b);
+            $this->setVarByRef("g3a", $g3a);
+            $this->setVarByRef("g3b", $g3b);
+            $this->setVarByRef("g4a", $g4a);
+            $this->setVarByRef("g4b", $g4b);
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
             return "review_tpl.php";
         }
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["g1a"] = $g1a;
+        $formdata["g1b"] = $g1b;
+        $formdata["g2a"] = $g2a;
+        $formdata["g2b"] = $g2b;
+        $formdata["g3a"] = $g3a;
+        $formdata["g3b"] = $g3b;
+        $formdata["g4a"] = $g4a;
+        $formdata["g4b"] = $g4b;
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
 
@@ -1785,13 +1807,11 @@ class apo extends controller {
         }
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["h1"] = $h1;
+        $formdata["h2a"] = $h2a;
+        $formdata["h2b"] = $h2b;
+        $formdata["h3a"] = $h3a;
+        $formdata["h3b"] = $h3b;
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
 
@@ -1870,13 +1890,15 @@ class apo extends controller {
         $totalSAQAcredits = $totalstudyhoursExam / 10;
 
         $formdata = array();
-        $formdata["b1"] = $b1;
-        $formdata["b2"] = $b2;
-        $formdata["b3a"] = $b3a;
-        $formdata["b3b"] = $b3b;
-        $formdata["b4a"] = $b4a;
-        $formdata["b4b"] = $b4b;
-        $formdata["b4c"] = $b4c;
+        $formdata["a"] = $a;
+        $formdata["b"] = $b;
+        $formdata["c"] = $c;
+        $formdata["d"] = $d;
+        $formdata["e"] = $e;
+        $formdata["f"] = $f;
+        $formdata["g"] = $g;
+        $formdata["h"] = $h;
+        $formdata["i"] = $i;
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
 
