@@ -310,7 +310,8 @@ class wall extends controller
     private function __getmoreposts()
     {
         $objWallOps = $this->getObject('wallops', 'wall');
-        echo $objWallOps->nextPosts();
+        $wallid = $this->getParam('wallid', NULL);
+        echo $objWallOps->nextPosts($wallid);
         die();
     }
 

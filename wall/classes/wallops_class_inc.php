@@ -154,29 +154,59 @@ class wallops extends object
     public function showWall($wallType, $num=10)
     {
         $this->wallType = $wallType;
+        $page = 0;
         switch( $wallType ) {
             case "4":
                 $keyName = 'identifier';
                 $keyValue = $this->getParam($keyName, NULL);
-                $page = 0;
-                $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num);
                 break;
+            case "3":
+                $objContext = $this->getObject('dbcontext', 'context');
+                if($objContext->isInContext()){
+                    $currentContextcode = $objContext->getcontextcode();
+                    $keyValue = $currentContextcode;
+                    $keyName = 'identifier';
+                } else {
+                    // @TODO deal with this situation better
+                    return NULL;
+                }
+                break;
+            case "2":
+                $objGuessUser = $this->getObject('bestguess', 'utilities');
+                $ownerId = $objGuessUser->guessUserId();
+                $keyValue = $ownerId;
+                $keyName = 'ownerid';
+
+                break;
+            case "1":
             default:
+                $keyName = 'identifier';
+                $keyValue = 'sitewall';
                 $posts = $this->objDbwall->getMorePosts($wallType, 0, NULL, NULL, 10);
                 //$posts = $this->objDbwall->getWall($wallType, $num);
                 break;
         }
-            
-        $numPosts = $this->objDbwall->countPosts($wallType);
+        $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num);         
+        $numPosts = $this->objDbwall->countPosts($wallType, FALSE, $keyName, $keyValue);
+
+
+
+//WORKING HERE
+
+
+
+
+
+        
         if ($numPosts <= 10) {
             return $this->addToWrapper(
-            $this->showPostBox()
-            . $this->showPosts($posts, $numPosts, $wallType, $num, TRUE)
+                $this->showPostBox($wallType, $keyName, $keyValue)
+                . $this->showPosts($posts, $numPosts, $wallType, $num, TRUE, $keyValue), $keyValue
             );
         } else {
             return $this->addToWrapper(
-              $this->showPostBox()
-              . $this->showPosts($posts, $numPosts, $wallType, $num)
+                $this->showPostBox($wallType, $keyName, $keyValue)
+                . $this->showPosts($posts, $numPosts, $wallType, $num, FALSE, $keyValue), $keyValue
             );
          }
 
@@ -190,7 +220,7 @@ class wallops extends object
      * @access private
      *
      */
-    private function addToWrapper($str, $wallid="_default")
+    private function addToWrapper($str, $wallid)
     {
         return "\n\n<div class='wall_wrapper' id='wall_wrapper_{$wallid}'>\n" . $str . "\n</div>\n\n";
     }
@@ -204,7 +234,7 @@ class wallops extends object
      * @access private
      *
      */
-    private function addToWall($str, $wallid="_default")
+    private function addToWall($str, $wallid)
     {
         return "\n\n<div class='wall' id='wall_{$wallid}'>\n{$str}\n</div>\n\n";
     }
@@ -217,7 +247,7 @@ class wallops extends object
      * @access public
      *
      */
-    public function nextPosts()
+    public function nextPosts($wallid)
     {
         // Retrieve the wall type.
         $wallType = $this->getParam('walltype', FALSE);
@@ -275,7 +305,7 @@ class wallops extends object
             $rem = $totalPages-$pageDisp;
             //die($keyname . ' = ' . $keyValue);
             $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue);
-            $ret .= $this->showPosts($posts, $numPosts, $wallType, 10, $hideMoreLink);
+            $ret .= $this->showPosts($posts, $numPosts, $wallType, 10, $hideMoreLink, $wallid);
         } else {
             $ret = $this->objLanguage->languageText("mod_wall_nowalltype", "wall", "No wall type given");
         }
@@ -294,7 +324,7 @@ class wallops extends object
      * @return string The formatted wall posts and their comments
      *
      */
-    public function showPosts($posts, $numPosts, $wallType, $num=10, $hideMorePosts=FALSE, $wallid='_default') {
+    public function showPosts($posts, $numPosts, $wallType, $num=10, $hideMorePosts=FALSE, $wallid) {
         // Initialize the comments string.
         $comments = NULL;
         $ret=NULL;
@@ -388,7 +418,7 @@ class wallops extends object
               . $this->getReplyLink($id) . $comments . " "
               . $showMoreReplies . "</div>\n";
         }
-        $ret = $this->addToWall($ret . $numPostsTxt);
+        $ret = $this->addToWall($ret . $numPostsTxt, $wallid);
         return $ret;
     }
 
@@ -457,9 +487,18 @@ class wallops extends object
     * @return string The input box and button
     *
     */
-    private function showPostBox($wallid="_default")
+    private function showPostBox($wallType, $keyName, $keyValue)
     {
+        $wallid = $keyValue;
         if ( $this->objUser->isLoggedIn() ) {
+            $target = $this->uri(array(
+              'action' => 'save',
+              'ownerid' => $ownerId,
+              'walltype' => $wallType,
+              $keyName => $keyValue
+            ), 'wall');
+            $target = str_replace('&amp;', "&", $target);
+
             $onlyText = $this->objLanguage->languageText("mod_wall_onlytext",
               "wall", "No HTML, only links and text");
             $enterText =  $this->objLanguage->languageText("mod_wall_entertext",
@@ -469,6 +508,7 @@ class wallops extends object
             $ret = '<div id=\'updateBox\'>
             ' . $enterText . '
             <textarea class=\'wallpost\' id=\'wallpost_' . $wallid . '\'></textarea>
+            <input type="hidden" id=\'target_' . $wallid . '\' value="' . $target . '" name="target_' . $wallid . '" />
             <button class=\'shareBtn\' id=\''. $wallid . '\'>' . $shareText . '</button>
             <div class="wall_onlytext" id="wall_onlytext_' . $wallid . '">' . $onlyText . '</div>
             <div class=\'clear\'></div>
@@ -561,7 +601,7 @@ class wallops extends object
         $newScript .= "var wallType=" . $wallType .";\n";
         $newScript .= "var keyValue='" . $keyValue ."';\n";
         $newScript .= "var me='" . $myName ."';\n";
-        $newScript .= "var target='" . $target ."';\n";
+        //$newScript .= "var target='" . $target ."';\n";
         $newScript .= "var youSaid='" . $youSaid ."';\n";
         $newScript .= "var secsAgo='" . $secsAgo ."';\n";
         $newScript .= "var nothingApppendTo='" . $nothingApppendTo ."';\n";

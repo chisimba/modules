@@ -22,6 +22,8 @@ jQuery(function() {
     var id;
     var status_text;
     var fixedid;
+    var target;
+    var wallid;
 
     // Function to do the oembed magic
     jQuery(".msg a").oembed(null, {
@@ -34,14 +36,12 @@ jQuery(function() {
     jQuery(".wall_posts_more").live("click", function(){
         id=jQuery(this).attr("id");
         fixedid = id.replace("more_posts_", "");
-        alert(fixedid);
         jQuery.ajax({
-            url: "index.php?module=wall&action=getmoreposts",
+            url: "index.php?module=wall&action=getmoreposts&wallid="+fixedid,
             type: "GET",
             data: dataStrBase+page+"&source=ORIGINAL",
             success: function(ret) {
-                alert(ret);
-                jQuery("#posts_more_"+id).html("");
+                jQuery("#"+id).html("");
                 ret ='<div class="wall_post_append">'+ret+'</div>';
                 jQuery("#wall_"+fixedid).append(ret);
                 page=page+1;
@@ -50,7 +50,7 @@ jQuery(function() {
     });
 
     // Function for posting a wall post
-    jQuery(".shareBtn").click(function(){
+    jQuery(".shareBtn").live("click", function(){
         id=jQuery(this).attr("id");
         status_text = jQuery("#wallpost_"+id).val();
         if(status_text.length == 0) {
@@ -58,6 +58,8 @@ jQuery(function() {
         } else {
             jQuery(".shareBtn").attr("disabled", "disabled");
             var tmpOnlytxt = jQuery("#wall_onlytext_"+id).html();
+            target = jQuery("#target_"+id).val();
+            alert(target);
             jQuery("#wall_onlytext_"+id).html('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
             status_text = stripHTML(status_text); // clean all html tags
             status_text = replaceURLWithHTMLLinks(status_text); // replace links with HTML anchor tags.
@@ -83,26 +85,24 @@ jQuery(function() {
     });
 
     // The function for deleting a post
-    jQuery(function() {
-        jQuery(".delpost").click(function() {
-            var commentContainer = jQuery(this).parent();
-            id = jQuery(this).attr("id");
-            var string = 'id='+ id;
-            jQuery.ajax({
-               type: "POST",
-               url: "index.php?module=wall&action=delete&id=" + id,
-               data: string,
-               cache: false,
-               success: function(ret){
-                   if(ret == "true") {
-                       commentContainer.slideUp('slow', function() {jQuery(this).remove();});
-                   } else {
-                       alert(ret);
-                   }
-              }
-            });
-            return false;
+    jQuery(".delpost").click(function() {
+        var commentContainer = jQuery(this).parent();
+        id = jQuery(this).attr("id");
+        var string = 'id='+ id;
+        jQuery.ajax({
+           type: "POST",
+           url: "index.php?module=wall&action=delete&id=" + id,
+           data: string,
+           cache: false,
+           success: function(ret){
+               if(ret == "true") {
+                   commentContainer.slideUp('slow', function() {jQuery(this).remove();});
+               } else {
+                   alert(ret);
+               }
+          }
         });
+        return false;
     });
 
     //  The javascript for running the comments.

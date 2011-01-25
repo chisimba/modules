@@ -169,14 +169,14 @@ class dbwall extends dbtable
      * @return integer The number of posts
      *
      */
-    public function countPosts($wallType, $total=FALSE)
+    public function countPosts($wallType, $total=FALSE, $keyName=FALSE, $keyValue=FALSE)
     {
         $baseSql = 'SELECT COUNT(id) AS totalposts FROM tbl_wall_posts ';
         $filter = NULL;
         if ($total) {
             $sql = $baseSql;
         } else {
-            $filter = $this->getCountFilter($wallType);
+            $filter = $this->getCountFilter($wallType, $keyName, $keyValue);
         }
         $countAr = $this->getArray($baseSql . $filter);
         return $countAr[0]['totalposts'];
@@ -190,15 +190,24 @@ class dbwall extends dbtable
      * @return string The filter
      *
      */
-    public function getCountFilter($wallType)
+    public function getCountFilter($wallType, $keyName=FALSE, $keyValue=FALSE)
     {
+        if ($keyName && $keyValue) {
+            $filter = " WHERE walltype = '{$wallType}' AND {$keyName} = '{$keyValue}' ";
+            return $filter;
+        }
+
+
+
+
+        
         // Create the filter based on walltype
         if ($wallType == '3') {
             // Next check if they are in a context.
             $objContext = $this->getObject('dbcontext', 'context');
             if($objContext->isInContext()){
                 $currentContextcode = $objContext->getcontextcode();
-                $filter = " WHERE walltype = '$wallType' AND identifier = '$currentContextcode' ";
+                $filter = " WHERE walltype = '{$wallType}' AND {$keyName} = '{$currentContextcode}' ";
             }
         } elseif ($wallType == '2') {
             $objGuessUser = $this->getObject('bestguess', 'utilities');
