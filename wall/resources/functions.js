@@ -21,6 +21,7 @@ jQuery(function() {
 
     var id;
     var status_text;
+    var fixedid;
 
     // Function to do the oembed magic
     jQuery(".msg a").oembed(null, {
@@ -30,15 +31,19 @@ jQuery(function() {
     
     // Function for getting additional wall posts.
     var dataStrBase = "walltype="+wallType+"&key="+keyValue+"&page=";
-    jQuery("#wall_more_posts").live("click", function(){
+    jQuery(".wall_posts_more").live("click", function(){
+        id=jQuery(this).attr("id");
+        fixedid = id.replace("more_posts_", "");
+        alert(fixedid);
         jQuery.ajax({
             url: "index.php?module=wall&action=getmoreposts",
             type: "GET",
             data: dataStrBase+page+"&source=ORIGINAL",
             success: function(ret) {
-                jQuery(".wall_posts_more").html("");
+                alert(ret);
+                jQuery("#posts_more_"+id).html("");
                 ret ='<div class="wall_post_append">'+ret+'</div>';
-                jQuery("#wall").append(ret);
+                jQuery("#wall_"+fixedid).append(ret);
                 page=page+1;
             }
         });
@@ -47,9 +52,7 @@ jQuery(function() {
     // Function for posting a wall post
     jQuery(".shareBtn").click(function(){
         id=jQuery(this).attr("id");
-        //alert(id);
         status_text = jQuery("#wallpost_"+id).val();
-        alert(status_text);
         if(status_text.length == 0) {
                 return;
         } else {
@@ -83,7 +86,7 @@ jQuery(function() {
     jQuery(function() {
         jQuery(".delpost").click(function() {
             var commentContainer = jQuery(this).parent();
-            var id = jQuery(this).attr("id");
+            id = jQuery(this).attr("id");
             var string = 'id='+ id;
             jQuery.ajax({
                type: "POST",
@@ -107,7 +110,7 @@ jQuery(function() {
     // Show the post box and submit button
     jQuery(".wall_comment_button").live("click", function(){
         var element = jQuery(this);
-        var id = element.attr("id");
+        id = element.attr("id");
         jQuery("#c__"+id).slideToggle(300);
         jQuery(this).toggleClass("active");
         return false;
@@ -115,8 +118,8 @@ jQuery(function() {
 
     // Get additional comments via ajax
     jQuery(".wall_comments_more").live("click", function(){
-        var id = jQuery(this).attr("id");
-        var fixedid = id.replace("mrep__", "");
+        id = jQuery(this).attr("id");
+        fixedid = id.replace("mrep__", "");
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=wall&action=morecomments&id=" + fixedid,
@@ -130,7 +133,7 @@ jQuery(function() {
 
     // Delete a comment
     jQuery(".wall_delcomment").live("click", function(){
-        var id = jQuery(this).attr("id");
+        id = jQuery(this).attr("id");
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=wall&action=deletecomment&id="+id,
@@ -147,8 +150,8 @@ jQuery(function() {
 
     // Post the comment
     jQuery(".comment_submit").live("click", function(){
-        var id = jQuery(this).attr("id");
-        var fixedid = id.replace("cb_", "");
+        id = jQuery(this).attr("id");
+        fixedid = id.replace("cb_", "");
         var comment_text = jQuery("#ct_"+id).val();
         if(comment_text.length == 0) {
             return;

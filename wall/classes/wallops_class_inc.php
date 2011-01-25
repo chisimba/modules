@@ -154,17 +154,19 @@ class wallops extends object
     public function showWall($wallType, $num=10)
     {
         $this->wallType = $wallType;
-
-
-
-        if ($wallType == "4") {
-            $keyName = 'identifier';
-            $keyValue = $this->getParam($keyName, NULL);
-            $page = 0;
-            $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num);
-        } else {
-            $posts = $this->objDbwall->getWall($wallType, $num);
+        switch( $wallType ) {
+            case "4":
+                $keyName = 'identifier';
+                $keyValue = $this->getParam($keyName, NULL);
+                $page = 0;
+                $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num);
+                break;
+            default:
+                $posts = $this->objDbwall->getMorePosts($wallType, 0, NULL, NULL, 10);
+                //$posts = $this->objDbwall->getWall($wallType, $num);
+                break;
         }
+            
         $numPosts = $this->objDbwall->countPosts($wallType);
         if ($numPosts <= 10) {
             return $this->addToWrapper(
@@ -292,14 +294,14 @@ class wallops extends object
      * @return string The formatted wall posts and their comments
      *
      */
-    public function showPosts($posts, $numPosts, $wallType, $num=10, $hideMorePosts=FALSE) {
+    public function showPosts($posts, $numPosts, $wallType, $num=10, $hideMorePosts=FALSE, $wallid='_default') {
         // Initialize the comments string.
         $comments = NULL;
         $ret=NULL;
         // Build the more posts link
         if (!$hideMorePosts) {
             $numPostsTxt =  "<a class='wall_posts_more' "
-              . "id='wall_more_posts' href='javascript:void(0);'>"
+              . "id='more_posts_{$wallid}' href='javascript:void(0);'>"
               . $this->objLanguage->languageText("mod_wall_olderposts", 
                       "wall", "Older posts") 
               . "</a>";
