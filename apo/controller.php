@@ -495,7 +495,7 @@ class apo extends controller {
         $selectedfolder = "/";
         $version = $this->getParam('version', "1");
 
-        $refNo = $this->documents->addDocument(
+        $refNo = $this->documents->showDocument(
                         $date,
                         $refno,
                         $dept,
@@ -574,7 +574,7 @@ class apo extends controller {
       }
      */
 
-    function __editdocument() {
+    function __showeditdocument() {
 
         $id = $this->getParam("id");
         $document = $this->documents->getDocument($id);
@@ -822,7 +822,7 @@ class apo extends controller {
         $docid = $this->getParam('docid');
         //print_r($formname . "/n" . $formdata . "/n" . $docid);
         die();
-        $this->objformdata->saveData($formname, $formdata, $docid);
+        $this->objformdata->saveData($docid, $formname, $formdata);
     }
 
     public function __forwardto() {
@@ -982,7 +982,41 @@ class apo extends controller {
         return $xml;
     }
 
-    public function __addoverview() {
+    public function __saveFormData() {
+        $docid = $this->getParam("id");
+        $formname = $this->getParam('formname');
+
+        if ($formname == "overview") {
+            $formdata["a1"] = $this->getParam("a1");
+            $formdata["a2"] = $this->getParam("a2");
+            $formdata["a3"] = $this->getParam("a3");
+            $formdata["a4"] = $this->getParam("a4");
+            $formdata["a5"] = $this->getParam("a5");
+        }
+        else if ($formname == "rulesandsyllabusone") {
+        }
+        else if ($formname == "rulesandsyllabustwo") {
+        }
+        else if ($formname == "subsidyrequirements") {
+        }
+        else if ($formname == "outcomesandassessmentone") {
+        }
+        else if ($formname == "outcomesandassessmenttwo") {
+        }
+        else if ($formname == "outcomesandassessmentthree") {
+        }
+        else if ($formname == "resources") {
+        }
+        else if ($formname == "") {
+        }
+        else if ($formname == "overview") {
+        }
+        else if ($formname == "overview") {
+        }
+        $this->objformdata->saveData($docid, $formname, $formdata);
+    }
+
+    public function __showoverview() {
         // $id = $this->getParam('id');
         //$formname = $this->getParam('formname');
         $selected = $this->getParam('selected');
@@ -993,49 +1027,47 @@ class apo extends controller {
         return "overview_tpl.php";
     }
 
-    public function __addrulesandsyllabusone() {
-          $docid = $this->getParam("id");
-          $formname = $this->getParam('formname');
+    public function __showrulesandsyllabusone() {
+        $docid = $this->getParam("id");
+        $formname = $this->getParam('formname');
 
-          $a1 = $this->getParam("a1");
-          $a2 = $this->getParam("a2");
-          $a3 = $this->getParam("a3");
-          $a4 = $this->getParam("a4");
-          $a5 = $this->getParam("a5");
+        $a1 = $this->getParam("a1");
+        $a2 = $this->getParam("a2");
+        $a3 = $this->getParam("a3");
+        $a4 = $this->getParam("a4");
+        $a5 = $this->getParam("a5");
 
-          if ($a1 == null) {
-          $errormessages[] = "Please provide an answer for A.1";
-          }
-          if ($a3 == null) {
-          $errormessages[] = "Please provide an answer for A.3";
-          }
-          if ($a4 == null) {
-          $errormessages[] = "Please provide an answer for A.4";
-          }
+        if ($a1 == null) {
+            $errormessages[] = "Please provide an answer for A.1";
+        }
+        if ($a3 == null) {
+            $errormessages[] = "Please provide an answer for A.3";
+        }
+        if ($a4 == null) {
+            $errormessages[] = "Please provide an answer for A.4";
+        }
 
-          if (count($errormessages) > 0) {
-          $this->setVarByRef("errormessages", $errormessages);
-          $this->setVarByRef("a1", $a1);
-          $this->setVarByRef("a2", $a2);
-          $this->setVarByRef("a3", $a3);
-          $this->setVarByRef("a4", $a4);
-          $this->setVarByRef("a5", $a5);
-          $mode = "fixup";
-          $this->setVarByRef("mode", $mode);
-          return "overview_tpl.php";
-          }
+        if (count($errormessages) > 0) {
+            $this->setVarByRef("errormessages", $errormessages);
+            $this->setVarByRef("a1", $a1);
+            $this->setVarByRef("a2", $a2);
+            $this->setVarByRef("a3", $a3);
+            $this->setVarByRef("a4", $a4);
+            $this->setVarByRef("a5", $a5);
+            $mode = "fixup";
+            $this->setVarByRef("mode", $mode);
+            return "overview_tpl.php";
+        }
 
-          $formname = "overview";
+        $formdata["a1"] = $a1;
+        $formdata["a2"] = $a2;
+        $formdata["a3"] = $a3;
+        $formdata["a4"] = $a4;
+        $formdata["a5"] = $a5;
 
-          $formdata["a1"] = $a1;
-          $formdata["a2"] = $a2;
-          $formdata["a3"] = $a3;
-          $formdata["a4"] = $a4;
-          $formdata["a5"] = $a5;
+        $this->objformdata->saveData($formname, $formdata, $docid);
 
-          $this->objformdata->saveData($formname, $formdata, $docid);
-
-          /*$formdata = new SimpleXMLElement();
+        /* $formdata = new SimpleXMLElement();
           $formdata->addChild('a1', $a1);
           $formdata->addChild('a2', $a2);
           $formdata->addChild('a3', $a3);
@@ -1058,7 +1090,7 @@ class apo extends controller {
         return "rulesandsyllabusone_tpl.php";
     }
 
-    public function __addrulesandsyllabustwo() {
+    public function __showrulesandsyllabustwo() {
         /* $id = $this->getParam("id");
           $formname = $this->getParam('formname');
 
@@ -1123,7 +1155,7 @@ class apo extends controller {
         return "rulesandsyllabustwo_tpl.php";
     }
 
-    public function __addsubsidyrequirements() {
+    public function __showsubsidyrequirements() {
         /* $id = $this->getParam("id");
           $formname = $this->getParam('formname');
 
@@ -1179,7 +1211,7 @@ class apo extends controller {
         return "subsidyrequirements_tpl.php";
     }
 
-    public function __addoutcomesandassessmentone() {
+    public function __showoutcomesandassessmentone() {
         /* $id = $this->getParam("id");
           $formname = $this->getParam('formname');
 
@@ -1249,7 +1281,7 @@ class apo extends controller {
         return "outcomesandassessmentone_tpl.php";
     }
 
-    public function __addoutcomesandassessmenttwo() {
+    public function __showoutcomesandassessmenttwo() {
         /* $id = $this->getParam("id");
           $formname = $this->getParam('formname');
 
@@ -1311,7 +1343,7 @@ class apo extends controller {
         return "outcomesandassessmenttwo_tpl.php";
     }
 
-    public function __addoutcomesandassessmentthree() {
+    public function __showoutcomesandassessmentthree() {
         /*  $id = $this->getParam("id");
           $formname = $this->getParam('formname');
 
@@ -1385,7 +1417,7 @@ class apo extends controller {
         return "outcomesandassessmentthree_tpl.php";
     }
 
-    public function __addresources() {
+    public function __showresources() {
         /*   $id = $this->getParam("id");
           $formname = $this->getParam('formname');
 
@@ -1464,7 +1496,7 @@ class apo extends controller {
         return "resources_tpl.php";
     }
 
-    public function __addcollaborationandcontracts() {
+    public function __showcollaborationandcontracts() {
         /*   $id = $this->getParam("id");
           $formname = $this->getParam('formname');
 
@@ -1556,7 +1588,7 @@ class apo extends controller {
         return "collaborationandcontracts_tpl.php";
     }
 
-    public function __addreview() {
+    public function __showreview() {
         /*  $id = $this->getParam("id");
           $formname = $this->getParam('formname');
 
@@ -1630,7 +1662,7 @@ class apo extends controller {
         return "review_tpl.php";
     }
 
-    public function __addcontactdetails() {
+    public function __showcontactdetails() {
         /* $id = $this->getParam("id");
           $formname = $this->getParam('formname');
 
@@ -1868,7 +1900,7 @@ class apo extends controller {
         return "outcomesandassessmentthree_tpl.php";
     }
 
-    public function __addeditCourseProposal() {
+    public function __showeditCourseProposal() {
 
         $telephone = $this->getParam("telephone");
         $title = $this->getParam("title");

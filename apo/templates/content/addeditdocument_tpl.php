@@ -42,34 +42,34 @@ if ($mode == 'edit') {
     $overviewlink = new link($this->uri(array("action" => "showoverview")));
     $overviewlink->link = "Overview";
 
-    $rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
+    $rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone")));
     $rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
 
-    $rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
+    $rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo")));
     $rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
 
-    $subsidyrequirementslink = new link($this->uri(array("action" => "addsubsidyrequirements")));
+    $subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements")));
     $subsidyrequirementslink->link = "Subsidy Requirements";
 
-    $outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
+    $outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone")));
     $outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
 
-    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
+    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo")));
     $outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
 
-    $outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
+    $outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree")));
     $outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
 
-    $resourceslink = new link($this->uri(array("action" => "addresources")));
+    $resourceslink = new link($this->uri(array("action" => "showresources")));
     $resourceslink->link = "Resources";
 
-    $collaborationandcontractslink = new link($this->uri(array("action" => "addcollaborationandcontracts")));
+    $collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts")));
     $collaborationandcontractslink->link = "Collaboration and Contracts";
 
-    $reviewlink = new link($this->uri(array("action" => "addreview")));
+    $reviewlink = new link($this->uri(array("action" => "showreview")));
     $reviewlink->link = "Review";
 
-    $contactdetailslink = new link($this->uri(array("action" => "addcontactdetails")));
+    $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails")));
     $contactdetailslink->link = "Contact Details";
 
     $links = "<b>Document</b>" . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
@@ -202,7 +202,7 @@ $button->setToSubmit();
 
 if ($mode == 'edit') {
     $button = new button('next', $this->objLanguage->languageText('word_next'));
-    $uri = $this->uri(array('action' => 'addoverview', 'id' => $document['id']));
+    $uri = $this->uri(array('action' => 'showoverview', 'id' => $document['id']));
     $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 }
 

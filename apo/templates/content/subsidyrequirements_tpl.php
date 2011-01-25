@@ -28,34 +28,34 @@ echo $header->show();
 $doclink = new link($this->uri(array("action" => "editdocument")));
 $doclink->link = "Document";
 
-$overviewlink = new link($this->uri(array("action" => "addoverview")));
+$overviewlink = new link($this->uri(array("action" => "showoverview")));
 $overviewlink->link = "Overview";
 
-$rulesandsyllabusonelink = new link($this->uri(array("action" => "addrulesandsyllabusone")));
+$rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone")));
 $rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
-$rulesandsyllabustwolink = new link($this->uri(array("action" => "addrulesandsyllabustwo")));
+$rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo")));
 $rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
-$outcomesandassessmentonelink = new link($this->uri(array("action" => "addoutcomesandassessmentone")));
+$outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone")));
 $outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
-$outcomesandassessmenttwolink = new link($this->uri(array("action" => "addoutcomesandassessmenttwo")));
+$outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo")));
 $outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
 
-$outcomesandassessmentthreelink = new link($this->uri(array("action" => "addoutcomesandassessmentthree")));
+$outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree")));
 $outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
-$resourceslink = new link($this->uri(array("action" => "addresources")));
+$resourceslink = new link($this->uri(array("action" => "showresources")));
 $resourceslink->link = "Resources";
 
-$collaborationandcontractslink = new link($this->uri(array("action" => "addcollaborationandcontracts")));
+$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts")));
 $collaborationandcontractslink->link = "Collaboration and Contracts";
 
-$reviewlink = new link($this->uri(array("action" => "addreview")));
+$reviewlink = new link($this->uri(array("action" => "showreview")));
 $reviewlink->link = "Review";
 
-$contactdetailslink = new link($this->uri(array("action" => "addcontactdetails")));
+$contactdetailslink = new link($this->uri(array("action" => "showcontactdetails")));
 $contactdetailslink->link = "Contact Details";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
@@ -71,7 +71,7 @@ $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
 
-$action = 'addoutcomesandassessmentone';
+$action = 'showoutcomesandassessmentone';
 $form = new form('subsidyrequirementsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'subsidyrequirements')));
 /* if ($mode == 'edit') {
   $legend = "Edit document";
@@ -177,7 +177,7 @@ $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($table->show());
 //echo $fs->show();
-$action = 'addoutcomesandassessmentone';
+$action = 'showoutcomesandassessmentone';
 $form = new form('subsidyrequirementsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'subsidyrequirements')));
 
 $hiddenSelected = new hiddeninput('selected', $cfile);
@@ -210,7 +210,7 @@ $button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'addrulesandsyllabustwo'));
+$uri = $this->uri(array('action' => 'showrulesandsyllabustwo'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
