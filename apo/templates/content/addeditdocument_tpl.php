@@ -167,7 +167,7 @@ $fs->setLegend($legend);
 $fs->addContent($table->show());
 
 // Form
-$form = new form('registerdocumentform', $this->uri(array('action' => $action)));
+$form = new form('registerdocumentform', $this->uri(array('action' => $action,'id' => $id)));
 $numberfield = new hiddeninput('number', $number);
 $form->addToForm($numberfield->show());
 
@@ -177,7 +177,7 @@ $form->addToForm($hiddenSelected->show());
 
 //$form
 if ($mode == 'edit') {
-    $hiddenId = new hiddeninput('docid', $document['id']);
+    $hiddenId = new hiddeninput('id', $document['id']);
     $form->addToForm($hiddenId->show());
 }
 
