@@ -24,9 +24,10 @@ $header = new htmlHeading();
 $header->str = "@".$res['screen_name']." ".$this->objLanguage->languageText('mod_tweetlic_userlicenses', 'tweetlic')." ".ucwords($res['copyright'])." ".$icon->show();
 $header->type = 1;
 
+$link = new href($this->uri(array(''), 'tweetlic'), $this->objLanguage->languageText('mod_tweetlic_licenseyourown', 'tweetlic'));
 
 $middleColumn .= $header->show();
-$middleColumn .= new href($this->uri(array(''), 'tweetlic'), $this->objLanguage->languageText('mod_tweetlic_licenseyourown', 'tweetlic'));
+$middleColumn .= $link->show(); 
 
 
 // $leftColumn .= $this->leftMenu->show();
