@@ -63,7 +63,7 @@ class dbeventscontent extends dbTable{
             'event_staffreg'=>$staffreg,
             'event_visitorreg'=>$visitorreg
         );
-        print_r($data);
+       
         return $this->insert($data);
 
     }
