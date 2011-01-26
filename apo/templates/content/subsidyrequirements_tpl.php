@@ -147,7 +147,7 @@ $table->addCell($radio->show());
 $table->endRow();
 
 
-$textarea = new textarea('c4b');
+$textarea = new textarea('c4b1');
 $textarea->size = 60;
 $textarea->value = $c4b;
 $textarea->cols=100;
@@ -159,7 +159,7 @@ $table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
-$textarea = new textarea('c4c');
+$textarea = new textarea('c4b2');
 $textarea->size = 60;
 $textarea->value = $c4c;
 $textarea->cols=100;
