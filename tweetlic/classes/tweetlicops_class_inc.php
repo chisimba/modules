@@ -115,7 +115,7 @@ class tweetlicops extends object {
 		    twttr.anywhere(function (T) {
 		
 		        T("#cctweetbox").tweetBox({
-		            height: 40,
+		            height: 80,
 		            width: 550,
 		            defaultContent: "'.$msg.' '.$gourl.'",
 		            label: "Tweet this!"
@@ -139,7 +139,7 @@ class tweetlicops extends object {
 		    twttr.anywhere(function (T) {
 		
 		        T("#cctweetboxinv").tweetBox({
-		            height: 40,
+		            height: 80,
 		            width: 550,
 		            defaultContent: "@'.$name.' '.$msg.' '.$gourl.'",
 		            label: "Tweet this!"
