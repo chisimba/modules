@@ -107,6 +107,7 @@ class tweetlicops extends object {
     public function ccTweetBox($screen_name) {
         $gourl = $this->uri(array('action' => 'viewlic', 'user' => $screen_name), 'tweetlic');
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
+        $gourl = str_replace("&amp;", "&", $gourl);
         $gourl = $this->teeny->create(urlencode($gourl));
         $msg = $this->objLanguage->languageText("mod_tweetlic_msg", "tweetlic")." ";
         
