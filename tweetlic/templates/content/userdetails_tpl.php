@@ -26,7 +26,7 @@ $header->type = 1;
 
 
 $middleColumn .= $header->show();
-$middleColumn .= new href($this->uri(array(), 'tweetlic'), $this->objLanguage->languageText('mod_tweetlic_licenseyourown', 'tweetlic'));
+$middleColumn .= new href($this->uri(array(''), 'tweetlic'), $this->objLanguage->languageText('mod_tweetlic_licenseyourown', 'tweetlic'));
 
 
 // $leftColumn .= $this->leftMenu->show();
