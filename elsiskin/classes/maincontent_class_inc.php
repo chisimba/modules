@@ -62,6 +62,7 @@ class maincontent extends object {
     private $documentation;
 
     private $category;
+    private $sidebar;
 
     /**
      * Blog posts object
@@ -86,6 +87,7 @@ class maincontent extends object {
         $this->objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
         $this->objblogPosts = $this->getObject('blogposts', 'blog');
         $this->objLanguage = $this->getObject("language", "language");
+        $this->sidebar = $this->getObject('sidebar');
 
     }
 
@@ -167,18 +169,25 @@ class maincontent extends object {
                     </div>
                     <div class="grid_2"><p>&nbsp;</p></div>
                     <!-- end .grid_1 --> <div class="clear">&nbsp;</div>
-                    <div class="grid_2">
-                        <div id="blog"><h3>'.$alllink->show().'</h3>'.$bloginfo.'</div>
-                    </div>
+                    <div class="grid_2">'.
+                    $this->getBlogs()
+                    .'</div>
                     <div class="grid_2">
                         <div class="info-box-holder">
                             <div class="right_wrap">
                                 <h2>Support and Help</h2>
                             </div>
-                        </div><div id="supportandhelp">
-                        '.$this->getSupportAndDocumentation().'</div>
+                            <div id="supportandhelp">'
+                                    .$this->getSupportAndDocumentation().'
+                            </div>
+                        </div>
+                        <div class="grid_1">
+                            '.
+                    $this->sidebar->getFacebook()
+                        .'</div>
+                        <div class="grid_1 push_1">Twitter</div>
+                        <div class="clear">&nbsp;</div>
                     </div>
-                    <div class="clear">&nbsp;</div>
                     <div class="grid_2"><p>&nbsp;</p></div>
                     <div class="grid_2">
                     </div>';
@@ -186,7 +195,15 @@ class maincontent extends object {
 
         return $retstr;
     }
-
+/*<div class="grid_2">
+                        <div class="info-box-holder">
+                            <div class="right_wrap">
+                                <h2>Support and Help</h2>
+                            </div>
+                        </div><div id="supportandhelp">
+                        '.$this->getSupportAndDocumentation().'</div>
+                    </div>
+                    <div class="clear">&nbsp;</div>*/
     /**
      * Method to show the main content of the about page
      * @return string
@@ -424,52 +441,50 @@ class maincontent extends object {
      */
      private function getBlogs() {
         $this->loadClass('href', 'htmlelements');
-        $num = 6;
+        $num = 3;
         $data = $this->objDbBlog->getLastPosts($num);
         $ret = "";
         if (!empty($data)) {
-            $count = 1;
-            $ret = "<table width='100%'>";
+            $ret .= '<div class="grid_2">';
             foreach ($data as $item) {
+                $ret .= '<div class="blog-post-preview">
+                            <p>';
                 $linkuri = $this->uri(array(
                             'action' => 'viewsingle',
                             'postid' => $item['id'],
                             'userid' => $item['userid']
                         ));
+                $user = $this->objUser->fullname($item['userid']);
                 $link = new href($linkuri, stripslashes($item['post_title']));
-                $posterName = '<div class="blogpreviewuser">'
-                        . $this->objUser->fullname($item['userid'])
-                        . '</div>';
+                $postExcerpt = $item['post_excerpt'];
                 $fixedTime = strtotime($item['post_date']);
                 $fixedTime = date('Y-m-d H:i:s', $fixedTime);
                 $postDate = $this->objHumanizeDate->getDifference($fixedTime);
-                $postExcerpt = $item['post_excerpt'];
-                if ($count == 1) {
-                    $before = "<tr>";
-                    $after = "";
-                } elseif ($count % 3 == 0) {
-                    $before = "";
-                    $after = "</tr><tr>";
-                } else {
-                    $before = "";
-                    $after = "";
-                }
-                $ret .= $before . "<td width='33.3%' valign='top'><div class='blogpreview'>"
-                        . "<div class='blogpreviewtitle'>" . $link->show() . "</div>"
-                        . $postExcerpt . "<br />" . $posterName
-                        . "<div class='blogpreviewpostdate'>"
-                        . $postDate . "</div>"
-                        . "</div></td>" . $after;
-                $count++;
+                $userlink = new link($this->uri(array()));
+                $userlink->link = $this->objUser->getUserImage($item['userid']);
+                $userlink->title = $user;
+                $allBlogs = new link($this->uri(array("action"=>"randblog", "userid"=>$item['userid']), "blog"));
+                $allBlogs->link = 'All posts by '. $user;
+
+                $ret .= $userlink->show();
+                $ret .= '<strong>'.$link->show().'</strong>
+                         <br>';
+            
+                $ret .= '   </p>
+                            <p>'.$postExcerpt.'
+                            
+                            </p>
+                        <p class="post-details">
+                            Written '.$postDate.' on '
+                                     .date('Y-m-d', strtotime($item['post_date'])).' at '
+                                     .date('H:i:s', strtotime($item['post_date']))
+                                     .'<!-- Filed under: TAG. NUMBER comments-->
+                        <br>By '.$user.' | '. $allBlogs->show().'
+                        </p>
+                        </div>';
+                    
             }
-            if ($count < 6) {
-                while ($count <= 6) {
-                    $ret .= "<td><div class='blogpreviewnodata'>&nbsp;</div></td>";
-                    $count++;
-                }
-                $ret .= "</tr>";
-            }
-            $ret = $ret . "</table>";
+            $ret .= '</div>';
         }
 
         return $ret;
@@ -551,7 +566,6 @@ class maincontent extends object {
         $categories = $objCategories->getCategories();
 
         foreach ($categories as $cat) {
-
             if ($cat['categoryname'] == $this->category) {//'documentation') {
                 $documentationId = $cat['id'];
                 $documentationStories = $news->getCategoryStories($documentationId);
