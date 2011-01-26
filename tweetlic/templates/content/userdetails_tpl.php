@@ -30,7 +30,7 @@ $middleColumn .= $header->show();
 $middleColumn .= $link->show(); 
 
 
-// $leftColumn .= $this->leftMenu->show();
+$leftColumn .= $this->objOps->userSearchBox();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);

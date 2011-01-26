@@ -20,7 +20,7 @@ $middleColumn .= $this->objOps->ccTweetBox($name);
 $middleColumn .= '<div id="cctweetbox"></div>';
 
 
-// $leftColumn .= $this->leftMenu->show();
+$leftColumn .= $this->objOps->userSearchBox();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);

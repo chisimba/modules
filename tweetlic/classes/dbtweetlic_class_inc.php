@@ -85,7 +85,9 @@ class dbtweetlic extends dbTable
 	    }
 	    else {
 	        $insarr['creationtime'] = $this->now();
-		    return $this->insert($insarr, 'tbl_tweetlic_streams');
+	        if(!empty($insarr)) {
+		        return $this->insert($insarr, 'tbl_tweetlic_streams');
+		    }
 		}
 	}
 	
@@ -99,5 +101,15 @@ class dbtweetlic extends dbTable
 	 {
 	     return $this->getAll("WHERE screen_name = '$name'");
 	 }
+	 
+	 /**
+	  * Perform a simple search through users to find their license
+	  * 
+	  * @param license
+	  * @return array details
+	  */
+	  public function searchUsers($license) {
+	      
+	  }
 }
 ?>

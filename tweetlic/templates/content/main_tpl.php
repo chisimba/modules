@@ -22,7 +22,7 @@ $middleColumn .= $this->objLanguage->languageText('mod_tweetlic_viewlic', 'tweet
 
 $middleColumn .= $this->objOps->licForm();
 
-// $leftColumn .= $this->leftMenu->show();
+$leftColumn .= $this->objOps->userSearchBox();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);

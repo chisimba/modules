@@ -104,6 +104,12 @@ class tweetlicops extends object {
         $this->loadClass('radio', 'htmlelements');
     }
     
+    /**
+     * Method to return the required JS to display an @anywhere tweet box for CCSA
+     *
+     * @param string screen_name the username of the user to tweet for
+     * @return string some js
+     */
     public function ccTweetBox($screen_name) {
         $gourl = $this->uri(array('action' => 'viewlic', 'user' => $screen_name), 'tweetlic');
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
@@ -129,6 +135,12 @@ class tweetlicops extends object {
 		return $js;
     }
     
+    /**
+     * Method to return the required JS to display an @anywhere invitationtweet box for CCSA
+     *
+     * @param string screen_name the username of the user to tweet for
+     * @return string some js
+     */
     public function ccTweetBoxInvite($screen_name) {
         $gourl = $this->uri(array('user' => $screen_name), 'tweetlic');
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
@@ -154,12 +166,17 @@ class tweetlicops extends object {
 		return $js;
     }
     
+    /**
+     * Method to return the form for people to fill out to license their tweets
+     *
+     * @param $edit NULL
+     * @return string form data
+     */
     public function licForm($edit = NULL) {
         // start the form
         $form = new form ('lic', $this->uri(array('action'=>'lictweet'), 'tweetlic'));
         // add some rules
         $form->addRule('screen_name', $this->objLanguage->languageText("mod_tweetlic_needscreenname", "tweetlic"), 'required');
-        // $form->addRule('license', $this->objLanguage->languageText("mod_userregistration_needfriendemail", "userregistration"), 'email');
         // screen name
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->startRow();
@@ -193,6 +210,34 @@ class tweetlicops extends object {
         
         return $form->show();
     }
+    
+    /**
+     * Method to create a search box for searching for users
+     *
+     * @param
+     * @return
+     */
+     public function userSearchBox() {
+         $this->loadClass('textinput', 'htmlelements');
+         $qseekform = new form('qseek', $this->uri(array(
+             'action' => 'usersearch',
+         )));
+         $qseekform->addRule('searchterm', $this->objLanguage->languageText("mod_tweetlic_phrase_searchtermreq", "tweetlic") , 'required');
+         $qseekterm = new textinput('searchterm');
+         $qseekterm->size = 15;
+         $qseekform->addToForm("@".$qseekterm->show());
+         $this->objsTButton = new button($this->objLanguage->languageText('word_search', 'system'));
+         $this->objsTButton->setValue($this->objLanguage->languageText('word_search', 'system'));
+         $this->objsTButton->setToSubmit();
+         $qseekform->addToForm($this->objsTButton->show());
+         $qseekform = $qseekform->show();
+         $objFeatureBox = $this->getObject('featurebox', 'navigation');
+         $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_tweetlic_qseek", "tweetlic") , $this->objLanguage->languageText("mod_tweetlic_qseekinstructions", "tweetlic") . "<br />" . $qseekform);
+
+         return $ret;
+     }
+     
+     
     
     
 }

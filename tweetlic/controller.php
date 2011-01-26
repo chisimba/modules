@@ -128,6 +128,11 @@ class tweetlic extends controller
                     return 'userdetails_tpl.php';
                 }
                 break;
+                
+            case 'usersearch' :
+                $name = $this->getParam('searchterm');
+                $this->nextAction('viewlic', array('user' => $name));
+                break;
 
             default:
                 $this->nextAction('');
@@ -143,7 +148,7 @@ class tweetlic extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'lictweet', 'viewlic');
+        $allowedActions = array('', 'lictweet', 'viewlic', 'usersearch');
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
