@@ -14,12 +14,18 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
-
+$this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+
 //$action = 'saveoverview';
 //$nextaction="showrulesandsyllabus";
 $action = 'showrulesandsyllabusone';
+
+$formdata = $this->objformdata->getFormData("overview", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
 
 //$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview','nextaction'=>$nextaction)));
 $form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview')));
@@ -82,11 +88,12 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 $textinput = new textinput('a1');
 $textinput->size = 100;
-if ($mode == 'edit') {
-    $textinput->value = $document['docname'];
-}
+$textinput->value = $document['docname'];
 if ($mode == "fixup") {
     $textinput->value = $a1;
+}
+if ($mode == "edit") {
+    $textinput->value = $formdata['a1'];
 }
 $table->startRow();
 $table->addCell("A.1. Name of course/unit:");
@@ -102,7 +109,7 @@ $radio->addOption('2', "change to the outcomes or credit value of a course/unit"
 $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
 if ($mode == 'edit') {
-    //$radio->setSelected($a2);
+    $radio->setSelected($formdata['a2']);
 }
 if ($mode == "fixup") {
     $radio->setSelected($a2);
@@ -121,6 +128,9 @@ $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $a3;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['a3'];
+}
 $table->startRow();
 $table->addCell("A.3. Provide a brief motivation for the introduction/amendment of the course/unit:");
 $table->endRow();
@@ -135,6 +145,9 @@ $textarea->width = '500px';
 $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $a4;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['a4'];
 }
 $table->startRow();
 $table->addCell("A.4. Towards which qualification(s) can the course/unit be taken?");
@@ -154,6 +167,9 @@ $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($a5);
+}
+if ($mode == "edit") {
+    $radio->setSelected($formdata['a5']);
 }
 $table->startRow();
 $table->addCell("A.5. This new or amended course proposal is:","100");
