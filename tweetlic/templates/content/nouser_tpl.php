@@ -17,7 +17,7 @@ $header->type = 1;
 
 $middleColumn .= $header->show();
 
-$middleColumn .= $this->objOps->ccTweetBoxInvite($name);
+$middleColumn .= $this->objOps->ccTweetBoxInvite($screen_name);
 $middleColumn .= '<div id="cctweetboxinv"></div>';
 
 

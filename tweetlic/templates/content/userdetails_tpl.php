@@ -5,6 +5,7 @@ $res = $res[0];
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 
 $icon = $this->newObject('geticon', 'htmlelements');
+$this->loadClass('href', 'htmlelements');
 $image = $res['copyright']."_big";
 $icon->setIcon($image, 'gif', 'icons/creativecommons_v3');
 
@@ -25,6 +26,7 @@ $header->type = 1;
 
 
 $middleColumn .= $header->show();
+$middleColumn .= new href($this->uri(array(), 'tweetlic'), $this->objLanguage->languageText('mod_tweetlic_licenseyourown', 'tweetlic'));
 
 
 // $leftColumn .= $this->leftMenu->show();
