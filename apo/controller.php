@@ -811,15 +811,6 @@ class apo extends controller {
         return 'ajaxuploadresults_tpl.php';
     }
 
-    public function __saveFormData() {
-        $formname = $this->getParam('formname');
-        $formdata = $this->getParam('formdata');
-        $docid = $this->getParam('docid');
-        //print_r($formname . "/n" . $formdata . "/n" . $docid);
-        die();
-        $this->objformdata->saveData($docid, $formname, $formdata);
-    }
-
     public function __forwardto() {
         $link = $this->getParam('link');
         $email = $this->getParam('email');
@@ -857,16 +848,6 @@ class apo extends controller {
             'doctype' => $doctype);
 
         return $this->objUploadTable->advancedSearch($data); //$this->documents->advancedSearch($data);
-    }
-
-    /**
-     * retrives form
-     */
-    function __getFormData() {
-        $formname = $this->getParam("formname");
-        $docid = $this->getParam("docid");
-
-        echo $this->objformdata->getFormData($formname, $docid);
     }
 
     public function __checkdocattach() {
@@ -1232,7 +1213,7 @@ class apo extends controller {
         if ($c4a == null) {
             $errormessages[] = "Please provide an answer for C.4.a";
         }
-        if ($c4b == null) {
+        if ($c4b1 == null || $c4b2 == null) {
             $errormessages[] = "Please provide an answer for C.4.b";
         }
 
@@ -1936,6 +1917,14 @@ class apo extends controller {
           $this->setVarByRef("mode", $mode);
           $this->setVarByRef("selected", $selected); */
         return "editCourseProposal_tpl.php";
+    }
+
+    public function __forward(){
+        return "forwardto_tpl.php";
+    }
+
+    public function __submit(){
+        return "submit_tpl.php";
     }
 
 }
