@@ -14,11 +14,16 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
-
+$this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
-$action = 'showsubsidyrequirements';
 
+$formdata = $this->objformdata->getFormData("rulesandsyllabustwo", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+
+$action = 'showsubsidyrequirements';
 $form = new form('rulesandsyllabustwoform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'rulesandsyllabustwo')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section B: Rules and Syllabus');
@@ -92,6 +97,9 @@ $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($b5a);
 }
+if ($mode == "edit") {
+    $radio->setSelected($formdata['b5a']);
+}
 $table->startRow();
 $table->addCell("B.5.a. At what level is the course/unit taught?");
 $table->endRow();
@@ -106,6 +114,9 @@ $textarea->width = '500px';
 $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b5b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['b5b'];
 }
 $table->startRow();
 $table->addCell("B.5.b. In which year/s of study is the course/unit to be taught? ");
@@ -131,6 +142,9 @@ $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($b6a);
 }
+if ($mode == "edit") {
+    $radio->setSelected($formdata['b6a']);
+}
 $table->startRow();
 $table->addCell("B.6.a. This is a:");
 $table->endRow();
@@ -145,6 +159,9 @@ $textarea->width = '500px';
 $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b6b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['b6b'];
 }
 $table->startRow();
 $table->addCell("B.6.b. If ‘other’, provide details of the course/unit duration and/or the number of lectures which comprise the course/unit:");
@@ -161,6 +178,9 @@ $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($b6c);
+}
+if ($mode == "edit") {
+    $radio->setSelected($formdata['b6c']);
 }
 $table->startRow();
 $table->addCell("B.6.c.Is the unit assessed:");

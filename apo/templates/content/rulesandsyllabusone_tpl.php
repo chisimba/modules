@@ -15,11 +15,16 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
-
+$this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
-$action = 'showrulesandsyllabustwo';
 
+$formdata = $this->objformdata->getFormData("rulesandsyllabusone", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+
+$action = 'showrulesandsyllabustwo';
 $form = new form('rulesandsyllabusoneform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'rulesandsyllabusone')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section B: Rules and Syllabus');
@@ -85,6 +90,9 @@ $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b1;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['b1'];
+}
 $table->startRow();
 $table->addCell("B.1. How does this course/unit change the rules for the curriculum?");
 $table->endRow();
@@ -99,6 +107,9 @@ $textarea->width = '500px';
 $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b2;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['b2'];
 }
 $table->startRow();
 $table->addCell("B.2. Describe the course/unit syllabus:");
@@ -115,6 +126,9 @@ $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b3a;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['b3a'];
+}
 $table->startRow();
 $table->addCell("B.3. a. What are the pre-requisites for the course/unit if any?");
 $table->endRow();
@@ -129,6 +143,9 @@ $textarea->width = '500px';
 $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b3b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['b3b'];
 }
 $table->startRow();
 $table->addCell("B.3.b. What are the co-requisites for the course/unit if any?");
@@ -147,6 +164,9 @@ $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($b4a);
 }
+if ($mode == "edit") {
+    $radio->setSelected($formdata['b4a']);
+}
 $table->startRow();
 $table->addCell("B.4.a. This is:");
 $table->endRow();
@@ -162,6 +182,9 @@ $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b4b;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['b4b'];
+}
 $table->startRow();
 $table->addCell("B.4.b. If it is a compulsory course/unit, which course/unit is it replacing, or is the course/unit to be taken by students in addition to the current workload of courses/unit?");
 $table->endRow();
@@ -176,6 +199,9 @@ $textarea->width = '500px';
 $textarea->cols=100;
 if ($mode == "fixup") {
     $textarea->value = $b4c;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['b4c'];
 }
 $table->startRow();
 $table->addCell("B.4.c. If it is both a compulsory and optional course/unit, provide details explaining for which qualifications/ programmes the course/unit would be optional and for which it would be compulsory:");

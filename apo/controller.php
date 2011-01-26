@@ -56,10 +56,6 @@ class apo extends controller {
         $this->mode = $this->objSysConfig->getValue('MODE', 'apo');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
 
-        /**
-         * Form DB objects
-         */
-        $this->dboverview = $this->getObject('dboverview');
     }
 
     /**

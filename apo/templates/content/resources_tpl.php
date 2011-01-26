@@ -13,6 +13,12 @@ $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
+$this->objformdata = $this->getObject('dbformdata');
+
+$formdata = $this->objformdata->getFormData("resources", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
 
 $action='showcollaborationandcontracts';
 $form = new form('resourcesform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'resources')));
@@ -80,6 +86,9 @@ $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $he1a;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['e1a'];
+}
 $table->startRow();
 $table->addCell("E.1.a. Is there currently adequate teaching capacity with regard to the introduction of the course/unit? ");
 $table->endRow();
@@ -92,9 +101,11 @@ $textarea = new textarea('e1b');
 $textarea->height = '70px';
 $textarea->width = '500px';
 $textarea->cols = 100;
-
 if ($mode == "fixup") {
     $textarea->value = $e1b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['e1b'];
 }
 $table->startRow();
 $table->addCell("E.1.b. Who will teach the course/unit?");
@@ -111,6 +122,9 @@ $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e2a;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['e2a'];
+}
 $table->startRow();
 $table->addCell("E.2.a. How many students will the course/unit attract?");
 $table->endRow();
@@ -125,6 +139,9 @@ $textarea->width = '500px';
 $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e2b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['e2b'];
 }
 $table->startRow();
 $table->addCell("E.2.b. How has this been factored into the enrolment planning in your Faculty?");
@@ -141,6 +158,9 @@ $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e2c;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['e2c'];
+}
 $table->startRow();
 $table->addCell("E.2.c. How has it been determined if the course/unit is sustainable in the long term, or short term if of topical interest?");
 $table->endRow();
@@ -155,6 +175,9 @@ $textarea->width = '500px';
 $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e3a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['e3a'];
 }
 $table->startRow();
 $table->addCell("E.3.a. Specify the space requirements for the course/unit:");
@@ -171,6 +194,9 @@ $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e3b;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['e3b'];
+}
 $table->startRow();
 $table->addCell("E.3.b. Specify the IT teaching resources required for the course/unit:");
 $table->endRow();
@@ -185,6 +211,9 @@ $textarea->width = '500px';
 $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e3c;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['e3c'];
 }
 $table->startRow();
 $table->addCell("E.3.c. Specify the library resources required to teach the course/unit:");
@@ -201,6 +230,9 @@ $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e4;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['e4'];
+}
 $table->startRow();
 $table->addCell("E.4. Does the School intend to offer the course/unit in addition to its current course/unit offerings, or is the intention to eliminate an existing course/unit?");
 $table->endRow();
@@ -216,6 +248,9 @@ $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e5a;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['e5a'];
+}
 $table->startRow();
 $table->addCell("E.5.a. Specify the name of the course/unit co-ordinator:");
 $table->endRow();
@@ -230,6 +265,9 @@ $textarea->width = '500px';
 $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $e5b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['e5b'];
 }
 $table->startRow();
 $table->addCell("E.5.b. State the Staff number of the course/unit coordinator (consult your Faculty Registrar):");

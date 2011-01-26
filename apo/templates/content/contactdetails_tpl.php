@@ -16,11 +16,16 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
-
+$this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
-$action = 'finishdocument';
 
+$formdata = $this->objformdata->getFormData("contactdetails", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+
+$action = 'finishdocument';
 $form = new form('contactdetailsform', $this->uri(array('action' => $action, 'id'=>$id, 'formname'=>'contactdetails')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section H: Contact Details');
@@ -86,6 +91,9 @@ $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h1;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['h1'];
+}
 $table->startRow();
 $table->addCell("H.1. Name of academic proposing the course/unit:");
 $table->endRow();
@@ -100,6 +108,9 @@ $textarea->width = '500px';
 $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h2a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['h2a'];
 }
 $table->startRow();
 $table->addCell("H.2.a. Name of the School which will be the home for the course/unit:");
@@ -116,6 +127,9 @@ $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h2b;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['h2b'];
+}
 $table->startRow();
 $table->addCell("H.2.b. School approval signature (Head of School or appropriate School committee chair) and date:");
 $table->endRow();
@@ -131,6 +145,9 @@ $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h3a;
 }
+if ($mode == "edit") {
+    $textarea->value = $formdata['h3a'];
+}
 $table->startRow();
 $table->addCell("H.3.a. Telephone contact numbers:");
 $table->endRow();
@@ -145,6 +162,9 @@ $textarea->width = '500px';
 $textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $h3b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['h3b'];
 }
 $table->startRow();
 $table->addCell("H.3.b. Email addresses:");
