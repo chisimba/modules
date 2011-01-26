@@ -117,12 +117,13 @@ class tweetlic extends controller
                 
             case 'viewlic':
                 $screen_name = $this->getParam('user');
-                $this->setVarByRef('screen_name', $screen_name);
                 $res = $this->objDbTweets->getUserDetails($screen_name);
                 if(empty($res)) {
+                    $this->setVarByRef('screen_name', $screen_name);
                     return 'nouser_tpl.php';
                 }
                 else {
+                    $this->setVarByRef('screen_name', $screen_name);
                     $this->setVarByRef('res', $res);
                     return 'userdetails_tpl.php';
                 }
