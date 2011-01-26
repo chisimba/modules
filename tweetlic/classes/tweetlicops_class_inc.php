@@ -142,7 +142,7 @@ class tweetlicops extends object {
 		        T("#cctweetboxinv").tweetBox({
 		            height: 80,
 		            width: 550,
-		            defaultContent: "@'.$name.' '.$msg.' '.$gourl.'",
+		            defaultContent: "@'.$screen_name.' '.$msg.' '.$gourl.'",
 		            label: "Tweet this!"
 		        });
 		
