@@ -46,6 +46,7 @@ class feedbk extends dbTable {
         $this->loadClass('label', 'htmlelements');
         //Load the button object
         $this->loadClass('button', 'htmlelements');
+        //$table = $this->newObject('htmltable', 'htmlelements');
 
         $strjs = '<script type="text/javascript">
 		//<![CDATA[
@@ -147,24 +148,22 @@ class feedbk extends dbTable {
         $objButton->setToSubmit();
         // Use the language object to label button
         // with the word save
-
         $objButton->setValue('' . $this->objLanguage->languageText("mod_libraryforms_savecomment", "libraryforms") . ' ');
-
-
-
         
+
+	// captcha
         $objCaptcha = $this->getObject('captcha', 'utilities');
         $captcha = new textinput('feedback_captcha');
         $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_feedback_captcha');
 
-    $strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . '<br /><div id="feedbackcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() . $required . '  <a href="javascript:feedbackredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
+    	$strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . 
+	'<br /><div id="feedbackcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() .
+	 $required . '<a href="javascript:feedbackredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
+       	 $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
+         $objForm->addRule('feedback_captcha', $this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be 		 empty.Captcha is missing.'), 'required');
+         $objForm->addToForm($objButton->show());
 
-        $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
-        $objForm->addRule('feedback_captcha', $this->objLanguage->languageText("mod_request_captcha_unrequired", 'libraryforms', 'Captcha cant be empty.Captcha is missing.'), 'required');
-        $objForm->addToForm($objButton->show());
-
-
-        return $objForm->show();
+      return $objForm->show();
     }
 
 

@@ -25,11 +25,11 @@ $this->loadClass('link', 'htmlelements');
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
 
 //link to Landing Page
-//$objLandingPage = new link($this->uri(array('action'=>'Back to Forms')));
-//$objLandingPage->link='Back to Forms';
-//$landinging = $objLandingPage->show();
+$objLandingPage = new link($this->uri(array('action'=>'Back to Forms')));
+$objLandingPage->link='Back to Forms';
+$landinging = $objLandingPage->show();
 $cssLayout->setNumColumns(2);
-//$cssLayout->setLeftColumnContent($landinging);
+$cssLayout->setLeftColumnContent($landinging);
 $cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
 

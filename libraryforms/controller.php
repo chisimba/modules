@@ -43,12 +43,14 @@ class libraryforms extends controller {
     public function dispatch($action) {
 
         //$action = $this->getParam('action');
-         $this->setLayoutTemplate('default_layout_tpl.php');
+         $this->setLayoutTemplate('editadd_tpl.php');
      
-          if($_POST){
+          //if($_POST){
 
         switch ($action) {
-
+                 
+                  default:
+                     return 'editadd_tpl.php';
            
             case 'addeditform':
                 return $this->saveRecord();
@@ -84,35 +86,7 @@ class libraryforms extends controller {
                 return 'fdbkconfirm_tpl.php';
 
           }// close for switch
-    }//end of function dispatch
-
-
-    else {
-       switch ($action)
-	{
-         default:
-                return 'homepage_tpl.php';
-                
-           case 'home':
-
-             return 'homepage_tpl.php';
-            
-            case 'tellus':
-                 return 'editadd_tpl.php';  
-            
-              case 'periodicalbooks': 
-                 return 'periodconfirm_tpl.php';
-             
-              case 'thesisbooks':
-                  return 'thesisconfirm_tpl.php';
-		
-		
-	} // end switch
-	
-} // end else 	
-
-}
-         
+    }//end of function dispatch     
 
     /*
      * Public Method that checks if all required fields are filled
@@ -150,7 +124,7 @@ class libraryforms extends controller {
         if (count($msg) > 0) {
             $this->setVarByRef('msg', $msg);
             $this->setVarByRef('insarr', $insarr);
-            return 'default_layout_tpl.php';
+            return 'editadd_tpl.php';
         }
         // insert into database
         $pid = $this->dbAddDistances->insertRecord($surname, $initials, $title, $studentno, $postaladdress,
@@ -209,7 +183,7 @@ class libraryforms extends controller {
         if (count($erormsg) > 0) {
             $this->setVarByRef('erormsg', $erormsg);
             $this->setVarByRef('insarr', $insarr);
-            return 'default_layout_tpl.php';
+            return 'editadd_tpl.php';
         }
 
         //insert into DB
@@ -261,7 +235,7 @@ class libraryforms extends controller {
         if (count($errormsg) > 0) {
             $this->setVarByRef('$errormsg', $errormsg);
             $this->setVarByRef('insarr', $insarr);
-            return 'default_layout_tpl.php';
+            return 'editadd_tpl.php';
         }
 
         //insert the data into DB
@@ -287,7 +261,7 @@ class libraryforms extends controller {
         $msg = $this->getParam('msgbox');
         $captcha = $this->getParam('feedback_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
+        if (md5(strtoupper($captcha)) != $this->getParam('feedback_captcha') || empty($captcha)) {
             $errormsg[] = 'badcaptcha';
         }
 
@@ -295,7 +269,7 @@ class libraryforms extends controller {
         if (count($errormsg) > 0) {
             $this->setVarByRef('errormsg', $errormsg);
             $this->setVarByRef('insarr', $insarr);
-            return 'default_layout_tpl.php';
+            return 'editadd_tpl.php';
         }
 
 
@@ -306,7 +280,7 @@ class libraryforms extends controller {
         // send email alert
         $subject = "Feed Back";
 
-        $this->sendEmailNotification($subject, $message = ' Name: ' . $name . '       '  .  "\n" . ' Email Adress: ' . $email . '   ' .  "\n".   ' Feed Back Message: ' . $msg);
+        $this->sendEmailNotification($subject, $message = ' Name: ' . $name . '       '  .  "\n" . ' Email Adress: ' .  $email . '   ' .  "\n".   ' Feed Back Message: ' . $msg);
     }
 
 // end of Submitmsg
@@ -328,6 +302,8 @@ class libraryforms extends controller {
         // send email
         $objMail->send();
     }
+   
+
 
 // end of notification email
 }
