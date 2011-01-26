@@ -70,7 +70,7 @@ class formmanager extends object {
         draggable:true
     });
 ";
-        if($allowStaffReg == 'true') {
+        if(strtolower( $allowStaffReg) == 'true') {
     /*
      * ================  Registration form  =======================
      */
@@ -109,7 +109,7 @@ class formmanager extends object {
 
         }
 
-        if($allowExternalReg == 'true') {
+        if(strtolower( $allowExternalReg) == 'true') {
             $regFormJS.=" var form = new Ext.form.FormPanel({
         baseCls: 'x-plain',
         labelWidth: 75,

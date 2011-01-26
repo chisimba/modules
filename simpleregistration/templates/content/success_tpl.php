@@ -52,7 +52,7 @@ $admin->link= $this->objLanguage->languageText('mod_simpleregistration_admin', '
 
 $admin=$this->objUser->isAdmin() ?$admin->show():"";
 $table->startRow();
-$table->addCell('<br/><br/><br/><br/>'.$home.'&nbsp;'.$admin);
+$table->addCell('<br/><br/><br/><br/>&nbsp;'.$admin);
 $table->endRow();
 
 $table->startRow();
