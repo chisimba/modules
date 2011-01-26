@@ -93,27 +93,20 @@ class sidebar extends object {
     public function showHomeSidebar() {
         $retstr = '<!-- Start: Sidebar -->
                 <div class="grid_1">
-                    <div id="Sidebar">
-                         <div id="facebook">';
-        $fbwidgetpath = $this->getResourceUri('fb-widget.inc.php', 'elsiskin');
-        $fh = fopen($fbwidgetpath, 'r'); // or die($php_errormsg);
-        $fbwidget = fread($fh, filesize($fbwidgetpath));
-        $retstr .= $fbwidget;
-        fclose($fh); // or die($php_errormsg);
+                    <div id="Sidebar">&nbsp;</div>
+                </div>
+                <!-- end .grid_1 -->
+                <!-- End: Sidebar -->';
 
-        $retstr .= '</div>
-                        <div id="twitter">';
+
+        /*$retstr .= $this->getFacebook();
+        $retstr .= '                <div id="twitter">';
         $twitwidgetpath = $this->getResourceUri('twi-widget.inc.php', 'elsiskin');
         $fh = fopen($twitwidgetpath, 'r'); // or die($php_errormsg);
         $twitwidget = fread($fh, filesize($twitwidgetpath));
         $retstr .= $twitwidget;
         fclose($fh); // or die($php_errormsg);
-        $retstr .= '</div>
-                    </div>
-                </div>
-                <!-- end .grid_1 -->
-                <!-- End: Sidebar -->';
-
+        $retstr .= '</div>*/
         return $retstr;
     }
 
@@ -166,6 +159,20 @@ class sidebar extends object {
 				</div>
 				 <!-- end .grid_1 -->
                 <!-- End: Sidebar -->';
+
+        return $retstr;
+    }
+
+    public function getFacebook() {
+        $retstr =
+        '<div id="facebook">';
+        $fbwidgetpath = $this->getResourceUri('fb-widget.inc.php', 'elsiskin');
+        $fh = fopen($fbwidgetpath, 'r'); // or die($php_errormsg);
+        $fbwidget = fread($fh, filesize($fbwidgetpath));
+        $retstr .= $fbwidget;
+        fclose($fh); // or die($php_errormsg);
+
+        $retstr .= '</div>';
 
         return $retstr;
     }
