@@ -70,5 +70,15 @@ class dbregistration extends dbTable{
         return $rows;
     }
 
+
+    public  function getRegistrationCount($eventid){
+            $sql="select count(id) as totalregistrations from ".$this->table." where event_id ='".$eventid."'";
+            $rows=$this->getArray($sql);
+            if(count($rows) > 0){
+                $row=$rows[0];
+                return $row['totalregistrations'];
+            }
+            return 0;
+    }
 }
 ?>

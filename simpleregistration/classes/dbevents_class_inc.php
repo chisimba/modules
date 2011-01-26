@@ -48,6 +48,11 @@ class dbevents extends dbTable {
     public function getMyEvents() {
         $sql =
                 "select * from " . $this->table . " where userid = '" . $this->objUser->userid() . "'";
+
+        if ($this->objUser->isAdmin()) {
+            $sql =
+                    "select * from " . $this->table;
+        }
         $rows = $this->getArray($sql);
         return $rows;
     }
