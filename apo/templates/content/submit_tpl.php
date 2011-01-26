@@ -26,7 +26,7 @@ echo $header->show();
 
 
 
-$efs = new fieldset();
+/*$efs = new fieldset();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {
 
@@ -38,16 +38,16 @@ if (count($errormessages) > 0) {
     $errorstr.='</li>';
     $efs->addContent($errorstr);
     $form->addToForm($efs);
-}
+}*/
 
-$legend = "<b>Submit</b>";
+//$legend = "<b>Submit</b>";
 $fs = new fieldset();
-$fs->setLegend($legend);
-$fs->addContent($label->show());
-$fs->addContent($table->show());
+//$fs->setLegend($legend);
+//$fs->addContent($label->show());
+//$fs->addContent($table->show());
 $form->addToForm($fs->show());
 
-$button = new button('submit', $this->objLanguage->languageText('word_submit'));
+$button = new button('submit', "Submit");
 $button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 

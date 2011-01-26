@@ -25,7 +25,7 @@ echo $header->show();
 
 
 
-$efs = new fieldset();
+/*$efs = new fieldset();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {
 
@@ -37,16 +37,16 @@ if (count($errormessages) > 0) {
     $errorstr.='</li>';
     $efs->addContent($errorstr);
     $form->addToForm($efs);
-}
+}*/
 
-$legend = "<b>Forward to</b>";
+
 $fs = new fieldset();
-$fs->setLegend($legend);
-$fs->addContent($label->show());
-$fs->addContent($table->show());
+
+//$fs->addContent($label->show());
+//$fs->addContent($table->show());
 $form->addToForm($fs->show());
 
-$button = new button('forward', $this->objLanguage->languageText('word_forward'));
+$button = new button('forward', "Forward");
 $button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 
