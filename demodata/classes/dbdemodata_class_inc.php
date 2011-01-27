@@ -3,7 +3,9 @@
  *
  * Demo data
  *
- * Creates demo data for an installation, allowing for test data such as users, etc. as well as enabling the carrying out of a demonstration using fake data.
+ * Creates demo data for an installation, allowing for test data such as
+ * users, etc. as well as enabling the carrying out of a demonstration
+ * using fake data.
  *
  * PHP version 5
  *
