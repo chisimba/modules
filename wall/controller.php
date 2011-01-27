@@ -165,10 +165,14 @@ class wall extends controller
 
     private function __getsimpleblogwall()
     {
+        $str = NULL;
         $objGuessWall = $this->getObject('wallguesser','wall');
         $wallType = $objGuessWall->guessWall();
         $objWallOps = $this->getObject('wallops', 'wall');
-        $str = $objWallOps->showWall($wallType);
+        $keyValue = $this->getParam('identifier', FALSE);
+        if ($keyValue) {
+            $str = $objWallOps->showObjectWall('identifier', $keyValue);
+        }
         die($str);
         //$this->setVarByRef('str', $str);
         //return "dump_tpl.php";

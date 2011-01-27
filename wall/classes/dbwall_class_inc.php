@@ -156,7 +156,8 @@ class dbwall extends dbtable
         }
         $startPoint = $page * $num;
         $tail =  " ORDER BY datecreated DESC LIMIT {$startPoint}, {$num} ";
-        $posts = $this->getArray($baseSql . $filter . $tail);
+        $sql = $baseSql . $filter . $tail;
+        $posts = $this->getArray($sql);
         return $posts;
     }
     
@@ -196,12 +197,7 @@ class dbwall extends dbtable
             $filter = " WHERE walltype = '{$wallType}' AND {$keyName} = '{$keyValue}' ";
             return $filter;
         }
-
-
-
-
-        
-        // Create the filter based on walltype
+        // Create the filter based on walltype.
         if ($wallType == '3') {
             // Next check if they are in a context.
             $objContext = $this->getObject('dbcontext', 'context');
@@ -289,7 +285,7 @@ class dbwall extends dbtable
                     $postedWhere = NULL;
                 }
             } elseif ($wallType == '4') {
-                $identifier = $this->getParam('keyValue', NULL);
+                $identifier = $this->getParam('identifier', NULL);
                 $postedWhere = $this->objLanguage->languageText("mod_wall_onsimpleblogwall", "wall", "Wrote on a blog post wall.");
             } elseif ($wallType == '1') {
                 $identifier="sitewall";

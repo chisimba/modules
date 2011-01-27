@@ -6,17 +6,20 @@
  *
  */
 
+// Remove HTML from wall posts
 function stripHTML(source){
 	var strippedText = source.replace(/<\/?[^>]+(>|$)/g, "");
 	return strippedText;
 }
 
+// Turn links into active links
 function replaceURLWithHTMLLinks(source) {
   var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
    replaced = source.replace(exp,"<a href='$1' target='_blank'>$1</a>"); 
    return replaced;
 }
 
+// The main jQuery for the wall
 jQuery(function() {
 
     var id;
@@ -24,24 +27,19 @@ jQuery(function() {
     var fixedid;
     var target;
     var wallid;
-
-    // Function to do the oembed magic
-    jQuery(".msg a").oembed(null, {
-        embedMethod: "append",
-        maxWidth: 480
-    });
-    
+   
     // Function for getting additional wall posts.
-    var dataStrBase = "walltype="+wallType+"&key="+keyValue+"&page=";
+    var dataStrBase = "walltype="+wallType+"&page=";
     jQuery(".wall_posts_more").live("click", function(){
         id=jQuery(this).attr("id");
         fixedid = id.replace("more_posts_", "");
+        jQuery("#"+id).html('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
         jQuery.ajax({
             url: "index.php?module=wall&action=getmoreposts&wallid="+fixedid,
             type: "GET",
-            data: dataStrBase+page+"&source=ORIGINAL",
+            data: dataStrBase+page+"&key="+fixedid,
             success: function(ret) {
-                jQuery("#"+id).html("");
+                jQuery("#"+id).remove();
                 ret ='<div class="wall_post_append">'+ret+'</div>';
                 jQuery("#wall_"+fixedid).append(ret);
                 page=page+1;
@@ -59,7 +57,7 @@ jQuery(function() {
             jQuery(".shareBtn").attr("disabled", "disabled");
             var tmpOnlytxt = jQuery("#wall_onlytext_"+id).html();
             target = jQuery("#target_"+id).val();
-            alert(target);
+            //alert(target);
             jQuery("#wall_onlytext_"+id).html('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
             status_text = stripHTML(status_text); // clean all html tags
             status_text = replaceURLWithHTMLLinks(status_text); // replace links with HTML anchor tags.

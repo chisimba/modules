@@ -131,7 +131,9 @@ class wallops extends object
         $oEmb = $this->getObject('jqoembed', 'oembed');
         $oEmb->loadOembedPlugin();
         // Load the functions specific to this module.
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('functions.js'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('oembed.js'));
+        // Load the functions specific to this module.
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('wall.js'));
         // Instantiate the user object.
         $this->objUser = $this->getObject('user', 'security');
         // Instantiate the language object.
@@ -140,6 +142,35 @@ class wallops extends object
         $this->objDd = $this->getObject('translatedatedifference', 'utilities');
         // Load all javascript values so they are available to the included script
         $this->loadScript();
+    }
+
+    /**
+     *
+     * Get an object wall (walltype=4, retrieve by identifier)
+     *
+     * @param string $keyName The key (should  always be identifier, but I made it generic)
+     * @param string $keyValue The 'identifier' string for the object wall
+     * @param integer $page The page number
+     * @param integer $num The number of items per page
+     * @return string The rendered wall
+     * 
+     */
+    public function showObjectWall($keyName, $keyValue, $page=0, $num=10)
+    {
+        $wallType = 4;
+        $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num);
+        $numPosts = $this->objDbwall->countPosts($wallType, FALSE, $keyName, $keyValue);
+        if ($numPosts <= 10) {
+            return $this->addToWrapper(
+                $this->showPostBox($wallType, $keyName, $keyValue)
+                . $this->showPosts($posts, $numPosts, $wallType, $keyValue, $num, TRUE, $keyValue), $keyValue
+            );
+        } else {
+            return $this->addToWrapper(
+                $this->showPostBox($wallType, $keyName, $keyValue)
+                . $this->showPosts($posts, $numPosts, $wallType, $keyValue, $num, FALSE), $keyValue
+            );
+         }
     }
 
     /**
@@ -159,6 +190,7 @@ class wallops extends object
             case "4":
                 $keyName = 'identifier';
                 $keyValue = $this->getParam($keyName, NULL);
+                $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num);
                 break;
             case "3":
                 $objContext = $this->getObject('dbcontext', 'context');
@@ -166,6 +198,7 @@ class wallops extends object
                     $currentContextcode = $objContext->getcontextcode();
                     $keyValue = $currentContextcode;
                     $keyName = 'identifier';
+                    $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num);
                 } else {
                     // @TODO deal with this situation better
                     return NULL;
@@ -176,17 +209,15 @@ class wallops extends object
                 $ownerId = $objGuessUser->guessUserId();
                 $keyValue = $ownerId;
                 $keyName = 'ownerid';
-
+                $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num, $ownerId);
                 break;
             case "1":
             default:
                 $keyName = 'identifier';
                 $keyValue = 'sitewall';
                 $posts = $this->objDbwall->getMorePosts($wallType, 0, NULL, NULL, 10);
-                //$posts = $this->objDbwall->getWall($wallType, $num);
                 break;
         }
-        $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue, $num);         
         $numPosts = $this->objDbwall->countPosts($wallType, FALSE, $keyName, $keyValue);
 
 
@@ -201,12 +232,12 @@ class wallops extends object
         if ($numPosts <= 10) {
             return $this->addToWrapper(
                 $this->showPostBox($wallType, $keyName, $keyValue)
-                . $this->showPosts($posts, $numPosts, $wallType, $num, TRUE, $keyValue), $keyValue
+                . $this->showPosts($posts, $numPosts, $wallType, $keyValue, $num, TRUE, $keyValue), $keyValue
             );
         } else {
             return $this->addToWrapper(
                 $this->showPostBox($wallType, $keyName, $keyValue)
-                . $this->showPosts($posts, $numPosts, $wallType, $num, FALSE, $keyValue), $keyValue
+                . $this->showPosts($posts, $numPosts, $wallType, $keyValue, $num, FALSE), $keyValue
             );
          }
 
@@ -270,8 +301,8 @@ class wallops extends object
                     }
                     break;
                 case "4";
-                    $keyValue = $this->getParam('', FALSE);
                     $keyName = 'identifier';
+                    $keyValue = $wallid;
                     break;
                 case "1":
                 case "sitewall":
@@ -305,7 +336,7 @@ class wallops extends object
             $rem = $totalPages-$pageDisp;
             //die($keyname . ' = ' . $keyValue);
             $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue);
-            $ret .= $this->showPosts($posts, $numPosts, $wallType, 10, $hideMoreLink, $wallid);
+            $ret .= $this->showPosts($posts, $numPosts, $wallType, $wallid, 10, $hideMoreLink);
         } else {
             $ret = $this->objLanguage->languageText("mod_wall_nowalltype", "wall", "No wall type given");
         }
@@ -324,7 +355,7 @@ class wallops extends object
      * @return string The formatted wall posts and their comments
      *
      */
-    public function showPosts($posts, $numPosts, $wallType, $num=10, $hideMorePosts=FALSE, $wallid) {
+    public function showPosts($posts, $numPosts, $wallType, $wallid, $num=10, $hideMorePosts=FALSE) {
         // Initialize the comments string.
         $comments = NULL;
         $ret=NULL;
@@ -487,16 +518,24 @@ class wallops extends object
     * @return string The input box and button
     *
     */
-    private function showPostBox($wallType, $keyName, $keyValue)
+    private function showPostBox($wallType, $keyName, $keyValue, $ownerId=FALSE)
     {
         $wallid = $keyValue;
         if ( $this->objUser->isLoggedIn() ) {
-            $target = $this->uri(array(
-              'action' => 'save',
-              'ownerid' => $ownerId,
-              'walltype' => $wallType,
-              $keyName => $keyValue
-            ), 'wall');
+            if ($ownerId) {
+                $target = $this->uri(array(
+                  'action' => 'save',
+                  'ownerid' => $ownerId,
+                  'walltype' => $wallType,
+                  $keyName => $keyValue
+                ), 'wall');
+            } else {
+                $target = $this->uri(array(
+                  'action' => 'save',
+                  'walltype' => $wallType,
+                  $keyName => $keyValue
+                ), 'wall');
+            }
             $target = str_replace('&amp;', "&", $target);
 
             $onlyText = $this->objLanguage->languageText("mod_wall_onlytext",
