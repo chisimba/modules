@@ -156,6 +156,7 @@ class feedbk extends dbTable {
         $captcha = new textinput('feedback_captcha');
         $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_feedback_captcha');
 
+      $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
     	$strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . 
 	'<br /><div id="feedbackcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() .
 	 $required . '<a href="javascript:feedbackredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
