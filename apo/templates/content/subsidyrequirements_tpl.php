@@ -17,6 +17,13 @@ $this->loadClass('dropdown', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 
+$formdata = $this->objformdata->getFormData("subsidyrequirements", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+$action = 'showoutcomesandassessmentone';
+$form = new form('subsidyrequirementsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'subsidyrequirements')));
+
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section C: Subsidy Requirements');
 
 $header = new htmlheading();
@@ -71,8 +78,6 @@ $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
 
-$action = 'showoutcomesandassessmentone';
-$form = new form('subsidyrequirementsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'subsidyrequirements')));
 /* if ($mode == 'edit') {
   $legend = "Edit document";
   } */

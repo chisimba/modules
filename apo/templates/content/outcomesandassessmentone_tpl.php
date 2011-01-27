@@ -16,6 +16,14 @@ $this->loadClass('dropdown', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 
+$formdata = $this->objformdata->getFormData("outcomesandassessmenttwo", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+
+$action = 'showoutcomesandassessmenttwo';
+$form = new form('outcomesandassessmentoneform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'outcomesandassessmentone')));
+
 $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section D: Outcomes and Assessment - Page One');
 
 $header = new htmlheading();
@@ -201,9 +209,6 @@ $table->endRow();
 $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($table->show());
-
-$action = 'showoutcomesandassessmenttwo';
-$form = new form('outcomesassessmentform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'outcomesandassessmentone')));
 
 $hiddenSelected = new hiddeninput('selected', $cfile);
 $form->addToForm($hiddenSelected->show());

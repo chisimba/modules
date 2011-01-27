@@ -13,6 +13,14 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->setVar('pageSuppressXML', TRUE);
 
+$formdata = $this->objformdata->getFormData("outcomesandassessmentone", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+
+$action = 'showoutcomesandassessmentthree';
+$form = new form('outcomesandassessmenttwoform', $this->uri(array('action' => $action,'id' => $id, 'formname'=>'outcomesandassessmenttwo')));
+
 $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section D: Outcomes and Assessments - Page Two');
 
 $header = new htmlheading();
@@ -68,9 +76,6 @@ $fs->addContent($links);
 echo $fs->show() . '<br/>';
 
 $legend = "<b>Section D: Outcomes and Assessment - Page Two</b>";
-$action = 'showoutcomesandassessmentthree';
-
-$form = new form('outcomesandassessmenttwoform', $this->uri(array('action' => $action,)));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 

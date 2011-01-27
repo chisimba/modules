@@ -18,7 +18,7 @@ $this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 
-//$action = 'saveoverview';
+//$action = 'savingFormData';
 //$nextaction="showrulesandsyllabus";
 $action = 'showrulesandsyllabusone';
 

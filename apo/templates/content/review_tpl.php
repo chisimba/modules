@@ -17,6 +17,14 @@ $this->loadClass('textarea', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 
+$formdata = $this->objformdata->getFormData("review", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+
+$action = 'showcontactdetails';
+$form = new form('reviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'review')));
+
 $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section G: Review');
 
 $header = new htmlheading();
@@ -73,9 +81,8 @@ echo $fs->show() . '<br/>';
 
 $legend = "<b>Section G: Review</b>";
 
-$action = 'showcontactdetails';
-$form = new form('reviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'review')));
-$form = new form('reviewform', $this->uri(array('action' => 'showcontactdetails')));
+
+//$form = new form('reviewform', $this->uri(array('action' => 'showcontactdetails')));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 

@@ -12,6 +12,14 @@ $this->loadClass('textarea', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 
+$formdata = $this->objformdata->getFormData("collaborationandcontracts", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+
+$action = 'showreview';
+$form = new form('collaborationandcontractsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'collaborationandcontracts')));
+
 $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section F: Collaboration and Contacts');
 
 $header = new htmlheading();
@@ -67,8 +75,7 @@ $fs->addContent($links);
 echo $fs->show() . '<br/>';
 
 $legend = "<b>Section F: Collaboration and Contacts</b>";
-$action = 'showreview';
-$form = new form('collaborationandcontactsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'collaborationandcontracts')));
+
 
 $table = $this->newObject('htmltable', 'htmlelements');
 

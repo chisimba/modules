@@ -968,25 +968,97 @@ class apo extends controller {
             $formdata["a3"] = $this->getParam("a3");
             $formdata["a4"] = $this->getParam("a4");
             $formdata["a5"] = $this->getParam("a5");
-        } else if ($formname == "rulesandsyllabusone") {
-            
-        } else if ($formname == "rulesandsyllabustwo") {
-            
-        } else if ($formname == "subsidyrequirements") {
+        } 
+        else if ($formname == "rulesandsyllabusone") {
+            $formdata["b1"] = $this->getParam("b1");
+            $formdata["b2"] = $this->getParam("a2");
+            $formdata["b3a"] = $this->getParam("b3a");
+            $formdata["b4a"] = $this->getParam("b4a");
+            $formdata["b4b"] = $this->getParam("b4b");
+            $formdata["b4c"] = $this->getParam("b4c");
+        } 
+        else if ($formname == "rulesandsyllabustwo") {
+            $formdata["b5a"] = $this->getParam("b5a");
+            $formdata["b5b"] = $this->getParam("b5b");
+            $formdata["b6a"] = $this->getParam("b6a");
+            $formdata["b6b"] = $this->getParam("b6b");
+            $formdata["b6c"] = $this->getParam("b6c");
+        }
+        else if ($formname == "subsidyrequirements") {
+            $formdata["c1"] = $this->getParam("c1");
+            $formdata["c2a"] = $this->getParam("c2a");
+            $formdata["c2b"] = $this->getParam("c2b");
+            $formdata["c3"] = $this->getParam("c3");
+            $formdata["c4a"] = $this->getParam("c4a");
+            $formdata["c4b1"] = $this->getParam("c4b1");
+            $formdata["c4b2"] = $this->getParam("c4b1");
             
         } else if ($formname == "outcomesandassessmentone") {
+
+            $formdata["d1a"] = $this->getParam("d1a");
+            $formdata["d1b"] = $this->getParam("d1b");
+            $formdata["d2a"] = $this->getParam("d2a");
+            $formdata["d2b"] = $this->getParam("d2b");
+            $formdata["d2c"] = $this->getParam("d2c");
+            $formdata["d3"] = $this->getParam("d3");
+
             
         } else if ($formname == "outcomesandassessmenttwo") {
+
+           
             
         } else if ($formname == "outcomesandassessmentthree") {
+            $formdata["a"] = $this->getParam("a");
+            $formdata["b"] = $this->getParam("b");
+            $formdata["c"] = $this->getParam("c");
+            $formdata["d"] = $this->getParam("d");
+            $formdata["e"] = $this->getParam("e");
+            $formdata["f"] = $this->getParam("f");
+            $formdata["g"] = $this->getParam("g");
+            $formdata["h"] = $this->getParam("h");
+            $formdata["i"] = $this->getParam("i");
             
         } else if ($formname == "resources") {
+            $formdata["e1a"] = $this->getParam("e1a");
+            $formdata["e1b"] = $this->getParam("e1b");
+            $formdata["e2a"] = $this->getParam("e2a");
+            $formdata["e2b"] = $this->getParam("e2b");
+            $formdata["e2c"] = $this->getParam("e2c");
+            $formdata["e3a"] = $this->getParam("e3a");
+            $formdata["e3b"] = $this->getParam("e3b");
+            $formdata["e3c"] = $this->getParam("e3c");
+            $formdata["e4"] = $this->getParam("e4");
+            $formdata["e5a"] = $this->getParam("e5a");
+            $formdata["e5b"] = $this->getParam("e5b");
             
-        } else if ($formname == "collaborationsandcontracts") {
+        } else if ($formname == "collaborationandcontracts") {
+
+            $formdata["f1a"] = $this->getParam("f1a");
+            $formdata["f1b"] = $this->getParam("f1b");
+            $formdata["f2a"] = $this->getParam("f2a");
+            $formdata["f2b"] = $this->getParam("f2b");
+            $formdata["f3a"] = $this->getParam("f3a");
+            $formdata["f3b"] = $this->getParam("f3b");
+            $formdata["f4"] = $this->getParam("f4");
             
         } else if ($formname == "review") {
+
+            $formdata["g1a"] = $this->getParam("g1a");
+            $formdata["g1b"] = $this->getParam("g1b");
+            $formdata["g2a"] = $this->getParam("g2a");
+            $formdata["g2b"] = $this->getParam("g2b");
+            $formdata["g3a"] = $this->getParam("g3a");
+            $formdata["g3b"] = $this->getParam("g3b");
+            $formdata["g4a"] = $this->getParam("g4a");
+            $formdata["g4b"] = $this->getParam("g4b");
+
             
         } else if ($formname == "contact details") {
+            $formdata["h1"] = $this->getParam("h1");
+            $formdata["h2a"] = $this->getParam("h2a");
+            $formdata["h2b"] = $this->getParam("h2b");
+            $formdata["h3a"] = $this->getParam("h3a");
+            $formdata["h3b"] = $this->getParam("h3b");
 
         }
         $this->objformdata->saveData($docid, $formname, $formdata);
@@ -1216,6 +1288,9 @@ class apo extends controller {
         if ($c4b1 == null || $c4b2 == null) {
             $errormessages[] = "Please provide an answer for C.4.b";
         }
+        if ($c4b2 == null) {
+            $errormessages[] = "Please provide an answer for C.4.b";
+        }
 
         if (count($errormessages) > 0) {
 
@@ -1249,7 +1324,7 @@ class apo extends controller {
 //$c3->label='CEMS (must be 6 characters)';
 //$surname->label='Surname (must be less than 15 characters)';
 //$formname->addRule(array('name'=>'c3','length'=>6), 'Check CESM manual','maxlength');
-//$objForm->addRule(array('name'=>'surname','length'=>6), 'Your surname is too long',
+//$objForm->addRule(array('name'=>'surname','length'=>6), 'Your surname is too long',*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1301,7 +1376,7 @@ class apo extends controller {
             $this->setVarByRef("d3", $d3);
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
-            return "rulesandsyllabustwo_tpl.php";
+            return "outcomesandassessmentone_tpl.php";
         }
 
         $formdata = array();
@@ -1326,7 +1401,7 @@ class apo extends controller {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
 
-        $errormessages = array();
+  /*      $errormessages = array();
 
         $a = $this->getParam("a");
         $b = $this->getParam("b");
@@ -1386,7 +1461,7 @@ class apo extends controller {
         $formdata["h"] = $h;
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
-
+*/
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1397,6 +1472,7 @@ class apo extends controller {
 
     public function __showresources() {
         $id = $this->getParam("id");
+
         $formname = $this->getParam('formname');
 
         $errormessages = array();
@@ -1478,6 +1554,8 @@ class apo extends controller {
 
     public function __showcollaborationandcontracts() {
         $id = $this->getParam("id");
+   //     Print_r($id);
+    //    die();
         $formname = $this->getParam('formname');
 
         $errormessages = array();
@@ -1574,7 +1652,7 @@ class apo extends controller {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
 
-        $errormessages = array();
+     //   $errormessages = array();
 
         $f1a = $this->getParam("f1a");
         $f1b = $this->getParam("f1b");
@@ -1583,7 +1661,7 @@ class apo extends controller {
         $f3a = $this->getParam("f3a");
         $f3b = $this->getParam("f3b");
         $f4 = $this->getParam("f4");
-
+/*
         if ($f1a == null) {
             $errormessages[] = "Please provide an answer for F.1.a";
         }
@@ -1631,7 +1709,7 @@ class apo extends controller {
             $mode = "fixup";
             $this->setVarByRef("mode", $mode);
             return "collaborationandcontracts_tpl.php";
-        }
+        }*/
 
         $formdata = array();
         $formdata["f1a"] = $f1a;
