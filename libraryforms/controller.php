@@ -252,8 +252,9 @@ class libraryforms extends controller {
 		$studentno . '  ' . "\n". ' Course   '.$course . "\n" . ' Student Identification: ' . $overseas . "\n" . ' Level of User: ' . $undergrad );
     }
 
-//  end saveperiodicalRecord
-    public function submitmsg() {
+// end of periodical method
+
+ public function submitmsg() {
 
         //get parametters
         $name = $this->getParam('feedback_name');
@@ -261,7 +262,7 @@ class libraryforms extends controller {
         $msg = $this->getParam('msgbox');
         $captcha = $this->getParam('feedback_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('feedback_captcha') || empty($captcha)) {
+        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
             $errormsg[] = 'badcaptcha';
         }
 
@@ -280,7 +281,7 @@ class libraryforms extends controller {
         // send email alert
         $subject = "Feed Back";
 
-        $this->sendEmailNotification($subject, $message = ' Name: ' . $name . '       '  .  "\n" . ' Email Adress: ' .  $email . '   ' .  "\n".   ' Feed Back Message: ' . $msg);
+        $this->sendEmailNotification($subject, $message = ' Name: ' . $name . '       '  .  "\n" . ' Email Adress: ' . $email . '   ' .  "\n".   ' Feed Back Message: ' . $msg);
     }
 
 // end of Submitmsg
