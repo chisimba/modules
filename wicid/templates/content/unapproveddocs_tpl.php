@@ -25,11 +25,17 @@ $unapproveddocs->link = "Unapproved/New documents";
 $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments")));
 $rejecteddocuments->link = "Rejected documents";
 
+if($this->objUser->isAdmin()){
+  echo  $this->objUtils->showCreateFolderForm($tobeeditedfoldername);
+}
+
 
 $links = $newdoclink->show() . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
 $fs = new fieldset();
 $fs->setLegend('Navigation');
 $fs->addContent($links);
+
+
 
 echo $fs->show() . '<br/>';
 

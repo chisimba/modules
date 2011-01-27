@@ -68,13 +68,15 @@ class dbdocuments extends dbtable {
           $sql.=" and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
           } */
 
-        $sql = "select * from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= '$rejected'";
+        $sql = "select * from tbl_wicid_documents where (deleteDoc = 'N' or deleteDoc is null) and  (active='N' or active is null)
+        and (rejectDoc= '$rejected' or rejectDoc is null)";
         if (!$this->objUser->isadmin()) {
 
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
         $sql.=' order by puid DESC';
 
+        
         $rows = $this->getArray($sql);
         $docs = array();
         //print_r($rows);

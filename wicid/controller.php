@@ -118,7 +118,11 @@ class wicid extends controller {
      */
     public function __home() {
         $selected = "unapproved";
+
+        $tobeeditedfoldername = "";
         $documents = $this->documents->getdocuments($this->mode);
+        $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
+
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
         return "unapproveddocs_tpl.php";
@@ -191,8 +195,8 @@ class wicid extends controller {
         if ($dir == $basedir) {
             $selected = "";
         }
-        $files=$this->objUtils->getFiles($dir);
-         $this->setVarByRef("files", $files);
+        $files = $this->objUtils->getFiles($dir);
+        $this->setVarByRef("files", $files);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
         $selected = $this->baseDir . $selected;
@@ -299,13 +303,15 @@ class wicid extends controller {
      * @return <type>
      */
     public function __createfolder() {
-        $path = $this->getParam('folderpath');
+        $path = $this->getParam('parentfolder');
         $name = $this->getParam('foldername');
+
         if (!$path) {
             $path = "";
         }
+
         $this->objUtils->createFolder($path, $name);
-        return $this->nextAction('getFolders', array());
+        $this->nextAction('unapproveddocs');
     }
 
     /**
@@ -742,7 +748,9 @@ class wicid extends controller {
 
             $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
 
-            return $this->nextAction('erroriframe', array('message' => 'Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf', 'file' => $filename, 'id' => $generatedid));
+            //return $this->nextAction('erroriframe', array('message' => 'Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf', 'file' => $filename, 'id' => $generatedid));
+            $message='Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf';
+            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => '','message'=>$message));
         } else {
 
             $filename = $result['filename'];
@@ -788,7 +796,7 @@ class wicid extends controller {
 
             $result = $this->objUploadTable->saveFileInfo($data);
             $this->documents->updateInfo($docid, array("ext" => $ext, "upload" => "Y"));
-            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename));
+            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename,'message'=>'file uploaded'));
         }
     }
 
@@ -808,6 +816,9 @@ class wicid extends controller {
 
         $filename = $this->getParam('filename');
         $this->setVarByRef('filename', $filename);
+
+        $message=$this->getParam('message');
+        $this->setVarByRef('message',$message);
 
         return 'ajaxuploadresults_tpl.php';
     }

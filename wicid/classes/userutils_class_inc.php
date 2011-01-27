@@ -41,6 +41,7 @@ class userutils extends object {
 
     public function init() {
         //instantiate the language object
+        $this->loadClass('fieldset', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('treemenu', 'tree');
         $this->loadClass('label', 'htmlelements');
@@ -454,7 +455,7 @@ class userutils extends object {
      * allows the user to donwload the selected file
      * @param <type> $filename
      */
-    function downloadFile($filepath,$filename) {
+    function downloadFile($filepath, $filename) {
 
         //check if user has access to the parent folder before accessing it
 
@@ -485,7 +486,7 @@ class userutils extends object {
         // Get a date and timestamp
         $today = date("F j, Y, g:i a");
         $time = time();
-       
+
 
         // Send file headers
         header("Content-type: $type");
@@ -665,10 +666,13 @@ class userutils extends object {
     function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
         $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $folders = $this->listdir($baseFolder);
-
+        $icon = "";
+        $expandedIcon = "";
+        $cssClass = "";
+        $defaultIndex = 0;
         sort($folders, SORT_LOCALE_STRING);
         if ($selected == '') {
-            $selected = $folders[0];
+            $selected = $folders[$defaultIndex];
         }
         $baseFolderId = "0";
         $objfolders = $this->getObject('dbfolderpermissions');
@@ -689,6 +693,7 @@ class userutils extends object {
             } else {
                 $cssClass = '';
             }
+
             $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
             $count = $documents->getRejectedDocsCount();
             $rejectedDocs = "$count Rejected documents";
@@ -699,8 +704,11 @@ class userutils extends object {
                 $cssClass = '';
             }
             $rejectedDocsNode = new treenode(array('text' => $rejectedDocs, 'link' => $this->uri(array('action' => 'rejecteddocuments', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
-            $allFilesNode->addItem($newDocsNode);
-            $allFilesNode->addItem($rejectedDocsNode);
+
+            if ($treeType != 'htmldropdown') {
+                $allFilesNode->addItem($newDocsNode);
+                $allFilesNode->addItem($rejectedDocsNode);
+            }
         }
 //Create a new tree
         $menu = new treemenu();
@@ -752,36 +760,57 @@ class userutils extends object {
         return $treeMenu->getMenu();
     }
 
-    function showCreateFolderForm($folderPath, $selected) {
-        if ($folderPath == FALSE) {
-            return '';
-        }
+    /* function showCreateFolderForm($folderPath, $selected) {
+      if ($folderPath == FALSE) {
+      return '';
+      }
 
-        $folderParts = explode('/', $folderPath);
+      $folderParts = explode('/', $folderPath);
 
-        $form = new form('createfolder', $this->uri(array('action' => 'createfolder')));
+      $form = new form('createfolder', $this->uri(array('action' => 'createfolder')));
 
-        $label = new label('Create a ' . $this->modeLabel . ' in: ', 'input_parentfolder');
+      $label = new label('Create a ' . $this->modeLabel . ' in: ', 'input_parentfolder');
 
 
-        $form->addToForm($label->show() . $this->getTree('htmldropdown', $selected));
+      $form->addToForm($label->show() . $this->getTree('htmldropdown', $selected));
 
-        // $objInputMasks = $this->getObject('inputmasks', 'htmlelements');
-        // echo $objInputMasks->show();
+      // $objInputMasks = $this->getObject('inputmasks', 'htmlelements');
+      // echo $objInputMasks->show();
 
+      $textinput = new textinput('foldername');
+      //$textinput->setCss('text input_mask anytext');
+
+      $label = new label('Name of ' . $this->modeLabel . ': ', 'input_foldername');
+
+      $form->addToForm(' &nbsp; ' . $label->show() . $textinput->show());
+
+      $button = new button('create', 'Create ' . $this->modeLabel);
+      $button->setToSubmit();
+
+      $form->addToForm(' ' . $button->show());
+
+      return $form->show();
+      } */
+
+    function showCreateFolderForm($name='') {
+
+        $form = new form('createdepartment', $this->uri(array('action' => 'createfolder')));
         $textinput = new textinput('foldername');
-        //$textinput->setCss('text input_mask anytext');
-
-        $label = new label('Name of ' . $this->modeLabel . ': ', 'input_foldername');
-
+        $textinput->value = $name;
+        $label = new label('Name of ' . $this->modeLabel . ': ', 'input_parentfolder');
+        $form->addToForm("<br/>Create in " . $this->getTree('htmldropdown'));
         $form->addToForm(' &nbsp; ' . $label->show() . $textinput->show());
+
 
         $button = new button('create', 'Create ' . $this->modeLabel);
         $button->setToSubmit();
 
-        $form->addToForm(' ' . $button->show());
+        $form->addToForm('<br/>' . $button->show());
 
-        return $form->show();
+        $fs = new fieldset();
+        $fs->setLegend($this->modeLabel);
+        $fs->addContent($form->show());
+        return $fs->show();
     }
 
 }
