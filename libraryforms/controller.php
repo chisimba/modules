@@ -22,6 +22,11 @@ class libraryforms extends controller {
     public $objLanguage;
     public $required;
     protected $objMail;
+    var $errormsg;
+    var $msg;
+    var $erormsg;
+    
+
 
     public function init() {
 
@@ -193,7 +198,7 @@ class libraryforms extends controller {
                         $entitynum, $studentno, $course, $local, $postgrad);
 
 // after inserting into db send email alert
-        $subject = "Book thesis record";
+        $subject = "Book thesis request";
         $this->sendEmailNotification($subject,
         $message = ' Author: '. $author . '  ' .  "\n" . ' Title : ' . $title . '  '  .  "\n" .' Place: ' . $place . '  ' .  "\n" .' Publisher:  '.$publisher . '  '  .   "\n" . ' date: '.
 	$date . '   '  .   "\n" . ' Edition: ' . $edition . '  ' .  "\n" .' ISBN: ' . $isbn . '  ' .  "\n" . ' Series: ' . $series . '  ' .  "\n" .' Copy: ' . 
@@ -243,7 +248,7 @@ class libraryforms extends controller {
                         $author, $titlearticle, $prof, $address, $cell, $tell,
                         $tellw, $emailaddress, $entitynum, $studentno, $course, $overseas,$undergrad);
 
-        $subject = "Periodical Book Record";
+        $subject = "Periodical Book Request";
         $this->sendEmailNotification($subject,
                 $message = ' Title Periodical:   '.  $titleperiodical  . '   ' .  "\n". ' Volume:   '.  $volume . '   ' . "\n". ' Part:   '. $part . '   ' . "\n". ' Year:   '. 
 		$year . '   ' . "\n" . ' Pages:   '.$pages . '   ' . "\n". 'Author   '. $author . '   ' . "\n". ' Title Article   '. $titlearticle . '   ' . "\n". ' Prof:   '.
