@@ -94,7 +94,7 @@ class wiki extends controller {
             $this->setSession('wiki_id', 'init_1');
         }
         // Load scriptaclous since we can no longer guarantee it is there
-        $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+        $scriptaculous = $this->getObject('scriptaculous', 'prototype');
         $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
     }
 
