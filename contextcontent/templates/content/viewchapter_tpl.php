@@ -4,9 +4,14 @@ $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 
-//A link to adding a page
-$addPageLink = new link($this->uri(array('action' => 'addpage', 'context' => $this->contextCode, 'chapter' =>  $chapterId)));
-$addPageLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages', 'contextcontent');
+if ($this->isValid('addpage')) {
+    //A link to adding a page
+    $addPageLink = new link($this->uri(array('action' => 'addpage', 'context' => $this->contextCode, 'chapter' =>  $chapterId)));
+    $addPageLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages', 'contextcontent');
+    $addPage = $addPageLink->show();
+} else {
+    $addPage = '';
+}
 
 $nextPage = "";
 $chapterList = "";
@@ -37,7 +42,7 @@ $table->startRow();
 $table->cssClass = "pagenavigation";
 $table->addCell($chapterList, '25%', 'top');
 $table->addCell($editChapter, '25%', 'top');
-$table->addCell($addPageLink->show(),'25%', 'top');
+$table->addCell($addPage, '25%', 'top');
 $table->addCell($nextPage, '25%', 'top', 'right');
 $table->endRow();
 
@@ -47,7 +52,7 @@ $topTable->startRow();
 $topTable->cssClass = "toppagenavigation";
 $topTable->addCell($chapterList, '25%', 'top');
 $topTable->addCell($editChapter, '25%', 'top');
-$topTable->addCell($addPageLink->show(),'25%', 'top');
+$topTable->addCell($addPage, '25%', 'top');
 $topTable->addCell($nextPage, '25%', 'top', 'right');
 $topTable->endRow();
 
