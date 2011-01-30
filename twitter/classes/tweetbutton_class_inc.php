@@ -100,6 +100,6 @@ class tweetbutton extends object
         $doc->appendChild($script);
 
         // Return the serialised document.
-        return $doc->saveHTML();
+        return '<div class=\'tweet_button\'>' . $doc->saveHTML() . '</div>';
     }
 }
