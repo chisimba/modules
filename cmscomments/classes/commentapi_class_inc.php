@@ -50,7 +50,7 @@ class commentapi extends object
                     $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
                     $this->showfullname = $this->sysConfig->getValue('show_fullname', 'blog');
                     // Load scriptaclous since we can no longer guarantee it is there
-                    $scriptaculous = $this->getObject('scriptaculous', 'htmlelements');
+                    $scriptaculous = $this->getObject('scriptaculous', 'prototype');
                     $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
 		}
 		catch (customException $e)
