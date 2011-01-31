@@ -38,6 +38,8 @@ class elsiskin extends controller {
     function init() {
     	//Instantiate the language object
         //$this->objLanguage = $this->getObject('language', 'language');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->adminEmail = $this->objSysConfig->getValue('ADMIN_EMAIL', 'elsiskin');
     }
 
 
@@ -100,6 +102,33 @@ class elsiskin extends controller {
      */
     function __home() {
         return "home_tpl.php";
+    }
+
+    /**
+     * Method to submit the details from the contact us form page.
+     *
+     * @access private
+     * @param string $subject The subject of the matter for which user is asking for assistance.
+     * @param string $name The name of the user
+     * @param string $email the email address of the user
+     * @param string $comments the comments that the user has submitted
+     * @return none
+     */
+    function __contactformsubmit() {
+        $subject = $this->objSysConfig->getValue('EMAIL_SUBJECT', 'elsiskin');
+        $body  = "Message: ".$this->getParam('c_message')."\n";
+        $body .= "Topic: ".$this->getParam('c_topic')."\n";
+        $body .= "Name: ". $this->getParam('c_name')."\n";
+        $email.= "Email: ". $this->getParam('c_email')."\n";
+
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('to', $this->adminEmail);
+        $objMailer->setValue('from', $this->adminEmail);
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', strip_tags($body));
+        $objMailer->send();
+        
+        return $this->nextAction("contact", array("submission"=>"true"));
     }
 
 
