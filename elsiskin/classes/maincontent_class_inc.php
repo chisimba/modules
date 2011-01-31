@@ -170,7 +170,7 @@ class maincontent extends object {
                     <div class="grid_2"><p>&nbsp;</p></div>
                     <!-- end .grid_1 --> <div class="clear">&nbsp;</div>
                     <div class="grid_2">'.
-                    $this->getBlogs()
+                    $bloginfo
                     .'</div>
                     <div class="grid_2">
                         <div class="info-box-holder">
@@ -195,22 +195,14 @@ class maincontent extends object {
 
         return $retstr;
     }
-/*<div class="grid_2">
-                        <div class="info-box-holder">
-                            <div class="right_wrap">
-                                <h2>Support and Help</h2>
-                            </div>
-                        </div><div id="supportandhelp">
-                        '.$this->getSupportAndDocumentation().'</div>
-                    </div>
-                    <div class="clear">&nbsp;</div>*/
+
     /**
      * Method to show the main content of the about page
      * @return string
      * @access public
      */
     public function showAboutMain() {
-        $retstr .= '<div class="grid_3">
+        $retstr = '<div class="grid_3">
                         '.$this->getAboutContent().'
                     </div>
                     <!-- end .grid_3 -->';
@@ -404,7 +396,13 @@ class maincontent extends object {
 
                             foreach($topics as $row) {
                                 $retstr .= '
-                                    <option value="'.$row['value'].'">'.$row['text'].'</option>';
+                                    <option value="';
+                                if(!empty($row['value']) ) {
+                                    $retstr .= $row['value'];
+                                }
+                                $retstr .= '">';
+                                $retstr .= $row['text'];
+                                $retstr .='</option>';
                             }
 
                             $retstr .= '
