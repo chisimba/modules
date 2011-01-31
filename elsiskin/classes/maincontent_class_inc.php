@@ -370,7 +370,11 @@ class maincontent extends object {
          * @access public
          */
         public function showContactMain() {
-
+            $submission = $this->getParam('submission');
+            $message = "";
+            if(!empty($submission)) {
+                $message .= "<h3>".$this->objLanguage->languagetext('mod_elsiskin_contactsubmissionmessage', 'elsiskin')."</h3>";
+            }
             $this->loadClass('label','htmlelements');
             $this->loadClass('button', 'htmlelements');
             $this->loadClass('textarea','htmlelements');
@@ -385,14 +389,15 @@ class maincontent extends object {
 
             $retstr = '
                  <div class="grid_3">
-
+                       '.$message.'
                        <h4>Fill in the form</h4>
                        <br><br>
-                       <form onsubmit="return ContactDetails_Field_Validator(this)" id="loginform" name="loginform" method="POST" action="./?sub=process">
+                       <form id="contactForm" name="contactForm" method="POST" action="?module=elsiskin&action=contactformsubmit">
                             <fieldset id="topdialogue">
                             <legend><span>'.$this->objLanguage->languagetext('mod_elsiskin_please','elsiskin').'</span> '.$this->objLanguage->languagetext('mod_elsiskin_contactdetails','elsiskin').'</legend>
                             <label>Subject</label>
-                            <select size="1" name="c_topic">';
+                            <em>*</em>
+                            <select size="1" class="required" name="c_topic" id="c_topic">';
 
                             foreach($topics as $row) {
                                 $retstr .= '
@@ -407,22 +412,25 @@ class maincontent extends object {
 
                             $retstr .= '
                                 </select>
-                            <br>';
-                            $myLabel = new label($this->objLanguage->languageText('mod_elsiskin_namelabel','elsiskin'));
+                            <br />';
+                            $nameLabel = new label($this->objLanguage->languageText('mod_elsiskin_namelabel','elsiskin'));
 
-                            $retstr .= $myLabel->show().'
-                            <input type="text" name="c_name" maxlength="256" size="35">
-                            <br>
-                            <label>'.$this->objLanguage->languageText('mod_elsiskin_email','elsiskin').'</label>
-                            <input type="text" name="" maxlength="256" size="">';
-                            $retstr .= '<br>
-                            <label>'.$this->objLanguage->languageText('mod_elsiskin_comment','elsiskin').'</label>';
-	    $objTextarea = new textarea($this->objLanguage->languageText('mod_elsiskin_contentmesage','elsiskin'), '', '7', '50');
+                            $retstr .= $nameLabel->show().'
+                            <em>*</em><input type="text" class="required" name="c_name" maxlength="50" size="35">
+                            <br />';
+                            $emailLabel = new label($this->objLanguage->languageText('mod_elsiskin_email','elsiskin'));
+                            $retstr .= $emailLabel->show().'
+                            <em>*</em><input type="text" class="required" name="c_email" maxlength="50" size="35">
+                            <br />';
+                            $commentsLabel = new label($this->objLanguage->languageText('mod_elsiskin_comment','elsiskin'));
+                            $retstr .= $commentsLabel->show();
+	    $objTextarea = new textarea($this->objLanguage->languageText('mod_elsiskin_contentmesage','elsiskin'), '', '7', '40');
+            $objTextarea->setCssClass("required");
             $objButton = new button($this->objLanguage->languageText('mod_elsiskin_submit','elsiskin'), $this->objLanguage->languageText('mod_elsiskin_send','elsiskin'));
             $objButton->setToSubmit();
 
-            $retstr.= $objTextarea->show();
-            $retstr.= '<br>';
+            $retstr.= '<em>*</em>'.$objTextarea->show();
+            $retstr.= '<br />';
 	    $retstr .= $objButton->show();
             $retstr .= '
                             </fieldset>
