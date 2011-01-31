@@ -307,11 +307,22 @@ class libraryforms extends controller {
         $objMail->AltBody = $message;
         // send email
         $objMail->send();
-    }
+    }// end of notification email
    
+    public function requiresLogin() {
+    
+    $action = $this->getParam()
+                   
+               return FALSE;
+            
+      
+	}  // end function
 
 
-// end of notification email
+
+
+
+
 }
 
 // end of all
