@@ -281,8 +281,9 @@ $table->addCell("<b>".$label->labelValue."</b>");
 $table->endRow();
 
 $button = new button('calculate', "Calculate");
-$uri = $this->uri(array('action' => 'calculatespreedsheet'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$uri = $this->uri(array('action' => 'calculatespreedsheet', 'id' => $id, 'formname'=>'outcomesandassessmentthree'));
+$action = 'javascript: window.location=\'' . $uri . '\'';
+$button->setToSubmit();
 $table->startRow();
 $table->addCell(" ");
 $table->addCell($button->show());

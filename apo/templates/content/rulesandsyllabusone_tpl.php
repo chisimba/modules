@@ -238,7 +238,7 @@ $button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'showoverview'));
+$uri = $this->uri(array('action' => 'showoverview', 'id' => $id, 'formname'=>'rulesandsyllabusone'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

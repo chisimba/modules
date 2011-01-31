@@ -24,7 +24,6 @@ class dbformdata extends dbtable {
         $data = array();
         $data["id"] = $docid;
         $formdatanew = array_merge($data, $formdata);
-        print_r($tablename);
 
         /* $datalength = count($data);
           for ($i = 0; $i < $datalength; $i++) {
@@ -55,13 +54,13 @@ class dbformdata extends dbtable {
                   ); */
  
                 $this->update('id', $existingdata[0]['id'], $formdata, $tablename);
-                print_r("updated");
+
             }
         }
         else
             $this->insert($formdatanew, $tablename); //$formname, $formdata, $docid
 
-            echo 'success';
+
     }
 
     function exists($docid, $formname) {

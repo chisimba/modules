@@ -28,7 +28,7 @@ if ($formdata != null){
 }
 
 //$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview','nextaction'=>$nextaction)));
-$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview')));
+$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview', 'toform'=>'rulesandsyllabusone')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section A: Overview');
 
@@ -38,37 +38,37 @@ $header->str = $xtitle;
 
 echo $header->show();
 
-$doclink = new link($this->uri(array("action" => "editdocument")));
+$doclink = new link($this->uri(array("action" => "editdocument", 'id' => $id, 'formname'=>'overview')));
 $doclink->link = "Document";
 
-$rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone")));
+$rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone", 'id' => $id, 'formname'=>'overview')));
 $rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
-$rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo")));
+$rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo", 'id' => $id, 'formname'=>'overview')));
 $rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
-$subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements")));
+$subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements", 'id' => $id, 'formname'=>'overview')));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
-$outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone")));
+$outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone", 'id' => $id, 'formname'=>'overview')));
 $outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
-$outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo")));
+$outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo", 'id' => $id, 'formname'=>'overview')));
 $outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
 
-$outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree")));
+$outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree", 'id' => $id, 'formname'=>'overview')));
 $outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
-$resourceslink = new link($this->uri(array("action" => "showresources")));
+$resourceslink = new link($this->uri(array("action" => "showresources", 'id' => $id, 'formname'=>'overview')));
 $resourceslink->link = "Resources";
 
-$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts")));
+$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts", 'id' => $id, 'formname'=>'overview')));
 $collaborationandcontractslink->link = "Collaboration and Contracts";
 
-$reviewlink = new link($this->uri(array("action" => "showreview")));
+$reviewlink = new link($this->uri(array("action" => "showreview", 'id' => $id, 'formname'=>'overview')));
 $reviewlink->link = "Review";
 
-$contactdetailslink = new link($this->uri(array("action" => "showcontactdetails")));
+$contactdetailslink = new link($this->uri(array("action" => "showcontactdetails", 'id' => $id, 'formname'=>'overview')));
 $contactdetailslink->link = "Contact Details";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . "<b>Overview</b>" . '&nbsp;|&nbsp;' .
@@ -202,14 +202,14 @@ $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
 $button->setToSubmit();
-//$uri = $this->uri(array('action' => $action));
+//$uri = $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview', 'toform'=>'rulesandsyllabusone'));
 //$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 
 $form->addToForm('<br/>' . $button->show());
 
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'showeditdocument'));
+$uri = $this->uri(array('action' => 'showeditdocument', 'id' => $id, 'formname'=>'overview', 'toform'=>'addeditdocument'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 //$button->setToSubmit();
 $form->addToForm($button->show());

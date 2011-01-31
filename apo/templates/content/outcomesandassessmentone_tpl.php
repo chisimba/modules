@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @category  Chisimba
  * @package   apo (Academic Planning Office)
@@ -16,13 +17,13 @@ $this->loadClass('dropdown', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
 
-$formdata = $this->objformdata->getFormData("outcomesandassessmenttwo", $id);
-if ($formdata != null){
+$formdata = $this->objformdata->getFormData("outcomesandassessmentone", $id);
+if ($formdata != null) {
     $mode = "edit";
 }
 
 $action = 'showoutcomesandassessmenttwo';
-$form = new form('outcomesandassessmentoneform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'outcomesandassessmentone')));
+$form = new form('outcomesandassessmentoneform', $this->uri(array('action' => $action, 'id' => $id, 'formname' => 'outcomesandassessmentone')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section D: Outcomes and Assessment - Page One');
 
@@ -68,9 +69,9 @@ $reviewlink->link = "Review";
 $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails")));
 $contactdetailslink->link = "Contact Details";
 
-$links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show(). '&nbsp;|&nbsp;' .
+$links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
         $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
-        $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' ." <b> Outcomes and Assessments - Page one </b>" . '&nbsp;|&nbsp;' .
+        $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . " <b> Outcomes and Assessments - Page one </b>" . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
         $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '<br/>';
@@ -85,67 +86,52 @@ $legend = "<b>Section D: Outcomes and Assessments - Page One</b>";
 
 //Section D.1.
 
-$d1a = new dropdown('d1a');
+$dropdown = new dropdown('d1a');
 //$dropdown->size = 150;
-$d1a->addOption('');
-$d1a->addOption("NQF 5");
-$d1a->addOption("NQF 6");
-$d1a->addOption("NQF 7");
-$d1a->addOption("NQF 8");
-
-/*if ($mode == 'fixup') {
-    $documentNumber->setSelected($oldNGF);
+$dropdown->addOption('');
+$dropdown->addOption("NQF 5");
+$dropdown->addOption("NQF 6");
+$dropdown->addOption("NQF 7");
+$dropdown->addOption("NQF 8");
+if ($mode == 'fixup') {
+    $dropdown->setSelected($d1a);
 }
 if ($mode == 'edit') {
-    $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}*/
+    $dropdown->setSelected($formdata['d1a']);
+}
 
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $table->addCell("D.1.a. On which OLD NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7 & 8) is the course/unit positioned?:");
 $table->endRow();
+$table->startRow();
+$table->addCell($dropdown->show());
+$table->endRow();
 
-if ($mode == 'edit') {
-    $table->startRow();
-    $table->addCell($document['refno'] . '-' . $document['version']);
-    $table->startRow();
-} else {
-    $table->startRow();
-    $table->addCell($d1a->show());
-    $table->endRow();
-}
+$dropdown = new dropdown('d1b');
+$dropdown->addOption('');
+$dropdown->addOption("<b>NQF 5</b>");
+$dropdown->addOption("NQF 6");
+$dropdown->addOption("NQF 7");
+$dropdown->addOption("NQF 8");
+$dropdown->addOption("NQF 9");
+$dropdown->addOption("NQF 10");
 
-
-$d1b = new dropdown('d1b');
-$d1b->addOption('');
-$d1b->addOption("<b>NQF 5</b>");
-$d1b->addOption("NQF 6");
-$d1b->addOption("NQF 7");
-$d1b->addOption("NQF 8");
-$d1b->addOption("NQF 9");
-$d1b->addOption("NQF 10");
-
-
-/*if ($mode == 'fixup') {
-    $documentNumber->setSelected($d1b);
+if ($mode == 'fixup') {
+    $dropdown->setSelected($d1b);
 }
 if ($mode == 'edit') {
-    $documentNumber->setSelected(substr($document['refno'], 0, 1));
+    $dropdown->setSelected($formdata['d1b']);
 }
-*/
+
 //$table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $table->addCell("D.1.b. On which NEW NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7, 8, 9 & 10) is the course/unit positioned?:");
 $table->endRow();
-if ($mode == 'edit') {
-    $table->startRow();
-    $table->addCell($document['refno'] . '-' . $document['version']);
-    $table->endRow();
-} else {
-    $table->startRow();
-    $table->addCell($d1b->show());
-    $table->endRow();
-}
+$table->startRow();
+$table->addCell($dropdown->show());
+$table->endRow();
+
 //Section D.2.
 
 $table->startRow();
@@ -155,7 +141,13 @@ $table->endRow();
 $textarea = new textarea('d2a');
 $textarea->size = 60;
 $textarea->value = $courseOutcomes;
-$textarea->cols=100;
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d2a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d2a'];
+}
 
 $table->startRow();
 $table->addCell('Learning Outcomes of the Course/Unit');
@@ -168,7 +160,13 @@ $table->endRow();
 $textarea = new textarea('d2b');
 $textarea->size = 60;
 $textarea->value = $assessCriteria;
-$textarea->cols=100;
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d2b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d2b'];
+}
 
 $table->startRow();
 $table->addCell('Assessment Criteria for the Learning Outcomes');
@@ -181,7 +179,13 @@ $table->endRow();
 $textarea = new textarea('d2c');
 $textarea->size = 60;
 $textarea->value = $assessMethods;
-$textarea->cols=100;
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d2c;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d2c'];
+}
 
 $table->startRow();
 $table->addCell('Assessment Methods to be Used');
@@ -195,7 +199,13 @@ $table->endRow();
 $textarea = new textarea('d3');
 $textarea->size = 60;
 $textarea->value = $overallAchieve;
-$textarea->cols=100;
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d3;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d3'];
+}
 
 $table->startRow();
 $table->addCell('D.3. How do the course/unit outcomes contribute to the acheivement of the overall qualification/programme outcomes?:');
@@ -231,7 +241,7 @@ $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
 $button->setToSubmit();
-$form->addToForm('<br/>' .$button->show());
+$form->addToForm('<br/>' . $button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'showsubsidyrequirements'));
@@ -244,5 +254,4 @@ $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 echo $form->show();
-
 ?>

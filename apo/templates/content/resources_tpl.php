@@ -84,7 +84,7 @@ $textarea->height = '70px';
 $textarea->width = '500px';
 $textarea->cols = 100;
 if ($mode == "fixup") {
-    $textarea->value = $he1a;
+    $textarea->value = $e1a;
 }
 if ($mode == "edit") {
     $textarea->value = $formdata['e1a'];

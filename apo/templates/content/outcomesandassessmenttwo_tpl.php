@@ -13,7 +13,7 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->setVar('pageSuppressXML', TRUE);
 
-$formdata = $this->objformdata->getFormData("outcomesandassessmentone", $id);
+$formdata = $this->objformdata->getFormData("outcomesandassessmenttwo", $id);
 if ($formdata != null){
     $mode = "edit";
 }

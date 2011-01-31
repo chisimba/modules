@@ -215,12 +215,12 @@ $button->setToSubmit();
 $form->addToForm('<br/>'.$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'showrulesandsyllabusone'));
+$uri = $this->uri(array('action' => 'showrulesandsyllabusone', 'id' => $id, 'formname'=>'rulesandsyllabustwo'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-$uri = $this->uri(array('action' => 'home'));
+$uri = $this->uri(array('action' => 'home', 'id' => $id, 'formname'=>'overview'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
