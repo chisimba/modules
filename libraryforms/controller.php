@@ -309,13 +309,10 @@ class libraryforms extends controller {
         $objMail->send();
     }// end of notification email
    
-    public function requiresLogin() {
-    
-    $action = $this->getParam()
-                   
+    public function requiresLogin() 
+	{                   
                return FALSE;
-            
-      
+              
 	}  // end function
 
 
