@@ -515,6 +515,25 @@ class userutils extends object {
     }
 
     /**
+     * Check if folder exists
+     * @param string $folderpath
+     * @param string $foldername
+     * @return boolean
+     */
+    public function folderExistsCheck($folderpath, $foldername) {
+        $this->objMkdir = $this->getObject('mkdir', 'files');
+        $path = $this->objSysConfig->getValue('FILES_DIR', 'wicid') . '/' . $folderpath . '/' . $foldername;
+        
+        //Check if path is an existing directory
+        if (is_dir($path)) {
+            $result = TRUE;
+        } else {
+            $result = FALSE;
+        }
+        return $result;
+    }
+
+    /**
      * renames a selected folder
      * @param <type> $folderpath
      * @param <type> $foldername
@@ -791,18 +810,24 @@ class userutils extends object {
 
       return $form->show();
       } */
+    /*
+     * Function to generate a form that allows one to add a wicid folder
+     * @param string name value of text input box
+     * @return form object
+     */
 
     function showCreateFolderForm($name='') {
-
         $form = new form('createdepartment', $this->uri(array('action' => 'createfolder')));
         $textinput = new textinput('foldername');
         $textinput->value = $name;
+
         $label = new label('Name of ' . $this->modeLabel . ': ', 'input_parentfolder');
         $form->addToForm("<br/>Create in " . $this->getTree('htmldropdown'));
         $form->addToForm(' &nbsp; ' . $label->show() . $textinput->show());
-
+        $form->addToForm(' <br /><span id="spanfoldermessage"></span><br /><br />');
 
         $button = new button('create', 'Create ' . $this->modeLabel);
+        $button->cssId = 'savebutton';
         $button->setToSubmit();
 
         $form->addToForm('<br/>' . $button->show());
@@ -812,7 +837,5 @@ class userutils extends object {
         $fs->addContent($form->show());
         return $fs->show();
     }
-
 }
-
 ?>

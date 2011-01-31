@@ -309,9 +309,34 @@ class wicid extends controller {
         if (!$path) {
             $path = "";
         }
-
-        $this->objUtils->createFolder($path, $name);
+        //Confirm that folder does not exist
+        $exists = $this->objUtils->folderExistsCheck($path, $name);
+        //Create only if new
+        if (!$exists) {            
+            $this->objUtils->createFolder($path, $name);
+        }
         $this->nextAction('unapproveddocs');
+    }
+
+    /**
+     * used to check if a folder exists in the selected dir.
+     * 
+     * @return boolean
+     */
+    public function __folderExistsCheck() {
+        $path = $this->getParam('parentfolder');
+        $name = $this->getParam('foldername');
+
+        if (!$path) {
+            $path = "";
+        }
+
+        $exists = $this->objUtils->folderExistsCheck($path, $name);
+        if($exists) {
+            echo 'exists';
+        } else {
+            echo 'create';
+        }
     }
 
     /**
@@ -749,8 +774,8 @@ class wicid extends controller {
             $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
 
             //return $this->nextAction('erroriframe', array('message' => 'Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf', 'file' => $filename, 'id' => $generatedid));
-            $message='Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf';
-            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => '','message'=>$message));
+            $message = 'Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf';
+            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => '', 'message' => $message));
         } else {
 
             $filename = $result['filename'];
@@ -796,7 +821,7 @@ class wicid extends controller {
 
             $result = $this->objUploadTable->saveFileInfo($data);
             $this->documents->updateInfo($docid, array("ext" => $ext, "upload" => "Y"));
-            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename,'message'=>'file uploaded'));
+            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename, 'message' => 'file uploaded'));
         }
     }
 
@@ -817,8 +842,8 @@ class wicid extends controller {
         $filename = $this->getParam('filename');
         $this->setVarByRef('filename', $filename);
 
-        $message=$this->getParam('message');
-        $this->setVarByRef('message',$message);
+        $message = $this->getParam('message');
+        $this->setVarByRef('message', $message);
 
         return 'ajaxuploadresults_tpl.php';
     }

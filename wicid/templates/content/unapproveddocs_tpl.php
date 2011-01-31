@@ -5,15 +5,114 @@ if (isset($refno)) {
 }
 
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+//load classes
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
+//Create object for geticon
+$objIcon = $this->newObject('geticon', 'htmlelements');
+//Load Icon loader
+$objIcon->setIcon('loader');
+
+
+//Append JS to check if folder exists and avoid creation of duplicates
+    $this->appendArrayVar('headerParams', '
+    <script type="text/javascript">
+        // Flag Variable - Update message or not
+        var doUpdateMessage = false;
+
+        // Var Current Entered Folder
+        var currentFolder;
+
+        // Action to be taken once page has loaded
+        jQuery(document).ready(function(){
+            jQuery("#input_foldername").bind(\'keyup\', function() {
+                checkFolder(jQuery("#input_foldername").attr(\'value\'), jQuery("#input_parentfolder").attr(\'value\'));
+            });
+            jQuery("#input_parentfolder").change(function() {
+            alert("Was selected");
+                checkFolder(jQuery("#input_foldername").attr(\'value\'), jQuery("#input_parentfolder").attr(\'value\'));
+            });
+        });
+
+        // Function to check whether folder exists in the chosen directory
+        function checkFolder(folder, parent)
+        {
+            // Messages can be updated
+            doUpdateMessage = true;
+
+            // If folder is null
+            if (folder == null) {
+                // Remove existing stuff on the span
+                jQuery("#spanfoldermessage").html("");
+                jQuery("#spanfoldermessage").removeClass("error");
+                jQuery("#input_foldername").removeClass("inputerror");
+                jQuery("#spanfoldermessage").removeClass("success");
+                doUpdateMessage = false;
+
+            // If folder name is root - Reserved. Saves Ajax Call
+            } else if (folder.toLowerCase() == "root") {
+
+                currentFolder = folder;
+
+                jQuery("#spanfoldermessage").html("This name is already in use and cannot be reused.");
+                jQuery("#spanfoldermessage").addClass("error");
+                jQuery("#input_foldername").addClass("inputerror");
+                jQuery("#spanfoldermessage").removeClass("success");
+                doUpdateMessage = false;
+
+            // Else Need to do Ajax Call
+            } else {
+                // Check that existing folder name is not in use
+                if (currentFolder != folder) {
+
+                    // Set message to checking
+                    jQuery("#spanfoldermessage").removeClass("success");
+                    jQuery("#spanfoldermessage").html("<span id=\"folderexistscheck\">' . addslashes($objIcon->show()) . ' Checking ...</span>");
+
+                    // Set current Folder
+                    currentFolder = folder;
+
+                    // DO Ajax
+                    jQuery.ajax({
+                        type: "GET",
+                        url: "index.php",
+                        data: "module=wicid&action=folderExistsCheck&foldername="+folder+"&parentname="+parent,
+                        success: function(msg){
+
+                            // Check if messages can be updated and folder remains the same
+                            if (doUpdateMessage == true && currentFolder == folder) {
+
+                                // IF folder exists
+                                if (msg == "exists") {
+                                    jQuery("#spanfoldermessage").html("A folder with that name already exists");
+                                    jQuery("#spanfoldermessage").addClass("error");
+                                    jQuery("#input_foldername").addClass("inputerror");
+                                    jQuery("#spanfoldermessage").removeClass("success");
+                                    jQuery("#savebutton").attr("disabled", "disabled");
+
+                                // Else
+                                } else {
+                                    jQuery("#spanfoldermessage").html("Available");
+                                    jQuery("#spanfoldermessage").addClass("success");
+                                    jQuery("#spanfoldermessage").removeClass("error");
+                                    jQuery("#input_foldername").removeClass("inputerror");
+                                    jQuery("#savebutton").removeAttr("disabled");
+                                }
+
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>');
+
 $header = new htmlheading();
 $header->type = 2;
 $header->str = $this->objLanguage->languageText('mod_wicid_unapproved', 'wicid', 'Unapproved Documents') . ' (' . count($documents) . ')';
 
 echo $header->show();
-
 
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
 $newdoclink->link = "Register New Document";
