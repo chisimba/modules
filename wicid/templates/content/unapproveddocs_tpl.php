@@ -1,5 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <?php
+/* ------------icon request template----------------*/
+// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run'])
+{
+    die("You cannot view this page directly");
+}
+// end security check
 if (isset($refno)) {
     echo '<div class="warning"><strong>The ref number is ' . $refno . '</strong></div>';
 }
@@ -9,6 +16,8 @@ $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
+$this->loadClass('checkbox','htmlelements');
+
 //Create object for geticon
 $objIcon = $this->newObject('geticon', 'htmlelements');
 //Load Icon loader
