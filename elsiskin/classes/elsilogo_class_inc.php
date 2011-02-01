@@ -74,11 +74,11 @@ class elsilogo extends object {
         $retstr .= '<!-- Start: Horizontal nav -->
 			 <div class="clear">&nbsp;</div> 
 				<div id="Horizontalnav"> 
-					<div class="wide">
-					</div>
+					<div class="wide"></div>
 			<!-- end .grid_2 .push_2 -->
 				</div> 
 			<!-- end .grid_1 -->
+                        </div>
 			<!-- End: header -->
 			 </div>
 			 <!-- End: Horizontal nav -->';

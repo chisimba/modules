@@ -144,21 +144,7 @@ class maincontent extends object {
         }
         $alllink = new link($this->uri(array("action"=>"siteblog"), "blog"));
         $alllink->link = 'View all blogs';
-        $retstr = '<div class="grid_1">
-                        <img src="'.$this->skinpath.'images/sm_xolani.jpg"><h4>eLearning</h4>
-                        <p>Augment your  teaching and learning programme with digital resources.</p>
-                   </div>
-                   <!-- end .grid_1 -->
-                   <div class="grid_1">
-                        <img src="'.$this->skinpath.'images/mulalo_matshusa.png"><h4>Support</h4>
-                        <p>Our training workshops will give you hands on experience with new learning technologies</p>
-                   </div>
-                   <!-- end .grid_1 -->
-                   <div class="grid_1">
-                        <img src="'.$this->skinpath.'images/sm_wafula_gill.jpg" width="220" height="91"><h4>Innovation</h4>
-                        <p>Explore  and develop new and emerging technologies in your teaching &amp; research. </p>
-                   </div>
-                   <!-- end .grid_1 -->
+        $retstr = '
                    <div class="clear">&nbsp;</div>
                    <div class="grid_2">
                         <div class="info-box-holder">
@@ -195,6 +181,23 @@ class maincontent extends object {
 
         return $retstr;
     }
+
+    /*<div class="grid_1">
+                        <img src="'.$this->skinpath.'images/sm_xolani.jpg"><h4>eLearning</h4>
+                        <p>Augment your  teaching and learning programme with digital resources.</p>
+                   </div>
+                   <!-- end .grid_1 -->
+                   <div class="grid_1">
+                        <img src="'.$this->skinpath.'images/mulalo_matshusa.png"><h4>Support</h4>
+                        <p>Our training workshops will give you hands on experience with new learning technologies</p>
+                   </div>
+                   <!-- end .grid_1 -->
+                   <div class="grid_1">
+                        <img src="'.$this->skinpath.'images/sm_wafula_gill.jpg" width="220" height="91"><h4>Innovation</h4>
+                        <p>Explore  and develop new and emerging technologies in your teaching &amp; research. </p>
+                   </div>
+                   <!-- end .grid_1 -->
+                   */
 
     /**
      * Method to show the main content of the about page

@@ -100,12 +100,15 @@ class elsicontent extends object {
 
     private function getContent($action) {
         // get the content of the page
-        $retstr = '<div id="Content">';
-        $retstr .= $this->getIntroText($action);
+        echo '<!-- Start: Content -->
+              <div id="Content">';
+        $retstr = $this->getIntroText($action);
         $retstr .= $this->sidebar->show();
-        $retstr .= '<div id="Main">' . $this->mainContent->show() . '</div>
+        $retstr .= '<div id="Main">' 
+                        . $this->mainContent->show()
+                   .'</div>
                     <!-- End: Main -->
-            <!-- End: Content -->';
+              ';
 
         return $retstr;
     }
@@ -120,66 +123,16 @@ class elsicontent extends object {
         $this->loadClass("link", "htmlelements");
 
         if($action == 'about') {
-            $aboutLink = new link($this->uri(array("action"=>"about")));
-            $aboutLink->link = $this->objLanguage->languageText('mod_elsiskin_welcome', 'elsiskin');
-            $ret = '
-                <div class="clear">&nbsp;</div>
-                <div class="grid_1">
-                    <h3>'.$aboutLink->show().'</h3>
-                </div>';
-            $aboutLink->link = $this->objLanguage->languageText('mod_elsiskin_aboutelsi', 'elsiskin');
-            $ret .= '
-                <div class="grid_3">
-                    <h2>'.$aboutLink->show().'</h2>
-                </div>
-                <div class="grid_1 pull_3">
-                    <h3>'.$this->objLanguage->languageText('mod_elsiskin_moreaboutelsi', 'elsiskin').'</h3>
-                </div>
-                <!-- end .grid_1.pull_3 -->
-                <div class="clear">&nbsp;</div>';
+            $ret = $this->getAboutContent();
         }
         else if($action == 'staff') {
-            $staffLink = new link($this->uri(array("action"=>"staff")));
-            $staffLink->link = $this->objLanguage->languageText('mod_elsiskin_elsistaff', 'elsiskin');
-            $ret = '
-                <div class="clear">&nbsp;</div>
-                <div class="grid_1 ">
-                    <h3>'.$staffLink->show().'</h3>
-                </div>';
-            $staffLink->link = $this->objLanguage->languageText('mod_elsiskin_elsiwhoworks', 'elsiskin');
-            $ret .='
-                <div class="grid_3">
-                    <h2><a href="">'.$staffLink->show().'</a></h2>
-                </div>
-                <!-- end .grid_1.pull_3 -->
-                <div class="clear">&nbsp;</div>';
+            $ret = $this->getStaffContent();
         }
         else if($action == 'contact') {
-            $contactLink = new link($this->uri(array("action"=>"contact")));
-            $contactLink->link = $this->objLanguage->languageText('mod_elsiskin_contactus', 'elsiskin');
-            $ret = '
-                <div class="clear">&nbsp;</div>
-                <div class="grid_1">
-                    <h3>'.$contactLink->show().'</h3>
-                </div>';
-            $contactLink->link = $this->objLanguage->languageText('mod_elsiskin_contactassist', 'elsiskin');
-            $ret .='
-                <div class="grid_3">
-                    <h2>'.$contactLink->show().'</h2>
-                </div>
-                <div class="grid_1 pull_3">
-                    <h3>More about eLSI</h3>
-                </div>
-                <!-- end .grid_1.pull_3 -->
-                <div class="clear">&nbsp;</div>';
+            $ret = $this->getContactContent();
         }
         else if($action == 'viewsingle' || $action == 'viewstory'){
-            $ret = '
-                <div class="clear">&nbsp;</div>
-                <div class="grid_3">
-
-                </div>
-                <div class="clear">&nbsp;</div>';
+            $ret = $this->getNoContent();
         }
         else {
             $homeLink = new link($this->uri(array("action"=>"home")));
@@ -229,4 +182,75 @@ class elsicontent extends object {
         return $retstr;
     }
 
+    private function getAboutContent() {
+        $aboutLink = new link($this->uri(array("action"=>"about")));
+        $aboutLink->link = $this->objLanguage->languageText('mod_elsiskin_welcome', 'elsiskin');
+        $ret = '
+                <div class="clear">&nbsp;</div>
+                <div class="grid_1">
+                    <h3>'.$aboutLink->show().'</h3>
+                </div>';
+        $aboutLink->link = $this->objLanguage->languageText('mod_elsiskin_aboutelsi', 'elsiskin');
+        $ret .= '
+                <div class="grid_3">
+                    <h2>'.$aboutLink->show().'</h2>
+                </div>
+                <div class="grid_1 pull_3">
+                    <h3>'.$this->objLanguage->languageText('mod_elsiskin_moreaboutelsi', 'elsiskin').'</h3>
+                </div>
+                <!-- end .grid_1.pull_3 -->
+                <div class="clear">&nbsp;</div>';
+
+        return $ret;
+    }
+
+    private function getStaffContent() {
+        $staffLink = new link($this->uri(array("action"=>"staff")));
+        $staffLink->link = $this->objLanguage->languageText('mod_elsiskin_elsistaff', 'elsiskin');
+        $ret = '
+            <div class="clear">&nbsp;</div>
+            <div class="grid_1 ">
+                <h3>'.$staffLink->show().'</h3>
+            </div>';
+        $staffLink->link = $this->objLanguage->languageText('mod_elsiskin_elsiwhoworks', 'elsiskin');
+        $ret .='
+            <div class="grid_3">
+                <h2><a href="">'.$staffLink->show().'</a></h2>
+            </div>
+            <!-- end .grid_1.pull_3 -->
+            <div class="clear">&nbsp;</div>';
+
+        return $ret;
+    }
+
+    private function getContactContent() {
+        $contactLink = new link($this->uri(array("action"=>"contact")));
+        $contactLink->link = $this->objLanguage->languageText('mod_elsiskin_contactus', 'elsiskin');
+        $ret = '
+            <div class="clear">&nbsp;</div>
+            <div class="grid_1">
+                <h3>'.$contactLink->show().'</h3>
+            </div>';
+        $contactLink->link = $this->objLanguage->languageText('mod_elsiskin_contactassist', 'elsiskin');
+        $ret .='
+            <div class="grid_3">
+                <h2>'.$contactLink->show().'</h2>
+            </div>
+            <div class="grid_1 pull_3">
+                <h3>More about eLSI</h3>
+            </div>
+            <!-- end .grid_1.pull_3 -->
+            <div class="clear">&nbsp;</div>';
+
+        return $ret;
+    }
+
+    private function getNoContent() {
+        $ret = '
+            <div class="clear">&nbsp;</div>
+            <div class="grid_3"></div>
+            <div class="clear">&nbsp;</div>';
+
+        return $ret;
+    }
 }
