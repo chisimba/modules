@@ -55,7 +55,7 @@ $objIcon->setIcon('loader');
 
                 currentFolder = folder;
 
-                jQuery("#spanfoldermessage").html("This name is already in use and cannot be reused.");
+                jQuery("#spanfoldermessage").html("The name "+folder+" is reserved. Kindly type in another one");
                 jQuery("#spanfoldermessage").addClass("error");
                 jQuery("#input_foldername").addClass("inputerror");
                 jQuery("#spanfoldermessage").removeClass("success");
@@ -85,7 +85,7 @@ $objIcon->setIcon('loader');
 
                                 // IF folder exists
                                 if (msg == "exists") {
-                                    jQuery("#spanfoldermessage").html("A folder with that name already exists");
+                                    jQuery("#spanfoldermessage").html("A folder with the name "+folder+" already exists");
                                     jQuery("#spanfoldermessage").addClass("error");
                                     jQuery("#input_foldername").addClass("inputerror");
                                     jQuery("#spanfoldermessage").removeClass("success");
@@ -93,7 +93,7 @@ $objIcon->setIcon('loader');
 
                                 // Else
                                 } else {
-                                    jQuery("#spanfoldermessage").html("Available");
+                                    jQuery("#spanfoldermessage").html("You can use the name: "+folder);
                                     jQuery("#spanfoldermessage").addClass("success");
                                     jQuery("#spanfoldermessage").removeClass("error");
                                     jQuery("#input_foldername").removeClass("inputerror");
