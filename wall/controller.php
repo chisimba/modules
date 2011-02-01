@@ -402,6 +402,7 @@ class wall extends controller
             case 'getmoreposts':
             case 'countposts':
             case 'morecomments':
+            case 'getsimpleblogwall':
                 return FALSE;
                 break;
             default:

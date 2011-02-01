@@ -74,6 +74,8 @@ class block_contextwall extends object
      * Standard block show method.
      *
      * @return string $this->display block rendered
+     * @access public
+     * 
      */
     public function show() 
     {
