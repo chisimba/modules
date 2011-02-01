@@ -1,9 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <?php
-/* ------------icon request template----------------*/
+/* ------------icon request template---------------- */
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -16,8 +15,8 @@ $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
-$this->loadClass('checkbox','htmlelements');
-
+$this->loadClass('checkbox', 'htmlelements');
+$this->loadClass('hiddeninput', 'htmlelements');
 //Create object for geticon
 $objIcon = $this->newObject('geticon', 'htmlelements');
 //Load Icon loader
@@ -25,7 +24,7 @@ $objIcon->setIcon('loader');
 
 
 //Append JS to check if folder exists and avoid creation of duplicates
-    $this->appendArrayVar('headerParams', '
+$this->appendArrayVar('headerParams', '
     <script type="text/javascript">
         // Flag Variable - Update message or not
         var doUpdateMessage = false;
@@ -133,8 +132,8 @@ $unapproveddocs->link = "Unapproved/New documents";
 $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments")));
 $rejecteddocuments->link = "Rejected documents";
 
-if($this->objUser->isAdmin()){
-  echo  $this->objUtils->showCreateFolderForm($tobeeditedfoldername);
+if ($this->objUser->isAdmin()) {
+    echo $this->objUtils->showCreateFolderForm($tobeeditedfoldername);
 }
 
 
@@ -161,25 +160,34 @@ $table->addHeaderCell("Date");
 $table->endHeaderRow();
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
+
 if (count($documents) > 0) {
     foreach ($documents as $document) {
         //$topic=  substr($document['topic'], strlen($this->baseDir));
         $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'])));
         $link->link = $document['filename'];
-        //Add checkbox to help select record for batch approval
-        $approve = &new checkBox($document['id'].'_app',Null,Null);
+
+        //Dont show checkbox if there is no attachment
+        if ($document['attachmentstatus'] == 'No') {
+            $approve = new hiddeninput($document['id'] . '_app', "");
+        } else {
+            //Create checkbox to help select record for batch approval
+            $approve = &new checkBox($document['id'] . '_app', Null, Null);
+            $approve->setValue('approve');
+        }
         $table->startRow();
         $table->addCell($approve->show());
+
         $table->addCell($link->show());
         $table->addCell($document['refno']);
         $table->addCell($document['owner']);
         $table->addCell($document['topic']);
         $table->addCell($document['telephone']);
         // w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
-               //         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
+        //         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
 
 
-        $uplink = new link($this->uri(array("action" => "uploadfile","docname"=>$document['filename'], "docid" => $document['id'],"topic"=>$document['topic'])));
+        $uplink = new link($this->uri(array("action" => "uploadfile", "docname" => $document['filename'], "docid" => $document['id'], "topic" => $document['topic'])));
         $uplink->link = $objIcon->show();
 
         $table->addCell($document['attachmentstatus'] . $uplink->show());
@@ -187,8 +195,9 @@ if (count($documents) > 0) {
         $table->endRow();
     }
 }
+
 // Form
-$form = new form('registerdocumentform', $this->uri(array('action' => 'batchapprove')));
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchapprove', 'mode' => $mode)));
 $form->addToForm($table->show());
 
 $button = new button('save', $this->objLanguage->languageText('mod_wicid_approveselected', 'wicid', 'Approve Selected'));
@@ -197,7 +206,7 @@ $form->addToForm('<br/>' . $button->show());
 
 //Create legend for the unnapproved docs
 $fs = new fieldset();
-$fs->setLegend('Unnaproved documents');
+$fs->setLegend('Unapproved documents');
 $fs->addContent($form->show());
 
 echo $fs->show();

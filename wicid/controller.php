@@ -32,6 +32,10 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class wicid extends controller {
 
+    //Declare global variables
+    public $TRUE;
+    public $FALSE;
+
     function init() {
         $this->loadclass('link', 'htmlelements');
         $this->objLanguage = $this->getObject('language', 'language');
@@ -54,6 +58,9 @@ class wicid extends controller {
         $this->forwardto = $this->getObject('dbforwardto');
         $this->mode = $this->objSysConfig->getValue('MODE', 'wicid');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        //Set global variables
+        $this->TRUE = 1;
+        $this->FALSE = 0;
     }
 
     /**
@@ -312,7 +319,7 @@ class wicid extends controller {
         //Confirm that folder does not exist
         $exists = $this->objUtils->folderExistsCheck($path, $name);
         //Create only if new
-        if (!$exists) {            
+        if (!$exists) {
             $this->objUtils->createFolder($path, $name);
         }
         $this->nextAction('unapproveddocs');
@@ -332,7 +339,7 @@ class wicid extends controller {
         }
 
         $exists = $this->objUtils->folderExistsCheck($path, $name);
-        if($exists) {
+        if ($exists) {
             echo 'exists';
         } else {
             echo 'create';
@@ -712,6 +719,26 @@ class wicid extends controller {
         $this->nextAction("unapproveddocs");
     }
 
+    /*
+     * Function that approves documents in batch
+     */
+
+    function __batchapprove() {
+        $id = $this->getParam('id');
+        $mode = $this->getParam('mode');
+        $documents = $this->documents->getdocuments($this->mode);
+        //Step through the documents and approve those selected
+        if (isset($documents)) {
+            foreach ($documents as $document) {
+                if($document['attachmentstatus']!="No")
+                if ($this->getParam($document['id'] . '_app') == 'approve') {
+                    $this->documents->approveDocs($document['id']);
+                }
+            }
+        }
+        $this->nextAction("unapproveddocs");
+    }
+
     function __rejectdocument() {
         $id = $this->getParam('id');
         $this->documents->rejectDocs($id);
@@ -981,6 +1008,7 @@ class wicid extends controller {
         $documents = $this->documents->getdocuments($this->mode);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("mode", $mode);
         return "unapproveddocs_tpl.php";
     }
 
