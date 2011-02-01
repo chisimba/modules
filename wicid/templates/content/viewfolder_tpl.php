@@ -21,26 +21,40 @@ if ($this->objUser->isAdmin()) {
 }
 echo $createFolder;
 
+// Create a Register New Document Button
+$button = new button("submit", "Register New Document");
+
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
-$newdoclink->link = "Register New Document";
+$newdoclink->link = $button->show();
 
+// Create a Unapproved/New documents Button
+$button = new button("submit", "Unapproved/New documents");
 $unapproveddocs = new link($this->uri(array("action" => "unapproveddocs")));
-$unapproveddocs->link = "Unapproved/New documents";
+$unapproveddocs->link = $button->show();
 
-
+// Create a  Button
+$button = new button("submit", "Rejected documents");
 $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments")));
-$rejecteddocuments->link = "Rejected documents";
+$rejecteddocuments->link = $button->show();
 
-echo $newdoclink->show() . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
+$links = $newdoclink->show() . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
+
+//Add navigation to fieldset
+$fs = new fieldset();
+$fs->setLegend('Navigation');
+$fs->addContent($links);
+
+echo $fs->show();
+
 $table = $this->getObject("htmltable", "htmlelements");
 
+if (count($files) > 0) {
 $table->startHeaderRow();
 $table->addHeaderCell("Type");
 $table->addHeaderCell("Title");
 $table->addHeaderCell("Ref No");
 $table->addHeaderCell("Owner");
 $table->endHeaderRow();
-if (count($files) > 0) {
     foreach ($files as $file) {
         $dlink1=new link($this->uri(array("action"=>"downloadfile","filepath"=>$file['id'],"filename"=>$file['actualfilename'])));
         $dlink1->link=$file['thumbnailpath'];
@@ -55,6 +69,14 @@ if (count($files) > 0) {
         $table->addCell($file['owner'].'('.$file['telephone'].')');
         $table->endRow();
     }
+} else {
+        $table->startRow();
+        $table->addCell("There are no topics to display");
+        $table->endRow();
 }
-echo $table->show();
+//Add rejected documents table to fieldset
+$fs = new fieldset();
+$fs->setLegend('Topics');
+$fs->addContent($table->show());
+echo $fs->show();
 ?>
