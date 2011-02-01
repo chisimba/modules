@@ -166,8 +166,10 @@ if (count($documents) > 0) {
         //$topic=  substr($document['topic'], strlen($this->baseDir));
         $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'])));
         $link->link = $document['filename'];
+        //Add checkbox to help select record for batch approval
+        $approve = &new checkBox($document['id'].'_app',Null,Null);
         $table->startRow();
-
+        $table->addCell($approve->show());
         $table->addCell($link->show());
         $table->addCell($document['refno']);
         $table->addCell($document['owner']);
@@ -185,5 +187,18 @@ if (count($documents) > 0) {
         $table->endRow();
     }
 }
-echo $table->show();
+// Form
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchapprove')));
+$form->addToForm($table->show());
+
+$button = new button('save', $this->objLanguage->languageText('mod_wicid_approveselected', 'wicid', 'Approve Selected'));
+$button->setToSubmit();
+$form->addToForm('<br/>' . $button->show());
+
+//Create legend for the unnapproved docs
+$fs = new fieldset();
+$fs->setLegend('Unnaproved documents');
+$fs->addContent($form->show());
+
+echo $fs->show();
 ?>
