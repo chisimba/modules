@@ -107,7 +107,7 @@ if ($mode == "edit") {
 if ($mode == 'edit') {
     $dropdown->setSelected($formdata['d1a']);
 }
-
+*/
 
 $table->startRow();
 $table->addCell("D.1.a. On which OLD NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7 & 8) is the course/unit positioned?:");
