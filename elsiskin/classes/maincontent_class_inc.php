@@ -512,11 +512,6 @@ class maincontent extends object {
 
         $objDateTime = $this->getObject('dateandtime', 'utilities');
 
-        $categoryLink = new link ($this->uri(array('action'=>'viewcategory', 'id'=>$category['id'])));
-        $categoryLink->link = $category['categoryname'];
-
-        //$this->objMenuTools->addToBreadCrumbs(array($categoryLink->show(), $story['storytitle']));
-
         $header = new htmlheading();
         $header->type = 1;
         $header->cssClass="newsstorytitleh1";
