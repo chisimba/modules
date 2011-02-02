@@ -32,6 +32,7 @@
                     'd8' => array('type' => 'text', 'notnull'=>TRUE),
                     'e1' => array('type' => 'text', 'notnull'=>TRUE),
                     'e8' => array('type' => 'text', 'notnull'=>TRUE),
+                    'other' => array('type' => 'text', 'notnull'=>TRUE),
                     'f1' => array('type' => 'text', 'notnull'=>TRUE),
                     'f2' => array('type' => 'text', 'notnull'=>TRUE),
                     'f3' => array('type' => 'text', 'notnull'=>TRUE),
