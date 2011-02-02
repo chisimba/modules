@@ -79,7 +79,26 @@ $legend = "<b>Section F: Collaboration and Contacts</b>";
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
-$F1a = new dropdown('f1a');
+$radio = new radio ('f1a');
+$radio->addOption('y',"yes");
+$radio->addOption('n',"no");
+$radio->setSelected('1');
+$radio->setBreakSpace('</p><p>');
+if ($mode == "fixup") {
+    $radio->setSelected($f1a);
+}
+if ($mode == "edit") {
+    $radio->setSelected($formdata['f1a']);
+}
+$table->startRow();
+$table->addCell("F.1.a Is approval for the course/unit required from a professional body?:");
+$table->endRow();
+
+$table->startRow();
+$table->addCell($radio->show());
+$table->endRow();
+
+/*$F1a = new dropdown('f1a');
 $F1a->addOption('');
 $F1a->addOption("Yes");
 $F1a->addOption("No");
@@ -89,7 +108,7 @@ $F1a->addOption("No");
 }
 if ($mode == 'edit') {
     $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}*/
+}
 $table->startRow();
 $table->addCell("F.1.a Is approval for the course/unit required from a professional body?:");
 $table->endRow();
@@ -102,11 +121,17 @@ if ($mode == 'edit') {
     $table->startRow();
     $table->addCell($F1a->show());
     $table->endRow();
-}
+}*/
 
 
 $textarea = new textarea('f1b');
 $teaxtarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $f1b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['f1b'];
+}
 
 $table->startRow();
 $table->addCell('F.1.b If yes, state the name of the professional body and provide details of the bodys prerequisites and/or contacts.:');
@@ -116,7 +141,26 @@ $table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
-$F2a = new dropdown('f2a');
+$radio = new radio ('f2a');
+$radio->addOption('y',"yes");
+$radio->addOption('n',"no");
+$radio->setSelected('1');
+$radio->setBreakSpace('</p><p>');
+if ($mode == "fixup") {
+    $radio->setSelected($f1a);
+}
+if ($mode == "edit") {
+    $radio->setSelected($formdata['f2a']);
+}
+$table->startRow();
+$table->addCell("F.2.a Are other Schools or Faculties involved in and/or have interest in the course?:");
+$table->endRow();
+
+$table->startRow();
+$table->addCell($radio->show());
+$table->endRow();
+
+/*$F2a = new dropdown('f2a');
 $F2a->addOption('');
 $F2a->addOption("Yes");
 $F2a->addOption("No");
@@ -126,7 +170,7 @@ $F2a->addOption("No");
 }
 if ($mode == 'edit') {
     $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}*/
+}
 $table->startRow();
 $table->addCell("F.2.a Are other Schools or Faculties involved in and/or have interest in the course?:");
 $table->endRow();
@@ -138,10 +182,16 @@ if ($mode == 'edit') {
     $table->startRow();
     $table->addCell($F2a->show());
     $table->endRow();
-}
+}*/
 
 $textarea = new textarea('f2b');
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $f2b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['f2b'];
+}
 
 $table->startRow();
 $table->addCell('F.2.b If yes, provide the details of the other Schools or Fucalties involvement/interest, including support and provision for the course/unit.:');
@@ -151,7 +201,26 @@ $table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
 
-$F3a = new dropdown('f3a');
+$radio = new radio ('f3a');
+$radio->addOption('y',"yes");
+$radio->addOption('n',"no");
+$radio->setSelected('1');
+$radio->setBreakSpace('</p><p>');
+if ($mode == "fixup") {
+    $radio->setSelected($f1a);
+}
+if ($mode == "edit") {
+    $radio->setSelected($formdata['f3a']);
+}
+$table->startRow();
+$table->addCell("F.3.a Does the course/unit provide service learning?:");
+$table->endRow();
+
+$table->startRow();
+$table->addCell($radio->show());
+$table->endRow();
+
+/*$F3a = new dropdown('f3a');
 $F3a->addOption('');
 $F3a->addOption("Yes");
 $F3a->addOption("No");
@@ -161,7 +230,10 @@ $F3a->addOption("No");
 }
 if ($mode == 'edit') {
     $documentNumber->setSelected(substr($document['refno'], 0, 1));
-}*/
+ *
+ *
+ *
+}
 $table->startRow();
 $table->addCell("F.3.a Does the course/unit provide service learning?:");
 $table->endRow();
@@ -173,11 +245,16 @@ if ($mode == 'edit') {
     $table->startRow();
     $table->addCell($F3a->show());
     $table->endRow();
-}
+}*/
 
 $textarea = new textarea('f3b');
 $teaxtarea->cols = 100;
-
+if ($mode == "fixup") {
+    $textarea->value = $f3b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['f3b'];
+}
 $table->startRow();
 $table->addCell('F.3.b If yes, provide the details on the nature as well as the provisioning for the service learning component and methodology.:');
 $table->endRow();
@@ -188,6 +265,12 @@ $table->endRow();
 
 $textarea = new textarea('f4');
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $f4;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['f4'];
+}
 
 $table->startRow();
 $table->addCell('F.4 Specify whether collaboration, contacts or other cooperation agreements have been, or will need to be, entered into with entities outside of the university?:');

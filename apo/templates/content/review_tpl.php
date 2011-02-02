@@ -88,6 +88,12 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 $textarea = new textarea('g1a');
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $g1a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['g1a'];
+}
 
 $table->startRow();
 $table->addCell('G.1.a How will the course/unit syllabus be reviewed?:');
@@ -99,6 +105,12 @@ $table->endRow();
 
 $textarea = new textarea('g1b');
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $g1b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['g1b'];
+}
 
 $table->startRow();
 $table->addCell('G.1.b How often will the course/unit syllabus be reviewed?:');
@@ -110,6 +122,12 @@ $table->endRow();
 
 $textarea = new textarea('g2a');
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $g2a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['g2a'];
+}
 
 $table->startRow();
 $table->addCell('G.2.a How will integration of course/unit outcome, syllabus, teaching methods and assessment methods be evaluated?:');
@@ -121,6 +139,12 @@ $table->endRow();
 
 $textarea = new textarea('g2b');
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $g2b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['g2b'];
+}
 
 $table->startRow();
 $table->addCell('G.2.b How often will the above integration be reviewed?:');
@@ -132,6 +156,12 @@ $table->endRow();
 
 $textarea = new textarea('g3a');
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $g3a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['g3a'];
+}
 
 $table->startRow();
 $table->addCell('G.3.a How will the course/unit through-put rate be evaluated?:');
@@ -143,6 +173,12 @@ $table->endRow();
 
 $textarea = new textarea('g3b');
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $g3b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['g3b'];
+}
 
 $table->startRow();
 $table->addCell('G.3.b How often will the course/unit through-put be reviewed?:');
@@ -154,6 +190,12 @@ $table->endRow();
 
 $textarea = new textarea('g4a');
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $g4a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['g4a'];
+}
 
 $table->startRow();
 $table->addCell('G.4.a How will theteaching on the course/unit be evaluated from a students perspective and from a lectures perspective?:');
@@ -166,6 +208,12 @@ $table->endRow();
 $textarea = new textarea('g4b');
 $textarea->cols = 100;
 
+if ($mode == "fixup") {
+    $textarea->value = $g4b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['g4b'];
+}
 $table->startRow();
 $table->addCell('G.4.b How often will the teaching on the course/unit be evaluated from these two perspectives?:');
 $table->endRow();

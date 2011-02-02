@@ -85,7 +85,7 @@ $groups[] = array('id' => '2', 'description' => "Work effectively with others as
 $groups[] = array('id' => '3', 'description' => "Organise and manage oneself and one’s activities responsibly and effectively.<br>");
 $groups[] = array('id' => '4', 'description' => "Collect, analyse, organise and critically evaluate information.<br>");
 $groups[] = array('id' => '5', 'description' => "Communicate effectively using visual, mathematical and/or language skills in the modes of oral and/ or written presentation.<br>");
-$groups[] = array('id' => '6', 'description' => "	Use science and technology effectively and critically, showing responsibility towards the environment and health of others.<br>");
+$groups[] = array('id' => '6', 'description' => "Use science and technology effectively and critically, showing responsibility towards the environment and health of others.<br>");
 $groups[] = array('id' => '7', 'description' => "Demonstrate an understanding of the world as a set of related systems by recognising that problem-solving contexts do not exist in isolation.<br>");
 $groups[] = array('id' => '8', 'description' => "	In order to contribute to the full personal development of each learner and the social economic development of the society at large, it must be the intention underlying any programme of learning to make an individual aware of the importance of:
 <br>- Reflecting on and exploring a variety of strategies to learn more effectively;

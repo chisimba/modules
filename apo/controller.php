@@ -1432,6 +1432,8 @@ class apo extends controller {
         $formname = $this->getParam('formname');
         print_r($id);
 
+
+
         $errormessages = array();
 
         $d1a = $this->getParam("d1a");
@@ -1582,7 +1584,7 @@ class apo extends controller {
         $formname = $this->getParam('formname');
         print_r($id);
 
-        $errormessages = array();
+        /*$errormessages = array();
 
         $a = $this->getParam("a");
         $b = $this->getParam("b");
@@ -1649,7 +1651,7 @@ class apo extends controller {
         $formdata["h"] = $h;
         $formdata["i"] = $i;
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $this->objformdata->saveData($id, $formname, $formdata);*/
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -1756,6 +1758,7 @@ class apo extends controller {
 
     public function __showreview() {
         $id = $this->getParam("id");
+
         $formname = $this->getParam('formname');
         print_r($id);
 

@@ -18,7 +18,7 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->setVar('pageSuppressXML', TRUE);
 
 $formdata = $this->objformdata->getFormData("outcomesandassessmentone", $id);
-if ($formdata != null) {
+if ($formdata != null){
     $mode = "edit";
 }
 
@@ -84,23 +84,31 @@ echo $fs->show() . '<br/>';
 
 $legend = "<b>Section D: Outcomes and Assessments - Page One</b>";
 
-//Section D.1.
+$table = $this->newObject('htmltable', 'htmlelements');
 
-$dropdown = new dropdown('d1a');
+
+$d1a = new dropdown('d1a');
 //$dropdown->size = 150;
-$dropdown->addOption('');
-$dropdown->addOption("NQF 5");
-$dropdown->addOption("NQF 6");
-$dropdown->addOption("NQF 7");
-$dropdown->addOption("NQF 8");
-if ($mode == 'fixup') {
-    $dropdown->setSelected($d1a);
+$d1a->addOption('');
+$d1a->addOption("NQF 5");
+$d1a->addOption("NQF 6");
+$d1a->addOption("NQF 7");
+$d1a->addOption("NQF 8");
+if ($mode == "fixup") {
+    $d1a->setSelected($d1a);
+}
+if ($mode == "edit") {
+    $d1a->setSelected($formdata['d1a']);
+}
+
+/*if ($mode == 'fixup') {
+    $documentNumber->setSelected($oldNGF);
 }
 if ($mode == 'edit') {
     $dropdown->setSelected($formdata['d1a']);
 }
 
-$table = $this->newObject('htmltable', 'htmlelements');
+
 $table->startRow();
 $table->addCell("D.1.a. On which OLD NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7 & 8) is the course/unit positioned?:");
 $table->endRow();
@@ -108,30 +116,44 @@ $table->startRow();
 $table->addCell($dropdown->show());
 $table->endRow();
 
-$dropdown = new dropdown('d1b');
-$dropdown->addOption('');
-$dropdown->addOption("<b>NQF 5</b>");
-$dropdown->addOption("NQF 6");
-$dropdown->addOption("NQF 7");
-$dropdown->addOption("NQF 8");
-$dropdown->addOption("NQF 9");
-$dropdown->addOption("NQF 10");
+//if ($mode == 'edit') {
+  //  $table->startRow();
+   // $table->addCell($document['refno'] . '-' . $document['version']);
+    //$table->startRow();
+//} else {
+    $table->startRow();
+    $table->addCell($d1a->show());
+    $table->endRow();
+//}
 
-if ($mode == 'fixup') {
-    $dropdown->setSelected($d1b);
+$d1b = new dropdown('d1b');
+$d1b->addOption('');
+$d1b->addOption("<b>NQF 5</b>");
+$d1b->addOption("NQF 6");
+$d1b->addOption("NQF 7");
+$d1b->addOption("NQF 8");
+$d1b->addOption("NQF 9");
+$d1b->addOption("NQF 10");
+if ($mode == "fixup") {
+    $d1b->setSelected($d1b);
 }
-if ($mode == 'edit') {
-    $dropdown->setSelected($formdata['d1b']);
+if ($mode == "edit") {
+    $d1b->setSelected($formdata['d1b']);
 }
 
-//$table = $this->newObject('htmltable', 'htmlelements');
+
 $table->startRow();
 $table->addCell("D.1.b. On which NEW NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7, 8, 9 & 10) is the course/unit positioned?:");
 $table->endRow();
-$table->startRow();
-$table->addCell($dropdown->show());
-$table->endRow();
-
+//if ($mode == 'edit') {
+   // $table->startRow();
+   // $table->addCell($document['refno'] . '-' . $document['version']);
+  //  $table->endRow();
+//} else {
+    $table->startRow();
+    $table->addCell($d1b->show());
+    $table->endRow();
+//}
 //Section D.2.
 
 $table->startRow();
@@ -140,8 +162,13 @@ $table->endRow();
 
 $textarea = new textarea('d2a');
 $textarea->size = 60;
-$textarea->value = $courseOutcomes;
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d2a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d2a'];
+}
 if ($mode == "fixup") {
     $textarea->value = $d2a;
 }
@@ -159,8 +186,13 @@ $table->endRow();
 
 $textarea = new textarea('d2b');
 $textarea->size = 60;
-$textarea->value = $assessCriteria;
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d2b;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d2b'];
+}
 if ($mode == "fixup") {
     $textarea->value = $d2b;
 }
@@ -178,8 +210,13 @@ $table->endRow();
 
 $textarea = new textarea('d2c');
 $textarea->size = 60;
-$textarea->value = $assessMethods;
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d2c;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d2c'];
+}
 if ($mode == "fixup") {
     $textarea->value = $d2c;
 }
@@ -198,8 +235,13 @@ $table->endRow();
 //Section D.3.
 $textarea = new textarea('d3');
 $textarea->size = 60;
-$textarea->value = $overallAchieve;
 $textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d3;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d3'];
+}
 if ($mode == "fixup") {
     $textarea->value = $d3;
 }

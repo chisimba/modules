@@ -2,7 +2,7 @@
  /*
  * @category  Chisimba
  * @package   apo (Academic Planning Office)
- * @author    Jacqueline Gil
+ * @author    Palesa Mokwena
  */
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
@@ -82,10 +82,6 @@ echo $fs->show() . '<br/>';
   $legend = "Edit document";
   } */
 $table = $this->newObject('htmltable', 'htmlelements');
-//$table->border = 2;
-//$table->cellpadding = '2';
-//$table->cellspacing='3';
-
 
 $textarea = new textarea('c1');
 $textarea->cols=100;
@@ -114,6 +110,12 @@ if ($mode == "edit") {
     $radio->setSelected($formdata['c2a']);
 }
 $radio->setBreakSpace('</p><p>');
+if ($mode == "fixup") {
+    $textarea->value = $c2a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['c2a'];
+}
 $table->startRow();
 $table->addCell("C.2.a. The course/unit is taught:");
 $table->endRow();
@@ -172,6 +174,12 @@ if ($mode == "edit") {
     $radio->setSelected($formdata['c4a']);
 }
 $radio->setBreakSpace('</p><p>');
+if ($mode == "fixup") {
+    $textarea->value = $c4a;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['c4a'];
+}
 $table->startRow();
 $table->addCell("C.4.a. Is any other School/Entity involved in teaching this unit?:");
 $table->endRow();
