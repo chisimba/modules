@@ -83,6 +83,7 @@ class elsicontent extends object {
         $this->sidebar->setSkinPath($this->skinpath);
         $this->mainContent->setCurrentAction($action);
         $this->mainContent->setSkinPath($this->skinpath);
+
         if($action == 'viewstory') {
             $id = $this->getParam('id');
             if(!empty($id)) {
@@ -246,9 +247,14 @@ class elsicontent extends object {
     }
 
     private function getNoContent() {
+        $sideBarLink = new link($this->uri(array(), "news"));
+        $sideBarLink->link = $this->objLanguage->languageText('mod_elsiskin_welcome', 'elsiskin');
         $ret = '
             <div class="clear">&nbsp;</div>
-            <div class="grid_3"></div>
+            <div class="grid_1">
+                <h3>'.$sideBarLink->show().'</h3>
+            </div>
+            <div class="grid_3">&nbsp;</div>
             <div class="clear">&nbsp;</div>';
 
         return $ret;

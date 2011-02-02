@@ -523,7 +523,7 @@ class maincontent extends object {
         $header->str = $story['storytitle'];
         //$this->setVar('pageTitle', $story['storytitle']);
 
-        $str ='<div id="newsstoryheader">'. $header->show();
+        $str ='<div class="grid_3"><div id="newsstoryheader">'. $header->show();
 
         $str .= '<p>'.$objDateTime->formatDateOnly($story['storydate']).'</p></div>';
 
@@ -535,7 +535,8 @@ class maincontent extends object {
 
         $str .= $objSocialBookmarking->diggThis();
         $str .= $objSocialBookmarking->show();
-
+        $str .= "</div>";
+        
         return $str;
     }
 

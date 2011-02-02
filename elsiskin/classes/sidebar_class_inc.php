@@ -61,6 +61,7 @@ class sidebar extends object {
 
     /**
      * Method to set the base skin path
+     * @param string $skinpath the absolute path to the location of elsiskin
      * @return none
      * @access public
      */
@@ -81,6 +82,9 @@ class sidebar extends object {
                 break;
             case 'contact': return $this->showContactSidebar();
                 break;
+            case 'viewstory':
+            case 'viewsingle':return $this->showNewsBlogSidebar();
+                break;
             default: return $this->showHomeSidebar();
         }
     }
@@ -98,15 +102,6 @@ class sidebar extends object {
                 <!-- end .grid_1 -->
                 <!-- End: Sidebar -->';
 
-
-        /*$retstr .= $this->getFacebook();
-        $retstr .= '                <div id="twitter">';
-        $twitwidgetpath = $this->getResourceUri('twi-widget.inc.php', 'elsiskin');
-        $fh = fopen($twitwidgetpath, 'r'); // or die($php_errormsg);
-        $twitwidget = fread($fh, filesize($twitwidgetpath));
-        $retstr .= $twitwidget;
-        fclose($fh); // or die($php_errormsg);
-        $retstr .= '</div>*/
         return $retstr;
     }
 
@@ -173,6 +168,17 @@ class sidebar extends object {
         fclose($fh); // or die($php_errormsg);
 
         $retstr .= '</div>';
+
+        return $retstr;
+    }
+
+    public function showNewsBlogSidebar() {
+        $retstr = '<!-- Start: Sidebar -->
+                   <div id="Sidebar">
+                        <div class="grid_1">
+                            <p><img src="' . $this->skinpath . 'images/dots_blank.png"></p>
+                        </div>
+                   </div>';
 
         return $retstr;
     }
