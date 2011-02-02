@@ -516,8 +516,7 @@ class maincontent extends object {
         $header->type = 1;
         $header->cssClass="newsstorytitleh1";
         $header->str = $story['storytitle'];
-        //$this->setVar('pageTitle', $story['storytitle']);
-
+        
         $str ='<div class="grid_3"><div id="newsstoryheader">'. $header->show();
 
         $str .= '<p>'.$objDateTime->formatDateOnly($story['storydate']).'</p></div>';
