@@ -43,6 +43,8 @@
                     'g9' => array('type' => 'text', 'notnull'=>TRUE),
                     'g10' => array('type' => 'text', 'notnull'=>TRUE),
                     'h11' => array('type' => 'text', 'notnull'=>TRUE),
-                    'h12' => array('type' => 'text', 'notnull'=>TRUE)
+                    'h12' => array('type' => 'text', 'notnull'=>TRUE),
+                    'd6' => array('type' => 'text', 'notnull'=>TRUE),
+                    'd7' => array('type' => 'text', 'notnull'=>TRUE)
                     );
 ?>
