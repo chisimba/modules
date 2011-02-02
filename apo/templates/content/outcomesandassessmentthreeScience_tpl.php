@@ -365,6 +365,46 @@ $table->addCell(" ", null, "center", "center", null, null, '1');
 $table->addCell($button->show(), null, "center", "right", null, null, '1');
 $table->endRow();
 
+/*D.6. State the university credits for the course/unit using as a guide the University Credit Points System tables included in Appendix E.
+ * D.7. Timetable slots/diagonals (applicable to the Faculties of Science, Commerce Law and Management, Humanities)
+ */
+
+$table2 = $this->newObject('htmltable', 'htmlelements');
+
+$textarea = new textarea('d6');
+/*$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d6;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d6'];
+}*/
+$table2->startRow();
+$table2->addCell("D.6. State the university credits for the course/unit using as a guide the University Credit Points System tables included in Appendix E.");
+$table2->endRow();
+$table2->startRow();
+$table2->addCell($textarea->show());
+$table2->endRow();
+
+$textarea = new textarea('d7');
+/*$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $d6;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['d6'];
+}*/
+$table2->startRow();
+$table2->addCell("D.7. Timetable slots/diagonals (applicable to the Faculties of Science, Commerce Law and Management, Humanities).");
+$table2->endRow();
+$table2->startRow();
+$table2->addCell($textarea->show());
+$table2->endRow();
+
 $efs = new fieldset();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {
@@ -384,6 +424,7 @@ $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($label->show());
 $fs->addContent($table->show());
+$fs->addContent($table2->show());
 $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));

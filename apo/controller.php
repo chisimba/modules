@@ -1348,6 +1348,84 @@ class apo extends controller {
         $this->setVarByRef("id", $id);
         return "outcomesandassessmentone_tpl.php";
     }
+    public function __showoutcomesandassessmentoneScience() {
+        $id = $this->getParam("id");
+        $formname = $this->getParam('formname');
+        print_r($id);
+
+       /* $errormessages = array();
+
+        $c1 = $this->getParam("c1");
+        $c2a = $this->getParam("c2a");
+        $c2b = $this->getParam("c2b");
+        $c3 = $this->getParam("c3");
+        $c4a = $this->getParam("c4a");
+        $c4b1 = $this->getParam("c4b1");
+        $c4b2 = $this->getParam("c4b2");
+
+        if ($c1 == null) {
+            $errormessages[] = "Please provide an answer for C.1";
+        }
+        if ($c2a == null) {
+            $errormessages[] = "Please provide an answer for C.2.a";
+        }
+        if ($c2b == null) {
+            $errormessages[] = "Please provide an answer for C.2.b";
+        }
+        if ($c3 == null) {
+            $errormessages[] = "Please provide an answer for C.3";
+        }
+        if ($c4a == null) {
+            $errormessages[] = "Please provide an answer for C.4.a";
+        }
+        if ($c4b1 == null || $c4b2 == null) {
+            $errormessages[] = "Please provide an answer for C.4.b";
+        }
+        if ($c4b2 == null) {
+            $errormessages[] = "Please provide an answer for C.4.b";
+        }
+
+        if (count($errormessages) > 0) {
+
+            $this->setVarByRef("errormessages", $errormessages);
+            $this->setVarByRef("c1", $c1);
+            $this->setVarByRef("c2a", $c2a);
+            $this->setVarByRef("c2b", $c2b);
+            $this->setVarByRef("c3", $c3);
+            $this->setVarByRef("c4a", $c4a);
+            $this->setVarByRef("c4b1", $c4b1);
+            $this->setVarByRef("c4b2", $c4b2);
+            $mode = "fixup";
+            $this->setVarByRef("mode", $mode);
+            $this->setVarByRef("id", $id);
+            return "subsidyrequirements_tpl.php";
+        }
+
+        $formdata = array();
+        $formdata["c1"] = $c1;
+        $formdata["c2a"] = $c2a;
+        $formdata["c2b"] = $c2b;
+        $formdata["c3"] = $c3;
+        $formdata["c4a"] = $c4a;
+        $formdata["c4b1"] = $c4b1;
+        $formdata["c4b2"] = $c4b2;
+
+        $formdata = serialize($formdata);
+
+        $this->objformdata->saveData($id, $formname, $formdata);*/
+//$formname = $this->getParam('form');
+//$c3 = $this->getParam("c3");
+//$c3->label='CEMS (must be 6 characters)';
+//$surname->label='Surname (must be less than 15 characters)';
+//$formname->addRule(array('name'=>'c3','length'=>6), 'Check CESM manual','maxlength');
+//$objForm->addRule(array('name'=>'surname','length'=>6), 'Your surname is too long',*/
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("id", $id);
+        return "outcomesandassessmentoneScience_tpl.php";
+    }
 
     public function __showoutcomesandassessmenttwo() {
         $id = $this->getParam("id");
@@ -1455,6 +1533,48 @@ class apo extends controller {
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
         return "outcomesandassessmentthree_tpl.php";
+    }
+
+    public function __showoutcomesandassessmentthreeScience() {
+        $id = $this->getParam("id");
+        $formname = $this->getParam('formname');
+        print_r($id);
+
+        $errormessages = array();
+
+        $d4_1 = $this->getParam("1");
+        $d4_2 = $this->getParam("2");
+        $d4_3 = $this->getParam("3");
+        $d4_4 = $this->getParam("4");
+        $d4_5 = $this->getParam("5");
+        $d4_6 = $this->getParam("6");
+        $d4_7 = $this->getParam("7");
+        $d4_8 = $this->getParam("8");
+
+  /*      if ($d4_1 == null && $d4_2 == null && $d4_3 == null && $d4_4 == null && $d4_5 == null && $d4_6 == null && $d4_7 == null && $d4_8 == null) {
+            $errormessages[] = "Please provide an answer for D.4";
+        }
+
+        if (count($errormessages) > 0) {
+            $this->setVarByRef("errormessages", $errormessages);
+            $mode = "fixup";
+            $this->setVarByRef("mode", $mode);
+            return "outcomesandassessmenttwo_tpl.php";
+        }*/
+
+        $d4 = $d4_1." ".$d4_2." ".$d4_3." ".$d4_4." ".$d4_5." ".$d4_6." ".$d4_7." ".$d4_8;
+
+        $formdata = array();
+        $formdata["d4"] = $d4;
+        $formdata = serialize($formdata);
+        //$this->objformdata->saveData($id, $formname, $formdata);
+
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("id", $id);
+        return "outcomesandassessmentthreeScience_tpl.php";
     }
 
     public function __showresources() {

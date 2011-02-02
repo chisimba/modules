@@ -1,5 +1,6 @@
 <?php
- /*
+
+/*
  * @category  Chisimba
  * @package   apo (Academic Planning Office)
  * @author    Jacqueline Gil
@@ -14,17 +15,17 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
-$id=$this->getParam('id');
+$id = $this->getParam('id');
 
 $formdata = $this->objformdata->getFormData("outcomesandassessmentthree", $id);
-if ($formdata != null){
+if ($formdata != null) {
     $mode = "edit";
 }
 
 $calculate = $this->uri(array("action" => "editdocument"));
 
 $action = 'showresources';
-$form = new form('outcomesandassessmentthreeform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'outcomesandassessmentthree')));
+$form = new form('outcomesandassessmentthreeform', $this->uri(array('action' => $action, 'id' => $id, 'formname' => 'outcomesandassessmentthree')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section D: Outcomes and Assessment');
 
@@ -86,7 +87,7 @@ $label->labelValue = "<b><i>D.5. Specify the notional study hours expected for t
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->border = 2;
 $table->cellpadding = '2';
-$table->cellspacing='3';
+$table->cellspacing = '3';
 
 $textinput = new textinput('a');
 $textinput->size = 10;
@@ -97,7 +98,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['a'];
 }
-$textinput->onChange = 'onChange = "'.$calculate.'"';
+$textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("a. Over how many weeks will this course run?");
 $table->addCell($textinput->show());
@@ -112,7 +113,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['b'];
 }
-$textinput->onChange = 'onChange = "'.$calculate.'"';
+$textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("b. How many hours of teaching will a particular student experience for this specific course in a single week?");
 $table->addCell($textinput->show());
@@ -127,7 +128,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['c'];
 }
-$textinput->onChange = 'onChange = "'.$calculate.'"';
+$textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("c. How many hours of tutorials will a particular student experience for this specific course in a single week?");
 $table->addCell($textinput->show());
@@ -142,7 +143,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['d'];
 }
-$textinput->onChange = 'onChange = "'.$calculate.'"';
+$textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("d. How many lab hours will a particular student experience for this specific course in a single week? (Note: the assumption is that there is only one staff contact hour per lab, the remaining lab time is student self-study)");
 $table->addCell($textinput->show());
@@ -157,7 +158,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['e'];
 }
-$textinput->onChange = 'onChange = "'.$calculate.'"';
+$textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("e. How many other contact sessions are there each week including periods used for testd or other assessments which have not been included in the number of lecture, tutorial or laboratory sessions.");
 $table->addCell($textinput->show());
@@ -173,7 +174,7 @@ if ($mode == "fixup") {
 
 $table->startRow();
 $table->addCell("<b>Total contact time</b>");
-$table->addCell("<b>".$label->labelValue."</b>");
+$table->addCell("<b>" . $label->labelValue . "</b>");
 $table->endRow();
 
 $textinput = new textinput('f');
@@ -185,7 +186,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['f'];
 }
-$textinput->onChange = 'onChange = "'.$calculate.'"';
+$textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("f. For every hour of lectures or contact with a staff member, how many hours should the student spend studying by her/himself?");
 $table->addCell($textinput->show());
@@ -199,7 +200,7 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("<b>Total notional study hours (excluding the exams)</b>");
-$table->addCell("<b>".$label->labelValue."</b>");
+$table->addCell("<b>" . $label->labelValue . "</b>");
 $table->endRow();
 
 $textinput = new textinput('g');
@@ -211,7 +212,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['g'];
 }
-$textinput->onChange = 'onChange = "'.$calculate.'"';
+$textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("g. How many exams are there per year?");
 $table->addCell($textinput->show());
@@ -226,7 +227,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['h'];
 }
-$textinput->onChange = 'onChange = "'.$calculate.'"';
+$textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("h. How long is each exam?");
 $table->addCell($textinput->show());
@@ -240,7 +241,7 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("<b>Total exam time per year</b>");
-$table->addCell("<b>".$label->labelValue."</b>");
+$table->addCell("<b>" . $label->labelValue . "</b>");
 $table->endRow();
 
 $textinput = new textinput('i');
@@ -252,7 +253,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['i'];
 }
-$textinput->onChange = 'onChange = "'.$calculate.'"';
+$textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("i. How many hours of preparation for the exams is the student expected to undertake?");
 $table->addCell($textinput->show());
@@ -266,7 +267,7 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("<b>Total notional study hours</b>");
-$table->addCell("<b>".$label->labelValue."</b>");
+$table->addCell("<b>" . $label->labelValue . "</b>");
 $table->endRow();
 
 $label = new label();
@@ -277,11 +278,11 @@ if ($mode == "fixup") {
 }
 $table->startRow();
 $table->addCell("<b>Total SAQA Credits</b>");
-$table->addCell("<b>".$label->labelValue."</b>");
+$table->addCell("<b>" . $label->labelValue . "</b>");
 $table->endRow();
 
 $button = new button('calculate', "Calculate");
-$uri = $this->uri(array('action' => 'calculatespreedsheet', 'id' => $id, 'formname'=>'outcomesandassessmentthree'));
+$uri = $this->uri(array('action' => 'calculatespreedsheet', 'id' => $id, 'formname' => 'outcomesandassessmentthree'));
 $action = 'javascript: window.location=\'' . $uri . '\'';
 $button->setToSubmit();
 $table->startRow();
@@ -296,7 +297,7 @@ if (count($errormessages) > 0) {
     $errorstr = '<ul>';
 
     foreach ($errormessages as $errormessage) {
-        $errorstr.='<li class="error">' . $errormessage ;//. '<li/>';
+        $errorstr.='<li class="error">' . $errormessage; //. '<li/>';
     }
     $errorstr.='</li>';
     $efs->addContent($errorstr);
@@ -312,7 +313,7 @@ $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
 $button->setToSubmit();
-$form->addToForm('<br/>'.$button->show());
+$form->addToForm('<br/>' . $button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'showoutcomesandassessmenttwo'));
