@@ -173,7 +173,7 @@ class sidebar extends object {
     }
 
     public function getTwitter() {
-        $retstr .= '<div id="twitter"><img src="' . $this->skinpath . 'images/ELSITwitter.png" width="240" height="239" /></div>';
+        $retstr = '<div id="twitter"><img src="' . $this->skinpath . 'images/ELSITwitter.png" width="240" height="239" /></div>';
 
         return $retstr;
     }
