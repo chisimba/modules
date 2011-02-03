@@ -172,6 +172,12 @@ class sidebar extends object {
         return $retstr;
     }
 
+    public function getTwitter() {
+        $retstr .= '<div id="twitter"><img src="' . $this->skinpath . 'images/ELSITwitter.png" width="240" height="239" /></div>';
+
+        return $retstr;
+    }
+
     public function showNewsBlogSidebar() {
         $retstr = '<!-- Start: Sidebar -->
                    <div id="Sidebar">

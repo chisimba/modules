@@ -171,7 +171,7 @@ class maincontent extends object {
                             '.
                     $this->sidebar->getFacebook()
                         .'</div>
-                        <div class="grid_1 push_1">Twitter</div>
+                        <div class="grid_1 push_1">'.$this->sidebar->getTwitter().'</div>
                         <div class="clear">&nbsp;</div>
                     </div>
                     <div class="grid_2"><p>&nbsp;</p></div>

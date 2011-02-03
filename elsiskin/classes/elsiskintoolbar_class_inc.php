@@ -54,11 +54,15 @@ class elsiskintoolbar extends object {
         $objUser = $this->getObject('user', 'security');
         $userIsLoggedIn = $objUser->isLoggedIn();
         $menuOptions = array(
-            array('action' => 'about', 'text' => 'About', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
-            array('action' => 'staff', 'text' => 'Staff', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
-            array('action' => 'news', 'text' => 'News', 'actioncheck' => array(), 'module' => 'news', 'status' => 'loggedin'),
+            array('action' => 'about', 'text' => 'About<br> Us', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
+            array('action' => 'staff', 'text' => 'eLSI <br>Staff', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
+            array('action' => 'contact', 'text' => 'Contact<br> Us', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
+            array('action' => 'projectsresearch', 'text' => 'Projects<br>& Research', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
+            array('action' => 'supporttraining', 'text' => 'Support<br>& Training', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
+            array('action' => 'news', 'text' => 'Current <br>News', 'actioncheck' => array(), 'module' => 'news', 'status' => 'loggedin')/*,
             array('action' => 'blog', 'text' => 'Blog', 'actioncheck' => array(), 'module' => 'blog', 'status' => 'loggedin'),
-            array('action' => 'logoff', 'text' => 'Logout', 'actioncheck' => array(), 'module' => 'security', 'status' => 'loggedin')
+            array('action' => 'admin', 'text' => 'Admin', 'actioncheck' => array(), 'module' => 'blog', 'status' => 'loggedin'),
+            array('action' => 'logoff', 'text' => 'Logout', 'actioncheck' => array(), 'module' => 'security', 'status' => 'loggedin')*/
         );
         $str = "";
         $usedDefault = FALSE;
@@ -113,10 +117,16 @@ class elsiskintoolbar extends object {
         $usedDefault = $usedDefault ? FALSE : TRUE;
 
         // Add Home Link
-        $home = $this->generateItem('home', 'elsiskin', 'Home', $usedDefault);
+        $home = $this->generateItem('home', 'elsiskin', 'eLSI <br> Home', $usedDefault);
 
         // Return Toolbar
-        $retstr = '<!-- Start: header -->
+        $retstr = $home . $str; /*<li class="level1-li"><a href="#nogo" class="level1-a">Home<!--[if gte IE 7]><!--></a><!--<![endif]--></li>
+
+<li class="level1-li"><a href="#nogo" class="level1-a">About Us</a></li>
+<li class="level1-li"><a href="#nogo" class="level1-a">Our Staff</a></li>
+<li class="level1-li"><a href="#nogo" class="level1-a">Contact Us</a></li>
+<li class="level1-li"><a href="#nogo" class="level1-a">Log In</a></li>
+        /*$retstr = '<!-- Start: header -->
         <div id="header">
             <div class="org_nav">
                 <!-- Start: contactnav -->
@@ -137,7 +147,7 @@ class elsiskintoolbar extends object {
 				</div>
 			<!-- End: Topnav -->
 			</div>
-			<!-- End: .grid_4 -->';
+			<!-- End: .grid_4 -->';*/
 
         return $retstr;
     }
@@ -161,21 +171,22 @@ class elsiskintoolbar extends object {
         }
         $tabClass = "";
         if ($count > 0) {
-            $tabClass .= ' class="tab' . ++$count . '"';
+            $tabClass .= ' class="level1-li"';
         }
 
-        if ($text == "Home") {
-            $tabClass .= ' class="tab1"';
+        if ($action == "home") {
+            $tabClass .= ' class="level1-li"';
         }
 
         if ($isRegistered) {
             $link = new link($this->uri(array('action' => $action), $module));
             $link->link = $text;
+            $link->cssClass = "level1-a";
 
-            $isActive = $isActive ? ' id="current"' : '';
+            //$isActive = $isActive ? ' id="current"' : '';
 
             return '
-						<li' . $isActive . $tabClass . '>' . $link->show() . '</li>';
+						<li' /*. $isActive*/ . $tabClass . '>' . $link->show() . '</li>';
         } else {
             return '';
         }

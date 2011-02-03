@@ -66,7 +66,81 @@ class staffcards extends object {
      * elsi staff
      */
     public function show() {
+        $profiles = array(
+                        array("href"=>"1", "name"=>"Taurai Hungwe", "image"=>"THungwe.jpg", "jobtitle"=>"Instructional Designer","ext"=>"7184", "email"=>"taurai.hungwe@wits.ac.za", "bio"=>"I am a career learner. Teaching and technology is my passion. My interest vary from blended learning, mobile technology, data mining and basketball.")
+                    );
+        $networks = array(
+                        array("href"=>"1","network"=>"No Networks")
+                    );
         $retstr = '
+            <div id="boxes">';
+        foreach($profile as $row) {
+            $retstr .= '
+		<!-- #customize your modal window here -->
+		<div id="dialog'.$row['href'].'" class="window">
+                    <a href="#" class="close">Close</a>
+                    <div class="card_header">
+                        <h1>'.$row['name'].'</h1>
+                        <div class="cardnav">
+                            <ul class="htabs">
+                                <li><a href="#myprofile" class="current">About Me</a></li>
+                                <li><a href="#mynetwork">My Networks</a></li>
+                                <li> <a href="#contact">Contact Me</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="vcard">
+			<div class="tabs">
+				<div class="tab" id="myprofile">
+					<div class="main_content">
+                                            <h2>About <span class="fn">'.$row['name'].'</span></h2>
+                                                <span class="jobtitle"><strong>'.$row['jobtitle'].'</strong>,&nbsp;</span>
+                                                <span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
+                                                <span class="division">KIM</span></span>
+                                                <p><img src="' . $this->skinpath . 'images/'.$row['image'].' class="left" alt="Taurai Hungwe"></p>
+						<p class="bio">'.$row['bio'].'</p>
+					</div>
+				</div>
+				<div style="display: none;" class="tab" id="mynetwork">
+					<div id="profiles">
+                                            <h2><span class="fn">Taurai Hungwe\'s</span> networks</h2>
+                                            <div id="networkmedia">
+                                              <ul>
+                                                    <li>Taurai Hungwe has supplied no networks</li>
+                                              </ul>
+                                              <div class="clear"></div>
+                                            </div>
+					</div>
+				</div>
+				<div style="display: none;" class="tab bmod" id="contact">
+					<div class="adr">  <h2>Contact <span class="fn">'.$row['name'].'</span></h2>
+						<ul>
+                                                    <li class="street-address">Wits Private Bag X3</li>
+                                                    <li><span class="locality"> Johannesburg </span>  <span class="postal-code"> 2050 </span></li>
+
+                                                    <li class="country-name">South Africa</li>
+						</ul>
+					</div>
+					<div class="telecommunications">
+						<p class="tel">Phone
+                                                    <span class="tel">
+                                                    <span class="type">Work</span>: <span class="value">+27 11 717 '.$row['ext'].'</span>
+                                                     <span class="type">Home</span>: <span class="value">+27 84 967 7358</span>
+                                                    <span class="type">Cell</span>: <span class="value">+27 79 040 7170</span>
+                                                    </span>
+						</p>
+						<p class="email">Email: <a class="value" href="mailto:'.$row['name'].'">'.$row['email'].'</a></p>
+						<p class="skype">Skype: Taurai.Hungwe</p>
+						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
+					</div>
+				</div>
+			</div>
+		</div>';
+        }
+
+        $retstr .= '</div>';
+
+        /*$retstr = '
 		<!-- #dialog is the id of a DIV defined in the code below -->
 		<div id="boxes">
 			<!-- #customize your modal window here -->
@@ -1173,10 +1247,10 @@ class staffcards extends object {
 			</div>
 			
 				</div>               
-			</div>   
+			</div>*/
 											   
 			
-			<!-- Do not remove div#mask, because you\'ll need it to fill the whole screen -->	
+	$retstr .='	<!-- Do not remove div#mask, because you\'ll need it to fill the whole screen -->
 			<div id="mask"></div>';
 
         return $retstr;

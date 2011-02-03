@@ -40,6 +40,8 @@ class elsilogo extends object {
 
     // path to root folder of skin
     private $skinpath;
+    // displays toolbar based on who is logged in.
+    private $toolbar;
 
     /**
      * Constructor
@@ -53,6 +55,7 @@ class elsilogo extends object {
      * @return none
      */
     public function setSkinPath($skinpath) {
+        $this->toolbar = $this->getObject('elsiskintoolbar', 'elsiskin');
         $this->skinpath = $skinpath;
     }
 
@@ -62,26 +65,46 @@ class elsilogo extends object {
      * @return string $retstr which displays the wits logo and elsi logo
      */
     public function show() {
-        $retstr = '<div class="clear">&nbsp;</div>
-            <div class="grid_3">
-                <img src="' . $this->skinpath . 'images/logo_wits.png">
-            </div>
-    		<!-- end .grid_3 -->
-            <div class="grid_1">
-                <img src="' . $this->skinpath . 'images/logo_elsi.gif">
-            </div>';
+        $retstr = '
+            <div id="body-wrapper">
+    <!-- Print Header -->
+    <div id="branding"><img height="130px" width="960px" alt="UNIVERSITY OF THE WITWATERSRAND, JOHANNESBURG" src="'.$this->skinpathimages.'print-branding.gif"></div>
 
-        $retstr .= '<!-- Start: Horizontal nav -->
-			 <div class="clear">&nbsp;</div> 
-				<div id="Horizontalnav"> 
-					<div class="wide"></div>
-			<!-- end .grid_2 .push_2 -->
-				</div> 
-			<!-- end .grid_1 -->
-                        </div>
-			<!-- End: header -->
-			 </div>
-			 <!-- End: Horizontal nav -->';
+    	<!-- The Wits Crest -->
+    	<div id="wits-crest"></div>
+
+        <!-- Generic Links -->
+    	<div id="generic-links">
+
+            <!-- Top links -->
+            <div id="top-links">
+            	A-Z listing  |  Contact Us  |  Maps
+                <form>
+                	<input type="text" value="Search »" class="searchbar">
+                    <input type="submit" value="" class="searchbutton">
+                 </form>
+            </div>
+
+            <!-- Tab links -->
+            <div id="tab-links">
+            	<ul>
+                    <li>Wits Home</li>
+                    <li>Alumni</li>
+                    <li>About Us</li>
+                </ul>
+
+            </div>
+
+
+        </div>
+                    <div class="clear">&nbsp;
+            </div>
+        <div id="dropList">
+<ul id="menu">'.$this->toolbar->show().'</ul>
+</div>
+        <!-- To clear floats -->
+        <div id="clearfix"></div>
+';
 
         return $retstr;
     }
