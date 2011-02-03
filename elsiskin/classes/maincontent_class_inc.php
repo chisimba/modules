@@ -202,160 +202,27 @@ class maincontent extends object {
      * @access public
      */
     public function showStaffMain() {
-		$retstr = '
-                    <div class="grid_3">
+	$objStaffProfiles = $this->getObject('staffprofiles');
+        $objStaffProfiles->setSkinPath($this->skinpath);
+        $retstr = '
+                <div class="grid_3">
                     <p>ELSI staff have an interest and the ability to assist with the effective educational use of ICTs
-                    </p><div id="container">
+                    </p>
+                    <div id="container">';
+        $retstr .= $objStaffProfiles->show();
+        $retstr .= "</div>
+                </div>";
 
 
-                    <ul class="business_cards">
-                            <li>
-                                    <a name="modal" href="#dialog11">
-                                    <h3 class="name">Agnes Chigona</h3>
-                                    <img width="75" height="90" class="left" alt="" src="'.$this->skinpath.'images/AgnesChigona.jpg">
-                                            <p class="jobtitle">Research Fellow</p>
-                                            <span class="phone">+ 27 11 717 7181</span><br>
-                                            <span class="email">agnes.chigona@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog6">
-                                    <h3 class="name">Shakira Choonara</h3>
-                                    <img width="75" height="90" alt="Shakira Choonara" class="left" src="'.$this->skinpath.'images/schoonara.jpg">
-                                            <p class="jobtitle">Office Administrator</p>
-                                            <span class="phone">+27 11 717 7161</span><br>
-                                            <span class="email">shakira.choonara2@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog2">
-                                    <h3 class="name">Rabelani Dagada</h3>
-                                    <img width="75" height="90" class="left" alt="Rabelani Dagada" src="'.$this->skinpath.'images/RDagada.jpg">
-                                            <p class="jobtitle">e Learning Manager</p>
-                                            <span class="phone">+ 27 11 717 7184</span><br>
-                                            <span class="email">rabelani.dagada@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog1">
-                                    <h3 class="name">Taurai Hungwe</h3>
-                                    <img width="75" height="90" class="left" alt="T Hungwe" src="'.$this->skinpath.'images/THungwe.jpg">
-                                            <p class="jobtitle">Instructional Designer</p>
-                                            <span class="phone">+ 27 11 717 7184</span><br>
-                                            <span class="email">taurai.hungwe@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog15"><h3 class="name">Noxolo Mbana </h3>
-                                    <img width="75" height="90" class="left" alt="" src="'.$this->skinpath.'images/noxolombana.jpg">
-                                            <p class="jobtitle">Researcher</p>
-                                            <span class="phone">+27 11 717 7164</span><br>
-                                            <span class="email">noxolo.mbana@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog14">
-                                    <h3 class="name">Reginald Moledi</h3>
-                                    <img width="75" height="90" class="left" alt="" src="'.$this->skinpath.'images/regimoledi.jpg">
-                                            <p class="jobtitle">Instructional Developer</p>
-                                            <span class="phone">+27 11 717 7170</span><br>
-                                            <span class="email">reginald.moledi@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog4">
-                                    <h3 class="name">Derek Moore</h3>
-                                    <img width="75" height="90" alt="Derek Moore" class="left" src="'.$this->skinpath.'images/dmoore.jpg">
-                                                    <p class="jobtitle">Content Developer</p>
-                                                    <span class="phone">+ 27 11 717 7171</span><br>
-                                                    <span class="email">derek.moore@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog13">
-                                    <h3 class="name">Paul Mungai</h3>
-                                    <img width="75" height="90" class="left" alt="Paul Mungai" src="'.$this->skinpath.'images/PaulMungai.jpg">
-                                                    <p class="jobtitle">Software Developer</p>
-                                                    <span class="phone">+27 11 717 7183</span><br>
-                                                    <span class="email">paul.mungai@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog10">
-                                    <h3 class="name">Tessa Murray </h3>
-                                    <img width="75" height="90" class="left" alt="Tessa Murray" src="'.$this->skinpath.'images/tessa_murry.jpg">
-                                            <p class="jobtitle">Team leader: Content developer</p>
-                                            <span class="phone">+ 27 11 717 7178</span><br>
-                                            <span class="email">tessa.murray@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog12">
-                                    <h3 class="name"> Neo Petlele </h3>
-                                    <img width="75" height="90" class="left" alt="Neo.Petlele" src="'.$this->skinpath.'images/Neo.Petlele.jpg">
-                                                    <p class="jobtitle">Research Assistant</p>
-                                                    <span class="phone">+27 11 717 7183</span><br>
-                                                    <span class="email">neo.Petlele@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog3">
-                                    <h3 class="name">Nkululeko (Nguni) Phakela</h3>
-                                    <img width="75" height="90" class="left" alt="Nkululeko Phakela" src="'.$this->skinpath.'images/NkululekoPhakela.jpg">
-                                    <p class="jobtitle">Software Developer</p>
-                                    <span class="phone">+ 27 11 717 7182</span><br>
-                                    <span class="email">nguni52@gmail.com</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog7">
-                                    <h3 class="name">Fatima Rahiman</h3>
-                                    <img width="75" height="90" alt="Fatima Rahiman" class="left" src="'.$this->skinpath.'images/frahiman.jpg">
-                                    <p class="jobtitle">Team leader: Instructional designer</p>
-                                    <span class="phone">+ 27 11 717 7174</span><br>
-                                    <span class="email">fatima.rahiman@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog5">
-                                    <h3 class="name">James Smurthwaite</h3>
-                                    <img width="75" height="90" class="left" alt="James Smurthwaite" src="'.$this->skinpath.'images/Profile_Pic_James.gif">
-                                    <p class="jobtitle">Content Developer</p>
-                                    <span class="phone">+27 11 717 7169</span><br>
-                                    <span class="email">james.smurthwaite@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog8">
-                                    <h3 class="name">Ofentse Tabane</h3>
-                                    <img width="75" height="90" alt="Ofentse Tabane" class="left" src="'.$this->skinpath.'images/otabane.jpg">
-                                    <p>Assistant Instructional Designer</p>
-                                    <span class="phone">+ 27 11 717 7172</span><br>
-                                    <span class="email">ofentse.tabane@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                            <li>
-                                    <a name="modal" href="#dialog9">
-                                    <h3 class="name">David Wafula </h3>
-                                    <img width="75" height="90" class="left" alt="" src="'.$this->skinpath.'images/DavidWafula.jpg">
-                                    <p class="jobtitle">Team Leader Software Development</p>
-                                    <span class="phone">+ 27 11 717 7180</span><br>
-                                    <span class="email">david.wafula@wits.ac.za</span><br>
-                                    </a>
-                            </li>
-                    </ul>
-                    </div>
-                    </div>
-                    <!-- end .grid_3 -->';
 
-		return $retstr;
-	 }
-        /**
-         * Method to show the main content of the contact us page
-         * @return string
-         * @access public
-         */
-        public function showContactMain() {
+        return $retstr;
+     }
+    /**
+     * Method to show the main content of the contact us page
+     * @return string
+     * @access public
+     */
+    public function showContactMain() {
             $submission = $this->getParam('submission');
             $message = "";
             if(!empty($submission)) {
@@ -431,7 +298,7 @@ class maincontent extends object {
      * @return string
      * @access private
      */
-     private function getBlogs() {
+    private function getBlogs() {
         $this->loadClass('href', 'htmlelements');
         $num = 3;
         $data = $this->objDbBlog->getLastPosts($num);
