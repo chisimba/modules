@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This class interfaces with db to store a list of files uploaded
  *  PHP version 5
@@ -46,8 +45,13 @@ class dbdocuments extends dbtable {
         $replacewith = "";
         $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
     }
-
-    public function getdocuments($mode="default", $rejected = "N") {
+    /*
+     * Function to get documents based on passed params
+     * @param string rejected
+     * @param string active
+     * @param string mode
+     */
+    public function getdocuments($mode="default", $rejected = "N", $active="N") {
         /*
           if (strcmp($rejected, 'Y') == 0) {
           $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
@@ -68,7 +72,7 @@ class dbdocuments extends dbtable {
           $sql.=" and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
           } */
 
-        $sql = "select * from tbl_wicid_documents where (deleteDoc = 'N' or deleteDoc is null) and  (active='N' or active is null)
+        $sql = "select * from tbl_wicid_documents where (deleteDoc = 'N' or deleteDoc is null) and  (active='$active' or active is null)
         and (rejectDoc= '$rejected' or rejectDoc is null)";
         if (!$this->objUser->isadmin()) {
 
@@ -92,8 +96,106 @@ class dbdocuments extends dbtable {
             if ($row['upload'] == '') {
                 $attachmentStatus = "No";
             } else {
-                $f = $row['filename'];
-                $attachmentStatus = 'Yes&nbsp;<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($f) . '-16x16.png">';
+                //$f = $row['filename'];
+                //$attachmentStatus = 'Yes&nbsp;<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($f) . '-16x16.png">';
+            }
+
+            $statusS = $row['status'];
+            switch ($statusS) {
+                case 0:
+                    $status = "Creator";
+                    break;
+                case 1:
+                    $status = "APO";
+                    break;
+                case 2:
+                    $status = "Subfaculty";
+                    break;
+                case 3:
+                    $status = "Faculty";
+                    break;
+                case 4:
+                    $status = "Senate";
+                    break;
+            }
+
+            $currentuserid = $row['currentuserid'];
+            $fullname = $this->objUser->fullname($currentuserid);
+
+            $docs[] = array(
+                'userid' => $row['userid'],
+                'owner' => $owner,
+                'refno' => $row['refno'] . "-" . $row['ref_version'],
+                'filename' => $row['docname'],
+                'group' => $row['groupid'],
+                'id' => $row['id'],
+                'topic' => $row['topic'],
+                'department' => $row['department'],
+                'telephone' => $row['telephone'],
+                'date' => $row['date_created'],
+                'attachmentstatus' => $attachmentStatus,
+                'status' => $status,
+                'currentuserid' => $fullname,
+                'version' => $row['version'],
+                'ref_version' => $row['ref_version']
+            );
+        }
+        //echo json_encode(array("documents" => $docs));
+        return $docs;
+    }
+    /*
+     * Function to get rejected documents based on passed params
+     * @param string rejected
+     * @param string active
+     * @param string mode
+     */
+    public function getRejectedDocuments($mode="default", $rejected = "Y") {
+        /*
+          if (strcmp($rejected, 'Y') == 0) {
+          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
+          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
+          where A.active = 'N'
+          and A.deleteDoc = 'N'
+          and A.rejectDoc = 'Y'";
+          } else {
+          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
+          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
+          where A.active = 'N'
+          and A.deleteDoc = 'N'
+          and A.rejectDoc = 'N'";
+
+          }
+
+          if ($mode = "apo") {
+          $sql.=" and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
+          } */
+
+        $sql = "select * from tbl_wicid_documents where rejectDoc= '$rejected'";
+        
+        if (!$this->objUser->isadmin()) {
+
+            $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
+        }
+        $sql.=' order by puid DESC';
+
+
+        $rows = $this->getArray($sql);
+        $docs = array();
+        //print_r($rows);
+
+        foreach ($rows as $row) {
+            //$owner=$this->userutils->getUserId();
+            if (strlen(trim($row['contact_person'])) == 0) {
+                $owner = $this->objUser->fullname($row['userid']);
+            } else {
+                $owner = $row['contact_person'];
+            }
+
+            if ($row['upload'] == '') {
+                $attachmentStatus = "No";
+            } else {
+                //$f = $row['filename'];
+                //$attachmentStatus = 'Yes&nbsp;<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($f) . '-16x16.png">';
             }
 
             $statusS = $row['status'];
@@ -206,6 +308,7 @@ class dbdocuments extends dbtable {
             'active' => $approved,
             'status' => $status,
             'currentuserid' => $currentuserid,
+            'deleteDoc' => "N",
             'ref_version' => $ref_version,
             'version' => $version
         );
@@ -223,11 +326,11 @@ class dbdocuments extends dbtable {
     }
 
     /**
-     * sets active to Y to docs with supplied id
+     * sets active to Y and deleteDoc to N for the submitted docs
      * @param <type> $docids
      */
     function approveDocs($docids) {
-        $data = array('active' => 'Y');
+        $data = array('active' => 'Y', 'deleteDoc' => 'N');
         $ids = explode(",", $docids);
         $userid = $this->userutils->getUserId();
         $ext = '.na';
@@ -266,6 +369,18 @@ class dbdocuments extends dbtable {
             } else {
                    rename($filename, $newname);
             }
+        }
+    }
+    /**
+     * sets delete to by setting deleteDoc value to Y to docs with supplied id
+     * @param <type> $docids
+     */
+    function deleteDocuments($docids) {
+        $data = array('deleteDoc' => 'Y', 'active' => 'N');
+        $ids = explode(",", $docids);
+        $userid = $this->userutils->getUserId();
+        foreach ($ids as $id) {
+            $this->update('id', $id, $data);
         }
     }
 
@@ -328,6 +443,18 @@ class dbdocuments extends dbtable {
         $res = $this->getArray($sql);
 
         return (int) $res[0]['myrefno'] + 1;
+    }
+    
+    /*
+     * Get Id using the refno
+     * @param string refno
+     * @return id
+     */
+    function getIdWithRefNo($refno) {
+        $refnumber = explode("-",$refno);
+        $res = $this->getRow("refno", $refnumber[0]);
+        $res = $this->getAll("where refno='" . $refnumber[0] . "' and ref_version='" . $refnumber[1] . "'");
+        return $res[0]['id'];
     }
 
     function getRefNo($id) {

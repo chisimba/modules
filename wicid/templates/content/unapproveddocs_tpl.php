@@ -155,6 +155,7 @@ echo $fs->show() . '<br/>';
 
 $table = $this->getObject("htmltable", "htmlelements");
 $table->startHeaderRow();
+$table->addHeaderCell("Select");
 $table->addHeaderCell("Title");
 $table->addHeaderCell("Ref No");
 $table->addHeaderCell("Owner");
@@ -174,16 +175,23 @@ if (count($documents) > 0) {
         $link->link = $document['filename'];
 
         //Dont show checkbox if there is no attachment
-        if ($document['attachmentstatus'] == 'No') {
-            $approve = new hiddeninput($document['id'] . '_app', "");
-        } else {
-            //Create checkbox to help select record for batch approval
-            $approve = &new checkBox($document['id'] . '_app', Null, Null);
-            $approve->setValue('approve');
-        }
+        /*
+          if ($document['attachmentstatus'] == 'No') {
+          $approve = new hiddeninput($document['id'] . '_app', "");
+          } else {
+          //Create checkbox to help select record for batch approval
+          $approve = &new checkBox($document['id'] . '_app', Null, Null);
+          $approve->setValue('approve');
+          } */
+
+        //Show checkbox even without attachment
+        //Create checkbox to help select record for batch execution
+        $approve = &new checkBox($document['id'] . '_app', Null, Null);
+        $approve->setValue('execute');
+        
+        //Add row to render the record data
         $table->startRow();
         $table->addCell($approve->show());
-
         $table->addCell($link->show());
         $table->addCell($document['refno']);
         $table->addCell($document['owner']);
@@ -203,12 +211,17 @@ if (count($documents) > 0) {
 }
 
 // Form
-$form = new form('registerdocumentform', $this->uri(array('action' => 'batchapprove', 'mode' => $mode)));
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active'=>'N')));
 $form->addToForm($table->show());
 
-$button = new button('save', $this->objLanguage->languageText('mod_wicid_approveselected', 'wicid', 'Approve Selected'));
+$button = new button('submit', $this->objLanguage->languageText('mod_wicid_approveselected', 'wicid', 'Approve Selected'));
 $button->setToSubmit();
 $form->addToForm('<br/>' . $button->show());
+
+$button = new button('submit', $this->objLanguage->languageText('mod_wicid_deleteselected', 'wicid', 'Delete Selected'));
+$button->setToSubmit();
+
+$form->addToForm(" | ".$button->show());
 
 //Create legend for the unnapproved docs
 $fs = new fieldset();

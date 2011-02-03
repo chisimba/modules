@@ -193,6 +193,7 @@ class wicid extends controller {
         $rejecteddocuments = $this->documents->getdocuments($this->mode, "Y");
 
         $dir = $this->getParam("folder", "");
+        $mode = $this->getParam("mode", "");
 
         $objPreviewFolder = $this->getObject('previewfolder');
 
@@ -205,6 +206,7 @@ class wicid extends controller {
         $files = $this->objUtils->getFiles($dir);
         $this->setVarByRef("files", $files);
         $this->setVarByRef("documents", $documents);
+        $this->setVarByRef("mode", $mode);
         $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
         $selected = $this->baseDir . $selected;
         $this->setVarByRef("selected", $selected);
@@ -723,16 +725,34 @@ class wicid extends controller {
      * Function that approves documents in batch
      */
 
-    function __batchapprove() {
+    function __batchexecute() {
+        //Get parameters
+        $submit = $this->getParam('submit');
         $id = $this->getParam('id');
         $mode = $this->getParam('mode');
-        $documents = $this->documents->getdocuments($this->mode);
-        //Step through the documents and approve those selected
-        if (isset($documents)) {
-            foreach ($documents as $document) {
-                if($document['attachmentstatus']!="No")
-                if ($this->getParam($document['id'] . '_app') == 'approve') {
-                    $this->documents->approveDocs($document['id']);
+        $active = $this->getParam('active');
+        $rejected = $this->getParam('rejected', 'N');
+
+        $documents = $this->documents->getdocuments($this->mode, $rejected, $active);
+        //Check and execute action
+        if ($submit == "Approve Selected") {
+            //Step through the documents and approve those selected
+            if (isset($documents)) {
+                foreach ($documents as $document) {
+                    //if ($document['attachmentstatus'] != "No")
+                    if ($this->getParam($document['id'] . '_app') == 'execute') {
+                        $this->documents->approveDocs($document['id']);
+                    }
+                }
+            }
+        } elseif ($submit == "Delete Selected") {
+
+            //Step through the documents and approve those selected
+            if (isset($documents)) {
+                foreach ($documents as $document) {
+                    if ($this->getParam($document['id'] . '_app') == 'execute') {
+                        $this->documents->deleteDocuments($document['id']);
+                    }
                 }
             }
         }
@@ -1008,12 +1028,14 @@ class wicid extends controller {
         $documents = $this->documents->getdocuments($this->mode);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
-        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("mode", $this->mode);
         return "unapproveddocs_tpl.php";
     }
 
     public function __rejecteddocuments() {
         $selected = "rejecteddocuments";
+        $documents = $this->documents->getRejectedDocuments($this->mode,'Y','Y');
+        $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
         return "rejecteddocuments_tpl.php";
     }
