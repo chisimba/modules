@@ -68,7 +68,7 @@ class elsilogo extends object {
         $retstr = '
             <div id="body-wrapper">
     <!-- Print Header -->
-    <div id="branding"><img height="130px" width="960px" alt="UNIVERSITY OF THE WITWATERSRAND, JOHANNESBURG" src="'.$this->skinpathimages.'print-branding.gif"></div>
+    <div id="branding"><img height="130px" width="960px" alt="UNIVERSITY OF THE WITWATERSRAND, JOHANNESBURG" src="'.$this->skinpath.'images/print-branding.gif"></div>
 
     	<!-- The Wits Crest -->
     	<div id="wits-crest"></div>
