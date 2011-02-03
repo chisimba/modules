@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class interfaces with db to store a list of files uploaded
  *  PHP version 5
@@ -45,12 +46,14 @@ class dbdocuments extends dbtable {
         $replacewith = "";
         $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
     }
+
     /*
      * Function to get documents based on passed params
      * @param string rejected
      * @param string active
      * @param string mode
      */
+
     public function getdocuments($mode="default", $rejected = "N", $active="N") {
         /*
           if (strcmp($rejected, 'Y') == 0) {
@@ -80,7 +83,7 @@ class dbdocuments extends dbtable {
         }
         $sql.=' order by puid DESC';
 
-        
+
         $rows = $this->getArray($sql);
         $docs = array();
         //print_r($rows);
@@ -143,12 +146,14 @@ class dbdocuments extends dbtable {
         //echo json_encode(array("documents" => $docs));
         return $docs;
     }
+
     /*
      * Function to get rejected documents based on passed params
      * @param string rejected
      * @param string active
      * @param string mode
      */
+
     public function getRejectedDocuments($mode="default", $rejected = "Y") {
         /*
           if (strcmp($rejected, 'Y') == 0) {
@@ -171,7 +176,7 @@ class dbdocuments extends dbtable {
           } */
 
         $sql = "select * from tbl_wicid_documents where rejectDoc= '$rejected'";
-        
+
         if (!$this->objUser->isadmin()) {
 
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
@@ -241,31 +246,29 @@ class dbdocuments extends dbtable {
         //echo json_encode(array("documents" => $docs));
         return $docs;
     }
-
+    /*
+     * Function to get the number of unapproved documents
+     */
     function getUnapprovedDocsCount() {
-        $sql = "select count(id) as total from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'N'";
+        $sql = "select count(id) as total from tbl_wicid_documents where (deleteDoc = 'N' or deleteDoc is null) and  active='N'";
 
         if (!$this->objUser->isadmin()) {
-       $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
+            $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
         $data = $this->getArray($sql);
-        foreach ($data as $row) {
-            return $row['total'];
-        }
-        return "0";
+        $recordcount = $data[0]['total'];
+        return $recordcount;
     }
-
+    /*
+     * Function to get the number of rejected documents
+     */
     function getRejectedDocsCount() {
-        $sql = "select count(id) as total from tbl_wicid_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'Y'";
+        $sql = "select count(id) as total from tbl_wicid_documents where rejectDoc= 'Y'";
         if (!$this->objUser->isadmin()) {
-
-           $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
+            $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
         $data = $this->getArray($sql);
-        foreach ($data as $row) {
-            return $row['total'];
-        }
-        return "0";
+        return $data[0]['total'];
     }
 
     /**
@@ -367,10 +370,11 @@ class dbdocuments extends dbtable {
                     'filepath' => $doc['topic'] . '/' . $doc['docname'] . $ext);
                 $result = $this->objUploadTable->saveFileInfo($data);
             } else {
-                   rename($filename, $newname);
+                rename($filename, $newname);
             }
         }
     }
+
     /**
      * sets delete to by setting deleteDoc value to Y to docs with supplied id
      * @param <type> $docids
@@ -444,14 +448,15 @@ class dbdocuments extends dbtable {
 
         return (int) $res[0]['myrefno'] + 1;
     }
-    
+
     /*
      * Get Id using the refno
      * @param string refno
      * @return id
      */
+
     function getIdWithRefNo($refno) {
-        $refnumber = explode("-",$refno);
+        $refnumber = explode("-", $refno);
         $res = $this->getRow("refno", $refnumber[0]);
         $res = $this->getAll("where refno='" . $refnumber[0] . "' and ref_version='" . $refnumber[1] . "'");
         return $res[0]['id'];
@@ -465,9 +470,10 @@ class dbdocuments extends dbtable {
 
     function getRefFullNo($id) {
         $res = $this->getRow("id", $id);
-        return $res['refno'].'-'.$res['ref_version'];
+        return $res['refno'] . '-' . $res['ref_version'];
     }
-     function getRefVersion($id) {
+
+    function getRefVersion($id) {
         $res = $this->getRow("id", $id);
         return $res['ref_version'];
     }
@@ -489,8 +495,8 @@ class dbdocuments extends dbtable {
 
     function updateInfo($id, $data) {
         $version = $this->getVersion($id);
-        $data['version'] =$version;
-        return $this->update("id", $id,  $data);
+        $data['version'] = $version;
+        return $this->update("id", $id, $data);
     }
 
     function changeCurrentUser($userid, $docid, $version) {
