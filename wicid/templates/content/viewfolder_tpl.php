@@ -14,10 +14,12 @@ if ($selected == '') {
     $folders = $this->getDefaultFolder($this->baseDir);
     $selected = $folders[0];
 }
+if($selected !="unknown0"){
 $cfile = substr($selected, strlen($this->baseDir));
 $header->str = $cfile;
 
 echo $header->show();
+}
 
 $createFolder = "";
 if ($this->objUser->isAdmin()) {
