@@ -156,10 +156,7 @@ class elsiskintoolbar extends object {
             $link->link = $text;
             $link->cssClass = "level1-a";
 
-            //$isActive = $isActive ? ' id="current"' : '';
-
-            return '
-						<li' /*. $isActive*/ . $tabClass . '>' . $link->show() . '</li>';
+            return '<li' . $tabClass . '>' . $link->show() . '</li>';
         } else {
             return '';
         }
