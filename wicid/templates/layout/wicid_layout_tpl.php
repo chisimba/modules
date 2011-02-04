@@ -11,6 +11,49 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('tabcontent', 'htmlelements');
 
+//Create a table to hold the search params
+$ftable = &$this->newObject("htmltable", "htmlelements");
+
+//Set width
+$ftable->width = "20%";
+
+//Create a dropdown to hold the search parameters
+$filterdrops = new dropdown('filter');
+
+$filterdrops->addOption("Ref No.");
+$filterdrops->addOption("Title");
+$filterdrops->addOption("Owner");
+$filterdrops->addOption("Telephone");
+$filterdrops->addOption("Date");
+
+//Create a submit button
+$filterbutton = new button('filtersearch', "Search");
+$filterbutton->setToSubmit();
+
+$ftable->startRow();
+$ftable->addCell("Search by: ");
+$ftable->endRow();
+
+$ftable->startRow();
+$ftable->addCell($filterdrops->show());
+$ftable->endRow();
+
+$ftable->startRow();
+$ftable->addCell($filterbutton->show());
+$ftable->endRow();
+
+
+//Add a form to contain the search feature
+$form = new form('searchdocs', $this->uri(array('action' => 'filtersearch')));
+$form->addToForm($ftable->show());
+//Add search table to fieldset
+$filterset = new fieldset();
+$filterset->setLegend('Search Documents');
+$filterset->addContent($form->show());
+
+$filters = $filterset->show();
+
+
 $searchForm = new form('filesearch', $this->uri(array('action' => 'search')));
 $searchForm->method = 'GET';
 $hiddenInput = new hiddeninput('module', 'filemanager');
@@ -36,8 +79,17 @@ $header->str = $this->objLanguage->languageText('mod_wicid_name', 'wicid', 'WICI
 
 $leftColumn = $header->show();
 
-$leftColumn .= $searchForm->show();
-$leftColumn .= '<div class="filemanagertree">' . $nav . '</div>';
+//Disable old search
+//$leftColumn .= $searchForm->show();
+//New Search
+$leftColumn .= $filters;
+//Add navigation table to fieldset
+$linkset = new fieldset();
+$linkset->setLegend('Links');
+$linkset->addContent('<div class="filemanagertree">' . $nav . '</div>');
+
+$filters = $filterset->show();
+$leftColumn .= $linkset->show();
 $cssLayout->setLeftColumnContent($leftColumn);
 
 $cssLayout->setMiddleColumnContent($this->getContent());

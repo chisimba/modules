@@ -14,11 +14,11 @@ if ($selected == '') {
     $folders = $this->getDefaultFolder($this->baseDir);
     $selected = $folders[0];
 }
-if($selected !="unknown0"){
-$cfile = substr($selected, strlen($this->baseDir));
-$header->str = $cfile;
+if ($selected != "unknown0") {
+    $cfile = substr($selected, strlen($this->baseDir));
+    $header->str = $cfile;
 
-echo $header->show();
+    echo $header->show();
 }
 
 $createFolder = "";
@@ -52,16 +52,15 @@ $fs->addContent($links);
 
 echo $fs->show();
 
-$table = $this->getObject("htmltable", "htmlelements");
-
+$table = &$this->newObject("htmltable", "htmlelements");
 if (count($files) > 0) {
-    $table->startHeaderRow();
-    $table->addHeaderCell("Select");
-    $table->addHeaderCell("Type");
-    $table->addHeaderCell("Title");
-    $table->addHeaderCell("Ref No");
-    $table->addHeaderCell("Owner");
-    $table->endHeaderRow();
+    $table->startRow();
+    $table->addCell("<b>Select</b>");
+    $table->addCell("<b>Type</b>");
+    $table->addCell("<b>Title</b>");
+    $table->addCell("<b>Ref No</b>");
+    $table->addCell("<b>Owner</b>");
+    $table->endRow();
     foreach ($files as $file) {
         $dlink1 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
         $dlink1->link = $file['thumbnailpath'];
@@ -89,7 +88,7 @@ if (count($files) > 0) {
     $table->endRow();
 }
 //Add Form
-$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active'=>'Y')));
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active' => 'Y')));
 $form->addToForm($table->show());
 
 $button = new button('submit', $this->objLanguage->languageText('mod_wicid_deleteselected', 'wicid', 'Delete Selected'));
