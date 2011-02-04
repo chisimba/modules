@@ -301,6 +301,7 @@ class dbdocuments extends dbtable {
             if ($row['upload'] == '') {
                 $attachmentStatus = "No";
             } else {
+                $attachmentStatus = Null;
                 //$f = $row['filename'];
                 //$attachmentStatus = 'Yes&nbsp;<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($f) . '-16x16.png">';
             }

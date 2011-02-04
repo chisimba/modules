@@ -7,7 +7,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 if (isset($refno)) {
-    echo '<div class="warning"><strong>The ref number is ' . $refno . '</strong></div>';
+    echo '<div class="warning"><strong>'.$this->objLanguage->languageText('mod_wicid_refnois', 'wicid', 'The ref number is').' ' . $refno . '</strong></div>';
 }
 
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
@@ -38,7 +38,6 @@ $this->appendArrayVar('headerParams', '
                 checkFolder(jQuery("#input_foldername").attr(\'value\'), jQuery("#input_parentfolder").attr(\'value\'));
             });
             jQuery("#input_parentfolder").change(function() {
-            alert("Was selected");
                 checkFolder(jQuery("#input_foldername").attr(\'value\'), jQuery("#input_parentfolder").attr(\'value\'));
             });
         });
@@ -63,7 +62,7 @@ $this->appendArrayVar('headerParams', '
 
                 currentFolder = folder;
 
-                jQuery("#spanfoldermessage").html("The name "+folder+" is reserved. Kindly type in another one");
+                jQuery("#spanfoldermessage").html("'.$this->objLanguage->languageText('mod_wicid_thename', 'wicid', 'The name').' "+folder+" '.$this->objLanguage->languageText('mod_wicid_isreservedselectother', 'wicid', 'is reserved. Kindly type in another one').'");
                 jQuery("#spanfoldermessage").addClass("error");
                 jQuery("#input_foldername").addClass("inputerror");
                 jQuery("#spanfoldermessage").removeClass("success");
@@ -76,7 +75,7 @@ $this->appendArrayVar('headerParams', '
 
                     // Set message to checking
                     jQuery("#spanfoldermessage").removeClass("success");
-                    jQuery("#spanfoldermessage").html("<span id=\"folderexistscheck\">' . addslashes($objIcon->show()) . ' Checking ...</span>");
+                    jQuery("#spanfoldermessage").html("<span id=\"folderexistscheck\">' . addslashes($objIcon->show()) . ' '.$this->objLanguage->languageText('mod_wicid_checking', 'wicid', 'Checking').' ...</span>");
 
                     // Set current Folder
                     currentFolder = folder;
@@ -93,7 +92,7 @@ $this->appendArrayVar('headerParams', '
 
                                 // IF folder exists
                                 if (msg == "exists") {
-                                    jQuery("#spanfoldermessage").html("A folder with the name "+folder+" already exists");
+                                    jQuery("#spanfoldermessage").html("'.$this->objLanguage->languageText('mod_wicid_afolderwithname', 'wicid', 'A folder with the name').' "+folder+" '.$this->objLanguage->languageText('mod_wicid_alreadyexists', 'wicid', 'already exists').'");
                                     jQuery("#spanfoldermessage").addClass("error");
                                     jQuery("#input_foldername").addClass("inputerror");
                                     jQuery("#spanfoldermessage").removeClass("success");
@@ -101,7 +100,7 @@ $this->appendArrayVar('headerParams', '
 
                                 // Else
                                 } else {
-                                    jQuery("#spanfoldermessage").html("You can use the name: "+folder);
+                                    jQuery("#spanfoldermessage").html("'.$this->objLanguage->languageText('mod_wicid_canusename', 'wicid', 'You can use the name').': "+folder);
                                     jQuery("#spanfoldermessage").addClass("success");
                                     jQuery("#spanfoldermessage").removeClass("error");
                                     jQuery("#input_foldername").removeClass("inputerror");
@@ -123,18 +122,18 @@ $header->str = $this->objLanguage->languageText('mod_wicid_unapproved', 'wicid',
 echo $header->show();
 
 // Create a Register New Document Button
-$button = new button("submit", "Register New Document");
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registernewdoc', 'wicid', "Register New Document"));
 
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
 $newdoclink->link = $button->show();
 
 // Create a Unapproved/New documents Button
-$button = new button("submit", "Unapproved/New documents");
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_newunapproved', 'wicid', "Unapproved/New documents"));
 $unapproveddocs = new link($this->uri(array("action" => "unapproveddocs")));
 $unapproveddocs->link = $button->show();
 
 // Create a  Button
-$button = new button("submit", "Rejected documents");
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registeredocs', 'wicid', "Rejected documents"));
 $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments")));
 $rejecteddocuments->link = $button->show();
 
@@ -145,7 +144,7 @@ if ($this->objUser->isAdmin()) {
 
 $links = $newdoclink->show() . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
 $fs = new fieldset();
-$fs->setLegend('Navigation');
+$fs->setLegend($this->objLanguage->languageText('mod_wicid_navigation', 'wicid', 'Navigation'));
 $fs->addContent($links);
 
 
@@ -155,14 +154,14 @@ echo $fs->show() . '<br/>';
 
 $table = $this->getObject("htmltable", "htmlelements");
 $table->startHeaderRow();
-$table->addHeaderCell("Select");
-$table->addHeaderCell("Title");
-$table->addHeaderCell("Ref No");
-$table->addHeaderCell("Owner");
-$table->addHeaderCell("Topic");
-$table->addHeaderCell("Telephone");
-$table->addHeaderCell("Attachment");
-$table->addHeaderCell("Date");
+$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select"));
+$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title"));
+$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No"));
+$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner"));
+$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_topic', 'wicid', "Topic"));
+$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone"));
+$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment"));
+$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_date', 'wicid', "Date"));
 
 $table->endHeaderRow();
 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -225,7 +224,7 @@ $form->addToForm(" | ".$button->show());
 
 //Create legend for the unnapproved docs
 $fs = new fieldset();
-$fs->setLegend('Unapproved documents');
+$fs->setLegend($this->objLanguage->languageText('mod_wicid_unapproved', 'wicid', 'Unapproved documents'));
 $fs->addContent($form->show());
 
 echo $fs->show();

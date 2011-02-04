@@ -28,18 +28,18 @@ if ($this->objUser->isAdmin()) {
 echo $createFolder;
 
 // Create a Register New Document Button
-$button = new button("submit", "Register New Document");
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registernewdoc', 'wicid', "Register New Document"));
 
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
 $newdoclink->link = $button->show();
 
 // Create a Unapproved/New documents Button
-$button = new button("submit", "Unapproved/New documents");
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_newunapproved', 'wicid', "Unapproved/New documents"));
 $unapproveddocs = new link($this->uri(array("action" => "unapproveddocs")));
 $unapproveddocs->link = $button->show();
 
 // Create a  Button
-$button = new button("submit", "Rejected documents");
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registeredocs', 'wicid', "Rejected documents"));
 $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments")));
 $rejecteddocuments->link = $button->show();
 
@@ -55,11 +55,11 @@ echo $fs->show();
 $table = &$this->newObject("htmltable", "htmlelements");
 if (count($files) > 0) {
     $table->startRow();
-    $table->addCell("<b>Select</b>");
-    $table->addCell("<b>Type</b>");
-    $table->addCell("<b>Title</b>");
-    $table->addCell("<b>Ref No</b>");
-    $table->addCell("<b>Owner</b>");
+    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select")."</b>");
+    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type")."</b>");
+    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title")."</b>");
+    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No")."</b>");
+    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner")."</b>");
     $table->endRow();
     foreach ($files as $file) {
         $dlink1 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
@@ -84,7 +84,7 @@ if (count($files) > 0) {
     }
 } else {
     $table->startRow();
-    $table->addCell("There are no topics to display");
+    $table->addCell($this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found'));
     $table->endRow();
 }
 //Add Form
@@ -98,7 +98,7 @@ $form->addToForm(" </br> " . $button->show());
 
 //Add rejected documents table to fieldset
 $fs = new fieldset();
-$fs->setLegend('Topics');
+$fs->setLegend($this->objLanguage->languageText('mod_wicid_topics', 'wicid', 'Topics'));
 $fs->addContent($form->show());
 echo $fs->show();
 ?>

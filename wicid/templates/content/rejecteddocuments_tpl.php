@@ -9,18 +9,18 @@ echo $header->show();
 
 
 // Create a Register New Document Button
-$button = new button("submit", "Register New Document");
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registernewdoc', 'wicid', "Register New Document"));
 
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
 $newdoclink->link = $button->show();
 
 // Create a Unapproved/New documents Button
-$button = new button("submit", "Unapproved/New documents");
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_newunapproved', 'wicid', "Unapproved/New documents"));
 $unapproveddocs = new link($this->uri(array("action" => "unapproveddocs")));
 $unapproveddocs->link = $button->show();
 
 // Create a  Button
-$button = new button("submit", "Rejected documents");
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registeredocs', 'wicid', "Rejected documents"));
 $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments")));
 $rejecteddocuments->link = $button->show();
 
@@ -28,7 +28,7 @@ $links = $newdoclink->show() . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbs
 
 //Add navigation to fieldset
 $fs = new fieldset();
-$fs->setLegend('Navigation');
+$fs->setLegend($this->objLanguage->languageText('mod_wicid_navigation', 'wicid', 'Navigation'));
 $fs->addContent($links);
 
 echo $fs->show();
@@ -38,12 +38,12 @@ $table = $this->getObject("htmltable", "htmlelements");
 
 if (count($documents) > 0) {
     $table->startHeaderRow();
-    $table->addHeaderCell("Owner");
-    $table->addHeaderCell("Ref No");
-    $table->addHeaderCell("Title");
-    $table->addHeaderCell("Topic");
-    $table->addHeaderCell("Telephone");
-    $table->addHeaderCell("Attachment");
+    $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner"));
+    $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No"));
+    $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title"));
+    $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_topic', 'wicid', "Topic"));
+    $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone"));
+    $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment"));
     $table->endHeaderRow();
     foreach ($documents as $document) {
         $table->startRow();
@@ -57,13 +57,13 @@ if (count($documents) > 0) {
     }
 } else {
     $table->startRow();
-    $table->addCell("There are no rejected documents");
+    $table->addCell($this->objLanguage->languageText('mod_wicid_norecords', 'wicid', "There are no records found"));
     $table->endRow();
 }
 
 //Add rejected documents table to fieldset
 $fs = new fieldset();
-$fs->setLegend('Rejected Documents');
+$fs->setLegend($this->objLanguage->languageText('mod_wicid_registeredocs', 'wicid', "Rejected documents"));
 $fs->addContent($table->show());
 echo $fs->show();
 ?>

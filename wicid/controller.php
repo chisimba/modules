@@ -126,7 +126,7 @@ class wicid extends controller {
     public function __home() {
         $selected = "unapproved";
 
-        $tobeeditedfoldername = "";
+        $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
         $documents = $this->documents->getdocuments($this->mode);
         $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
 
@@ -1108,7 +1108,9 @@ class wicid extends controller {
 
     public function __unapproveddocs() {
         $selected = "unapproved";
+        $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
         $documents = $this->documents->getdocuments($this->mode);
+        $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("mode", $this->mode);
@@ -1117,7 +1119,9 @@ class wicid extends controller {
 
     public function __rejecteddocuments() {
         $selected = "rejecteddocuments";
+        $attachmentStatus  = $this->getParam("attachmentStatus", Null);
         $documents = $this->documents->getRejectedDocuments($this->mode, 'Y', 'Y');
+        $this->setVarByRef("attachmentStatus", $attachmentStatus);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
         return "rejecteddocuments_tpl.php";

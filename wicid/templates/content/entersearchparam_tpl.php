@@ -74,10 +74,10 @@ if (count($files) >= 1) {
 
     $table->startRow();
     //$table->addCell("<b>Select</b>");
-    $table->addCell("<b>Type</b>");
-    $table->addCell("<b>Title</b>");
-    $table->addCell("<b>Ref No</b>");
-    $table->addCell("<b>Owner</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', 'Type') . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', 'Title') . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', 'Ref No') . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', 'Owner') . "</b>");
     $table->endRow();
     foreach ($files as $file) {
         $dlink1 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
@@ -102,19 +102,19 @@ if (count($files) >= 1) {
     }
     //Create legend for the search results
     $fs = new fieldset();
-    $fs->setLegend('Search Results');
+    $fs->setLegend($this->objLanguage->languageText('mod_wicid_searchresults', 'wicid', 'Search Results'));
     $fs->addContent($table->show());
 
     echo $fs->show();
-} elseif($status == 1) {
+} elseif ($status == 1) {
     $table->startRow();
-    $table->addCell("There are no records found");
+    $table->addCell($this->objLanguage->languageText('mod_wicid_norecords', 'wicid', "There are no records found"));
     $table->endRow();
     //Create legend for the search results
     $fs = new fieldset();
-    $fs->setLegend('Search Results');
+    $fs->setLegend($this->objLanguage->languageText('mod_wicid_searchresults', 'wicid', 'Search Results'));
     $fs->addContent($table->show());
 
-    echo $fs->show();    
+    echo $fs->show();
 }
 ?>
