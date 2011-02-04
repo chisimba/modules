@@ -158,6 +158,13 @@ class sidebar extends object {
         return $retstr;
     }
 
+    /*
+     * Method to read the facebook script file and display the facebook like page
+     * @param none
+     * @access public
+     * @return str $retstr containing the string that shows the facebook like page
+     *
+     */
     public function getFacebook() {
         $retstr =
         '<div id="facebook">';
@@ -172,12 +179,27 @@ class sidebar extends object {
         return $retstr;
     }
 
+    /*
+     * Method to read display the twitter link
+     * @param none
+     * @access public
+     * @return str $retstr containing the string that shows the twitter link
+     */
     public function getTwitter() {
         $retstr = '<div id="twitter"><img src="' . $this->skinpath . 'images/ELSITwitter.png" width="240" height="239" /></div>';
 
         return $retstr;
     }
 
+    /*
+     * Method to display the sidebar of the News and Blog pages that are linked
+     * to the home page. This is not with regard to the news module. Customized
+     * news or blog for one view.
+     * @param none
+     * @access public
+     * @return string blank image for layout control
+     *
+     */
     public function showNewsBlogSidebar() {
         $retstr = '<!-- Start: Sidebar -->
                    <div id="Sidebar">
