@@ -20,7 +20,7 @@ $ftable->width = "20%";
 //Create a dropdown to hold the search parameters
 $filterdrops = new dropdown('filter');
 
-$filterdrops->addOption("Ref No.");
+$filterdrops->addOption("Ref No");
 $filterdrops->addOption("Title");
 $filterdrops->addOption("Owner");
 $filterdrops->addOption("Telephone");

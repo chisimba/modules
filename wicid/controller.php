@@ -135,6 +135,58 @@ class wicid extends controller {
         return "unapproveddocs_tpl.php";
     }
 
+    /**
+     * Function that receives search parameters for document retrieval
+     * @return object
+     */
+    public function __filtersearch() {
+
+        $filter = $this->getParam("filter", Null);
+        $this->setVarByRef("selected", $this->getParam("selected", Null));
+        $this->setVarByRef("printresults", $this->getParam("printresults", Null));
+        $this->setVarByRef("filter", $filter);
+        if ($filter == Null) {
+            return $this->nextAction('home');
+        } else {
+            return "entersearchparam_tpl.php";
+        }
+    }
+
+    /**
+     * Function that searches and returns data per predefined params
+     * @return object
+     */
+    public function __filterbyparam() {
+        $filter = $this->getParam("filter", Null);
+        $gifts = $this->objDbGift->searchGiftsByDonor($f);
+        $this->setVarByRef("filter", $filter);
+        switch ($filter) {
+            case 'Owner':
+                $this->setVarByRef("printresults", $results);
+                return "entersearchparam_tpl.php";
+                break;
+            case 'Ref No':
+                $this->setVarByRef("printresults", $results);
+                return "entersearchparam_tpl.php";
+                break;
+            case 'Telephone':
+                $this->setVarByRef("printresults", $results);
+                return "entersearchparam_tpl.php";
+                break;
+            case 'Date':
+                $this->setVarByRef("printresults", $results);
+                return "entersearchparam_tpl.php";
+                break;
+            case 'Title':
+                $this->setVarByRef("printresults", $results);
+                return "entersearchparam_tpl.php";
+                break;
+            default:
+                return "entersearchparam_tpl.php";
+                break;
+        }
+    }
+
     /*
      * Method to show the upload file page
      *
@@ -1034,7 +1086,7 @@ class wicid extends controller {
 
     public function __rejecteddocuments() {
         $selected = "rejecteddocuments";
-        $documents = $this->documents->getRejectedDocuments($this->mode,'Y','Y');
+        $documents = $this->documents->getRejectedDocuments($this->mode, 'Y', 'Y');
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
         return "rejecteddocuments_tpl.php";
