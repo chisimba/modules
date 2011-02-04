@@ -286,7 +286,7 @@ class userutils extends object {
 
         foreach ($rows as $row) {
             //$size = $this->formatBytes(filesize($dir.$node.'/'.$f), 2);
-            $isowner = $this->objUser->userid() == $file['userid'] ? "true" : "false";
+            $isowner = $this->objUser->userid() == $row['userid'] ? "true" : "false";
             $size = "0"; //$this->formatBytes(filesize($dir . $node . '/' . $f), 2);
             // $lastmod = date('M j, Y, g:i a',filemtime($dir.$node.'/'.$f));
             $files[] = array(

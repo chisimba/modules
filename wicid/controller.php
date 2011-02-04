@@ -131,6 +131,7 @@ class wicid extends controller {
         $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
 
         $this->setVarByRef("documents", $documents);
+        $this->setVarByRef("mode", $this->mode);
         $this->setVarByRef("selected", $selected);
         return "unapproveddocs_tpl.php";
     }
