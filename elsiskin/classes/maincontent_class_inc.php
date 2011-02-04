@@ -132,7 +132,7 @@ class maincontent extends object {
     }
 
     /**
-     * Method to show the main content of the home page
+     * Method to show the main content of the home page.
      * @return string
      * @access public
      */
