@@ -401,11 +401,26 @@ class maincontent extends object {
         return $str;
     }
 
+    /*
+     * Method to get show the Support and Documentation page
+     * @access private
+     * @param none
+     * @return str containing content for the Support and Documetation page
+     * 
+     */
     private function getSupportAndDocumentation() {
         $this->category = "documentation";
         $this->documentation = "No documents have been set up";
         return $this->getContent();
     }
+
+    /*
+     * Method to display the content of the about us page.
+     * @param none
+     * @access private
+     * @return str containing content for the about us page
+     *
+     */
 
     private function getAboutContent() {
         $this->category = "about_Content";
@@ -413,6 +428,15 @@ class maincontent extends object {
         return $this->getContent();
     }
 
+    /*
+     * Method to get content from the database regarding the specific content
+     * for a category of a page. The content displayed depends on the page on
+     * which the user is. The category name determines which content is displayed
+     * @param none
+     * @access private
+     * @return string $retstr containing the content for a page.
+     *
+     */
     private function getContent() {
         $retstr = "";
         $objCategories = $this->getObject("dbnewscategories", "news");
