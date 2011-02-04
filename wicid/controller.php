@@ -145,6 +145,8 @@ class wicid extends controller {
         $this->setVarByRef("selected", $this->getParam("selected", Null));
         $this->setVarByRef("printresults", $this->getParam("printresults", Null));
         $this->setVarByRef("filter", $filter);
+        $this->setVarByRef("files", $this->getParam("files", Null));
+        $this->setVarByRef("status", $this->getParam("status", Null));
         if ($filter == Null) {
             return $this->nextAction('home');
         } else {
@@ -157,34 +159,63 @@ class wicid extends controller {
      * @return object
      */
     public function __filterbyparam() {
+        //Get the filter action
         $filter = $this->getParam("filter", Null);
-        $gifts = $this->objDbGift->searchGiftsByDonor($f);
-        $this->setVarByRef("filter", $filter);
-        switch ($filter) {
-            case 'Owner':
-                $this->setVarByRef("printresults", $results);
-                return "entersearchparam_tpl.php";
-                break;
-            case 'Ref No':
-                $this->setVarByRef("printresults", $results);
-                return "entersearchparam_tpl.php";
-                break;
-            case 'Telephone':
-                $this->setVarByRef("printresults", $results);
-                return "entersearchparam_tpl.php";
-                break;
-            case 'Date':
-                $this->setVarByRef("printresults", $results);
-                return "entersearchparam_tpl.php";
-                break;
-            case 'Title':
-                $this->setVarByRef("printresults", $results);
-                return "entersearchparam_tpl.php";
-                break;
-            default:
-                return "entersearchparam_tpl.php";
-                break;
+        //Get the value to search for
+        $filtervalue = $this->getParam("filtervalue", Null);
+        //  $documents = $this->documents->getdocuments($this->mode);
+        $rejecteddocuments = $this->documents->getdocuments($this->mode, "Y");
+
+        $dir = $this->getParam("folder", "");
+        $mode = $this->getParam("mode", "");
+
+        $objPreviewFolder = $this->getObject('previewfolder');
+
+        $selected = "";
+        $selected = $dir;
+        $basedir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        if ($dir == $basedir) {
+            $selected = "";
         }
+        $files = $this->objUtils->searchFileInAllNodes($filter, $filtervalue);
+        
+        $this->setVarByRef("files", $files);
+        $this->setVarByRef("documents", $documents);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
+        $selected = $this->baseDir . $selected;
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("filter", $filter);
+        $status = 1;
+        $this->setVarByRef("status", $status);
+        $this->setVarByRef("printresults", $results);
+        return "entersearchparam_tpl.php";
+    }
+
+    /**
+     * Fetch the records based on the search parameters
+     * @param string $filter the type of parameter to use
+     * @param string $filtervalue the value supplied by the user
+     * @return array
+     */
+    public function __getFilteredRecords($filter, $filtervalue) {
+        $documents = $this->documents->filterdocuments($filter, $filtervalue);
+
+        $mode = $this->getParam("mode", "");
+
+        $selected = "";
+        $selected = $dir;
+        $basedir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        if ($dir == $basedir) {
+            $selected = "";
+        }
+        $files = $this->objUtils->getFiles($dir);
+        $this->setVarByRef("files", $files);
+        $this->setVarByRef("documents", $documents);
+        $this->setVarByRef("mode", $mode);
+        $selected = $this->baseDir . $selected;
+        $this->setVarByRef("selected", $selected);
+        return "viewfolder_tpl.php";
     }
 
     /*

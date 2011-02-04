@@ -100,6 +100,43 @@ class dbfileuploads extends dbtable {
         return $res;
     }
 
+    /*
+     * Function to get documents based on passed params
+     * @param string $filter the type of parameter to use
+     * @param string $filtervalue the value supplied by the user
+     * @return array
+     */
+
+    public function searchFileInAllNodes($filter, $filtervalue) {
+        $sql = "select A.refno,A.telephone, A.docname, A.date_created, A.contact_person, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
+              from tbl_wicid_documents as A
+                join tbl_wicid_fileuploads as B on A.id = B.docid ";
+        //Derermine the where clause based on filter
+        switch ($filter) {
+            case 'Owner':
+                $sql .= "where A.contact_person like '%" . $filtervalue . "%'";
+                break;
+            case 'Ref No':
+                $sql .= "where A.refno like '%" . $filtervalue . "%'";
+                break;
+            case 'Telephone':
+                $sql .= "where A.telephone like '%" . $filtervalue . "%'";
+                break;
+            case 'Date':
+                $sql .= "where A.date_created like '%" . $filtervalue . "%'";
+                break;
+            case 'Title':
+                $sql .= "where A.docname like '%" . $filtervalue . "%'";
+                break;
+            default:
+                return Null;
+                break;
+        }
+        $sql .= " and A.active ='Y' order by A.date_created DESC";
+
+        return $this->getArray($sql);
+    }
+
     public function getNodeFiles($node) {
         $sql = "select A.refno,A.telephone, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
               from tbl_wicid_documents as A
@@ -342,4 +379,5 @@ class dbfileuploads extends dbtable {
     }
 
 }
+
 ?>

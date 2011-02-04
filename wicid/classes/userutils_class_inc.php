@@ -305,6 +305,40 @@ class userutils extends object {
         return $files;
     }
 
+    /*
+     * Function to get documents based on passed params
+     * @param string $filter the type of parameter to use
+     * @param string $filtervalue the value supplied by the user
+     * @return array
+     */
+
+    public function searchFileInAllNodes($filter, $filtervalue) {
+        $objFileUploads = $this->getObject('dbfileuploads');
+        $today = getdate();
+
+        $owner = $this->getUserId();
+        $rows = $objFileUploads->searchFileInAllNodes($filter, $filtervalue);
+        $files = array();
+
+        foreach ($rows as $row) {
+            $isowner = $this->objUser->userid() == $row['userid'] ? "true" : "false";
+            $size = "0";
+            $files[] = array(
+                'text' => '<img src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '-16x16.png">&nbsp;' . $row['filename'],
+                'actualfilename' => $row['filename'],
+                'id' => $row['filepath'],
+                'docid' => $row['docid'],
+                'telephone' => $row['telephone'],
+                'refno' => $this->getFullRefNo($row['docid']),
+                'owner' => $this->objUser->fullname($row['userid']),
+                'lastmod' => $row['date_uploaded'],
+                'filesize' => $size,
+                'thumbnailpath' => '<img src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '.png" width="22" height="22">',
+            );
+        }
+        return $files;
+    }
+
     /* function getFiles() {
       $this->objUser = $this->getObject("user", "security");
       $dir=$this->objSysConfig->getValue('FILES_DIR', 'wicid');
@@ -523,7 +557,7 @@ class userutils extends object {
     public function folderExistsCheck($folderpath, $foldername) {
         $this->objMkdir = $this->getObject('mkdir', 'files');
         $path = $this->objSysConfig->getValue('FILES_DIR', 'wicid') . '/' . $folderpath . '/' . $foldername;
-        
+
         //Check if path is an existing directory
         if (is_dir($path)) {
             $result = TRUE;
@@ -837,5 +871,7 @@ class userutils extends object {
         $fs->addContent($form->show());
         return $fs->show();
     }
+
 }
+
 ?>

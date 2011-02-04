@@ -49,6 +49,108 @@ class dbdocuments extends dbtable {
 
     /*
      * Function to get documents based on passed params
+     * @param string $filter the type of parameter to use
+     * @param string $filtervalue the value supplied by the user
+     * @return array
+     */
+
+    public function filterdocuments($filter, $filtervalue) {
+
+        $sql = "select * from tbl_wicid_documents ";
+
+        //Derermine the where clause based on filter
+        switch ($filter) {
+            case 'Owner':
+                $sql .= "where contact_person like '%" . $filtervalue . "%'";
+                break;
+            case 'Ref No':
+                $sql .= "where refno like '%" . $filtervalue . "%'";
+                break;
+            case 'Telephone':
+                $sql .= "where telephone like '%" . $filtervalue . "%'";
+                break;
+            case 'Date':
+                $sql .= "where date_created like '%" . $filtervalue . "%'";
+                break;
+            case 'Title':
+                $sql .= "where docname like '%" . $filtervalue . "%'";
+                break;
+            default:
+                return Null;
+                break;
+        }
+
+        if (!$this->objUser->isadmin()) {
+            $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
+        }
+        $sql.=' order by puid DESC';
+
+
+        $rows = $this->getArray($sql);
+        $docs = array();
+        //print_r($rows);
+
+        foreach ($rows as $row) {
+            //$owner=$this->userutils->getUserId();
+            if (strlen(trim($row['contact_person'])) == 0) {
+                $owner = $this->objUser->fullname($row['userid']);
+            } else {
+                $owner = $row['contact_person'];
+            }
+
+            if ($row['upload'] == '') {
+                $attachmentStatus = "No";
+            } else {
+                //$f = $row['filename'];
+                //$attachmentStatus = 'Yes&nbsp;<img  src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($f) . '-16x16.png">';
+            }
+
+            $statusS = $row['status'];
+            switch ($statusS) {
+                case 0:
+                    $status = "Creator";
+                    break;
+                case 1:
+                    $status = "APO";
+                    break;
+                case 2:
+                    $status = "Subfaculty";
+                    break;
+                case 3:
+                    $status = "Faculty";
+                    break;
+                case 4:
+                    $status = "Senate";
+                    break;
+            }
+
+            $currentuserid = $row['currentuserid'];
+            $fullname = $this->objUser->fullname($currentuserid);
+
+            $docs[] = array(
+                'userid' => $row['userid'],
+                'owner' => $owner,
+                'refno' => $row['refno'] . "-" . $row['ref_version'],
+                'filename' => $row['docname'],
+                'group' => $row['groupid'],
+                'id' => $row['id'],
+                'topic' => $row['topic'],
+                'department' => $row['department'],
+                'telephone' => $row['telephone'],
+                'date' => $row['date_created'],
+                'attachmentstatus' => $attachmentStatus,
+                'status' => $status,
+                'currentuserid' => $fullname,
+                'version' => $row['version'],
+                'ref_version' => $row['ref_version']
+            );
+        }
+        //echo json_encode(array("documents" => $docs));
+        return $docs;
+    }
+
+    /*
+     * Function to get documents based on passed params
      * @param string rejected
      * @param string active
      * @param string mode
@@ -246,9 +348,11 @@ class dbdocuments extends dbtable {
         //echo json_encode(array("documents" => $docs));
         return $docs;
     }
+
     /*
      * Function to get the number of unapproved documents
      */
+
     function getUnapprovedDocsCount() {
         $sql = "select count(id) as total from tbl_wicid_documents where (deleteDoc = 'N' or deleteDoc is null) and  active='N'";
 
@@ -259,9 +363,11 @@ class dbdocuments extends dbtable {
         $recordcount = $data[0]['total'];
         return $recordcount;
     }
+
     /*
      * Function to get the number of rejected documents
      */
+
     function getRejectedDocsCount() {
         $sql = "select count(id) as total from tbl_wicid_documents where rejectDoc= 'Y'";
         if (!$this->objUser->isadmin()) {
