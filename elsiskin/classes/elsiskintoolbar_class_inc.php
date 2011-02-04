@@ -120,34 +120,7 @@ class elsiskintoolbar extends object {
         $home = $this->generateItem('home', 'elsiskin', 'eLSI <br> Home', $usedDefault);
 
         // Return Toolbar
-        $retstr = $home . $str; /*<li class="level1-li"><a href="#nogo" class="level1-a">Home<!--[if gte IE 7]><!--></a><!--<![endif]--></li>
-
-<li class="level1-li"><a href="#nogo" class="level1-a">About Us</a></li>
-<li class="level1-li"><a href="#nogo" class="level1-a">Our Staff</a></li>
-<li class="level1-li"><a href="#nogo" class="level1-a">Contact Us</a></li>
-<li class="level1-li"><a href="#nogo" class="level1-a">Log In</a></li>
-        /*$retstr = '<!-- Start: header -->
-        <div id="header">
-            <div class="org_nav">
-                <!-- Start: contactnav -->
-
-                <div id="contactnav">'
-                    .$this->getContactLink().
-                '</div>
-                <!-- End: contactnav -->
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="org_nav">
-                <!-- Start: Topnav -->
-			<div class="org_nav">
-			<!-- Start: Topnav -->
-				<div id="Topnav">
-					<ul id="tabnav">' . $home . $str . '
-					</ul>
-				</div>
-			<!-- End: Topnav -->
-			</div>
-			<!-- End: .grid_4 -->';*/
+        $retstr = $home . $str;
 
         return $retstr;
     }
