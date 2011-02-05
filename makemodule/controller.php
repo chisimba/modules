@@ -149,12 +149,18 @@ class makemodule extends controller
     */
     private function __view()
     {
-        
-        if ($this->objOps->isDeveloper() || $this->objUser->isAdmin()) {
-            return "main_tpl.php";
+
+        if ($this->objUser->userName() == 'admin') {
+            // We don't want modules created by the anonymous 'admin' user.
+            $ret = "notadmin_tpl.php";
         } else {
-            return "guest_tpl.php";
+            if ($this->objOps->isDeveloper() || $this->objUser->isAdmin()) {
+                $ret = "main_tpl.php";
+            } else {
+                $ret = "guest_tpl.php";
+            }
         }
+        return $ret;
     }
 
     /**
