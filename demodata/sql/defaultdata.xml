@@ -230,6 +230,60 @@
         <howcreated>install</howcreated>
         <updated>2011-01-09</updated>
     </tbl_users>
+    <tbl_users>
+        <id>init_14</id>
+        <userid>14</userid>
+        <username>aeinstein</username>
+        <title>Prof</title>
+        <firstname>Albert</firstname>
+        <surname>Einstein</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2011-02-06</creationdate>
+        <emailaddress>einstein@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>US</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2011-02-06</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_15</id>
+        <userid>15</userid>
+        <username>fbacon</username>
+        <title>Sir</title>
+        <firstname>Francis</firstname>
+        <surname>Bacon</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2011-02-06</creationdate>
+        <emailaddress>fbacon@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>UK</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2011-02-06</updated>
+    </tbl_users>
+    <tbl_users>
+        <id>init_16</id>
+        <userid>16</userid>
+        <username>aturing</username>
+        <title>Dr</title>
+        <firstname>Alan</firstname>
+        <surname>Turing</surname>
+        <pass>86f7e437faa5a7fce15d1ddcb9eaeaea377667b8</pass>
+        <creationdate>2011-02-06</creationdate>
+        <emailaddress>aturing@localhost.local</emailaddress>
+        <logins>0</logins>
+        <sex>M</sex>
+        <country>UK</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2011-02-06</updated>
+    </tbl_users>
 
 
   <!-- MODULE: WALL, Table tbl_wall_posts -->
