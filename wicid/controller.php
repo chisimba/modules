@@ -290,12 +290,15 @@ class wicid extends controller {
 
         $selected = "";
         $selected = $dir;
+        
         $basedir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         if ($dir == $basedir) {
             $selected = "";
         }
+
         $files = $this->objUtils->getFiles($dir);
         $this->setVarByRef("files", $files);
+        $this->setVarByRef("dir", $dir);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
