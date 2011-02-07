@@ -196,9 +196,9 @@ class elsicontent extends object {
                 <div class="grid_3">
                     <h2>'.$aboutLink->show().'</h2>
                 </div>
-                <div class="grid_1 pull_3">
+                <!-- <div class="grid_1 pull_3">
                     <h3>'.$this->objLanguage->languageText('mod_elsiskin_moreaboutelsi', 'elsiskin').'</h3>
-                </div>
+                </div>-->
                 <!-- end .grid_1.pull_3 -->
                 <div class="clear">&nbsp;</div>';
 
