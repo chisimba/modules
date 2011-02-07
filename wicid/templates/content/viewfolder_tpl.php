@@ -24,8 +24,10 @@ if ($selected != "unknown0") {
 $createFolder = "";
 if ($this->objUser->isAdmin()) {
     $createFolder = $this->objUtils->showCreateFolderForm("/", $selected);
+    $deleteFolder = $this->objUtils->showDeleteFolderForm("/", $message);
 }
 echo $createFolder;
+echo $deleteFolder;
 
 // Create a Register New Document Button
 $button = new button("submit", $this->objLanguage->languageText('mod_wicid_registernewdoc', 'wicid', "Register New Document"));

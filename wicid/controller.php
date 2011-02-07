@@ -279,12 +279,59 @@ class wicid extends controller {
         return "searchForFile_tpl.php";
     }
 
+    /*
+     * Method to delete folder/topic
+     *
+     */
+
+    public function __deletetopic() {
+
+        //Get the folder
+        $folder = $this->getParam("parentfolder", "");
+        $userId = $this->objUser->userId();
+        if($folder=='0')
+            $folder = '/';
+        //Check if user is authorised to delete
+        $isowner = $this->folderPermissions->permissionExists($userId, $folder);
+        $folderpermserror = $this->objLanguage->languageText('mod_wicid_deletetopicpermserror', 'wicid', "You do not have permissions to delete this folder");
+        $deletesuccess = $this->objLanguage->languageText('mod_wicid_deletesuccess', 'wicid', "was deleted successfully");
+        if(!$isowner){
+            return $this->nextAction('viewfolder', array('message' => $folderpermserror, 'folder'=>$folder));
+        }
+
+        //Check if folder has documents
+        $checkfolderdocs = $this->objUploads->getNodeFiles($folder);
+        $foldernotempty = $this->objLanguage->languageText('mod_wicid_deletetopicerrormessage', 'wicid', "Kindly delete the documents in this topic before deleting it. These documents are listed in the Topics section on the lower part of this form");
+        //Ask user to delete the contents of the folder first, else delete the topic if empty
+        if(count($checkfolderdocs)>=1){
+            return $this->nextAction('viewfolder', array('message' => $foldernotempty, 'folder'=>$folder));
+        } else {
+            //Delete the topic
+            $this->folderPermissions->removePermission($userId, $folder);
+
+            return $this->nextAction('viewfolder', array('message' => $folder." ".$deletesuccess, 'folder'=>'/'));
+        }            
+
+        if (strstr($result, "success")) {
+            $this->nextAction('home');
+        } else {
+            return $this->nextAction('home', array('message' => $result));
+        }
+    }
+
+    /**
+     * function that renders a folder and its associated documents
+     * 
+     * @return form
+     */
+
     public function __viewfolder() {
         //  $documents = $this->documents->getdocuments($this->mode);
         $rejecteddocuments = $this->documents->getdocuments($this->mode, "Y");
 
         $dir = $this->getParam("folder", "");
         $mode = $this->getParam("mode", "");
+        $message = $this->getParam("message", "");
 
         $objPreviewFolder = $this->getObject('previewfolder');
 
@@ -301,6 +348,7 @@ class wicid extends controller {
         $this->setVarByRef("dir", $dir);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("message", $message);
         $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
         $selected = $this->baseDir . $selected;
         $this->setVarByRef("selected", $selected);

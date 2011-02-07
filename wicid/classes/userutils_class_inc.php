@@ -56,6 +56,7 @@ class userutils extends object {
         $this->objAltConfig = $this->getObject('altconfig', 'config');
         $this->resourcePath = $this->objAltConfig->getModulePath();
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objLanguage = $this->getObject('language', 'language');
         // $this->xmlutil=$this->getObject('xmlutil');
         $replacewith = "";
         $docRoot = $_SERVER['DOCUMENT_ROOT'];
@@ -874,7 +875,29 @@ class userutils extends object {
         $fs->addContent($form->show());
         return $fs->show();
     }
+    /*
+     * Function to generate a form that allows one to delete a wicid folder/topic
+     * @param string name value of text input box
+     * @return form object
+     */
 
+    function showDeleteFolderForm($name='', $message=Null) {
+        $form = new form('deletetopic', $this->uri(array('action' => 'deletetopic')));
+
+        $form->addToForm("<br/>".$this->objLanguage->languageText('mod_wicid_selectdeletetopic', 'wicid', "Select the topic you want to delete")." ". $this->getTree('htmldropdown'));
+
+        $button = new button('submit', $this->objLanguage->languageText('mod_wicid_deletetopic', 'wicid', "Delete a topic"));
+        $button->cssId = 'savebutton';
+        $button->setToSubmit();
+        //Show error message if any
+        $form->addToForm('<br/>' . $message);
+        //Render submit button
+        $form->addToForm('<br/>' . $button->show());
+        //Create fieldset to hold form
+        $fs = new fieldset();
+        $fs->setLegend($this->objLanguage->languageText('mod_wicid_deletetopic', 'wicid', "Delete a topic"));
+        $fs->addContent($form->show());
+        return $fs->show();
+    }
 }
-
 ?>
