@@ -127,6 +127,8 @@ class maincontent extends object {
             case 'contact': return $this->showContactMain();
             case 'viewsingle':return $this->showSingleBlog();
             case 'viewstory': return $this->showNewsStory();
+            case 'projectsresearch': return $this->showProjectsResearchMain();
+            case 'supporttraining': return $this->showSupportTrainingMain();
             default: return $this->showHomeMain();
         }
     }
@@ -149,7 +151,7 @@ class maincontent extends object {
                    <div class="grid_2">
                         <div class="info-box-holder">
                             <div class="left_wrap">
-                                <h2>ELSI Staff Blog</h2>
+                                <h3>ELSI Staff Blog</h3>
                             </div>
                         </div>
                     </div>
@@ -161,17 +163,13 @@ class maincontent extends object {
                     <div class="grid_2">
                         <div class="info-box-holder">
                             <div class="right_wrap">
-                                <h2>Support and Help</h2>
+                                <h3>Support and Help</h3>
                             </div>
                             <div id="supportandhelp">'
                                     .$this->getSupportAndDocumentation().'
                             </div>
                         </div>
-                        <div class="grid_1">
-                            '.
-                    $this->sidebar->getFacebook()
-                        .'</div>
-                        <div class="grid_1 push_1">'.$this->sidebar->getTwitter().'</div>
+                        '.$this->sidebar->getFacebook().$this->sidebar->getTwitter().'
                         <div class="clear">&nbsp;</div>
                     </div>
                     <div class="grid_2"><p>&nbsp;</p></div>
@@ -453,5 +451,50 @@ class maincontent extends object {
 
         $retstr .= $this->documentation;
         return $retstr;
+    }
+
+    private function showProjectsResearchMain() {
+        $retstr = '<div class="grid_3">
+                        '.$this->getProjectsResearchContent().'
+                    </div>
+                    <!-- end .grid_3 -->';
+
+        return $retstr;
+
+    }
+
+    /*
+     * Method to get show the Projects and Research page
+     * @access private
+     * @param none
+     * @return str containing content for the Projects and Research  page
+     *
+     */
+    private function getProjectsResearchContent() {
+        $this->category = "projectsresearch";
+        $this->documentation = "Projects and Research Content has not yet been set up";
+        return $this->getContent();
+    }
+
+    private function showSupportTrainingMain() {
+        $retstr = '<div class="grid_3">
+                        '.$this->getSupportTrainingContent().'
+                    </div>
+                    <!-- end .grid_3 -->';
+
+        return $retstr;
+    }
+
+    /*
+     * Method to get show the Support and Training page
+     * @access private
+     * @param none
+     * @return str containing content for the Support and Training page
+     *
+     */
+    private function getSupportTrainingContent() {
+        $this->category = "supporttraining";
+        $this->documentation = "Support and Training Content has not yet been set up";
+        return $this->getContent();
     }
 }

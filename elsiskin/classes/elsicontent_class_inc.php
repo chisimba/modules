@@ -132,7 +132,7 @@ class elsicontent extends object {
         else if($action == 'contact') {
             $ret = $this->getContactContent();
         }
-        else if($action == 'viewsingle' || $action == 'viewstory'){
+        else if($action == 'viewsingle' || $action == 'viewstory' || $action == 'projectsresearch' || $action == 'supporttraining'){
             $ret = $this->getNoContent();
         }
         else {

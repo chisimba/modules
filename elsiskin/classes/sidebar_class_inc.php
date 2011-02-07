@@ -42,12 +42,14 @@ class sidebar extends object {
     private $currentAction;
     // path to root folder of skin
     private $skinpath;
+    // link object
+    private $objLink;
 
     /**
      * Constructor
      */
     public function init() {
-
+        $this->objLink = $this->getObject("link", "htmlelements");
     }
 
     /**
@@ -166,13 +168,16 @@ class sidebar extends object {
      *
      */
     public function getFacebook() {
+        $this->objLink->link("http://www.facebook.com/pages/Wits-eLSI-eLearning-Support-and-Innovation/143838025636947");
+        $this->objLink->link = '<img src="' . $this->skinpath . 'images/ELSIFacebook.png" width="230" height="239" />';
         $retstr =
         '<div id="facebook">';
-        $fbwidgetpath = $this->getResourceUri('fb-widget.inc.php', 'elsiskin');
+        /*$fbwidgetpath = $this->getResourceUri('fb-widget.inc.php', 'elsiskin');
         $fh = fopen($fbwidgetpath, 'r'); // or die($php_errormsg);
         $fbwidget = fread($fh, filesize($fbwidgetpath));
         $retstr .= $fbwidget;
-        fclose($fh); // or die($php_errormsg);
+        fclose($fh); // or die($php_errormsg);*/
+        $retstr .= $this->objLink->show();
 
         $retstr .= '</div>';
 
@@ -186,7 +191,12 @@ class sidebar extends object {
      * @return str $retstr containing the string that shows the twitter link
      */
     public function getTwitter() {
-        $retstr = '<div id="twitter"><img src="' . $this->skinpath . 'images/ELSITwitter.png" width="240" height="239" /></div>';
+        $this->objLink->link("http://www.facebook.com/pages/Wits-eLSI-eLearning-Support-and-Innovation/143838025636947");
+        $this->objLink->link = '<img src="' . $this->skinpath . 'images/ELSITwitter.png" width="230" height="239" />';
+        $retstr = '
+        <div id="twitter">';
+        $retstr .= $this->objLink->show();
+        $retstr .= '</div>';
 
         return $retstr;
     }
