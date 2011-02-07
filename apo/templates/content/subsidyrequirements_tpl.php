@@ -21,7 +21,14 @@ $formdata = $this->objformdata->getFormData("subsidyrequirements", $id);
 if ($formdata != null){
     $mode = "edit";
 }
-$action = 'showoutcomesandassessmentone';
+
+$faculty = $this->documents->getFaculty($id);
+if ($faculty == "Science") {
+    $action = 'showoutcomesandassessmentoneScience';
+} else {
+    $action = 'showoutcomesandassessmentone';
+}
+
 $form = new form('subsidyrequirementsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'subsidyrequirements')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section C: Subsidy Requirements');
@@ -229,7 +236,6 @@ $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($table->show());
 //echo $fs->show();
-$action = 'showoutcomesandassessmentone';
 $form = new form('subsidyrequirementsform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'subsidyrequirements')));
 
 $efs = new fieldset();

@@ -14,12 +14,18 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->setVar('pageSuppressXML', TRUE);
 
 $formdata = $this->objformdata->getFormData("outcomesandassessmenttwo", $id);
-if ($formdata != null){
+if ($formdata != null) {
     $mode = "edit";
 }
 
-$action = 'showoutcomesandassessmentthree';
-$form = new form('outcomesandassessmenttwoform', $this->uri(array('action' => $action,'id' => $id, 'formname'=>'outcomesandassessmenttwo')));
+$faculty = $this->documents->getFaculty($id);
+if ($faculty == "Science") {
+    $action = 'showoutcomesandassessmentthreeScience';
+} else {
+    $action = 'showoutcomesandassessmentthree';
+}
+
+$form = new form('outcomesandassessmenttwoform', $this->uri(array('action' => $action, 'id' => $id, 'formname' => 'outcomesandassessmenttwo')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section D: Outcomes and Assessments - Page Two');
 

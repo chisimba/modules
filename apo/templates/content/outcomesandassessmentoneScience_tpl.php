@@ -23,7 +23,7 @@ if ($formdata != null) {
 }
 
 $action = 'showoutcomesandassessmenttwo';
-$form = new form('outcomesandassessmentoneScienceform', $this->uri(array('action' => $action, 'id' => $id, 'formname' => 'outcomesandassessmentone')));
+$form = new form('outcomesandassessmentoneScienceform', $this->uri(array('action' => $action, 'id' => $id, 'formname' => 'outcomesandassessmentoneScience')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Section D: Outcomes and Assessment - Page One');
 

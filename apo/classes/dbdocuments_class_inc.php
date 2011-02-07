@@ -480,6 +480,14 @@ class dbdocuments extends dbtable {
         return $this->getArray($sql);
     }
 
+    function getFaculty($docid) {
+        $sql = "select department from tbl_apo_documents where id='$docid'";
+        $faculty = $this->getArray($sql);
+        $faculty = $faculty[0]['department'];
+
+        return $faculty;
+    }
+
 }
 
 ?>

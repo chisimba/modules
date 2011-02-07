@@ -12,6 +12,10 @@ $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 $id=$this->getParam('id');
 
+$doctitle = "doc title";
+$docauthor = "doc author";
+$docrefno = "doc ref no";
+
 $action = 'submit';
 $form = new form('submitform', $this->uri(array('action' => $action, 'id' => $id)));
 
@@ -23,7 +27,51 @@ $header->str = $xtitle;
 
 echo $header->show();
 
+$table = $this->newObject('htmltable', 'htmlelements');
+$table->width = '50%';
+$table->cellpadding = '2';
+$table->cellspacing = '3';
 
+$table->startRow();
+$table->addCell("Title: ");
+$table->addCell($doctitle);
+$table->endRow();
+
+$table->startRow();
+$table->addCell("Author: ");
+$table->addCell($docauthor);
+$table->endRow();
+
+$table->startRow();
+$table->addCell("Reference no: ");
+$table->addCell($docrefno);
+$table->endRow();
+
+/*        submitCombo.add("Creator");
+        submitCombo.add("APO");
+        submitCombo.add("SubFaculty");
+        submitCombo.add("Faculty");
+        submitCombo.add("Senate");*/
+
+$dropdown = new dropdown('submit');
+$dropdown->addOption('');
+$dropdown->addOption("<b>Creator</b>");
+$dropdown->addOption("APO");
+$dropdown->addOption("Subfaculty");
+$dropdown->addOption("Faculty");
+$dropdown->addOption("Senate");
+
+$table->startRow();
+$table->addCell("Submit to: ");
+$table->addCell($dropdown->show());
+$table->endRow();
+
+$legend = "<b>Submit</b>";
+$fs = new fieldset();
+$fs->width = 700;
+$fs->setLegend($legend);
+$fs->addContent($table->show());
+$form->addToForm($fs->show());
 
 
 /*$efs = new fieldset();
@@ -39,13 +87,6 @@ if (count($errormessages) > 0) {
     $efs->addContent($errorstr);
     $form->addToForm($efs);
 }*/
-
-//$legend = "<b>Submit</b>";
-$fs = new fieldset();
-//$fs->setLegend($legend);
-//$fs->addContent($label->show());
-//$fs->addContent($table->show());
-$form->addToForm($fs->show());
 
 $button = new button('submit', "Submit");
 $button->setToSubmit();

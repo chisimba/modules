@@ -81,8 +81,8 @@ $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
 
-$label = new label();
-$label->labelValue = "<b><i>D.5. Specify the notional study hours expected for the duration of the course/unit using the spreadsheet provided.</b></i>";
+$label1 = new label();
+$label1->labelValue = "<b><i>D.5. Specify the notional study hours expected for the duration of the course/unit using the spreadsheet provided.</b></i>";
 
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->border = 2;
@@ -90,7 +90,7 @@ $table->cellpadding = '2';
 $table->cellspacing = '3';
 
 $textinput = new textinput('a');
-$textinput->size = 10;
+$textinput->size = 5;
 $textinput->value = "0";
 if ($mode == "fixup") {
     $textinput->value = $a;
@@ -100,12 +100,12 @@ if ($mode == "edit") {
 }
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
-$table->addCell("a. Over how many weeks will this course run?");
+$table->addCell("a. Over how many weeks will this course run?",800,"top",null,null,null,1);
 $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('b');
-$textinput->size = 10;
+$textinput->size = 5;
 $textinput->value = "0";
 if ($mode == "fixup") {
     $textinput->value = $b;
@@ -120,7 +120,7 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('c');
-$textinput->size = 10;
+$textinput->size = 5;
 $textinput->value = "0";
 if ($mode == "fixup") {
     $textinput->value = $c;
@@ -135,7 +135,7 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('d');
-$textinput->size = 10;
+$textinput->size = 5;
 $textinput->value = "0";
 if ($mode == "fixup") {
     $textinput->value = $d;
@@ -150,7 +150,7 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('e');
-$textinput->size = 10;
+$textinput->size = 5;
 $textinput->value = "0";
 if ($mode == "fixup") {
     $textinput->value = $e;
@@ -178,7 +178,7 @@ $table->addCell("<b>" . $label->labelValue . "</b>");
 $table->endRow();
 
 $textinput = new textinput('f');
-$textinput->size = 10;
+$textinput->size = 5;
 $textinput->value = "0";
 if ($mode == "fixup") {
     $textinput->value = $f;
@@ -204,7 +204,7 @@ $table->addCell("<b>" . $label->labelValue . "</b>");
 $table->endRow();
 
 $textinput = new textinput('g');
-$textinput->size = 10;
+$textinput->size = 5;
 $textinput->value = "0";
 if ($mode == "fixup") {
     $textinput->value = $g;
@@ -219,7 +219,7 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('h');
-$textinput->size = 10;
+$textinput->size = 5;
 $textinput->value = "0";
 if ($mode == "fixup") {
     $textinput->value = $h;
@@ -245,7 +245,7 @@ $table->addCell("<b>" . $label->labelValue . "</b>");
 $table->endRow();
 
 $textinput = new textinput('i');
-$textinput->size = 10;
+$textinput->size = 5;
 $textinput->value = "0";
 if ($mode == "fixup") {
     $textinput->value = $i;
@@ -306,8 +306,9 @@ if (count($errormessages) > 0) {
 
 $legend = "<b>Section D: Outcomes and Assessment - Page Three</b>";
 $fs = new fieldset();
+$fs->width = 700;
 $fs->setLegend($legend);
-$fs->addContent($label->show());
+$fs->addContent($label1->show());
 $fs->addContent($table->show());
 $form->addToForm($fs->show());
 

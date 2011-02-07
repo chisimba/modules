@@ -25,7 +25,7 @@ if ($formdata != null){
     $mode = "edit";
 }
 
-$action = 'finishdocument';
+$action = 'showcomments';
 $form = new form('contactdetailsform', $this->uri(array('action' => $action, 'id'=>$id, 'formname'=>'contactdetails')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section H: Contact Details');
