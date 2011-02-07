@@ -162,8 +162,15 @@ class wicid extends controller {
     public function __filterbyparam() {
         //Get the filter action
         $filter = $this->getParam("filter", Null);
-        //Get the value to search for
-        $filtervalue = $this->getParam("filtervalue", Null);
+        if ($filter=="Date") {
+            //Get the values to search for
+            $filtervalue = array();
+            $filtervalue['start'] = $this->getParam("startdate", Null);
+            $filtervalue['end'] = $this->getParam("enddate", Null);
+        } else {
+            //Get the value to search for
+            $filtervalue = $this->getParam("filtervalue", Null);
+        }
         //  $documents = $this->documents->getdocuments($this->mode);
         $rejecteddocuments = $this->documents->getdocuments($this->mode, "Y");
 
@@ -179,7 +186,7 @@ class wicid extends controller {
             $selected = "";
         }
         $files = $this->objUtils->searchFileInAllNodes($filter, $filtervalue);
-        
+
         $this->setVarByRef("files", $files);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("mode", $mode);
@@ -811,15 +818,16 @@ class wicid extends controller {
 
     function __batchexecute() {
         //Get parameters
-        $submit = $this->getParam('submit');
+        $submit = strtolower($this->getParam('submit'));
         $id = $this->getParam('id');
         $mode = $this->getParam('mode');
-        $active = $this->getParam('active');
+        $active = $this->getParam('active', 'Y');
         $rejected = $this->getParam('rejected', 'N');
 
         $documents = $this->documents->getdocuments($this->mode, $rejected, $active);
+
         //Check and execute action
-        if ($submit == "Approve Selected") {
+        if ($submit == "approve selected") {
             //Step through the documents and approve those selected
             if (isset($documents)) {
                 foreach ($documents as $document) {
@@ -829,10 +837,11 @@ class wicid extends controller {
                     }
                 }
             }
-        } elseif ($submit == "Delete Selected") {
+        } elseif ($submit == "delete selected") {
 
             //Step through the documents and approve those selected
             if (isset($documents)) {
+
                 foreach ($documents as $document) {
                     if ($this->getParam($document['id'] . '_app') == 'execute') {
                         $this->documents->deleteDocuments($document['id']);
@@ -917,6 +926,7 @@ class wicid extends controller {
             $exts = split("[/\\.]", $filename);
             $n = count($exts) - 1;
             $ext = $exts[$n];
+            $ext = strtolower($ext);
             $doc = $this->documents->getDocument($docid);
             $placeholder = $file = $dir . '/' . $topic . '/' . $docname . '.na';
             $file = "";
@@ -1110,17 +1120,19 @@ class wicid extends controller {
     public function __unapproveddocs() {
         $selected = "unapproved";
         $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
+        $attachmentStatus = $this->getParam("attachmentStatus", Null);
         $documents = $this->documents->getdocuments($this->mode);
         $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("mode", $this->mode);
+        $this->setVarByRef("attachmentStatus", $attachmentStatus);
         return "unapproveddocs_tpl.php";
     }
 
     public function __rejecteddocuments() {
         $selected = "rejecteddocuments";
-        $attachmentStatus  = $this->getParam("attachmentStatus", Null);
+        $attachmentStatus = $this->getParam("attachmentStatus", Null);
         $documents = $this->documents->getRejectedDocuments($this->mode, 'Y', 'Y');
         $this->setVarByRef("attachmentStatus", $attachmentStatus);
         $this->setVarByRef("documents", $documents);
@@ -1129,8 +1141,14 @@ class wicid extends controller {
     }
 
     public function __newdocument() {
-        $selected = $this->getParam('selected');
+        $selected = $this->getParam('selected', Null);
+        $mode = $this->getParam('mode', Null);
+        $errormessages = $this->getParam('errormessages', Null);
+        $telephone = $this->getParam('telephone', Null);
         $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("errormessages", $errormessages);
+        $this->setVarByRef("telephone", $telephone);
         return "addeditdocument_tpl.php";
     }
 

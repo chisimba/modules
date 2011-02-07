@@ -308,7 +308,7 @@ class userutils extends object {
     /*
      * Function to get documents based on passed params
      * @param string $filter the type of parameter to use
-     * @param string $filtervalue the value supplied by the user
+     * @param string or array $filtervalue the value supplied by the user
      * @return array
      */
 

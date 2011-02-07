@@ -83,13 +83,10 @@ $leftColumn = $header->show();
 //$leftColumn .= $searchForm->show();
 //New Search
 $leftColumn .= $filters;
-//Add navigation table to fieldset
-$linkset = new fieldset();
-$linkset->setLegend('Links');
-$linkset->addContent('<div class="filemanagertree">' . $nav . '</div>');
 
 $filters = $filterset->show();
-$leftColumn .= $linkset->show();
+
+$leftColumn .= '<div class="filemanagertree">' . $nav . '</div>';
 $cssLayout->setLeftColumnContent($leftColumn);
 
 $cssLayout->setMiddleColumnContent($this->getContent());

@@ -35,10 +35,15 @@ if ($filter == 'Owner') {
 } elseif ($filter == 'Date') {
     $objDateTime = $this->getObject('dateandtime', 'utilities');
     $objDatePicker = $this->newObject('datepicker', 'htmlelements');
-    $objDatePicker->name = 'filtervalue';
+    $objDatePicker->name = 'startdate';
+    $objDatePicker2 = $this->newObject('datepicker', 'htmlelements');
+    $objDatePicker2->name = 'enddate';
     $table->startRow();
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_date', 'wicid', 'Date') . ": </b>", "120px", "top", "right");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_startdate', 'wicid', 'Start date') . ": </b>", "120px", "top", "right");
     $table->addCell($objDatePicker->show(), "190px", "top", "left");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_enddate', 'wicid', 'End date') . ": </b>", "120px", "top", "right");
+    $table->addCell($objDatePicker2->show(), "190px", "top", "left");
+
 } elseif ($filter == 'Title') {
     $textinput = new textinput('filtervalue');
     $textinput->size = 30;

@@ -123,7 +123,7 @@ class dbfileuploads extends dbtable {
                 $sql .= "where A.telephone like '%" . $filtervalue . "%'";
                 break;
             case 'Date':
-                $sql .= "where A.date_created like '%" . $filtervalue . "%'";
+                $sql .= "where A.date_created between '" . $filtervalue['start'] . "' and '" . $filtervalue['end'] . "'";
                 break;
             case 'Title':
                 $sql .= "where A.docname like '%" . $filtervalue . "%'";
