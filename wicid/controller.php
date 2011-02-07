@@ -409,6 +409,7 @@ class wicid extends controller {
         if (!$path) {
             $path = "";
         }
+
         //Confirm that folder does not exist
         $exists = $this->objUtils->folderExistsCheck($path, $name);
         //Create only if new
@@ -578,6 +579,7 @@ class wicid extends controller {
         }
         $selectedfolder = $this->getParam('parentfolder');
 
+
         if ($selectedfolder == '0') {
             $errormessages[] = "Select topic";
         }
@@ -647,7 +649,10 @@ class wicid extends controller {
         $documents = $this->documents->getdocuments($this->mode);
         $this->setVarByRef("documents", $documents);
         $selected = "unapproved";
+        $tobeeditedfoldername = $this->getParam('tobeeditedfoldername', Null);
+        $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
         $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("mode", $this->mode);
         $this->setVarByRef("refno", $refNo);
         return "unapproveddocs_tpl.php";
         // }

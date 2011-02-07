@@ -542,9 +542,12 @@ class userutils extends object {
         $path = $this->objSysConfig->getValue('FILES_DIR', 'wicid') . '/' . $folderpath . '/' . $foldername;
         $result = $this->objMkdir->mkdirs($path);
         $userid = $this->getUserId();
+        $fullpath = $folderpath . '/' . $foldername;
+        //Search and replace double //
+        $fullpath = str_ireplace("//", "/", $fullpath);
         //if($result != FALSE) {
         $this->folderPermissions->addPermission(
-                $userid, $folderpath . '/' . $foldername,
+                $userid, $fullpath,
                 'true', 'true', 'true');
     }
 

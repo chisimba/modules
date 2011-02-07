@@ -404,6 +404,9 @@ class dbdocuments extends dbtable {
         if ($contact == NULL) {
             $contact = $this->objUser->fullname();
         }
+        //Remove double //
+        $newpath = str_ireplace("//", "/", $path);
+        //$newpath = str_ireplace("/", "%", $newpath);
 
         $data = array(
             'docname' => $title,
@@ -414,7 +417,7 @@ class dbdocuments extends dbtable {
             'department' => $department,
             'contact_person' => $contact,
             'telephone' => $telephone,
-            'topic' => $path,
+            'topic' => $newpath,
             'mode' => $mode,
             'active' => $approved,
             'status' => $status,
@@ -423,6 +426,7 @@ class dbdocuments extends dbtable {
             'ref_version' => $ref_version,
             'version' => $version
         );
+
         $id = $this->insert($data);
         return $refno . "/" . $ref_version;
     }
