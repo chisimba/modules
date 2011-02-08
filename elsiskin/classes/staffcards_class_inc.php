@@ -66,7 +66,7 @@ class staffcards extends object {
      * elsi staff
      */
     public function show() {
-        $profiles = array(
+        /*$profiles = array(
                         array("href"=>"1", "name"=>"Taurai Hungwe", "image"=>"THungwe.jpg", "jobtitle"=>"Instructional Designer","ext"=>"7184", "email"=>"taurai.hungwe@wits.ac.za", "bio"=>"I am a career learner. Teaching and technology is my passion. My interest vary from blended learning, mobile technology, data mining and basketball.")
                     );
         $networks = array(
@@ -138,9 +138,9 @@ class staffcards extends object {
 		</div>';
         }
 
-        $retstr .= '</div>';
+        $retstr .= '</div>';*/
 
-        /*$retstr = '
+        $retstr = '
 		<!-- #dialog is the id of a DIV defined in the code below -->
 		<div id="boxes">
 			<!-- #customize your modal window here -->
@@ -1247,7 +1247,7 @@ class staffcards extends object {
 			</div>
 			
 				</div>               
-			</div>*/
+			</div>';
 											   
 			
 	$retstr .='	<!-- Do not remove div#mask, because you\'ll need it to fill the whole screen -->
