@@ -6,6 +6,30 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
+//Append javascript to check all fields
+$this->appendArrayVar('headerParams', "
+<script type=\"text/javascript\">
+        // Action to be taken once page has loaded
+        jQuery(document).ready(function(){
+            jQuery(\"#input_selectall\").bind('click', function() {
+                //if checked, check the other checkboxes, otherwise uncheck all
+                var act = jQuery('#input_selectall').attr('checked');
+                //Get no of checkboxes from hidden input that stores the count
+                var count = jQuery('#input_doc_count').attr('value');
+            if(act) {
+                var todo = 'checked';
+            } else {
+                var todo = '';
+            }
+            for (var i = 0; i < count; i++) {
+                jQuery('#set4batch_'+i).attr('checked', todo);
+            }
+            });
+        });
+</script>
+");
+
+
 $header = new htmlheading();
 $header->type = 2;
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
@@ -54,14 +78,29 @@ $fs->addContent($links);
 
 echo $fs->show();
 
+//Add Form
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active' => 'Y')));
+
 $table = &$this->newObject("htmltable", "htmlelements");
-if (count($files) > 0) {
+//Store file count
+$filecount = count($files);
+if ($filecount > 0) {
+    $count = 0;
+    //Create a check all checkbox
+    $selectall = &new checkBox('selectall', Null, Null);
+    $selectall->setValue('clicked');
+    //Store count
+    $textinput = new textinput('doc_count');
+    $textinput->size = 1;
+    $textinput->value = $filecount;
+    $textinput->setType('hidden');
+
     $table->startRow();
-    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select")."</b>");
-    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type")."</b>");
-    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title")."</b>");
-    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No")."</b>");
-    $table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner")."</b>");
+    $table->addCell($selectall->show() .$textinput->show(). "<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner") . "</b>");
     $table->endRow();
     foreach ($files as $file) {
         $dlink1 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
@@ -75,6 +114,7 @@ if (count($files) > 0) {
         //Create checkbox to help select record for batch execution
         $approve = &new checkBox($docId . '_app', Null, Null);
         $approve->setValue('execute');
+        $approve->setId('set4batch_'.$count);
 
         $table->startRow();
         $table->addCell($approve->show());
@@ -83,14 +123,15 @@ if (count($files) > 0) {
         $table->addCell($file['refno']);
         $table->addCell($file['owner'] . '(' . $file['telephone'] . ')');
         $table->endRow();
+        $count++;
     }
 } else {
     $table->startRow();
     $table->addCell($this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found'));
     $table->endRow();
 }
-//Add Form
-$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active' => 'Y')));
+
+//add table to form
 $form->addToForm($table->show());
 
 $button = new button('submit', $this->objLanguage->languageText('mod_wicid_deleteselected', 'wicid', 'Delete Selected'));

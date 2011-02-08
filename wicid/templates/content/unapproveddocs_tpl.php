@@ -7,7 +7,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 if (isset($refno)) {
-    echo '<div class="warning"><strong>'.$this->objLanguage->languageText('mod_wicid_refnois', 'wicid', 'The ref number is').' ' . $refno . '</strong></div>';
+    echo '<div class="warning"><strong>' . $this->objLanguage->languageText('mod_wicid_refnois', 'wicid', 'The ref number is') . ' ' . $refno . '</strong></div>';
 }
 
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
@@ -17,11 +17,34 @@ $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
 //Create object for geticon
 $objIcon = $this->newObject('geticon', 'htmlelements');
 //Load Icon loader
 $objIcon->setIcon('loader');
 
+//Append javascript to check all fields
+$this->appendArrayVar('headerParams', "
+<script type=\"text/javascript\">
+        // Action to be taken once page has loaded
+        jQuery(document).ready(function(){
+            jQuery(\"#input_selectall\").bind('click', function() {
+                //if checked, check the other checkboxes, otherwise uncheck all
+                var act = jQuery('#input_selectall').attr('checked');
+                //Get no of checkboxes
+                var count = jQuery('#input_doc_count').attr('value');               
+            if(act) {
+                var todo = 'checked';
+            } else {
+                var todo = '';
+            }
+            for (var i = 0; i < count; i++) {
+                jQuery('#set4batch_'+i).attr('checked', todo);
+            }
+            });
+        });
+</script>
+");
 
 //Append JS to check if folder exists and avoid creation of duplicates
 $this->appendArrayVar('headerParams', '
@@ -62,7 +85,7 @@ $this->appendArrayVar('headerParams', '
 
                 currentFolder = folder;
 
-                jQuery("#spanfoldermessage").html("'.$this->objLanguage->languageText('mod_wicid_thename', 'wicid', 'The name').' "+folder+" '.$this->objLanguage->languageText('mod_wicid_isreservedselectother', 'wicid', 'is reserved. Kindly type in another one').'");
+                jQuery("#spanfoldermessage").html("' . $this->objLanguage->languageText('mod_wicid_thename', 'wicid', 'The name') . ' "+folder+" ' . $this->objLanguage->languageText('mod_wicid_isreservedselectother', 'wicid', 'is reserved. Kindly type in another one') . '");
                 jQuery("#spanfoldermessage").addClass("error");
                 jQuery("#input_foldername").addClass("inputerror");
                 jQuery("#spanfoldermessage").removeClass("success");
@@ -75,7 +98,7 @@ $this->appendArrayVar('headerParams', '
 
                     // Set message to checking
                     jQuery("#spanfoldermessage").removeClass("success");
-                    jQuery("#spanfoldermessage").html("<span id=\"folderexistscheck\">' . addslashes($objIcon->show()) . ' '.$this->objLanguage->languageText('mod_wicid_checking', 'wicid', 'Checking').' ...</span>");
+                    jQuery("#spanfoldermessage").html("<span id=\"folderexistscheck\">' . addslashes($objIcon->show()) . ' ' . $this->objLanguage->languageText('mod_wicid_checking', 'wicid', 'Checking') . ' ...</span>");
 
                     // Set current Folder
                     currentFolder = folder;
@@ -92,7 +115,7 @@ $this->appendArrayVar('headerParams', '
 
                                 // IF folder exists
                                 if (msg == "exists") {
-                                    jQuery("#spanfoldermessage").html("'.$this->objLanguage->languageText('mod_wicid_afolderwithname', 'wicid', 'A folder with the name').' "+folder+" '.$this->objLanguage->languageText('mod_wicid_alreadyexists', 'wicid', 'already exists').'");
+                                    jQuery("#spanfoldermessage").html("' . $this->objLanguage->languageText('mod_wicid_afolderwithname', 'wicid', 'A folder with the name') . ' "+folder+" ' . $this->objLanguage->languageText('mod_wicid_alreadyexists', 'wicid', 'already exists') . '");
                                     jQuery("#spanfoldermessage").addClass("error");
                                     jQuery("#input_foldername").addClass("inputerror");
                                     jQuery("#spanfoldermessage").removeClass("success");
@@ -100,7 +123,7 @@ $this->appendArrayVar('headerParams', '
 
                                 // Else
                                 } else {
-                                    jQuery("#spanfoldermessage").html("'.$this->objLanguage->languageText('mod_wicid_canusename', 'wicid', 'You can use the name').': "+folder);
+                                    jQuery("#spanfoldermessage").html("' . $this->objLanguage->languageText('mod_wicid_canusename', 'wicid', 'You can use the name') . ': "+folder);
                                     jQuery("#spanfoldermessage").addClass("success");
                                     jQuery("#spanfoldermessage").removeClass("error");
                                     jQuery("#input_foldername").removeClass("inputerror");
@@ -154,7 +177,22 @@ echo $fs->show() . '<br/>';
 
 $table = $this->getObject("htmltable", "htmlelements");
 $table->startHeaderRow();
-$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select"));
+
+$doccount = count($documents);
+//Add checkbox if there are docs to show
+if ($doccount > 0) {
+    //Create a check all checkbox
+    $selectall = &new checkBox('selectall', Null, Null);
+    $selectall->setValue('clicked');
+    //Store count
+    $textinput = new textinput('doc_count');
+    $textinput->size = 1;
+    $textinput->value = $doccount;
+    $textinput->setType('hidden');
+    $table->addHeaderCell($selectall->show() .$textinput->show() . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select"));
+} else {
+    $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select"));
+}
 $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title"));
 $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No"));
 $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner"));
@@ -168,6 +206,7 @@ $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
 
 if (count($documents) > 0) {
+    $count = 0;
     foreach ($documents as $document) {
         //$topic=  substr($document['topic'], strlen($this->baseDir));
         $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'])));
@@ -187,7 +226,8 @@ if (count($documents) > 0) {
         //Create checkbox to help select record for batch execution
         $approve = &new checkBox($document['id'] . '_app', Null, Null);
         $approve->setValue('execute');
-        
+        $approve->setId('set4batch_'.$count);
+
         //Add row to render the record data
         $table->startRow();
         $table->addCell($approve->show());
@@ -206,11 +246,13 @@ if (count($documents) > 0) {
         $table->addCell($document['attachmentstatus'] . $uplink->show());
         $table->addCell($document['date']);
         $table->endRow();
+        //Increment count
+        $count++;
     }
 }
 
 // Form
-$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active'=>'N')));
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active' => 'N')));
 $form->addToForm($table->show());
 
 $button = new button('submit', $this->objLanguage->languageText('mod_wicid_approveselected', 'wicid', 'Approve Selected'));
@@ -220,7 +262,7 @@ $form->addToForm('<br/>' . $button->show());
 $button = new button('submit', $this->objLanguage->languageText('mod_wicid_deleteselected', 'wicid', 'Delete Selected'));
 $button->setToSubmit();
 
-$form->addToForm(" | ".$button->show());
+$form->addToForm(" | " . $button->show());
 
 //Create legend for the unnapproved docs
 $fs = new fieldset();
