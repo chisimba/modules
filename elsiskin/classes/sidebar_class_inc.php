@@ -191,7 +191,7 @@ class sidebar extends object {
      * @return str $retstr containing the string that shows the twitter link
      */
     public function getTwitter() {
-        $this->objLink->link("http://www.facebook.com/pages/Wits-eLSI-eLearning-Support-and-Innovation/143838025636947");
+        $this->objLink->link("http://twitter.com/elsi_wits");
         $this->objLink->link = '<img src="' . $this->skinpath . 'images/ELSITwitter.png" width="230" height="239" />';
         $retstr = '
         <div id="twitter">';

@@ -307,7 +307,7 @@ class staffcards extends object {
 							<li><a href="http://www.facebook.com/nphakela"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
 							<li><a href="http://twitter.com/nguni52/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
                                                         <li><a href="http://www.delicious.com/nphakela/"><img src="' . $this->skinpath . 'images/profiles/delicious.png"><strong>Delicious</strong>delicious.com</a></li>
-							<li><a href="http://www.flickr.com/photos/nphakela"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
+							<li><a href="http://www.flickr.com/photos/56799340@N08/"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
                                                   </ul>
 						  <div class="clear"></div>
 						</div>
