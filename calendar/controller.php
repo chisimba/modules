@@ -51,12 +51,14 @@ class calendar extends controller
 
        // $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
         $this->isContextLecturer = $this->objContextGroups->isContextLecturer();
-       
+
         // Give User Lecturer Rights if User is Admin
         //if ($this->isValid('manage_course_event')) {
+        /*
         if ($this->objUser->isCourseAdmin()) {
             $this->isContextLecturer = TRUE;
         }
+        */
 
 
         //if ($this->isValid('manage_site_event')) {
@@ -140,7 +142,7 @@ class calendar extends controller
     * Method to show events for the current month. This is the default action
     */
     function showEvents()
-    { 
+    {
         $month = $this->getParam('month', date('m'));
         $year = $this->getParam('year', date('Y'));
         $this->setVarByRef('month', $month);
