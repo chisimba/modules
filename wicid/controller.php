@@ -327,7 +327,7 @@ class wicid extends controller {
 
     public function __viewfolder() {
         //  $documents = $this->documents->getdocuments($this->mode);
-        $rows = 1;
+        $rows = 10;
         $start = $this->getParam("start", 0);
         //Select records Limit array
         $limit = array();
