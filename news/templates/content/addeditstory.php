@@ -81,7 +81,7 @@ $datePicker = $this->newObject('datepicker', 'htmlelements');
 $datePicker->name = 'storyexpirydate';
 
 if ($mode == 'edit') {
-    $datePicker->defaultDate = $story['datetopstoryexpire'];
+    $datePicker->defaultDate = date("Y-m-d",strtotime ($story['datetopstoryexpire']));
 }
 
 $formTable->startRow();
