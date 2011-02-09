@@ -34,17 +34,6 @@ class facebookapps extends controller
      */
     public function init()
     {
-        $this->objUser = $this->getObject('user', 'security');
-        $this->objLanguage = $this->getObject('language', 'language');
-        
-        //Instantiate the facebook api wrapper
-        //this->objFacebook = $this->getObject('facebookwrapper', 'facebookapps');
-
-
-        //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
-        //Log this module call
-        $this->objLog->log();
     }
     
     
@@ -97,9 +86,9 @@ class facebookapps extends controller
         return "dump_tpl.php";
     }
     
-    private function __playapp()
+    private function __getCommentsForAjax()
     {
-        $app = $this->getParam('action', 'default');
+        
     } 
 
     
@@ -114,17 +103,7 @@ class facebookapps extends controller
     */
     public function requiresLogin($action)
     {
-        switch ($action)
-        {
-            case 'default':
-            case 'showapp':
-                return FALSE;
-                break;
-            default:
-            	case NULL:
-                return TRUE;
-                break;
-        }
+        return FALSE;
     }
         
     /**
