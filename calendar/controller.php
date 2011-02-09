@@ -56,8 +56,6 @@ class calendar extends controller
         //if ($this->isValid('manage_course_event')) {
         if ($this->objUser->isCourseAdmin()) {
             $this->isContextLecturer = TRUE;
-        } else {
-            $this->isContextLecturer = FALSE;
         }
 
 
