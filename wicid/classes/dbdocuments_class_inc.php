@@ -149,46 +149,37 @@ class dbdocuments extends dbtable {
         return $docs;
     }
 
+
     /*
      * Function to get documents based on passed params
      * @param string rejected
      * @param string active
      * @param string mode
+     * @param array limit stores the start and end rows
+     * @param string rowcount stores the count of records for this selection
      */
 
-    public function getdocuments($mode="default", $rejected = "N", $active="N") {
-        /*
-          if (strcmp($rejected, 'Y') == 0) {
-          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
-          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
-          where A.active = 'N'
-          and A.deleteDoc = 'N'
-          and A.rejectDoc = 'Y'";
-          } else {
-          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
-          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
-          where A.active = 'N'
-          and A.deleteDoc = 'N'
-          and A.rejectDoc = 'N'";
-
-          }
-
-          if ($mode = "apo") {
-          $sql.=" and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
-          } */
+    public function getdocuments($mode="default", $rejected = "N", $active="N", $limit=Null, $rowcount=Null) {
 
         $sql = "select * from tbl_wicid_documents where (deleteDoc = 'N' or deleteDoc is null) and  (active='$active' or active is null)
         and (rejectDoc= '$rejected' or rejectDoc is null)";
+
         if (!$this->objUser->isadmin()) {
 
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
         $sql.=' order by puid DESC';
 
+        if(empty($rowcount)){
+            $rowcount = count($this->getArray($sql));
+        }
+        //Add the limit if specified
+        if (is_array($limit))
+            $sql .= " limit " . $limit['start'] . ", " . $limit['rows'];
 
         $rows = $this->getArray($sql);
         $docs = array();
-        //print_r($rows);
+
 
         foreach ($rows as $row) {
             //$owner=$this->userutils->getUserId();
@@ -243,10 +234,11 @@ class dbdocuments extends dbtable {
                 'status' => $status,
                 'currentuserid' => $fullname,
                 'version' => $row['version'],
-                'ref_version' => $row['ref_version']
+                'ref_version' => $row['ref_version']                
             );
         }
-        //echo json_encode(array("documents" => $docs));
+        $docs['count'] = $rowcount;
+
         return $docs;
     }
 

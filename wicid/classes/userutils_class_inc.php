@@ -276,13 +276,26 @@ class userutils extends object {
             return false;
         }
     }
+    /**
+     * Function that returns the files of a given node
+     * @param string $node the node
+     * @param array $limit the start and end limits
+     * @param string $rowcount the rowcount
+     * @return array
+     */
 
-    function getFiles($node) {
+    function getFiles($node, $limit=Null, $rowcount=Null) {
         $objFileUploads = $this->getObject('dbfileuploads');
         $today = getdate();
 
         $owner = $this->getUserId();
-        $rows = $objFileUploads->getNodeFiles($node);
+        
+        if(empty($rowcount)){
+            $rowcount = count($objFileUploads->getNodeFiles($node));
+        }
+
+        $rows = $objFileUploads->getNodeFiles($node, $limit);
+
         $files = array();
 
         foreach ($rows as $row) {
@@ -303,6 +316,7 @@ class userutils extends object {
                 'thumbnailpath' => '<img src="' . $this->sitePath . '/wicid/resources/images/ext/' . $this->findexts($row['filename']) . '.png" width="22" height="22">',
             );
         }
+        $files['count'] = $rowcount;
         return $files;
     }
 

@@ -327,11 +327,21 @@ class wicid extends controller {
 
     public function __viewfolder() {
         //  $documents = $this->documents->getdocuments($this->mode);
-        $rejecteddocuments = $this->documents->getdocuments($this->mode, "Y");
+        $rows = 1;
+        $start = $this->getParam("start", 0);
+        //Select records Limit array
+        $limit = array();
+        $limit['start'] = $start;
+        $limit['rows'] = $rows;
+        //Get the rowcount
+        $rowcount = $this->getParam("rowcount", Null);
+
+        $rejecteddocuments = $this->documents->getdocuments($this->mode, 'N', "Y",$limit,$rowcount);
 
         $dir = $this->getParam("folder", "");
         $mode = $this->getParam("mode", "");
         $message = $this->getParam("message", "");
+        
 
         $objPreviewFolder = $this->getObject('previewfolder');
 
@@ -342,8 +352,10 @@ class wicid extends controller {
         if ($dir == $basedir) {
             $selected = "";
         }
-
-        $files = $this->objUtils->getFiles($dir);
+        $rowcount = $this->getParam("rowcount", Null);
+        $this->setVarByRef("start", $start);
+        $this->setVarByRef("rows", $rows);
+        $files = $this->objUtils->getFiles($dir,$limit, $rowcount);
         $this->setVarByRef("files", $files);
         $this->setVarByRef("dir", $dir);
         $this->setVarByRef("documents", $documents);

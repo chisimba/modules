@@ -79,7 +79,7 @@ $fs->addContent($links);
 echo $fs->show();
 
 //Add Form
-$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active' => 'Y')));
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active' => 'Y', 'rowcount' => $files['count'])));
 
 $table = &$this->newObject("htmltable", "htmlelements");
 //Store file count
@@ -96,34 +96,36 @@ if ($filecount > 0) {
     $textinput->setType('hidden');
 
     $table->startRow();
-    $table->addCell($selectall->show() .$textinput->show(). "<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
+    $table->addCell($selectall->show() . $textinput->show() . "<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type") . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title") . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No") . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner") . "</b>");
     $table->endRow();
     foreach ($files as $file) {
-        $dlink1 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
-        $dlink1->link = $file['thumbnailpath'];
+        if (count($file) > 1) {
+            $dlink1 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
+            $dlink1->link = $file['thumbnailpath'];
 
-        $dlink2 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
-        $dlink2->link = $file['actualfilename'];
-        //Get the document Id
-        $docId = $this->documents->getIdWithRefNo($file['refno']);
+            $dlink2 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
+            $dlink2->link = $file['actualfilename'];
+            //Get the document Id
+            $docId = $this->documents->getIdWithRefNo($file['refno']);
 
-        //Create checkbox to help select record for batch execution
-        $approve = &new checkBox($docId . '_app', Null, Null);
-        $approve->setValue('execute');
-        $approve->setId('set4batch_'.$count);
+            //Create checkbox to help select record for batch execution
+            $approve = &new checkBox($docId . '_app', Null, Null);
+            $approve->setValue('execute');
+            $approve->setId('set4batch_' . $count);
 
-        $table->startRow();
-        $table->addCell($approve->show());
-        $table->addCell($dlink1->show());
-        $table->addCell($dlink2->show());
-        $table->addCell($file['refno']);
-        $table->addCell($file['owner'] . '(' . $file['telephone'] . ')');
-        $table->endRow();
-        $count++;
+            $table->startRow();
+            $table->addCell($approve->show());
+            $table->addCell($dlink1->show());
+            $table->addCell($dlink2->show());
+            $table->addCell($file['refno']);
+            $table->addCell($file['owner'] . '(' . $file['telephone'] . ')');
+            $table->endRow();
+            $count++;
+        }
     }
 } else {
     $table->startRow();
@@ -139,9 +141,63 @@ $button->setToSubmit();
 
 $form->addToForm(" </br> " . $button->show());
 
-//Add rejected documents table to fieldset
+
+//Add Navigations
+if ($filecount > 0) {
+    //Compute new start val
+    $newstart = $start + $rows;
+    $newprev = $start - $rows;
+    //Navigation Flag
+    $str = "";
+    //Create table to hold buttons(forms)
+    $table = &$this->newObject("htmltable", "htmlelements");
+    $table->width = '100%';
+    $table->startRow();
+    $nextflag = "nonext";
+    //Add prev button
+    if ($newprev >= 0) {
+        $str .= "prev";
+        $button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordprevious', 'wicid', 'Previous'));
+        $button->setToSubmit();
+        //Add Form
+        $prevform = new form('prevform', $this->uri(array('action' => 'viewfolder', 'mode' => $mode, 'active' => 'Y', 'start' => $newprev, 'rowcount' => $files['count'], 'folder' => $dir)));
+
+        $prevform->addToForm("</ br> " . $button->show() . " </ br>");
+
+        $table->addCell($prevform->show(), "50%", 'top', 'right');
+    }
+    //Add Next button
+    if ($newstart < $files['count'] && $start != $files['count'] && $files['count'] > $rows) {
+
+        $button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordnext', 'wicid', 'Next'));
+        $button->setToSubmit();
+        //Add Form
+        $nextform = new form('nextform', $this->uri(array('action' => 'viewfolder', 'mode' => $mode, 'active' => 'Y', 'start' => $newstart, 'rowcount' => $files['count'], 'folder' => $dir)));
+
+        $nextform->addToForm("</ br> " . $button->show() . " </ br>");
+        if (!empty($str)) {
+            $table->addCell($nextform->show(), "50%", 'top', 'left');
+        } else {
+            $table->addCell(" ", "50%", 'top', 'left');
+            $table->addCell($nextform->show(), "50%", 'top', 'left');
+        }
+        $str .= "next";
+        $nextflag = "next";
+    }
+    if ($nextflag == "nonext") {
+        $table->addCell(" ", "50%", 'top', 'left');
+    }
+    $table->endRow();
+    $navtable = $table->show();
+}
+//Add documents table to fieldset
 $fs = new fieldset();
 $fs->setLegend($this->objLanguage->languageText('mod_wicid_topics', 'wicid', 'Topics'));
-$fs->addContent($form->show());
+//Check if str is empty
+if (!empty($str)) {
+    $fs->addContent($form->show() . "<br/>" . $navtable);
+} else {
+    $fs->addContent($form->show());
+}
 echo $fs->show();
 ?>
