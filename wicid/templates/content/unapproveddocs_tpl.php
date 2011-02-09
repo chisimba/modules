@@ -176,37 +176,42 @@ echo $fs->show() . '<br/>';
 
 
 $table = $this->getObject("htmltable", "htmlelements");
-$table->startHeaderRow();
+
 
 $doccount = count($documents);
-//Add checkbox if there are docs to show
-if ($doccount > 0) {
-    //Create a check all checkbox
-    $selectall = &new checkBox('selectall', Null, Null);
-    $selectall->setValue('clicked');
-    //Store count
-    $textinput = new textinput('doc_count');
-    $textinput->size = 1;
-    $textinput->value = $doccount;
-    $textinput->setType('hidden');
-    $table->addHeaderCell($selectall->show() .$textinput->show() . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select"));
-} else {
-    $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select"));
-}
-$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title"));
-$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No"));
-$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner"));
-$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_topic', 'wicid', "Topic"));
-$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone"));
-$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment"));
-$table->addHeaderCell($this->objLanguage->languageText('mod_wicid_date', 'wicid', "Date"));
 
-$table->endHeaderRow();
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
 
 if (count($documents) > 0) {
     $count = 0;
+
+    $table->startRow();
+    //Add checkbox if there are docs to show
+    if ($doccount > 0) {
+        //Create a check all checkbox
+        $selectall = &new checkBox('selectall', Null, Null);
+        $selectall->setValue('clicked');
+        //Store count
+        $textinput = new textinput('doc_count');
+        $textinput->size = 1;
+        $textinput->value = $doccount;
+        $textinput->setType('hidden');
+        $table->addCell("<b>" . $selectall->show() . $textinput->show() . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
+    } else {
+        $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
+    }
+    
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_topic', 'wicid', "Topic") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_date', 'wicid', "Date") . "</b>");
+
+    $table->endRow();
+
     foreach ($documents as $document) {
         //$topic=  substr($document['topic'], strlen($this->baseDir));
         $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'])));
@@ -226,7 +231,7 @@ if (count($documents) > 0) {
         //Create checkbox to help select record for batch execution
         $approve = &new checkBox($document['id'] . '_app', Null, Null);
         $approve->setValue('execute');
-        $approve->setId('set4batch_'.$count);
+        $approve->setId('set4batch_' . $count);
 
         //Add row to render the record data
         $table->startRow();
@@ -249,6 +254,11 @@ if (count($documents) > 0) {
         //Increment count
         $count++;
     }
+} else {
+        //Loads if no records were found
+        $table->startRow();
+        $table->addCell($this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found'));
+        $table->endRow();
 }
 
 // Form
