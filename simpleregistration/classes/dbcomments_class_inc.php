@@ -36,6 +36,13 @@ class dbcomments extends dbTable{
         return $this->insert($data);
 
     }
+
+ public function deleteEventComments($id)
+    {
+        if ($id != '') {
+            return $this->delete('event_id', $id);
+        }
+    }
   
 
     /**

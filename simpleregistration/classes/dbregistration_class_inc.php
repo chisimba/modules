@@ -70,6 +70,13 @@ class dbregistration extends dbTable{
         return $rows;
     }
 
+      public function deleteEventMembers($id)
+    {
+        if ($id != '') {
+            return $this->delete('event_id', $id);
+        }
+    }
+
 
     public  function getRegistrationCount($eventid){
             $sql="select count(id) as totalregistrations from ".$this->table." where event_id ='".$eventid."'";

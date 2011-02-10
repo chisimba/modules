@@ -3,6 +3,8 @@ $this->loadclass('link','htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('textarea','htmlelements');
+$this->loadClass('radio', 'htmlelements');
+
 $objIcon= $this->newObject('geticon','htmlelements');
 
 $extbase = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
@@ -17,7 +19,7 @@ $this->appendArrayVar('headerParams', $maincss);
 $eventcontent=array();
 
 if(!empty ($content)) {
-    $eventcontent=$content;
+   $eventcontent=$content;
    $mode="edit";
 }
 
@@ -100,17 +102,29 @@ $table->addCell('Event attachments');
 $table->addCell($objInput->show());
 $table->endRow();
 
-
-$objInput = new textinput('staffregfield', $eventcontent['event_staffreg']);
+//Radio buttons for the option of allowing staff registration
 $table->startRow();
 $table->addCell('Allow staff registration');
-$table->addCell($objInput->show());
+$radio = new radio('staffregfield');
+$radio->addOption('true','Yes');
+$radio->addOption('false','No');
+//Let the 'yes' option be checked by default
+$radio->setSelected('true');
+$radio->setBreakSpace('&nbsp;');
+$table->addCell($radio->show());
 $table->endRow();
 
-$objInput = new textinput('visitorregfield', $eventcontent['event_visitorreg']);
+
+//Radio buttons for the option of allowing visitor registration
 $table->startRow();
 $table->addCell('Allow visitor registration');
-$table->addCell($objInput->show());
+$radio = new radio('visitorregfield');
+$radio->addOption('true','Yes');
+$radio->addOption('false','No');
+//Let the 'yes' option be checked by default
+$radio->setSelected('true');
+$radio->setBreakSpace('&nbsp;');
+$table->addCell($radio->show());
 $table->endRow();
 
 

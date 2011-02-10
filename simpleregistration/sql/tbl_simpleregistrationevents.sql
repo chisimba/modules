@@ -19,6 +19,10 @@ $fields = array(
     'type' => 'text',
     'length' => 128
     ),
+    'max_people' => array(
+    'type' => 'integer',
+    'notnull' => TRUE
+    ),
     'event_date' => array(
     'type' => 'date'
     ),

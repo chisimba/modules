@@ -56,7 +56,6 @@ $pagecontent = $objWashout->parseText($content);
 $table->startRow();
 $table->addCell($pagecontent);
 $table->addCell($regformObj->createRegisterForm($editfirstname, $editlastname, $editcompany, $editemail, $mode, $allowStaffReg, $allowExternalReg, $eventid));
-
 $table->endRow();
 
 $admin = new link($this->uri(array('action' => 'memberlist', 'shortname' => $shortname)));

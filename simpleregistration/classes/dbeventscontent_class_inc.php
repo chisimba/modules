@@ -41,7 +41,6 @@ class dbeventscontent extends dbTable{
         $emailcontact,
         $emailsubject,
         $emailname,
-        $emailsubject,
         $emailcontent,
         $emailattachments,
         $staffreg,
@@ -68,6 +67,27 @@ class dbeventscontent extends dbTable{
 
     }
 
+     /**
+     *
+     * Method to event content
+     *
+     * @access public
+     * @param string $eventid The event ID
+     * @param string $venue Important instructions pertaining to the event, eg, venue, etc.
+     * @param string $content Information about what the event is all about
+     * @param string $leftitle1 
+     * @param string $leftitle2
+     * @param string $footer
+     * @param string $emailcontact Event's email contact
+     * @param string $emailsubject
+     * @param string $emailcontent
+     * @param string $emailattachments
+     * @param boolean $staffreg Whether to allow staff registration
+     * @param boolean $visitorreg Whether to allow visitor registration
+     * @return string Event ID
+     *
+     */
+
     public function updateEventContent(
         $eventid,
         $venue,
@@ -78,7 +98,6 @@ class dbeventscontent extends dbTable{
         $emailcontact,
         $emailsubject,
         $emailname,
-        $emailsubject,
         $emailcontent,
         $emailattachments,
         $staffreg,
@@ -99,7 +118,7 @@ class dbeventscontent extends dbTable{
             'event_staffreg'=>$staffreg,
             'event_visitorreg'=>$visitorreg
         );
-        return $this->update('event_id',$eventid, $data);;
+        return $this->update('event_id',$eventid, $data);
 
     }
     /**
@@ -112,5 +131,11 @@ class dbeventscontent extends dbTable{
         return $row;
     }
 
+    public function deleteEventContent($id)
+    {
+        if ($id != '') {
+            return $this->delete('event_id', $id);
+        }
+    }
 }
 ?>

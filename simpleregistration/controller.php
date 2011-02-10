@@ -20,6 +20,8 @@ class simpleregistration extends controller {
         $this->utils = $this->getObject('simpleregistrationutils', 'simpleregistration');
         $this->dbeventscontent = $this->getObject('dbeventscontent');
         $this->dbcomments = $this->getObject('dbcomments');
+	$this->dbeventmembers = $this->getObject('dbregistration');
+	
         $this->objLog->log();
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
@@ -107,6 +109,7 @@ class simpleregistration extends controller {
         $this->setVarByRef('eventid', $this->eventid);
         //echo $this->eventid;
         $content = $this->dbeventscontent->getEventContent($this->eventid);
+	
         //print_r($content);
         //die();
         $this->setVarByRef('eventcontent', $content);
@@ -118,18 +121,14 @@ class simpleregistration extends controller {
      * user
      */
     function __register() {
-        $firstame = $this->getParam('firstname');
+             $firstame = $this->getParam('firstname');
         $lastname = $this->getParam('lastname');
         $company = $this->getParam('company');
         $email = $this->getParam('emailfield');
         $reg = $this->getObject('dbregistration');
         $eventid = $this->getParam('eventid');
-
-
         $totalregistrations = $reg->getRegistrationCount($eventid);
-        $maxregistrations = $this->objSysConfig->getValue('MAX_REG', 'simpleregistration');
-
-  
+	$maxregistrations = $this->dbevents->getMaxRegistrations($eventid);
         if ($totalregistrations > $maxregistrations) {
             return "registrationful_tpl.php";
         }
@@ -172,26 +171,133 @@ class simpleregistration extends controller {
         }
     }
 
+
+    /**
+     *
+     * Method to set the 'edit' mode for updating registered events
+     *
+     * @access private
+     *
+     */
+    function __editevent() {
+        $this->setVar('mode', 'edit');
+	$eventid = $this->getParam('eventid');
+	$this->setVar('eventid', $eventid);
+	$addevent = $this->dbevents->getEvent($eventid);
+	$eventcontent = $this->dbeventscontent->getEventContent($eventid);
+	$this->setVar('addevent', $addevent);
+	$this->setVar('eventcontent', $eventcontent);
+        return 'addeditevent.php'; 
+    }
+
+    /**
+     *
+     * Method to set the 'add' mode for adding new events events
+     *
+     * @access private
+     *
+     */
+    function __addevent() {
+        $this->setVar('mode', 'add');
+	$id = $this->getParam('eventid');
+        return 'addeditevent.php'; 
+    } 
+
+
+    /**
+     *
+     * Method to update registered events
+     *
+     * @access private
+     *
+     */
+   function __updateevent() {
+
+	$eventid = $this->getParam('eventid');
+	$eventtitle = $this->getParam('titlefield');
+        $eventdate = $this->getParam('eventdate');
+        $sn = $this->getParam('shorttitlefield');
+	$maxNumberOfParticipants = $this->getParam('maxpeoplefield');
+	//Update the event
+        $this->dbevents->updateEvent($eventid,$eventtitle, $sn, $maxNumberOfParticipants,$eventdate);
+	$Instructions = $this->getParam('venuefield');
+	$contentfield = $this->getParam('contentfield');
+	$lefttitle1field  = $this->getParam('lefttitle1field');
+	$lefttitle2field  = $this->getParam('lefttitle2field');
+	$footerfield  = $this->getParam('footerfield');
+	$eventemailfield  = $this->getParam('emailcontactfield');
+	$emailnamefield  = $this->getParam('emailnamefield');
+	$emailsubjectfield  = $this->getParam('emailsubjectfield');
+	$emailcontentfield = $this->getParam('emailcontentfield');
+	$emailattachmentsfield = $this->getParam('emailattachmentsfield');
+	$staffregfield = $this->getParam('staffregfield');
+	$visitorregfield = $this->getParam('visitorregfield');
+
+	//Update event content
+	$this->dbeventscontent->updateEventContent(
+                $eventid,
+                $Instructions,
+                $contentfield,
+                $lefttitle1field,
+                $lefttitle2field,
+                $footerfield,
+                $eventemailfield,
+                $emailsubjectfield,
+                $emailnamefield,
+                $emailcontentfield,
+                $emailattachmentsfield,
+                $staffregfield,
+                $visitorregfield);
+
+	
+       $this->nextAction('eventlisting');
+
+
+    }
+
+     /**
+     *
+     * Method to save new events
+     *
+     * @access private
+     *
+     */
+
     function __saveevent() {
-        $eventtitle = $this->getParam('eventtitlefield');
-        $eventdate = $this->getParam('eventdatefield');
-        $sn = $this->getParam('shortnamefield');
-        $id = $this->dbevents->addEvent($eventtitle, $sn, $eventdate);
+        $eventtitle = $this->getParam('titlefield');
+        $eventdate = $this->getParam('eventdate');
+        $sn = $this->getParam('shorttitlefield');
+	$maxNumberOfParticipants = $this->getParam('maxpeoplefield');
+	//Save the event
+        $id = $this->dbevents->addEvent($eventtitle, $sn, $maxNumberOfParticipants,$eventdate);
+	$Instructions = $this->getParam('venuefield');
+	$contentfield = $this->getParam('contentfield');
+	$lefttitle1field  = $this->getParam('lefttitle1field');
+	$lefttitle2field  = $this->getParam('lefttitle2field');
+	$footerfield  = $this->getParam('footerfield');
+	$eventemailfield  = $this->getParam('emailcontactfield');
+	$emailnamefield  = $this->getParam('emailnamefield');
+	$emailsubjectfield  = $this->getParam('emailsubjectfield');
+	$emailcontentfield = $this->getParam('emailcontentfield');
+	$emailattachmentsfield = $this->getParam('emailattachmentsfield');
+	$staffregfield = $this->getParam('staffregfield');
+	$visitorregfield = $this->getParam('visitorregfield');
+	//Save event content
         $this->dbeventscontent->addEventContent(
                 $id,
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "");
+                $Instructions,
+                $contentfield,
+                $lefttitle1field,
+                $lefttitle2field,
+                $footerfield,
+                $eventemailfield,
+                $emailsubjectfield,
+                $emailnamefield,
+                $emailcontentfield,
+                $emailattachmentsfield,
+                $staffregfield,
+                $visitorregfield);
+	
         $this->nextAction('eventlisting');
     }
 
@@ -346,6 +452,60 @@ class simpleregistration extends controller {
         $this->setVarByRef('eventid', $eventid);
         $this->setVarByRef('eventcontent', $content);
         return "success_tpl.php";
+    }
+
+        /**
+     *
+     *
+     */
+    function __deleteevent() {
+        $eventid = $this->getParam('id');
+
+       	$event = $this->dbevents->getEvent($eventid);
+	
+
+        if ($event == FALSE) {
+            //return $this->nextAction('home');
+		echo 'u suck';
+        } else {
+            $this->setVarByRef('event', $event);
+
+            $randomNumber = rand(0, 50000);
+            $this->setSession('deleteevent_' . $event['id'], $randomNumber);
+            $this->setVarByRef('deleteValue', $randomNumber);
+
+            return 'deleteevent.php';
+        }
+    }
+
+	    /**
+     *
+     *
+     *
+     */
+    function __deleteeventconfirm() {
+        $id = $this->getParam('id');
+        $confirm = $this->getParam('confirm');
+
+        if (($id != '') && ($confirm == 'yes')) {
+            $event = $this->dbevents->getEvent($id);
+
+            if ($event == FALSE) {
+                return $this->nextAction('home');
+            } else {
+                $this->dbcomments->deleteEventComments($id);
+		$this->dbeventscontent->deleteEventContent($id);
+		$this->dbeventmembers->deleteEventMembers($id);
+
+                $this->setSession('deletestory_' . $event['id'], NULL);
+
+                $this->dbevents->deleteEvent($id);
+
+                return $this->nextAction('home');
+            }
+        } else {
+            return $this->nextAction('home');
+        }
     }
 
     /**

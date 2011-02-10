@@ -65,8 +65,7 @@ $table->startRow();
 //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
 $table->addCell($footer,null,null,null,'colspan="2"');
 $table->endRow();
-
-
 echo '<div id="wrap">'.$table->show().'</div>';
+
 
 ?>
