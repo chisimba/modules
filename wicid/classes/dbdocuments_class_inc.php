@@ -248,28 +248,11 @@ class dbdocuments extends dbtable {
      * @param string rejected
      * @param string active
      * @param string mode
+     * @param array limit
+     * @param string rowcount
      */
 
-    public function getRejectedDocuments($mode="default", $rejected = "Y") {
-        /*
-          if (strcmp($rejected, 'Y') == 0) {
-          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
-          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
-          where A.active = 'N'
-          and A.deleteDoc = 'N'
-          and A.rejectDoc = 'Y'";
-          } else {
-          $sql = "select A.*, B.docid, B.filename from tbl_wicid_documents as A
-          left outer join tbl_wicid_fileuploads as B on A.id = B.docid
-          where A.active = 'N'
-          and A.deleteDoc = 'N'
-          and A.rejectDoc = 'N'";
-
-          }
-
-          if ($mode = "apo") {
-          $sql.=" and A.version = (select max(version) from tbl_wicid_documents as C where C.id=A.id)";
-          } */
+    public function getRejectedDocuments($mode="default", $rejected = "Y", $limit=Null, $rowcount=Null) {
 
         $sql = "select * from tbl_wicid_documents where rejectDoc= '$rejected'";
 
@@ -278,6 +261,14 @@ class dbdocuments extends dbtable {
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
         $sql.=' order by puid DESC';
+        
+        //Get total no of rows for this user
+        if(empty($rowcount)){
+            $rowcount = count($this->getArray($sql));
+        }
+        //Add the limit if specified
+        if (is_array($limit))
+            $sql .= " limit " . $limit['start'] . ", " . $limit['rows'];
 
 
         $rows = $this->getArray($sql);
@@ -340,6 +331,7 @@ class dbdocuments extends dbtable {
                 'ref_version' => $row['ref_version']
             );
         }
+        $docs['count'] = $rowcount;
         //echo json_encode(array("documents" => $docs));
         return $docs;
     }

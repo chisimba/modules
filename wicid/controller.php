@@ -1200,7 +1200,7 @@ class wicid extends controller {
 
         $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
         $attachmentStatus = $this->getParam("attachmentStatus", Null);
-        $documents = $this->documents->getdocuments($this->mode, 'N', "N",$limit,$rowcount);
+        $documents = $this->documents->getdocuments($this->mode, 'N', "N", $limit, $rowcount);
         $rowcount = $this->getParam("rowcount", Null);
         $this->setVarByRef("start", $start);
         $this->setVarByRef("rows", $rows);
@@ -1214,8 +1214,22 @@ class wicid extends controller {
 
     public function __rejecteddocuments() {
         $selected = "rejecteddocuments";
+        //Set show rows
+        $rows = 10;
+        $start = $this->getParam("start", 0);
+        //Select records Limit array
+        $limit = array();
+        $limit['start'] = $start;
+        $limit['rows'] = $rows;
+        //Get the rowcount
+        $rowcount = $this->getParam("rowcount", Null);
+
         $attachmentStatus = $this->getParam("attachmentStatus", Null);
-        $documents = $this->documents->getRejectedDocuments($this->mode, 'Y', 'Y');
+        $documents = $this->documents->getRejectedDocuments($this->mode, 'Y', $limit, $rowcount);
+        $rowcount = $this->getParam("rowcount", Null);
+        $this->setVarByRef("start", $start);
+        $this->setVarByRef("rows", $rows);
+        $this->setVarByRef("mode", $this->mode);
         $this->setVarByRef("attachmentStatus", $attachmentStatus);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
