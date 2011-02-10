@@ -464,16 +464,11 @@ class maincontent extends object {
         $categories = $objCategories->getCategories();
 
         foreach ($categories as $cat) {
-            if ($cat['categoryname'] == $this->category) {//'documentation') {
+            if ($cat['categoryname'] == $this->category || $this->category == 'support_training') {//'documentation') {
                 if($this->category == 'projects_research') {
                     $documentationId = $cat['id'];
                     $this->documentation = $this->viewCategory($documentationId);
-                }
-                else if($this->category == 'support_training') {
-                    $documentationId = $cat['id'];
-                    $this->documentation = $this->viewCategory($documentationId);
-                }
-                else {
+                } else {
                     $documentationId = $cat['id'];
                     $documentationStories = $news->getCategoryStories($documentationId);
                     $this->documentation = $documentationStories[0]['storytext'];
