@@ -278,4 +278,23 @@ class elsicontent extends object {
 
         return $ret;
     }
+
+    private function getSupportContent() {
+        $supportLink = new link($this->uri(array("action"=>"supporttraining")));
+        $supportLink->link = $this->objLanguage->languageText('mod_elsiskin_welcomesupport', 'elsiskin');
+        $ret = '
+            <div class="clear">&nbsp;</div>
+            <div class="grid_1">
+                <h3>'.$supportLink->show().'</h3>
+            </div>';
+        $supportLink->link = $this->objLanguage->languageText('mod_elsiskin_supportheading', 'elsiskin');
+        $ret .='
+            <div class="grid_3">
+                <h2>'.$supportLink->show().'</h2>
+            </div>
+            <!-- end .grid_1.pull_3 -->
+            <div class="clear">&nbsp;</div>';
+
+        return $ret;
+    }
 }
