@@ -465,9 +465,15 @@ class maincontent extends object {
 
         foreach ($categories as $cat) {
             if ($cat['categoryname'] == $this->category) {//'documentation') {
-                $documentationId = $cat['id'];
-                $documentationStories = $news->getCategoryStories($documentationId);
-                $this->documentation = $documentationStories[0]['storytext'];
+                if($this->category == 'projects_research' || $this->category == 'support_training') {
+                    $documentationId = $cat['id'];
+                    $this->documentation = $this->viewCategory($documentationId);
+                }
+                else {
+                    $documentationId = $cat['id'];
+                    $documentationStories = $news->getCategoryStories($documentationId);
+                    $this->documentation = $documentationStories[0]['storytext'];
+                }
             }
         }
 
@@ -518,5 +524,17 @@ class maincontent extends object {
         $this->category = "support_training";
         $this->documentation = "Support and Training Content has not yet been set up";
         return $this->getContent();
+    }
+
+    private function viewCategory($id) {
+        $this->objNewsBlocks = $this->getObject('dbnewsblocks', 'news');
+        
+        $category = $this->objCategory->getCategory($id);
+        $retstr = "";
+
+        $sectionLayout = $this->getObject('section_' . $category['itemsview'], 'news');
+        $retstr .= $sectionLayout->renderSection($category);
+        
+        return $retstr;
     }
 }
