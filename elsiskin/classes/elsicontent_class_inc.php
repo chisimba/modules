@@ -132,6 +132,12 @@ class elsicontent extends object {
         else if($action == 'contact') {
             $ret = $this->getContactContent();
         }
+        else if($action == 'projectsresearch') {
+            $ret = $this->getProjectsContent();
+        }
+        else if($action == 'supporttraining') {
+            $ret = $this->getSupportContent();
+        }
         else if($action == 'viewsingle' || $action == 'viewstory' || $action == 'projectsresearch' || $action == 'supporttraining'){
             $ret = $this->getNoContent();
         }
@@ -249,6 +255,25 @@ class elsicontent extends object {
                 <h3>'.$sideBarLink->show().'</h3>
             </div>
             <div class="grid_3">&nbsp;</div>
+            <div class="clear">&nbsp;</div>';
+
+        return $ret;
+    }
+
+    private function getProjectsContent() {
+        $researchLink = new link($this->uri(array("action"=>"projectsresearch")));
+        $researchLink->link = $this->objLanguage->languageText('mod_elsiskin_welcomeprojects', 'elsiskin');
+        $ret = '
+            <div class="clear">&nbsp;</div>
+            <div class="grid_1">
+                <h3>'.$researchLink->show().'</h3>
+            </div>';
+        $researchLink->link = $this->objLanguage->languageText('mod_elsiskin_projectsheading', 'elsiskin');
+        $ret .='
+            <div class="grid_3">
+                <h2>'.$researchLink->show().'</h2>
+            </div>
+            <!-- end .grid_1.pull_3 -->
             <div class="clear">&nbsp;</div>';
 
         return $ret;

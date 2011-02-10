@@ -79,14 +79,11 @@ class sidebar extends object {
     public function show() {
         switch ($this->currentAction) {
             case 'about':return $this->showAboutSidebar();
-                break;
             case 'staff':return $this->showStaffSidebar();
-                break;
             case 'contact': return $this->showContactSidebar();
-                break;
+            case 'projectsresearch': return $this->showProjectsSidebar();
             case 'viewstory':
             case 'viewsingle':return $this->showNewsBlogSidebar();
-                break;
             default: return $this->showHomeSidebar();
         }
     }
@@ -144,6 +141,7 @@ class sidebar extends object {
 
     /**
      * Method to show the contact us page sidebar
+     * @param none
      * @return string $retstr with the contact us sidebar content
      * @access public
      */
@@ -218,6 +216,24 @@ class sidebar extends object {
                         </div>
                    </div>';
 
+        return $retstr;
+    }
+
+    /**
+    * Method to show the Projects and Research page sidebar
+    * @param none
+    * @return string $retstr with the Projects and Research sidebar content
+    * @access public
+    */
+    private function showProjectsSidebar() {
+        $retstr = '<!-- Start: Sidebar -->
+                <div id="Sidebar">
+                    <div class="grid_1">
+                        <p><img src="' . $this->skinpath . 'images/dots_clipboard.png"></p>
+                    </div>
+		</div>
+		<!-- end .grid_1 -->
+                <!-- End: Sidebar -->';
         return $retstr;
     }
 }

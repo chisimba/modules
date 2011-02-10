@@ -139,6 +139,12 @@ class rotatingidentity extends object {
                            <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="">Office Administrator</a><br>
                            <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="">Directions</a></span>
                        </div>';
+        } else if($action == 'projectsresearch') {
+          $retstr .= '<div class="text-holder">
+                          <span class="head-main">Projects and Research</span>
+                          <span class="head-text">eLSI offers workshops for Schools or Faculties as well as individual face-to-face consultations.<br>
+                          <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="?module=elsiskin&action=contact">Contact us</a></span>
+                        </div>';
         } else {
             
             if(!empty($news)) {
@@ -184,6 +190,8 @@ class rotatingidentity extends object {
             case 'about': $retstr .= $this->showAboutBanner();
                 break;
             case 'contact': $retstr .= $this->showContactBanner();
+                break;
+            case 'projectsresearch': $retstr .= $this->showProjectsBanner();
                 break;
             default: $retstr .= $this->showHomeBanner($news);
         }
@@ -267,6 +275,12 @@ class rotatingidentity extends object {
      */
     public function showContactBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/contact_address.jpg">';
+
+        return $retstr;
+    }
+
+    private function showProjectsBanner() {
+        $retstr = '<img src="' . $this->skinpath . 'images/research_computer.jpg">';
 
         return $retstr;
     }
