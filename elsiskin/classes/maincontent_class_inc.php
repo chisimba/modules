@@ -534,6 +534,8 @@ class maincontent extends object {
 
         $sectionLayout = $this->getObject('section_' . $category['itemsview'], 'news');
         $retstr .= $sectionLayout->renderSection($category);
+
+        $retstr .= str_replace("module=news", "module=elsiskin", $retstr);
         
         return $retstr;
     }
