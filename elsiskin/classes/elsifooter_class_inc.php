@@ -68,8 +68,8 @@ class elsifooter extends object {
                 <div class="grid_4">&nbsp;</div>
                 <!-- end .grid_4 -->
                 <div class="clear">&nbsp;</div>
-                <div class="grid_4">';
-                    
+                <div class="grid_4"> ';
+                $retstr .= " | ";
                 foreach($links as $key => $index) {
                     $eachLink = new link($this->uri(array('action'=>$key)));
                     $eachLink->link = $index;
