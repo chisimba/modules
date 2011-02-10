@@ -1187,9 +1187,23 @@ class wicid extends controller {
 
     public function __unapproveddocs() {
         $selected = "unapproved";
+
+        //Set show rows
+        $rows = 3;
+        $start = $this->getParam("start", 0);
+        //Select records Limit array
+        $limit = array();
+        $limit['start'] = $start;
+        $limit['rows'] = $rows;
+        //Get the rowcount
+        $rowcount = $this->getParam("rowcount", Null);
+
         $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
         $attachmentStatus = $this->getParam("attachmentStatus", Null);
-        $documents = $this->documents->getdocuments($this->mode);
+        $documents = $this->documents->getdocuments($this->mode, 'N', "N",$limit,$rowcount);
+        $rowcount = $this->getParam("rowcount", Null);
+        $this->setVarByRef("start", $start);
+        $this->setVarByRef("rows", $rows);
         $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);

@@ -183,7 +183,7 @@ $doccount = count($documents);
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
 
-if (count($documents) > 0) {
+if ($doccount > 0) {
     $count = 0;
 
     $table->startRow();
@@ -201,7 +201,7 @@ if (count($documents) > 0) {
     } else {
         $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
     }
-    
+
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title") . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No") . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner") . "</b>");
@@ -213,52 +213,54 @@ if (count($documents) > 0) {
     $table->endRow();
 
     foreach ($documents as $document) {
-        //$topic=  substr($document['topic'], strlen($this->baseDir));
-        $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'])));
-        $link->link = $document['filename'];
+        if (count($document) > 1) {
+            //$topic=  substr($document['topic'], strlen($this->baseDir));
+            $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'])));
+            $link->link = $document['filename'];
 
-        //Dont show checkbox if there is no attachment
-        /*
-          if ($document['attachmentstatus'] == 'No') {
-          $approve = new hiddeninput($document['id'] . '_app', "");
-          } else {
-          //Create checkbox to help select record for batch approval
-          $approve = &new checkBox($document['id'] . '_app', Null, Null);
-          $approve->setValue('approve');
-          } */
+            //Dont show checkbox if there is no attachment
+            /*
+              if ($document['attachmentstatus'] == 'No') {
+              $approve = new hiddeninput($document['id'] . '_app', "");
+              } else {
+              //Create checkbox to help select record for batch approval
+              $approve = &new checkBox($document['id'] . '_app', Null, Null);
+              $approve->setValue('approve');
+              } */
 
-        //Show checkbox even without attachment
-        //Create checkbox to help select record for batch execution
-        $approve = &new checkBox($document['id'] . '_app', Null, Null);
-        $approve->setValue('execute');
-        $approve->setId('set4batch_' . $count);
+            //Show checkbox even without attachment
+            //Create checkbox to help select record for batch execution
+            $approve = &new checkBox($document['id'] . '_app', Null, Null);
+            $approve->setValue('execute');
+            $approve->setId('set4batch_' . $count);
 
-        //Add row to render the record data
-        $table->startRow();
-        $table->addCell($approve->show());
-        $table->addCell($link->show());
-        $table->addCell($document['refno']);
-        $table->addCell($document['owner']);
-        $table->addCell($document['topic']);
-        $table->addCell($document['telephone']);
-        // w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
-        //         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
+            //Add row to render the record data
+            $table->startRow();
+            $table->addCell($approve->show());
+            $table->addCell($link->show());
+            $table->addCell($document['refno']);
+            $table->addCell($document['owner']);
+            $table->addCell($document['topic']);
+            $table->addCell($document['telephone']);
+            // w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
+            //         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
 
 
-        $uplink = new link($this->uri(array("action" => "uploadfile", "docname" => $document['filename'], "docid" => $document['id'], "topic" => $document['topic'])));
-        $uplink->link = $objIcon->show();
+            $uplink = new link($this->uri(array("action" => "uploadfile", "docname" => $document['filename'], "docid" => $document['id'], "topic" => $document['topic'])));
+            $uplink->link = $objIcon->show();
 
-        $table->addCell($document['attachmentstatus'] . $uplink->show());
-        $table->addCell($document['date']);
-        $table->endRow();
-        //Increment count
-        $count++;
+            $table->addCell($document['attachmentstatus'] . $uplink->show());
+            $table->addCell($document['date']);
+            $table->endRow();
+            //Increment count
+            $count++;
+        }
     }
 } else {
-        //Loads if no records were found
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found'));
-        $table->endRow();
+    //Loads if no records were found
+    $table->startRow();
+    $table->addCell($this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found'));
+    $table->endRow();
 }
 
 // Form
@@ -272,12 +274,70 @@ $form->addToForm('<br/>' . $button->show());
 $button = new button('submit', $this->objLanguage->languageText('mod_wicid_deleteselected', 'wicid', 'Delete Selected'));
 $button->setToSubmit();
 
-$form->addToForm(" | " . $button->show());
+$form->addToForm("  " . $button->show());
+
+
+//Add Navigations
+if ($doccount > 0) {
+    //Compute new start val
+    $newstart = $start + $rows;
+    $newprev = $start - $rows;
+    //Navigation Flag
+    $str = "";
+    //total row count
+    $totalrowcount = $documents['count'];
+    //Create table to hold buttons(forms)
+    $table = &$this->newObject("htmltable", "htmlelements");
+    $table->width = '100%';
+    $table->startRow();
+    $nextflag = "nonext";
+    //Add prev button
+    if ($newprev >= 0) {
+        $str .= "prev";
+        $button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordprevious', 'wicid', 'Previous'));
+        $button->setToSubmit();
+        //Add Form
+        $prevform = new form('prevform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newprev, 'rowcount' => $totalrowcount)));
+
+        $prevform->addToForm("</ br> " . $button->show() . " </ br>");
+
+        $table->addCell($prevform->show(), "50%", 'top', 'right');
+    }
+    //Add Next button
+    if ($newstart < $totalrowcount && $start != $totalrowcount && $totalrowcount > $rows) {
+
+        $button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordnext', 'wicid', 'Next'));
+        $button->setToSubmit();
+        //Add Form
+        $nextform = new form('nextform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newstart, 'rowcount' => $totalrowcount)));
+
+        $nextform->addToForm("</ br> " . $button->show() . " </ br>");
+        if (!empty($str)) {
+            $table->addCell($nextform->show(), "50%", 'top', 'left');
+        } else {
+            $table->addCell(" ", "50%", 'top', 'left');
+            $table->addCell($nextform->show(), "50%", 'top', 'left');
+        }
+        $str .= "next";
+        $nextflag = "next";
+    }
+    if ($nextflag == "nonext") {
+        $table->addCell(" ", "50%", 'top', 'left');
+    }
+    $table->endRow();
+    $navtable = $table->show();
+}
+
 
 //Create legend for the unnapproved docs
 $fs = new fieldset();
 $fs->setLegend($this->objLanguage->languageText('mod_wicid_unapproved', 'wicid', 'Unapproved documents'));
-$fs->addContent($form->show());
 
+//Check if str is empty
+if (!empty($str)) {
+    $fs->addContent($form->show() . "<br/>" . $navtable);
+} else {
+    $fs->addContent($form->show());
+}
 echo $fs->show();
 ?>

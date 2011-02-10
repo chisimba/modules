@@ -178,6 +178,7 @@ class dbdocuments extends dbtable {
             $sql .= " limit " . $limit['start'] . ", " . $limit['rows'];
 
         $rows = $this->getArray($sql);
+
         $docs = array();
 
 
