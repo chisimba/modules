@@ -83,7 +83,7 @@ $form = new form('registerdocumentform', $this->uri(array('action' => 'batchexec
 
 $table = &$this->newObject("htmltable", "htmlelements");
 //Store file count
-$filecount = count($files);
+$filecount = $files['count'];
 if ($filecount > 0) {
     $count = 0;
     //Create a check all checkbox
@@ -135,12 +135,12 @@ if ($filecount > 0) {
 
 //add table to form
 $form->addToForm($table->show());
+if ($filecount > 0) {
+    $button = new button('submit', $this->objLanguage->languageText('mod_wicid_deleteselected', 'wicid', 'Delete Selected'));
+    $button->setToSubmit();
 
-$button = new button('submit', $this->objLanguage->languageText('mod_wicid_deleteselected', 'wicid', 'Delete Selected'));
-$button->setToSubmit();
-
-$form->addToForm(" </br> " . $button->show());
-
+    $form->addToForm(" </br> " . $button->show());
+}
 
 //Add Navigations
 if ($filecount > 0) {

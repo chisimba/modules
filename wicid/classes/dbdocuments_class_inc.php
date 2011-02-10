@@ -149,7 +149,6 @@ class dbdocuments extends dbtable {
         return $docs;
     }
 
-
     /*
      * Function to get documents based on passed params
      * @param string rejected
@@ -170,7 +169,7 @@ class dbdocuments extends dbtable {
         }
         $sql.=' order by puid DESC';
 
-        if(empty($rowcount)){
+        if (empty($rowcount)) {
             $rowcount = count($this->getArray($sql));
         }
         //Add the limit if specified
@@ -235,7 +234,7 @@ class dbdocuments extends dbtable {
                 'status' => $status,
                 'currentuserid' => $fullname,
                 'version' => $row['version'],
-                'ref_version' => $row['ref_version']                
+                'ref_version' => $row['ref_version']
             );
         }
         $docs['count'] = $rowcount;
@@ -261,9 +260,9 @@ class dbdocuments extends dbtable {
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         }
         $sql.=' order by puid DESC';
-        
+
         //Get total no of rows for this user
-        if(empty($rowcount)){
+        if (empty($rowcount)) {
             $rowcount = count($this->getArray($sql));
         }
         //Add the limit if specified
@@ -436,38 +435,42 @@ class dbdocuments extends dbtable {
         $ext = '.na';
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         foreach ($ids as $id) {
-            $this->update('id', $id, $data);
-            $doc = $this->getDocument($id);
-            //print_r($doc);
+            //Check if record has an attachment
+            $checkupload = $this->getAll("where id='" . $id . "' and upload='Y'");
+            if (!empty($checkupload)) {
+                $this->update('id', $id, $data);
+                $doc = $this->getDocument($id);
+                //print_r($doc);
 
-            $filename = $dir . '/' . $doc['topic'] . '/' . $doc['docname'] . $ext;
-            $filename = str_replace("//", "/", $filename);
-            $newname = $dir . '/' . $doc['topic'] . '/' . $doc['docname'] . '.' . $doc['ext'];
-            $newname = str_replace("//", "/", $newname);
+                $filename = $dir . '/' . $doc['topic'] . '/' . $doc['docname'] . $ext;
+                $filename = str_replace("//", "/", $filename);
+                $newname = $dir . '/' . $doc['topic'] . '/' . $doc['docname'] . '.' . $doc['ext'];
+                $newname = str_replace("//", "/", $newname);
 
-            /*  $fh = fopen("/dwaf/wicidtest/log.txt", 'w') or die("can't open file ".$doc['docname']);
-              $stringData = "renaming on approve $filename\n$newname\n===================";
-              fwrite($fh, $stringData);
-              fclose($fh);
-             */
-            if (!file_exists($filename)) {
+                /*  $fh = fopen("/dwaf/wicidtest/log.txt", 'w') or die("can't open file ".$doc['docname']);
+                  $stringData = "renaming on approve $filename\n$newname\n===================";
+                  fwrite($fh, $stringData);
+                  fclose($fh);
+                 */
+                if (!file_exists($filename)) {
 
-                $fh = fopen($filename, 'w') or die("can't open file " . $doc['docname']);
-                $stringData = "\n";
-                fwrite($fh, $stringData);
-                fclose($fh);
-                $data = array(
-                    'filename' => $doc['docname'] . $ext,
-                    'filetype' => 'txt',
-                    'date_uploaded' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
-                    'userid' => $userid,
-                    'parent' => $doc['topic'],
-                    'docid' => $id,
-                    'refno' => $this->userutils->getRefNo($id),
-                    'filepath' => $doc['topic'] . '/' . $doc['docname'] . $ext);
-                $result = $this->objUploadTable->saveFileInfo($data);
-            } else {
-                rename($filename, $newname);
+                    $fh = fopen($filename, 'w') or die("can't open file " . $doc['docname']);
+                    $stringData = "\n";
+                    fwrite($fh, $stringData);
+                    fclose($fh);
+                    $data = array(
+                        'filename' => $doc['docname'] . $ext,
+                        'filetype' => 'txt',
+                        'date_uploaded' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                        'userid' => $userid,
+                        'parent' => $doc['topic'],
+                        'docid' => $id,
+                        'refno' => $this->userutils->getRefNo($id),
+                        'filepath' => $doc['topic'] . '/' . $doc['docname'] . $ext);
+                    $result = $this->objUploadTable->saveFileInfo($data);
+                } else {
+                    rename($filename, $newname);
+                }
             }
         }
     }

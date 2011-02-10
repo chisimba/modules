@@ -36,7 +36,7 @@ echo $fs->show();
 echo "<br />";
 $table = $this->getObject("htmltable", "htmlelements");
 //Get no of rows
-$doccount = count($documents);
+$doccount = $documents['count'];
 if ($doccount > 0) {
     $table->startHeaderRow();
     $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner"));

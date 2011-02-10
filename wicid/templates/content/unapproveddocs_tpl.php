@@ -178,7 +178,7 @@ echo $fs->show() . '<br/>';
 $table = $this->getObject("htmltable", "htmlelements");
 
 
-$doccount = count($documents);
+$doccount = $documents['count'];
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
@@ -266,16 +266,17 @@ if ($doccount > 0) {
 // Form
 $form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active' => 'N')));
 $form->addToForm($table->show());
+if ($doccount > 0) {
+    $button = new button('submit', $this->objLanguage->languageText('mod_wicid_approveselected', 'wicid', 'Approve Selected'));
+    $button->setToSubmit();
+    $form->addToForm('<br/>' . $button->show());
 
-$button = new button('submit', $this->objLanguage->languageText('mod_wicid_approveselected', 'wicid', 'Approve Selected'));
-$button->setToSubmit();
-$form->addToForm('<br/>' . $button->show());
+    $button = new button('submit', $this->objLanguage->languageText('mod_wicid_deleteselected', 'wicid', 'Delete Selected'));
+    $button->setToSubmit();
 
-$button = new button('submit', $this->objLanguage->languageText('mod_wicid_deleteselected', 'wicid', 'Delete Selected'));
-$button->setToSubmit();
-
-$form->addToForm("  " . $button->show());
-
+    $form->addToForm("  " . $button->show());
+    $form->addToForm("<br />" . $this->objLanguage->languageText('mod_wicid_approvenote', 'wicid', 'Note: Only records with attachments will be approved'));
+}
 
 //Add Navigations
 if ($doccount > 0) {
