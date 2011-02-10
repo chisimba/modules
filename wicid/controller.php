@@ -1189,7 +1189,7 @@ class wicid extends controller {
         $selected = "unapproved";
 
         //Set show rows
-        $rows = 3;
+        $rows = 10;
         $start = $this->getParam("start", 0);
         //Select records Limit array
         $limit = array();
