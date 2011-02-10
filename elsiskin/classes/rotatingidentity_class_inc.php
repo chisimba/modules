@@ -141,7 +141,7 @@ class rotatingidentity extends object {
                        </div>';
         } else if($action == 'projectsresearch') {
           $retstr .= '<div class="text-holder">
-                          <span class="head-main">Projects and Research</span>
+                          <span class="head-main">Projects & Research</span>
                           <span class="head-text">eLSI offers workshops for Schools or Faculties as well as individual face-to-face consultations.<br>
                           <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="?module=elsiskin&action=contact">Contact us</a></span>
                         </div>';
