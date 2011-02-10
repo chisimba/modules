@@ -493,7 +493,7 @@ class maincontent extends object {
      *
      */
     private function getProjectsResearchContent() {
-        $this->category = "projectsresearch";
+        $this->category = "projects_research";
         $this->documentation = "Projects and Research Content has not yet been set up";
         return $this->getContent();
     }
@@ -515,7 +515,7 @@ class maincontent extends object {
      *
      */
     private function getSupportTrainingContent() {
-        $this->category = "supporttraining";
+        $this->category = "support_training";
         $this->documentation = "Support and Training Content has not yet been set up";
         return $this->getContent();
     }
