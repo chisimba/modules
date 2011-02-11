@@ -831,37 +831,7 @@ class userutils extends object {
         return $treeMenu->getMenu();
     }
 
-    /* function showCreateFolderForm($folderPath, $selected) {
-      if ($folderPath == FALSE) {
-      return '';
-      }
-
-      $folderParts = explode('/', $folderPath);
-
-      $form = new form('createfolder', $this->uri(array('action' => 'createfolder')));
-
-      $label = new label('Create a ' . $this->modeLabel . ' in: ', 'input_parentfolder');
-
-
-      $form->addToForm($label->show() . $this->getTree('htmldropdown', $selected));
-
-      // $objInputMasks = $this->getObject('inputmasks', 'htmlelements');
-      // echo $objInputMasks->show();
-
-      $textinput = new textinput('foldername');
-      //$textinput->setCss('text input_mask anytext');
-
-      $label = new label('Name of ' . $this->modeLabel . ': ', 'input_foldername');
-
-      $form->addToForm(' &nbsp; ' . $label->show() . $textinput->show());
-
-      $button = new button('create', 'Create ' . $this->modeLabel);
-      $button->setToSubmit();
-
-      $form->addToForm(' ' . $button->show());
-
-      return $form->show();
-      } */
+    
     /*
      * Function to generate a form that allows one to add a wicid folder
      * @param string name value of text input box

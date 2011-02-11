@@ -32,7 +32,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class wicid extends controller {
 
-    //Declare global variables
+//Declare global variables
     public $TRUE;
     public $FALSE;
 
@@ -43,10 +43,10 @@ class wicid extends controller {
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objLog->log();
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        //get the util object
-        // user object
+//get the util object
+// user object
         $this->objUser = $this->getObject('user', 'security');
-        //file type info object
+//file type info object
         $this->objPermitted = $this->getObject('dbpermittedtypes');
         $this->objUploads = $this->getObject('dbfileuploads');
         $this->objFileFolder = $this->getObject('filefolder', 'filemanager');
@@ -58,7 +58,7 @@ class wicid extends controller {
         $this->forwardto = $this->getObject('dbforwardto');
         $this->mode = $this->objSysConfig->getValue('MODE', 'wicid');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
-        //Set global variables
+//Set global variables
         $this->TRUE = 1;
         $this->FALSE = 0;
     }
@@ -160,18 +160,18 @@ class wicid extends controller {
      * @return object
      */
     public function __filterbyparam() {
-        //Get the filter action
+//Get the filter action
         $filter = $this->getParam("filter", Null);
-        if ($filter=="Date") {
-            //Get the values to search for
+        if ($filter == "Date") {
+//Get the values to search for
             $filtervalue = array();
             $filtervalue['start'] = $this->getParam("startdate", Null);
             $filtervalue['end'] = $this->getParam("enddate", Null);
         } else {
-            //Get the value to search for
+//Get the value to search for
             $filtervalue = $this->getParam("filtervalue", Null);
         }
-        //  $documents = $this->documents->getdocuments($this->mode);
+//  $documents = $this->documents->getdocuments($this->mode);
         $rejecteddocuments = $this->documents->getdocuments($this->mode, "Y");
 
         $dir = $this->getParam("folder", "");
@@ -286,37 +286,37 @@ class wicid extends controller {
 
     public function __deletetopic() {
 
-        //Get the folder
+//Get the folder
         $folder = $this->getParam("parentfolder", "");
         $userId = $this->objUser->userId();
-        if($folder=='0')
+        if ($folder == '0')
             $folder = '/';
-        //Check if user is authorised to delete
+//Check if user is authorised to delete
         $isowner = $this->folderPermissions->permissionExists($userId, $folder);
-        $folderpermserror ='<strong class="confirm">'. $this->objLanguage->languageText('mod_wicid_deletetopicpermserror', 'wicid', "You do not have permissions to delete this folder").'</strong>';
-        $deletesuccess ='<strong class="confirm">'. $this->objLanguage->languageText('mod_wicid_deletesuccess', 'wicid', "was deleted successfully").'</strong>';
-        if(!$isowner){
-            return $this->nextAction('viewfolder', array('message' => $folderpermserror, 'folder'=>$folder));
+        $folderpermserror = '<strong class="confirm">' . $this->objLanguage->languageText('mod_wicid_deletetopicpermserror', 'wicid', "You do not have permissions to delete this folder") . '</strong>';
+        $deletesuccess = '<strong class="confirm">' . $this->objLanguage->languageText('mod_wicid_deletesuccess', 'wicid', "was deleted successfully") . '</strong>';
+        if (!$isowner) {
+            return $this->nextAction('removefolder', array('message' => $folderpermserror, 'folder' => $folder));
         }
 
-        //Check if folder has documents
+//Check if folder has documents
         $checkfolderdocs = $this->objUploads->getAllNodeFiles($folder);
 
-        $foldernotempty ='<strong class="confirm">'. $this->objLanguage->languageText('mod_wicid_deleteallintopicmessage', 'wicid', "Kindly delete both approved and un-approved documents in this topic before deleting it. The approved documents are listed in the Topics section on the lower part of this form. The un-approved documents are in the new documents section (See menu on your left)").'</strong>';
-        //Ask user to delete the contents of the folder first, else delete the topic if empty
-        if(count($checkfolderdocs)>=1){
-            return $this->nextAction('viewfolder', array('message' => $foldernotempty, 'folder'=>$folder));
+        $foldernotempty = '<strong class="confirm">' . $this->objLanguage->languageText('mod_wicid_shortdeleteallintopicmessage', 'wicid', "Kindly delete both approved and un-approved documents in this topic before deleting it") . '</strong>';
+//Ask user to delete the contents of the folder first, else delete the topic if empty
+        if (count($checkfolderdocs) >= 1) {
+            return $this->nextAction('removefolder', array('message' => $foldernotempty, 'folder' => $folder));
         } else {
-            //Delete the topic
+//Delete the topic
             $this->folderPermissions->removePermission($userId, $folder);
 
-            return $this->nextAction('viewfolder', array('message' => '<strong id="confirm">'.$folder."</strong> ".$deletesuccess, 'folder'=>'/'));
-        }            
+            return $this->nextAction('removefolder', array('message' => '<strong id="confirm">' . $folder . "</strong> " . $deletesuccess, 'folder' => '/'));
+        }
 
         if (strstr($result, "success")) {
-            $this->nextAction('home');
+            $this->nextAction('removefolder');
         } else {
-            return $this->nextAction('home', array('message' => $result));
+            return $this->nextAction('removefolder', array('message' => $result));
         }
     }
 
@@ -325,30 +325,29 @@ class wicid extends controller {
      * 
      * @return form
      */
-
     public function __viewfolder() {
-        //Set show rows
+//Set show rows
         $rows = 10;
         $start = $this->getParam("start", 0);
-        //Select records Limit array
+//Select records Limit array
         $limit = array();
         $limit['start'] = $start;
         $limit['rows'] = $rows;
-        //Get the rowcount
+//Get the rowcount
         $rowcount = $this->getParam("rowcount", Null);
 
-        $rejecteddocuments = $this->documents->getdocuments($this->mode, 'N', "Y",$limit,$rowcount);
+        $rejecteddocuments = $this->documents->getdocuments($this->mode, 'N', "Y", $limit, $rowcount);
 
         $dir = $this->getParam("folder", "");
         $mode = $this->getParam("mode", "");
         $message = $this->getParam("message", "");
-        
+
 
         $objPreviewFolder = $this->getObject('previewfolder');
 
         $selected = "";
         $selected = $dir;
-        
+
         $basedir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         if ($dir == $basedir) {
             $selected = "";
@@ -356,7 +355,7 @@ class wicid extends controller {
         $rowcount = $this->getParam("rowcount", Null);
         $this->setVarByRef("start", $start);
         $this->setVarByRef("rows", $rows);
-        $files = $this->objUtils->getFiles($dir,$limit, $rowcount);
+        $files = $this->objUtils->getFiles($dir, $limit, $rowcount);
         $this->setVarByRef("files", $files);
         $this->setVarByRef("dir", $dir);
         $this->setVarByRef("documents", $documents);
@@ -368,6 +367,55 @@ class wicid extends controller {
         return "viewfolder_tpl.php";
     }
 
+    /**
+     * function that loads create folder form
+     *
+     * @return form
+     */
+    public function __addfolder() {
+        $createcheck = $this->getParam('createcheck', 'new');
+        $dir = $this->getParam("folder", "");
+        if (empty($dir)) {
+            $successmsg = Null;
+            $this->setVarByRef('successmsg', $successmsg);
+        } else {
+            if ($createcheck == "add") {
+                $successmsg = $dir . " " . $this->objLanguage->languageText('mod_wicid_createsuccess', 'wicid', "was created successfully");
+                $this->setVarByRef('successmsg', $successmsg);
+            } else if ($createcheck == "fail") {
+                if($dir == "/") {
+                $successmsg = $this->objLanguage->languageText('mod_wicid_entertopicname', 'wicid', "You need to type in a meaningful topic name before submitting");
+                $this->setVarByRef('successmsg', $successmsg);
+                } else {
+                $successmsg = $dir . " " . $this->objLanguage->languageText('mod_wicid_createfail', 'wicid', "was not created successfully. A corresponding topic already exists");
+                $this->setVarByRef('successmsg', $successmsg);
+                }
+            }
+        }
+
+        $this->setVarByRef("dir", $dir);
+        $this->setVarByRef("mode", $this->mode);
+        $selected = $this->baseDir . $dir;
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("successmsg", $successmsg);
+        return "createfolder_tpl.php";
+    }
+    /**
+     * function that loads delete folder form
+     *
+     * @return form
+     */
+    public function __removefolder() {
+        $dir = $this->getParam("folder", "");
+        $this->setVarByRef("mode", $this->mode);
+        $selected = $this->baseDir . $dir;
+        $message = $this->getParam('message', '');
+        $this->setVarByRef("mode", $this->mode);
+        $this->setVarByRef("message", $message);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("successmsg", $message);
+        return "deletefolder_tpl.php";
+    }
     function __getdefaultfolder($dir) {
         $handle = opendir($dir);
         $files = array();
@@ -418,7 +466,7 @@ class wicid extends controller {
      * @return <type>
      */
     public function __savefiletype() {
-        // go save stuff
+// go save stuff
         $this->objPermitted->saveFileTypes($this->getParam('filetypedesc'), $this->getParam('filetypeext'));
         return $this->nextAction('admin');
     }
@@ -473,14 +521,20 @@ class wicid extends controller {
         if (!$path) {
             $path = "";
         }
+        $flag = "";
 
-        //Confirm that folder does not exist
+//Confirm that folder does not exist
         $exists = $this->objUtils->folderExistsCheck($path, $name);
-        //Create only if new
+//Create only if new
         if (!$exists) {
             $this->objUtils->createFolder($path, $name);
+            $flag = 'add';
+        } else {
+            $flag = 'fail';
         }
-        $this->nextAction('unapproveddocs');
+
+        $this->setVarByRef('folder', $name);
+        $this->nextAction('addfolder', array('createcheck' => $flag, 'folder' => $name));
     }
 
     /**
@@ -647,7 +701,7 @@ class wicid extends controller {
         if ($selectedfolder == '0') {
             $errormessages[] = "Select topic";
         }
-        //check wat is the largest count for this year.
+//check wat is the largest count for this year.
         $ref_version = $this->documents->checkRefNo($number);
         $refno = $number . date("Y"); //."-".($res;
         $contact = $this->getParam('contact', '');
@@ -688,7 +742,7 @@ class wicid extends controller {
         }
         $currentuserid = $this->objUser->userid();
         $version = $this->getParam('version', "1");
-        //  if (!$this->documents->documentExists($dept, $refno, $title, $selectedfolder, $version)) {
+//  if (!$this->documents->documentExists($dept, $refno, $title, $selectedfolder, $version)) {
         $refNo = $this->documents->addDocument(
                         $date,
                         $refno,
@@ -719,7 +773,7 @@ class wicid extends controller {
         $this->setVarByRef("mode", $this->mode);
         $this->setVarByRef("refno", $refNo);
         return "unapproveddocs_tpl.php";
-        // }
+// }
     }
 
     function __updatedocument() {
@@ -806,8 +860,8 @@ class wicid extends controller {
           $source=$basedir.'/resources/'.$template;
           $dest=$basedir.'/'.$selectedfolder.'/'.$title.'.'.$ext; */
 
-        //copy($source, $dest);
-        // save the file information into the database
+//copy($source, $dest);
+// save the file information into the database
         $data = array(
             'filename' => $title . '.' . $ext,
             'filetype' => $ext,
@@ -886,7 +940,7 @@ class wicid extends controller {
      */
 
     function __batchexecute() {
-        //Get parameters
+//Get parameters
         $submit = strtolower($this->getParam('submit'));
         $id = $this->getParam('id');
         $mode = $this->getParam('mode');
@@ -895,12 +949,12 @@ class wicid extends controller {
 
         $documents = $this->documents->getdocuments($this->mode, $rejected, $active);
 
-        //Check and execute action
+//Check and execute action
         if ($submit == "approve selected") {
-            //Step through the documents and approve those selected
+//Step through the documents and approve those selected
             if (isset($documents)) {
                 foreach ($documents as $document) {
-                    //if ($document['attachmentstatus'] != "No")
+//if ($document['attachmentstatus'] != "No")
                     if ($this->getParam($document['id'] . '_app') == 'execute') {
                         $this->documents->approveDocs($document['id']);
                     }
@@ -908,7 +962,7 @@ class wicid extends controller {
             }
         } elseif ($submit == "delete selected") {
 
-            //Step through the documents and approve those selected
+//Step through the documents and approve those selected
             if (isset($documents)) {
 
                 foreach ($documents as $document) {
@@ -955,8 +1009,8 @@ class wicid extends controller {
         $docid = $this->getParam('docid');
         $destinationDir = $dir . '/' . $topic;
 
-        //$objMkDir->mkdirs($destinationDir);
-        //@chmod($destinationDir, 0777);
+//$objMkDir->mkdirs($destinationDir);
+//@chmod($destinationDir, 0777);
 
         $objUpload = $this->newObject('upload', 'files');
         $objUpload->permittedTypes = array(
@@ -982,7 +1036,7 @@ class wicid extends controller {
 
             $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
 
-            //return $this->nextAction('erroriframe', array('message' => 'Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf', 'file' => $filename, 'id' => $generatedid));
+//return $this->nextAction('erroriframe', array('message' => 'Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf', 'file' => $filename, 'id' => $generatedid));
             $message = 'Unsupported file extension.Only use txt, doc, odt, ppt, pptx, docx,pdf';
             return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => '', 'message' => $message));
         } else {
@@ -990,7 +1044,7 @@ class wicid extends controller {
             $filename = $result['filename'];
             $mimetype = $result['mimetype'];
             $path_parts = $result['storedname'];
-            //$ext = $path_parts['extension'];
+//$ext = $path_parts['extension'];
             $filename = strtolower($filename);
             $exts = split("[/\\.]", $filename);
             $n = count($exts) - 1;
@@ -1018,7 +1072,7 @@ class wicid extends controller {
             $this->setSession('uploadedfiles', $uploadedFiles);
             $path = $topic . '/' . $docname . '.' . $ext;
 
-            // save the file information into the database
+// save the file information into the database
             $data = array(
                 'filename' => $docname . '.' . $ext,
                 'filetype' => $ext,
@@ -1084,7 +1138,7 @@ class wicid extends controller {
         $refno = $this->getParam('refno');
         $topic = $this->getParam('topic');
         $dept = $this->getParam('dept');
-        //$active = $this->getParam('');
+//$active = $this->getParam('');
 
         $data = array(
             'startDate' => $startDate,
@@ -1189,14 +1243,14 @@ class wicid extends controller {
     public function __unapproveddocs() {
         $selected = "unapproved";
 
-        //Set show rows
+//Set show rows
         $rows = 10;
         $start = $this->getParam("start", 0);
-        //Select records Limit array
+//Select records Limit array
         $limit = array();
         $limit['start'] = $start;
         $limit['rows'] = $rows;
-        //Get the rowcount
+//Get the rowcount
         $rowcount = $this->getParam("rowcount", Null);
 
         $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
@@ -1215,14 +1269,14 @@ class wicid extends controller {
 
     public function __rejecteddocuments() {
         $selected = "rejecteddocuments";
-        //Set show rows
+//Set show rows
         $rows = 10;
         $start = $this->getParam("start", 0);
-        //Select records Limit array
+//Select records Limit array
         $limit = array();
         $limit['start'] = $start;
         $limit['rows'] = $rows;
-        //Get the rowcount
+//Get the rowcount
         $rowcount = $this->getParam("rowcount", Null);
 
         $attachmentStatus = $this->getParam("attachmentStatus", Null);
