@@ -112,9 +112,6 @@ if ($mode == 'edit') {
 $table->startRow();
 $table->addCell("D.1.a. On which OLD NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7 & 8) is the course/unit positioned?:");
 $table->endRow();
-$table->startRow();
-$table->addCell($dropdown->show());
-$table->endRow();
 
 //if ($mode == 'edit') {
   //  $table->startRow();
