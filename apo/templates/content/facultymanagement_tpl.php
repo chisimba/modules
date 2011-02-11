@@ -30,15 +30,14 @@ $table->addHeaderCell("Actions");
 $table->endHeaderRow();
 
 $objIcon->setIcon('edit');
-//$objIcon->alt = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
-//$objIcon->title = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
+$objIcon->alt = $this->objLanguage->languageText('mod_apo_editfaculty', 'apo', 'Edit Faculty');
+$objIcon->title = $this->objLanguage->languageText('mod_apo_editfaculty', 'apo', 'Edit Faculty');
 $editIcon = $objIcon->show();
 
 $objIcon->setIcon('delete');
-//$objIcon->alt = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
-//$objIcon->title = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
+$objIcon->alt = $this->objLanguage->languageText('mod_apo_deletefaculty', 'apo', 'Delete Faculty');
+$objIcon->title = $this->objLanguage->languageText('mod_apo_deletefaculty', 'apo', 'Delete Faculty');
 $deleteIcon = $objIcon->show();
-
 
 if (count($faculties) > 0) {
     foreach ($faculties as $faculty) {

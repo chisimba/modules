@@ -10,11 +10,8 @@ $this->setVar('pageSuppressXML', TRUE);
 
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
-//$action = 'registerdocument';
-$this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 if ($mode == 'edit') {
-    $action = "updatedocument";
-    $selected = $this->baseDir . $document['topic'];
+    $action = "updatefaculty";    
 }
 
 
@@ -87,12 +84,6 @@ $fs->addContent($table->show());
 $form = new form('registerfaculty', $this->uri(array('action' => $action,'id' => $id)));
 
 
-//$form
-if ($mode == 'edit') {
-    $hiddenId = new hiddeninput('id', $document['id']);
-    $form->addToForm($hiddenId->show());
-}
-
 
 $efs = new fieldset();
 $efs->setLegend('Errors');
@@ -110,7 +101,7 @@ if (count($errormessages) > 0) {
 $form->addToForm($fs->show());
 
 if($mode == 'edit') {
-    $submitText = $this->objLanguage->languageText('mod_wicid_save', 'wicid', 'Edit Faculty');
+    $submitText = $this->objLanguage->languageText('mod_wicid_save', 'wicid', 'Update Faculty');
 }
 else {
     $submitText = $this->objLanguage->languageText('mod_wicid_save', 'wicid', 'Create Faculty');

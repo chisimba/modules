@@ -2777,19 +2777,47 @@ class apo extends controller {
         $selected = $this->getParam('selected');
         $mode = "edit";
         $action = "editfaculty";
+        $id = $this->getParam('id');
+        $data = $this->faculties->getFaculty($id);
+
         $this->setVarByRef("action", $action);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("faculties", $data);
+        $this->setVarByRef("id", $id);
 
         return "addeditfaculty_tpl.php";
     }
 
     public function __registerfaculty() {
         $faculty = $this->getParam('faculty');
-        $contact = $this->getParam('contact_person');
-        $tel = $this->getParam('telephone');
+        $contact = $this->getParam('contact');
+        $telephone = $this->getParam('telephone');
         
-        $this->faculties->addFaculty($faculty, $contact, $tel);
+        $this->faculties->addFaculty($faculty, $contact, $telephone);
+
+        return $this->nextAction('facultymanagement', array('folder' => '0'));
+    }
+
+    public function __updatefaculty() {
+        $faculty = $this->getParam('faculty');
+        $contact = $this->getParam('contact');
+        $telephone = $this->getParam('telephone');
+
+        if (empty($contact)) {
+            // using this user id, get the full name and compare it with contact person!
+            $contact = $this->objUser->fullname($userid);
+        }
+
+        $data = array("faculty"=> $faculty, "contact_person"=>$contact, "telephone"=>$telephone, "userid"=>$this->objUser->userId());
+        $this->faculties->editFaculty($this->getParam('id'), $data);
+
+        return $this->nextAction('facultymanagement', array('folder' => '0'));
+    }
+
+    public function __deletefaculty() {
+        $id = $this->getParam('id');
+        $this->faculties->deleteFaculty($id);
 
         return $this->nextAction('facultymanagement', array('folder' => '0'));
     }

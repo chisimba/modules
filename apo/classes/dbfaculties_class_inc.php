@@ -89,7 +89,7 @@ class dbfaculties extends dbtable {
      * @access public
      */
     public function editFaculty($id, $data) {
-        $this->update("id", $id, $fields);
+        $this->update("id", $id, $data);
     }
 
     /*
@@ -107,10 +107,13 @@ class dbfaculties extends dbtable {
      * @access public
      * @return array containing all the data for all the faculties
      */
-    function getFaculties() {
+    public function getFaculties() {
         return $this->getAll();
     }
 
+    public function getFaculty($id) {
+        return $this->getRow("id", $id);
+    }
 }
 
 ?>
