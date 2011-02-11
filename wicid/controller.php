@@ -300,8 +300,9 @@ class wicid extends controller {
         }
 
         //Check if folder has documents
-        $checkfolderdocs = $this->objUploads->getNodeFiles($folder);
-        $foldernotempty ='<strong class="confirm">'. $this->objLanguage->languageText('mod_wicid_deletetopicerrormessage', 'wicid', "Delete the documents in this topic before deleting it. These documents are listed in the Topics section on the lower part of this form").'</strong>';
+        $checkfolderdocs = $this->objUploads->getAllNodeFiles($folder);
+
+        $foldernotempty ='<strong class="confirm">'. $this->objLanguage->languageText('mod_wicid_deleteallintopicmessage', 'wicid', "Kindly delete both approved and un-approved documents in this topic before deleting it. The approved documents are listed in the Topics section on the lower part of this form. The un-approved documents are in the new documents section (See menu on your left)").'</strong>';
         //Ask user to delete the contents of the folder first, else delete the topic if empty
         if(count($checkfolderdocs)>=1){
             return $this->nextAction('viewfolder', array('message' => $foldernotempty, 'folder'=>$folder));
