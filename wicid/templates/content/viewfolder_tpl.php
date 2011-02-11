@@ -129,7 +129,7 @@ if ($filecount > 0) {
     }
 } else {
     $table->startRow();
-    $table->addCell($this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found'));
+    $table->addCell('<strong class="confirm">'.$this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found')).'</strong>';
     $table->endRow();
 }
 

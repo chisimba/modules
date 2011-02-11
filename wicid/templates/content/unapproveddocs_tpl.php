@@ -115,7 +115,7 @@ $this->appendArrayVar('headerParams', '
 
                                 // IF folder exists
                                 if (msg == "exists") {
-                                    jQuery("#spanfoldermessage").html("' . $this->objLanguage->languageText('mod_wicid_afolderwithname', 'wicid', 'A folder with the name') . ' "+folder+" ' . $this->objLanguage->languageText('mod_wicid_alreadyexists', 'wicid', 'already exists') . '");
+                                    jQuery("#spanfoldermessage").html("<strong class="confirm">' . $this->objLanguage->languageText('mod_wicid_afolderwithname', 'wicid', 'A folder with the name') . ' "+folder+" ' . $this->objLanguage->languageText('mod_wicid_alreadyexists', 'wicid', 'already exists') . '</strong>");
                                     jQuery("#spanfoldermessage").addClass("error");
                                     jQuery("#input_foldername").addClass("inputerror");
                                     jQuery("#spanfoldermessage").removeClass("success");
@@ -259,7 +259,7 @@ if ($doccount > 0) {
 } else {
     //Loads if no records were found
     $table->startRow();
-    $table->addCell($this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found'));
+    $table->addCell('<strong id="confirm">'.$this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found')).'</strong>';
     $table->endRow();
 }
 
@@ -275,7 +275,7 @@ if ($doccount > 0) {
     $button->setToSubmit();
 
     $form->addToForm("  " . $button->show());
-    $form->addToForm("<br />" . $this->objLanguage->languageText('mod_wicid_approvenote', 'wicid', 'Note: Only records with attachments will be approved'));
+    $form->addToForm("<br />" .'<strong id="confirm">'. $this->objLanguage->languageText('mod_wicid_approvenote', 'wicid', 'Note: Only records with attachments will be approved')).'</strong.';
 }
 
 //Add Navigations

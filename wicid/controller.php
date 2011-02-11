@@ -293,15 +293,15 @@ class wicid extends controller {
             $folder = '/';
         //Check if user is authorised to delete
         $isowner = $this->folderPermissions->permissionExists($userId, $folder);
-        $folderpermserror = $this->objLanguage->languageText('mod_wicid_deletetopicpermserror', 'wicid', "You do not have permissions to delete this folder");
-        $deletesuccess = $this->objLanguage->languageText('mod_wicid_deletesuccess', 'wicid', "was deleted successfully");
+        $folderpermserror ='<strong class="confirm">'. $this->objLanguage->languageText('mod_wicid_deletetopicpermserror', 'wicid', "You do not have permissions to delete this folder").'</strong>';
+        $deletesuccess ='<strong class="confirm">'. $this->objLanguage->languageText('mod_wicid_deletesuccess', 'wicid', "was deleted successfully").'</strong>';
         if(!$isowner){
             return $this->nextAction('viewfolder', array('message' => $folderpermserror, 'folder'=>$folder));
         }
 
         //Check if folder has documents
         $checkfolderdocs = $this->objUploads->getNodeFiles($folder);
-        $foldernotempty = $this->objLanguage->languageText('mod_wicid_deletetopicerrormessage', 'wicid', "Kindly delete the documents in this topic before deleting it. These documents are listed in the Topics section on the lower part of this form");
+        $foldernotempty ='<strong class="confirm">'. $this->objLanguage->languageText('mod_wicid_deletetopicerrormessage', 'wicid', "Delete the documents in this topic before deleting it. These documents are listed in the Topics section on the lower part of this form").'</strong>';
         //Ask user to delete the contents of the folder first, else delete the topic if empty
         if(count($checkfolderdocs)>=1){
             return $this->nextAction('viewfolder', array('message' => $foldernotempty, 'folder'=>$folder));
@@ -309,7 +309,7 @@ class wicid extends controller {
             //Delete the topic
             $this->folderPermissions->removePermission($userId, $folder);
 
-            return $this->nextAction('viewfolder', array('message' => $folder." ".$deletesuccess, 'folder'=>'/'));
+            return $this->nextAction('viewfolder', array('message' => '<strong id="confirm">'.$folder."</strong> ".$deletesuccess, 'folder'=>'/'));
         }            
 
         if (strstr($result, "success")) {
