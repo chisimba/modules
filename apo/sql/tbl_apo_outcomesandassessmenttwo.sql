@@ -7,7 +7,7 @@
                     'id3' => array('type' => 'text', 'notnull'=>TRUE),
                     'id4' => array('type' => 'text', 'notnull'=>TRUE),
                     'id5' => array('type' => 'text', 'notnull'=>TRUE),
-                    'id6' => array('type' => 'text', 'notnull'=>TRUE).
+                    'id6' => array('type' => 'text', 'notnull'=>TRUE),
                     'id7' => array('type' => 'text', 'notnull'=>TRUE),
                     'id8' => array('type' => 'text', 'notnull'=>TRUE)
                     );
