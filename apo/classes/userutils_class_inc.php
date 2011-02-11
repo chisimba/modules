@@ -699,8 +699,20 @@ class userutils extends object {
                 $cssClass = '';
             }
             $rejectedDocsNode = new treenode(array('text' => $rejectedDocs, 'link' => $this->uri(array('action' => 'rejecteddocuments', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+
+            //$count = count($this->objFaculties->getFaculties());
+            $facultyManagement = "$count Faculty Management";
+            if ($selected == 'facultymanagement') {
+                $facultyManagement = '<strong>' . $facultyManagement . '</strong>';
+                $cssClass = 'confirm';
+            } else {
+                $cssClass = '';
+            }
+            $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => $this->uri(array('action' => 'facultymanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+
             $allFilesNode->addItem($newDocsNode);
             $allFilesNode->addItem($rejectedDocsNode);
+            $allFilesNode->addItem($facultyManagementNode);
         }
 //Create a new tree
         $menu = new treemenu();

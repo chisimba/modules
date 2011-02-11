@@ -55,12 +55,21 @@ class apo extends controller {
         $this->forwardto = $this->getObject('dbforwardto');
         $this->mode = $this->objSysConfig->getValue('MODE', 'apo');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
+        $this->faculties = $this->getObject('dbfaculties');
     }
 
     /**
-     * Standard Dispatch Function for Controller
-     * @param <type> $action
-     * @return <type>
+     *
+     * The standard dispatch method for the apo module.
+     * The dispatch method uses methods determined from the action
+     * parameter of the querystring and executes the appropriate method,
+     * returning its appropriate template. This template contains the code
+     * which renders the module output.
+     *
+     * @access public
+     * @param $action
+     * @return A call to the appropriate method
+     *
      */
     public function dispatch($action) {
         /*
@@ -2718,4 +2727,60 @@ class apo extends controller {
         return "unapproveddocs_tpl.php";
     }
 
+    /**
+     *
+     * The standard dispatch method for the apo module.
+     * The dispatch method uses methods determined from the action
+     * parameter of the querystring and executes the appropriate method,
+     * returning its appropriate template. This template contains the code
+     * which renders the module output.
+     *
+     * @access public
+     * @param $action
+     * @return A call to the appropriate method
+     *
+     */
+    public function __facultymanagement() {
+        $selected = "facultymanagement";
+        $faculties = $this->faculties->getfaculties(0, 10, $this->mode);
+        $this->setVarByRef("faculties", $faculties);
+        $this->setVarByRef("selected", $selected);
+
+        return "facultymanagement_tpl.php";
+    }
+
+    /*
+     * This method is used to add a new faculty
+     * @param none
+     * @access public
+     * @return the form that will be used to capture the information for the new
+     * faculty
+     */
+    public function __newfaculty() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $action = "newfaculty";
+        $this->setVarByRef("action", $action);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+
+        return "addeditfaculty_tpl.php";
+    }
+
+    /*
+     * This method is used to add a new faculty
+     * @param none
+     * @access public
+     * @return the form that will be used to edit the information for the faculty
+     */
+    public function __editfaculty() {
+        $selected = $this->getParam('selected');
+        $mode = "edit";
+        $action = "editfaculty";
+        $this->setVarByRef("action", $action);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+
+        return "addeditfaculty_tpl.php";
+    }
 }
