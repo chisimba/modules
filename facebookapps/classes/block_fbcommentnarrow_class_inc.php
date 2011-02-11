@@ -98,7 +98,7 @@ class block_fbcommentnarrow extends object
     public function show() 
     {
         $objApps = $this->getObject('fbapps', 'facebookapps');
-        return $objApps->getComments(190);
+        return $objApps->getComments(160);
         
     }
 }
