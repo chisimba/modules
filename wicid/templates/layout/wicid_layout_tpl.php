@@ -83,7 +83,7 @@ $leftColumn = $header->show();
 //$leftColumn .= $searchForm->show();
 //New Search
 $leftColumn .= $filters;
-
+$leftColumn .=  "test link";
 $filters = $filterset->show();
 
 $leftColumn .= '<div class="filemanagertree">' . $nav . '</div>';

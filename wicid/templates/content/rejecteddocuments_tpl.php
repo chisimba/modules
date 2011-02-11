@@ -24,7 +24,7 @@ $button = new button("submit", $this->objLanguage->languageText('mod_wicid_regis
 $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments")));
 $rejecteddocuments->link = $button->show();
 
-$links = $newdoclink->show() . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
+$links = $newdoclink->show() . '&nbsp;&nbsp;' . $unapproveddocs->show() . '&nbsp;&nbsp;' . $rejecteddocuments->show() . '<br/>';
 
 //Add navigation to fieldset
 $fs = new fieldset();

@@ -747,7 +747,37 @@ class userutils extends object {
         }
         $baseFolderId = "0";
         $objfolders = $this->getObject('dbfolderpermissions');
+        //Add manage topics node
+        if ($treeType == 'htmldropdown') {
+            $manageNode = new treenode(array('text' => $this->objLanguage->languageText('mod_wicid_managetopic', 'wicid', "Manage Topics"), 'link' => ""));
+        } else {
+            $manageNode = new treenode(array('text' => $this->objLanguage->languageText('mod_wicid_managetopic', 'wicid', "Manage Topics"), 'link' => "", 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+        }
+        if ($treeMode == 'side') {
+            $createfolders = $this->objLanguage->languageText('mod_wicid_addtopic', 'wicid', "Add Topic");
+            if ($selected == 'addfolder') {
+                $createfolders = '<strong>' . $createfolders . '</strong>';
+                $cssClass = 'confirm';
+            } else {
+                $cssClass = '';
+            }
 
+            $addfolderNode = new treenode(array('text' => $createfolders, 'link' => $this->uri(array('action' => 'addfolder', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $removefolder = $this->objLanguage->languageText('mod_wicid_deletetopic', 'wicid', "Delete Topic");
+            if ($selected == 'removefolder') {
+                $removefolder = '<strong>' . $removefolder . '</strong>';
+                $cssClass = 'confirm';
+            } else {
+                $cssClass = '';
+            }
+            $delfolderNode = new treenode(array('text' => $removefolder, 'link' => $this->uri(array('action' => 'removefolder', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+
+            if ($treeType != 'htmldropdown') {
+                $manageNode->addItem($addfolderNode);
+                $manageNode->addItem($delfolderNode);
+            }
+        }
+        //Add topics node
 
         if ($treeType == 'htmldropdown') {
             $allFilesNode = new treenode(array('text' => $this->modeLabel . 's', 'link' => $baseFolderId));
@@ -817,6 +847,8 @@ class userutils extends object {
                 $refArray[$folder] = & $node;
             }
         }
+        
+        $menu->addItem($manageNode);
 
         $menu->addItem($allFilesNode);
         if ($treeType == 'htmldropdown') {
