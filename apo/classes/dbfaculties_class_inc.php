@@ -55,8 +55,9 @@ class dbfaculties extends dbtable {
      * @access public
      * @return none
      */
-    public function addFaculty($faculty, $date, $contact, $telephone) {
+    public function addFaculty($faculty, $contact, $telephone) {
 
+        $date = date("Y m d");
         $userid = $this->userutils->getUserId();
         $currentuserid = $userid;
 

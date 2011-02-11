@@ -2759,7 +2759,7 @@ class apo extends controller {
     public function __newfaculty() {
         $selected = $this->getParam('selected');
         $mode = "new";
-        $action = "newfaculty";
+        $action = "registerfaculty";
         $this->setVarByRef("action", $action);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
@@ -2782,5 +2782,15 @@ class apo extends controller {
         $this->setVarByRef("selected", $selected);
 
         return "addeditfaculty_tpl.php";
+    }
+
+    public function __registerfaculty() {
+        $faculty = $this->getParam('faculty');
+        $contact = $this->getParam('contact_person');
+        $tel = $this->getParam('telephone');
+        
+        $this->faculties->addFaculty($faculty, $contact, $tel);
+
+        return $this->nextAction('facultymanagement', array('folder' => '0'));
     }
 }

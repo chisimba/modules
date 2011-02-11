@@ -86,8 +86,6 @@ $fs->addContent($table->show());
 // Form
 $form = new form('registerfaculty', $this->uri(array('action' => $action,'id' => $id)));
 
-$hiddenSelected = new hiddeninput('selected', $cfile);
-$form->addToForm($hiddenSelected->show());
 
 //$form
 if ($mode == 'edit') {
@@ -123,7 +121,7 @@ $button->setToSubmit();
 $form->addToForm('<br/>' . $button->show());
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-$uri = $this->uri(array('action' => 'home'));
+$uri = $this->uri(array('action' => 'facultymanagement'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
