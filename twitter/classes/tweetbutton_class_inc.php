@@ -73,13 +73,23 @@ class tweetbutton extends object
     {
         // Create the HTML document.
         $doc = new DOMDocument('UTF-8');
+        // Get the protcol
+        if (!empty($_SERVER['HTTPS'])
+            && $_SERVER['HTTPS'] !== 'off'
+            || $_SERVER['SERVER_PORT'] == 443) {
+                $conProtocol = "https";
+        } else {
+                $conProtocol = "http";
+        }
+
+
 
         // Create the link.
         $a = $doc->createElement('a');
         $a->appendChild($doc->createTextNode($text));
         $a->setAttribute('class', 'twitter-share-button');
         $a->setAttribute('data-count', $style);
-        $a->setAttribute('href', 'http://twitter.com/share');
+        $a->setAttribute('href', $conProtocol . '://twitter.com/share');
         if ($via) {
             $a->setAttribute('data-via', $via);
         }
@@ -92,7 +102,7 @@ class tweetbutton extends object
 
         // Create the script element.
         $script = $doc->createElement('script');
-        $script->setAttribute('src', 'http://platform.twitter.com/widgets.js');
+        $script->setAttribute('src', $conProtocol . 'http://platform.twitter.com/widgets.js');
         $script->setAttribute('type', 'text/javascript');
 
         // Add the link and the script to the document.
