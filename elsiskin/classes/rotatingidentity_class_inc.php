@@ -152,16 +152,14 @@ class rotatingidentity extends object {
                             <div class="text-holder">
                                 <div id="s7">';
                 foreach($news as $row) {
-                    //$moreLink = new link($this->uri(array('module'=>'elsiskin', 'action'=>'viewnewspost', 'id'=>$row['id'])));
-                    //$moreLink->link = " more...";
-                    
+                    $aboutLink = new link($this->uri(array("module"=>"elsiskin", "action"=>"about")));
+                    $aboutLink->link = "Latest News";
                     $retstr .= '
                                 
                                     <div class = "news" id=\''.$row['id'].'\'>
                                         <span class="head-main">'.trim(strip_tags($row['storytitle'])).'</span>';
                         $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 100).' ...<br>
-                                            <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<a href="about/index.html">Latest New</a>s<br>
-                                            <!---<img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;<br>--->
+                                            <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;'.$aboutLink->show().'<br>
                                         </span>
                                         <input type="hidden" id="newslink" value="'.$this->uri(array("action"=>"viewstory")).'" />
                                     </div>';
