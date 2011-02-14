@@ -124,16 +124,7 @@ class wicid extends controller {
      * Method to show the Home Page of the Module
      */
     public function __home() {
-        $selected = "unapproved";
-
-        $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
-        $documents = $this->documents->getdocuments($this->mode);
-        $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
-
-        $this->setVarByRef("documents", $documents);
-        $this->setVarByRef("mode", $this->mode);
-        $this->setVarByRef("selected", $selected);
-        return "unapproveddocs_tpl.php";
+        return $this->nextAction('unapproveddocs');
     }
 
     /**

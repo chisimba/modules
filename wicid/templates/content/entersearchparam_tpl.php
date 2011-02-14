@@ -13,6 +13,7 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
 $table = &$this->newObject('htmltable', 'htmlelements');
+/*
 if ($filter == 'Default') {
     $textinput = new textinput('filtervalue');
     $textinput->size = 30;
@@ -81,6 +82,8 @@ if ($filter == 'Default') {
 $filterset->addContent($form->show());
 
 echo $filterset->show();
+ * 
+ */
 //Add table to show results
 $table = &$this->newObject('htmltable', 'htmlelements');
 //Display results if search was positive

@@ -13,11 +13,6 @@ $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('tabcontent', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 
-//Create a table to hold the search params
-$ftable = &$this->newObject("htmltable", "htmlelements");
-
-//Set width
-$ftable->width = "20%";
 
 //Create a dropdown to hold the search parameters
 /*$filterdrops = new dropdown('filter11');
@@ -38,54 +33,56 @@ $textinput = new textinput('filtervalue');
 $textinput->size = 17;
 
 $table = &$this->newObject('htmltable', 'htmlelements');
+$table->width = '800px';
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 $objDatePicker = $this->newObject('datepicker', 'htmlelements');
 $objDatePicker->name = 'startdate';
 $objDatePicker2 = $this->newObject('datepicker', 'htmlelements');
 $objDatePicker2->name = 'enddate';
 
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_wicid_startdate', 'wicid', 'Start date') . ": ", "120px", "top", "left");
-$table->endRow();
-$table->startRow();
-$table->addCell($objDatePicker->show(), "190px", "top", "left");
-$table->endRow();
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_wicid_enddate', 'wicid', 'End date') . ": ", "120px", "top", "left");
-$table->endRow();
-$table->startRow();
-$table->addCell($objDatePicker2->show(), "190px", "top", "left");
-$table->endRow();
 //Radio button Group
-$objElement = new radio('filter');
-$objElement->addOption('Date',$this->objLanguage->languageText('mod_wicid_searchbydate', 'wicid', 'Date'));
-$objElement->addOption('Default',$this->objLanguage->languageText('mod_wicid_otherfields', 'wicid', 'Other fields')."*");
-$objElement->setBreakSpace($table->show());
-$objElement->setSelected('Default');
-$searchbyradio =  $objElement->show();
+$objElementDefault = new radio('filter');
+$objElementDefault->addOption('Default',$this->objLanguage->languageText('mod_wicid_gsearch', 'wicid', 'General search')." *");
+//$objElement->setBreakSpace($table->show());
+$objElementDefault->setSelected('Default');
+$objElementDefault = $objElementDefault->show();
 
-/*
-$ftable->startRow();
-$ftable->addCell($searchbyradio);
-$ftable->endRow();
- */
 
-$ftable->startRow();
-$ftable->addCell($searchbyradio.$textinput->show(), "30px", "top", "left");
-$ftable->endRow();
+//Radio button Group
+$objElementDate = new radio('filter');
+$objElementDate->addOption('Date',$this->objLanguage->languageText('mod_wicid_phrasesearchby', 'wicid', 'Search by')." ".$this->objLanguage->languageText('mod_wicid_searchbydate', 'wicid', 'Date'));
+//$objElement->setBreakSpace($table->show());
+$objElementDate =  $objElementDate->show();
 
-$ftable->startRow();
-$ftable->addCell($filterbutton->show());
-$ftable->endRow();
+$table->startRow();
+$table->addCell($objElementDefault.": ", "", "top", "left","","",'1');
+$table->addCell($objElementDate . ": ", "", "top", "left","","colspan='5'",'1');
+$table->endRow();
+$table->startRow();
+$table->addCell($textinput->show(), "", "top", "left","","",'1');
+$table->addCell($this->objLanguage->languageText('mod_wicid_startdate', 'wicid', 'Start date') . ": ", "", "top", "left","","",'1');
+$table->addCell($objDatePicker->show(), "", "top", "left","","",'1');
+$table->addCell($this->objLanguage->languageText('mod_wicid_enddate', 'wicid', 'End date') . ": ", "", "top", "left","","",'1');
+$table->addCell($objDatePicker2->show(), "", "top", "left","","",'1');
+$table->addCell($filterbutton->show(), "", "top", "left","","",'1');
+$table->startRow();
+$table->addCell("* "." ".$this->objLanguage->languageText('mod_wicid_thisincludes', 'wicid', 'This includes').": ".$this->objLanguage->languageText('mod_wicid_searchby', 'wicid', 'Ref No., Title, Owner or Telephone'), "", "top", "left","","colspan='6'",'1');
+$table->endRow();
 
+//Add date to fieldset
+$otset = new fieldset();
+$otset->setLegend("");
+$otset->addContent($table->show());
+
+$fsetdateother = $otset->show();
 
 //Add a form to contain the search feature
 $form = new form('searchdocs', $this->uri(array('action' => 'filterbyparam')));
-$form->addToForm($ftable->show());
-$form->addToForm("* ".$this->objLanguage->languageText('mod_wicid_searchby', 'wicid', 'Ref No., Title, Owner or Telephone'));
+//$form->addToForm($fsetdateother);
+$form->addToForm($table->show());
 //Add search table to fieldset
 $filterset = new fieldset();
-$filterset->setLegend($this->objLanguage->languageText('mod_wicid_searchdocsby', 'wicid', 'Search documents by'));
+$filterset->setLegend($this->objLanguage->languageText('mod_wicid_searchdocs', 'wicid', 'Search documents'));
 $filterset->addContent($form->show());
 
 $filters = $filterset->show();
@@ -126,10 +123,10 @@ $leftColumn .= '<div class="filemanagertree">' . $managenav. $nav . '</div>';
 
 //New Search
 $rightColumn = $filters;
-$cssLayout->numColumns = 3;
+$cssLayout->numColumns = 2;
 $cssLayout->setLeftColumnContent($leftColumn);
-$cssLayout->setMiddleColumnContent($this->getContent());
-$cssLayout->setRightColumnContent($rightColumn);
+$cssLayout->setMiddleColumnContent($rightColumn.$this->getContent());
+//$cssLayout->setRightColumnContent($rightColumn);
 // Display the Layout
 echo $cssLayout->show();
 ?>
