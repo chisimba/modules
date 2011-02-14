@@ -47,7 +47,7 @@ class elsilogo extends object {
      * Constructor
      */
     public function init() {
-        
+        $this->objUser = $this->newObject('user', 'security');
     }
 
     /**
@@ -83,19 +83,8 @@ class elsilogo extends object {
                 	<input type="text" value="Search »" class="searchbar">
                     <input type="submit" value="" class="searchbutton">
                  </form>
-            </div>
-
-            <!-- Tab links -->
-            <div id="tab-links">
-            	<ul>
-                    <li>Wits Home</li>
-                    <li>Alumni</li>
-                    <li>About Us</li>
-                </ul>
-
-            </div>
-
-
+            </div>'.
+            $this->getTabLinks().'
         </div>
                     <div class="clear">&nbsp;
             </div>
@@ -105,6 +94,38 @@ class elsilogo extends object {
         <!-- To clear floats -->
         <div id="clearfix"></div>
 ';
+
+        return $retstr;
+    }
+
+    public function getTabLinks() {
+        if($this->objUser->isLoggedIn() && $this->objUser->isAdmin()) {
+            $newsLink = new link($this->uri(array(), "news"));
+            $newsLink->link = "News";
+            $blogLink = new link($this->uri(array(),"blog"));
+            $blogLink->link = "Blog";
+            $adminLink = new link($this->uri(array(),"toolbar"));
+            $adminLink->link = "Admin";
+            $retstr = '<!-- Tab links -->
+                <div id="tab-links">
+                    <ul>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$newsLink->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$blogLink->show().'</li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$adminLink->show().'</li>
+                    </ul>
+                </div>';
+
+        }
+        else {
+            $retstr = '<!-- Tab links -->
+                <div id="tab-links">
+                    <ul>
+                        <li><a href="http://web.wits.ac.za/">Wits Home</a></li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;Alumni</li>
+                        <li>About Us</li>
+                    </ul>
+                </div>';
+        }
 
         return $retstr;
     }
