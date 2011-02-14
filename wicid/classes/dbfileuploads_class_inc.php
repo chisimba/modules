@@ -129,7 +129,7 @@ class dbfileuploads extends dbtable {
                 $sql .= "where A.docname like '%" . $filtervalue . "%'";
                 break;
             default:
-                return Null;
+                $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.refno like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%'";
                 break;
         }
         $sql .= " and A.active ='Y' order by A.date_created DESC";

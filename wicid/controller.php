@@ -160,18 +160,19 @@ class wicid extends controller {
      * @return object
      */
     public function __filterbyparam() {
-//Get the filter action
+        //Get the filter action
         $filter = $this->getParam("filter", Null);
         if ($filter == "Date") {
-//Get the values to search for
+            //Get the values to search for
             $filtervalue = array();
             $filtervalue['start'] = $this->getParam("startdate", Null);
             $filtervalue['end'] = $this->getParam("enddate", Null);
         } else {
-//Get the value to search for
+            //Get the value to search for
+            $filter = 'Default';
             $filtervalue = $this->getParam("filtervalue", Null);
         }
-//  $documents = $this->documents->getdocuments($this->mode);
+        //  $documents = $this->documents->getdocuments($this->mode);
         $rejecteddocuments = $this->documents->getdocuments($this->mode, "Y");
 
         $dir = $this->getParam("folder", "");

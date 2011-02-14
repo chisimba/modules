@@ -11,6 +11,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('tabcontent', 'htmlelements');
+$this->loadClass('radio', 'htmlelements');
 
 //Create a table to hold the search params
 $ftable = &$this->newObject("htmltable", "htmlelements");
@@ -19,24 +20,58 @@ $ftable = &$this->newObject("htmltable", "htmlelements");
 $ftable->width = "20%";
 
 //Create a dropdown to hold the search parameters
-$filterdrops = new dropdown('filter');
+/*$filterdrops = new dropdown('filter11');
 
 $filterdrops->addOption("Ref No");
 $filterdrops->addOption("Title");
 $filterdrops->addOption("Owner");
 $filterdrops->addOption("Telephone");
 $filterdrops->addOption("Date");
-
+*/
 //Create a submit button
 $filterbutton = new button('filtersearch', "Search");
 $filterbutton->setToSubmit();
 
+
+
+$textinput = new textinput('filtervalue');
+$textinput->size = 17;
+
+$table = &$this->newObject('htmltable', 'htmlelements');
+$objDateTime = $this->getObject('dateandtime', 'utilities');
+$objDatePicker = $this->newObject('datepicker', 'htmlelements');
+$objDatePicker->name = 'startdate';
+$objDatePicker2 = $this->newObject('datepicker', 'htmlelements');
+$objDatePicker2->name = 'enddate';
+
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_wicid_startdate', 'wicid', 'Start date') . ": ", "120px", "top", "left");
+$table->endRow();
+$table->startRow();
+$table->addCell($objDatePicker->show(), "190px", "top", "left");
+$table->endRow();
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_wicid_enddate', 'wicid', 'End date') . ": ", "120px", "top", "left");
+$table->endRow();
+$table->startRow();
+$table->addCell($objDatePicker2->show(), "190px", "top", "left");
+$table->endRow();
+//Radio button Group
+$objElement = new radio('filter');
+$objElement->addOption('Date',$this->objLanguage->languageText('mod_wicid_searchbydate', 'wicid', 'Date'));
+$objElement->addOption('Default',$this->objLanguage->languageText('mod_wicid_otherfields', 'wicid', 'Other fields')."*");
+$objElement->setBreakSpace($table->show());
+$objElement->setSelected('Default');
+$searchbyradio =  $objElement->show();
+
+/*
 $ftable->startRow();
-$ftable->addCell("Search by: ");
+$ftable->addCell($searchbyradio);
 $ftable->endRow();
+ */
 
 $ftable->startRow();
-$ftable->addCell($filterdrops->show());
+$ftable->addCell($searchbyradio.$textinput->show(), "30px", "top", "left");
 $ftable->endRow();
 
 $ftable->startRow();
@@ -45,11 +80,12 @@ $ftable->endRow();
 
 
 //Add a form to contain the search feature
-$form = new form('searchdocs', $this->uri(array('action' => 'filtersearch')));
+$form = new form('searchdocs', $this->uri(array('action' => 'filterbyparam')));
 $form->addToForm($ftable->show());
+$form->addToForm("* ".$this->objLanguage->languageText('mod_wicid_searchby', 'wicid', 'Ref No., Title, Owner or Telephone'));
 //Add search table to fieldset
 $filterset = new fieldset();
-$filterset->setLegend('Search Documents');
+$filterset->setLegend($this->objLanguage->languageText('mod_wicid_searchdocsby', 'wicid', 'Search documents by'));
 $filterset->addContent($form->show());
 
 $filters = $filterset->show();
@@ -70,6 +106,8 @@ $button = new button('search', $this->objLanguage->languageText('word_search', '
 $button->setToSubmit();
 $searchForm->addToForm($button->show());
 
+
+
 //get file list
 // Create an Instance of the CSS Layout
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
@@ -82,15 +120,16 @@ $leftColumn = $header->show();
 
 //Disable old search
 //$leftColumn .= $searchForm->show();
-//New Search
-$leftColumn .= $filters;
 
 $filters = $filterset->show();
 $leftColumn .= '<div class="filemanagertree">' . $managenav. $nav . '</div>';
 
+//New Search
+$rightColumn = $filters;
+$cssLayout->numColumns = 3;
 $cssLayout->setLeftColumnContent($leftColumn);
-
 $cssLayout->setMiddleColumnContent($this->getContent());
+$cssLayout->setRightColumnContent($rightColumn);
 // Display the Layout
 echo $cssLayout->show();
 ?>

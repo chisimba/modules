@@ -13,8 +13,13 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
 $table = &$this->newObject('htmltable', 'htmlelements');
-
-if ($filter == 'Owner') {
+if ($filter == 'Default') {
+    $textinput = new textinput('filtervalue');
+    $textinput->size = 30;
+    $table->startRow();
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_searchby', 'wicid', 'Search by Ref No, Title, Owner or Telephone') . ": </b>", "350px", "top", "right");
+    $table->addCell($textinput->show(), "30px", "top", "left");
+} elseif ($filter == 'Owner') {
     $textinput = new textinput('filtervalue');
     $textinput->size = 30;
     $table->startRow();
@@ -68,7 +73,11 @@ $form->addToForm($table->show());
 
 //Add form to fieldset
 $filterset = new fieldset();
-$filterset->setLegend($this->objLanguage->languageText('mod_wicid_searchdocsby', 'wicid', 'Search Documents By') . " <b>" . $filter . "</b>");
+if ($filter == 'Default') {
+    $filterset->setLegend($this->objLanguage->languageText('mod_wicid_searchdocs', 'wicid', 'Search Documents'));
+} else {
+    $filterset->setLegend($this->objLanguage->languageText('mod_wicid_searchdocsby', 'wicid', 'Search Documents By') . " <b>" . $filter . "</b>");
+}
 $filterset->addContent($form->show());
 
 echo $filterset->show();
