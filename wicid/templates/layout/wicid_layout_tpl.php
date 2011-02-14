@@ -1,6 +1,7 @@
 <?php
 $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 $nav = $this->objUtils->getTree($baseFolder, $selected);
+$managenav = $this->objUtils->getManageTree($baseFolder, $selected);
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -85,8 +86,8 @@ $leftColumn = $header->show();
 $leftColumn .= $filters;
 
 $filters = $filterset->show();
+$leftColumn .= '<div class="filemanagertree">' . $managenav. $nav . '</div>';
 
-$leftColumn .= '<div class="filemanagertree">' . $nav . '</div>';
 $cssLayout->setLeftColumnContent($leftColumn);
 
 $cssLayout->setMiddleColumnContent($this->getContent());
