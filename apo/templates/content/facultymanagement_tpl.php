@@ -1,4 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <?php
 $this->loadClass('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -12,14 +11,7 @@ echo $header->show();
 $newfacultylink = new link($this->uri(array("action" => "newfaculty", "selected" => $selected)));
 $newfacultylink->link = "Add New Faculty";
 
-/*$editfacultylink = new link($this->uri(array("action" => "editfaculty", "selected" => $selected)));
-$editfacultylink->link = "Edit Faculty";
-
-
-$deletefacultylink = new link($this->uri(array("action" => "deletefaculty", "selected" => $selected)));
-$deletefacultylink->link = "deletefaculty";*/
-
-echo $newfacultylink->show();// . '&nbsp;|&nbsp;' . $editfacultylink->show() . '&nbsp;|&nbsp;' . $deletefacultylink->show() . '<br/>';
+echo $newfacultylink->show();
 
 $table = $this->getObject("htmltable", "htmlelements");
 $table->startHeaderRow();
