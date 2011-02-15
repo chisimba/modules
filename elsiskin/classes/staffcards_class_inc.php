@@ -1264,7 +1264,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
 							<p><img src="' . $this->skinpath . 'images/staff/shailingovender.png" class="left" alt="Shailin Govender"></p>
-							<p class="bio">UPDATE BIO SOON</p>
+							<p class="bio">Systems analyst, with a strong affinity for information systems. Proud to be a member of the Wits community and looking forward to being a part of the exciting new projects still to come.</p>
 				  </div>
 				</div>
 
