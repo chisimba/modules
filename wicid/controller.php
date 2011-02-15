@@ -58,6 +58,7 @@ class wicid extends controller {
         $this->forwardto = $this->getObject('dbforwardto');
         $this->mode = $this->objSysConfig->getValue('MODE', 'wicid');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $this->pageSize = $this->objSysConfig->getValue('PAGE_SIZE', 'wicid');
 //Set global variables
         $this->TRUE = 1;
         $this->FALSE = 0;
@@ -319,7 +320,7 @@ class wicid extends controller {
      */
     public function __viewfolder() {
 //Set show rows
-        $rows = 10;
+        $rows = $this->pageSize;
         $start = $this->getParam("start", 0);
 //Select records Limit array
         $limit = array();
