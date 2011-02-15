@@ -61,9 +61,11 @@ class staffprofiles extends object {
     public function show() {
 
         $profiles = array(
+            array("href"=>"16", "name"=>"Zaahirah Bhamjee", "image"=>"zaahirahbhamjee.jpg", "jobtitle"=>"Assistant Instructional Designer","ext"=>"77164", "email"=>"zaahirahbhamjee@gmail.com"),
             array("href"=>"11", "name"=>"Agnes Chigona", "image"=>"AgnesChigona.jpg", "jobtitle"=>"Research Fellow", "ext"=>"7181","email"=>"agnes.chigona@wits.ac.za"),
             array("href"=>"6", "name"=>"Shakira Choonara", "image"=>"schoonara.jpg", "jobtitle"=>"Office Administrator", "ext"=>"7161", "email"=>"shakira.choonara2@wits.ac.za"),
             array("href"=>"2", "name"=>"Rabelani Dagada", "image"=>"RDagada.jpg", "jobtitle"=>"Head: eLearning Support and Innovation Unit", "ext"=>"7162", "email"=>"rabelani.dagada@wits.ac.za"),
+            array("href"=>"17", "name"=>"Shailin Govender", "image"=>"shailingovender.png", "jobtitle"=>"Systems Analyst","ext"=>"77181", "email"=>"Shailin.Govender@wits.ac.za"),
             array("href"=>"1", "name"=>"Taurai Hungwe", "image"=>"THungwe.jpg", "jobtitle"=>"Instructional Designer","ext"=>"7164", "email"=>"taurai.hungwe@wits.ac.za"),
             array("href"=>"15", "name"=>"Noxolo Mbana ", "image"=>"noxolombana.jpg", "jobtitle"=>"Researcher","ext"=>"7164", "email"=>"noxolo.mbana@wits.ac.za"),
             array("href"=>"14", "name"=>"Reginald Moledi", "image"=>"regimoledi.jpg", "jobtitle"=>"Instructional Developer","ext"=>"7170", "email"=>"reginald.moledi@wits.ac.za"),
@@ -75,9 +77,7 @@ class staffprofiles extends object {
             array("href"=>"7", "name"=>"Fatima Rahiman", "image"=>"frahiman.jpg", "jobtitle"=>"Team leader: Instructional designer","ext"=>"77174", "email"=>"fatima.rahiman@wits.ac.za"),
             array("href"=>"5", "name"=>"James Smurthwaite", "image"=>"Profile_Pic_James.gif", "jobtitle"=>"Content Developer","ext"=>"77196", "email"=>"James.Smurthwaite@wits.ac.za"),
             array("href"=>"8", "name"=>"Ofentse Tabane", "image"=>"otabane.jpg", "jobtitle"=>"Instructional designer","ext"=>"77172", "email"=>"ofentse.tabane@wits.ac.za"),
-            array("href"=>"9", "name"=>"David Wafula", "image"=>"DavidWafula.jpg", "jobtitle"=>"Team Leader Software Development","ext"=>"77180", "email"=>"david.wafula@wits.ac.za"),
-            array("href"=>"16", "name"=>"Zaahirah Bhamjee", "image"=>"zaahirahbhamjee.jpg", "jobtitle"=>"Assistant Instructional Designer","ext"=>"77164", "email"=>"zaahirahbhamjee@gmail.com"),
-            array("href"=>"17", "name"=>"Shailin Govender", "image"=>"shailingovender.png", "jobtitle"=>"Systems Analyst","ext"=>"77181", "email"=>"Shailin.Govender@wits.ac.za")
+            array("href"=>"9", "name"=>"David Wafula", "image"=>"DavidWafula.jpg", "jobtitle"=>"Team Leader Software Development","ext"=>"77180", "email"=>"david.wafula@wits.ac.za")
         );
 
         $retstr = '<ul class="business_cards">';
