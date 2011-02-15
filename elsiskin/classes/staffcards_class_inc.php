@@ -1282,7 +1282,7 @@ class staffcards extends object {
 					</div>
 				</div>
 				<div style="display: none;" class="tab bmod" id="contact">
-					<div class="adr">  <h2>Contact <span class="fn">Shailan Govender</span></h2>
+					<div class="adr">  <h2>Contact <span class="fn">Shailin Govender</span></h2>
 						<ul>
                                                     <li class="street-address">Wits Private Bag X3</li>
                                                     <li><span class="locality"> Johannesburg </span>  <span class="postal-code"> 2050 </span></li>
