@@ -164,7 +164,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Instructional Designer</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/THungwe.jpg" class="left" alt="Taurai Hungwe"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/THungwe.jpg" class="left" alt="Taurai Hungwe"></p>
 							<p class="bio">I am a career learner. Teaching and technology is my passion. My interest vary from blended learning, mobile technology, data mining and basketball.</p>
 					</div>            
 				</div>
@@ -224,7 +224,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>eLearning Manager</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/RDagada.jpg" class="left" alt="Rabelani Dagada"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/RDagada.jpg" class="left" alt="Rabelani Dagada"></p>
 							<p class="bio"></p>
 					</div>            
 				</div>
@@ -233,7 +233,11 @@ class staffcards extends object {
 					<h2><span class="fn">Rabelani.Dagada\'s</span> networks</h2>
 						<div id="networkmedia">
 				  		  <ul>        
-							<li>Rabelani Dagada has supplied no networks</li>
+							<li><a href="http://www.facebook.com/pages/Rabelani-Dagada-Author-and-Intellectual/127030800684042"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://twitter.com/#!/Rabelani_Dagada"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+                                                        <li><a href="http://za.linkedin.com/pub/rabelani-dagada/13/443/28"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
+							<li><a href="http://www.amazon.com/Rabelani-Dagada/e/B004AOEDQY/ref=sr_tc_2_rm?qid=1297599658&sr=1-2-ent"><img src="' . $this->skinpath . 'images/profiles/amazon.png"><strong>Amazon</strong>amazon.com</a></li>
+                                                        <li><a href="http://www.slideshare.net/RabelaniDagada/presentations"><img src="' . $this->skinpath . 'images/profiles/slideshare.png"><strong>Slideshare</strong>slideshare.com</a></li>
 						  </ul>
 						  <div class="clear"></div>
 						</div>
@@ -250,7 +254,7 @@ class staffcards extends object {
 					<div class="telecommunications">
 						<p class="tel">Phone 
 							<span class="tel">
-							<span class="type">Work</span>: <span class="value"></span>
+							<span class="type">Work</span>: 011 717 7162<span class="value"></span>
 							 <span class="type">Home</span>: <span class="value"></span>
 							<span class="type">Cell</span>: <span class="value"></span>
 							</span>
@@ -288,7 +292,7 @@ class staffcards extends object {
 		
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/NkululekoPhakela.jpg" class="left" alt="Nkululeko Phakela"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/NkululekoPhakela.jpg" class="left" alt="Nkululeko Phakela"></p>
 					  <p class="bio">Bio: Born and Bred in Lesotho. I have had the pleasures of being able to travel the world a bit, and Africa is where my heart is. Johannesburg provides for me the world class services that I have come to expect. I am enjoying my time here. Working for the ELSI unit at Wits University. 
 		
 					  </p>
@@ -378,7 +382,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Content Developer</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/dmoore.jpg" class="left" alt="Derek Moore"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/dmoore.jpg" class="left" alt="Derek Moore"></p>
 							<p class="bio">Teacher, learning designer & aspiring heutagogist exploring the wild & wooly frontiers of electronic education.
 							Working for the ELSI unit at Wits University.
 							</p>
@@ -464,7 +468,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/Profile_Pic_James.gif" class="left" alt="James Smurthwaite"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/Profile_Pic_James.gif" class="left" alt="James Smurthwaite"></p>
 							<p class="bio">A background in journalism, media studies, communication and graphic design, with a keen interest in harnessing technology for creating and communicating information rich content.
 							</p>
 							
@@ -544,7 +548,7 @@ class staffcards extends object {
 		
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/schoonara.jpg" class="left" alt="Shakira Choonara"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/schoonara.jpg" class="left" alt="Shakira Choonara"></p>
 					  <p class="bio">
 					  </p>
 							
@@ -621,7 +625,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Team Leader: Learning Design</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/frahiman.jpg" class="left" alt="Fatima Rahiman"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/frahiman.jpg" class="left" alt="Fatima Rahiman"></p>
 							<p class="bio">Fatima\'s  oscillating career path has stabilized, laying her hat at her alma mater where she is presently  reading her Masters in Educational Technology by night,  whilst advocating online learning by day. 
 		An innate curiosity about the machinations of a mind , a curiosity fueled by its betrayal in earlier academic years which left her a medical manqué , coupled with previous stints as an educator, citizen journalism portal manager, and as a project manager of a primary school broadcast channel, has endowed her with a keen propensity for Information Technology tools - an aid in her desire to assist in the augmentation of effective learning and teaching practices. 
 		In addition, she has completed a certificate course in Instructional Design and Content writing, and has a BSc in Life Sciences as well as a  BA Hons in Journalism and Media studies.  </p>
@@ -699,7 +703,7 @@ class staffcards extends object {
 		
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/otabane.jpg" alt="Ofentse Tabane" width="75" height="90" class="left"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/otabane.jpg" alt="Ofentse Tabane" width="75" height="90" class="left"></p>
 					  <p class="bio">On earth to acquire as much knowledge as my mind can absorb in any form
 					  </p>
 				  </div>            
@@ -711,6 +715,8 @@ class staffcards extends object {
 						<div id="networkmedia">
 						  <ul>        
 							<li><a href="http://twitter.com/KeOfentse/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+                                                        <li><a href="http://www.linkedin.com/groupsDirectory?results=&sik=1297677498286&pplSearchOrigin=GLHD&keywords=Ofentse+Tabane"><img src="'.$this->skinpath . 'images/profiles/linkedin.png"<strong>LinkedIn</strong>linkedin.com</a></li>
+                                                        <li><a href="http://www.flickr.com/photos/56709923@N05/"><img src="'.$this->skinpath .'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
 						  </ul>
 						  <div class="clear"></div>
 		
@@ -776,7 +782,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Team Leader, Software Development.</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/DavidWafula.jpg" alt="Ofentse Tabane" width="100" height="120" class="left"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/DavidWafula.jpg" alt="Ofentse Tabane" width="100" height="120" class="left"></p>
 					  <p class="bio">Specializing in Java, PHP, Realtime Communications Outside computer world: an avid runner
 					  </p>
 				  </div>            
@@ -868,7 +874,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/AgnesChigona.jpg" class="left" alt="Agnes Chigona"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/AgnesChigona.jpg" class="left" alt="Agnes Chigona"></p>
 							<p class="bio">I have studied in different countries including South Africa (PhD.); Germany (MA); New Zealand (Graduate Dipl. in Women & Gender Studies); Malawi (B.Ed.). 
 				  Research interests: ICTs and Education; African Women and ICTs 
 		
@@ -950,7 +956,7 @@ class staffcards extends object {
 							<span class="jobtitle"><strong>Research Assistant</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/Neo.Petlele.jpg" class="left" alt="Neo Petlele"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/Neo.Petlele.jpg" class="left" alt="Neo Petlele"></p>
 							<p class="bio">Research Assistant for the eLSI unit. Currently serving on the ZAW 2011 Conference Organising Committee as well as the Wits LMS evaluation Working Group Committee.
 		
 		
@@ -1031,7 +1037,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/PaulMungai.jpg" class="left" alt="Paul Mungai"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/PaulMungai.jpg" class="left" alt="Paul Mungai"></p>
 							<p class="bio">I specialize in building simple tools that can assist in teaching and learning.
 							</p>
 				  </div>            
@@ -1112,7 +1118,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/regimoledi.jpg" class="left" alt="Reginald Moledi"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/regimoledi.jpg" class="left" alt="Reginald Moledi"></p>
 							<p class="bio">Facilitator and trainer for lecturers and students in the use of LMS for teaching and learning.
 		Certified Trainer(Blackboard), IT(UJ), Project Management(TSA).
 							</p>
@@ -1195,7 +1201,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/noxolombana.jpg" class="left" alt="Noxolo Kahlana-Mbana"></p>
+							<p><img src="' . $this->skinpath . 'images/staff/noxolombana.jpg" class="left" alt="Noxolo Kahlana-Mbana"></p>
 							<p class="bio">Community developer, perpetual student, transformation, change management and sustainability enthusiast, working on eLearning Research for eLSI unit at Wits.
 		
 		
