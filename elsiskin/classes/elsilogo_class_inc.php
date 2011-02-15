@@ -117,12 +117,16 @@ class elsilogo extends object {
 
         }
         else {
+            $witsHome = new link("http://web.wits.ac.za/");
+            $witsHome->link = "Wits Home";
+            $aboutLink = new link($this->uri(array("action"=> "about"),"elsi"));
+            $aboutLink->link = "About eLSI";
             $retstr = '<!-- Tab links -->
                 <div id="tab-links">
                     <ul>
-                        <li><a href="http://web.wits.ac.za/">Wits Home</a></li>
-                        <li>&nbsp;&nbsp;&nbsp;&nbsp;Alumni</li>
-                        <li>About Us</li>
+                        <li>'.$witsHome->show().'</li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://web.wits.ac.za/">Alumni</a></li>
+                        <li>'.$aboutLink->show().'</li>
                     </ul>
                 </div>';
         }
