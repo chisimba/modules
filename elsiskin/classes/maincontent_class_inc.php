@@ -263,6 +263,9 @@ class maincontent extends object {
             $retstr = '
                  <div class="grid_3">
                        '.$message.'
+                       <p>11-17 Joriseen Street<br> Braamfontein, 2050 <br> Johannesburg<br> Gauteng</p>
+                       <p>Telephone: 011 717 7161</p>
+                       <div id="clear">&nbsp;</div>
                        <h4>Fill in the form</h4>
                        <br><br>
                        <form id="contactForm" name="contactForm" method="POST" action="?module=elsiskin&action=contactformsubmit">
