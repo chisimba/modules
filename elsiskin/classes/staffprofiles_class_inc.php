@@ -71,7 +71,7 @@ class staffprofiles extends object {
             array("href"=>"14", "name"=>"Reginald Moledi", "image"=>"regimoledi.jpg", "jobtitle"=>"Instructional Developer","ext"=>"7170", "email"=>"reginald.moledi@wits.ac.za"),
             array("href"=>"4", "name"=>"Derek Moore", "image"=>"dmoore.jpg", "jobtitle"=>"Content Developer","ext"=>"7171", "email"=>"derek.moore@wits.ac.za"),
             array("href"=>"13", "name"=>"Paul Mungai", "image"=>"PaulMungai.jpg", "jobtitle"=>"Software Developer","ext"=>"7166", "email"=>"paul.mungai@wits.ac.za"),
-            array("href"=>"10", "name"=>"Tessa Murray", "image"=>"tessa_murry.jpg", "jobtitle"=>"Team leader: Content developer","ext"=>"77178", "email"=>"tessa.murray@wits.ac.za"),
+            array("href"=>"10", "name"=>"Tessa Murray", "image"=>"tessa_murry.jpg", "jobtitle"=>"Team leader: Content developer","ext"=>"7178", "email"=>"tessa.murray@wits.ac.za"),
             array("href"=>"12", "name"=>"Neo Petlele", "image"=>"Neo.Petlele.jpg", "jobtitle"=>"Research Assistant","ext"=>"7176", "email"=>"neo.petlele@wits.ac.za"),
             array("href"=>"3", "name"=>"Nkululeko (Nguni) Phakela", "image"=>"NkululekoPhakela.jpg", "jobtitle"=>"Software Developer","ext"=>"7184", "email"=>"nonkululeko.phakela@wits.ac.za"),
             array("href"=>"7", "name"=>"Fatima Rahiman", "image"=>"frahiman.jpg", "jobtitle"=>"Team leader: Instructional designer","ext"=>"7174", "email"=>"fatima.rahiman@wits.ac.za"),
