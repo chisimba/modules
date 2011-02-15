@@ -140,7 +140,7 @@ $this->appendArrayVar('headerParams', '
 
 $header = new htmlheading();
 $header->type = 2;
-$header->str = $this->objLanguage->languageText('mod_wicid_unapproved', 'wicid', 'Unapproved Documents') . ' (' . count($documents) . ')';
+$header->str = $this->objLanguage->languageText('mod_wicid_unapproved', 'wicid', 'Unapproved Documents') . ' (' . $documents['count'] . ')';
 
 echo $header->show();
 

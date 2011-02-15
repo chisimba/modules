@@ -1248,8 +1248,7 @@ class wicid extends controller {
 
         $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
         $attachmentStatus = $this->getParam("attachmentStatus", Null);
-        $documents = $this->documents->getdocuments($this->mode, 'N', "N", $limit, $rowcount);
-        $rowcount = $this->getParam("rowcount", Null);
+        $documents = $this->documents->getdocuments($this->mode, 'N', "N", $limit, $rowcount);        
         $this->setVarByRef("start", $start);
         $this->setVarByRef("rows", $rows);
         $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
