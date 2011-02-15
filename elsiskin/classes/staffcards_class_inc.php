@@ -1244,7 +1244,7 @@ class staffcards extends object {
                         <div id="dialog17" class="window">
 				<a href="#" class="close">Close</a>
 				<div class="card_header">
-					<h1>Zaahirah Bhamjee</h1>
+					<h1>Shailin Govender</h1>
 						<div class="cardnav">
 
 						<ul class="htabs">
