@@ -27,7 +27,7 @@ class oerunesco extends controller {
          * Convert the action into a method (alternative to
          * using case selections)
          */
-        $this->setLayoutTemplate("gift_layout_tpl.php");
+
         $method = $this->getMethod($action);
         /*
          * Return the template determined by the method resulting
