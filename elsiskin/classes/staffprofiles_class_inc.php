@@ -76,7 +76,7 @@ class staffprofiles extends object {
             array("href"=>"5", "name"=>"James Smurthwaite", "image"=>"Profile_Pic_James.gif", "jobtitle"=>"Content Developer","ext"=>"77196", "email"=>"James.Smurthwaite@wits.ac.za"),
             array("href"=>"8", "name"=>"Ofentse Tabane", "image"=>"otabane.jpg", "jobtitle"=>"Instructional designer","ext"=>"77172", "email"=>"ofentse.tabane@wits.ac.za"),
             array("href"=>"9", "name"=>"David Wafula", "image"=>"DavidWafula.jpg", "jobtitle"=>"Team Leader Software Development","ext"=>"77180", "email"=>"david.wafula@wits.ac.za"),
-            array("href"=>"16", "name"=>"Zaahirah Bhamjee", "image"=>"", "jobtitle"=>"Assistant Instructional Designer","ext"=>"77164", "email"=>"zaahirahbhamjee@gmail.com"),
+            array("href"=>"16", "name"=>"Zaahirah Bhamjee", "image"=>"zaahirahbhamjee.jpg", "jobtitle"=>"Assistant Instructional Designer","ext"=>"77164", "email"=>"zaahirahbhamjee@gmail.com"),
             array("href"=>"17", "name"=>"Shailin Govender", "image"=>"shailingovender.png", "jobtitle"=>"Systems Analyst","ext"=>"77181", "email"=>"Shailin.Govender@wits.ac.za")
         );
 
