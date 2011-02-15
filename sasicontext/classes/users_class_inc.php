@@ -253,5 +253,20 @@ class users extends object {// extends abauth implements ifauth {
         $this->addtocontext++;
         return $this->objGroupAdmin->addGroupUser($groupId, $permUserId);
     }
+
+    /*
+     * Method that add users from the sasi webserver subject classlist to the context
+     *
+     * @param var @contextCode
+     * @return boolean
+    */
+    public function synchronizeAllUsers($remove = 0) {
+        $sasicontexts = $this->dbSasicontext->getAllSasicontext();
+        if(is_array($sasicontexts)) {
+            foreach($sasicontexts as $context) {
+                $this->synchronizeAll($context['contextcode'], $remove);
+            }
+        }
+    }
 }
 ?>

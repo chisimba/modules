@@ -92,7 +92,7 @@ class dbsasicontext extends dbtable {
      * @param string $id
      * @return array $data List of sasi - context
      */
-    public function getAllSasicontext($id) {
+    public function getAllSasicontext() {
 
         return $this->getAll();
     }

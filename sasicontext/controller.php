@@ -43,7 +43,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 /**
  *
- * Model controller for the table tbl_phonebook
  * @authors: Qhamani Fenama <qfenama@gmail.com>
  * @copyright 2010 University of the Western Cape
  */
@@ -89,14 +88,21 @@ class sasicontext extends controller {
             $this->objSasiUsers = $this->getObject('users');
             $this->contextCode = $this->objContext->getContextCode();
             $this->contextTitle = $this->objContext->getTitle();
-            if ($this->contextCode == 'root' || $this->contextCode == NULL && (!$this->objUser->isAdmin() || !$this->objUser->isContextLecturer($this->objUser->userId(), $this->objContext->getContextCode()))) {
-                return $this->nextAction ( NULL, NULL, '_default' );
-            }
         } catch (customException $e) {
             echo customException::cleanUp();
             die();
         }
     }//end of init function
+
+
+    function requiresLogin($action) {
+
+        $actions = array('autosynch');
+
+        if(in_array($action, $actions)) {
+            return FALSE;
+        }
+    }
 
     /**
      * Method to process actions to be taken
@@ -104,6 +110,10 @@ class sasicontext extends controller {
      * @param string $action String indicating action to be taken
      */
     public function dispatch($action) {
+
+        if (($this->contextCode == 'root' || $this->contextCode == NULL && (!$this->objUser->isAdmin() || !$this->objUser->isContextLecturer($this->objUser->userId(), $this->objContext->getContextCode()))) && $action != 'autosynch') {
+            return $this->nextAction ( NULL, NULL, '_default' );
+        }
         switch ($action) {
             default:
             //setup the layout
@@ -138,6 +148,12 @@ class sasicontext extends controller {
                 $role = $this->getParam('role');
                 $this->objUsers->synchronizeAll($this->contextCode, $remove);
                 $this->nextAction(NULL, array ('addtocontext' =>  $this->objUsers->addtocontext ,'addtosite' => $this->objUsers->addtosite, 'removed' => $this->objUsers->removed));
+                exit (0);
+                break;
+            case 'autosynch':
+                $remove = $this->getParam('remove');
+                $this->objUsers->synchronizeAllUsers($remove);
+                echo 'Success';
                 exit (0);
                 break;
         } //end of switch
