@@ -715,7 +715,7 @@ class staffcards extends object {
 						<div id="networkmedia">
 						  <ul>        
 							<li><a href="http://twitter.com/KeOfentse/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-                                                        <li><a href="http://www.linkedin.com/groupsDirectory?results=&sik=1297677498286&pplSearchOrigin=GLHD&keywords=Ofentse+Tabane"><img src="'.$this->skinpath . 'images/profiles/linkedin.png"<strong>LinkedIn</strong>linkedin.com</a></li>
+                                                        <li><a href="http://za.linkedin.com/pub/ofentse-tabane/15/94a/811"><img src="'.$this->skinpath . 'images/profiles/linkedin.png"<strong>LinkedIn</strong>linkedin.com</a></li>
                                                         <li><a href="http://www.flickr.com/photos/56709923@N05/"><img src="'.$this->skinpath .'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
 						  </ul>
 						  <div class="clear"></div>
