@@ -75,7 +75,7 @@ class staffprofiles extends object {
             array("href"=>"12", "name"=>"Neo Petlele", "image"=>"Neo.Petlele.jpg", "jobtitle"=>"Research Assistant","ext"=>"77176", "email"=>"neo.petlele@wits.ac.za"),
             array("href"=>"3", "name"=>"Nkululeko (Nguni) Phakela", "image"=>"NkululekoPhakela.jpg", "jobtitle"=>"Software Developer","ext"=>"77184", "email"=>"nonkululeko.phakela@wits.ac.za"),
             array("href"=>"7", "name"=>"Fatima Rahiman", "image"=>"frahiman.jpg", "jobtitle"=>"Team leader: Instructional designer","ext"=>"77174", "email"=>"fatima.rahiman@wits.ac.za"),
-            array("href"=>"5", "name"=>"James Smurthwaite", "image"=>"Profile_Pic_James.gif", "jobtitle"=>"Content Developer","ext"=>"77196", "email"=>"James.Smurthwaite@wits.ac.za"),
+            array("href"=>"5", "name"=>"James Smurthwaite", "image"=>"Profile_Pic_James.gif", "jobtitle"=>"Content Developer","ext"=>"77169", "email"=>"James.Smurthwaite@wits.ac.za"),
             array("href"=>"8", "name"=>"Ofentse Tabane", "image"=>"otabane.jpg", "jobtitle"=>"Instructional designer","ext"=>"77172", "email"=>"ofentse.tabane@wits.ac.za"),
             array("href"=>"9", "name"=>"David Wafula", "image"=>"DavidWafula.jpg", "jobtitle"=>"Team Leader Software Development","ext"=>"77180", "email"=>"david.wafula@wits.ac.za")
         );
