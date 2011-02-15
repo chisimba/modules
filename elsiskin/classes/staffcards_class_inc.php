@@ -1174,12 +1174,10 @@ class staffcards extends object {
 			
 			  
 												  
-			<div id="dialog15" class="window">
+			<div id="dialog16" class="window">
 				<a href="#" class="close">Close</a>
 				<div class="card_header">
-					<h1>
-						Noxolo Kahlana-Mbana
-					</h1>
+					<h1>Zaahirah Bhamjee</h1>
 						<div class="cardnav">
 		
 						<ul class="htabs">
@@ -1189,8 +1187,141 @@ class staffcards extends object {
 						</ul>
 						</div> 
 				</div> 
-		
-		<div class="vcard">    
+		<div class="vcard">
+			<div class="tabs">
+				<div class="tab" id="myprofile">
+					<div class="main_content">
+						<h2>About <span class="fn">Zaahirah Bhamjee</span></h2>
+
+							<span class="jobtitle"><strong>Assistant Instructional Designer </strong>,&nbsp;</span>
+							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
+							<span class="division">KIM</span></span>
+							<p><img src="' . $this->skinpath . 'images/staff/zaahirahbhamjee.jpg" class="left" alt="Zaahirah Bhamjee"></p>
+							<p class="bio">Assistant Instructional Designer with a passion for photography. Looking forward to seeing the integration of social networking with e-learning.</p>
+				  </div>
+				</div>
+
+				<div style="display: none;" class="tab" id="mynetwork">
+					<div id="profiles">
+					<h2><span class="fn">Zaahirah Bhamjee\'s</span> networks</h2>
+						<div id="networkmedia">
+						  <ul>  <li><a href="http://www.facebook.com/zaahirah.bowtie "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://twitter.com/#!/residentofearth"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+
+						  </ul>
+
+						  <div class="clear"></div>
+						</div>
+					</div>
+				</div>
+				<div style="display: none;" class="tab bmod" id="contact">
+					<div class="adr">  <h2>Contact <span class="fn">Zaahirah Bhamjee</span></h2>
+						<ul>
+                                                    <li class="street-address">Wits Private Bag X3</li>
+                                                    <li><span class="locality"> Johannesburg </span>  <span class="postal-code"> 2050 </span></li>
+                                                    <li class="country-name">South Africa</li>
+						</ul>
+					</div>
+
+
+					<div class="telecommunications">
+						<p class="tel">Phone
+							<span class="tel">
+							<span class="type">Work</span>: <span class="value">+ 27 11 717 7164</span>
+							<span class="type">Cell</span>: <span class="value"></span>
+							</span>
+
+						</p>
+						<p class="email">Email: <a class="value" href="zaahirah.bhamjee@gmail.com">zaahirah.bhamjee@gmail.com</a></p>
+						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
+
+					</div>
+				</div>
+			</div>
+
+				</div>
+			</div>
+                        <div id="dialog17" class="window">
+				<a href="#" class="close">Close</a>
+				<div class="card_header">
+					<h1>Zaahirah Bhamjee</h1>
+						<div class="cardnav">
+
+						<ul class="htabs">
+							<li><a href="#myprofile" class="current">About Me</a></li>
+							<li><a href="#mynetwork">My Networks</a></li>
+							<li> <a href="#contact">Contact Me</a></li>
+						</ul>
+						</div>
+				</div>
+		<div class="vcard">
+			<div class="tabs">
+				<div class="tab" id="myprofile">
+					<div class="main_content">
+						<h2>About <span class="fn">Shailin Govender</span></h2>
+
+							<span class="jobtitle"><strong>Systems Analyst </strong>,&nbsp;</span>
+							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
+							<span class="division">KIM</span></span>
+							<p><img src="' . $this->skinpath . 'images/staff/shailingovender.png" class="left" alt="Shailin Govender"></p>
+							<p class="bio">UPDATE BIO SOON</p>
+				  </div>
+				</div>
+
+				<div style="display: none;" class="tab" id="mynetwork">
+					<div id="profiles">
+					<h2><span class="fn">Shailin Govender\'s</span> networks</h2>
+						<div id="networkmedia">
+						  <ul>  <li><a href="http://www.facebook.com/home.php#!/shailin1"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://www.linkedin.com/profile/view?id=86209033&trk=tab_pro"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
+
+						  </ul>
+
+						  <div class="clear"></div>
+						</div>
+					</div>
+				</div>
+				<div style="display: none;" class="tab bmod" id="contact">
+					<div class="adr">  <h2>Contact <span class="fn">Shailan Govender</span></h2>
+						<ul>
+                                                    <li class="street-address">Wits Private Bag X3</li>
+                                                    <li><span class="locality"> Johannesburg </span>  <span class="postal-code"> 2050 </span></li>
+                                                    <li class="country-name">South Africa</li>
+						</ul>
+					</div>
+
+
+					<div class="telecommunications">
+						<p class="tel">Phone
+							<span class="tel">
+							<span class="type">Work</span>: <span class="value">+ 27 11 717 7181</span>
+							<span class="type">Cell</span>: <span class="value">+ 27 72 390 1922</span>
+							</span>
+
+						</p>
+						<p class="email">Email: <a class="value" href="shailin.govender@wits.ac.za">shailin.govender@wits.ac.za</a></p>
+						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
+
+					</div>
+				</div>
+			</div>
+
+				</div>
+			</div>
+			<div id="dialog15" class="window">
+				<a href="#" class="close">Close</a>
+				<div class="card_header">
+					<h1>Noxolo Kahlana-Mbana</h1>
+						<div class="cardnav">
+						<ul class="htabs">
+							<li><a href="#myprofile" class="current">About Me</a></li>
+							<li><a href="#mynetwork">My Networks</a></li>
+							<li> <a href="#contact">Contact Me</a></li>
+
+						</ul>
+						</div>
+				</div>
+		<div class="vcard">
 			<div class="tabs">
 				<div class="tab" id="myprofile">
 					<div class="main_content">
