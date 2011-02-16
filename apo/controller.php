@@ -923,13 +923,6 @@ class apo extends controller {
         $this->documents->getVersion($docid);
     }
 
-    public function __reclaimdocument() {
-        $userid = $this->getParam('userid');
-        $docid = $this->getParam('docid');
-        $version = $this->getParam('version');
-        $this->documents->reclaimDocument($userid, $docid, $version);
-    }
-
     public function __unapproveddocs() {
         $selected = "unapproved";
         $documents = $this->documents->getdocuments(0, 10, $this->mode);
@@ -2844,6 +2837,21 @@ class apo extends controller {
         $this->faculties->deleteFaculty($id);
 
         return $this->nextAction('facultymanagement', array('folder' => '0'));
+    }
+
+    public function __reclaimdocumentform() {
+        $id = $this->getParam("id");
+        $document = $this->documents->getDocument($id);
+        $this->setVarByRef("document", $document);
+        $this->setVarByRef("id", $id);
+        return "reclaimdocumentform_tpl.php";
+    }
+
+    public function __reclaimdocument(){
+        $userid = $this->getParam('userid');
+        $docid = $this->getParam('docid');
+        $version = $this->getParam('version');
+        $this->documents->reclaimDocument($userid, $docid, $version);
     }
 
 }
