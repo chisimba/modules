@@ -320,7 +320,9 @@ class dbdocuments extends dbtable {
      * @return <type>
      */
     function getDocument($id) {
-        return $this->getRow('id', $id);
+        $document = $this->getRow('id', $id);
+
+        return serialize($document);
     }
 
     function checkRefNo($number) {
