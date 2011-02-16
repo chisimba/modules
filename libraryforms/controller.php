@@ -25,8 +25,6 @@ class libraryforms extends controller {
     var $errormsg;
     var $msg;
     var $erormsg;
-    
-
 
     public function init() {
 
@@ -48,15 +46,15 @@ class libraryforms extends controller {
     public function dispatch($action) {
 
         //$action = $this->getParam('action');
-         $this->setLayoutTemplate('editadd_tpl.php');
-     
-          //if($_POST){
+        $this->setLayoutTemplate('editadd_tpl.php');
+
+        //if($_POST){
 
         switch ($action) {
-                 
-                  default:
-                     return 'editadd_tpl.php';
-           
+
+            default:
+                return 'editadd_tpl.php';
+
             case 'addeditform':
                 return $this->saveRecord();
 
@@ -87,11 +85,11 @@ class libraryforms extends controller {
 
             case 'save_fdbk':
 
-                $this->submitmsg();
-                return 'fdbkconfirm_tpl.php';
+                return $this->submitmsg();
+        }// close for switch
+    }
 
-          }// close for switch
-    }//end of function dispatch     
+//end of function dispatch     
 
     /*
      * Public Method that checks if all required fields are filled
@@ -141,13 +139,12 @@ class libraryforms extends controller {
         $subject = "New user registered";
 
         $this->sendEmailNotification($subject,
-                $message = ' Surname: ' . $surname . '  ' . "\n" . ' Initials:  '. $initials . '   ' . "\n" . ' Title: '. $title . '   ' . "\n" . ' Student no: '.
-		 $studentno . '   ' ."\n" . ' Postal Adress: '.	$postaladdress . '   ' . "\n" . ' Physical Address: '.$physicaladdress . '   ' . "\n" .' Postal Code: ' .
-		 $postalcode . '   ' ."\n" . ' Postal Code: ' . $postalcode2 . '   ' . "\n" .'Tel home: ' . $telnoh . '   ' . "\n" .' Tel work: ' . 
-		 $telnow . '   ' . "\n" .' Cell : ' . $cell . '   ' . "\n" .' Fax: '. $fax . '   ' . "\n" . ' Email address: ' . $emailaddress . '   ' . "\n" . ' Course: '.  
-		 $course . '   ' . "\n" .' Department: ' . $department . '   ' .  "\n" . ' Supervisor: ' . $supervisor );
+                $message = ' Surname: ' . $surname . '  ' . "\n" . ' Initials:  ' . $initials . '   ' . "\n" . ' Title: ' . $title . '   ' . "\n" . ' Student no: ' .
+                $studentno . '   ' . "\n" . ' Postal Adress: ' . $postaladdress . '   ' . "\n" . ' Physical Address: ' . $physicaladdress . '   ' . "\n" . ' Postal Code: ' .
+                $postalcode . '   ' . "\n" . ' Postal Code: ' . $postalcode2 . '   ' . "\n" . 'Tel home: ' . $telnoh . '   ' . "\n" . ' Tel work: ' .
+                $telnow . '   ' . "\n" . ' Cell : ' . $cell . '   ' . "\n" . ' Fax: ' . $fax . '   ' . "\n" . ' Email address: ' . $emailaddress . '   ' . "\n" . ' Course: ' .
+                $course . '   ' . "\n" . ' Department: ' . $department . '   ' . "\n" . ' Supervisor: ' . $supervisor);
     }
-
 
 // end of Save Records */
 
@@ -171,18 +168,18 @@ class libraryforms extends controller {
         $fax = $this->getParam('fax');
         $tel = $this->getParam('thesis_tel');
         $telw = $this->getParam('thesis_w');
-        $emailaddress= $this->getParam('thesis_email');
+        $emailaddress = $this->getParam('thesis_email');
         $entitynum = $this->getParam('entity');
         $studentno = $this->getParam('thesis_studentno');
         $course = $this->getParam('thesis_course');
         $local = $this->getParam('local');
-        $postgrad=$this->getParam('postgrad');
+        $postgrad = $this->getParam('postgrad');
         $captcha = $this->getParam('thesis_captcha');
- 
+
 //var_dump($_POST);die;
         // Check whether user matched captcha
         if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
-            $erormsg [ ] = 'badcaptcha';
+            $erormsg [] = 'badcaptcha';
         }
         //if form entry is in corect or invavalid
         if (count($erormsg) > 0) {
@@ -200,12 +197,12 @@ class libraryforms extends controller {
 // after inserting into db send email alert
         $subject = "Book thesis request";
         $this->sendEmailNotification($subject,
-        $message = ' Author: '. $author . '  ' .  "\n" . ' Title : ' . $title . '  '  .  "\n" .' Place: ' . $place . '  ' .  "\n" .' Publisher:  '.$publisher . '  '  .   "\n" . ' date: '.
-	$date . '   '  .   "\n" . ' Edition: ' . $edition . '  ' .  "\n" .' ISBN: ' . $isbn . '  ' .  "\n" . ' Series: ' . $series . '  ' .  "\n" .' Copy: ' . 
- 	$copy . '  ' .  "\n" .' TItle:' .$titlepages . '  ' .  "\n" .' Pages: '. $pages . '  ' .  "\n" .' Type of Thesis: ' . $thesis . '  ' .  "\n" .' Name: ' . 
-	$name . '  ' .  "\n" .' Address: ' . $address . '   ' . "\n" . ' Cell: ' . $cell . '   ' . ' Fax: '. $fax . '   ' .  "\n" .' Tel(H): ' . 
-	$tel . '  ' .  "\n" .' Tel (W): ' . $telw . '  ' .  "\n" . ' E-mail: ' . $emailaddress . '  ' .  "\n" .' Entity num: '.
-	$entitynum . '   ' .  "\n" .' Student no: ' . $studentno . '  ' .   "\n" .' Course: ' .$course . "\n". ' User Identification: ' . $local . "\n" .' User Level:  ' . $postgrad);
+                $message = ' Author: ' . $author . '  ' . "\n" . ' Title : ' . $title . '  ' . "\n" . ' Place: ' . $place . '  ' . "\n" . ' Publisher:  ' . $publisher . '  ' . "\n" . ' date: ' .
+                $date . '   ' . "\n" . ' Edition: ' . $edition . '  ' . "\n" . ' ISBN: ' . $isbn . '  ' . "\n" . ' Series: ' . $series . '  ' . "\n" . ' Copy: ' .
+                $copy . '  ' . "\n" . ' TItle:' . $titlepages . '  ' . "\n" . ' Pages: ' . $pages . '  ' . "\n" . ' Type of Thesis: ' . $thesis . '  ' . "\n" . ' Name: ' .
+                $name . '  ' . "\n" . ' Address: ' . $address . '   ' . "\n" . ' Cell: ' . $cell . '   ' . ' Fax: ' . $fax . '   ' . "\n" . ' Tel(H): ' .
+                $tel . '  ' . "\n" . ' Tel (W): ' . $telw . '  ' . "\n" . ' E-mail: ' . $emailaddress . '  ' . "\n" . ' Entity num: ' .
+                $entitynum . '   ' . "\n" . ' Student no: ' . $studentno . '  ' . "\n" . ' Course: ' . $course . "\n" . ' User Identification: ' . $local . "\n" . ' User Level:  ' . $postgrad);
     }
 
 // end of bookthesisrecord
@@ -228,8 +225,8 @@ class libraryforms extends controller {
         $entitynum = $this->getParam('periodical_entity');
         $studentno = $this->getParam('periodical_student');
         $course = $this->getParam('periodical_course');
-        $overseas =$this->getParam('overseas');
- 	$undergrad =$this->getParam('undergrad');
+        $overseas = $this->getParam('overseas');
+        $undergrad = $this->getParam('undergrad');
         $captcha = $this->getParam('periodical_captcha');
 
         // Check whether user matched captcha
@@ -244,22 +241,22 @@ class libraryforms extends controller {
         }
 
         //insert the data into DB
-        $id = $this->dbAddillperiodical->insertperiodicalRecord($titleperiodical , $volume, $part, $year, $pages,
+        $id = $this->dbAddillperiodical->insertperiodicalRecord($titleperiodical, $volume, $part, $year, $pages,
                         $author, $titlearticle, $prof, $address, $cell, $tell,
-                        $tellw, $emailaddress, $entitynum, $studentno, $course, $overseas,$undergrad);
+                        $tellw, $emailaddress, $entitynum, $studentno, $course, $overseas, $undergrad);
 
         $subject = "Periodical Book Request";
         $this->sendEmailNotification($subject,
-                $message = ' Title Periodical:   '.  $titleperiodical  . '   ' .  "\n". ' Volume:   '.  $volume . '   ' . "\n". ' Part:   '. $part . '   ' . "\n". ' Year:   '. 
-		$year . '   ' . "\n" . ' Pages:   '.$pages . '   ' . "\n". 'Author   '. $author . '   ' . "\n". ' Title Article   '. $titlearticle . '   ' . "\n". ' Prof:   '.
-		$prof . '   ' . "\n". 'Address:   '. $address . '  ' . "\n". 'Cell: '. $cell . '   ' .  "\n". ' Tel: '.$tell . '   ' . "\n". ' Tell (W) '.
-                $tellw . '  ' . "\n" .' Email Address:   '. $emailaddress . '   ' . "\n". ' Entity num:   '. $entitynum . '   ' . "\n". ' Student No:   '.
-		$studentno . '  ' . "\n". ' Course   '.$course . "\n" . ' Student Identification: ' . $overseas . "\n" . ' Level of User: ' . $undergrad );
+                $message = ' Title Periodical:   ' . $titleperiodical . '   ' . "\n" . ' Volume:   ' . $volume . '   ' . "\n" . ' Part:   ' . $part . '   ' . "\n" . ' Year:   ' .
+                $year . '   ' . "\n" . ' Pages:   ' . $pages . '   ' . "\n" . 'Author   ' . $author . '   ' . "\n" . ' Title Article   ' . $titlearticle . '   ' . "\n" . ' Prof:   ' .
+                $prof . '   ' . "\n" . 'Address:   ' . $address . '  ' . "\n" . 'Cell: ' . $cell . '   ' . "\n" . ' Tel: ' . $tell . '   ' . "\n" . ' Tell (W) ' .
+                $tellw . '  ' . "\n" . ' Email Address:   ' . $emailaddress . '   ' . "\n" . ' Entity num:   ' . $entitynum . '   ' . "\n" . ' Student No:   ' .
+                $studentno . '  ' . "\n" . ' Course   ' . $course . "\n" . ' Student Identification: ' . $overseas . "\n" . ' Level of User: ' . $undergrad);
     }
 
 // end of periodical method
 
- public function submitmsg() {
+    public function submitmsg() {
 
         //get parametters
         $name = $this->getParam('feedback_name');
@@ -267,7 +264,11 @@ class libraryforms extends controller {
         $msg = $this->getParam('msgbox');
         $captcha = $this->getParam('feedback_captcha');
 
-        if (md5(strtoupper($captcha)) != $this->getParam('captcha') || empty($captcha)) {
+        // echo md5(strtoupper($captcha)).' against '.$this->getParam('captcha');
+        // die();
+        $errormsg[] = array();
+
+        if ((md5(strtoupper($captcha)) != $this->getParam('captcha'))) {
             $errormsg[] = 'badcaptcha';
         }
 
@@ -275,6 +276,7 @@ class libraryforms extends controller {
         if (count($errormsg) > 0) {
             $this->setVarByRef('errormsg', $errormsg);
             $this->setVarByRef('insarr', $insarr);
+
             return 'editadd_tpl.php';
         }
 
@@ -286,13 +288,14 @@ class libraryforms extends controller {
         // send email alert
         $subject = "Feed Back";
 
-        $this->sendEmailNotification($subject, $message = ' Name: ' . $name . '       '  .  "\n" . ' Email Adress: ' . $email . '   ' .  "\n".   ' Feed Back Message: ' . $msg);
+        $this->sendEmailNotification($subject, $message = ' Name: ' . $name . '       ' . "\n" . ' Email Adress: ' . $email . '   ' . "\n" . ' Feed Back Message: ' . $msg);
+        return 'fdbkconfirm_tpl.php';
     }
 
 // end of Submitmsg
 
     public function sendEmailNotification($subject, $message) {
-        
+
         $objMail = $this->getObject('email', 'mail');
         //send to multiple addressed   
         $list = array("pmalinga@uwc.ac.za", "arieluwc.uwc.ac.za", "library@uwc.ac.za");
@@ -307,19 +310,15 @@ class libraryforms extends controller {
         $objMail->AltBody = $message;
         // send email
         $objMail->send();
-    }// end of notification email
-   
-    public function requiresLogin() 
-	{                   
-               return FALSE;
-              
-	}  // end function
+    }
 
+// end of notification email
 
+    public function requiresLogin() {
+        return FALSE;
+    }
 
-
-
-
+// end function
 }
 
 // end of all
