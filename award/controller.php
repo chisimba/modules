@@ -114,7 +114,7 @@ class award extends controller
 	    $this->userId = $this->objUser->userId();
 	    
 		$this->setLayoutTemplate('layout_tpl.php');
-	    $this->setPageTemplate('award_page_tpl.php');
+	    //$this->setPageTemplate('award_page_tpl.php');
 		
 	}
 
