@@ -117,11 +117,11 @@ class elsiskin extends controller {
     function __contactformsubmit() {
         $subject = $this->objSysConfig->getValue('EMAIL_SUBJECT', 'elsiskin');
         $body  = "Hi ".$this->getParam('c_name').",\n\n";
-        $body .= "The Following message was just sent to the administrator for eLSI. The will get in contact with you soon.\n";
+        $body .= "The Following message was just sent to the administrator for eLSI. The team will get in contact with you soon.\n\n";
         $body .= "Message: ".$this->getParam('c_message')."\n";
         $body .= "Topic: ".$this->getParam('c_topic')."\n";
         $body .= "Name: ". $this->getParam('c_name')."\n\n";
-        $body .= "Regards,\n eLSI Team";
+        $body .= "Best Regards,\neLSI Team";
         $email.= "Email: ". $this->getParam('c_email')."\n";
 
         $toEmail = $this->adminEmail.",".$this->getParam('c_email');
