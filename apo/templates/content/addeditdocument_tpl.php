@@ -54,7 +54,7 @@ if ($mode == 'edit') {
     $outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone")));
     $outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
 
-    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo")));
+    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo","id"=>$id)));
     $outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
 
     $outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree")));

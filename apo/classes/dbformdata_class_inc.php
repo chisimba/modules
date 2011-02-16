@@ -40,7 +40,7 @@ class dbformdata extends dbtable {
 
         if ($this->exists($docid, $formname)) {
             print_r("exists");
-            $existingdata = $this->getAll("where id='$docid'");
+            $existingdata = $this->getAll("where docid='$docid'");
 
             if (count($existingdata) > 0) {
                 print_r("count > 0");
@@ -53,7 +53,7 @@ class dbformdata extends dbtable {
                   //'userid' => $this->userutils->getUserId()
                   ); */
  
-                $this->update('id', $existingdata[0]['id'], $formdata, $tablename);
+                $this->update('docid', $existingdata[0]['docid'], $formdata, $tablename);
 
             }
         }
@@ -64,7 +64,7 @@ class dbformdata extends dbtable {
     }
 
     function exists($docid, $formname) {
-        $sql = "select * from tbl_apo_" . $formname . " where id='$docid'";
+        $sql = "select * from tbl_apo_" . $formname . " where docid='$docid'";
         $rows = $this->getArray($sql);
         if (count($rows) > 0) {
             return TRUE;
@@ -75,7 +75,7 @@ class dbformdata extends dbtable {
 
     public function getFormData($formname, $docid) {
 
-        $sql = "select * from tbl_apo_".$formname." where id='$docid'";
+        $sql = "select * from tbl_apo_".$formname." where docid='$docid'";
         $data = $this->getArray($sql);
         $formdata = $data[0];
 

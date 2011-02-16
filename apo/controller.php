@@ -1007,6 +1007,9 @@ class apo extends controller {
             $formdata["d3"] = $this->getParam("d3");
         } else if ($formname == "outcomesandassessmenttwo") {
             $formdata["d4"] = $this->getParam("d4");
+            $selectedOpts = $this->getParam('groups');
+            echo $selectedOpts;
+            die();
         } else if ($formname == "outcomesandassessmentthree") {
             $formdata["a"] = $this->getParam("a");
             $formdata["b"] = $this->getParam("b");
@@ -1565,21 +1568,24 @@ class apo extends controller {
     }
 
     public function __showoutcomesandassessmentthree() {
+
+        $selectedOpts = $this->getParam('groups');
+
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
+
 
         $errormessages = array();
 
-        $d4_1 = $this->getParam("1");
-        $d4_2 = $this->getParam("2");
-        $d4_3 = $this->getParam("3");
-        $d4_4 = $this->getParam("4");
-        $d4_5 = $this->getParam("5");
-        $d4_6 = $this->getParam("6");
-        $d4_7 = $this->getParam("7");
-        $d4_8 = $this->getParam("8");
-
+        /* $d4_1 = $this->getParam("1");
+          $d4_2 = $this->getParam("2");
+          $d4_3 = $this->getParam("3");
+          $d4_4 = $this->getParam("4");
+          $d4_5 = $this->getParam("5");
+          $d4_6 = $this->getParam("6");
+          $d4_7 = $this->getParam("7");
+          $d4_8 = $this->getParam("8");
+         */
         /*      if ($d4_1 == null && $d4_2 == null && $d4_3 == null && $d4_4 == null && $d4_5 == null && $d4_6 == null && $d4_7 == null && $d4_8 == null) {
           $errormessages[] = "Please provide an answer for D.4";
           }
@@ -1591,12 +1597,28 @@ class apo extends controller {
           return "outcomesandassessmenttwo_tpl.php";
           } */
 
-        $d4 = $d4_1 . " " . $d4_2 . " " . $d4_3 . " " . $d4_4 . " " . $d4_5 . " " . $d4_6 . " " . $d4_7 . " " . $d4_8;
+        $d4 = "";
+
+        //
+        //// $d4_1 . " " . $d4_2 . " " . $d4_3 . " " . $d4_4 . " " . $d4_5 . " " . $d4_6 . " " . $d4_7 . " " . $d4_8;
 
         $formdata = array();
-        $formdata["d4"] = $d4;
+
+        $formdata["docid"] = $id;
+        $formdata["id1"] = "0";
+        $formdata["id2"] = "0";
+        $formdata["id3"] = "0";
+        $formdata["id4"] = "0";
+        $formdata["id5"] = "0";
+        $formdata["id6"] = "0";
+        $formdata["id7"] = "0";
+        $formdata["id8"] = "0";
+        foreach ($selectedOpts as $opt) {
+            $formdata["id" . $opt] = "1";
+        }
+
         $formdata = serialize($formdata);
-        //$this->objformdata->saveData($id, $formname, $formdata);
+        $this->objformdata->saveData($id, $formname, $formdata);
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -2756,6 +2778,7 @@ class apo extends controller {
      * @return the form that will be used to capture the information for the new
      * faculty
      */
+
     public function __newfaculty() {
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -2773,6 +2796,7 @@ class apo extends controller {
      * @access public
      * @return the form that will be used to edit the information for the faculty
      */
+
     public function __editfaculty() {
         $selected = $this->getParam('selected');
         $mode = "edit";
@@ -2793,7 +2817,7 @@ class apo extends controller {
         $faculty = $this->getParam('faculty');
         $contact = $this->getParam('contact');
         $telephone = $this->getParam('telephone');
-        
+
         $this->faculties->addFaculty($faculty, $contact, $telephone);
 
         return $this->nextAction('facultymanagement', array('folder' => '0'));
@@ -2809,7 +2833,7 @@ class apo extends controller {
             $contact = $this->objUser->fullname($userid);
         }
 
-        $data = array("faculty"=> $faculty, "contact_person"=>$contact, "telephone"=>$telephone, "userid"=>$this->objUser->userId());
+        $data = array("faculty" => $faculty, "contact_person" => $contact, "telephone" => $telephone, "userid" => $this->objUser->userId());
         $this->faculties->editFaculty($this->getParam('id'), $data);
 
         return $this->nextAction('facultymanagement', array('folder' => '0'));
@@ -2821,4 +2845,5 @@ class apo extends controller {
 
         return $this->nextAction('facultymanagement', array('folder' => '0'));
     }
+
 }
