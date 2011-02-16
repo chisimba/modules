@@ -121,8 +121,10 @@ class elsiskin extends controller {
         $body .= "Name: ". $this->getParam('c_name')."\n";
         $email.= "Email: ". $this->getParam('c_email')."\n";
 
+        $toEmail = $this->adminEmail.",".$this->getParam('c_email');
+        
         $objMailer = $this->getObject('email', 'mail');
-        $objMailer->setValue('to', $this->adminEmail.",".$email);
+        $objMailer->setValue('to', $toEmail);
         $objMailer->setValue('from', $this->adminEmail);
         $objMailer->setValue('subject', $subject);
         $objMailer->setValue('body', strip_tags($body));
