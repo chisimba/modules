@@ -99,19 +99,27 @@ class elsilogo extends object {
     }
 
     public function getTabLinks() {
-        if($this->objUser->isLoggedIn() && $this->objUser->isAdmin()) {
+        if($this->objUser->isLoggedIn()) {
             $newsLink = new link($this->uri(array(), "news"));
             $newsLink->link = "News";
             $blogLink = new link($this->uri(array(),"blog"));
             $blogLink->link = "Blog";
             $adminLink = new link($this->uri(array(),"toolbar"));
             $adminLink->link = "Admin";
+            $logoutLink = new link($this->uri(array("action"=>"logoff"), "security"));
+            $logoutLink->link = "Logout";
             $retstr = '<!-- Tab links -->
                 <div id="tab-links">
                     <ul>
                         <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$newsLink->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-                        <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$blogLink->show().'</li>
-                        <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$adminLink->show().'</li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$blogLink->show().'</li>';
+           if($this->objUser->isAdmin()) {
+                $retstr .= '<li>&nbsp;&nbsp;&nbsp;&nbsp;'.$adminLink->show().'</li>';
+           }
+           else {
+                $retstr .= '<li>&nbsp;&nbsp;&nbsp;&nbsp;'.$logoutLink->show().'</li>';
+           }
+           $retstr .= '
                     </ul>
                 </div>';
 
@@ -119,13 +127,15 @@ class elsilogo extends object {
         else {
             $witsHome = new link("http://web.wits.ac.za/");
             $witsHome->link = "Wits Home";
-            $aboutLink = new link($this->uri(array("action"=> "about"),"elsi"));
-            $aboutLink->link = "About eLSI";
+            $witsAlumni = new link("http://web.wits.ac.za/Alumni/");
+            $witsAlumni->link = "Alumni";
+            $aboutLink = new link("http://web.wits.ac.za/AboutWits");
+            $aboutLink->link = "About";
             $retstr = '<!-- Tab links -->
                 <div id="tab-links">
                     <ul>
                         <li>'.$witsHome->show().'</li>
-                        <li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://web.wits.ac.za/">Alumni</a></li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$witsAlumni->show().'</li>
                         <li>'.$aboutLink->show().'</li>
                     </ul>
                 </div>';

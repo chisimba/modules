@@ -56,10 +56,10 @@ class elsiskintoolbar extends object {
         $menuOptions = array(
             array('action' => 'about', 'text' => 'About<br> eLSI', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
             array('action' => 'staff', 'text' => 'eLSI <br>Staff', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
-            array('action' => 'contact', 'text' => 'Contact<br> eLSI', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
+            array('action' => 'news', 'text' => 'Current <br>News', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
             array('action' => 'projectsresearch', 'text' => 'Projects<br>& Research', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
             array('action' => 'supporttraining', 'text' => 'Support<br>& Training', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both'),
-            array('action' => 'news', 'text' => 'Current <br>News', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both') /*,
+            array('action' => 'contact', 'text' => 'Contact<br> eLSI', 'actioncheck' => array(), 'module' => 'elsiskin', 'status' => 'both')/*,
             array('action' => 'blog', 'text' => 'Blog', 'actioncheck' => array(), 'module' => 'blog', 'status' => 'loggedin'),
             array('action' => 'admin', 'text' => 'Admin', 'actioncheck' => array(), 'module' => 'blog', 'status' => 'loggedin'),
             array('action' => 'logoff', 'text' => 'Logout', 'actioncheck' => array(), 'module' => 'security', 'status' => 'loggedin')*/

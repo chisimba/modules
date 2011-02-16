@@ -146,12 +146,14 @@ class maincontent extends object {
         }
         $alllink = new link($this->uri(array("action"=>"siteblog"), "blog"));
         $alllink->link = 'View all blogs';
+        $elsiBlogs = new link($this->uri(array("action"=>"allblogs"), "blog"));
+        $elsiBlogs->link = 'eLSI Staff Blog';
         $retstr = '
                    <div class="clear">&nbsp;</div>
                    <div class="grid_2">
                         <div class="info-box-holder">
                             <div class="left_wrap">
-                                <h3>ELSI Staff Blog</h3>
+                                <h3>'.$elsiBlogs->show().'</h3>
                             </div>
                         </div>
                     </div>
@@ -335,7 +337,7 @@ class maincontent extends object {
                             'action' => 'viewsingle',
                             'postid' => $item['id'],
                             'userid' => $item['userid']
-                        ));
+                        ), "blog");
                 $user = $this->objUser->fullname($item['userid']);
                 $link = new href($linkuri, stripslashes($item['post_title']));
                 $postExcerpt = $item['post_excerpt'];
@@ -361,7 +363,7 @@ class maincontent extends object {
                                      .date('Y-m-d', strtotime($item['post_date'])).' at '
                                      .date('H:i:s', strtotime($item['post_date']))
                                      .'<!-- Filed under: TAG. NUMBER comments-->
-                        <br>By '.$user.' | '. $allBlogs->show().'
+                        <br>By '.$user.' | '. $allBlogs->show().' | Comments '.$item['comment_count'].'
                         </p>
                         </div>';
                     

@@ -60,7 +60,14 @@ class elsifooter extends object {
      * @access public
      */
     public function show() {
-        $links = array('home'=>'Home', 'about'=>'About Us', 'staff'=>'eLSI Staff', 'contact'=>'Contact Us', 'projectsresearch'=>'Projects & Research', 'supporttraining'=>'Support & Training');
+        $links = array(
+                    'home'=>'Home',
+                    'about'=>'About Us',
+                    'staff'=>'eLSI Staff',
+                    'news'=>'Current News',
+                    'projectsresearch'=>'Projects & Research',
+                    'supporttraining'=>'Support & Training',
+                    'contact'=>'Contact Us');
         $retstr ='
            <!-- Start: Footer -->
             <div id="Footer">
