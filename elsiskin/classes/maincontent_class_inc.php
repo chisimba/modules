@@ -342,10 +342,10 @@ class maincontent extends object {
                 $fixedTime = strtotime($item['post_date']);
                 $fixedTime = date('Y-m-d H:i:s', $fixedTime);
                 $postDate = $this->objHumanizeDate->getDifference($fixedTime);
-                $userlink = new link($this->uri(array()));
+                $userlink = new link($this->uri(array("action" =>"viewblog", "userid"=>$item['userid']), "blog"));
                 $userlink->link = $this->objUser->getUserImage($item['userid']);
                 $userlink->title = $user;
-                $allBlogs = new link($this->uri(array("action"=>"randblog", "userid"=>$item['userid']), "blog"));
+                $allBlogs = new link($this->uri(array("action"=>"viewblog", "userid"=>$item['userid']), "blog"));
                 $allBlogs->link = 'All posts by '. $user;
 
                 $ret .= $userlink->show();
