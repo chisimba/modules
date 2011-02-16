@@ -225,7 +225,20 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
 							<p><img src="' . $this->skinpath . 'images/staff/RDagada.jpg" class="left" alt="Rabelani Dagada"></p>
-							<p class="bio"></p>
+							<p class="bio">I have a very physically imposing presence and a huge laughter.
+                                                        I am an Author and Development Economist who have throughout his career made huge
+                                                        contribution in the fields of Educatio and Information and Communications Technology (ICT).
+                                                        My role at Wits is a detour from a successful corporate environment career where I had
+                                                        occupied senior positions, including being a Managing Director and Non-Executive Director.
+                                                        My peers in South Africa have hailed my stature as a scholar and researcher. I have already
+                                                        started to make my mark internationally wherein I am taken in high esteem. My several
+                                                        contributions, both individually and with co-authors, in the form of published works and
+                                                        presentations bear testimony to a person not only committed to research and scholarship,
+                                                        but also the promotion of organisational and human developments.  I studied at the universities
+                                                        of Johannesburg, Witwatersrand and London.  I should also confess that I am a socially
+                                                        handicapped intellectual who spends most his time alone. When I am not working,
+                                                        I will be found with a book on hand, interchangeably a biography or development
+                                                        economics - listening to gospel music.</p>
 					</div>            
 				</div>
 				<div style="display: none;" class="tab" id="mynetwork">
