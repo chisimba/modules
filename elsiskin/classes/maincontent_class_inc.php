@@ -255,8 +255,8 @@ class maincontent extends object {
             $topics = array(
                 array('text'=>'I\'d like to make ...'),
                 array('value'=>'General', 'text'=>'A general enquiry '),
-                array('value'=>'Admissions', 'text'=>'An admissions enquiry'),
-                array('value'=>'Finance', 'text'=>'A financial enquiry'),
+                array('value'=>'Admissions', 'text'=>'Enquiry about the LMS'),
+                array('value'=>'Finance', 'text'=>'Enquiry about ELSI’s services'),
                 array('value'=>'Other', 'text'=>'An enquiry about another matter')
             );
 
