@@ -2720,7 +2720,7 @@ class apo extends controller {
 
     public function __submit() {
         $id = $this->getParam("id");
-        $submit = $this->getParam("submit");
+        $submit = $this->getParam("submitto");
 
         $this->documents->setStatus($id, $submit);
 

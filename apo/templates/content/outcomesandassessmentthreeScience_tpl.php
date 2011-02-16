@@ -245,19 +245,19 @@ if ($mode == "edit") {
 
 $table->startRow();
 $table->addCell("Lectures (excl. tests)");
-$table->addCell($textinputa1->show(), null, "center", "center", null, null, '2');
-$table->addCell($textinputa2->show(), null, "center", "center", null, null, '1');
-$table->addCell($a3, null, "center", "center", null, null, '1');
-$table->addCell($a4, null, "center", "center", null, null, '1');
-$table->addCell($a5, null, "center", "center", null, null, '1');
-$table->addCell($a6, null, "center", "center", null, null, '1');
-$table->addCell($a7, null, "center", "center", null, null, '1');
-$table->addCell($a8, null, "center", "center", null, null, '1');
+$table->addCell($textinputa1->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '2');
+$table->addCell($textinputa2->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($a3, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/ , '1');
+$table->addCell($a4, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($a5, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($a6, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($a7, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($a8, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($a13, null, "center", "center", null, null, '1');
+$table->addCell($a13, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->endRow();
 
 $textinputb1 = new textinput('b1', "", 'text', 3);
@@ -273,19 +273,19 @@ if ($mode == "edit") {
 
 $table->startRow();
 $table->addCell("Tuts");
-$table->addCell($textinputb1->show(), null, "center", "center", null, null, '1');
-$table->addCell($textinputb2->show(), null, "center", "center", null, null, '1');
-$table->addCell($b3, null, "center", "center", null, null, '1');
-$table->addCell($b4, null, "center", "center", null, null, '1');
-$table->addCell($b5, null, "center", "center", null, null, '1');
-$table->addCell($b6, null, "center", "center", null, null, '1');
-$table->addCell($b7, null, "center", "center", null, null, '1');
-$table->addCell($b8, null, "center", "center", null, null, '1');
+$table->addCell($textinputb1->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($textinputb2->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($b3, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($b4, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($b5, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($b6, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($b7, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($b8, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($b13, null, "center", "center", null, null, '1');
+$table->addCell($b13, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->endRow();
 
 $textinputc1 = new textinput('c1', "", 'text', 3);
@@ -301,19 +301,19 @@ if ($mode == "edit") {
 
 $table->startRow();
 $table->addCell("Labs");
-$table->addCell($textinputc1->show(), null, "center", "center", null, null, '1');
-$table->addCell($textinputc2->show(), null, "center", "center", null, null, '1');
-$table->addCell($c3, null, "center", "center", null, null, '1');
-$table->addCell($c4, null, "center", "center", null, null, '1');
-$table->addCell($c5, null, "center", "center", null, null, '1');
-$table->addCell($c6, null, "center", "center", null, null, '1');
-$table->addCell($c7, null, "center", "center", null, null, '1');
-$table->addCell($c8, null, "center", "center", null, null, '1');
+$table->addCell($textinputc1->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($textinputc2->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($c3, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($c4, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($c5, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($c6, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($c7, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($c8, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($c13, null, "center", "center", null, null, '1');
+$table->addCell($c13, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->endRow();
 
 $textinputd1 = new textinput('d1', "", 'text', 3);
@@ -329,19 +329,19 @@ if ($mode == "edit") {
 
 $table->startRow();
 $table->addCell("Field trips (days)");
-$table->addCell($textinputd1->show(), null, "center", "center", null, null, '1');
+$table->addCell($textinputd1->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($d3, null, "center", "center", null, null, '1');
-$table->addCell($d4, null, "center", "center", null, null, '1');
-$table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($textinputd8->show(), null, "center", "center", null, null, '1');
+$table->addCell($d3, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($d4, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
+$table->addCell($textinputd8->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($d13, null, "center", "center", null, null, '1');
+$table->addCell("-", null, "center", "center", null, null, '1');
+$table->addCell("-", null, "center", "center", null, null, '1');
+$table->addCell("-", null, "center", "center", null, null, '1');
+$table->addCell($d13, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->endRow();
 
 $textinpute1 = new textinput('e1', "", 'text', 3);
@@ -357,19 +357,19 @@ if ($mode == "edit") {
 
 $table->startRow();
 $table->addCell("Assignments/essays");
-$table->addCell($textinpute1->show(), null, "center", "center", null, null, '1');
+$table->addCell($textinpute1->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($textinpute8->show(), null, "center", "center", null, null, '1');
+$table->addCell($textinpute8->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($e13, null, "center", "center", null, null, '1');
+$table->addCell($e13, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->endRow();
 
 $textinput = new textinput('other', "", 'text', 10);
@@ -391,19 +391,19 @@ if ($mode == "edit") {
 
 $table->startRow();
 $table->addCell("Other (please specify)" . $textinput->show(), null, "center", "center", null, null, '1');
-$table->addCell($textinputf1->show(), null, "center", "center", null, null, '1');
-$table->addCell($textinputf2->show(), null, "center", "center", null, null, '1');
-$table->addCell($textinputf3->show(), null, "center", "center", null, null, '1');
-$table->addCell($f4, null, "center", "center", null, null, '1');
-$table->addCell($f5, null, "center", "center", null, null, '1');
-$table->addCell($f6, null, "center", "center", null, null, '1');
-$table->addCell($f7, null, "center", "center", null, null, '1');
-$table->addCell($f8, null, "center", "center", null, null, '1');
+$table->addCell($textinputf1->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($textinputf2->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($textinputf3->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($f4, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($f5, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($f6, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($f7, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
+$table->addCell($f8, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($f13, null, "center", "center", null, null, '1');
+$table->addCell($f13, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->endRow();
 
 $textinputg9 = new textinput('g9', "", 'text', 3);
@@ -427,11 +427,11 @@ $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($textinputg9->show(), null, "center", "center", null, null, '1');
-$table->addCell($textinputg10->show(), null, "center", "center", null, null, '1');
+$table->addCell($textinputg9->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($textinputg10->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($g13, null, "center", "center", null, null, '1');
+$table->addCell($g13, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->endRow();
 
 $textinputh11 = new textinput('h11', "", 'text', 3);
@@ -457,9 +457,9 @@ $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($textinputh11->show(), null, "center", "center", null, null, '1');
-$table->addCell($textinputh12->show(), null, "center", "center", null, null, '1');
-$table->addCell($h13, null, "center", "center", null, null, '1');
+$table->addCell($textinputh11->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($textinputh12->show(), null, "center", "center", null, null /*'bgcolor="#00FF33"'*/, '1');
+$table->addCell($h13, null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->endRow();
 
 $table->startRow();
@@ -476,7 +476,7 @@ $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
 $table->addCell("-", null, "center", "center", null, null, '1');
-$table->addCell($i13, null, "center", "center", null, null, '1');
+$table->addCell("<u><b>".$i13."</b></u>", null, "center", "center", null, null /*''bgcolor="#FFFF00"'*/, '1');
 $table->endRow();
 
 $button = new button('calculate', "Calculate");

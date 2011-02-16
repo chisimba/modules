@@ -53,9 +53,9 @@ $table->endRow();
         submitCombo.add("Faculty");
         submitCombo.add("Senate");*/
 
-$dropdown = new dropdown('submit');
-$dropdown->addOption('');
-$dropdown->addOption("<b>Creator</b>");
+$dropdown = new dropdown('submitto');
+//$dropdown->addOption('');
+$dropdown->addOption("Creator");
 $dropdown->addOption("APO");
 $dropdown->addOption("Subfaculty");
 $dropdown->addOption("Faculty");
