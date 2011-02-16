@@ -353,7 +353,7 @@ class maincontent extends object {
                          <br>';
             
                 $ret .= '   </p>
-                            <p>'.$postExcerpt.'
+                            <p>'.str_replace("\\", "", $postExcerpt).'
                             
                             </p>
                         <p class="post-details">
