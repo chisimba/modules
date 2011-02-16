@@ -324,6 +324,7 @@ class maincontent extends object {
      * @access private
      */
     private function getBlogs() {
+        $objComments = $this->getObject('commentapi', 'blogcomments');
         $this->loadClass('href', 'htmlelements');
         $num = 3;
         $data = $this->objDbBlog->getLastPosts($num);
@@ -331,6 +332,8 @@ class maincontent extends object {
         if (!empty($data)) {
             $ret .= '<div class="grid_2">';
             foreach ($data as $item) {
+                $commentCount = $objComments->getCount($item['id']);
+
                 $ret .= '<div class="blog-post-preview">
                             <p>';
                 $linkuri = $this->uri(array(
@@ -363,7 +366,7 @@ class maincontent extends object {
                                      .date('Y-m-d', strtotime($item['post_date'])).' at '
                                      .date('H:i:s', strtotime($item['post_date']))
                                      .'<!-- Filed under: TAG. NUMBER comments-->
-                        <br>By '.$user.' | '. $allBlogs->show().' | Comments '.$item['comment_count'].'
+                        <br>By '.$user.' | '. $allBlogs->show().' | Comments '.$commentCount.'
                         </p>
                         </div>';
                     
