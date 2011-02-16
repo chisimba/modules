@@ -48,18 +48,37 @@ $objIcon->setIcon('edit');
 if (count($documents) > 0) {
     foreach ($documents as $document) {
         //$topic=  substr($document['topic'], strlen($this->baseDir));
-        $link = new link($this->uri(array("action" => "showeditdocument", "id" => $document['id'])));
-        $link->link = $document['filename'];
-        $table->startRow();
+        if ($document['currentuserid'] == "Administrative User") {
+            $link = new link($this->uri(array("action" => "showeditdocument", "id" => $document['id'])));
+            $link->link = $document['filename'];
 
-        $table->addCell($link->show());
-        $table->addCell($document['department']);
-        $table->addCell($document['owner']);
-       
-        $table->addCell($document['telephone']);
-   
-        $table->addCell($document['date']);
-        $table->endRow();
+            $table->startRow();
+            $table->addCell($link->show());
+            $table->addCell($document['department']);
+            $table->addCell($document['owner']);
+            $table->addCell($document['telephone']);
+            $table->addCell($document['date']);
+            $table->endRow();
+        } else if ($document['owner'] == '' && $document['currentuserid'] != '') {
+            $link = new link($this->uri(array("action" => "reclaimdocumentform", "id" => $document['id'])));
+            $link->link = $document['filename'];
+
+            $table->startRow();
+            $table->addCell($link->show());
+            $table->addCell($document['department']);
+            $table->addCell($document['owner']);
+            $table->addCell($document['telephone']);
+            $table->addCell($document['date']);
+            $table->endRow();
+        } else {
+            $table->startRow();
+            $table->addCell($document['filename']);
+            $table->addCell($document['department']);
+            $table->addCell($document['owner']);
+            $table->addCell($document['telephone']);
+            $table->addCell($document['date']);
+            $table->endRow();
+        }
     }
 }
 echo $table->show();
