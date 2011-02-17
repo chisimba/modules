@@ -437,7 +437,9 @@ if (empty($messageData)) {
     $arrRecipients = explode('|', $recipientList);
     $to = '';
     foreach($arrRecipients as $key => $recipient) {
-        $to .= $this->dbRouting->getName($recipient);
+        if($recipient != ""){
+            $to .= $this->dbRouting->getName($recipient);
+        }
         if ($key != count($arrRecipients) -1) {
             $to.= '; ';
         }
