@@ -2892,6 +2892,7 @@ class apo extends controller {
         $selected = $this->getParam('selected');
         $mode = "edit";
         $action = "editschool";
+        $faculties = $this->faculties->getFaculties();
         $id = $this->getParam('id');
         $data = $this->schools->getSchool($id);
 
@@ -2900,6 +2901,7 @@ class apo extends controller {
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("schools", $data);
         $this->setVarByRef("id", $id);
+        $this->setVarByRef("faculties", $faculties);
 
         return "addeditschool_tpl.php";
     }
