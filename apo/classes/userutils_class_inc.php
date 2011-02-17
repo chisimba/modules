@@ -682,7 +682,9 @@ class userutils extends object {
         $documents = $this->getObject('dbdocuments');
         $count = $documents->getUnapprovedDocsCount();
         $faculty = $this->getObject('dbfaculties');
+        $school = $this->getObject('dbschools');
         $facultyCount = count($faculty->getFaculties());
+        $schoolCount = count($school->getSchools());
         if ($treeMode == 'side') {
             $unapprovedDocs = "$count New documents";
             if ($selected == 'unapproved') {
@@ -712,6 +714,16 @@ class userutils extends object {
             }
             $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => $this->uri(array('action' => 'facultymanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
 
+            $schoolManagement = "$schoolCount School Management";
+            $facultyManagementNode->addItem(new treenode(array(
+                                                            'text'=> $schoolManagement,
+                                                            'link' => $this->uri(array('action' => 'schoolmanagement')),
+                                                            'icon' => $icon, 
+                                                            'expandedIcon' => $expandedIcon, 
+                                                            'cssClass' => $cssClass
+                                                        )
+                                            ));
+            
             $allFilesNode->addItem($newDocsNode);
             $allFilesNode->addItem($rejectedDocsNode);
             $allFilesNode->addItem($facultyManagementNode);

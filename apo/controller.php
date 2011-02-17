@@ -56,6 +56,7 @@ class apo extends controller {
         $this->mode = $this->objSysConfig->getValue('MODE', 'apo');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         $this->faculties = $this->getObject('dbfaculties');
+        $this->schools = $this->getObject('dbschools');
     }
 
     /**
@@ -2839,6 +2840,124 @@ class apo extends controller {
         return $this->nextAction('facultymanagement', array('folder' => '0'));
     }
 
+    /**
+     *
+     * The standard dispatch method for the apo module.
+     * The dispatch method uses methods determined from the action
+     * parameter of the querystring and executes the appropriate method,
+     * returning its appropriate template. This template contains the code
+     * which renders the module output.
+     *
+     * @access public
+     * @param $action
+     * @return A call to the appropriate method
+     *
+     */
+    public function __schoolmanagement() {
+        $selected = "schoolmanagement";
+        $schools = $this->schools->getSchools(0, 10, $this->mode);
+        $this->setVarByRef("schools", $schools);
+        $this->setVarByRef("selected", $selected);
+
+        return "schoolmanagement_tpl.php";
+    }
+
+    /*
+     * This method is used to add a new faculty
+     * @param none
+     * @access public
+     * @return the form that will be used to capture the information for the new
+     * faculty
+     */
+    public function __newschool() {
+        $selected = $this->getParam('selected');
+        $mode = "new";
+        $action = "registerschool";
+        $this->setVarByRef("action", $action);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+
+        return "addeditschool_tpl.php";
+    }
+
+    /*
+     * This method is used to add a new school
+     * @param none
+     * @access public
+     * @return the form that will be used to edit the information for the school
+     */
+    public function __editschool() {
+        $selected = $this->getParam('selected');
+        $mode = "edit";
+        $action = "editschool";
+        $id = $this->getParam('id');
+        $data = $this->schools->getSchool($id);
+
+        $this->setVarByRef("action", $action);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("schools", $data);
+        $this->setVarByRef("id", $id);
+
+        return "addeditschool_tpl.php";
+    }
+
+    /*
+     * This method is used to add a new faculty
+     * @param none
+     * @access public
+     * @return the form that will be used to capture the information for the new
+     * faculty
+     */
+    public function __registerschool() {
+        $faculty = $this->getParam('faculty');
+        $school = $this->getParam('school');
+        $contact = $this->getParam('contact');
+        $telephone = $this->getParam('telephone');
+
+        $this->schools->addSchool($faculty, $school, $contact, $telephone);
+
+        return $this->nextAction('schoolmanagement');
+    }
+
+    /*
+     * This method is used to update a faculty
+     * @param none
+     * @access public
+     * @return the next action to perform after updating a faculty
+     * faculty
+     */
+    public function __updateschool() {
+        $faculty = $this->getParam('faculty');
+        $school = $this->getParam('school');
+        $contact = $this->getParam('contact');
+        $telephone = $this->getParam('telephone');
+
+        if (empty($contact)) {
+            // using this user id, get the full name and compare it with contact person!
+            $contact = $this->objUser->fullname($userid);
+        }
+
+        $data = array("faculty"=> $faculty, "school"=>$school, "contact_person"=>$contact, "telephone"=>$telephone, "userid"=>$this->objUser->userId());
+        $this->schools->editSchool($this->getParam('id'), $data);
+
+        return $this->nextAction('schoolmanagement');
+    }
+
+    /*
+     * This method is used to delete a faculty
+     * @param none
+     * @access public
+     * @return the next action to perform after deleting a faculty
+     * faculty
+     */
+    public function __deleteschool() {
+        $id = $this->getParam('id');
+        $this->schools->deleteSchool($id);
+
+        return $this->nextAction('schoolmanagement');
+    }
+
     public function __reclaimdocumentform() {
         $id = $this->getParam("id");
         $document = $this->documents->getDocument($id);
@@ -2853,5 +2972,4 @@ class apo extends controller {
         $version = $this->getParam('version');
         $this->documents->reclaimDocument($userid, $docid, $version);
     }
-
 }
