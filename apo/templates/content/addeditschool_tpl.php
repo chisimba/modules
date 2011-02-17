@@ -38,11 +38,8 @@ echo $header->show();
 // Opening date
 $table = $this->newObject('htmltable', 'htmlelements');
 
-$textinput = new textinput('Faculty');
-$textinput->size = 60;
-if ($mode == 'edit') {
-    $textinput->value = $schools['faculty'];
-}
+$textinput = new dropdown('faculty');
+$textinput->addFromDB($faculties, "", 'faculty', $schools['faculty']);
 $table->startRow();
 $table->addCell("<b>Faculty</b>");
 $table->addCell($textinput->show());

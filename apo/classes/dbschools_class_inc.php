@@ -55,7 +55,7 @@ class dbschools extends dbtable {
      * @access public
      * @return none
      */
-    public function addSchool($school, $school, $contact, $telephone) {
+    public function addSchool($faculty, $school, $contact, $telephone) {
 
         $date = date("Y m d");
         $userid = $this->userutils->getUserId();
@@ -71,7 +71,7 @@ class dbschools extends dbtable {
         }
 
         $data = array(
-            'school' => $school,
+            'faculty' => $faculty,
             'school'=> $school,
             'date_created' => $date,
             'userid' => $this->objUser->userId(),

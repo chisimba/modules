@@ -115,5 +115,4 @@ class dbfaculties extends dbtable {
         return $this->getRow("id", $id);
     }
 }
-
 ?>

@@ -2758,7 +2758,7 @@ class apo extends controller {
      */
     public function __facultymanagement() {
         $selected = "facultymanagement";
-        $faculties = $this->faculties->getfaculties(0, 10, $this->mode);
+        $faculties = $this->faculties->getFaculties(0, 10, $this->mode);
         $this->setVarByRef("faculties", $faculties);
         $this->setVarByRef("selected", $selected);
 
@@ -2873,9 +2873,11 @@ class apo extends controller {
         $selected = $this->getParam('selected');
         $mode = "new";
         $action = "registerschool";
+        $faculties = $this->faculties->getFaculties();
         $this->setVarByRef("action", $action);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("faculties", $faculties);
 
         return "addeditschool_tpl.php";
     }
