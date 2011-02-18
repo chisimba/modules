@@ -1,5 +1,16 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <?php
+
+$documentjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/document.js').'"></script>';
+$jqueryUICore = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery-ui/jquery.ui.core.js').'"></script>';
+$jqueryUI = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery-ui/jquery-ui.min.js').'"></script>';
+$jqueryUICSS = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/jquery-ui.css').'">';
+
+$this->appendArrayVar("headerParams", $jqueryUICSS);
+$this->appendArrayVar("headerParams", $jqueryUICore);
+$this->appendArrayVar("headerParams", $jqueryUI);
+$this->appendArrayVar("headerParams", $documentjs);
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -7,6 +18,7 @@ $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 
 $this->setVar('pageSuppressXML', TRUE);
+$this->setVar('JQUERY_VERSION', '1.4.2');
 
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
@@ -89,16 +101,16 @@ if ($mode == 'edit') {
 // Opening date
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
-$table->addCell('<b>Entry Date</b>');
-$objDateTime = $this->getObject('dateandtime', 'utilities');
-$objDatePicker = $this->newObject('datepicker', 'htmlelements');
-$objDatePicker->name = 'entrydate';
+$textinput = new textinput('date_created');
+$textinput->size = 60;
+$textinput->cssId="datepicker1";
+
 if ($mode == 'edit') {
-    $objDatePicker->setDefaultDate(substr($document['date_created'], 0, 10));
+    $textinput->value = $document['date_created'];
 }
 
-
-$table->addCell($objDatePicker->show());
+$table->addCell('<b>Entry Date</b>');
+$table->addCell($textinput->show());
 $table->endRow();
 
 
