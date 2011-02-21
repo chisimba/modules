@@ -145,9 +145,9 @@ class maincontent extends object {
             $bloginfo = "There are no blogs yet.";
         }
         $alllink = new link($this->uri(array("action"=>"siteblog"), "blog"));
-        $alllink->link = 'View all blogs';
+        $alllink->link = $this->objLanguage->languageText('mod_elsiskin_viewallblogs', 'elsiskin');
         $elsiBlogs = new link($this->uri(array("action"=>"allblogs"), "blog"));
-        $elsiBlogs->link = 'eLSI Staff Blog';
+        $elsiBlogs->link = $this->objLanguage->languageText('mod_elsiskin_elsistaffblogs', 'elsiskin');
         $retstr = '
                    <div class="clear">&nbsp;</div>
                    <div class="grid_2">
@@ -206,7 +206,7 @@ class maincontent extends object {
         $objStaffProfiles->setSkinPath($this->skinpath);
         $retstr = '
                 <div class="grid_3">
-                    <p>ELSI staff have an interest and the ability to assist with the effective educational use of ICTs
+                    <p>'.$this->objLanguage->languageText('mod_elsiskin_elsistaffassist', 'elsiskin').'
                     </p>
                     <div id="container">';
         $retstr .= $objStaffProfiles->show();
@@ -254,12 +254,18 @@ class maincontent extends object {
             $this->loadClass('button', 'htmlelements');
             $this->loadClass('textarea','htmlelements');
 
+            $defaultenquiry = $this->objLanguage->languagetext('mod_elsiskin_defaultenquiry', 'elsiskin');
+            $phraseGeneral = $this->objLanguage->languagetext('mod_elsiskin_general', 'elsiskin');
+            $generalenquiry = $this->objLanguage->languagetext('mod_elsiskin_generalenquiry', 'elsiskin');
+            $lmsenquiry = $this->objLanguage->languagetext('mod_elsiskin_lmsenquiry', 'elsiskin');
+            $lmsservice = $this->objLanguage->languagetext('mod_elsiskin_lmsservice', 'elsiskin');
+            $other = $this->objLanguage->languagetext('mod_elsiskin_otherenquiry', 'elsiskin');
             $topics = array(
-                array('text'=>'I\'d like to make ...'),
-                array('value'=>'General', 'text'=>'A general enquiry '),
-                array('value'=>'Enquiry about the LMS', 'text'=>'Enquiry about the LMS'),
-                array('value'=>'Enquiry about ELSI’s services', 'text'=>'Enquiry about ELSI’s services'),
-                array('value'=>'An enquiry about another matter', 'text'=>'An enquiry about another matter')
+                array('text'=>$defaultenquiry),
+                array('value'=>$phraseGeneral, 'text'=>$generalenquiry),
+                array('value'=>$lmsenquiry, 'text'=>$lmsenquiry),
+                array('value'=>$lmsservice, 'text'=>$lmsservice),
+                array('value'=>$other, 'text'=>$other)
             );
 
             $retstr = '
