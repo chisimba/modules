@@ -145,6 +145,26 @@ class rotatingidentity extends object {
                           <span class="head-text">eLSI offers workshops for Schools or Faculties as well as individual face-to-face consultations.<br>
                           <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="?module=elsiskin&action=contact">Contact us</a></span>
                         </div>';
+        } else if($action == 'viewstory') {
+            $retstr .= '
+                            <div class="text-holder">';
+                foreach($news as $row) {
+                    if($row['id'] == $this->getParam('id')) {
+                        $aboutLink = new link($this->uri(array("module"=>"elsiskin", "action"=>"about")));
+                        $aboutLink->link = "Latest News";
+                        $retstr .= '
+
+                                        <div class = "news" id=\''.$row['id'].'\'>
+                                            <span class="head-main">'.trim(strip_tags($row['storytitle'])).'</span>';
+                            $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 100).' ...<br>
+                                                <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;'.$aboutLink->show().'<br>
+                                            </span>
+                                            <input type="hidden" id="newslink" value="'.$this->uri(array("action"=>"viewstory")).'" />
+                                        </div>';
+                    }
+                }
+                $retstr .= '
+                            </div>';
         } else {
             
             if(!empty($news)) {
@@ -190,6 +210,8 @@ class rotatingidentity extends object {
             case 'contact': $retstr .= $this->showContactBanner();
                 break;
             case 'projectsresearch': $retstr .= $this->showProjectsBanner();
+                break;
+            case 'viewstory':$retstr .= $this->showNewsBanner($news);
                 break;
             default: $retstr .= $this->showHomeBanner($news);
         }
@@ -279,6 +301,30 @@ class rotatingidentity extends object {
 
     private function showProjectsBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/research_computer.jpg">';
+
+        return $retstr;
+    }
+
+    public function showNewsBanner($news) {
+        if(!empty($news)) {
+            $objFile = $this->getObject('dbfile', 'filemanager');
+            $retstr = '<div class="slideshow" style="z-index:1;">';
+            foreach($news as $row) {
+                if($row['id'] == $this->getParam('id')) {
+                    $myFile = $objFile->getFile($row['storyimage']);
+                    $retstr .= '<img class="storyimage" id="'.$row['id'].'"  src="usrfiles/' .$myFile['path'].'">';
+                }
+            }
+            $retstr .= '</div>';
+        }
+        else {
+            $retstr = '<div class="slideshow" style="z-index:1;">
+                           <img src="' . $this->skinpath . 'images/front_identity/home_dread.jpg">
+                           <img src="' . $this->skinpath . 'images/front_identity/mlearning_website.png">
+                           <img src="' . $this->skinpath . 'images/front_identity/oaweek_website.png">
+                           <img src="' . $this->skinpath . 'images/front_identity/passport_website.png">
+                       </div>';
+        }
 
         return $retstr;
     }
