@@ -84,7 +84,7 @@ class elsifooter extends object {
            <!-- Start: Footer -->
             <div id="Footer">
 
-                <div>
+                <div id="chisimbapower">
                     <img src ="'.$this->skinpath.'images/powered_by_chisimba.png" alt="Powered By Chisimba" title="Powered By Chisimba" />
                 </div>
                 <!-- end .grid_4 -->
