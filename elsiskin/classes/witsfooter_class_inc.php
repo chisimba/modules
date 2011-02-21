@@ -84,21 +84,21 @@ class witsfooter extends object {
                 </div>
                 <div id="footer-centre">
                     <span class="leftcol">
-                    <a href="#">Prospective Students</a><br />
-                    <a href="#">Faculties & Schools</a><br />
-                    <a href="#">Current Students</a><br />
-                    <a href="#">Research & Libraries</a><br />
-                    <a href="#">Visit our Campus</a><br />
-                    <a href="#">News Centre</a><br />
-                    <a href="#">International</a><br />
+                    <a href="http://web.wits.ac.za/Prospective/">Prospective Students</a><br />
+                    <a href="http://web.wits.ac.za/Academic/AcademicInformation.htm">Faculties & Schools</a><br />
+                    <a href="http://web.wits.ac.za/Students/">Current Students</a><br />
+                    <a href="http://web.wits.ac.za/Library/">Research & Libraries</a><br />
+                    <a href="http://web.wits.ac.za/PlacesOfInterest/">Visit our Campus</a><br />
+                    <a href="http://web.wits.ac.za/NewsRoom/">News Centre</a><br />
+                    <a href="http://web.wits.ac.za/Prospective/International/">International</a><br />
                     </span>
 
                     <span class="rightcol">
-                    <a href="#">Term Dates 2010</a><br />
-                    <a href="#">Wits Enterprise</a><br />
-                    <a href="#">Sport</a><br />
-                    <a href="#">Vacancies</a><br />
-                    <a href="#">Sitemap</a><br />
+                    <a href="http://web.wits.ac.za/Academic/GeneralInfo/Almanac/2011.htm">Term Dates 2010</a><br />
+                    <a href="http://hermes.wits.ac.za/Enterprise/">Wits Enterprise</a><br />
+                    <a href="http://web.wits.ac.za/Students/Sport/">Sport</a><br />
+                    <a href="http://web.wits.ac.za/NewsRoom/Vacancies.htm">Vacancies</a><br />
+                    <a href="http://web.wits.ac.za/sitemap/">Sitemap</a><br />
                     </span>
 
                     <!-- To clear floats -->
