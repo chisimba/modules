@@ -1324,7 +1324,7 @@ class staffcards extends object {
 			<div id="dialog15" class="window">
 				<a href="#" class="close">Close</a>
 				<div class="card_header">
-					<h1>Noxolo Kahlana-Mbana</h1>
+					<h1>Nkaba Senne</h1>
 						<div class="cardnav">
 						<ul class="htabs">
 							<li><a href="#myprofile" class="current">About Me</a></li>
@@ -1338,37 +1338,37 @@ class staffcards extends object {
 			<div class="tabs">
 				<div class="tab" id="myprofile">
 					<div class="main_content">
-						<h2>About <span class="fn">Noxolo Kahlana-Mbana</span></h2>
+						<h2>About <span class="fn">Nkaba Senne</span></h2>
 						
 						 
-							<span class="jobtitle"><strong>Researcher</strong>,&nbsp;</span>
+							<span class="jobtitle"><strong>Content Develolper</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 		
 							<span class="division">KIM</span></span>
-							<p><img src="' . $this->skinpath . 'images/staff/noxolombana.jpg" class="left" alt="Noxolo Kahlana-Mbana"></p>
-							<p class="bio">Community developer, perpetual student, transformation, change management and sustainability enthusiast, working on eLearning Research for eLSI unit at Wits.
-		
-		
+							<p><img src="' . $this->skinpath . 'images/staff/nkabasenne.jpg" class="left" alt="Nkaba Senne"></p>
+							<p class="bio">I am a Content Developer in charge of Podcasting in the eLSI unit. I am
+                                                        a good  Communicator with a Communications and Creative writing  background. I love meeting
+                                                        new faces and  learning from other people’s experiences. I am definitely not afraid of challenges.
+                                                        <br><br>“What sculpture is to a block of marble, education is to the soul.”
 							</p>
 				  </div>            
 				</div>
 				<div style="display: none;" class="tab" id="mynetwork">
 					<div id="profiles">
-					<h2><span class="fn">Noxolo Kahlana-Mbana\'s</span> networks</h2>
+					<h2><span class="fn">Nkaba Senne\'s</span> networks</h2>
 		
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://www.facebook.com/#!/nmbana "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/Chosen_Ukwanda/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-							<li><a href="http://za.linkedin.com/pub/noxolo-mbana/a/281/283"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
+							<li><a href="http://www.facebook.com/nkaba.senne"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://twitter.com/nkgoyametsi/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a href="#"><strong>Sowetan Live</strong>sowetanlive.co.za</a></li>
 						  </ul>
-		
 						  <div class="clear"></div>
 						</div>
 					</div>
 				</div>
 				<div style="display: none;" class="tab bmod" id="contact">
-					<div class="adr">  <h2>Contact <span class="fn">Noxolo Kahlana-Mbana</span></h2>
+					<div class="adr">  <h2>Contact <span class="fn">Nkaba Senne</span></h2>
 						<ul>
 		
 							<li class="street-address">Wits Private Bag X3</li>
@@ -1381,17 +1381,14 @@ class staffcards extends object {
 					<div class="telecommunications">
 						<p class="tel">Phone 
 							<span class="tel">
-							<span class="type">Work</span>: <span class="value">+ 27 11 717 7164</span>
-							<span class="type">Cell</span>: <span class="value">+ 27 767 397 686</span>
+                                                            <span class="type">Work</span>: <span class="value">+ 27 11 717 7179</span>
 							</span>
 		
 						</p>
-						<p class="email">Email: <a class="value" href="noxolo.mbana@wits.ac.za">noxolo.mbana@wits.ac.za</a></p>
-						 <p class="skype">Skype: nox7910</p>
-		
-							<a href="">
-								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
-							</a>
+						<p class="email">Email: <a class="value" href="nkaba.senne@wits.ac.za">nkaba.senne@wits.ac.za</a></p>
+                                                <a href="">
+                                                    <img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
+                                                </a>
 					</div>
 		
 				</div>
