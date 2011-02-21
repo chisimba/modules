@@ -224,7 +224,7 @@ class rotatingidentity extends object {
             $retstr = '<div class="slideshow" style="z-index:1;">';
             foreach($news as $row) {
                 $myFile = $objFile->getFile($row['storyimage']);
-                $retstr .= '<img src="usrfiles/' .$myFile['path'].'">';
+                $retstr .= '<img class="storyimage" id="'.$row['id'].'"  src="usrfiles/' .$myFile['path'].'">';
             }
             $retstr .= '</div>';
         }
