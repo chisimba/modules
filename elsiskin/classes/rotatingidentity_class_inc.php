@@ -159,11 +159,11 @@ class rotatingidentity extends object {
                             $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 100).' ...<br>
                                                 <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;'.$aboutLink->show().'<br>
                                             </span>
-                                            <input type="hidden" id="newslink" value="'.$this->uri(array("action"=>"viewstory")).'" />
                                         </div>';
                     }
                 }
                 $retstr .= '
+                            <input type="hidden" id="newslink" value="'.$this->uri(array("action"=>"viewstory")).'" />
                             </div>';
         } else {
             
@@ -181,11 +181,11 @@ class rotatingidentity extends object {
                         $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 100).' ...<br>
                                             <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;'.$aboutLink->show().'<br>
                                         </span>
-                                        <input type="hidden" id="newslink" value="'.$this->uri(array("action"=>"viewstory")).'" />
                                     </div>';
                 }
                 $retstr .= '
                                 </div>
+                                <input type="hidden" id="newslink" value="'.$this->uri(array("action"=>"viewstory")).'" />
                             </div>';
             }
             else {
