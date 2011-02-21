@@ -122,7 +122,7 @@ class witsfooter extends object {
                     <p>Copyright © 2000-2010<br />
 				University of the Witwatersrand, Johannesburg<br /><br />
 
-                <a href="#">Privacy Policy</a>  |  <a href="#">Disclaimer</a>  |  <a href="#">Terms of Use</a></p>
+                <a href="#">Privacy Policy</a>  |  <a href="http://web.wits.ac.za/Admin/Disclaimer.htm">Disclaimer</a>  |  <a href="#">Terms of Use</a></p>
 
                 </div>
             </div>
