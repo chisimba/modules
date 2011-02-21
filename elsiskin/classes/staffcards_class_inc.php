@@ -196,7 +196,7 @@ class staffcards extends object {
 							<span class="type">Cell</span>: <span class="value">+27 79 040 7170</span>
 							</span>
 						</p>
-						<p class="email">Email: <a class="value" href="Taurai.Hungwe@wits.ac.za">Taurai.Hungwe@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:Taurai.Hungwe@wits.ac.za">Taurai.Hungwe@wits.ac.za</a></p>
 						<p class="skype">Skype: Taurai.Hungwe</p>
 						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
 					</div>
@@ -272,7 +272,7 @@ class staffcards extends object {
 							<span class="type">Cell</span>: <span class="value"></span>
 							</span>
 						</p>
-						<p class="email">Email: <a class="value" href="Rabelani.Dagada@wits.ac.za">Rabelani.Dagada@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:Rabelani.Dagada@wits.ac.za">Rabelani.Dagada@wits.ac.za</a></p>
 							<a href="">
 								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
@@ -344,13 +344,13 @@ class staffcards extends object {
 					<div class="telecommunications">
 						<p class="tel">Phone 
 							<span class="tel">
-							<span class="type">Work</span>: <span class="value">+27 11 717 7182</span>
+							<span class="type">Work</span>: <span class="value">+27 11 717 7168</span>
 							 <span class="type">Home</span>: <span class="value"></span>
 							<span class="type">Cell</span>: <span class="value">+27 78 029 0917</span>
 		
 							</span>
 						</p>
-						<p class="email">Email: <a class="value" href="nguni52@gmail.com">nguni52@gmail.com</a></p>
+						<p class="email">Email: <a class="value" href="mailto:nonkululeko.phakela@wits.ac.za">nonkululeko.phakela@wits.ac.za</a></p>
 						<p class="Skype">Skype: nguni52</p>
 						<p class="IM">IM (Google Talk): nguni52@gmail.com </p>
 		
@@ -443,7 +443,7 @@ class staffcards extends object {
 		
 							</span>
 						</p>
-						<p class="email">Email: <a class="value" href="derek.moore@wits.ac.za">derek.moore@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:derek.moore@wits.ac.za">derek.moore@wits.ac.za</a></p>
 							<a href="">
 								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
 							</a>
@@ -522,7 +522,7 @@ class staffcards extends object {
 		
 		
 						</p>
-						<p class="email">Email: <a class="value" href="james.smurthwaite@wits.ac.za">james.smurthwaite@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:james.smurthwaite@wits.ac.za">james.smurthwaite@wits.ac.za</a></p>
 						<p class="skype">Skype: jimmy.smurthwaite</p>
 							<a href="">
 								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
@@ -602,7 +602,7 @@ class staffcards extends object {
 		
 		
 						</p>
-						<p class="email">Email: <a class="value" href="Shakira.Choonara2@wits.ac.za">Shakira.Choonara2@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:Shakira.Choonara2@wits.ac.za">Shakira.Choonara2@wits.ac.za</a></p>
 											<a href="">
 		
 								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
@@ -676,7 +676,7 @@ class staffcards extends object {
 							</span>
 		
 						</p>
-						<p class="email">Email: <a class="value" href="Fatima.Rahiman@wits.ac.za">Fatima.Rahiman@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:Fatima.Rahiman@wits.ac.za">Fatima.Rahiman@wits.ac.za</a></p>
 						 <p class="skype">Skype: fatimar1507</p>
 		
 							<a href="">
@@ -755,7 +755,7 @@ class staffcards extends object {
 							</span>
 		
 						</p>
-						<p class="email">Email: <a class="value" href="ofentse.tabane@wits.ac.za">ofentse.tabane@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:ofentse.tabane@wits.ac.za">ofentse.tabane@wits.ac.za</a></p>
 		
 						
 		
@@ -831,7 +831,7 @@ class staffcards extends object {
 							</span>
 		
 						</p>
-						<p class="email">Email: <a class="value" href="david.wafula@wits.ac.za">david.wafula@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:david.wafula@wits.ac.za">david.wafula@wits.ac.za</a></p>
 				  
 							<a href="">
 								<img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
@@ -929,7 +929,7 @@ class staffcards extends object {
 		
 		
 						</p>
-						<p class="email">Email: <a class="value" href="agnes.chigona@wits.ac.za">agnes.chigona@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:agnes.chigona@wits.ac.za">agnes.chigona@wits.ac.za</a></p>
 		
 						 <p class="skype">Skype: Agnes.Chigona</p>
 		
@@ -1008,7 +1008,7 @@ class staffcards extends object {
 							<span class="type">Work</span>: <span class="value">+ 27 11 717 7183</span>
 							</span>
 						</p>
-						<p class="email">Email: <a class="value" href="Neo.Petlele@wits.ac.za">Neo.Petlele@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:Neo.Petlele@wits.ac.za">Neo.Petlele@wits.ac.za</a></p>
 		
 						<span class="type">Cell</span>: <span class="value">+ 27 8 2533914</span>
 		
@@ -1089,7 +1089,7 @@ class staffcards extends object {
 							</span>
 		
 						</p>
-						<p class="email">Email: <a class="value" href="paul.mungai@wits.ac.za">paul.mungai@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:paul.mungai@wits.ac.za">paul.mungai@wits.ac.za</a></p>
 		
 		
 							<a href="">
@@ -1171,7 +1171,7 @@ class staffcards extends object {
 							</span>
 		
 						</p>
-						<p class="email">Email: <a class="value" href="Reginald.moledi@wits.ac.za">Reginald.moledi@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:Reginald.moledi@wits.ac.za">Reginald.moledi@wits.ac.za</a></p>
 		
 		
 							<a href="">
@@ -1245,7 +1245,7 @@ class staffcards extends object {
 							</span>
 
 						</p>
-						<p class="email">Email: <a class="value" href="zaahirah.bhamjee@gmail.com">zaahirah.bhamjee@gmail.com</a></p>
+						<p class="email">Email: <a class="value" href="mailto:Zaahirah.Bhamjee@wits.ac.za">Zaahirah.Bhamjee@wits.ac.za</a></p>
 						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
 
 					</div>
@@ -1312,7 +1312,86 @@ class staffcards extends object {
 							</span>
 
 						</p>
-						<p class="email">Email: <a class="value" href="shailin.govender@wits.ac.za">shailin.govender@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:shailin.govender@wits.ac.za">shailin.govender@wits.ac.za</a></p>
+						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
+
+					</div>
+				</div>
+			</div>
+
+				</div>
+			</div>
+                        <div id="dialog18" class="window">
+				<a href="#" class="close">Close</a>
+				<div class="card_header">
+					<h1>Antoinette Nolwandle Malgas</h1>
+						<div class="cardnav">
+
+						<ul class="htabs">
+							<li><a href="#myprofile" class="current">About Me</a></li>
+							<li><a href="#mynetwork">My Networks</a></li>
+							<li> <a href="#contact">Contact Me</a></li>
+						</ul>
+						</div>
+				</div>
+		<div class="vcard">
+			<div class="tabs">
+				<div class="tab" id="myprofile">
+					<div class="main_content">
+						<h2>About <span class="fn">Antoinette Nolwandle Malgas</span></h2>
+
+							<span class="jobtitle"><strong>Instructional Designer and Trainer </strong>,&nbsp;</span>
+							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
+							<span class="division">KIM</span></span>
+							<p><img src="' . $this->skinpath . 'images/staff/antoinettenolwandle.jpg" class="left" alt="Antoinette Malgas"></p>
+							<p class="bio">
+                                                            Learner designer for students’ material, Webct training and VTC Admin. Background in:
+                                                            research of OVC (orphans and vulnerable children), extensive training of Wits staff
+                                                            and students in application software and training of secondary school learners in career
+                                                            guidance. Researching and continuous learning helped me realize that technology can be
+                                                            used to impact the nation in the most positive ways rather  than destructive. I would
+                                                            like to be part of impacting Wits community.
+
+                                                            <br><br>
+                                                            Change is inevitable and if I can impact one, just one in a most positive way, it is worth it!
+                                                            <br><br>
+                                                            As long as there is poverty in the world
+                                                            I can never be rich, even if I have a billion dollars. As long as diseases are rampant and
+                                                            millions of people in this world cannot expect to live more than twenty-eight or thirty years,
+                                                            I can never be totally healthy even if I just got a good checkup. I can never be what I
+                                                            ought to be until you are what you ought to be. This is the way our world is made. No
+                                                            individual or nation can stand out boasting of being independent. We are interdependent(Martin Luther King Jnr.)
+                                                        </p>
+				  </div>
+				</div>
+
+				<div style="display: none;" class="tab" id="mynetwork">
+					<div id="profiles">
+					<h2><span class="fn">Antoinette Nolwandle Malgas\'s</span> networks</h2>
+						<div id="networkmedia">
+						  <ul>There are not networks provided by Antoinette</ul>
+
+						  <div class="clear"></div>
+						</div>
+					</div>
+				</div>
+				<div style="display: none;" class="tab bmod" id="contact">
+					<div class="adr">  <h2>Contact <span class="fn">Antoinette Nolwandle Malgas</span></h2>
+						<ul>
+                                                    <li class="street-address">Wits Private Bag X3</li>
+                                                    <li><span class="locality"> Johannesburg </span>  <span class="postal-code"> 2050 </span></li>
+                                                    <li class="country-name">South Africa</li>
+						</ul>
+					</div>
+
+
+					<div class="telecommunications">
+						<p class="tel">Phone
+							<span class="tel">
+							<span class="type">Work</span>: <span class="value">+ 27 11 717 7175</span>
+							</span>
+						</p>
+						<p class="email">Email: <a class="value" href="mailto:antoinette.malgas@wits.ac.za">antoinette.malgas@wits.ac.za</a></p>
 						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
 
 					</div>
@@ -1385,7 +1464,7 @@ class staffcards extends object {
 							</span>
 		
 						</p>
-						<p class="email">Email: <a class="value" href="nkaba.senne@wits.ac.za">nkaba.senne@wits.ac.za</a></p>
+						<p class="email">Email: <a class="value" href="mailto:nkaba.senne@wits.ac.za">nkaba.senne@wits.ac.za</a></p>
                                                 <a href="">
                                                     <img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right">
                                                 </a>
