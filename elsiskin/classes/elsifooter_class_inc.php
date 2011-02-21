@@ -45,6 +45,8 @@ class elsifooter extends object {
     private $objNews;
     // stories for rotating banners at the top
     private $stories;
+    // path to root folder of skin
+    private $skinpath;
 
     /**
      * Constructor
@@ -52,6 +54,16 @@ class elsifooter extends object {
     public function init() {
         $this->objCategory = $this->getObject('dbnewscategories', 'news');
         $this->objNews = $this->getObject('dbnewsstories', 'news');
+    }
+
+     /**
+     * Method to show the Toolbar
+     * @param string $skinpath the default skinpath for elsi skin
+     * @return none
+     * @access public
+     */
+    public function setSkinPath($skinpath) {
+        $this->skinpath = $skinpath;
     }
 
     /*
@@ -72,7 +84,9 @@ class elsifooter extends object {
            <!-- Start: Footer -->
             <div id="Footer">
 
-                <div class="grid_4">&nbsp;</div>
+                <div>
+                    <img src ="'.$this->skinpath.'images/powered_by_chisimba.png" alt="Powered By Chisimba" title="Powered By Chisimba" />
+                </div>
                 <!-- end .grid_4 -->
                 <div class="clear">&nbsp;</div>
                 <div class="grid_4"> ';
