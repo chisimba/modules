@@ -18,7 +18,9 @@ $header->type = 1;
 $middleColumn .= '<div id="heading" class="rounded">'.$header->show().'</div>';
 $middleColumn .= $str;
 $middleColumn .= $this->objUI->formatUI($str);
-
+if($this->objUser->isLoggedIn()) {
+    $middleColumn .= $this->objUI->addForm();
+}
 //$leftColumn .= $this->objOps->userSearchBox();
 
 $cssLayout->setMiddleColumnContent($middleColumn);

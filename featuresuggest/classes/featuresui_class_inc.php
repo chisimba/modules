@@ -164,5 +164,24 @@ class featuresui extends object {
         return $js;
     }
     
+    public function addForm() {
+        // load up a simple form 
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $addform = new form('addfeature', $this->uri(array(
+            'action' => 'submit',
+        )));
+        $addform->addRule('content', $this->objLanguage->languageText("mod_featuresuggest_phrase_featurereq", "featuresuggest") , 'required');
+        $feature = new textinput('content');
+        $feature->size = 50;
+        $addform->addToForm($feature->show());
+        $this->objsTButton = new button($this->objLanguage->languageText('word_featureadd', 'featuresuggest'));
+        $this->objsTButton->setValue($this->objLanguage->languageText('word_featureadd', 'featuresuggest'));
+        $this->objsTButton->setToSubmit();
+        $addform->addToForm($this->objsTButton->show());
+        $addform = $addform->show();
+        
+        return $addform;
+    }
 }
 ?>

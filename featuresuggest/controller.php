@@ -161,9 +161,10 @@ class featuresuggest extends controller
 		            );
 		        $this->objOps->setData($arr);
 		           
-	            echo json_encode(array(
-		            'html'	=> (string)($this->objOps)
-	            ));
+	            //echo json_encode(array(
+		        //    'html'	=> (string)($this->objOps)
+	            //));
+	            $this->nextAction('');
                 break;
                 
             default:
