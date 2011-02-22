@@ -183,5 +183,23 @@ class featuresui extends object {
         
         return $addform;
     }
+    
+    /**
+     * Method to display the login box for prelogin blog operations
+     *
+     * @param  bool   $featurebox
+     * @return string
+     */
+    public function loginBox($featurebox = FALSE)
+    {
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        if ($featurebox == FALSE) {
+            return $objBlocks->showBlock('login', 'security') . "<br />" . $objBlocks->showBlock('register', 'security');
+        } else {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objBlocks->showBlock('login', 'security', 'none')
+              . "<br />" . $objBlocks->showBlock('register', 'security', 'none') );
+        }
+    }
 }
 ?>

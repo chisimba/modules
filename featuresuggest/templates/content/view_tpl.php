@@ -19,10 +19,12 @@ $middleColumn .= '<div id="heading" class="rounded">'.$header->show().'</div>';
 $middleColumn .= $str;
 $middleColumn .= $this->objUI->formatUI($str);
 if($this->objUser->isLoggedIn()) {
-    $middleColumn .= $this->objUI->addForm();
+    $middleColumn .= "<ul><li>".$this->objUI->addForm()."</li></ul>";
+    $leftColumn .= $this->leftMenu->show();
 }
-//$leftColumn .= $this->objOps->userSearchBox();
-
+else {
+    $leftColumn .= $this->objUI->loginBox(TRUE);
+}
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);
 echo $cssLayout->show();

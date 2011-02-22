@@ -114,11 +114,11 @@ class featuresuggest extends controller
             case 'vote':
                 // If the request did not come from AJAX, exit:
                 //var_dump($_SERVER); die();
-                //if($_SERVER['REQUEST_METHOD'] !='XMLHttpRequest'){
-                //    echo "I only speak AJAX";
+                if($_SERVER['REQUEST_METHOD'] !='XMLHttpRequest'){
+                    echo "I only speak AJAX";
 	                //$this->nextAction('');
-	            //    break;
-                //}
+	                break;
+                }
                 $ip	= sprintf('%u',ip2long($_SERVER['REMOTE_ADDR']));
                 $vote = $this->getParam('vote');
                 $v = intval($vote);
@@ -129,7 +129,6 @@ class featuresuggest extends controller
 	            if($v != -1 && $v != 1){
 		            echo "Invalid vote";
 		            break;
-		            //$this->nextAction('');
 	            }
 	            // check if the record exists
 	            if($this->objDbFeatures->checkRecord($id) > 0) {
@@ -141,11 +140,6 @@ class featuresuggest extends controller
                 break;
                 
             case 'submit':
-                // If the request did not come from AJAX, exit:
-                //if($_SERVER['REQUEST_METHOD'] !='XMLHttpRequest'){
-	            //    echo "I only speak AJAX";
-	                //$this->nextAction('');
-                //}
                 $ip	= sprintf('%u',ip2long($_SERVER['REMOTE_ADDR']));
                 $content = $this->getParam('content');
                 $content = htmlspecialchars(strip_tags($content));
