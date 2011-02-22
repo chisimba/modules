@@ -72,6 +72,8 @@ class elsifooter extends object {
      * @access public
      */
     public function show() {
+        $chisimbaLink = new link("http://www.chisimba.com");
+        $chisimbaLink->link = '<img src ="'.$this->skinpath.'images/powered_by_chisimba.png" alt="Powered By Chisimba" title="Powered By Chisimba" />';
         $links = array(
                     'home'=>'Home',
                     'about'=>'About Us',
@@ -79,13 +81,14 @@ class elsifooter extends object {
                     'news'=>'Current News',
                     'projectsresearch'=>'Projects & Research',
                     'supporttraining'=>'Support & Training',
-                    'contact'=>'Contact Us');
+                    'contact'=>'Contact Us',
+                    );
         $retstr ='
            <!-- Start: Footer -->
             <div id="Footer">
 
                 <div id="chisimbapower">
-                    <img src ="'.$this->skinpath.'images/powered_by_chisimba.png" alt="Powered By Chisimba" title="Powered By Chisimba" />
+                '.$chisimbaLink->show().'
                 </div>
                 <!-- end .grid_4 -->
                 <div class="clear">&nbsp;</div>
