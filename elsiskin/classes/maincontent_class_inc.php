@@ -245,6 +245,8 @@ class maincontent extends object {
      * @access public
      */
     public function showContactMain() {
+            $objMap = $this->getObject('map');
+
             $submission = $this->getParam('submission');
             $message = "";
             if(!empty($submission)) {
@@ -318,8 +320,10 @@ class maincontent extends object {
 	    $retstr .= $objButton->show();
             $retstr .= '
                             </fieldset>
-                        </form>
-                    </div>';
+                        </form>';
+                    
+            $retstr .= $objMap->show();
+            $retstr .= '</div>';
 
             return $retstr;
 	 }
