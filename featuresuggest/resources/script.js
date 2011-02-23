@@ -39,7 +39,7 @@ jQuery(document).ready(function(){
 		ul.html(arr);
 		
 		// Sending an AJAX request
-		jQuery.get('index.php?module=featuresuggest&action=vote',{action:'vote',vote:v,'id':id});
+		jQuery.get('index.php?module=featuresuggest',{action:'vote',vote:v,'id':id});
 	});
 
 
@@ -55,7 +55,7 @@ jQuery(document).ready(function(){
 		
 		form.addClass('working');
 		
-		jQuery.getJSON('index.php?module=featuresuggest&action=vote',{action:'submit',content:textField.val()},function(msg){
+		jQuery.getJSON('index.php?module=featuresuggest',{action:'submit',content:textField.val()},function(msg){
 			textField.val('');
 			form.removeClass('working');
 			
