@@ -1419,7 +1419,7 @@ class staffcards extends object {
 					<div class="main_content">
 						<h2>About <span class="fn">Palesa Mokwena</span></h2>
 
-							<span class="jobtitle"><strong>Intern (Web Developement)</strong>,&nbsp;</span>
+							<span class="jobtitle"><strong>Intern (Web Development)</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
 							<p><img src="' . $this->skinpath . 'images/staff/palesamokwena.jpg" class="left" alt="Palesa Mokwena"></p>
@@ -1483,7 +1483,7 @@ class staffcards extends object {
 					<div class="main_content">
 						<h2>About <span class="fn">Dexters Mlambo</span></h2>
 
-							<span class="jobtitle"><strong>Intern (Web Developement)</strong>,&nbsp;</span>
+							<span class="jobtitle"><strong>Intern (Web Development)</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
 							<p><img src="' . $this->skinpath . 'images/staff/dextersmlambo.jpg" class="left" alt="Dexters Mlambo"></p>
