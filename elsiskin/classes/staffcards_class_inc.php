@@ -1400,6 +1400,136 @@ class staffcards extends object {
 
 				</div>
 			</div>
+                        <div id="dialog19" class="window">
+				<a href="#" class="close">Close</a>
+				<div class="card_header">
+					<h1>Palesa Mokwena</h1>
+						<div class="cardnav">
+
+						<ul class="htabs">
+							<li><a href="#myprofile" class="current">About Me</a></li>
+							<li><a href="#mynetwork">My Networks</a></li>
+							<li> <a href="#contact">Contact Me</a></li>
+						</ul>
+						</div>
+				</div>
+		<div class="vcard">
+			<div class="tabs">
+				<div class="tab" id="myprofile">
+					<div class="main_content">
+						<h2>About <span class="fn">Palesa Mokwena</span></h2>
+
+							<span class="jobtitle"><strong>Intern (Web Developement)</strong>,&nbsp;</span>
+							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
+							<span class="division">KIM</span></span>
+							<p><img src="' . $this->skinpath . 'images/staff/palesamokwena.jpg" class="left" alt="Palesa Mokwena"></p>
+							<p class="bio">I am currently in the process of completing my BSc in Electrical Engineering. Choosing this career path has been one of the best choices I\'ve made as it has and will opened doors to endless possibilities. Even thou i am registered for High Voltage, i am doing some development work as an intern at eLearning. This opportunity will give me experience and understanding as programming has not been one of my strengths.</p>
+				  </div>
+				</div>
+
+				<div style="display: none;" class="tab" id="mynetwork">
+					<div id="profiles">
+					<h2><span class="fn">Palesa Mokwena\'s</span> networks</h2>
+						<div id="networkmedia">
+						  <ul>  <li><a href="http://www.facebook.com/people/Palesa-Mokwena/672512980"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							</ul>
+
+						  <div class="clear"></div>
+						</div>
+					</div>
+				</div>
+				<div style="display: none;" class="tab bmod" id="contact">
+					<div class="adr">  <h2>Contact <span class="fn">Palesa Mokwena</span></h2>
+						<ul>
+                                                    <li class="street-address">Wits Private Bag X3</li>
+                                                    <li><span class="locality"> Johannesburg </span>  <span class="postal-code"> 2050 </span></li>
+                                                    <li class="country-name">South Africa</li>
+						</ul>
+					</div>
+
+
+					<div class="telecommunications">
+						<p class="tel">Phone
+							<span class="tel">
+							<span class="type">Work</span>: <span class="value">+ 27 11 717 7183</span>
+							</span>
+
+						</p>
+						<p class="email">Email: <a class="value" href="mailto:pmokwena@gmail.com">pmokwena@gmail.com</a></p>
+						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
+
+					</div>
+				</div>
+			</div>
+
+				</div>
+			</div>
+                        <div id="dialog20" class="window">
+				<a href="#" class="close">Close</a>
+				<div class="card_header">
+					<h1>Dexters Mlambo</h1>
+						<div class="cardnav">
+
+						<ul class="htabs">
+							<li><a href="#myprofile" class="current">About Me</a></li>
+							<li><a href="#mynetwork">My Networks</a></li>
+							<li> <a href="#contact">Contact Me</a></li>
+						</ul>
+						</div>
+				</div>
+		<div class="vcard">
+			<div class="tabs">
+				<div class="tab" id="myprofile">
+					<div class="main_content">
+						<h2>About <span class="fn">Dexters Mlambo</span></h2>
+
+							<span class="jobtitle"><strong>Intern (Web Developement)</strong>,&nbsp;</span>
+							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
+							<span class="division">KIM</span></span>
+							<p><img src="' . $this->skinpath . 'images/staff/dextersmlambo.jpg" class="left" alt="Dexters Mlambo"></p>
+							<p class="bio">Born and raised in Johannesburg. Web developer in training open to learn as much as he can to expand his knowledge of web development.</p>
+				  </div>
+				</div>
+
+				<div style="display: none;" class="tab" id="mynetwork">
+					<div id="profiles">
+					<h2><span class="fn">Dexters Mlambo\'s</span> networks</h2>
+						<div id="networkmedia">
+						  <ul>
+                                                    <li><a href="http://www.facebook.com/home.php#!/mirzadexter"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+                                                    <li><a href="http://www.linkedin.com/profile/edit?trk=hb_tab_pro_top"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
+                                                  </ul>
+
+						  <div class="clear"></div>
+						</div>
+					</div>
+				</div>
+				<div style="display: none;" class="tab bmod" id="contact">
+					<div class="adr">  <h2>Contact <span class="fn">Dexters Mlambo</span></h2>
+						<ul>
+                                                    <li class="street-address">Wits Private Bag X3</li>
+                                                    <li><span class="locality"> Johannesburg </span>  <span class="postal-code"> 2050 </span></li>
+                                                    <li class="country-name">South Africa</li>
+						</ul>
+					</div>
+
+
+					<div class="telecommunications">
+						<p class="tel">Phone
+							<span class="tel">
+                                                            <span class="type">Work</span>: <span class="value">+ 27 11 717 7188</span>
+							</span>
+
+						</p>
+						<p class="email">Email: <a class="value" href="mailto:mirzadexter@gmail.com">mirzadexter@gmail.com</a></p>
+						<a href=""><img src="' . $this->skinpath . 'images/Icon_vCard.png" alt="download vcard icon" align="right"></a>
+
+					</div>
+				</div>
+			</div>
+
+				</div>
+			</div>
 			<div id="dialog15" class="window">
 				<a href="#" class="close">Close</a>
 				<div class="card_header">
