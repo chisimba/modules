@@ -114,11 +114,11 @@ class featuresuggest extends controller
             case 'vote':
                 // If the request did not come from AJAX, exit:
                 //var_dump($_SERVER); die();
-                if($_SERVER['REQUEST_METHOD'] !='XMLHttpRequest'){
-                    echo "I only speak AJAX";
+                //if($_SERVER['REQUEST_METHOD'] !='XMLHttpRequest'){
+                //    echo "I only speak AJAX";
 	                //$this->nextAction('');
-	                break;
-                }
+	        //        break;
+               // }
                 $ip	= sprintf('%u',ip2long($_SERVER['REMOTE_ADDR']));
                 $vote = $this->getParam('vote');
                 $v = intval($vote);
