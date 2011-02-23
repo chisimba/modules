@@ -191,8 +191,8 @@ class apo extends controller {
     }
 
     public function __viewfolder() {
-        //  $documents = $this->documents->getdocuments($this->mode);
-        $rejecteddocuments = $this->documents->getdocuments(0, 10, $this->mode, "Y");
+        $documents = $this->documents->getdocuments($this->mode);
+       // $rejecteddocuments = $this->documents->getdocuments(0, 10, $this->mode, "Y");
 
         $dir = $this->getParam("folder", "");
 
@@ -207,7 +207,7 @@ class apo extends controller {
         $files = $this->objUtils->getFiles($dir);
         $this->setVarByRef("files", $files);
         $this->setVarByRef("documents", $documents);
-        $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
+      //  $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
         $selected = $this->baseDir . $selected;
         $this->setVarByRef("selected", $selected);
         return "viewfolder_tpl.php";
@@ -438,11 +438,16 @@ class apo extends controller {
 
     function __registerdocument() {
 
-        $errormessages = array();
-        $date = $this->getParam('entrydate');
+        $errormessages = $this->getParam('errormessages');
+        $date = $this->getParam('date_created');
 
         $number = $this->getParam('number');
 
+        //$id = $this->getParam("id");
+        // $id = $this->documents->getDocument($id);
+        //  $id = $this->getParam('id');
+        // print_r($id);
+        // die();
 
         $dept = $this->getParam('department');
 
@@ -525,6 +530,7 @@ class apo extends controller {
         $this->setVarByRef("documents", $documents);
         $selected = "unapproved";
         $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("id", $id);
         $this->setVarByRef("refno", $refNo);
         return "unapproveddocs_tpl.php";
         // }
@@ -533,11 +539,10 @@ class apo extends controller {
     function __updatedocument() {
         $number = $this->getParam('number');
         $dept = $this->getParam('department');
-        $date = $this->getParam('entrydate');
+        $date = $this->getParam('date_created');
         $title = $this->getParam('title');
         $group = $this->getParam('group');
         $selectedfolder = $this->getParam('parentfolder');
-
         $telephone = $this->getParam('telephone');
         $id = $this->getParam('docid');
         $contact = $this->getParam('contact');
@@ -558,7 +563,7 @@ class apo extends controller {
         );
 
         $this->documents->updateInfo($id, $data);
-        $this->nextAction('unapproveddocuments');
+       // $this->nextAction('unapproveddocuments');
     }
 
     /*
@@ -580,12 +585,17 @@ class apo extends controller {
      */
 
     function __showeditdocument() {
-        $id = $this->getParam("id");
+       
+        $action = "updatedocument";
+        $id = $this->getParam('id');
+       
         $document = $this->documents->getDocument($id);
+        //print_r($document);
+       // die();
         $mode = "edit";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("document", $document);
-        $this->setVarByRef("id", $id);
+        // $this->setVarByRef("id", $id);
         return "addeditdocument_tpl.php";
     }
 
@@ -940,11 +950,20 @@ class apo extends controller {
 
     public function __newdocument() {
         $selected = $this->getParam('selected');
+        $id = $this->getParam("docid");
+        // $document = $this->documents->getDocument($id);
+        // $id = $this->getParam('id');
+        //  print_r($id);
+        //  die();
+        $errormessages = $this->getParam('errormessages');
+
         $mode = "new";
-        $action = "registerdocument";
         $this->setVarByRef("action", $action);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("errormessages", $errormessages);
+        $this->setVarByRef("id", $id);
+
 
         return "addeditdocument_tpl.php";
     }
@@ -1082,7 +1101,8 @@ class apo extends controller {
 
     public function __showoverview() {
         $id = $this->getParam('id');
-        print_r($id);
+        $document = $this->documents->getDocument($id);
+        // print_r($id);
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1102,30 +1122,31 @@ class apo extends controller {
         $a4 = $this->getParam("a4");
         $a5 = $this->getParam("a5");
 
-        $errormessages = array();
-        if ($a1 == null) {
-            $errormessages[] = "Please provide an answer for A.1";
-        }
-        if ($a3 == null) {
-            $errormessages[] = "Please provide an answer for A.3";
-        }
-        if ($a4 == null) {
-            $errormessages[] = "Please provide an answer for A.4";
-        }
+        /* $errormessages = array();
+          if ($a1 == null) {
+          $errormessages[] = "Please provide an answer for A.1";
+          }
+          if ($a3 == null) {
+          $errormessages[] = "Please provide an answer for A.3";
+          }
+          if ($a4 == null) {
+          $errormessages[] = "Please provide an answer for A.4";
+          }
 
-        if (count($errormessages) > 0) {
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("a1", $a1);
-            $this->setVarByRef("a2", $a2);
-            $this->setVarByRef("a3", $a3);
-            $this->setVarByRef("a4", $a4);
-            $this->setVarByRef("a5", $a5);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "overview_tpl.php";
-        }
+          if (count($errormessages) > 0) {
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("a1", $a1);
+          $this->setVarByRef("a2", $a2);
+          $this->setVarByRef("a3", $a3);
+          $this->setVarByRef("a4", $a4);
+          $this->setVarByRef("a5", $a5);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "overview_tpl.php";
+          } */
 
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["a1"] = $a1;
         $formdata["a2"] = $a2;
         $formdata["a3"] = $a3;
@@ -1147,7 +1168,7 @@ class apo extends controller {
     public function __showrulesandsyllabustwo() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
+        //print_r($id);
 
         $errormessages = array();
 
@@ -1158,42 +1179,43 @@ class apo extends controller {
         $b4a = $this->getParam("b4a");
         $b4b = $this->getParam("b4b");
         $b4c = $this->getParam("b4c");
+        /*
+          if ($b1 == null) {
+          $errormessages[] = "Please provide an answer for B.1";
+          }
+          if ($b2 == null) {
+          $errormessages[] = "Please provide an answer for B.2";
+          }
+          if ($b3a == null) {
+          $errormessages[] = "Please provide an answer for B.3.a";
+          }
+          if ($b3b == null) {
+          $errormessages[] = "Please provide an answer for B.3.b";
+          }
+          if ($b4b == null) {
+          $errormessages[] = "Please provide an answer for B.4.b";
+          }
+          if ($b4c == null) {
+          $errormessages[] = "Please provide an answer for B.4.c";
+          }
 
-        if ($b1 == null) {
-            $errormessages[] = "Please provide an answer for B.1";
-        }
-        if ($b2 == null) {
-            $errormessages[] = "Please provide an answer for B.2";
-        }
-        if ($b3a == null) {
-            $errormessages[] = "Please provide an answer for B.3.a";
-        }
-        if ($b3b == null) {
-            $errormessages[] = "Please provide an answer for B.3.b";
-        }
-        if ($b4b == null) {
-            $errormessages[] = "Please provide an answer for B.4.b";
-        }
-        if ($b4c == null) {
-            $errormessages[] = "Please provide an answer for B.4.c";
-        }
+          if (count($errormessages) > 0) {
 
-        if (count($errormessages) > 0) {
-
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("b1", $b1);
-            $this->setVarByRef("b2", $b2);
-            $this->setVarByRef("b3a", $b3a);
-            $this->setVarByRef("b3b", $b3b);
-            $this->setVarByRef("b4a", $b4a);
-            $this->setVarByRef("b4b", $b4b);
-            $this->setVarByRef("b4c", $b4c);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "rulesandsyllabusone_tpl.php";
-        }
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("b1", $b1);
+          $this->setVarByRef("b2", $b2);
+          $this->setVarByRef("b3a", $b3a);
+          $this->setVarByRef("b3b", $b3b);
+          $this->setVarByRef("b4a", $b4a);
+          $this->setVarByRef("b4b", $b4b);
+          $this->setVarByRef("b4c", $b4c);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "rulesandsyllabusone_tpl.php";
+          } */
 
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["b1"] = $b1;
         $formdata["b2"] = $b2;
         $formdata["b3a"] = $b3a;
@@ -1226,37 +1248,38 @@ class apo extends controller {
         $b6a = $this->getParam("b6a");
         $b6b = $this->getParam("b6b");
         $b6c = $this->getParam("b6c");
+        /*
+          if ($b5a == null) {
+          $errormessages[] = "Please provide an answer for B.5.a";
+          }
+          if ($b5b == null) {
+          $errormessages[] = "Please provide an answer for B.5.b";
+          }
+          if ($b6a == null) {
+          $errormessages[] = "Please provide an answer for B.6.a";
+          }
+          if ($b6b == null) {
+          $errormessages[] = "Please provide an answer for B.6.b";
+          }
+          if ($b6c == null) {
+          $errormessages[] = "Please provide an answer for B.6.c";
+          }
 
-        if ($b5a == null) {
-            $errormessages[] = "Please provide an answer for B.5.a";
-        }
-        if ($b5b == null) {
-            $errormessages[] = "Please provide an answer for B.5.b";
-        }
-        if ($b6a == null) {
-            $errormessages[] = "Please provide an answer for B.6.a";
-        }
-        if ($b6b == null) {
-            $errormessages[] = "Please provide an answer for B.6.b";
-        }
-        if ($b6c == null) {
-            $errormessages[] = "Please provide an answer for B.6.c";
-        }
+          if (count($errormessages) > 0) {
 
-        if (count($errormessages) > 0) {
-
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("b5a", $b5a);
-            $this->setVarByRef("b5b", $b5b);
-            $this->setVarByRef("b6a", $b6a);
-            $this->setVarByRef("b6b", $b6b);
-            $this->setVarByRef("b6c", $b6c);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "rulesandsyllabustwo_tpl.php";
-        }
-
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("b5a", $b5a);
+          $this->setVarByRef("b5b", $b5b);
+          $this->setVarByRef("b6a", $b6a);
+          $this->setVarByRef("b6b", $b6b);
+          $this->setVarByRef("b6c", $b6c);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "rulesandsyllabustwo_tpl.php";
+          }
+         */
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["b5a"] = $b5a;
         $formdata["b5b"] = $b5b;
         $formdata["b6a"] = $b6a;
@@ -1278,6 +1301,7 @@ class apo extends controller {
 
     public function __showoutcomesandassessmentone() {
         $id = $this->getParam("id");
+        $document = $this->documents->getDocument($id);
         $formname = $this->getParam('formname');
         print_r($id);
 
@@ -1290,46 +1314,47 @@ class apo extends controller {
         $c4a = $this->getParam("c4a");
         $c4b1 = $this->getParam("c4b1");
         $c4b2 = $this->getParam("c4b2");
+        /*
+          if ($c1 == null) {
+          $errormessages[] = "Please provide an answer for C.1";
+          }
+          if ($c2a == null) {
+          $errormessages[] = "Please provide an answer for C.2.a";
+          }
+          if ($c2b == null) {
+          $errormessages[] = "Please provide an answer for C.2.b";
+          }
+          if ($c3 == null) {
+          $errormessages[] = "Please provide an answer for C.3";
+          }
+          if ($c4a == null) {
+          $errormessages[] = "Please provide an answer for C.4.a";
+          }
+          if ($c4b1 == null || $c4b2 == null) {
+          $errormessages[] = "Please provide an answer for C.4.b";
+          }
+          if ($c4b2 == null) {
+          $errormessages[] = "Please provide an answer for C.4.b";
+          }
 
-        if ($c1 == null) {
-            $errormessages[] = "Please provide an answer for C.1";
-        }
-        if ($c2a == null) {
-            $errormessages[] = "Please provide an answer for C.2.a";
-        }
-        if ($c2b == null) {
-            $errormessages[] = "Please provide an answer for C.2.b";
-        }
-        if ($c3 == null) {
-            $errormessages[] = "Please provide an answer for C.3";
-        }
-        if ($c4a == null) {
-            $errormessages[] = "Please provide an answer for C.4.a";
-        }
-        if ($c4b1 == null || $c4b2 == null) {
-            $errormessages[] = "Please provide an answer for C.4.b";
-        }
-        if ($c4b2 == null) {
-            $errormessages[] = "Please provide an answer for C.4.b";
-        }
+          if (count($errormessages) > 0) {
 
-        if (count($errormessages) > 0) {
-
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("c1", $c1);
-            $this->setVarByRef("c2a", $c2a);
-            $this->setVarByRef("c2b", $c2b);
-            $this->setVarByRef("c3", $c3);
-            $this->setVarByRef("c4a", $c4a);
-            $this->setVarByRef("c4b1", $c4b1);
-            $this->setVarByRef("c4b2", $c4b2);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            $this->setVarByRef("id", $id);
-            return "subsidyrequirements_tpl.php";
-        }
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("c1", $c1);
+          $this->setVarByRef("c2a", $c2a);
+          $this->setVarByRef("c2b", $c2b);
+          $this->setVarByRef("c3", $c3);
+          $this->setVarByRef("c4a", $c4a);
+          $this->setVarByRef("c4b1", $c4b1);
+          $this->setVarByRef("c4b2", $c4b2);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          $this->setVarByRef("id", $id);
+          return "subsidyrequirements_tpl.php";
+          } */
 
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["c1"] = $c1;
         $formdata["c2a"] = $c2a;
         $formdata["c2b"] = $c2b;
@@ -1348,6 +1373,7 @@ class apo extends controller {
 //$formname->addRule(array('name'=>'c3','length'=>6), 'Check CESM manual','maxlength');
 //$objForm->addRule(array('name'=>'surname','length'=>6), 'Your surname is too long',*/
         $selected = $this->getParam('selected');
+
         $mode = "new";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
@@ -1369,46 +1395,47 @@ class apo extends controller {
         $c4a = $this->getParam("c4a");
         $c4b1 = $this->getParam("c4b1");
         $c4b2 = $this->getParam("c4b2");
+        /*
+          if ($c1 == null) {
+          $errormessages[] = "Please provide an answer for C.1";
+          }
+          if ($c2a == null) {
+          $errormessages[] = "Please provide an answer for C.2.a";
+          }
+          if ($c2b == null) {
+          $errormessages[] = "Please provide an answer for C.2.b";
+          }
+          if ($c3 == null) {
+          $errormessages[] = "Please provide an answer for C.3";
+          }
+          if ($c4a == null) {
+          $errormessages[] = "Please provide an answer for C.4.a";
+          }
+          if ($c4b1 == null || $c4b2 == null) {
+          $errormessages[] = "Please provide an answer for C.4.b";
+          }
+          if ($c4b2 == null) {
+          $errormessages[] = "Please provide an answer for C.4.b";
+          }
 
-        if ($c1 == null) {
-            $errormessages[] = "Please provide an answer for C.1";
-        }
-        if ($c2a == null) {
-            $errormessages[] = "Please provide an answer for C.2.a";
-        }
-        if ($c2b == null) {
-            $errormessages[] = "Please provide an answer for C.2.b";
-        }
-        if ($c3 == null) {
-            $errormessages[] = "Please provide an answer for C.3";
-        }
-        if ($c4a == null) {
-            $errormessages[] = "Please provide an answer for C.4.a";
-        }
-        if ($c4b1 == null || $c4b2 == null) {
-            $errormessages[] = "Please provide an answer for C.4.b";
-        }
-        if ($c4b2 == null) {
-            $errormessages[] = "Please provide an answer for C.4.b";
-        }
+          if (count($errormessages) > 0) {
 
-        if (count($errormessages) > 0) {
-
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("c1", $c1);
-            $this->setVarByRef("c2a", $c2a);
-            $this->setVarByRef("c2b", $c2b);
-            $this->setVarByRef("c3", $c3);
-            $this->setVarByRef("c4a", $c4a);
-            $this->setVarByRef("c4b1", $c4b1);
-            $this->setVarByRef("c4b2", $c4b2);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            $this->setVarByRef("id", $id);
-            return "subsidyrequirements_tpl.php";
-        }
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("c1", $c1);
+          $this->setVarByRef("c2a", $c2a);
+          $this->setVarByRef("c2b", $c2b);
+          $this->setVarByRef("c3", $c3);
+          $this->setVarByRef("c4a", $c4a);
+          $this->setVarByRef("c4b1", $c4b1);
+          $this->setVarByRef("c4b2", $c4b2);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          $this->setVarByRef("id", $id);
+          return "subsidyrequirements_tpl.php";
+          } */
 
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["c1"] = $c1;
         $formdata["c2a"] = $c2a;
         $formdata["c2b"] = $c2b;
@@ -1450,42 +1477,43 @@ class apo extends controller {
             $d2b = $this->getParam("d2b");
             $d2c = $this->getParam("d2c");
             $d3 = $this->getParam("d3");
+            /*
+              if ($d1a == null) {
+              $errormessages[] = "Please provide an answer for D.1.a";
+              }
+              if ($d1b == null) {
+              $errormessages[] = "Please provide an answer for D.1.b";
+              }
+              if ($d2a == null) {
+              $errormessages[] = "Please provide an answer for D.2.a";
+              }
+              if ($d2b == null) {
+              $errormessages[] = "Please provide an answer for D.2.b";
+              }
+              if ($d2c == null) {
+              $errormessages[] = "Please provide an answer for D.2.c";
+              }
+              if ($d3 == null) {
+              $errormessages[] = "Please provide an answer for D.3";
+              }
 
-            if ($d1a == null) {
-                $errormessages[] = "Please provide an answer for D.1.a";
-            }
-            if ($d1b == null) {
-                $errormessages[] = "Please provide an answer for D.1.b";
-            }
-            if ($d2a == null) {
-                $errormessages[] = "Please provide an answer for D.2.a";
-            }
-            if ($d2b == null) {
-                $errormessages[] = "Please provide an answer for D.2.b";
-            }
-            if ($d2c == null) {
-                $errormessages[] = "Please provide an answer for D.2.c";
-            }
-            if ($d3 == null) {
-                $errormessages[] = "Please provide an answer for D.3";
-            }
+              if (count($errormessages) > 0) {
 
-            if (count($errormessages) > 0) {
-
-                $this->setVarByRef("errormessages", $errormessages);
-                $this->setVarByRef("d1a", $d1a);
-                $this->setVarByRef("d1b", $d1b);
-                $this->setVarByRef("d2a", $d2a);
-                $this->setVarByRef("d2b", $d2b);
-                $this->setVarByRef("d2c", $d2c);
-                $this->setVarByRef("d3", $d3);
-                $mode = "fixup";
-                $this->setVarByRef("mode", $mode);
-                $this->setVarByRef("id", $id);
-                return "outcomesandassessmentone_tpl.php";
-            }
+              $this->setVarByRef("errormessages", $errormessages);
+              $this->setVarByRef("d1a", $d1a);
+              $this->setVarByRef("d1b", $d1b);
+              $this->setVarByRef("d2a", $d2a);
+              $this->setVarByRef("d2b", $d2b);
+              $this->setVarByRef("d2c", $d2c);
+              $this->setVarByRef("d3", $d3);
+              $mode = "fixup";
+              $this->setVarByRef("mode", $mode);
+              $this->setVarByRef("id", $id);
+              return "outcomesandassessmentone_tpl.php";
+              } */
 
             $formdata = array();
+            $formdata["docid"] = $id;
             $formdata["d1a"] = $d1a;
             $formdata["d1b"] = $d1b;
             $formdata["d2a"] = $d2a;
@@ -1503,44 +1531,44 @@ class apo extends controller {
             $d25 = $this->getParam("d25");
             $d3 = $this->getParam("d3");
 
-            if ($d1 == null) {
-                $errormessages[] = "Please provide an answer for D.1";
-            }
-            if ($d21 == null) {
-                $errormessages[] = "Please provide an answer for D.2.1";
-            }
-            if ($d22 == null) {
-                $errormessages[] = "Please provide an answer for D.2.2";
-            }
-            if ($d23 == null) {
-                $errormessages[] = "Please provide an answer for D.2.3";
-            }
-            if ($d24 == null) {
-                $errormessages[] = "Please provide an answer for D.2.4";
-            }
-            if ($d25 == null) {
-                $errormessages[] = "Please provide an answer for D.2.5";
-            }
-            if ($d3 == null) {
-                $errormessages[] = "Please provide an answer for D.3";
-            }
+            /*  if ($d1 == null) {
+              $errormessages[] = "Please provide an answer for D.1";
+              }
+              if ($d21 == null) {
+              $errormessages[] = "Please provide an answer for D.2.1";
+              }
+              if ($d22 == null) {
+              $errormessages[] = "Please provide an answer for D.2.2";
+              }
+              if ($d23 == null) {
+              $errormessages[] = "Please provide an answer for D.2.3";
+              }
+              if ($d24 == null) {
+              $errormessages[] = "Please provide an answer for D.2.4";
+              }
+              if ($d25 == null) {
+              $errormessages[] = "Please provide an answer for D.2.5";
+              }
+              if ($d3 == null) {
+              $errormessages[] = "Please provide an answer for D.3";
+              }
 
-            if (count($errormessages) > 0) {
+              if (count($errormessages) > 0) {
 
-                $this->setVarByRef("errormessages", $errormessages);
-                $this->setVarByRef("d1", $d1);
-                $this->setVarByRef("d21", $d21);
-                $this->setVarByRef("d22", $d22);
-                $this->setVarByRef("d23", $d23);
-                $this->setVarByRef("d24", $d24);
-                $this->setVarByRef("d25", $d25);
-                $this->setVarByRef("d3", $d3);
-                $mode = "fixup";
-                $this->setVarByRef("mode", $mode);
-                $this->setVarByRef("id", $id);
-                return "outcomesandassessmentoneScience_tpl.php";
-            }
-
+              $this->setVarByRef("errormessages", $errormessages);
+              $this->setVarByRef("d1", $d1);
+              $this->setVarByRef("d21", $d21);
+              $this->setVarByRef("d22", $d22);
+              $this->setVarByRef("d23", $d23);
+              $this->setVarByRef("d24", $d24);
+              $this->setVarByRef("d25", $d25);
+              $this->setVarByRef("d3", $d3);
+              $mode = "fixup";
+              $this->setVarByRef("mode", $mode);
+              $this->setVarByRef("id", $id);
+              return "outcomesandassessmentoneScience_tpl.php";
+              }
+             */
             $formdata = array();
             $formdata["d1"] = $d1;
             $formdata["d21"] = $d21;
@@ -1607,9 +1635,9 @@ class apo extends controller {
         $formdata["id6"] = "0";
         $formdata["id7"] = "0";
         $formdata["id8"] = "0";
-        foreach ($selectedOpts as $opt) {
-            $formdata["id" . $opt] = "1";
-        }
+        /* foreach ($selectedOpts as $opt) {
+          $formdata["id" . $opt] = "1";
+          } */
 
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
@@ -1649,11 +1677,10 @@ class apo extends controller {
           return "outcomesandassessmenttwo_tpl.php";
           } */
 
-        $d4 = $d4_1 . " " . $d4_2 . " " . $d4_3 . " " . $d4_4 . " " . $d4_5 . " " . $d4_6 . " " . $d4_7 . " " . $d4_8;
-
-        $formdata = array();
-        $formdata["d4"] = $d4;
-        $formdata = serialize($formdata);
+        //  $d4 = $d4_1 . " " . $d4_2 . " " . $d4_3 . " " . $d4_4 . " " . $d4_5 . " " . $d4_6 . " " . $d4_7 . " " . $d4_8;
+        //$formdata = array();
+        // $formdata["d4"] = $d4;
+        //    $formdata = serialize($formdata);
         //$this->objformdata->saveData($id, $formname, $formdata);
 
         $selected = $this->getParam('selected');
@@ -1669,76 +1696,77 @@ class apo extends controller {
         $formname = $this->getParam('formname');
         print_r($id);
 
-        /* $errormessages = array();
+        $errormessages = array();
 
-          if ($formname == "outcomesandassessmentthree") {
-          $a = $this->getParam("a");
-          $b = $this->getParam("b");
-          $c = $this->getParam("c");
-          $d = $this->getParam("d");
-          $e = $this->getParam("e");
-          $f = $this->getParam("f");
-          $g = $this->getParam("g");
-          $h = $this->getParam("h");
-          $i = $this->getParam("i");
+        if ($formname == "outcomesandassessmentthree") {
+            $a = $this->getParam("a");
+            $b = $this->getParam("b");
+            $c = $this->getParam("c");
+            $d = $this->getParam("d");
+            $e = $this->getParam("e");
+            $f = $this->getParam("f");
+            $g = $this->getParam("g");
+            $h = $this->getParam("h");
+            $i = $this->getParam("i");
 
-          if ($a == null) {
-          $errormessages[] = "Please provide an answer for a";
-          }
-          if ($b == null) {
-          $errormessages[] = "Please provide an answer for b";
-          }
-          if ($c == null) {
-          $errormessages[] = "Please provide an answer for c";
-          }
-          if ($d == null) {
-          $errormessages[] = "Please provide an answer for d";
-          }
-          if ($e == null) {
-          $errormessages[] = "Please provide an answer for e";
-          }
-          if ($f == null) {
-          $errormessages[] = "Please provide an answer for f";
-          }
-          if ($g == null) {
-          $errormessages[] = "Please provide an answer for g";
-          }
-          if ($h == null) {
-          $errormessages[] = "Please provide an answer for h";
-          }
-          if ($i == null) {
-          $errormessages[] = "Please provide an answer for i";
-          }
+            /*    if ($a == null) {
+              $errormessages[] = "Please provide an answer for a";
+              }
+              if ($b == null) {
+              $errormessages[] = "Please provide an answer for b";
+              }
+              if ($c == null) {
+              $errormessages[] = "Please provide an answer for c";
+              }
+              if ($d == null) {
+              $errormessages[] = "Please provide an answer for d";
+              }
+              if ($e == null) {
+              $errormessages[] = "Please provide an answer for e";
+              }
+              if ($f == null) {
+              $errormessages[] = "Please provide an answer for f";
+              }
+              if ($g == null) {
+              $errormessages[] = "Please provide an answer for g";
+              }
+              if ($h == null) {
+              $errormessages[] = "Please provide an answer for h";
+              }
+              if ($i == null) {
+              $errormessages[] = "Please provide an answer for i";
+              }
 
-          if (count($errormessages) > 0) {
-          $this->setVarByRef("errormessages", $errormessages);
-          $this->setVarByRef("a", $a);
-          $this->setVarByRef("b", $b);
-          $this->setVarByRef("c", $c);
-          $this->setVarByRef("d", $d);
-          $this->setVarByRef("e", $e);
-          $this->setVarByRef("f", $f);
-          $this->setVarByRef("g", $g);
-          $this->setVarByRef("h", $h);
-          $this->setVarByRef("i", $i);
-          $mode = "fixup";
-          $this->setVarByRef("mode", $mode);
-          return "outcomesandassessmentthree_tpl.php";
-          }
+              if (count($errormessages) > 0) {
+              $this->setVarByRef("errormessages", $errormessages);
+              $this->setVarByRef("a", $a);
+              $this->setVarByRef("b", $b);
+              $this->setVarByRef("c", $c);
+              $this->setVarByRef("d", $d);
+              $this->setVarByRef("e", $e);
+              $this->setVarByRef("f", $f);
+              $this->setVarByRef("g", $g);
+              $this->setVarByRef("h", $h);
+              $this->setVarByRef("i", $i);
+              $mode = "fixup";
+              $this->setVarByRef("mode", $mode);
+              return "outcomesandassessmentthree_tpl.php";
+              } */
 
-          $formdata = array();
-          $formdata["a"] = $a;
-          $formdata["b"] = $b;
-          $formdata["c"] = $c;
-          $formdata["d"] = $d;
-          $formdata["e"] = $e;
-          $formdata["f"] = $f;
-          $formdata["g"] = $g;
-          $formdata["h"] = $h;
-          $formdata["i"] = $i;
-          $formdata = serialize($formdata);
-          $this->objformdata->saveData($id, $formname, $formdata);
-          } else if ($formname == "outcomesandassessmentthreeScience") {
+            $formdata = array();
+            $formdata["docid"] = $id;
+            $formdata["a"] = $a;
+            $formdata["b"] = $b;
+            $formdata["c"] = $c;
+            $formdata["d"] = $d;
+            $formdata["e"] = $e;
+            $formdata["f"] = $f;
+            $formdata["g"] = $g;
+            $formdata["h"] = $h;
+            $formdata["i"] = $i;
+            $formdata = serialize($formdata);
+            $this->objformdata->saveData($id, $formname, $formdata);
+        } /* else if ($formname == "outcomesandassessmentthreeScience") {
           $a1 = $this->getParam("a1");
           $a2 = $this->getParam("a2");
           $a3 = $this->getParam("a3");
@@ -1862,6 +1890,7 @@ class apo extends controller {
           }
 
           $formdata = array();
+          $formdata["docid"] = $id;
           $formdata["a1"] = $a1;
           $formdata["a2"] = $a2;
           $formdata["a3"] = $a3;
@@ -1920,9 +1949,10 @@ class apo extends controller {
     public function __showcollaborationandcontracts() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
+        $document = $this->documents->getDocument($id);
         print_r($id);
 
-        $errormessages = array();
+        // $errormessages = array();
 
         $e1a = $this->getParam("e1a");
         $e1b = $this->getParam("e1b");
@@ -1935,61 +1965,62 @@ class apo extends controller {
         $e4 = $this->getParam("e4");
         $e5a = $this->getParam("e5a");
         $e5b = $this->getParam("e5b");
+        /*
+          if ($e1a == null) {
+          $errormessages[] = "Please provide an answer for E.1.a";
+          }
+          if ($e1b == null) {
+          $errormessages[] = "Please provide an answer for E.1.b";
+          }
+          if ($e2a == null) {
+          $errormessages[] = "Please provide an answer for E.2.a";
+          }
+          if ($e2b == null) {
+          $errormessages[] = "Please provide an answer for E.2.b";
+          }
+          if ($e2c == null) {
+          $errormessages[] = "Please provide an answer for E.2.c";
+          }
+          if ($e3a == null) {
+          $errormessages[] = "Please provide an answer for E.3.a";
+          }
+          if ($e3b == null) {
+          $errormessages[] = "Please provide an answer for E.3.b";
+          }
+          if ($e3c == null) {
+          $errormessages[] = "Please provide an answer for E.3.c";
+          }
+          if ($e4 == null) {
+          $errormessages[] = "Please provide an answer for E.4";
+          }
+          if ($e5a == null) {
+          $errormessages[] = "Please provide an answer for E.5.a";
+          }
+          if ($e5b == null) {
+          $errormessages[] = "Please provide an answer for E.5.b";
+          }
 
-        if ($e1a == null) {
-            $errormessages[] = "Please provide an answer for E.1.a";
-        }
-        if ($e1b == null) {
-            $errormessages[] = "Please provide an answer for E.1.b";
-        }
-        if ($e2a == null) {
-            $errormessages[] = "Please provide an answer for E.2.a";
-        }
-        if ($e2b == null) {
-            $errormessages[] = "Please provide an answer for E.2.b";
-        }
-        if ($e2c == null) {
-            $errormessages[] = "Please provide an answer for E.2.c";
-        }
-        if ($e3a == null) {
-            $errormessages[] = "Please provide an answer for E.3.a";
-        }
-        if ($e3b == null) {
-            $errormessages[] = "Please provide an answer for E.3.b";
-        }
-        if ($e3c == null) {
-            $errormessages[] = "Please provide an answer for E.3.c";
-        }
-        if ($e4 == null) {
-            $errormessages[] = "Please provide an answer for E.4";
-        }
-        if ($e5a == null) {
-            $errormessages[] = "Please provide an answer for E.5.a";
-        }
-        if ($e5b == null) {
-            $errormessages[] = "Please provide an answer for E.5.b";
-        }
+          if (count($errormessages) > 0) {
 
-        if (count($errormessages) > 0) {
-
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("e1a", $e1a);
-            $this->setVarByRef("e1b", $e1b);
-            $this->setVarByRef("e2a", $e2a);
-            $this->setVarByRef("e2b", $e2b);
-            $this->setVarByRef("e2c", $e2c);
-            $this->setVarByRef("e3a", $e3a);
-            $this->setVarByRef("e3b", $e3b);
-            $this->setVarByRef("e3c", $e3c);
-            $this->setVarByRef("e4", $e4);
-            $this->setVarByRef("e5a", $e5a);
-            $this->setVarByRef("e5b", $e5b);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "resources_tpl.php";
-        }
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("e1a", $e1a);
+          $this->setVarByRef("e1b", $e1b);
+          $this->setVarByRef("e2a", $e2a);
+          $this->setVarByRef("e2b", $e2b);
+          $this->setVarByRef("e2c", $e2c);
+          $this->setVarByRef("e3a", $e3a);
+          $this->setVarByRef("e3b", $e3b);
+          $this->setVarByRef("e3c", $e3c);
+          $this->setVarByRef("e4", $e4);
+          $this->setVarByRef("e5a", $e5a);
+          $this->setVarByRef("e5b", $e5b);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "resources_tpl.php";
+          } */
 
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["e1a"] = $e1a;
         $formdata["e1b"] = $e1b;
         $formdata["e2a"] = $e2a;
@@ -2008,6 +2039,7 @@ class apo extends controller {
         $mode = "new";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("document", $document);
         $this->setVarByRef("id", $id);
         return "collaborationandcontracts_tpl.php";
     }
@@ -2027,51 +2059,52 @@ class apo extends controller {
         $f3a = $this->getParam("f3a");
         $f3b = $this->getParam("f3b");
         $f4 = $this->getParam("f4");
+        /*
+          if ($f1a == null) {
+          $errormessages[] = "Please provide an answer for F.1.a";
+          }
 
-        if ($f1a == null) {
-            $errormessages[] = "Please provide an answer for F.1.a";
-        }
+          if ($f1b == '') {
+          $errormessages[] = "Provide answer for F.1.b.";
+          }
 
-        if ($f1b == '') {
-            $errormessages[] = "Provide answer for F.1.b.";
-        }
+          if (empty($_POST['f2a'])) {
+          $errormessages[] = "Provide answer for F.2.a.";
+          }
 
-        if (empty($_POST['f2a'])) {
-            $errormessages[] = "Provide answer for F.2.a.";
-        }
+          if ($f2b == '') {
+          $errormessages[] = "Provide answer for F.2.b.";
+          }
 
-        if ($f2b == '') {
-            $errormessages[] = "Provide answer for F.2.b.";
-        }
+          if (empty($_POST['f3a'])) {
+          $errormessages[] = "Provide answer for F.3.a.";
+          }
 
-        if (empty($_POST['f3a'])) {
-            $errormessages[] = "Provide answer for F.3.a.";
-        }
+          if ($f3b == '') {
+          $errormessages[] = "Provide answer for F.3.b.";
+          }
 
-        if ($f3b == '') {
-            $errormessages[] = "Provide answer for F.3.b.";
-        }
+          if (empty($_POST['f4'])) {
+          $errormessages[] = "Provide answer for F.4.";
+          }
 
-        if (empty($_POST['f4'])) {
-            $errormessages[] = "Provide answer for F.4.";
-        }
+          if (count($errormessages) > 0) {
 
-        if (count($errormessages) > 0) {
-
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("f1a", $f1a);
-            $this->setVarByRef("f1b", $f1b);
-            $this->setVarByRef("f2a", $f2a);
-            $this->setVarByRef("f2b", $f2b);
-            $this->setVarByRef("f3a", $f3a);
-            $this->setVarByRef("f3b", $f3b);
-            $this->setVarByRef("f4", $f4);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "collaborationandcontracts_tpl.php";
-        }
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("f1a", $f1a);
+          $this->setVarByRef("f1b", $f1b);
+          $this->setVarByRef("f2a", $f2a);
+          $this->setVarByRef("f2b", $f2b);
+          $this->setVarByRef("f3a", $f3a);
+          $this->setVarByRef("f3b", $f3b);
+          $this->setVarByRef("f4", $f4);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "collaborationandcontracts_tpl.php";
+          } */
 
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["f1a"] = $f1a;
         $formdata["f1b"] = $f1b;
         $formdata["f2a"] = $f2a;
@@ -2106,63 +2139,64 @@ class apo extends controller {
         $g3b = $this->getParam("g3b");
         $g4a = $this->getParam("g4a");
         $g4b = $this->getParam("g4b");
+        /*
+          if ($g1a == null) {
+          $errormessages[] = "Please provide an answer for G.1.a";
+          }
 
-        if ($g1a == null) {
-            $errormessages[] = "Please provide an answer for G.1.a";
-        }
+          $g1b = $this->getParam("g1b");
+          if ($g1b == '') {
+          $errormessages[] = "Provide answer for G.1.b.";
+          }
 
-        $g1b = $this->getParam("g1b");
-        if ($g1b == '') {
-            $errormessages[] = "Provide answer for G.1.b.";
-        }
+          $g2a = $this->getParam("g2a");
+          if ($g2a == '') {
+          $errormessages[] = "Provide answer for G.2.a.";
+          }
 
-        $g2a = $this->getParam("g2a");
-        if ($g2a == '') {
-            $errormessages[] = "Provide answer for G.2.a.";
-        }
+          $g2b = $this->getParam("g2b");
+          if ($g2b == '') {
+          $errormessages[] = "Provide answer for G.2.b.";
+          }
 
-        $g2b = $this->getParam("g2b");
-        if ($g2b == '') {
-            $errormessages[] = "Provide answer for G.2.b.";
-        }
+          $g3a = $this->getParam("g3a");
+          if ($g3a == '') {
+          $errormessages[] = "Provide answer for G.3.a.";
+          }
 
-        $g3a = $this->getParam("g3a");
-        if ($g3a == '') {
-            $errormessages[] = "Provide answer for G.3.a.";
-        }
+          $g3b = $this->getParam("g3b");
+          if ($g3b == '') {
+          $errormessages[] = "Provide answer for G.3.b.";
+          }
 
-        $g3b = $this->getParam("g3b");
-        if ($g3b == '') {
-            $errormessages[] = "Provide answer for G.3.b.";
-        }
+          $g4a = $this->getParam("g4a");
+          if ($g4a == '') {
+          $errormessages[] = "Provide answer for G.4.a. ";
+          }
 
-        $g4a = $this->getParam("g4a");
-        if ($g4a == '') {
-            $errormessages[] = "Provide answer for G.4.a. ";
-        }
+          $g4b = $this->getParam("g4b");
+          if ($g4b == '') {
+          $errormessages[] = "Provide answer for G.4.b.";
+          }
 
-        $g4b = $this->getParam("g4b");
-        if ($g4b == '') {
-            $errormessages[] = "Provide answer for G.4.b.";
-        }
+          if (count($errormessages) > 0) {
 
-        if (count($errormessages) > 0) {
-
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("g1a", $g1a);
-            $this->setVarByRef("g1b", $g1b);
-            $this->setVarByRef("g2a", $g2a);
-            $this->setVarByRef("g2b", $g2b);
-            $this->setVarByRef("g3a", $g3a);
-            $this->setVarByRef("g3b", $g3b);
-            $this->setVarByRef("g4a", $g4a);
-            $this->setVarByRef("g4b", $g4b);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "review_tpl.php";
-        }
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("g1a", $g1a);
+          $this->setVarByRef("g1b", $g1b);
+          $this->setVarByRef("g2a", $g2a);
+          $this->setVarByRef("g2b", $g2b);
+          $this->setVarByRef("g3a", $g3a);
+          $this->setVarByRef("g3b", $g3b);
+          $this->setVarByRef("g4a", $g4a);
+          $this->setVarByRef("g4b", $g4b);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "review_tpl.php";
+          } */
 
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["g1a"] = $g1a;
         $formdata["g1b"] = $g1b;
         $formdata["g2a"] = $g2a;
@@ -2225,6 +2259,7 @@ class apo extends controller {
           }
 
           $formdata = array();
+         * $formdata["docid"] = $id;
           $formdata["h1"] = $h1;
           $formdata["h2a"] = $h2a;
           $formdata["h2b"] = $h2b;
@@ -2238,6 +2273,7 @@ class apo extends controller {
 
     public function __showfeedback() {
         $id = $this->getParam("id");
+        $document = $this->documents->getDocument($id);
         $formname = $this->getParam('formname');
         print_r($id);
 
@@ -2257,36 +2293,37 @@ class apo extends controller {
         $h3a = $this->getParam("h3a");
         $h3b = $this->getParam("h3b");
 
-        if ($h1 == null) {
-            $errormessages[] = "Please provide an answer for H.1";
-        }
-        if ($h2a == null) {
-            $errormessages[] = "Please provide an answer for H.2.a";
-        }
-        if ($h2b == null) {
-            $errormessages[] = "Please provide an answer for H.2.b";
-        }
-        if ($h3a == null) {
-            $errormessages[] = "Please provide an answer for H.3.a";
-        }
-        if ($h3b == null) {
-            $errormessages[] = "Please provide an answer for H.3.b";
-        }
+        /*        if ($h1 == null) {
+          $errormessages[] = "Please provide an answer for H.1";
+          }
+          if ($h2a == null) {
+          $errormessages[] = "Please provide an answer for H.2.a";
+          }
+          if ($h2b == null) {
+          $errormessages[] = "Please provide an answer for H.2.b";
+          }
+          if ($h3a == null) {
+          $errormessages[] = "Please provide an answer for H.3.a";
+          }
+          if ($h3b == null) {
+          $errormessages[] = "Please provide an answer for H.3.b";
+          }
 
-        if (count($errormessages) > 0) {
+          if (count($errormessages) > 0) {
 
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("h1", $h1);
-            $this->setVarByRef("h2a", $h2a);
-            $this->setVarByRef("h2b", $h2b);
-            $this->setVarByRef("h3a", $h3a);
-            $this->setVarByRef("h3b", $h3b);
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            return "contactdetails_tpl.php";
-        }
-
+          $this->setVarByRef("errormessages", $errormessages);
+          $this->setVarByRef("h1", $h1);
+          $this->setVarByRef("h2a", $h2a);
+          $this->setVarByRef("h2b", $h2b);
+          $this->setVarByRef("h3a", $h3a);
+          $this->setVarByRef("h3b", $h3b);
+          $mode = "fixup";
+          $this->setVarByRef("mode", $mode);
+          return "contactdetails_tpl.php";
+          }
+         */
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["h1"] = $h1;
         $formdata["h2a"] = $h2a;
         $formdata["h2b"] = $h2b;
@@ -2370,6 +2407,7 @@ class apo extends controller {
         $totalSAQAcredits = $totalstudyhoursExam / 10;
 
         $formdata = array();
+        $formdata["docid"] = $id;
         $formdata["a"] = $a;
         $formdata["b"] = $b;
         $formdata["c"] = $c;
@@ -2869,6 +2907,7 @@ class apo extends controller {
      * @return the form that will be used to capture the information for the new
      * faculty
      */
+
     public function __newschool() {
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -2888,6 +2927,7 @@ class apo extends controller {
      * @access public
      * @return the form that will be used to edit the information for the school
      */
+
     public function __editschool() {
         $selected = $this->getParam('selected');
         $mode = "edit";
@@ -2913,6 +2953,7 @@ class apo extends controller {
      * @return the form that will be used to capture the information for the new
      * faculty
      */
+
     public function __registerschool() {
         $faculty = $this->getParam('faculty');
         $school = $this->getParam('school');
@@ -2931,6 +2972,7 @@ class apo extends controller {
      * @return the next action to perform after updating a faculty
      * faculty
      */
+
     public function __updateschool() {
         $faculty = $this->getParam('faculty');
         $school = $this->getParam('school');
@@ -2942,7 +2984,7 @@ class apo extends controller {
             $contact = $this->objUser->fullname($userid);
         }
 
-        $data = array("faculty"=> $faculty, "school"=>$school, "contact_person"=>$contact, "telephone"=>$telephone, "userid"=>$this->objUser->userId());
+        $data = array("faculty" => $faculty, "school" => $school, "contact_person" => $contact, "telephone" => $telephone, "userid" => $this->objUser->userId());
         $this->schools->editSchool($this->getParam('id'), $data);
 
         return $this->nextAction('schoolmanagement');
@@ -2955,6 +2997,7 @@ class apo extends controller {
      * @return the next action to perform after deleting a faculty
      * faculty
      */
+
     public function __deleteschool() {
         $id = $this->getParam('id');
         $this->schools->deleteSchool($id);
@@ -2970,10 +3013,11 @@ class apo extends controller {
         return "reclaimdocumentform_tpl.php";
     }
 
-    public function __reclaimdocument(){
+    public function __reclaimdocument() {
         $userid = $this->getParam('userid');
         $docid = $this->getParam('docid');
         $version = $this->getParam('version');
         $this->documents->reclaimDocument($userid, $docid, $version);
     }
+
 }

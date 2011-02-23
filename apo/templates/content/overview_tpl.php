@@ -14,6 +14,7 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
+$this->documents = $this->getObject('dbdocuments');
 $this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');

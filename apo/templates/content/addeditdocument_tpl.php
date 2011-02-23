@@ -16,19 +16,25 @@ $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
+$this->documents = $this->getObject('dbdocuments');
 
 $this->setVar('pageSuppressXML', TRUE);
 $this->setVar('JQUERY_VERSION', '1.4.2');
 
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
-//$action = 'registerdocument';
+
+
+
+if ($mode == 'new'){
+    $action = 'registerdocument';
+}
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+
 if ($mode == 'edit') {
     $action = "updatedocument";
     $selected = $this->baseDir . $document['topic'];
 }
-
 
 if ($selected == '') {
 
@@ -51,37 +57,37 @@ $header->str = $xtitle;
 echo $header->show();
 
 if ($mode == 'edit') {
-    $overviewlink = new link($this->uri(array("action" => "showoverview")));
+    $overviewlink = new link($this->uri(array("action" => "showoverview","id" => $document['id'])));
     $overviewlink->link = "Overview";
 
-    $rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone")));
+    $rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone","id" => $document['id'])));
     $rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
 
-    $rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo")));
+    $rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo","id" => $document['id'])));
     $rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
 
-    $subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements")));
+    $subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements","id" => $document['id'])));
     $subsidyrequirementslink->link = "Subsidy Requirements";
 
-    $outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone")));
+    $outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone","id" => $document['id'])));
     $outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
 
-    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo","id"=>$id)));
+    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo","id" => $document['id'])));
     $outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
 
-    $outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree")));
+    $outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree","id" => $document['id'])));
     $outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
 
-    $resourceslink = new link($this->uri(array("action" => "showresources")));
+    $resourceslink = new link($this->uri(array("action" => "showresources","id" => $document['id'])));
     $resourceslink->link = "Resources";
 
-    $collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts")));
+    $collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts","id" => $document['id'])));
     $collaborationandcontractslink->link = "Collaboration and Contracts";
 
-    $reviewlink = new link($this->uri(array("action" => "showreview")));
+    $reviewlink = new link($this->uri(array("action" => "showreview","id" => $document['id'])));
     $reviewlink->link = "Review";
 
-    $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails")));
+    $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails","id" => $document['id'])));
     $contactdetailslink->link = "Contact Details";
 
     $links = "<b>Document</b>" . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
@@ -108,6 +114,8 @@ $textinput->cssId="datepicker1";
 if ($mode == 'edit') {
     $textinput->value = $document['date_created'];
 }
+
+
 
 $table->addCell('<b>Entry Date</b>');
 $table->addCell($textinput->show());
@@ -179,6 +187,7 @@ $fs->setLegend($legend);
 $fs->addContent($table->show());
 
 // Form
+
 $form = new form('registerdocumentform', $this->uri(array('action' => $action,'id' => $id)));
 $numberfield = new hiddeninput('number', $number);
 $form->addToForm($numberfield->show());
@@ -193,7 +202,7 @@ if ($mode == 'edit') {
     $form->addToForm($hiddenId->show());
 }
 
-
+$errormessages = array();
 $efs = new fieldset();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {
@@ -220,7 +229,7 @@ if ($mode == 'edit') {
 
 $form->addToForm('<br/>' . $button->show());
 
-if ($this->objUser->isAdmin()) {
+/*if ($this->objUser->isAdmin()) {
     if ($mode == 'edit') {
         $button = new button('approve', "Approve");
         $uri = $this->uri(array('action' => 'approvedocument', 'id' => $document['id']));
@@ -232,7 +241,7 @@ if ($this->objUser->isAdmin()) {
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $form->addToForm($button->show());
     }
-}
+}*/
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');

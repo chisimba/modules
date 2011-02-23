@@ -75,7 +75,7 @@ class dbdocuments extends dbtable {
         }
 
         $sql.=' order by puid DESC';
-       // $sql.=" limit $start, $end";
+        // $sql.=" limit $start, $end";
         //echo $sql;
         //die();
         $rows = $this->getArray($sql);
@@ -204,7 +204,7 @@ class dbdocuments extends dbtable {
             'telephone' => $telephone,
             'topic' => $path,
             'mode' => $mode,
-            'deleteDoc'=>"N",
+            'deleteDoc' => "N",
             'active' => $approved,
             'status' => $status,
             'currentuserid' => $currentuserid,
@@ -322,7 +322,7 @@ class dbdocuments extends dbtable {
     function getDocument($id) {
         $document = $this->getRow('id', $id);
 
-        return serialize($document);
+        return $document;
     }
 
     function checkRefNo($number) {

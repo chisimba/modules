@@ -673,6 +673,9 @@ class userutils extends object {
         $baseFolderId = "0";
         $objfolders = $this->getObject('dbfolderpermissions');
 
+        $icon = '';
+        $expandedIcon = '';
+        $cssClass = '';
 
         if ($treeType == 'htmldropdown') {
             $allFilesNode = new treenode(array('text' => $this->modeLabel . 's', 'link' => $baseFolderId));
@@ -686,7 +689,7 @@ class userutils extends object {
         $facultyCount = count($faculty->getFaculties());
         $schoolCount = count($school->getSchools());
         if ($treeMode == 'side') {
-            $unapprovedDocs = "$count New documents";
+            $unapprovedDocs = "$count New Course Proposals";
             if ($selected == 'unapproved') {
                 $unapprovedDocs = '<strong>' . $unapprovedDocs . '</strong>';
                 $cssClass = 'confirm';
@@ -694,7 +697,7 @@ class userutils extends object {
                 $cssClass = '';
             }
             $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
-            $count = $documents->getRejectedDocsCount();
+          /*  $count = $documents->getRejectedDocsCount();
             $rejectedDocs = "$count Rejected documents";
             if ($selected == 'rejecteddocuments') {
                 $rejectedDocs = '<strong>' . $rejectedDocs . '</strong>';
@@ -702,7 +705,7 @@ class userutils extends object {
             } else {
                 $cssClass = '';
             }
-            $rejectedDocsNode = new treenode(array('text' => $rejectedDocs, 'link' => $this->uri(array('action' => 'rejecteddocuments', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $rejectedDocsNode = new treenode(array('text' => $rejectedDocs, 'link' => $this->uri(array('action' => 'rejecteddocuments', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));*/
 
             //$count = count($this->objFaculties->getFaculties());
             $facultyManagement = "$facultyCount Faculty Management";
@@ -725,7 +728,7 @@ class userutils extends object {
                                             ));
             
             $allFilesNode->addItem($newDocsNode);
-            $allFilesNode->addItem($rejectedDocsNode);
+         //   $allFilesNode->addItem($rejectedDocsNode);
             $allFilesNode->addItem($facultyManagementNode);
         }
 //Create a new tree

@@ -35,37 +35,37 @@ $header->str = $xtitle;
 
 echo $header->show();
 
-$doclink = new link($this->uri(array("action" => "editdocument")));
+$doclink = new link($this->uri(array("action" => "editdocument","id"=>$id)));
 $doclink->link = "Document";
 
-$overviewlink = new link($this->uri(array("action" => "showoverview")));
+$overviewlink = new link($this->uri(array("action" => "showoverview","id"=>$id)));
 $overviewlink->link = "Overview";
 
-$rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone")));
+$rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone","id"=>$id)));
 $rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
-$rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo")));
+$rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo","id"=>$id)));
 $rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
-$subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements")));
+$subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements","id"=>$id)));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
-$outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone")));
+$outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone","id"=>$id)));
 $outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
-$outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree")));
+$outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree","id"=>$id)));
 $outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
-$resourceslink = new link($this->uri(array("action" => "showresources")));
+$resourceslink = new link($this->uri(array("action" => "showresources","id"=>$id)));
 $resourceslink->link = "Resources";
 
-$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts")));
+$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts","id"=>$id)));
 $collaborationandcontractslink->link = "Collaboration and Contracts";
 
-$reviewlink = new link($this->uri(array("action" => "showreview")));
+$reviewlink = new link($this->uri(array("action" => "showreview","id"=>$id)));
 $reviewlink->link = "Review";
 
-$contactdetailslink = new link($this->uri(array("action" => "showcontactdetails")));
+$contactdetailslink = new link($this->uri(array("action" => "showcontactdetails","id"=>$id)));
 $contactdetailslink->link = "Contact Details";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .

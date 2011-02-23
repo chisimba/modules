@@ -23,15 +23,15 @@ echo $createFolder;
 
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
 $newdoclink->link = "Register New Course Proposal";
-
+/*
 $unapproveddocs = new link($this->uri(array("action" => "unapproveddocs")));
 $unapproveddocs->link = "Unapproved/New documents";
 
 
 $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments")));
-$rejecteddocuments->link = "Rejected documents";
+$rejecteddocuments->link = "Rejected documents";*/
 
-echo $newdoclink->show() . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
+echo $newdoclink->show();// . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
 $table = $this->getObject("htmltable", "htmlelements");
 
 $table->startHeaderRow();

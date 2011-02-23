@@ -14,9 +14,16 @@ $header->str = $this->objLanguage->languageText('mod_wicid_unapproved', 'wicid',
 
 echo $header->show();
 
-
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registernewdoc', 'wicid', "New Course Proposal"));
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
-$newdoclink->link = "Register New Document";
+$newdoclink->link = $button->show();
+
+
+// Create a Unapproved/New documents Button
+$button = new button("submit", $this->objLanguage->languageText('mod_wicid_newunapproved', 'wicid', "Unapproved/New documents"));
+$unapproveddocs = new link($this->uri(array("action" => "unapproveddocs")));
+$unapproveddocs->link = $button->show();
+
 
 $unapproveddocs = new link($this->uri(array("action" => "unapproveddocs")));
 $unapproveddocs->link = "Unapproved/New documents";
@@ -26,7 +33,7 @@ $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments"))
 $rejecteddocuments->link = "Rejected documents";
 
 
-$links = $newdoclink->show() . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
+$links = $newdoclink->show(); //. '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
 $fs = new fieldset();
 $fs->setLegend('Navigation');
 $fs->addContent($links);

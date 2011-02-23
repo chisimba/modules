@@ -14,7 +14,7 @@ $header->str = $this->objLanguage->languageText('mod_wicid_unapproved', 'wicid',
 
 echo $header->show();
 
-
+//$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registernewdoc', 'wicid', "Register New Course Proposal"));
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
 $newdoclink->link = "New Course Proposal";
 
@@ -26,7 +26,7 @@ $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments"))
 $rejecteddocuments->link = "Rejected documents";
 
 
-$links = $newdoclink->show() . '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
+$links = $newdoclink->show(); //. '&nbsp;|&nbsp;' . $unapproveddocs->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
 $fs = new fieldset();
 $fs->setLegend('Navigation');
 $fs->addContent($links);
@@ -50,6 +50,7 @@ if (count($documents) > 0) {
         //$topic=  substr($document['topic'], strlen($this->baseDir));
         if ($document['currentuserid'] == "Administrative User") {
             $link = new link($this->uri(array("action" => "showeditdocument", "id" => $document['id'])));
+            
             $link->link = $document['filename'];
 
             $table->startRow();
