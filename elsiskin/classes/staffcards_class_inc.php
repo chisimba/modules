@@ -246,11 +246,11 @@ class staffcards extends object {
 					<h2><span class="fn">Rabelani.Dagada\'s</span> networks</h2>
 						<div id="networkmedia">
 				  		  <ul>        
-							<li><a href="http://www.facebook.com/pages/Rabelani-Dagada-Author-and-Intellectual/127030800684042"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/#!/Rabelani_Dagada"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-                                                        <li><a href="http://za.linkedin.com/pub/rabelani-dagada/13/443/28"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
-							<li><a href="http://www.amazon.com/Rabelani-Dagada/e/B004AOEDQY/ref=sr_tc_2_rm?qid=1297599658&sr=1-2-ent"><img src="' . $this->skinpath . 'images/profiles/amazon.png"><strong>Amazon</strong>amazon.com</a></li>
-                                                        <li><a href="http://www.slideshare.net/RabelaniDagada/presentations"><img src="' . $this->skinpath . 'images/profiles/slideshare.png"><strong>Slideshare</strong>slideshare.com</a></li>
+							<li><a href="http://www.facebook.com/pages/Rabelani-Dagada-Author-and-Intellectual/127030800684042"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://twitter.com/#!/Rabelani_Dagada"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+                                                        <li><a href="http://za.linkedin.com/pub/rabelani-dagada/13/443/28"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
+							<li><a href="http://www.amazon.com/Rabelani-Dagada/e/B004AOEDQY/ref=sr_tc_2_rm?qid=1297599658&sr=1-2-ent"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/amazon.png"><strong>Amazon</strong>amazon.com</a></li>
+                                                        <li><a href="http://www.slideshare.net/RabelaniDagada/presentations"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/slideshare.png"><strong>Slideshare</strong>slideshare.com</a></li>
 						  </ul>
 						  <div class="clear"></div>
 						</div>
@@ -321,10 +321,11 @@ class staffcards extends object {
 					<h2><span class="fn">Nkululeko Phakela\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://www.facebook.com/nphakela"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/nguni52/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-                                                        <li><a href="http://www.delicious.com/nphakela/"><img src="' . $this->skinpath . 'images/profiles/delicious.png"><strong>Delicious</strong>delicious.com</a></li>
-							<li><a href="http://www.flickr.com/photos/56799340@N08/"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
+							<li><a href="http://www.facebook.com/nphakela"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a href="http://twitter.com/nguni52/"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+                                                        <li><a href="http://www.delicious.com/nphakela/"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/delicious.png"><strong>Delicious</strong>delicious.com</a></li>
+							<li><a href="http://www.flickr.com/photos/56799340@N08/"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
+                                                        <li><a href="http://twitpic.com/photos/Nguni52"  target="_blank"><img src="' . $this->skinpath . 'images/profiles/twitpic.png"><strong>TwitPic</strong>twitpic.com</a></li>
                                                   </ul>
 						  <div class="clear"></div>
 						</div>
@@ -411,13 +412,13 @@ class staffcards extends object {
 					<h2><span class="fn">Derek Moore\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://twitter.com/weblearning/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a  target="_blank" href="http://twitter.com/weblearning/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 		
-							<li><a href="http://www.facebook.com/weblearning"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://za.linkedin.com/in/weblearning"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
-							<li><a href="http://www.delicious.com/weblearning/"><img src="' . $this->skinpath . 'images/profiles/delicious.png"><strong>Delicious</strong>delicious.com</a></li>
-							<li><a href="http://www.flickr.com/photos/weblearning"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
-							<li><a href="http://www.weblearning.co.za/blog/"><img src="' . $this->skinpath . 'images/profiles/wordpress.png"><strong>Wordpress</strong>My Blog</a></li>
+							<li><a  target="_blank" href="http://www.facebook.com/weblearning"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a target="_blank" href="http://za.linkedin.com/in/weblearning"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
+							<li><a target="_blank" href="http://www.delicious.com/weblearning/"><img src="' . $this->skinpath . 'images/profiles/delicious.png"><strong>Delicious</strong>delicious.com</a></li>
+							<li><a target="_blank" href="http://www.flickr.com/photos/weblearning"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
+							<li><a target="_blank" href="http://www.weblearning.co.za/blog/"><img src="' . $this->skinpath . 'images/profiles/wordpress.png"><strong>Wordpress</strong>My Blog</a></li>
 		
 						  </ul>
 						  <div class="clear"></div>
@@ -496,7 +497,10 @@ class staffcards extends object {
 		
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://twitter.com/JimmyNts/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li>
+                                                            <a target="_blank" href="http://twitter.com/JimmyNts/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a>
+
+                                                        </li>
 						  </ul>
 						  <div class="clear"></div>
 						</div>
@@ -650,7 +654,7 @@ class staffcards extends object {
 					<h2><span class="fn">Fatima Rahiman\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://twitter.com/fatima1507/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a target="_blank" href="http://twitter.com/fatima1507/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 						  </ul>
 		
 						  <div class="clear"></div>
@@ -727,9 +731,9 @@ class staffcards extends object {
 					<h2><span class="fn">Ofentse Tabane\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://twitter.com/KeOfentse/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-                                                        <li><a href="http://za.linkedin.com/pub/ofentse-tabane/15/94a/811"><img src="'.$this->skinpath . 'images/profiles/linkedin.png"<strong>LinkedIn</strong>linkedin.com</a></li>
-                                                        <li><a href="http://www.flickr.com/photos/56709923@N05/"><img src="'.$this->skinpath .'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
+							<li><a target="_blank" href="http://twitter.com/KeOfentse/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+                                                        <li><a target="_blank" href="http://za.linkedin.com/pub/ofentse-tabane/15/94a/811"><img src="'.$this->skinpath . 'images/profiles/linkedin.png"<strong>LinkedIn</strong>linkedin.com</a></li>
+                                                        <li><a target="_blank" href="http://www.flickr.com/photos/56709923@N05/"><img src="'.$this->skinpath .'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>
 						  </ul>
 						  <div class="clear"></div>
 		
@@ -982,10 +986,10 @@ class staffcards extends object {
 					<h2><span class="fn">Neo Petlele\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul> 
-							<li><a href="http://za.linkedin.com/pub/neo-petlele/b/7b9/61b"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
-							<li><a href="http://twitter.com/newis/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a target="_blank" href="http://za.linkedin.com/pub/neo-petlele/b/7b9/61b"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
+							<li><a target="_blank" href="http://twitter.com/newis/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 		
-							<li><a href="http://www.facebook.com/Neo%20Petlele#!/profile.php?id=730956553"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a target="_blank" href="http://www.facebook.com/Neo%20Petlele#!/profile.php?id=730956553"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Facebook</strong>facebook.com</a></li>
 						  </ul>
 						  <div class="clear"></div>
 						</div>
@@ -1061,10 +1065,10 @@ class staffcards extends object {
 		
 						<div id="networkmedia">
 						  <ul>   
-							<li><a href="http://www.facebook.com/#!/paulwando "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/pwando/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-							<li><a href="http://www.linkedin.com/profile/view?id=33772766"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
-							<li><a href="http://www.flickr.com/photos/52238056@N04/"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>                  </ul>
+							<li><a target="_blank" href="http://www.facebook.com/#!/paulwando "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a target="_blank" href="http://twitter.com/pwando/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a target="_blank" href="http://www.linkedin.com/profile/view?id=33772766"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
+							<li><a target="_blank" href="http://www.flickr.com/photos/52238056@N04/"><img src="' . $this->skinpath . 'images/profiles/flickr.png"><strong>Flickr</strong>flickr.com</a></li>                  </ul>
 		
 						  <div class="clear"></div>
 						</div>
@@ -1143,9 +1147,9 @@ class staffcards extends object {
 		
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://www.facebook.com/#!/nmbana "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/Chosen_Ukwanda/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-							<li><a href="http://za.linkedin.com/pub/noxolo-mbana/a/281/283"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
+							<li><a target="_blank" href="http://www.facebook.com/#!/nmbana "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a target="_blank" href="http://twitter.com/Chosen_Ukwanda/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a target="_blank" href="http://za.linkedin.com/pub/noxolo-mbana/a/281/283"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkIn</strong>linkin.com</a></li>
 						  </ul>
 		
 						  <div class="clear"></div>
@@ -1218,8 +1222,8 @@ class staffcards extends object {
 					<div id="profiles">
 					<h2><span class="fn">Zaahirah Bhamjee\'s</span> networks</h2>
 						<div id="networkmedia">
-						  <ul>  <li><a href="http://www.facebook.com/zaahirah.bowtie "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/#!/residentofearth"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+						  <ul>  <li><a target="_blank" href="http://www.facebook.com/zaahirah.bowtie "><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a target="_blank" href="http://twitter.com/#!/residentofearth"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
 
 						  </ul>
 
@@ -1285,8 +1289,8 @@ class staffcards extends object {
 					<div id="profiles">
 					<h2><span class="fn">Shailin Govender\'s</span> networks</h2>
 						<div id="networkmedia">
-						  <ul>  <li><a href="http://www.facebook.com/home.php#!/shailin1"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://www.linkedin.com/profile/view?id=86209033&trk=tab_pro"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
+						  <ul>  <li><a target="_blank" href="http://www.facebook.com/home.php#!/shailin1"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a target="_blank" href="http://www.linkedin.com/profile/view?id=86209033&trk=tab_pro"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
 
 						  </ul>
 
@@ -1431,7 +1435,7 @@ class staffcards extends object {
 					<div id="profiles">
 					<h2><span class="fn">Palesa Mokwena\'s</span> networks</h2>
 						<div id="networkmedia">
-						  <ul>  <li><a href="http://www.facebook.com/people/Palesa-Mokwena/672512980"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+						  <ul>  <li><a target="_blank" href="http://www.facebook.com/people/Palesa-Mokwena/672512980"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
 							</ul>
 
 						  <div class="clear"></div>
@@ -1496,8 +1500,8 @@ class staffcards extends object {
 					<h2><span class="fn">Dexters Mlambo\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>
-                                                    <li><a href="http://www.facebook.com/home.php#!/mirzadexter"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-                                                    <li><a href="http://www.linkedin.com/profile/edit?trk=hb_tab_pro_top"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
+                                                    <li><a target="_blank" href="http://www.facebook.com/home.php#!/mirzadexter"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+                                                    <li><a target="_blank" href="http://www.linkedin.com/profile/edit?trk=hb_tab_pro_top"><img src="' . $this->skinpath . 'images/profiles/linkedin.png"><strong>LinkedIn</strong>linkedin.com</a></li>
                                                   </ul>
 
 						  <div class="clear"></div>
@@ -1568,9 +1572,9 @@ class staffcards extends object {
 		
 						<div id="networkmedia">
 						  <ul>        
-							<li><a href="http://www.facebook.com/nkaba.senne"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
-							<li><a href="http://twitter.com/nkgoyametsi/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
-							<li><a href="#"><strong>Sowetan Live</strong>sowetanlive.co.za</a></li>
+							<li><a target="_blank" href="http://www.facebook.com/nkaba.senne"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+							<li><a target="_blank" href="http://twitter.com/nkgoyametsi/"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>
+							<li><a target="_blank" href="#"><strong>Sowetan Live</strong>sowetanlive.co.za</a></li>
 						  </ul>
 						  <div class="clear"></div>
 						</div>
