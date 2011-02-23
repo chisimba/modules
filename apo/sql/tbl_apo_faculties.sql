@@ -4,10 +4,13 @@
     $fields = array(
                 'id' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                 'docid' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
-                'faculty' => array('type' => 'text', 'notnull'=>TRUE),
+                'name' => array('type' => 'text', 'notnull'=>TRUE),
                 'date_created' => array('type' => 'date', 'notnull'=>TRUE),
                 'userid' => array('type' => 'text','length' => 15, 'notnull'=>TRUE),
                 'contact_person' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
-                'telephone' => array('type' => 'text','length' => 32, 'notnull'=>TRUE)
+                'telephone' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
+                'deleted' => array('type' => 'text','length' => 1),
+                'level' => array('type' => 'text','length' => 1),
+                'path' => array('type' => 'text')
              );
 ?>

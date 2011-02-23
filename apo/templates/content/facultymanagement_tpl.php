@@ -1,17 +1,14 @@
 <?php
 $this->loadClass('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
+$objFaculties = $this->newObject('faculties');
 $header = new htmlheading();
 $header->type = 2;
 $header->str = $this->objLanguage->languageText('mod_apo_facultymanagement', 'apo');
 
 echo $header->show();
 
-
-$newfacultylink = new link($this->uri(array("action" => "newfaculty", "selected" => $selected)));
-$newfacultylink->link = "Add New Faculty";
-
-echo $newfacultylink->show();
+echo $objFaculties->showCreateFacultiesForm();
 
 $table = $this->getObject("htmltable", "htmlelements");
 $table->startHeaderRow();
@@ -34,7 +31,7 @@ $deleteIcon = $objIcon->show();
 if (count($faculties) > 0) {
     foreach ($faculties as $faculty) {
         $table->startRow();
-        $table->addCell($faculty['faculty']);
+        $table->addCell($faculty['name']);
         $table->addCell($faculty['contact_person']);
         $table->addCell($faculty['telephone']);
 
@@ -50,5 +47,6 @@ if (count($faculties) > 0) {
         $table->endRow();
     }
 }
+echo "<br><br>";
 echo $table->show();
 ?>

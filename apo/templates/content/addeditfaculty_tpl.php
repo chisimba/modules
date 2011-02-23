@@ -41,7 +41,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $textinput = new textinput('faculty');
 $textinput->size = 60;
 if ($mode == 'edit') {
-    $textinput->value = $faculties['faculty'];
+    $textinput->value = $faculties['name'];
 }
 $table->startRow();
 $table->addCell("<b>Faculty</b>");

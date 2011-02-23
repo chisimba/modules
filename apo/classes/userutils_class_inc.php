@@ -61,7 +61,7 @@ class userutils extends object {
         $location = "http://" . $_SERVER['HTTP_HOST'];
         $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
         $this->folderPermissions = $this->getObject('dbfolderpermissions');
-
+        $this->rootTitle = $this->objSysConfig->getValue('ROOT_TITLE', 'apo');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         $this->modeLabel = "Topic";
     }
@@ -631,7 +631,7 @@ class userutils extends object {
         return $refNo;
     }
 
-    function listdir($dir='.') {
+    public function listdir($dir='.') {
         if (!is_dir($dir)) {
             return false;
         }
@@ -642,7 +642,7 @@ class userutils extends object {
         return $files;
     }
 
-    function listdiraux($dir, &$files) {
+    public function listdiraux($dir, &$files) {
         $handle = opendir($dir);
         while (($file = readdir($handle)) !== false) {
             if ($file == '.' || $file == '..') {
@@ -662,7 +662,7 @@ class userutils extends object {
         closedir($handle);
     }
 
-    function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
+    public function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
         $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         $folders = $this->listdir($baseFolder);
 
@@ -685,9 +685,9 @@ class userutils extends object {
         $documents = $this->getObject('dbdocuments');
         $count = $documents->getUnapprovedDocsCount();
         $faculty = $this->getObject('dbfaculties');
-        $school = $this->getObject('dbschools');
+        
         $facultyCount = count($faculty->getFaculties());
-        $schoolCount = count($school->getSchools());
+        $faculties = $faculty->getFaculties();
         if ($treeMode == 'side') {
             $unapprovedDocs = "$count New Course Proposals";
             if ($selected == 'unapproved') {
@@ -697,17 +697,7 @@ class userutils extends object {
                 $cssClass = '';
             }
             $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
-          /*  $count = $documents->getRejectedDocsCount();
-            $rejectedDocs = "$count Rejected documents";
-            if ($selected == 'rejecteddocuments') {
-                $rejectedDocs = '<strong>' . $rejectedDocs . '</strong>';
-                $cssClass = 'confirm';
-            } else {
-                $cssClass = '';
-            }
-            $rejectedDocsNode = new treenode(array('text' => $rejectedDocs, 'link' => $this->uri(array('action' => 'rejecteddocuments', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));*/
 
-            //$count = count($this->objFaculties->getFaculties());
             $facultyManagement = "$facultyCount Faculty Management";
             if ($selected == 'facultymanagement') {
                 $facultyManagement = '<strong>' . $facultyManagement . '</strong>';
@@ -715,56 +705,52 @@ class userutils extends object {
             } else {
                 $cssClass = '';
             }
-            $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => $this->uri(array('action' => 'facultymanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
 
-            $schoolManagement = "$schoolCount School Management";
-            $facultyManagementNode->addItem(new treenode(array(
-                                                            'text'=> $schoolManagement,
-                                                            'link' => $this->uri(array('action' => 'schoolmanagement')),
-                                                            'icon' => $icon, 
-                                                            'expandedIcon' => $expandedIcon, 
-                                                            'cssClass' => $cssClass
-                                                        )
-                                            ));
-            
-            $allFilesNode->addItem($newDocsNode);
-         //   $allFilesNode->addItem($rejectedDocsNode);
+            if ($treeType == 'htmldropdown') {
+                $facultyManagementNode = new treenode(array('text' => $this->rootTitle, 'link' => '-1'));
+            }
+            else {
+                $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => $this->uri(array('action' => 'facultymanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            }
+print_r($facultyManagementNode);
+            if ($treeType != 'htmldropdown') {
+                $allFilesNode->addItem($newDocsNode);
+            }
             $allFilesNode->addItem($facultyManagementNode);
         }
-//Create a new tree
+
+        //Create a new tree
         $menu = new treemenu();
 
         $icon = 'folder.gif';
         $expandedIcon = 'folder-expanded.gif';
         $refArray = array();
-        $refArray[$baseFolder] = & $allFilesNode;
+        $refArray[$this->rootTitle] = & $allFilesNode;
+        
+        if (count($faculties) > 0) {
+            foreach ($faculties as $row) {
+                $folderText = $row['name'];
 
-        if (count($folders) > 0) {
-            foreach ($folders as $folder) {
-                $folderText = basename($folder);
-                $cfile = substr($folder, strlen($this->baseDir));
 
-                $folderShortText = substr(basename($folder), 0, 200) . '...';
-
-                if ($folder == $selected) {
+                $folderShortText = substr($row['name'], 0, 200) . '...';
+                if ($row['name'] == $selected) {
                     $folderText = '<strong>' . $folderText . '</strong>';
                     $cssClass = 'confirm';
                 } else {
                     $cssClass = '';
                 }
                 if ($treeType == 'htmldropdown') {
-                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $cfile, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $row['id'], 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
                 } else {
-                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $this->uri(array('action' => 'viewfolder', 'folder' => $cfile)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $this->uri(array('action' => 'home', 'facultyid' => $row['id'], 'facultyname' => $row['name'])), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
                 }
-                $parent = dirname($folder);
 
-                //echo $folder['folderpath'].' - '.$parent.'<br />';
+                $parent = $this->getParent($row['path']);
                 if (array_key_exists($parent, $refArray)) {
-                    $refArray[dirname($folder)]->addItem($node);
+                    $refArray[$parent]->addItem($node);
                 }
 
-                $refArray[$folder] = & $node;
+                $refArray[$row['path']] = & $node;
             }
         }
 
@@ -781,7 +767,7 @@ class userutils extends object {
         return $treeMenu->getMenu();
     }
 
-    function showCreateFolderForm($folderPath, $selected) {
+    public function showCreateFolderForm($folderPath, $selected) {
         if ($folderPath == FALSE) {
             return '';
         }
@@ -813,6 +799,23 @@ class userutils extends object {
         return $form->show();
     }
 
+    public function getParent($path) {
+
+        $parent = "";
+        $parts = explode("/", $path);
+        $count = count($parts);
+        for ($i = 0; $i < $count - 1; $i++) {
+            if ($parent == '') {
+                $parent.= $parts[$i];
+            } else {
+                $parent.="/" . $parts[$i];
+            }
+        }
+        if ($parent == '') {
+            $parent = $this->rootTitle;
+        }
+        return $parent;
+    }
 }
 
 ?>

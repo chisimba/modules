@@ -55,7 +55,7 @@ class dbfaculties extends dbtable {
      * @access public
      * @return none
      */
-    public function addFaculty($faculty, $contact, $telephone) {
+    public function addFaculty($rec, $path) {
 
         $date = date("Y m d");
         $userid = $this->userutils->getUserId();
@@ -70,14 +70,22 @@ class dbfaculties extends dbtable {
             $contact = $this->objUser->fullname();
         }
 
+        if($this->exists($rec['name'])){
+             return FALSE;
+        }
+        $rec['name'] = str_replace("'", "\'", $rec['name']);
+        
         $data = array(
-            'faculty' => $faculty,
+            'name' => $rec['name'],
             'date_created' => $date,
             'userid' => $this->objUser->userId(),
-            'contact_person' => $contact,
-            'telephone' => $telephone
+            'contact_person' => $rec['contact'],
+            'telephone' => $rec['telephone'],
+            'path'=> $path,
+            'deleted'=>'N',
+            "level" => count(explode("/", $path))
         );
-        
+
         $this->insert($data);
     }
 
@@ -113,6 +121,23 @@ class dbfaculties extends dbtable {
 
     public function getFaculty($id) {
         return $this->getRow("id", $id);
+    }
+
+    /*
+     * This method checks whether the faculty that is being created already exists
+     * @param $name The name of the faculty that is being checked for existence.
+     * @access public
+     * @return boolean TRUE/FALSE which says whether the faculty exists or not
+     */
+    public function exists($name){
+        $sql=
+        "select * from ".$this->tablename." where name ='$name'";
+        $rows=$this->getArray($sql);
+        if(count($rows) > 0){
+            return TRUE;
+        }
+        
+        return FALSE;
     }
 }
 ?>

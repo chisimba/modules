@@ -2846,13 +2846,55 @@ class apo extends controller {
     }
 
     public function __registerfaculty() {
-        $faculty = $this->getParam('faculty');
+        $name = $this->getParam('faculty');
         $contact = $this->getParam('contact');
         $telephone = $this->getParam('telephone');
 
-        $this->faculties->addFaculty($faculty, $contact, $telephone);
+        /*if ($name == '') {
+            $errormessage = "Department Name required";
+            $this->setVarByRef("errormessage", $errormessage);
+            $gifts = $this->objDbGift->getGifts($departmentid);
+            $departmentid = $this->getParam('selecteddepartment');
+            if ($departmentid == '') {
+                $departmentid = $this->getSession("departmentid");
+            }
+            $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+            $this->setVarByRef("departmentname", $departmentname);
+            $this->setVarByRef("departmentid", $departmentid);
 
-        return $this->nextAction('facultymanagement', array('folder' => '0'));
+            $this->setVarByRef("gifts", $gifts);
+            return "home_tpl.php";
+        } else */if ($this->faculties->exists($faculty)) {
+            $errormessage = "Faculty Name already exists";die();
+            /*$this->setVarByRef("errormessage", $errormessage);
+
+            $departmentid = $this->getParam('selecteddepartment');
+            if ($departmentid == '') {
+                $departmentid = $this->getSession("departmentid");
+            }
+            $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+            $this->setVarByRef("departmentname", $departmentname);
+            $this->setVarByRef("departmentid", $departmentid);
+            $this->setVarByRef("editdepartmentname", $name);
+            $this->setVarByRef("gifts", $gifts);
+            return "home_tpl.php";*/
+        } else {
+            $parentid = $this->getParam('parentfolder');
+            $fac = $this->faculties->getFaculty($parentid);
+            $parent = $fac['path'];
+            $path = "";
+            if ($parent) {
+                $path .= $parent . '/' . $name;
+            } else {
+                $path .= $name;
+            }
+            $data = array("name"=>$name, "contact"=>$contact, "telephone"=>$telephone);
+            
+            $this->faculties->addFaculty($data, $path);
+
+            return $this->nextAction('facultymanagement');
+        }
+       
     }
 
     public function __updatefaculty() {
