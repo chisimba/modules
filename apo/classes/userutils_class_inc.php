@@ -712,7 +712,7 @@ class userutils extends object {
             else {
                 $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => $this->uri(array('action' => 'facultymanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
             }
-print_r($facultyManagementNode);
+
             if ($treeType != 'htmldropdown') {
                 $allFilesNode->addItem($newDocsNode);
             }
