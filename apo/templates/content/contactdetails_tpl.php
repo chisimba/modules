@@ -25,6 +25,7 @@ if ($formdata != null){
     $mode = "edit";
 }
 
+
 $action = 'showcomments';
 $form = new form('contactdetailsform', $this->uri(array('action' => $action, 'id'=>$id, 'formname'=>'contactdetails')));
 
@@ -175,6 +176,7 @@ $table->addCell($textarea->show());
 $table->endRow();
 
 $efs = new fieldset();
+$errormessages = array();
 $efs->setLegend('Errors');
 if (count($errormessages) > 0) {
 
@@ -194,9 +196,14 @@ $fs->setLegend($legend);
 $fs->addContent($table->show());
 $form->addToForm($fs->show());
 
-$button = new button('finish', "Finish");
+/*$button = new button('finish', "Finish");
 $button->setToSubmit();
-$form->addToForm('<br/>'.$button->show());
+$form->addToForm('<br/>'.$button->show());*/
+
+$button = new button('next', $this->objLanguage->languageText('word_next'));
+$button->setToSubmit();
+$form->addToForm('<br/>' . $button->show());
+
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'showreview'));

@@ -17,6 +17,11 @@ $this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 
+$formdata = $this->objformdata->getFormData("feedback", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+
 $action = 'finishdocument';
 
 $form = new form('feedbackform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'feedback')));
@@ -82,6 +87,60 @@ $fs->addContent($links);
 echo $fs->show() . '<br/>';
 
 $table = $this->newObject('htmltable', 'htmlelements');
+
+$textarea = new textarea('q1');
+$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $q1;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['q1'];
+}
+$table->startRow();
+$table->addCell("How easy was it for you to propose your course/qualification/curriculum using this system?:");
+$table->endRow();
+
+$table->startRow();
+$table->addCell($textarea->show());
+$table->endRow();
+
+$textarea = new textarea('q2');
+$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $q2;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['q2'];
+}
+$table->startRow();
+$table->addCell("Has the system improved the service provided by the APO?:");
+$table->endRow();
+
+$table->startRow();
+$table->addCell($textarea->show());
+$table->endRow();
+
+$textarea = new textarea('q3');
+$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $q3;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['q3'];
+}
+$table->startRow();
+$table->addCell("Any general comments:");
+$table->endRow();
+
+$table->startRow();
+$table->addCell($textarea->show());
+$table->endRow();
 
 $efs = new fieldset();
 $efs->setLegend('Errors');

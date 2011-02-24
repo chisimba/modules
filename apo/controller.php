@@ -192,7 +192,7 @@ class apo extends controller {
 
     public function __viewfolder() {
         $documents = $this->documents->getdocuments($this->mode);
-       // $rejecteddocuments = $this->documents->getdocuments(0, 10, $this->mode, "Y");
+        // $rejecteddocuments = $this->documents->getdocuments(0, 10, $this->mode, "Y");
 
         $dir = $this->getParam("folder", "");
 
@@ -207,7 +207,7 @@ class apo extends controller {
         $files = $this->objUtils->getFiles($dir);
         $this->setVarByRef("files", $files);
         $this->setVarByRef("documents", $documents);
-      //  $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
+        //  $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
         $selected = $this->baseDir . $selected;
         $this->setVarByRef("selected", $selected);
         return "viewfolder_tpl.php";
@@ -563,7 +563,7 @@ class apo extends controller {
         );
 
         $this->documents->updateInfo($id, $data);
-       // $this->nextAction('unapproveddocuments');
+        // $this->nextAction('unapproveddocuments');
     }
 
     /*
@@ -585,13 +585,13 @@ class apo extends controller {
      */
 
     function __showeditdocument() {
-       
+
         $action = "updatedocument";
         $id = $this->getParam('id');
-       
+
         $document = $this->documents->getDocument($id);
         //print_r($document);
-       // die();
+        // die();
         $mode = "edit";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("document", $document);
@@ -1068,6 +1068,12 @@ class apo extends controller {
             $formdata["h2b"] = $this->getParam("h2b");
             $formdata["h3a"] = $this->getParam("h3a");
             $formdata["h3b"] = $this->getParam("h3b");
+        } else if ($formname == "comments") {
+            $formdata["apo"] = $apo;
+            $formdata["subsidy"] = $subsidy;
+            $formdata["library"] = $library;
+            $formdata["legal"] = $legal;
+            $formdata["faculty"] = $faculty;
         }
 
         $errormessages = array();
@@ -1952,7 +1958,7 @@ class apo extends controller {
         $document = $this->documents->getDocument($id);
         print_r($id);
 
-        // $errormessages = array();
+        $errormessages = array();
 
         $e1a = $this->getParam("e1a");
         $e1b = $this->getParam("e1b");
@@ -2217,18 +2223,21 @@ class apo extends controller {
     }
 
     public function __showcomments() {
-        /*   $id = $this->getParam("id");
-          $formname = $this->getParam('formname');
-          print_r($id);
+        $id = $this->getParam("id");
+        $formname = $this->getParam('formname');
+        $document = $this->documents->getDocument($id);
 
-          $errormessages = array();
+        $errormessages = array();
 
-          $h1 = $this->getParam("h1");
-          $h2a = $this->getParam("h2a");
-          $h2b = $this->getParam("h2b");
-          $h3a = $this->getParam("h3a");
-          $h3b = $this->getParam("h3b");
+        $h1 = $this->getParam("h1");
+        $h2a = $this->getParam("h2a");
+        $h2b = $this->getParam("h2b");
+        $h3a = $this->getParam("h3a");
+        $h3b = $this->getParam("h3b");
 
+
+
+        /* $errormessages = array();
           if ($h1 == null) {
           $errormessages[] = "Please provide an answer for H.1";
           }
@@ -2256,17 +2265,25 @@ class apo extends controller {
           $mode = "fixup";
           $this->setVarByRef("mode", $mode);
           return "contactdetails_tpl.php";
-          }
+          } */
 
-          $formdata = array();
-         * $formdata["docid"] = $id;
-          $formdata["h1"] = $h1;
-          $formdata["h2a"] = $h2a;
-          $formdata["h2b"] = $h2b;
-          $formdata["h3a"] = $h3a;
-          $formdata["h3b"] = $h3b;
-          $formdata = serialize($formdata);
-          $this->objformdata->saveData($id, $formname, $formdata); */
+        $formdata = array();
+        $formdata["docid"] = $id;
+        $formdata["h1"] = $h1;
+        $formdata["h2a"] = $h2a;
+        $formdata["h2b"] = $h2b;
+        $formdata["h3a"] = $h3a;
+        $formdata["h3b"] = $h3b;
+
+
+        $formdata = serialize($formdata);
+        $this->objformdata->saveData($id, $formname, $formdata);
+
+        $selected = $this->getParam('selected');
+        //$mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("id", $id);
 
         return "comments_tpl.php";
     }
@@ -2277,21 +2294,46 @@ class apo extends controller {
         $formname = $this->getParam('formname');
         print_r($id);
 
+        $apo = $this->getParam("apo");
+        $subsidy = $this->getParam("subsidy");
+        $legal = $this->getParam("legal");
+        $library = $this->getParam("library");
+        $faculty = $this->getParam("faculty");
+
+
+        $formdata = array();
+        $formdata["docid"] = $id;
+        $formdata["apo"] = $apo;
+        $formdata["subsidy"] = $subsidy;
+        $formdata["library"] = $library;
+        $formdata["legal"] = $legal;
+        $formdata["faculty"] = $faculty;
+
+        $formdata = serialize($formdata);
+        $this->objformdata->saveData($id, $formname, $formdata);
+
+        $selected = $this->getParam('selected');
+        //$mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("id", $id);
+
         return "feedback_tpl.php";
     }
 
     public function __finishdocument() {
         $id = $this->getParam("id");
+        $document = $this->documents->getDocument($id);
         $formname = $this->getParam('formname');
         print_r($id);
 
+        $q1 = $this->getParam("q1");
+        $q2 = $this->getParam("q2");
+        $q3 = $this->getParam("q3");
+
+
         $errormessages = array();
 
-        $h1 = $this->getParam("h1");
-        $h2a = $this->getParam("h2a");
-        $h2b = $this->getParam("h2b");
-        $h3a = $this->getParam("h3a");
-        $h3b = $this->getParam("h3b");
 
         /*        if ($h1 == null) {
           $errormessages[] = "Please provide an answer for H.1";
@@ -2324,11 +2366,10 @@ class apo extends controller {
          */
         $formdata = array();
         $formdata["docid"] = $id;
-        $formdata["h1"] = $h1;
-        $formdata["h2a"] = $h2a;
-        $formdata["h2b"] = $h2b;
-        $formdata["h3a"] = $h3a;
-        $formdata["h3b"] = $h3b;
+        $formdata["q1"] = $q1;
+        $formdata["q2"] = $q2;
+        $formdata["q3"] = $q3;
+        
         $formdata = serialize($formdata);
         $this->objformdata->saveData($id, $formname, $formdata);
 

@@ -3,7 +3,7 @@
 /*
  * @category  Chisimba
  * @package   apo (Academic Planning Office)
- * @author    Jacqueline Gil
+ * @author    Jacqueline Gil and Palesa Mokwena
  */
 
 $this->loadClass('fieldset', 'htmlelements');
@@ -18,7 +18,12 @@ $this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 
-$action = 'finishdocument';
+$formdata = $this->objformdata->getFormData("comments", $id);
+if ($formdata != null){
+    $mode = "edit";
+}
+
+$action = 'showfeedback';
 
 $form = new form('commentsform', $this->uri(array('action' => $action, 'id' => $id, 'formname' => 'comments')));
 
@@ -80,172 +85,96 @@ $fs->addContent($links);
 echo $fs->show() . '<br/>';
 
 $table = $this->newObject('htmltable', 'htmlelements');
-$table->border = 2;
-$table->cellpadding = '2';
-$table->cellspacing = '3';
 
-//addHeaderCell($str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
-$table->startHeaderRow();
-$table->addHeaderCell("INFORMATION", 165, "top", "center", null, 'colspan = "2"'); //, null, "center", "center", null, null, '2');
-$table->addHeaderCell("DETAILS", 100, "top", "center", null, 'colspan = "2"'); //, null, "center", "center", null, null, '2');
-$table->endHeaderRow();
-
-$textarea = new textarea('title', null, 2, 80);
+$textarea = new textarea('apo');
+$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $apo;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['apo'];
+}
 $table->startRow();
-$table->addCell("Title", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show(), 190, "top", null, null, 'colspan = "2"', 1);
+$table->addCell("APO Comments:");
 $table->endRow();
 
-$textarea = new textarea('ad', null, 2, 80);
 $table->startRow();
-$table->addCell("Academic Development", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show(), 190, "top", null, null, 'colspan = "2"', 1);
-$table->endRow();
-
-$textarea = new textarea('faculty', null, 2, 80);
-$table->startRow();
-$table->addCell("Faculty", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show(), 190, "top", null, null, 'colspan = "2"', 1);
-$table->endRow();
-
-/* $table = $this->newObject('htmltable', 'htmlelements');
-  $table->border = 2;
-  $table->cellpadding = '2';
-  $table->cellspacing = '3'; */
-
-//addCell($str, $width=null, $valign="top", $align=null,
-//$class=null, $attrib=Null,$border = '0')
-$textarea = new textarea('doc', null, 2, 65);
-$table->startRow();
-$table->addCell("Document reference no. & Title e.g. S2003/?", 190, "top", null, null, 'colspan = "2"', 1);
 $table->addCell($textarea->show());
-$table->addCell("<b>DATE</b>", 80, "center", "center", null, 'bgcolor="#E8E8E8"', 1);
 $table->endRow();
 
-//textinput($name=null, $value=null, $type=null, $size=null)
-$textarea = new textarea('recieved', null, 2, 65);
-$textinput = new textinput('date1', 'dd-mm-yyyy', 'text', 9);
+$textarea = new textarea('subsidy');
+$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $subsidy;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['subsidy'];
+}
 $table->startRow();
-$table->addCell("Received by", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show());
-$table->addCell($textinput->show());
+$table->addCell("Subsidy Comments:");
 $table->endRow();
 
-$textarea = new textarea('apocomments', null, 2, 65);
-$textinput = new textinput('date2', 'dd-mm-yyyy', 'text', 9);
 $table->startRow();
-$table->addCell("APO", 100, "center", null, null, 'rowspan = "2"', 1);
-$table->addCell("Comments");
 $table->addCell($textarea->show());
-$table->addCell($textinput->show());
 $table->endRow();
 
-$textarea = new textarea('aporeply', null, 2, 65);
-$textinput = new textinput('date3', 'dd-mm-yyyy', 'text', 9);
+$textarea = new textarea('library');
+$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $library;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['library'];
+}
 $table->startRow();
-$table->addCell("Received Reply");
-$table->addCell($textarea->show());
-$table->addCell($textinput->show());
+$table->addCell("Library Comments (For Library use Only):");
 $table->endRow();
 
-$textarea = new textarea('referrals', null, 2, 65);
-$textinput = new textinput('date4', 'dd-mm-yyyy', 'text', 9);
 $table->startRow();
-$table->addCell("Referrals to: Other Faculties, Prof Bodies, Service Learning, ect.");
-$table->addCell("Comments");
 $table->addCell($textarea->show());
-$table->addCell($textinput->show());
 $table->endRow();
 
-
-$textarea = new textarea('subsidy', null, 2, 65);
-$textinput = new textinput('date5', 'dd-mm-yyyy', 'text', 9);
+$textarea = new textarea('legal');
+$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $legal;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['legal'];
+}
 $table->startRow();
-$table->addCell("Subsidy", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show());
-$table->addCell($textinput->show());
+$table->addCell("Legal Office Comments (If neccessary):");
 $table->endRow();
 
-$textarea = new textarea('librarycomments', null, 2, 65);
-$textinput = new textinput('date6', 'dd-mm-yyyy', 'text', 9);
 $table->startRow();
-$table->addCell("Library (for library use only)", 100, "center", null, null, 'rowspan = "2"', 1);
-$table->addCell("Comments");
 $table->addCell($textarea->show());
-$table->addCell($textinput->show());
 $table->endRow();
 
-$textarea = new textarea('libraryreply', null, 2, 65);
-$textinput = new textinput('date7', 'dd-mm-yyyy', 'text', 9);
+$textarea = new textarea('faculty');
+$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $faculty;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['faculty'];
+}
 $table->startRow();
-$table->addCell("Received Reply");
-$table->addCell($textarea->show());
-$table->addCell($textinput->show());
+$table->addCell("Faculty Board Comments:");
 $table->endRow();
 
-$textarea = new textarea('facultyboard', null, 2, 65);
-$textinput = new textinput('date8', 'dd-mm-yyyy', 'text', 9);
 $table->startRow();
-$table->addCell("Faculty Board", 190, "top", null, null, 'colspan = "2"', 1);
 $table->addCell($textarea->show());
-$table->addCell($textinput->show());
 $table->endRow();
-
-$textarea = new textarea('approval', null, 2, 65);
-$textinput = new textinput('date9', 'dd-mm-yyyy', 'text', 9);
-$table->startRow();
-$table->addCell("Professional Body Approval", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show());
-$table->addCell($textinput->show());
-$table->endRow();
-
-$textarea = new textarea('apdc', null, 2, 65);
-$textinput = new textinput('date10', 'dd-mm-yyyy', 'text', 9);
-$table->startRow();
-$table->addCell("APDC", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show());
-$table->addCell($textinput->show());
-$table->endRow();
-
-$textarea = new textarea('legal', null, 2, 65);
-$textinput = new textinput('date11', 'dd-mm-yyyy', 'text', 9);
-$table->startRow();
-$table->addCell("Legal Office (if necessary)", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show());
-$table->addCell($textinput->show());
-$table->endRow();
-
-$textarea = new textarea('codes', null, 2, 65);
-$textinput = new textinput('date12', 'dd-mm-yyyy', 'text', 9);
-$table->startRow();
-$table->addCell("Create Codes", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show());
-$table->addCell($textinput->show());
-$table->endRow();
-
-$textarea = new textarea('review', null, 2, 65);
-$textinput = new textinput('date13', 'dd-mm-yyyy', 'text', 9);
-$table->startRow();
-$table->addCell("Review", 190, "top", null, null, 'colspan = "2"', 1);
-$table->addCell($textarea->show());
-$table->addCell($textinput->show());
-$table->endRow();
-
-
-
-/* $efs = new fieldset();
-  $efs->setLegend('Errors');
-  if (count($errormessages) > 0) {
-
-  $errorstr = '<ul>';
-
-  foreach ($errormessages as $errormessage) {
-  $errorstr.='<li class="error">' . $errormessage; //. '<li/>';
-  }
-  $errorstr.='</li>';
-  $efs->addContent($errorstr);
-  $form->addToForm($efs);
-  } */
 
 $legend = "<b>Comments</b>";
 $fs = new fieldset();
@@ -263,7 +192,7 @@ $form->addToForm('<br/>' . $button->show());
 
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'showcontactdetails', 'id' => $id, 'formname' => 'overview', 'toform' => 'addeditdocument'));
+$uri = $this->uri(array('action' => 'showcontactdetails', 'id' => $id, 'formname' => 'comment', 'toform' => 'addeditdocument'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 //$button->setToSubmit();
 $form->addToForm($button->show());
