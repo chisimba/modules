@@ -2121,8 +2121,10 @@ class apo extends controller {
         $formdata["f4"] = $f4;
 
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($id, $formname, $formdata);
-
+        $issubmit = $this->getParam('next');
+        if(!empty($issubmit)) {
+           $this->objformdata->saveData($id, $formname, $formdata);
+        }
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -2134,8 +2136,7 @@ class apo extends controller {
     public function __showcontactdetails() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
-
+        
         $errormessages = array();
 
         $g1a = $this->getParam("g1a");
@@ -2213,7 +2214,10 @@ class apo extends controller {
         $formdata["g4a"] = $g4a;
         $formdata["g4b"] = $g4b;
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if(!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $selected = $this->getParam('selected');
         $mode = "new";
