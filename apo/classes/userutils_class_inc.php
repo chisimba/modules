@@ -63,7 +63,7 @@ class userutils extends object {
         $this->folderPermissions = $this->getObject('dbfolderpermissions');
         $this->rootTitle = $this->objSysConfig->getValue('ROOT_TITLE', 'apo');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
-        $this->modeLabel = "Topic";
+        $this->modeLabel = $this->objSysConfig->getValue('MODE_LABEL', 'apo');
     }
 
     public function getUserId() {
@@ -678,9 +678,9 @@ class userutils extends object {
         $cssClass = '';
 
         if ($treeType == 'htmldropdown') {
-            $allFilesNode = new treenode(array('text' => $this->rootTitle . 's', 'link' => $baseFolderId));
+            $allFilesNode = new treenode(array('text' => $this->modeLabel, 'link' => $baseFolderId));
         } else {
-            $allFilesNode = new treenode(array('text' => $this->rootTitle . 's', 'link' => $this->uri(array('action' => 'viewfolder', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $allFilesNode = new treenode(array('text' => $this->modeLabel, 'link' => $this->uri(array('action' => 'viewfolder', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
         }
         $documents = $this->getObject('dbdocuments');
         $count = $documents->getUnapprovedDocsCount();
