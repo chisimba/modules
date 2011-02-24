@@ -2972,7 +2972,7 @@ class apo extends controller {
             $contact = $this->objUser->fullname($userid);
         }
 
-        $data = array("faculty" => $faculty, "contact_person" => $contact, "telephone" => $telephone, "userid" => $this->objUser->userId());
+        $data = array("name" => $faculty, "contact_person" => $contact, "telephone" => $telephone, "userid" => $this->objUser->userId());
         $this->faculties->editFaculty($this->getParam('id'), $data);
 
         return $this->nextAction('facultymanagement', array('folder' => '0'));
