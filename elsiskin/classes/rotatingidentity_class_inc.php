@@ -133,12 +133,15 @@ class rotatingidentity extends object {
                           <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="">Contact us</a></span>
                         </div>';
         } else if ($action == 'contact') {
+            $contactLink = new link("http://maps.google.co.za/maps?q=11-17+jorissen+street&hl=en&ie=UTF8&hq=&hnear=17+Jorissen+St,+Johannesburg,+Gauteng+2000&gl=za&ll=-26.192797,28.033247&spn=0.023105,0.025749&z=14&iwloc=A&source=embed");
+            $contactLink->link = '<img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;Directions';
             $retstr .= '<div class="text-holder">
                            <span class="head-main">Contact us at ELSI</span>
                            <span class="head-text">Visit us, pick up the phone, write an email, tweet a message. We\'d love to get in contact with you. <br>
-                           <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="">Office Administrator</a><br>
-                           <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="">Directions</a></span>
-                       </div>';
+                           <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="">Office Administrator</a><br>';
+            $retstr .= $contactLink->show();
+            $retstr .= '</span>
+                        </div>';
         } else if($action == 'projectsresearch') {
           $retstr .= '<div class="text-holder">
                           <span class="head-main">Projects & Research</span>
