@@ -130,8 +130,7 @@ class apo extends controller {
     public function __home() {
         $selected = "unapproved";
         $documents = $this->documents->getdocuments(0, 10, $this->mode);
-        //print_r($documents);
-//die();
+
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);
         return "unapproveddocs_tpl.php";
@@ -440,15 +439,7 @@ class apo extends controller {
 
         $errormessages = $this->getParam('errormessages');
         $date = $this->getParam('date_created');
-
         $number = $this->getParam('number');
-
-        //$id = $this->getParam("id");
-        // $id = $this->documents->getDocument($id);
-        //  $id = $this->getParam('id');
-        // print_r($id);
-        // die();
-
         $dept = $this->getParam('department');
 
         if ($dept == '') {
@@ -456,16 +447,11 @@ class apo extends controller {
         }
         $title = $this->getParam('title');
 
-
-
         if ($title == 'title') {
             $errormessages[] = "Fill in course title";
         }
         $selectedfolder = $this->getParam('parentfolder');
 
-        /* if ($selectedfolder == '0') {
-          $errormessages[] = "Select topic";
-          } */
         //check wat is the largest count for this year.
         $ref_version = $this->documents->checkRefNo($number);
         $refno = $number . date("Y"); //."-".($res;
@@ -480,7 +466,6 @@ class apo extends controller {
             $errormessages[] = "Fill in telephone";
         }
 
-
         if (count($errormessages) > 0) {
 
             $this->setVarByRef("errormessages", $errormessages);
@@ -491,9 +476,9 @@ class apo extends controller {
             $this->setVarByRef("number", $number);
 
             $mode = "fixup";
-            // $action = "registerdocument";
             $this->setVarByRef("mode", $mode);
             $this->setVarByRef("action", $action);
+
             return "addeditdocument_tpl.php";
         }
         $status = $this->getParam('status');
@@ -585,17 +570,18 @@ class apo extends controller {
      */
 
     function __showeditdocument() {
+        $faculties = $this->faculties->getFaculties();
 
         $action = "updatedocument";
         $id = $this->getParam('id');
 
         $document = $this->documents->getDocument($id);
-        //print_r($document);
-        // die();
+        
         $mode = "edit";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("document", $document);
-        // $this->setVarByRef("id", $id);
+        $this->setVarByRef("departments", $faculties);
+
         return "addeditdocument_tpl.php";
     }
 
@@ -956,6 +942,7 @@ class apo extends controller {
         //  print_r($id);
         //  die();
         $errormessages = $this->getParam('errormessages');
+        $faculties = $this->faculties->getFaculties();
 
         $mode = "new";
         $this->setVarByRef("action", $action);
@@ -963,6 +950,7 @@ class apo extends controller {
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("errormessages", $errormessages);
         $this->setVarByRef("id", $id);
+        $this->setVarByRef("departments", $faculties);
 
 
         return "addeditdocument_tpl.php";

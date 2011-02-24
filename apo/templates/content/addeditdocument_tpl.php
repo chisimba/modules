@@ -121,16 +121,16 @@ $table->addCell('<b>Entry Date</b>');
 $table->addCell($textinput->show());
 $table->endRow();
 
-
 $number = 'S';
-
-$textinput = new textinput('department');
-$textinput->size = 60;
+$textinput = new dropdown('department');
+$textinput->addOption("", "Please select department...");
+$textinput->addFromDB($departments, 'name', 'name', $document['department']);
+//$textinput->size = 60;
 if ($mode == 'edit') {
-    $textinput->value = $document['department'];
+    $textinput->setSelected($document['department']);
 }
 if ($mode == "fixup") {
-    $textinput->value = $department;
+    $textinput->setSelected($department);
 }
 $table->startRow();
 $table->addCell("<b>Originating Department</b>");
