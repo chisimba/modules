@@ -72,6 +72,17 @@ $table->addCell("<b>Telephone number</b>");
 $table->addCell($textinput->show());
 $table->endRow();
 
+$faculty = $this->faculties->getFacultyByName($faculties['name']);
+$table->startRow();
+$table->addCell("<b>Create in</b>" );
+if($mode == 'edit') {
+    $table->addCell($this->objUtils->getTree('htmldropdown', $faculty['id']));
+}
+else {
+    $table->addCell($this->objUtils->getTree('htmldropdown'));
+}
+$table->endRow();
+
 $legend = "New Faculty";
 if ($mode == 'edit') {
     $legend = "Edit Faculty";

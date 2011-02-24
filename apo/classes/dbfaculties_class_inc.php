@@ -123,6 +123,9 @@ class dbfaculties extends dbtable {
         return $this->getRow("id", $id);
     }
 
+    public function getFacultyByName($name) {
+        return $this->getRow("name", $name);
+    }
     /*
      * This method checks whether the faculty that is being created already exists
      * @param $name The name of the faculty that is being checked for existence.
