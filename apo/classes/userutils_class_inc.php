@@ -678,9 +678,9 @@ class userutils extends object {
         $cssClass = '';
 
         if ($treeType == 'htmldropdown') {
-            $allFilesNode = new treenode(array('text' => $this->modeLabel . 's', 'link' => $baseFolderId));
+            $allFilesNode = new treenode(array('text' => $this->rootTitle . 's', 'link' => $baseFolderId));
         } else {
-            $allFilesNode = new treenode(array('text' => $this->modeLabel . 's', 'link' => $this->uri(array('action' => 'viewfolder', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $allFilesNode = new treenode(array('text' => $this->rootTitle . 's', 'link' => $this->uri(array('action' => 'viewfolder', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
         }
         $documents = $this->getObject('dbdocuments');
         $count = $documents->getUnapprovedDocsCount();
@@ -707,7 +707,7 @@ class userutils extends object {
             }
 
             if ($treeType == 'htmldropdown') {
-                $facultyManagementNode = new treenode(array('text' => $this->rootTitle, 'link' => '-1'));
+                $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => '-1'));
             }
             else {
                 $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => $this->uri(array('action' => 'facultymanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
