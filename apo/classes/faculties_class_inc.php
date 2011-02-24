@@ -53,9 +53,7 @@ class faculties extends object {
         //$textinput = new textinput('facultyname');
         //$textinput->value = $name;
         $label = new label('Name of ' . $this->facultyLabel . ': ', 'input_facultyname');
-        $form->addToForm("Create in " . $this->objUtils->getTree('htmldropdown')."<br><br>");
-        //$form->addToForm(' &nbsp; ' . $label->show() . $textinput->show());
-
+        
         // Opening date
         $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -81,6 +79,11 @@ class faculties extends object {
         $table->startRow();
         $table->addCell("<b>Telephone number</b>");
         $table->addCell($textinput->show());
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell("<b>Create in</b>" );
+        $table->addCell($this->objUtils->getTree('htmldropdown'));
         $table->endRow();
 
         $button = new button('create', 'Create ' . $this->facultyLabel);
