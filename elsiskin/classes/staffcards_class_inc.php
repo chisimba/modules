@@ -970,14 +970,12 @@ class staffcards extends object {
 						<h2>About <span class="fn">Neo Petlele</span></h2>
 						
 						 
-							<span class="jobtitle"><strong>Research Assistant</strong>,&nbsp;</span>
+							<span class="jobtitle"><strong>ICT Training Co-ordinator</strong>,&nbsp;</span>
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
 							<p><img src="' . $this->skinpath . 'images/staff/Neo.Petlele.jpg" class="left" alt="Neo Petlele"></p>
-							<p class="bio">Research Assistant for the eLSI unit. Currently serving on the ZAW 2011 Conference Organising Committee as well as the Wits LMS evaluation Working Group Committee.
-		
-		
-							</p>
+							<p class="bio">ICT Training Co-ordinator –overseeing the running of all ICT training  offered by the unit.
+                                                                       Serving on the Wits LMS Evaluation Working Group Committee.</p>
 		
 					 </div>            
 				</div>
