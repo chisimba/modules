@@ -364,7 +364,7 @@ class maincontent extends object {
                 $allBlogs->link = 'All posts by '. $user;
 
                 $ret .= $userlink->show();
-                $ret .= '<strong>'.$link->show().'</strong>
+                $ret .= '<h4>'.$link->show().'</h4>
                          <br>';
             
                 $ret .= '   </p>
