@@ -142,7 +142,7 @@ class dbdocuments extends dbtable {
     }
 
     function getUnapprovedDocsCount() {
-        $sql = "select count(id) as total from tbl_apo_documents where deleteDoc = 'N' and  active='N' and rejectDoc= 'N'";
+        $sql = "select count(id) as total from tbl_apo_documents where deleteDoc = 'N' and  active='N'"; /* and rejectDoc= 'N'*/
 
         if (!$this->objUser->isadmin()) {
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
