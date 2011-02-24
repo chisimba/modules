@@ -1,10 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <?php
-
-$documentjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/document.js').'"></script>';
-$jqueryUICore = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery-ui/jquery.ui.core.js').'"></script>';
-$jqueryUI = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery-ui/jquery-ui.min.js').'"></script>';
-$jqueryUICSS = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/jquery-ui.css').'">';
+$documentjs = '<script type="text/javascript" src="' . $this->getResourceURI('js/document.js') . '"></script>';
+$jqueryUICore = '<script type="text/javascript" src="' . $this->getResourceURI('js/jquery-ui/jquery.ui.core.js') . '"></script>';
+$jqueryUI = '<script type="text/javascript" src="' . $this->getResourceURI('js/jquery-ui/jquery-ui.min.js') . '"></script>';
+$jqueryUICSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceURI('css/jquery-ui.css') . '">';
 
 $this->appendArrayVar("headerParams", $jqueryUICSS);
 $this->appendArrayVar("headerParams", $jqueryUICore);
@@ -26,7 +25,7 @@ $this->loadClass('button', 'htmlelements');
 
 
 
-if ($mode == 'new'){
+if ($mode == 'new') {
     $action = 'registerdocument';
 }
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
@@ -57,45 +56,52 @@ $header->str = $xtitle;
 echo $header->show();
 
 if ($mode == 'edit') {
-    $overviewlink = new link($this->uri(array("action" => "showoverview","id" => $document['id'])));
+    $overviewlink = new link($this->uri(array("action" => "showoverview", "id" => $document['id'])));
     $overviewlink->link = "Overview";
 
-    $rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone","id" => $document['id'])));
+    $rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone", "id" => $document['id'])));
     $rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
 
-    $rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo","id" => $document['id'])));
+    $rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo", "id" => $document['id'])));
     $rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
 
-    $subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements","id" => $document['id'])));
+    $subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements", "id" => $document['id'])));
     $subsidyrequirementslink->link = "Subsidy Requirements";
 
-    $outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone","id" => $document['id'])));
+    $outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone", "id" => $document['id'])));
     $outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
 
-    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo","id" => $document['id'])));
+    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo", "id" => $document['id'])));
     $outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
 
-    $outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree","id" => $document['id'])));
+    $outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree", "id" => $document['id'])));
     $outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
 
-    $resourceslink = new link($this->uri(array("action" => "showresources","id" => $document['id'])));
+    $resourceslink = new link($this->uri(array("action" => "showresources", "id" => $document['id'])));
     $resourceslink->link = "Resources";
 
-    $collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts","id" => $document['id'])));
+    $collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts", "id" => $document['id'])));
     $collaborationandcontractslink->link = "Collaboration and Contracts";
 
-    $reviewlink = new link($this->uri(array("action" => "showreview","id" => $document['id'])));
+    $reviewlink = new link($this->uri(array("action" => "showreview", "id" => $document['id'])));
     $reviewlink->link = "Review";
 
-    $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails","id" => $document['id'])));
+    $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails", "id" => $document['id'])));
     $contactdetailslink->link = "Contact Details";
+
+    $commentslink = new link($this->uri(array("action" => "showcomments", "id" => $id)));
+    $commentslink->link = "Comments";
+
+    $feedbacklink = new link($this->uri(array("action" => "showfeedback", "id" => $id)));
+    $feedbacklink->link = "Feedback";
 
     $links = "<b>Document</b>" . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
             $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
             $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
             $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
             $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
-            $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '<br/>';
+            $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '&nbsp;|&nbsp;' . $commentslink->show() . '&nbsp;|&nbsp;' .
+            $feedbacklink->show() . '<br/>';
 
     $fs = new fieldset();
     $fs->setLegend('<b>Navigation</b>');
@@ -109,7 +115,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $textinput = new textinput('date_created');
 $textinput->size = 60;
-$textinput->cssId="datepicker1";
+$textinput->cssId = "datepicker1";
 
 if ($mode == 'edit') {
     $textinput->value = $document['date_created'];
@@ -157,7 +163,7 @@ $textinput = new textinput('telephone');
 $textinput->size = 40;
 if ($mode == 'edit') {
     $textinput->value = $document['telephone'];
-} 
+}
 $table->startRow();
 $table->addCell("<b>Telephone number</b>");
 $table->addCell($textinput->show());
@@ -188,7 +194,7 @@ $fs->addContent($table->show());
 
 // Form
 
-$form = new form('registerdocumentform', $this->uri(array('action' => $action,'id' => $id)));
+$form = new form('registerdocumentform', $this->uri(array('action' => $action, 'id' => $id)));
 $numberfield = new hiddeninput('number', $number);
 $form->addToForm($numberfield->show());
 
@@ -229,19 +235,19 @@ if ($mode == 'edit') {
 
 $form->addToForm('<br/>' . $button->show());
 
-/*if ($this->objUser->isAdmin()) {
-    if ($mode == 'edit') {
-        $button = new button('approve', "Approve");
-        $uri = $this->uri(array('action' => 'approvedocument', 'id' => $document['id']));
-        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-        $form->addToForm($button->show());
+/* if ($this->objUser->isAdmin()) {
+  if ($mode == 'edit') {
+  $button = new button('approve', "Approve");
+  $uri = $this->uri(array('action' => 'approvedocument', 'id' => $document['id']));
+  $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+  $form->addToForm($button->show());
 
-        $button = new button('reject', "Reject");
-        $uri = $this->uri(array('action' => 'rejectdocument', 'id' => $document['id']));
-        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-        $form->addToForm($button->show());
-    }
-}*/
+  $button = new button('reject', "Reject");
+  $uri = $this->uri(array('action' => 'rejectdocument', 'id' => $document['id']));
+  $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+  $form->addToForm($button->show());
+  }
+  } */
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');

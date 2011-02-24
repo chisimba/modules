@@ -1083,7 +1083,10 @@ class apo extends controller {
         }
 
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($docid, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -1149,8 +1152,10 @@ class apo extends controller {
         $formdata["a5"] = $a5;
 
         $formdata = serialize($formdata);
-
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -1163,7 +1168,6 @@ class apo extends controller {
     public function __showrulesandsyllabustwo() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        //print_r($id);
 
         $errormessages = array();
 
@@ -1221,7 +1225,10 @@ class apo extends controller {
 
         $formdata = serialize($formdata);
 
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -1234,7 +1241,6 @@ class apo extends controller {
     public function __showsubsidyrequirements() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
 
         $errormessages = array();
 
@@ -1283,8 +1289,10 @@ class apo extends controller {
 
         $formdata = serialize($formdata);
 
-        $this->objformdata->saveData($id, $formname, $formdata);
-
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -1298,7 +1306,6 @@ class apo extends controller {
         $id = $this->getParam("id");
         $document = $this->documents->getDocument($id);
         $formname = $this->getParam('formname');
-        print_r($id);
 
         $errormessages = array();
 
@@ -1360,7 +1367,10 @@ class apo extends controller {
 
         $formdata = serialize($formdata);
 
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 //$formname = $this->getParam('form');
 //$c3 = $this->getParam("c3");
 //$c3->label='CEMS (must be 6 characters)';
@@ -1368,7 +1378,6 @@ class apo extends controller {
 //$formname->addRule(array('name'=>'c3','length'=>6), 'Check CESM manual','maxlength');
 //$objForm->addRule(array('name'=>'surname','length'=>6), 'Your surname is too long',*/
         $selected = $this->getParam('selected');
-
         $mode = "new";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
@@ -1379,7 +1388,6 @@ class apo extends controller {
     public function __showoutcomesandassessmentoneScience() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
 
         $errormessages = array();
 
@@ -1440,8 +1448,10 @@ class apo extends controller {
         $formdata["c4b2"] = $c4b2;
 
         $formdata = serialize($formdata);
-
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 //$formname = $this->getParam('form');
 //$c3 = $this->getParam("c3");
 //$c3->label='CEMS (must be 6 characters)';
@@ -1459,9 +1469,6 @@ class apo extends controller {
     public function __showoutcomesandassessmenttwo() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
-
-
 
         $errormessages = array();
 
@@ -1506,7 +1513,6 @@ class apo extends controller {
               $this->setVarByRef("id", $id);
               return "outcomesandassessmentone_tpl.php";
               } */
-
             $formdata = array();
             $formdata["docid"] = $id;
             $formdata["d1a"] = $d1a;
@@ -1515,8 +1521,12 @@ class apo extends controller {
             $formdata["d2b"] = $d2b;
             $formdata["d2c"] = $d2c;
             $formdata["d3"] = $d3;
+
             $formdata = serialize($formdata);
-            $this->objformdata->saveData($id, $formname, $formdata);
+            $issubmit = $this->getParam('next');
+            if (!empty($issubmit)) {
+                $this->objformdata->saveData($id, $formname, $formdata);
+            }
         } else if ($formname == "outcomesandassessmentoneScience") {
             $d1 = $this->getParam("d1");
             $d21 = $this->getParam("d21");
@@ -1572,8 +1582,12 @@ class apo extends controller {
             $formdata["d24"] = $d24;
             $formdata["d25"] = $d25;
             $formdata["d3"] = $d3;
+
             $formdata = serialize($formdata);
-            $this->objformdata->saveData($id, $formname, $formdata);
+            $issubmit = $this->getParam('next');
+            if (!empty($issubmit)) {
+                $this->objformdata->saveData($id, $formname, $formdata);
+            }
         }
 
         $selected = $this->getParam('selected');
@@ -1587,10 +1601,8 @@ class apo extends controller {
     public function __showoutcomesandassessmentthree() {
 
         $selectedOpts = $this->getParam('groups');
-
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-
 
         $errormessages = array();
 
@@ -1635,7 +1647,10 @@ class apo extends controller {
           } */
 
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -1648,7 +1663,6 @@ class apo extends controller {
     public function __showoutcomesandassessmentthreeScience() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
 
         $errormessages = array();
 
@@ -1676,7 +1690,10 @@ class apo extends controller {
         //$formdata = array();
         // $formdata["d4"] = $d4;
         //    $formdata = serialize($formdata);
-        //$this->objformdata->saveData($id, $formname, $formdata);
+        //$issubmit = $this->getParam('next');
+        //  if(!empty($issubmit)) {
+        //     $this->objformdata->saveData($id, $formname, $formdata);
+        //  }
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -1689,7 +1706,6 @@ class apo extends controller {
     public function __showresources() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
 
         $errormessages = array();
 
@@ -1759,8 +1775,12 @@ class apo extends controller {
             $formdata["g"] = $g;
             $formdata["h"] = $h;
             $formdata["i"] = $i;
+
             $formdata = serialize($formdata);
-            $this->objformdata->saveData($id, $formname, $formdata);
+            $issubmit = $this->getParam('next');
+            if (!empty($issubmit)) {
+                $this->objformdata->saveData($id, $formname, $formdata);
+            }
         } /* else if ($formname == "outcomesandassessmentthreeScience") {
           $a1 = $this->getParam("a1");
           $a2 = $this->getParam("a2");
@@ -1945,7 +1965,6 @@ class apo extends controller {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
         $document = $this->documents->getDocument($id);
-        print_r($id);
 
         $errormessages = array();
 
@@ -2027,8 +2046,12 @@ class apo extends controller {
         $formdata["e4"] = $e4;
         $formdata["e5a"] = $e5a;
         $formdata["e5b"] = $e5b;
+
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -2041,9 +2064,7 @@ class apo extends controller {
 
     public function __showreview() {
         $id = $this->getParam("id");
-
         $formname = $this->getParam('formname');
-        print_r($id);
 
         $errormessages = array();
 
@@ -2110,9 +2131,10 @@ class apo extends controller {
 
         $formdata = serialize($formdata);
         $issubmit = $this->getParam('next');
-        if(!empty($issubmit)) {
-           $this->objformdata->saveData($id, $formname, $formdata);
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
         }
+
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -2124,7 +2146,7 @@ class apo extends controller {
     public function __showcontactdetails() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        
+
         $errormessages = array();
 
         $g1a = $this->getParam("g1a");
@@ -2201,9 +2223,10 @@ class apo extends controller {
         $formdata["g3b"] = $g3b;
         $formdata["g4a"] = $g4a;
         $formdata["g4b"] = $g4b;
+
         $formdata = serialize($formdata);
         $issubmit = $this->getParam('next');
-        if(!empty($issubmit)) {
+        if (!empty($issubmit)) {
             $this->objformdata->saveData($id, $formname, $formdata);
         }
 
@@ -2270,7 +2293,10 @@ class apo extends controller {
 
 
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $selected = $this->getParam('selected');
         //$mode = "new";
@@ -2285,8 +2311,7 @@ class apo extends controller {
         $id = $this->getParam("id");
         $document = $this->documents->getDocument($id);
         $formname = $this->getParam('formname');
-        print_r($id);
-
+       
         $apo = $this->getParam("apo");
         $subsidy = $this->getParam("subsidy");
         $legal = $this->getParam("legal");
@@ -2303,7 +2328,10 @@ class apo extends controller {
         $formdata["faculty"] = $faculty;
 
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $selected = $this->getParam('selected');
         //$mode = "new";
@@ -2318,7 +2346,6 @@ class apo extends controller {
         $id = $this->getParam("id");
         $document = $this->documents->getDocument($id);
         $formname = $this->getParam('formname');
-        print_r($id);
 
         $q1 = $this->getParam("q1");
         $q2 = $this->getParam("q2");
@@ -2362,9 +2389,12 @@ class apo extends controller {
         $formdata["q1"] = $q1;
         $formdata["q2"] = $q2;
         $formdata["q3"] = $q3;
-        
+
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $$issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         return "finishdocument_tpl.php";
     }
@@ -2372,9 +2402,7 @@ class apo extends controller {
     public function __calculatespreedsheet() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
-        die();
-
+    
         $errormessages = array();
 
         $a = $this->getParam("a");
@@ -2476,8 +2504,7 @@ class apo extends controller {
     public function __calculatespreedsheetScience() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-        print_r($id);
-
+       
         $errormessages = array();
 
         $a3 = 0.75;
@@ -2724,8 +2751,12 @@ class apo extends controller {
         $formdata["h12"] = $h12;
         $formdata["d6"] = $d6;
         $formdata["d7"] = $d7;
+        
         $formdata = serialize($formdata);
-        $this->objformdata->saveData($id, $formname, $formdata);
+        $$issubmit = $this->getParam('next');
+        if (!empty($issubmit)) {
+            $this->objformdata->saveData($id, $formname, $formdata);
+        }
 
         $this->setVarByRef("a1", $a1);
         $this->setVarByRef("a2", $a2);
@@ -2884,34 +2915,35 @@ class apo extends controller {
         $contact = $this->getParam('contact');
         $telephone = $this->getParam('telephone');
 
-        /*if ($name == '') {
-            $errormessage = "Department Name required";
-            $this->setVarByRef("errormessage", $errormessage);
-            $gifts = $this->objDbGift->getGifts($departmentid);
-            $departmentid = $this->getParam('selecteddepartment');
-            if ($departmentid == '') {
-                $departmentid = $this->getSession("departmentid");
-            }
-            $departmentname = $this->objDepartments->getDepartmentName($departmentid);
-            $this->setVarByRef("departmentname", $departmentname);
-            $this->setVarByRef("departmentid", $departmentid);
+        /* if ($name == '') {
+          $errormessage = "Department Name required";
+          $this->setVarByRef("errormessage", $errormessage);
+          $gifts = $this->objDbGift->getGifts($departmentid);
+          $departmentid = $this->getParam('selecteddepartment');
+          if ($departmentid == '') {
+          $departmentid = $this->getSession("departmentid");
+          }
+          $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+          $this->setVarByRef("departmentname", $departmentname);
+          $this->setVarByRef("departmentid", $departmentid);
 
-            $this->setVarByRef("gifts", $gifts);
-            return "home_tpl.php";
-        } else */if ($this->faculties->exists($faculty)) {
-            $errormessage = "Faculty Name already exists";die();
-            /*$this->setVarByRef("errormessage", $errormessage);
+          $this->setVarByRef("gifts", $gifts);
+          return "home_tpl.php";
+          } else */if ($this->faculties->exists($faculty)) {
+            $errormessage = "Faculty Name already exists";
+            die();
+            /* $this->setVarByRef("errormessage", $errormessage);
 
-            $departmentid = $this->getParam('selecteddepartment');
-            if ($departmentid == '') {
-                $departmentid = $this->getSession("departmentid");
-            }
-            $departmentname = $this->objDepartments->getDepartmentName($departmentid);
-            $this->setVarByRef("departmentname", $departmentname);
-            $this->setVarByRef("departmentid", $departmentid);
-            $this->setVarByRef("editdepartmentname", $name);
-            $this->setVarByRef("gifts", $gifts);
-            return "home_tpl.php";*/
+              $departmentid = $this->getParam('selecteddepartment');
+              if ($departmentid == '') {
+              $departmentid = $this->getSession("departmentid");
+              }
+              $departmentname = $this->objDepartments->getDepartmentName($departmentid);
+              $this->setVarByRef("departmentname", $departmentname);
+              $this->setVarByRef("departmentid", $departmentid);
+              $this->setVarByRef("editdepartmentname", $name);
+              $this->setVarByRef("gifts", $gifts);
+              return "home_tpl.php"; */
         } else {
             $parentid = $this->getParam('parentfolder');
             $fac = $this->faculties->getFaculty($parentid);
@@ -2922,13 +2954,12 @@ class apo extends controller {
             } else {
                 $path .= $name;
             }
-            $data = array("name"=>$name, "contact"=>$contact, "telephone"=>$telephone);
-            
+            $data = array("name" => $name, "contact" => $contact, "telephone" => $telephone);
+
             $this->faculties->addFaculty($data, $path);
 
             return $this->nextAction('facultymanagement');
         }
-       
     }
 
     public function __updatefaculty() {

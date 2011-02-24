@@ -61,12 +61,20 @@ $reviewlink->link = "Review";
 $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails","id"=>$id)));
 $contactdetailslink->link = "Contact Details";
 
+$commentslink = new link($this->uri(array("action" => "showcomments","id"=>$id)));
+$commentslink->link = "Comments";
+
+$feedbacklink = new link($this->uri(array("action" => "showfeedback","id"=>$id)));
+$feedbacklink->link = "Feedback";
+
+
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
         $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . "<b>Collaboration and Contracts</b>" . '&nbsp;|&nbsp;' .
-        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '<br/>';
+        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() .'&nbsp;|&nbsp;' . $commentslink->show() . '&nbsp;|&nbsp;' .
+        $feedbacklink->show() . '<br/>';
 
 $fs = new fieldset();
 $fs->setLegend('<b>Navigation</b>');

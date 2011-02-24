@@ -72,12 +72,19 @@ $reviewlink->link = "Review";
 $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails","id"=>$id)));
 $contactdetailslink->link = "Contact Details";
 
+$commentslink = new link($this->uri(array("action" => "showcomments","id"=>$id)));
+$commentslink->link = "Comments";
+
+$feedbacklink = new link($this->uri(array("action" => "showfeedback","id"=>$id)));
+$feedbacklink->link = "Feedback";
+
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
         $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         "<b>Subsidy Requirements</b>" . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
-        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '<br/>';
+        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() .'&nbsp;|&nbsp;' . $commentslink->show() . '&nbsp;|&nbsp;' .
+        $feedbacklink->show() . '<br/>';
 
 $fs = new fieldset();
 $fs->setLegend('<b>Navigation</b>');
@@ -161,7 +168,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['c3'];
 }
-$textinput->setExtra("maxlength = 6");
+//$textinput->setExtra("maxlength = 6");
 $table->startRow();
 $table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from http://intranet.wits.ac.za/Academic/APO/CESMs.htm):', '100');
 $table->endRow();
