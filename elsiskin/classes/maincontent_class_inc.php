@@ -188,7 +188,7 @@ class maincontent extends object {
      * @access public
      */
     public function showAboutMain() {
-        $retstr = '<div class="grid_3">
+        $retstr = '<div class="grid_3"> 
                         '.$this->getAboutContent().'
                     </div>
                     <!-- end .grid_3 -->';
