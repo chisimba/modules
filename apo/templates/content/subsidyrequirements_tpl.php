@@ -161,6 +161,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['c3'];
 }
+$textinput->setExtra("maxlength = 6");
 $table->startRow();
 $table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from http://intranet.wits.ac.za/Academic/APO/CESMs.htm):', '100');
 $table->endRow();

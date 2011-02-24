@@ -1114,6 +1114,7 @@ class apo extends controller {
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
+        $this->setVarByRef("document", $document);
         return "overview_tpl.php";
     }
 
