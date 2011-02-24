@@ -100,6 +100,8 @@ class elsilogo extends object {
 
     public function getTabLinks() {
         if($this->objUser->isLoggedIn()) {
+            $profileLink = new link($this->uri(array(), "postlogin"));
+            $profileLink->link = "Profile";
             $newsLink = new link($this->uri(array(), "news"));
             $newsLink->link = "News";
             $blogLink = new link($this->uri(array(),"blog"));
@@ -111,6 +113,7 @@ class elsilogo extends object {
             $retstr = '<!-- Tab links -->
                 <div id="tab-links">
                     <ul>
+                        <li>'.$profileLink->show().'<li>
                         <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$newsLink->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                         <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$blogLink->show().'</li>';
            if($this->objUser->isAdmin()) {
