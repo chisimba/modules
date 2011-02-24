@@ -2929,7 +2929,7 @@ class apo extends controller {
 
           $this->setVarByRef("gifts", $gifts);
           return "home_tpl.php";
-          } else */if ($this->faculties->exists($faculty)) {
+          } else */if ($this->faculties->exists($name)) {
             $errormessage = "Faculty Name already exists";
             die();
             /* $this->setVarByRef("errormessage", $errormessage);

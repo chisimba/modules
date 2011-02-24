@@ -667,7 +667,7 @@ class userutils extends object {
         $folders = $this->listdir($baseFolder);
 
         sort($folders, SORT_LOCALE_STRING);
-        if ($selected == '') {
+        if ($selected == '' && !empty($folders)) {
             $selected = $folders[0];
         }
         $baseFolderId = "0";
