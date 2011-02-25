@@ -1111,49 +1111,28 @@ class apo extends controller {
 
     public function __showrulesandsyllabusone() {
         $id = $this->getParam("id");
+        $document = $this->documents->getDocument($id);
         $formname = $this->getParam('formname');
-        print_r($id);
-
+       
         $a1 = $this->getParam("a1");
         $a2 = $this->getParam("a2");
         $a3 = $this->getParam("a3");
         $a4 = $this->getParam("a4");
         $a5 = $this->getParam("a5");
 
-        /* $errormessages = array();
-          if ($a1 == null) {
-          $errormessages[] = "Please provide an answer for A.1";
-          }
-          if ($a3 == null) {
-          $errormessages[] = "Please provide an answer for A.3";
-          }
-          if ($a4 == null) {
-          $errormessages[] = "Please provide an answer for A.4";
-          }
-
-          if (count($errormessages) > 0) {
-          $this->setVarByRef("errormessages", $errormessages);
-          $this->setVarByRef("a1", $a1);
-          $this->setVarByRef("a2", $a2);
-          $this->setVarByRef("a3", $a3);
-          $this->setVarByRef("a4", $a4);
-          $this->setVarByRef("a5", $a5);
-          $mode = "fixup";
-          $this->setVarByRef("mode", $mode);
-          return "overview_tpl.php";
-          } */
-
+        $errormessages = array();
+      
         $formdata = array();
-        $formdata["docid"] = $id;
+        $formdata["docid"] = $id;          
         $formdata["a1"] = $a1;
         $formdata["a2"] = $a2;
         $formdata["a3"] = $a3;
         $formdata["a4"] = $a4;
         $formdata["a5"] = $a5;
 
-        $formdata = serialize($formdata);
         $issubmit = $this->getParam('next');
-        if (!empty($issubmit)) {
+        if (!empty($issubmit)) {            
+            $formdata = serialize($formdata);
             $this->objformdata->saveData($id, $formname, $formdata);
         }
 
@@ -1161,6 +1140,7 @@ class apo extends controller {
         $mode = "new";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
+         $this->setVarByRef("document", $document);
         $this->setVarByRef("id", $id);
         return "rulesandsyllabusone_tpl.php";
     }
@@ -1234,6 +1214,7 @@ class apo extends controller {
         $mode = "new";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("document", $document);
         $this->setVarByRef("id", $id);
         return "rulesandsyllabustwo_tpl.php";
     }
@@ -1779,6 +1760,10 @@ class apo extends controller {
             $formdata = serialize($formdata);
             $issubmit = $this->getParam('next');
             if (!empty($issubmit)) {
+
+
+
+
                 $this->objformdata->saveData($id, $formname, $formdata);
             }
         } /* else if ($formname == "outcomesandassessmentthreeScience") {

@@ -91,7 +91,7 @@ echo $fs->show() . '<br/>';
 $legend = "<b>Section D: Outcomes and Assessment - Page Two</b>";
 
 $table = $this->newObject('htmltable', 'htmlelements');
-
+$groupstoselect = array();
 $groups = array();
 $groups[] = array('id' => '1', 'description' => " Identify and solve problems in which responses display that responsible decisions using critical and creative thinking have been made.<br>");
 $groups[] = array('id' => '2', 'description' => "Work effectively with others as a member of a team, group, organisation, community.<br>");
@@ -169,6 +169,7 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
+$form->extra = 'class="sections"';
 
 
 echo $form->show();

@@ -5,6 +5,15 @@
  * @package   apo (Academic Planning Office)
  * @author    Jacqueline Gil
  */
+
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
+
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('iframe', 'htmlelements');
@@ -105,10 +114,11 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['a'];
 }
+$textinput->setCss("required");
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("a. Over how many weeks will this course run?",800,"top",null,null,null,1);
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 $textinput = new textinput('b');
@@ -120,10 +130,11 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['b'];
 }
+$textinput->setCss("required");
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("b. How many hours of teaching will a particular student experience for this specific course in a single week?");
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 $textinput = new textinput('c');
@@ -135,10 +146,11 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['c'];
 }
+$textinput->setCss("required");
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("c. How many hours of tutorials will a particular student experience for this specific course in a single week?");
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 $textinput = new textinput('d');
@@ -150,10 +162,11 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['d'];
 }
+$textinput->setCss("required");
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("d. How many lab hours will a particular student experience for this specific course in a single week? (Note: the assumption is that there is only one staff contact hour per lab, the remaining lab time is student self-study)");
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 $textinput = new textinput('e');
@@ -165,10 +178,11 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['e'];
 }
+$textinput->setCss("required");
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("e. How many other contact sessions are there each week including periods used for testd or other assessments which have not been included in the number of lecture, tutorial or laboratory sessions.");
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 $label = new label();
@@ -193,10 +207,11 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['f'];
 }
+$textinput->setCss("required");
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("f. For every hour of lectures or contact with a staff member, how many hours should the student spend studying by her/himself?");
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 $label = new label();
@@ -219,10 +234,11 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['g'];
 }
+$textinput->setCss("required");
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("g. How many exams are there per year?");
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 $textinput = new textinput('h');
@@ -234,10 +250,11 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['h'];
 }
+$textinput->setCss("required");
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("h. How long is each exam?");
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 $label = new label();
@@ -260,10 +277,11 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['i'];
 }
+$textinput->setCss("required");
 $textinput->onChange = 'onChange = "' . $calculate . '"';
 $table->startRow();
 $table->addCell("i. How many hours of preparation for the exams is the student expected to undertake?");
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 $label = new label();
@@ -332,6 +350,7 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
+$form->extra = 'class="sections"';
 
 echo $form->show();
 ?>

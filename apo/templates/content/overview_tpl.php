@@ -8,8 +8,12 @@
 
 $validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
 $sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
 $this->appendArrayVar("headerParams", $validatorjs);
 $this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
+
 
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -152,7 +156,7 @@ $table->startRow();
 $table->addCell("A.3. Provide a brief motivation for the introduction/amendment of the course/unit:");
 $table->endRow();
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('a4');
@@ -171,7 +175,7 @@ $table->addCell("A.4. Towards which qualification(s) can the course/unit be take
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $radio = new radio('a5');

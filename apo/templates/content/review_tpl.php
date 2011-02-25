@@ -4,6 +4,15 @@
  * @package   apo (Academic Planning Office)
  * @author    Jacqueline Gil
  */
+
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -101,13 +110,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['g1a'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('G.1.a How will the course/unit syllabus be reviewed?:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g1b');
@@ -118,13 +127,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['g1b'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('G.1.b How often will the course/unit syllabus be reviewed?:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g2a');
@@ -135,13 +144,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['g2a'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('G.2.a How will integration of course/unit outcome, syllabus, teaching methods and assessment methods be evaluated?:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g2b');
@@ -152,13 +161,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['g2b'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('G.2.b How often will the above integration be reviewed?:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g3a');
@@ -169,13 +178,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['g3a'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('G.3.a How will the course/unit through-put rate be evaluated?:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g3b');
@@ -186,13 +195,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['g3b'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('G.3.b How often will the course/unit through-put be reviewed?:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g4a');
@@ -203,13 +212,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['g4a'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('G.4.a How will theteaching on the course/unit be evaluated from a students perspective and from a lectures perspective?:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('g4b');
@@ -221,12 +230,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['g4b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('G.4.b How often will the teaching on the course/unit be evaluated from these two perspectives?:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $efs = new fieldset();
@@ -262,7 +272,7 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
-
+$form->extra = 'class="sections"';
 
 echo $form->show();
 

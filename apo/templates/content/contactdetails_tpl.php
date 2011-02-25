@@ -5,6 +5,14 @@
  * @author    Jacqueline Gil
  */
 
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -103,12 +111,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['h1'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("H.1. Name of academic proposing the course/unit:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('h2a');
@@ -121,12 +130,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['h2a'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("H.2.a. Name of the School which will be the home for the course/unit:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('h2b');
@@ -139,12 +149,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['h2b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("H.2.b. School approval signature (Head of School or appropriate School committee chair) and date:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('h3a');
@@ -157,12 +168,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['h3a'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("H.3.a. Telephone contact numbers:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('h3b');
@@ -175,12 +187,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['h3b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("H.3.b. Email addresses:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $efs = new fieldset();
@@ -222,6 +235,8 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
+$form->extra = 'class="sections"';
+
 echo $form->show();
 ?>
 

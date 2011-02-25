@@ -1,4 +1,13 @@
 <?php
+
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -140,7 +149,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['f1b'];
 }
-
+//$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('F.1.b If yes, state the name of the professional body and provide details of the bodys prerequisites and/or contacts.:');
 $table->endRow();
@@ -200,7 +209,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['f2b'];
 }
-
+//$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('F.2.b If yes, provide the details of the other Schools or Fucalties involvement/interest, including support and provision for the course/unit.:');
 $table->endRow();
@@ -263,6 +272,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['f3b'];
 }
+//$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('F.3.b If yes, provide the details on the nature as well as the provisioning for the service learning component and methodology.:');
 $table->endRow();
@@ -279,7 +289,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['f4'];
 }
-
+//$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('F.4 Specify whether collaboration, contacts or other cooperation agreements have been, or will need to be, entered into with entities outside of the university?:');
 $table->endRow();
@@ -322,7 +332,7 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
-
+$form->extra = 'class="sections"';
 
 echo $form->show();
 ?>

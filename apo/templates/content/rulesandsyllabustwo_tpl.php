@@ -4,6 +4,15 @@
  * @package   apo (Academic Planning Office)
  * @author    Jacqueline Gil
  */
+
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -14,6 +23,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
+$this->setVar('JQUERY_VERSION', '1.4.2');
 $this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
@@ -125,12 +135,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['b5b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("B.5.b. In which year/s of study is the course/unit to be taught? ");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $radio = new radio ('b6a');
@@ -170,12 +181,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['b6b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("B.6.b. If ‘other’, provide details of the course/unit duration and/or the number of lectures which comprise the course/unit:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $radio = new radio ('b6c');
@@ -189,12 +201,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $radio->setSelected($formdata['b6c']);
 }
+//$radio->cssClass = "required";
 $table->startRow();
 $table->addCell("B.6.c.Is the unit assessed:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($radio->show());
+$table->addCell(/*'<em>*</em>'.*/$radio->show());
 $table->endRow();
 
 $efs = new fieldset();
@@ -230,6 +243,7 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home', 'id' => $id, 'formname'=>'overview'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
+$form->extra = 'class="sections"';
 
 echo $form->show();
 ?>

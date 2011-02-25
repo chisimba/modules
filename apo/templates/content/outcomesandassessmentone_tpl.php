@@ -5,6 +5,15 @@
  * @package   apo (Academic Planning Office)
  * @author    Palesa Mokwena
  */
+
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -107,7 +116,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $d1a->setSelected($formdata['d1a']);
 }
-
+//$d1a->setCss("required");
 /*if ($mode == 'fixup') {
     $documentNumber->setSelected($oldNGF);
 }
@@ -145,7 +154,7 @@ if ($mode == "edit") {
     $d1b->setSelected($formdata['d1b']);
 }
 
-
+//$d1b->setCss("required");
 $table->startRow();
 $table->addCell("D.1.b. On which NEW NQF (National Qualifications Framework) level (e.g. NQF 5, 6, 7, 8, 9 & 10) is the course/unit positioned?:");
 $table->endRow();
@@ -179,13 +188,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['d2a'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('Learning Outcomes of the Course/Unit');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('d2b');
@@ -203,13 +212,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['d2b'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('Assessment Criteria for the Learning Outcomes');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('d2c');
@@ -227,13 +236,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['d2c'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('Assessment Methods to be Used');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 //Section D.3.
@@ -252,13 +261,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['d3'];
 }
-
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('D.3. How do the course/unit outcomes contribute to the acheivement of the overall qualification/programme outcomes?:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 //Form
@@ -298,6 +307,7 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
+$form->extra = 'class="sections"';
 
 echo $form->show();
 ?>

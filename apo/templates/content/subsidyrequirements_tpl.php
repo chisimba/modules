@@ -4,6 +4,15 @@
  * @package   apo (Academic Planning Office)
  * @author    Palesa Mokwena
  */
+
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -105,12 +114,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['c1'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('C.1. The mode of instruction is understood to be contact/face-to-face lecturing. Provide details if any other mode of delivery is to be used:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $radio = new radio ('c2a');
@@ -147,12 +157,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['c2b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('C.2.b. If the course/unit is taught off-campus provide details:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 //Section C.3.
@@ -169,12 +180,13 @@ if ($mode == "edit") {
     $textinput->value = $formdata['c3'];
 }
 //$textinput->setExtra("maxlength = 6");
+$textinput->setCss("required");
 $table->startRow();
 $table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from http://intranet.wits.ac.za/Academic/APO/CESMs.htm):', '100');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textinput->show());
+$table->addCell('<em>*</em>'.$textinput->show());
 $table->endRow();
 
 //Section C.4.
@@ -213,12 +225,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['c4b1'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('C.4.b. If yes, state the name of the School/Entity:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('c4b2');
@@ -230,12 +243,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['c4b2'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell('Percentage each teaches.:');
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $legend = "<b>Section C: Subsidy Requirements</b>";
@@ -276,6 +290,7 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
+$form->extra = 'class="sections"';
 
 
 echo $form->show();

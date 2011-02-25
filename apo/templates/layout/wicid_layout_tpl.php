@@ -1,5 +1,5 @@
 <?php
-$baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+$baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'apo');
 $nav = $this->objUtils->getTree($baseFolder, $selected);
 
 $this->loadClass('link', 'htmlelements');
@@ -26,7 +26,7 @@ $cssLayout = $this->newObject('csslayout', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 2;
-$header->str = $this->objLanguage->languageText('mod_wicid_name', 'wicid', 'WICID');
+$header->str = $this->objLanguage->languageText('mod_wicid_name', 'wicid', 'APO');
 
 $leftColumn = $header->show();
 

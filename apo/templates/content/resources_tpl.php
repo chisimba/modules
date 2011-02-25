@@ -4,6 +4,15 @@
  * @package   apo (Academic Planning Office)
  * @author    Jacqueline Gil
  */
+
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -96,12 +105,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e1a'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.1.a. Is there currently adequate teaching capacity with regard to the introduction of the course/unit? ");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e1b');
@@ -114,12 +124,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e1b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.1.b. Who will teach the course/unit?");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e2a');
@@ -132,12 +143,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e2a'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.2.a. How many students will the course/unit attract?");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e2b');
@@ -150,12 +162,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e2b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.2.b. How has this been factored into the enrolment planning in your Faculty?");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e2c');
@@ -168,12 +181,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e2c'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.2.c. How has it been determined if the course/unit is sustainable in the long term, or short term if of topical interest?");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e3a');
@@ -186,12 +200,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e3a'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.3.a. Specify the space requirements for the course/unit:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e3b');
@@ -204,12 +219,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e3b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.3.b. Specify the IT teaching resources required for the course/unit:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e3c');
@@ -222,12 +238,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e3c'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.3.c. Specify the library resources required to teach the course/unit:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e4');
@@ -240,12 +257,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e4'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.4. Does the School intend to offer the course/unit in addition to its current course/unit offerings, or is the intention to eliminate an existing course/unit?");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e5a');
@@ -258,12 +276,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e5a'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.5.a. Specify the name of the course/unit co-ordinator:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('e5b');
@@ -276,12 +295,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['e5b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("E.5.b. State the Staff number of the course/unit coordinator (consult your Faculty Registrar):");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $efs = new fieldset();
@@ -317,6 +337,7 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
+$form->extra = 'class="sections"';
 
 echo $form->show();
 ?>

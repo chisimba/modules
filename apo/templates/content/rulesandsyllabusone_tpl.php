@@ -186,13 +186,12 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $radio->setSelected($formdata['b4a']);
 }
-$radio->cssClass = "required";
 $table->startRow();
 $table->addCell("B.4.a. This is:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<em>*</em>'.$radio->show());
+$table->addCell($radio->show());
 $table->endRow();
 
 $textarea = new textarea('b4b');
