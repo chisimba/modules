@@ -6,6 +6,11 @@
  * @author    Jacqueline Gil
  */
 
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+
 $this->loadClass('fieldset', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('iframe', 'htmlelements');
@@ -17,6 +22,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->documents = $this->getObject('dbdocuments');
 $this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
+$this->setVar('JQUERY_VERSION', '1.4.2');
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 
 //$action = 'savingFormData';
@@ -103,6 +109,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textinput->value = $formdata['a1'];
 }
+$textinput->setCss("required");
 $table->startRow();
 $table->addCell("A.1. Name of course/unit:");
 $table->endRow();
@@ -122,6 +129,7 @@ if ($mode == 'edit') {
 if ($mode == "fixup") {
     $radio->setSelected($a2);
 }
+$radio->cssClass = "required";
 $table->startRow();
 $table->addCell("A.2. This is a:");
 $table->endRow();
@@ -139,10 +147,10 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['a3'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("A.3. Provide a brief motivation for the introduction/amendment of the course/unit:");
 $table->endRow();
-
 $table->startRow();
 $table->addCell($textarea->show());
 $table->endRow();
@@ -157,6 +165,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['a4'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("A.4. Towards which qualification(s) can the course/unit be taken?");
 $table->endRow();
@@ -179,6 +188,7 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $radio->setSelected($formdata['a5']);
 }
+$radio->cssClass = "required";
 $table->startRow();
 $table->addCell("A.5. This new or amended course proposal is:","100");
 $table->endRow();
@@ -226,6 +236,6 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
-
+$form->extra = 'class="sections"';
 echo $form->show();
 ?>

@@ -4,6 +4,13 @@
  * @package   apo (Academic Planning Office)
  * @author    Jacqueline Gil
  */
+$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
+$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+
+$this->appendArrayVar("headerParams", $validatorjs);
+$this->appendArrayVar("headerParams", $sectionsjs);
+$this->appendArrayVar("headerParams", $sectionscss);
 
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
@@ -17,6 +24,7 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->objformdata = $this->getObject('dbformdata');
 $this->setVar('pageSuppressXML', TRUE);
+$this->setVar('JQUERY_VERSION', '1.4.2');
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 
 $formdata = $this->objformdata->getFormData("rulesandsyllabusone", $id);
@@ -100,12 +108,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['b1'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("B.1. How does this course/unit change the rules for the curriculum?");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b2');
@@ -118,12 +127,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['b2'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("B.2. Describe the course/unit syllabus:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b3a');
@@ -136,12 +146,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['b3a'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("B.3. a. What are the pre-requisites for the course/unit if any?");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b3b');
@@ -154,12 +165,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['b3b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("B.3.b. What are the co-requisites for the course/unit if any?");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $radio = new radio ('b4a');
@@ -174,12 +186,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $radio->setSelected($formdata['b4a']);
 }
+$radio->cssClass = "required";
 $table->startRow();
 $table->addCell("B.4.a. This is:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($radio->show());
+$table->addCell('<em>*</em>'.$radio->show());
 $table->endRow();
 
 $textarea = new textarea('b4b');
@@ -192,12 +205,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['b4b'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("B.4.b. If it is a compulsory course/unit, which course/unit is it replacing, or is the course/unit to be taken by students in addition to the current workload of courses/unit?");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b4c');
@@ -210,12 +224,13 @@ if ($mode == "fixup") {
 if ($mode == "edit") {
     $textarea->value = $formdata['b4c'];
 }
+$textarea->setCssClass("required");
 $table->startRow();
 $table->addCell("B.4.c. If it is both a compulsory and optional course/unit, provide details explaining for which qualifications/ programmes the course/unit would be optional and for which it would be compulsory:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell($textarea->show());
+$table->addCell('<em>*</em>'.$textarea->show());
 $table->endRow();
 
 $efs = new fieldset();
@@ -253,6 +268,7 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));;
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
+$form->extra = 'class="sections"';
 
 echo $form->show();
 ?>
