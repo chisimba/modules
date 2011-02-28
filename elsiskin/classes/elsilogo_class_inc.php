@@ -65,6 +65,13 @@ class elsilogo extends object {
      * @return string $retstr which displays the wits logo and elsi logo
      */
     public function show() {
+        $azlisting = new link("http://web.wits.ac.za/AboutWits/Index.htm");
+        $azlisting->link = "A-Z listing";
+        $contactUsLink = new link("http://web.wits.ac.za/ContactWits/");
+        $contactUsLink->link = "Contact Us";
+        $mapsLink = new link("http://web.wits.ac.za/maps");
+        $mapsLink->link = "Maps";
+        
         $retstr = '
             <div id="body-wrapper">
     <!-- Print Header -->
@@ -77,9 +84,9 @@ class elsilogo extends object {
     	<div id="generic-links">
 
             <!-- Top links -->
-            <div id="top-links">
-            	A-Z listing  |  Contact Us  |  Maps
-                <form>
+            <div id="top-links">'.
+            	$azlisting->show().'  |  '.$contactUsLink->show().'  |  '.$mapsLink->show().'
+                <form onSubmit="return witsSearch();">
                 	<input type="text" value="Search »" class="searchbar">
                     <input type="submit" value="" class="searchbutton">
                  </form>
