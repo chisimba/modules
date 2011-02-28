@@ -46,6 +46,7 @@ class rotatingidentity extends object {
     private $objNews;
     // news category object
     private $objCategory;
+    private $elearnSystem;
 
     /**
      * Constructor
@@ -53,6 +54,8 @@ class rotatingidentity extends object {
     public function init() {
         $this->objCategory = $this->getObject('dbnewscategories', 'news');
         $this->objNews = $this->getObject('dbnewsstories', 'news');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->elearnSystem = $this->objSysConfig->getValue('ELEARN_SYSTEM_URL', 'elsiskin');
     }
 
     /**
@@ -69,19 +72,17 @@ class rotatingidentity extends object {
      */
     public function show($action) {
         $this->loadClass('link', 'htmlelements');
-        if($action == 'viewsingle' || $action == 'viewstory') {
+        if ($action == 'viewsingle' || $action == 'viewstory') {
             $category = 'home_news';
-        }
-        else {
-            $category = $action."_news";
+        } else {
+            $category = $action . "_news";
         }
         $exists = $this->objCategory->categoryExists($category);
         //$exists = FALSE;
-        if($exists) {
+        if ($exists) {
             $categoryId = $this->objCategory->getCategoryId($category);
             $news = $this->objNews->getCategoryStories($categoryId);
-        }
-        else {
+        } else {
             $news = "";
         }
         $objUser = $this->getObject('user', 'security');
@@ -91,28 +92,29 @@ class rotatingidentity extends object {
                     <div class="clear">&nbsp;</div>
                     <div class="grid_1 push_3">
                         <a onmouseover="MM_swapImage(\'Login\',\'\',\'' . $this->skinpath . 'images/';
-                        if($userIsLoggedIn) {
-                            $retstr .= 'logout_1.png\',1)"';
-                        }
-                        else {
-                            $retstr .= '/login_1.png';
-                        }
-                        $retstr .= '\',1)" onmouseout="MM_swapImgRestore()" href="';
-                        if($userIsLoggedIn) {
-                          $retstr .= $this->uri(array("action"=>"logoff"),"security").'">';
-                        }
-                        else {
-                          $retstr .= $this->uri(array("action"=>"home"),"postlogin").'">';
-                        }
-                        $retstr.='   <img border="0" width="220" height="245" name="Login" alt="Login" src="' . $this->skinpath . 'images/';
-                        if($userIsLoggedIn) {
-                            $retstr .='logout.png">';
-                        }
-                        else {
-                            $retstr .='login.png">';
-                        }
+        $retstr .= '/login_1.png';
+        /*if ($userIsLoggedIn) {
+            $retstr .= 'logout_1.png\',1)"';
+        } else {
+            $retstr .= '/login_1.png';
+        }*/
+        $retstr .= '\',1)" onmouseout="MM_swapImgRestore()" href="';
+       $retstr .= $this->elearnSystem;
+       /* if ($userIsLoggedIn) {
+            $retstr .= $this->uri(array("action" => "logoff"), "security") . '">';
+        } else {
+            $retstr .= $this->uri(array("action" => "home"), "postlogin") . '">';
+        }*/
+        $retstr.='"><img border="0" width="220" height="245" name="Login" alt="Login" src="' . $this->skinpath . 'images/';
+         $retstr .='login.png">';
 
-       $retstr .='                 </a>
+        /*if ($userIsLoggedIn) {
+            $retstr .='logout.png">';
+        } else {
+            $retstr .='login.png">';
+        }*/
+
+        $retstr .='                 </a>
                     </div>
                     <!-- end .grid_1 .push_3 -->
                     <div class="grid_3 pull_1">
@@ -143,56 +145,55 @@ class rotatingidentity extends object {
             $retstr .= $contactLink->show();
             $retstr .= '</span>
                         </div>';
-        } else if($action == 'projectsresearch') {
-          $retstr .= '<div class="text-holder">
+        } else if ($action == 'projectsresearch') {
+            $retstr .= '<div class="text-holder">
                           <span class="head-main">Projects & Research</span>
                           <span class="head-text">eLSI offers workshops for Schools or Faculties as well as individual face-to-face consultations.<br>
                           <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="?module=elsiskin&action=contact">Contact us</a></span>
                         </div>';
-        } else if($action == 'viewstory') {
+        } else if ($action == 'viewstory') {
             $retstr .= '
                             <div class="text-holder">';
-                foreach($news as $row) {
-                    if($row['id'] == $this->getParam('id')) {
-                        $aboutLink = new link($this->uri(array("module"=>"elsiskin", "action"=>"about")));
-                        $aboutLink->link = "Latest News";
-                        $retstr .= '
+            foreach ($news as $row) {
+                if ($row['id'] == $this->getParam('id')) {
+                    $aboutLink = new link($this->uri(array("module" => "elsiskin", "action" => "about")));
+                    $aboutLink->link = "Latest News";
+                    $retstr .= '
 
-                                        <div class = "news" id=\''.$row['id'].'\'>
-                                            <span class="head-main">'.trim(strip_tags($row['storytitle'])).'</span>';
-                            $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 100).' ...<br>
-                                                <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;'.$aboutLink->show().'<br>
+                                        <div class = "news" id=\'' . $row['id'] . '\'>
+                                            <span class="head-main">' . trim(strip_tags($row['storytitle'])) . '</span>';
+                    $retstr .= '    <span class="head-text">' . substr(trim(strip_tags($row['storytext'])), 0, 100) . ' ...<br>
+                                                <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;' . $aboutLink->show() . '<br>
                                             </span>
                                         </div>';
-                    }
                 }
-                $retstr .= '
-                            <input type="hidden" id="newslink" value="'.$this->uri(array("action"=>"viewstory")).'" />
+            }
+            $retstr .= '
+                            <input type="hidden" id="newslink" value="' . $this->uri(array("action" => "viewstory")) . '" />
                             </div>';
         } else {
-            
-            if(!empty($news)) {
+
+            if (!empty($news)) {
                 $retstr .= '
                             <div class="text-holder">
                                 <div id="s7">';
-                foreach($news as $row) {
-                    $aboutLink = new link($this->uri(array("module"=>"elsiskin", "action"=>"about")));
+                foreach ($news as $row) {
+                    $aboutLink = new link($this->uri(array("module" => "elsiskin", "action" => "about")));
                     $aboutLink->link = "Latest News";
                     $retstr .= '
                                 
-                                    <div class = "news" id=\''.$row['id'].'\'>
-                                        <span class="head-main">'.trim(strip_tags($row['storytitle'])).'</span>';
-                        $retstr .= '    <span class="head-text">'.substr(trim(strip_tags($row['storytext'])), 0, 100).' ...<br>
-                                            <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;'.$aboutLink->show().'<br>
+                                    <div class = "news" id=\'' . $row['id'] . '\'>
+                                        <span class="head-main">' . trim(strip_tags($row['storytitle'])) . '</span>';
+                    $retstr .= '    <span class="head-text">' . substr(trim(strip_tags($row['storytext'])), 0, 100) . ' ...<br>
+                                            <img src="' . $this->skinpath . 'images/plus_more.gif" width="16" height="16">&nbsp;' . $aboutLink->show() . '<br>
                                         </span>
                                     </div>';
                 }
                 $retstr .= '
                                 </div>
-                                <input type="hidden" id="newslink" value="'.$this->uri(array("action"=>"viewstory")).'" />
+                                <input type="hidden" id="newslink" value="' . $this->uri(array("action" => "viewstory")) . '" />
                             </div>';
-            }
-            else {
+            } else {
                 $retstr .= '<div class="text-holder">
                     <span class="head-main">WELCOME TO ELSI</span>
                     <span class="head-text">No Current News.<br>
@@ -244,17 +245,17 @@ class rotatingidentity extends object {
      * @return string $retstr contaning the div with the rotating images with
      * the news linked to them
      */
+
     public function showHomeBanner($news) {
-        if(!empty($news)) {
+        if (!empty($news)) {
             $objFile = $this->getObject('dbfile', 'filemanager');
             $retstr = '<div class="slideshow" style="z-index:1;">';
-            foreach($news as $row) {
+            foreach ($news as $row) {
                 $myFile = $objFile->getFile($row['storyimage']);
-                $retstr .= '<img class="storyimage" id="'.$row['id'].'"  src="usrfiles/' .$myFile['path'].'">';
+                $retstr .= '<img class="storyimage" id="' . $row['id'] . '"  src="usrfiles/' . $myFile['path'] . '">';
             }
             $retstr .= '</div>';
-        }
-        else {
+        } else {
             $retstr = '<div class="slideshow" style="z-index:1;">
                            <img src="' . $this->skinpath . 'images/front_identity/home_dread.jpg">
                            <img src="' . $this->skinpath . 'images/front_identity/mlearning_website.png">
@@ -270,6 +271,7 @@ class rotatingidentity extends object {
      * @access public
      * @return string $retstr containing the banner for about us page
      */
+
     public function showAboutBanner() {
         $retstr = '
                     <ul class="slideshow">
@@ -286,6 +288,7 @@ class rotatingidentity extends object {
      * @access public
      * @return string $retstr containing the banner for staff page
      */
+
     public function showStaffBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/staff_cubicles.jpg">';
 
@@ -297,6 +300,7 @@ class rotatingidentity extends object {
      * @access public
      * @return string $retstr containing the banner for contact us page
      */
+
     public function showContactBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/contact_address.jpg">';
 
@@ -310,18 +314,17 @@ class rotatingidentity extends object {
     }
 
     public function showNewsBanner($news) {
-        if(!empty($news)) {
+        if (!empty($news)) {
             $objFile = $this->getObject('dbfile', 'filemanager');
             $retstr = '<div class="slideshow" style="z-index:1;">';
-            foreach($news as $row) {
-                if($row['id'] == $this->getParam('id')) {
+            foreach ($news as $row) {
+                if ($row['id'] == $this->getParam('id')) {
                     $myFile = $objFile->getFile($row['storyimage']);
-                    $retstr .= '<img class="storyimage" id="'.$row['id'].'"  src="usrfiles/' .$myFile['path'].'">';
+                    $retstr .= '<img class="storyimage" id="' . $row['id'] . '"  src="usrfiles/' . $myFile['path'] . '">';
                 }
             }
             $retstr .= '</div>';
-        }
-        else {
+        } else {
             $retstr = '<div class="slideshow" style="z-index:1;">
                            <img src="' . $this->skinpath . 'images/front_identity/home_dread.jpg">
                            <img src="' . $this->skinpath . 'images/front_identity/mlearning_website.png">

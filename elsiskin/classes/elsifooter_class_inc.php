@@ -1,4 +1,5 @@
 <?php
+
 /*
  *
  * A class to display the footer of the elsi skin. It retrieves the url actions from the
@@ -56,7 +57,7 @@ class elsifooter extends object {
         $this->objNews = $this->getObject('dbnewsstories', 'news');
     }
 
-     /**
+    /**
      * Method to show the Toolbar
      * @param string $skinpath the default skinpath for elsi skin
      * @return none
@@ -71,35 +72,43 @@ class elsifooter extends object {
      * @return string $retstr which has the footer for the skin
      * @access public
      */
+
     public function show() {
         $chisimbaLink = new link("http://www.chisimba.com");
-        $chisimbaLink->link = '<img src ="'.$this->skinpath.'images/powered_by_chisimba.png" alt="Powered By Chisimba" title="Powered By Chisimba" />';
+        $chisimbaLink->link = '<img src ="' . $this->skinpath . 'images/powered_by_chisimba.png" alt="Powered By Chisimba" title="Powered By Chisimba" />';
         $links = array(
-                    'home'=>'Home',
-                    'about'=>'About Us',
-                    'staff'=>'eLSI Staff',
-                    'news'=>'Current News',
-                    'projectsresearch'=>'Projects & Research',
-                    'supporttraining'=>'Support & Training',
-                    'contact'=>'Contact Us',
-                    );
-        $retstr ='
+            'home' => 'Home',
+            'about' => 'About Us',
+            'staff' => 'eLSI Staff',
+            'news' => 'Current News',
+            'projectsresearch' => 'Projects & Research',
+            'supporttraining' => 'Support & Training',
+            'contact' => 'Contact Us',
+            'postlogin' => 'Sign In',
+        );
+        $retstr = '
            <!-- Start: Footer -->
             <div id="Footer">
 
                 <div id="chisimbapower">
-                '.$chisimbaLink->show().'
+                ' . $chisimbaLink->show() . '
                 </div>
                 <!-- end .grid_4 -->
                 <div class="clear">&nbsp;</div>
                 <div class="grid_4"> ';
-                $retstr .= " | ";
-                foreach($links as $key => $index) {
-                    $eachLink = new link($this->uri(array('action'=>$key)));
-                    $eachLink->link = $index;
-                    $retstr .= $eachLink->show()." | ";
-                }   
-      $retstr .= '
+        $retstr .= " | ";
+        foreach ($links as $key => $index) {
+
+            $eachLink = new link($this->uri(array('action' => $key)));
+
+            if ($key == 'postlogin') {
+                $eachLink = new link($this->uri(array('action' => 'home'), 'postlogin'));
+            }
+
+            $eachLink->link = $index;
+            $retstr .= $eachLink->show() . " | ";
+        }
+        $retstr .= '
                 </div>
 
             </div>
@@ -108,4 +117,5 @@ class elsifooter extends object {
 
         return $retstr;
     }
+
 }
