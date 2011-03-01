@@ -48,6 +48,8 @@ class elsifooter extends object {
     private $stories;
     // path to root folder of skin
     private $skinpath;
+    // object for user details
+    private $objUser;
 
     /**
      * Constructor
@@ -55,6 +57,7 @@ class elsifooter extends object {
     public function init() {
         $this->objCategory = $this->getObject('dbnewscategories', 'news');
         $this->objNews = $this->getObject('dbnewsstories', 'news');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -100,12 +103,15 @@ class elsifooter extends object {
         foreach ($links as $key => $index) {
 
             $eachLink = new link($this->uri(array('action' => $key)));
-
+            $eachLink->link = $index;
             if ($key == 'postlogin') {
-                $eachLink = new link($this->uri(array('action' => 'home'), 'postlogin'));
+                $eachLink = $this->objUser->isLoggedIn()?
+                            new link($this->uri(array("action"=>"logoff"), "security")):
+                            new link($this->uri(array('action' => 'home'), 'postlogin'));
+                $eachLink->link = $this->objUser->isLoggedIn()?"Sign Out":"Sign In";
             }
 
-            $eachLink->link = $index;
+            
             $retstr .= $eachLink->show() . " | ";
         }
         $retstr .= '
