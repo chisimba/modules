@@ -482,7 +482,7 @@ class maincontent extends object {
         $categories = $objCategories->getCategories();
 
         foreach ($categories as $cat) {
-            if ($cat['categoryname'] == $this->category || $this->category == 'support_training') {//'documentation') {
+            if ($cat['categoryname'] == $this->category) {
                 if($this->category == 'projects_research') {
                     $documentationId = $cat['id'];
                     $this->documentation = $this->viewCategory($documentationId);
