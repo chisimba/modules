@@ -87,7 +87,7 @@ class elsifooter extends object {
             'projectsresearch' => 'Projects & Research',
             'supporttraining' => 'Support & Training',
             'contact' => 'Contact Us',
-            'postlogin' => 'Sign In',
+            'postlogin' => 'Log In',
         );
         $retstr = '
            <!-- Start: Footer -->
@@ -108,7 +108,7 @@ class elsifooter extends object {
                 $eachLink = $this->objUser->isLoggedIn()?
                             new link($this->uri(array("action"=>"logoff"), "security")):
                             new link($this->uri(array('action' => 'home'), 'postlogin'));
-                $eachLink->link = $this->objUser->isLoggedIn()?"Sign Out":"Sign In";
+                $eachLink->link = $this->objUser->isLoggedIn()?"Log Out":"Log In";
             }
 
             
