@@ -171,18 +171,24 @@ class rttutil extends object {
 <offline-allowed/>
     </information>
     <resources>
-        <j2se version="1.6+" />
-        <jar href="rtt-core-2.0.0.jar" />
-        <jar href="rtt-chatroom-2.0.0.jar" />
-        <jar href="rtt-whiteboard-2.0.0.jar" />
-        <jar href="rttcustomprogressindicator-0.1.0.jar"
-         download="progress" />
-          <jar href="smack-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
-          <jar href="smackx-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
-          <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
-          <jar href="proxy-vole_20100914.jar"/>
-          <jar href="looks-2.3.0.jar"/>
-          <jar href="PgsLookAndFeel.jar"/>
+          <jar href="commons-collections-3.1-rt.jar" />
+        <jar href="commons-logging-api-rt.jar" />
+        <jar href="quartz-all-1.6.0.jar" />
+        <jar href="jta-rt.jar" />
+        <jar href="PgsLookAndFeel.jar"/>
+        <jar href="l2fprod-common-all.jar"/>
+        <jar href="kunstsoff-rt.jar" />
+        <jar href="smack.jar"/>
+        <jar href="smackx.jar"/>
+        <jar href="smackx-debug.jar"/>
+        <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+        <jar href="xmlpull_1_1_3_4c.jar"/>
+         <jar href="google-api-translate-java-0.94.jar" />
+        <jar href="proxy-vole_20100914.jar" />
+        <jar href="looks-2.3.0.jar" />
+        <jar href="rtt-2.0.0.jar" />
+        <jar href="jspeex.jar" />
+        <jar href="microba-0.4.4.3.jar" />
 </resources>
 ';
         /*
