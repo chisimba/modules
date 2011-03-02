@@ -82,6 +82,8 @@ class sidebar extends object {
             case 'staff':return $this->showStaffSidebar();
             case 'contact': return $this->showContactSidebar();
             case 'projectsresearch': return $this->showProjectsSidebar();
+            case 'supporttraining': return $this->showSupportTrainingSidebar();
+            case 'currentnews': return $this->showCurrentNewsSidebar();
             case 'viewstory':
             case 'viewsingle':return $this->showNewsBlogSidebar();
             default: return $this->showHomeSidebar();
@@ -223,7 +225,7 @@ class sidebar extends object {
     * Method to show the Projects and Research page sidebar
     * @param none
     * @return string $retstr with the Projects and Research sidebar content
-    * @access public
+    * @access private
     */
     private function showProjectsSidebar() {
         $retstr = '<!-- Start: Sidebar -->
@@ -234,6 +236,49 @@ class sidebar extends object {
 		</div>
 		<!-- end .grid_1 -->
                 <!-- End: Sidebar -->';
+        return $retstr;
+    }
+
+    /*
+     * Method to show the support and training page sidebar
+     * @param none
+     * @return string $retstr with the support and training sidebar content
+     * @access private
+     *
+     */
+
+    private function showSupportTrainingSidebar() {
+        $retstr = '<!-- Start: Sidebar -->
+                <div id="Sidebar">
+                    <div class="grid_1">
+                        <p><img src="' . $this->skinpath . 'images/dots_question.png"></p>
+                    </div>
+		</div>
+		<!-- end .grid_1 -->
+                <!-- End: Sidebar -->';
+
+
+        return $retstr;
+    }
+
+    /*
+     * Method to show the current news page sidebar
+     * @param none
+     * @return string $retstr with the current news sidebar content
+     * @access private
+     *
+     */
+    private function showCurrentNewsSidebar() {
+        $retstr = '<!-- Start: Sidebar -->
+                <div id="Sidebar">
+                    <div class="grid_1">
+                        <p><img src="' . $this->skinpath . 'images/dots_news.png"></p>
+                    </div>
+		</div>
+		<!-- end .grid_1 -->
+                <!-- End: Sidebar -->';
+
+
         return $retstr;
     }
 }

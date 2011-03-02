@@ -160,7 +160,7 @@ class rotatingidentity extends object {
         } else if ($action == 'currentnews') {
             $retstr .= '<div class="text-holder">
                           <span class="head-main">Current News</span>
-                          <span class="head-text">These are the current news at eLSI.<br>
+                          <span class="head-text">All the eLearning news including our archives, announcements, events and reports..<br>
                           </span>
                         </div>';
         } else if ($action == 'viewstory') {
@@ -229,6 +229,8 @@ class rotatingidentity extends object {
             case 'projectsresearch': $retstr .= $this->showProjectsBanner();
                 break;
             case 'supporttraining': $retstr .= $this->showSupportBanner();
+                break;
+            case 'currentnews': $retstr .= $this->showCurrentNewsBanner();
                 break;
             case 'viewstory':$retstr .= $this->showNewsBanner($news);
                 break;
@@ -304,7 +306,7 @@ class rotatingidentity extends object {
      */
 
     public function showStaffBanner() {
-        $retstr = '<img src="' . $this->skinpath . 'images/staff_cubicles.jpg">';
+        $retstr = '<img src="' . $this->skinpath . 'images/front_identity/staff_cubicles.jpg">';
 
         return $retstr;
     }
@@ -316,19 +318,25 @@ class rotatingidentity extends object {
      */
 
     public function showContactBanner() {
-        $retstr = '<img src="' . $this->skinpath . 'images/contact_address.jpg">';
+        $retstr = '<img src="' . $this->skinpath . 'images/front_identity/contact_address.jpg">';
 
         return $retstr;
     }
 
     private function showProjectsBanner() {
-        $retstr = '<img src="' . $this->skinpath . 'images/research_computer.jpg">';
+        $retstr = '<img src="' . $this->skinpath . 'images/front_identity/research_computer.jpg">';
 
         return $retstr;
     }
 
     private function showSupportBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/front_identity/home_dread.jpg">';
+
+        return $retstr;
+    }
+
+    private function showCurrentNewsBanner() {
+        $retstr = '<img src="' . $this->skinpath . 'images/front_identity/news_office.jpg">';
 
         return $retstr;
     }
