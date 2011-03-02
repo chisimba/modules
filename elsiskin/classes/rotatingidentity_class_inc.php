@@ -157,6 +157,12 @@ class rotatingidentity extends object {
                           <span class="head-text">eLSI would like to enable academics, students and others to electronically distribute their teaching and learning resources.<br>
                           </span>
                         </div>';
+        } else if ($action == 'currentnews') {
+            $retstr .= '<div class="text-holder">
+                          <span class="head-main">Current News</span>
+                          <span class="head-text">These are the current news at eLSI.<br>
+                          </span>
+                        </div>';
         } else if ($action == 'viewstory') {
             $retstr .= '
                             <div class="text-holder">';
