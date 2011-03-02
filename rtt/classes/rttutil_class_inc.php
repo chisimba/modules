@@ -229,7 +229,7 @@ class rttutil extends object {
           </resources>
          */
 
-        $str.=' <application-desc    main-class="org.avoir.rtt.core.Main" progress-class="rttcustomprogressindicator.CustomProgress">
+        $str.=' <application-desc    main-class="org.avoir.rtt.core.Main">
     <argument>-slidesdir=/</argument>
     <argument>-maxstanzas=5</argument>
     <argument>-admin=' . $enableDraw . '</argument>
