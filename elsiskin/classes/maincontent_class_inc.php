@@ -604,7 +604,6 @@ class maincontent extends object {
     private function getAllSiteBlogs() {
         $num = 100;
         
-
         return $this->getBlogs($num);;
     }
 }
