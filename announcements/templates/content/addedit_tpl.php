@@ -53,7 +53,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 if ($mode == 'fixup') {
     $table->startRow();
-    $table->addCell('<font color="#ff0000">'. $errormessage.'</font>');
+    $table->addCell('<font color="#ff0000">'. $errorMessage.'</font>');
     $table->endRow();
 }
 
@@ -77,10 +77,11 @@ $table->endRow();
 
 if (
     $mode == 'add'
+        && count($lecturerContext) > 0
     || $mode == 'edit'
-        && $announcement['contextid'] != 'site'
+        && $announcement['contextid'] == 'context'
     || $mode == 'fixup'
-        && $recipienttarget != 'site') {
+        && $recipienttarget == 'context') {
     $contextsList = '';
     if (count($lecturerContext) > 0) {
         foreach ($lecturerContext as $context) {
@@ -110,27 +111,27 @@ if ($mode == 'add') {
     if ($isAdmin && count($lecturerContext) > 0) {
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to').':');
-        $recipientTarget = new radio ('recipienttarget');
-        $recipientTarget->setBreakSpace('<br />');
-        $recipientTarget->addOption('site', $this->objLanguage->languageText('mod_announcements_allusers', 'announcements', 'Site - All Users'));
-        $recipientTarget->addOption('context', $this->objLanguage->code2Txt('mod_announcements_onlytofollowing', 'announcements', NULL, 'Only to the following [-contexts-]'));
-        $recipientTarget->setSelected('site');
-        $table->addCell($recipientTarget->show().$contextsList);
+        $objRecipientTarget = new radio ('recipienttarget');
+        $objRecipientTarget->setBreakSpace('<br />');
+        $objRecipientTarget->addOption('site', $this->objLanguage->languageText('mod_announcements_allusers', 'announcements', 'Site - All Users'));
+        $objRecipientTarget->addOption('context', $this->objLanguage->code2Txt('mod_announcements_onlytofollowing', 'announcements', NULL, 'Only to the following [-contexts-]'));
+        $objRecipientTarget->setSelected('site');
+        $table->addCell($objRecipientTarget->show().$contextsList);
         $table->endRow();
     } else if ($isAdmin) {
-        $recipientTarget = new hiddeninput('recipienttarget', 'site');
-        $form->addToForm($recipientTarget->show());
+        $objRecipientTarget = new hiddeninput('recipienttarget', 'site');
+        $form->addToForm($objRecipientTarget->show());
     } else {
-        $recipientTarget = new hiddeninput('recipienttarget', 'context');
-        $form->addToForm($recipientTarget->show());
+        $objRecipientTarget = new hiddeninput('recipienttarget', 'context');
+        $form->addToForm($objRecipientTarget->show());
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to'));
         $table->addCell($this->objLanguage->code2Txt('mod_announcements_followingcontexts', 'announcements', NULL, 'the following [-contexts-]').':'.$contextsList);
         $table->endRow();
     }
 } else if ($mode == 'edit') {
-    $recipientTarget = new hiddeninput('recipienttarget', $announcement['contextid']);
-    $form->addToForm($recipientTarget->show());
+    $objRecipientTarget = new hiddeninput('recipienttarget', $announcement['contextid']);
+    $form->addToForm($objRecipientTarget->show());
     if ($announcement['contextid'] == 'site') {
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('word_type', 'system', 'Type').':');
@@ -138,15 +139,13 @@ if ($mode == 'add') {
         $table->endRow();
     } else {
         $table->startRow();
-        $label = new label ($this->objLanguage->languageText('word_title', 'system', 'Title'), 'input_title');
-        $title = new textinput('title');
         $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to').':');
         $table->addCell($this->objLanguage->code2Txt('mod_announcements_followingcontexts', 'announcements', NULL, 'the following [-contexts-]').':'.$contextsList);
         $table->endRow();
     }
 } else if ($mode == 'fixup') {
-    $recipientTarget = new hiddeninput('recipienttarget', $recipienttarget);
-    $form->addToForm($recipientTarget->show());
+    $objRecipientTarget = new hiddeninput('recipienttarget', $recipienttarget);
+    $form->addToForm($objRecipientTarget->show());
     if ($recipienttarget == 'site') {
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('word_type', 'system', 'Type').':');
@@ -154,8 +153,6 @@ if ($mode == 'add') {
         $table->endRow();
     } else {
         $table->startRow();
-        $label = new label ($this->objLanguage->languageText('word_title', 'system', 'Title'), 'input_title');
-        $title = new textinput('title');
         $table->addCell($this->objLanguage->languageText('mod_announcements_sendto', 'announcements', 'Send to').':');
         $table->addCell($this->objLanguage->code2Txt('mod_announcements_followingcontexts', 'announcements', NULL, 'the following [-contexts-]').':'.$contextsList);
         $table->endRow();
@@ -224,4 +221,10 @@ $backLink->link = $this->objLanguage->languageText('mod_announcements_back', 'an
 echo "<div class='modulehome'></div><div class='modulehomelink'>" . $backLink->show() . '</div>';
 */
 echo $backLink->show();
+/*
+$label = new label ($this->objLanguage->languageText('word_title', 'system', 'Title'), 'input_title');
+$title = new textinput('title');
+$label = new label ($this->objLanguage->languageText('word_title', 'system', 'Title'), 'input_title');
+$title = new textinput('title');
+*/
 ?>

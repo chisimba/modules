@@ -316,13 +316,13 @@ class announcements extends controller
         && ($title == ''
             || strip_tags($message) == '')) {
             $this->setVar('mode', 'fixup');
-            $this->setVar('lecturerContext', $this->lecturerContext);
-            $this->setVar('isAdmin', $this->isAdmin);
-            $this->setVar("message", $message);
-            $this->setVarByRef("title", $title);
+            $this->setVar("errorMessage", $this->objLanguage->languageText('mod_announcements_errortitlemessagerequired', 'announcements'));
+            //$this->setVar('lecturerContext', $this->lecturerContext);
+            //$this->setVar('isAdmin', $this->isAdmin);
+            $this->setVar("title", $title);
             $this->setVar('recipienttarget', $recipienttarget);
             $this->setVar('contexts', $contexts);
-            $this->setVar("errormessage", $this->objLanguage->languageText('mod_announcements_errortitlemessagerequired', 'announcements'));
+            $this->setVar("message", $message);
             return 'addedit_tpl.php';
         } else if ($mode == 'add' || $mode == 'fixup') //  || $mode == 'save'
         {
