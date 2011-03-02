@@ -129,6 +129,7 @@ class maincontent extends object {
             case 'viewstory': return $this->showNewsStory();
             case 'projectsresearch': return $this->showProjectsResearchMain();
             case 'supporttraining': return $this->showSupportTrainingMain();
+            case 'currentnews': return $this->showCurrentNews();
             default: return $this->showHomeMain();
         }
     }
@@ -483,7 +484,7 @@ class maincontent extends object {
 
         foreach ($categories as $cat) {
             if ($cat['categoryname'] == $this->category) {
-                if($this->category == 'projects_research' || $this->category == 'support_training') {
+                if($this->category == 'projects_research' || $this->category == 'support_training' || $this->currentAction == 'currentnews') {
                     $documentationId = $cat['id'];
                     $this->documentation = $this->viewCategory($documentationId);
                 } else {
@@ -555,5 +556,21 @@ class maincontent extends object {
         $retstr = str_replace("<h1>".$this->category."</h1>", "", $retstr);
         
         return $retstr;
+    }
+
+    private function showCurrentNews() {
+        $retstr = '<div class="grid_3">'
+                        .$this->getCurrentNews().
+                  '</div>
+                  <!-- end .grid_3 -->';
+
+        return $retstr;
+    }
+
+    private function getCurrentNews() {
+        $this->category = "home_news";
+        $this->documentation = "Current News Content has not yet been set up";
+
+        return $this->getContent();
     }
 }

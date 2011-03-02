@@ -138,6 +138,9 @@ class elsicontent extends object {
         else if($action == 'supporttraining') {
             $ret = $this->getSupportContent();
         }
+        else if($action == 'currentnews') {
+            $ret = $this->getCurrentNewsContent();
+        }
         else if($action == 'viewsingle' || $action == 'viewstory' || $action == 'projectsresearch' || $action == 'supporttraining'){
             $ret = $this->getNoContent();
         }
@@ -291,6 +294,25 @@ class elsicontent extends object {
         $ret .='
             <div class="grid_3">
                 <h2>'.$supportLink->show().'</h2>
+            </div>
+            <!-- end .grid_1.pull_3 -->
+            <div class="clear">&nbsp;</div>';
+
+        return $ret;
+    }
+
+    private function getCurrentNewsContent() {
+        $currentNewsLink = new link($this->uri(array("action"=>"currentnews")));
+        $currentNewsLink->link = $this->objLanguage->languageText('mod_elsiskin_welcomenews', 'elsiskin');
+        $ret = '
+            <div class="clear">&nbsp;</div>
+            <div class="grid_1">
+                <h3>'.$currentNewsLink->show().'</h3>
+            </div>';
+        $currentNewsLink->link = $this->objLanguage->languageText('mod_elsiskin_newsheading', 'elsiskin');
+        $ret .='
+            <div class="grid_3">
+                <h2>'.$currentNewsLink->show().'</h2>
             </div>
             <!-- end .grid_1.pull_3 -->
             <div class="clear">&nbsp;</div>';
