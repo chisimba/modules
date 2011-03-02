@@ -88,7 +88,7 @@ class maincontent extends object {
         $this->objblogPosts = $this->getObject('blogposts', 'blog');
         $this->objLanguage = $this->getObject("language", "language");
         $this->sidebar = $this->getObject('sidebar');
-
+        $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
     }
 
     /* Method to set the current action of the page
@@ -340,49 +340,56 @@ class maincontent extends object {
         $num = 3;
         $data = $this->objDbBlog->getLastPosts($num);
         $ret = "";
+
+        // get the group id based on name:
+        $groupId = $this->objGroup->getId('eLSI');
+
         if (!empty($data)) {
-            $ret .= '<div class="grid_2">';
-            foreach ($data as $item) {
-                $commentCount = $objComments->getCount($item['id']);
+            if(!empty($groupId)) {
+                $ret .= '<div class="grid_2">';
+                foreach ($data as $item) {
+                    if($this->objGroup->isGroupMember($item['userid'], $groupId)) {
+                        $commentCount = $objComments->getCount($item['id']);
 
-                $ret .= '<div class="blog-post-preview">
-                            <p>';
-                $linkuri = $this->uri(array(
-                            'action' => 'viewsingle',
-                            'postid' => $item['id'],
-                            'userid' => $item['userid']
-                        ), "blog");
-                $user = $this->objUser->fullname($item['userid']);
-                $link = new href($linkuri, stripslashes($item['post_title']));
-                $postExcerpt = $item['post_excerpt'];
-                $fixedTime = strtotime($item['post_date']);
-                $fixedTime = date('Y-m-d H:i:s', $fixedTime);
-                $postDate = $this->objHumanizeDate->getDifference($fixedTime);
-                $userlink = new link($this->uri(array("action" =>"viewblog", "userid"=>$item['userid']), "blog"));
-                $userlink->link = $this->objUser->getUserImage($item['userid']);
-                $userlink->title = $user;
-                $allBlogs = new link($this->uri(array("action"=>"viewblog", "userid"=>$item['userid']), "blog"));
-                $allBlogs->link = 'All posts by '. $user;
+                        $ret .= '<div class="blog-post-preview">
+                                    <p>';
+                        $linkuri = $this->uri(array(
+                                    'action' => 'viewsingle',
+                                    'postid' => $item['id'],
+                                    'userid' => $item['userid']
+                                ), "blog");
+                        $user = $this->objUser->fullname($item['userid']);
+                        $link = new href($linkuri, stripslashes($item['post_title']));
+                        $postExcerpt = $item['post_excerpt'];
+                        $fixedTime = strtotime($item['post_date']);
+                        $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+                        $postDate = $this->objHumanizeDate->getDifference($fixedTime);
+                        $userlink = new link($this->uri(array("action" =>"viewblog", "userid"=>$item['userid']), "blog"));
+                        $userlink->link = $this->objUser->getUserImage($item['userid']);
+                        $userlink->title = $user;
+                        $allBlogs = new link($this->uri(array("action"=>"viewblog", "userid"=>$item['userid']), "blog"));
+                        $allBlogs->link = 'All posts by '. $user;
 
-                $ret .= $userlink->show();
-                $ret .= '<h4>'.$link->show().'</h4>
-                         <br>';
-            
-                $ret .= '   </p>
-                            <p>'.str_replace("\\", "", $postExcerpt).'
-                            
-                            </p>
-                        <p class="post-details">
-                            Written '.$postDate.' on '
-                                     .date('Y-m-d', strtotime($item['post_date'])).' at '
-                                     .date('H:i:s', strtotime($item['post_date']))
-                                     .'<!-- Filed under: TAG. NUMBER comments-->
-                        <br>By '.$user.' | '. $allBlogs->show().' | Comments '.$commentCount.'
-                        </p>
-                        </div>';
-                    
+                        $ret .= $userlink->show();
+                        $ret .= '<h4>'.$link->show().'</h4>
+                                 <br>';
+
+                        $ret .= '   </p>
+                                    <p>'.str_replace("\\", "", $postExcerpt).'
+
+                                    </p>
+                                <p class="post-details">
+                                    Written '.$postDate.' on '
+                                             .date('Y-m-d', strtotime($item['post_date'])).' at '
+                                             .date('H:i:s', strtotime($item['post_date']))
+                                             .'<!-- Filed under: TAG. NUMBER comments-->
+                                <br>By '.$user.' | '. $allBlogs->show().' | Comments '.$commentCount.'
+                                </p>
+                                </div>';
+                    }
+                }
+                $ret .= '</div>';
             }
-            $ret .= '</div>';
         }
 
         return $ret;
