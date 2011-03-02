@@ -144,6 +144,9 @@ class elsicontent extends object {
         else if($action == 'viewsingle' || $action == 'viewstory' || $action == 'projectsresearch' || $action == 'supporttraining'){
             $ret = $this->getNoContent();
         }
+        else if($action == 'allsiteblogs') {
+            $ret = $this->getAllSiteBlogsContent();
+        }
         else {
             $homeLink = new link($this->uri(array("action"=>"home")));
             $homeLink->link = $this->objLanguage->languageText('mod_elsiskin_welcome', 'elsiskin');
@@ -313,6 +316,25 @@ class elsicontent extends object {
         $ret .='
             <div class="grid_3">
                 <h2>'.$currentNewsLink->show().'</h2>
+            </div>
+            <!-- end .grid_1.pull_3 -->
+            <div class="clear">&nbsp;</div>';
+
+        return $ret;
+    }
+
+    private function getAllSiteBlogsContent() {
+        $allSiteBlogsLink = new link($this->uri(array("action"=>"allsiteblogs")));
+        $allSiteBlogsLink->link = $this->objLanguage->languageText('mod_elsiskin_welcomeallblogs', 'elsiskin');
+        $ret = '
+            <div class="clear">&nbsp;</div>
+            <div class="grid_1">
+                <h3>'.$allSiteBlogsLink->show().'</h3>
+            </div>';
+        $allSiteBlogsLink->link = $this->objLanguage->languageText('mod_elsiskin_allblogsheading', 'elsiskin');
+        $ret .='
+            <div class="grid_3">
+                <h2>'.$allSiteBlogsLink->show().'</h2>
             </div>
             <!-- end .grid_1.pull_3 -->
             <div class="clear">&nbsp;</div>';

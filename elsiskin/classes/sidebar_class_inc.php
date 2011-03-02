@@ -281,4 +281,25 @@ class sidebar extends object {
 
         return $retstr;
     }
+
+    /*
+     * Method to show the current news page sidebar
+     * @param none
+     * @return string $retstr with the current news sidebar content
+     * @access private
+     *
+     */
+    private function showAllSiteBlogsSidebar() {
+        $retstr = '<!-- Start: Sidebar -->
+                <div id="Sidebar">
+                    <div class="grid_1">
+                        <p><img src="' . $this->skinpath . 'images/dots_news.png"></p>
+                    </div>
+		</div>
+		<!-- end .grid_1 -->
+                <!-- End: Sidebar -->';
+
+
+        return $retstr;
+    }
 }

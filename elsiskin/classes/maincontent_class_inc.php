@@ -130,6 +130,7 @@ class maincontent extends object {
             case 'projectsresearch': return $this->showProjectsResearchMain();
             case 'supporttraining': return $this->showSupportTrainingMain();
             case 'currentnews': return $this->showCurrentNews();
+            case 'allsiteblogs': return $this->getAllSiteBlogs();
             default: return $this->showHomeMain();
         }
     }
@@ -147,7 +148,7 @@ class maincontent extends object {
         }
         $alllink = new link($this->uri(array("action"=>"siteblog"), "blog"));
         $alllink->link = $this->objLanguage->languageText('mod_elsiskin_viewallblogs', 'elsiskin');
-        $elsiBlogs = new link($this->uri(array("action"=>"allblogs"), "blog"));
+        $elsiBlogs = new link($this->uri(array("action"=>"allsiteblogs")));
         $elsiBlogs->link = $this->objLanguage->languageText('mod_elsiskin_elsistaffblogs', 'elsiskin');
         $retstr = '
                    <div class="clear">&nbsp;</div>
@@ -334,11 +335,15 @@ class maincontent extends object {
      * @return string
      * @access private
      */
-    private function getBlogs() {
+    private function getBlogs($num=10) {
         $objComments = $this->getObject('commentapi', 'blogcomments');
         $this->loadClass('href', 'htmlelements');
-        $num = 10;
-        $data = $this->objDbBlog->getLastPosts($num);
+        /*if($num > 10) {
+            $data = $this->objDbBlog->getLastPosts(NULL);
+        }
+        else {*/
+            $data = $this->objDbBlog->getLastPosts($num);
+        //}
         $ret = "";
 
         // get the group id based on name:
@@ -346,7 +351,12 @@ class maincontent extends object {
         $count = 0;
         if (!empty($data)) {
             if(!empty($groupId)) {
-                $ret .= '<div class="grid_2">';
+                if($num > 10) {
+                    $ret .= '<div class="grid_3">';
+                }
+                else {
+                    $ret .= '<div class="grid_2">';
+                }
                 foreach ($data as $item) {
                     if($this->objGroup->isGroupMember($item['userid'], $groupId) && $count < 3) {
                         $commentCount = $objComments->getCount($item['id']);
@@ -581,5 +591,11 @@ class maincontent extends object {
         $this->documentation = "Current News Content has not yet been set up";
 
         return $this->getContent();
+    }
+
+    private function getAllSiteBlogs() {
+        $num = 100;
+        
+        return $this->getBlogs($num);
     }
 }

@@ -160,7 +160,13 @@ class rotatingidentity extends object {
         } else if ($action == 'currentnews') {
             $retstr .= '<div class="text-holder">
                           <span class="head-main">Current News</span>
-                          <span class="head-text">All the eLearning news including our archives, announcements, events and reports..<br>
+                          <span class="head-text">All the eLearning news including our archives, announcements, events and reports.<br>
+                          </span>
+                        </div>';
+        } else if($action == 'allsiteblogs') {
+            $retstr .= '<div class="text-holder">
+                          <span class="head-main">eLSI Blogs</span>
+                          <span class="head-text">All the eLearning Blogs from the members of the unit.<br>
                           </span>
                         </div>';
         } else if ($action == 'viewstory') {
@@ -233,6 +239,8 @@ class rotatingidentity extends object {
             case 'currentnews': $retstr .= $this->showCurrentNewsBanner();
                 break;
             case 'viewstory':$retstr .= $this->showNewsBanner($news);
+                break;
+            case 'allsiteblogs':$retstr .= $this->showAllSiteBlogs();
                 break;
             default: $retstr .= $this->showHomeBanner($news);
         }
@@ -364,4 +372,9 @@ class rotatingidentity extends object {
         return $retstr;
     }
 
+    private function showAllSiteBlogs() {
+        $retstr = '<img src="' . $this->skinpath . 'images/front_identity/news_office.jpg">';
+
+        return $retstr;
+    }
 }
