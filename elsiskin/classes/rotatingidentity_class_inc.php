@@ -151,6 +151,12 @@ class rotatingidentity extends object {
                           <span class="head-text">eLSI offers workshops for Schools or Faculties as well as individual face-to-face consultations.<br>
                           <img width="16" height="16" src="' . $this->skinpath . 'images/plus_more.gif">&nbsp;<a href="?module=elsiskin&action=contact">Contact us</a></span>
                         </div>';
+        } else if ($action == 'supporttraining') {
+            $retstr .= '<div class="text-holder">
+                          <span class="head-main">Support and Training</span>
+                          <span class="head-text">eLSI would like to enable academics, students and others to electronically distribute their teaching and learning resources.<br>
+                          </span>
+                        </div>';
         } else if ($action == 'viewstory') {
             $retstr .= '
                             <div class="text-holder">';
@@ -215,6 +221,8 @@ class rotatingidentity extends object {
             case 'contact': $retstr .= $this->showContactBanner();
                 break;
             case 'projectsresearch': $retstr .= $this->showProjectsBanner();
+                break;
+            case 'supporttraining': $retstr .= $this->showSupportBanner();
                 break;
             case 'viewstory':$retstr .= $this->showNewsBanner($news);
                 break;
@@ -309,6 +317,12 @@ class rotatingidentity extends object {
 
     private function showProjectsBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/research_computer.jpg">';
+
+        return $retstr;
+    }
+
+    private function showSupportBanner() {
+        $retstr = '<img src="' . $this->skinpath . 'images/front_identity/home_dread.jpg">';
 
         return $retstr;
     }
