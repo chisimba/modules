@@ -56,28 +56,25 @@ class rttutil extends object {
     </information>
     <resources>
         <j2se version="1.5+" />
-        
-        <jar href="commons-collections-3.1-rt.jar" />
+                <jar href="commons-collections-3.1-rt.jar" />
         <jar href="commons-logging-api-rt.jar" />
         <jar href="quartz-all-1.6.0.jar" />
         <jar href="jta-rt.jar" />
         <jar href="PgsLookAndFeel.jar"/>
-        <jar href="DJNativeSwing.jar" />
-        <jar href="DJNativeSwing-SWT.jar" />
         <jar href="l2fprod-common-all.jar"/>
         <jar href="kunstsoff-rt.jar" />
-        <jar href="smack.jar" />
-        <jar href="smackx.jar" />
+        <jar href="smack.jar"/>
+        <jar href="smackx.jar"/>
+        <jar href="smackx-debug.jar"/>
+        <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+        <jar href="xmlpull_1_1_3_4c.jar"/>
+         <jar href="google-api-translate-java-0.94.jar" />
+        <jar href="proxy-vole_20100914.jar" />
         <jar href="looks-2.3.0.jar" />
-      
-        <jar href="realtime2-chatmanager.jar" />
-        <jar href="realtime2-presentations.jar" />
-        <jar href="realtime2-audio.jar" />
-        <jar href="realtime2-core.jar" />
-
-        <jar href="realtime2-usermanager.jar" />
-        <jar href="realtime2-roommanager.jar" />
-        <jar href="realtime2-whiteboard.jar" />
+        <jar href="rtt-2.0.0.jar" />
+        <jar href="jspeex.jar" />
+        <jar href="microba-0.4.4.3.jar" />
+       
 </resources>
 
     <resources os="Windows" arch="x86">
@@ -136,6 +133,7 @@ class rttutil extends object {
     }
 
     function generateDemoJNLP($nickname, $username) {
+
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $servletURL = $objSysConfig->getValue('SERVLETURL', 'rtt');
         $plugins = $objSysConfig->getValue('PLUGINS', 'rtt');
@@ -149,7 +147,7 @@ class rttutil extends object {
         $sipPort = $objSysConfig->getValue('SIPPORT', 'rtt');
         $outboundProxy = $objSysConfig->getValue('OUTBOUNDPROXY', 'rtt');
         $sipDomain = $objSysConfig->getValue('SIPDOMAIN', 'rtt');
-
+        $languageBundles = $objSysConfig->getValue('LANGUAGE_BUNDLES', 'rtt');
         $objAltConfig = $this->getObject('altconfig', 'config');
         $modPath = $objAltConfig->getModulePath();
         $moduleUri = $objAltConfig->getModuleURI();
@@ -166,52 +164,66 @@ class rttutil extends object {
         <vendor>AVOIR</vendor>
         <description>Realtime Communication Tools</description>
         <homepage href="http://www.chisimba.com"/>
-        <description kind="short">rtt</description>
-        <icon href="' . $codebase . '/images/logo.png"/>
-        <icon kind="splash" href="' . $codebase . '/images/splash_rtt.png"/>
-        <offline-allowed/>
+        <description kind="short">rtt</description>';
+        /* <icon href="' . $codebase . '/images/logo.png"/>
+          <icon kind="splash" href="' . $codebase . '/images/splash_rtt.png"/>
+         */ $str.='
+<offline-allowed/>
     </information>
     <resources>
-        <j2se version="1.5+" />
-
-        <jar href="commons-collections-3.1-rt.jar" />
-        <jar href="commons-logging-api-rt.jar" />
-        <jar href="quartz-all-1.6.0.jar" />
-        <jar href="jta-rt.jar" />
-        <jar href="PgsLookAndFeel.jar"/>
-        <jar href="l2fprod-common-all.jar"/>
-        <jar href="kunstsoff-rt.jar" />
-
-<!--
-        <jar href="httpmime-4.0.3.jar" />
-        <jar href="httpcore-4.0.1.jar" />
-        <jar href="httpclient-4.0.3.jar" />
-
-        <jar href="asmack-jse.jar" />
-        <jar href="xmlpull_1_1_3_4c.jar" />
-        <jar href="xpp3-1.1.3.4.C.jar"/>
--->
-
-        <jar href="smack-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
-        <jar href="smackx-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
-        <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
-
-
-        <jar href="proxy-vole_20100914.jar" />
-        <jar href="looks-2.3.0.jar" />
-        <jar href="realtime2-chatmanager.jar" />
-        <jar href="realtime2-presentations.jar" />
-        <jar href="realtime2-audio.jar" />
-        <jar href="realtime2-core.jar" />
-        <jar href="jspeex.jar" />
-        
-        <jar href="realtime2-usermanager.jar" />
-        <jar href="realtime2-roommanager.jar" />
-        <jar href="realtime2-whiteboard.jar" />
+        <j2se version="1.6+" />
+        <jar href="rtt-core-2.0.0.jar" />
+        <jar href="rtt-chatroom-2.0.0.jar" />
+        <jar href="rtt-whiteboard-2.0.0.jar" />
+        <jar href="rttcustomprogressindicator-0.1.0.jar"
+         download="progress" />
+          <jar href="smack-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+          <jar href="smackx-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+          <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+          <jar href="proxy-vole_20100914.jar"/>
+          <jar href="looks-2.3.0.jar"/>
+          <jar href="PgsLookAndFeel.jar"/>
 </resources>
+';
+        /*
+          <jar href="commons-collections-3.1-rt.jar" />
+          <jar href="commons-logging-api-rt.jar" />
+          <jar href="quartz-all-1.6.0.jar" />
+          <jar href="jta-rt.jar" />
+          <jar href="PgsLookAndFeel.jar"/>
+          <jar href="l2fprod-common-all.jar"/>
+          <jar href="kunstsoff-rt.jar" />
+
+          <!--
+          <jar href="httpmime-4.0.3.jar" />
+          <jar href="httpcore-4.0.1.jar" />
+          <jar href="httpclient-4.0.3.jar" />
+
+          <jar href="asmack-jse.jar" />
+          <jar href="xmlpull_1_1_3_4c.jar" />
+          <jar href="xpp3-1.1.3.4.C.jar"/>
+          -->
+
+          <jar href="smack-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+          <jar href="smackx-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+          <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
 
 
-   <application-desc    main-class="org.avoir.realtime.core.Main">
+          <jar href="proxy-vole_20100914.jar" />
+          <jar href="looks-2.3.0.jar" />
+          <jar href="realtime2-chatmanager.jar" />
+          <jar href="realtime2-presentations.jar" />
+          <jar href="realtime2-audio.jar" />
+          <jar href="realtime2-core.jar" />
+          <jar href="jspeex.jar" />
+
+          <jar href="realtime2-usermanager.jar" />
+          <jar href="realtime2-roommanager.jar" />
+          <jar href="realtime2-whiteboard.jar" />
+          </resources>
+         */
+
+        $str.=' <application-desc    main-class="org.avoir.rtt.core.Main" progress-class="rttcustomprogressindicator.CustomProgress">
     <argument>-slidesdir=/</argument>
     <argument>-maxstanzas=5</argument>
     <argument>-admin=' . $enableDraw . '</argument>
@@ -235,7 +247,8 @@ class rttutil extends object {
     <argument>-domain=' . $sipDomain . '</argument>
     <argument>-userpart=' . $callnumber . '</argument>
     <argument>-roomname=' . $roomname . '</argument>
-    </application-desc>
+    <argument>-languagebundles=' . $languageBundles . '</argument>
+</application-desc>
 
     <security>
         <all-permissions/>
