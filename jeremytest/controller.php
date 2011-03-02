@@ -125,6 +125,12 @@ class jeremytest extends controller
     {
         return 'siteroot_tpl.php';
     }
+
+    public function __test1()
+    {
+        return 'test1_tpl.php';
+    }
+
 }
 
 ?>

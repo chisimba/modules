@@ -1,5 +1,8 @@
 <?php
 
+//echo "Email";
+//die;
+
 /**
  *
  *
@@ -32,6 +35,8 @@ $headers .= 'From: '.$from . "\r\n" .
 	'Reply-To: '.$from . "\r\n" .
 	'X-Mailer: PHP/' . phpversion();
 
-return mail($to, $subject, $body, $headers);
+$res = mail($to, $subject, $body, $headers);
+
+echo $res?'OK':'FAIL';
 
 ?>
