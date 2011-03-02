@@ -337,18 +337,18 @@ class maincontent extends object {
     private function getBlogs() {
         $objComments = $this->getObject('commentapi', 'blogcomments');
         $this->loadClass('href', 'htmlelements');
-        $num = 3;
+        $num = 10;
         $data = $this->objDbBlog->getLastPosts($num);
         $ret = "";
 
         // get the group id based on name:
         $groupId = $this->objGroup->getId('eLSI');
-
+        $count = 0;
         if (!empty($data)) {
             if(!empty($groupId)) {
                 $ret .= '<div class="grid_2">';
                 foreach ($data as $item) {
-                    if($this->objGroup->isGroupMember($item['userid'], $groupId)) {
+                    if($this->objGroup->isGroupMember($item['userid'], $groupId) && $count < 3) {
                         $commentCount = $objComments->getCount($item['id']);
 
                         $ret .= '<div class="blog-post-preview">
@@ -386,6 +386,8 @@ class maincontent extends object {
                                 <br>By '.$user.' | '. $allBlogs->show().' | Comments '.$commentCount.'
                                 </p>
                                 </div>';
+
+                        $count++;
                     }
                 }
                 $ret .= '</div>';
