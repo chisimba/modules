@@ -400,6 +400,12 @@ class maincontent extends object {
                         $count++;
                     }
                 }
+                if($num > 10) {
+                    $allBlogsLink = new link($this->uri(array("action"=>"allblogs"), "blog"));
+                    $allBlogsLink->link = "All Site Blogs";
+
+                    $ret .= '<br><br>'.$allBlogsLink->show();
+                }
                 $ret .= '</div>';
             }
         }
@@ -596,6 +602,7 @@ class maincontent extends object {
     private function getAllSiteBlogs() {
         $num = 100;
         
-        return $this->getBlogs($num);
+
+        return $this->getBlogs($num);;
     }
 }
