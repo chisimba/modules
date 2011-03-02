@@ -84,6 +84,7 @@ class sidebar extends object {
             case 'projectsresearch': return $this->showProjectsSidebar();
             case 'supporttraining': return $this->showSupportTrainingSidebar();
             case 'currentnews': return $this->showCurrentNewsSidebar();
+            case 'allsiteblogs': return $this->showAllSiteBlogsSidebar();
             case 'viewstory':
             case 'viewsingle':return $this->showNewsBlogSidebar();
             default: return $this->showHomeSidebar();
@@ -293,7 +294,7 @@ class sidebar extends object {
         $retstr = '<!-- Start: Sidebar -->
                 <div id="Sidebar">
                     <div class="grid_1">
-                        <p><img src="' . $this->skinpath . 'images/dots_news.png"></p>
+                        <p><img src="' . $this->skinpath . 'images/dots_blogs.png"></p>
                     </div>
 		</div>
 		<!-- end .grid_1 -->

@@ -166,7 +166,7 @@ class rotatingidentity extends object {
         } else if($action == 'allsiteblogs') {
             $retstr .= '<div class="text-holder">
                           <span class="head-main">eLSI Blogs</span>
-                          <span class="head-text">All the eLearning Blogs from the members of the unit.<br>
+                          <span class="head-text">eLSI\'s multi-user blog is where staff contribute their own opinions about learning, technology & change.<br>
                           </span>
                         </div>';
         } else if ($action == 'viewstory') {
@@ -373,7 +373,7 @@ class rotatingidentity extends object {
     }
 
     private function showAllSiteBlogs() {
-        $retstr = '<img src="' . $this->skinpath . 'images/front_identity/news_office.jpg">';
+        $retstr = '<img src="' . $this->skinpath . 'images/front_identity/research_computer.jpg">';
 
         return $retstr;
     }

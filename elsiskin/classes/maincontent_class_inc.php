@@ -404,7 +404,7 @@ class maincontent extends object {
                     $allBlogsLink = new link($this->uri(array("action"=>"allblogs"), "blog"));
                     $allBlogsLink->link = "All Site Blogs";
 
-                    $ret .= '<br><br>'.$allBlogsLink->show();
+                    $ret .= '<br><br>'.$allBlogsLink->show().'<br><br>Note, that the opinions expressed in each blog are their own and not those of eLSI';
                 }
                 $ret .= '</div>';
             }
