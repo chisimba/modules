@@ -68,10 +68,10 @@ class dbAnnouncements extends dbTable {
         $messageId = $this->insert(array(
                     'title' => $title,
                     'message' => $message,
-                    'title' => $title,
+                    //'title' => $title,
                     'createdon' => $this->now(),
                     'createdby' => $this->objUser->userId(),
-                    'contextid' => $type,
+                    'contextid' => $type
                 ));
 
 
@@ -90,11 +90,11 @@ class dbAnnouncements extends dbTable {
                     $atitle = $this->emailTitle . ": '$title'";
                     $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
 		    	if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
-			    $message1 .= $this->emailBody4.$message ." ";
+			    $message1 .= /*$this->emailBody4.*/$message ." ";
 			}
 		    $message1 .= $this->emailBody3 . ": " . $link->href;
                     $emailList = $this->getSiteRecipients();
-		    
+
                     $this->sendEmail($atitle, $message, $emailList);
                 }
             }
@@ -189,7 +189,7 @@ class dbAnnouncements extends dbTable {
 			    $message1 .= ": ".$message ." ";
 			}
 		    $message1 .= $this->emailBody3 . ": " . $link->href;
-		    
+
 		    $this->sendEmail($atitle, $message1, $emailList);
                 }
             }
@@ -288,8 +288,9 @@ class dbAnnouncements extends dbTable {
     private function sendEmail($title, $message, $recipients) {
         //$recipients = array_unique($recipients);
         $objMailer = $this->getObject('email', 'mail');
+        //$message = trim($message, "\x00..\x1F");
+        $message = preg_replace('/[\x00-\x1F]/', '', $message);
         $message = html_entity_decode($message);
-        $message = trim($message, "\x00..\x1F");
         $message = strip_tags($message);
         $list = array();
 

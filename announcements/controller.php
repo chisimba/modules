@@ -299,17 +299,19 @@ class announcements extends controller
      */
     private function __save()
     {
-        $title = $this->getParam('title');
-        $message = $this->getParam('message');
-        $email = $this->getParam('email');
         $mode = $this->getParam('mode');
+        $title = $this->getParam('title');
         $recipienttarget = $this->getParam('recipienttarget');
         $contexts = $this->getParam('contexts', array());
-        //If context checked, target set to context by default
-        if(!empty($contexts))
-         $recipienttarget = 'context';
-        $email = ($email == 'Y') ? TRUE : FALSE;
-
+        $email = $this->getParam('email');
+        $message = $this->getParam('message');
+        /*
+        // If context checked, target set to context by default
+        if (!empty($contexts)) {
+            $recipienttarget = 'context';
+        }
+        */
+        $email = ($email == 'Y');
         if (
             ($mode == 'add'
             || $mode == 'fixup')
@@ -326,20 +328,20 @@ class announcements extends controller
             return 'addedit_tpl.php';
         } else if ($mode == 'add' || $mode == 'fixup') //  || $mode == 'save'
         {
-
             $result = $this->objAnnouncements->addAnnouncement($title, $message, $recipienttarget, $contexts, $email);
-            	//add to activity streamer/log
-            	if($this->eventsEnabled)
-            	{
-            		$message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_announcements_hasaddeda', 'announcements')." ".$this->objContext->getContextCode()." ".$this->objLanguage->languageText('mod_announcements_announcement', 'announcements').": ".$title;
-            	 	$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-    																				'link'=> $this->uri(array()),
-    																				'contextcode' => $this->objContext->getContextCode(),
-    																				'author' => $this->objUser->fullname(),
-    																				'description'=>$message));
-            	}
+            //add to activity streamer/log
+            if($this->eventsEnabled)
+            {
+                $message = $this->objUser->getsurname()." ".$this->objLanguage->languageText('mod_announcements_hasaddeda', 'announcements')." ".$this->objContext->getContextCode()." ".$this->objLanguage->languageText('mod_announcements_announcement', 'announcements').": ".$title;
+                $this->eventDispatcher->post($this->objActivityStreamer, "context", array(
+                    'title'=> $message,
+    				'link'=> $this->uri(array()),
+    				'contextcode' => $this->objContext->getContextCode(),
+    				'author' => $this->objUser->fullname(),
+    				'description'=>$message
+    			));
+            }
             return $this->nextAction('view', array('id'=>$result));
-
         }
     }
 
