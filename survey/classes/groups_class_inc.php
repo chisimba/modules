@@ -68,16 +68,16 @@ class groups extends dbTable {
      */
     public function init() {
         parent::init('tbl_users');
-        $this->table='tbl_users';
-        $this->tblGroups='tbl_perms_groups';
+        $this->table = 'tbl_users';
+        $this->tblGroups = 'tbl_groupadmin_group';
 
-        $this->dbSurvey=&$this->newObject('dbsurvey');
+        $this->dbSurvey = $this->newObject('dbsurvey');
 
-        $this->objLanguage=&$this->newObject('language','language');
-        $this->objGroupAdmin=&$this->newObject('groupadminmodel','groupadmin');
-        $this->objGroupUsers=&$this->newObject('groupusersdb','groupadmin');
-        $this->objUser=&$this->newObject('user','security');
-        $this->userId=$this->objUser->userId();
+        $this->objLanguage = $this->newObject('language','language');
+        $this->objGroupAdmin = $this->newObject('groupadminmodel','groupadmin');
+        $this->objGroupUsers = $this->newObject('groupusersdb','groupadmin');
+        $this->objUser = $this->newObject('user','security');
+        $this->userId = $this->objUser->userId();
     }
 
     /**
@@ -297,16 +297,17 @@ class groups extends dbTable {
     }
 
     /**
-     * Method to add the site wide survey group
-     *
-     * @access private
-     * @return string $rootId The id for the survey root group
-     */
-    public function getRootId() {
+    * Method to add the site wide survey group
+    *
+    * @access private
+    * @return string $rootId The id for the survey root group
+    */
+    public function getRootId()
+    {
         $rootId = $this->objGroupAdmin->getLeafId(array('Surveys'));
-        if(!empty($rootId)) {
+        if(!empty($rootId)){
             return $rootId;
-        }else {
+        }else{
             $rootId = $this->objGroupAdmin->addGroup('Surveys','The group for surveys',NULL);
             return $rootId;
         }
@@ -321,21 +322,12 @@ class groups extends dbTable {
      */
     private function removeSurveyGroups($data) {
         $rootId = $this->getRootId();
-
-        $subgroups = $this->getRawSubGroups($rootId);
-        $arrGroupIdList = Array();
-
-        foreach($subgroups as $grpid) {
-            $arrGroupIdList[] = $grpid['subgroup_id'];
-            $innersubgrp = $this->getRawSubGroups($grpid['subgroup_id']);
-            foreach($innersubgrp as $grpid2) {
-                $arrGroupIdList[] = $grpid2['subgroup_id'];
-            }
-        }
-        foreach($data as $key=>$group) {
-            $groupId = $group['group_id'];
-            if(in_array($groupId, $arrGroupIdList) || $group['group_id'] == $rootId) {
-                unset($data[$key]);
+        if($arrGroupIdList != NULL) {
+            foreach($data as $key=>$group){
+                $groupId=$group['id'];
+                if(in_array($groupId,$arrGroupIdList)){
+                    unset($data[$key]);
+                }
             }
         }
         $ret = $data;
@@ -365,30 +357,22 @@ class groups extends dbTable {
      * @return BOOl $isSuccessful TRUE on success false on failure
      */
     public function addGroups($surveyId) {
-        $rootId=$this->getRootId();
-
+        $rootId = $this->getRootId();
         $arrSurveyData = $this->dbSurvey->getSurvey($surveyId);
-
         $surveyName = $arrSurveyData[0]['survey_name'];
-
-        $groupId = $this->objGroupAdmin->getLeafId(array($surveyId));
-
-        //Adding main group
-        if($groupId==NULL) {
-            $groupId = $this->objGroupAdmin->addGroup($surveyId, $surveyName, $rootId);
+        $groupId = $this->objGroupAdmin->getLeafId(array('Surveys',$surveyId));
+        //var_dump($groupId); die();
+        if($groupId!=FALSE){
+            $this->objGroupAdmin->deleteGroup($groupId);
         }
-
-        //Add the group as subGroups of the "Surveys" parent Group.
-        $data = array(
-                'group_id' => $rootId,
-                'subgroup_id' => $groupId
-        );
-        $assign = $this->objLuAdmin->perm->assignSubGroup($data);
-
-        //Adding Obsevers, Collaborators and Respondents subgroups
-        $this->addSubGroups($surveyId, $groupId);
-
-        $isSuccessful=TRUE;
+        $groupId=$this->objGroupAdmin->addGroup($surveyId,$surveyName,$rootId);
+        if($groupId===FALSE){
+            $isSuccessful=FALSE;
+            return $isSuccessful;
+        }
+        $this->objGroupAdmin->addSubGroups($surveyId, $groupId, $grps = array('Observers', 'Collaborators', 'Respondents'));
+        $isSuccessful = TRUE;
+        
         return $isSuccessful;
     }
 
@@ -453,46 +437,47 @@ class groups extends dbTable {
      * @return array $arrGroupIdList An array containing the sub group ids
      */
     private function getSubGroupIds($surveyId) {
-        $arrGroupIdList=array();
-        $arrGroupIdList['Observers'] = $this->objGroupAdmin->getLeafId(array($surveyId,'Observers'));
-        $arrGroupIdList['Collaborators'] = $this->objGroupAdmin->getLeafId(array($surveyId,'Collaborators'));
-        $arrGroupIdList['Respondents'] = $this->objGroupAdmin->getLeafId(array($surveyId,'Respondents'));
-
+        $arrGroupIdList = array();
+        $arrGroupIdList['Observers'] = $this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Observers'));
+        $arrGroupIdList['Collaborators'] = $this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Collaborators'));
+        $arrGroupIdList['Respondents'] = $this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Respondents'));
         if(!isset($arrGroupIdList['Observers'])) {
             $this->addGroups($surveyId);
-            $arrGroupIdList = array();
-            $arrGroupIdList['Observers'] = $this->objGroupAdmin->getLeafId(array($surveyId,'Observers'));
-            $arrGroupIdList['Collaborators'] = $this->objGroupAdmin->getLeafId(array($surveyId,'Collaborators'));
-            $arrGroupIdList['Respondents'] = $this->objGroupAdmin->getLeafId(array($surveyId,'Respondents'));
+            $arrGroupIdList=array();
+            $arrGroupIdList['Observers'] = $this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Observers'));
+            $arrGroupIdList['Collaborators'] = $this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Collaborators'));
+            $arrGroupIdList['Respondents'] = $this->objGroupAdmin->getLeafId(array('Surveys',$surveyId,'Respondents'));
         }
 
         return $arrGroupIdList;
     }
 
     /**
-     * Method to return the group the user is in
-     *
-     * @access puplic
-     * @param string $userId The UserId of the user
-     * @param string $surveyId The id of the current survey
-     * @return string $group none|Observers|Collaborators|Respondents The group the user is in
-     */
-    public function getUserGroup($userId,$surveyId) {
-        $permUserId = $this->objGroupAdmin->getPermUserId($userId);
+    * Method to return the group the user is in
+    *
+    * @access puplic
+    * @param string $userId The UserId of the user
+    * @param string $surveyId The id of the current survey
+    * @return string $group none|Observers|Collaborators|Respondents The group the user is in
+    */
+    public function getUserGroup($userId,$surveyId)
+    {
+        $pkId = $this->objUser->PKId($userId);
+        //var_dump($pkId); //die('come back here');
         $arrGroupIdList = $this->getSubGroupIds($surveyId);
-
-        $inGroup = 'None';
-        foreach($arrGroupIdList as $group=>$groupId) {
-            $isInGroup = $this->objGroupAdmin->isSubGroupMember($userId,$groupId);
-            if($isInGroup) {
+        $inGroup='None';
+        foreach($arrGroupIdList as $group => $groupId){
+            $isInGroup = $this->objGroupAdmin->isSubGroupMember($pkId,$groupId);
+            if($isInGroup){
                 $inGroup = $group;
                 return $inGroup;
             }
         }
-        $arrSurveyData=$this->dbSurvey->getSurvey($surveyId);
-        if($userId == $arrSurveyData[0]['creator_id']) {
+        $arrSurveyData = $this->dbSurvey->getSurvey($surveyId);
+        if($userId == $arrSurveyData[0]['creator_id']){
             $inGroup = 'Creator';
         }
+        
         return $inGroup;
     }
 

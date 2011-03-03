@@ -199,6 +199,7 @@ class survey extends controller {
             case 'surveygroups' :
                 $surveyId = $this->getParam('survey_id');
                 $userGroup = $this->groups->getUserGroup($this->userId, $surveyId);
+                // var_dump($userGroup); die();
                 if ($userGroup == 'Creator') {
                     $this->setVarByRef('surveyId', $surveyId);
                     return 'group_tpl.php';

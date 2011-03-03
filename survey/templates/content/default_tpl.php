@@ -356,7 +356,16 @@ if(!$GLOBALS['kewl_entry_point_run']){
                 $deleteIcon=$objIcon->getDeleteIconWithConfirm('', $deleteArray,'survey',$deleteSurveyLabel);
                 $icons.='&nbsp;'.$deleteIcon;
             }
-
+            
+            // export the survey as csv
+            if($userGroup == 'Creator' || $this->isAdmin){
+                $objLinkEx= new link($this->uri(array('action'=>'exportcsv', 'survey_id'=>$surveyId)));
+                $exportLabel = $this->objLanguage->languageText('mod_survey_exportlabel', 'survey');
+                $objLinkEx->link = $exportLabel;
+                $exportSurvey = $objLinkEx->show();
+                $icons.='&nbsp;'.$exportSurvey;
+            }
+            
             $objTable->startRow();
             $objTable->addCell($nameLink,'','','',$class,'rowspan="2"');
             $objTable->addCell($owner,'','','center',$class,'');
