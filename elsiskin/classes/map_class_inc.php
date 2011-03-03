@@ -48,7 +48,16 @@ class map extends object {
                         scrolling="no"
                         marginheight="0"
                         marginwidth="0"
-                        src="http://maps.google.co.za/maps?q=11-17+jorissen+street&amp;hl=en&amp;ie=UTF8&amp;hq=&amp;hnear=17+Jorissen+St,+Johannesburg,+Gauteng+2000&amp;gl=za&amp;ll=-26.192797,28.033247&amp;spn=0.023105,0.025749&amp;z=14&amp;iwloc=A&amp;output=embed">
+                        src="';
+
+        if(array_key_exists('HTTPS', $SERVER)) {
+            $retstr .= 'https';
+        }
+        else {
+            $retstr .= 'http';
+        }
+
+        $retstr .= '://maps.google.co.za/maps?q=11-17+jorissen+street&amp;hl=en&amp;ie=UTF8&amp;hq=&amp;hnear=17+Jorissen+St,+Johannesburg,+Gauteng+2000&amp;gl=za&amp;ll=-26.192797,28.033247&amp;spn=0.023105,0.025749&amp;z=14&amp;iwloc=A&amp;output=embed">
                     </iframe>
                     <br />
                     <medium>
