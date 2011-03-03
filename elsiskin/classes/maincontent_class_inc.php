@@ -397,7 +397,7 @@ class maincontent extends object {
                                 </p>
                                 </div>';
 
-                        if($num < 10) {
+                        if($num <= 10) {
                             $count++;
                         }
                     }
