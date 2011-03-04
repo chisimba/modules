@@ -1,10 +1,10 @@
 <?php
 
 /**
- *
+ * AJAX progress
  *
  * @version $Id$
- * @copyright 2011
+ * @copyright (C) 2011 Jeremy O'Connor
  */
 
 for ($i=0; $i<5; ++$i) {

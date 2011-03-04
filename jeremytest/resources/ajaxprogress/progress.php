@@ -1,10 +1,10 @@
 <?php
 
 /**
- *
+ * AJAX progress
  *
  * @version $Id$
- * @copyright 2011
+ * @copyright (C) 2011 Jeremy O'Connor
  */
 
 if (!file_exists('progress')) {
