@@ -331,24 +331,44 @@ class rotatingidentity extends object {
         return $retstr;
     }
 
+    /*
+     * Method to display the projects page banner.
+     * @access public
+     * @return string $retstr containing the banner for project page
+     */
     private function showProjectsBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/front_identity/research_computer.jpg">';
 
         return $retstr;
     }
 
+    /*
+     * Method to display the support and training page banner.
+     * @access public
+     * @return string $retstr containing the banner for support and training page
+     */
     private function showSupportBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/front_identity/home_dread.jpg">';
 
         return $retstr;
     }
 
+    /*
+     * Method to display the current news page banner.
+     * @access public
+     * @return string $retstr containing the banner for current news page
+     */
     private function showCurrentNewsBanner() {
         $retstr = '<img src="' . $this->skinpath . 'images/front_identity/news_office.jpg">';
 
         return $retstr;
     }
 
+    /*
+     * Method to display the news banner.
+     * @access public
+     * @return string $retstr containing the banner for news page
+     */
     public function showNewsBanner($news) {
         if (!empty($news)) {
             $objFile = $this->getObject('dbfile', 'filemanager');
@@ -372,6 +392,11 @@ class rotatingidentity extends object {
         return $retstr;
     }
 
+    /*
+     * Method to display all the site blogs page banner.
+     * @access public
+     * @return string $retstr containing all site blogs page
+     */
     private function showAllSiteBlogs() {
         $retstr = '<img src="' . $this->skinpath . 'images/front_identity/research_computer.jpg">';
 

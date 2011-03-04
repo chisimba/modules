@@ -105,6 +105,15 @@ class elsilogo extends object {
         return $retstr;
     }
 
+    /*
+     * This method is used to get all the tabs links for the top navigation bar. It displays
+     * different tabs depending on whether the user is logged in or not, and whether they are
+     * a regular user or an admin
+     * @param none
+     * @access public
+     * @return string $retstr The tab links for the top navigation.
+     *
+     */
     public function getTabLinks() {
         if($this->objUser->isLoggedIn()) {
             $profileLink = new link($this->uri(array(), "postlogin"));

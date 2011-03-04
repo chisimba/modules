@@ -38,8 +38,17 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end of security
 
 class map extends object {
+    /*
+     * Constructor
+     */
     public function init() {}
-    
+
+    /*
+     * This method is used to display the map showing the location of the offices
+     * of eLSI, using the google map embed code
+     * @access public
+     * @return string $retstr The embeded google map
+     */
     public function show() {
         $retstr = '<br><br><iframe
                         width="425"

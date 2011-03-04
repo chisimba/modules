@@ -173,6 +173,13 @@ class elsicontent extends object {
         return $ret;
     }
 
+    /*
+     * This method displays the introduction text for the home page
+     * @param none
+     * @access public
+     * @return string $retstr The string that contains the content for the home introduction text
+     *
+     */
     public function getHomeIntrotextContent() {
         $retstr = "";
         $objCategories = $this->getObject("dbnewscategories", "news");
@@ -195,6 +202,13 @@ class elsicontent extends object {
         return $retstr;
     }
 
+    /*
+     * This method displays the introduction text for the about page
+     * @param none
+     * @access private
+     * @return string $retstr The string that contains the content for the about introduction text
+     *
+     */
     private function getAboutContent() {
         $aboutLink = new link($this->uri(array("action"=>"about")));
         $aboutLink->link = $this->objLanguage->languageText('mod_elsiskin_welcome', 'elsiskin');
@@ -214,6 +228,13 @@ class elsicontent extends object {
         return $ret;
     }
 
+    /*
+     * This method displays the introduction text for the staff page
+     * @param none
+     * @access private
+     * @return string $retstr The string that contains the content for the staff introduction text
+     *
+     */
     private function getStaffContent() {
         $staffLink = new link($this->uri(array("action"=>"staff")));
         $staffLink->link = $this->objLanguage->languageText('mod_elsiskin_elsistaff', 'elsiskin');
@@ -233,6 +254,13 @@ class elsicontent extends object {
         return $ret;
     }
 
+    /*
+     * This method displays the introduction text for the contact us page
+     * @param none
+     * @access public
+     * @return string $retstr The string that contains the content for the contact us introduction text
+     *
+     */
     private function getContactContent() {
         $contactLink = new link($this->uri(array("action"=>"contact")));
         $contactLink->link = $this->objLanguage->languageText('mod_elsiskin_contactus', 'elsiskin');
@@ -252,6 +280,13 @@ class elsicontent extends object {
         return $ret;
     }
 
+    /*
+     * This method displays no introduction text
+     * @param none
+     * @access private
+     * @return string $retstr The string that contains no content
+     *
+     */
     private function getNoContent() {
         $sideBarLink = new link($this->uri(array(), "news"));
         $sideBarLink->link = $this->objLanguage->languageText('mod_elsiskin_welcome', 'elsiskin');
@@ -266,6 +301,13 @@ class elsicontent extends object {
         return $ret;
     }
 
+    /*
+     * This method displays the introduction text for the projects page
+     * @param none
+     * @access private
+     * @return string $retstr The string that contains the content for the projects introduction text
+     *
+     */
     private function getProjectsContent() {
         $researchLink = new link($this->uri(array("action"=>"projectsresearch")));
         $researchLink->link = $this->objLanguage->languageText('mod_elsiskin_welcomeprojects', 'elsiskin');
@@ -285,6 +327,13 @@ class elsicontent extends object {
         return $ret;
     }
 
+    /*
+     * This method displays the introduction text for the support page
+     * @param none
+     * @access private
+     * @return string $retstr The string that contains the content for the support introduction text
+     *
+     */
     private function getSupportContent() {
         $supportLink = new link($this->uri(array("action"=>"supporttraining")));
         $supportLink->link = $this->objLanguage->languageText('mod_elsiskin_welcomesupport', 'elsiskin');
@@ -304,6 +353,13 @@ class elsicontent extends object {
         return $ret;
     }
 
+    /*
+     * This method displays the introduction text for the current news page
+     * @param none
+     * @access private
+     * @return string $retstr The string that contains the content for the current news introduction text
+     *
+     */
     private function getCurrentNewsContent() {
         $currentNewsLink = new link($this->uri(array("action"=>"currentnews")));
         $currentNewsLink->link = $this->objLanguage->languageText('mod_elsiskin_welcomenews', 'elsiskin');
@@ -323,6 +379,13 @@ class elsicontent extends object {
         return $ret;
     }
 
+    /*
+     * This method displays the introduction text for the site-wide blogs page
+     * @param none
+     * @access private
+     * @return string $retstr The string that contains the content for the site-wide blogs introduction text
+     *
+     */
     private function getAllSiteBlogsContent() {
         $allSiteBlogsLink = new link($this->uri(array("action"=>"allsiteblogs")));
         $allSiteBlogsLink->link = $this->objLanguage->languageText('mod_elsiskin_welcomeallblogs', 'elsiskin');

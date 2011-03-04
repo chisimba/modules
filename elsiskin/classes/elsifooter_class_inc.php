@@ -75,7 +75,6 @@ class elsifooter extends object {
      * @return string $retstr which has the footer for the skin
      * @access public
      */
-
     public function show() {
         $chisimbaLink = new link("http://www.chisimba.com");
         $chisimbaLink->link = '<img src ="' . $this->skinpath . 'images/powered_by_chisimba.png" alt="Powered By Chisimba" title="Powered By Chisimba" />';

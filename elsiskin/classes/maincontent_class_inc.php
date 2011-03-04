@@ -526,6 +526,13 @@ class maincontent extends object {
         return $retstr;
     }
 
+    /*
+     * This is a method to display the main content of the projects and research page
+     * @param none
+     * @access private
+     * @return string $retstr The string containing all the content for the projects
+     * and research page
+     */
     private function showProjectsResearchMain() {
         $retstr = '<div class="grid_3">
                         '.$this->getProjectsResearchContent().'
@@ -549,6 +556,13 @@ class maincontent extends object {
         return $this->getContent();
     }
 
+    /*
+     * Method to get show the Support and Training page
+     * @access private
+     * @param none
+     * @return str containing content for the Support and Training page
+     *
+     */
     private function showSupportTrainingMain() {
         $retstr = '<div class="grid_3">
                         '.$this->getSupportTrainingContent().'
@@ -559,11 +573,10 @@ class maincontent extends object {
     }
 
     /*
-     * Method to get show the Support and Training page
+     * Helper method to get show the Support and Training page
      * @access private
      * @param none
      * @return str containing content for the Support and Training page
-     *
      */
     private function getSupportTrainingContent() {
         $this->category = "support_training";
@@ -571,6 +584,13 @@ class maincontent extends object {
         return $this->getContent();
     }
 
+    /*
+     * This method is used to display the news in a layout that is chosen in the news module creation
+     * for a particular category.
+     * @param $id This is the category id
+     * @access private
+     * @return string $retstr The news for a particular category
+     */
     private function viewCategory($id) {
         $this->objNewsBlocks = $this->getObject('dbnewsblocks', 'news');
         
@@ -585,6 +605,12 @@ class maincontent extends object {
         return $retstr;
     }
 
+     /*
+     * Method to get show the all the current news
+     * @access private
+     * @param none
+     * @return str containing all the current news
+     */
     private function showCurrentNews() {
         $retstr = '<div class="grid_3">'
                         .$this->getCurrentNews().
@@ -594,6 +620,12 @@ class maincontent extends object {
         return $retstr;
     }
 
+    /*
+     * Helper method to get show the current news
+     * @access private
+     * @param none
+     * @return str containing content for the current news page
+     */
     private function getCurrentNews() {
         $this->category = "home_news";
         $this->documentation = "Current News Content has not yet been set up";
@@ -601,6 +633,12 @@ class maincontent extends object {
         return $this->getContent();
     }
 
+    /*
+     * This method is used to get all the blogs for the site
+     * @param none
+     * @access private
+     * @return all the current blogs
+     */
     private function getAllSiteBlogs() {
         $num = 100;
         
