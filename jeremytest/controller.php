@@ -131,6 +131,11 @@ class jeremytest extends controller
         return 'test1_tpl.php';
     }
 
+    public function __ajaxprogress()
+    {
+        return 'ajaxprogress_tpl.php';
+    }
+
 }
 
 ?>
