@@ -8,7 +8,8 @@
  */
 
 for ($i=0; $i<5; ++$i) {
-    if (file_put_contents('progress', "{$i}%") === FALSE) {
+    $p = (int)(100*$i/5);
+    if (file_put_contents('progress', "{$p}%") === FALSE) {
         echo "Failure!";
         exit(0);
     }
