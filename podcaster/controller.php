@@ -24,12 +24,12 @@
  *
  * @category  Chisimba
  * @package   podcaster
- * @author    Paul Mungai
+ * @author    Paul Mungai <paulwando@gmail.com>
  *
  * @copyright 2011 Free Software Innnovation Unit
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link      http://avoir.uwc.ac.za
- * @see       References to other sections (if any)...
+ * 
  */
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -43,7 +43,7 @@ class podcaster extends controller {
     public $realtimeManager;
     public $presentManager;
     public $objAnalyzeMediaFile;
-    public $objMediaFileInfo;
+    public $objMediaFileData;
 
     /**
      * Constructor
@@ -52,17 +52,25 @@ class podcaster extends controller {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objAnalyzeMediaFile = $this->getObject('analyzemediafile', 'filemanager');
-        $this->objMediaFileInfo = $this->getObject('dbmediafiledata');
+        $this->objMediaFileData = $this->getObject('dbmediafiledata');
         $this->objFiles = $this->getObject('dbpodcasterfiles');
         $this->objTags = $this->getObject('dbpodcastertags');
-        //$this->objSlides = $this->getObject('dbpodcasterslides');
+        $this->objUtils = $this->getObject('userutils');
+        $this->objUploads = $this->getObject('dbfileuploads');
+        $this->documents = $this->getObject('dbdocuments');
         $this->objViewerUtils = $this->getObject('viewerutils');
         $this->objSchedules = $this->getObject('dbpodcasterschedules');
         $this->realtimeManager = $this->getObject('realtimemanager');
+        $this->folderPermissions = $this->getObject('dbfolderpermissions');
 
         $this->objSearch = $this->getObject('indexdata', 'search');
-        //$this->presentManager = $this->getObject('presentmanager');
+        // user object
+        $this->objUser = $this->getObject('user', 'security');
+        $this->userId = $this->objUser->userId();
+        //Get podcaster base directory
+        $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'podcaster');
     }
 
     /**
@@ -71,7 +79,7 @@ class podcaster extends controller {
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule');
+        $required = array('login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
 
 
         if (in_array($action, $required)) {
@@ -145,7 +153,7 @@ class podcaster extends controller {
         $tagCloud = $this->objTags->getTagCloud();
         $this->setVarByRef('tagCloud', $tagCloud);
 
-        $latestFiles = $this->objFiles->getLatestPresentations();
+        $latestFiles = $this->objFiles->getLatestPodcasts();
         $this->setVarByRef('latestFiles', $latestFiles);
 
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -158,6 +166,435 @@ class podcaster extends controller {
             $period = 'home';
         }
         return $hometpl . '_tpl.php';
+    }
+
+    /**
+     * function that loads create folder form
+     *
+     * @return form
+     */
+    public function __steponeupload() {
+        $defaultexists = $this->objUtils->defaultFolderExistsCheck();
+        //Create only if new
+        if (!$defaultexists) {
+            $this->objUtils->createDefaultFolder();
+        }
+
+        $createcheck = $this->getParam('createcheck', 'new');
+        $dir = $this->getParam("folder", "");
+        if (empty($dir)) {
+            $successmsg = Null;
+            $dir = $this->objUser->userId();
+            $this->setVarByRef('successmsg', $successmsg);
+        } else {
+            if ($createcheck == "add") {
+                $successmsg = $dir . " " . $this->objLanguage->languageText('mod_podcaster_createsuccess', 'podcaster', "was created successfully");
+                $this->setVarByRef('successmsg', $successmsg);
+            } else if ($createcheck == "fail") {
+                if ($dir == "/") {
+                    $successmsg = $this->objLanguage->languageText('mod_podcaster_enterfoldername', 'podcaster', "You need to type in a meaningful folder name before submitting");
+                    $this->setVarByRef('successmsg', $successmsg);
+                } else {
+                    $successmsg = $dir . " " . $this->objLanguage->languageText('mod_podcaster_createfail', 'podcaster', "was not created successfully. A corresponding folder already exists");
+                    $this->setVarByRef('successmsg', $successmsg);
+                }
+            }
+        }
+
+        $this->setVarByRef("dir", $dir);
+        $this->setVarByRef("mode", $this->mode);
+        $selected = $this->baseDir . $dir;
+        $selected = str_replace("//", "/", $selected);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("successmsg", $successmsg);
+        return "steponeupload_tpl.php";
+    }
+    /**
+     * function that loads create folder form
+     *
+     * @return form
+     */
+    public function __addfolder() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+
+        $defaultexists = $this->objUtils->defaultFolderExistsCheck();
+        //Create only if new
+        if (!$defaultexists) {
+            $this->objUtils->createDefaultFolder();
+        }
+
+        $createcheck = $this->getParam('createcheck', 'new');
+        $dir = $this->getParam("folder", "");
+        if (empty($dir)) {
+            $successmsg = Null;
+            $dir = $this->objUser->userId();
+            $this->setVarByRef('successmsg', $successmsg);
+        } else {
+            if ($createcheck == "add") {
+                $successmsg = $dir . " " . $this->objLanguage->languageText('mod_podcaster_createsuccess', 'podcaster', "was created successfully");
+                $this->setVarByRef('successmsg', $successmsg);
+            } else if ($createcheck == "fail") {
+                if ($dir == "/") {
+                    $successmsg = $this->objLanguage->languageText('mod_podcaster_enterfoldername', 'podcaster', "You need to type in a meaningful folder name before submitting");
+                    $this->setVarByRef('successmsg', $successmsg);
+                } else {
+                    $successmsg = $dir . " " . $this->objLanguage->languageText('mod_podcaster_createfail', 'podcaster', "was not created successfully. A corresponding folder already exists");
+                    $this->setVarByRef('successmsg', $successmsg);
+                }
+            }
+        }
+
+        $this->setVarByRef("dir", $dir);
+        $this->setVarByRef("mode", $this->mode);
+        $selected = $this->baseDir . $dir;
+        $selected = str_replace("//", "/", $selected);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("successmsg", $successmsg);
+        return "createfolder_tpl.php";
+    }
+
+    /**
+     * Function that gets the default folder for the user
+     * @param <type> $dir
+     * @return <type>
+     */
+    function __getdefaultfolder($dir) {
+        $handle = opendir($dir);
+        $files = array();
+        while (($file = readdir($handle)) !== false) {
+
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
+            $filepath = $dir == '.' ? $file : $dir . '/' . $file;
+            if (is_link($filepath))
+                continue;
+            if (is_dir($filepath)) {
+                $cfile = substr($filepath, strlen($dir));
+                if ($this->folderPermissions->isValidFolder($cfile)) {
+                    $files[] = $filepath;
+                }
+            }
+        }
+        closedir($handle);
+        sort($files, SORT_LOCALE_STRING);
+
+        return $files;
+    }
+
+    /**
+     * function that loads delete folder form
+     *
+     * @return form
+     */
+    public function __removefolder() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        $dir = $this->getParam("folder", "");
+        $this->setVarByRef("mode", $this->mode);
+        $selected = $this->baseDir . $dir;
+        $message = $this->getParam('message', '');
+        $this->setVarByRef("mode", $this->mode);
+        $this->setVarByRef("message", $message);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("successmsg", $message);
+        return "deletefolder_tpl.php";
+    }
+
+    /**
+     * used to create a new folder in a selected dir. If none is provided, the folder is
+     * created in the root dir
+     * @return array
+     */
+    public function __createfolder2() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        $path = $this->getParam('parentfolder');
+        $name = $this->getParam('foldername');
+
+        if(empty($name) || $name == "/") {
+            $flag = "selected";
+            $this->nextAction('upload', array('createcheck' => $flag, 'folder' => $name, "path" =>$path));
+        }
+        if (!$path) {
+            $path = "";
+        }
+        
+        $flag = "";
+
+        $defaultexists = $this->objUtils->defaultFolderExistsCheck();
+        //Create only if new
+        if (!$defaultexists) {
+            $this->objUtils->createDefaultFolder();            
+        }
+        //Confirm that folder does not exist
+        $exists = $this->objUtils->folderExistsCheck($path, $name);
+        //Create only if new
+        if (!$exists) {
+            $userId = $this->objUser->userId();
+            //We need to remove the userId from the path
+            $remUId = split("/", $path);
+            $pathf = "/";
+            $count = count($remUId);
+            $start = 0;
+            do {
+                if ($userId != $remUId[$start] && $remUId[$start] != "") {
+                    $pathf .= $remUId[$start];
+                    if (($start + 1) != $count)
+                        $pathf .= "/";
+                }
+                $start++;
+            }while ($start < $count);
+            $path = $pathf;
+            $this->objUtils->createFolder($path, $name);
+            $path = $path."/".$name;
+            $flag = 'add';
+        } else {
+            $flag = 'fail';
+        }
+
+        $this->setVarByRef('folder', $name);
+        $this->nextAction('upload', array('createcheck' => $flag, 'folder' => $name, "path" =>$path));
+    }
+    /**
+     * used to create a new folder in a selected dir. If none is provided, the folder is
+     * created in the root dir
+     * @return <type>
+     */
+    public function __createfolder() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        $path = $this->getParam('parentfolder');
+        $name = $this->getParam('foldername');
+
+        if (!$path) {
+            $path = "";
+        }
+        $flag = "";
+        $defaultexists = $this->objUtils->defaultFolderExistsCheck();
+        //Create only if new
+        if (!$defaultexists) {
+            $this->objUtils->createDefaultFolder();
+            $flag = 'add';
+        }
+        //Confirm that folder does not exist
+        $exists = $this->objUtils->folderExistsCheck($path, $name);
+        //Create only if new
+        if (!$exists) {
+            $userId = $this->objUser->userId();
+            //We need to remove the userId from the path
+            $remUId = split("/", $path);
+            $pathf = "/";
+            $count = count($remUId);
+            $start = 0;
+            do {
+                if ($userId != $remUId[$start] && $remUId[$start] != "") {
+                    $pathf .= $remUId[$start];
+                    if (($start + 1) != $count)
+                        $pathf .= "/";
+                }
+                $start++;
+            }while ($start < $count);
+            $path = $pathf;
+            $this->objUtils->createFolder($path, $name);
+            $flag = 'add';
+        } else {
+            $flag = 'fail';
+        }
+
+        $this->setVarByRef('folder', $name);
+        $this->nextAction('addfolder', array('createcheck' => $flag, 'folder' => $name));
+    }
+
+    /**
+     * used to check if a folder exists in the selected dir.
+     *
+     * @return boolean
+     */
+    public function __folderExistsCheck() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        $path = $this->getParam('parentfolder');
+        $name = $this->getParam('foldername');
+
+        if (!$path) {
+            $path = "";
+        }
+
+        $exists = $this->objUtils->folderExistsCheck($path, $name);
+        if ($exists) {
+            echo 'exists';
+        } else {
+            echo 'create';
+        }
+    }
+
+    /**
+     * renames the supplied folder
+     * @return <type>
+     */
+    public function __renamefolder() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        $res = $this->objUtils->renameFolder($this->getParam('folderpath'), $this->getParam('foldername'));
+        return $this->nextAction('home', array("result" => $res));
+    }
+
+    /*
+     * Method to delete folder/topic
+     *
+     */
+
+    public function __deletetopic() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        //Get the folder
+        $folder = $this->getParam("parentfolder", "");
+        $userId = $this->objUser->userId();
+        if ($folder == '0')
+            $folder = '/';
+        $path = $folder;
+        $userId = $this->objUser->userId();
+        //We need to remove the userId from the path
+        $remUId = split("/", $path);
+        $pathf = "/";
+        $count = count($remUId);
+        $start = 0;
+        do {
+            if ($userId != $remUId[$start] && $remUId[$start] != "") {
+                $pathf .= $remUId[$start];
+                if (($start + 1) != $count)
+                    $pathf .= "/";
+            }
+            $start++;
+        }while ($start < $count);
+        $path = $pathf;
+        $folder = $path;
+        $folderpermserror = '<strong class="confirm">' . $this->objLanguage->languageText('mod_podcaster_deletefolderpermserror', 'podcaster', "You do not have permissions to delete this folder") . '</strong>';
+        if (!empty($folder) || $folder == "/") {
+            //Check if user is authorised to delete
+            $isowner = $this->folderPermissions->permissionExists($userId, $folder);
+        } else {
+            return $this->nextAction('removefolder', array('message' => $folderpermserror, 'folder' => $folder));
+        }
+        $deletesuccess = '<strong class="confirm">' . $this->objLanguage->languageText('mod_podcaster_deletesuccess', 'podcaster', "was deleted successfully") . '</strong>';
+        if (!$isowner) {
+            return $this->nextAction('removefolder', array('message' => $folderpermserror, 'folder' => $folder));
+        }
+
+        //Check if folder has podcasts
+        $checkfolderdocs = $this->objUploads->getAllNodeFiles($folder);
+
+        $foldernotempty = '<strong class="confirm">' . $this->objLanguage->languageText('mod_podcaster_shortdeleteallinfoldermessage', 'podcaster', "Kindly delete both approved and un-approved podcasts in this folder before deleting it") . '</strong>';
+        //Ask user to delete the contents of the folder first, else delete the topic if empty
+        if (count($checkfolderdocs) >= 1) {
+            return $this->nextAction('removefolder', array('message' => $foldernotempty, 'folder' => $folder));
+        } else {
+            //Delete the topic
+            $this->folderPermissions->removePermission($userId, $folder);
+
+            return $this->nextAction('removefolder', array('message' => '<strong id="confirm">' . $folder . "</strong> " . $deletesuccess, 'folder' => '/'));
+        }
+
+        if (strstr($result, "success")) {
+            $this->nextAction('removefolder');
+        } else {
+            return $this->nextAction('removefolder', array('message' => $result));
+        }
+    }
+
+    /**
+     * deletes the selected file
+     * @return array
+     */
+    public function __deletefile() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        $userid = $this->objUser->userId();
+        $id = $this->getParam('id');
+        $fileRes = $this->objUtils->deleteFile($userid, $id);
+        $result = "";
+
+        if ($fileRes == 1) {
+            $this->objUploads->deleteFileRecord($id);
+        } else {
+            $result = $this->objLanguage->languageText("mod_podcaster_deleteerror", 'podcaster', 'Folder could not be deleted. Note: You need to be the owner of this folder and also, the folder needs to be empty to delete');
+        }
+        return $this->nextAction('home', array("result" => "$result"));
+    }
+
+    /**
+     * function that renders a folder and its associated documents
+     *
+     * @return form
+     */
+    public function __viewfolder() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        //Set show rows
+        $rows = $this->pageSize;
+        $start = $this->getParam("start", 0);
+        //Select records Limit array
+        $limit = array();
+        $limit['start'] = $start;
+        $limit['rows'] = $rows;
+        //Get the rowcount
+        $rowcount = $this->getParam("rowcount", Null);
+
+        $rejecteddocuments = $this->documents->getdocuments($this->mode, 'N', "Y", $limit, $rowcount);
+
+        $dir = $this->getParam("folder", "");
+        $mode = $this->getParam("mode", "");
+        $message = $this->getParam("message", "");
+
+
+        $objPreviewFolder = $this->getObject('previewfolder');
+
+        $selected = "";
+        $selected = $dir;
+
+        $basedir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        if ($dir == $basedir) {
+            $selected = "";
+        }
+        $rowcount = $this->getParam("rowcount", Null);
+        $this->setVarByRef("start", $start);
+        $this->setVarByRef("rows", $rows);
+        $files = $this->objUtils->getFiles($dir, $limit, $rowcount);
+        $this->setVarByRef("files", $files);
+        $this->setVarByRef("dir", $dir);
+        $this->setVarByRef("documents", $documents);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("message", $message);
+        $this->setVarByRef("rejecteddocuments", $rejecteddocuments);
+        $selected = $this->baseDir . $selected;
+        $this->setVarByRef("selected", $selected);
+        return "viewfolder_tpl.php";
+    }
+
+    /*
+     * Function that returns unpublished podcasts
+     */
+
+    public function __unpublishedpods() {
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        $selected = "unapproved";
+
+        //Set show rows
+        $rows = $this->pageSize;
+        $start = $this->getParam("start", 0);
+
+        //Select records Limit array
+        $limit = array();
+        $limit['start'] = $start;
+        $limit['rows'] = $rows;
+
+        //Get the rowcount
+        $rowcount = $this->getParam("rowcount", Null);
+
+        $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
+        $attachmentStatus = $this->getParam("attachmentStatus", Null);
+        $documents = $this->documents->getdocuments($this->mode, 'N', "N", $limit, $rowcount);
+        $this->setVarByRef("start", $start);
+        $this->setVarByRef("rows", $rows);
+        $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
+        $this->setVarByRef("documents", $documents);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("mode", $this->mode);
+        $this->setVarByRef("attachmentStatus", $attachmentStatus);
+        return "unpublishedpodcasts_tpl.php";
     }
 
     /**
@@ -341,6 +778,7 @@ class podcaster extends controller {
         $id = $this->getParam('id');
 
         $file = $this->objFiles->getFile($id);
+        $filedata = $this->objMediaFileData->getFileByFileId($file['id']);
 
         if ($file == FALSE) {
             return $this->nextAction('home', array('error' => 'norecord'));
@@ -353,7 +791,7 @@ class podcaster extends controller {
         $this->setVarByRef('file', $getPodcast);
         $this->setVarByRef('tags', $tags);
 
-        $this->setVar('pageTitle', $this->objConfig->getSiteName() . ' - ' . $file['title']);
+        $this->setVar('pageTitle', $this->objConfig->getSiteName() . ' - ' . $filedata['title']);
 
         $objViewCounter = $this->getObject('dbpodcasterviewcounter');
         $objViewCounter->addView($id);
@@ -490,6 +928,12 @@ class podcaster extends controller {
      *
      */
     function __upload() {
+        $createcheck = $this->getParam('createcheck');
+        $folder = $this->getParam('folder');
+        $path = $this->getParam('path');
+        $this->setVarByRef('createcheck', $createcheck);
+        $this->setVarByRef('folder', $folder);
+        $this->setVarByRef('path', $path);
         return 'testupload_tpl.php';
     }
 
@@ -592,13 +1036,19 @@ class podcaster extends controller {
     function __doajaxupload() {
         $generatedid = $this->getParam('id');
         $filename = $this->getParam('filename');
-
+        $path = $this->getParam('path');
+        
         $id = $this->objFiles->autoCreateTitle();
 
-        $objMkDir = $this->getObject('mkdir', 'files');
+        //$objMkDir = $this->getObject('mkdir', 'files');
 
-        $destinationDir = $this->objConfig->getcontentBasePath() . '/podcaster/' . $id;
-        $objMkDir->mkdirs($destinationDir);
+        //$destinationDir = $this->objConfig->getcontentBasePath() . '/podcaster/' . $id;
+        //$objMkDir->mkdirs($destinationDir);
+        $destinationDir = $this->baseDir."/".$this->userId."/".$path."/";
+        $destinationDir = str_replace("//", "/", $destinationDir);
+
+        $fullPath = "/".$this->userId."/".$path."/";
+        $fullPath = str_replace("//", "/", $fullPath);
 
         @chmod($destinationDir, 0777);
 
@@ -607,12 +1057,10 @@ class podcaster extends controller {
         $objUpload->overWrite = TRUE;
         $objUpload->uploadFolder = $destinationDir . '/';
 
-        $result = $objUpload->doUpload(TRUE);       
-        
+        $result = $objUpload->doUpload(TRUE);
+
 
         if ($result['success'] == FALSE) {
-            $this->objFiles->removeAutoCreatedTitle($id);
-            rmdir($this->objConfig->getcontentBasePath() . '/podcaster/' . $id);
 
             $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
 
@@ -630,20 +1078,18 @@ class podcaster extends controller {
             $ext = $path_parts['extension'];
 
 
-            $file = $this->objConfig->getcontentBasePath() . 'podcaster/' . $id . '/' . $filename;
-        
+            $file = $destinationDir. $filename;
+
             if ($ext == '1') {
-                $rename = $this->objConfig->getcontentBasePath() . 'podcaster/' . $id . '/' . $filename;
+                $rename = $destinationDir . $filename;
 
                 rename($file, $rename);
 
                 //$filename = $path_parts['filename'] . '.mp3';
-                
             }
 
             if (is_file($file)) {
                 @chmod($file, 0777);
-                
             }
             // Check if File Exists
             if (file_exists($file)) {
@@ -651,7 +1097,7 @@ class podcaster extends controller {
                 $fileInfo = $this->objAnalyzeMediaFile->analyzeFile($file);
 
                 // Add Information to Databse
-                $this->objMediaFileInfo->addMediaFileInfo($id, $fileInfo[0]);                
+                $this->objMediaFileData->addMediaFileInfo($id, $fileInfo[0]);
             }
 
             //$this->objFiles->updateReadyForConversion($id, $filename, $mimetype);

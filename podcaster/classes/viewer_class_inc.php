@@ -100,67 +100,7 @@ class viewer extends object
         $this->objFile = $this->getObject('dbpodcasterfiles');
     }
 
-        /**
-         *
-         * A method to return the flash presentation for rendering in the page
-         * @param string $id The file id of the flash file to show
-         * @return string the flash file rendered for viewing within a div
-         * @access public
-         *
-         */
-    public function showFlash($id)
-    {
-        $flashFile = $this->objConfig->getcontentBasePath().'podcaster/'. $id .'/' . $id.'.swf';
-        if (file_exists($flashFile)) {
-            $flashFile = $this->uri(array('action'=>'getflash', 'id'=>$id));
-            //$this->objConfig->getcontentPath().'podcaster/' .$id .'/'. $id.'.swf';
-            $flashContent = '
-             <div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
-             <param name="movie" value="'.$flashFile.'">
-             <param name="quality" value="high">
-             <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="534" height="402"></embed>
-            </object></div>';
-        } else {
-            $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 540px; height: 302px; text-align: center;">Flash Version of Presentation being converted</div>';
-        }
-        return $flashContent;
-    }
-    public function showFeaturedFlash($id)
-    {
-        $flashFile = $this->objConfig->getcontentBasePath().'podcaster/'. $id .'/' . $id.'.swf';
-        if (file_exists($flashFile)) {
-            $flashFile = $this->uri(array('action'=>'getflash', 'id'=>$id));
-            //$this->objConfig->getcontentPath().'podcaster/' .$id .'/'. $id.'.swf';
-            $flashContent = '
-             <div style="border: 1px solid #000; width: 270px; height: 270px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="280" height="280">
-             <param name="movie" value="'.$flashFile.'">
-             <param name="quality" value="high">
-             <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="270" height="270"></embed>
-            </object></div>';
-        } else {
-            $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 270px; height: 270px; text-align: center;">Flash Version of Presentation being converted</div>';
-        }
-        return $flashContent;
-    }
-        /**
-         *
-         * A method to return the flash presentation for rendering in the page
-         * @param string $uri The URL of the flash file to show
-         * @return string the flash file rendered for viewing within a div
-         * @access public
-         *
-         */
-    public function showFlashUrl($uri)
-    {
-        $flashFile = $uri;
-        $flashContent = '
-           <div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
-           <param name="movie" value="'.$flashFile.'">
-           <param name="quality" value="high">
-           <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="534" height="402"></embed>
-          </object></div>';
-        return $flashContent;
-    }
+
         /**
          * Display results as table
          * @param <type> $files
@@ -195,7 +135,7 @@ class viewer extends object
 
 
                 $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
-                $link->link = $this->objFile->getPresentationThumbnail($file['id']);
+                $link->link = $this->objFile->getPodcastThumbnail($file['id']);
 
                 $table->addCell($link->show(), 120);
                 $table->addCell('&nbsp;', 10);
@@ -339,7 +279,7 @@ class viewer extends object
                 $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
 
                 $imgLink = new link($link);
-                $imgLink->link = $this->objFile->getPresentationThumbnail($file['id'], $filename);
+                $imgLink->link = $this->objFile->getPodcastThumbnail($file['id'], $filename);
 
                 $date = $objDate->sqlToUnixTime($file['dateuploaded']);
 
@@ -359,7 +299,7 @@ class viewer extends object
  * @param <type> $title
  * @return <type>
  */
-    public function getPresentationThumbnail($id, $title='')
+    public function getPodcastThumbnail($id, $title='')
     {
         $source = $this->objConfig->getcontentBasePath().'podcaster_thumbnails/'.$id.'.jpg';
         $relLink = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'podcaster_thumbnails/'.$id.'.jpg';
@@ -402,57 +342,13 @@ class viewer extends object
 
                     return '<img src="'.$imgRel.'" '.$title.' style="border:1px solid #000;" />';
                 } else {
-                    return $this->objLanguage->languageText("mod_podcaster_unabletogeneratethumbnail", "podcaster");// '';
+                    return $this->objLanguage->languageText("mod_podcaster_unabletogeneratethumbnail", "podcaster");
                 }
             } else {
                 return $this->objLanguage->languageText("mod_podcaster_nopreview", "podcaster");
             }
         }
     }
-
-        /**
- * Generate presentation thumb nail
- * @param <type> $id
- * @param <type> $title
- * @return <type>
- */
-    public function getPresentationFirstSlide($id, $title='')
-    {
-
-        $source = $this->objConfig->getcontentBasePath().'podcaster/'.$id.'/img0.jpg';
-        $relLink = $this->objConfig->getcontentPath().'podcaster/'.$id.'/img0.jpg';
-
-        if (file_exists($source)) {
-            $objMkDir = $this->getObject('mkdir', 'files');
-            $destinationDir = $this->objConfig->getcontentBasePath().'/podcaster_thumbnails';
-            $objMkDir->mkdirs($destinationDir);
-
-            $this->objImageResize = $this->getObject('imageresize', 'files');
-
-            $this->objImageResize->setImg($source);
-
-
-            $this->objImageResize->resize(300, 300, TRUE);
-
-            //$this->objImageResize->show(); // Uncomment for testing purposes
-
-            // Determine filename for file
-            // If thumbnail can be created, give it a unique file name
-            // Else resort to [ext].jpg - prevents clutter, other files with same type can reference this one file
-            if ($this->objImageResize->canCreateFromSouce) {
-                $img = $this->objConfig->getcontentBasePath().'/podcaster_thumbnails/'.$id.'.jpg';
-                $imgRel = $this->objConfig->getcontentPath().'/podcaster_thumbnails/'.$id.'.jpg';
-                $this->objImageResize->store($img);
-
-                return '<img src="'.$imgRel.'" '.$title.' style="border:1px solid #000;" />';
-            } else {
-                return $this->objLanguage->languageText("mod_podcaster_unabletogeneratethumbnail", "podcaster");// '';
-            }
-        } else {
-            return $this->objLanguage->languageText("mod_podcaster_nopreview", "podcaster");
-        }
-    }
-
 }
 
 ?>

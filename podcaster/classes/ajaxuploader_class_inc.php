@@ -37,7 +37,7 @@ class ajaxuploader extends object
     * Method to render the form
     * @return string Form
     */
-    public function show()
+    public function showForm($path)
     {
         // Generate an ID - In case multiple uploads occur on one page
         $id = mktime().rand();
@@ -58,7 +58,7 @@ class ajaxuploader extends object
         $objIcon->setIcon('loading_bar');
 
         // Create Form
-        $form = new form ('uploadfile_'.$id, $this->uri(array('action'=>'doajaxupload')));
+        $form = new form ('uploadfile_'.$id, $this->uri(array('action'=>'doajaxupload', 'path'=>$path)));
         $form->extra = 'enctype="multipart/form-data" target="iframe_upload_'.$id.'"';;
         $form->id = 'form_upload_'.$id;
 
@@ -74,9 +74,10 @@ class ajaxuploader extends object
 
         // Hidden Inputs
         $filename = new hiddeninput('filename', '');
+        $filepath = new hiddeninput('path', $path);
         $hiddenInput = new hiddeninput('id', $id);
 
-        $form->addToForm($fileInput->show().' '.$button->show().$filename->show().$hiddenInput->show());
+        $form->addToForm($fileInput->show().' '.$button->show().$filename->show().$hiddenInput->show().$filepath->show());
 
         // Append JavaScript
         $this->addJS();

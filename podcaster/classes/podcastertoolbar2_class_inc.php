@@ -28,10 +28,8 @@ class podcastertoolbar2 extends object
         $userIsLoggedIn = $objUser->isLoggedIn();
 
         $menuOptions = array(
-            array('action'=>'upload', 'text'=>'Upload', 'actioncheck'=>array('upload'), 'module'=>'podcaster', 'status'=>'both'),
-            array('action'=>'home', 'text'=>'V-Meetings', 'actioncheck'=>array(), 'module'=>'realtime', 'status'=>'both'),
+            array('action'=>'steponeupload', 'text'=>'Upload', 'actioncheck'=>array('upload'), 'module'=>'podcaster', 'status'=>'loggedin'),
             array('action'=>'search', 'text'=>'Search', 'actioncheck'=>array('search'), 'module'=>'podcaster', 'status'=>'both'),
-            array('action'=>NULL, 'text'=>'Blog', 'actioncheck'=>array(), 'module'=>'blog', 'status'=>'both'),
             array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
             array('action'=>NULL, 'text'=>'My Details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
             array('action'=>'login', 'text'=>'Login', 'actioncheck'=>array('login'), 'module'=>'podcaster', 'status'=>'login'),
@@ -94,7 +92,7 @@ class podcastertoolbar2 extends object
         $usedDefault = $usedDefault ? FALSE: TRUE;
 
         // Add Home Link
-        $home = $this->generateItem(NULL, '_default', 'Home', $usedDefault);
+        $home = $this->generateItem(NULL, 'podcaster', 'Home', $usedDefault);
 
 
         // Return Toolbar

@@ -281,10 +281,13 @@ class viewerutils extends object {
 
     public function getFeatured() {
         $objFiles = $this->getObject('dbpodcasterfiles');
+
         $objView = $this->getObject("viewer", "podcaster");
         $this->loadClass('link', 'htmlelements');
         $filename = '';
-        $latestFile = $objFiles->getLatestPresentation();
+
+        $latestFile = $objFiles->getLatestPodcasts();
+        
         $preview = '';
         $fileStr = '';
         if (count($latestFile) == 0) {
@@ -297,19 +300,20 @@ class viewerutils extends object {
 
             $counter = 0;
 
-            foreach ($latestFile as $file) {
-
+            foreach ($latestFile as $filedata) {
+                
+                $file = $this->objMediaFileData->getFileByFileId($filedata['id']);
                 if (trim($file['title']) == '') {
                     $filename = $file['filename'];
                 } else {
                     $filename = htmlentities($file['title']);
                 }
 
-                $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
-                $link->link = $objView->getPresentationFirstSlide($file['id'], $filename);
+                $link = new link($this->uri(array('action' => 'view', 'id' => $filedata['id'])));
+                $link->link = $objView->getPodcastThumbnail($filedata['id'], $filename);
                 $preview = $link->show();
                 $linkname = $objTrim->strTrim($filename, 45);
-                $fileLink = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
+                $fileLink = new link($this->uri(array('action' => 'view', 'id' => $filedata['id'])));
                 $fileLink->link = $linkname;
                 $fileLink->title = $filename;
                 $fileStr = $fileLink->show();
@@ -318,11 +322,8 @@ class viewerutils extends object {
         return $preview;
     }
 
-    private function createCell($colType, $filename, $thumbNail, $desc, $tags, $uploader, $licence, $id) {
+    private function createCell($colType, $filename, $thumbNail, $tags, $uploader, $licence, $id) {
         $objTrim = $this->getObject('trimstr', 'strings');
-        $desc = $objTrim->strTrim($desc, 30);
-        $descLink = new link($this->uri(array('action' => 'view', 'id' => $id)));
-        $descLink->link = $desc;
         $str = '<div class="' . $colType . '">
               <div class="subcl">
               <div class="sectionstats_content">
@@ -334,10 +335,7 @@ class viewerutils extends object {
               <li class="sectionstats_first">
 
               ' . $thumbNail->show() . '
-              <h3>
-             ' . $descLink->show() . '
-              </h3>
-   <br/><br/></br><br/><br/><br/><br/><br/><br/>
+   <br/><br/><br/><br/>
               </li>
 
               <li><strong>Tags: </strong><a  href="#">' . $tags . '</a></li>
@@ -360,7 +358,7 @@ class viewerutils extends object {
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objUser = $this->getObject('user', 'security');
         $objTags = $this->getObject('dbpodcastertags');
-        $latestFiles = $objFiles->getLatestPresentations();
+        $latestFiles = $objFiles->getLatestPodcasts();
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $latest10Desc = $objLanguage->languageText("mod_podcaster_latest10desc", "podcaster");
         $latest10Str = $objLanguage->languageText("mod_podcaster_latest10str", "podcaster");
@@ -396,7 +394,8 @@ class viewerutils extends object {
             $column = 0;
 
 
-            foreach ($latestFiles as $file) {
+            foreach ($latestFiles as $filedata) {
+                $file = $this->objMediaFileData->getFileByFileId($filedata['id']);
                 if (trim($file['title']) == '') {
                     $filename = $file['filename'];
                 } else {
@@ -411,15 +410,11 @@ class viewerutils extends object {
                 } else {
                     $columnDiv = 'c50r';
                 }
-                $fileLink = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
-                $fileLink->link = $objFiles->getPresentationThumbnail($file['id']);
+                $fileLink = new link($this->uri(array('action' => 'view', 'id' => $filedata['id'])));
+                $fileLink->link = $objFiles->getPodcastThumbnail($filedata['id']);
                 $fileLink->title = $filename;
-                $desc = 'No description available';
-                if ($file['description'] != '') {
-                    $desc = ''
-                            . nl2br(htmlentities($file['description']));
-                }
-                $tags = $objTags->getTags($file['id']);
+                
+                $tags = $objTags->getTags($filedata['id']);
                 $tagsStr = '';
                 if (count($tags) == 0) {
                     $tagsStr .= '<em>'
@@ -435,7 +430,7 @@ class viewerutils extends object {
                     }
                 }
 
-                $fileTypes = array('odp' => 'OpenOffice Impress Presentation', 'ppt' => 'PowerPoint Presentation', 'pdf' => 'PDF Document');
+                $fileTypes = array('mp3' => 'mp3');
                 $objFileIcons = $this->getObject('fileicons', 'files');
                 $uploaderLink = new link($this->uri(array('action' => 'byuser', 'userid' => $file['creatorid'])));
                 $uploaderLink->link = $objUser->fullname($file['creatorid']);
@@ -450,11 +445,10 @@ class viewerutils extends object {
                                 $columnDiv,
                                 $filename,
                                 $fileLink,
-                                $desc,
                                 $tagsStr,
                                 $uploaderLink->show(),
                                 '<p>' . $objDisplayLicense->show($license) . '</p>',
-                                $file['id']
+                                $filedata['id']
                 );
 
                 $column++;

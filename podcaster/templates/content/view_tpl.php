@@ -73,7 +73,6 @@ echo $heading->show();
 
 // Show the flash file using the viewer class
 $objView = $this->getObject("viewer", "podcaster");
-$flashContent = $objView->showFlash($file['id']);
 
 $rightCell = '<div style="float:right">'.$objBookMarks->diggThis().'</div>';
 
@@ -240,30 +239,6 @@ $homeLink->link = $this->objLanguage->languageText("phrase_backhome");
 $bottomLinks = array();
 
 $bottomLinks[] = $homeLink->show();
-
-if ($this->isValid('regenerate')) {
-    $flashLink = new link ($this->uri(array('action'=>'regenerate', 'type'=>'flash', 'id'=>$file['id'])));
-    $flashLink->link = $this->objLanguage->languageText("mod_podcaster_regenerateflash", "podcaster");
-    $bottomLinks[] = $flashLink->show();
-
-    $slidesLink = new link ($this->uri(array('action'=>'regenerate', 'type'=>'slides', 'id'=>$file['id'])));
-    $slidesLink->link = $this->objLanguage->languageText("mod_podcaster_slides", "podcaster");
-    $bottomLinks[] = $slidesLink->show();
-
-    $pdfLink = new link ($this->uri(array('action'=>'regenerate', 'type'=>'pdf', 'id'=>$file['id'])));
-    $pdfLink->link = $this->objLanguage->languageText("mod_podcaster_pdf", "podcaster");
-    $bottomLinks[] = $pdfLink->show();
-
-
-}
-
-if ($blogRegistered) {
-    $blogThisLink = new link ($this->uri(array('action'=>'blogadmin', 'mode'=>'writepost', 'text'=>'[WPRESENT: id='.$file['id'].']<br /><br />'), 'blog'));
-    $blogThisLink->link = $this->objLanguage->languageText("mod_podcaster_blogthispresentation", "podcaster");
-
-    $bottomLinks[] = $blogThisLink->show();
-}
-
 
 echo '<p>';
 $divider = '';

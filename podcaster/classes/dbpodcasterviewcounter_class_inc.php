@@ -24,6 +24,7 @@ class dbpodcasterviewcounter extends dbtable
     {
         parent::init('tbl_podcaster_views');
         $this->loadClass('link', 'htmlelements');
+        $this->objMediaFileData = $this->getObject('dbmediafiledata');
     }
 
     /**
@@ -390,9 +391,9 @@ class dbpodcasterviewcounter extends dbtable
             $this->loadClass('link', 'htmlelements');
             $filetitle='Presentation';
             $result='';
-            foreach ($data as $file)
+            foreach ($data as $filedata)
             {
-
+                $file = $this->objMediaFileData->getFileByFileId($filedata['id']);
                 if ($file['title'] == '') {
                     $filetitle.='-'.$counter;
                 } else {
@@ -401,15 +402,14 @@ class dbpodcasterviewcounter extends dbtable
 
                 $counter++;
                 $result.="<li>";
-                $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
+                $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$filedata['id'])));
                 $fileLink->link = $filetitle;
 
                 $result.=$fileLink->show();
-                $result.=' - '.$file['viewcount'];
+                $result.=' - '.$filedata['viewcount'];
 
                 $result.="</li>";
             }
-
             $content = $result;
         }
 

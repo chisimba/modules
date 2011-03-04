@@ -167,11 +167,11 @@ class dbpodcasterfiles extends dbtable
             ));
     }
 
-    public function getLatestPresentations()
+    public function getLatestPodcasts()
     {
         return $this->getAll(' ORDER BY dateuploaded DESC LIMIT 10');
     }
-    public function getLatestPresentation()
+    public function getLatestPodcast()
     {
         return $this->getAll(' ORDER BY dateuploaded DESC LIMIT 1');
     }
@@ -217,10 +217,10 @@ class dbpodcasterfiles extends dbtable
     }
 
 
-    public function getPresentationThumbnail($id, $title='')
+    public function getPodcastThumbnail($id, $title='')
     {
         $objViewer = $this->getObject('viewer');
-        return $objViewer->getPresentationThumbnail($id, $title);
+        return $objViewer->getPodcastThumbnail($id, $title);
     }
 
     public function deleteFile($id)
