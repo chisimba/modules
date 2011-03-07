@@ -1,32 +1,4 @@
 <?php
-/*
-CREATE TABLE `tbl_podcaster_metadata_media` (
-  `id` varchar(32) NOT NULL,
-  `fileid` varchar(32) NOT NULL,
-  `version` int(11) NOT NULL default '1',
-  `width` int(11) default '0',
-  `height` int(11) default '0',
-  `playtime` varchar(11) default NULL,
-  `format` varchar(30) default NULL,
-  `mimetype` varchar(50) default NULL,
-  `cclicense` varchar(150) default NULL,
-  `framerate` int(11) default NULL,
-  `bitrate` int(11) default NULL,
-  `samplerate` int(11) default NULL,
-  `title` varchar(255) default NULL,
-  `artist` varchar(255) default NULL,
-  `year` varchar(10) default NULL,
-  `url` varchar(255) default NULL,
-  `getid3info` text collate latin1_general_ci,
-  `creatorid` varchar(25) NOT NULL,
-  `datecreated` datetime NOT NULL,
-  `modifierid` varchar(25) NOT NULL,
-  `datemodified` datetime NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `fileId` (`fileid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='Table to hold metadata for media files';
-;
-*/
 $tablename = 'tbl_podcaster_metadata_media';
 
 $options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -38,6 +10,16 @@ $fields = array(
         'notnull' => TRUE
         ),
     'fileid' => array(
+        'type' => 'text',
+        'length' => 32,
+        'notnull' => TRUE
+        ),
+    'filename' => array(
+        'type' => 'text',
+        'length' => 150,
+        'notnull' => TRUE
+        ),
+    'uploadpathid' => array(
         'type' => 'text',
         'length' => 32,
         'notnull' => TRUE

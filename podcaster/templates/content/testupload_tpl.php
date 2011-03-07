@@ -9,12 +9,14 @@ $header->str = $this->objLanguage->languageText('mod_podcaster_uploadpodcast', '
 $upPath = $this->objLanguage->languageText('mod_podcaster_uploadpath', 'podcaster', 'Upload path');
 
 echo $header->show();
-
+$path = $folderdata['folderpath'];
+$folderid = $folderdata['id'];
 echo "<p>".$upPath.": ".$path."</p>";
 
 $objAjaxUpload = $this->newObject('ajaxuploader');
 
-echo $objAjaxUpload->showForm($path);
+echo $objAjaxUpload->showForm($path, $folderid);
+
 
 ?>
 

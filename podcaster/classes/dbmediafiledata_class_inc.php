@@ -63,7 +63,7 @@ class dbmediafiledata extends dbTable
     * @param  array  $infoArray Array with details of the metadata
     * @return string Record Id of the Entry
     */
-    function addMediaFileInfo($fileId, $infoArray)
+    function addMediaFileInfo($fileId, $infoArray, $filename,$pathid)
     {
         // Add File Id to Array
         $infoArray['fileid'] = $fileId;
@@ -75,7 +75,8 @@ class dbmediafiledata extends dbTable
         if (!isset($infoArray['modifierid'])) {
             $infoArray['modifierid'] = $this->objUser->userId();
         }
-        
+        $infoArray['filename'] = $filename;
+        $infoArray['uploadpathid'] = $pathid;
         $infoArray['datecreated'] = strftime('%Y-%m-%d', mktime());
         $infoArray['timecreated'] = strftime('%H:%M:%S', mktime());
         

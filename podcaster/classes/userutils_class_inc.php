@@ -512,7 +512,6 @@ class userutils extends object {
         $this->objMkdir = $this->getObject('mkdir', 'files');
         $userid = $this->getUserId();
         $path = $this->objSysConfig->getValue('FILES_DIR', 'podcaster') . '/' . $userid . '/';
-
         //Check if path is an existing directory
         if (is_dir($path)) {
             $result = TRUE;
@@ -922,13 +921,17 @@ class userutils extends object {
         return $treeMenu->getMenu();
     }
 
-    /*
+    /**
      * Function to generate a form that allows one to add a podcaster folder
-     * @param string name value of text input box
-     * @return form object
+     * @param string $name
+     * @param string $formaction
+     * @param string $labelText
+     * @param string $buttonLabel
+     * @param string $note
+     * @param string $buttonNote
+     * @return form
      */
-
-    function showCreateFolderForm($name='', $formaction = 'createfolder',$labelText="Create", $buttonLabel = "", $note="") {
+    function showCreateFolderForm($name='', $formaction = 'createfolder',$labelText="Create", $buttonLabel = "", $note="", $buttonNote="") {
         if($buttonLabel=="")
             $buttonLabel = 'Create '.$this->modeLabel;
         $form = new form($formaction, $this->uri(array('action' => $formaction)));
@@ -948,7 +951,7 @@ class userutils extends object {
         $button->cssId = 'savebutton';
         $button->setToSubmit();
 
-        $form->addToForm('<br/>' . $button->show());
+        $form->addToForm('<br/>' . $button->show()." ".$buttonNote);
 
         $fs = new fieldset();
         $fs->setLegend($this->modeLabel);

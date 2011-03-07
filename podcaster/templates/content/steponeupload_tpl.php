@@ -30,7 +30,9 @@ $label = $this->objLanguage->languageText('mod_podcaster_uploadpodcast', 'podcas
 $note = "<b> * ".$this->objLanguage->languageText('mod_podcaster_upsteponecreate', 'podcaster', 'Type in the name of folder if you want to create a new folder within the selected folder')."</b>";
 $buttonLabel = $this->objLanguage->languageText('word_next', 'system', 'System')." ".$this->objLanguage->languageText('mod_podcaster_wordstep', 'podcaster', 'Step');
 
-$createFolder = $this->objUtils->showCreateFolderForm("/", 'createfolder2',$label, $buttonLabel,$note);
+$buttonNote = $this->objLanguage->languageText('mod_podcaster_clicknext', 'podcaster', 'Click on the "Next step" button to save and proceed to uploading the podcast file');
+
+$createFolder = $this->objUtils->showCreateFolderForm("/", 'createfolder2',$label, $buttonLabel,$note, $buttonNote);
 
 echo '<p><strong id="confirm">'.$successmsg."</strong></p>";
 

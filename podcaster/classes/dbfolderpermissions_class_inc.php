@@ -60,23 +60,28 @@ class dbfolderpermissions extends dbtable {
     }
 
     public  function getAllFolders(){
-        $sql=
-        "select * from ".$this->tablename;
+        $sql= "select * from ".$this->tablename;
         return $this->getArray($sql);
     }
-
+    /**
+     * Search record by id
+     * @param string $id The record ID
+     * @return array The entries
+     */
+    function getById($id)
+    {
+        return $this->getAll("WHERE id='" . $id . "'");
+    }
     /**
      *
      * gets all the users and the thier permissions for a specific folder
      * @param <type> $folderpath
      * @return <type>
      */
-    public function getPermmissions($folderpath) {
-        $this->userid="1";
+    public function getPermmissions($folderpath) {       
         $sql="select * from ".$this->tablename." where userid = '".$this->userid."' and folderpath= '".$folderpath."'";
         $rows=$this->getArray($sql);
         return $rows;
-
     }
 
 

@@ -209,6 +209,7 @@ class podcaster extends controller {
         $this->setVarByRef("successmsg", $successmsg);
         return "steponeupload_tpl.php";
     }
+
     /**
      * function that loads create folder form
      *
@@ -308,31 +309,14 @@ class podcaster extends controller {
     public function __createfolder2() {
         $this->setLayoutTemplate("podcaster_layout_tpl.php");
         $path = $this->getParam('parentfolder');
+        if ($path == '0')
+            $path = '/';
         $name = $this->getParam('foldername');
-
-        if(empty($name) || $name == "/") {
-            $flag = "selected";
-            $this->nextAction('upload', array('createcheck' => $flag, 'folder' => $name, "path" =>$path));
-        }
-        if (!$path) {
-            $path = "";
-        }
-        
-        $flag = "";
-
-        $defaultexists = $this->objUtils->defaultFolderExistsCheck();
-        //Create only if new
-        if (!$defaultexists) {
-            $this->objUtils->createDefaultFolder();            
-        }
-        //Confirm that folder does not exist
-        $exists = $this->objUtils->folderExistsCheck($path, $name);
-        //Create only if new
-        if (!$exists) {
-            $userId = $this->objUser->userId();
-            //We need to remove the userId from the path
+        $userId = $this->objUser->userId();
+        $pathf = "/";
+        //We need to remove the userId from the path
+        if ($path != '/') {
             $remUId = split("/", $path);
-            $pathf = "/";
             $count = count($remUId);
             $start = 0;
             do {
@@ -344,16 +328,42 @@ class podcaster extends controller {
                 $start++;
             }while ($start < $count);
             $path = $pathf;
+        }
+        if (empty($name) || $name == "/") {
+            $flag = "selected";
+            $folderdata = $this->folderPermissions->getPermmissions($pathf);
+            $folderid = $folderdata[0]['id'];
+            $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid));
+        }
+        if (!$path) {
+            $path = "";
+        }
+
+        $flag = "";
+
+        $defaultexists = $this->objUtils->defaultFolderExistsCheck();
+        //Create only if new
+        if (!$defaultexists) {
+            $this->objUtils->createDefaultFolder();
+        }
+        //Confirm that folder does not exist
+        $exists = $this->objUtils->folderExistsCheck($path, $name);
+        //Create only if new
+        if (!$exists) {
+            $path = $pathf;
             $this->objUtils->createFolder($path, $name);
-            $path = $path."/".$name;
+            $path = $path . "/" . $name;
             $flag = 'add';
         } else {
             $flag = 'fail';
         }
-
+        $path = str_replace("//","/",$path);
+        $folderdata = $this->folderPermissions->getPermmissions($path);
+        $folderid = $folderdata[0]['id'];
         $this->setVarByRef('folder', $name);
-        $this->nextAction('upload', array('createcheck' => $flag, 'folder' => $name, "path" =>$path));
+        $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid));
     }
+
     /**
      * used to create a new folder in a selected dir. If none is provided, the folder is
      * created in the root dir
@@ -398,7 +408,6 @@ class podcaster extends controller {
         } else {
             $flag = 'fail';
         }
-
         $this->setVarByRef('folder', $name);
         $this->nextAction('addfolder', array('createcheck' => $flag, 'folder' => $name));
     }
@@ -930,10 +939,11 @@ class podcaster extends controller {
     function __upload() {
         $createcheck = $this->getParam('createcheck');
         $folder = $this->getParam('folder');
-        $path = $this->getParam('path');
+        $folderid = $this->getParam('folderid');
+        $folderdata = $this->folderPermissions->getById($folderid);
+        $folderdata = $folderdata[0];
         $this->setVarByRef('createcheck', $createcheck);
-        $this->setVarByRef('folder', $folder);
-        $this->setVarByRef('path', $path);
+        $this->setVarByRef('folderdata', $folderdata);
         return 'testupload_tpl.php';
     }
 
@@ -1034,41 +1044,37 @@ class podcaster extends controller {
      *
      */
     function __doajaxupload() {
+
         $generatedid = $this->getParam('id');
         $filename = $this->getParam('filename');
-        $path = $this->getParam('path');
-        
+        $pathid = $this->getParam('pathid');
+        $folderdata = $this->folderPermissions->getById($pathid);
+        $folderdata = $folderdata[0];
         $id = $this->objFiles->autoCreateTitle();
-
-        //$objMkDir = $this->getObject('mkdir', 'files');
-
-        //$destinationDir = $this->objConfig->getcontentBasePath() . '/podcaster/' . $id;
-        //$objMkDir->mkdirs($destinationDir);
-        $destinationDir = $this->baseDir."/".$this->userId."/".$path."/";
+        $path = $folderdata['folderpath'];
+        $destinationDir = $this->baseDir . "/" . $this->userId . "/" . $path . "/";
         $destinationDir = str_replace("//", "/", $destinationDir);
 
-        $fullPath = "/".$this->userId."/".$path."/";
+        $fullPath = "/" . $this->userId . "/" . $path . "/";
         $fullPath = str_replace("//", "/", $fullPath);
 
         @chmod($destinationDir, 0777);
 
         $objUpload = $this->newObject('upload', 'files');
-        $objUpload->permittedTypes = array('mp3'); //'pps',
+        $objUpload->permittedTypes = array('mp3');
         $objUpload->overWrite = TRUE;
-        $objUpload->uploadFolder = $destinationDir . '/';
+        $objUpload->setUploadFolder($destinationDir . '/');
 
         $result = $objUpload->doUpload(TRUE);
-
 
         if ($result['success'] == FALSE) {
 
             $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
 
-            return $this->nextAction('erroriframe', array('message' => $result['message'], 'file' => $filename, 'id' => $generatedid));
+            return $this->nextAction('erroriframe', array('message' => $result['message'], 'file' => $filename, 'pathid' => $pathid));
         } else {
 
             //var_dump($result);
-
 
             $filename = $result['filename'];
             $mimetype = $result['mimetype'];
@@ -1078,7 +1084,7 @@ class podcaster extends controller {
             $ext = $path_parts['extension'];
 
 
-            $file = $destinationDir. $filename;
+            $file = $destinationDir . $filename;
 
             if ($ext == '1') {
                 $rename = $destinationDir . $filename;
@@ -1097,7 +1103,7 @@ class podcaster extends controller {
                 $fileInfo = $this->objAnalyzeMediaFile->analyzeFile($file);
 
                 // Add Information to Databse
-                $this->objMediaFileData->addMediaFileInfo($id, $fileInfo[0]);
+                $this->objMediaFileData->addMediaFileInfo($id, $fileInfo[0], $filename, $folderdata['id']);
             }
 
             //$this->objFiles->updateReadyForConversion($id, $filename, $mimetype);
@@ -1106,7 +1112,7 @@ class podcaster extends controller {
             $uploadedFiles[] = $id;
             $this->setSession('uploadedfiles', $uploadedFiles);
 
-            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename));
+            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename, 'pathid' => $pathid));
         }
     }
 
@@ -1126,6 +1132,9 @@ class podcaster extends controller {
 
         $filename = $this->getParam('filename');
         $this->setVarByRef('filename', $filename);
+
+        $pathid = $this->getParam('pathid');
+        $this->setVarByRef('pathid', $pathid);
 
         return 'ajaxuploadresults_tpl.php';
     }
