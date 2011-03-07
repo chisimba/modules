@@ -30,7 +30,6 @@
  * @see       
  */
 
-
 /**
  * Class to handle interaction with table tbl_files_metadata_media
  * 
@@ -45,61 +44,74 @@
  * @link      http://avoir.uwc.ac.za
  * @see       
  */
-class dbmediafiledata extends dbTable
-{
-    
+class dbmediafiledata extends dbTable {
+
     /**
-    * Constructor
-    */
-    function init()
-    {
+     * Constructor
+     */
+    function init() {
         parent::init('tbl_podcaster_metadata_media');
         $this->objUser = $this->getObject('user', 'security');
     }
-    
+
     /**
-    * Method to add metadata info about a file
-    * @param  string $fileId    Record Id of the File
-    * @param  array  $infoArray Array with details of the metadata
-    * @return string Record Id of the Entry
-    */
-    function addMediaFileInfo($fileId, $infoArray, $filename,$pathid)
-    {
+     * Method to add metadata info about a file
+     * @param  string $fileId    Record Id of the File
+     * @param  array  $infoArray Array with details of the metadata
+     * @return string Record Id of the Entry
+     */
+    function addMediaFileInfo($fileId, $infoArray, $filename, $pathId) {
         // Add File Id to Array
         $infoArray['fileid'] = $fileId;
-        
+
         if (!isset($infoArray['creatorid'])) {
             $infoArray['creatorid'] = $this->objUser->userId();
         }
-        
+
         if (!isset($infoArray['modifierid'])) {
             $infoArray['modifierid'] = $this->objUser->userId();
         }
+
         $infoArray['filename'] = $filename;
-        $infoArray['uploadpathid'] = $pathid;
+        $infoArray['uploadpathid'] = $pathId;
         $infoArray['datecreated'] = strftime('%Y-%m-%d', mktime());
         $infoArray['timecreated'] = strftime('%H:%M:%S', mktime());
-        
-        return $this->insert($infoArray);
+
+        //Check if file is already recorded, if it is do an update
+        $existCheck = $this->getFileByNameAndPathId($filename, $pathId);
+        $existCheck = $existCheck[0];
+        if (empty($existCheck)) {
+            return $this->insert($infoArray);
+        } else {
+            return $this->update('id', $existCheck['id'], $infoArray);
+        }
     }
 
     /**
-    * Method to get the details of a file
-    * @param string $id Record ID of the file
-    * @return array Details of the file
-    */
-    public function getFile($id)
-    {
+     * Method to get the details of a file
+     * @param string $name actual filename with extension
+     * @param string $pathId the folder path id
+     * @return array Details of the file
+     */
+    public function getFileByNameAndPathId($name, $pathId) {
+        return $this->getAll('where filename="' . $name . '" AND uploadpathid="' . $pathId . '"');
+    }
+
+    /**
+     * Method to get the details of a file
+     * @param string $id Record ID of the file
+     * @return array Details of the file
+     */
+    public function getFile($id) {
         return $this->getRow('id', $id);
     }
 
     /**
-    * Method to get the details of a file
-    * @param string $id Record ID of the file
-    * @return array Details of the file
-    */
-    public function getFileByFileId($id)
-    {
+     * Method to get the details of a file
+     * @param string $id Record ID of the file
+     * @return array Details of the file
+     */
+    public function getFileByFileId($id) {
         return $this->getRow('fileid', $id);
     }
 
@@ -111,40 +123,37 @@ class dbmediafiledata extends dbTable
      * @param string $license
      * @return array
      */
-
-    public function updateFileDetails($id, $title, $description, $license)
-    {
+    public function updateFileDetails($id, $title, $description, $license) {
         return $this->update('id', $id, array(
-                'title' => stripslashes($title),
-                'description' => stripslashes($description),
-                'cclicense' => $license
-            ));
+            'title' => stripslashes($title),
+            'description' => stripslashes($description),
+            'cclicense' => $license
+        ));
     }
-    
+
     /**
-    * Method to clean up records that have no matching data in tbl_files
-    */
-    function cleanUpMismatchedMediaFiles()
-    {
+     * Method to clean up records that have no matching data in tbl_files
+     */
+    function cleanUpMismatchedMediaFiles() {
         $sql = 'SELECT tbl_podcaster_metadata_media.id, tbl_files.id as files_id FROM tbl_podcaster_metadata_media  LEFT JOIN tbl_files ON (tbl_podcaster_metadata_media.fileid = tbl_files.id) WHERE tbl_files.id IS NULL';
-        
+
         $results = $this->getArray($sql);
-        
-        foreach ($results as $result)
-        {
+
+        foreach ($results as $result) {
             $this->delete('id', $result['id']);
         }
     }
-    
+
     /**
-    * Method to update the width and height info of a file
-    * @param string $fileId Record Id of the File
-    * @param int $width Width of the File
-    * @param int $height Height of the File
-    */
-    function updateWidthHeight($fileId, $width, $height)
-    {
-        return $this->update('fileid', $fileId, array('width'=>$width, 'height'=>$height));
+     * Method to update the width and height info of a file
+     * @param string $fileId Record Id of the File
+     * @param int $width Width of the File
+     * @param int $height Height of the File
+     */
+    function updateWidthHeight($fileId, $width, $height) {
+        return $this->update('fileid', $fileId, array('width' => $width, 'height' => $height));
     }
+
 }
+
 ?>

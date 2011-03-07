@@ -1112,7 +1112,7 @@ class podcaster extends controller {
             $uploadedFiles[] = $id;
             $this->setSession('uploadedfiles', $uploadedFiles);
 
-            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename, 'pathid' => $pathid));
+            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename, 'pathid' => $pathid));            
         }
     }
 
