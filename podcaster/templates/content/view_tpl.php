@@ -17,21 +17,22 @@ if ($file['filedata']['title'] == '') {
     $heading->str = $file['filedata']['title'];
 }
 
+
 $showDeleteLink = FALSE;
 
 if ($file['filedata']['creatorid'] == $objUser->userId()) {
     $objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
 
-    $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+    $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'describepodcast', 'fileid'=>$file["filedata"]['fileid'], 'mode'=>'submodal')), 'link');
 
     $heading->str .= ' '.$editLink;
-
+/*
     $objIcon->setIcon('delete');
 
-    $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'delete', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+    $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'delete', 'id'=>$file["filedata"]['fileid'], 'mode'=>'submodal')), 'link');
 
     $heading->str .= ' '.$deleteLink;
-
+*/
     $showDeleteLink = TRUE;
 
 }
@@ -40,17 +41,17 @@ if ($showDeleteLink == FALSE && $this->isValid('admindelete')) {
     $objIcon->setIcon('delete');
 
     $objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
-    $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'admindelete', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+    $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'admindelete', 'id'=>$file['id'])), 'link');
     $objIcon->setIcon('delete');
 
     $objIcon->setIcon('edit');
-    $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+    $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'])), 'link');
 
     $heading->str .= $editLink.' '.$deleteLink;
 }
 
 $heading->type = 1;
-
+/*
 // Check if blog is registered
 $objModules  = $this->getObject('modules', 'modulecatalogue');
 $blogRegistered = $objModules->checkIfRegistered('blog');
@@ -67,7 +68,7 @@ if ($blogRegistered) {
 
     $heading->str .= ' '.$blogThisLink->show();
 }
-
+*/
 echo $heading->show();
 
 // Show the flash file using the viewer class

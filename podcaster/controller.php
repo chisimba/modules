@@ -1037,7 +1037,7 @@ class podcaster extends controller {
      */
     public function __describepodcast() {
         $fileid = $this->getParam("fileid", "");
-        $filedata = $this->objMediaFileData->getFileByFileId($fileid);
+        $filedata = $this->objMediaFileData->getFileByFileId($fileid);        
         $this->setVarByRef("filedata", $filedata);
         return "tpl_addeditpodcast.php";
     }
@@ -1055,7 +1055,7 @@ class podcaster extends controller {
         $description = $this->getParam("description", "");
         $filedata = $this->objMediaFileData->updateFileDetails($id, $podtitle, $description, $cclicense, $artist);
         $this->setVarByRef("filedata", $filedata);
-        return $this->nextAction('describepodcast', array('fileid' => $fileid));
+        return $this->nextAction('view', array('id'=>$id,'fileid' => $fileid));
     }
     /**
      * Used to do the actual upload

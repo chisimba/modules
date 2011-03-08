@@ -13,7 +13,7 @@ $header->type = 1;
 
 echo $header->show();
 
-$form = new form('savedescribepodcast', $this->uri(array('action' => 'view', 'id' => $filedata['id'], 'fileid' => $filedata['fileid'])));
+$form = new form('savedescribepodcast', $this->uri(array('action' => 'savedescribepodcast', 'id' => $filedata['id'], 'fileid' => $filedata['fileid'])));
 $form->extra = 'enctype="multipart/form-data"';
 
 $objTable = new htmltable();
