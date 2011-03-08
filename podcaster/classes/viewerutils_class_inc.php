@@ -23,8 +23,14 @@ class viewerutils extends object {
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objMediaFileData = $this->getObject('dbmediafiledata');
+        $this->objFolderPerms = $this->getObject('dbfolderpermissions');
         $this->objLanguage = & $this->getObject('language', 'language');
         $this->objDateTime = & $this->getObject('dateandtime', 'utilities');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'podcaster');
+        $this->userId = $this->objUser->userId();
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $this->siteBase = $this->objAltConfig->getitem('KEWL_SITEROOT_PATH');
     }
 
     /**
@@ -55,20 +61,28 @@ class viewerutils extends object {
 
         $objSoundPlayer = $this->newObject('buildsoundplayer', 'files');
 
-        $result = $this->objMediaFileData->getFileByFileId($id);
+        $result = $this->objMediaFileData->getFile($id);
 
-        $filename = $result['title'] . "." . $result['format'];
+        $filename = $result['filename'];
+        //Get the path
+        $pathdata = $this->objFolderPerms->getById($result['uploadpathid']);
+        $pathdata = $pathdata[0];
+        $newpodpath = str_replace($this->siteBase, "/", $this->baseDir);
+        $newpodpath = $newpodpath ."/". $this->userId ."/".$pathdata['folderpath']. '/' . $filename;
+        $newpodpath = str_replace("//", "/", $newpodpath);
 
-        $podpath = $this->objConfig->getsiteRoot() . $this->objConfig->getcontentPath() . 'podcaster/' . $id . '/' . $filename;
-        $filepath = $this->objConfig->getsiteRootPath() . $this->objConfig->getcontentPath() . 'podcaster/' . $id . '/' . $filename;
+        $podpath = $this->baseDir."/". $this->userId ."/".$pathdata['folderpath']. '/' . $filename;
+        $podpath = str_replace("//", "/", $podpath);
+
+        $filepath = $podpath;
         $filesize = filesize($filepath);
         $filesize = $this->format_file_fize_size($filesize);
-        $soundFile = str_replace(' ', '%20', $podpath);
+        $newpodpath = ltrim($newpodpath, '/');
+        $soundFile = str_replace(' ', '%20', $newpodpath);
 
-        $objSoundPlayer->setSoundFile($soundFile);
+        $objSoundPlayer->setSoundFile('podcaster/1/Paul/110213_001.mp3');
 
         $podInfo = $objSoundPlayer->show();
-
         $content = "";
 
         $table = $this->newObject('htmltable', 'htmlelements');

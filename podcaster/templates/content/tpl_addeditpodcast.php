@@ -4,57 +4,86 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass("htmltable", 'htmlelements');
+$this->loadClass("textinput", "htmlelements");
 
 $header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_podcaster_addpodcast', 'podcast', 'Add podcast');
+$header->str = $this->objLanguage->languageText('mod_podcaster_uploadstepthree', 'podcaster', 'Step 3: Describe podcast');
 $header->type = 1;
 
 echo $header->show();
 
-$header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_filemanager_uploadnewfile', 'filemanager', 'Upload new file');
-$header->type = 4;
-
-echo $header->show();
-
-$form = new form('addpodcastbyupload', $this->uri(array('action'=>'uploadpodcast')));
+$form = new form('savedescribepodcast', $this->uri(array('action' => 'view', 'id' => $filedata['id'], 'fileid' => $filedata['fileid'])));
 $form->extra = 'enctype="multipart/form-data"';
 
-$objUpload = $this->newObject('uploadinput', 'filemanager');
-$objUpload->restrictFileList = array('mp3');
+$objTable = new htmltable();
+$objTable->width = '100%';
+$objTable->attributes = " align='left' border='0'";
+$objTable->cellspacing = '5';
 
-$button = new button('submitform', $this->objLanguage->languageText('mod_podcaster_uploadpodcast', 'podcast', 'Upload Podcast'));
+//Title
+$podtitle = new textinput("podtitle", $filedata['title']);
+$podtitle->size = 60;
+
+$objTable->startRow();
+$objTable->addCell("* " . $this->objLanguage->languageText('mod_podcaster_title', 'podcaster', 'Title') . " :", 140, 'top', 'right');
+$objTable->addCell($podtitle->show(), Null, 'top', 'left');
+$objTable->endRow();
+
+//Artist
+$podartist = new textinput("artist", $filedata['artist']);
+$podartist->size = 60;
+
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_podcaster_artist', 'podcaster', 'Artist') . " :", 140, 'top', 'right');
+$objTable->addCell($podartist->show(), Null, 'top', 'left');
+$objTable->endRow();
+
+// CC licence
+$lic = $this->getObject('licensechooser', 'creativecommons');
+if (isset($filedata['cclicense'])) {
+    $lic->defaultValue = $filedata['cclicense'];
+}
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_podcaster_license', 'podcaster', 'License') . " :", 140, 'top', 'right');
+$objTable->addCell($lic->show(), Null, 'top', 'left');
+$objTable->endRow();
+
+//Add the WYSWYG editor
+$editor = $this->newObject('htmlarea', 'htmlelements');
+$editor->setName('description');
+$editor->height = '300px';
+$editor->width = '450px';
+$editor->setContent($filedata['description']);
+
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_description', 'system', 'Description') . " :", 140, 'top', 'right');
+$objTable->addCell($editor->show(), Null, 'top', 'left');
+$objTable->endRow();
+
+
+$buttonLabel = $this->objLanguage->languageText('word_next', 'system', 'System') . " " . $this->objLanguage->languageText('mod_podcaster_wordstep', 'podcaster', 'Step');
+
+$buttonNote = $this->objLanguage->languageText('mod_podcaster_clicknextthree', 'podcaster', 'Click on the "Next step" button to save the descriptions and view the podcast');
+
+//Save button
+$button = new button("submit", $buttonLabel); //word_save
 $button->setToSubmit();
 
-$form->addToForm($objUpload->show().'<br />'.$button->show());
+$objTable->startRow();
+$objTable->addCell(" ", 140, 'top', 'right', '', '');
+//$objTable->addCell($button->show()." ".$buttonNote, 140, 'top', 'right','','colspan="2"');
+$objTable->addCell("**" . $button->show(), Null, 'top', 'left');
+$objTable->endRow();
 
+$objTable->startRow();
+$objTable->addCell("* " . $this->objLanguage->languageText('mod_podcaster_notetitle', 'podcaster', 'The Title is a meaningful name of the podcast for display. However, this does not change the podcast file name'), Null, 'top', 'left', '', 'colspan="2"');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell("** " . $buttonNote, Null, 'top', 'left', '', 'colspan="2"');
+$objTable->endRow();
 
-echo $form->show();
-
-$header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_filemanager_chooseexisting', 'filemanager', 'Choose existing file from file manager');
-$header->type = 4;
-
-echo $header->show();
-
-$form = new form('addpodcast', $this->uri(array('action'=>'savenewpodcast')));
-
-
-$objSelectFile = $this->newObject('selectfile', 'filemanager');
-
-$objSelectFile->name = 'podcast';
-$objSelectFile->restrictFileList = array('mp3');
-
-$button = new button('submitform', $this->objLanguage->languageText('mod_podcaster_addpodcast', 'podcast'));
-$button->setToSubmit();;
-
-$form->addToForm($objSelectFile->show().'<br />'.$button->show());
-
+$form->addToForm($objTable->show());
 
 echo $form->show();
-
-$link = new link ($this->uri(NULL));
-$link->link = $this->objLanguage->languageText('mod_podcaster_returntopodcasthome', 'podcast', 'Return to Podcast Home');
-
-echo '<p>'.$link->show().'</p>';
 ?>

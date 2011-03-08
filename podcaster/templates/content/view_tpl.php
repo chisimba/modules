@@ -1,5 +1,4 @@
 <?php
-
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
@@ -84,7 +83,7 @@ if ($file['filedata']['description'] != '') {
     $rightCell .= '<p><strong>'
             . $this->objLanguage->languageText("word_description")
             . ':</strong><br /> '
-            .nl2br(htmlentities($file['description']))
+            .nl2br($file['filedata']['description'])
             .'</p>';
 }
 

@@ -5,7 +5,7 @@ $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $header = new htmlheading();
 $header->type = 2;
-$header->str = $this->objLanguage->languageText('mod_podcaster_uploadpodcast', 'podcaster', 'Upload podcast');
+$header->str = $this->objLanguage->languageText('mod_podcaster_uploadsteptwo', 'podcaster', 'Step 1: Select/Create upload folder');
 $upPath = $this->objLanguage->languageText('mod_podcaster_uploadpath', 'podcaster', 'Upload path');
 
 echo $header->show();

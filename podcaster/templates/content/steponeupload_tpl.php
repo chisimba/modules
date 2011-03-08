@@ -8,7 +8,7 @@ $this->loadClass('hiddeninput', 'htmlelements');
         
 $header = new htmlheading();
 $header->type = 2;
-$header->str = $this->objLanguage->languageText('mod_podcaster_upstepone', 'podcaster', 'Upload podcast step 1');
+$header->str = $this->objLanguage->languageText('mod_podcaster_uploadstepone', 'podcaster', 'Upload podcast step 1');
 
 $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'podcaster');
 

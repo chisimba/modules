@@ -79,7 +79,7 @@ class podcaster extends controller {
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
+        $required = array('describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
 
 
         if (in_array($action, $required)) {
@@ -357,7 +357,7 @@ class podcaster extends controller {
         } else {
             $flag = 'fail';
         }
-        $path = str_replace("//","/",$path);
+        $path = str_replace("//", "/", $path);
         $folderdata = $this->folderPermissions->getPermmissions($path);
         $folderid = $folderdata[0]['id'];
         $this->setVarByRef('folder', $name);
@@ -786,14 +786,13 @@ class podcaster extends controller {
     function __view() {
         $id = $this->getParam('id');
 
-        $file = $this->objFiles->getFile($id);
-        $filedata = $this->objMediaFileData->getFileByFileId($file['id']);
+        $filedata = $this->objMediaFileData->getFile($id);
 
-        if ($file == FALSE) {
+        if (empty($filedata)) {
             return $this->nextAction('home', array('error' => 'norecord'));
         }
 
-        $tags = $this->objTags->getTags($id);
+        $tags = $this->objTags->getTags($filedata['fileid']);
 
         $getPodcast = $this->objViewerUtils->getPodcastView($id);
 
@@ -1032,13 +1031,32 @@ class podcaster extends controller {
     }
 
     /**
-     * Used to do the actual upload
+     * function that loads the edit podcast details form
      *
+     * @return form
      */
-    function __addpodcast() {
-        return 'tpl_addeditpodcast.php';
+    public function __describepodcast() {
+        $fileid = $this->getParam("fileid", "");
+        $filedata = $this->objMediaFileData->getFileByFileId($fileid);
+        $this->setVarByRef("filedata", $filedata);
+        return "tpl_addeditpodcast.php";
     }
-
+    /**
+     * function that saves the podcast details form
+     *
+     * @return form
+     */
+    public function __savedescribepodcast() {
+        $id = $this->getParam("id", "");
+        $fileid = $this->getParam("fileid", "");
+        $podtitle = $this->getParam("podtitle", "");
+        $cclicense = $this->getParam("creativecommons", "");
+        $artist = $this->getParam("artist", "");
+        $description = $this->getParam("description", "");
+        $filedata = $this->objMediaFileData->updateFileDetails($id, $podtitle, $description, $cclicense, $artist);
+        $this->setVarByRef("filedata", $filedata);
+        return $this->nextAction('describepodcast', array('fileid' => $fileid));
+    }
     /**
      * Used to do the actual upload
      *
@@ -1112,7 +1130,7 @@ class podcaster extends controller {
             $uploadedFiles[] = $id;
             $this->setSession('uploadedfiles', $uploadedFiles);
 
-            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename, 'pathid' => $pathid));            
+            return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename, 'pathid' => $pathid));
         }
     }
 

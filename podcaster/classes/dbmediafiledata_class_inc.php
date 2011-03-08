@@ -121,14 +121,16 @@ class dbmediafiledata extends dbTable {
      * @param string $title
      * @param string $description
      * @param string $license
+     * @param string $license
      * @return array
      */
-    public function updateFileDetails($id, $title, $description, $license) {
+    public function updateFileDetails($id, $title, $description, $license, $artist) {
         return $this->update('id', $id, array(
-            'title' => stripslashes($title),
-            'description' => stripslashes($description),
-            'cclicense' => $license
-        ));
+            'title' => $title,
+            'description' => $description,
+            'cclicense' => $license,
+            'artist' => $artist
+            ));
     }
 
     /**
