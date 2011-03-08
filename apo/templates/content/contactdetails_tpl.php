@@ -227,7 +227,7 @@ $form->addToForm('<br/>' . $button->show());
 
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'showreview'));
+$uri = $this->uri(array('action' => 'showreview', 'id' => $id));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

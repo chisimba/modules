@@ -56,43 +56,43 @@ $header->str = $xtitle;
 echo $header->show();
 
 if ($mode == 'edit') {
-    $overviewlink = new link($this->uri(array("action" => "showoverview", "id" => $document['id'])));
+    $overviewlink = new link($this->uri(array("action" => "showoverview", "id" => $document['id'], 'formname'=>'editdocument')));
     $overviewlink->link = "Overview";
 
-    $rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone", "id" => $document['id'])));
+    $rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone", "id" => $document['id'], 'formname'=>'editdocument')));
     $rulesandsyllabusonelink->link = "Rules and Syllabus (page one)";
 
-    $rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo", "id" => $document['id'])));
+    $rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo", "id" => $document['id'], 'formname'=>'editdocument')));
     $rulesandsyllabustwolink->link = "Rules and Syllabus (page two)";
 
-    $subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements", "id" => $document['id'])));
+    $subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements", "id" => $document['id'], 'formname'=>'editdocument')));
     $subsidyrequirementslink->link = "Subsidy Requirements";
 
-    $outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone", "id" => $document['id'])));
+    $outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone", "id" => $document['id'], 'formname'=>'editdocument')));
     $outcomesandassessmentonelink->link = "Outcomes and Assessment (page one)";
 
-    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo", "id" => $document['id'])));
+    $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo", "id" => $document['id'], 'formname'=>'editdocument')));
     $outcomesandassessmenttwolink->link = "Outcomes and Assessment (page two)";
 
-    $outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree", "id" => $document['id'])));
+    $outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree", "id" => $document['id'], 'formname'=>'editdocument')));
     $outcomesandassessmentthreelink->link = "Outcomes and Assessment (page three)";
 
-    $resourceslink = new link($this->uri(array("action" => "showresources", "id" => $document['id'])));
+    $resourceslink = new link($this->uri(array("action" => "showresources", "id" => $document['id'], 'formname'=>'editdocument')));
     $resourceslink->link = "Resources";
 
-    $collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts", "id" => $document['id'])));
+    $collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts", "id" => $document['id'], 'formname'=>'editdocument')));
     $collaborationandcontractslink->link = "Collaboration and Contracts";
 
-    $reviewlink = new link($this->uri(array("action" => "showreview", "id" => $document['id'])));
+    $reviewlink = new link($this->uri(array("action" => "showreview", "id" => $document['id'], 'formname'=>'editdocument')));
     $reviewlink->link = "Review";
 
-    $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails", "id" => $document['id'])));
+    $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails", "id" => $document['id'], 'formname'=>'editdocument')));
     $contactdetailslink->link = "Contact Details";
 
-    $commentslink = new link($this->uri(array("action" => "showcomments", "id" => $id)));
+    $commentslink = new link($this->uri(array("action" => "showcomments", "id" => $document['id'], 'formname'=>'editdocument')));
     $commentslink->link = "Comments";
 
-    $feedbacklink = new link($this->uri(array("action" => "showfeedback", "id" => $id)));
+    $feedbacklink = new link($this->uri(array("action" => "showfeedback", "id" => $document['id'], 'formname'=>'editdocument')));
     $feedbacklink->link = "Feedback";
 
     $links = "<b>Document</b>" . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .

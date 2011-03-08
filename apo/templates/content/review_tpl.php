@@ -264,7 +264,7 @@ $button->setToSubmit();
 $form->addToForm('<br/>' .$button->show());
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'showcollaborationandcontracts'));
+$uri = $this->uri(array('action' => 'showcollaborationandcontracts', 'id' => $id));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
