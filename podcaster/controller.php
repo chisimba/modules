@@ -153,7 +153,7 @@ class podcaster extends controller {
         $tagCloud = $this->objTags->getTagCloud();
         $this->setVarByRef('tagCloud', $tagCloud);
 
-        $latestFiles = $this->objFiles->getLatestPodcasts();
+        $latestFiles = $this->objMediaFileData->getLatestPodcasts();
         $this->setVarByRef('latestFiles', $latestFiles);
 
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -802,6 +802,7 @@ class podcaster extends controller {
         $this->setVar('pageTitle', $this->objConfig->getSiteName() . ' - ' . $filedata['title']);
 
         $objViewCounter = $this->getObject('dbpodcasterviewcounter');
+        
         $objViewCounter->addView($id);
 
         return 'view_tpl.php';
@@ -1037,10 +1038,11 @@ class podcaster extends controller {
      */
     public function __describepodcast() {
         $fileid = $this->getParam("fileid", "");
-        $filedata = $this->objMediaFileData->getFileByFileId($fileid);        
+        $filedata = $this->objMediaFileData->getFileByFileId($fileid);
         $this->setVarByRef("filedata", $filedata);
         return "tpl_addeditpodcast.php";
     }
+
     /**
      * function that saves the podcast details form
      *
@@ -1053,10 +1055,15 @@ class podcaster extends controller {
         $cclicense = $this->getParam("creativecommons", "");
         $artist = $this->getParam("artist", "");
         $description = $this->getParam("description", "");
+        $tags = $this->getParam("tags", "");
+        $tags = explode(",", $tags);
+        $this->objTags->addTags($id,$tags);
+
         $filedata = $this->objMediaFileData->updateFileDetails($id, $podtitle, $description, $cclicense, $artist);
         $this->setVarByRef("filedata", $filedata);
-        return $this->nextAction('view', array('id'=>$id,'fileid' => $fileid));
+        return $this->nextAction('view', array('id' => $id, 'fileid' => $fileid));
     }
+
     /**
      * Used to do the actual upload
      *

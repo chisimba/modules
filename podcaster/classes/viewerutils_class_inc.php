@@ -31,6 +31,7 @@ class viewerutils extends object {
         $this->userId = $this->objUser->userId();
         $this->objAltConfig = $this->getObject('altconfig', 'config');
         $this->siteBase = $this->objAltConfig->getitem('KEWL_SITEROOT_PATH');
+        $this->siteUrl = $this->objAltConfig->getitem('KEWL_SITE_PATH');        
     }
 
     /**
@@ -62,16 +63,17 @@ class viewerutils extends object {
         $objSoundPlayer = $this->newObject('buildsoundplayer', 'files');
 
         $result = $this->objMediaFileData->getFile($id);
+        //$pathdata = $result;
 
         $filename = $result['filename'];
         //Get the path
         $pathdata = $this->objFolderPerms->getById($result['uploadpathid']);
         $pathdata = $pathdata[0];
         $newpodpath = str_replace($this->siteBase, "/", $this->baseDir);
-        $newpodpath = $newpodpath ."/". $this->userId ."/".$pathdata['folderpath']. '/' . $filename;
+        $newpodpath = $newpodpath ."/". $result['creatorid'] ."/".$pathdata['folderpath']. '/' . $filename;
         $newpodpath = str_replace("//", "/", $newpodpath);
 
-        $podpath = $this->baseDir."/". $this->userId ."/".$pathdata['folderpath']. '/' . $filename;
+        $podpath = $this->baseDir."/". $result['creatorid'] ."/".$pathdata['folderpath']. '/' . $filename;
         $podpath = str_replace("//", "/", $podpath);
 
         $filepath = $podpath;
@@ -80,9 +82,10 @@ class viewerutils extends object {
         $newpodpath = ltrim($newpodpath, '/');
         $soundFile = str_replace(' ', '%20', $newpodpath);
 
-        $objSoundPlayer->setSoundFile('podcaster/1/Paul/110213_001.mp3');
+        $objSoundPlayer->setSoundFile($soundFile);
 
         $podInfo = $objSoundPlayer->show();
+        
         $content = "";
 
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -117,8 +120,10 @@ class viewerutils extends object {
         $license = $objDisplayLicense->show($license);
 
         $content .= $table->show();
-
-        $downloadLink = new link($podpath);
+        $fileurl = $this->siteUrl.$newpodpath;
+        
+        $fileurl = str_replace("//", "/", $fileurl);
+        $downloadLink = new link($fileurl);
         $downloadLink->link = htmlentities($filename);
 
         $content .= '<br /><p>' . $podInfo ." ".$license. '</p><p><strong>' . $this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast') . ': '. $downloadLink->show() .'</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>';
@@ -372,7 +377,7 @@ class viewerutils extends object {
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objUser = $this->getObject('user', 'security');
         $objTags = $this->getObject('dbpodcastertags');
-        $latestFiles = $objFiles->getLatestPodcasts();
+        $latestFiles = $this->objMediaFileData->getLatestPodcasts();
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $latest10Desc = $objLanguage->languageText("mod_podcaster_latest10desc", "podcaster");
         $latest10Str = $objLanguage->languageText("mod_podcaster_latest10str", "podcaster");
@@ -409,11 +414,12 @@ class viewerutils extends object {
 
 
             foreach ($latestFiles as $filedata) {
-                $file = $this->objMediaFileData->getFileByFileId($filedata['id']);
-                if (trim($file['title']) == '') {
-                    $filename = $file['filename'];
+                
+               
+                if (trim($filedata['title']) == '') {
+                    $filename = $filedata['filename'];
                 } else {
-                    $filename = htmlentities($file['title']);
+                    $filename = htmlentities($filedata['title']);
                 }
                 $linkname = $objTrim->strTrim($filename, 45);
                 $extra = '';
@@ -428,7 +434,7 @@ class viewerutils extends object {
                 $fileLink->link = $objFiles->getPodcastThumbnail($filedata['id']);
                 $fileLink->title = $filename;
                 
-                $tags = $objTags->getTags($filedata['id']);
+                $tags = $objTags->getTags($filedata['fileid']);
                 $tagsStr = '';
                 if (count($tags) == 0) {
                     $tagsStr .= '<em>'
@@ -446,13 +452,13 @@ class viewerutils extends object {
 
                 $fileTypes = array('mp3' => 'mp3');
                 $objFileIcons = $this->getObject('fileicons', 'files');
-                $uploaderLink = new link($this->uri(array('action' => 'byuser', 'userid' => $file['creatorid'])));
-                $uploaderLink->link = $objUser->fullname($file['creatorid']);
+                $uploaderLink = new link($this->uri(array('action' => 'byuser', 'userid' => $filedata['creatorid'])));
+                $uploaderLink->link = $objUser->fullname($filedata['creatorid']);
 
 
                 $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
                 $objDisplayLicense->icontype = 'small';
-                $license = ($file['cclicense'] == '' ? 'copyright' : $file['cclicense']);
+                $license = ($filedata['cclicense'] == '' ? 'copyright' : $filedata['cclicense']);
                 '<p>' . $objDisplayLicense->show($license) . '</p>';
 
                 $row.=$this->createCell(

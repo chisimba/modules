@@ -37,7 +37,7 @@ class dbpodcasterdownloadcounter extends dbtable
     }
 
     /**
-     * Method to the the most downloaded presentations for today
+     * Method to the the most downloaded podcasts for today
      * @return array List of Most downloaded Presentations for Today
      */
     public function getMostDownloadedToday()
@@ -48,7 +48,7 @@ class dbpodcasterdownloadcounter extends dbtable
     }
 
     /**
-     * Method to the the most downloaded presentations this week
+     * Method to the the most downloaded podcasts this week
      * @return array List of Most downloaded Presentations this week
      */
     public function getMostDownloadedThisWeek()
@@ -72,7 +72,7 @@ class dbpodcasterdownloadcounter extends dbtable
     }
 
     /**
-     * Method to the the most downloaded presentations of all time
+     * Method to the the most downloaded podcasts of all time
      * @return array List of Most downloaded Presentations of all time
      */
     public function getMostDownloadedAllTime()
@@ -208,7 +208,7 @@ class dbpodcasterdownloadcounter extends dbtable
 
     /**
      * Method to get to take data and a period and convert them into a featurebox for display
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -226,7 +226,7 @@ class dbpodcasterdownloadcounter extends dbtable
 
     /**
      * Method to get to take data and a period and convert them into a table for display, as well as links to other periods
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -252,13 +252,13 @@ class dbpodcasterdownloadcounter extends dbtable
             switch ($period)
             {
                 case 'alltime':
-                    $str = 'No presentations have been downloaded on this site';
+                    $str = 'No podcasts have been downloaded on this site';
                     break;
                 case 'week':
-                    $str = 'No presentations have been downloaded this week';
+                    $str = 'No podcasts have been downloaded this week';
                     break;
                 default:
-                    $str = 'No presentations have been downloaded today';
+                    $str = 'No podcasts have been downloaded today';
                     break;
             }
 
@@ -343,7 +343,7 @@ class dbpodcasterdownloadcounter extends dbtable
 
  /**
      * Method to get to take data and a period and convert them into a list for display, as well as links to other periods
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -369,13 +369,13 @@ class dbpodcasterdownloadcounter extends dbtable
             switch ($period)
             {
                 case 'alltime':
-                $str = 'No presentations have been downloaded on this site';
+                $str = 'No podcasts have been downloaded on this site';
                 break;
                 case 'week':
-                $str = 'No presentations have been downloaded this week';
+                $str = 'No podcasts have been downloaded this week';
                 break;
                 default:
-                $str = 'No presentations have been downloaded today';
+                $str = 'No podcasts have been downloaded today';
                 break;
             }
 

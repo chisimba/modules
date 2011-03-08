@@ -42,7 +42,7 @@ class dbpodcasterviewcounter extends dbtable
     }
 
     /**
-     * Method to the the most viewed presentations for today
+     * Method to the the most viewed podcasts for today
      * @return array List of Most Viewed Presentations for Today
      */
     public function getMostViewedToday()
@@ -53,7 +53,7 @@ class dbpodcasterviewcounter extends dbtable
     }
 
     /**
-     * Method to the the most viewed presentations this week
+     * Method to the the most viewed podcasts this week
      * @return array List of Most Viewed Presentations this week
      */
     public function getMostViewedThisWeek()
@@ -77,7 +77,7 @@ class dbpodcasterviewcounter extends dbtable
     }
 
     /**
-     * Method to the the most viewed presentations of all time
+     * Method to the the most viewed podcasts of all time
      * @return array List of Most Viewed Presentations of all time
      */
     public function getMostViewedAllTime()
@@ -199,7 +199,7 @@ class dbpodcasterviewcounter extends dbtable
 
     /**
      * Method to get to take data and a period and convert them into a featurebox for display
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -217,7 +217,7 @@ class dbpodcasterviewcounter extends dbtable
 
     /**
      * Method to get to take data and a period and convert them into a table for display, as well as links to other periods
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -243,13 +243,13 @@ class dbpodcasterviewcounter extends dbtable
             switch ($period)
             {
                 case 'alltime':
-                $str = 'No presentations have been viewed on this site';
+                $str = 'No podcasts have been viewed on this site';
                 break;
                 case 'week':
-                $str = 'No presentations have been viewed this week';
+                $str = 'No podcasts have been viewed this week';
                 break;
                 default:
-                $str = 'No presentations have been viewed today';
+                $str = 'No podcasts have been viewed today';
                 break;
             }
 
@@ -344,7 +344,7 @@ class dbpodcasterviewcounter extends dbtable
 
  /**
      * Method to get to take data and a period and convert them into a list for display, as well as links to other periods
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -370,13 +370,13 @@ class dbpodcasterviewcounter extends dbtable
             switch ($period)
             {
                 case 'alltime':
-                $str = 'No presentations have been viewed on this site';
+                $str = 'No podcasts have been viewed on this site';
                 break;
                 case 'week':
-                $str = 'No presentations have been viewed this week';
+                $str = 'No podcasts have been viewed this week';
                 break;
                 default:
-                $str = 'No presentations have been viewed today';
+                $str = 'No podcasts have been viewed today';
                 break;
             }
 

@@ -27,7 +27,7 @@ class dbwebpresentuploadscounter extends dbTable
     }
 
     /**
-     * Method to the the most viewed presentations for today
+     * Method to the the most viewed podcasts for today
      * @return array List of Most Viewed Presentations for Today
      */
     public function getMostUploadedToday()
@@ -39,7 +39,7 @@ class dbwebpresentuploadscounter extends dbTable
     }
 
     /**
-     * Method to the the most viewed presentations this week
+     * Method to the the most viewed podcasts this week
      * @return array List of Most Viewed Presentations this week
      */
     public function getMostUploadedThisWeek()
@@ -63,7 +63,7 @@ class dbwebpresentuploadscounter extends dbTable
     }
 
     /**
-     * Method to the the most viewed presentations of all time
+     * Method to the the most viewed podcasts of all time
      * @return array List of Most Viewed Presentations of all time
      */
     public function getMostUploadedAllTime()
@@ -195,7 +195,7 @@ class dbwebpresentuploadscounter extends dbTable
 
     /**
      * Method to get to take data and a period and convert them into a featurebox for display
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -213,7 +213,7 @@ class dbwebpresentuploadscounter extends dbTable
 
     /**
      * Method to get to take data and a period and convert them into a table for display, as well as links to other periods
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -239,13 +239,13 @@ class dbwebpresentuploadscounter extends dbTable
             switch ($period)
             {
                 case 'alltime':
-                    $str = 'No presentations have been uploaded on this site';
+                    $str = 'No podcasts have been uploaded on this site';
                     break;
                 case 'week':
-                    $str = 'No presentations have been uploaded this week';
+                    $str = 'No podcasts have been uploaded this week';
                     break;
                 default:
-                    $str = 'No presentations have been uploaded today';
+                    $str = 'No podcasts have been uploaded today';
                     break;
             }
 
@@ -329,7 +329,7 @@ class dbwebpresentuploadscounter extends dbTable
     }
  /**
      * Method to get to take data and a period and convert them into a list for display, as well as links to other periods
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -355,13 +355,13 @@ class dbwebpresentuploadscounter extends dbTable
             switch ($period)
             {
                 case 'alltime':
-                $str = 'No presentations have been uploaded on this site';
+                $str = 'No podcasts have been uploaded on this site';
                 break;
                 case 'week':
-                $str = 'No presentations have been uploaded this week';
+                $str = 'No podcasts have been uploaded this week';
                 break;
                 default:
-                $str = 'No presentations have been uploaded today';
+                $str = 'No podcasts have been uploaded today';
                 break;
             }
 

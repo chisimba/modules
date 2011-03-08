@@ -114,6 +114,22 @@ class dbmediafiledata extends dbTable {
     public function getFileByFileId($id) {
         return $this->getRow('fileid', $id);
     }
+    /**
+     * Function that returns the latest 10 podcasts
+     * @return array
+     */
+    public function getLatestPodcasts()
+    {
+        return $this->getAll(' ORDER BY datecreated, timecreated DESC LIMIT 10');
+    }
+    /**
+     * Function that returns the latest podcast
+     * @return array
+     */
+    public function getLatestPodcast()
+    {
+        return $this->getAll(' ORDER BY datecreated, timecreated DESC LIMIT 1');
+    }
 
     /**
      * Function to update file details

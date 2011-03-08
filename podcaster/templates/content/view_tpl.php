@@ -21,9 +21,13 @@ if ($file['filedata']['title'] == '') {
 $showDeleteLink = FALSE;
 
 if ($file['filedata']['creatorid'] == $objUser->userId()) {
-    $objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
+    //$objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
 
-    $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'describepodcast', 'fileid'=>$file["filedata"]['fileid'], 'mode'=>'submodal')), 'link');
+    //$editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'describepodcast', 'fileid'=>$file["filedata"]['fileid'], 'mode'=>'submodal')), 'link');
+
+    $editLink = new link ($this->uri(array('action'=>'describepodcast', 'fileid'=>$file["filedata"]['fileid'])));
+    $editLink->link = $objIcon->show();
+    $editLink = $editLink->show();
 
     $heading->str .= ' '.$editLink;
 /*
@@ -38,16 +42,17 @@ if ($file['filedata']['creatorid'] == $objUser->userId()) {
 }
 
 if ($showDeleteLink == FALSE && $this->isValid('admindelete')) {
-    $objIcon->setIcon('delete');
+/*    $objIcon->setIcon('delete');
 
     $objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
     $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'admindelete', 'id'=>$file['id'])), 'link');
     $objIcon->setIcon('delete');
 
-    $objIcon->setIcon('edit');
-    $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'])), 'link');
+    $editLink = new link ($this->uri(array('action'=>'describepodcast', 'fileid'=>$file["filedata"]['fileid'])));
+    $editLink->link = $objIcon->show();
+    $editLink = $editLink->show();
 
-    $heading->str .= $editLink.' '.$deleteLink;
+    $heading->str .= $editLink;*/
 }
 
 $heading->type = 1;
@@ -125,7 +130,7 @@ foreach ($fileTypes as $fileType=>$fileName) {
         $link = new link($this->uri(array('action'=>'download', 'id'=>$file['id'], 'type'=>$fileType)));
         $link->link = $objFileIcons->getExtensionIcon($fileType).' '.$fileName;
 
-        $rightCell .= '<li>'.$link->show().'</li>';
+        //$rightCell .= '<li>'.$link->show().'</li>';
     }
 
 }
