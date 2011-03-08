@@ -96,7 +96,7 @@ class staffprofiles extends object {
                             </a>
                         </li>';
                         }
-        $retstr .= '</ul';
+        $retstr .= '</ul>';
             
         return $retstr;
     }
