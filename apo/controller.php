@@ -3121,17 +3121,19 @@ class apo extends controller {
      */
 
     public function __makepdf() {
-        $fullnames = $this->objUser->fullName() . "'s Documents";
         $myid = $this->objUser->userId();
         $documents = $this->documents->getdocuments(0, 20, $this->mode, "N", $myid);
         $createPdf = False;
-
-
-
+        $fullnames = $this->objUser->fullName(). "'s Document";
+        if(count($documents) > 1) {
+            $fullnames .= "s";
+        }
+       
         if (!empty($documents)) {
             $createPdf = True;
             // get all the data for these documents
-            $text = "";
+            $text1 = "";
+            $text2 = "";
             foreach ($documents as $row) {
                 $overview = $this->objformdata->getFormData("overview", $row['id']);
                 $overviewTable = $this->objFormatting->getOviewviewTable($overview);
@@ -3139,18 +3141,35 @@ class apo extends controller {
                 $rulesAndSyllabusoneTable = $this->objFormatting->getRulesAndSyllabusOne($rulesandsyllabusone);
                 $rulesandsyllabustwo = $this->objformdata->getFormData("rulesandsyllabustwo", $row['id']);
                 $rulesAndSyllabustwoTable = $this->objFormatting->getRulesAndSyllabusTwo($rulesandsyllabustwo);
+                $subsidyRequirements = $this->objformdata->getFormData("subsidyrequirements", $row['id']);
+                $subsidyRequirementsTable = $this->objFormatting->getSubsidyRequirements($subsidyRequirements);
+                $outcomesandassessmentone = $this->objformdata->getFormData("outcomesandassessmentone", $row['id']);
+                $outcomesandassessmentoneTable = $this->objFormatting->getOutcomesAndAssessmentsOne($outcomesandassessmentone);
+                $outcomesandassessmenttwo = $this->objformdata->getFormData("outcomesandassessmenttwo", $row['id']);
+                $outcomesandassessmenttwoTable = $this->objFormatting->getOutcomesAndAssessmentsTwo($outcomesandassessmenttwo);
+                $outcomesandassessmentthree = $this->objformdata->getFormData("outcomesandassessmentthree", $row['id']);
+                $outcomesandassessmentthreeTable = $this->objFormatting->getOutcomesAndAssessmentsThree($outcomesandassessmentthree);
+
                 //get the pdfmaker classes
-                $text .= '<h1>' . $fullnames . "</h1><br><br>\r\n" 
+                $text1 .= '<h1>' . $fullnames . "</h1><br><br>\r\n"
                       . $overviewTable
                       . $rulesAndSyllabusoneTable
-                      . $rulesAndSyllabustwoTable;
+                      . $rulesAndSyllabustwoTable
+                      . $subsidyRequirementsTable
+                      . $outcomesandassessmentoneTable;
+
+                $text2 .= $outcomesandassessmenttwoTable
+                      . $outcomesandassessmentthreeTable;
             }
-        }
+        }echo $text1.$text2;
         $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
         //Write pdf
         $objPdf->initWrite();
-        if ($createPdf == True)
-            $objPdf->partWrite($text);
+        if ($createPdf == True) {
+            $objPdf->partWrite($text1);
+            //$objPdf->addPage();
+            $objPdf->partWrite($text2);
+        }
         if ($createPdf == True) {
             return $objPdf->show();
         } else {
