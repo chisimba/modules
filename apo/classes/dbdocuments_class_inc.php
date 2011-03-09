@@ -47,7 +47,7 @@ class dbdocuments extends dbtable {
         $this->sitePath = $location . '/' . str_replace($docRoot, $replacewith, $this->resourcePath);
     }
 
-    public function getdocuments($start, $end, $mode="default", $rejected = "N") {
+    public function getdocuments($start, $end, $mode="default", $rejected = "N", $myId = NULL) {
         /*
           if (strcmp($rejected, 'Y') == 0) {
           $sql = "select A.*, B.docid, B.filename from tbl_apo_documents as A
@@ -72,6 +72,9 @@ class dbdocuments extends dbtable {
         if (!$this->objUser->isadmin()) {
 
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
+        }
+        else if (!is_null($myId)) {
+            $sql.=" and (userid = '" . $myId . "')";
         }
 
         $sql.=' order by puid DESC';

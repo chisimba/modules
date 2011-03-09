@@ -57,6 +57,7 @@ class apo extends controller {
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         $this->faculties = $this->getObject('dbfaculties');
         $this->schools = $this->getObject('dbschools');
+        $this->objFormatting = $this->getObject('formatting');
     }
 
     /**
@@ -576,7 +577,7 @@ class apo extends controller {
         $id = $this->getParam('id');
 
         $document = $this->documents->getDocument($id);
-        
+
         $mode = "edit";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("document", $document);
@@ -2296,7 +2297,7 @@ class apo extends controller {
         $id = $this->getParam("id");
         $document = $this->documents->getDocument($id);
         $formname = $this->getParam('formname');
-       
+
         $apo = $this->getParam("apo");
         $subsidy = $this->getParam("subsidy");
         $legal = $this->getParam("legal");
@@ -2387,7 +2388,7 @@ class apo extends controller {
     public function __calculatespreedsheet() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-    
+
         $errormessages = array();
 
         $a = $this->getParam("a");
@@ -2489,7 +2490,7 @@ class apo extends controller {
     public function __calculatespreedsheetScience() {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
-       
+
         $errormessages = array();
 
         $a3 = 0.75;
@@ -2736,7 +2737,7 @@ class apo extends controller {
         $formdata["h12"] = $h12;
         $formdata["d6"] = $d6;
         $formdata["d7"] = $d7;
-        
+
         $formdata = serialize($formdata);
         $$issubmit = $this->getParam('next');
         if (!empty($issubmit)) {
@@ -3110,6 +3111,51 @@ class apo extends controller {
         $docid = $this->getParam('docid');
         $version = $this->getParam('version');
         $this->documents->reclaimDocument($userid, $docid, $version);
+    }
+
+    /*
+     * This method is used to display the information for a document on a pdf.
+     * @param none
+     * @access public
+     * @return the data exported to a pdf
+     */
+
+    public function __makepdf() {
+        $fullnames = $this->objUser->fullName() . "'s Documents";
+        $myid = $this->objUser->userId();
+        $documents = $this->documents->getdocuments(0, 20, $this->mode, "N", $myid);
+        $createPdf = False;
+
+
+
+        if (!empty($documents)) {
+            $createPdf = True;
+            // get all the data for these documents
+            $text = "";
+            foreach ($documents as $row) {
+                $overview = $this->objformdata->getFormData("overview", $row['id']);
+                $overviewTable = $this->objFormatting->getOviewviewTable($overview);
+                $rulesandsyllabusone = $this->objformdata->getFormData("rulesandsyllabusone", $row['id']);
+                $rulesAndSyllabusoneTable = $this->objFormatting->getRulesAndSyllabusOne($rulesandsyllabusone);
+                $rulesandsyllabustwo = $this->objformdata->getFormData("rulesandsyllabustwo", $row['id']);
+                $rulesAndSyllabustwoTable = $this->objFormatting->getRulesAndSyllabusTwo($rulesandsyllabustwo);
+                //get the pdfmaker classes
+                $text .= '<h1>' . $fullnames . "</h1><br><br>\r\n" 
+                      . $overviewTable
+                      . $rulesAndSyllabusoneTable
+                      . $rulesAndSyllabustwoTable;
+            }
+        }
+        $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
+        //Write pdf
+        $objPdf->initWrite();
+        if ($createPdf == True)
+            $objPdf->partWrite($text);
+        if ($createPdf == True) {
+            return $objPdf->show();
+        } else {
+            echo 'Nothing to display in pdf.';
+        }
     }
 
 }

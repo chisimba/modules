@@ -77,8 +77,11 @@ class dbformdata extends dbtable {
 
         $sql = "select * from tbl_apo_".$formname." where docid='$docid'";
         $data = $this->getArray($sql);
-        $formdata = $data[0];
-
+        $formdata = "";
+        if(!empty($data)) {
+            $formdata = $data[0];
+        }
+        
         return $formdata;
     }
 
