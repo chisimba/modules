@@ -40,12 +40,16 @@ $table->addHeaderCell("Department");
 $table->addHeaderCell("Owner");
 $table->addHeaderCell("Telephone");
 $table->addHeaderCell("Date");
-
+$table->addHeaderCell();
 $table->endHeaderRow();
+
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
 if (count($documents) > 0) {
     foreach ($documents as $document) {
+        $makepdf = new link($this->uri(array("action"=>"selectpdf", "id"=>$document['id'])));
+        $objIcon->setIcon('pdf');
+        $makepdf->link = $objIcon->show();
         if ($document['currentuserid'] == "Administrative User") {
             $link = new link($this->uri(array("action" => "showeditdocument", "id" => $document['id'])));
             
@@ -57,6 +61,7 @@ if (count($documents) > 0) {
             $table->addCell($document['owner']);
             $table->addCell($document['telephone']);
             $table->addCell($document['date']);
+            $table->addCell($makepdf->show());
             $table->endRow();
         } else if ($document['owner'] == '' && $document['currentuserid'] != '') {
             $link = new link($this->uri(array("action" => "reclaimdocumentform", "id" => $document['id'])));
@@ -68,6 +73,7 @@ if (count($documents) > 0) {
             $table->addCell($document['owner']);
             $table->addCell($document['telephone']);
             $table->addCell($document['date']);
+            $table->addCell($makepdf->show());
             $table->endRow();
         } else {
             $table->startRow();
@@ -76,6 +82,7 @@ if (count($documents) > 0) {
             $table->addCell($document['owner']);
             $table->addCell($document['telephone']);
             $table->addCell($document['date']);
+            $table->addCell($makepdf->show());
             $table->endRow();
         }
     }

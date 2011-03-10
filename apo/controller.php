@@ -3190,4 +3190,19 @@ class apo extends controller {
         }
     }
 
+    /*
+     * This method is used to determine the content that the user wants to display
+     * in a pdf that they will want to download or print. 
+     * @access public
+     * @param $id The id of the document that the user would like to print
+     * @return template page where the user can customize the data
+     */
+    public function __selectpdf() {
+        $id=$this->getParam('id');
+        $document = $this->documents->getDocument($id);
+
+        $this->setVarByRef("document", $document);
+        
+        return "selectpdf_tpl.php";
+    }
 }
