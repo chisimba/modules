@@ -724,6 +724,7 @@ class userutils extends object {
 
         $icon = 'folder.gif';
         $expandedIcon = 'folder-expanded.gif';
+
         $refArray = array();
         $refArray[$this->rootTitle] = & $allFilesNode;
         
