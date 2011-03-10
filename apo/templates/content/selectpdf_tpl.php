@@ -11,14 +11,14 @@
 
 
     // select which sections the user would like to print in the document.
-    print_r($document);
+    //print_r($document);
 
 
     $table = $this->newObject('htmltable', 'htmlelements');
     $table->border = 0;
     $table->cellspacing = '3';
     //$table->width = "30%";
-    $checkbox = new checkbox("overview");
+    $checkbox = new checkbox("Overview");
 
     //Overview
     $table->startRow();
