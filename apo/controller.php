@@ -3121,8 +3121,25 @@ class apo extends controller {
      */
 
     public function __makepdf() {
+        $id = $this->getParam('id');
+        $all = $this->getParam('all');
+        $overview = $this->getParam('overview');
+        $rulesandsyllabusone = $this->getParam('rulesandsyllabusone');
+        $rulesandsyllabustwo = $this->getParam('rulesandsyllabustwo');
+        $subsidy = $this->getParam('subsidy');
+        $outcomesandassessmentone = $this->getParam('outcomesandassessmentone');
+        $outcomesandassessmenttwo = $this->getParam('outcomesandassessmenttwo');
+        $outcomesandassessmentthree = $this->getParam('outcomesandassessmentthree');
+        $resources = $this->getParam('resources');
+        $collaborations = $this->getParam('collaborations');
+        $review = $this->getParam('review');
+        $comments = $this->getParam('comments');
+        $feedback= $this->getParam('feedback');
+
+        $documents = $this->documents->getDocument($id);
+
         $myid = $this->objUser->userId();
-        $documents = $this->documents->getdocuments(0, 20, $this->mode, "N", $myid);
+        //$documents = $this->documents->getdocuments(0, 20, $this->mode, "N", $myid);
         $createPdf = False;
         $fullnames = $this->objUser->fullName(). "'s Document";
         if(count($documents) > 1) {
@@ -3134,31 +3151,56 @@ class apo extends controller {
             // get all the data for these documents
             $text1 = "";
             
-            foreach ($documents as $row) {
-                $overview = $this->objformdata->getFormData("overview", $row['id']);
-                $overviewTable = $this->objFormatting->getOviewviewTable($overview);
-                $rulesandsyllabusone = $this->objformdata->getFormData("rulesandsyllabusone", $row['id']);
-                $rulesAndSyllabusoneTable = $this->objFormatting->getRulesAndSyllabusOne($rulesandsyllabusone);
-                $rulesandsyllabustwo = $this->objformdata->getFormData("rulesandsyllabustwo", $row['id']);
-                $rulesAndSyllabustwoTable = $this->objFormatting->getRulesAndSyllabusTwo($rulesandsyllabustwo);
-                $subsidyRequirements = $this->objformdata->getFormData("subsidyrequirements", $row['id']);
-                $subsidyRequirementsTable = $this->objFormatting->getSubsidyRequirements($subsidyRequirements);
-                $outcomesandassessmentone = $this->objformdata->getFormData("outcomesandassessmentone", $row['id']);
-                $outcomesandassessmentoneTable = $this->objFormatting->getOutcomesAndAssessmentsOne($outcomesandassessmentone);
-                $outcomesandassessmenttwo = $this->objformdata->getFormData("outcomesandassessmenttwo", $row['id']);
-                $outcomesandassessmenttwoTable = $this->objFormatting->getOutcomesAndAssessmentsTwo($outcomesandassessmenttwo);
-                $outcomesandassessmentthree = $this->objformdata->getFormData("outcomesandassessmentthree", $row['id']);
-                $outcomesandassessmentthreeTable = $this->objFormatting->getOutcomesAndAssessmentsThree($outcomesandassessmentthree);
-                $resources = $this->objformdata->getFormData("resources", $row['id']);
-                $resourcesTable = $this->objFormatting->getResources($resources);
-                $collaborations = $this->objformdata->getFormData("collaborationandcontracts", $row['id']);
-                $colloborationsTable = $this->objFormatting->getCollaborationAndContracts($collaborations);
-                $review = $this->objformdata->getFormData("review", $row['id']);
-                $reviewTable = $this->objFormatting->getReview($review);
-                $comments = $this->objformdata->getFormData("comments", $row['id']);
-                $commentsTable = $this->objFormatting->getComments($comments);
-                $feedback = $this->objformdata->getFormData("feedback", $row['id']);
-                $feedbackTable = $this->objFormatting->getFeedback($feedback);
+            //foreach ($documents as $row) {
+            $row = $documents; // in case i need to modify my code late to use foreach. 
+                if($overview == 'on' || $all == 'on') {
+                    $overview = $this->objformdata->getFormData("overview", $row['id']);
+                    $overviewTable = $this->objFormatting->getOviewviewTable($overview);
+                }
+                if($rulesandsyllabusone== 'on' || $all == 'on') {
+                    $rulesandsyllabusone = $this->objformdata->getFormData("rulesandsyllabusone", $row['id']);
+                    $rulesAndSyllabusoneTable = $this->objFormatting->getRulesAndSyllabusOne($rulesandsyllabusone);
+                }
+                if($rulesandsyllabustwo== 'on' || $all == 'on') {
+                    $rulesandsyllabustwo = $this->objformdata->getFormData("rulesandsyllabustwo", $row['id']);
+                    $rulesAndSyllabustwoTable = $this->objFormatting->getRulesAndSyllabusTwo($rulesandsyllabustwo);
+                }
+                if($subsidy== 'on' || $all == 'on') {
+                    $subsidyRequirements = $this->objformdata->getFormData("subsidyrequirements", $row['id']);
+                    $subsidyRequirementsTable = $this->objFormatting->getSubsidyRequirements($subsidyRequirements);
+                }
+                if($outcomesandassessmentone == 'on' || $all == 'on') {
+                    $outcomesandassessmentone = $this->objformdata->getFormData("outcomesandassessmentone", $row['id']);
+                    $outcomesandassessmentoneTable = $this->objFormatting->getOutcomesAndAssessmentsOne($outcomesandassessmentone);
+                }
+                if($outcomesandassessmenttwo == 'on' || $all == 'on') {
+                    $outcomesandassessmenttwo = $this->objformdata->getFormData("outcomesandassessmenttwo", $row['id']);
+                    $outcomesandassessmenttwoTable = $this->objFormatting->getOutcomesAndAssessmentsTwo($outcomesandassessmenttwo);
+                }
+                if($outcomesandassessmentthree == 'on' || $all == 'on') {
+                    $outcomesandassessmentthree = $this->objformdata->getFormData("outcomesandassessmentthree", $row['id']);
+                    $outcomesandassessmentthreeTable = $this->objFormatting->getOutcomesAndAssessmentsThree($outcomesandassessmentthree);
+                }
+                if($resources == 'on' || $all == 'on') {
+                    $resources = $this->objformdata->getFormData("resources", $row['id']);
+                    $resourcesTable = $this->objFormatting->getResources($resources);
+                }
+                if($collaborations == 'on' || $all == 'on') {
+                    $collaborations = $this->objformdata->getFormData("collaborationandcontracts", $row['id']);
+                    $colloborationsTable = $this->objFormatting->getCollaborationAndContracts($collaborations);
+                }
+                if($review == 'on') {
+                    $review = $this->objformdata->getFormData("review", $row['id']);
+                    $reviewTable = $this->objFormatting->getReview($review);
+                }
+                if($commenets == 'on' || $all == 'on') {
+                    $comments = $this->objformdata->getFormData("comments", $row['id']);
+                    $commentsTable = $this->objFormatting->getComments($comments);
+                }
+                if($feedback == 'on' || $all == 'on') {
+                    $feedback = $this->objformdata->getFormData("feedback", $row['id']);
+                    $feedbackTable = $this->objFormatting->getFeedback($feedback);
+                }
 
                 //get the pdfmaker classes
                 $text1 .= '<h1>' . $fullnames . "</h1><br><br>\r\n"
@@ -3176,7 +3218,7 @@ class apo extends controller {
                       . $commentsTable
                       . $feedbackTable;
             }
-        }
+        //}
         $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
         //Write pdf
         $objPdf->initWrite();
@@ -3201,6 +3243,7 @@ class apo extends controller {
         $id=$this->getParam('id');
         $document = $this->documents->getDocument($id);
 
+        $this->setVarByRef("id", $id);
         $this->setVarByRef("document", $document);
         
         return "selectpdf_tpl.php";
