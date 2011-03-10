@@ -3133,7 +3133,7 @@ class apo extends controller {
             $createPdf = True;
             // get all the data for these documents
             $text1 = "";
-            $text2 = "";
+            
             foreach ($documents as $row) {
                 $overview = $this->objformdata->getFormData("overview", $row['id']);
                 $overviewTable = $this->objFormatting->getOviewviewTable($overview);
@@ -3149,6 +3149,16 @@ class apo extends controller {
                 $outcomesandassessmenttwoTable = $this->objFormatting->getOutcomesAndAssessmentsTwo($outcomesandassessmenttwo);
                 $outcomesandassessmentthree = $this->objformdata->getFormData("outcomesandassessmentthree", $row['id']);
                 $outcomesandassessmentthreeTable = $this->objFormatting->getOutcomesAndAssessmentsThree($outcomesandassessmentthree);
+                $resources = $this->objformdata->getFormData("resources", $row['id']);
+                $resourcesTable = $this->objFormatting->getResources($resources);
+                $collaborations = $this->objformdata->getFormData("collaborationandcontracts", $row['id']);
+                $colloborationsTable = $this->objFormatting->getCollaborationAndContracts($collaborations);
+                $review = $this->objformdata->getFormData("review", $row['id']);
+                $reviewTable = $this->objFormatting->getReview($review);
+                $comments = $this->objformdata->getFormData("comments", $row['id']);
+                $commentsTable = $this->objFormatting->getComments($comments);
+                $feedback = $this->objformdata->getFormData("feedback", $row['id']);
+                $feedbackTable = $this->objFormatting->getFeedback($feedback);
 
                 //get the pdfmaker classes
                 $text1 .= '<h1>' . $fullnames . "</h1><br><br>\r\n"
@@ -3156,19 +3166,22 @@ class apo extends controller {
                       . $rulesAndSyllabusoneTable
                       . $rulesAndSyllabustwoTable
                       . $subsidyRequirementsTable
-                      . $outcomesandassessmentoneTable;
-
-                $text2 .= $outcomesandassessmenttwoTable
-                      . $outcomesandassessmentthreeTable;
+                      . $outcomesandassessmentoneTable
+                      . $outcomesandassessmenttwoTable
+                      . $outcomesandassessmentthreeTable
+                      . $resourcesTable
+                      . $colloborationsTable
+                      . $reviewTable
+                      . $contactTable
+                      . $commentsTable
+                      . $feedbackTable;
             }
-        }echo $text1.$text2;
+        }
         $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
         //Write pdf
         $objPdf->initWrite();
         if ($createPdf == True) {
             $objPdf->partWrite($text1);
-            //$objPdf->addPage();
-            $objPdf->partWrite($text2);
         }
         if ($createPdf == True) {
             return $objPdf->show();
