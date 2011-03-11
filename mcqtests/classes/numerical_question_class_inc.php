@@ -2,6 +2,12 @@
 
 class numerical_question extends object {
 
+    /**
+     * Method to construct the class.
+     *
+     * @access public
+     * @return
+     */
     function init() {
         $this->objGeneralForm = $this->getObject("question_calculated_formmanager");
         $this->objLanguage = $this->getObject('language', 'language');
@@ -9,6 +15,16 @@ class numerical_question extends object {
         $this->loadClass('htmltable', 'htmlelements');
     }
 
+    /**
+     * Method to create a numerical question form
+     *
+     * @access public
+     * @param  array $testid contains test id
+     * @param  string $data contains test data
+     * @param  string $edit
+     * @param  string $questionId
+     * @author Nguni Phakela
+     */
     public function numericalQForm($testid=null, $data=null, $edit=false, $questionId=null) {
         $qNameMsg = $this->objLanguage->languageText('mod_mcqtests_reqname', 'mcqtests');
         $qTextMsg = $this->objLanguage->languageText('mod_mcqtests_reqtext', 'mcqtests');
