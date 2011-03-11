@@ -36,7 +36,7 @@ $table->addHeaderCell("Department");
 $table->addHeaderCell("Owner");
 $table->addHeaderCell("Telephone");
 $table->addHeaderCell("Date");
-$table->addHeaderCell();
+//$table->addHeaderCell();
 $table->endHeaderRow();
 
 $objIcon = $this->newObject('geticon', 'htmlelements');

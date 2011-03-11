@@ -67,12 +67,8 @@ class userutils extends object {
 
     public function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
         $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'apo');
-        $folders = $this->listdir($baseFolder);
-
-        sort($folders, SORT_LOCALE_STRING);
-        if ($selected == '' && !empty($folders)) {
-            $selected = $folders[0];
-        }
+        
+        
         $baseFolderId = "0";
         
         $icon = '';
@@ -220,16 +216,6 @@ class userutils extends object {
         return $parent;
     }
 
-    public function listdir($dir='.') {
-        if (!is_dir($dir)) {
-            return false;
-        }
-
-        $files = array();
-        $this->listdiraux($dir, $files);
-
-        return $files;
-    }
 }
 
 ?>
