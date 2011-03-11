@@ -1,7 +1,7 @@
 <?php
 
 //define table
-$tablename = 'tbl_groups';
+$tablename = 'tbl_unesco_oer_groups';
 $options = array('comment'=>'Table to store groups','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
 //define fields
