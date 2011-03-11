@@ -16,7 +16,7 @@ $this->loadClass('link', 'htmlelements');
          <![endif]-->
     </head>
 
-    <body>
+   <body>
         <div class="blueHorizontalStrip"></div>
         <div class="mainWrapper">
             <div class="topContent">
@@ -441,7 +441,7 @@ $this->loadClass('link', 'htmlelements');
                             <div class="rightColumnContentPadding">
                                 <div class="leftImageTabsList"><img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="placeholder" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
-                        	Model Curricula for Journalism Education<br><a href="#" class="adaptationLinks">11 adaptations</a>
+                        	Model Curricula for Journal I WANTO TO TESTism Education<br><a href="#" class="adaptationLinks">11 adaptations</a>
                                 </div>
                                 <div class="tabsListingSpace"></div>
                                 <div class="leftImageTabsList"><img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="placeholder" width="45" height="49"></div>
