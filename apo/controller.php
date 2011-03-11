@@ -19,7 +19,7 @@ $id = "";
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   wicid (document management system)
+ * @package   apo (Academic Planning Office)
 
  *
   =
@@ -3193,7 +3193,7 @@ class apo extends controller {
                     $review = $this->objformdata->getFormData("review", $row['id']);
                     $reviewTable = $this->objFormatting->getReview($review);
                 }
-                if($commenets == 'on' || $all == 'on') {
+                if($comments == 'on' || $all == 'on') {
                     $comments = $this->objformdata->getFormData("comments", $row['id']);
                     $commentsTable = $this->objFormatting->getComments($comments);
                 }
