@@ -1,11 +1,12 @@
 <?php
 
-class unesco_oer extends controller
-{
+class unesco_oer extends controller {
 
-    function init()
-    {
-
+   
+    public $objProductUtil;
+    
+    function init() {
+        $this->objProductUtil=$this->getObject('productutil');
     }
 
     /**
@@ -13,8 +14,7 @@ class unesco_oer extends controller
      * @param <type> $action
      * @return <type>
      */
-    public function dispatch($action)
-    {
+    public function dispatch($action) {
         /*
          * Convert the action into a method (alternative to
          * using case selections)
@@ -38,14 +38,10 @@ class unesco_oer extends controller
      * @return string the name of the method
      *
      */
-    function getMethod(& $action)
-    {
-        if ($this->validAction($action))
-        {
+    function getMethod(& $action) {
+        if ($this->validAction($action)) {
             return '__' . $action;
-        }
-        else
-        {
+        } else {
             return '__home';
         }
     }
@@ -62,14 +58,10 @@ class unesco_oer extends controller
      * @return boolean TRUE|FALSE
      *
      */
-    function validAction(& $action)
-    {
-        if (method_exists($this, '__' . $action))
-        {
+    function validAction(& $action) {
+        if (method_exists($this, '__' . $action)) {
             return TRUE;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -77,30 +69,26 @@ class unesco_oer extends controller
     /**
      * Method to show the Home Page of the Module
      */
-    public function __home()
-    {
+    public function __home() {
         return "home_tpl.php";
     }
 
-    public function __1b()
-    {
+    public function __1b() {
         return "1b_tpl.php";
     }
 
-    public function __2a()
-    {
+    public function __2a() {
         return "2a_tpl.php";
     }
 
-    public function __2b()
-    {
+    public function __2b() {
         return "2b_tpl.php";
     }
 
-    public function requiresLogin()
-    {
+    public function requiresLogin() {
         return false;
     }
 
 }
+
 ?>

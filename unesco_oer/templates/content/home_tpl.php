@@ -1,5 +1,6 @@
 <?php
 $this->loadClass('link', 'htmlelements');
+$this->loadClass('htmltable', 'htmlelements');
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -110,11 +111,11 @@ $this->loadClass('link', 'htmlelements');
                     <div class="navitem">
                         <div class="navitemInner">
                             <?php
-                                $abLink = new link($this->uri(array("action" => "2a")));
+                            $abLink = new link($this->uri(array("action" => "2a")));
                             $abLink->link = 'PRODUCT ADAPTATIONS';
                             echo $abLink->show();
                             ?>
-                            
+
                         </div>
                     </div>
                     <div class="mainNavPipe"></div>
@@ -235,6 +236,43 @@ $this->loadClass('link', 'htmlelements');
                             </div>
                         </div>
                     </div>
+                    <?
+                                $objTable = $this->getObject('htmltable', 'htmlelements');
+                                $products = array();
+
+
+                                $products[] = array(
+                                    "new" => "false",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Product 1',
+                                    "language" => '',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Product 2',
+                                    "language" => '',
+                                );
+                                $newRow = true;
+                                $count = 0;
+                                foreach ($products as $product) {
+
+                                    if ($newRow) {
+                                        $objTable->startRow();
+                                        $objTable->addCell($this->objProductUtil->createProductInfo($product));
+                                        $objTable->endRow();
+                                       // $newRow=false;
+                                    }
+                                    if ($count == 2) {
+                                        $newRow = true;
+                                        $count = 0;
+                                    }
+                                    $count++;
+                                }
+                                echo $objTable->show();
+                    ?>
+                    <!--
                     <table class="gridListingTable" cellspacing="0" cellpadding="0">
                         <tr>
                             <td>
@@ -372,7 +410,7 @@ $this->loadClass('link', 'htmlelements');
                                 </div>
                             </td>
                         </tr>
-                    </table>
+                    </table> -->
                     <!-- Pagination-->
                     <div class="paginationDiv">
                         <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
