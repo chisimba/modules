@@ -423,7 +423,7 @@ class pansaops extends object {
         map.addControl(new GMapTypeControl());
         map.setCenter(new GLatLng(-30, 25), 6);
 
-          GDownloadUrl(\"http://173.203.201.87/pansa/index.php?module=pansamaps&action=getmapdata\", function(data, responseCode) {
+          GDownloadUrl(\"http://pansamaps.chisimba.com/index.php?module=pansamaps&action=getmapdata\", function(data, responseCode) {
           // To ensure against HTTP errors that result in null or bad data,
           // always check status code is equal to 200 before processing the data
           if(responseCode == 200) {
@@ -452,7 +452,7 @@ class pansaops extends object {
         map.addControl(new GSmallMapControl());
         map.addControl(new GMapTypeControl());
         map.setCenter(new GLatLng(-30, 25), 6);
-        GDownloadUrl(\"http://173.203.201.87/pansa/index.php?module=pansamaps&action=getmapdata\", function(data, responseCode) {
+        GDownloadUrl(\"http://pansamaps.chisimba.com/index.php?module=pansamaps&action=getmapdata\", function(data, responseCode) {
           // To ensure against HTTP errors that result in null or bad data,
           // always check status code is equal to 200 before processing the data
           if(responseCode == 200) {
