@@ -236,8 +236,8 @@ $this->loadClass('htmltable', 'htmlelements');
                             </div>
                         </div>
                     </div>
-                    <?
-                               /* $objTable = $this->getObject('htmltable', 'htmlelements');
+                    <?php
+                                $objTable = $this->getObject('htmltable', 'htmlelements');
                                 $products = array();
 
 
@@ -262,7 +262,7 @@ $this->loadClass('htmltable', 'htmlelements');
                                         $objTable->startRow();
                                         $objTable->addCell($this->objProductUtil->createProductInfo($product));
                                         $objTable->endRow();
-                                       // $newRow=false;
+                                        // $newRow=false;
                                     }
                                     if ($count == 2) {
                                         $newRow = true;
@@ -270,9 +270,9 @@ $this->loadClass('htmltable', 'htmlelements');
                                     }
                                     $count++;
                                 }
-                                echo $objTable->show();*/
+                                echo $objTable->show();
                     ?>
-                    
+<!--
                     <table class="gridListingTable" cellspacing="0" cellpadding="0">
                         <tr>
                             <td>
@@ -410,7 +410,7 @@ $this->loadClass('htmltable', 'htmlelements');
                                 </div>
                             </td>
                         </tr>
-                    </table> 
+                    </table> -->
                     <!-- Pagination-->
                     <div class="paginationDiv">
                         <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
