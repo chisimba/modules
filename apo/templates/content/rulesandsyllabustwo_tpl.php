@@ -193,7 +193,7 @@ $table->endRow();
 $radio = new radio ('b6c');
 $radio->addOption('y',"yes");
 $radio->addOption('n',"no");
-$radio->setSelected('1');
+$radio->setSelected('y');
 $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($b6c);
