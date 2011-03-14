@@ -4,9 +4,11 @@ class unesco_oer extends controller {
 
    
     public $objProductUtil;
+    public $objproducts;
     
     function init() {
         $this->objProductUtil=$this->getObject('productutil');
+         $this->objproducts = $this->getObject('dbproducts');
     }
 
     /**
@@ -65,6 +67,7 @@ class unesco_oer extends controller {
             return FALSE;
         }
     }
+
 
     /**
      * Method to show the Home Page of the Module
