@@ -4,6 +4,7 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 
 $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+$objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook','addThis');
 $objBookMarks->includeTextLink = FALSE;
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -79,11 +80,7 @@ echo $heading->show();
 // Show the flash file using the viewer class
 $objView = $this->getObject("viewer", "podcaster");
 
-$rightCell = '<div style="float:right">'.$objBookMarks->diggThis().'</div>';
-
-
-
-//$rightCell = '<p><strong>Title of Presentation:</strong> '.$file['title'].'</p>';
+$rightCell = "";
 
 if ($file['filedata']['description'] != '') {
     $rightCell .= '<p><strong>'
@@ -114,7 +111,7 @@ $rightCell .=  '</p>';
 
 
 
-$fileTypes = array('odp'=>'OpenOffice Impress Presentation', 'ppt'=>'PowerPoint Presentation', 'pdf'=>'PDF Document');
+$fileTypes = array('mp3'=>'mp3');
 
 $objFileIcons = $this->getObject('fileicons', 'files');
 
@@ -150,18 +147,24 @@ $filterBox->size=38;
 $flashUrl = $this->uri(array('action'=>'getflash', 'id'=>$file['id']));
 
 
-$flashUrl =  $this->objConfig->getsiteRoot()
-        . $this->objConfig->getcontentPath()
-        .'podcaster/'  .$file['id'] .'/'. $file['id'].'.swf';
+$fileUrl =  $this->objConfig->getsiteRoot()
+        . $file['podpath'];
 
+$rssString = "[RSS]".$fileUrl."[/RSS]";
+$fileRSS = $this->parse4RSS->parse($rssString);
+//$rightCell .= "<p>".$fileRSS."</p>";
+/*
+$filterText = "[WPRESENT: type=byurl, url=" . $fileUrl . "]";
 
-$filterText = "[WPRESENT: type=byurl, url=" . $flashUrl . "]";
 $filterBox->setValue($filterText);
+
 $rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_podcaster_filterbyurl", "podcaster")
         . "</strong>: " . $filterBox->show() . "<br />"
         . $this->objLanguage->languageText("mod_podcaster_filterbyurlexplained", "podcaster")
         . "</p>";
 unset($filterText);
+
+
 
 $snippetText = '<div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
   <param name="movie" value="' . $flashUrl . '">
@@ -178,32 +181,22 @@ $rightCell  .= "<p><strong>"
         .  $this->objLanguage->languageText("mod_podcaster_snippetexplained", "podcaster")
         . "</p>";
 
-
+*/
 // End of output the filter code.
 
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 
+//Get social bookmarks
+$markers = $objBookMarks->show();
 
 $leftContents= "<p>".$file['podinfo']."</p>";
 $table->addCell($leftContents, 550);
-$table->addCell($rightCell);
+$table->addCell($rightCell."<br />".$markers);
 $table->endRow();
 $table->startRow();
-$leftContents = '<br /><p>'.$objBookMarks->addThis();
-$divider = ' &nbsp;';
-
-foreach ($objBookMarks->options as $option) {
-    if ($option != 'diggThis' && $option != 'addThis') {
-        $leftContents .= $divider.$objBookMarks->$option();
-    }
-}
 
 $leftContents .= '</p>';
-$table->addCell("", 550);
-$table->addCell($leftContents, 550);
-$table->endRow();
-
 
 /**
  *      * We need the agenda, so find it. If the presentation was not given any specific

@@ -64,6 +64,7 @@ class podcaster extends controller {
         $this->objSchedules = $this->getObject('dbpodcasterschedules');
         $this->realtimeManager = $this->getObject('realtimemanager');
         $this->folderPermissions = $this->getObject('dbfolderpermissions');
+        $this->parse4RSS = $this->getObject('parse4rss','filters');
 
         $this->objSearch = $this->getObject('indexdata', 'search');
         // user object

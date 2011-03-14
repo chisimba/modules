@@ -127,8 +127,8 @@ class viewerutils extends object {
         $downloadLink->link = htmlentities($filename);
 
         $content .= '<br /><p>' . $podInfo ." ".$license. '</p><p><strong>' . $this->objLanguage->languageText('mod_podcaster_downloadpodcast', 'podcaster', 'Download podcast') . ': '. $downloadLink->show() .'</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>';
-
-        return array('podinfo' => $content, 'filename' => $filename, 'filedata' => $result, 'id' => $id);
+//var_dump($newpodpath);exit;
+        return array('podinfo' => $content, 'filename' => $filename, 'filedata' => $result, 'id' => $id, 'podpath'=>$newpodpath);
     }
 
     public function getLatestUpload() {
