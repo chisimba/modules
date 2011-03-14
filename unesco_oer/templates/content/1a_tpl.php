@@ -238,40 +238,14 @@ $this->loadClass('htmltable', 'htmlelements');
                     </div>
                     <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
-                                $products = array();
+                                $products = $this->objDBProducts->getProducts(0, 10);
 
-                                $prodtitle = $this->objproducts->getproducttitle($title);
-                                $prodtitles = "";
-                                echo $prodtitle;
-                                foreach ($prodtitle as $prodtitles) {
-
-
-                                    $products[] = array(
-                                        "new" => "false",
-                                        "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                        "title" => $prodtitles,
-                                        "language" => '',
-                                    );
-                                }
-
-
-                                /*            $products[] = array(
-                                  "new" => "false",
-                                  "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                  "title" => 'Product 1',
-                                  "language" => '',
-                                  );
-
-                                  $products[] = array(
-                                  "new" => "true",
-                                  "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                  "title" => 'Product 2',
-                                  "language" => '',
-                                  );
+                                /*
                                  *
                                  *
-                                 * 
-                                 */ $newRow = true;
+                                 */
+
+                                $newRow = true;
                                 $count = 0;
                                 foreach ($products as $product) {
 
