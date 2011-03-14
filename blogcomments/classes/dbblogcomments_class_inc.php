@@ -35,6 +35,7 @@ class dbblogcomments extends dbTable
         parent::init('tbl_blogcomments');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
     /**
@@ -104,10 +105,11 @@ class dbblogcomments extends dbTable
             //echo $bodyText; die();
             //get the email address
             $emailadd = $this->objUser->email($puserid);
-
+            $commentsemail = $this->objSysConfig->getValue('comments_email', 'blogcomments');
+            
             $objMailer = $this->getObject('email', 'mail');
             $objMailer->setValue('to', array($emailadd));
-            $objMailer->setValue('from', 'noreply@uwc.ac.za');
+            $objMailer->setValue('from', $commentsemail);
             $objMailer->setValue('fromName', $this->objLanguage->languageText("mod_blog_emailfromname", "blogcomments"));
             $objMailer->setValue('subject', $this->objLanguage->languageText("mod_blog_emailsub", "blogcomments"));
             $objMailer->setValue('body', strip_tags($bodyText));
