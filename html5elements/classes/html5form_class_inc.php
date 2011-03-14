@@ -102,9 +102,10 @@ class html5form extends object
      * @param  boolean $search      Is this a search field.
      * @param  boolean $required    Does a value need to be filled in before submission.
      * @param  boolean $autofocus   Should the focus automatically be on this field after pageload.
+     * @param  integer $maxlength   The maximum number of characters that can be inserted.
      * @return object  The generated DOMElement.
      */
-    public function text(DOMDocument $document, $name, $value=NULL, $placeholder=NULL, $pattern=NULL, $search=FALSE, $required=FALSE, $autofocus=FALSE)
+    public function text(DOMDocument $document, $name, $value=NULL, $placeholder=NULL, $pattern=NULL, $search=FALSE, $required=FALSE, $autofocus=FALSE, $maxlength=NULL)
     {
         $input = $document->createElement('input');
         $input->setAttribute('type', $search ? 'search' : 'text');
@@ -128,6 +129,10 @@ class html5form extends object
 
         if ($autofocus) {
             $input->setAttribute('autofocus', '');
+        }
+
+        if (is_integer($maxlength)) {
+            $input->setAttribute('maxlength', $maxlength);
         }
 
         return $input;
