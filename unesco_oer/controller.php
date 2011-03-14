@@ -2,13 +2,12 @@
 
 class unesco_oer extends controller {
 
-   
     public $objProductUtil;
-    public $objproducts;
-    
+    public $objDbProducts;
+
     function init() {
-        $this->objProductUtil=$this->getObject('productutil');
-         $this->objproducts = $this->getObject('dbproducts');
+        $this->objProductUtil = $this->getObject('productutil');
+        $this->objDbProducts = $this->getObject('dbproducts');
     }
 
     /**
@@ -68,12 +67,11 @@ class unesco_oer extends controller {
         }
     }
 
-
     /**
      * Method to show the Home Page of the Module
      */
     public function __home() {
-        return "home_tpl.php";
+        return "1a_tpl.php";
     }
 
     public function __1b() {
