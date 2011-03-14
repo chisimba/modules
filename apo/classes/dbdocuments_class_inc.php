@@ -187,9 +187,9 @@ class dbdocuments extends dbtable {
     }
 
     function updateInfo($id, $data) {
-        $version = $this->getVersion($id);
-        $data['version'] = $version;
-        return $this->update("id", $id, $data);
+        //$version = $this->getVersion($id);
+        //$data['version'] = $version;
+        $this->update("id", $id, $data);
     }
 
     function sendEmailAlert($useridto) {

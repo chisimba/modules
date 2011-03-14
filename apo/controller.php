@@ -232,7 +232,7 @@ class apo extends controller {
         $group = $this->getParam('group');
         $selectedfolder = $this->getParam('parentfolder');
         $telephone = $this->getParam('telephone');
-        $id = $this->getParam('docid');
+        $id = $this->getParam('id');
         $contact = $this->getParam('contact');
         $status = $this->getParam('status', "0");
         $currentuserid = $this->getParam('currentuserid');
@@ -250,8 +250,8 @@ class apo extends controller {
             "version" => $version
         );
 
-        $this->documents->updateInfo($id, $data);
-        // $this->nextAction('unapproveddocuments');
+       $this->documents->updateInfo($id, $data);
+       $this->nextAction('showoverview', array('id' => $id));
     }
 
     function __showeditdocument() {
