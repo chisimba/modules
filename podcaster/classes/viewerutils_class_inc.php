@@ -102,13 +102,13 @@ class viewerutils extends object {
             $authorLink->link = $artist;
             $table->addCell('<strong>' . $this->objLanguage->languageText("mod_podcaster_uploadedby", "podcaster", 'Uploaded by') . ':</strong> ' . $authorLink->show(), '50%');
         }
-        $table->addCell('<strong>' . $this->objLanguage->languageText('word_date', 'system') . ':</strong> ' . $this->objDateTime->formatDate($result['datecreated']), '50%');
+        $table->addCell('<strong>' . $this->objLanguage->languageText('mod_podcaster_date', 'podcaster', 'Date') . ':</strong> ' . $this->objDateTime->formatDate($result['datecreated']), '50%');
         $table->endRow();
         $table->startRow();
         $table->addCell('<strong>' . $this->objLanguage->languageText('phrase_filesize', 'system') . ':</strong> ' . $filesize, '50%');
         $playtime = $this->objDateTime->secondsToTime($result['playtime']);
         $playtime = ($playtime == '0:0') ? '<em>Unknown</em>' : $playtime;
-        $table->addCell('<strong>' . $this->objLanguage->languageText('word_playtime', 'system') . ':</strong> ' . $playtime, '50%');
+        $table->addCell('<strong>' . $this->objLanguage->languageText('mod_podcaster_playtime', 'podcaster', 'Play time') . ':</strong> ' . $playtime, '50%');
         $table->endRow();
 
         //Get the license
@@ -126,7 +126,7 @@ class viewerutils extends object {
         $downloadLink = new link($fileurl);
         $downloadLink->link = htmlentities($filename);
 
-        $content .= '<br /><p>' . $podInfo ." ".$license. '</p><p><strong>' . $this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast') . ': '. $downloadLink->show() .'</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>';
+        $content .= '<br /><p>' . $podInfo ." ".$license. '</p><p><strong>' . $this->objLanguage->languageText('mod_podcaster_downloadpodcast', 'podcaster', 'Download podcast') . ': '. $downloadLink->show() .'</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>';
 
         return array('podinfo' => $content, 'filename' => $filename, 'filedata' => $result, 'id' => $id);
     }
