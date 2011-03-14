@@ -238,7 +238,7 @@ $this->loadClass('htmltable', 'htmlelements');
                     </div>
                     <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
-                                $products = $this->objDBProducts->getProducts(0, 10);
+                                $products = $this->objDbProducts->getProducts(0, 10);
 
                                 /*
                                  *
