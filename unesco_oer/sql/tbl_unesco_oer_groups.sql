@@ -12,3 +12,4 @@ $fields = array(
                 'loclong' =>array('type' =>'varchar','length'=>255)
 		
 );
+?>
