@@ -7,8 +7,8 @@ $options = array('comment'=>'Table to store product_themes','collate'=>'utf8_gen
 
 //define fields
 $fields = array(
-		'id' => array('type' => 'varchar','length' => 32,'not null'),
-		'description '=>array('type'=>'varchar','length'=>128)
+		'id' => array('type' => 'text','length' => 32,'not null'),
+		'description '=>array('type'=>'text','length'=>128)
 		
 );
 ?>
