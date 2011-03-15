@@ -240,65 +240,7 @@ $this->loadClass('link', 'htmlelements');
 
                     <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
-                                $products = array();
-
-
-                                $products[] = array(
-                                    "new" => "true",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Marovo Lagoon Encyclopaedia 1',
-                                    "language" => '',
-                                );
-
-                                $products[] = array(
-                                    "new" => "false",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Marovo Lagoon Encyclopaedia 2',
-                                    "language" => '',
-                                );
-
-                                $products[] = array(
-                                    "new" => "true",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Marovo Lagoon Encyclopaedia 3',
-                                    "language" => '',
-                                );
-
-                                $products[] = array(
-                                    "new" => "true",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Marovo Lagoon Encyclopaedia 4',
-                                    "language" => '',
-                                );
-
-                                $products[] = array(
-                                    "new" => "false",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Marovo Lagoon Encyclopaedia 5',
-                                    "language" => '',
-                                );
-
-                                $products[] = array(
-                                    "new" => "false",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Marovo Lagoon Encyclopaedia 5',
-                                    "language" => '',
-                                );
-
-                                $products[] = array(
-                                    "new" => "false",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Marovo Lagoon Encyclopaedia 5',
-                                    "language" => '',
-                                );
-
-                                $products[] = array(
-                                    "new" => "false",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Marovo Lagoon Encyclopaedia 5',
-                                    "language" => '',
-                                );
-
+                               $products = $this->objDbProducts->getProducts(0, 10);
                                 foreach ($products as $product) {
                                     $objTable->startRow();
                                     $objTable->addCell($this->objProductUtil->populateListView($product));

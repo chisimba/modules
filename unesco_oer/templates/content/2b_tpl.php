@@ -243,58 +243,7 @@ $this->loadClass('link', 'htmlelements');
 
                     <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
-                                $products = array();
-
-                                $products[] = array(
-                                    "new" => "true",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'How Shaka made it through the rain',
-                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
-                                    "languageOfAdaptation" => 'Xitsonga',
-                                    "adaptedBy" => 'University of Algiers',
-                                    "countryOfAdaptation" => 'Algeria',
-                                );
-
-                                $products[] = array(
-                                    "new" => "true",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Model Curricula for Journalism Education',
-                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
-                                    "languageOfAdaptation" => 'Afrikaans',
-                                    "adaptedBy" => 'UNISA',
-                                    "countryOfAdaptation" => 'South Africa',
-                                );
-
-                                $products[] = array(
-                                    "new" => "true",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Model Curricula for Journalism Education',
-                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
-                                    "languageOfAdaptation" => 'English',
-                                    "adaptedBy" => 'Polytechnic of Namibia',
-                                    "countryOfAdaptation" => 'Nigeria',
-                                );
-
-                                $products[] = array(
-                                    "new" => "true",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'How Shaka made it through the rain',
-                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
-                                    "languageOfAdaptation" => 'Xitsonga',
-                                    "adaptedBy" => 'UNISA',
-                                    "countryOfAdaptation" => 'South Africa',
-                                );
-
-                                $products[] = array(
-                                    "new" => "true",
-                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
-                                    "title" => 'Model Curricula for Journalism Education',
-                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
-                                    "languageOfAdaptation" => 'isiZulu',
-                                    "adaptedBy" => 'UNIA',
-                                    "countryOfAdaptation" => 'Azania',
-                                );
-
+                               $products = $this->objDbProducts->getProducts(0, 10);
                                 $newRow = true;
                                 $count = 0;
 
