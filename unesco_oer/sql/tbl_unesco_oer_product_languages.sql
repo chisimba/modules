@@ -6,9 +6,9 @@ $options = array('comment'=>'Table to store Product_languages','collate'=>'utf8_
 
 //define fields
 $fields = array(
-		'id' => array('type' => 'text','length' => 32,'not null'),
-                'code' =>array('type' =>'text','length'=>3),
-                'name'=>array('type'=>'text','length'=>255)
+		'id' => array('type' => 'varchar','length' => 32,'not null'),
+                'code' =>array('type' =>'varchar','length'=>3),
+                'name'=>array('type'=>'varchar','length'=>255)
 		);
 ?>
 
