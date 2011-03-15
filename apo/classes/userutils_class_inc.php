@@ -36,7 +36,11 @@ if (!
 class userutils extends object {
 
     var $heading = "Document Management System";
-   
+
+    /*
+     * Constructor
+     *
+     */
     public function init() {
         //instantiate the language object
         $this->loadClass('link', 'htmlelements');
@@ -57,7 +61,16 @@ class userutils extends object {
         $this->modeLabel = $this->objSysConfig->getValue('MODE_LABEL', 'apo');
     }
 
-    public function showPageHeading($page=null) {
+    /*
+     * This method is used to display the heading on a page, by making the first
+     * letter a capital letter
+     * @param string $page The string that contains the current page in view
+     * @access public
+     * @return string $heading. This is the heading of the page, with the first letter
+     * being upper case.
+     */
+     public function showPageHeading($page=null) {
+
         if ($page != null) {
             return $this->heading . " - " . ucfirst($page);
         } else {
@@ -65,6 +78,16 @@ class userutils extends object {
         }
     }
 
+    /*
+     * This method is used to construct the tree for the side navigation and also for select
+     * input type navigation
+     * @param $treeType
+     * @param $selected The currently selected tree node, when navigating.
+     * @param $treemode
+     * @param $action 
+     * @access public
+     * @return The tree that is being used for navigation
+     */
     public function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
         $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         
@@ -83,7 +106,10 @@ class userutils extends object {
         $documents = $this->getObject('dbdocuments');
         $count = $documents->getUnapprovedDocsCount();
         $faculty = $this->getObject('dbfaculties');
-        
+
+        //$this->objUsers = $this->getObject('dbusers');
+        $userCount = 0;//$this->objUsers->getNumUsers();
+
         $facultyCount = count($faculty->getFaculties());
         $faculties = $faculty->getFaculties();
         if ($treeMode == 'side') {
@@ -94,7 +120,18 @@ class userutils extends object {
             } else {
                 $cssClass = '';
             }
+
+            $userManagement = "$userCount Users";
+            if ($selected == 'unapproved') {
+                $userManagement = '<strong>' . $userManagement . '</strong>';
+                $cssClass = 'confirm';
+            } else {
+                $cssClass = '';
+            }
+
+
             $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $newUserNode = new treenode(array('text' => $userManagement, 'link' => $this->uri(array('action' => 'usermanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
 
             $facultyManagement = "$facultyCount Faculty Management";
             if ($selected == 'facultymanagement') {
@@ -113,6 +150,7 @@ class userutils extends object {
 
             if ($treeType != 'htmldropdown') {
                 $allFilesNode->addItem($newDocsNode);
+                $allFilesNode->addItem($newUserNode);
             }
             $allFilesNode->addItem($facultyManagementNode);
         }
@@ -198,6 +236,13 @@ class userutils extends object {
         return $form->show();
     }
 
+    /*
+     * This is a helper method that is used to determine the parent of the current
+     * node in a tree.
+     * @param $path The expanded path of the current node
+     * @access public
+     * @return the parent of the deepest child node.
+     */
     public function getParent($path) {
 
         $parent = "";

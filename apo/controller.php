@@ -47,6 +47,7 @@ class apo extends controller {
         $this->mode = $this->objSysConfig->getValue('MODE', 'apo');
         $this->faculties = $this->getObject('dbfaculties');
         $this->objFormatting = $this->getObject('formatting');
+        $this->users = $this->getObject('dbapousers');
     }
 
     /**
@@ -1717,6 +1718,54 @@ class apo extends controller {
         return "selectpdf_tpl.php";
     }
 
+    /*
+     * This method is used to manage users that are involved in the process
+     * document handling for the academic policy office.
+     * @param none
+     * @access public
+     * @return the template displaying how to add, delete, edit users, and also shows
+     * the number of users together with their roles
+     */
+    public function __usermanagement() {
+        $users = $this->users->getUsers();
+        $this->setVarByRef("users", $users);
+        $this->setVarByRef("selected", $selected);
+
+        return "usermanagement_tpl.php";
+    }
+
+    /*
+     * This method is used to add a user to the database
+     * @access public
+     * @return the user template that displays all the users
+     */
+    public function __registeruser() {
+        $name = $this->getParam('name');
+        $role = $this->getParam('role');
+        $email = $this->getParam('email');
+        $telephone = $this->getParam('telephone');
+
+        if ($this->users->exists($name)) {
+            $errormessage = "User Name already exists";
+            die();
+        } else {
+            /*$parentid = $this->getParam('parentfolder');
+            $fac = $this->faculties->getFaculty($parentid);
+            $parent = $fac['path'];
+            $path = "";
+            if ($parent) {
+                $path .= $parent . '/' . $name;
+            } else {
+                $path .= $name;
+            }*/
+
+            $data = array("name" => $name, "role" => $role, "email"=> $email, "telephone" => $telephone);
+            
+            $this->users->addUser($data);
+
+            return $this->nextAction('usermanagement');
+        }
+    }
 }
 
 ?>
