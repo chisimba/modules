@@ -64,12 +64,14 @@ class podcaster extends controller {
         $this->objSchedules = $this->getObject('dbpodcasterschedules');
         $this->realtimeManager = $this->getObject('realtimemanager');
         $this->folderPermissions = $this->getObject('dbfolderpermissions');
-        $this->parse4RSS = $this->getObject('parse4rss','filters');
+        $this->parse4RSS = $this->getObject('parse4rss', 'filters');
 
         $this->objSearch = $this->getObject('indexdata', 'search');
         // user object
         $this->objUser = $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
+        $this->userPKId = $this->objUser->PKId($this->userId);
+
         //Get podcaster base directory
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'podcaster');
     }
@@ -80,7 +82,7 @@ class podcaster extends controller {
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
+        $required = array('doAjaxSendMail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
 
 
         if (in_array($action, $required)) {
@@ -334,7 +336,7 @@ class podcaster extends controller {
             $flag = "selected";
             $folderdata = $this->folderPermissions->getPermmissions($pathf);
             $folderid = $folderdata[0]['id'];
-            $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid));
+            $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
         }
         if (!$path) {
             $path = "";
@@ -352,17 +354,140 @@ class podcaster extends controller {
         //Create only if new
         if (!$exists) {
             $path = $pathf;
-            $this->objUtils->createFolder($path, $name);
+            //$this->objUtils->createFolder($path, $name);
             $path = $path . "/" . $name;
             $flag = 'add';
         } else {
+            $path = $path . "/" . $name;
             $flag = 'fail';
         }
         $path = str_replace("//", "/", $path);
         $folderdata = $this->folderPermissions->getPermmissions($path);
+
         $folderid = $folderdata[0]['id'];
         $this->setVarByRef('folder', $name);
-        $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid));
+        $this->setVarByRef('path', $path);
+        $this->nextAction('sendmail', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
+    }
+
+    /**
+     * function that loads "send email after new folder creation" form
+     *
+     * @return form
+     */
+    public function __sendmail() {
+        $folderid = $this->getParam("folderid", "");
+        $createcheck = $this->getParam('createcheck', '');
+        $path = $this->getParam('path', '');
+        $useremail = $this->objUser->email($this->userId);
+        $this->setVarByRef("mode", $this->mode);
+        $this->setVarByRef("createcheck", $createcheck);
+        $this->setVarByRef("path", $path);
+        $this->setVarByRef("useremail", $useremail);
+        $this->setVarByRef("folderid", $folderid);
+        return "addemails_tpl.php";
+    }
+
+    /**
+     * function that loads "send email after new folder creation" form
+     *
+     * @return form
+     */
+    public function __doAjaxSendMail() {
+        //Debug on txtfile
+        $File = "/home/paul/Desktop/ajaxsendmail.txt";
+        $Handle = fopen($File, 'w');
+        $Data = "Jane Doe1\n";
+        fwrite($Handle, $Data);
+        fclose($Handle);
+        //End debug
+
+        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        $folderid = $this->getParam("folderid", "");
+        $generatedid = $this->getParam('id', '');
+        $createcheck = $this->getParam('createcheck', '');
+        $path = $this->getParam('path', '');
+        $useremail = $this->getParam('useremail', '');
+        $useremail = str_replace(" ", "", $useremail);
+        //Confirm that each is an email before sending
+        $useremails = explode(",", $useremail);
+        $useremail = $this->objViewerUtils->validateEmails($useremails);
+
+        if (empty($useremail))
+            $useremail = $user['emailaddress'];
+
+        // Then bang off a mail to the user.
+        $siteName = $this->objConfig->getSiteName();
+        $siteEmail = $this->objConfig->getsiteEmail();
+        $user = $this->objUser->getUserDetails($this->userId);
+        $message = $this->objLanguage->languageText("mod_podcaster_dearsirmadam", "podcaster", "Dear Sir/Madam") . '<br />
+<br />
+' . $this->objLanguage->languageText("mod_podcaster_emailtext", "podcaster", "On [[DATE]], a podcast folder was created on the [[SITENAME]] website. Your can get updates of new podcasts in this folder via the following RSS feed") . ':<br />
+<br />
+' . $this->objLanguage->languageText("mod_podcaster_rss", "podcaster", "RSS") . ': [[RSS]]<br /><br />
+The folder was created by [[FIRSTNAME]] [[SURNAME]]. You can contact them through this email address [[EMAIL]].
+<br /><br />
+Sincerely,<br />
+[[SITENAME]]<br />
+[[SITEADDRESS]]
+<br />';
+
+        $message = str_replace('[[FIRSTNAME]]', $user['firstname'], $message);
+        $message = str_replace('[[SURNAME]]', $user['surname'], $message);
+        $message = str_replace('[[USERNAME]]', str_replace(" ", '', $user['username']), $message);
+        $message = str_replace('[[EMAIL]]', $user['emailaddress'], $message);
+        $message = str_replace('[[SITENAME]]', $siteName, $message);
+        $message = str_replace('[[RSS]]', $path, $message);
+        $message = str_replace('[[SITEADDRESS]]', $this->objConfig->getsiteRoot(), $message);
+        $message = str_replace('[[DATE]]', date('l dS \of F Y h:i:s A'), $message);
+
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('to', array($useremail));
+        $objMailer->setValue('from', $siteEmail);
+        $objMailer->setValue('fromName', $siteName . ' Registration System');
+        $objMailer->setValue('subject', 'Podcast folder: ' . $siteName);
+        $objMailer->setValue('body', strip_tags($message));
+        $objMailer->setValue('AltBody', strip_tags($message));
+
+        if ($objMailer->send()) {
+            $sendstatus = "success";
+        } else {
+            $sendstatus = "fail";
+        }
+        $this->setVarByRef("mode", $this->mode);
+        $this->setVarByRef("createcheck", $createcheck);
+        $this->setVarByRef("path", $path);
+        $flag = 'add';
+        $this->nextAction('ajaxSendMailResults', array('id' => $generatedid, 'emails' => $useremail, 'createcheck' => $flag, 'folderid' => $folderid, 'path' => $path, 'sendstatus' => $sendstatus));
+    }
+
+    /**
+     * Used to push through send mail results for AJAX
+     */
+    function __ajaxSendMailResults() {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+
+        $emails = $this->getParam('emails');
+        $this->setVarByRef('emails', $emails);
+
+        $path = $this->getParam('path');
+        $this->setVarByRef('path', $path);
+
+        $folderid = $this->getParam('folderid');
+        $this->setVarByRef('folderid', $folderid);
+
+        $sendstatus = $this->getParam('sendstatus');
+        $this->setVarByRef('sendstatus', $sendstatus);
+
+        $createcheck = $this->getParam('createcheck');
+        $this->setVarByRef('createcheck', $createcheck);
+
+        $generatedid = $this->getParam('id');
+        $this->setVarByRef('id', $generatedid);
+
+        return 'ajaxsendmailresults_tpl.php';
     }
 
     /**
@@ -803,7 +928,7 @@ class podcaster extends controller {
         $this->setVar('pageTitle', $this->objConfig->getSiteName() . ' - ' . $filedata['title']);
 
         $objViewCounter = $this->getObject('dbpodcasterviewcounter');
-        
+
         $objViewCounter->addView($id);
 
         return 'view_tpl.php';
@@ -1058,7 +1183,7 @@ class podcaster extends controller {
         $description = $this->getParam("description", "");
         $tags = $this->getParam("tags", "");
         $tags = explode(",", $tags);
-        $this->objTags->addTags($id,$tags);
+        $this->objTags->addTags($id, $tags);
 
         $filedata = $this->objMediaFileData->updateFileDetails($id, $podtitle, $description, $cclicense, $artist);
         $this->setVarByRef("filedata", $filedata);

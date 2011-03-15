@@ -31,7 +31,39 @@ class viewerutils extends object {
         $this->userId = $this->objUser->userId();
         $this->objAltConfig = $this->getObject('altconfig', 'config');
         $this->siteBase = $this->objAltConfig->getitem('KEWL_SITEROOT_PATH');
-        $this->siteUrl = $this->objAltConfig->getitem('KEWL_SITE_PATH');        
+        $this->siteUrl = $this->objAltConfig->getitem('KEWL_SITE_PATH');
+    }
+
+    /**
+     * Function that validates emails
+     * @param string $email
+     * @return boolean
+     */
+    public function isValidEmail($email) {
+        $result = ereg ("^[^@ ]+@[^@ ]+\.[^@ \.]+$", $email );
+        if ($result){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * Function that validates emails
+     * @param array $emails
+     * @return string
+     */
+    public function validateEmails($emails) {
+        $delimiter = "";
+        $newemailstring = "";
+        foreach ($emails as $email) {
+            if ($this->isValidEmail($email)) {
+                $newemailstring .= $delimiter . $email;
+                $delimiter = ",";
+                $email="";
+            }
+        }
+        return $newemailstring;
     }
 
     /**
@@ -70,10 +102,10 @@ class viewerutils extends object {
         $pathdata = $this->objFolderPerms->getById($result['uploadpathid']);
         $pathdata = $pathdata[0];
         $newpodpath = str_replace($this->siteBase, "/", $this->baseDir);
-        $newpodpath = $newpodpath ."/". $result['creatorid'] ."/".$pathdata['folderpath']. '/' . $filename;
+        $newpodpath = $newpodpath . "/" . $result['creatorid'] . "/" . $pathdata['folderpath'] . '/' . $filename;
         $newpodpath = str_replace("//", "/", $newpodpath);
 
-        $podpath = $this->baseDir."/". $result['creatorid'] ."/".$pathdata['folderpath']. '/' . $filename;
+        $podpath = $this->baseDir . "/" . $result['creatorid'] . "/" . $pathdata['folderpath'] . '/' . $filename;
         $podpath = str_replace("//", "/", $podpath);
 
         $filepath = $podpath;
@@ -85,7 +117,7 @@ class viewerutils extends object {
         $objSoundPlayer->setSoundFile($soundFile);
 
         $podInfo = $objSoundPlayer->show();
-        
+
         $content = "";
 
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -120,15 +152,15 @@ class viewerutils extends object {
         $license = $objDisplayLicense->show($license);
 
         $content .= $table->show();
-        $fileurl = $this->siteUrl.$newpodpath;
-        
+        $fileurl = $this->siteUrl . $newpodpath;
+
         $fileurl = str_replace("//", "/", $fileurl);
         $downloadLink = new link($fileurl);
         $downloadLink->link = htmlentities($filename);
 
-        $content .= '<br /><p>' . $podInfo ." ".$license. '</p><p><strong>' . $this->objLanguage->languageText('mod_podcaster_downloadpodcast', 'podcaster', 'Download podcast') . ': '. $downloadLink->show() .'</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>';
+        $content .= '<br /><p>' . $podInfo . " " . $license . '</p><p><strong>' . $this->objLanguage->languageText('mod_podcaster_downloadpodcast', 'podcaster', 'Download podcast') . ': ' . $downloadLink->show() . '</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>';
 //var_dump($newpodpath);exit;
-        return array('podinfo' => $content, 'filename' => $filename, 'filedata' => $result, 'id' => $id, 'podpath'=>$newpodpath);
+        return array('podinfo' => $content, 'filename' => $filename, 'filedata' => $result, 'id' => $id, 'podpath' => $newpodpath);
     }
 
     public function getLatestUpload() {
@@ -306,7 +338,7 @@ class viewerutils extends object {
         $filename = '';
 
         $latestFile = $objFiles->getLatestPodcasts();
-        
+
         $preview = '';
         $fileStr = '';
         if (count($latestFile) == 0) {
@@ -320,7 +352,7 @@ class viewerutils extends object {
             $counter = 0;
 
             foreach ($latestFile as $filedata) {
-                
+
                 $file = $this->objMediaFileData->getFileByFileId($filedata['id']);
                 if (trim($file['title']) == '') {
                     $filename = $file['filename'];
@@ -414,8 +446,8 @@ class viewerutils extends object {
 
 
             foreach ($latestFiles as $filedata) {
-                
-               
+
+
                 if (trim($filedata['title']) == '') {
                     $filename = $filedata['filename'];
                 } else {
@@ -433,7 +465,7 @@ class viewerutils extends object {
                 $fileLink = new link($this->uri(array('action' => 'view', 'id' => $filedata['id'])));
                 $fileLink->link = $objFiles->getPodcastThumbnail($filedata['id']);
                 $fileLink->title = $filename;
-                
+
                 $tags = $objTags->getTags($filedata['fileid']);
                 $tagsStr = '';
                 if (count($tags) == 0) {
