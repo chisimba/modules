@@ -237,17 +237,17 @@ $this->loadClass('htmltable', 'htmlelements');
                         </div>
                     </div>
                     <?php
-                                $objTable = $this->getObject('htmltable', 'htmlelements');
-                                $products = $this->objDbProducts->getProducts(0, 10);
+                                // creates chisimba table
 
-                                /*
-                                 *
-                                 *
-                                 */
+
+                                $objTable = $this->getObject('htmltable', 'htmlelements');
+                                $products = $this->objDbProducts->getProducts(0, 10);               // pulls available products from database using getproducts
+
+
 
                                 $newRow = true;
                                 $count = 0;
-                                foreach ($products as $product) {
+                                foreach ($products as $product) {                                       //populates table
 
                                     if ($newRow) {
                                         $objTable->startRow();
@@ -261,8 +261,9 @@ $this->loadClass('htmltable', 'htmlelements');
                                     }
                                     $count++;
 
-                                    echo $objTable->show();
+                                    
                                 }
+                                echo $objTable->show();
                     ?>
                     <!--
                                         <table class="gridListingTable" cellspacing="0" cellpadding="0">
