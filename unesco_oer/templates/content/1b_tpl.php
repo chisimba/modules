@@ -236,165 +236,238 @@ $this->loadClass('link', 'htmlelements');
                             </div>
                         </div>
                     </div>
-                    <div class="productsListView">
-                        <h2>Model Curricula for Journalism</h2><br>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv">new</div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv">
-                                <select name="" class="listingsLanguageDropDown">
-                                    <option value="">Languages</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                    <!--Display the products in a list view-->
+
+                    <?php
+                                $objTable = $this->getObject('htmltable', 'htmlelements');
+                                $products = array();
 
 
-                    <div class="productsListView">
-                        <h2>The Net for Journalists</h2><br>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv">new</div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv">
-                                <select name="" class="listingsLanguageDropDown">
-                                    <option value="">Languages</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Marovo Lagoon Encyclopaedia 1',
+                                    "language" => '',
+                                );
+
+                                $products[] = array(
+                                    "new" => "false",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Marovo Lagoon Encyclopaedia 2',
+                                    "language" => '',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Marovo Lagoon Encyclopaedia 3',
+                                    "language" => '',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Marovo Lagoon Encyclopaedia 4',
+                                    "language" => '',
+                                );
+
+                                $products[] = array(
+                                    "new" => "false",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Marovo Lagoon Encyclopaedia 5',
+                                    "language" => '',
+                                );
+
+                                $products[] = array(
+                                    "new" => "false",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Marovo Lagoon Encyclopaedia 5',
+                                    "language" => '',
+                                );
+
+                                $products[] = array(
+                                    "new" => "false",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Marovo Lagoon Encyclopaedia 5',
+                                    "language" => '',
+                                );
+
+                                $products[] = array(
+                                    "new" => "false",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Marovo Lagoon Encyclopaedia 5',
+                                    "language" => '',
+                                );
+
+                                foreach ($products as $product) {
+                                    $objTable->startRow();
+                                    $objTable->addCell($this->objProductUtil->populateListView($product));
+                                    $objTable->endRow();
+                                }
+                                echo $objTable->show();
+                    ?>
+                    <!--</div>-->
+
+                    <!--                    <div class="productsListView">
+                                            <h2>Model Curricula for Journalism</h2><br>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv">new</div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv">
+                                                    <select name="" class="listingsLanguageDropDown">
+                                                        <option value="">Languages</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
-                    <div class="productsListView">
-                        <h2>The Entrepreneur’s Guide to Computer Recycling</h2><br>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv">
-                                <select name="" class="listingsLanguageDropDown">
-                                    <option value="">Languages</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                                        <div class="productsListView">
+                                            <h2>The Net for Journalists</h2><br>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv">new</div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv">
+                                                    <select name="" class="listingsLanguageDropDown">
+                                                        <option value="">Languages</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
-                    <div class="productsListView">
-                        <h2>Manual for Investigative Journalists</h2><br>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv">
-                                <select name="" class="listingsLanguageDropDown">
-                                    <option value="">Languages</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="productsListView">
-                        <h2>Marovo Lagoon Encyclopaedia</h2><br>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv">
-                                <select name="" class="listingsLanguageDropDown">
-                                    <option value="">Languages</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                                        <div class="productsListView">
+                                            <h2>The Entrepreneur’s Guide to Computer Recycling</h2><br>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv">
+                                                    <select name="" class="listingsLanguageDropDown">
+                                                        <option value="">Languages</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
-                    <div class="productsListView">
-                        <h2>Nulla venenatis ligula a nulla lobortis convallis. Aenean vel arcu nunc, vel vestibulum lacus. Praesent quis lorem velit, vitae aliquet nisi. Suspendisse potenti.</h2><br>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv">new</div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                        </div>
-                        <div class="productlistViewLeftFloat">
-                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv">
-                                <select name="" class="listingsLanguageDropDown">
-                                    <option value="">Languages</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                                        <div class="productsListView">
+                                            <h2>Manual for Investigative Journalists</h2><br>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv">
+                                                    <select name="" class="listingsLanguageDropDown">
+                                                        <option value="">Languages</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="productsListView">
+                                            <h2>Marovo Lagoon Encyclopaedia</h2><br>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv">
+                                                    <select name="" class="listingsLanguageDropDown">
+                                                        <option value="">Languages</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="productsListView">
+                                            <h2>Nulla venenatis ligula a nulla lobortis convallis. Aenean vel arcu nunc, vel vestibulum lacus. Praesent quis lorem velit, vitae aliquet nisi. Suspendisse potenti.</h2><br>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv">new</div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                            </div>
+                                            <div class="productlistViewLeftFloat">
+                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                <div class="listingAdaptationLinkDiv">
+                                                    <select name="" class="listingsLanguageDropDown">
+                                                        <option value="">Languages</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                    -->
 
                     <!-- Pagination-->
                     <div class="paginationDiv">

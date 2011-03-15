@@ -98,22 +98,22 @@ $this->loadClass('link', 'htmlelements');
                 <div class="mainNavigation">
                     <div class="navitem">
                         <div class="navitemInner">
-                                                            <?php
-                                $abLink = new link($this->uri(array("action" => "home")));
-                                $abLink->link = 'UNESCO OER PRODUCTS';
-                                echo $abLink->show();
-                                ?>
+                            <?php
+                            $abLink = new link($this->uri(array("action" => "home")));
+                            $abLink->link = 'UNESCO OER PRODUCTS';
+                            echo $abLink->show();
+                            ?>
 
                         </div>
                     </div>
                     <div class="mainNavPipe">&nbsp;</div>
                     <div class="navitemOnstate">
                         <div class="navitemInnerOnstate">
-                                                            <?php
-                                $abLink = new link($this->uri(array("action" => "2a")));
-                                $abLink->link = 'PRODUCT ADAPTATIONS';
-                                echo $abLink->show();
-                                ?>
+                            <?php
+                            $abLink = new link($this->uri(array("action" => "2a")));
+                            $abLink->link = 'PRODUCT ADAPTATIONS';
+                            echo $abLink->show();
+                            ?>
                         </div>
                     </div>
                     <div class="mainNavPipe"></div>
@@ -223,7 +223,7 @@ $this->loadClass('link', 'htmlelements');
                                 echo $abLink->show();
                             ?>
 
-                            <div class="gridListDivView">
+                                <div class="gridListDivView">
 
                                 <?php
                                 $abLink = new link($this->uri(array("action" => "2b")));
@@ -234,133 +234,224 @@ $this->loadClass('link', 'htmlelements');
                             </div>
                         </div>
                     </div>
-                    <table class="gridListingTable" cellspacing="0" cellpadding="0">
-                        <tr>
-                            <td>
-                                <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                <div class="imageGridListing">
-                                    <div class="imageTopFlag"></div>
-                                    <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101" alt="Placeholder">
-                                    <div class="imageBotomFlag"></div>
-                                </div>
-                                <br>
-                                <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
-                                <div class="adaptedByDiv">Adapted by:</div>
-                                <div class="gridSmallImageAdaptation">
-                                    <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                    <span class="greyListingHeading">Polytechnic of Namibia</span>
-                                </div>
-                                <div class="gridAdaptationLinksDiv">
-                                    <a href="#" class="productAdaptationGridViewLinks">School</a> |
-                                    <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
-                                    <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                </div>
 
-                            </td>
-                            <td>
-                                <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                <div class="imageGridListing">
-                                    <div class="imageTopFlag"></div>
-                                    <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                    <div class="imageBotomFlag"></div>
-                                </div>
-                                <br>
-                                <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
-                                <div class="adaptedByDiv greenColor">Managed by:</div>
-                                <div class="gridSmallImageAdaptation">
-                                    <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                    <span class="greyListingHeading">Polytechnic of Namibia</span>
-                                </div>
-                                <div class="gridAdaptationLinksDiv">
-                                    <a href="#" class="productAdaptationGridViewLinks">School</a> |
-                                    <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
-                                    <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                <div class="imageGridListing">
-                                    <div class="imageTopFlag"></div>
-                                    <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101" alt="Placeholder">
-                                    <div class="imageBotomFlag"></div>
-                                </div>
-                                <br>
-                                <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
-                                <div class="adaptedByDiv">Adapted by:</div>
-                                <div class="gridSmallImageAdaptation">
-                                    <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                    <span class="greyListingHeading">Polytechnic of Namibia</span>
-                                </div>
-                                <div class="gridAdaptationLinksDiv">
-                                    <a href="#" class="productAdaptationGridViewLinks">School</a> |
-                                    <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
-                                    <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                <div class="imageGridListing">
-                                    <div class="imageTopFlag"></div>
-                                    <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                    <div class="imageBotomFlag"></div>
-                                </div>
-                                <br>
-                                <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
-                                <div class="adaptedByDiv">Adapted by:</div>
-                                <div class="gridSmallImageAdaptation">
-                                    <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                    <span class="greyListingHeading">Polytechnic of Namibia</span>
-                                </div>
-                                <div class="gridAdaptationLinksDiv">
-                                    <a href="#" class="productAdaptationGridViewLinks">School</a> |
-                                    <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
-                                    <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                <div class="imageGridListing">
-                                    <div class="imageTopFlag"></div>
-                                    <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101" alt="Placeholder">
-                                    <div class="imageBotomFlag"></div>
-                                </div>
-                                <br>
-                                <div class="orangeListingHeading">The Net for Journalists Curricula</div>
-                                <div class="adaptedByDiv">Adapted by:</div>
-                                <div class="gridSmallImageAdaptation">
-                                    <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                    <span class="greyListingHeading">Polytechnic of Namibia</span>
-                                </div>
-                                <div class="gridAdaptationLinksDiv">
-                                    <a href="#" class="productAdaptationGridViewLinks">School</a> |
-                                    <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
-                                    <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                <div class="imageGridListing">
-                                    <div class="imageTopFlag"></div>
-                                    <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                    <div class="imageBotomFlag"></div>
-                                </div>
-                                <br>
-                                <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
-                                <div class="adaptedByDiv">Adapted by:</div>
-                                <div class="gridSmallImageAdaptation">
-                                    <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                    <span class="greyListingHeading">Polytechnic of Namibia</span>
-                                </div>
-                                <div class="gridAdaptationLinksDiv">
-                                    <a href="#" class="productAdaptationGridViewLinks">School</a> |
-                                    <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
-                                    <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                    <?php
+                                $objTable = $this->getObject('htmltable', 'htmlelements');
+                                $products = array();
+
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Model Curricula for Journalism Education',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'Xitsonga',
+                                    "adaptedBy" => 'UNISA',
+                                    "countryOfAdaptation" => 'South Africa',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'How Shaka made it through the rain',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'Xitsonga',
+                                    "adaptedBy" => 'University of Algiers',
+                                    "countryOfAdaptation" => 'Algeria',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Model Curricula for Journalism Education',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'Afrikaans',
+                                    "adaptedBy" => 'UNISA',
+                                    "countryOfAdaptation" => 'South Africa',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Model Curricula for Journalism Education',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'English',
+                                    "adaptedBy" => 'Polytechnic of Namibia',
+                                    "countryOfAdaptation" => 'Nigeria',
+                                );
+
+                                                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'How Shaka made it through the rain',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'Xitsonga',
+                                    "adaptedBy" => 'UNISA',
+                                    "countryOfAdaptation" => 'South Africa',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Model Curricula for Journalism Education',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'isiZulu',
+                                    "adaptedBy" => 'UNIA',
+                                    "countryOfAdaptation" => 'Azania',
+                                );
+
+                                $newRow = true;
+                                $count = 0;
+
+                                foreach ($products as $product) {
+                                    if ($newRow) {
+                                        $objTable->startRow();
+                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                        $newRow = false;
+                                    } else {
+                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                    }
+
+                                    if ($count == 2) {
+                                        $newRow = true;
+                                        $count = 0;
+                                        $objTable->endRow();
+                                    }
+                                    $count++;
+                                }
+                                echo $objTable->show();
+                    ?>
+
+                    <!--
+                                        <table class="gridListingTable" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td>
+                                                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                                                    <div class="imageGridListing">
+                                                        <div class="imageTopFlag"></div>
+                                                        <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101" alt="Placeholder">
+                                                        <div class="imageBotomFlag"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
+                                                    <div class="adaptedByDiv">Adapted by:</div>
+                                                    <div class="gridSmallImageAdaptation">
+                                                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                                                        <span class="greyListingHeading">Polytechnic of Namibia</span>
+                                                    </div>
+                                                    <div class="gridAdaptationLinksDiv">
+                                                        <a href="#" class="productAdaptationGridViewLinks">School</a> |
+                                                        <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
+                                                        <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                    </div>
+
+                                                </td>
+                                                <td>
+                                                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                                                    <div class="imageGridListing">
+                                                        <div class="imageTopFlag"></div>
+                                                        <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
+                                                        <div class="imageBotomFlag"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
+                                                    <div class="adaptedByDiv greenColor">Managed by:</div>
+                                                    <div class="gridSmallImageAdaptation">
+                                                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                                                        <span class="greyListingHeading">Polytechnic of Namibia</span>
+                                                    </div>
+                                                    <div class="gridAdaptationLinksDiv">
+                                                        <a href="#" class="productAdaptationGridViewLinks">School</a> |
+                                                        <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
+                                                        <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                                                    <div class="imageGridListing">
+                                                        <div class="imageTopFlag"></div>
+                                                        <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101" alt="Placeholder">
+                                                        <div class="imageBotomFlag"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
+                                                    <div class="adaptedByDiv">Adapted by:</div>
+                                                    <div class="gridSmallImageAdaptation">
+                                                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                                                        <span class="greyListingHeading">Polytechnic of Namibia</span>
+                                                    </div>
+                                                    <div class="gridAdaptationLinksDiv">
+                                                        <a href="#" class="productAdaptationGridViewLinks">School</a> |
+                                                        <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
+                                                        <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                                                    <div class="imageGridListing">
+                                                        <div class="imageTopFlag"></div>
+                                                        <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
+                                                        <div class="imageBotomFlag"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
+                                                    <div class="adaptedByDiv">Adapted by:</div>
+                                                    <div class="gridSmallImageAdaptation">
+                                                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                                                        <span class="greyListingHeading">Polytechnic of Namibia</span>
+                                                    </div>
+                                                    <div class="gridAdaptationLinksDiv">
+                                                        <a href="#" class="productAdaptationGridViewLinks">School</a> |
+                                                        <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
+                                                        <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                                                    <div class="imageGridListing">
+                                                        <div class="imageTopFlag"></div>
+                                                        <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101" alt="Placeholder">
+                                                        <div class="imageBotomFlag"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="orangeListingHeading">The Net for Journalists Curricula</div>
+                                                    <div class="adaptedByDiv">Adapted by:</div>
+                                                    <div class="gridSmallImageAdaptation">
+                                                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                                                        <span class="greyListingHeading">Polytechnic of Namibia</span>
+                                                    </div>
+                                                    <div class="gridAdaptationLinksDiv">
+                                                        <a href="#" class="productAdaptationGridViewLinks">School</a> |
+                                                        <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
+                                                        <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                                                    <div class="imageGridListing">
+                                                        <div class="imageTopFlag"></div>
+                                                        <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
+                                                        <div class="imageBotomFlag"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="orangeListingHeading">Model Curricula for Journalism Education</div>
+                                                    <div class="adaptedByDiv">Adapted by:</div>
+                                                    <div class="gridSmallImageAdaptation">
+                                                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                                                        <span class="greyListingHeading">Polytechnic of Namibia</span>
+                                                    </div>
+                                                    <div class="gridAdaptationLinksDiv">
+                                                        <a href="#" class="productAdaptationGridViewLinks">School</a> |
+                                                        <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br>
+                                                        <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                    -->
                     <!-- Pagination-->
                     <div class="paginationDiv">
                         <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>

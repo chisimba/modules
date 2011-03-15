@@ -100,11 +100,11 @@ $this->loadClass('link', 'htmlelements');
                 <div class="mainNavigation">
                     <div class="navitem">
                         <div class="navitemInner">
-                                <?php
-                                $abLink = new link($this->uri(array("action" => "home")));
-                                $abLink->link = 'UNESCO OER PRODUCTS';
-                                echo $abLink->show();
-                                ?>
+                            <?php
+                            $abLink = new link($this->uri(array("action" => "home")));
+                            $abLink->link = 'UNESCO OER PRODUCTS';
+                            echo $abLink->show();
+                            ?>
 
                         </div>
                     </div>
@@ -112,10 +112,10 @@ $this->loadClass('link', 'htmlelements');
                     <div class="navitemOnstate">
                         <div class="navitemInnerOnstate">
                             <?php
-                                $abLink = new link($this->uri(array("action" => "2a")));
-                                $abLink->link = 'PRODUCT ADAPTATIONS';
-                                echo $abLink->show();
-                                ?>
+                            $abLink = new link($this->uri(array("action" => "2a")));
+                            $abLink->link = 'PRODUCT ADAPTATIONS';
+                            echo $abLink->show();
+                            ?>
 
                         </div>
                     </div>
@@ -228,7 +228,7 @@ $this->loadClass('link', 'htmlelements');
                                 echo $abLink->show();
                             ?>
 
-                            <div class="gridListDivView">
+                                <div class="gridListDivView">
 
                                 <?php
                                 $abLink = new link($this->uri(array("action" => "2b")));
@@ -239,6 +239,74 @@ $this->loadClass('link', 'htmlelements');
                             </div>
                         </div>
                     </div>
+
+
+                    <?php
+                                $objTable = $this->getObject('htmltable', 'htmlelements');
+                                $products = array();
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'How Shaka made it through the rain',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'Xitsonga',
+                                    "adaptedBy" => 'University of Algiers',
+                                    "countryOfAdaptation" => 'Algeria',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Model Curricula for Journalism Education',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'Afrikaans',
+                                    "adaptedBy" => 'UNISA',
+                                    "countryOfAdaptation" => 'South Africa',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Model Curricula for Journalism Education',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'English',
+                                    "adaptedBy" => 'Polytechnic of Namibia',
+                                    "countryOfAdaptation" => 'Nigeria',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'How Shaka made it through the rain',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'Xitsonga',
+                                    "adaptedBy" => 'UNISA',
+                                    "countryOfAdaptation" => 'South Africa',
+                                );
+
+                                $products[] = array(
+                                    "new" => "true",
+                                    "thumbnail" => 'skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg',
+                                    "title" => 'Model Curricula for Journalism Education',
+                                    "institutionLogo" => 'skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg',
+                                    "languageOfAdaptation" => 'isiZulu',
+                                    "adaptedBy" => 'UNIA',
+                                    "countryOfAdaptation" => 'Azania',
+                                );
+
+                                $newRow = true;
+                                $count = 0;
+
+                                foreach ($products as $product) {
+                                    $objTable->startRow();
+                                    $objTable->addCell($this->objProductUtil->populateAdaptedListView($product));
+                                    $objTable->endRow();
+                                }
+                                echo $objTable->show();
+                    ?>
+
+                    <!--
                     <div class="adaptationListView">
                         <div class="productAdaptationListViewLeftColumn">
                             <h2><a href="#" class="adaptationListingLink">Model Curricula for Journalism</a></h2><br>
@@ -410,10 +478,9 @@ $this->loadClass('link', 'htmlelements');
                                 <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="adaptationLinks">make adaptation</a></div>
                             </div>
                         </div>
-
-
-
                     </div>
+
+                    -->
 
 
 
