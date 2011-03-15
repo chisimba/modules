@@ -1,7 +1,7 @@
 <?php
 
 //define table
-$tablename = 'tbl_institution';
+$tablename = 'tbl_unesco_oer_institution';
 $options = array('comment'=>'Table to store institution','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
 //define fields
