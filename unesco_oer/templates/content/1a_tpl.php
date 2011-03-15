@@ -247,21 +247,23 @@ $this->loadClass('htmltable', 'htmlelements');
 
                                 $newRow = true;
                                 $count = 0;
-                                foreach ($products as $product) {                                       //populates table
+                                foreach ($products as $product) {               //populates table
+
 
                                     if ($newRow) {
                                         $objTable->startRow();
                                         $objTable->addCell($this->objProductUtil->createProductInfo($product));
-                                        $objTable->endRow();
-                                        // $newRow=false;
+                                        $newRow=false;
+                                    }else{
+                                        $objTable->addCell($this->objProductUtil->createProductInfo($product));
                                     }
-                                    if ($count == 2) {
+
+                                    $count++;
+                                    if ($count == 3) {
                                         $newRow = true;
+                                        $objTable->endRow();
                                         $count = 0;
                                     }
-                                    $count++;
-
-                                    
                                 }
                                 echo $objTable->show();
                     ?>
