@@ -82,7 +82,7 @@ class podcaster extends controller {
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('doAjaxSendMail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
+        $required = array('doajaxsendmail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
 
 
         if (in_array($action, $required)) {
@@ -315,6 +315,7 @@ class podcaster extends controller {
         if ($path == '0')
             $path = '/';
         $name = $this->getParam('foldername');
+        
         $userId = $this->objUser->userId();
         $pathf = "/";
         //We need to remove the userId from the path
@@ -332,11 +333,11 @@ class podcaster extends controller {
             }while ($start < $count);
             $path = $pathf;
         }
-        if (empty($name) || $name == "/") {
+        if (empty($name) || $name == "/") {            
             $flag = "selected";
             $folderdata = $this->folderPermissions->getPermmissions($pathf);
             $folderid = $folderdata[0]['id'];
-            $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
+            return $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
         }
         if (!$path) {
             $path = "";
@@ -354,7 +355,7 @@ class podcaster extends controller {
         //Create only if new
         if (!$exists) {
             $path = $pathf;
-            //$this->objUtils->createFolder($path, $name);
+            $this->objUtils->createFolder($path, $name);
             $path = $path . "/" . $name;
             $flag = 'add';
         } else {
@@ -367,7 +368,7 @@ class podcaster extends controller {
         $folderid = $folderdata[0]['id'];
         $this->setVarByRef('folder', $name);
         $this->setVarByRef('path', $path);
-        $this->nextAction('sendmail', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
+        $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
     }
 
     /**
@@ -393,18 +394,18 @@ class podcaster extends controller {
      *
      * @return form
      */
-    public function __doAjaxSendMail() {
+    public function __doajaxsendmail() {
+        $generatedid = $this->getParam('id', '');
         //Debug on txtfile
         $File = "/home/paul/Desktop/ajaxsendmail.txt";
         $Handle = fopen($File, 'w');
-        $Data = "Jane Doe1\n";
+        $Data = "Jane Doe doAjaxSendMail".$generatedid."\n";
         fwrite($Handle, $Data);
         fclose($Handle);
+        exit;
         //End debug
-
         $this->setLayoutTemplate("podcaster_layout_tpl.php");
         $folderid = $this->getParam("folderid", "");
-        $generatedid = $this->getParam('id', '');
         $createcheck = $this->getParam('createcheck', '');
         $path = $this->getParam('path', '');
         $useremail = $this->getParam('useremail', '');
@@ -1195,7 +1196,6 @@ Sincerely,<br />
      *
      */
     function __doajaxupload() {
-
         $generatedid = $this->getParam('id');
         $filename = $this->getParam('filename');
         $pathid = $this->getParam('pathid');

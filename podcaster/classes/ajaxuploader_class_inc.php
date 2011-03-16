@@ -70,8 +70,7 @@ class ajaxuploader extends object
         // File Input
         $fileInput = new textinput('fileupload');
         $fileInput->fldType = 'file';
-        $fileInput->size = 60;
-        $fileInput->extra = 'onchange="changeFileName(\''.$id.'\');"';
+        $fileInput->size = 60;        
 
         // Button
         $button = new button ('upload', 'Upload');
@@ -111,23 +110,6 @@ function doUpload(id)
         document.forms[\'uploadfile_\'+id].submit();
     }
 }
-
-function changeFileName(id)
-{
-    document.forms[\'uploadfile\'].filename.value = document.forms[\'uploadfile\'].fileupload.value;
-
-    var tr = document.forms[\'uploadfile_\'+id].fileupload.value;
-    len = tr.length;
-    rs = 0;
-    for (i = len; i > 0; i--) {
-        vb = tr.substring(i,i+1)
-        if (vb == "/" && rs == 0) {
-            document.forms[\'uploadfile_\'+id].filename.value = tr.substring(i+1,len);
-            rs = 1;
-        }
-    }
-}
-
 // ]]>
 </script>');
     }
