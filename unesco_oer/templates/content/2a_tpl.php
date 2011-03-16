@@ -241,16 +241,22 @@ $this->loadClass('link', 'htmlelements');
                                 $newRow = true;
                                 $count = 0;
 
-                                foreach ($products as $product) {
-                                    if ($newRow && $product['parent_id'] != '') {
-                                        $objTable->startRow();
-                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
-                                        $newRow = false;
-                                         $count++;
-                                    } else if ($product['parent_id'] != '') {
-                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
-                                         $count++;
-                                    }
+                              foreach ($products as $product) {               //populates table
+                                    if ($product['parent_id'] != null) {
+                                        $count++;
+
+
+                                            if ($newRow) {
+                                                $objTable->startRow();
+                                                $objTable->addCell($this->objProductUtil->createProductInfo($product));
+                                                $newRow = false;
+
+
+                                            } else  {
+                                                $objTable->addCell($this->objProductUtil->createProductInfo($product));
+
+                                               }
+                                      }
                                    
                                     if ($count == 3) {
                                         $newRow = true;

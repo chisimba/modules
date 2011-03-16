@@ -244,17 +244,21 @@ $this->loadClass('htmltable', 'htmlelements');
                                 $newRow = true;
                                 $count = 0;
                                 foreach ($products as $product) {               //populates table
-                                    if ($newRow && $product['parent_id'] == null) {
-                                        $objTable->startRow();
-                                        $objTable->addCell($this->objProductUtil->createProductInfo($product));
-                                        $newRow = false;
+                                    if ($product['parent_id'] == null) {
                                         $count++;
 
-                                    } else if ($product['parent_id'] == null) {
-                                        $objTable->addCell($this->objProductUtil->createProductInfo($product));
-                                        $count++;
-                                    }
 
+                                            if ($newRow) {
+                                                $objTable->startRow();
+                                                $objTable->addCell($this->objProductUtil->createProductInfo($product));
+                                                $newRow = false;
+
+
+                                            } else  {
+                                                $objTable->addCell($this->objProductUtil->createProductInfo($product));
+                                       
+                                               }
+                                      }
 
                                     if ($count == 3) {
                                         $newRow = true;
