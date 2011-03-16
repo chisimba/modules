@@ -338,7 +338,7 @@ class podcaster extends controller {
             $folderdata = $this->folderPermissions->getPermmissions($pathf);
             $folderid = $folderdata[0]['id'];
             //return $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
-            return $this->nextAction('sendmail', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
+            return $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
         }
         if (!$path) {
             $path = "";
@@ -369,7 +369,7 @@ class podcaster extends controller {
         $folderid = $folderdata[0]['id'];
         $this->setVarByRef('folder', $name);
         $this->setVarByRef('path', $path);
-        $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
+        $this->nextAction('sendmail', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
     }
 
     /**
@@ -407,7 +407,7 @@ class podcaster extends controller {
         //Confirm that each is an email before sending
         $useremails = explode(",", $useremail);
         $useremail = $this->objViewerUtils->validateEmails($useremails);
-
+        $user = $this->objUser->getUserDetails($this->userId);
         if (empty($useremail))
             $useremail = $user['emailaddress'];
 
@@ -415,7 +415,6 @@ class podcaster extends controller {
         // Then bang off a mail to the user.
         $siteName = $this->objConfig->getSiteName();
         $siteEmail = $this->objConfig->getsiteEmail();
-        $user = $this->objUser->getUserDetails($this->userId);
         $message = $this->objLanguage->languageText("mod_podcaster_dearsirmadam", "podcaster", "Dear Sir/Madam") . '<br />
 <br />
 ' . $this->objLanguage->languageText("mod_podcaster_emailtext", "podcaster", "On [[DATE]], a podcast folder was created on the [[SITENAME]] website. Your can get updates of new podcasts in this folder via the following RSS feed") . ':<br />
