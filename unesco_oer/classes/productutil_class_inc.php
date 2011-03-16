@@ -79,7 +79,7 @@ class productutil extends object
         $content.='
                                 <div class="imageGridListing">
                                     <div class="imageTopFlag"></div>
-                                    <img src="' . $product['thumbnail'] . '" width="79" height="101">
+                                    <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
                                     <div class="imageBotomFlag"></div>
                                 </div>
                                 <br>
