@@ -23,16 +23,24 @@ $linkDescribe = $descProdLink->show()." ".$buttonNote;
 
 $this->setVar('pageSuppressXML', TRUE);
 
+        //Debug on txtfile
+        $File = "/home/paul/Desktop/ajaxsendmail.txt";
+        $Handle = fopen($File, 'w');
+        $Data = "Jane Doe doAjaxSendMail id=".$id." folderid=".$folderid." useremail=".$emails." createcheck=".$createcheck." path=".$path." sendstatus=".$sendstatus."\n";
+        fwrite($Handle, $Data);
+        fclose($Handle);
+        //exit;
+
 $this->appendArrayVar('bodyOnLoad', '
 
 var par = window.parent.document;
 window.history.forward(1);
 
-par.forms[\'sendmailconfirm_'.$id.'\'].reset();
-par.getElementById(\'sendmailconfirm_'.$id.'\').style.display=\'block\';
+par.forms[\'sendemail_'.$id.'\'].reset();
+par.getElementById(\'form_sendemail_'.$id.'\').style.display=\'block\';
 par.getElementById(\'sendmailresults\').style.display=\'block\';
-par.getElementById(\'sendmailresults\').innerHTML = \'<span class="confirm">An email was successfully sent to these addresses: '.$useremail.'</span><br /><br /> '.$linkDescribe.' \';
-par.getElementById(\'div_email_'.$id.'\').style.display=\'none\';
+par.getElementById(\'sendmailresults\').innerHTML = \'<span class="confirm">An email was successfully sent to these addresses: '.$emails.'</span><br /><br /> '.$linkDescribe.' \';
+par.getElementById(\'div_sendmail_'.$id.'\').style.display=\'none\';
 
 parent.loadAjaxForm(\''.$fileid.'\');
 parent.processConversions();

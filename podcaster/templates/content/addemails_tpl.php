@@ -1,5 +1,21 @@
 <?php
 $this->setVar('pageSuppressXML', TRUE);
+
+$this->loadClass('iframe', 'htmlelements');
+$this->loadClass('htmlheading', 'htmlelements');
+
+$header = new htmlHeading();
+$header->str = $this->objLanguage->languageText('mod_podcaster_emailrssnote', 'podcaster', 'Email RSS notification');
+$header->type = 2;
+
+echo $header->show();
+
+$objAjaxSendMail = $this->newObject('ajaxsendmail');
+
+echo $objAjaxSendMail->showForm($useremail,$createcheck,$path,$folderid);
+
+/*
+$this->setVar('pageSuppressXML', TRUE);
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -74,7 +90,6 @@ $form->id = 'form_sendmail_'.$id;
 //Title
 $usremail = new textinput("useremail", $useremail);
 $usremail->size = 60;
-$usremail->extra = 'onchange="changeEmailAddress(\'' . $id . '\');"';
 
 $ffolderid = new hiddeninput("folderid", $folderid);
 $ccreatecheck = new hiddeninput("createcheck", $createcheck);
@@ -107,10 +122,12 @@ $objTable->startRow();
 $objTable->addCell("** " . $buttonNote, Null, 'top', 'left', '', 'colspan="3"');
 $objTable->endRow();
 $form->addToForm($objTable->show());
-/*
+
 $form->addToForm($emailAdd." ".$usremail->show() . " **" . $button->show());
 $form->addToForm("<br />".$ffolderid->show() . $ccreatecheck->show() . $ppath->show() . $genId->show());
 $form->addToForm("<br />* " . $emailDesc."<br /> **".$buttonNote);
-*/
+
 echo $form->show() . '<div id="div_email_' . $id . '" style="display:none;"> Sending mail ' . $objIcon->show() . '</div><div id="sendmailresults"></div><div id="updateform"></div>' . $objIframe->show();
+
+ */
 ?>

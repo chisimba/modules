@@ -1,51 +1,50 @@
 <?php
+
 // security check - must be included in all scripts
-if(!$GLOBALS['kewl_entry_point_run']){
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end of security
 
 /**
-* Class to Display the Ajax Send Mail
-*
-*
-*/
-class ajaxsendmail extends object
-{
+ * Class for the Ajax send mail form
+ *
+ */
+class ajaxsendmail extends object {
 
     /**
-    * Constructor
-    */
-    public function init()
-    {
+     * Constructor
+     */
+    public function init() {
         // Load Classes Needed to Create the form and iframe
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('hiddeninput', 'htmlelements');
+        $this->objLanguage = $this->getObject('language', 'language');
     }
 
     /**
-    * Method to render the form
-    * @return string Form
-    */
+     * Method to render the form
+     * @return string Form
+     */
+
     /**
      * Method to render the form
      * @param string $path
      * @return form
      */
-    public function showForm($path, $pathid)
-    {
+    public function showForm($useremail, $createcheck, $path, $folderid) {
         // Generate an ID - In case multiple uploads occur on one page
-        $id = mktime().rand();
+        $id = mktime() . rand();
 
         // Generate Iframe
         $objIframe = $this->newObject('iframe', 'htmlelements');
 
-        $objIframe->src = $this->uri(array('action'=>'tempiframe', 'id'=>$id));
-        $objIframe->id = 'ifra_upload_'.$id;
-        $objIframe->name = 'iframe_upload_'.$id;
+        $objIframe->src = $this->uri(array('action' => 'tempiframe', 'id' => $id));
+        $objIframe->id = 'ifra_sendmail_' . $id;
+        $objIframe->name = 'iframe_sendmail_' . $id;
         $objIframe->frameborder = 1;
         $objIframe->width = 600;
         $objIframe->height = 400;
@@ -56,73 +55,62 @@ class ajaxsendmail extends object
         $objIcon->setIcon('loading_bar');
 
         // Create Form
-        $form = new form ('uploadfile_'.$id, $this->uri(array('action'=>'doAjaxSendMail', 'pathid'=>$pathid)));
-        $form->extra = 'enctype="multipart/form-data" target="iframe_upload_'.$id.'"';
-        $form->id = 'form_upload_'.$id;
+        $form = new form('sendemail_' . $id, $this->uri(array('action' => 'doajaxsendmail')));
+        $form->extra = 'enctype="multipart/form-data" target="iframe_sendmail_' . $id . '"';
+        $form->id = 'form_sendemail_' . $id;
 
         // File Input
-        $fileInput = new textinput('fileupload');
-        $fileInput->fldType = 'file';
-        $fileInput->size = 60;
-        $fileInput->extra = 'onchange="changeFileName(\''.$id.'\');"';
-
+        $usremail = new textinput("useremail", $useremail);
+        $usremail->size = 60;
+        $ccreatecheck = new hiddeninput("createcheck", $createcheck);
+        $genId = new hiddeninput('id', $id);
+        $ppath = new hiddeninput("path", $path);
+        $folderid = new hiddeninput("folderid", $folderid);
         // Button
-        $button = new button ('upload', 'Upload');
-        $button->setOnClick('doUpload(\''.$id.'\');');
+        $button = new button('send', 'Send mail');
+        $button->setOnClick('doSendMail(\'' . $id . '\');');
 
         // Hidden Inputs
         $filename = new hiddeninput('filename', '');
-        $pathid = new hiddeninput('path', $pathid);
-        $hiddenInput = new hiddeninput('id', $id);
-
-        $form->addToForm($fileInput->show().' '.$button->show().$filename->show().$hiddenInput->show().$pathid->show());
+        $emailAdd = "* " . $this->objLanguage->languageText('mod_podcaster_emailadd', 'podcaster', 'Email address') . " :";
+        //$buttonNote = $this->objLanguage->languageText('mod_podcaster_clickthreefromemail', 'podcaster', 'Click on the "Next step" button to send the emails and proceed to upload podcast');
+        $emailDesc = $this->objLanguage->languageText('mod_podcaster_emailtip', 'podcaster', 'You can type in multiple emails by seperating them with a comma i.e. john@gmail.com,mark@facebook.com');
+        
+        $form->addToForm($emailAdd . " " . $usremail->show() . ' ' . $button->show());
+        $form->addToForm($genId->show() . ' ' . $ppath->show() . ' ' . $ccreatecheck->show() . " " . $folderid->show());
+        $form->addToForm("<br /><br />* " . $emailDesc);
 
         // Append JavaScript
         $this->addJS();
 
-        return $form->show().'<div id="div_upload_'.$id.'" style="display:none;">'.$objIcon->show().' Upload in Progress</div><div id="uploadresults"></div><div id="updateform"></div>'.$objIframe->show();
+        return $form->show() . '<div id="div_sendmail_' . $id . '" style="display:none;">Sending mail ' . $objIcon->show() . '</div><div id="sendmailresults"></div><div id="sendmailform"></div>' . $objIframe->show();
     }
 
     /**
-    * Method to append JavaScript to the header
-    *
-    * These are run when the forms are submitted.
-    */
-    private function addJS()
-    {
+     * Method to append JavaScript to the header
+     *
+     * These are run when the forms are submitted.
+     */
+    private function addJS() {
+        $errormsg = $this->objLanguage->languageText('mod_podcaster_validemailadd', 'podcaster', 'You need to type in a valid email address to proceed');
         $this->appendArrayVar('headerParams', '<script type="text/javascript">
 // <![CDATA[
 
-function doUpload(id)
+function doSendMail(id)
 {
-    if (document.forms[\'uploadfile_\'+id].fileupload.value == \'\') {
-        alert(\'Please select a file\');
+    if (document.forms[\'sendemail_\'+id].useremail.value == \'\') {
+        alert(\''.$errormsg.'\');
     } else {
-        document.getElementById(\'form_upload_\'+id).style.display=\'none\';
-        document.getElementById(\'div_upload_\'+id).style.display=\'block\';
-        document.getElementById(\'uploadresults\').style.display=\'none\';
-        document.forms[\'uploadfile_\'+id].submit();
+        document.getElementById(\'form_sendemail_\'+id).style.display=\'none\';
+        document.getElementById(\'div_sendmail_\'+id).style.display=\'block\';
+        document.getElementById(\'sendmailresults\').style.display=\'none\';
+        document.forms[\'sendemail_\'+id].submit();
     }
 }
-
-function changeFileName(id)
-{
-    document.forms[\'uploadfile\'].filename.value = document.forms[\'uploadfile\'].fileupload.value;
-
-    var tr = document.forms[\'uploadfile_\'+id].fileupload.value;
-    len = tr.length;
-    rs = 0;
-    for (i = len; i > 0; i--) {
-        vb = tr.substring(i,i+1)
-        if (vb == "/" && rs == 0) {
-            document.forms[\'uploadfile_\'+id].filename.value = tr.substring(i+1,len);
-            rs = 1;
-        }
-    }
-}
-
 // ]]>
 </script>');
     }
+
 }
+
 ?>

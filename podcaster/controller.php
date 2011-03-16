@@ -337,7 +337,8 @@ class podcaster extends controller {
             $flag = "selected";
             $folderdata = $this->folderPermissions->getPermmissions($pathf);
             $folderid = $folderdata[0]['id'];
-            return $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
+            //return $this->nextAction('upload', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
+            return $this->nextAction('sendmail', array('createcheck' => $flag, 'folderid' => $folderid, 'path' => $path));
         }
         if (!$path) {
             $path = "";
@@ -395,20 +396,13 @@ class podcaster extends controller {
      * @return form
      */
     public function __doajaxsendmail() {
+        //$this->setLayoutTemplate("podcaster_layout_tpl.php");
         $generatedid = $this->getParam('id', '');
-        //Debug on txtfile
-        $File = "/home/paul/Desktop/ajaxsendmail.txt";
-        $Handle = fopen($File, 'w');
-        $Data = "Jane Doe doAjaxSendMail".$generatedid."\n";
-        fwrite($Handle, $Data);
-        fclose($Handle);
-        exit;
-        //End debug
-        $this->setLayoutTemplate("podcaster_layout_tpl.php");
+        $useremail = $this->getParam('useremail', '');
         $folderid = $this->getParam("folderid", "");
         $createcheck = $this->getParam('createcheck', '');
         $path = $this->getParam('path', '');
-        $useremail = $this->getParam('useremail', '');
+        //Validate useremail
         $useremail = str_replace(" ", "", $useremail);
         //Confirm that each is an email before sending
         $useremails = explode(",", $useremail);
@@ -417,6 +411,7 @@ class podcaster extends controller {
         if (empty($useremail))
             $useremail = $user['emailaddress'];
 
+        //End debug
         // Then bang off a mail to the user.
         $siteName = $this->objConfig->getSiteName();
         $siteEmail = $this->objConfig->getsiteEmail();
@@ -451,21 +446,21 @@ Sincerely,<br />
         $objMailer->setValue('AltBody', strip_tags($message));
 
         if ($objMailer->send()) {
-            $sendstatus = "success";
+            $sendstatus = "send_success";
         } else {
-            $sendstatus = "fail";
+            $sendstatus = "send_fail";
         }
         $this->setVarByRef("mode", $this->mode);
         $this->setVarByRef("createcheck", $createcheck);
         $this->setVarByRef("path", $path);
         $flag = 'add';
-        $this->nextAction('ajaxSendMailResults', array('id' => $generatedid, 'emails' => $useremail, 'createcheck' => $flag, 'folderid' => $folderid, 'path' => $path, 'sendstatus' => $sendstatus));
+        $this->nextAction('ajaxsendmailresults', array('id' => $generatedid, 'emails' => $useremail, 'createcheck' => $flag, 'folderid' => $folderid, 'path' => $path, 'sendstatus' => $sendstatus));
     }
 
     /**
      * Used to push through send mail results for AJAX
      */
-    function __ajaxSendMailResults() {
+    function __ajaxsendmailresults() {
         $this->setVar('pageSuppressToolbar', TRUE);
         $this->setVar('pageSuppressBanner', TRUE);
         $this->setVar('suppressFooter', TRUE);
@@ -487,7 +482,6 @@ Sincerely,<br />
 
         $generatedid = $this->getParam('id');
         $this->setVarByRef('id', $generatedid);
-
         return 'ajaxsendmailresults_tpl.php';
     }
 
