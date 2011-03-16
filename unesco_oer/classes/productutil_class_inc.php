@@ -59,9 +59,13 @@ class productutil extends object
                                 </div>
 ';
         return $content;
-        
     }
 
+    /**
+     * This function populates a page with the original products in a gridview
+     * @param <type> $product
+     * @return <type> $content
+     */
     public function populateGridView($product)
     {
         $content = '';
@@ -96,6 +100,11 @@ class productutil extends object
         return $content;
     }
 
+    /**
+     * This function populates a page with the original products in a listview
+     * @param <type> $product
+     * @return <type> $content
+     */
     public function populateListView($product)
     {
         $content = '';
@@ -136,6 +145,11 @@ class productutil extends object
         return $content;
     }
 
+    /**
+     * This function populates a page with the adapted products in a gridview
+     * @param <type> $adaptedProduct
+     * @return <type> $content
+     */
     public function populateAdaptedGridView($adaptedProduct)
     {
         $content = '';
@@ -171,6 +185,11 @@ class productutil extends object
         return $content;
     }
 
+    /**
+     * This function populates a page with the adapted products in a listview
+     * @param <type> $adaptedProduct
+     * @return <type> $content
+     */
     public function populateAdaptedListView($adaptedProduct)
     {
         $content = '';

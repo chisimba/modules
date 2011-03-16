@@ -28,9 +28,8 @@ class dbproducts extends dbtable {
     function init() {
         parent::init("tbl_unesco_oer_products.sql");
     }
-
+    
     function getProductTitle($title) {
-
         $sql = "select * from tbl_unesco_oer_products where title = '$title'";
 
         return $this->getArray($sql);

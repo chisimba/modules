@@ -237,13 +237,9 @@ $this->loadClass('htmltable', 'htmlelements');
                         </div>
                     </div>
                     <?php
-                                // creates chisimba table
-
-
+                                //Creates chisimba table
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
                                 $products = $this->objDbProducts->getProducts(0, 10);               // pulls available products from database using getproducts
-
-
 
                                 $newRow = true;
                                 $count = 0;
