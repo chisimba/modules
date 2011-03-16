@@ -244,6 +244,7 @@ $this->loadClass('link', 'htmlelements');
 
                                 //Loop through the products and display each in it's own line
                                 foreach ($products as $product) {
+                                    if ($product['parent_id'] == null)
                                     echo $this->objProductUtil->populateListView($product);
                                 }
                     ?>
