@@ -101,7 +101,7 @@ class userutils extends object {
         if ($treeType == 'htmldropdown') {
             $allFilesNode = new treenode(array('text' => $this->modeLabel, 'link' => $baseFolderId));
         } else {
-            $allFilesNode = new treenode(array('text' => $this->modeLabel, 'link' => $this->uri(array('action' => 'viewfolder', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $allFilesNode = new treenode(array('text' => $this->modeLabel, 'link' => "#", 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
         }
         $documents = $this->getObject('dbdocuments');
         $count = $documents->getUnapprovedDocsCount();
@@ -122,7 +122,7 @@ class userutils extends object {
             }
 
             $userManagement = "$userCount Users";
-            if ($selected == 'unapproved') {
+            if ($selected == 'usermanagement') {
                 $userManagement = '<strong>' . $userManagement . '</strong>';
                 $cssClass = 'confirm';
             } else {
@@ -130,8 +130,8 @@ class userutils extends object {
             }
 
 
-            $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
-            $newUserNode = new treenode(array('text' => $userManagement, 'link' => $this->uri(array('action' => 'usermanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs')), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            $newUserNode = new treenode(array('text' => $userManagement, 'link' => $this->uri(array('action' => 'usermanagement')), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
 
             foreach($rolesArray as $key=>$value) {
                 $roleNode = &new treenode(array(
@@ -155,7 +155,7 @@ class userutils extends object {
                 $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => '-1'));
             }
             else {
-                $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => $this->uri(array('action' => 'facultymanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+                $facultyManagementNode = new treenode(array('text' => $facultyManagement, 'link' => $this->uri(array('action' => 'facultymanagement')), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
             }
 
             if ($treeType != 'htmldropdown') {
