@@ -102,8 +102,30 @@ class dbapousers extends dbtable {
         return $this->getAll();
     }
 
+    /* This method retrieves data for a specific user.
+     * @param <String> $id The key that is used to retrieve data for each user
+     * @access public
+     * @return array containing all the data for that users
+     */
     public function getUser($id) {
         return $this->getRow("id", $id);
+    }
+
+    /*
+     * This method is used to get the number of users, either for a particular division,
+     * or for all divisions
+     * @param <String> $role The role that the user has
+     * @access public
+     * @return <String> $count The number of users
+     */
+    public function getNumUsers($role = NULL) {
+
+        if(!empty($role)) {
+            $this->getAll("role = '$role'");
+        }
+        else {
+            return count($this->getUsers());
+        }
     }
 
     

@@ -91,7 +91,7 @@ class userutils extends object {
     public function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
         $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         
-        
+        $rolesArray = array('subsidy'=>'Subsidy Office', 'library'=>'Library', 'faculty'=>'Faculty Registrar');
         $baseFolderId = "0";
         
         $icon = '';
@@ -107,8 +107,8 @@ class userutils extends object {
         $count = $documents->getUnapprovedDocsCount();
         $faculty = $this->getObject('dbfaculties');
 
-        //$this->objUsers = $this->getObject('dbusers');
-        $userCount = 0;//$this->objUsers->getNumUsers();
+        $this->objUsers = $this->getObject('dbapousers');
+        $userCount = $this->objUsers->getNumUsers();
 
         $facultyCount = count($faculty->getFaculties());
         $faculties = $faculty->getFaculties();
@@ -132,6 +132,16 @@ class userutils extends object {
 
             $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
             $newUserNode = new treenode(array('text' => $userManagement, 'link' => $this->uri(array('action' => 'usermanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+
+            foreach($rolesArray as $key=>$value) {echo $key.":".$value;
+                $roleNode = new treenode(array(
+                                           'text' => $value,
+                                           'link' => $this->uri(array('action' => 'usermanagement', 'role' => $key)),
+                                           'icon' => $icon,
+                                           'expandedIcon' => $expandedIcon,
+                                           'cssClass' => $cssClass));
+                $newUserNode->addItem($roleNode);
+            }
 
             $facultyManagement = "$facultyCount Faculty Management";
             if ($selected == 'facultymanagement') {
@@ -162,7 +172,7 @@ class userutils extends object {
         $expandedIcon = 'folder-expanded.gif';
 
         $refArray = array();
-        $refArray[$this->rootTitle] = & $allFilesNode;
+        $refArray[$this->rootTitle] = & $facultyManagementNode;
         
         if (count($faculties) > 0) {
             foreach ($faculties as $row) {
