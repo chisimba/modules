@@ -133,8 +133,8 @@ class userutils extends object {
             $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
             $newUserNode = new treenode(array('text' => $userManagement, 'link' => $this->uri(array('action' => 'usermanagement', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
 
-            foreach($rolesArray as $key=>$value) {echo $key.":".$value;
-                $roleNode = new treenode(array(
+            foreach($rolesArray as $key=>$value) {
+                $roleNode = &new treenode(array(
                                            'text' => $value,
                                            'link' => $this->uri(array('action' => 'usermanagement', 'role' => $key)),
                                            'icon' => $icon,
