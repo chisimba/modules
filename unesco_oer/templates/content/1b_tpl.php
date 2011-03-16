@@ -16,7 +16,7 @@ $this->loadClass('link', 'htmlelements');
          <![endif]-->
     </head>
 
-   <body>
+    <body>
         <div class="blueHorizontalStrip"></div>
         <div class="mainWrapper">
             <div class="topContent">
@@ -240,13 +240,12 @@ $this->loadClass('link', 'htmlelements');
 
                     <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
-                               $products = $this->objDbProducts->getProducts(0, 10);
+                                $products = $this->objDbProducts->getProducts(0, 10);
+
+                                //Loop through the products and display each in it's own line
                                 foreach ($products as $product) {
-                                    $objTable->startRow();
-                                    $objTable->addCell($this->objProductUtil->populateListView($product));
-                                    $objTable->endRow();
+                                    echo $this->objProductUtil->populateListView($product);
                                 }
-                                echo $objTable->show();
                     ?>
                     <!--</div>-->
 

@@ -239,20 +239,13 @@ $this->loadClass('link', 'htmlelements');
                             </div>
                         </div>
                     </div>
-
-
+                    
                     <?php
-                                $objTable = $this->getObject('htmltable', 'htmlelements');
-                               $products = $this->objDbProducts->getProducts(0, 10);
-                                $newRow = true;
-                                $count = 0;
+                                $products = $this->objDbProducts->getProducts(0, 10);
 
                                 foreach ($products as $product) {
-                                    $objTable->startRow();
-                                    $objTable->addCell($this->objProductUtil->populateAdaptedListView($product));
-                                    $objTable->endRow();
+                                    echo $this->objProductUtil->populateAdaptedListView($product);
                                 }
-                                echo $objTable->show();
                     ?>
 
                     <!--
