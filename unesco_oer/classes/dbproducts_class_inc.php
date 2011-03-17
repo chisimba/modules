@@ -26,7 +26,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class dbproducts extends dbtable {
 
     function init() {
-        parent::init("tbl_unesco_oer_products.sql");
+        parent::init("tbl_unesco_oer_products");
     }
     
     function getProductTitle($title) {
@@ -39,6 +39,10 @@ class dbproducts extends dbtable {
         $sql = "select * from tbl_unesco_oer_products limit $start,$end";
 
         return $this->getArray($sql);
+    }
+
+    function addProduct($productArray) {
+        //INSERT INTO `unesco_oer`.`tbl_unesco_oer_products` (`id`, `parent_id`, `title`, `creator`, `keywords`, `description`, `created_on`, `resource_type`, `content_type`, `format`, `source`, `theme`, `language`, `content`, `thumbnail`, `puid`) VALUES ('1', NULL, 'Model Curricula for Journalism Education', 'UNESCO Series on Journalism Education', 'Journalism', 'Model curricula for journalism education; UNESCO series on journalism education; 2009', CURDATE(), 'pdf', 'text', 'pdf', 'Products/Files', 'none', 'English', '??', 'Products/Thumbnails/Journalism Curriculum.png', NULL)
     }
 
 }

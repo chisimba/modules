@@ -5,7 +5,17 @@ class unesco_oer extends controller {
     public $objProductUtil;
     public $objDbProducts;
 
+    /**
+     *
+     * @var string $objLanguage String object property for holding the
+     * language object
+     * @access public
+     *
+     */
+    public $objLanguage;
+
     function init() {
+        $this->objLanguage = $this->getObject('language', 'language');
         $this->objProductUtil = $this->getObject('productutil');
         $this->objDbProducts = $this->getObject('dbproducts');
     }
@@ -97,6 +107,48 @@ class unesco_oer extends controller {
 
     public function requiresLogin() {
         return false;
+    }
+
+    public function __productsUi() {
+        return "tbl_products_ui_tpl.php";
+    }
+
+    public function __uploadSubmit(){
+
+        $uploadedFile = $this->getObject('uploadinput', 'filemanager');
+        $uploadedFile->enableOverwriteIncrement = TRUE;
+        $uploadedFile->customuploadpath = 'unesco_oer/'.$this->getParam('title').'/thumbnail/';
+
+        $results = $uploadedFile->handleUpload();
+
+        if ($results == FALSE) {
+            return NULL;
+        } else {
+            // If successfully Uploaded
+            if (!$results['success']) return NULL;
+        }
+
+        $data=array(
+
+            'parent_id'=>NULL,
+            'title'=>$this->getParam('title'),
+            'creator'=>$this->getParam('creator'),
+            'keywords'=>trim($this->getParam('keywords')),
+            'description'=>$this->getParam('description'),
+            'created_on'=>NULL,
+            'resource_type'=>NULL,
+            'content_type'=>NULL,
+            'format'=>NULL,
+            'source'=>NULL,
+            'theme'=>$this->getParam('theme'),
+            'language'=>$this->getParam('language'),
+            'content'=>NULL,
+            'thumbnail'=>'usrfiles/'.$results['path']
+        );
+
+        $this->objDbProducts->insert($data);
+
+        return "tbl_products_ui_tpl.php";
     }
 
 }
