@@ -86,6 +86,15 @@ class unesco_oer extends controller {
         return "2b_tpl.php";
     }
 
+     public function __FilterProducts() {
+
+
+
+
+
+        return "2b_tpl.php";
+    }
+
     public function requiresLogin() {
         return false;
     }
