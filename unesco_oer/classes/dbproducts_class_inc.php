@@ -36,7 +36,8 @@ class dbproducts extends dbtable {
     }
 
     function getProducts($start,$end) {
-        $sql = "select * from tbl_unesco_oer_products limit $start,$end ";
+        $sql = "select * from tbl_unesco_oer_products limit $start,$end";
+
         return $this->getArray($sql);
     }
 
