@@ -241,7 +241,7 @@ $this->loadClass('link', 'htmlelements');
                     </div>
 
                     <?php
-                                $objTable = $this->getObject('htmltable', 'htmlelements');
+                                //$objTable = $this->getObject('htmltable', 'htmlelements');
                                 $products = $this->objDbProducts->getProducts(0, 10);
                                 $newRow = true;
                                 $count = 0;
@@ -251,10 +251,6 @@ $this->loadClass('link', 'htmlelements');
 
                                 foreach ($products as $product) {
                                     if ($product['parent_id'] != '') {
-
-                                        $objTable->startRow();
-                                        $objTable->addCell($this->objProductUtil->populateAdaptedListView($product));
-                                        $objTable->endRow();
                                         echo $this->objProductUtil->populateAdaptedListView($product);
                                     }
                                 }

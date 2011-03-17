@@ -247,18 +247,14 @@ $this->loadClass('htmltable', 'htmlelements');
                                     if ($product['parent_id'] == null) {
                                         $count++;
 
-
-                                            if ($newRow) {
-                                                $objTable->startRow();
-                                                $objTable->addCell($this->objProductUtil->createProductInfo($product));
-                                                $newRow = false;
-
-
-                                            } else  {
-                                                $objTable->addCell($this->objProductUtil->createProductInfo($product));
-                                       
-                                               }
-                                      }
+                                        if ($newRow) {
+                                            $objTable->startRow();
+                                            $objTable->addCell($this->objProductUtil->populateGridView($product));
+                                            $newRow = false;
+                                        } else {
+                                            $objTable->addCell($this->objProductUtil->populateGridView($product));
+                                        }
+                                    }
 
                                     if ($count == 3) {
                                         $newRow = true;

@@ -23,44 +23,6 @@ class productutil extends object
 
     }
 
-    /*
-     * This function is included for backward compatibility
-     */
-
-    public function createProductInfo($product)
-    {
-        $content = '';
-
-        if ($product['new'] == 'true') {
-            $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
-        } else {
-            $content.= '<div class="newImageIcon"></div>';
-        }
-
-        $content.='
-                                <div class="imageGridListing">
-                                    <div class="imageTopFlag"></div>
-                                    <img src="' . $product['thumbnail'] . '" width="79" height="101">
-                                    <div class="imageBotomFlag"></div>
-                                </div>
-                                <br>
-                                <div class="blueListingHeading">' . $product['title'] . '</div>
-                                <div class="listingLanguageLinkAndIcon">
-                                    <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                    <div class="listingLanuagesDropdownDiv">
-                                        <select name="" class="listingsLanguageDropDown">
-                                            <option value="">Languages</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="listingAdaptationsLinkAndIcon">
-                                    <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                    <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                </div>
-';
-        return $content;
-    }
-
     /**
      * This function populates a page with the original products in a gridview
      * @param <type> $product
@@ -113,6 +75,7 @@ class productutil extends object
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
 
+        //TODO Sieve through this to get number of adaptations, 
         $content.='
                   <div class="productsListView">
                    <h2>' . $product['title'] . '</h2><br>

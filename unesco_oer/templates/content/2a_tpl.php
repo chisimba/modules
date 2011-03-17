@@ -241,29 +241,26 @@ $this->loadClass('link', 'htmlelements');
                                 $newRow = true;
                                 $count = 0;
 
-                              foreach ($products as $product) {               //populates table
+                                foreach ($products as $product) {               //populates table
                                     if ($product['parent_id'] != null) {
                                         $count++;
 
 
-                                            if ($newRow) {
-                                                $objTable->startRow();
-                                                $objTable->addCell($this->objProductUtil->createProductInfo($product));
-                                                $newRow = false;
+                                        if ($newRow) {
+                                            $objTable->startRow();
+                                            $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                            $newRow = false;
+                                        } else {
+                                            $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                        }
+                                    }
 
-
-                                            } else  {
-                                                $objTable->addCell($this->objProductUtil->createProductInfo($product));
-
-                                               }
-                                      }
-                                   
+                                    //Display 3 products per row
                                     if ($count == 3) {
                                         $newRow = true;
                                         $count = 0;
                                         $objTable->endRow();
                                     }
-                                   
                                 }
                                 echo $objTable->show();
                     ?>
