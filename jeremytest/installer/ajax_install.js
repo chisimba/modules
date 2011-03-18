@@ -1,13 +1,13 @@
 // Ajax_Install.js
 // (C) 2011 AVOIR
 
-var UpdateProgress_deleteprogressfile = false;
+//var UpdateProgress_deleteprogressfile = false;
 var UpdateProgress_response = '';
-function UpdateProgress()
+function UpdateProgress(deleteprogressfile_)
 {
     ///ajax_progress/
     //UpdateProgress_deleteprogress
-    var deleteprogressfile_ =UpdateProgress_deleteprogressfile;
+    //var deleteprogressfile_ =UpdateProgress_deleteprogressfile;
     new Ajax.Request('progress.php', {
         asynchronous: false,
         method:'get',
@@ -28,25 +28,31 @@ function UpdateProgress()
         }
     });
 }
+function UpdateProgress_()
+{
+    UpdateProgress(false);
+}
 
 var timerId = null;
 var login_url = null;
-
-function ajax_install(register_url, register_url_params, login_url_)
+function ajax_install(register_url, register_url_params_, login_url_)
 {
     login_url = login_url_;
+    register_url_params_ = 'var register_url_params = ' + register_url_params_;
+    eval(register_url_params_);
     ///ajax_progress/
     new Ajax.Request(register_url, {
         asynchronous: true,
         method:'get',
-        parameters: encodeURIComponent(register_url_params),
+        //parameters: encodeURI(register_url_params),
+        parameters: register_url_params,
         onSuccess: function(transport){
             if (timerId != null) {
                 window.clearInterval(timerId);
                 timerId = null;
             }
-            UpdateProgress_deleteprogressfile = true;
-            UpdateProgress();
+            //UpdateProgress_deleteprogressfile = true;
+            UpdateProgress(true);
             //var response = transport.responseText || "no response text";
             var s = '<pre>' + UpdateProgress_response + "\nSuccess! " /* + response */ + ' Please wait while you are redirected...' + '</pre>';
             $('output').innerHTML = s;
@@ -68,6 +74,6 @@ function ajax_install(register_url, register_url_params, login_url_)
             $('output').scrollTop=$('output').scrollHeight;
         }
     });
-    timerId = window.setInterval('UpdateProgress()', 1000);
-    return false;
+    timerId = window.setInterval('UpdateProgress_()', 1000);
+    //return; //false;
 }

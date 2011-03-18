@@ -63,7 +63,8 @@ class CompleteAction extends StepAction
         $registerLink = 'http://'.str_replace('//','/',$_SESSION['site_server_url'].'/'.$_SESSION['site_url'].'/index.php?module=modulecatalogue&action=firsttimeregistration&sysType=').str_replace(' ','%20',$_SESSION['SysType']);
         // AJAX
         $ajaxRegisterLink = 'http://'.str_replace('//','/',$_SESSION['site_server_url'].'/'.$_SESSION['site_url'].'/').'index.php';
-        $ajaxRegisterLinkParams = 'module=modulecatalogue&action=firsttimeregistration&sysType='.$_SESSION['SysType'].'&ajax=true'; //str_replace(' ','%20',);
+        //$ajaxRegisterLinkParams = 'module=modulecatalogue&action=firsttimeregistration&sysType='.$_SESSION['SysType'].'&ajax=true'; //str_replace(' ','%20',);
+        $ajaxRegisterLinkParams = "{ module: \'modulecatalogue\', action: \'firsttimeregistration\', sysType: \'".$_SESSION['SysType']."\', ajax: \'true\' }"; //urlencode()
         $ajaxLoginLink = 'http://'.str_replace('//','/',$_SESSION['site_server_url'].'/'.$_SESSION['site_url'].'/').'index.php?module=security&action=login&username=admin&password=a&mod=modulecatalogue';
 
         $tpl->set('login_url', $registerLink);

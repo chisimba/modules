@@ -9,7 +9,13 @@
 
 $deleteprogressfile = isset($_GET['deleteprogressfile']) && $_GET['deleteprogressfile'] == 'true';
 
-$filename = '../progress';
+$dir = dirname($_SERVER ['SCRIPT_FILENAME']);
+//echo "[$dir]\n";
+$dir = preg_replace('|/installer$|i', '', $dir);
+//echo "[$dir]\n";
+$filename = $dir . '/progress';
+//echo "[$filename]\n";
+
 if (!file_exists($filename)) {
     echo "Please wait...";
 }
