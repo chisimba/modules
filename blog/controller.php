@@ -536,8 +536,14 @@ class blog extends controller {
                 $this->setVarByRef('postid', $postid);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('userid', $userid);
+                //Add the stuff for rel=canonical
+                $permaLinkForPost = $this->uri(array('postid' => $postid,
+                    'action' => 'viewsingle',
+                    'userid' => $userid),'blog');
+                $permaLinkForPost = str_replace('&amp;', '&', $permaLinkForPost);
+                $canonicalLink = '<link rel="canonical" href="' . $permaLinkForPost . '"/>';
+                $this->appendArrayVar('headerParams', $canonicalLink);
                 $this->commentsEnabled = $this->objSysConfig->getValue('enabled', 'blogcomments');
-                // $this->setVar('pageSuppressXML', TRUE);
                 return 'viewsingle_tpl.php';
                 break;
 
