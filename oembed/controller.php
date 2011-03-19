@@ -139,7 +139,7 @@ class oembed extends controller
     */
     private function __demo()
     {
-        $this->setVar('JQUERY_VERSION', '1.3.1');
+        //$this->setVar('JQUERY_VERSION', '1.4.2');
         $oEmbed = $this->getObject('jqoembed', 'oembed');
         $oEmbed->loadOembedPlugin();
         $str = $oEmbed->getDefaultEmbed();
