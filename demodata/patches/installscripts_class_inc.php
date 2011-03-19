@@ -45,9 +45,9 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * WURFL Installer Class
+ * DEMODATA Installer Class
  * 
- * Performs the necessary actions to install the WURFL mobile device detection library.
+ * Performs the necessary actions to install the demodata users and their images
  * 
  * @category  Chisimba
  * @package   wurfl
@@ -58,7 +58,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://chisimba.com/
  * @see       http://wurfl.sourceforge.net/
  */
-class demodata_installscripts extends object
+class demodata_installscripts extends dbtable
 {
     /**
      * Instance of the altconfig class in the config module.
@@ -87,14 +87,105 @@ class demodata_installscripts extends object
     {
       // Extract the userimages
         $userImages = $this->objAltConfig->getModulePath() . 'demodata/resources/userimages/userimages.zip';
+        $userDataFile = $this->objAltConfig->getModulePath() . 'demodata/sql/userdata.xml';
         $targetPath = $this->objAltConfig->getSiteRootPath() . 'user_images/';
+        $userXml = $this->getUserDataAsXml($userDataFile);
+        if ($userXml) {
+            $this->createUsers($userXml);
+        }
 
-        // Unzip the WURFL XML file.
+
+        // Unzip the userimages demo file.
         $zip = new ZipArchive();
         if ($zip->open($userImages) === TRUE) {
             $zip->extractTo($targetPath);
             $zip->close();
         }
+    }
+
+    /**
+     *
+     * Get the userdata file from the SQL directory for this module
+     * and return it as an XML object
+     *
+     * @param string $userDataFile The file path to the XML file
+     * @return string Object The XML object
+     *
+     */
+    private function getUserDataAsXml($userDataFile)
+    {
+        if (file_exists($userDataFile)) {
+            return simplexml_load_file($userDataFile);
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Loop over the XML file and create the users
+     *
+     * @param strng Object $userXml The users XML
+     * @return boolean TRUE
+     *
+     */
+    private function createUsers($userXml)
+    {
+        $data = array();
+        foreach ($userXml->user as $user) {
+            $id = $user->id;
+            $email = $user->emailaddress;
+            $username = $user->username;
+            $password = $user->pass;
+            $userid = $user->userid;
+            $firstname = $user->firstname;
+            $surname = $user->surname;
+            $title = $user->title;
+            $sex = $user->sex;
+            $country = $user->country;
+            $cellnumber = NULL;
+            $staffnumber = $user->userid;
+            $accountType = $user->howcreated;
+            $creationdate = $user->creationdate;
+            $accountstatus = $user->isactive;
+            $logins = $user->logins;
+            $updated = $user->updated;
+            $permtype = $user->accesslevel;
+            $data = array('id' => $id,
+                          'emailAddress' => $email,
+                          'handle' => $username,
+                          'passwd' => $password,
+                          'auth_user_id' => $userid,
+                          'firstName' => $firstname,
+                          'surname' => $surname,
+                          'title' => $title,
+                          'sex' => $sex,
+                          'country' => $country,
+                          'cellnumber' => $cellnumber,
+                          'staffnumber' => $staffnumber,
+                          'howCreated' => $accountType,
+                          'creationDate' => $creationdate,
+                          'logins' => $logins,
+                          'updated'=> $updated,
+                          'is_active' => $accountstatus,
+                          'perm_type' => 1,
+            );
+            $adduser = $this->objLuAdmin->addUser($data);
+            if(!$adduser) {
+                 $errorArr = $this->objLuAdmin->getErrors();
+                 throw new customException($errorArr[0]['params']['reason']);
+                 exit(1);
+            }
+            // add the new user to the regular folks group for now
+            $params = array('filters' => array('group_define_name' => 'Guest'));
+            $group = $this->objLuAdmin->perm->getGroups($params);
+            $result = $this->objLuAdmin->perm->addUserToGroup(array('perm_user_id' => $adduser, 'group_id' => $group[0]['group_id']));
+            if(!$result) {
+                $errorArr = $this->objLuAdmin->getErrors();
+                throw new customException($errorArr[0]['params']['reason']);
+                exit(1);
+            }
+        }
+        return TRUE;
     }
 }
 ?>
