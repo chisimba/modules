@@ -81,9 +81,11 @@ class simplegal extends controller
             $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
             $this->objUser       = $this->getObject('user', 'security');
             $this->objModuleCat  = $this->getObject('modules', 'modulecatalogue');
-            $this->getObject('jquery', 'jquery');
+            $this->jq            = $this->getObject('jquery', 'jquery');
             $this->objRPC        = $this->getObject('simplegalxmlrpcapi');
-            
+            $this->objDbGal      = $this->getObject('dbsimplegal', 'simplegal');
+            $this->objOps        = $this->getObject('simplegalops');
+            $this->jq->show();
 			
             if($this->objModuleCat->checkIfRegistered('activitystreamer'))
             {
@@ -95,7 +97,7 @@ class simplegal extends controller
             }
         }
         catch ( customException $e ) {
-            customException::cleanUp ();
+            customException::clewaanUp ();
             exit ();
         }
     }
@@ -111,8 +113,9 @@ class simplegal extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
             case NULL:
-                $ip	= sprintf('%u',ip2long($_SERVER['REMOTE_ADDR']));
-                
+                $userid = $this->getParam('userid', 1);
+                $data = $this->objDbGal->retrieveData($userid);
+                $this->setVarByRef('data', $data);
                 return 'view_tpl.php';
                 break;
                 

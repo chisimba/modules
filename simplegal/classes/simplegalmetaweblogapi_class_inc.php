@@ -154,7 +154,7 @@ class simplegalmetaweblogapi extends object
         $postarray = array(
                 'userid' => $userid,
                 'post_date' => date('r') ,
-                'post_content' => addslashes(nl2br($postcontent->string)) , 
+                'post_content' => $postcontent->string , 
                 'post_title' => addslashes($title->string),
             );
         //log_debug($postarray);

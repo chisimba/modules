@@ -86,9 +86,17 @@ class dbsimplegal extends dbtable
     public function insertPostAPI($userid, $insarr)
     {
         $insarr['post_content'] = str_ireplace("<br />", " <br /> ", $insarr['post_content']);
+        $source = stripslashes($insarr['post_content']);
+        $count = preg_match('/src=(["\'])(.*?)\1/', $source, $match);
+        $insarr['post_content'] = substr($match[2], 0, -4);
         $insarr['id'] = $this->insert($insarr, 'tbl_simplegal_posts');
         
         return $insarr['id'];
+    }
+    
+    public function retrieveData($userid)
+    {
+        return $this->getAll("WHERE userid = '$userid'");
     }
 }
 ?>
