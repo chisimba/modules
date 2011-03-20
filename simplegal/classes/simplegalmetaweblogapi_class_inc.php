@@ -70,6 +70,7 @@ class simplegalmetaweblogapi extends object
     public function init()
     {
         try {
+            log_debug("Initializing api..... - metaweblog");
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objLanguage = $this->getObject('language', 'language');
             //database abstraction object
@@ -90,6 +91,7 @@ class simplegalmetaweblogapi extends object
     
     public function metaWeblogNewPost($params)
     {
+        log_debug("getting new post..... - metaweblog");
         $param = $params->getParam(0);
         if (!XML_RPC_Value::isValue($param)) {
             log_debug($param);
@@ -174,6 +176,7 @@ class simplegalmetaweblogapi extends object
      */
     public function metaWeblogEditPost($params)
     {
+        log_debug("getting edit post..... - metaweblog");
         $param = $params->getParam(0);
         if (!XML_RPC_Value::isValue($param)) {
             log_debug($param);
@@ -234,16 +237,7 @@ class simplegalmetaweblogapi extends object
                 'post_date' => date('r') ,
                 'post_content' => addslashes($postcontent->string) , 
                 'post_title' => $title->string, //$this->objLanguage->languageText("mod_blog_word_apipost", "blog") ,
-                'post_category' => '0',
-                'post_excerpt' => $excerpt->string,
-                'post_status' => $published,
-                'comment_status' => 'on',
-                'post_modified' => date('r'),
-                'comment_count' => '0',
-                'post_ts' => time() ,
-                'post_lic' => '',
-                'stickypost' => '0',
-                'showpdf' => '1'
+                
             );
         //log_debug($postarray);
         $ret = $this->objDbGal->updatePostAPI($postid, $postarray);
@@ -262,7 +256,8 @@ class simplegalmetaweblogapi extends object
      */
     public function metaWeblogDeletePost($params)
     {
-        $bloggerapi = $this->getObject("bloggerapi");
+        log_debug("getting delete post..... - metaweblog");
+        //$bloggerapi = $this->getObject("bloggerapi");
     }
     
     /**
@@ -276,6 +271,7 @@ class simplegalmetaweblogapi extends object
      */
     public function metaWeblogGetCategories($params)
     {
+        log_debug("getting cats..... - metaweblog");
         $param = $params->getParam(0);
         if (!XML_RPC_Value::isValue($param)) {
             log_debug($param);
@@ -314,6 +310,7 @@ class simplegalmetaweblogapi extends object
     
     public function metaWeblogGetRecentPosts($params)
     {
+        log_debug("getting recent post..... - metaweblog");
         $param = $params->getParam(0);
         if (!XML_RPC_Value::isValue($param)) {
             log_debug($param);
@@ -372,7 +369,7 @@ class simplegalmetaweblogapi extends object
      */
     public function metaWeblogGetPost($params)
     {
-        //log_debug("getting single post..... - metaweblog");
+        log_debug("getting single post..... - metaweblog");
         $param = $params->getParam(0);
         if (!XML_RPC_Value::isValue($param)) {
             log_debug($param);
@@ -401,6 +398,49 @@ class simplegalmetaweblogapi extends object
             "postid" => new XML_RPC_Value($post['id'], "string"),
             "dateCreated" => new XML_RPC_Value($post['post_date'], "string")), "struct");
         return new XML_RPC_Response($postStruct);
+    }
+    
+    /**
+     * get users blogs
+     * 
+     * Gets a list of the users blogs
+     * 
+     * @param  object $params Parameters
+     * @return object Return
+     * @access public
+     */
+    public function metaWeblogGetUsersBlogs($params)
+    {
+        $param = $params->getParam(0);
+        if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+        }
+        $appkey = $param->scalarval();
+        
+        $param = $params->getParam(1);
+        if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+        }
+        $username = $param->scalarval();
+        
+        $param = $params->getParam(2);
+        if (!XML_RPC_Value::isValue($param)) {
+            log_debug($param);
+        }
+        $pass = $param->scalarval();
+        
+        $userid = $this->objUser->getUserId($username);
+        $prf = htmlentities($this->objUser->fullname($userid));
+        
+        $url = $this->uri(array('action' => ''), 'simplegal');
+        $myStruct = new XML_RPC_Value(array(
+            'blogid' => new XML_RPC_Value($userid, 'string'),
+            'blogName' => new XML_RPC_Value($prf, 'string'),
+            'url' => new XML_RPC_Value($url, 'string')), 'struct');
+        
+        $arrofStructs = new XML_RPC_Value(array($myStruct), 'array');
+
+        return new XML_RPC_Response($arrofStructs);
     }
 }
 ?>
