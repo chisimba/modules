@@ -412,9 +412,7 @@ class news extends controller {
      */
     private function __addstory() {
         $this->setVar('mode', 'add');
-
-
-
+        $this->setVar('ENABLE_PROTOTYPE', TRUE); 
         $categories = $this->objNewsCategories->getCategories('categoryname');
         $this->setVarByRef('categories', $categories);
 
@@ -677,7 +675,7 @@ class news extends controller {
         $id = $this->getParam('id');
 
         $story = $this->objNewsStories->getStory($id);
-
+        $this->setVar('ENABLE_PROTOTYPE', TRUE);
         if ($story == FALSE) {
             return $this->nextAction('home', array('error' => 'nostory'));
         } else {
