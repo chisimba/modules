@@ -411,6 +411,14 @@ class podcaster extends controller {
         $user = $this->objUser->getUserDetails($this->userId);
         if (empty($useremail))
             $useremail = $user['emailaddress'];
+        
+        //Add RSS Link
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        $objIcon->setIcon('rss');
+
+        $rssLink = new link($this->uri(array('action' => 'viewfolderfeed', 'id' => $folderid)));
+        $rssLink->link = $objIcon->show();
+        $rssLink = $rssLink->show();
 
         //End debug
         // Then bang off a mail to the user.
@@ -418,7 +426,7 @@ class podcaster extends controller {
         $siteEmail = $this->objConfig->getsiteEmail();
         $message = $this->objLanguage->languageText("mod_podcaster_dearsirmadam", "podcaster", "Dear Sir/Madam") . '<br />
 <br />
-' . $this->objLanguage->languageText("mod_podcaster_emailtext", "podcaster", "On [[DATE]], a podcast folder was created on the [[SITENAME]] website. Your can get updates of new podcasts in this folder via the following RSS feed") . ':<br />
+' . $this->objLanguage->languageText("mod_podcaster_emailtext", "podcaster", "On [[DATE]], a podcast folder was created on the [[SITENAME]] website. Your can get updates of new podcasts in this folder via the following RSS feed") . ': '.$rssLink.'<br />
 <br />
 ' . $this->objLanguage->languageText("mod_podcaster_rss", "podcaster", "RSS") . ': [[RSS]]<br /><br />
 The folder was created by [[FIRSTNAME]] [[SURNAME]]. You can contact them through this email address [[EMAIL]].
@@ -929,6 +937,7 @@ Sincerely,<br />
 
         return 'view_tpl.php';
     }
+
     /**
      * Method to view the details of a presentation
      *
@@ -942,10 +951,9 @@ Sincerely,<br />
             return $this->nextAction('home', array('error' => 'norecord'));
         }
         //Generate RSS Feed
-        $title = $this->objConfig->getSiteName() . " " . $this->objLanguage->languageText("mod_podcaster_podcast", "podcaster","Podcast") . ': ' . $filedata['title'];
-        $description = $filedata['description'];
-        $url = $this->uri(array('action' => 'view', 'id' => $id));
-
+        $title = $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
+        $description =$this->objConfig->getSiteName().' '.$this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');;
+        $url = $this->uri(array('action'=>'latestrssfeed'));
         return $this->objViewer->generatePodcastFeed($title, $description, $url, $filedata);
     }
 
