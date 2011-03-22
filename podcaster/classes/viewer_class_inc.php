@@ -201,7 +201,7 @@ class viewer extends object {
         ;
         $url = $this->uri(array('action' => 'latestrssfeed'));
         $files = $this->objMediaFileData->getLatestPodcasts();
-        return $this->generateFeed($title, $description, $url, $files);
+        return $this->generateLatestFeed($title, $description, $url, $files);
     }
 
     /**
@@ -244,8 +244,8 @@ class viewer extends object {
      * @param <type> $files
      * @return <type>
      */
-    public function generateFeed($title, $description, $url, $files) {
-        $objFeedCreator = $this->getObject('feeder', 'feed');
+    public function generateLatestFeed($title, $description, $url, $files) {
+        $objFeedCreator = $this->getObject('feeder');
         $objFeedCreator->setupFeed(TRUE, $title, $description, $url, $url);
 
         if (count($files) > 0) {
@@ -272,7 +272,7 @@ class viewer extends object {
             }
         }
 
-        return $objFeedCreator->output();
+        return $objFeedCreator->output('',"latestfeed.xml");
     }
 
     /**
@@ -284,7 +284,7 @@ class viewer extends object {
      * @return <type>
      */
     public function generatePodcastFeed($title, $description, $url, $file) {
-        $objFeedCreator = $this->getObject('feeder', 'feed');
+        $objFeedCreator = $this->getObject('feeder');
         $objFeedCreator->setupFeed(TRUE, $title, strip_tags($description), $url, $url);
 
         if (count($file) > 0) {
@@ -309,7 +309,7 @@ class viewer extends object {
             $objFeedCreator->addItem($filename, $link, $imgLink->show() . '<br />' . nl2br($file['description']), 'here', $this->objUser->fullName($file['creatorid']), $date);
         }
 
-        return $objFeedCreator->output();
+        return $objFeedCreator->output('','podcastfeed.xml');
     }
 
     /**
