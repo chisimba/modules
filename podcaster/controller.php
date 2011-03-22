@@ -939,7 +939,7 @@ Sincerely,<br />
     }
 
     /**
-     * Method to view the details of a presentation
+     * Method to generate the podcast feed
      *
      */
     function __viewpodfeed() {
@@ -956,7 +956,14 @@ Sincerely,<br />
         $url = $this->uri(array('action'=>'latestrssfeed'));
         return $this->objViewer->generatePodcastFeed($title, $description, $url, $filedata);
     }
-
+    /**
+     * Method to generate the podcast feed
+     *
+     */
+    function __getlatestfeeds() {
+        //Generate RSS Feed
+        return $this->objViewer->getLatestFeed();
+    }
     /**
      * Method to get the flash file
      */

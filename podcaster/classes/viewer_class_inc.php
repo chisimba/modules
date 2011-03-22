@@ -226,14 +226,14 @@ class viewer extends object {
      * @return <type>
      */
     public function getTagFeed($tag) {
-        $title = $this->objConfig->getSiteName() . ' - Tag: ' . $tag;
-        $description = 'A List of Presentations with tag - ' . $tag;
+        $title = $this->objLanguage->languageText("mod_podcaster_podcast", "podcaster", 'Podcast').' '. $this->objLanguage->languageText("mod_podcaster_tag", "podcaster", 'Tag').': ' . $tag;
+        $description = $this->objLanguage->languageText("mod_podcaster_tag", "podcaster", 'List of podcasts with the tag').' - ' . $tag;
         $url = $this->uri(array('action' => 'tagrss', 'tag' => $tag));
 
         $objTags = $this->getObject('dbpodcastertags');
         $files = $objTags->getFilesWithTag($tag);
 
-        return $this->generateFeed($title, $description, $url, $files);
+        return $this->generateTagsFeed($title, $description, $url, $files);
     }
 
     /**
@@ -272,9 +272,46 @@ class viewer extends object {
             }
         }
 
-        return $objFeedCreator->output('',"latestfeed.xml");
+        return $objFeedCreator->output("RSS2.0","latestfeed.xml");
     }
+    /**
+     * Generate Feed
+     * @param <type> $title
+     * @param <type> $description
+     * @param <type> $url
+     * @param <type> $files
+     * @return <type>
+     */
+    public function generateTagsFeed($title, $description, $url, $files) {
+        $objFeedCreator = $this->getObject('feeder');
+        $objFeedCreator->setupFeed(TRUE, $title, $description, $url, $url);
 
+        if (count($files) > 0) {
+            $this->loadClass('link', 'htmlelements');
+            $objDate = $this->getObject('dateandtime', 'utilities');
+            foreach ($files as $file) {
+
+                if (trim($file['title']) == '') {
+                    $filename = $file['filename'];
+                } else {
+                    $filename = htmlentities($file['title']);
+                }
+
+                $link = str_replace('&amp;', '&', $this->uri(array('action' => 'view', 'id' => $file['id'])));
+
+                $imgLink = new link($link);
+                $imgLink->link = $this->objFile->getPodcastThumbnail($file['id'], $filename);
+
+                $date = $file['datecreated'] . " " . $file['timecreated'];
+
+                $date = $objDate->sqlToUnixTime($date);
+
+                $objFeedCreator->addItem($filename, $link, $imgLink->show() . '<br />' . nl2br($file['description']), 'here', $this->objUser->fullName($file['creatorid']), $date);
+            }
+        }
+
+        return $objFeedCreator->output("RSS2.0","latesttagsfeed.xml");
+    }
     /**
      * Generate Feed
      * @param <type> $title
@@ -309,7 +346,7 @@ class viewer extends object {
             $objFeedCreator->addItem($filename, $link, $imgLink->show() . '<br />' . nl2br($file['description']), 'here', $this->objUser->fullName($file['creatorid']), $date);
         }
 
-        return $objFeedCreator->output('','podcastfeed.xml');
+        return $objFeedCreator->output("RSS2.0",'podcastfeed.xml');
     }
 
     /**

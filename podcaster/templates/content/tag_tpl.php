@@ -6,8 +6,10 @@ $this->loadClass('link', 'htmlelements');
 $heading = new htmlheading();
 $heading->str = 'Tag - '.$tag;
 
+$altText = $this->objLanguage->languageText("mod_podcaster_podcast", "podcaster", 'Podcast').' '. $this->objLanguage->languageText("mod_podcaster_tag", "podcaster", 'Tag').': ' . $tag;
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('rss');
+$objIcon->alt = $altText;
 
 $rssLink = new link ($this->uri(array('action'=>'tagrss', 'tag'=>$tag)));
 $rssLink->link = $objIcon->show();

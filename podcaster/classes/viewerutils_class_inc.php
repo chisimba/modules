@@ -40,10 +40,10 @@ class viewerutils extends object {
      * @return boolean
      */
     public function isValidEmail($email) {
-        $result = ereg ("^[^@ ]+@[^@ ]+\.[^@ \.]+$", $email );
-        if ($result){
+        $result = ereg("^[^@ ]+@[^@ ]+\.[^@ \.]+$", $email);
+        if ($result) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -60,7 +60,7 @@ class viewerutils extends object {
             if ($this->isValidEmail($email)) {
                 $newemailstring .= $delimiter . $email;
                 $delimiter = ",";
-                $email="";
+                $email = "";
             }
         }
         return $newemailstring;
@@ -422,7 +422,18 @@ class viewerutils extends object {
             $content = '';
             $counter = 0;
             $homepagetitle = $objSysConfig->getValue('HOME_PAGE_TITLE', 'podcaster');
+            $altText = $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
+            //Add RSS Link
+            $objIcon = $this->newObject('geticon', 'htmlelements');
+            $objIcon->setIcon('rss');
+            $objIcon->alt = $altText;
+            
 
+            $rssLink = new link($this->uri(array('action' => 'getlatestfeeds')));
+            $rssLink->link = $objIcon->show();            
+            $rssLink = ' ' . $rssLink->show();
+            //Append RSS icon to the heading
+            $homepagetitle = $homepagetitle . $rssLink;
             $title = '
            
            <h1>' . $homepagetitle . '</h1>
