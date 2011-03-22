@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for storing and presenting the tags relating to slide show presentations
+ * Class for storing and presenting the tags relating to podcasts
  *
  * PHP version 5
  *
@@ -19,7 +19,7 @@
  *
  * @category  Chisimba
  * @package   podcaster
- * @author    Tohir Solomons <tsolomons@uwc.ac.za>
+ * @author    Paul Mungai <paulwando@gmail.com>
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id: dbpodcastertags_class_inc.php 11934 2008-12-29 21:18:12Z charlvn $
@@ -38,21 +38,6 @@ $GLOBALS['kewl_entry_point_run']){
     die("You cannot view this page directly");
 }
 
-/**
- * Class for building the catalogue navigation for module catalogue.
- * The class makes use of nodes in an array to keep track of the different categories
- * and the shoe() function renders the array as a navigation menu.
- *
- * The class builds a css style navigation menu
- *
- * @category  Chisimba
- * @package   podcaster
- * @author    Tohir Solomons <tsolomons@uwc.ac.za>
- * @copyright 2007 AVOIR
- * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: dbpodcastertags_class_inc.php 11934 2008-12-29 21:18:12Z charlvn $
- * @link      http://avoir.uwc.ac.za
- */
 class dbpodcastertags extends dbtable
 {
 
@@ -237,19 +222,25 @@ FROM tbl_podcaster_tags GROUP BY tbl_podcaster_tags.tag ORDER BY tbl_podcaster_t
      * @param string $tag Tag
      * @return array List of Files with tag associated
      */
-    public function getFilesWithTag($tag, $order='dateuploaded DESC')
+    public function getFilesWithTag($tag, $sort='datecreated_desc')
     {
-        if ($order == 'creatorname asc')
-        {
-            $order = 'firstname, surname, creatorid';
-        } else if ($order == 'creatorname desc')
-        {
-            $order = 'firstname DESC, surname DESC , creatorid DESC';
+        $sortstring = "";
+        if($sort == 'datecreated_desc'){
+            $sortstring = "datecreated DESC, timecreated DESC";
+        } elseif ($sort == 'datecreated_asc'){
+            $sortstring = "datecreated ASC, timecreated ASC";
+        } elseif ($sort == 'creatorname_asc'){
+            $sortstring = "firstname ASC, surname ASC, creatorid";
+        } elseif ($sort == 'creatorname_desc'){
+            $sortstring = "firstname DESC, surname DESC, creatorid";
+        } elseif ($sort == 'title_asc'){
+            $sortstring = "title ASC";
+        } elseif ($sort == 'title_desc'){
+            $sortstring = "title DESC";
         }
 
-
-        $sql = 'SELECT DISTINCT tbl_podcaster_files.id, tbl_podcaster_files.*, tbl_users.firstName as firstname, tbl_users.surname FROM tbl_podcaster_files, tbl_podcaster_tags, tbl_users
-        WHERE (tbl_podcaster_tags.fileid = tbl_podcaster_files.id AND tbl_podcaster_files.creatorid = tbl_users.userid) AND tbl_podcaster_tags.tag LIKE \''.$tag.'\' ORDER BY '.$order;
+        $sql = 'SELECT DISTINCT tbl_podcaster_metadata_media.id, tbl_podcaster_metadata_media.*, tbl_users.firstName as firstname, tbl_users.surname FROM tbl_podcaster_metadata_media, tbl_podcaster_tags, tbl_users
+        WHERE (tbl_podcaster_tags.fileid = tbl_podcaster_metadata_media.id AND tbl_podcaster_metadata_media.creatorid = tbl_users.userid) AND tbl_podcaster_tags.tag LIKE \''.$tag.'\' ORDER BY '.$sortstring;
 
         //echo $sql;
 

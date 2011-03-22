@@ -43,10 +43,10 @@ class wicid extends controller {
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objLog->log();
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-//get the util object
-// user object
+        //get the util object
+        // user object
         $this->objUser = $this->getObject('user', 'security');
-//file type info object
+        //file type info object
         $this->objPermitted = $this->getObject('dbpermittedtypes');
         $this->objUploads = $this->getObject('dbfileuploads');
         $this->objFileFolder = $this->getObject('filefolder', 'filemanager');
@@ -59,7 +59,7 @@ class wicid extends controller {
         $this->mode = $this->objSysConfig->getValue('MODE', 'wicid');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $this->pageSize = $this->objSysConfig->getValue('PAGE_SIZE', 'wicid');
-//Set global variables
+        //Set global variables
         $this->TRUE = 1;
         $this->FALSE = 0;
     }
@@ -1232,18 +1232,23 @@ class wicid extends controller {
         $version = $this->getParam('version');
         $this->documents->reclaimDocument($userid, $docid, $version);
     }
-
+    
+    /*
+     * Function that returns unapproved documents
+     */
     public function __unapproveddocs() {
         $selected = "unapproved";
-
-//Set show rows
+        
+        //Set show rows
         $rows = $this->pageSize;
         $start = $this->getParam("start", 0);
-//Select records Limit array
+        
+        //Select records Limit array
         $limit = array();
         $limit['start'] = $start;
         $limit['rows'] = $rows;
-//Get the rowcount
+
+        //Get the rowcount
         $rowcount = $this->getParam("rowcount", Null);
 
         $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);

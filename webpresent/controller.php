@@ -154,6 +154,7 @@ class webpresent extends controller
 
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $hometpl=$objSysConfig->getValue('HOMETPL', 'webpresent');
+        
         $permittedTypes = array ('newhome', 'home');
 
         // Check that period is valid, if not, the default home install

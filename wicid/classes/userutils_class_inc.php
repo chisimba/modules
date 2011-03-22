@@ -724,18 +724,19 @@ class userutils extends object {
             if (is_link($filepath))
                 continue;
             if (is_dir($filepath)) {
-                $cfile = substr($filepath, strlen($this->baseDir));
+                $cfile = substr($filepath, strlen($this->baseDir));                
                 if ($this->folderPermissions->isValidFolder($cfile)) {
                     $files[] = $filepath;
                 }
                 $this->listdiraux($filepath, $files);
             }
-        }
+        }        
         closedir($handle);
     }
     function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
         $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
         $folders = $this->listdir($baseFolder);
+        
         $icon = "";
         $expandedIcon = "";
         $cssClass = "";
@@ -765,6 +766,7 @@ class userutils extends object {
             }
 
             $newDocsNode = new treenode(array('text' => $unapprovedDocs, 'link' => $this->uri(array('action' => 'unapproveddocs', 'folder' => $baseFolderId)), 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+            
             $count = $documents->getRejectedDocsCount();
             $rejectedDocs = "$count Rejected documents";
             if ($selected == 'rejecteddocuments') {
@@ -812,9 +814,10 @@ class userutils extends object {
                 if (array_key_exists($parent, $refArray)) {
                     $refArray[dirname($folder)]->addItem($node);
                 }
-
                 $refArray[$folder] = & $node;
+                //var_dump($refArray);exit;
             }
+            
         }
 
         $menu->addItem($allFilesNode);

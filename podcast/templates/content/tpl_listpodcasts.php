@@ -6,7 +6,6 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('formatfilesize', 'files');
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
-
 $filesize = new formatfilesize();
 
 
@@ -91,6 +90,7 @@ if (count($podcasts) == 0) {
         $soundFile = str_replace('&', '&amp;', $objFile->getFilePath($podcast['fileid']));
         $soundFile = str_replace(' ', '%20', $soundFile);
         $objSoundPlayer->setSoundFile($soundFile);
+    
         
         $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As').') '.$downloadLink->show().'</p>';
          

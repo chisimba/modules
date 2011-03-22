@@ -1,8 +1,6 @@
-
 <?php
 $this->loadClass('link','htmlelements');
 echo "Attaching a document to '$docname' in '$topic'";
-
 $this->loadClass('iframe', 'htmlelements');
 
 $objAjaxUpload = $this->newObject('ajaxuploader');
@@ -12,7 +10,6 @@ $link=new link($this->uri(array("action"=>"unapproveddocs","id"=>$docid)));
 $link->link="Back to documents";
 echo $link->show();
 ?>
-
 
 <script type="text/javascript">
     //<![CDATA[

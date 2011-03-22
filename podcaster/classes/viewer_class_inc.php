@@ -122,7 +122,7 @@ class viewer extends object
             $counter = 0;
             $inRow = FALSE;
 
-            $objTrim = $this->getObject('trimstr', 'strings');
+            //$objTrim = $this->getObject('trimstr', 'strings');
 
             foreach ($files as $file)
             {
@@ -137,8 +137,8 @@ class viewer extends object
                 $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
                 $link->link = $this->objFile->getPodcastThumbnail($file['id']);
 
-                $table->addCell($link->show(), 120);
-                $table->addCell('&nbsp;', 10);
+                $table->addCell($link->show(), "20%");
+                $table->addCell('&nbsp;', "5%");
 
                 $rightContent = '';
 
@@ -154,7 +154,8 @@ class viewer extends object
                 if (trim($file['description']) == '') {
                     $description = '<em>'.$this->objLanguage->languageText("mod_podcaster_filehasnodesc", "podcaster").'</em>';
                 } else {
-                    $description = nl2br(htmlentities($objTrim->strTrim($file['description'], 200)));
+                    //$description = nl2br(htmlentities($objTrim->strTrim($file['description'], 200)));
+                    $description = $file['description'];
                 }
 
                 $rightContent .= $description.'</p>';
@@ -171,16 +172,16 @@ class viewer extends object
                 $userLink->link = $this->objUser->fullname($file['creatorid']);
 
                 $rightContent .= '<strong>'.$this->objLanguage->languageText("mod_podcaster_uploadedby", "podcaster").':</strong> '.$userLink->show().'<br />';
-                $rightContent .= '<strong>'.$this->objLanguage->languageText("mod_podcaster_dateuploaded", "podcaster").':</strong> '.$objDateTime->formatDate($file['dateuploaded']).'</p>';
+                $rightContent .= '<strong>'.$this->objLanguage->languageText("mod_podcaster_dateuploaded", "podcaster").':</strong> '.$objDateTime->formatDateOnly($file['datecreated'])." - ".$objDateTime->formatTime($file['timecreated']).'</p>';
 
-                $table->addCell($rightContent, '40%');
+                $table->addCell($rightContent, '75%');
 
 
                 if (($counter%2) == 0)
                 {
                     $table->endRow();
                 } else {
-                    $table->addCell('&nbsp;', '20');
+                    $table->addCell('&nbsp;', '5%');
                 }
 
                 $divider = 'addrow';
@@ -281,13 +282,52 @@ class viewer extends object
                 $imgLink = new link($link);
                 $imgLink->link = $this->objFile->getPodcastThumbnail($file['id'], $filename);
 
-                $date = $objDate->sqlToUnixTime($file['dateuploaded']);
+                //$date = $objDate->sqlToUnixTime($file['datecreated']);
+                $date = $objDate->formatDateOnly($file['datecreated'])." - ".$objDate->formatTime($file['timecreated']);
 
 
-                $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.$file['description'], 'here', $this->objUser->fullName($file['creatorid']), $date);
+                $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.nl2br($file['description']), 'here', $this->objUser->fullName($file['creatorid']), $date);
             }
 
 
+        }
+
+        return $objFeedCreator->output();
+    }
+/**
+ * Generate Feed
+ * @param <type> $title
+ * @param <type> $description
+ * @param <type> $url
+ * @param <type> $files
+ * @return <type>
+ */
+    public function generatePodcastFeed($title, $description, $url, $file)
+    {
+        $objFeedCreator = $this->getObject('feeder', 'feed');
+        $objFeedCreator->setupFeed(TRUE, $title, strip_tags($description), $this->objConfig->getsiteRoot(), $url);
+
+        if (count($file) > 0)
+        {
+            $this->loadClass('link', 'htmlelements');
+            $objDate = $this->getObject('dateandtime', 'utilities');
+
+                if (trim($file['title']) == '') {
+                    $filename = $file['filename'];
+                } else {
+                    $filename = htmlentities($file['title']);
+                }
+
+                $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
+
+                $imgLink = new link($link);
+                $imgLink->link = $this->objFile->getPodcastThumbnail($file['id'], $filename);
+
+                //$date = $objDate->sqlToUnixTime($file['datecreated']);
+                $date = $objDate->formatDateOnly($file['datecreated'])." - ".$objDate->formatTime($file['timecreated']);
+
+
+                $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.nl2br($file['description']), 'here', $this->objUser->fullName($file['creatorid']), $date);
         }
 
         return $objFeedCreator->output();

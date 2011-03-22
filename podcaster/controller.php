@@ -61,6 +61,7 @@ class podcaster extends controller {
         $this->objUploads = $this->getObject('dbfileuploads');
         $this->documents = $this->getObject('dbdocuments');
         $this->objViewerUtils = $this->getObject('viewerutils');
+        $this->objViewer = $this->getObject('viewer');
         $this->objSchedules = $this->getObject('dbpodcasterschedules');
         $this->realtimeManager = $this->getObject('realtimemanager');
         $this->folderPermissions = $this->getObject('dbfolderpermissions');
@@ -315,7 +316,7 @@ class podcaster extends controller {
         if ($path == '0')
             $path = '/';
         $name = $this->getParam('foldername');
-        
+
         $userId = $this->objUser->userId();
         $pathf = "/";
         //We need to remove the userId from the path
@@ -333,7 +334,7 @@ class podcaster extends controller {
             }while ($start < $count);
             $path = $pathf;
         }
-        if (empty($name) || $name == "/") {            
+        if (empty($name) || $name == "/") {
             $flag = "selected";
             $folderdata = $this->folderPermissions->getPermmissions($pathf);
             $folderid = $folderdata[0]['id'];
@@ -912,11 +913,12 @@ Sincerely,<br />
             return $this->nextAction('home', array('error' => 'norecord'));
         }
 
-        $tags = $this->objTags->getTags($filedata['fileid']);
+        $tags = $this->objTags->getTags($filedata['id']);
 
         $getPodcast = $this->objViewerUtils->getPodcastView($id);
 
         $this->setVarByRef('file', $getPodcast);
+        $this->setVarByRef('id', $id);
         $this->setVarByRef('tags', $tags);
 
         $this->setVar('pageTitle', $this->objConfig->getSiteName() . ' - ' . $filedata['title']);
@@ -926,6 +928,25 @@ Sincerely,<br />
         $objViewCounter->addView($id);
 
         return 'view_tpl.php';
+    }
+    /**
+     * Method to view the details of a presentation
+     *
+     */
+    function __viewpodfeed() {
+        $id = $this->getParam('id');
+
+        $filedata = $this->objMediaFileData->getFile($id);
+
+        if (empty($filedata)) {
+            return $this->nextAction('home', array('error' => 'norecord'));
+        }
+        //Generate RSS Feed
+        $title = $this->objConfig->getSiteName() . " " . $this->objLanguage->languageText("mod_podcaster_podcast", "podcaster","Podcast") . ': ' . $filedata['title'];
+        $description = $filedata['description'];
+        $url = $this->uri(array('action' => 'view', 'id' => $id));
+
+        return $this->objViewer->generatePodcastFeed($title, $description, $url, $filedata);
     }
 
     /**
@@ -974,11 +995,11 @@ Sincerely,<br />
      */
     function __tag() {
         $tag = $this->getParam('tag');
-        $sort = $this->getParam('sort', 'dateuploaded_desc');
+        $sort = $this->getParam('sort', 'datecreated_desc');
 
         // Check that sort options provided is valid
-        if (!preg_match('/(dateuploaded|title|creatorname)_(asc|desc)/', strtolower($sort))) {
-            $sort = 'dateuploaded_desc';
+        if (!preg_match('/(datecreated|title|creatorname)_(asc|desc)/', strtolower($sort))) {
+            $sort = 'datecreated_desc';
         }
 
         if (trim($tag) != '') {
@@ -986,7 +1007,7 @@ Sincerely,<br />
             $tagCounter->addView($tag);
         }
 
-        $files = $this->objTags->getFilesWithTag($tag, str_replace('_', ' ', $sort));
+        $files = $this->objTags->getFilesWithTag($tag, $sort);
 
         $this->setVarByRef('tag', $tag);
         $this->setVarByRef('files', $files);

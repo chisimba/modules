@@ -22,12 +22,10 @@ if (count($files) == 0) {
     echo '<div class="noRecordsMessage">No files matches this tag</div>';
 } else {
     $sortOptions = array(
-        'dateuploaded_desc' => 'Newest First',
-        'dateuploaded_asc' => 'Oldest First',
+        'datecreated_desc' => 'Newest First',
+        'datecreated_asc' => 'Oldest First',
         'title_asc' => 'Alphabetical',
-        //'title_desc' => 'Alphabetical Reversed',
-        'creatorname_asc' => 'User',
-        //'creatorname_desc' => 'User Reversed',
+        'creatorname_asc' => 'User'
     );
 
     echo '<p><strong>Sort By:</strong> ';

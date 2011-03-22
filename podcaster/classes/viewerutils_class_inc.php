@@ -466,7 +466,7 @@ class viewerutils extends object {
                 $fileLink->link = $objFiles->getPodcastThumbnail($filedata['id']);
                 $fileLink->title = $filename;
 
-                $tags = $objTags->getTags($filedata['fileid']);
+                $tags = $objTags->getTags($filedata['id']);
                 $tagsStr = '';
                 if (count($tags) == 0) {
                     $tagsStr .= '<em>'

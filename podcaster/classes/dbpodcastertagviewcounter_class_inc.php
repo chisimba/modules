@@ -1,7 +1,4 @@
 <?php
-
-
-
 // security check - must be included in all scripts
 if (!
 /**
@@ -14,7 +11,7 @@ $GLOBALS['kewl_entry_point_run']){
 }
 
 
-class dbwebpresenttagviewcounter extends dbtable
+class dbpodcastertagviewcounter extends dbtable
 {
 
     /**
@@ -22,7 +19,7 @@ class dbwebpresenttagviewcounter extends dbtable
     */
     public function init()
     {
-        parent::init('tbl_webpresent_tagviews');
+        parent::init('tbl_podcaster_tagviews');
         $this->loadClass('link', 'htmlelements');
     }
 
@@ -41,19 +38,19 @@ class dbwebpresenttagviewcounter extends dbtable
     }
 
     /**
-     * Method to the the most viewed presentations for today
-     * @return array List of Most Viewed Presentations for Today
+     * Method to the the most viewed podcasts for today
+     * @return array List of Most Viewed podcasts for Today
      */
     public function getMostViewedToday()
     {
-        $sql = 'SELECT count( tbl_webpresent_tagviews.id ) AS viewcount, tbl_webpresent_tagviews . * FROM tbl_webpresent_tagviews WHERE (dateviewed = \''.date('Y-m-d').'\') GROUP BY tbl_webpresent_tagviews.tag ORDER BY viewcount DESC LIMIT 5';
+        $sql = 'SELECT count( tbl_podcaster_tagviews.id ) AS viewcount, tbl_podcaster_tagviews . * FROM tbl_podcaster_tagviews WHERE (dateviewed = \''.date('Y-m-d').'\') GROUP BY tbl_podcaster_tagviews.tag ORDER BY viewcount DESC LIMIT 5';
 
         return $this->getArray($sql);
     }
 
     /**
-     * Method to the the most viewed presentations this week
-     * @return array List of Most Viewed Presentations this week
+     * Method to the the most viewed podcasts this week
+     * @return array List of Most Viewed podcasts this week
      */
     public function getMostViewedThisWeek()
     {
@@ -70,18 +67,18 @@ class dbwebpresenttagviewcounter extends dbtable
         }
 
         // SQL
-        $sql = 'SELECT count( tbl_webpresent_tagviews.id ) AS viewcount, tbl_webpresent_tagviews . * FROM tbl_webpresent_tagviews WHERE (dateviewed > \''.$startOfWeek .'\') GROUP BY tbl_webpresent_tagviews.tag ORDER BY viewcount DESC LIMIT 5';
+        $sql = 'SELECT count( tbl_podcaster_tagviews.id ) AS viewcount, tbl_podcaster_tagviews . * FROM tbl_podcaster_tagviews WHERE (dateviewed > \''.$startOfWeek .'\') GROUP BY tbl_podcaster_tagviews.tag ORDER BY viewcount DESC LIMIT 5';
 
         return $this->getArray($sql);
     }
 
     /**
-     * Method to the the most viewed presentations of all time
-     * @return array List of Most Viewed Presentations of all time
+     * Method to the the most viewed podcasts of all time
+     * @return array List of Most Viewed podcasts of all time
      */
     public function getMostViewedAllTime()
     {
-        $sql = 'SELECT count( tbl_webpresent_tagviews.id ) AS viewcount, tbl_webpresent_tagviews . * FROM tbl_webpresent_tagviews GROUP BY tbl_webpresent_tagviews.tag ORDER BY viewcount DESC LIMIT 5';
+        $sql = 'SELECT count( tbl_podcaster_tagviews.id ) AS viewcount, tbl_podcaster_tagviews . * FROM tbl_podcaster_tagviews GROUP BY tbl_podcaster_tagviews.tag ORDER BY viewcount DESC LIMIT 5';
         return $this->getArray($sql);
     }
 
@@ -136,7 +133,7 @@ class dbwebpresenttagviewcounter extends dbtable
     }
 
     /**
-     * Method to get the Most Viewed Today Presentations as a table
+     * Method to get the Most Viewed Today podcasts as a table
      * @return string
      */
     public function getMostViewedTodayTable()
@@ -147,7 +144,7 @@ class dbwebpresenttagviewcounter extends dbtable
     }
 
     /**
-     * Method to get the Most Viewed This Week Presentations as a table
+     * Method to get the Most Viewed This Week podcasts as a table
      * @return string
      */
     public function getMostViewedThisWeekTable()
@@ -158,7 +155,7 @@ class dbwebpresenttagviewcounter extends dbtable
     }
 
     /**
-     * Method to get the Most Viewed All Time Presentations as a table
+     * Method to get the Most Viewed All Time podcasts as a table
      * @return string
      */
     public function getMostViewedAllTimeTable()
@@ -170,7 +167,7 @@ class dbwebpresenttagviewcounter extends dbtable
 
     /**
      * Method to get to take data and a period and convert them into a featurebox for display
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -188,7 +185,7 @@ class dbwebpresenttagviewcounter extends dbtable
 
     /**
      * Method to get to take data and a period and convert them into a table for display, as well as links to other periods
-     * @param array $data List of presentations
+     * @param array $data List of podcasts
      * @param string $period Period Data is for
      * @return string
      */
@@ -214,13 +211,13 @@ class dbwebpresenttagviewcounter extends dbtable
             switch ($period)
             {
                 case 'alltime':
-                    $str = 'No presentations have been viewed on this site';
+                    $str = 'No podcasts have been viewed on this site';
                     break;
                 case 'week':
-                    $str = 'No presentations have been viewed this week';
+                    $str = 'No podcasts have been viewed this week';
                     break;
                 default:
-                    $str = 'No presentations have been viewed today';
+                    $str = 'No podcasts have been viewed today';
                     break;
             }
 

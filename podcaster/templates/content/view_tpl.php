@@ -75,6 +75,14 @@ if ($blogRegistered) {
     $heading->str .= ' '.$blogThisLink->show();
 }
 */
+//Add RSS Link
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objIcon->setIcon('rss');
+
+$rssLink = new link ($this->uri(array('action'=>'viewpodfeed', 'id'=>$id)));
+$rssLink->link = $objIcon->show();
+//Append RSS icon to the heading
+$heading->str .= ' '.$rssLink->show();
 echo $heading->show();
 
 // Show the flash file using the viewer class
@@ -89,7 +97,6 @@ if ($file['filedata']['description'] != '') {
             .nl2br($file['filedata']['description'])
             .'</p>';
 }
-
 $rightCell .=  '<p><strong>'
         . $this->objLanguage->languageText("word_tags")
         . ':</strong> ';
