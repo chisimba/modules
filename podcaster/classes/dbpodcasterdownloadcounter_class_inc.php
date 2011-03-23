@@ -42,7 +42,7 @@ class dbpodcasterdownloadcounter extends dbtable
      */
     public function getMostDownloadedToday()
     {
-        $sql = 'SELECT count(tbl_podcaster_downloads.id) as viewcount, tbl_podcaster_files.* FROM tbl_podcaster_downloads, tbl_podcaster_files WHERE (tbl_podcaster_files.id = tbl_podcaster_downloads.fileid AND datedownloaded=\''.date('Y-m-d').'\' ) GROUP BY tbl_podcaster_downloads.fileid Order by viewcount desc limit 5';
+        $sql = 'SELECT count(tbl_podcaster_downloads.id) as viewcount, tbl_podcaster_metadata_media.* FROM tbl_podcaster_downloads, tbl_podcaster_metadata_media WHERE (tbl_podcaster_metadata_media.id = tbl_podcaster_downloads.fileid AND datedownloaded=\''.date('Y-m-d').'\' ) GROUP BY tbl_podcaster_downloads.fileid Order by viewcount desc limit 5';
 
         return $this->getArray($sql);
     }
@@ -66,7 +66,7 @@ class dbpodcasterdownloadcounter extends dbtable
         }
 
         // SQL
-        $sql = 'SELECT count(tbl_podcaster_downloads.id) as viewcount, tbl_podcaster_files.* FROM tbl_podcaster_downloads, tbl_podcaster_files WHERE (tbl_podcaster_files.id = tbl_podcaster_downloads.fileid AND datedownloaded > \''.$startOfWeek .'\' ) GROUP BY tbl_podcaster_downloads.fileid Order by viewcount desc limit 5';
+        $sql = 'SELECT count(tbl_podcaster_downloads.id) as viewcount, tbl_podcaster_metadata_media.* FROM tbl_podcaster_downloads, tbl_podcaster_metadata_media WHERE (tbl_podcaster_metadata_media.id = tbl_podcaster_downloads.fileid AND datedownloaded > \''.$startOfWeek .'\' ) GROUP BY tbl_podcaster_downloads.fileid Order by viewcount desc limit 5';
 
         return $this->getArray($sql);
     }
@@ -77,7 +77,7 @@ class dbpodcasterdownloadcounter extends dbtable
      */
     public function getMostDownloadedAllTime()
     {
-        $sql = 'SELECT count(tbl_podcaster_downloads.id) as viewcount, tbl_podcaster_files.* FROM tbl_podcaster_downloads, tbl_podcaster_files WHERE (tbl_podcaster_files.id = tbl_podcaster_downloads.fileid ) GROUP BY tbl_podcaster_downloads.fileid Order by viewcount DESC LIMIT 5';
+        $sql = 'SELECT count(tbl_podcaster_downloads.id) as viewcount, tbl_podcaster_metadata_media.* FROM tbl_podcaster_downloads, tbl_podcaster_metadata_media WHERE (tbl_podcaster_metadata_media.id = tbl_podcaster_downloads.fileid ) GROUP BY tbl_podcaster_downloads.fileid Order by viewcount DESC LIMIT 5';
         return $this->getArray($sql);
     }
 

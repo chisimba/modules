@@ -132,8 +132,8 @@ class viewer extends object {
                 $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
                 $link->link = $this->objFile->getPodcastThumbnail($file['id']);
 
-                $table->addCell($link->show(), "20%");
-                $table->addCell('&nbsp;', "5%");
+                $table->addCell($link->show());
+                $table->addCell('&nbsp;');
 
                 $rightContent = '';
 
@@ -162,19 +162,28 @@ class viewer extends object {
 
                 $rightContent .= '<p><strong>' . $this->objLanguage->languageText("mod_podcaster_licence", "podcaster") . ':</strong> ' . $objDisplayLicense->show($file['cclicense']) . '<br />';
 
-                $userLink = new link($this->uri(array('action' => 'byuser', 'userid' => $file['creatorid'])));
-                $userLink->link = $this->objUser->fullname($file['creatorid']);
+                $altText = $file['artist'] . ' - ' . $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
+                //Add RSS Link to follow author
+                $objIcon = $this->newObject('geticon', 'htmlelements');
+                $objIcon->setIcon('rss');
+                $objIcon->alt = $altText;
 
-                $rightContent .= '<strong>' . $this->objLanguage->languageText("mod_podcaster_uploadedby", "podcaster") . ':</strong> ' . $userLink->show() . '<br />';
+
+                $rssLink = new link($this->uri(array('action' => 'addauthorfeed', 'author' => $file['artist'])));
+                $rssLink->link = $objIcon->show();
+                $rssLink = ' ' . $rssLink->show();
+
+                $rightContent .= '<strong>' . $this->objLanguage->languageText("mod_podcaster_author", "podcaster") . ':</strong> ' . $file['artist'] . '<br />';
+                $rightContent .= '<strong>' . $file['artist'] . '</strong> ' . $rssLink . '<br />';
                 $rightContent .= '<strong>' . $this->objLanguage->languageText("mod_podcaster_dateuploaded", "podcaster") . ':</strong> ' . $objDateTime->formatDateOnly($file['datecreated']) . " - " . $objDateTime->formatTime($file['timecreated']) . '</p>';
 
-                $table->addCell($rightContent, '75%');
+                $table->addCell($rightContent);
 
 
                 if (($counter % 2) == 0) {
                     $table->endRow();
                 } else {
-                    $table->addCell('&nbsp;', '5%');
+                    $table->addCell('&nbsp;');
                 }
 
                 $divider = 'addrow';
@@ -206,18 +215,17 @@ class viewer extends object {
 
     /**
      * Get user feed
-     * @param <type> $userId
-     * @return <type>
+     * @param string $author
+     * @return object
      */
-    public function getUserFeed($userId) {
-        $fullName = $this->objUser->fullName($userId);
-        $title = $fullName . '\'s Files';
-        $description = $this->objLanguage->languageText("mod_podcaster_phraselistuploadedby", "podcaster") . ' ' . $fullName;
-        $url = $this->uri(array('action' => 'userrss', 'userid' => $userId));
+    public function getUserFeed($author) {
+        $title = $author . ' - ' . $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
+        $description = $this->objLanguage->languageText("mod_podcaster_phraselistby", "podcaster", "A List of the Latest podcasts by") . ' ' . $author;
+        $url = $this->uri(array('action' => 'addauthorfeed', 'author' => $author));
 
-        $files = $this->objFile->getByUser($userId);
-
-        return $this->generateFeed($title, $description, $url, $files);
+        $files = $this->objMediaFileData->getLatestAuthorPodcasts($author);
+        $author = stripslashes($author);
+        return $this->generateAuthorLatestFeed($title, $description, $url, $files, $author);
     }
 
     /**
@@ -226,8 +234,8 @@ class viewer extends object {
      * @return <type>
      */
     public function getTagFeed($tag) {
-        $title = $this->objLanguage->languageText("mod_podcaster_podcast", "podcaster", 'Podcast').' '. $this->objLanguage->languageText("mod_podcaster_tag", "podcaster", 'Tag').': ' . $tag;
-        $description = $this->objLanguage->languageText("mod_podcaster_tag", "podcaster", 'List of podcasts with the tag').' - ' . $tag;
+        $title = $this->objLanguage->languageText("mod_podcaster_podcast", "podcaster", 'Podcast') . ' ' . $this->objLanguage->languageText("mod_podcaster_tag", "podcaster", 'Tag') . ': ' . $tag;
+        $description = $this->objLanguage->languageText("mod_podcaster_tag", "podcaster", 'List of podcasts with the tag') . ' - ' . $tag;
         $url = $this->uri(array('action' => 'tagrss', 'tag' => $tag));
 
         $objTags = $this->getObject('dbpodcastertags');
@@ -272,8 +280,52 @@ class viewer extends object {
             }
         }
 
-        return $objFeedCreator->output("RSS2.0","latestfeed.xml");
+        return $objFeedCreator->output("RSS2.0", "latestfeed.xml");
     }
+
+    /**
+     * Generate author latest feeds
+     * @param string $title
+     * @param string $description
+     * @param string $url
+     * @param string $files
+     * @param string $author
+     * @return object
+     */
+    public function generateAuthorLatestFeed($title, $description, $url, $files, $author) {
+        $objFeedCreator = $this->getObject('feeder');
+        $objFeedCreator->setupFeed(TRUE, $title, $description, $url, $url);
+
+        if (count($files) > 0) {
+            $this->loadClass('link', 'htmlelements');
+            $objDate = $this->getObject('dateandtime', 'utilities');
+            foreach ($files as $file) {
+
+                if (trim($file['title']) == '') {
+                    $filename = $file['filename'];
+                } else {
+                    $filename = htmlentities($file['title']);
+                }
+
+                $link = str_replace('&amp;', '&', $this->uri(array('action' => 'view', 'id' => $file['id'])));
+
+                $imgLink = new link($link);
+                $imgLink->link = $this->objFile->getPodcastThumbnail($file['id'], $filename);
+
+                $date = $file['datecreated'] . " " . $file['timecreated'];
+
+                $date = $objDate->sqlToUnixTime($date);
+
+                $objFeedCreator->addItem($filename, $link, $imgLink->show() . '<br />' . nl2br($file['description']), 'here', $this->objUser->fullName($file['creatorid']), $date);
+            }
+        }
+
+        $author = str_replace("/", " ", $author);
+        $fileName = $author . "-" . "latestfeed.xml";
+
+        return $objFeedCreator->output("RSS2.0", $fileName);
+    }
+
     /**
      * Generate Feed
      * @param <type> $title
@@ -310,8 +362,9 @@ class viewer extends object {
             }
         }
 
-        return $objFeedCreator->output("RSS2.0","latesttagsfeed.xml");
+        return $objFeedCreator->output("RSS2.0", "latesttagsfeed.xml");
     }
+
     /**
      * Generate Feed
      * @param <type> $title
@@ -346,7 +399,7 @@ class viewer extends object {
             $objFeedCreator->addItem($filename, $link, $imgLink->show() . '<br />' . nl2br($file['description']), 'here', $this->objUser->fullName($file['creatorid']), $date);
         }
 
-        return $objFeedCreator->output("RSS2.0",'podcastfeed.xml');
+        return $objFeedCreator->output("RSS2.0", 'podcastfeed.xml');
     }
 
     /**

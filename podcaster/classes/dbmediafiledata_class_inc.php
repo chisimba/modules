@@ -120,7 +120,15 @@ class dbmediafiledata extends dbTable {
      */
     public function getLatestPodcasts()
     {
-        return $this->getAll(' ORDER BY datecreated DESC, timecreated DESC LIMIT 50');
+        return $this->getAll(' ORDER BY datecreated DESC, timecreated DESC LIMIT 10');
+    }
+    /**
+     * Function that returns the latest 10 podcasts by a certain author/creator/artist names
+     * @return array
+     */
+    public function getLatestAuthorPodcasts($author)
+    {
+        return $this->getAll('where artist="' . $author . '" ORDER BY datecreated DESC, timecreated DESC LIMIT 10');
     }
     /**
      * Function that returns the latest podcast

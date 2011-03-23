@@ -27,11 +27,12 @@ class viewerutils extends object {
         $this->objLanguage = & $this->getObject('language', 'language');
         $this->objDateTime = & $this->getObject('dateandtime', 'utilities');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'podcaster');
         $this->userId = $this->objUser->userId();
         $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'podcaster');
         $this->siteBase = $this->objAltConfig->getitem('KEWL_SITEROOT_PATH');
         $this->siteUrl = $this->objAltConfig->getitem('KEWL_SITE_PATH');
+        $this->objFileIcons = $this->getObject('fileicons', 'files');
     }
 
     /**
@@ -122,13 +123,24 @@ class viewerutils extends object {
 
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->startRow();
+        $fullName = $this->objUser->fullname($result['creatorid']);
         if ($result['artist'] == '') {
-            $artist = $this->objUser->fullname($result['creatorid']);
+            $artist = $fullName;
         } else {
             $artist = $result['artist'];
         }
+        $altText = $artist . ' - '.$this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
+        //Add RSS Link to follow author
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        $objIcon->setIcon('rss');
+        $objIcon->alt = $altText;
+
+
+        $rssLink = new link($this->uri(array('action' => 'addauthorfeed', 'author'=>$artist)));
+        $rssLink->link = $objIcon->show();
+        $rssLink = ' ' . $rssLink->show();
         if (isset($id)) {
-            $table->addCell('<strong>' . $this->objLanguage->languageText("mod_podcaster_uploadedby", "podcaster", 'Uploaded by') . ':</strong> ' . $artist, '50%');
+            $table->addCell('<strong>' . $this->objLanguage->languageText("mod_podcaster_author", "podcaster", 'Author') . ':</strong> ' . $artist, '50%');
         } else {
             $authorLink = new link($this->uri(array('action' => 'byuser', 'id' => $this->objUser->userName($result['creatorid']))));
             $authorLink->link = $artist;
@@ -141,6 +153,10 @@ class viewerutils extends object {
         $playtime = $this->objDateTime->secondsToTime($result['playtime']);
         $playtime = ($playtime == '0:0') ? '<em>Unknown</em>' : $playtime;
         $table->addCell('<strong>' . $this->objLanguage->languageText('mod_podcaster_playtime', 'podcaster', 'Play time') . ':</strong> ' . $playtime, '50%');
+        $table->endRow();
+        $table->startRow();
+        $table->addCell($rssLink." ".$artist, '50%');
+        $table->addCell(" ", '50%');
         $table->endRow();
 
         //Get the license
@@ -155,10 +171,14 @@ class viewerutils extends object {
         $fileurl = $this->siteUrl . $newpodpath;
 
         $fileurl = str_replace("//", "/", $fileurl);
+        
         $downloadLink = new link($fileurl);
         $downloadLink->link = htmlentities($filename);
+        
+        $link = new link($this->uri(array('action' => 'download', 'id' => $id)));
+        $link->link = $this->objFileIcons->getExtensionIcon($result['format']) . ' ' . $result['title'];
 
-        $content .= '<br /><p>' . $podInfo . " " . $license . '</p><p><strong>' . $this->objLanguage->languageText('mod_podcaster_downloadpodcast', 'podcaster', 'Download podcast') . ': ' . $downloadLink->show() . '</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>';
+        $content .= '<br /><p>' . $podInfo . " " . $license . '</p><p><strong>' . $this->objLanguage->languageText('mod_podcaster_downloadpodcast', 'podcaster', 'Download podcast') . ': ' . $link->show() . '</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>';
 //var_dump($newpodpath);exit;
         return array('podinfo' => $content, 'filename' => $filename, 'filedata' => $result, 'id' => $id, 'podpath' => $newpodpath);
     }
@@ -224,6 +244,7 @@ class viewerutils extends object {
     public function getMostViewed() {
         $objStats = $this->getObject('dbpodcasterviewcounter');
         $list = $objStats->getMostViewedList();
+        
         $objLanguage = $this->getObject('language', 'language');
         $statisticStr = $objLanguage->languageText("mod_podcaster_statistics", "podcaster");
         $mostViewedStr = $objLanguage->languageText("mod_podcaster_mostviewed", "podcaster");
@@ -390,7 +411,7 @@ class viewerutils extends object {
               </li>
 
               <li><strong>Tags: </strong><a  href="#">' . $tags . '</a></li>
-              <li><strong>By: </strong>' . $uploader . '</li>
+              <li><strong>'.$this->objLanguage->languageText("mod_podcaster_author", "podcaster", 'Author') .': </strong>' . $uploader . '</li>
               ' . $licence . '
               </ul>
  <div class="clear"></div>
@@ -410,6 +431,7 @@ class viewerutils extends object {
         $objUser = $this->getObject('user', 'security');
         $objTags = $this->getObject('dbpodcastertags');
         $latestFiles = $this->objMediaFileData->getLatestPodcasts();
+        
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $latest10Desc = $objLanguage->languageText("mod_podcaster_latest10desc", "podcaster");
         $latest10Str = $objLanguage->languageText("mod_podcaster_latest10str", "podcaster");
@@ -427,10 +449,10 @@ class viewerutils extends object {
             $objIcon = $this->newObject('geticon', 'htmlelements');
             $objIcon->setIcon('rss');
             $objIcon->alt = $altText;
-            
+
 
             $rssLink = new link($this->uri(array('action' => 'getlatestfeeds')));
-            $rssLink->link = $objIcon->show();            
+            $rssLink->link = $objIcon->show();
             $rssLink = ' ' . $rssLink->show();
             //Append RSS icon to the heading
             $homepagetitle = $homepagetitle . $rssLink;
@@ -458,7 +480,6 @@ class viewerutils extends object {
 
             foreach ($latestFiles as $filedata) {
 
-
                 if (trim($filedata['title']) == '') {
                     $filename = $filedata['filename'];
                 } else {
@@ -468,7 +489,7 @@ class viewerutils extends object {
                 $extra = '';
                 $columnDiv = '';
 
-                if ($column == 0) {
+                if ($column == 0) {                    
                     $columnDiv = 'c50l';
                 } else {
                     $columnDiv = 'c50r';
@@ -497,7 +518,7 @@ class viewerutils extends object {
                 $objFileIcons = $this->getObject('fileicons', 'files');
                 $uploaderLink = new link($this->uri(array('action' => 'byuser', 'userid' => $filedata['creatorid'])));
                 $uploaderLink->link = $objUser->fullname($filedata['creatorid']);
-
+                $theAuthor = $filedata['artist'];
 
                 $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
                 $objDisplayLicense->icontype = 'small';
@@ -509,7 +530,7 @@ class viewerutils extends object {
                                 $filename,
                                 $fileLink,
                                 $tagsStr,
-                                $uploaderLink->show(),
+                                $theAuthor,
                                 '<p>' . $objDisplayLicense->show($license) . '</p>',
                                 $filedata['id']
                 );

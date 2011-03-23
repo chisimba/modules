@@ -25,6 +25,7 @@ class dbpodcasterviewcounter extends dbtable
         parent::init('tbl_podcaster_views');
         $this->loadClass('link', 'htmlelements');
         $this->objMediaFileData = $this->getObject('dbmediafiledata');
+        $this->objLanguage = & $this->getObject('language', 'language');
     }
 
     /**
@@ -47,7 +48,7 @@ class dbpodcasterviewcounter extends dbtable
      */
     public function getMostViewedToday()
     {
-        $sql = 'SELECT count(tbl_podcaster_views.id) as viewcount, tbl_podcaster_files.* FROM tbl_podcaster_views, tbl_podcaster_files WHERE (tbl_podcaster_files.id = tbl_podcaster_views.fileid AND dateviewed=\''.date('Y-m-d').'\' ) GROUP BY tbl_podcaster_views.fileid Order by viewcount desc limit 5';
+        $sql = 'SELECT count(tbl_podcaster_views.id) as viewcount, tbl_podcaster_metadata_media.* FROM tbl_podcaster_views, tbl_podcaster_metadata_media WHERE (tbl_podcaster_metadata_media.id = tbl_podcaster_views.fileid AND dateviewed=\''.date('Y-m-d').'\' ) GROUP BY tbl_podcaster_views.fileid Order by viewcount desc limit 5';
 
         return $this->getArray($sql);
     }
@@ -71,7 +72,7 @@ class dbpodcasterviewcounter extends dbtable
         }
 
         // SQL
-        $sql = 'SELECT count(tbl_podcaster_views.id) as viewcount, tbl_podcaster_files.* FROM tbl_podcaster_views, tbl_podcaster_files WHERE (tbl_podcaster_files.id = tbl_podcaster_views.fileid AND dateviewed > \''.$startOfWeek .'\' ) GROUP BY tbl_podcaster_views.fileid Order by viewcount desc limit 5';
+        $sql = 'SELECT count(tbl_podcaster_views.id) as viewcount, tbl_podcaster_metadata_media.* FROM tbl_podcaster_views, tbl_podcaster_metadata_media WHERE (tbl_podcaster_metadata_media.id = tbl_podcaster_views.fileid AND dateviewed > \''.$startOfWeek .'\' ) GROUP BY tbl_podcaster_views.fileid Order by viewcount desc limit 5';
 
         return $this->getArray($sql);
     }
@@ -82,7 +83,7 @@ class dbpodcasterviewcounter extends dbtable
      */
     public function getMostViewedAllTime()
     {
-        $sql = 'SELECT count(tbl_podcaster_views.id) as viewcount, tbl_podcaster_files.* FROM tbl_podcaster_views, tbl_podcaster_files WHERE (tbl_podcaster_files.id = tbl_podcaster_views.fileid ) GROUP BY tbl_podcaster_views.fileid Order by viewcount DESC LIMIT 5';
+        $sql = 'SELECT count(tbl_podcaster_views.id) as viewcount, tbl_podcaster_metadata_media.* FROM tbl_podcaster_views, tbl_podcaster_metadata_media WHERE (tbl_podcaster_metadata_media.id = tbl_podcaster_views.fileid ) GROUP BY tbl_podcaster_views.fileid Order by viewcount DESC LIMIT 5';
         return $this->getArray($sql);
     }
 
@@ -389,24 +390,22 @@ class dbpodcasterviewcounter extends dbtable
             $counter = 0;
 
             $this->loadClass('link', 'htmlelements');
-            $filetitle='Presentation';
+            $filetitle='';
             $result='';
             foreach ($data as $filedata)
             {
-                $file = $this->objMediaFileData->getFileByFileId($filedata['id']);
-                if ($file['title'] == '') {
-                    $filetitle.='-'.$counter;
-                } else {
-                    $filetitle = $file['title'];
-                }
-
+                $filetitle = $filedata['title'];
                 $counter++;
                 $result.="<li>";
                 $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$filedata['id'])));
                 $fileLink->link = $filetitle;
 
                 $result.=$fileLink->show();
-                $result.=' - '.$filedata['viewcount'];
+                if($filedata['viewcount']>1){
+                $result.=' ('.$filedata['viewcount']." ".$this->objLanguage->languageText("mod_podcaster_views","podcaster","Views").")";
+                } else {
+                    $result.=' ('.$filedata['viewcount']." ".$this->objLanguage->languageText("mod_podcaster_view","podcaster","View").")";
+                }
 
                 $result.="</li>";
             }

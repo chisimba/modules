@@ -73,8 +73,10 @@ class podcaster extends controller {
         $this->userId = $this->objUser->userId();
         $this->userPKId = $this->objUser->PKId($this->userId);
 
-        //Get podcaster base directory
+        //Get system paths
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'podcaster');
+        $this->siteBase = $this->objConfig->getitem('KEWL_SITEROOT_PATH');
+        $this->siteUrl = $this->objConfig->getitem('KEWL_SITE_ROOT');
     }
 
     /**
@@ -411,7 +413,7 @@ class podcaster extends controller {
         $user = $this->objUser->getUserDetails($this->userId);
         if (empty($useremail))
             $useremail = $user['emailaddress'];
-        
+
         //Add RSS Link
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('rss');
@@ -426,7 +428,7 @@ class podcaster extends controller {
         $siteEmail = $this->objConfig->getsiteEmail();
         $message = $this->objLanguage->languageText("mod_podcaster_dearsirmadam", "podcaster", "Dear Sir/Madam") . '<br />
 <br />
-' . $this->objLanguage->languageText("mod_podcaster_emailtext", "podcaster", "On [[DATE]], a podcast folder was created on the [[SITENAME]] website. Your can get updates of new podcasts in this folder via the following RSS feed") . ': '.$rssLink.'<br />
+' . $this->objLanguage->languageText("mod_podcaster_emailtext", "podcaster", "On [[DATE]], a podcast folder was created on the [[SITENAME]] website. Your can get updates of new podcasts in this folder via the following RSS feed") . ': ' . $rssLink . '<br />
 <br />
 ' . $this->objLanguage->languageText("mod_podcaster_rss", "podcaster", "RSS") . ': [[RSS]]<br /><br />
 The folder was created by [[FIRSTNAME]] [[SURNAME]]. You can contact them through this email address [[EMAIL]].
@@ -952,10 +954,21 @@ Sincerely,<br />
         }
         //Generate RSS Feed
         $title = $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
-        $description =$this->objConfig->getSiteName().' '.$this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');;
-        $url = $this->uri(array('action'=>'latestrssfeed'));
+        $description = $this->objConfig->getSiteName() . ' ' . $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
+        ;
+        $url = $this->uri(array('action' => 'latestrssfeed'));
         return $this->objViewer->generatePodcastFeed($title, $description, $url, $filedata);
     }
+
+    /**
+     * Method to generate the podcast author feed
+     *
+     */
+    function __addauthorfeed() {
+        $author = $this->getParam('author');
+        return $this->objViewer->getUserFeed($author);
+    }
+
     /**
      * Method to generate the podcast feed
      *
@@ -964,6 +977,7 @@ Sincerely,<br />
         //Generate RSS Feed
         return $this->objViewer->getLatestFeed();
     }
+
     /**
      * Method to get the flash file
      */
@@ -988,17 +1002,22 @@ Sincerely,<br />
      */
     function __download() {
         $id = $this->getParam('id');
-        $type = $this->getParam('type');
-
-        $fullPath = $this->objConfig->getcontentBasePath() . 'podcaster/' . $id . '/' . $id . '.' . $type;
-
-        if (file_exists($fullPath)) {
-            $relLink = $this->objConfig->getcontentPath() . 'podcaster/' . $id . '/' . $id . '.' . $type;
-
+        $result = $this->objMediaFileData->getFile($id);
+        if (!empty($result)) {
+            //Get the path
+            $pathdata = $this->folderPermissions->getById($result['uploadpathid']);
+            $pathdata = $pathdata[0];
+            $newpodpath = str_replace($this->siteBase, "/", $this->baseDir);                        
+            $newpodpath = $newpodpath . "/" . $result['creatorid'] . "/" . $pathdata['folderpath'] . '/' . $result['filename'];
+            $newpodpath = str_replace("//", "/", $newpodpath);
+            $fileurl = $newpodpath;
+            //Remove / at the start of path
+            $fileurl = ltrim($fileurl,'/');
+            $fileurl = str_replace("//", "/", $fileurl);
+            
             $objDownloadCounter = $this->getObject('dbpodcasterdownloadcounter');
-            $objDownloadCounter->addDownload($id, $type);
-
-            header('Location:' . $relLink);
+            $objDownloadCounter->addDownload($id, $result['format']);
+            header('Location:' . $fileurl);
         } else {
             return $this->nextAction(NULL, array('error' => 'cannotfindfile'));
         }
