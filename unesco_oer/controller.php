@@ -4,7 +4,9 @@ class unesco_oer extends controller {
 
     public $objProductUtil;
     public $objDbProducts;
-
+    public $objDbResourceTypes;
+    public $objDbProductThemes;
+    public $objDbProductLanguages;
     /**
      *
      * @var string $objLanguage String object property for holding the
@@ -18,6 +20,9 @@ class unesco_oer extends controller {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objProductUtil = $this->getObject('productutil');
         $this->objDbProducts = $this->getObject('dbproducts');
+        $this->objDbResourceTypes = $this->getObject('dbresourcetypes');
+        $this->objDbProductThemes = $this->getObject('dbproductthemes');
+        $this->objDbProductLanguages =$this->getObject('dbproductlanguages');
     }
 
     /**
@@ -109,48 +114,154 @@ class unesco_oer extends controller {
         return false;
     }
 
+    /*
+     * Method to display page for creating a new product
+     */
     public function __productsUi() {
         return "tbl_products_ui_tpl.php";
     }
 
+    /*
+     * Method to display page for selecting input option
+     */
+    public function __addData() {
+        return "addData_tpl.php";
+    }
+
+    /*
+     *Method to display page with data populated for an Adaptation
+     */
+    public function __createAdaptation() {
+        $id = $this->getParam('id');
+        $this->setVar('productID', $id);
+        return $this->__productsUi();
+    }
+
+    /*
+     *Method to display page with adaptable products
+     */
+    public function __chooseProductToAdapt() {
+        return 'newAdaptation_tpl.php';
+    }
+
+    public function __createOERproduct(){
+        $id = NULL;
+        $this->setVar('productID', $id);
+        return $this->__productsUi();
+    }
+
+    /*
+     * Method to retrieve entries from user on the tbl_products_ui_tpl.php page
+     * and add it to the tbl_unesco_oer_products table
+     */
     public function __uploadSubmit(){
-
-        $uploadedFile = $this->getObject('uploadinput', 'filemanager');
-        $uploadedFile->enableOverwriteIncrement = TRUE;
-        $uploadedFile->customuploadpath = 'unesco_oer/'.$this->getParam('title').'/thumbnail/';
-
-        $results = $uploadedFile->handleUpload();
-
-        if ($results == FALSE) {
-            return NULL;
-        } else {
-            // If successfully Uploaded
-            if (!$results['success']) return NULL;
+        //Retrieve thumbnail and save it
+        $parentID = $this->getParam('parentID');
+        $thumbnailPath;
+        if ($parentID == NULL){
+            $uploadedFile = $this->getObject('uploadinput', 'filemanager');
+            $uploadedFile->enableOverwriteIncrement = TRUE;
+            $uploadedFile->customuploadpath = 'unesco_oer/'.$this->getParam('title').'/thumbnail/';
+            $results = $uploadedFile->handleUpload();
+            //Test if file was successfully uploaded
+            if ($results == FALSE) {
+                //TODO return proper error page
+                return NULL;
+            } else {
+                if (!$results['success']) { // upload was unsuccessfule
+                    return NULL; //TODO return proper error page containing error
+                }else{
+                    $thumbnailPath = 'usrfiles/'.$results['path'];
+                }
+            }
+        }else{
+            $sql = "select * from tbl_unesco_oer_products where id = '$parentID'";
+            $products = $this->objDbProducts->getArray($sql);
+            $product = $products[0];
+            $thumbnailPath = $product['thumbnail'];
         }
 
+        //retrieve parent information
+       // $objParent = $this->;
+
+        //create array for uploading into data base
         $data=array(
 
-            'parent_id'=>NULL,
+            'parent_id'=>$parentID,
             'title'=>$this->getParam('title'),
             'creator'=>$this->getParam('creator'),
             'keywords'=>trim($this->getParam('keywords')),
             'description'=>$this->getParam('description'),
-            'created_on'=>NULL,
-            'resource_type'=>NULL,
-            'content_type'=>NULL,
-            'format'=>NULL,
-            'source'=>NULL,
+            'created_on'=>$this->objDbProducts->now(),
+            'resource_type'=>$this->getParam('resourceType'),
+            'content_type'=>NULL, //TODO find out about this data type
+            'format'=>NULL, //TODO find out about this data type
+            'source'=>NULL, //TODO this must be removed
             'theme'=>$this->getParam('theme'),
             'language'=>$this->getParam('language'),
             'content'=>NULL,
-            'thumbnail'=>'usrfiles/'.$results['path']
+            'thumbnail'=>$thumbnailPath
         );
 
         $this->objDbProducts->insert($data);
 
-        return "tbl_products_ui_tpl.php";
+        return $this->__addData();
     }
 
+     /*
+     * Method to display page for creating a new resource type
+     */
+    public function __newResourceTypeUI() {
+        return "newResourceTypeUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the newResourceTypeUI_tpl.php page
+     * and add it to the tbl_unesco_oer_resource_types table
+     */
+    public function __resourceTypeSubmit(){
+        $description = $this->getParam('newTypeDescription');
+        $this->objDbResourceTypes->addType($description);
+        return $this->__addData();
+    }
+
+
+    /*
+     * Method to display page for creating a new theme
+     */
+    public function __createThemeUI() {
+        return "createThemeUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createThemeUI_tpl.php page
+     * and add it to the tbl_unesco_oer_product_themes table
+     */
+    public function __createThemeSubmit(){
+        $description = $this->getParam('newTheme');
+        $this->objDbProductThemes->addTheme($description);
+        return $this->__addData();
+    }
+
+    /*
+     * Method to display page for creating a new theme
+     */
+    public function __createLanguageUI() {
+        return "createLanguageUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createThemeUI_tpl.php page
+     * and add it to the tbl_unesco_oer_product_themes table
+     */
+    public function __createLanguageSubmit(){
+        $code = $this->getParam('newLanguageCode');
+        $name = $this->getParam('newLanguageName');
+        if (strlen($code) == 0) $code = $name;
+
+        $this->objDbProductLanguages->addLanguage($code, $name);
+        return $this->__addData();
+    }
 }
 
 ?>
