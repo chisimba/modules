@@ -110,7 +110,7 @@ class simpleblog extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'view');
+        $action=htmlentities($this->getParam('action', 'view'));
         /*
         * Convert the action into a method (alternative to
         * using case selections)
@@ -198,6 +198,11 @@ class simpleblog extends controller
         die();
     }
 
+    public function __savedescription()
+    {
+        die("SAVENOTREADY");
+    }
+
     /**
     *
     * Method to render a block for use by the ajax methods when
@@ -268,6 +273,7 @@ class simpleblog extends controller
     */
     private function __actionError()
     {
+        $action=htmlentities($this->getParam('action', NULL));
         // Load an instance of the language object.
         $objLanguage = $this->getObject('language', 'language');
         $this->setVar('str', "<h3>"

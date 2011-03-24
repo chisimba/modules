@@ -71,6 +71,7 @@ class block_simpleblogmiddle extends object
     {
         $this->title = "Simpleblog posts";
     }
+
     /**
      * Standard block show method.
      *
@@ -78,15 +79,24 @@ class block_simpleblogmiddle extends object
      */
     public function show() 
     {
-        $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
         $objGuesser = $this->getObject('guesser', 'simpleblog');
         $blogId = $objGuesser->guessBlogId();
-        die($blogId);
-        //if ($blogId) {
+        $objUser = $this->getObject('user', 'security');
+        $userId = $objUser->userId();
+        $loggedIn = FALSE;
+        if ($objUser->isLoggedIn()) {
+           $loggedIn=TRUE;
+            if ($userId == $blogId) {
+                die("YOU IS THE BLOGGER YOU IS");
+            }
+        }
+
+        $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
+        if ($blogId) {
             return $objPostOps->showCurrentPosts($blogId);
-        //} else {
-          //  return NULL;
-        //}
+        } else {
+            return $objPostOps->noBlogYet($loggedIn);
+        }
     }
 }
 ?>

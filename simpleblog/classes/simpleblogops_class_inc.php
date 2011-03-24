@@ -309,7 +309,7 @@ class simpleblogops extends object
                 $blogger = $objBestGuess->guessUserId();
 
                 $myId = $this->objUser->userId();
-                die($blogger . " = " . $myId);
+//                die($blogger . " = " . $myId);
                 // If they are the blogger
                 if ($blogger == $myId) {
                     $this->hasEditAddDelRights = TRUE;
@@ -322,6 +322,38 @@ class simpleblogops extends object
         } else {
             return FALSE;
         }
+    }
+
+
+    /**
+     *
+     * Return a response when the user of the requested blog has not yet
+     * created a blog post.
+     *
+     * @return string The response text
+     * @access public
+     * 
+     */
+    public function noBlogYet($isCurrentBlogger=FALSE)
+    {
+        if ($isCurrentBlogger) {
+            $ret = $this->objLanguage->languageText(
+                "mod_simplelblog_yourfirstblog",
+                "simpleblog",
+                "You have no blog posts. You can create one now."
+             );
+            // THe edit form
+            $objDesc = $this->getObject('editdescription', 'simpleblog');
+            $ret .= $objDesc->getForm(TRUE);
+            //$ret .= "PUT EDITOR HERE";
+            return $ret;
+        } else {
+            return $this->objLanguage->languageText(
+                "mod_simplelblog_noblogyet",
+                "simpleblog",
+                "The user has not yet created a blog");
+        }
+
     }
 }
 ?>

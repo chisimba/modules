@@ -100,48 +100,75 @@ class dbblogs extends dbtable
         return $posts;
     }
 
+    /**
+     *
+     * Get the blog id of a particular user
+     *
+     * @param string $userId The userid of the user to look up
+     * @return string The blog id of the user
+     * @access public
+     *
+     */
     public function getUserBlogId($userId) {
         if (!$userId == NULL) {
             $sql = 'SELECT blogid FROM tbl_simpleblog_blogs WHERE userid=\''
               . $userId . '\' AND blogtype=\'personal\'';
             $result = $this->getArrayWithLimit($sql, 0, 1);
-            if (count($result > 0)) {
-                $blogId = $result[0]['blogid'];
-                return $blogId;
-            } else {
-                return NULL;
+            if (is_array($result)) {
+                if (count($result) > 0) {
+                    $blogId = $result[0]['blogid'];
+                    return $blogId;
+                } else {
+                    return NULL;
+                }
             }
-        } else {
-            return NULL;
         }
+        return NULL;
     }
 
+    /**
+     *
+     * Look up the user id of the owner of a blog identified by its blog id
+     *
+     * @param string $blogId The blog id to look up
+     * @return string The userid of the person owning the blog
+     * @access public
+     *
+     */
     public function getOwnerId($blogId)
     {
         $sql = 'SELECT userid FROM tbl_simpleblog_blogs WHERE blogid=\''
           . $blogId . '\' AND blogtype=\'personal\'';
         $result = $this->getArrayWithLimit($sql, 0, 1);
-        $userId = $result[0]['userid'];
-        return $userId;
+        if ($result) {
+            $userId = $result[0]['userid'];
+            return $userId;
+        } else {
+            return NULL;
+        }
     }
     
     /**
-    * Method to retrieve the data for edit and prepare the vars for
-    * the edit template.
+    * Method to retrieve a record for edit
     *
-    * @param string $mode The mode should be edit or add
+    * @param string $id The id of the record to retrieve
+    * @return string Array A one row array containing the record data
+    * @access public
+    *
     */
-    function getForEdit($id)
+    public function getForEdit($id)
     {
         // Get the data for edit
         return $this->getRow('id', $id);
     }
 
     /**
-    * Method to retrieve the data for edit and prepare the vars for
-    * the edit template.
     *
-    * @param string $mode The mode should be edit or add
+    * Method to retrieve the data for edit by blogId
+    *
+    * @param string $mode The mode should be edit or add string Array A one row array containing the record data
+    * @access public
+    *
     */
     function getBlogInfo($blogId)
     {

@@ -1,10 +1,10 @@
 <?php
 /**
  *
- * Editor class for Simple Blog
+ * Editor class for Simple Blog descriptions
  *
  * Editor class for Simple Blog which builds the edit interface for
- * blog posts
+ * blog descriptions. This is for creating new blogs
  *
  * PHP version 5
  *
@@ -59,7 +59,7 @@ $GLOBALS['kewl_entry_point_run'])
 * @author    Derek Keats <derek@dkeats.com>
 *
 */
-class editor extends object
+class editdescription extends object
 {
 
     /**
@@ -114,27 +114,30 @@ class editor extends object
         $this->loadClass ('hiddeninput', 'htmlelements');
     }
 
-    public function editForm($id=FALSE)
+    public function getForm($hasRights=FALSE, $blogId=FALSE)
     {
         $objSec = $this->getObject('simpleblogsecurity', 'simpleblog');
         $userId = $this->objUser->userId();
         $objGuesser = $this->getObject('guesser', 'simpleblog');
         $blogId = $objGuesser->guessBlogId();
-        if ($objSec->checkRights($blogId, $userId)) {
+        if ($hasRights) {
             // Load the form elements
             $this->loadEditElements();
-            return $this->buildEditForm();
+            return $this->buildForm();
+        } elseif ($objSec->checkRights($blogId, $userId)) {
+            // Load the form elements
+            $this->loadEditElements();
+            return $this->buildForm();
         } else {
-            return '<div class="error">' 
+            return '<div class="error">'
               . $this->objLanguage->languageText("mod_simpleblog_norights",
                 "simpleblog",
                 "You do not have rights to edit or create posts in this blog.")
               . '</div>';
         }
-        
     }
 
-    public function buildEditForm()
+    public function buildForm()
     {
         // Set up empty values so we can use same form for add and edit
         $title = '';
@@ -145,9 +148,8 @@ class editor extends object
             $id = $this->getParam('postid', FALSE);
             if ($id) {
                 $ar = $this->objDbPosts->getForEdit($id);
-                $title = trim($ar['post_title']);
-                $content = trim($ar['post_content']);
-                $status = $ar['post_status'];
+                $title = trim($ar['blog_name']);
+                $content = trim($ar['blog_description']);
                 $blogId = $ar['blogid'];
             }
         } else {
@@ -157,39 +159,27 @@ class editor extends object
 
         //Set up the form action URL
         $paramArray=array(
-            'action'=>'savepost',
+            'action'=>'savedescription',
             'mode'=>$mode);
         $formAction=$this->uri($paramArray, 'simpleblog');
 
         //Create the form class
-        $objForm = new form('simpleblog_editor');
+        $objForm = new form('simpleblog_editdescription');
         $objForm->setAction($formAction);
         $objForm->displayType=3;
 
         // The blog title form element unlabled.
-        $objBlogTitle = new textinput('post_title', $title);
-        $objBlogTitle->id='post_title';
-        $titleLabel = $this->objLanguage->languageText("mod_simpleblog_posttitle",
-            "simpleblog", "The title of this post");
-        $postTitleFormElement = $titleLabel . ":<br />" . $objBlogTitle->show();
+        $objBlogTitle = new textinput('blog_name', $title);
+        $objBlogTitle->id='blog_name';
+        $titleLabel = $this->objLanguage->languageText("mod_simpleblog_blogname",
+            "simpleblog", "The title of this blog");
+        $titleFormElement = $titleLabel . ":<br />" . $objBlogTitle->show();
 
 
-        // Whether it is published or draft
-        $objRadioElement = new radio('post_status');
-        $objRadioElement->addOption('posted',
-          $this->objLanguage->languageText("mod_simpleblog_posted",
-          "simpleblog", "posted"));
-        $objRadioElement->addOption('draft',
-          $this->objLanguage->languageText("mod_simpleblog_draft",
-          "simpleblog", "draft"));
-        $objRadioElement->setSelected($status);
-        $statusLabel =  $this->objLanguage->languageText("mod_simpleblog_statuslabel",
-            "simpleblog", "Indicate the publication status of this post");
-        $statusFormElement = $statusLabel . ": " . $objRadioElement->show();
 
         // The blog content editor unlabled.
         $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = 'post_content';
+        $editor->name = 'blog_description';
         $editor->setContent($content);
         $contentFormElement = $editor->show();
 
@@ -216,9 +206,8 @@ class editor extends object
 
         // Build the form
         $objForm->addToForm( $blogidFormElement . $postIdFormElement
-          . "<div class='title_form_element'>" . $postTitleFormElement . "</div>"
-          . "<div class='status_form_element'>" . $statusFormElement . "</div>"
-          . "<div class='content_form_element'>" . $contentFormElement . "</div>"
+          . "<div class='blogname_form_element'>" . $titleFormElement . "</div>"
+          . "<div class='description_form_element'>" . $contentFormElement . "</div>"
           . "<div class='savebutton_form_element'>" . $saveFormElement . "</div>");
         return $objForm->show();
     }

@@ -115,7 +115,6 @@ class guesser extends object
             $userId = $objBestGuess->guessUserId();
             $objDb = $this->getObject('dbblogs', 'simpleblog');
             $uid = $objDb->getUserBlogId($userId);
-            die($uid);
             if (!$uid == "") {
                 return $objDb->getUserBlogId($userId);
             } else {
