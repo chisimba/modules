@@ -114,32 +114,36 @@ class dbmediafiledata extends dbTable {
     public function getFileByFileId($id) {
         return $this->getRow('fileid', $id);
     }
+
     /**
      * Function that returns the latest 10 podcasts
      * @return array
      */
-    public function getLatestPodcasts()
-    {
+    public function getLatestPodcasts() {
         return $this->getAll(' ORDER BY datecreated DESC, timecreated DESC LIMIT 10');
     }
+
     /**
      * Function that returns the latest 10 podcasts by a certain author/creator/artist names
      * @return array
      */
-    public function getLatestAuthorPodcasts($author)
-    {
+    public function getLatestAuthorPodcasts($author) {
         return $this->getAll('where artist="' . $author . '" ORDER BY datecreated DESC, timecreated DESC LIMIT 10');
     }
 
     /*
-     * Function to get documents based on passed params
+     * Function to get podcast based on passed params
      * @param string $filter the type of parameter to use
      * @param string $filtervalue the value supplied by the user
      * @return array
      */
 
     public function searchFileInAllFields($filter, $filtervalue) {
-        $sql = "select * from tbl_podcaster_metadata_media as A ";
+        $sql = "select A.id, A.fileid, A.filename, A.uploadpathid, A.width, A.height, A.playtime,
+            A.format, A.mimetype, A.cclicense, A.framerate, A.bitrate, A.samplerate, A.title, A.artist,
+            A.description, A.year, A.url, A.getid3info, A.creatorid, A.datecreated, A.timecreated,
+            A.modifierid, A.datemodified, A.timemodified, B.id as tagId, B.tag from
+            tbl_podcaster_metadata_media as A join tbl_podcaster_tags as B on A.id = B.fileid ";
         //Derermine the where clause based on filter
         switch ($filter) {
             case 'description':
@@ -154,20 +158,38 @@ class dbmediafiledata extends dbTable {
             case 'filename':
                 $sql .= "where A.filename like '%" . $filtervalue . "%'";
                 break;
+            case 'tag':
+                $sql .= "where B.tag like '%" . $filtervalue . "%'";
+                break;
             default:
-                $sql .= "where A.description like '%" . $filtervalue . "%' or A.title like '%" . $filtervalue . "%' or A.artist like '%" . $filtervalue . "%' or A.filename like '%" . $filtervalue . "%'";
+                $sql .= "where A.description like '%" . $filtervalue . "%' 
+                    or A.title like '%" . $filtervalue . "%' or A.artist like '%" . $filtervalue . "%'
+                        or A.filename like '%" . $filtervalue . "%' or B.tag like '%" . $filtervalue . "%'";
                 break;
         }
+
         $sql .= " ORDER BY datecreated DESC, timecreated DESC";
 
-        return $this->getArray($sql);
+        $results = $this->getArray($sql);
+        //Remove duplicates
+        $checkDuplicate = array();
+        $newresults = array();
+        foreach ($results as $result) {
+            //Avoid duplicate views of the same record
+            if (!in_array($result['id'], $checkDuplicate)) {
+                //add this record id to the array
+                array_push($checkDuplicate, $result['id']);
+                array_push($newresults, $result);
+            }
+        }
+        return $newresults;
     }
+
     /**
      * Function that returns the latest podcast
      * @return array
      */
-    public function getLatestPodcast()
-    {
+    public function getLatestPodcast() {
         return $this->getAll(' ORDER BY datecreated, timecreated DESC LIMIT 1');
     }
 
@@ -186,7 +208,7 @@ class dbmediafiledata extends dbTable {
             'description' => $description,
             'cclicense' => $license,
             'artist' => $artist
-            ));
+        ));
     }
 
     /**
