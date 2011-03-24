@@ -130,6 +130,38 @@ class dbmediafiledata extends dbTable {
     {
         return $this->getAll('where artist="' . $author . '" ORDER BY datecreated DESC, timecreated DESC LIMIT 10');
     }
+
+    /*
+     * Function to get documents based on passed params
+     * @param string $filter the type of parameter to use
+     * @param string $filtervalue the value supplied by the user
+     * @return array
+     */
+
+    public function searchFileInAllFields($filter, $filtervalue) {
+        $sql = "select * from tbl_podcaster_metadata_media as A ";
+        //Derermine the where clause based on filter
+        switch ($filter) {
+            case 'description':
+                $sql .= "where A.description like '%" . $filtervalue . "%'";
+                break;
+            case 'title':
+                $sql .= "where A.title like '%" . $filtervalue . "%'";
+                break;
+            case 'artist':
+                $sql .= "where A.artist like '%" . $filtervalue . "%'";
+                break;
+            case 'filename':
+                $sql .= "where A.filename like '%" . $filtervalue . "%'";
+                break;
+            default:
+                $sql .= "where A.description like '%" . $filtervalue . "%' or A.title like '%" . $filtervalue . "%' or A.artist like '%" . $filtervalue . "%' or A.filename like '%" . $filtervalue . "%'";
+                break;
+        }
+        $sql .= " ORDER BY datecreated DESC, timecreated DESC";
+
+        return $this->getArray($sql);
+    }
     /**
      * Function that returns the latest podcast
      * @return array
