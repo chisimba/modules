@@ -1,7 +1,7 @@
 <?php
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
-$this->loadClass('dropdown','htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -162,6 +162,12 @@ $this->loadClass('dropdown','htmlelements');
                     <div class="blueBackground">
                         <select name="language" id="language" class="leftColumnSelectDropdown">
                             <option value="">All</option>
+                            <option value="">English</option>
+                            <option value="">Français</option>
+                            <option value="">Español</option>
+                            <option value="">Русский</option>
+                            <option value="">لعربية</option>
+                            <option value="">中文</option>
                         </select>
                     </div>
                     <br>
@@ -240,22 +246,25 @@ $this->loadClass('dropdown','htmlelements');
                     <?php
                                 //Creates chisimba table
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
-                                $products = $this->objDbProducts->getProducts(0, 10);               // pulls available products from database using getproducts
+                                $products = $this->objDbProducts->getProducts(0, 20);               // pulls available products from database using getproducts
 
                                 $newRow = true;
                                 $count = 0;
+                                $noOfAdaptations = 0;
                                 foreach ($products as $product) {               //populates table
-                                    if ($product['parent_id'] == null) {
-                                        $count++;
-
-                                        if ($newRow) {
-                                            $objTable->startRow();
-                                            $objTable->addCell($this->objProductUtil->populateGridView($product));
-                                            $newRow = false;
-                                        } else {
-                                            $objTable->addCell($this->objProductUtil->populateGridView($product));
-                                        }
+                                    //if ($product['parent_id'] == null) {
+                                    $count++;
+//                                    $noOfAdaptations = $this->objDbProducts->getNoOfAdaptations($product['parent_id'], 0);
+                                    //$noOfAdaptations = 3;
+                                    
+                                    if ($newRow) {
+                                        $objTable->startRow();
+                                        $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
+                                        $newRow = false;
+                                    } else {
+                                        $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
                                     }
+                                    //}
 
                                     if ($count == 3) {
                                         $newRow = true;
@@ -404,6 +413,7 @@ $this->loadClass('dropdown','htmlelements');
                                                 </td>
                                             </tr>
                                         </table> -->
+
                     <!-- Pagination-->
                     <div class="paginationDiv">
                         <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>

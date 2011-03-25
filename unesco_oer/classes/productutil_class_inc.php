@@ -28,7 +28,7 @@ class productutil extends object
      * @param <type> $product
      * @return <type> $content
      */
-    public function populateGridView($product)
+    public function populateGridView($product, $noOfAdaptations)
     {
         $content = '';
 
@@ -50,13 +50,13 @@ class productutil extends object
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                     <div class="listingLanuagesDropdownDiv">
                                         <select name="" class="listingsLanguageDropDown">
-                                            <option value="">Languages</option>
+                                            <option value="">' . $product['Language'] . '</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                    <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                    <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks"> ' . $noOfAdaptations . ' adaptation(s)</a></div>
                                 </div>
 ';
         return $content;
