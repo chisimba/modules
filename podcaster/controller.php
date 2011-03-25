@@ -447,6 +447,15 @@ Sincerely,<br />
         $message = str_replace('[[SITEADDRESS]]', $this->objConfig->getsiteRoot(), $message);
         $message = str_replace('[[DATE]]', date('l dS \of F Y h:i:s A'), $message);
 
+
+        $myFile = "testFile.txt";
+        $fh = fopen($myFile, 'w') or die("can't open file");
+        $stringData = $useremail . "\n";
+        fwrite($fh, $stringData);
+        $stringData = $message . "\n";
+        fwrite($fh, $stringData);
+        fclose($fh);
+
         $objMailer = $this->getObject('email', 'mail');
         $objMailer->setValue('to', array($useremail));
         $objMailer->setValue('from', $siteEmail);
@@ -968,6 +977,14 @@ Sincerely,<br />
         $author = $this->getParam('author');
         return $this->objViewer->getUserFeed($author);
     }
+    /**
+     * Method to generate the folder feeds -- shows the pods within it
+     *
+     */
+    function __viewfolderfeed() {
+        $folderId = $this->getParam('id');
+        return $this->objViewer->getFolderFeed($folderId);
+    }
 
     /**
      * Method to generate the podcast feed
@@ -1007,14 +1024,14 @@ Sincerely,<br />
             //Get the path
             $pathdata = $this->folderPermissions->getById($result['uploadpathid']);
             $pathdata = $pathdata[0];
-            $newpodpath = str_replace($this->siteBase, "/", $this->baseDir);                        
+            $newpodpath = str_replace($this->siteBase, "/", $this->baseDir);
             $newpodpath = $newpodpath . "/" . $result['creatorid'] . "/" . $pathdata['folderpath'] . '/' . $result['filename'];
             $newpodpath = str_replace("//", "/", $newpodpath);
             $fileurl = $newpodpath;
             //Remove / at the start of path
-            $fileurl = ltrim($fileurl,'/');
+            $fileurl = ltrim($fileurl, '/');
             $fileurl = str_replace("//", "/", $fileurl);
-            
+
             $objDownloadCounter = $this->getObject('dbpodcasterdownloadcounter');
             $objDownloadCounter->addDownload($id, $result['format']);
             header('Location:' . $fileurl);

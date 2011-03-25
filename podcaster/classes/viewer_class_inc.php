@@ -79,7 +79,10 @@ class viewer extends object {
      *
      */
     public $objConfig;
+
     public $objMediaFileData;
+
+    public $objFolderPermissions;
 
     /**
      *
@@ -97,6 +100,9 @@ class viewer extends object {
         $this->objFile = $this->getObject('dbpodcasterfiles');
 
         $this->objMediaFileData = $this->getObject('dbmediafiledata');
+
+        $this->objFolderPermissions = $this->getObject('dbfolderpermissions');
+        
     }
 
     /**
@@ -227,6 +233,25 @@ class viewer extends object {
         $author = stripslashes($author);
         return $this->generateAuthorLatestFeed($title, $description, $url, $files, $author);
     }
+    /**
+     * Get folder feeds
+     * @param string $folderId
+     * @return object
+     */
+    public function getFolderFeed($folderId) {
+        //Get folder name
+        $folderData = $this->objFolderPermissions->getById($folderId);
+        $path = $folderData[0]['folderpath'];
+        $directPath = explode("/",$path);
+        //Get the last item in array
+        $directFolder = end($directPath);
+        $title = $directFolder . ' - ' . $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
+        $description = $this->objLanguage->languageText("mod_podcaster_podcastinfolder", "podcaster", "List of podcasts within folder") . ' ' . $directFolder;
+        $url = $this->uri(array('action' => 'viewfolderfeed', 'id' => $folderId));
+
+        $files = $this->objMediaFileData->getLatestFolderPodcasts($folderId);
+        return $this->generateFolderLatestFeed($title, $description, $url, $files, $directFolder);
+    }
 
     /**
      * Get Tag Feed
@@ -325,7 +350,47 @@ class viewer extends object {
 
         return $objFeedCreator->output("RSS2.0", $fileName);
     }
+    /**
+     * Generate folder latest feeds
+     * @param string $title
+     * @param string $description
+     * @param string $url
+     * @param string $files
+     * @param string $author
+     * @return object
+     */
+    public function generateFolderLatestFeed($title, $description, $url, $files, $folder) {
+        $objFeedCreator = $this->getObject('feeder');
+        $objFeedCreator->setupFeed(TRUE, $title, $description, $url, $url);
 
+        if (count($files) > 0) {
+            $this->loadClass('link', 'htmlelements');
+            $objDate = $this->getObject('dateandtime', 'utilities');
+            foreach ($files as $file) {
+
+                if (trim($file['title']) == '') {
+                    $filename = $file['filename'];
+                } else {
+                    $filename = htmlentities($file['title']);
+                }
+
+                $link = str_replace('&amp;', '&', $this->uri(array('action' => 'view', 'id' => $file['id'])));
+
+                $imgLink = new link($link);
+                $imgLink->link = $this->objFile->getPodcastThumbnail($file['id'], $filename);
+
+                $date = $file['datecreated'] . " " . $file['timecreated'];
+
+                $date = $objDate->sqlToUnixTime($date);
+
+                $objFeedCreator->addItem($filename, $link, $imgLink->show() . '<br />' . nl2br($file['description']), 'here', $this->objUser->fullName($file['creatorid']), $date);
+            }
+        }
+        
+        $fileName = $folder . "-" . "folderlatestfeed.xml";
+
+        return $objFeedCreator->output("RSS2.0", $fileName);
+    }
     /**
      * Generate Feed
      * @param <type> $title
