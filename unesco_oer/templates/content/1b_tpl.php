@@ -243,8 +243,9 @@ $this->loadClass('link', 'htmlelements');
                                 $products = $this->objDbProducts->getProducts(0, 10,"");
 
                                 //Loop through the products and display each in it's own line
-                                foreach ($products as $product) {
-                                    
+                                foreach ($products as $product) {                                    
+                                    //Get number of adaptations
+                                        $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
                                     echo $this->objProductUtil->populateListView($product);
                                 }
                     ?>

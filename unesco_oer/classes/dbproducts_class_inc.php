@@ -56,44 +56,13 @@ class dbproducts extends dbtable
     }
 
     //TODO check the hierichal storage of data to make this more efficient
-    function getNoOfAdaptations($parentId, $count)
+    function getNoOfAdaptations($parentId)
     {
         $sql = "SELECT * FROM tbl_unesco_oer_products WHERE parent_id = '$parentId'";
+        $child = $this->getArray($sql);
 
-        //Count the number of occurances
-        while ($sql['parent_id'] != 'NULL') {
-            $this->getNoOfAdaptations($sql['parent_id'], $count + 1);
-            //$count++;
-        }
-
-        return $count;
+        return count($child);
     }
 
 }
-?>
-
-
-<?php
-// $parent is the parent of the children we want to see
-// $level is increased when we go deeper into the tree,
-//        used to display a nice indented tree
-
-/*
-function display_children($parent, $level) {
-   // retrieve all children of $parent
-   $result = mysql_query('SELECT title FROM tree '.
-                          'WHERE parent="'.$parent.'";');
-
-   // display each child
-   while ($row = mysql_fetch_array($result)) {
-       // indent and display the title of this child
-       echo str_repeat('  ',$level).$row['title']."\n";
-
-       // call this function again to display this
-       // child's children
-       display_children($row['title'], $level+1);
-   }
-}
- * *
- */
 ?>

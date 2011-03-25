@@ -1,5 +1,9 @@
 <?php
 
+//Display errors
+error_reporting(E_ALL);
+ini_set('display_errors', 'Off');
+
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,14 +32,20 @@ class productutil extends object
      * @param <type> $product
      * @return <type> $content
      */
-    public function populateGridView($product, $noOfAdaptations)
+    public function populateGridView($product)
     {
         $content = '';
 
+        //TODO find out what makes a product new
         if ($product['new'] == 'true') {
             $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
         } else {
             $content.= '<div class="newImageIcon"></div>';
+        }
+
+        //This some how forces the page to display the 0
+        if ($product['noOfAdaptations'] == 0) {
+            $product['noOfAdaptations'] = 0;
         }
 
         $content.='
@@ -50,13 +60,13 @@ class productutil extends object
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                     <div class="listingLanuagesDropdownDiv">
                                         <select name="" class="listingsLanguageDropDown">
-                                            <option value="">' . $product['Language'] . '</option>
+                                            <option value="">' . $product['language'] . '</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                    <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks"> ' . $noOfAdaptations . ' adaptation(s)</a></div>
+                                    <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks"> ' . $product['noOfAdaptations'] . ' adaptations</a></div>
                                 </div>
 ';
         return $content;
@@ -75,6 +85,11 @@ class productutil extends object
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
 
+        //This some how forces the page to display the 0
+        if ($product['noOfAdaptations'] == 0) {
+            $product['noOfAdaptations'] = 0;
+        }
+
         //TODO Sieve through this to get number of adaptations, 
         $content.='
                   <div class="productsListView">
@@ -85,7 +100,7 @@ class productutil extends object
                   	</div>
                     <div class="productlistViewLeftFloat">
                         <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">' . $product['noOfAdaptations'] . ' adaptations </a></div>
                     </div>
                     <div class="productlistViewLeftFloat">
                         <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
@@ -99,7 +114,7 @@ class productutil extends object
                       <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                         <div class="listingAdaptationLinkDiv">
                         	<select name="" class="listingsLanguageDropDown">
-                            	<option value="">Languages</option>
+                            	<option value="">' . $product['language'] . '</option>
                             </select>
                         </div>
                     </div>
@@ -124,6 +139,11 @@ class productutil extends object
         /*
          * TODO add code to check if the product was adapted by an institution or a group
          */
+
+        //This some how forces the page to display the 0
+        if ($product['noOfAdaptations'] == 0) {
+            $product['noOfAdaptations'] = 0;
+        }
 
         $content.='
                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
@@ -161,9 +181,15 @@ class productutil extends object
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
 
+        //This some how forces the page to display the 0
+        if ($product['noOfAdaptations'] == 0) {
+            $product['noOfAdaptations'] = 0;
+        }
+
         /*
          * TODO add code to check if the product was adapted by an institution or a group
          */
+
         $content.='
                     <div class="adaptationListView">
                         <div class="productAdaptationListViewLeftColumn">
@@ -199,6 +225,13 @@ class productutil extends object
                     </div>
                     ';
         return $content;
+    }
+
+    private function checkNoOfAdaptations($product)
+    {
+        if ($product['noOfAdaptations'] == 0) {
+            return 0;
+        }
     }
 
 }

@@ -252,27 +252,24 @@ $this->loadClass('dropdown', 'htmlelements');
                                 $count = 0;
                                 $noOfAdaptations = 0;
                                 foreach ($products as $product) {               //populates table
-                                    //if ($product['parent_id'] == null) {
-                                    $count++;
-//                                    $noOfAdaptations = $this->objDbProducts->getNoOfAdaptations($product['parent_id'], 0);
-                                    //$noOfAdaptations = 3;
-                                    
-                                    if ($newRow) {
-                                        $objTable->startRow();
-                                        $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
-                                        $newRow = false;
-                                    } else {
-                                        $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
+                                    if ($product['parent_id'] == null) {
+                                        $count++;
+                                        $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
+
+                                        if ($newRow) {
+                                            $objTable->startRow();
+                                            $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
+                                            $newRow = false;
+                                        } else {
+                                            $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
+                                        }
                                     }
-                                    //}
 
                                     if ($count == 3) {
                                         $newRow = true;
                                         $objTable->endRow();
                                         $count = 0;
                                     }
-                        
-
                                 }
                                 echo $objTable->show();
                     ?>

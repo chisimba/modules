@@ -251,6 +251,7 @@ $this->loadClass('link', 'htmlelements');
 
                                 foreach ($products as $product) {
                                     if ($product['parent_id'] != '') {
+                                        $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
                                         echo $this->objProductUtil->populateAdaptedListView($product);
                                     }
                                 }
