@@ -38,8 +38,13 @@ class dbproducts extends dbtable
         return $this->getArray($sql);
     }
 
-    function getProducts($start, $end)
-    {
+    function getFilteredProducts($filter) {
+        $sql = "select * from tbl_unesco_oer_products where $filter";
+
+        return $this->getArray($sql);
+    }
+
+     function getProducts($start,$end) {
         $sql = "select * from tbl_unesco_oer_products limit $start,$end";
 
         return $this->getArray($sql);

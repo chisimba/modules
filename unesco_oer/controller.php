@@ -102,12 +102,15 @@ class unesco_oer extends controller {
     }
 
      public function __FilterProducts() {
+        $ProdFilter = $this->getParam('filter');
+        if ($ProdFilter == NULL){
+            $ProdFilter = "no value returned";
+        }
+        $this->setVarByRef("testfilter", $ProdFilter);
 
 
 
-
-
-        return "2b_tpl.php";
+        return "2a_tpl.php";
     }
 
     public function requiresLogin() {

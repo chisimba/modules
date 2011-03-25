@@ -1,7 +1,10 @@
 <?php
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$filterSelect = false;
 ?>
+<script src="http://code.jquery.com/jquery-1.5.js"></script>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -99,22 +102,22 @@ $this->loadClass('dropdown', 'htmlelements');
                 <div class="mainNavigation">
                     <div class="navitem">
                         <div class="navitemInner">
-                            <?php
-                            $abLink = new link($this->uri(array("action" => "home")));
-                            $abLink->link = 'UNESCO OER PRODUCTS';
-                            echo $abLink->show();
-                            ?>
+<?php
+$abLink = new link($this->uri(array("action" => "home")));
+$abLink->link = 'UNESCO OER PRODUCTS';
+echo $abLink->show();
+?>
 
                         </div>
                     </div>
                     <div class="mainNavPipe">&nbsp;</div>
                     <div class="navitemOnstate">
                         <div class="navitemInnerOnstate">
-                            <?php
-                            $abLink = new link($this->uri(array("action" => "2a")));
-                            $abLink->link = 'PRODUCT ADAPTATIONS';
-                            echo $abLink->show();
-                            ?>
+<?php
+$abLink = new link($this->uri(array("action" => "2a")));
+$abLink->link = 'PRODUCT ADAPTATIONS';
+echo $abLink->show();
+?>
                         </div>
                     </div>
                     <div class="mainNavPipe"></div>
@@ -151,109 +154,149 @@ $this->loadClass('dropdown', 'htmlelements');
                     <br>
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
                     <div class="blueBackground">
-                        <?php
-                            $products = $this->objDbProducts->getProducts(0, 10);
-                            $objfilter = $this->getObject('dropdown', 'htmlelements');
-                            $objfilter = new dropdown('filter');
-                            foreach ($products as $product) {
+                    <?php
+                    $products = $this->objDbProducts->getProducts(0, 10);
+                    $filter = new dropdown('filterTheme');
+                    foreach ($products as $product) {
 
-                                $objfilter->addOption($product['theme']);
-                                
-                           }
-                            echo $objfilter->show();
-                            $SelectedFilter = $objfilter->value ;
-                            
+                        $filter->addOption($product['theme']);
+                    }
+                    $uri = $this->uri(array('action' => 'filterTheme'));
+                    $form = new form('filterTheme', $this->uri(array('action' => 'FilterProducts')));
+                    //         $filterbutton = new button('FilterProducts', "FilterProducts");
+                    //   $filterbutton->settosubmit();
 
-                        ?>
-                            <!--
+                    $uri = $this->uri(array('action' => 'FilterProducts'));
+                    $filter->addOnChange('javascript: sendFilterform()');
+                    //                         $form -> addtoform($filterbutton->show());
+                    // $filter->setselected();
 
-                                                  <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                                        <option value="">All</option>
-                                                    </select>
+                    $form->addtoform($filter->show());
+                    //    $form->addtoform($filterbutton->show());
+                    echo $form->show();
+                    echo $testfilter;
+                    ?>
+                        <!--
 
-                            <!-- Pagination-->
-                        </div>
-                        <br>
+                                              <select name="theme" id="theme" class="leftColumnSelectDropdown">
+                                                    <option value="">All</option>
+                                                </select>
 
-
-
-                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
-                        <div class="blueBackground">
-                            <select name="language" id="language" class="leftColumnSelectDropdown">
-                                <option value="">All</option>
-                            </select>
-                        </div>
-                        <br>
-                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">Author</div>
-                        <div class="blueBackground">
-                            <select name="author" id="author" class="leftColumnSelectDropdown">
-                                <option value="">All</option>
-                            </select>
-                        </div>
-                        <br>
-                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
-                        <div class="blueBackground">
-                            <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                                <option value="">All</option>
-                            </select>
-                        </div>
-                        <br><br>
-                        <div class="blueBackground rightAlign">
-                            <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                            <a href="#" class="resetLink">RESET</a>
-                        </div>
-                        <div class="filterheader">
-
-
-                            <?php
-                            $abLink = new link($this->uri(array("action" => "2b", "filter" => $selectedfilter)));
-                            $abLink->link = 'Filter';
-                            echo $abLink->show();
-                            ?>
-
-                        </div>
-                        <div class="rssFeed">
-                            <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
-                            <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
-                        </div>
+                        <!-- Pagination-->
                     </div>
-                    <!-- Center column DIv -->
-                    <div class="centerColumnDiv">
-                        <div class="GridListViewDiv">
-                            <div class="sortBy">
-                                Sort By:
-                                <select name="" class="contentDropDown">
-                                    <option value="">Date Added</option>
-                                </select>
-                                <select name="" class="contentDropDown">
-                                    <option value="">DESC</option>
-                                </select>
-                            </div>
-                            <div class="viewGrid">
-                                <div class="viewAsDiv">View as: </div>
+                    <br>
 
 
-<?php
-                            $abLink = new link($this->uri(array("action" => "2a")));
-                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
-                            echo $abLink->show();
-?>
+
+                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
+                    <div class="blueBackground">
+<?php ?>
+
+
+
+
+                                     <!--   <select name="language" id="language" class="leftColumnSelectDropdown">
+                                            <option value="">All</option>
+                                      /select>
+
+                        -->
+                    </div>
+                    <br>
+                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">Author</div>
+                    <div class="blueBackground">
+
+                        <?php
+                        $products = $this->objDbProducts->getProducts(0, 10);
+                        $filter = new dropdown('filter');
+                        foreach ($products as $product) {
+
+                            $filter->addOption($product['creator']);
+                        }
+                        $uri = $this->uri(array('action' => 'filter'));
+                        $form = new form('filter', $this->uri(array('action' => 'FilterProducts')));
+                        $filterbutton = new button('FilterProducts', "FilterProducts");
+                        $filterbutton->settosubmit('filter');
+
+                        $uri = $this->uri(array('action' => 'FilterProducts'));
+                        $filter->addOnChange();
+                        //                         $form -> addtoform($filterbutton->show());
+                        // $filter->setselected();
+
+                        $form->addtoform($filter->show());
+                        $form->addtoform($filterbutton->show());
+
+                        echo $form->show();
+                        echo $testfilter
+                        ?>
+
+
+                                        <!--<select name="author" id="author" class="leftColumnSelectDropdown">
+                                            <option value="">All</option>
+                                        </select>
+
+                        -->
+                    </div>
+                    <br>
+                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
+                    <div class="blueBackground">
+                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                            <option value="">All</option>
+                            <option value="1">Peter Griffin</option>
+                        </select>
+                    </div>
+                    <br><br>
+                    <div class="blueBackground rightAlign">
+                        <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
+                        <a href="#" class="resetLink">RESET</a>
+                    </div>
+                    <div class="filterheader">
+
+
+<?php ?>
+
+                    </div>
+                    <div class="rssFeed">
+                        <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
+                        <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
+                    </div>
+                </div>
+                <!-- Center column DIv -->
+                <div class="centerColumnDiv">
+                    <div class="GridListViewDiv">
+                        <div class="sortBy">
+                            Sort By:
+                            <select name="" class="contentDropDown">
+                                <option value="">Date Added</option>
+                            </select>
+                            <select name="" class="contentDropDown">
+                                <option value="">DESC</option>
+                            </select>
+                        </div>
+                        <div class="viewGrid">
+                            <div class="viewAsDiv">View as: </div>
+
+
+                                    <?php
+                                    $abLink = new link($this->uri(array("action" => "2a")));
+                                    $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
+                                    echo $abLink->show();
+                                    ?>
 
                             <div class="gridListDivView">
-<?php
-                            $abLink = new link($this->uri(array("action" => "2a")));
-                            $abLink->link = 'GRID';
-                            echo $abLink->show();
-?>
+                                                <?php
+                                                $abLink = new link($this->uri(array("action" => "2a")));
+                                                $abLink->link = 'GRID';
+                                                echo $abLink->show();
+                                                ?>
                             </div>
 
                             <div class="gridListPipe">|</div>
 
-<?php
+                            <?php
                             $abLink = new link($this->uri(array("action" => "2b")));
                             $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                             echo $abLink->show();
-?>
+                            ?>
 
                             <div class="gridListDivView">
 
@@ -269,34 +312,41 @@ $this->loadClass('dropdown', 'htmlelements');
 
 <?php
                             $objTable = $this->getObject('htmltable', 'htmlelements');
-                            $products = $this->objDbProducts->getProducts(0, 10);
+                            if ($filterSelect == false) {
+                                $teststring .="parent_id is not null";
+                            }
+                            else
+                                $teststring .= " and parent_id is not null" . $teststring;
+
+                            $filterselect = true;
+                            echo "$teststring";
+
+
+                            $products = $this->objDbProducts->getFilteredProducts($teststring);
                             $newRow = true;
                             $count = 0;
 
-                                foreach ($products as $product) {               //populates table
-                                    if ($product['parent_id'] != null) {
-                                        $count++;
-
-
-                                        if ($newRow) {
-                                            $objTable->startRow();
-                                            $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
-                                            $newRow = false;
-                                        } else {
-                                            $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
-                                        }
-                                    }
-
-                                    //Display 3 products per row
-                                    if ($count == 3) {
-                                        $newRow = true;
-                                        $count = 0;
-                                        $objTable->endRow();
-                                    }
+                            foreach ($products as $product) {               //populates table
+                                if ($newRow) {
+                                    $objTable->startRow();
+                                    $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                    $newRow = false;
+                                } else {
+                                    $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
                                 }
 
-                        
-                            
+
+                                //Display 3 products per row
+                                $count++;
+                                if ($count == 3) {
+                                    $newRow = true;
+                                    $count = 0;
+                                    $objTable->endRow();
+                                }
+                            }
+
+
+
                             echo $objTable->show();
 ?>
 
@@ -525,3 +575,4 @@ $this->loadClass('dropdown', 'htmlelements');
         </div>
     </body>
 </html>
+

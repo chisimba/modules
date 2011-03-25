@@ -240,11 +240,11 @@ $this->loadClass('link', 'htmlelements');
 
                     <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
-                                $products = $this->objDbProducts->getProducts(0, 10);
+                                $products = $this->objDbProducts->getProducts(0, 10,"");
 
                                 //Loop through the products and display each in it's own line
                                 foreach ($products as $product) {
-                                    if ($product['parent_id'] == null)
+                                    
                                     echo $this->objProductUtil->populateListView($product);
                                 }
                     ?>
