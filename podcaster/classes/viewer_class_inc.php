@@ -134,20 +134,26 @@ class viewer extends object {
                     $table->startRow();
                 }
 
-
-                $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
-                $link->link = $this->objFile->getPodcastThumbnail($file['id']);
-
-                $table->addCell($link->show());
-                $table->addCell('&nbsp;');
-
-                $rightContent = '';
-
                 if (trim($file['title']) == '') {
                     $filename = $file['filename'];
                 } else {
                     $filename = htmlentities($file['title']);
                 }
+
+                //Return title instead of nopreview message
+                $thumbnail = $this->objFile->getPodcastThumbnail($file['id']);
+                if($thumbnail=='No preview available'){
+                    //$thumbnail = $filename;
+                }
+
+                $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
+                
+                $link->link = $thumbnail;
+
+                $table->addCell($link->show());
+                $table->addCell('&nbsp;');
+
+                $rightContent = '';
 
                 $link->link = $filename;
                 $rightContent .= '<p><strong>' . $link->show() . '</strong><br />';
@@ -515,8 +521,8 @@ class viewer extends object {
                 } else {
                     return $this->objLanguage->languageText("mod_podcaster_unabletogeneratethumbnail", "podcaster");
                 }
-            } else {
-                return $this->objLanguage->languageText("mod_podcaster_nopreview", "podcaster");
+            } else {                
+                return $this->objLanguage->languageText("mod_podcaster_nopreview", "podcaster");                
             }
         }
     }

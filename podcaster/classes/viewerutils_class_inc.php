@@ -382,7 +382,14 @@ class viewerutils extends object {
                 }
 
                 $link = new link($this->uri(array('action' => 'view', 'id' => $filedata['id'])));
-                $link->link = $objView->getPodcastThumbnail($filedata['id'], $filename);
+
+                //Return title instead of nopreview message
+                $thumbnail = $objView->getPodcastThumbnail($file['id'], $filename);
+                if($thumbnail=='No preview available'){
+                    $thumbnail = $filename;
+                }
+
+                $link->link = $thumbnail;
                 $preview = $link->show();
                 $linkname = $objTrim->strTrim($filename, 45);
                 $fileLink = new link($this->uri(array('action' => 'view', 'id' => $filedata['id'])));
@@ -495,7 +502,12 @@ class viewerutils extends object {
                     $columnDiv = 'c50r';
                 }
                 $fileLink = new link($this->uri(array('action' => 'view', 'id' => $filedata['id'])));
-                $fileLink->link = $objFiles->getPodcastThumbnail($filedata['id']);
+                //Return title instead of nopreview message
+                $thumbnail = $objFiles->getPodcastThumbnail($filedata['id']);
+                if($thumbnail=='No preview available'){
+                    $thumbnail = $filename;
+                }
+                $fileLink->link = $thumbnail;
                 $fileLink->title = $filename;
 
                 $tags = $objTags->getTags($filedata['id']);
