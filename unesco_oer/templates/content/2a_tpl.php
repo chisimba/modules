@@ -327,17 +327,19 @@ echo $abLink->show();
                             $count = 0;
 
                             foreach ($products as $product) {               //populates table
-                                if ($newRow) {
-                                    $objTable->startRow();
-                                    $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
-                                    $newRow = false;
-                                } else {
-                                    $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                if ($product['parent_id'] != null) {
+                                    $count++;
+                                    
+                                    if ($newRow) {
+                                        $objTable->startRow();
+                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                        $newRow = false;
+                                    } else {
+                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                    }
                                 }
 
-
                                 //Display 3 products per row
-                                $count++;
                                 if ($count == 3) {
                                     $newRow = true;
                                     $count = 0;

@@ -450,10 +450,27 @@ $this->loadClass('dropdown', 'htmlelements');
                             <div class="featuredHeader innerPadding">MOST...</div>
                         </div>
                         <!--tabs --->
-                        <div class="tabsOffState">ADOPTED</div>
-                        <div class="tabsOnState">RATED</div>
+                        <div class="tabsOnState">ADOPTED</div>
+                        <div class="tabsOffState">RATED</div>
                         <div class="tabsOffState">COMMENTED</div>
+                        
+                        <div class="rightColumnBorderedDiv">
+                            <div class="rightColumnContentPadding">
 
+                                
+                        <?php
+                        //TODO this will need Java script to implement properly as these tabs have to be updated independently
+                            //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+                            for ($i = 0; $i<3; $i++){
+                                echo $this->objProductUtil->populateMostAdapted($product);
+                            }
+                            
+                        ?>
+
+                            </div>
+                        </div>
+
+                        <!--
                         <div class="rightColumnBorderedDiv">
                             <div class="rightColumnContentPadding">
                                 <div class="leftImageTabsList"><img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="placeholder" width="45" height="49"></div>
@@ -472,6 +489,7 @@ $this->loadClass('dropdown', 'htmlelements');
                                 </div>
                             </div>
                         </div>
+                        -->
                         <br>
                     </div>
                 </div>

@@ -227,12 +227,27 @@ class productutil extends object
         return $content;
     }
 
+        /**
+     * This function populates a page with the most adapted products in a most adapted tab
+     * @param <type> $product
+     * @return <type> $content
+     */
+    public function populateMostAdapted($product){
+        $content = '';
+
+        $content .=        '   <div class="leftImageTabsList"><img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="placeholder" width="45" height="49"></div>
+                                <div class="rightTextTabsList">
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $product['noOfAdaptations']. ' adaptations</a>
+                                </div>
+                                <div class="tabsListingSpace"></div>';
+        return $content;
+    }
+
     private function checkNoOfAdaptations($product)
     {
         if ($product['noOfAdaptations'] == 0) {
             return 0;
         }
     }
-
-}
+ }
 ?>

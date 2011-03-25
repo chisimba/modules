@@ -64,5 +64,13 @@ class dbproducts extends dbtable
         return count($child);
     }
 
+    //TODO Function to get the 3 most adapted products
+    function getListOfMostAdapted($adaptedId){
+        if ($this->getNoOfAdaptations($adaptedId) > 1)
+        {
+            
+        }
+    }
+
 }
 ?>
