@@ -6,6 +6,8 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass("htmltable", 'htmlelements');
 $this->loadClass("textinput", "htmlelements");
+$this->loadClass("dropdown", "htmlelements");
+
 
 $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_podcaster_uploadstepthree', 'podcaster', 'Step 3: Describe podcast');
@@ -59,6 +61,31 @@ $podtags->size = 60;
 $objTable->startRow();
 $objTable->addCell("**" . $this->objLanguage->languageText('word_tags', 'system', 'Tags') . " :", 140, 'top', 'right');
 $objTable->addCell($podtags->show(), Null, 'top', 'left');
+$objTable->endRow();
+
+//Published status
+$published = new dropdown("publishstatus");
+$published->addOption('0',$this->objLanguage->languageText('mod_podcaster_unpublished', 'podcaster', 'Unpublished'));
+$published->addOption('1',$this->objLanguage->languageText('mod_podcaster_published', 'podcaster', 'Published'));
+
+if(empty($filedata['publishstatus'])){
+  $published->setSelected('0');
+} else {
+    $published->setSelected($filedata['publishstatus']);
+}
+
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_podcaster_publishedstatus', 'podcaster', 'Published status') . " :", 140, 'top', 'right');
+$objTable->addCell($published->show(), Null, 'top', 'left');
+$objTable->endRow();
+
+//Event
+$podevent = new textinput("event", $filedata['event']);
+$podevent->size = 60;
+
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_podcaster_event', 'podcaster', 'Event') . " :", 140, 'top', 'right');
+$objTable->addCell($podevent->show(), Null, 'top', 'left');
 $objTable->endRow();
 
 // CC licence

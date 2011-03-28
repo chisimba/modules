@@ -240,6 +240,20 @@ class viewer extends object {
         return $this->generateAuthorLatestFeed($title, $description, $url, $files, $author);
     }
     /**
+     * Get user feed
+     * @param string $userId
+     * @return object
+     */
+    public function getOwnFeed($userId) {
+        $ownerName = $this->objUser->getUserDetails($userId);
+        $title = $ownerName['surname'] . ' - ' . $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
+        $description = $this->objLanguage->languageText("mod_podcaster_phraselistby", "podcaster", "A List of the Latest podcasts by") . ' ' . $author;
+        $url = $this->uri(array('action' => 'addownfeed', 'userId' => $userId));
+
+        $files = $this->objMediaFileData->getAllAuthorPodcasts($userId);
+        return $this->generateAuthorLatestFeed($title, $description, $url, $files, $userId);
+    }
+    /**
      * Get folder feeds
      * @param string $folderId
      * @return object

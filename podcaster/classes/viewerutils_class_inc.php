@@ -129,14 +129,14 @@ class viewerutils extends object {
         } else {
             $artist = $result['artist'];
         }
-        $altText = $artist . ' - '.$this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
+        $altText = $artist . ' - ' . $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
         //Add RSS Link to follow author
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('rss');
         $objIcon->alt = $altText;
 
 
-        $rssLink = new link($this->uri(array('action' => 'addauthorfeed', 'author'=>$artist)));
+        $rssLink = new link($this->uri(array('action' => 'addauthorfeed', 'author' => $artist)));
         $rssLink->link = $objIcon->show();
         $rssLink = ' ' . $rssLink->show();
         if (isset($id)) {
@@ -155,7 +155,7 @@ class viewerutils extends object {
         $table->addCell('<strong>' . $this->objLanguage->languageText('mod_podcaster_playtime', 'podcaster', 'Play time') . ':</strong> ' . $playtime, '50%');
         $table->endRow();
         $table->startRow();
-        $table->addCell($rssLink." ".$artist, '50%');
+        $table->addCell($rssLink . " " . $artist, '50%');
         $table->addCell(" ", '50%');
         $table->endRow();
 
@@ -171,10 +171,10 @@ class viewerutils extends object {
         $fileurl = $this->siteUrl . $newpodpath;
 
         $fileurl = str_replace("//", "/", $fileurl);
-        
+
         $downloadLink = new link($fileurl);
         $downloadLink->link = htmlentities($filename);
-        
+
         $link = new link($this->uri(array('action' => 'download', 'id' => $id)));
         $link->link = $this->objFileIcons->getExtensionIcon($result['format']) . ' ' . $result['title'];
 
@@ -244,7 +244,7 @@ class viewerutils extends object {
     public function getMostViewed() {
         $objStats = $this->getObject('dbpodcasterviewcounter');
         $list = $objStats->getMostViewedList();
-        
+
         $objLanguage = $this->getObject('language', 'language');
         $statisticStr = $objLanguage->languageText("mod_podcaster_statistics", "podcaster");
         $mostViewedStr = $objLanguage->languageText("mod_podcaster_mostviewed", "podcaster");
@@ -385,7 +385,7 @@ class viewerutils extends object {
 
                 //Return title instead of nopreview message
                 $thumbnail = $objView->getPodcastThumbnail($file['id'], $filename);
-                if($thumbnail=='No preview available'){
+                if ($thumbnail == 'No preview available') {
                     $thumbnail = $filename;
                 }
 
@@ -418,7 +418,7 @@ class viewerutils extends object {
               </li>
 
               <li><strong>Tags: </strong><a  href="#">' . $tags . '</a></li>
-              <li><strong>'.$this->objLanguage->languageText("mod_podcaster_author", "podcaster", 'Author') .': </strong>' . $uploader . '</li>
+              <li><strong>' . $this->objLanguage->languageText("mod_podcaster_author", "podcaster", 'Author') . ': </strong>' . $uploader . '</li>
               ' . $licence . '
               </ul>
  <div class="clear"></div>
@@ -438,19 +438,21 @@ class viewerutils extends object {
         $objUser = $this->getObject('user', 'security');
         $objTags = $this->getObject('dbpodcastertags');
         $latestFiles = $this->objMediaFileData->getLatestPodcasts();
-        
+
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $latest10Desc = $objLanguage->languageText("mod_podcaster_latest10desc", "podcaster");
         $latest10Str = $objLanguage->languageText("mod_podcaster_latest10str", "podcaster");
+        $homepagetitle = $objSysConfig->getValue('HOME_PAGE_TITLE', 'podcaster');
+
         if (count($latestFiles) == 0) {
             $latestFilesContent = '';
+            return "<h1>" . $homepagetitle . "</h1><h3>" . $objLanguage->languageText("mod_podcaster_nopublishedpods", "podcaster", "No podcasts have been published yet") . "</h3>";
         } else {
             $latestFilesContent = '';
 
             $objTrim = $this->getObject('trimstr', 'strings');
             $content = '';
             $counter = 0;
-            $homepagetitle = $objSysConfig->getValue('HOME_PAGE_TITLE', 'podcaster');
             $altText = $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
             //Add RSS Link
             $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -496,7 +498,7 @@ class viewerutils extends object {
                 $extra = '';
                 $columnDiv = '';
 
-                if ($column == 0) {                    
+                if ($column == 0) {
                     $columnDiv = 'c50l';
                 } else {
                     $columnDiv = 'c50r';
@@ -504,7 +506,7 @@ class viewerutils extends object {
                 $fileLink = new link($this->uri(array('action' => 'view', 'id' => $filedata['id'])));
                 //Return title instead of nopreview message
                 $thumbnail = $objFiles->getPodcastThumbnail($filedata['id']);
-                if($thumbnail=='No preview available'){
+                if ($thumbnail == 'No preview available') {
                     $thumbnail = $filename;
                 }
                 $fileLink->link = $thumbnail;

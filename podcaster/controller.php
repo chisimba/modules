@@ -85,8 +85,7 @@ class podcaster extends controller {
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('doajaxsendmail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
-
+        $required = array('myuploads', 'doajaxsendmail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -978,6 +977,15 @@ Sincerely,<br />
         return $this->objViewer->getUserFeed($author);
     }
     /**
+     * Method to generate the podcast RSS by userId
+     *
+     */
+    function __addownfeed() {
+        $userId = $this->getParam('userId');
+        return $this->objViewer->getOwnFeed($userId);
+    }
+
+    /**
      * Method to generate the folder feeds -- shows the pods within it
      *
      */
@@ -1041,7 +1049,7 @@ Sincerely,<br />
     }
 
     /**
-     * Method to view a list of presentations that match a particular tag
+     * Method to view a list of podcasts that match a particular tag
      *
      */
     function __tag() {
@@ -1066,9 +1074,31 @@ Sincerely,<br />
 
         return 'tag_tpl.php';
     }
-
     /**
-     * Used to view a list of presentations uploaded by a particular user
+     * Used to view a list of podcasts uploaded by a particular user
+     *
+     */
+    function __myuploads() {
+        $userId = $this->userId;
+        $sort = $this->getParam('sort', 'dateuploaded_desc');
+
+        $sort = $this->getParam('sort', 'datecreated_desc');
+
+        // Check that sort options provided is valid
+        if (!preg_match('/(datecreated|title|artist)_(asc|desc)/', strtolower($sort))) {
+            $sort = 'datecreated_desc';
+        }
+
+        $files = $this->objMediaFileData->getAllAuthorPodcasts($userId,$sort);
+
+        $this->setVarByRef('files', $files);
+        $this->setVarByRef('sort', $sort);
+        $this->setVarByRef('userId', $userId);
+
+        return 'byuser_tpl.php';
+    }
+    /**
+     * Used to view a list of podcasts uploaded by a particular user
      *
      */
     function __byuser() {
@@ -1247,11 +1277,13 @@ Sincerely,<br />
         $cclicense = $this->getParam("creativecommons", "");
         $artist = $this->getParam("artist", "");
         $description = $this->getParam("description", "");
+        $podevent = $this->getParam("event", "");
+        $publishstatus = $this->getParam("publishstatus", "");
         $tags = $this->getParam("tags", "");
         $tags = explode(",", $tags);
         $this->objTags->addTags($id, $tags);
 
-        $filedata = $this->objMediaFileData->updateFileDetails($id, $podtitle, $description, $cclicense, $artist);
+        $filedata = $this->objMediaFileData->updateFileDetails($id, $podtitle, $description, $cclicense, $artist, $podevent, $publishstatus);
         $this->setVarByRef("filedata", $filedata);
         return $this->nextAction('view', array('id' => $id, 'fileid' => $fileid));
     }
@@ -1381,7 +1413,7 @@ Sincerely,<br />
 
     /**
      * Used to delete a presentation
-     * Check: Users can only upload their own presentations
+     * Check: Users can only upload their own podcasts
      */
     function __delete() {
         $id = $this->getParam('id');
@@ -1476,7 +1508,7 @@ Sincerely,<br />
     }
 
     /**
-     * Used to display the latest presentations RSS Feed
+     * Used to display the latest podcasts RSS Feed
      *
      */
     function __latestrssfeed() {
@@ -1485,7 +1517,7 @@ Sincerely,<br />
     }
 
     /**
-     * Used to show a RSS Feed of presentations matching a tag
+     * Used to show a RSS Feed of podcasts matching a tag
      *
      */
     function __tagrss() {
@@ -1495,10 +1527,19 @@ Sincerely,<br />
     }
 
     /**
-     * Used to display the latest presentations of a user RSS Feed
+     * Used to display the latest podcasts of a user RSS Feed
      *
      */
     public function __userrss() {
+        $userid = $this->getParam('userid');
+        $objViewer = $this->getObject('viewer');
+        echo $objViewer->getUserFeed($userid);
+    }
+    /**
+     * Get own RSS Feed
+     *
+     */
+    public function __ownrss() {
         $userid = $this->getParam('userid');
         $objViewer = $this->getObject('viewer');
         echo $objViewer->getUserFeed($userid);
@@ -1623,7 +1664,7 @@ Sincerely,<br />
     }
 
     /**
-     * Method to listall Presentations
+     * Method to listall podcasts
      * Used for testing purposes
      * @access private
      */
@@ -1654,7 +1695,7 @@ Sincerely,<br />
     }
 
     /**
-     * Batch script to convert presentations to version 2
+     * Batch script to convert podcasts to version 2
      */
     private function __converttov2() {
         $results = $this->objFiles->getAll(' ORDER BY dateuploaded DESC');

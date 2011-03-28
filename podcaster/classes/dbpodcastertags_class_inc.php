@@ -220,9 +220,10 @@ FROM tbl_podcaster_tags GROUP BY tbl_podcaster_tags.tag ORDER BY tbl_podcaster_t
     /**
      * Method to get all files with a particular tag
      * @param string $tag Tag
+     * @param string $published Determine whether to return published or unpublished podcasts
      * @return array List of Files with tag associated
      */
-    public function getFilesWithTag($tag, $sort='datecreated_desc')
+    public function getFilesWithTag($tag, $sort='datecreated_desc', $published='1')
     {
         $sortstring = "";
         if($sort == 'datecreated_desc'){
@@ -240,7 +241,7 @@ FROM tbl_podcaster_tags GROUP BY tbl_podcaster_tags.tag ORDER BY tbl_podcaster_t
         }
 
         $sql = 'SELECT DISTINCT tbl_podcaster_metadata_media.id, tbl_podcaster_metadata_media.*, tbl_users.firstName as firstname, tbl_users.surname FROM tbl_podcaster_metadata_media, tbl_podcaster_tags, tbl_users
-        WHERE (tbl_podcaster_tags.fileid = tbl_podcaster_metadata_media.id AND tbl_podcaster_metadata_media.creatorid = tbl_users.userid) AND tbl_podcaster_tags.tag LIKE \''.$tag.'\' ORDER BY '.$sortstring;
+        WHERE (tbl_podcaster_tags.fileid = tbl_podcaster_metadata_media.id AND tbl_podcaster_metadata_media.creatorid = tbl_users.userid) AND tbl_podcaster_tags.tag LIKE \''.$tag.'\' AND tbl_podcaster_metadata_media.publishstatus="'.$published.'" ORDER BY '.$sortstring;
 
         //echo $sql;
 

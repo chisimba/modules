@@ -117,35 +117,63 @@ class dbmediafiledata extends dbTable {
 
     /**
      * Function that returns the latest 10 podcasts
+     * @param string $published Determine whether to return published or unpublished podcasts
      * @return array
      */
-    public function getLatestPodcasts() {
-        return $this->getAll(' ORDER BY datecreated DESC, timecreated DESC');
-    }
-    
-    /**
-     * Function that returns the latest podcasts in a certain folder
-     * @return array
-     */
-    public function getLatestFolderPodcasts($folderId) {
-        return $this->getAll('where uploadpathid="' . $folderId . '" ORDER BY datecreated DESC, timecreated DESC');
-    }
-    /**
-     * Function that returns the latest 10 podcasts by a certain author/creator/artist names
-     * @return array
-     */
-    public function getLatestAuthorPodcasts($author) {
-        return $this->getAll('where artist="' . $author . '" ORDER BY datecreated DESC, timecreated DESC');
+    public function getLatestPodcasts($published='1') {
+        return $this->getAll('where publishstatus="'.$published.'" ORDER BY datecreated DESC, timecreated DESC');
     }
 
+    /**
+     * Function that returns the latest podcasts in a certain folder
+     * @param string $published Determine whether to return published or unpublished podcasts
+     * @return array
+     */
+    public function getLatestFolderPodcasts($folderId, $published='1') {
+        return $this->getAll('where uploadpathid="' . $folderId . '" and publishstatus="'.$published.'" ORDER BY datecreated DESC, timecreated DESC');
+    }
+
+    /**
+     * Function that returns the latest podcasts by creatorId
+     * @param string $creatorId Podcast owner userId
+     * @param string $published Determine whether to return published or unpublished podcasts
+     * @param string $sort How string should be ordered
+     * @return array
+     */
+    public function getAllAuthorPodcasts($creatorId,$sort='datecreated_desc') {
+        $sortstring = "";
+        if($sort == 'datecreated_desc'){
+            $sortstring = "datecreated DESC, timecreated DESC";
+        } elseif ($sort == 'datecreated_asc'){
+            $sortstring = "datecreated ASC, timecreated ASC";
+        } elseif ($sort == 'artist_asc'){
+            $sortstring = "artist ASC, datecreated DESC, timecreated DESC";
+        } elseif ($sort == 'artist_desc'){
+            $sortstring = "artist DESC, datecreated DESC, timecreated DESC";
+        } elseif ($sort == 'title_asc'){
+            $sortstring = "title ASC";
+        } elseif ($sort == 'title_desc'){
+            $sortstring = "title DESC";
+        }
+        return $this->getAll('where creatorid="' . $creatorId . '" ORDER BY '.$sortstring);
+    }
+    /**
+     * Function that returns the latest podcasts by a certain author/creator/artist names
+     * @param string $published Determine whether to return published or unpublished podcasts
+     * @return array
+     */
+    public function getLatestAuthorPodcasts($author, $published='1') {
+        return $this->getAll('where artist="' . $author . '" and publishstatus="'.$published.'" ORDER BY datecreated DESC, timecreated DESC');
+    }
     /*
      * Function to get podcast based on passed params
      * @param string $filter the type of parameter to use
      * @param string $filtervalue the value supplied by the user
+     * @param string $published Determine whether to return published or unpublished podcasts
      * @return array
      */
 
-    public function searchFileInAllFields($filter, $filtervalue) {
+    public function searchFileInAllFields($filter, $filtervalue, $published='1') {
         $sql = "select A.id, A.fileid, A.filename, A.uploadpathid, A.width, A.height, A.playtime,
             A.format, A.mimetype, A.cclicense, A.framerate, A.bitrate, A.samplerate, A.title, A.artist,
             A.description, A.year, A.url, A.getid3info, A.creatorid, A.datecreated, A.timecreated,
@@ -175,7 +203,7 @@ class dbmediafiledata extends dbTable {
                 break;
         }
 
-        $sql .= " ORDER BY datecreated DESC, timecreated DESC";
+        $sql .= " and publishstatus='".$published."' ORDER BY datecreated DESC, timecreated DESC";
 
         $results = $this->getArray($sql);
         //Remove duplicates
@@ -194,10 +222,11 @@ class dbmediafiledata extends dbTable {
 
     /**
      * Function that returns the latest podcast
+     * @param string $published Determine whether to return published or unpublished podcasts
      * @return array
      */
-    public function getLatestPodcast() {
-        return $this->getAll(' ORDER BY datecreated, timecreated DESC LIMIT 1');
+    public function getLatestPodcast($published='1') {
+        return $this->getAll('where publishstatus="'.$published.'" ORDER BY datecreated, timecreated DESC LIMIT 1');
     }
 
     /**
@@ -206,15 +235,19 @@ class dbmediafiledata extends dbTable {
      * @param string $title
      * @param string $description
      * @param string $license
-     * @param string $license
+     * @param string $artist
+     * @param string $event
+     * @param string $publishstatus
      * @return array
      */
-    public function updateFileDetails($id, $title, $description, $license, $artist) {
+    public function updateFileDetails($id, $title, $description, $license, $artist, $event, $publishstatus) {
         return $this->update('id', $id, array(
             'title' => $title,
             'description' => $description,
             'cclicense' => $license,
-            'artist' => $artist
+            'artist' => $artist,
+            'publishstatus' => $publishstatus,
+            'event' => $event
         ));
     }
 
@@ -240,7 +273,5 @@ class dbmediafiledata extends dbTable {
     function updateWidthHeight($fileId, $width, $height) {
         return $this->update('fileid', $fileId, array('width' => $width, 'height' => $height));
     }
-
 }
-
 ?>

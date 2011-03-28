@@ -85,6 +85,14 @@ $fields = array(
     'getid3info' => array(
         'type' => 'text'
         ),
+    'publishstatus' => array(
+        'type' => 'text',
+        'length' => 10
+        ),
+    'event' => array(
+        'type' => 'text',
+        'length' => 50
+        ),
     'creatorid' => array(
         'type' => 'text',
         'length' => 25,

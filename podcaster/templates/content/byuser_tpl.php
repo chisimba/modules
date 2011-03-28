@@ -4,39 +4,36 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 
 $heading = new htmlheading();
+//Get uploader name
+$uploader = $this->objUser->getUserDetails($userId);
+$uploaderOfficialName = $uploader['title'].". ".$uploader['surname'].' - '.$this->objLanguage->languageText("mod_podcaster_uploads", "podcaster", 'Uploads');
+$heading->str = $uploaderOfficialName;
 
-if ($userid == $objUser->userId())
-{
-    $heading->str = $this->objLanguage->languageText('mod_webpresent_myslides', 'webpresent', 'My Slides');;
-} else {
-    $text = $this->objLanguage->languageText('mod_webpresent_personsslides', 'webpresent', '[PERSON]\'s Slides');
-    $heading->str = stripslashes(str_replace('[PERSON]', $objUser->fullname($userid), $text));
-}
-
+$altText = $this->objLanguage->languageText("mod_podcaster_rssown", "podcaster", 'RSS your own podcasts');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('rss');
+$objIcon->alt = $altText;
 
-$rssLink = new link ($this->uri(array('action'=>'userrss', 'userid'=>$userid)));
+$rssLink = new link ($this->uri(array('action'=>'userrss', 'userid'=>$userId)));
 $rssLink->link = $objIcon->show();
 
 $heading->str .= ' '.$rssLink->show();
-
 
 $heading->type = 1;
 
 echo $heading->show();
 
 if (count($files) == 0) {
-    echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_webpresent_userhasnotuploadedfiles', 'webpresent', 'User has not uploaded any files').'.</div>';
+    echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText("mod_podcaster_nouploadsbyu", "podcaster", 'You have not Uploaded any files yet. Click on uploads link to upload a podcast').'</div>';
 } else {
     $sortOptions = array(
-        'dateuploaded_desc' => $this->objLanguage->languageText('phrase_newestfirst', 'webpresent', 'Newest First'),
-        'dateuploaded_asc' =>  $this->objLanguage->languageText('phrase_oldestfirst', 'webpresent', 'Oldest First'),
-        'title_asc' =>  $this->objLanguage->languageText('word_alphabetical', 'webpresent', 'Alphabetical'),
-        //'title_desc' => 'Alphabetical Reversed',
+        'datecreated_desc' => $this->objLanguage->languageText("mod_podcaster_newestfirst", "podcaster", 'Newest First'),
+        'datecreated_asc' => $this->objLanguage->languageText("mod_podcaster_oldestfirst", "podcaster", 'Oldest First'),
+        'title_asc' => $this->objLanguage->languageText("mod_podcaster_alphabetical", "podcaster", 'Alphabetical'),
+        'artist_asc' => $this->objLanguage->languageText("mod_podcaster_author", "podcaster", 'Author')
     );
 
-    echo '<p><strong>'.$this->objLanguage->languageText('sort_by', 'forum', 'Sort by').':</strong> ';
+    echo '<p><strong>'.$this->objLanguage->languageText("mod_podcaster_sortby", "podcaster", 'Sort by').':</strong> ';
 
     $divider = '';
     foreach ($sortOptions as $sortOption=>$optionText)
@@ -45,7 +42,7 @@ if (count($files) == 0) {
         {
             echo $divider.$optionText;
         } else {
-            $sortLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$userid, 'sort'=>$sortOption)));
+            $sortLink = new link ($this->uri(array('action'=>'myuploads', 'sort'=>$sortOption)));
             $sortLink->link = $optionText;
 
             echo $divider.$sortLink->show();
@@ -60,11 +57,10 @@ if (count($files) == 0) {
     $objViewer = $this->getObject('viewer');
     echo $objViewer->displayAsTable($files);
 
-
 }
 
 $homeLink = new link ($this->uri(NULL));
-$homeLink->link = $this->objLanguage->languageText('phrase_backhome', 'system', 'Back to home');
+$homeLink->link = $this->objLanguage->languageText("mod_podcaster_backtohome", "podcaster", 'Back to home');
 
 echo '<p>'.$homeLink->show().'</p>';
 
