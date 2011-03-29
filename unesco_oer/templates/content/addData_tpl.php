@@ -81,6 +81,15 @@ $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $table->addCell('&nbsp;&nbsp;' . $button->show());
 $table->endRow();
 
+//new featured product option
+$table->startRow();
+$table->addCell("<h2>Create new featured product:</h2>");
+$button = new button('createFeaturedProduct', "Create Featured Product");
+$uri = $this->uri(array('action' => 'featuredProductUI'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$table->addCell('&nbsp;&nbsp;' . $button->show());
+$table->endRow();
+
 //createform, add fields to it and display
 $form_data = new form('add_products_ui');
 $form_data->addToForm($table->show());
