@@ -51,6 +51,7 @@ class featuredproductutil extends object
         return $content;
     }
 
+
 }
 
 ?>

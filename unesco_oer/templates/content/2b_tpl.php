@@ -477,7 +477,13 @@ $this->loadClass('link', 'htmlelements');
                                 echo $this->objFeaturedProducUtil->featuredProductViewSpan($featuredProduct[0]);
                                 ?>
                               
-                                    <a href="#" class="adaptationLinks">See all adaptations (15)</a>
+                                    <a href="#" class="adaptationLinks">
+                                         <?php
+                                                    $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+                                                    $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
+                                                    echo"See all adaptations ($NOofAdaptation)"// This must be a link;
+                                                    ?>
+                                        </a>
                                     <br>
                                     <a href="#" class="adaptationLinks">See UNSECO orginals</a>
 

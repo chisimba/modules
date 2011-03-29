@@ -454,7 +454,14 @@ $this->loadClass('dropdown', 'htmlelements');
                                 echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct[0]);
                                  ?>
                                 <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
+
+                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
+                                         <?php
+                                         $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+                                         $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
+                                         echo"See all adaptations ($NOofAdaptation)"// This must be a link;
+                                          ?>
+                                        </a></div>
                             </div>
                         </div>
                         <div class="spaceBetweenRightBorderedDivs">

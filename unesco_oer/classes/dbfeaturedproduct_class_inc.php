@@ -56,7 +56,7 @@ class dbfeaturedproduct extends dbtable {
     }
 
     /*This function get the current featured product ID
-     * return int
+     * return int product_id
      */
 
     function getCurrentFeaturedProductID() {
