@@ -508,10 +508,15 @@ echo $abLink->show();
                         <div class="featuredHeader">FEATURED ADAPTATION</div>
                         <div class="rightColumnBorderedDiv">
                             <div class="rightColumnContentPadding">
-                                <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
-                                <div class="featuredAdaptationRightContentDiv">
-                                    <span class="greyListingHeading">Manual for Investigative Journalists</span>
-                                    <br><br>
+                                <?php
+                                $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+                                $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
+                                if (sizeof($featuredProduct) > 0) {
+                                    //TODO error handling
+                                }
+                                echo $this->objFeaturedProducUtil->featuredProductViewSpan($featuredProduct[0]);
+                                ?>
+                                
                                     <a href="#" class="adaptationLinks">See all adaptations (15)</a>
                                     <br>
                                     <a href="#" class="adaptationLinks">See UNSECO orginals</a>

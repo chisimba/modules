@@ -439,14 +439,13 @@ $this->loadClass('link', 'htmlelements');
                                     <div class="rightColumnBorderedDiv">
                                         <div class="rightColumnContentPadding">
                                              <?php
-                                $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
-                                if (sizeof($featuredProduct) > 0){
-                                    //TODO error handling
-                                }
-                                echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct[0]);
-                                 ?>
-                                            
+                                            $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+                                            $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
+                                            if (sizeof($featuredProduct) > 0) {
+                                                //TODO error handling
+                                            }
+                                            echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct[0]);
+                                            ?>
                                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                                             <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
                                         </div>

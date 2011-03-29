@@ -35,9 +35,22 @@ class featuredproductutil extends object
             <img src="' . $product['thumbnail'] . '" alt="Featured" width="136" height="176"><br>
                 <div class="greyListingHeading">"'. $product['title'] . '"</div>
                     <br>
+                    <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                     ';
         return $content;
         }
+        
+        function featuredProductViewSpan($product) {
+        $content = '';
+        $content.='
+            <img src="' . $product['thumbnail'] . '" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
+                                <div class="featuredAdaptationRightContentDiv">
+                                    <span class="greyListingHeading">"' . $product['title'] . '</span>
+                                    <br><br>
+            ';
+        return $content;
+    }
+
 }
 
 ?>
