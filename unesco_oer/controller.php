@@ -7,6 +7,8 @@ class unesco_oer extends controller {
     public $objDbResourceTypes;
     public $objDbProductThemes;
     public $objDbProductLanguages;
+    public $objDbFeaturedProduct;
+    public $objFeaturedProducUtil;
     /**
      *
      * @var string $objLanguage String object property for holding the
@@ -23,6 +25,9 @@ class unesco_oer extends controller {
         $this->objDbResourceTypes = $this->getObject('dbresourcetypes');
         $this->objDbProductThemes = $this->getObject('dbproductthemes');
         $this->objDbProductLanguages =$this->getObject('dbproductlanguages');
+        $this->objDbFeaturedProduct =$this->getObject('dbfeaturedproduct');
+        $this->objFeaturedProducUtil=$this->getObject('featuredproductutil');
+
     }
 
     /**
@@ -265,6 +270,25 @@ class unesco_oer extends controller {
         $this->objDbProductLanguages->addLanguage($code, $name);
         return $this->__addData();
     }
-}
+
+    /*
+     * Method to retrieve the current featured unesco product from user on the featuredProductUI_tpl.php
+     * return a page 1a_tpl.php with the current featured product
+     */
+    public function __createFeaturedProduct(){
+        $featuredproduct= $this->getParam('id');
+        $this->objDbFeaturedProduct->overRightCurrentFeaturedProduct($featuredproduct);
+        return "1a_tpl.php";
+    }
+
+     /*
+      * method to dispaly page to create a new unesco featured product
+      */
+     public function __featuredProductUI() {
+        return "featuredProductUI_tpl.php";
+    }
+
+
+     }
 
 ?>
