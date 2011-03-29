@@ -23,13 +23,13 @@
  * @copyright 2010
  */
 if (!
-    /**
-     * Description for $GLOBALS
-     * @global string $GLOBALS['kewl_entry_point_run']
-     * @name   $kewl_entry_point_run
-     */
-    $GLOBALS['kewl_entry_point_run']) {
-        die("You cannot view this page directly");
+        /**
+         * Description for $GLOBALS
+         * @global string $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
 }
 
 class users extends object {
@@ -48,9 +48,10 @@ class users extends object {
 
     function showUserForm($name='') {
         $roles = array(
-                    array('label'=>'subsidy', 'value' => 'Subsidy Office'),
-                    array('label'=>'library', 'value'=>'Library'),
-                    array('label'=>'facultyregistrar', 'value' =>'Faculty Registrar'));
+            array('label' => 'subsidy', 'value' => 'Subsidy Office'),
+            array('label' => 'library', 'value' => 'Library'),
+            array('label' => 'facultyregistrar', 'value' => 'Faculty Registrar'),
+            array('label' => 'legal', 'value' => 'Legal Office'));
 
         $form = new form('registeruser', $this->uri(array('action' => 'registeruser')));
         //$textinput = new textinput('facultyname');
@@ -68,7 +69,7 @@ class users extends object {
         $table->addCell($textinput->show());
         $table->endRow();
 
-        
+
         $textinput = new dropdown('role');
         $textinput->addOption("", "Please select role...");
         $textinput->addFromDB($roles, 'value', 'label');
