@@ -38,7 +38,13 @@ $this->loadClass('dropdown', 'htmlelements');
                                     <td><img src="skins/unesco_oer/images/icon-my-bookmarks.png"></td>
                                     <td><a href="#" class="prifileLinks">My Bookmarks</a></td>
                                     <td><img src="skins/unesco_oer/images/icon-my-administration-tools.png"></td>
-                                    <td><a href="#" class="prifileLinks">Administration Tools</a></td>
+                                    <td><a href="#" class="prifileLinks">
+                                            <?php
+                                            $abLink = new link($this->uri(array("action" => "addData")));
+                                            $abLink->link = 'Administration Tools';
+                                            echo $abLink->show();
+                                            ?>
+                                        </a></td>
                                 </tr>
                                 <tr>
                                     <td><img src="skins/unesco_oer/images/icon-my-groups.png"></td>

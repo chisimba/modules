@@ -52,7 +52,7 @@ class dbproducts extends dbtable
 
     function addProduct($productArray)
     {
-        //INSERT INTO `unesco_oer`.`tbl_unesco_oer_products` (`id`, `parent_id`, `title`, `creator`, `keywords`, `description`, `created_on`, `resource_type`, `content_type`, `format`, `source`, `theme`, `language`, `content`, `thumbnail`, `puid`) VALUES ('1', NULL, 'Model Curricula for Journalism Education', 'UNESCO Series on Journalism Education', 'Journalism', 'Model curricula for journalism education; UNESCO series on journalism education; 2009', CURDATE(), 'pdf', 'text', 'pdf', 'Products/Files', 'none', 'English', '??', 'Products/Thumbnails/Journalism Curriculum.png', NULL)
+        $this->insert($productArray);
     }
 
     //TODO check the hierichal storage of data to make this more efficient

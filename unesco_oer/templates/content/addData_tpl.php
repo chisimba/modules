@@ -14,6 +14,9 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+if (!$GLOBALS['kewl_entry_point_run'])
+    die("you cannot view directly");
+
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');

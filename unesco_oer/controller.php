@@ -165,7 +165,7 @@ class unesco_oer extends controller {
     public function __uploadSubmit(){
         //Retrieve thumbnail and save it
         $parentID = $this->getParam('parentID');
-        $thumbnailPath;
+        $thumbnailPath = '';
         if ($parentID == NULL){
             $uploadedFile = $this->getObject('uploadinput', 'filemanager');
             $uploadedFile->enableOverwriteIncrement = TRUE;
@@ -211,7 +211,7 @@ class unesco_oer extends controller {
             'thumbnail'=>$thumbnailPath
         );
 
-        $this->objDbProducts->insert($data);
+        $this->objDbProducts->addProduct($data);
 
         return $this->__addData();
     }
