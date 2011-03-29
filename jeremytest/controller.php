@@ -19,7 +19,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @author    Jeremy O'Connor <joconnor@uwc.ac.za>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: controller.php 13134 2009-04-08 07:20:51Z wnitsckie $
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */
