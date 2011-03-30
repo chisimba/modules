@@ -14,6 +14,22 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+class dbgroups extends dbtable {
 
+    function init() {
+        parent::init("tbl_unesco_oer_groups");
+    }
+
+    function addGroup($name, $loclat, $loclong) {
+        $data=array(
+            'name'=>$name,
+            'loclat'=>$loclat,
+            'loclong'=>$loclong
+        );
+
+        $this->insert($data);
+    }
+
+}
 
 ?>

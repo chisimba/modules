@@ -14,9 +14,6 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-if (!$GLOBALS['kewl_entry_point_run'])
-    die("you cannot view directly");
-
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
@@ -89,6 +86,24 @@ $table->startRow();
 $table->addCell("<h2>Create new featured product:</h2>");
 $button = new button('createFeaturedProduct', "Create Featured Product");
 $uri = $this->uri(array('action' => 'featuredProductUI'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$table->addCell('&nbsp;&nbsp;' . $button->show());
+$table->endRow();
+
+//new group options
+$table->startRow();
+$table->addCell("<h2>Create new group:</h2>");
+$button = new button('createGroup', "Create Group");
+$uri = $this->uri(array('action' => 'createGroupUI'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$table->addCell('&nbsp;&nbsp;' . $button->show());
+$table->endRow();
+
+//new institution options
+$table->startRow();
+$table->addCell("<h2>Create new institution:</h2>");
+$button = new button('createInstitution', "Create Institution");
+$uri = $this->uri(array('action' => 'createInstitutionUI'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $table->addCell('&nbsp;&nbsp;' . $button->show());
 $table->endRow();

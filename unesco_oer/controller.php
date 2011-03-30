@@ -9,6 +9,8 @@ class unesco_oer extends controller {
     public $objDbProductLanguages;
     public $objDbFeaturedProduct;
     public $objFeaturedProducUtil;
+    public $objDbGroups;
+    public $objDbInstitution;
     /**
      *
      * @var string $objLanguage String object property for holding the
@@ -27,7 +29,8 @@ class unesco_oer extends controller {
         $this->objDbProductLanguages =$this->getObject('dbproductlanguages');
         $this->objDbFeaturedProduct =$this->getObject('dbfeaturedproduct');
         $this->objFeaturedProducUtil=$this->getObject('featuredproductutil');
-
+        $this->objDbGroups = $this->getObject('dbgroups');
+        $this->objDbInstitution = $this->getObject('dbinstitution');
     }
 
     /**
@@ -289,6 +292,45 @@ class unesco_oer extends controller {
     }
 
 
-     }
+    /*
+     * Method to display page for creating a new group
+     */
+    public function __createGroupUI() {
+        return "createGroupUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createGroupUI_tpl.php page
+     * and add it to the tbl_unesco_oer_group table
+     */
+    public function __createGroupSubmit(){
+        $name = $this->getParam('newGroup');
+        $loclat = $this->getParam('loclat');
+        $loclong = $this->getParam('loclong');
+
+        $this->objDbGroups->addGroup($name, $loclat, $loclong);
+        return $this->__addData();
+    }
+
+    /*
+     * Method to display page for creating a new group
+     */
+    public function __createInstitutionUI() {
+        return "createInstitutionUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createGroupUI_tpl.php page
+     * and add it to the tbl_unesco_oer_group table
+     */
+    public function __createInstitutionSubmit(){
+        $name = $this->getParam('newInstitution');
+        $loclat = $this->getParam('loclat');
+        $loclong = $this->getParam('loclong');
+
+        $this->objDbInstitution->addInstitution($name, $loclat, $loclong);
+        return $this->__addData();
+    }
+}
 
 ?>
