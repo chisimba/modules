@@ -240,9 +240,15 @@ class beatui extends object {
             }
             
             // Facebook like button
-            $fburl = str_replace('http://', '', $url);
-            $fburl = htmlspecialchars($fburl);
-            $fb = '<iframe src="http://www.facebook.com/plugins/like.php?href='.$fburl.'&amp;layout=standard&amp;show_faces=true&amp;width=450&amp;action=like&amp;font&amp;colorscheme=light&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>';
+            $fbadmin = $this->objSysConfig->getValue('fbadminsid', 'facebookapps');
+            $fbapid = $this->objSysConfig->getValue('apid', 'facebookapps');
+            //$fburl = str_replace('http://', '', $url);
+            $fburl = htmlspecialchars($this->objConfig->getsiteRoot().$url);
+            $fb = "<fb:like href=\"$url\"
+									   layout=\"button_count\"
+									   show_faces=\"true\"
+									   action=\"like\"
+									   colorscheme=\"light\"></fb:like>";
             
             $soctable = $this->newObject('htmltable', 'htmlelements');
             $soctable->width = '80%';
@@ -268,10 +274,40 @@ class beatui extends object {
     }
     
     public function formatUI() {
+        // fb code
+        $fbadmin = $this->objSysConfig->getValue('fbadminsid', 'facebookapps');
+        $fbapid = $this->objSysConfig->getValue('apid', 'facebookapps');
+        $oghead = '<meta property="fb:admins" content="'.$fbadmin.'"/>
+                   <meta property="fb:app_id" content="'.$fbapid.'" />
+	               <meta property="og:type" content="blog" />		
+                   <meta property="og:title" content="'.$this->objConfig->getSiteName().'" />    	
+                   <meta property="og:url" content="'.$this->uri('').'" />';
+        // add the lot to the headerparams...
+        $this->appendArrayVar('headerParams', $oghead);
+        
         $js = NULL;
+        $js .= $this->getFbCode();
         $js .= '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>';
         $js .= $this->getJavascriptFile('script.js', 'beatstream');
         return $js;
+    }
+    
+    public function getFbCode() {
+        $fbapid = $this->objSysConfig->getValue('apid', 'facebookapps');
+        $fb = "<div id=\"fb-root\"></div>
+               <script>
+                   window.fbAsyncInit = function() {
+                       FB.init({appId: '$fbapid', status: true, cookie: true,
+                       xfbml: true});
+                   };
+                   (function() {
+                       var e = document.createElement('script'); e.async = true;
+                       e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+                       document.getElementById('fb-root').appendChild(e);
+                   }());
+             </script>
+             <fb:like action='like' colorscheme='light' layout='standard' show_faces='true' width='500'/>";
+        return $fb;
     }
     
     public function addForm() {

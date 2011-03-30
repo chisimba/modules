@@ -191,7 +191,7 @@ class beatstream extends controller
                 $sug = $this->objDbFeatures->getSingle($ip, $id);
                 $str = $this->objUI->formatData($sug);
                 $this->setVarByRef('str', $str);
-                return 'view_tpl.php';
+                return 'viewsingle_tpl.php';
                 
             default:
                 $this->nextAction('');
