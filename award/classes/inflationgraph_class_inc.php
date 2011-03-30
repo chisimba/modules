@@ -83,7 +83,7 @@ class inflationgraph extends object {
         $params->chco = '9C0000';
         $params->chds = min($values).','.max($values);
         $params->chxt = 'x,x,y,y';
-        $params->chxl = '0:|'.implode('|', $names).'|1:|'.$this->xAxis.'|3:|'.$this->yAcix;
+        $params->chxl = '0:|'.implode('|', $names).'|1:|'.$this->xAxis.'|3:|'.$this->yAxis;
         $params->chbh = 40;
         $params->chtt = $this->title;
         $params->chxp = '1,50|3,50';
