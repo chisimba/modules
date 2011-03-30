@@ -66,6 +66,7 @@ class podcaster extends controller {
         $this->realtimeManager = $this->getObject('realtimemanager');
         $this->folderPermissions = $this->getObject('dbfolderpermissions');
         $this->parse4RSS = $this->getObject('parse4rss', 'filters');
+        $this->objEventUtils = $this->newObject('eventutils', 'podcaster');
 
         $this->objSearch = $this->getObject('indexdata', 'search');
         // user object
@@ -171,6 +172,75 @@ class podcaster extends controller {
             $period = 'home';
         }
         return $hometpl . '_tpl.php';
+    }
+
+    /**
+     * Function that returns template for adding an event
+     * @return template
+     */
+    function __add_event() {
+        return "add_event_tpl.php";
+    }
+
+    /**
+     * Function that returns template for configuring an event
+     * @return template
+     */
+    function __configure_events() {
+        return "manage_events_tpl.php";
+    }
+
+    /**
+     * Function that returns confirmation on add event
+     * @return object
+     */
+    function __addeventconfirm() {
+        if (class_exists('groupops', false)) {
+            $id = $this->objEventUtils->addGroups($this->userId . "^" . $this->getParam('event', NULL));
+        }
+        return $this->nextAction('configure_events');
+    }
+
+    /**
+     * Function that returns template for viewing events
+     * @return object
+     */
+    function __viewevents() {
+        $this->setSession('showconfirmation', TRUE);
+        $myId = $this->getParam('id', null);
+        if (empty($myId))
+            $myId = $this->getSession('groupId');
+        $this->setSession('groupId', $myId);
+        return $this->objEventUtils->eventsHome($myId);
+    }
+
+    /**
+     * Function that returns template for managing an event
+     * @return object
+     */
+    function __manage_event() {
+        $groupId = $this->getParam('id', null);
+        $this->setVarByRef('groupId', $groupId);
+        if (class_exists('groupops', false)) {
+            return "allparts_tpl.php";
+        }
+    }
+
+    /**
+     * Function that returns template to search users
+     * @return object
+     */
+    function __searchforusers() {
+        return $this->objEventUtils->searchForUsers();
+    }
+
+    /**
+     * Function that returns the search results
+     * @return object
+     */
+    function __viewsearchresults() {
+        $groupId = $this->getSession('groupId', $groupId);
+        return $this->objEventUtils->getResults($this->getParam('page', 1));
     }
 
     /**
@@ -976,6 +1046,7 @@ Sincerely,<br />
         $author = $this->getParam('author');
         return $this->objViewer->getUserFeed($author);
     }
+
     /**
      * Method to generate the podcast RSS by userId
      *
@@ -1074,6 +1145,7 @@ Sincerely,<br />
 
         return 'tag_tpl.php';
     }
+
     /**
      * Used to view a list of podcasts uploaded by a particular user
      *
@@ -1089,7 +1161,7 @@ Sincerely,<br />
             $sort = 'datecreated_desc';
         }
 
-        $files = $this->objMediaFileData->getAllAuthorPodcasts($userId,$sort);
+        $files = $this->objMediaFileData->getAllAuthorPodcasts($userId, $sort);
 
         $this->setVarByRef('files', $files);
         $this->setVarByRef('sort', $sort);
@@ -1097,6 +1169,7 @@ Sincerely,<br />
 
         return 'byuser_tpl.php';
     }
+
     /**
      * Used to view a list of podcasts uploaded by a particular user
      *
@@ -1535,6 +1608,7 @@ Sincerely,<br />
         $objViewer = $this->getObject('viewer');
         echo $objViewer->getUserFeed($userid);
     }
+
     /**
      * Get own RSS Feed
      *
