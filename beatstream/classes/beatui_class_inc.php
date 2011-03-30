@@ -217,12 +217,12 @@ class beatui extends object {
             
             // tweet button
             $this->objTweetButton = $this->getObject('tweetbutton', 'twitter');
-            $related = $this->sysConfig->getValue('retweet_related', 'beatstream');
-            $status = $this->sysConfig->getValue('retweet_status', 'beatstream');
-            $style = $this->sysConfig->getValue('retweet_style', 'beatstream');
-            $text = $this->sysConfig->getValue('retweet_text', 'beatstream');
-            $type = $this->sysConfig->getValue('retweet_type', 'beatstream');
-            $via = $this->sysConfig->getValue('retweet_via', 'beatstream');
+            $related = $this->objSysConfig->getValue('retweet_related', 'beatstream');
+            $status = $this->objSysConfig->getValue('retweet_status', 'beatstream');
+            $style = $this->objSysConfig->getValue('retweet_style', 'beatstream');
+            $text = $this->objSysConfig->getValue('retweet_text', 'beatstream');
+            $type = $this->objSysConfig->getValue('retweet_type', 'beatstream');
+            $via = $this->objSysConfig->getValue('retweet_via', 'beatstream');
             /*if($status == NULL){
                 $status = "Check out this beat! ";
             }
