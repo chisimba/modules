@@ -223,7 +223,7 @@ class beatui extends object {
             $text = $this->objSysConfig->getValue('retweet_text', 'beatstream');
             $type = $this->objSysConfig->getValue('retweet_type', 'beatstream');
             $via = $this->objSysConfig->getValue('retweet_via', 'beatstream');
-            /*if($status == NULL){
+            if($status == NULL){
                 $status = "Check out this beat! ";
             }
             if($style == NULL) {
@@ -236,7 +236,7 @@ class beatui extends object {
                     $style = 'vertical';
                 }
                 $rt = $this->objTweetButton->getButton($text, $style, $via, $related, htmlspecialchars_decode($url));
-            } */
+            }
             
             $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_beatstream_downloadbeat', 'beatstream').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'beatstream', 'Right Click, and choose Save As').') '.$downloadLink->show()." "./*$objShare->show().*/'</p>';
             
