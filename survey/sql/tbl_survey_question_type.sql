@@ -50,10 +50,12 @@ $fields = array(
         ),
     );
 
+/*
 // create other indexes here...
 $name = 'tbl_survey_question_type_index';
 
 $indexes = array(
                 'fields' => array()
         );
+*/
 ?>
