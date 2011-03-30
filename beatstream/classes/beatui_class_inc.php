@@ -215,7 +215,7 @@ class beatui extends object {
             $objShare = $this->getObject('share', 'toolbar');
             $objShare->setup($url, htmlentities($podcast['filename']), 'Check out this beat! ');
             
-            // tweet button
+            /* tweet button
             $this->objTweetButton = $this->getObject('tweetbutton', 'twitter');
             $related = $this->sysConfig->getValue('retweet_related', 'beatstream');
             $status = $this->sysConfig->getValue('retweet_status', 'beatstream');
@@ -236,7 +236,7 @@ class beatui extends object {
                     $style = 'vertical';
                 }
                 $rt = $this->objTweetButton->getButton($text, $style, $via, $related, htmlspecialchars_decode($url));
-            }
+            } */
             
             $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_beatstream_downloadbeat', 'beatstream').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'beatstream', 'Right Click, and choose Save As').') '.$downloadLink->show()." "./*$objShare->show().*/'</p>';
             
