@@ -246,6 +246,8 @@ class beatui extends object {
             
             // pop it all back to the array for display purposes
             $s['suggestion'] = $content;
+            $fb = NULL;
+            $rt = NULL;
             $this->objOps->setData($s);
             $str .= (string)$this->objOps;
         }
