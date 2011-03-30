@@ -250,7 +250,7 @@ class beatui extends object {
             $soctable->cellpadding = '10';
             $soctable->startRow();
             $soctable->addCell($rt, '50%');
-            $soctable->addCell($fb, '50%', 'center', 'center');
+            $soctable->addCell($fb, '50%', 'bottom',);
             $soctable->endRow();
             
             $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_beatstream_downloadbeat', 'beatstream').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'beatstream', 'Right Click, and choose Save As').') '.$downloadLink->show()." <br />".$soctable->show().'</p>';
