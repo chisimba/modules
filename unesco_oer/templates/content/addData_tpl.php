@@ -108,6 +108,14 @@ $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $table->addCell('&nbsp;&nbsp;' . $button->show());
 $table->endRow();
 
+//return to Home
+$table->startRow();
+$button = new button('home', "HOME");
+$uri = $this->uri(array('action' => 'home'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$table->addCell('&nbsp;&nbsp;' . $button->show());
+$table->endRow();
+
 //createform, add fields to it and display
 $form_data = new form('add_products_ui');
 $form_data->addToForm($table->show());

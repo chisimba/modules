@@ -48,12 +48,21 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 //field for the creator
-$textinput = new textinput('creator');
-$textinput->size = 60;
-$textinput->setValue($product['creator']);
+$sql = "select name from tbl_unesco_oer_groups";
+$groups = $this->objDbGroups->getArray($sql);
+$creatorDropdown = new dropdown('creator');
+foreach ($groups as $group) {
+    $creatorDropdown->addOption($group['name']);
+}
+$sql = "select name from tbl_unesco_oer_institution";
+$institutions = $this->objDbInstitution->getArray($sql);
+foreach ($institutions as $institution) {
+    $creatorDropdown->addOption($institution['name']);
+}
+$creatorDropdown->setSelected($product['creator']);
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer'));
-$table->addCell($textinput->show());
+$table->addCell('Select creator');
+$table->addCell($creatorDropdown->show());
 $table->endRow();
 
 //field for keywords
