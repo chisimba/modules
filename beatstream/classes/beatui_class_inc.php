@@ -246,6 +246,8 @@ class beatui extends object {
             
             $soctable = $this->newObject('htmltable', 'htmlelements');
             $soctable->width = '80%';
+            $soctable->cellspacing = '1';
+            $soctable->cellpadding = '10';
             $soctable->startRow();
             $soctable->addCell($rt, '50%');
             $soctable->addCell($fb, '50%');
