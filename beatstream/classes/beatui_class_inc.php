@@ -239,7 +239,10 @@ class beatui extends object {
                 $rt = $this->objTweetButton->getButton($text, $style, $via, $related, htmlspecialchars_decode($url));
             }
             
-            $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_beatstream_downloadbeat', 'beatstream').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'beatstream', 'Right Click, and choose Save As').') '.$downloadLink->show()." ".$rt.'</p>';
+            // Facebook like button
+            $fb = '<iframe src="http://www.facebook.com/plugins/like.php?href='.$url.'&amp;layout=standard&amp;show_faces=true&amp;width=450&amp;action=like&amp;font&amp;colorscheme=light&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>';
+            
+            $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_beatstream_downloadbeat', 'beatstream').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'beatstream', 'Right Click, and choose Save As').') '.$downloadLink->show()." ".$rt." ".$fb.'</p>';
             
             // pop it all back to the array for display purposes
             $s['suggestion'] = $content;
