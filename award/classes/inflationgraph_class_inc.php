@@ -83,10 +83,13 @@ class inflationgraph extends object {
         $params->chco = '9C0000';
         $params->chds = min($values).','.max($values);
         $params->chxt = 'x,x,y,y';
-        $params->chxl = '0:|'.implode('|', $names).'|1:|Date|3:|Inflation';
+        $params->chxl = '0:|'.implode('|', $names).'|1:|'.$this->xAxis.'|3:|'.$this->yAcix;
         $params->chbh = 40;
-        $params->chtt = 'Consumer Price Index';
+        $params->chtt = $this->title;
         $params->chxp = '1,50|3,50';
+        $params->chdl = $this->label;
+        $params->chco = '9C0000';
+        $params->chdlp = 'bv';
         header('Location: https://chart.googleapis.com/chart?'.http_build_query($params));
     }
 }
