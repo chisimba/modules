@@ -244,7 +244,13 @@ class beatui extends object {
             $fburl = htmlspecialchars($fburl);
             $fb = '<iframe src="http://www.facebook.com/plugins/like.php?href='.$fburl.'&amp;layout=standard&amp;show_faces=true&amp;width=450&amp;action=like&amp;font&amp;colorscheme=light&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>';
             
-            $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_beatstream_downloadbeat', 'beatstream').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'beatstream', 'Right Click, and choose Save As').') '.$downloadLink->show()." <br />".$rt." ".$fb.'</p>';
+            $soctable = $this->newObject('htmltable', 'htmlelements');
+            $soctable->startRow();
+            $soctable->addCell($rt, '50%');
+            $soctable->addCell($fb, '50%');
+            $soctable->endRow();
+            
+            $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_beatstream_downloadbeat', 'beatstream').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'beatstream', 'Right Click, and choose Save As').') '.$downloadLink->show()." <br />".$soctable->show().'</p>';
             
             // pop it all back to the array for display purposes
             $s['suggestion'] = $content;
