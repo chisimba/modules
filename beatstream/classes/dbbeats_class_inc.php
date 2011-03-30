@@ -148,6 +148,34 @@ class dbbeats extends dbTable
 	       $res = $this->getArray($query);
 	       return $res;
 	   }
+	   
+	   public function getSingle($ip, $id) {
+	       $now = date('Y-m-d');
+	       // echo $now;
+	       $query = "SELECT s.*, if (v.ip IS NULL,0,1) AS have_voted FROM tbl_beatstream AS s LEFT JOIN tbl_beatstream_votes AS v ON(s.id = v.suggestion_id AND v.day = $now AND v.ip = $ip) 
+	                 WHERE s.id = '$id' ORDER BY s.rating DESC, s.id DESC";
+	       $res = $this->getArray($query);
+	       return $res;
+	   }
+	   
+	   public function deleteBeat($beatid) {
+	       // get the details of the record so we can clean the podcast table using the suggestion text
+	       $details = $this->getAll("WHERE id = '$beatid'");
+	       // var_dump($details); die();
+	       $podid = $details[0]['suggestion'];
+	       
+	       // clean up the votes
+	       $this->changeTable('tbl_beatstream_votes');
+	       $this->delete('suggestion_id', $beatid, 'tbl_beatstream_votes');
+	       
+	       // clean up the podcast
+	       $this->changeTable('tbl_podcast');
+	       $this->delete('id', $podid, 'tbl_podcast');
+	       
+	       // finally clean up the suggestion itelf
+	       $this->changeTable('tbl_beatstream');
+	       $this->delete('id', $beatid, 'tbl_beatstream');
+	   }
 	  
 	  /**
 	   * Method to dynamically change the table we are working with

@@ -179,6 +179,20 @@ class beatstream extends controller
 	            $this->nextAction('');
                 break;
                 
+            case 'deletebeat' :
+                $beatid = $this->getParam('id');
+                $this->objDbFeatures->deleteBeat($beatid);
+                $this->nextAction('');
+                break;
+                
+            case 'viewsingle' :
+                $ip	= sprintf('%u',ip2long($_SERVER['REMOTE_ADDR']));
+                $id = $this->getParam('id');
+                $sug = $this->objDbFeatures->getSingle($ip, $id);
+                $str = $this->objUI->formatData($sug);
+                $this->setVarByRef('str', $str);
+                return 'view_tpl.php';
+                
             default:
                 $this->nextAction('');
                 break;
@@ -193,7 +207,7 @@ class beatstream extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('','vote', 'submit');
+        $allowedActions = array('','vote', 'submit', 'viewsingle');
 
         if (in_array($action, $allowedActions)) {
             return FALSE;

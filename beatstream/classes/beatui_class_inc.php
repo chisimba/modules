@@ -161,7 +161,7 @@ class beatui extends object {
             $content = NULL;
             $filesize = new formatfilesize();
             $podcast = $this->objPodcast->getPodcast($s['suggestion']);
-            // var_dump($podcast);
+
             $table = $this->newObject('htmltable', 'htmlelements');
             $table->startRow();
             if ($podcast['artist'] == '') {
@@ -170,13 +170,19 @@ class beatui extends object {
                 $artist = $podcast['artist'];
             }
             if (isset($id)) {  
-                $table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$artist, '50%');
+                $table->addCell('<strong>'.$this->objLanguage->languageText('mod_beatstream_artist', 'beatstream').':</strong> '.$artist, '50%');
             } else {
                 $authorLink = new link ($this->uri(array('action'=>'byuser', 'id'=>$this->objUser->userName($podcast['creatorid']))));
                 $authorLink->link = $artist;
-                $table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$authorLink->show(), '50%');
+                $table->addCell('<strong>'.$this->objLanguage->languageText('mod_beatstream_artist', 'beatstream').':</strong> '.$authorLink->show(), '50%');
             }
             $table->addCell('<strong>'.$this->objLanguage->languageText('word_date', 'system').':</strong> '.$this->objDateTime->formatDate($podcast['datecreated']), '50%');
+            // only add in a delete button if the user is logged in and an admin
+            if($this->objUser->inAdminGroup($this->objUser->userId()) && $this->objUser->isLoggedIn()) {
+                $this->objDel = $this->newObject('geticon', 'htmlelements');
+                $del = $this->objDel->getDeleteIcon($this->uri(array('action' => 'deletebeat', 'id' => $s['id'])));
+                $table->addCell($del, '50%');
+            }
             $table->endRow();
             
             $table->startRow();
@@ -193,7 +199,7 @@ class beatui extends object {
         
             $this->objPop=&new windowpop;
             $this->objPop->set('location',$this->uri(array('action'=>'playpodcast', 'id'=>$podcast['id']), 'podcast'));
-            $this->objPop->set('linktext', $this->objLanguage->languageText('mod_podcast_listenonline', 'podcast'));
+            $this->objPop->set('linktext', $this->objLanguage->languageText('mod_beatstream_listenonline', 'beatstream'));
             $this->objPop->set('width','280');
             $this->objPop->set('height','120');
             //leave the rest at default values
@@ -203,8 +209,38 @@ class beatui extends object {
             $soundFile = str_replace('&', '&amp;', $objFile->getFilePath($podcast['fileid']));
             $soundFile = str_replace(' ', '%20', $soundFile);
             $objSoundPlayer->setSoundFile($soundFile);
-        
-            $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As').') '.$downloadLink->show().'</p>';
+            
+            $url = $this->uri(array('action' => 'viewsingle', 'id' => $s['id']));
+            // share thing
+            $objShare = $this->getObject('share', 'toolbar');
+            $objShare->setup($url, htmlentities($podcast['filename']), 'Check out this beat! ');
+            
+            // tweet button
+            $this->objTweetButton = $this->getObject('tweetbutton', 'twitter');
+            $related = $this->sysConfig->getValue('retweet_related', 'beatstream');
+            $status = $this->sysConfig->getValue('retweet_status', 'beatstream');
+            $style = $this->sysConfig->getValue('retweet_style', 'beatstream');
+            $text = $this->sysConfig->getValue('retweet_text', 'beatstream');
+            $type = $this->sysConfig->getValue('retweet_type', 'beatstream');
+            $via = $this->sysConfig->getValue('retweet_via', 'beatstream');
+            if($status == NULL){
+                $status = "Check out this beat! ";
+            }
+            if($style == NULL) {
+               $style = 'retweet vert';
+            }
+            if ($type == 'jquery') {
+                $rt = $this->objJqTwitter->retweetCounter($url, $status, $style);
+            } else {
+                if (strpos($style, 'vert') !== FALSE) {
+                    $style = 'vertical';
+                }
+                $rt = $this->objTweetButton->getButton($text, $style, $via, $related, htmlspecialchars_decode($url));
+            }
+            
+            $content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_beatstream_downloadbeat', 'beatstream').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'beatstream', 'Right Click, and choose Save As').') '.$downloadLink->show()." ".$rt./*$objShare->show().*/'</p>';
+            
+            // pop it all back to the array for display purposes
             $s['suggestion'] = $content;
             $this->objOps->setData($s);
             $str .= (string)$this->objOps;
