@@ -19,7 +19,7 @@ class inflationgraph extends object {
 
     var $Graph;
     var $Font;
-    var $Dataset1;
+    var $data;
     var $title = 'Title';
     var $xAxis = 'X axis';
     var $yAxis = 'Y axis';
@@ -59,15 +59,10 @@ class inflationgraph extends object {
     /**
      * Method to add the data to the graph
      *
-     * @param array $arrData array of co-ordinate pairs to plot on the graph
+     * @param array $data array of co-ordinate pairs to plot on the graph
      */
-    function addData($arrData) {
-        //$this->Dataset1 =& Image_Graph::factory('random', array(8, 10, 100, true));
-
-        $this->Dataset1 =& Image_Graph::factory('dataset');
-        foreach ($arrData as $pair) {
-            $this->Dataset1->addPoint($pair['x'], $pair['y']);
-        }
+    function addData($data) {
+        $this->data = $data;
     }
 
     /**
@@ -77,9 +72,9 @@ class inflationgraph extends object {
     function show() {
         $names = array();
         $values = array();
-        foreach ($this->Dataset1->_data as $i) {
-            $names[] = $i['X'];
-            $values[] = $i['Y'];
+        foreach ($this->data as $i) {
+            $names[] = $i['x'];
+            $values[] = is_numeric($i['y']) ? $i['y'] : 0;
         }
         $params = new stdClass();
         $params->cht = 'bvs';
