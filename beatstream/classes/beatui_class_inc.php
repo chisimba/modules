@@ -215,7 +215,7 @@ class beatui extends object {
             $objShare = $this->getObject('share', 'toolbar');
             $objShare->setup($url, htmlentities($podcast['filename']), 'Check out this beat! ');
             
-            /* tweet button
+            // tweet button
             $this->objTweetButton = $this->getObject('tweetbutton', 'twitter');
             $related = $this->sysConfig->getValue('retweet_related', 'beatstream');
             $status = $this->sysConfig->getValue('retweet_status', 'beatstream');
@@ -223,7 +223,7 @@ class beatui extends object {
             $text = $this->sysConfig->getValue('retweet_text', 'beatstream');
             $type = $this->sysConfig->getValue('retweet_type', 'beatstream');
             $via = $this->sysConfig->getValue('retweet_via', 'beatstream');
-            if($status == NULL){
+            /*if($status == NULL){
                 $status = "Check out this beat! ";
             }
             if($style == NULL) {
