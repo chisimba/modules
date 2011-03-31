@@ -78,6 +78,7 @@ class podcaster extends controller {
         $this->folderPermissions = $this->getObject('dbfolderpermissions');
         $this->parse4RSS = $this->getObject('parse4rss', 'filters');
         $this->objEventUtils = $this->newObject('eventutils', 'podcaster');
+        $this->objDbCategoryList = &$this->getObject('dbpodcaster_category', 'podcaster');
 
         $this->objSearch = $this->getObject('indexdata', 'search');
         // user object
@@ -205,6 +206,63 @@ class podcaster extends controller {
         return $this->nextAction('viewevents', array(
             'message' => 'usersupdated'
         ));
+    }
+
+    /**
+     * Function that returns edit category template
+     * @return template
+     */
+    function __addcategory() {
+        return "add_category_tpl.php";
+    }
+
+    /**
+     * Function that returns edit category template
+     * @return template
+     */
+    function __editcategory() {
+        $id = $this->getParam('id', null);
+        $this->setVarByRef('id', $id);
+        $list = $this->objDbCategoryList->listSingle($id);
+        $category = $list[0]['category'];
+        $description = $list[0]['description'];
+        $this->setVarByRef('category', $category);
+        $this->setVarByRef('description', $description);
+        return "edit_category_tpl.php";
+    }
+    /**
+     * Function that returns edit category template
+     * @return template
+     */
+    function __viewcategories() {
+        return "view_category_tpl.php";
+    }
+   /**
+     * Function that adds a category
+     * @return template
+     */
+    function __deletecategory() {
+                $this->nextAction($myid = $this->getParam('id', null), $this->objDbCategoryList->deleteSingle($myid));
+                return $this->nextAction('viewcategories');
+}
+    /**
+     * Function that adds a category
+     * @return template
+     */
+    function __addcategoryconfirm() {
+        $id = $this->objDbCategoryList->insertSingle($this->getParam('category', NULL), $this->getParam('description', NULL));
+        return $this->nextAction('viewcategories');
+    }
+
+    /**
+     * Function that updates a category
+     * @return template
+     */
+    function __editcategoryconfirm() {
+        $myid = $this->getParam('id', null);
+        $this->setVarByRef('id', $myid);
+        $this->nextAction($this->objDbCategoryList->updateSingle($myid, $this->getParam('category', NULL), $this->getParam('description', NULL)));
+        return $this->nextAction('viewcategories');
     }
 
     /**
