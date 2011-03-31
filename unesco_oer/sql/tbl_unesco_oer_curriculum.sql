@@ -14,23 +14,18 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class dbinstitution extends dbtable {
+//define table
+$tablename = 'tbl_unesco_oer_curriculum';
+$options = array('comment'=>'Table to store Curricula','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
-    function init() {
-        parent::init("tbl_unesco_oer_institution");
-    }
-
-    function addInstitution($name, $loclat, $loclong, $thumbnailPath) {
-        $data=array(
-            'name'=>$name,
-            'loclat'=>$loclat,
-            'loclong'=>$loclong,
-            'thumbnail'=>$thumbnailPath
-        );
-
-        $this->insert($data);
-    }
-
-}
-
+//define fields
+$fields = array(
+		'id' => array('type' => 'text','length' => 32,'not null'),
+                'product_id' =>array('type' =>'text','length'=>32, 'not null'),
+                'calendar_id'=>array('type'=>'text','length'=>32),
+                'title_page'=>array('type' =>'text'),
+                'forward'=>array('type' =>'text'),
+                'background'=>array('type' =>'text'),
+                'introduction'=>array('type' =>'text')
+ 		);
 ?>

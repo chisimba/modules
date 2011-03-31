@@ -52,6 +52,13 @@ $table->addCell('Input longitued:');
 $table->addCell($textinput->show());
 $table->endRow();
 
+//group thumbnail input options
+$objUpload = $this->getObject('uploadinput', 'filemanager');
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
+$table->addCell($objUpload->show());
+$table->endRow();
+
 //submission button
 $table->startRow();
 $button = new button('submitGroupUI', "Submit Group");
@@ -61,7 +68,7 @@ $table->endRow();
 
 //createform, add fields to it and display
 $form_data = new form('createGroup_ui',$this->uri(array('action'=>'createGroupSubmit')));
+$form_data->extra = 'enctype="multipart/form-data"';
 $form_data->addToForm($table->show());
 echo $form_data->show();
-
 ?>

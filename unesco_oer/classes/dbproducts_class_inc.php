@@ -72,5 +72,11 @@ class dbproducts extends dbtable
         }
     }
 
+    function getProductByID($ID){
+        $sql = "select * from tbl_unesco_oer_products where id = '$ID'";
+        $products = $this->getArray($sql);
+        return $products[0]; //TODO add error handler for non unique ID.
+    }
+
 }
 ?>

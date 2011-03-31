@@ -20,11 +20,12 @@ class dbgroups extends dbtable {
         parent::init("tbl_unesco_oer_groups");
     }
 
-    function addGroup($name, $loclat, $loclong) {
+    function addGroup($name, $loclat, $loclong, $thumbnailPath) {
         $data=array(
             'name'=>$name,
             'loclat'=>$loclat,
-            'loclong'=>$loclong
+            'loclong'=>$loclong,
+            'thumbnail'=>$thumbnailPath
         );
 
         $this->insert($data);

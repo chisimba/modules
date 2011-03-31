@@ -9,8 +9,8 @@ $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
                 'name' =>array('type' =>'text','length'=>128),
                 'loclat' =>array('type' =>'text','length'=>255),
-                'loclong' =>array('type' =>'text','length'=>255)
-		
+                'loclong' =>array('type' =>'text','length'=>255),
+		'thumbnail' =>array('type' => 'text', 'length' =>255)
 );
 ?>
 

@@ -11,6 +11,7 @@ class unesco_oer extends controller {
     public $objFeaturedProducUtil;
     public $objDbGroups;
     public $objDbInstitution;
+
     /**
      *
      * @var string $objLanguage String object property for holding the
@@ -169,31 +170,19 @@ class unesco_oer extends controller {
         //Retrieve thumbnail and save it
         $parentID = $this->getParam('parentID');
         $thumbnailPath = '';
-        if ($parentID == NULL){
-            $uploadedFile = $this->getObject('uploadinput', 'filemanager');
-            $uploadedFile->enableOverwriteIncrement = TRUE;
-            $uploadedFile->customuploadpath = 'unesco_oer/'.$this->getParam('title').'/thumbnail/';
-            $results = $uploadedFile->handleUpload();
-            //Test if file was successfully uploaded
-            if ($results == FALSE) {
-                //TODO return proper error page
-                return NULL;
-            } else {
-                if (!$results['success']) { // upload was unsuccessfule
-                    return NULL; //TODO return proper error page containing error
-                }else{
-                    $thumbnailPath = 'usrfiles/'.$results['path'];
-                }
+        if ($parentID == NULL) {
+            $path = 'unesco_oer/products/' . $this->getParam('title') . '/thumbnail/';
+            try {
+                $results = $this->uploadFile($path);
+            } catch (customException $e) {
+                echo customException::cleanUp();
+                exit();
             }
-        }else{
-            $sql = "select * from tbl_unesco_oer_products where id = '$parentID'";
-            $products = $this->objDbProducts->getArray($sql);
-            $product = $products[0];
+            $thumbnailPath = 'usrfiles/' . $results['path'];
+        } else {
+            $product = $this->objDbProducts->getProductByID($parentID);
             $thumbnailPath = $product['thumbnail'];
         }
-
-        //retrieve parent information
-       // $objParent = $this->;
 
         //create array for uploading into data base
         $data=array(
@@ -303,12 +292,20 @@ class unesco_oer extends controller {
      * Method to retrieve entries from user on the createGroupUI_tpl.php page
      * and add it to the tbl_unesco_oer_group table
      */
-    public function __createGroupSubmit(){
+    public function __createGroupSubmit() {
         $name = $this->getParam('newGroup');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
+        $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
+        try {
+            $results = $this->uploadFile($path);
+        } catch (customException $e) {
+            echo customException::cleanUp();
+            exit();
+        }
+        $thumbnailPath = 'usrfiles/' . $results['path'];
 
-        $this->objDbGroups->addGroup($name, $loclat, $loclong);
+        $this->objDbGroups->addGroup($name, $loclat, $loclong,$thumbnailPath);
         return $this->__addData();
     }
 
@@ -327,9 +324,36 @@ class unesco_oer extends controller {
         $name = $this->getParam('newInstitution');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
+        $path = 'unesco_oer/institutions/' . $name . '/thumbnail/';
+        try {
+            $results = $this->uploadFile($path);
+        } catch (customException $e) {
+            echo customException::cleanUp();
+            exit();
+        }
+        $thumbnailPath = 'usrfiles/' . $results['path'];
 
-        $this->objDbInstitution->addInstitution($name, $loclat, $loclong);
+        $this->objDbInstitution->addInstitution($name, $loclat, $loclong, $thumbnailPath);
         return $this->__addData();
+    }
+
+    private function uploadFile($path) {
+        $uploadedFile = $this->getObject('uploadinput', 'filemanager');
+        $uploadedFile->enableOverwriteIncrement = TRUE;
+        $uploadedFile->customuploadpath = $path;
+        $results = $uploadedFile->handleUpload($this->getParam('fileupload'));
+        //Test if file was successfully uploaded
+        // Technically, FALSE can never be returned, this is just a precaution
+        // FALSE means there is no fileinput with that name
+        if ($results == FALSE) {
+            //TODO return proper error page
+            throw new customException('Upload failed: FATAL <br />');
+        } else {
+            if (!$results['success']) { // upload was unsuccessfule
+                throw new customException('Upload failed: ' . $results['reason']); //TODO return proper error page containing error
+            }
+        }
+        return $results;
     }
 }
 

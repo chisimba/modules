@@ -129,7 +129,7 @@ $table->endRow();
 
 //field for the thumbnail
 if ($productID == NULL) {
-    $objUpload = $this->newObject('uploadinput', 'filemanager');
+    $objUpload = $this->getObject('uploadinput', 'filemanager');
     $table->startRow();
     $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
     $table->addCell($objUpload->show());
