@@ -16,6 +16,7 @@ class podcastertoolbar2 extends object
 
         $this->loadClass('link', 'htmlelements');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
+        $this->objLanguage = $this->getObject('language', 'language');
     }
 
     /**
@@ -30,6 +31,7 @@ class podcastertoolbar2 extends object
         $menuOptions = array(
             array('action'=>'steponeupload', 'text'=>'Upload', 'actioncheck'=>array('upload'), 'module'=>'podcaster', 'status'=>'loggedin'),
             array('action'=>'myuploads', 'text'=>'My Uploads', 'actioncheck'=>array('myuploads'), 'module'=>'podcaster', 'status'=>'loggedin'),
+            array('action'=>'configure_events', 'text'=>'My Events', 'actioncheck'=>array('configure_events'), 'module'=>'podcaster', 'status'=>'loggedin'),
             array('action'=>'search', 'text'=>'Search', 'actioncheck'=>array('search'), 'module'=>'podcaster', 'status'=>'both'),
             array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
             array('action'=>NULL, 'text'=>'My Details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),

@@ -57,7 +57,7 @@ class eventutils extends object {
 
     /**
      *
-     * @var $objLanguage String object property for holding the
+     * @var $this->objLanguage String object property for holding the
      * language object
      * @access public
      *
@@ -87,14 +87,24 @@ class eventutils extends object {
     public $_objGroupAdmin;
     /**
      *
-     * @var Object  $_objManageGroups for the Class ManageGroups
+     * @var Object $_objManageGroups for the Class ManageGroups
      */
     public $_objManageGroups;
     /**
      *
-     * @var object  objGroupsOps for Group Ops class
+     * @var object objGroupsOps for Group Ops class
      */
     public $objGroupsOps;
+    /**
+     *
+     * @var Object for DB context
+     */
+    public $_objDBContext;
+    /**
+     *
+     * @var Object for context users
+     */
+    public $objContextUsers;
 
     /**
      *
@@ -108,15 +118,39 @@ class eventutils extends object {
         $this->objUser = $this->getObject("user", "security");
         // Instantiate the config object
         $this->objConfig = $this->getObject('altconfig', 'config');
+        //Instantiate the Context DB Object
+        $this->_objDBContext = &$this->newObject('dbcontext', 'context');
 
         //$this->_objGAModel = $this->newObject('gamodel', 'groupadmin');
         $this->_objGroupAdmin = $this->newObject('groupadminmodel', 'groupadmin');
         $this->_objManageGroups = &$this->newObject('managegroups', 'contextgroups');
+        $this->objContextUsers = $this->getObject('contextusers', 'contextgroups');
         //TEMPORARY Check if class groupops exists
         if (file_exists($this->objConfig->getsiteRootPath() . "core_modules/groupadmin/classes/groupops_class_inc.php")) {
             $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
         }
         //$this->objGroupUsers = $this->getObject('groupusersdb', 'groupadmin');
+    }
+
+    /**
+     * Method to remove a user from a event
+     * @param string $userId User Id of the User
+     * @param string $group Group to be deleted from - either lecturers, students or guest
+     */
+    public function removeUserFromEvent($userId = NULL, $groupId = NULL) {
+        if ($userId == '') {
+            return $this->nextAction(NULL, array(
+                'message' => 'nouseridprovidedfordelete'
+            ));
+        }
+        //$pkId = $this->objUser->PKId($userId);
+        //Check if class groupops exists
+        if (class_exists('groupops', false)) {
+            $permid = $this->objGroupsOps->getUserByUserId($userId);
+        }
+        $pkId = $permid['perm_user_id'];
+        $deleteMember = $this->_objGroupAdmin->deleteGroupUser($groupId, $pkId);
+        return $deleteMember;
     }
 
     /**
@@ -164,7 +198,7 @@ class eventutils extends object {
      */
     public function getUserGroups() {
         //load classes
-        $objLanguage = &$this->getObject('language', 'language');
+        $this->objLanguage = $this->getObject('language', 'language');
         $icon = &$this->newObject('geticon', 'htmlelements');
         $table = &$this->newObject('htmltable', 'htmlelements');
         $linkstable = &$this->newObject('htmltable', 'htmlelements');
@@ -177,13 +211,13 @@ class eventutils extends object {
         //Add Group Link
         $iconAdd = $this->getObject('geticon', 'htmlelements');
         $iconAdd->setIcon('add');
-        $iconAdd->title = $objLanguage->languageText("mod_podcaster_addevent", 'podcaster', 'Add event');
-        $iconAdd->alt = $objLanguage->languageText("mod_podcaster_addevent", 'podcaster', 'Add event');
+        $iconAdd->title = $this->objLanguage->languageText("mod_podcaster_addevent", 'podcaster', 'Add event');
+        $iconAdd->alt = $this->objLanguage->languageText("mod_podcaster_addevent", 'podcaster', 'Add event');
         $addlink = new link($this->uri(array(
                             'module' => 'podcaster',
                             'action' => 'add_event'
                         )));
-        $addlink->link = $objLanguage->languageText("mod_podcaster_addevent", 'podcaster', 'Add event');
+        $addlink->link = $this->objLanguage->languageText("mod_podcaster_addevent", 'podcaster', 'Add event');
         $objLink = &$this->getObject('link', 'htmlelements');
         $objLink->link($this->uri(array(
                     'module' => 'podcaster',
@@ -200,7 +234,6 @@ class eventutils extends object {
         //Get group members
         //Get group id
         $userPid = $this->objUser->PKId($this->objUser->userId());
-        $this->setVarByRef('userPid', $this->userPid);
         //get the descendents.
         if (class_exists('groupops', false)) {
             $usergroupId = $this->_objGroupAdmin->getId($userPid);
@@ -246,21 +279,21 @@ class eventutils extends object {
                         //Add Users
                         $iconManage = $this->getObject('geticon', 'htmlelements');
                         $iconManage->setIcon('add_icon');
-                        $iconManage->alt = $objLanguage->languageText("mod_podcaster_add", 'podcaster', 'Add') . ' / ' . $objLanguage->languageText("mod_podcaster_edit", 'podcaster', 'Edit') . ' ' . $groupName;
-                        $iconManage->title = $objLanguage->languageText("mod_podcaster_add", 'podcaster', 'Add') . ' / ' . $objLanguage->languageText("mod_podcaster_edit", 'podcaster', 'Edit') . ' ' . $groupName;
+                        $iconManage->alt = $this->objLanguage->languageText("mod_podcaster_add", 'podcaster', 'Add') . ' / ' . $this->objLanguage->languageText("mod_podcaster_edit", 'podcaster', 'Edit') . ' ' . $groupName;
+                        $iconManage->title = $this->objLanguage->languageText("mod_podcaster_add", 'podcaster', 'Add') . ' / ' . $this->objLanguage->languageText("mod_podcaster_edit", 'podcaster', 'Edit') . ' ' . $groupName;
                         $mnglink = new link($this->uri(array(
                                             'module' => 'podcaster',
                                             'action' => 'viewevents',
                                             'id' => $groupId
                                         )));
-                        //	    		$mnglink->link = $objLanguage->languageText('mod_podcaster_manage', 'podcaster', 'Manage').' '.$subgroup['name'].' '.$iconManage->show();
+                        //	    		$mnglink->link = $this->objLanguage->languageText('mod_podcaster_manage', 'podcaster', 'Manage').' '.$subgroup['name'].' '.$iconManage->show();
                         $mnglink->link = $iconManage->show();
                         $linkManage = $mnglink->show();
                         //Manage Events
                         $iconShare = $this->getObject('geticon', 'htmlelements');
                         $iconShare->setIcon('fileshare');
-                        $iconShare->alt = $objLanguage->languageText("mod_podcaster_configure", 'podcaster', 'Configure') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_podcaster_view", 'podcaster', 'View');
-                        $iconShare->title = $objLanguage->languageText("mod_podcaster_configure", 'podcaster', 'Configure') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_podcaster_view", 'podcaster', 'View');
+                        $iconShare->alt = $this->objLanguage->languageText("mod_podcaster_configure", 'podcaster', 'Configure') . ' ' . $groupName . ' ' . $this->objLanguage->languageText("mod_podcaster_view", 'podcaster', 'View');
+                        $iconShare->title = $this->objLanguage->languageText("mod_podcaster_configure", 'podcaster', 'Configure') . ' ' . $groupName . ' ' . $this->objLanguage->languageText("mod_podcaster_view", 'podcaster', 'View');
                         $mnglink = new link($this->uri(array(
                                             'module' => 'podcaster',
                                             'action' => 'manage_event',
@@ -286,37 +319,105 @@ class eventutils extends object {
     }
 
     /**
-     * Method to show the list of users in an event
+     * Method to Show the Results for a Search
+     * @param int $page - Page of Results to show
      */
-    private function eventsHome($group) {
-        // Generate an array of users in the event, and send it to page template
-        $this->prepareEventUsersArray();
-        // Default Values for Search
+    public function getResults($page = 1) {
         $searchFor = $this->getSession('searchfor', '');
-        $this->setVar('searchfor', $searchFor);
         $field = $this->getSession('field', 'firstName');
+        //Ehb-added-begin
         $course = $this->getSession('course', 'course');
-        //$group=$this->getSession('group','group');
-        $this->setVar('field', $field);
-        $this->setVar('course', $course);
-        $this->setVar('group', $group);
-        $confirmation = $this->getSession('showconfirmation', FALSE);
-        $this->setVar('showconfirmation', $confirmation);
-        //$this->setSession('showconfirmation', FALSE);
+        $group = $this->getSession('group', 'group');
+        //Ehb-added-End
+        $order = $this->getSession('order', 'firstName');
+        $numResults = $this->getSession('numresults', 20);
+        $groupId = $this->getSession('groupId', "");
+        $resultsArr = array();
+        $resultsArr['searchfor'] = $searchFor;
+        $resultsArr['field'] = $field;
+        $resultsArr['order'] = $order;
+        $resultsArr['numresults'] = $numResults;
+        //Ehb-added-begin
+        $resultsArr['course'] = $course;
+        $resultsArr['group'] = $group;
+        //Ehb-added-End
+        // Prevent Corruption of Page Value - Negative Values
+        if ($page < 1) {
+            $page = 1;
+        }
+        $currentContextCode = $this->_objDBContext->getContextCode();
+        $results = $this->objContextUsers->searchUsers($searchFor, $field, $order, $numResults, ($page - 1), $course, $group);
+        $resultsArr['results'] = $results;
+        $countResults = $this->objContextUsers->countResults();
+        $resultsArr['countResults'] = $countResults;
+        $resultsArr['page'] = $page;
+        $paging = $this->objContextUsers->generatePaging($searchFor, $field, $order, $numResults, ($page - 1));
+        $resultsArr['paging'] = $paging;
+        $contextCode = $this->_objDBContext->getContextCode();
+        $resultsArr['contextCode'] = $contextCode;
         //Ehb-added-begin
         $currentContextCode = $this->_objDBContext->getContextCode();
         $where = "where contextCode<>" . "'" . $currentContextCode . "'";
         $data = $this->_objDBContext->getAll($where);
-        $this->setVarByRef('data', $data);
+        $resultsArr['data'] = $data;
         //Ehb-added-End
-        return 'eventhome_tpl.php';
+        // Get Users into Arrays
+        $eventsArr = $this->prepareEventUsersArray();
+        $resultsArr['guests'] = $eventsArr['guests'];
+        $resultsArr['guestDetails'] = $eventsArr['guestDetails'];
+
+        return $resultsArr;
+    }
+
+    /**
+     * Method to Update User Roles
+     */
+    public function updateUserRoles() {
+
+        $groupId = $this->getSession('groupId');
+
+        //$changedItems = $this->getparam('changedItems');
+        $existingMembers = $this->getparam('existingMembers');
+        $existingMembers = explode(",", $existingMembers);
+        $changedItems = $this->getparam('user');
+        //$changedItems = array_unique($changedItems);
+
+        $groups = $this->_objGroupAdmin->getTopLevelGroups();
+        //Remove terminated members
+        foreach ($existingMembers as $item) {
+            //Check if class groupops exists
+            if (class_exists('groupops', false)) {
+
+                $permid = $this->objGroupsOps->getUserByUserId($item);
+                $pkId = $permid['perm_user_id'];
+
+                //Add if not-exists
+                if (empty($changedItems)) {
+                    $this->objGroupsOps->removeUser($groupId, $pkId);
+                } else {
+                    if (!in_array($item, $changedItems)) {
+                        $this->objGroupsOps->removeUser($groupId, $pkId);
+                    }
+                }
+            }
+        }
+        //Add new members
+        foreach ($changedItems as $item) {
+            //Check if class groupops exists
+            if (class_exists('groupops', false)) {
+                $permid = $this->objGroupsOps->getUserByUserId($item);
+                $pkId = $permid['perm_user_id'];
+                $this->_objGroupAdmin->addGroupUser($groupId, $pkId);
+            }
+        }
+        return true;
     }
 
     /**
      * Method to Prepare a List of Users in a Context sorted by lecturer, student, guest
      * The results are sent to the template
      */
-    private function prepareEventUsersArray() {
+    public function prepareEventUsersArray() {
         // Get Context Code
         $contextCode = $this->_objDBContext->getContextCode();
         $filter = " ORDER BY surname ";
@@ -339,78 +440,8 @@ class eventutils extends object {
                 $guestsArray[] = $guest['userid'];
             }
         }
-        // Send to Template
-        $this->setVarByRef('guests', $guestsArray);
-        $this->setVarByRef('guestDetails', $guests);
-    }
-
-    /**
-     * Method to search for Users
-     * This function sets them as a session and then redirects to the results
-     */
-    private function searchForUsers() {
-        $searchFor = $this->getParam('search');
-        $this->setSession('searchfor', $searchFor);
-        $field = $this->getParam('field');
-        $this->setSession('field', $field);
-        //Ehb-added-begin
-        $course = $this->getParam('course');
-        $this->setSession('course', $course);
-        $group = $this->getParam('group');
-        $this->setSession('group', $group);
-        //Ehb-added-End
-        $order = $this->getParam('order');
-        $this->setSession('order', $order);
-        $numResults = $this->getParam('results');
-        $this->setSession('numresults', $numResults);
-        return $this->nextAction('viewsearchresults');
-    }
-
-    /**
-     * Method to Show the Results for a Search
-     * @param int $page - Page of Results to show
-     */
-    private function getResults($page = 1) {
-        $searchFor = $this->getSession('searchfor', '');
-        $field = $this->getSession('field', 'firstName');
-        //Ehb-added-begin
-        $course = $this->getSession('course', 'course');
-        $group = $this->getSession('group', 'group');
-        //Ehb-added-End
-        $order = $this->getSession('order', 'firstName');
-        $numResults = $this->getSession('numresults', 20);
-        $groupId = $this->getSession('groupId', $groupId);
-        $this->setVar('searchfor', $searchFor);
-        $this->setVar('field', $field);
-        $this->setVar('order', $order);
-        $this->setVar('numresults', $numResults);
-        //Ehb-added-begin
-        $this->setVar('course', $course);
-        $this->setVar('group', $group);
-        //Ehb-added-End
-        // Prevent Corruption of Page Value - Negative Values
-        if ($page < 1) {
-            $page = 1;
-        }
-        $currentContextCode = $this->_objDBContext->getContextCode();
-        $results = $this->objContextUsers->searchUsers($searchFor, $field, $order, $numResults, ($page - 1), $course, $group);
-        $this->setVarByRef('results', $results);
-        $countResults = $this->objContextUsers->countResults();
-        $this->setVarByRef('countResults', $countResults);
-        $this->setVarByRef('page', $page);
-        $paging = $this->objContextUsers->generatePaging($searchFor, $field, $order, $numResults, ($page - 1));
-        $this->setVarByRef('paging', $paging);
-        $contextCode = $this->_objDBContext->getContextCode();
-        $this->setVarByRef('contextCode', $contextCode);
-        //Ehb-added-begin
-        $currentContextCode = $this->_objDBContext->getContextCode();
-        $where = "where contextCode<>" . "'" . $currentContextCode . "'";
-        $data = $this->_objDBContext->getAll($where);
-        $this->setVarByRef('data', $data);
-        //Ehb-added-End
-        // Get Users into Arrays
-        $this->prepareContextUsersArray();
-        return 'searchresults_tpl.php';
+        $guestArr = array('guests' => $guestsArray, 'guestDetails' => $guests);
+        return $guestArr;
     }
 
 }

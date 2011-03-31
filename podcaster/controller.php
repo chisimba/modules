@@ -44,6 +44,17 @@ class podcaster extends controller {
     public $presentManager;
     public $objAnalyzeMediaFile;
     public $objMediaFileData;
+    /**
+     *
+     * @var Object for DB context
+     */
+    public $_objDBContext;
+    /**
+     *
+     * @var $_objGroupAdmin Object for GroupAdmin class
+     * @access public
+     */
+    public $_objGroupAdmin;
 
     /**
      * Constructor
@@ -73,7 +84,10 @@ class podcaster extends controller {
         $this->objUser = $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
         $this->userPKId = $this->objUser->PKId($this->userId);
+        //Instantiate the Context DB Object
+        $this->_objDBContext = &$this->newObject('dbcontext', 'context');
 
+        $this->_objGroupAdmin = $this->newObject('groupadminmodel', 'groupadmin');
         //Get system paths
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'podcaster');
         $this->siteBase = $this->objConfig->getitem('KEWL_SITEROOT_PATH');
@@ -86,7 +100,7 @@ class podcaster extends controller {
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('myuploads', 'doajaxsendmail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
+        $required = array('addusers', 'configure_events', 'viewevents', 'manage_event', 'add_event', 'viewsearchresults', 'myuploads', 'doajaxsendmail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -183,10 +197,23 @@ class podcaster extends controller {
     }
 
     /**
+     * Function that adds users to an event
+     * @return template
+     */
+    function __addusers() {
+        $resultsArr = $this->objEventUtils->updateUserRoles();
+        return $this->nextAction('viewevents', array(
+            'message' => 'usersupdated'
+        ));
+    }
+
+    /**
      * Function that returns template for configuring an event
      * @return template
      */
     function __configure_events() {
+        $userPid = $this->objUser->PKId($this->objUser->userId());
+        $this->setVarByRef('userPid', $this->userPid);
         return "manage_events_tpl.php";
     }
 
@@ -211,7 +238,42 @@ class podcaster extends controller {
         if (empty($myId))
             $myId = $this->getSession('groupId');
         $this->setSession('groupId', $myId);
-        return $this->objEventUtils->eventsHome($myId);
+        if (empty($myId)) {
+            return $this->nextAction('configure_events');
+        }
+        return $this->eventsHome($myId);
+    }
+
+    /**
+     * Method to show the list of users in an event
+     * @param string $group
+     * @return object
+     */
+    function eventsHome($group) {
+        // Generate an array of users in the event, and send it to page template
+        $guestArr = $this->objEventUtils->prepareEventUsersArray();
+        // Send to Template
+        $this->setVarByRef('guests', $guestsArr['guests']);
+        $this->setVarByRef('guestDetails', $guestsArr['guestDetails']);
+        // Default Values for Search
+        $searchFor = $this->getSession('searchfor', '');
+        $this->setVar('searchfor', $searchFor);
+        $field = $this->getSession('field', 'firstName');
+        $course = $this->getSession('course', 'course');
+        //$group=$this->getSession('group','group');
+        $this->setVar('field', $field);
+        $this->setVar('course', $course);
+        $this->setVar('group', $group);
+        $confirmation = $this->getSession('showconfirmation', FALSE);
+        $this->setVar('showconfirmation', $confirmation);
+        //$this->setSession('showconfirmation', FALSE);
+        //Ehb-added-begin
+        $currentContextCode = $this->_objDBContext->getContextCode();
+        $where = "where contextCode<>" . "'" . $currentContextCode . "'";
+        $data = $this->_objDBContext->getAll($where);
+        $this->setVarByRef('data', $data);
+        //Ehb-added-End
+        return 'eventhome_tpl.php';
     }
 
     /**
@@ -231,7 +293,29 @@ class podcaster extends controller {
      * @return object
      */
     function __searchforusers() {
-        return $this->objEventUtils->searchForUsers();
+        return $this->searchForUsers();
+    }
+
+    /**
+     * Method to search for Users
+     * This function sets them as a session and then redirects to the results
+     */
+    public function searchForUsers() {
+        $searchFor = $this->getParam('search');
+        $this->setSession('searchfor', $searchFor);
+        $field = $this->getParam('field');
+        $this->setSession('field', $field);
+        //Ehb-added-begin
+        $course = $this->getParam('course');
+        $this->setSession('course', $course);
+        $group = $this->getParam('group');
+        $this->setSession('group', $group);
+        //Ehb-added-End
+        $order = $this->getParam('order');
+        $this->setSession('order', $order);
+        $numResults = $this->getParam('results');
+        $this->setSession('numresults', $numResults);
+        return $this->nextAction('viewsearchresults');
     }
 
     /**
@@ -239,8 +323,51 @@ class podcaster extends controller {
      * @return object
      */
     function __viewsearchresults() {
-        $groupId = $this->getSession('groupId', $groupId);
-        return $this->objEventUtils->getResults($this->getParam('page', 1));
+        $groupId = $this->getSession('groupId', "");
+        $resultsArr = $this->objEventUtils->getResults($this->getParam('page', 1));
+        $this->setVarByRef('groupId', $groupId);
+        if (empty($groupId)) {
+            return $this->nextAction('configure_events');
+        }
+        $this->setVarByRef('resultsArr', $resultsArr);
+        return 'searchresults_tpl.php';
+    }
+
+    /**
+     * Function that removes a user from an event
+     * @return object
+     */
+    function __removeuser() {
+        $group = $this->getParam('group', '');
+        $userId = $this->getParam('userid', '');
+        $actDelete = $this->objEventUtils->removeUserFromEvent($userId, $group);
+        return $this->nextAction('viewevents', array(
+            'message' => 'userdeletedfromgroup'
+        ));
+    }
+
+    /**
+     * Function that removes a batch of users from an event
+     * @return object
+     */
+    function __batchremoveusers() {
+        $users = $userId = $this->getParam('user', '');
+        $usersCount = count($users);
+        if (is_array($users)) {
+            foreach ($users as $userId) {
+                if (!empty($userId)) {
+                    $group = $this->getParam('group', '');
+                    $actDelete = $this->objEventUtils->removeUserFromEvent($userId, $group);
+                }
+                return $this->nextAction('viewevents', array(
+                    'message' => 'userdeletedfromgroup'
+                ));
+            }
+        } else {
+            return $this->nextAction('viewevents', array(
+                'message' => 'nouseridprovidedfordelete'
+            ));
+        }
     }
 
     /**
