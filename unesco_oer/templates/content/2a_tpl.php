@@ -121,7 +121,7 @@ $this->loadClass('checkbox', 'htmlelements');
                     $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
                     $abLink->link = 'PRODUCT ADAPTATIONS';
                     echo $abLink->show();
-                    echo $page;
+                    
                   
                     ?>
                         </div>
@@ -154,53 +154,53 @@ $this->loadClass('checkbox', 'htmlelements');
                 <div class="blueBackground blueBackgroundCheckBoxText">
                <?php
 
-                $products = $this->objDbProducts->getProducts(0, 10);
-             
-           
-              $checkbox1 = new checkbox('test');
-             $checkbox2 = new checkbox('test2');
-        //        $checkbox3 = new checkbox('test3');
-//                foreach ($products as $product) {
-//                        $checkbox = new checkbox($product['resource_type']);
-//                        echo $product['resource_type'];
+//                $products = $this->objDbProducts->getProducts(0, 10);
 //
 //
-             $guidelink = new link($this->uri(array("action" => "FilterProducts")));
+//              $checkbox1 = new checkbox('test');
+//             $checkbox2 = new checkbox('test2');
+//        //        $checkbox3 = new checkbox('test3');
+////                foreach ($products as $product) {
+////                        $checkbox = new checkbox($product['resource_type']);
+////                        echo $product['resource_type'];
+////
+////
+//             $guidelink = new link($this->uri(array("action" => "FilterProducts")));
+//
+//    $guidelink->link = $checkbox1->show();
+//
+//
+//
+//
+//            $form1 = new form('check');
+//
+//
+//
+//
+//
+//                 $form1->addtoform($guidelink->show());
+//                 $form1->addtoform('fwefwe<br>');
+//                 $form1->addtoform($checkbox2->show());
+//                 echo $form1->show();
+//
+//
+//
+//
+//
+//
+//
+//
+//               ?>
 
-    $guidelink->link = $checkbox1->show();
 
 
 
 
-            $form1 = new form('check');
-
-
-
-
-
-                 $form1->addtoform($guidelink->show());
-                 $form1->addtoform('fwefwe<br>');
-                 $form1->addtoform($checkbox2->show());
-                 echo $form1->show();
-             
-               
-               
-               
-               
-               
-               
-               
-               ?>
-
-
-
-
-
-<!--                        <input type="checkbox"> Model<br>
+                        <input type="checkbox"> Model<br>
                         <input type="checkbox"> Guide<br>
                         <input type="checkbox"> Handbook<br>
                         <input type="checkbox"> Manual<br>
-                        <input type="checkbox"> Bestoractile<br>
+                        <input type="checkbox"> Bestoractile<br><!--
 
 -->
                     </div>
