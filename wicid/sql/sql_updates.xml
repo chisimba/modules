@@ -70,21 +70,6 @@
         </data>
     </update>
 
-    <update>
-        <table>tbl_wicid_documents</table>
-        <version>1.001</version>
-        <description>Added the deleteDoc field</description>
-        <data>
-            <add>
-                <name>deleteDoc</name>
-                <type>text</type>
-                <length>1</length>
-                <notnull>TRUE</notnull>
-                <default>N</default>
-            </add>
-
-        </data>
-    </update>
 
     <update>
         <table>tbl_wicid_documents</table>
@@ -157,21 +142,6 @@
                 <name>currentuserid</name>
                 <type>text</type>
                 <length>10</length>
-            </add>
-
-        </data>
-    </update>
-   <update>
-        <table>tbl_wicid_documents</table>
-        <version>1.003</version>
-        <description>Added the rejectedDoc field</description>
-        <data>
-            <add>
-                <name>rejectDoc</name>
-                <type>text</type>
-                <length>1</length>
-                <notnull>TRUE</notnull>
-                <default>N</default>
             </add>
 
         </data>
