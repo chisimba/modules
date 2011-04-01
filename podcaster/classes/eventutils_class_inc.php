@@ -53,7 +53,7 @@ if (!
  * @licence GNU/GPL
  *
  */
-class eventutils extends object {
+class eventutils extends dbTable {
 
     /**
      *
@@ -187,11 +187,11 @@ class eventutils extends object {
         $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
         // Add groupMembers
         //$this->addGroupMembers();
-        $groupId = $this->_objGroupAdmin->addGroupUser($newGroupId, $this->objUser->userId());
+        $groupId = $this->_objGroupAdmin->addGroupUser($newGroupId, $this->objUser->userId());        
         // Now create the ACLS
         $this->_objManageGroups->createAcls($userPid, $title);
+        return $groupId;
     }
-
     /**
      * Method to get the user groups. Renders output in a table with manage links(Add/edit)
      * @return string
@@ -217,7 +217,7 @@ class eventutils extends object {
                             'module' => 'podcaster',
                             'action' => 'add_event'
                         )));
-        $addlink->link = $this->objLanguage->languageText("mod_podcaster_addevent", 'podcaster', 'Add event');
+        $addlink->link = $iconAdd->show();
         $objLink = &$this->getObject('link', 'htmlelements');
         $objLink->link($this->uri(array(
                     'module' => 'podcaster',
@@ -225,7 +225,7 @@ class eventutils extends object {
                 )));
         $objLink->link = $iconAdd->show();
         $mylinkAdd = $objLink->show();
-        $addlink->link = 'Add Group';
+        $addlink->link = $this->objLanguage->languageText("mod_podcaster_addevent", 'podcaster', 'Add event');
         $linkAdd = $addlink->show();
         $linkstableRow = array(
             '<hr/>' . $linkAdd . ' ' . $mylinkAdd
@@ -289,6 +289,22 @@ class eventutils extends object {
                         //	    		$mnglink->link = $this->objLanguage->languageText('mod_podcaster_manage', 'podcaster', 'Manage').' '.$subgroup['name'].' '.$iconManage->show();
                         $mnglink->link = $iconManage->show();
                         $linkManage = $mnglink->show();
+
+                        //Edit Group Link
+                        $iconEdit = $this->getObject('geticon', 'htmlelements');
+                        $iconEdit->setIcon('edit');
+                        $iconEdit->title = $this->objLanguage->languageText("mod_podcaster_editevent", 'podcaster', 'Edit event');
+                        $iconEdit->alt = $this->objLanguage->languageText("mod_podcaster_editevent", 'podcaster', 'Edit event');
+
+                        $objLink = &$this->getObject('link', 'htmlelements');
+                        $objLink->link($this->uri(array(
+                                    'module' => 'podcaster',
+                                    'action' => 'edit_event',
+                                    'id' => $groupId
+                                )));
+                        $objLink->link = $iconEdit->show();
+                        $mylinkEdit = $objLink->show();
+
                         //Manage Events
                         $iconShare = $this->getObject('geticon', 'htmlelements');
                         $iconShare->setIcon('fileshare');
@@ -302,9 +318,10 @@ class eventutils extends object {
                         $mnglink->link = $iconShare->show();
                         $linkMng = $mnglink->show();
                         $tableRow = array(
-                            '<hr/>' . $linkManage . '   ' . $linkMng
+                            '<hr/>' . $linkManage . '  ' . $linkMng." ".$mylinkEdit
                         );
                         $table->addRow($tableRow);
+
                         $textinput = new textinput("groupname", $groupName);
                         $str.= $mngfeatureBox->show($groupName, $table->show());
                         $table = &$this->newObject('htmltable', 'htmlelements');
@@ -443,7 +460,20 @@ class eventutils extends object {
         $guestArr = array('guests' => $guestsArray, 'guestDetails' => $guests);
         return $guestArr;
     }
-
+    /**
+     * Update group name
+     * @param string $group_id The group Id
+     * @param string $newName The New name
+     */
+    public function changeEventName($group_id, $newName)
+    {
+        parent::init('tbl_perms_groups');
+        $userid = $this->objUser->userId();
+        $newName = $userid."^".$newName;
+        $this->update("group_id", $group_id, array(
+            'group_define_name' => $newName
+        ));
+    }
 }
 
 ?>

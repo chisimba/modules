@@ -17,6 +17,7 @@ class dbPodcaster_Category extends dbTable
     function init() 
     {
         parent::init('tbl_podcaster_category');
+        $this->objDbEvents = &$this->getObject('dbpodcaster_events', 'podcaster');
         $this->objUser = &$this->getObject('user', 'security');
     }
     /**
@@ -46,20 +47,18 @@ class dbPodcaster_Category extends dbTable
     {
         return $this->getAll("WHERE id='" . $id . "'");
     }
-    function getByItem() 
+    /**
+     * Function to fetch all categories
+     * @return array
+     */
+    function getAllCategories()
     {
-        $sql = "SELECT * FROM tbl_podcaster_category";
-        $data = $this->getArray($sql);
-        if (!empty($data)) {
-            return $data;
-        } else {
-            return FALSE;
-        }
+        return $this->getAll();
     }
     /**
      * Insert a record
-     * @param string $category Category
-     * -- @param string $userId The user ID
+     * @param string $category
+     * @param string $description
      */
     function insertSingle($category, $description)
     {

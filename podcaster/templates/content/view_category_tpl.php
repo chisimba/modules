@@ -27,7 +27,7 @@ if (!$hasAccess) {
     $objHeading->type = 1;
     $objHeading->str = $this->objLanguage->languageText("mod_podcaster_listofcategories", 'podcaster', "List of categories") . '&nbsp;&nbsp;&nbsp;' . $linkAdd;
     echo $objHeading->show();
-    $categoryList = $this->objDbCategoryList->getByItem();
+    $categoryList = $this->objDbCategoryList->getAllCategories();
     echo "<br/>";
     // Create a table object
     $table = &$this->newObject("htmltable", "htmlelements");
@@ -69,12 +69,19 @@ if (!$hasAccess) {
             $iconDelete->align = false;
             $objConfirm = &$this->getObject("link", "htmlelements");
             $objConfirm = &$this->newObject('confirm', 'utilities');
-            $objConfirm->setConfirm($iconDelete->show(), $this->uri(array(
-                        'module' => 'podcaster',
-                        'action' => 'deletecategory',
-                        'id' => $item["id"]
-                    )), $this->objLanguage->languageText('mod_podcaster_confirmdeletecategory', 'podcaster', 'Are you sure you want to delete this category?'));
-            $table->addCell($linkEdit . $objConfirm->show(), "", NULL, NULL, $class, '');
+            $checkAssociation = $this->objDbEvents->listByCategory($item["id"]);
+            if (!empty($checkAssociation)) {
+                $deleteLink = new link("javascript:alert('" . $this->objLanguage->languageText('mod_podcaster_deleteeventsincategory', 'podcaster', 'You need to delete the events in this category before deleting it') . ".');");
+                $deleteLink->link = $iconDelete->show();
+                $table->addCell($linkEdit . $deleteLink->show() , "", NULL, NULL, $class, '');
+            } else {
+                $objConfirm->setConfirm($iconDelete->show() , $this->uri(array(
+                    'module' => 'podcaster',
+                    'action' => 'deletecategory',
+                    'id' => $item["id"]
+                )) , $objLanguage->languageText('mod_podcaster_confirmdeletecategory', 'podcaster', 'Are you sure you want to delete this category?'));
+                $table->addCell($linkEdit . $objConfirm->show() , "", NULL, NULL, $class, '');
+            }
             $table->endRow();
         }
         unset($item);

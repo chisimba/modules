@@ -79,6 +79,7 @@ class podcaster extends controller {
         $this->parse4RSS = $this->getObject('parse4rss', 'filters');
         $this->objEventUtils = $this->newObject('eventutils', 'podcaster');
         $this->objDbCategoryList = &$this->getObject('dbpodcaster_category', 'podcaster');
+        $this->objDbEvents = &$this->getObject('dbpodcaster_events', 'podcaster');
 
         $this->objSearch = $this->getObject('indexdata', 'search');
         // user object
@@ -194,9 +195,36 @@ class podcaster extends controller {
      * @return template
      */
     function __add_event() {
+        $mode = 'add';
+        $this->setVarByRef('mode', $mode);
+        $categoriesList = $this->objDbCategoryList->getAllCategories();
+        $this->setVarByRef('categoriesList', $categoriesList);
         return "add_event_tpl.php";
     }
-
+    /**
+     * Function that returns edit event template
+     * @return template
+     */
+    function __edit_event() {
+        $mode = 'edit';
+        $this->setVarByRef('mode', $mode);
+        $eventId = $this->getParam('id', null);
+        
+        if(empty($eventId)) {
+            return $this->nextAction('configure_events');
+        }
+        $categoriesList = $this->objDbCategoryList->getAllCategories();
+        $this->setVarByRef('categoriesList', $categoriesList);
+        $groupName = $this->_objGroupAdmin->getName($eventId);
+        
+        $groupName = explode("^", $groupName);
+        $groupName = $groupName['1'];        
+        $eventsData = $this->objDbEvents->listByEvent($eventId);        
+        $this->setVarByRef('eventId', $eventId);
+        $this->setVarByRef('eventsData', $eventsData['0']);
+        $this->setVarByRef('eventName', $groupName);
+        return "add_event_tpl.php";
+    }
     /**
      * Function that adds users to an event
      * @return template
@@ -209,7 +237,7 @@ class podcaster extends controller {
     }
 
     /**
-     * Function that returns edit category template
+     * Function that returns add category template
      * @return template
      */
     function __addcategory() {
@@ -281,7 +309,29 @@ class podcaster extends controller {
      */
     function __addeventconfirm() {
         if (class_exists('groupops', false)) {
-            $id = $this->objEventUtils->addGroups($this->userId . "^" . $this->getParam('event', NULL));
+            $event = $this->getParam('event', NULL);
+            $categoryId = $this->getParam('category', NULL);
+            $access = $this->getParam('access', NULL);
+            $publish = $this->getParam('publish', NULL);
+            $eventId = $this->objEventUtils->addGroups($this->userId . "^" . $event);
+            
+            $this->objDbEvents->insertSingle($eventId, $categoryId, $access, $publish);
+        }
+        return $this->nextAction('configure_events');
+    }
+    /**
+     * Function that returns confirmation on edit event
+     * @return object
+     */
+    function __editeventconfirm() {
+        if (class_exists('groupops', false)) {
+            $eventId = $this->getParam('eventId', NULL);
+            $categoryId = $this->getParam('category', NULL);
+            $access = $this->getParam('access', NULL);
+            $event = $this->getParam('event', NULL);
+            $publish = $this->getParam('publish', NULL);
+            $this->objDbEvents->updateSingle($eventId, $categoryId, $access, $publish);
+            $this->objEventUtils->changeEventName($eventId, $event);
         }
         return $this->nextAction('configure_events');
     }
