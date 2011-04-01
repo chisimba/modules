@@ -111,15 +111,40 @@ class unesco_oer extends controller {
     }
 
      public function __FilterProducts() {
-        $ProdFilter = $this->getParam('filter');
-        if ($ProdFilter == NULL){
-            $ProdFilter = "no value returned";
-        }
-        $this->setVarByRef("testfilter", $ProdFilter);
+       $AuthFilter = $this->getParam('AuthorFilter');
+       $ThemeFilter = $this->getParam('ThemeFilter');
+       $LangFilter = $this->getParam('LanguageFilter');
+       $page = $this->getParam('page');
+
+//     
+    $adaptationstring = $this ->getParam('adaptationstring');
+ 
+
+          $buildstring = $adaptationstring;
+          if ($AuthFilter != Null)
+              $buildstring .= ' and creator = ' . "'$AuthFilter'";
+
+           if ($ThemeFilter != Null)
+              $buildstring .= ' and theme = ' . "'$ThemeFilter'";
+
+            if ($LangFilter != Null)
+              $buildstring .= ' and language = ' . "'$LangFilter'";
+
+        $this->setVarByRef("pagestring",$_SERVER['SCRIPT_NAME']);
 
 
 
-        return "2a_tpl.php";
+         $this->setVarByRef("AuthFilter", $AuthFilter);
+         $this->setVarByRef("ThemeFilter", $ThemeFilter);
+         $this->setVarByRef("LangFilter", $LangFilter);
+         $this->setVarByRef("finalstring", $buildstring);
+         $this->setVarByRef("page", $page);
+
+        
+            return "$page";
+         
+        
+
     }
 
     public function requiresLogin() {

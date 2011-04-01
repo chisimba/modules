@@ -2,7 +2,10 @@
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
-$filterSelect = false;
+$this->loadClass('checkbox', 'htmlelements');
+  $adaptationstring = 'parent_id is not null';
+  
+  
 ?>
 <script src="http://code.jquery.com/jquery-1.5.js"></script>
 
@@ -40,13 +43,7 @@ $filterSelect = false;
                                     <td><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="Bookmarks"></td>
                                     <td><a href="#" class="prifileLinks">My Bookmarks</a></td>
                                     <td><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools"></td>
-                                    <td><a href="#" class="prifileLinks">
-                                            <?php
-                                            $abLink = new link($this->uri(array("action" => "addData")));
-                                            $abLink->link = 'Administration Tools';
-                                            echo $abLink->show();
-                                            ?>
-                                        </a></td>
+                                    <td><a href="#" class="prifileLinks">Administration Tools</a></td>
                                 </tr>
                                 <tr>
                                     <td><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups"></td>
@@ -108,22 +105,25 @@ $filterSelect = false;
                 <div class="mainNavigation">
                     <div class="navitem">
                         <div class="navitemInner">
-<?php
-$abLink = new link($this->uri(array("action" => "home")));
-$abLink->link = 'UNESCO OER PRODUCTS';
-echo $abLink->show();
-?>
+                <?php
+                    $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                    $abLink->link = 'UNESCO OER PRODUCTS';
+                    echo $abLink->show();
+                    ?>
 
                         </div>
                     </div>
                     <div class="mainNavPipe">&nbsp;</div>
                     <div class="navitemOnstate">
                         <div class="navitemInnerOnstate">
-<?php
-$abLink = new link($this->uri(array("action" => "2a")));
-$abLink->link = 'PRODUCT ADAPTATIONS';
-echo $abLink->show();
-?>
+                    <?php
+                  
+                    $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
+                    $abLink->link = 'PRODUCT ADAPTATIONS';
+                    echo $abLink->show();
+                    echo $page;
+                  
+                    ?>
                         </div>
                     </div>
                     <div class="mainNavPipe"></div>
@@ -150,37 +150,88 @@ echo $abLink->show();
                     </div>
                     <div class="moduleSubHeader">Product matches filter criteria</div>
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
-                    <div class="blueBackground blueBackgroundCheckBoxText">
-                        <input type="checkbox"> Model<br>
+
+                <div class="blueBackground blueBackgroundCheckBoxText">
+               <?php
+
+                $products = $this->objDbProducts->getProducts(0, 10);
+             
+           
+              $checkbox1 = new checkbox('test');
+             $checkbox2 = new checkbox('test2');
+        //        $checkbox3 = new checkbox('test3');
+//                foreach ($products as $product) {
+//                        $checkbox = new checkbox($product['resource_type']);
+//                        echo $product['resource_type'];
+//
+//
+             $guidelink = new link($this->uri(array("action" => "FilterProducts")));
+
+    $guidelink->link = $checkbox1->show();
+
+
+
+
+            $form1 = new form('check');
+
+
+
+
+
+                 $form1->addtoform($guidelink->show());
+                 $form1->addtoform('fwefwe<br>');
+                 $form1->addtoform($checkbox2->show());
+                 echo $form1->show();
+             
+               
+               
+               
+               
+               
+               
+               
+               ?>
+
+
+
+
+
+<!--                        <input type="checkbox"> Model<br>
                         <input type="checkbox"> Guide<br>
                         <input type="checkbox"> Handbook<br>
                         <input type="checkbox"> Manual<br>
                         <input type="checkbox"> Bestoractile<br>
+
+-->
                     </div>
+
+
                     <br>
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
                     <div class="blueBackground">
                     <?php
                     $products = $this->objDbProducts->getProducts(0, 10);
-                    $filter = new dropdown('filterTheme');
+                    $filterTheme = new dropdown('ThemeFilter');
+                   
                     foreach ($products as $product) {
-
-                        $filter->addOption($product['theme']);
+                        $filterTheme->addoption(null);
+                        $filterTheme->addOption($product['theme']);
                     }
-                    $uri = $this->uri(array('action' => 'filterTheme'));
-                    $form = new form('filterTheme', $this->uri(array('action' => 'FilterProducts')));
-                    //         $filterbutton = new button('FilterProducts', "FilterProducts");
-                    //   $filterbutton->settosubmit();
+                     $filterTheme ->setSelected($ThemeFilter);
+
+                    $uri = $this->uri(array('action' => 'ThemeFilter'));
+                    $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter,"page" => '2a_tpl.php')));
+                   
 
                     $uri = $this->uri(array('action' => 'FilterProducts'));
-                    $filter->addOnChange('javascript: sendFilterform()');
-                    //                         $form -> addtoform($filterbutton->show());
-                    // $filter->setselected();
+                    $filterTheme->addOnChange('javascript: sendThemeFilterform()');
+                 
+                   
 
-                    $form->addtoform($filter->show());
-                    //    $form->addtoform($filterbutton->show());
+                    $form->addtoform($filterTheme->show());
+                   
                     echo $form->show();
-                    echo $testfilter;
+                   
                     ?>
                         <!--
 
@@ -196,7 +247,34 @@ echo $abLink->show();
 
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
                     <div class="blueBackground">
-<?php ?>
+<?php
+
+                        $products = $this->objDbProducts->getProducts(0, 10);
+                        $filterLang = new dropdown('LanguageFilter');
+                       
+                        foreach ($products as $product) {
+                            $filterLang->addoption(null);
+                            $filterLang->addOption($product['language']);
+                        }
+                       
+                         $filterLang ->setSelected($LangFilter);
+                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter,"page" => '2a_tpl.php')));
+
+
+                        $uri = $this->uri(array('action' => 'LanguageFilter'));
+                        $filterLang->addOnChange('javascript: sendLanguageFilterform()');
+
+
+                        $form->addtoform($filterLang->show());
+
+
+                        echo $form->show();
+                        
+
+
+
+
+?>
 
 
 
@@ -213,26 +291,26 @@ echo $abLink->show();
 
                         <?php
                         $products = $this->objDbProducts->getProducts(0, 10);
-                        $filter = new dropdown('filter');
+                        $filterAuth = new dropdown('AuthorFilter');
+                       
                         foreach ($products as $product) {
-
-                            $filter->addOption($product['creator']);
+                            $filterAuth->addoption(null);
+                            $filterAuth->addOption($product['creator']);
                         }
-                        $uri = $this->uri(array('action' => 'filter'));
-                        $form = new form('filter', $this->uri(array('action' => 'FilterProducts')));
-                        $filterbutton = new button('FilterProducts', "FilterProducts");
-                        $filterbutton->settosubmit('filter');
+                    
+                   $filterAuth ->setSelected($AuthFilter);
+                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring,'ThemeFilter'=>$ThemeFilter, 'LanguageFilter' => $LangFilter,"page" => '2a_tpl.php')));
+               
 
-                        $uri = $this->uri(array('action' => 'FilterProducts'));
-                        $filter->addOnChange();
-                        //                         $form -> addtoform($filterbutton->show());
-                        // $filter->setselected();
+                        $uri = $this->uri(array('action' => 'AuthorFilter'));
+                        $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
+                 
 
-                        $form->addtoform($filter->show());
-                        $form->addtoform($filterbutton->show());
+                        $form->addtoform($filterAuth->show());
+                  
 
                         echo $form->show();
-                        echo $testfilter
+                     
                         ?>
 
 
@@ -247,7 +325,7 @@ echo $abLink->show();
                     <div class="blueBackground">
                         <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
                             <option value="">All</option>
-                            <option value="1">Peter Griffin</option>
+                           
                         </select>
                     </div>
                     <br><br>
@@ -283,14 +361,14 @@ echo $abLink->show();
 
 
                                     <?php
-                                    $abLink = new link($this->uri(array("action" => "2a")));
+                                    $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => $adaptationstring, "page" => '2a_tpl.php')));
                                     $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
                                     echo $abLink->show();
                                     ?>
 
                             <div class="gridListDivView">
                                                 <?php
-                                                $abLink = new link($this->uri(array("action" => "2a")));
+                                                $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => $adaptationstring, "page" => '2a_tpl.php')));
                                                 $abLink->link = 'GRID';
                                                 echo $abLink->show();
                                                 ?>
@@ -299,7 +377,7 @@ echo $abLink->show();
                             <div class="gridListPipe">|</div>
 
                             <?php
-                            $abLink = new link($this->uri(array("action" => "2b")));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => $adaptationstring, "page" => '2b_tpl.php')));
                             $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                             echo $abLink->show();
                             ?>
@@ -307,7 +385,7 @@ echo $abLink->show();
                             <div class="gridListDivView">
 
 <?php
-                            $abLink = new link($this->uri(array("action" => "2b")));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => $adaptationstring, "page" => '2b_tpl.php')));
                             $abLink->link = 'LIST';
                             echo $abLink->show();
 ?>
@@ -318,24 +396,17 @@ echo $abLink->show();
 
 <?php
                             $objTable = $this->getObject('htmltable', 'htmlelements');
-                            if ($filterSelect == false) {
-                                $teststring .="parent_id is not null";
-                            }
-                            else
-                                $teststring .= " and parent_id is not null" . $teststring;
+                              
+                 
+                   
+                   
 
-                            $filterselect = true;
-                            echo "$teststring";
-
-
-                            $products = $this->objDbProducts->getFilteredProducts($teststring);
+                            $products = $this->objDbProducts->getFilteredProducts($finalstring);
                             $newRow = true;
                             $count = 0;
 
-                            foreach ($products as $product) {               //populates table
-                                if ($product['parent_id'] != null) {
-                                    $count++;
-                                    
+                            foreach ($products as $product) {
+                                    $count ++ ;                       //populates table
                                     if ($newRow) {
                                         $objTable->startRow();
                                         $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
@@ -343,7 +414,7 @@ echo $abLink->show();
                                     } else {
                                         $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
                                     }
-                                }
+                                
 
                                 //Display 3 products per row
                                 if ($count == 3) {
@@ -351,8 +422,8 @@ echo $abLink->show();
                                     $count = 0;
                                     $objTable->endRow();
                                 }
+                            
                             }
-
 
 
                             echo $objTable->show();
@@ -514,21 +585,11 @@ echo $abLink->show();
                         <div class="featuredHeader">FEATURED ADAPTATION</div>
                         <div class="rightColumnBorderedDiv">
                             <div class="rightColumnContentPadding">
-                                <?php
-                                $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
-                                if (sizeof($featuredProduct) > 0) {
-                                    //TODO error handling
-                                }
-                                echo $this->objFeaturedProducUtil->featuredProductViewSpan($featuredProduct[0]);
-                                ?>
-                                
-                                    <a href="#" class="adaptationLinks">
-                                        <?php
-                                         $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                         $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
-                                         echo"See all adaptations ($NOofAdaptation)";// this must be a link
-                                          ?></a>
+                                <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
+                                <div class="featuredAdaptationRightContentDiv">
+                                    <span class="greyListingHeading">Manual for Investigative Journalists</span>
+                                    <br><br>
+                                    <a href="#" class="adaptationLinks">See all adaptations (15)</a>
                                     <br>
                                     <a href="#" class="adaptationLinks">See UNSECO orginals</a>
 
@@ -593,4 +654,23 @@ echo $abLink->show();
         </div>
     </body>
 </html>
+<script>
 
+function sendThemeFilterform()
+{
+    document.forms["ThemeFilter"].submit();
+}
+
+function sendLanguageFilterform()
+{
+    document.forms["LanguageFilter"].submit();
+
+}function sendAuthorFilterform()
+{
+    document.forms["AuthorFilter"].submit();
+}
+
+
+
+
+</script>

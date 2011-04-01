@@ -1,5 +1,9 @@
 <?php
 $this->loadClass('link', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('checkbox', 'htmlelements');
+  $adaptationstring ="parent_id is null";
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -106,7 +110,7 @@ $this->loadClass('link', 'htmlelements');
                     <div class="navitemOnstate">
                         <div class="navitemInnerOnstate">
                             <?php
-                            $abLink = new link($this->uri(array("action" => "1b")));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
                             $abLink->link = 'UNESCO OER PRODUCTS';
                             echo $abLink->show();
                             ?>
@@ -116,7 +120,7 @@ $this->loadClass('link', 'htmlelements');
                     <div class="navitem">
                         <div class="navitemInner">
                             <?php
-                            $abLink = new link($this->uri(array("action" => "2a")));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
                             $abLink->link = 'PRODUCT ADAPTATIONS';
                             echo $abLink->show();
                             ?>
@@ -158,23 +162,111 @@ $this->loadClass('link', 'htmlelements');
                     <br>
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
                     <div class="blueBackground">
-                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
+
+
+
+
+                          <?php
+                    $products = $this->objDbProducts->getProducts(0, 10);
+                    $filterTheme = new dropdown('ThemeFilter');
+
+                    foreach ($products as $product) {
+                        $filterTheme->addoption(null);
+                        $filterTheme->addOption($product['theme']);
+                    }
+                     $filterTheme ->setSelected($ThemeFilter);
+
+                    $uri = $this->uri(array('action' => 'ThemeFilter'));
+                    $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter,"page" => '1b_tpl.php')));
+
+
+                    $uri = $this->uri(array('action' => 'FilterProducts'));
+                    $filterTheme->addOnChange('javascript: sendThemeFilterform()');
+
+
+
+                    $form->addtoform($filterTheme->show());
+
+                    echo $form->show();
+                    
+                    ?>
+<!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
                             <option value="">All</option>
-                        </select>
+                        </select>-->
                     </div>
                     <br>
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
                     <div class="blueBackground">
-                        <select name="language" id="language" class="leftColumnSelectDropdown">
+ <?php
+
+                        $products = $this->objDbProducts->getProducts(0, 10);
+                        $filterLang = new dropdown('LanguageFilter');
+
+                        foreach ($products as $product) {
+                            $filterLang->addoption(null);
+                            $filterLang->addOption($product['language']);
+                        }
+
+                         $filterLang ->setSelected($LangFilter);
+                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter,"page" => '1b_tpl.php')));
+
+
+                        $uri = $this->uri(array('action' => 'LanguageFilter'));
+                        $filterLang->addOnChange('javascript: sendLanguageFilterform()');
+
+
+                        $form->addtoform($filterLang->show());
+
+
+                        echo $form->show();
+
+
+
+
+
+?>
+
+
+<!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
                             <option value="">All</option>
-                        </select>
+                        </select>-->
                     </div>
                     <br>
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">Author</div>
                     <div class="blueBackground">
-                        <select name="author" id="author" class="leftColumnSelectDropdown">
+
+
+
+                         <?php
+                        $products = $this->objDbProducts->getProducts(0, 10);
+                        $filterAuth = new dropdown('AuthorFilter');
+
+                        foreach ($products as $product) {
+                            $filterAuth->addoption(null);
+                            $filterAuth->addOption($product['creator']);
+                        }
+
+                   $filterAuth ->setSelected($AuthFilter);
+                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring,'ThemeFilter'=>$ThemeFilter, 'LanguageFilter' => $LangFilter,"page" => '1b_tpl.php')));
+
+
+                        $uri = $this->uri(array('action' => 'AuthorFilter'));
+                        $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
+
+
+                        $form->addtoform($filterAuth->show());
+
+
+                        echo $form->show();
+                       
+                        ?>
+
+
+
+
+<!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
                             <option value="">All</option>
-                        </select>
+                        </select>-->
                     </div>
                     <br>
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
@@ -210,14 +302,14 @@ $this->loadClass('link', 'htmlelements');
 
 
                             <?php
-                            $abLink = new link($this->uri(array("action" => "home")));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
                             $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
                             echo $abLink->show();
                             ?>
 
                             <div class="gridListDivView">
                                 <?php
-                                $abLink = new link($this->uri(array("action" => "home")));
+                                $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
                                 $abLink->link = 'GRID';
                                 echo $abLink->show();
                                 ?>
@@ -226,7 +318,7 @@ $this->loadClass('link', 'htmlelements');
                             <div class="gridListPipe">|</div>
 
                             <?php
-                                $abLink = new link($this->uri(array("action" => "1b")));
+                                $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
                                 $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                                 echo $abLink->show();
                             ?>
@@ -234,7 +326,7 @@ $this->loadClass('link', 'htmlelements');
                                 <div class="gridListDivView">
 
                                 <?php
-                                $abLink = new link($this->uri(array("action" => "1b")));
+                                $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
                                 $abLink->link = 'LIST';
                                 echo $abLink->show();
                                 ?>
@@ -246,7 +338,7 @@ $this->loadClass('link', 'htmlelements');
 
                     <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
-                                $products = $this->objDbProducts->getProducts(0, 10, "");
+                               $products = $this->objDbProducts->getFilteredProducts($finalstring);
 
                                 //Loop through the products and display each in it's own line
                                 foreach ($products as $product) {
@@ -527,3 +619,24 @@ $this->loadClass('link', 'htmlelements');
         </div>
     </body>
 </html>
+
+<script>
+
+function sendThemeFilterform()
+{
+    document.forms["ThemeFilter"].submit();
+}
+
+function sendLanguageFilterform()
+{
+    document.forms["LanguageFilter"].submit();
+
+}function sendAuthorFilterform()
+{
+    document.forms["AuthorFilter"].submit();
+}
+
+
+
+
+</script>
