@@ -115,6 +115,7 @@ class unesco_oer extends controller {
        $ThemeFilter = $this->getParam('ThemeFilter');
        $LangFilter = $this->getParam('LanguageFilter');
        $page = $this->getParam('page');
+       $sort = $this->getParam('SortFilter');
 
 //     
     $adaptationstring = $this ->getParam('adaptationstring');
@@ -130,7 +131,10 @@ class unesco_oer extends controller {
             if ($LangFilter != Null)
               $buildstring .= ' and language = ' . "'$LangFilter'";
 
-        $this->setVarByRef("pagestring",$_SERVER['SCRIPT_NAME']);
+            if ($sort =='Date Added')
+                $buildstring .= ' order by created_on';
+            else if ($sort =='Alphabetical')
+               $buildstring .= ' order by title';
 
 
 
@@ -138,7 +142,7 @@ class unesco_oer extends controller {
          $this->setVarByRef("ThemeFilter", $ThemeFilter);
          $this->setVarByRef("LangFilter", $LangFilter);
          $this->setVarByRef("finalstring", $buildstring);
-         $this->setVarByRef("page", $page);
+     
 
         
             return "$page";
