@@ -66,7 +66,12 @@ class elsitraining extends controller {
      *
      */
     public function init() {
-        
+        $this->loadClass('link', 'htmlelements');
+        $this->objLanguage = $this->getObject("language", "language");
+        $this->objDbRegistration = $this->getObject("dbregistration");
+        $this->objDbOneonOne = $this->getObject("dboneonone");
+        $this->objDbScheduledRegistration = $this->getObject("dbscheduledregistration");
+        $this->objMainContent = $this->getObject("block_reg3");
     }
 
     /**
@@ -81,7 +86,7 @@ class elsitraining extends controller {
      * @return The output of the executed method
      * 
      */
-    public function dispatch() {
+    public function dispatch($action) {
         //Get action from query string and set default to view
         $action = $this->getParam('action', 'view');
         /*
@@ -94,6 +99,14 @@ class elsitraining extends controller {
          * from action
          */
         return $this->$method();
+        //$this->setLayoutTemplate("layout_tpl.php");
+        //$method = $this->getMethod($action);
+        /*
+         * Return the template determined by the method resulting
+         * from action
+         */
+        //return $this->$method();
+        
     }
 
     /**
@@ -106,11 +119,20 @@ class elsitraining extends controller {
      *
      */
     private function __view() {
+
         $this->setLayoutTemplate('layout_tpl.php');
+
         return 'default_tpl.php';
+        /*        $gifts = $this->objDbGift->getGifts($departmentid);
+        $this->setVarByRef("gifts", $gifts);
+        return "home_tpl.php";*/
     }
 
     /**
+     *
+     *         $objIcon->setIcon('delete');
+        $deleteGift = new link($this->uri(array('action' => 'confirmdeletegift', 'id' => $gift['id'])));
+        $deleteGift->link = $objIcon->show();
      *
      * Method to return an error when the action is not a valid
      * action method
@@ -160,10 +182,13 @@ class elsitraining extends controller {
         if ($this->__validAction($action)) {
             return "__" . $action;
         } else {
-            return "__actionError";
+            return "__view";
         }
     }
 
+    function __home(){
+        return "home_tpl.php";
+    }
     function __training() {
         return "addedittraining_tpl.php";
     }
@@ -201,7 +226,7 @@ class elsitraining extends controller {
             'prefendtime' => $prefendtime,
             'venue' => $venue);
 
-        $objRegistration = $this->getObject('dboneone', 'elsitraining');
+        $objRegistration = $this->getObject('dboneonone', 'elsitraining');
         $result = $objRegistration->recordTraining($data);
 
         echo "one on one has been created";
@@ -212,10 +237,17 @@ class elsitraining extends controller {
         $endtime = $this->getParam('endtime');
         $venue = $this->getParam('venue');
         $contactperson = $this->getParam('contactperson');
-        $limit = $this->getParam('limit');
+        $maxlimit = $this->getParam('maxlimit');
         $description = $this->getParam('description');
+
+        $data = array('starttime' => $starttime,
+            'endtime' => $endtime,
+            'venue' => $venue,
+            'contactperson' => $contactperson,
+            'maxlimit' => $maxlimit,
+            'description' => strip_tags($description));
         $objRegistration = $this->getObject('dbregistration', 'elsitraining');
-        $result = $objRegistration->recordTraining($data);
+        $result = $objRegistration->recordSchedule($data);
         echo "Training created";
     }
 
@@ -246,6 +278,13 @@ class elsitraining extends controller {
         //$this->setVarByRef("message", $successmessage);
         //return "success_tpl.php";
         echo "Registration successful.";
+    }
+
+    function __viewSched(){
+        $objDbRegistration = $this->getObject("dbregistration");
+        $schedules = $objDbRegistration->getSchedule();
+        $this->setVarByRef("schedules", $schedules);
+        return "viewschedules_tpl.php";
     }
 
     /**

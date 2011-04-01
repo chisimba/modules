@@ -70,7 +70,7 @@ $GLOBALS['kewl_entry_point_run'])
  * @link      http://avoir.uwc.ac.za
  *
  */
-class dbscheduledregistration extends dbtable
+class dbregistration extends dbtable
 {
     /**
     *
@@ -89,11 +89,18 @@ class dbscheduledregistration extends dbtable
     * by writing the userid and time to the database table
     *
     */
-    public function recordTraining($data)
+    public function recordSchedule($data)
     {
         //insert data from for schedule registration
         $result = $this->insert($data);
         return $result;
+    }
+    public function getSchedule() {
+
+        //Extract all the schedules from the site
+        $qry = "SELECT * FROM tbl_elsitraining_registration";
+        $data = $this->getArray($qry);
+        return $data;
     }
 }
 ?>

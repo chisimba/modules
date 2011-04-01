@@ -30,7 +30,7 @@ $fields = array(
     'endtime' => array('type' => 'timestamp','notnull' => TRUE),
     'venue' => array('type' => 'text','length' => 128,'notnull' => TRUE),
     'contactperson' => array('type' => 'text','length' => 12,'notnull' => TRUE),
-    'limit' => array('type' => 'integer','length' => 10,'notnull' => TRUE),
+    'maxlimit' => array('type' => 'integer','length' => 10,'notnull' => TRUE),
     'description' => array('type' => 'text','length' => 255,'notnull' => TRUE)
 );
 ?>

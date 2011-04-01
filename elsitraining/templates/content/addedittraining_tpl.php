@@ -34,7 +34,7 @@ $table->startRow();
 $table->addCell('<b>Time Start</b>');
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 $objDatePicker = $this->newObject('datepicker', 'htmlelements');
-$objDatePicker->name = 'date_recieved';
+$objDatePicker->name = 'starttime';
 
 $table->addCell($objDatePicker->show());
 $table->endRow();
@@ -43,7 +43,7 @@ $table->startRow();
 $table->addCell('<b>Time End</b>');
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 $objDatePicker = $this->newObject('datepicker', 'htmlelements');
-$objDatePicker->name = 'date_recieved';
+$objDatePicker->name = 'endtime';
 
 $table->addCell($objDatePicker->show());
 $table->endRow();
@@ -56,7 +56,7 @@ $table->addCell("<b>Venue</b>");
 $table->addCell($textinput->show());
 $table->endRow();
 
-$rlimit = new dropdown('registrationlimit');
+$rlimit = new dropdown('maxlimit');
 for ( $counter = 5; $counter <= 15; $counter += 1) {
     $rlimit->addOption($counter);
 }

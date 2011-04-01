@@ -70,7 +70,7 @@ $GLOBALS['kewl_entry_point_run'])
  * @link      http://avoir.uwc.ac.za
  *
  */
-class dbscheduledregistration extends dbtable
+class dboneonone extends dbtable
 {
     /**
     *

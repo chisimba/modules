@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Hello demo 3
@@ -28,12 +29,12 @@
  */
 // security check - must be included in all scripts
 if (!
-/**
- * Description for $GLOBALS
- * @global unknown $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * Description for $GLOBALS
+         * @global unknown $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -50,8 +51,8 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2010 AVOIR
  *
  */
-class block_reg3 extends object
-{
+class block_reg3 extends object {
+
     /**
      * The title of the block
      *
@@ -59,7 +60,6 @@ class block_reg3 extends object
      * @access public
      */
     public $title;
-
     /**
      * Expose the block for remote blocks
      *
@@ -75,21 +75,48 @@ class block_reg3 extends object
      *
      * @return NULL
      */
-    public function init() 
-    {
+    public function init() {
+
         // Set the title of the block.
         $this->title = "Registration Content";
         // Expose this block to external sites.
         $this->expose = TRUE;
     }
+
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
      */
-    public function show() 
-    {
-        return 'All my peoples that flipping stimulating the mind. All my peoples that be knowing their time.';
+    public function show() {
+        $objDbRegistration = $this->getObject("dbregistration");
+        /*$schedules = $objDbRegistration->getSchedule();
+        $table = $this->getObject('htmltable', 'htmlelements');
+        $table->startHeaderRow();
+        $table->addHeaderCell("Description");
+        $table->addHeaderCell("Start Time");
+        $table->addHeaderCell("End Time");
+        $table->addHeaderCell("Venue");
+        $table->addHeaderCell("Contact Person");
+        $table->addHeaderCell("Limit");
+        $table->endHeaderRow();
+
+        foreach ($schedules as $schedule) {
+            $table->startRow();
+            $table->addCell("description");
+            $table->addCell("starttime");
+            $table->addCell("endtime");
+            $table->addCell("venue");
+            $table->addCell("contactperson");
+            $table->addCell("maxlimit");
+            $table->endRow();
+        }
+*/
+        //echo $table->show();
+        $content = "";
+        $content .= 'SWEETY MABABEY BABEY BABEY.';
+        return $content;
     }
+
 }
 ?>
