@@ -88,6 +88,7 @@ class block_reg3 extends object {
      *
      * @return string $this->display block rendered
      */
+
     public function show() {
         $objDbRegistration = $this->getObject("dbregistration");
         /*$schedules = $objDbRegistration->getSchedule();
@@ -116,7 +117,12 @@ class block_reg3 extends object {
         $content = "";
         $content .= 'SWEETY MABABEY BABEY BABEY.';
         return $content;
-    }
 
+    }
+    
+    public function showTrainingSchedule() {
+
+        return "This is the training schedule";
+    }
 }
 ?>
