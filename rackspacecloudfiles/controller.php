@@ -105,14 +105,11 @@ class rackspacecloudfiles extends controller
                 $username = 'admin';
                 // get a list of containers
                 $containerarr = $this->objCloudfiles->containerList();
-                
-                var_dump($containerarr); 
                 // check if userid is in the list
-                //if(!in_array($username, $containerarr)) {
+                if(!in_array($username, $containerarr)) {
                     // optionally create a container for this user
-                 //   $this->objCloudfiles->createContainer($username);
-                 //   log_debug("created container for user $username");
-                //}
+                    $this->objCloudfiles->createContainer($username);
+                }
                 break;
 
             default:
