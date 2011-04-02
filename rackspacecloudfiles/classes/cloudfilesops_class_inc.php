@@ -124,8 +124,9 @@ class cloudfilesops extends object {
         var_dump($clist);
     }
     
-    public function uploadFile($filename, $file) {
-        $object = $this->container->create_object($filename);
+    public function uploadFile($username, $filename, $file) {
+        $container = $this->getContainer($username); 
+        $object = $container->create_object($filename);
         $object->load_from_filename($file);
     }
     
