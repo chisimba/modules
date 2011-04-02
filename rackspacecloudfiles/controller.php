@@ -104,10 +104,8 @@ class rackspacecloudfiles extends controller
             case NULL:
                 $username = 'admin';
                 // get a list of containers
-                $containers = $this->objCloudfiles->getAllContainers();
                 $containerarr = $this->objCloudfiles->containerList();
-                //$containers = explode(" ", $containerarr[0]);
-                var_dump($containers);
+                
                 var_dump($containerarr); 
                 // check if userid is in the list
                 //if(!in_array($username, $containerarr)) {
