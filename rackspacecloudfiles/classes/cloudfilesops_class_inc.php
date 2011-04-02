@@ -98,7 +98,7 @@ class cloudfilesops extends object {
         $this->apikey        = $this->objSysConfig->getValue('apikey', 'rackspacecloudfiles');
         $this->username      = $this->objSysConfig->getValue('username', 'rackspacecloudfiles');
         require_once($this->getResourcePath('cloudfiles.php', 'rackspacecloudfiles'));
-        $this->connect(); die();
+        $this->connect();
     }
     
     private function connect() {
