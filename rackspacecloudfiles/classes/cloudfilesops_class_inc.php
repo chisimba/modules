@@ -105,6 +105,9 @@ class cloudfilesops extends object {
         // Connect to Rackspace
         $this->auth = new CF_Authentication($this->username, $this->apikey);
         $this->auth->authenticate();
+        // this code will be used on rackspace servers, so we connect locally for MOAR speed!
+        $sn_url = "https://snet-" . substr($this->auth->storage_url, strlen("https://"));
+        $this->auth->storage_url = $sn_url;
         $this->conn = new CF_Connection($this->auth);
     }
     
