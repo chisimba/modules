@@ -110,6 +110,9 @@ class rackspacecloudfiles extends controller
                     // optionally create a container for this user
                     $this->objCloudfiles->createContainer($username);
                 }
+                $filename = 'test.jpg';
+                $localfile = '/var/www/geo/test.jpg';
+                $this->objCloudfiles->uploadFile($username, $filename, $localfile);
                 break;
 
             default:
