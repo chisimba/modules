@@ -117,6 +117,7 @@ class cloudfilesops extends object {
     
     public function getContainer($container) {
         $this->container = $this->conn->get_container($container);
+        return $this->container;
     }
     
     public function getAllContainers() {
