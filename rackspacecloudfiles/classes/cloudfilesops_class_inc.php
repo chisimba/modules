@@ -104,7 +104,7 @@ class cloudfilesops extends object {
     private function connect() {
         // Connect to Rackspace
         $this->auth = new CF_Authentication($this->username, $this->apikey);
-        $this->auth->setDebug(1);
+        // $this->auth->setDebug(1);
 
         $this->auth->authenticate();
         $this->conn = new CF_Connection($this->auth);
