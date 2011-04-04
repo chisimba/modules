@@ -594,10 +594,18 @@ $adaptationstring = "parent_id is null";
 
 
 <?php
-                                            //TODO this will need Java script to implement properly as these tabs have to be updated independently
+                                            //TODO this might need Java script to implement properly as these tabs have to be updated independently
                                             //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
-                                            for ($i = 0; $i < 3; $i++) {
-                                                echo $this->objProductUtil->populateMostAdapted($product);
+
+                                            $MostAdaptedProducts = $this->objDbProducts->getMostAdaptedProducts();
+                                            $mostCounter = 0;
+                                            foreach ($MostAdaptedProducts as $product) {
+                                                //Get the adaptationst parent id
+                                                $productId = $product['parent_id'];
+                                                //Get the original products
+                                                $myTitle = $this->objDbProducts->getProductById($productId);
+                                                $product['mytitle'] = $myTitle['title'];
+                                                echo $this->objProductUtil->populateMostAdapted($product);                                                
                                             }
 ?>
 

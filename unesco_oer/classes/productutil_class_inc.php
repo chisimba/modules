@@ -237,17 +237,11 @@ class productutil extends object
 
         $content .=        '   <div class="leftImageTabsList"><img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="placeholder" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
-                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $product['noOfAdaptations']. ' adaptations</a>
+                        	' . $product['mytitle'] . '<br><a href="#" class="adaptationLinks">' . $product['total']. ' adaptations</a>
                                 </div>
                                 <div class="tabsListingSpace"></div>';
         return $content;
     }
 
-    private function checkNoOfAdaptations($product)
-    {
-        if ($product['noOfAdaptations'] == 0) {
-            return 0;
-        }
-    }
  }
 ?>

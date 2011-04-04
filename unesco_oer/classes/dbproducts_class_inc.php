@@ -38,13 +38,15 @@ class dbproducts extends dbtable
         return $this->getArray($sql);
     }
 
-    function getFilteredProducts($filter) {
+    function getFilteredProducts($filter)
+    {
         $sql = "select * from tbl_unesco_oer_products where $filter";
 
         return $this->getArray($sql);
     }
 
-     function getProducts($start,$end) {
+    function getProducts($start, $end)
+    {
         $sql = "select * from tbl_unesco_oer_products limit $start,$end";
 
         return $this->getArray($sql);
@@ -65,11 +67,11 @@ class dbproducts extends dbtable
     }
 
     //TODO Function to get the 3 most adapted products
-    function getListOfMostAdapted($adaptedId){
-        if ($this->getNoOfAdaptations($adaptedId) > 1)
-        {
-            
-        }
+    function getMostAdaptedProducts()
+    {
+        $sql = "SELECT parent_id, count(*) AS total FROM tbl_unesco_oer_products WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC LIMIT 3";
+
+        return $this->getArray($sql);
     }
 
     function getProductByID($ID){
