@@ -96,7 +96,7 @@ class dbsimplegal extends dbtable
     
     public function retrieveData($userid)
     {
-        return $this->getAll("WHERE userid = '$userid'");
+        return $this->getAll(); // "WHERE userid = '$userid'");
     }
 }
 ?>
