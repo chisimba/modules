@@ -145,33 +145,27 @@ $header->str = $this->objLanguage->languageText('mod_wicid_unapproved', 'wicid',
 echo $header->show();
 
 // Create a Register New Document Button
-$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registernewdoc', 'wicid', "Register New Document"));
-
+//$button = new button("button1", $this->objLanguage->languageText('mod_wicid_registernewdoc', 'wicid', "Register New Document"));
+//$button->issubmitbutton = false;
 $newdoclink = new link($this->uri(array("action" => "newdocument", "selected" => $selected)));
-$newdoclink->link = $button->show();
-
-// Create a Unapproved/New documents Button
-$button = new button("submit", $this->objLanguage->languageText('mod_wicid_newunapproved', 'wicid', "Unapproved/New documents"));
-$unapproveddocs = new link($this->uri(array("action" => "unapproveddocs")));
-$unapproveddocs->link = $button->show();
+//$newdoclink->link = $button->showDefault();
+$newdoclink->link = $this->objLanguage->languageText('mod_wicid_registernewdoc', 'wicid', "Register New Document");
 
 // Create a  Button
-$button = new button("submit", $this->objLanguage->languageText('mod_wicid_registeredocs', 'wicid', "Rejected documents"));
+//$button = new button("button3", $this->objLanguage->languageText('mod_wicid_registeredocs', 'wicid', "Rejected documents"));
 $rejecteddocuments = new link($this->uri(array("action" => "rejecteddocuments")));
-$rejecteddocuments->link = $button->show();
+//$button->issubmitbutton = false;
+//$rejecteddocuments->link = $button->showDefault();
+$rejecteddocuments->link = $this->objLanguage->languageText('mod_wicid_registeredocs', 'wicid', "Rejected documents");
 
-$links = $newdoclink->show() . '&nbsp;&nbsp;' . $unapproveddocs->show() . '&nbsp;&nbsp;' . $rejecteddocuments->show() . '<br/>';
+$links = $newdoclink->show() . '&nbsp;|&nbsp;' . $rejecteddocuments->show() . '<br/>';
 $fs = new fieldset();
 $fs->setLegend($this->objLanguage->languageText('mod_wicid_navigation', 'wicid', 'Navigation'));
 $fs->addContent($links);
 
-
-
 echo $fs->show() . '<br/>';
 
-
 $table = $this->getObject("htmltable", "htmlelements");
-
 
 $doccount = $documents['count'];
 
