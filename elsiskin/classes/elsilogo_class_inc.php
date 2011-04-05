@@ -55,7 +55,13 @@ class elsilogo extends object {
      * @return none
      */
     public function setSkinPath($skinpath) {
-        $this->toolbar = $this->getObject('elsiskintoolbar', 'elsiskin');
+        $needle = "podskin";
+        if(stripos($skinpath, $needle) !== false) {
+            $this->toolbar = $this->getObject('podcastertoolbar1','podcaster');
+        }
+        else {
+            $this->toolbar = $this->getObject('elsiskintoolbar','elsiskin');
+        }
         $this->skinpath = $skinpath;
     }
 
@@ -115,35 +121,7 @@ class elsilogo extends object {
      *
      */
     public function getTabLinks() {
-        if($this->objUser->isLoggedIn()) {
-            $profileLink = new link($this->uri(array(), "postlogin"));
-            $profileLink->link = "Profile";
-            $newsLink = new link($this->uri(array(), "news"));
-            $newsLink->link = "News";
-            $blogLink = new link($this->uri(array(),"blog"));
-            $blogLink->link = "Blog";
-            $adminLink = new link($this->uri(array(),"toolbar"));
-            $adminLink->link = "Admin";
-            $logoutLink = new link($this->uri(array("action"=>"logoff"), "security"));
-            $logoutLink->link = "Logout";
-            $retstr = '<!-- Tab links -->
-                <div id="tab-links">
-                    <ul>
-                        <li>'.$profileLink->show().'<li>
-                        <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$newsLink->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-                        <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$blogLink->show().'</li>';
-           if($this->objUser->isAdmin()) {
-                $retstr .= '<li>&nbsp;&nbsp;&nbsp;&nbsp;'.$adminLink->show().'</li>';
-           }
-           else {
-                $retstr .= '<li>&nbsp;&nbsp;&nbsp;&nbsp;'.$logoutLink->show().'</li>';
-           }
-           $retstr .= '
-                    </ul>
-                </div>';
-
-        }
-        else {
+        
             $witsHome = new link("http://web.wits.ac.za/");
             $witsHome->link = "Wits Home";
             $witsAlumni = new link("http://web.wits.ac.za/Alumni/");
@@ -158,8 +136,7 @@ class elsilogo extends object {
                         <li>'.$aboutLink->show().'</li>
                     </ul>
                 </div>';
-        }
-
+        
         return $retstr;
     }
 
