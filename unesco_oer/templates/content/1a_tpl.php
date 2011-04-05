@@ -25,22 +25,25 @@ $adaptationstring = "parent_id is null";
         <div class="blueHorizontalStrip"></div>
         <div class="mainWrapper">
             <div class="topContent">
-                <div class="logOutSearchDiv">
-                    <div class="logoutSearchDivLeft">
-                        <div class="nameDiv">Hello Igor Nuk</div>
-                        <div class="logoutDiv">
-                            <div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
-                            <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
-                        </div>
-                        <div class="profileBookmarkGroupsMessengerDiv">
-                            <table class="profileBookmarkGroupsMessengerTable" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td><img src="skins/unesco_oer/images/icon-my-profile.png"></td>
-                                    <td><a href="#" class="prifileLinks">My Profile</a></td>
-                                    <td><img src="skins/unesco_oer/images/icon-my-bookmarks.png"></td>
-                                    <td><a href="#" class="prifileLinks">My Bookmarks</a></td>
-                                    <td><img src="skins/unesco_oer/images/icon-my-administration-tools.png"></td>
-                                    <td><a href="#" class="prifileLinks">
+                <?php
+                if ($this->objUser->isLoggedIn()) {
+                ?>
+                    <div class="logOutSearchDiv">
+                        <div class="logoutSearchDivLeft">
+                            <div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
+                            <div class="logoutDiv">
+                                <div class="textNextToRightFloatedImage"><a href="?module=security&action=logoff" class="prifileLinks">Log out</a></div>
+                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
+                            </div>
+                            <div class="profileBookmarkGroupsMessengerDiv">
+                                <table class="profileBookmarkGroupsMessengerTable" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td><img src="skins/unesco_oer/images/icon-my-profile.png"></td>
+                                        <td><a href="#" class="prifileLinks">My Profile</a></td>
+                                        <td><img src="skins/unesco_oer/images/icon-my-bookmarks.png"></td>
+                                        <td><a href="#" class="prifileLinks">My Bookmarks</a></td>
+                                        <td><img src="skins/unesco_oer/images/icon-my-administration-tools.png"></td>
+                                        <td><a href="#" class="prifileLinks">
                                             <?php
                                             $abLink = new link($this->uri(array("action" => "addData")));
                                             $abLink->link = 'Administration Tools';
@@ -77,13 +80,13 @@ $adaptationstring = "parent_id is null";
 
                             <!-- AddThis Button BEGIN -->
                             <div class="shareDiv">
-                                <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=jabulane"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=jabulane"></script>
+                                <a class="addthis_button" href="#"><img src="#" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="#"></script>
 
                                 <!-- AddThis Button END -->
                             </div>
 
                             <div class="likeDiv">
-                                <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fexample.com%2Fpage%2Fto%2Flike&amp;layout=button_count&amp;show_faces=true&amp;width=50&amp;action=like&amp;font=tahoma&amp;colorscheme=light&amp;"></iframe>
+                               
 
                             </div>
 
@@ -91,530 +94,539 @@ $adaptationstring = "parent_id is null";
                         </div>
                     </div>
                 </div>
-                <div class="logoAndHeading">
-                    <img src="skins/unesco_oer/images/logo-unesco.gif" class="imgFloatRight" alt="logo">
-                    <div class="logoText">
-                        <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
-                        <h1>UNESCO OER PRODUCTS</h1>
-                    </div>
-                </div>
-                <div class="languagesDiv">
-                    <a href="" class="languagesLinksActive">English</a> |
-                    <a href="" class="languagesLinks">Français</a> |
-                    <a href="" class="languagesLinks">Español</a> |
-                    <a href="" class="languagesLinks">Русский</a> |
-                    <a href="" class="languagesLinks">لعربية</a> |
-                    <a href="" class="languagesLinks">中文</a>
-                </div>
-                <div class="mainNavigation">
-                    <div class="navitemOnstate">
-                        <div class="navitemInnerOnstate">
-                            <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
-                                            $abLink->link = 'UNESCO OER PRODUCTS';
-                                            echo $abLink->show();
-                            ?>
-                                        </div>
-                                    </div>
-                                    <div class="mainNavPipe">&nbsp;</div>
-                                    <div class="navitem">
-                                        <div class="navitemInner">
-                            <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
-                                            $abLink->link = 'PRODUCT ADAPTATIONS';
-                                            echo $abLink->show();
-                            ?>
-
-                                        </div>
-                                    </div>
-                                    <div class="mainNavPipe"></div>
-                                    <div class="navitem">
-                                        <div class="navitemInner"><a href="#">REPORTING</a></div>
-                                    </div>
-                                    <div class="mainNavPipe"></div>
-                                    <div class="navitem">
-                                        <div class="navitemInner"><a href="#">ABOUT</a></div>
-                                    </div>
-                                    <div class="mainNavPipe"></div>
-                                    <div class="navitem"><div class="navitemInner"><a href="#">CONTACT</a></div></div>
-                                </div>
-                            </div>
-
-                            <div class="mainContentHolder">
-                                <div class="subNavigation"></div>
-                                <!-- Left Colum -->
-                                <div class="leftColumnDiv">
-                                    <div class="moduleHeader">FILTER PRODUCTS</div>
-                                    <div class="blueNumberBackground">
-                                        <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                                        <div class="numberOffilteredProducts">56</div>
-                                    </div>
-                                    <div class="moduleSubHeader">Product matches filter criteria</div>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
-                                    <div class="blueBackground blueBackgroundCheckBoxText">
-                                        <input type="checkbox"> Model<br>
-                                        <input type="checkbox"> Guide<br>
-                                        <input type="checkbox"> Handbook<br>
-                                        <input type="checkbox"> Manual<br>
-                                        <input type="checkbox"> Bestoractile<br>
-                                    </div>
-                                    <br>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
-                                    <div class="blueBackground">
-
-                        <?php
-                                            $products = $this->objDbProducts->getProducts(0, 10);
-                                            $filterTheme = new dropdown('ThemeFilter');
-
-                                            foreach ($products as $product) {
-                                                $filterTheme->addoption(null);
-                                                $filterTheme->addOption($product['theme']);
-                                            }
-                                            $filterTheme->setSelected($ThemeFilter);
-
-                                            $uri = $this->uri(array('action' => 'ThemeFilter'));
-                                            $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, "page" => '1a_tpl.php')));
-
-
-                                            $uri = $this->uri(array('action' => 'FilterProducts'));
-                                            $filterTheme->addOnChange('javascript: sendThemeFilterform()');
-
-
-
-                                            $form->addtoform($filterTheme->show());
-
-                                            echo $form->show();
-                        ?>
-
-                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                                                                                                                <option value="">All</option>
-                                                                                                                            </select>-->
-                                        </div>
-                                        <br>
-                                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
-                                        <div class="blueBackground">
-
-
-                        <?php
-                                            $products = $this->objDbProducts->getProducts(0, 10);
-                                            $filterLang = new dropdown('LanguageFilter');
-
-                                            foreach ($products as $product) {
-                                                $filterLang->addoption(null);
-                                                $filterLang->addOption($product['language']);
-                                            }
-
-                                            $filterLang->setSelected($LangFilter);
-                                            $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '1a_tpl.php')));
-
-
-                                            $uri = $this->uri(array('action' => 'LanguageFilter'));
-                                            $filterLang->addOnChange('javascript: sendLanguageFilterform()');
-
-
-                                            $form->addtoform($filterLang->show());
-
-
-                                            echo $form->show();
-                        ?>
-
-                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
-                                                                                                                                <option value="">All</option>
-                                                                                                                                <option value="">English</option>
-                                                                                                                                <option value="">Français</option>
-                                                                                                                                <option value="">Español</option>
-                                                                                                                                <option value="">Русский</option>
-                                                                                                                                <option value="">لعربية</option>
-                                                                                                                                <option value="">中文</option>
-                                                                                                                            </select>-->
-                                        </div>
-                                        <br>
-                                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">Author</div>
-                                        <div class="blueBackground">
-
-                        <?php
-                                            $products = $this->objDbProducts->getProducts(0, 10);
-                                            $filterAuth = new dropdown('AuthorFilter');
-
-                                            foreach ($products as $product) {
-                                                $filterAuth->addoption(null);
-                                                $filterAuth->addOption($product['creator']);
-                                            }
-
-                                            $filterAuth->setSelected($AuthFilter);
-                                            $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'LanguageFilter' => $LangFilter, "page" => '1a_tpl.php')));
-
-
-                                            $uri = $this->uri(array('action' => 'AuthorFilter'));
-                                            $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
-
-
-                                            $form->addtoform($filterAuth->show());
-
-
-                                            echo $form->show();
-                        ?>
-
-
-
-
-                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
-                                                                                                                                <option value="">All</option>
-                                                                                                                            </select>-->
-                                        </div>
-                                        <br>
-                                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
-                                        <div class="blueBackground">
-                                            <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                                                <option value="">All</option>
-                                            </select>
-                                        </div>
-                                        <br><br>
-                                        <div class="blueBackground rightAlign">
-                                            <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                                            <a href="#" class="resetLink">RESET</a>
-                                        </div>
-                                        <div class="rssFeed">
-                                            <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
-                                            <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
-                                        </div>
-                                    </div>
-                                    <!-- Center column DIv -->
-                                    <div class="centerColumnDiv">
-                                        <div class="GridListViewDiv">
-
-
-
-
-
-
-                                            <div class="sortBy">
-
-                                                                                <!--                                                <select name="" class="contentDropDown">
-                                                                                     <option value="">Date Added</option>
-                                                                                 </select>-->
-                            <?php
-                                            $products = $this->objDbProducts->getProducts(0, 10);
-                                            $filterLang = new dropdown('SortFilter');
-
-                                            $filterLang->addoption(null);
-                                            $filterLang->addoption('Date');
-                                            $filterLang->addOption('Alphabetical');
-
-
-                                            $filterLang->setSelected($SortFilter);
-                                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '1a_tpl.php')));
-
-
-                                            $uri = $this->uri(array('action' => 'SortFilter'));
-                                            $filterLang->addOnChange('javascript: sendSortFilterform()');
-
-
-
-                                            $form->addtoform('Sort By:');
-                                            $form->addtoform($filterLang->show());
-                                            echo $form->show();
-                            ?>
-
-
-
-                                                                <!--                                                <select name="" class="contentDropDown">
-                                                                    <option value="">DESC</option>
-                                                                </select>-->
-                                        </div>
-                                        <div class="viewGrid">
-                                            <div class="viewAsDiv">View as: </div>
-
-
-                            <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
-                                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
-                                            echo $abLink->show();
-                            ?>
-
-                                            <div class="gridListDivView">
-                                <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
-                                            $abLink->link = 'GRID';
-                                            echo $abLink->show();
-                                ?>
-                                        </div>
-
-                                        <div class="gridListPipe">|</div>
-
-                            <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
-                                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
-                                            echo $abLink->show();
-                            ?>
-
-                                            <div class="gridListDivView">
-
-                                <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
-                                            $abLink->link = 'LIST';
-                                            echo $abLink->show();
-                                ?>
-
-                                        </div>
-                                    </div>
-                                </div>
-                    <?php
-                                            //Creates chisimba table
-                                            $objTable = $this->getObject('htmltable', 'htmlelements');
-                                             if ($finalstring == null)
-                                                 $finalstring = 'parent_id is null';
-                                          
-
-                                            $products = $this->objDbProducts->getFilteredProducts($finalstring);
-
-                                            $newRow = true;
-                                            $count = 0;
-                                            $noOfAdaptations = 0;
-                                            foreach ($products as $product) {               //populates table
-                                                if ($product['parent_id'] == null) {
-                                                    $count++;
-                                                    $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
-
-                                                    if ($newRow) {
-                                                        $objTable->startRow();
-                                                        $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
-                                                        $newRow = false;
-                                                    } else {
-                                                        $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
-                                                    }
-                                                }
-
-                                                if ($count == 3) {
-                                                    $newRow = true;
-                                                    $objTable->endRow();
-                                                    $count = 0;
-                                                }
-                                            }
-                                            echo $objTable->show();
-                    ?>
-                                            <!--
-                                                                <table class="gridListingTable" cellspacing="0" cellpadding="0">
-                                                                    <tr>
-                                                                        <td>
-                                                                            <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                                                            <div class="imageGridListing">
-                                                                                <div class="imageTopFlag"></div>
-                                                                                <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                                <div class="imageBotomFlag"></div>
-                                                                            </div>
-                                                                            <br>
-                                                                            <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                            <div class="listingLanguageLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                                <div class="listingLanuagesDropdownDiv">
-                                                                                    <select name="" class="listingsLanguageDropDown">
-                                                                                        <option value="">Languages</option>
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="listingAdaptationsLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="newImageIcon"></div>
-                                                                            <div class="imageGridListing">
-                                                                                <div class="imageTopFlag"></div>
-                                                                                <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                                <div class="imageBotomFlag"></div>
-                                                                            </div>
-                                                                            <br>
-                                                                            <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                            <div class="listingLanguageLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                                <div class="listingLanuagesDropdownDiv">
-                                                                                    <select name="" class="listingsLanguageDropDown">
-                                                                                        <option value="">Languages</option>
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="listingAdaptationsLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="newImageIcon"></div>
-                                                                            <div class="imageGridListing">
-                                                                                <div class="imageTopFlag"></div>
-                                                                                <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                                <div class="imageBotomFlag"></div>
-                                                                            </div>
-                                                                            <br>
-                                                                            <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                            <div class="listingLanguageLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                                <div class="listingLanuagesDropdownDiv">
-                                                                                    <select name="" class="listingsLanguageDropDown">
-                                                                                        <option value="">Languages</option>
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="listingAdaptationsLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <div class="newImageIcon"></div>
-                                                                            <div class="imageGridListing">
-                                                                                <div class="imageTopFlag"></div>
-                                                                                <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                                <div class="imageBotomFlag"></div>
-                                                                            </div>
-                                                                            <br>
-                                                                            <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                            <div class="listingLanguageLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                                <div class="listingLanuagesDropdownDiv">
-                                                                                    <select name="" class="listingsLanguageDropDown">
-                                                                                        <option value="">Languages</option>
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="listingAdaptationsLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                                                            <div class="imageGridListing">
-                                                                                <div class="imageTopFlag"></div>
-                                                                                <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                                <div class="imageBotomFlag"></div>
-                                                                            </div>
-                                                                            <br>
-                                                                            <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                            <div class="listingLanguageLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                                <div class="listingLanuagesDropdownDiv">
-                                                                                    <select name="" class="listingsLanguageDropDown">
-                                                                                        <option value="">Languages</option>
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="listingAdaptationsLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                                                            <div class="imageGridListing">
-                                                                                <div class="imageTopFlag"></div>
-                                                                                <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                                <div class="imageBotomFlag"></div>
-                                                                            </div>
-                                                                            <br>
-                                                                            <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                            <div class="listingLanguageLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                                <div class="listingLanuagesDropdownDiv">
-                                                                                    <select name="" class="listingsLanguageDropDown">
-                                                                                        <option value="">Languages</option>
-                                                                                    </select>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="listingAdaptationsLinkAndIcon">
-                                                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                </table> -->
-
-                                            <!-- Pagination-->
-                                            <div class="paginationDiv">
-                                                <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
-                                                <div class="paginationLinkDiv">
-                                                    <a href="#" class="pagination">Prev</a>
-                                                    <a href="#" class="pagination">1</a>
-                                                    <a href="#" class="pagination">2</a>
-                                                    <a href="#" class="pagination">3</a>
-                                                    <a href="#" class="pagination">4</a>
-                                                    <a href="#" class="pagination">5</a>
-                                                    <a href="#" class="pagination">6</a>
-                                                    <a href="#" class="pagination">7</a>
-                                                    <a href="#" class="pagination">8</a>
-                                                    <a href="#" class="pagination">9</a>
-                                                    <a href="#" class="pagination">10</a>
-                                                    <a href="#" class="pagination">Next</a>
-                                                </div>
+                                   <?php
+                                        } else {
+                                       ?>
+                                            <div id="loginDiv">
+                                             <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
+                                            </div>
+                                    <?php
+                                        }
+                                      ?>
+                                        <div class="logoAndHeading">
+                                            <img src="skins/unesco_oer/images/logo-unesco.gif" class="imgFloatRight" alt="logo">
+                                            <div class="logoText">
+                                                <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
+                                                <h1>UNESCO OER PRODUCTS</h1>
                                             </div>
                                         </div>
+                                        <div class="languagesDiv">
+                                            <a href="" class="languagesLinksActive">English</a> |
+                                            <a href="" class="languagesLinks">Français</a> |
+                                            <a href="" class="languagesLinks">Español</a> |
+                                            <a href="" class="languagesLinks">Русский</a> |
+                                            <a href="" class="languagesLinks">لعربية</a> |
+                                            <a href="" class="languagesLinks">中文</a>
+                                        </div>
+                                        <div class="mainNavigation">
+                                            <div class="navitemOnstate">
+                                                <div class="navitemInnerOnstate">
+<?php
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                        $abLink->link = 'UNESCO OER PRODUCTS';
+                                        echo $abLink->show();
+?>
+                                    </div>
+                                </div>
+                                <div class="mainNavPipe">&nbsp;</div>
+                                <div class="navitem">
+                                    <div class="navitemInner">
+<?php
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
+                                        $abLink->link = 'PRODUCT ADAPTATIONS';
+                                        echo $abLink->show();
+?>
 
-                                        <!-- Right column DIv -->
-                                        <div class="rightColumnDiv">
-                                            <div class="rightColumnDiv">
-                                                <div class="featuredHeader">FEATURED UNESCO PRODUCTS</div>
-                                                <div class="rightColumnBorderedDiv">
-                                                    <div class="rightColumnContentPadding">
-                                <?php
-                                            $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                            $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
-                                            if (sizeof($featuredProduct) > 0) {
-                                                //TODO error handling
-                                            }
-                                            echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct[0]);
-                                ?>
-                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                    </div>
+                                </div>
+                                <div class="mainNavPipe"></div>
+                                <div class="navitem">
+                                    <div class="navitemInner"><a href="#">REPORTING</a></div>
+                                </div>
+                                <div class="mainNavPipe"></div>
+                                <div class="navitem">
+                                    <div class="navitemInner"><a href="#">ABOUT</a></div>
+                                </div>
+                                <div class="mainNavPipe"></div>
+                                <div class="navitem"><div class="navitemInner"><a href="#">CONTACT</a></div></div>
+                            </div>
+                        </div>
 
-                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
-                                        <?php
-                                            $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                            $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
-                                            echo"See all adaptations ($NOofAdaptation)"// This must be a link;
-                                        ?>
-                                        </a></div>
+                        <div class="mainContentHolder">
+                            <div class="subNavigation"></div>
+                            <!-- Left Colum -->
+                            <div class="leftColumnDiv">
+                                <div class="moduleHeader">FILTER PRODUCTS</div>
+                                <div class="blueNumberBackground">
+                                    <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
+                                    <div class="numberOffilteredProducts">56</div>
+                                </div>
+                                <div class="moduleSubHeader">Product matches filter criteria</div>
+                                <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
+                                <div class="blueBackground blueBackgroundCheckBoxText">
+                                    <input type="checkbox"> Model<br>
+                                    <input type="checkbox"> Guide<br>
+                                    <input type="checkbox"> Handbook<br>
+                                    <input type="checkbox"> Manual<br>
+                                    <input type="checkbox"> Bestoractile<br>
+                                </div>
+                                <br>
+                                <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
+                                <div class="blueBackground">
+
+<?php
+                                        $products = $this->objDbProducts->getProducts(0, 10);
+                                        $filterTheme = new dropdown('ThemeFilter');
+
+                                        foreach ($products as $product) {
+                                            $filterTheme->addoption(null);
+                                            $filterTheme->addOption($product['theme']);
+                                        }
+                                        $filterTheme->setSelected($ThemeFilter);
+
+                                        $uri = $this->uri(array('action' => 'ThemeFilter'));
+                                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, "page" => '1a_tpl.php')));
+
+
+                                        $uri = $this->uri(array('action' => 'FilterProducts'));
+                                        $filterTheme->addOnChange('javascript: sendThemeFilterform()');
+
+
+
+                                        $form->addtoform($filterTheme->show());
+
+                                        echo $form->show();
+?>
+
+                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
+                                                                                                                                                <option value="">All</option>
+                                                                                                                                            </select>-->
+                                    </div>
+                                    <br>
+                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
+                                    <div class="blueBackground">
+
+
+<?php
+                                        $products = $this->objDbProducts->getProducts(0, 10);
+                                        $filterLang = new dropdown('LanguageFilter');
+
+                                        foreach ($products as $product) {
+                                            $filterLang->addoption(null);
+                                            $filterLang->addOption($product['language']);
+                                        }
+
+                                        $filterLang->setSelected($LangFilter);
+                                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '1a_tpl.php')));
+
+
+                                        $uri = $this->uri(array('action' => 'LanguageFilter'));
+                                        $filterLang->addOnChange('javascript: sendLanguageFilterform()');
+
+
+                                        $form->addtoform($filterLang->show());
+
+
+                                        echo $form->show();
+?>
+
+                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
+                                                                                                                                                <option value="">All</option>
+                                                                                                                                                <option value="">English</option>
+                                                                                                                                                <option value="">Français</option>
+                                                                                                                                                <option value="">Español</option>
+                                                                                                                                                <option value="">Русский</option>
+                                                                                                                                                <option value="">لعربية</option>
+                                                                                                                                                <option value="">中文</option>
+                                                                                                                                            </select>-->
+                                    </div>
+                                    <br>
+                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">Author</div>
+                                    <div class="blueBackground">
+
+<?php
+                                        $products = $this->objDbProducts->getProducts(0, 10);
+                                        $filterAuth = new dropdown('AuthorFilter');
+
+                                        foreach ($products as $product) {
+                                            $filterAuth->addoption(null);
+                                            $filterAuth->addOption($product['creator']);
+                                        }
+
+                                        $filterAuth->setSelected($AuthFilter);
+                                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'LanguageFilter' => $LangFilter, "page" => '1a_tpl.php')));
+
+
+                                        $uri = $this->uri(array('action' => 'AuthorFilter'));
+                                        $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
+
+
+                                        $form->addtoform($filterAuth->show());
+
+
+                                        echo $form->show();
+?>
+
+
+
+
+                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
+                                                                                                                                                <option value="">All</option>
+                                                                                                                                            </select>-->
+                                    </div>
+                                    <br>
+                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
+                                    <div class="blueBackground">
+                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                                            <option value="">All</option>
+                                        </select>
+                                    </div>
+                                    <br><br>
+                                    <div class="blueBackground rightAlign">
+                                        <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
+                                        <a href="#" class="resetLink">RESET</a>
+                                    </div>
+                                    <div class="rssFeed">
+                                        <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
+                                        <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
+                                    </div>
+                                </div>
+                                <!-- Center column DIv -->
+                                <div class="centerColumnDiv">
+                                    <div class="GridListViewDiv">
+
+
+
+
+
+
+                                        <div class="sortBy">
+
+                                                                                                <!--                                                <select name="" class="contentDropDown">
+                                                                                                     <option value="">Date Added</option>
+                                                                                                 </select>-->
+<?php
+                                        $products = $this->objDbProducts->getProducts(0, 10);
+                                        $filterLang = new dropdown('SortFilter');
+
+                                        $filterLang->addoption(null);
+                                        $filterLang->addoption('Date');
+                                        $filterLang->addOption('Alphabetical');
+
+
+                                        $filterLang->setSelected($SortFilter);
+                                        $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '1a_tpl.php')));
+
+
+                                        $uri = $this->uri(array('action' => 'SortFilter'));
+                                        $filterLang->addOnChange('javascript: sendSortFilterform()');
+
+
+
+                                        $form->addtoform('Sort By:');
+                                        $form->addtoform($filterLang->show());
+                                        echo $form->show();
+?>
+
+
+
+                                                                            <!--                                                <select name="" class="contentDropDown">
+                                                                                <option value="">DESC</option>
+                                                                            </select>-->
+                                    </div>
+                                    <div class="viewGrid">
+                                        <div class="viewAsDiv">View as: </div>
+
+
+<?php
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                        $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
+                                        echo $abLink->show();
+?>
+
+                                        <div class="gridListDivView">
+<?php
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                        $abLink->link = 'GRID';
+                                        echo $abLink->show();
+?>
+                                    </div>
+
+                                    <div class="gridListPipe">|</div>
+
+<?php
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
+                                        $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
+                                        echo $abLink->show();
+?>
+
+                                        <div class="gridListDivView">
+
+<?php
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
+                                        $abLink->link = 'LIST';
+                                        echo $abLink->show();
+?>
+
+                                    </div>
                                 </div>
                             </div>
-                            <div class="spaceBetweenRightBorderedDivs">
-                                <div class="featuredHeader innerPadding">MOST...</div>
-                            </div>
-                            <!--tabs --->
-                            <div class="tabsOnState">ADOPTED</div>
-                            <div class="tabsOffState">RATED</div>
-                            <div class="tabsOffState">COMMENTED</div>
-
-                            <div class="rightColumnBorderedDiv">
-                                <div class="rightColumnContentPadding">
+<?php
+                                        //Creates chisimba table
+                                        $objTable = $this->getObject('htmltable', 'htmlelements');
+                                        if ($finalstring == null)
+                                            $finalstring = 'parent_id is null';
 
 
-                                <?php
-                                            //TODO this might need Java script to implement properly as these tabs have to be updated independently
-                                            //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+                                        $products = $this->objDbProducts->getFilteredProducts($finalstring);
 
-                                            $MostAdaptedProducts = $this->objDbProducts->getMostAdaptedProducts();
-                                            $mostCounter = 0;
-                                            foreach ($MostAdaptedProducts as $product) {
-                                                //Get the adaptationst parent id
-                                                $productId = $product['parent_id'];
-                                                //Get the original products
-                                                $myTitle = $this->objDbProducts->getProductById($productId);
-                                                $product['mytitle'] = $myTitle['title'];
+                                        $newRow = true;
+                                        $count = 0;
+                                        $noOfAdaptations = 0;
+                                        foreach ($products as $product) {               //populates table
+                                            if ($product['parent_id'] == null) {
+                                                $count++;
+                                                $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
 
-                                                //Check if the creator is a group or an institution
-                                                if ($this->objDbGroups->isGroup($product['creator']) == true) {
-                                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
+                                                if ($newRow) {
+                                                    $objTable->startRow();
+                                                    $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
+                                                    $newRow = false;
                                                 } else {
-                                                    $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
+                                                    $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
                                                 }
-
-                                                $product['institution_thumbnail'] = $thumbnail['thumbnail'];
-                                                //$product['institution'] = $this->objInstitution->getInstitution();
-                                                echo $this->objProductUtil->populateMostAdapted($product);
                                             }
-                                ?>
+
+                                            if ($count == 3) {
+                                                $newRow = true;
+                                                $objTable->endRow();
+                                                $count = 0;
+                                            }
+                                        }
+                                        echo $objTable->show();
+?>
+                                        <!--
+                                                            <table class="gridListingTable" cellspacing="0" cellpadding="0">
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                                                                        <div class="imageGridListing">
+                                                                            <div class="imageTopFlag"></div>
+                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
+                                                                            <div class="imageBotomFlag"></div>
+                                                                        </div>
+                                                                        <br>
+                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
+                                                                        <div class="listingLanguageLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                                            <div class="listingLanuagesDropdownDiv">
+                                                                                <select name="" class="listingsLanguageDropDown">
+                                                                                    <option value="">Languages</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="listingAdaptationsLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="newImageIcon"></div>
+                                                                        <div class="imageGridListing">
+                                                                            <div class="imageTopFlag"></div>
+                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
+                                                                            <div class="imageBotomFlag"></div>
+                                                                        </div>
+                                                                        <br>
+                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
+                                                                        <div class="listingLanguageLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                                            <div class="listingLanuagesDropdownDiv">
+                                                                                <select name="" class="listingsLanguageDropDown">
+                                                                                    <option value="">Languages</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="listingAdaptationsLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="newImageIcon"></div>
+                                                                        <div class="imageGridListing">
+                                                                            <div class="imageTopFlag"></div>
+                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
+                                                                            <div class="imageBotomFlag"></div>
+                                                                        </div>
+                                                                        <br>
+                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
+                                                                        <div class="listingLanguageLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                                            <div class="listingLanuagesDropdownDiv">
+                                                                                <select name="" class="listingsLanguageDropDown">
+                                                                                    <option value="">Languages</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="listingAdaptationsLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="newImageIcon"></div>
+                                                                        <div class="imageGridListing">
+                                                                            <div class="imageTopFlag"></div>
+                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
+                                                                            <div class="imageBotomFlag"></div>
+                                                                        </div>
+                                                                        <br>
+                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
+                                                                        <div class="listingLanguageLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                                            <div class="listingLanuagesDropdownDiv">
+                                                                                <select name="" class="listingsLanguageDropDown">
+                                                                                    <option value="">Languages</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="listingAdaptationsLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                                                                        <div class="imageGridListing">
+                                                                            <div class="imageTopFlag"></div>
+                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
+                                                                            <div class="imageBotomFlag"></div>
+                                                                        </div>
+                                                                        <br>
+                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
+                                                                        <div class="listingLanguageLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                                            <div class="listingLanuagesDropdownDiv">
+                                                                                <select name="" class="listingsLanguageDropDown">
+                                                                                    <option value="">Languages</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="listingAdaptationsLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                                                                        <div class="imageGridListing">
+                                                                            <div class="imageTopFlag"></div>
+                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
+                                                                            <div class="imageBotomFlag"></div>
+                                                                        </div>
+                                                                        <br>
+                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
+                                                                        <div class="listingLanguageLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                                                            <div class="listingLanuagesDropdownDiv">
+                                                                                <select name="" class="listingsLanguageDropDown">
+                                                                                    <option value="">Languages</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="listingAdaptationsLinkAndIcon">
+                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table> -->
+
+                                        <!-- Pagination-->
+                                        <div class="paginationDiv">
+                                            <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
+                                            <div class="paginationLinkDiv">
+                                                <a href="#" class="pagination">Prev</a>
+                                                <a href="#" class="pagination">1</a>
+                                                <a href="#" class="pagination">2</a>
+                                                <a href="#" class="pagination">3</a>
+                                                <a href="#" class="pagination">4</a>
+                                                <a href="#" class="pagination">5</a>
+                                                <a href="#" class="pagination">6</a>
+                                                <a href="#" class="pagination">7</a>
+                                                <a href="#" class="pagination">8</a>
+                                                <a href="#" class="pagination">9</a>
+                                                <a href="#" class="pagination">10</a>
+                                                <a href="#" class="pagination">Next</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right column DIv -->
+                                    <div class="rightColumnDiv">
+                                        <div class="rightColumnDiv">
+                                            <div class="featuredHeader">FEATURED UNESCO PRODUCTS</div>
+                                            <div class="rightColumnBorderedDiv">
+                                                <div class="rightColumnContentPadding">
+<?php
+                                        $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+                                        $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
+                                        if (sizeof($featuredProduct) > 0) {
+                                            //TODO error handling
+                                        }
+                                        echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct[0]);
+?>
+                                        <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+
+                                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
+<?php
+                                        $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+                                        $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
+                                        echo"See all adaptations ($NOofAdaptation)"// This must be a link;
+?>
+                                    </a></div>
+                            </div>
+                        </div>
+                        <div class="spaceBetweenRightBorderedDivs">
+                            <div class="featuredHeader innerPadding">MOST...</div>
+                        </div>
+                        <!--tabs --->
+                        <div class="tabsOnState">ADOPTED</div>
+                        <div class="tabsOffState">RATED</div>
+                        <div class="tabsOffState">COMMENTED</div>
+
+                        <div class="rightColumnBorderedDiv">
+                            <div class="rightColumnContentPadding">
+
+
+<?php
+                                        //TODO this might need Java script to implement properly as these tabs have to be updated independently
+                                        //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+
+                                        $MostAdaptedProducts = $this->objDbProducts->getMostAdaptedProducts();
+                                        $mostCounter = 0;
+                                        foreach ($MostAdaptedProducts as $product) {
+                                            //Get the adaptationst parent id
+                                            $productId = $product['parent_id'];
+                                            //Get the original products
+                                            $myTitle = $this->objDbProducts->getProductById($productId);
+                                            $product['mytitle'] = $myTitle['title'];
+
+                                            //Check if the creator is a group or an institution
+                                            if ($this->objDbGroups->isGroup($product['creator']) == true) {
+                                                $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
+                                            } else {
+                                                $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
+                                            }
+
+                                            $product['institution_thumbnail'] = $thumbnail['thumbnail'];
+                                            //$product['institution'] = $this->objInstitution->getInstitution();
+                                            echo $this->objProductUtil->populateMostAdapted($product);
+                                        }
+?>
 
                             </div>
                         </div>
@@ -688,22 +700,22 @@ $adaptationstring = "parent_id is null";
 
     function sendThemeFilterform()
     {
-    document.forms["ThemeFilter"].submit();
+        document.forms["ThemeFilter"].submit();
     }
 
     function sendLanguageFilterform()
     {
-    document.forms["LanguageFilter"].submit();
+        document.forms["LanguageFilter"].submit();
 
     }function sendAuthorFilterform()
     {
-    document.forms["AuthorFilter"].submit();
+        document.forms["AuthorFilter"].submit();
     }
 
 
     function sendSortFilterform()
     {
-    document.forms["SortFilter"].submit();
+        document.forms["SortFilter"].submit();
     }
 
 </script>

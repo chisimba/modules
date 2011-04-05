@@ -21,8 +21,7 @@ $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 
 //get parent if any
-$sql = "select * from tbl_unesco_oer_products where id = '$productID'";
-$products = $this->objDbProducts->getArray($sql);
+$products = $this->objDbProducts->getProductByID($productID);
 $product = $products[0];
 
 if (count($products) > 1)
@@ -48,14 +47,14 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 //field for the creator
-$sql = "select name from tbl_unesco_oer_groups";
-$groups = $this->objDbGroups->getArray($sql);
+
+$groups = $this->objDbGroups->getGroups();
 $creatorDropdown = new dropdown('creator');
 foreach ($groups as $group) {
     $creatorDropdown->addOption($group['name']);
 }
-$sql = "select name from tbl_unesco_oer_institution";
-$institutions = $this->objDbInstitution->getArray($sql);
+
+$institutions = $this->objDbInstitution->getInstitutions();
 foreach ($institutions as $institution) {
     $creatorDropdown->addOption($institution['name']);
 }
@@ -86,8 +85,8 @@ $table->addCell($editor->show());
 $table->endRow();
 
 //field for resource type
-$sql = "select description from tbl_unesco_oer_resource_types";
-$resourceTypes = $this->objDbResourceTypes->getArray($sql);
+
+$resourceTypes = $this->objDbResourceTypes->getResourceTypes();
 $resourceDropdown = new dropdown('resourceType');
 foreach ($resourceTypes as $resourceType) {
 
@@ -100,8 +99,8 @@ $table->addCell($resourceDropdown->show());
 $table->endRow();
 
 //field for the theme
-$sql = "select description from tbl_unesco_oer_product_themes";
-$productThemes = $this->objDbProductThemes->getArray($sql);
+
+$productThemes = $this->objDbProductThemes->getProductThemes();
 $productThemesDropdown = new dropdown('theme');
 foreach ($productThemes as $productTheme) {
 
@@ -114,8 +113,7 @@ $table->addCell($productThemesDropdown->show());
 $table->endRow();
 
 //field for the language
-$sql = "select code from tbl_unesco_oer_product_languages";
-$productLanguages = $this->objDbProductLanguages->getArray($sql);
+$productLanguages = $this->objDbProductLanguages->getProductLanguages();
 $productLanguagesDropdown = new dropdown('language');
 foreach ($productLanguages as $productLanguage) {
 

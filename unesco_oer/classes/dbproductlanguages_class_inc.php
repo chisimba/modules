@@ -20,6 +20,10 @@ class dbproductlanguages extends dbtable {
         parent::init("tbl_unesco_oer_product_languages");
     }
 
+    function getProductLanguages(){
+        $sql = "select code from tbl_unesco_oer_product_languages";
+        return $this->getArray($sql);
+    }
     function addLanguage($code,$name) {
         $data=array(
             'code'=>$code,

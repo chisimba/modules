@@ -15,16 +15,18 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class dbgroups extends dbtable
-{
+class dbgroups extends dbtable {
 
-    function init()
-    {
+    function init() {
         parent::init("tbl_unesco_oer_groups");
     }
 
-    function addGroup($name, $loclat, $loclong, $thumbnailPath)
-    {
+    function getGroups() {
+        $sql = "select name from tbl_unesco_oer_groups";
+        return $this->getArray($sql);
+    }
+
+    function addGroup($name, $loclat, $loclong, $thumbnailPath) {
         $data = array(
             'name' => $name,
             'loclat' => $loclat,
@@ -35,16 +37,14 @@ class dbgroups extends dbtable
         $this->insert($data);
     }
 
-    public function getGroupThumbnail($name)
-    {
+    public function getGroupThumbnail($name) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name = '$name'";
         $thumbnail = $this->getArray($sql);
-        
+
         return $thumbnail[0];
     }
 
-        public function isGroup($name)
-    {
+    public function isGroup($name) {
         //$sql = "IF EXISTS(SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name')";
 
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name = '$name'";
@@ -56,4 +56,5 @@ class dbgroups extends dbtable
     }
 
 }
+
 ?>

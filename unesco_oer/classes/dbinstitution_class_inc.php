@@ -15,16 +15,18 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class dbinstitution extends dbtable
-{
+class dbinstitution extends dbtable {
 
-    function init()
-    {
+    function init() {
         parent::init("tbl_unesco_oer_institution");
     }
 
-    function addInstitution($name, $loclat, $loclong, $thumbnailPath)
-    {
+    function getInstitutions() {
+        $sql = "select * from tbl_unesco_oer_institution";
+        return $this->getArray($sql);
+    }
+
+    function addInstitution($name, $loclat, $loclong, $thumbnailPath) {
         $data = array(
             'name' => $name,
             'loclat' => $loclat,
@@ -35,16 +37,14 @@ class dbinstitution extends dbtable
         $this->insert($data);
     }
 
-    public function getInstitutionThumbnail($name)
-    {
+    public function getInstitutionThumbnail($name) {
         //TODO Ntsako Handle the situation where the institution is not in the table
         $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name'";
         $thumbnail = $this->getArray($sql);
         return $thumbnail[0];
     }
 
-    public function isInstitution($name)
-    {
+    public function isInstitution($name) {
         //$sql = "IF EXISTS(SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name')";
 
         $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name'";
@@ -56,4 +56,5 @@ class dbinstitution extends dbtable
     }
 
 }
+
 ?>

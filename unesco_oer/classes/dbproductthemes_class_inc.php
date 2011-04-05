@@ -1,5 +1,6 @@
 <?php
-/* 
+
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -20,9 +21,14 @@ class dbproductthemes extends dbtable {
         parent::init("tbl_unesco_oer_product_themes");
     }
 
+    function getProductThemes() {
+        $sql = "select description from tbl_unesco_oer_product_themes";
+        return $this->getArray($sql);
+    }
+
     function addTheme($description) {
-        $data=array(
-            'description'=>$description
+        $data = array(
+            'description' => $description
         );
 
         $this->insert($data);
