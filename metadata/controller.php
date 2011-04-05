@@ -80,7 +80,8 @@ class metadata extends controller
             $this->objUser       = $this->getObject('user', 'security');
             $this->objModuleCat  = $this->getObject('modules', 'modulecatalogue');
             $this->objExif       = $this->getObject('exifmeta');
-            $this->objMarc       = $this->getObject('marcmeta');
+            $this->objIPTC       = $this->getObject('iptcmeta');
+            // $this->objMarc       = $this->getObject('marcmeta');
             $this->objRdf        = $this->getObject ('rdf', 'rdfgen');
 			
 			// Define the paths we will be needing
@@ -119,11 +120,32 @@ class metadata extends controller
                 break;
 
             case 'exif' :
-                $image = "/var/www/test.jpg";
-                // $this->objExif->getImageType($image);
-                // var_dump($this->objExif->readHeaders($image));
-                // var_dump($this->objExif->readHeadersByKey($image, "IFD0"));
-                echo $this->objExif->getExifThumb($image, 200, 200);
+                foreach(glob('/var/www/example_photos/*.jpg') as $image) {
+                    echo $image."<br />";
+                    $contents = file_get_contents($image);
+                    $hash = sha1($contents);
+                    echo $hash;
+                    echo "<br />";
+                    $this->objExif->getImageType($image);
+                    var_dump($this->objExif->readHeaders($image));
+                    var_dump($this->objExif->readHeadersByKey($image, "IFD0"));
+                    echo $this->objExif->getExifThumb($image, 200, 200);
+                }
+                break;
+                
+            case 'iptc' :
+                foreach(glob('/var/www/example_photos/*.jpg') as $image) {
+                    echo $image."<br />";
+                    $this->objIPTC->setImage($image);
+                    $valid = $this->objIPTC->isValid();
+                
+                    $tagarr = $this->objIPTC->getAllTags();
+                    $copyarr = $tagarr['2#116'];
+                    $keywords = $tagarr['2#025'];
+                    $data = array_merge($copyarr, $keywords);
+                    var_dump($data);
+                    echo "<br /><br />";
+                }
                 break;
                 
             case 'marc' :

@@ -149,7 +149,7 @@ class exifmeta extends object {
      * @return array of EXIF data
      */
     public function readHeaders($image) {
-        $exif = exif_read_data($image, 0, true);
+        $exif = @exif_read_data($image, 0, true);
         foreach ($exif as $key => $section) {
             foreach ($section as $name => $val) {
                 $data[] = array($key.$name, $val);
@@ -192,7 +192,7 @@ class exifmeta extends object {
      * @access public
      */
     public function getExifThumb($image, $width, $height) {
-        $thumbnail = exif_thumbnail($image, $width, $height, $this->getImageType($image));
+        $thumbnail = @exif_thumbnail($image, $width, $height, $this->getImageType($image));
         return "<img  width='$width' height='$height' src='data:image;base64,".base64_encode($thumbnail)."'>";
     }
 }
