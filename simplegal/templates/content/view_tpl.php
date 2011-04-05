@@ -6,14 +6,14 @@ $cssLayout->setNumColumns(1);
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('href', 'htmlelements');
-// $this->objWallOps    = $this->getObject('wallops', 'wall'); 
+//$this->objWallOps    = $this->getObject('wallops', 'wall');
         
 $mainColumn = NULL;
 
 // send the data from controller to an operation function to build the gallery now
 $mainColumn .= $this->objOps->formatData($data);
 
-//$middleColumn .= $this->objWallOps->showWall(0, 10);
+//$mainColumn .= $this->objWallOps->showWall(0, 10);
 
 $cssLayout->setMiddleColumnContent($mainColumn);
 echo $cssLayout->show();

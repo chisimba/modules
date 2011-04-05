@@ -106,7 +106,7 @@ class simplegalops extends object {
     
     public function formatData($data) {
         $str = NULL;
-        $str .= '<div class="panel"><ul id="images">';
+        $str .= '&nbsp;<br /><div class="panel"><ul id="images">';
         foreach($data as $pic) {
             $str .= '<li><a href="'.$pic['post_content'].'_z.jpg"><img src="'.$pic['post_content'].'_t.jpg" title="'.$pic['post_title'].'" /></a></li>';
         }
