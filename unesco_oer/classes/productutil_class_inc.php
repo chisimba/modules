@@ -36,7 +36,7 @@ class productutil extends object
     {
         $content = '';
 
-        //TODO find out what makes a product new
+        //TODO Ntsako find out what makes a product new
         if ($product['new'] == 'true') {
             $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
         } else {
@@ -90,7 +90,6 @@ class productutil extends object
             $product['noOfAdaptations'] = 0;
         }
 
-        //TODO Sieve through this to get number of adaptations, 
         $content.='
                   <div class="productsListView">
                    <h2>' . $product['title'] . '</h2><br>
@@ -137,7 +136,7 @@ class productutil extends object
           } */
 
         /*
-         * TODO add code to check if the product was adapted by an institution or a group
+         * TODO Ntsako add code to check if the product was adapted by an institution or a group
          */
 
         //This some how forces the page to display the 0
@@ -187,7 +186,7 @@ class productutil extends object
         }
 
         /*
-         * TODO add code to check if the product was adapted by an institution or a group
+         * TODO Ntsako add code to check if the product was adapted by an institution or a group
          */
 
         $content.='
@@ -235,7 +234,7 @@ class productutil extends object
     public function populateMostAdapted($product){
         $content = '';
 
-        $content .=        '   <div class="leftImageTabsList"><img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="placeholder" width="45" height="49"></div>
+        $content .=        '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
                         	' . $product['mytitle'] . '<br><a href="#" class="adaptationLinks">' . $product['total']. ' adaptations</a>
                                 </div>

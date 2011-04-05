@@ -57,7 +57,7 @@ class dbproducts extends dbtable
         $this->insert($productArray);
     }
 
-    //TODO check the hierichal storage of data to make this more efficient
+    //TODO Ntsako check the hierichal storage of data to make this more efficient
     function getNoOfAdaptations($parentId)
     {
         $sql = "SELECT * FROM tbl_unesco_oer_products WHERE parent_id = '$parentId'";
@@ -66,10 +66,9 @@ class dbproducts extends dbtable
         return count($child);
     }
 
-    //TODO Function to get the 3 most adapted products
     function getMostAdaptedProducts()
     {
-        $sql = "SELECT parent_id, count(*) AS total FROM tbl_unesco_oer_products WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC LIMIT 3";
+        $sql = "SELECT parent_id, creator, count(*) AS total FROM tbl_unesco_oer_products WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC LIMIT 3";
 
         return $this->getArray($sql);
     }

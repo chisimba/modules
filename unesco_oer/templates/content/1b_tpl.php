@@ -565,8 +565,10 @@ $this->loadClass('checkbox', 'htmlelements');
                                     <div class="rightColumnBorderedDiv">
                                         <div class="rightColumnContentPadding">
 <?php
-                                            //TODO this might need Java script to implement properly as these tabs have to be updated independently
-                                            //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+                                            /**TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
+                                            Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+                                             * *
+                                             */
 
                                             $MostAdaptedProducts = $this->objDbProducts->getMostAdaptedProducts();
                                             $mostCounter = 0;
@@ -576,6 +578,14 @@ $this->loadClass('checkbox', 'htmlelements');
                                                 //Get the original products
                                                 $myTitle = $this->objDbProducts->getProductById($productId);
                                                 $product['mytitle'] = $myTitle['title'];
+                                                                                                                                                //Check if the creator is a group or an institution
+                                                if ($this->objDbGroups->isGroup($product['creator']) == true) {
+                                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
+                                                } else {
+                                                    $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
+                                                }
+
+                                                $product['institution_thumbnail'] = $thumbnail['thumbnail'];
                                                 echo $this->objProductUtil->populateMostAdapted($product);
                                             }
 ?>
