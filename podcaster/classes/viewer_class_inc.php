@@ -79,10 +79,9 @@ class viewer extends object {
      *
      */
     public $objConfig;
-
     public $objMediaFileData;
-
     public $objFolderPermissions;
+    public $objEventUtils;
 
     /**
      *
@@ -102,7 +101,9 @@ class viewer extends object {
         $this->objMediaFileData = $this->getObject('dbmediafiledata');
 
         $this->objFolderPermissions = $this->getObject('dbfolderpermissions');
-        
+
+        $this->objEventUtils = $this->getObject('eventutils');
+
     }
 
     /**
@@ -142,12 +143,12 @@ class viewer extends object {
 
                 //Return title instead of nopreview message
                 $thumbnail = $this->objFile->getPodcastThumbnail($file['id']);
-                if($thumbnail=='No preview available'){
+                if ($thumbnail == 'No preview available') {
                     //$thumbnail = $filename;
                 }
 
                 $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
-                
+
                 $link->link = $thumbnail;
 
                 $table->addCell($link->show());
@@ -213,6 +214,84 @@ class viewer extends object {
     }
 
     /**
+     * Display podcasts  in a table for adding to an event
+     * @param <type> $files
+     * @return <type>
+     */
+    public function addUserPodcastsToEvent($files, $groupId) {
+        $this->loadClass('checkbox', 'htmlelements');
+        if (count($files) == 0) {
+            return '';
+        } else {
+            $table = $this->newObject('htmltable', 'htmlelements');
+
+            $divider = '';
+
+            $objDateTime = $this->getObject('dateandtime', 'utilities');
+            $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
+            $objDisplayLicense->icontype = 'small';
+
+            $counter = 0;
+            $inRow = FALSE;
+
+            //$objTrim = $this->getObject('trimstr', 'strings');
+            //Add table heading
+            $table->startRow();
+            $table->addCell('<strong>' . $this->objLanguage->languageText("mod_podcaster_title", "podcaster", "Title") . '</strong> ');
+            $table->addCell('<strong>' . $this->objLanguage->languageText("mod_podcaster_author", "podcaster", "Author") . '</strong> ');
+            $table->addCell('<strong>' . $this->objLanguage->languageText("mod_podcaster_dateuploaded", "podcaster", "Date uploaded") . '</strong> ');
+            $table->addCell('<strong>' . $this->objLanguage->languageText("mod_podcaster_select", "podcaster", "Select") . '</strong> ');
+            $table->endRow();
+
+            foreach ($files as $file) {
+                $counter++;
+
+                if (trim($file['title']) == '') {
+                    $filename = $file['filename'];
+                } else {
+                    $filename = htmlentities($file['title']);
+                }
+
+                //Return title instead of nopreview message
+                $thumbnail = $this->objFile->getPodcastThumbnail($file['id']);
+                if ($thumbnail == 'No preview available') {
+                    //$thumbnail = $filename;
+                }
+
+                $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
+                $link->link = $filename;
+                //Add checkbox to help in identifying podcasts to add to event
+                $objCheck = new checkbox('fileid[]');
+                $objCheck->value = $file['id'];
+                //If already part of event, set as checked
+                $isMember = $this->objEventUtils->checkIfExists($file['id'], $groupId);
+                if ($isMember) {
+                    $objCheck->ischecked = true;
+                } else {
+                    $objCheck->ischecked = false;
+                }
+
+                $table->startRow();
+                $table->addCell('<strong>' . $link->show() . '</strong>');
+                $table->addCell($file['artist']);
+                $table->addCell($objDateTime->formatDateOnly($file['datecreated']));
+                $table->addCell($objCheck->show());
+                $table->endRow();
+                $divider = 'addrow';
+            }
+
+            if (($counter % 2) == 1) {
+                $table->addCell('&nbsp;');
+                $table->addCell('&nbsp;');
+                $table->addCell('&nbsp;');
+                $table->endRow();
+            }
+
+            return $table->show();
+        }
+    }
+
+    /**
      * Get latest feeds
      * @return <type>
      */
@@ -239,6 +318,7 @@ class viewer extends object {
         $author = stripslashes($author);
         return $this->generateAuthorLatestFeed($title, $description, $url, $files, $author);
     }
+
     /**
      * Get user feed
      * @param string $userId
@@ -253,6 +333,7 @@ class viewer extends object {
         $files = $this->objMediaFileData->getAllAuthorPodcasts($userId);
         return $this->generateAuthorLatestFeed($title, $description, $url, $files, $userId);
     }
+
     /**
      * Get folder feeds
      * @param string $folderId
@@ -262,7 +343,7 @@ class viewer extends object {
         //Get folder name
         $folderData = $this->objFolderPermissions->getById($folderId);
         $path = $folderData[0]['folderpath'];
-        $directPath = explode("/",$path);
+        $directPath = explode("/", $path);
         //Get the last item in array
         $directFolder = end($directPath);
         $title = $directFolder . ' - ' . $this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", 'Latest podcasts');
@@ -370,6 +451,7 @@ class viewer extends object {
 
         return $objFeedCreator->output("RSS2.0", $fileName);
     }
+
     /**
      * Generate folder latest feeds
      * @param string $title
@@ -406,11 +488,12 @@ class viewer extends object {
                 $objFeedCreator->addItem($filename, $link, $imgLink->show() . '<br />' . nl2br($file['description']), 'here', $this->objUser->fullName($file['creatorid']), $date);
             }
         }
-        
+
         $fileName = $folder . "-" . "folderlatestfeed.xml";
 
         return $objFeedCreator->output("RSS2.0", $fileName);
     }
+
     /**
      * Generate Feed
      * @param <type> $title
@@ -535,8 +618,8 @@ class viewer extends object {
                 } else {
                     return $this->objLanguage->languageText("mod_podcaster_unabletogeneratethumbnail", "podcaster");
                 }
-            } else {                
-                return $this->objLanguage->languageText("mod_podcaster_nopreview", "podcaster");                
+            } else {
+                return $this->objLanguage->languageText("mod_podcaster_nopreview", "podcaster");
             }
         }
     }

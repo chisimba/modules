@@ -201,6 +201,7 @@ class podcaster extends controller {
         $this->setVarByRef('categoriesList', $categoriesList);
         return "add_event_tpl.php";
     }
+
     /**
      * Function that returns edit event template
      * @return template
@@ -209,22 +210,23 @@ class podcaster extends controller {
         $mode = 'edit';
         $this->setVarByRef('mode', $mode);
         $eventId = $this->getParam('id', null);
-        
-        if(empty($eventId)) {
+
+        if (empty($eventId)) {
             return $this->nextAction('configure_events');
         }
         $categoriesList = $this->objDbCategoryList->getAllCategories();
         $this->setVarByRef('categoriesList', $categoriesList);
         $groupName = $this->_objGroupAdmin->getName($eventId);
-        
+
         $groupName = explode("^", $groupName);
-        $groupName = $groupName['1'];        
-        $eventsData = $this->objDbEvents->listByEvent($eventId);        
+        $groupName = $groupName['1'];
+        $eventsData = $this->objDbEvents->listByEvent($eventId);
         $this->setVarByRef('eventId', $eventId);
         $this->setVarByRef('eventsData', $eventsData['0']);
         $this->setVarByRef('eventName', $groupName);
         return "add_event_tpl.php";
     }
+
     /**
      * Function that adds users to an event
      * @return template
@@ -258,6 +260,7 @@ class podcaster extends controller {
         $this->setVarByRef('description', $description);
         return "edit_category_tpl.php";
     }
+
     /**
      * Function that returns edit category template
      * @return template
@@ -265,14 +268,16 @@ class podcaster extends controller {
     function __viewcategories() {
         return "view_category_tpl.php";
     }
-   /**
+
+    /**
      * Function that adds a category
      * @return template
      */
     function __deletecategory() {
-                $this->nextAction($myid = $this->getParam('id', null), $this->objDbCategoryList->deleteSingle($myid));
-                return $this->nextAction('viewcategories');
-}
+        $this->nextAction($myid = $this->getParam('id', null), $this->objDbCategoryList->deleteSingle($myid));
+        return $this->nextAction('viewcategories');
+    }
+
     /**
      * Function that adds a category
      * @return template
@@ -314,11 +319,12 @@ class podcaster extends controller {
             $access = $this->getParam('access', NULL);
             $publish = $this->getParam('publish', NULL);
             $eventId = $this->objEventUtils->addGroups($this->userId . "^" . $event);
-            
+
             $this->objDbEvents->insertSingle($eventId, $categoryId, $access, $publish);
         }
         return $this->nextAction('configure_events');
     }
+
     /**
      * Function that returns confirmation on edit event
      * @return object
@@ -385,15 +391,85 @@ class podcaster extends controller {
     }
 
     /**
-     * Function that returns template for managing an event
+     * Function that returns template for adding podcasts to an event
      * @return object
      */
     function __manage_event() {
         $groupId = $this->getParam('id', null);
         $this->setVarByRef('groupId', $groupId);
-        if (class_exists('groupops', false)) {
-            return "allparts_tpl.php";
+        if (class_exists('groupops', true)) {
+            $userId = $this->userId;
+            $sort = $this->getParam('sort', 'dateuploaded_desc');
+
+            $sort = $this->getParam('sort', 'datecreated_desc');
+
+            // Check that sort options provided is valid
+            if (!preg_match('/(datecreated|title|artist)_(asc|desc)/', strtolower($sort))) {
+                $sort = 'datecreated_desc';
+            }
+
+            $files = $this->objMediaFileData->getAllAuthorPodcasts($userId, $sort);
+
+            $this->setVarByRef('files', $files);
+            $this->setVarByRef('sort', $sort);
+            $this->setVarByRef('userId', $userId);
+
+            return 'addmypodcaststoevent_tpl.php';
+        } else {
+            return $this->nextAction('configure_events');
         }
+    }
+
+    /**
+     * Function that saves the new podcasts affiliated to a certain event
+     * 
+     */
+    function __eventpodcastsmgr() {
+        $groupId = $this->getParam('groupId', NULL);
+        if (class_exists('groupops', true)) {
+            $selectedParts = $this->getArrayParam('fileid');
+            $this->setVarByRef('groupId', $groupId);
+            //Get user Groups
+            $subGroups = $this->_objGroupAdmin->getSubgroups($groupId);
+            $subGroups = $subGroups[0];
+            
+            if (empty($selectedParts)) {
+                $this->objEventUtils->deleteGroupPodcasts($userGroups, $groupId);
+            } else {
+                if (!empty($subGroups)) {
+                    $newsubGroup = array();
+                    foreach ($subGroups as $thisSub) {
+                        $newsubGroup[] = $thisSub["group_define_name"];
+                    }
+                    // Get the added member ids
+                    $addList = array_diff($selectedParts, $newsubGroup);
+                    // Get the deleted member ids
+                    $delList = array_diff($newsubGroup, $selectedParts);
+                   
+                    // Delete these members
+                    if (!empty($delList)) {
+                        foreach ($delList as $partPid) {
+                            $gpId = $this->_objGroupAdmin->getId($partPid);
+                            $delChild = $this->objEventUtils->deleteChildGroup($gpId, $groupId);
+                        }
+                    }
+                    // Add these members
+                    if (count($addList) > 0) {
+                        $this->objEventUtils->manageEventPodcasts($addList, $groupId);
+                    }
+                } else {
+                    $addList = $selectedParts;
+                    // Add these members
+                    if (count($addList) > 0) {
+                        $this->objEventUtils->manageEventPodcasts($addList, $groupId);
+                    }
+                }
+                //Empty array
+                $selectedParts = array();
+            }
+            return $this->nextAction('manage_event', array('id' => $groupId));
+        }
+        return $this->nextAction('manage_event', array('id' => $groupId));
     }
 
     /**

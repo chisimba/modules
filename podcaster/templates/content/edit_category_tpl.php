@@ -18,7 +18,7 @@ if (!$hasAccess) {
     $objWindow = &$this->newObject('windowpop', 'htmlelements');
     $objHeading = &$this->getObject('htmlheading', 'htmlelements');
     $objHeading->type = 1;
-    $objHeading->str = $objLanguage->languageText("mod_podcaster_addcategory", 'podcaster',"Add category");
+    $objHeading->str = $objLanguage->languageText("mod_podcaster_editcategory", 'podcaster',"Edit category");
     echo $objHeading->show();
     $form = new form("add", $this->uri(array(
         'module' => 'podcaster',
@@ -70,17 +70,19 @@ if (!$hasAccess) {
         'module' => 'podcaster',
         'action' => 'viewcategories'
     )));
-    //$objCancel->link = $buttonCancel->show();
-    $objCancel->link = $objLanguage->languageText("word_cancel", 'system', 'Cancel');
+
+    $objCancel->link = $buttonCancel->show();
+    //$objCancel->link = $objLanguage->languageText("word_cancel", 'system', 'Cancel');
     $linkCancel = $objCancel->show();
     $row = array(
-        $button->show()
+        $button->show()." ".$linkCancel
     );
-    $objTable->addRow($row, NULL);
+    //$objTable->addRow($row[0], NULL);
     $objTable->startRow();
+    $objTable->addCell($row[0], Null, 'top', 'left');
     $objTable->addCell('&nbsp;', 140, 'top', 'right');
-    $objTable->addCell($linkCancel, Null, 'top', 'left');
     $objTable->endRow();
+
     $form->addToForm($objTable->show());
     echo $form->show();
 }

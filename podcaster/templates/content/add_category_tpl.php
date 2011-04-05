@@ -77,20 +77,15 @@ if (!$hasAccess) {
         'action' => 'viewcategories'
     )));
     
-    //$objCancel->link = $buttonCancel->show();
-    $objCancel->link = $objLanguage->languageText("word_cancel", 'system', 'Cancel');
+    $objCancel->link = $buttonCancel->show();
+    //$objCancel->link = $objLanguage->languageText("word_cancel", 'system', 'Cancel');
     $linkCancel = $objCancel->show();
     $row = array(
         $button->show()
     );
     $objTable->startRow();
     $objTable->addCell('&nbsp;', 140, 'top', 'right');
-    $objTable->addCell($row[0], Null, 'top', 'left');
-    $objTable->endRow();
-
-    $objTable->startRow();
-    $objTable->addCell('&nbsp;', 140, 'top', 'right');
-    $objTable->addCell($linkCancel, Null, 'top', 'left');
+    $objTable->addCell($row[0]. " ".$linkCancel, Null, 'top', 'left');
     $objTable->endRow();
 
     $form->addToForm($objTable->show());

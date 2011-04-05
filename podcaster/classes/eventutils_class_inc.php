@@ -187,11 +187,12 @@ class eventutils extends dbTable {
         $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
         // Add groupMembers
         //$this->addGroupMembers();
-        $groupId = $this->_objGroupAdmin->addGroupUser($newGroupId, $this->objUser->userId());        
+        $groupId = $this->_objGroupAdmin->addGroupUser($newGroupId, $this->objUser->userId());
         // Now create the ACLS
         $this->_objManageGroups->createAcls($userPid, $title);
         return $groupId;
     }
+
     /**
      * Method to get the user groups. Renders output in a table with manage links(Add/edit)
      * @return string
@@ -318,7 +319,7 @@ class eventutils extends dbTable {
                         $mnglink->link = $iconShare->show();
                         $linkMng = $mnglink->show();
                         $tableRow = array(
-                            '<hr/>' . $linkManage . '  ' . $linkMng." ".$mylinkEdit
+                            '<hr/>' . $linkManage . '  ' . $linkMng . " " . $mylinkEdit
                         );
                         $table->addRow($tableRow);
 
@@ -430,6 +431,88 @@ class eventutils extends dbTable {
         return true;
     }
 
+    //Function for managing the podcasts within an event
+
+    public function manageEventPodcasts($selectedParts, $groupId) {
+        if (empty($groupId))
+            $groupId = $this->getSession('groupId', $groupId);
+
+        foreach ($selectedParts as $partId) {
+            //$thisId = $this->_objGroupAdmin->getId($partId, $pkField = 'name');
+            $partList = $this->_objGroupAdmin->getId($partId, $pkField = 'name');
+            if (empty($partList)) {
+                $partGroupsId = $this->_objGroupAdmin->addGroup($partId, $partId, $groupId);
+                // then add them as subGroups of the parent Group.
+                $data = array(
+                    'group_id' => $groupId,
+                    'subgroup_id' => $partGroupsId
+                );
+                $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
+                //$newGroupId = $this->_objGroupAdmin->addGroupUser( $partGroupsId, $groupId );
+                // Now create the ACLS
+                //$this->_objManageGroups->createAcls($partGroupsId, $groupId);
+            } else {
+                $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
+                $check = 0;
+                if (!empty($isSubGroup)) {
+                    foreach ($isSubGroup[0] as $subgrp) {
+                        if ($partId == $subgrp['group_define_name']) {
+                            $check = 1;
+                        }
+                    }
+                }
+                //If subgroup does not exist, create
+                if ($check == 0) {
+                    $data = array(
+                        'group_id' => $groupId,
+                        'subgroup_id' => $partList
+                    );
+                    $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
+                }
+                /*
+                  if (!$isGroupMember) {
+                  $addGrpUser = $this->_objGroupAdmin->addGroupUser($groupId,$partList);
+                  }
+                 */
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Function that deletes group podcasts
+     * @param string $users
+     * @param string $groupId
+     */
+    public function deleteGroupPodcasts($users, $groupId) {
+        // Delete these members
+        foreach ($users as $partId) {
+            $this->_objGroupAdmin->deleteGroupUser($partId['group_id'], $groupId);
+        }
+        //Empty array
+        $selectedParts = array();
+        return true;
+    }
+
+    /**
+     * Check if podcast is part of an event/group
+     * @param string $partId
+     * @param string $groupId
+     * @return boolean
+     */
+    public function checkIfExists($partId, $parentId) {
+
+        //Check if group exists
+        $childId = $this->_objGroupAdmin->getId($partId);
+        parent::init('tbl_perms_group_subgroups');
+        $getPuid = $this->getAll("WHERE subgroup_id='" . $childId . "' AND group_id = '" . $parentId . "'");
+        if (!empty($getPuid)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Method to Prepare a List of Users in a Context sorted by lecturer, student, guest
      * The results are sent to the template
@@ -460,20 +543,41 @@ class eventutils extends dbTable {
         $guestArr = array('guests' => $guestsArray, 'guestDetails' => $guests);
         return $guestArr;
     }
+
+    /**
+     * Function that deletes a child record in tbl_perms_group_subgroups
+     * @param string $childId
+     * @param string $parentId
+     * @return true|false TRUE on success, FALSE on failure
+     */
+    public function deleteChildGroup($childId, $parentId) {
+        parent::init('tbl_perms_group_subgroups');
+        $getPuid = $this->getAll("WHERE subgroup_id='" . $childId . "' AND group_id = '" . $parentId . "'");
+        //Deletes its affiliation with this parent
+        if (!empty($getPuid)) {
+            foreach ($getPuid as $thisPuid) {
+                $this->delete("puid", $thisPuid["puid"]);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Update group name
      * @param string $group_id The group Id
      * @param string $newName The New name
      */
-    public function changeEventName($group_id, $newName)
-    {
+    public function changeEventName($group_id, $newName) {
         parent::init('tbl_perms_groups');
         $userid = $this->objUser->userId();
-        $newName = $userid."^".$newName;
+        $newName = $userid . "^" . $newName;
         $this->update("group_id", $group_id, array(
             'group_define_name' => $newName
         ));
     }
+
 }
 
 ?>
