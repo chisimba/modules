@@ -302,7 +302,7 @@ $adaptationstring = "parent_id is null";
                                             $filterLang->addOption('Alphabetical');
 
 
-                                            $filterLang->setSelected($LangFilter);
+                                            $filterLang->setSelected($SortFilter);
                                             $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '1a_tpl.php')));
 
 
@@ -362,9 +362,9 @@ $adaptationstring = "parent_id is null";
                     <?php
                                             //Creates chisimba table
                                             $objTable = $this->getObject('htmltable', 'htmlelements');
-
-                                            if ($finalstring == null)
-                                                $finalstring = "parent_id is null";
+                                             if ($finalstring == null)
+                                                 $finalstring = 'parent_id is null';
+                                          
 
                                             $products = $this->objDbProducts->getFilteredProducts($finalstring);
 

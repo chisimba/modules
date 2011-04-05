@@ -117,7 +117,7 @@ class unesco_oer extends controller {
        $page = $this->getParam('page');
        $sort = $this->getParam('SortFilter');
 
-//     
+
     $adaptationstring = $this ->getParam('adaptationstring');
  
 
@@ -141,6 +141,9 @@ class unesco_oer extends controller {
          $this->setVarByRef("AuthFilter", $AuthFilter);
          $this->setVarByRef("ThemeFilter", $ThemeFilter);
          $this->setVarByRef("LangFilter", $LangFilter);
+          $this->setVarByRef("SortFilter", $sort);
+
+
          $this->setVarByRef("finalstring", $buildstring);
      
 

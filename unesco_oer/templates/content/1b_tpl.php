@@ -289,13 +289,44 @@ $this->loadClass('checkbox', 'htmlelements');
                 <div class="centerColumnDiv">
                     <div class="GridListViewDiv">
                         <div class="sortBy">
-                            Sort By:
+                             <?php
+                                            $products = $this->objDbProducts->getProducts(0, 10);
+                                            $filterLang = new dropdown('SortFilter');
+
+                                            $filterLang->addoption(null);
+                                            $filterLang->addoption('Date');
+                                            $filterLang->addOption('Alphabetical');
+
+
+                                            $filterLang->setSelected($SortFilter);
+                                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '1b_tpl.php')));
+
+
+                                            $uri = $this->uri(array('action' => 'SortFilter'));
+                                            $filterLang->addOnChange('javascript: sendSortFilterform()');
+
+
+
+                                            $form->addtoform('Sort By:');
+                                            $form->addtoform($filterLang->show());
+                                            echo $form->show();
+                            ?>
+
+
+
+
+
+
+
+<!--
+
+Sort By:
                             <select name="" class="contentDropDown">
                                 <option value="">Date Added</option>
                             </select>
                             <select name="" class="contentDropDown">
                                 <option value="">DESC</option>
-                            </select>
+                            </select>-->
                         </div>
                         <div class="viewGrid">
                             <div class="viewAsDiv">View as: </div>
@@ -655,6 +686,9 @@ function sendLanguageFilterform()
 }
 
 
-
+function sendSortFilterform()
+    {
+    document.forms["SortFilter"].submit();
+    }
 
 </script>

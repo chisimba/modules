@@ -152,46 +152,46 @@ $this->loadClass('checkbox', 'htmlelements');
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
 
                 <div class="blueBackground blueBackgroundCheckBoxText">
-               <?php
+<!--               <?php
 
-//                $products = $this->objDbProducts->getProducts(0, 10);
-//
-//
-//              $checkbox1 = new checkbox('test');
-//             $checkbox2 = new checkbox('test2');
-//        //        $checkbox3 = new checkbox('test3');
-////                foreach ($products as $product) {
-////                        $checkbox = new checkbox($product['resource_type']);
-////                        echo $product['resource_type'];
-////
-////
-//             $guidelink = new link($this->uri(array("action" => "FilterProducts")));
-//
-//    $guidelink->link = $checkbox1->show();
-//
-//
-//
-//
-//            $form1 = new form('check');
-//
-//
-//
-//
-//
-//                 $form1->addtoform($guidelink->show());
-//                 $form1->addtoform('fwefwe<br>');
-//                 $form1->addtoform($checkbox2->show());
-//                 echo $form1->show();
-//
-//
-//
-//
-//
-//
-//
-//
-//               ?>
+                $products = $this->objDbProducts->getProducts(0, 10);
 
+
+              $checkbox1 = new checkbox('test');
+              $checkbox2 = new checkbox('test2');
+        //        $checkbox3 = new checkbox('test3');
+//                foreach ($products as $product) {
+//                        $checkbox = new checkbox($product['resource_type']);
+//                        echo $product['resource_type'];
+//
+//
+             $guidelink = new link($this->uri(array("action" => "FilterProducts")));
+
+    $guidelink->link = $checkbox1->show();
+
+
+
+
+            $form1 = new form('check');
+
+
+
+
+
+                 $form1->addtoform($guidelink->show());
+                 $form1->addtoform($checkbox1->show());
+                 $form1->addtoform($checkbox2->show());
+                 echo $form1->show();
+
+
+
+
+
+
+
+
+             ?>
+-->
 
 
 
@@ -348,13 +348,43 @@ $this->loadClass('checkbox', 'htmlelements');
                 <div class="centerColumnDiv">
                     <div class="GridListViewDiv">
                         <div class="sortBy">
-                            Sort By:
+
+                             <?php
+                                            $products = $this->objDbProducts->getProducts(0, 10);
+                                            $filterLang = new dropdown('SortFilter');
+
+                                            $filterLang->addoption(null);
+                                            $filterLang->addoption('Date');
+                                            $filterLang->addOption('Alphabetical');
+
+
+                                            $filterLang->setSelected($SortFilter);
+                                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '2a_tpl.php')));
+
+
+                                            $uri = $this->uri(array('action' => 'SortFilter'));
+                                            $filterLang->addOnChange('javascript: sendSortFilterform()');
+
+
+
+                                            $form->addtoform('Sort By:');
+                                            $form->addtoform($filterLang->show());
+                                            echo $form->show();
+                            ?>
+
+
+
+
+
+
+
+<!--                            Sort By:
                             <select name="" class="contentDropDown">
                                 <option value="">Date Added</option>
                             </select>
                             <select name="" class="contentDropDown">
                                 <option value="">DESC</option>
-                            </select>
+                            </select>-->
                         </div>
                         <div class="viewGrid">
                             <div class="viewAsDiv">View as: </div>
@@ -671,6 +701,10 @@ function sendLanguageFilterform()
 }
 
 
+function sendSortFilterform()
+    {
+    document.forms["SortFilter"].submit();
+    }
 
 
 </script>
