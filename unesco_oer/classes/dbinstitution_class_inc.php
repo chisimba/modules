@@ -38,7 +38,7 @@ class dbinstitution extends dbtable
     public function getInstitutionThumbnail($name)
     {
         //TODO Ntsako Handle the situation where the institution is not in the table
-        $sql = "SELECT thumbnail FROM tbl_unesco_oer_institution WHERE name = '$name'";
+        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name'";
         $thumbnail = $this->getArray($sql);
         return $thumbnail[0];
     }
@@ -47,7 +47,7 @@ class dbinstitution extends dbtable
     {
         //$sql = "IF EXISTS(SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name')";
 
-        $sql = "SELECT thumbnail FROM tbl_unesco_oer_institution WHERE name = '$name'";
+        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name'";
         if (count($this->getArray($sql)) != 0) {
             return true;
         } else {

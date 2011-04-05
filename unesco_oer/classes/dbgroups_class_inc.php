@@ -37,7 +37,7 @@ class dbgroups extends dbtable
 
     public function getGroupThumbnail($name)
     {
-        $sql = "SELECT thumbnail FROM tbl_unesco_oer_groups WHERE name = '$name'";
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name = '$name'";
         $thumbnail = $this->getArray($sql);
         
         return $thumbnail[0];
@@ -47,7 +47,7 @@ class dbgroups extends dbtable
     {
         //$sql = "IF EXISTS(SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name')";
 
-        $sql = "SELECT thumbnail FROM tbl_unesco_oer_groups WHERE name = '$name'";
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name = '$name'";
         if (count($this->getArray($sql)) != 0) {
             return true;
         } else {
