@@ -242,5 +242,35 @@ class productutil extends object
         return $content;
     }
 
+    public function displayMostAdapted(&$objDbProducts, &$objDbGroups, &$objDbInstitution)
+    {
+        $content ='';
+                                                    //TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
+                                            //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+
+                                            $MostAdaptedProducts = $objDbProducts->getMostAdaptedProducts();
+
+                                            foreach ($MostAdaptedProducts as $childProduct) {
+                                                //Get the original products
+                                                $product = $objDbProducts->getProductById($childProduct['parent_id']);
+                                                //Get number of adaptations for the product
+                                                $product['noOfAdaptations'] = $childProduct['total'];
+                                                //Check if the creator is a group or an institution
+                                                $isGroupCreator = $objDbGroups->isGroup($product['creator']);
+
+                                                if ($isGroupCreator == true) {
+                                                    $thumbnail = $objDbGroups->getGroupThumbnail($product['creator']);
+                                                } else {
+                                                    $thumbnail = $objDbInstitution->getInstitutionThumbnail($product['creator']);
+                                                }
+
+                                                $product['institution_thumbnail'] = $thumbnail['thumbnail'];
+                                                //$product['institution'] = $this->objInstitution->getInstitution();
+                                                $content .= $this->populateMostAdapted($product);
+                                            }
+
+                                            return $content;
+    }
+
  }
 ?>

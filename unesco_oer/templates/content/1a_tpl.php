@@ -604,29 +604,7 @@ $adaptationstring = "parent_id is null";
 
 
 <?php
-                                        //TODO this might need Java script to implement properly as these tabs have to be updated independently
-                                        //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
-
-                                            $MostAdaptedProducts = $this->objDbProducts->getMostAdaptedProducts();
-
-                                            foreach ($MostAdaptedProducts as $childProduct) {
-                                                //Get the original products
-                                                $product = $this->objDbProducts->getProductById($childProduct['parent_id']);
-                                                //Get number of adaptations for the product
-                                                $product['noOfAdaptations'] = $childProduct['total'];
-                                                //Check if the creator is a group or an institution
-                                                $isGroupCreator = $this->objDbGroups->isGroup($product['creator']);
-
-                                                if ($isGroupCreator == true) {
-                                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
-                                                } else {
-                                                    $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
-                                                }
-
-                                                $product['institution_thumbnail'] = $thumbnail['thumbnail'];
-                                                //$product['institution'] = $this->objInstitution->getInstitution();
-                                                echo $this->objProductUtil->populateMostAdapted($product);
-                                            }
+        echo $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution);
 ?>
 
                             </div>
