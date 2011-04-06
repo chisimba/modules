@@ -596,10 +596,8 @@ Sort By:
                                     <div class="rightColumnBorderedDiv">
                                         <div class="rightColumnContentPadding">
 <?php
-                                            /**TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
-                                            Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
-                                             * *
-                                             */
+                                            //TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
+                                            //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
 
                                             $MostAdaptedProducts = $this->objDbProducts->getMostAdaptedProducts();
 

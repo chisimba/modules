@@ -583,6 +583,7 @@ $adaptationstring = "parent_id is null";
 
                                         <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
 <?php
+                                        //The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
                                         $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
                                         $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
                                         echo"See all adaptations ($NOofAdaptation)"// This must be a link;
@@ -603,7 +604,8 @@ $adaptationstring = "parent_id is null";
 
 
 <?php
-                                            //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+                                        //TODO this might need Java script to implement properly as these tabs have to be updated independently
+                                        //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
 
                                             $MostAdaptedProducts = $this->objDbProducts->getMostAdaptedProducts();
 

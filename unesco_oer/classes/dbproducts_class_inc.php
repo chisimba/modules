@@ -73,8 +73,15 @@ class dbproducts extends dbtable
         return $this->getArray($sql);
     }
 
-    function getProductByID($ID){
-        $sql = "select * from tbl_unesco_oer_products where id = '$ID'";
+    function getProductByID($id){
+        //If searching by id
+        if (strlen($id)>2){
+            $sql = "select * from tbl_unesco_oer_products where id = '$id'";
+        }  else {
+            //If searching by puid
+            $sql = "select * from tbl_unesco_oer_products where puid = '$id'";
+        }
+        $sql = "select * from tbl_unesco_oer_products where id = '$id'";
         $products = $this->getArray($sql);
         return $products[0]; //TODO add error handler for non unique ID.
     }
