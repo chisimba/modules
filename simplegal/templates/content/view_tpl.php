@@ -15,5 +15,8 @@ $mainColumn .= $this->objOps->formatData($data);
 
 //$mainColumn .= $this->objWallOps->showWall(0, 10);
 
+$objApps = $this->getObject('fbapps', 'facebookapps');
+$mainColumn .= '<div class="FB_comment">' . $objApps->getComments() . '</div>';
+
 $cssLayout->setMiddleColumnContent($mainColumn);
 echo $cssLayout->show();
