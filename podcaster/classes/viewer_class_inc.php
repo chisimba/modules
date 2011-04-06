@@ -82,6 +82,7 @@ class viewer extends object {
     public $objMediaFileData;
     public $objFolderPermissions;
     public $objEventUtils;
+    public $objGroupAdmin;
 
     /**
      *
@@ -103,7 +104,8 @@ class viewer extends object {
         $this->objFolderPermissions = $this->getObject('dbfolderpermissions');
 
         $this->objEventUtils = $this->getObject('eventutils');
-
+        
+        $this->_objGroupAdmin = $this->newObject('groupadminmodel', 'groupadmin');
     }
 
     /**
@@ -141,19 +143,19 @@ class viewer extends object {
                     $filename = htmlentities($file['title']);
                 }
                 /*
-                //Return title instead of nopreview message
-                $thumbnail = $this->objFile->getPodcastThumbnail($file['id']);
-                if ($thumbnail == 'No preview available') {
-                    //$thumbnail = $filename;
-                }
+                  //Return title instead of nopreview message
+                  $thumbnail = $this->objFile->getPodcastThumbnail($file['id']);
+                  if ($thumbnail == 'No preview available') {
+                  //$thumbnail = $filename;
+                  }
 
-                $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
+                  $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
 
-                $link->link = $thumbnail;
+                  $link->link = $thumbnail;
 
-                $table->addCell($link->show());
-                $table->addCell('&nbsp;');
-                */
+                  $table->addCell($link->show());
+                  $table->addCell('&nbsp;');
+                 */
                 $rightContent = '';
                 $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
                 $link->link = $filename;
@@ -317,6 +319,28 @@ class viewer extends object {
         $files = $this->objMediaFileData->getLatestAuthorPodcasts($author);
         $author = stripslashes($author);
         return $this->generateAuthorLatestFeed($title, $description, $url, $files, $author);
+    }
+
+    /**
+     * Get event feed
+     * @param string $groupId
+     * @return object
+     */
+    public function getEventFeed($groupId) {
+        $groupName = $this->_objGroupAdmin->getName($groupId);
+        $groupName = explode("^^", $groupName);
+        $groupName = $groupName[1];
+        
+        //Get uploader name        
+        $wordPodcasts = $this->objLanguage->languageText("mod_podcaster_podcasts", "podcaster", 'Podcasts');
+        $title = $groupName . ' - ' . $wordPodcasts;
+        
+        $description = $groupName." - ".$this->objLanguage->languageText("mod_podcaster_latestpodcasts", "podcaster", "Latest podcasts");
+        $url = $this->uri(array('action' => 'eventrss', 'groupId' => $groupId));
+
+        $files = $this->objEventUtils->getEventPodcasts($groupId,'datecreated_desc');
+        
+        return $this->generateAuthorLatestFeed($title, $description, $url, $files, $groupName);
     }
 
     /**

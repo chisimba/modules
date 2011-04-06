@@ -328,7 +328,7 @@ class podcaster extends controller {
             $categoryId = $this->getParam('category', NULL);
             $access = $this->getParam('access', NULL);
             $publish = $this->getParam('publish', NULL);
-            $eventId = $this->objEventUtils->addGroups($this->userId . "^" . $event);
+            $eventId = $this->objEventUtils->addGroups($this->userId . "^^" . $event);
 
             $this->objDbEvents->insertSingle($eventId, $categoryId, $access, $publish);
         }
@@ -1961,7 +1961,16 @@ Sincerely,<br />
         $objViewer = $this->getObject('viewer');
         echo $objViewer->getUserFeed($userid);
     }
+    /**
+     * Used to display the latest podcasts of an event as an RSS Feed
+     *
+     */
+    public function __eventrss() {
+        $groupId = $this->getParam('groupId');
+        $objViewer = $this->getObject('viewer');
+        echo $objViewer->getEventFeed($groupId);
 
+    }
     /**
      * Get own RSS Feed
      *

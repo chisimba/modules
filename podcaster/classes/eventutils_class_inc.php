@@ -260,7 +260,7 @@ class eventutils extends dbTable {
                 foreach ($myGroupId as $groupId) {
                     $membersList = $this->_objGroupAdmin->getGroupUsers($groupId, $fields);
                     $groupName = $this->_objGroupAdmin->getName($groupId);
-                    $groupName = explode("^", $groupName);
+                    $groupName = explode("^^", $groupName);
                     if (count($groupName) == 2) {
                         $groupName = $groupName[1];
                         foreach ($membersList as $users) {
@@ -353,10 +353,14 @@ class eventutils extends dbTable {
         $str = '';
 
         //Get group members
+        $userId = $this->objUser->userId();
         //Get group id
-        $userPid = $this->objUser->PKId($this->objUser->userId());
+        $userPid = $this->objUser->PKId($userId);
         //get the descendents.
-        if (class_exists('groupops', false)) {
+        if (class_exists('groupops')) {
+            //Get perm Id            
+            $usrGroups = $this->getUserPermGroups($userId);            
+            /*
             $usergroupId = $this->_objGroupAdmin->getId($userPid);
             $usersubgroups = $this->_objGroupAdmin->getSubgroups($usergroupId);
             //Check if empty
@@ -369,6 +373,17 @@ class eventutils extends dbTable {
                     }
                 }
             }
+             */
+            if (!empty($usrGroups)) {
+                $myGroupId = array();
+                //Retrieve the groupId's
+                foreach ($usrGroups as $thisGroup) {
+                    $myGroupId[] = $thisGroup['group_id'];
+
+                }
+                $usersubgroups = $myGroupId;
+            }
+            
             $fields = array(
                 'firstName',
                 'surname',
@@ -378,7 +393,8 @@ class eventutils extends dbTable {
             if (!empty($usersubgroups)) {
                 foreach ($myGroupId as $groupId) {
                     $groupName = $this->_objGroupAdmin->getName($groupId);
-                    $groupName = explode("^", $groupName);
+                    $groupName = explode("^^", $groupName);
+
                     if (count($groupName) == 2) {
                         $groupName = $groupName[1];
                         //Add Users
@@ -681,12 +697,21 @@ class eventutils extends dbTable {
     public function changeEventName($group_id, $newName) {
         parent::init('tbl_perms_groups');
         $userid = $this->objUser->userId();
-        $newName = $userid . "^" . $newName;
+        $newName = $userid . "^^^^" . $newName;
         $this->update("group_id", $group_id, array(
             'group_define_name' => $newName
         ));
     }
-
+    /**
+     * Update group name
+     * @param string $userId The User Id
+     */
+    public function getUserPermGroups($userId) {
+        parent::init('tbl_perms_groupusers');        
+        $usrPermId = $this->_objGroupAdmin->getPermUserId($userId);        
+        $usrGrps = $this->getAll('where perm_user_id="' . $usrPermId . '"');
+        return $usrGrps;
+    }
 }
 
 ?>
