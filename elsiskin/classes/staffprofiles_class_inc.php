@@ -61,7 +61,6 @@ class staffprofiles extends object {
     public function show() {
 
         $profiles = array(
-            array("href"=>"16", "name"=>"Zaahirah Bhamjee", "image"=>"zaahirahbhamjee.jpg", "jobtitle"=>"Assistant Instructional Designer","ext"=>"7164", "email"=>"zaahirahbhamjee@gmail.com"),
             array("href"=>"11", "name"=>"Agnes Chigona", "image"=>"AgnesChigona.jpg", "jobtitle"=>"Research Fellow", "ext"=>"7181","email"=>"agnes.chigona@wits.ac.za"),
             array("href"=>"6", "name"=>"Shakira Choonara", "image"=>"schoonara.jpg", "jobtitle"=>"Office Administrator", "ext"=>"7161", "email"=>"shakira.choonara2@wits.ac.za"),
             array("href"=>"2", "name"=>"Rabelani Dagada", "image"=>"RDagada.jpg", "jobtitle"=>"Head: eLearning Support and Innovation Unit", "ext"=>"7162", "email"=>"rabelani.dagada@wits.ac.za"),
@@ -69,7 +68,6 @@ class staffprofiles extends object {
             array("href"=>"1", "name"=>"Taurai Hungwe", "image"=>"THungwe.jpg", "jobtitle"=>"Instructional Designer","ext"=>"7164", "email"=>"taurai.hungwe@wits.ac.za"),
             array("href"=>"18", "name"=>"Antoinette Nolwandle Malgas ", "image"=>"antoinettenolwandle.jpg", "jobtitle"=>"Instructional Designer and Trainer","ext"=>"7175", "email"=>"antoinette.malgas@wits.ac.za"),
             array("href"=>"19", "name"=>"Palesa Mokwena", "image"=>"palesamokwena.jpg", "jobtitle"=>"Intern (Web Development)","ext"=>"7175", "email"=>"pmokwena@gmail.com"),
-            array("href"=>"20", "name"=>"Dexters Mlambo", "image"=>"dextersmlambo.jpg", "jobtitle"=>"Intern (Web Development)","ext"=>"7188", "email"=>"mirzadexter@gmail.com"),
             array("href"=>"14", "name"=>"Reginald Moledi", "image"=>"regimoledi.jpg", "jobtitle"=>"Instructional Developer","ext"=>"7170", "email"=>"reginald.moledi@wits.ac.za"),
             array("href"=>"4", "name"=>"Derek Moore", "image"=>"dmoore.jpg", "jobtitle"=>"Content Developer","ext"=>"7171", "email"=>"derek.moore@wits.ac.za"),
             array("href"=>"13", "name"=>"Paul Mungai", "image"=>"PaulMungai.jpg", "jobtitle"=>"Software Developer","ext"=>"7166", "email"=>"paul.mungai@wits.ac.za"),

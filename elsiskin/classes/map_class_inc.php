@@ -58,7 +58,7 @@ class map extends object {
                         marginheight="0"
                         marginwidth="0"
                         src="';
-        if(array_key_exists('HTTPS', $SERVER)) {
+        if(array_key_exists('HTTPS', $_SERVER)) {
             $retstr .= 'https';
         }
         else {
