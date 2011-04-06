@@ -1,4 +1,5 @@
 <?php
+
 /**
  * controller class
  *
@@ -28,15 +29,14 @@
  */
 // security check - must be included in all scripts
 if (!
-/**
- * Description for $GLOBALS
- * @global entry point $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run'])
-    {
-        die("You cannot view this page directly");
-    }
+        /**
+         * Description for $GLOBALS
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
 
 /**
  * controller class
@@ -48,57 +48,56 @@ $GLOBALS['kewl_entry_point_run'])
  * @author    Emmanuel Natalis<matnatalis@udsm.ac.tz>
  * @copyright 2008 Emmanuel Natalis
  */
- class bestwishes extends controller
- {
-    public  function init()
-     {
-     }
-     public function dispatch()
-         {
-             $action=$_GET['action'];
-             switch($action)
-                 {
-                 case bdenterdate:
-                                             return 'happybirthdayenterdate_tlp.php';
-                                             break;
-                 case enterdate:
-                                              $birthdate=$_POST['calendardate'];
-                                              $objHappybirthday=$this->getObject('dbbestwishes','bestwishes');
-                                             $report= $objHappybirthday->insertBirthdate($birthdate);
-                                              $this->setVar('report',$report);
-                                              return 'bestwishesreport_tlp.php';
-                                              break;
-                case bdremovedate:  
-                                                $objHappybirthday=$this->getObject('dbbestwishes','bestwishes');
-                                                $report= $objHappybirthday->removeBirthdate();
-                                                $this->setVar('report',$report);
-                                                return 'bestwishesreport_tlp.php';
-                                                break;
-                case viewbdusers:
-                                                 return 'happybirthdayviewusers_tpl.php';
-                                                 break;
-                case enterevent:
-                                                 return 'enterevent_tpl.php';
-                                                break;
-                case viewevents:
-                                               return 'viewevents_tpl.php';
-                case saveEvent:
-                                                 
-                                                $objHappybirthday=$this->getObject('dbbestwishes','bestwishes');
-                                                $title=$_POST['title'];
-                                                $description=$_POST['description'];
-                                                $report= $objHappybirthday->saveEvents($title,$description);
-                                                $this->setVar('report',$report);
-                                                return 'bestwishesreport_tlp.php';
-                                                 break;
-                  default:
-                                               return 'main_menu_tlp.php';
-                 }
-            
-         }
-         public function requiresLogin()
-             {
-                 return TRUE;
-             }
- }
- ?>
+class bestwishes extends controller {
+
+    public function init() {
+
+    }
+
+    public function dispatch() {
+        $action = $_GET['action'];
+        switch ($action) {
+            case bdenterdate:
+                return 'happybirthdayenterdate_tlp.php';
+                break;
+            case enterdate:
+                $birthdate = $_POST['calendardate'];
+                $objHappybirthday = $this->getObject('dbbestwishes', 'bestwishes');
+                $report = $objHappybirthday->insertBirthdate($birthdate);
+                $this->setVar('report', $report);
+                return 'bestwishesreport_tlp.php';
+                break;
+            case bdremovedate:
+                $objHappybirthday = $this->getObject('dbbestwishes', 'bestwishes');
+                $report = $objHappybirthday->removeBirthdate();
+                $this->setVar('report', $report);
+                return 'bestwishesreport_tlp.php';
+                break;
+            case viewbdusers:
+                return 'happybirthdayviewusers_tpl.php';
+                break;
+            case enterevent:
+                return 'enterevent_tpl.php';
+                break;
+            case viewevents:
+                return 'viewevents_tpl.php';
+            case saveEvent:
+
+                $objHappybirthday = $this->getObject('dbbestwishes', 'bestwishes');
+                $title = $_POST['title'];
+                $description = $_POST['description'];
+                $report = $objHappybirthday->saveEvents($title, $description);
+                $this->setVar('report', $report);
+                return 'bestwishesreport_tlp.php';
+                break;
+            default:
+                return 'main_menu_tlp.php';
+        }
+    }
+
+    public function requiresLogin() {
+        return TRUE;
+    }
+
+}
+?>
