@@ -125,6 +125,7 @@ class eventutils extends dbTable {
         $this->_objGroupAdmin = $this->newObject('groupadminmodel', 'groupadmin');
         $this->_objManageGroups = &$this->newObject('managegroups', 'contextgroups');
         $this->objContextUsers = $this->getObject('contextusers', 'contextgroups');
+        $this->objMediaFileData = $this->getObject('dbmediafiledata');
         //TEMPORARY Check if class groupops exists
         if (file_exists($this->objConfig->getsiteRootPath() . "core_modules/groupadmin/classes/groupops_class_inc.php")) {
             $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
@@ -337,6 +338,89 @@ class eventutils extends dbTable {
     }
 
     /**
+     * Method to get the user groups. Renders output in a table with manage links(Add/edit)
+     * @return string
+     */
+    public function getUserEvents() {
+        //load classes
+        $this->objLanguage = $this->getObject('language', 'language');
+        $icon = &$this->newObject('geticon', 'htmlelements');
+        $table = &$this->newObject('htmltable', 'htmlelements');
+        $linkstable = &$this->newObject('htmltable', 'htmlelements');
+        $objGroups = &$this->newObject('managegroups', 'contextgroups');
+        $table->width = '40%';
+        $linkstable->width = '40%';
+        $str = '';
+
+        //Get group members
+        //Get group id
+        $userPid = $this->objUser->PKId($this->objUser->userId());
+        //get the descendents.
+        if (class_exists('groupops', false)) {
+            $usergroupId = $this->_objGroupAdmin->getId($userPid);
+            $usersubgroups = $this->_objGroupAdmin->getSubgroups($usergroupId);
+            //Check if empty
+            if (!empty($usersubgroups)) {
+                foreach ($usersubgroups as $subgroup) {
+                    // The member list of this group
+                    $myGroupId = array();
+                    foreach (array_keys($subgroup) as $myGrpId) {
+                        $myGroupId[] = $myGrpId;
+                    }
+                }
+            }
+            $fields = array(
+                'firstName',
+                'surname',
+                'tbl_users.id'
+            );
+            //Check if empty
+            if (!empty($usersubgroups)) {
+                foreach ($myGroupId as $groupId) {
+                    $groupName = $this->_objGroupAdmin->getName($groupId);
+                    $groupName = explode("^", $groupName);
+                    if (count($groupName) == 2) {
+                        $groupName = $groupName[1];
+                        //Add Users
+                        $iconManage = $this->getObject('geticon', 'htmlelements');
+                        $iconManage->setIcon('bookopen');
+                        $iconManage->alt = $this->objLanguage->languageText("mod_podcaster_vieweventpodcasts", 'podcaster', 'View event podcasts');
+                        $iconManage->title = $this->objLanguage->languageText("mod_podcaster_vieweventpodcasts", 'podcaster', 'View event podcasts');
+
+                        $mnglink = new link($this->uri(array(
+                                            'module' => 'podcaster',
+                                            'action' => 'event_podcasts',
+                                            'id' => $groupId
+                                        )));
+
+                        $mnglink->link = $iconManage->show();
+
+                        $linkManageImg = $mnglink->show();
+
+                        $mnglink = new link($this->uri(array(
+                                            'module' => 'podcaster',
+                                            'action' => 'event_podcasts',
+                                            'id' => $groupId
+                                        )));
+
+                        $mnglink->link = $groupName;
+
+                        $linkManageTxt = $mnglink->show();
+
+                        $tableRow = array(
+                            '<hr/>' . $linkManageTxt . '  ' . $linkManageImg
+                        );
+                        $table->addRow($tableRow);
+                        $str.= $table->show();
+                    }
+                } //end foreach
+            }
+        }
+        return $str;
+        unset($users);
+    }
+
+    /**
      * Method to Show the Results for a Search
      * @param int $page - Page of Results to show
      */
@@ -511,6 +595,31 @@ class eventutils extends dbTable {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Get all the podcasts associated with this event
+     * @param string $groupId
+     * @param string $sort
+     * @return array
+     */
+    public function getEventPodcasts($groupId, $sort) {
+        //Get subgroups if any - subgroups are synonymous to the podcasts
+        $subgroups = $this->_objGroupAdmin->getSubgroups($groupId);
+        $eventPods = array();
+        $idHolder = '';
+        $podData = '';
+        if (!empty($subgroups)) {
+            foreach ($subgroups as $subgroup) {
+                foreach ($subgroup as $grpData) {
+                    $podId = $grpData['group_define_name'];
+                    $idHolder .= "id='".$podId."' or ";
+                    }
+            }
+            $idHolder = rtrim($idHolder, 'or ');            
+            $podData = $this->objMediaFileData->getAllListedPodcasts($idHolder, $sort);
+        }
+        return $podData;
     }
 
     /**

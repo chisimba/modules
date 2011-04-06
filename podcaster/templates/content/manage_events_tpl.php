@@ -25,4 +25,9 @@ if (class_exists('groupops', false)) {
     $content = $this->objEventUtils->getUserGroups();
 }
 echo $content;
+
+$homeLink = new link($this->uri(array('module' => 'podcaster', 'action' => 'myevents')));
+$homeLink->link = $this->objLanguage->languageText("mod_podcaster_backtoevents", "podcaster", 'Back to events');
+
+echo '<p>' . $homeLink->show() . '</p>';
 ?>

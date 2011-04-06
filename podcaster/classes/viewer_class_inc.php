@@ -140,7 +140,7 @@ class viewer extends object {
                 } else {
                     $filename = htmlentities($file['title']);
                 }
-
+                /*
                 //Return title instead of nopreview message
                 $thumbnail = $this->objFile->getPodcastThumbnail($file['id']);
                 if ($thumbnail == 'No preview available') {
@@ -153,9 +153,9 @@ class viewer extends object {
 
                 $table->addCell($link->show());
                 $table->addCell('&nbsp;');
-
+                */
                 $rightContent = '';
-
+                $link = new link($this->uri(array('action' => 'view', 'id' => $file['id'])));
                 $link->link = $filename;
                 $rightContent .= '<p><strong>' . $link->show() . '</strong><br />';
 

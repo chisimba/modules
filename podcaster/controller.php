@@ -102,7 +102,7 @@ class podcaster extends controller {
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('addusers', 'configure_events', 'viewevents', 'manage_event', 'add_event', 'viewsearchresults', 'myuploads', 'doajaxsendmail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
+        $required = array('myevents', 'addusers', 'configure_events', 'viewevents', 'manage_event', 'add_event', 'viewsearchresults', 'myuploads', 'doajaxsendmail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -309,6 +309,16 @@ class podcaster extends controller {
     }
 
     /**
+     * Function that returns template for configuring an event
+     * @return template
+     */
+    function __myevents() {
+        $userPid = $this->objUser->PKId($this->objUser->userId());
+        $this->setVarByRef('userPid', $this->userPid);
+        return "view_events_tpl.php";
+    }
+
+    /**
      * Function that returns confirmation on add event
      * @return object
      */
@@ -432,7 +442,7 @@ class podcaster extends controller {
             //Get user Groups
             $subGroups = $this->_objGroupAdmin->getSubgroups($groupId);
             $subGroups = $subGroups[0];
-            
+
             if (empty($selectedParts)) {
                 $this->objEventUtils->deleteGroupPodcasts($userGroups, $groupId);
             } else {
@@ -445,7 +455,7 @@ class podcaster extends controller {
                     $addList = array_diff($selectedParts, $newsubGroup);
                     // Get the deleted member ids
                     $delList = array_diff($newsubGroup, $selectedParts);
-                   
+
                     // Delete these members
                     if (!empty($delList)) {
                         foreach ($delList as $partPid) {
@@ -1455,6 +1465,38 @@ Sincerely,<br />
         $this->setVarByRef('sort', $sort);
 
         return 'tag_tpl.php';
+    }
+
+    /**
+     * Used to view a list of podcasts uploaded by a particular user
+     *
+     */
+    function __event_podcasts() {
+        $userId = $this->userId;
+
+        $groupId = $this->getParam('id', '');
+
+        if (empty($groupId)) {
+            return $this->nextAction('myevents');
+        }
+
+        $sort = $this->getParam('sort', 'dateuploaded_desc');
+
+        $sort = $this->getParam('sort', 'datecreated_desc');
+
+        // Check that sort options provided is valid
+        if (!preg_match('/(datecreated|title|artist)_(asc|desc)/', strtolower($sort))) {
+            $sort = 'datecreated_desc';
+        }
+
+        $files = $this->objEventUtils->getEventPodcasts($groupId, $sort);
+
+        $this->setVarByRef('files', $files);
+        $this->setVarByRef('sort', $sort);
+        $this->setVarByRef('userId', $userId);
+        $this->setVarByRef('groupId', $groupId);
+
+        return 'event_podcasts_tpl.php';
     }
 
     /**

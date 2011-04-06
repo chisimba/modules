@@ -51,7 +51,7 @@ class dbmediafiledata extends dbTable {
      */
     function init() {
         parent::init('tbl_podcaster_metadata_media');
-        $this->objUser = $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');        
     }
 
     /**
@@ -107,7 +107,7 @@ class dbmediafiledata extends dbTable {
     }
 
     /**
-     * Method to get the details of a file
+     * Method to get the details of a filegetAllAuthorPodcasts
      * @param string $id Record ID of the file
      * @return array Details of the file
      */
@@ -156,6 +156,32 @@ class dbmediafiledata extends dbTable {
             $sortstring = "title DESC";
         }
         return $this->getAll('where creatorid="' . $creatorId . '" ORDER BY '.$sortstring);
+    }
+    /**
+     * Function that returns the podcasts listed, why this - to allow sorting
+     * @param string $list The id's that you want returned ("id1" or "id2" or "id3") note its double quotes
+     * @param string $published Determine whether to return published or unpublished podcasts
+     * @param string $sort How string should be ordered
+     * @return array
+     */
+    public function getAllListedPodcasts($list,$sort='datecreated_desc') {        
+        $sortstring = "";
+        if($sort == 'datecreated_desc'){
+            $sortstring = "datecreated DESC, timecreated DESC";
+        } elseif ($sort == 'datecreated_asc'){
+            $sortstring = "datecreated ASC, timecreated ASC";
+        } elseif ($sort == 'artist_asc'){
+            $sortstring = "artist ASC, datecreated DESC, timecreated DESC";
+        } elseif ($sort == 'artist_desc'){
+            $sortstring = "artist DESC, datecreated DESC, timecreated DESC";
+        } elseif ($sort == 'title_asc'){
+            $sortstring = "title ASC";
+        } elseif ($sort == 'title_desc'){
+            $sortstring = "title DESC";
+        }
+        $podData = $this->getAll("where ".$list." ORDER BY ".$sortstring);
+        
+        return $podData;
     }
     /**
      * Function that returns the latest podcasts by a certain author/creator/artist names
