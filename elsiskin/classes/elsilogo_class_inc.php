@@ -65,7 +65,7 @@ class elsilogo extends object {
         $this->skinpath = $skinpath;
     }
 
-    /* 
+    /*
      * Method to display the logo section of the skin
      * @access public
      * @return string $retstr which displays the wits logo and elsi logo
@@ -77,7 +77,7 @@ class elsilogo extends object {
         $contactUsLink->link = "Contact Us";
         $mapsLink = new link("http://web.wits.ac.za/maps");
         $mapsLink->link = "Maps";
-        
+
         $retstr = '
             <div id="body-wrapper">
     <!-- Print Header -->
@@ -121,7 +121,9 @@ class elsilogo extends object {
      *
      */
     public function getTabLinks() {
-        
+        $haystack = $this->skinpath;
+        $needle = "podskin";
+        if(stripos($haystack, $needle) !== false) {
             $witsHome = new link("http://web.wits.ac.za/");
             $witsHome->link = "Wits Home";
             $witsAlumni = new link("http://web.wits.ac.za/Alumni/");
@@ -136,7 +138,53 @@ class elsilogo extends object {
                         <li>'.$aboutLink->show().'</li>
                     </ul>
                 </div>';
-        
+        }
+        else {
+            if($this->objUser->isLoggedIn()) {
+                $profileLink = new link($this->uri(array(), "postlogin"));
+                $profileLink->link = "Profile";
+                $newsLink = new link($this->uri(array(), "news"));
+                $newsLink->link = "News";
+                $blogLink = new link($this->uri(array(),"blog"));
+                $blogLink->link = "Blog";
+                $adminLink = new link($this->uri(array(),"toolbar"));
+                $adminLink->link = "Admin";
+                $logoutLink = new link($this->uri(array("action"=>"logoff"), "security"));
+                $logoutLink->link = "Logout";
+                $retstr = '<!-- Tab links -->
+                    <div id="tab-links">
+                        <ul>
+                            <li>'.$profileLink->show().'<li>
+                            <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$newsLink->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                            <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$blogLink->show().'</li>';
+               if($this->objUser->isAdmin()) {
+                    $retstr .= '<li>&nbsp;&nbsp;&nbsp;&nbsp;'.$adminLink->show().'</li>';
+               }
+               else {
+                    $retstr .= '<li>&nbsp;&nbsp;&nbsp;&nbsp;'.$logoutLink->show().'</li>';
+               }
+               $retstr .= '
+                        </ul>
+                    </div>';
+            }
+            else {
+                $witsHome = new link("http://web.wits.ac.za/");
+                $witsHome->link = "Wits Home";
+                $witsAlumni = new link("http://web.wits.ac.za/Alumni/");
+                $witsAlumni->link = "Alumni";
+                $aboutLink = new link("http://web.wits.ac.za/AboutWits");
+                $aboutLink->link = "About";
+                $retstr = '<!-- Tab links -->
+                    <div id="tab-links">
+                        <ul>
+                            <li>'.$witsHome->show().'</li>
+                            <li>&nbsp;&nbsp;&nbsp;&nbsp;'.$witsAlumni->show().'</li>
+                            <li>'.$aboutLink->show().'</li>
+                        </ul>
+                    </div>';
+            }
+        }
+
         return $retstr;
     }
 
