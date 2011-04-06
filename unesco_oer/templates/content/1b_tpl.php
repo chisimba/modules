@@ -602,21 +602,23 @@ Sort By:
                                              */
 
                                             $MostAdaptedProducts = $this->objDbProducts->getMostAdaptedProducts();
-                                            $mostCounter = 0;
-                                            foreach ($MostAdaptedProducts as $product) {
-                                                //Get the adaptationst parent id
-                                                $productId = $product['parent_id'];
+
+                                            foreach ($MostAdaptedProducts as $childProduct) {
                                                 //Get the original products
-                                                $myTitle = $this->objDbProducts->getProductById($productId);
-                                                $product['mytitle'] = $myTitle['title'];
-                                                                                                                                                //Check if the creator is a group or an institution
-                                                if ($this->objDbGroups->isGroup($product['creator']) == true) {
+                                                $product = $this->objDbProducts->getProductById($childProduct['parent_id']);
+                                                //Get number of adaptations for the product
+                                                $product['noOfAdaptations'] = $childProduct['total'];
+                                                //Check if the creator is a group or an institution
+                                                $isGroupCreator = $this->objDbGroups->isGroup($product['creator']);
+
+                                                if ($isGroupCreator == true) {
                                                     $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
                                                 } else {
                                                     $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
                                                 }
 
                                                 $product['institution_thumbnail'] = $thumbnail['thumbnail'];
+                                                //$product['institution'] = $this->objInstitution->getInstitution();
                                                 echo $this->objProductUtil->populateMostAdapted($product);
                                             }
 ?>

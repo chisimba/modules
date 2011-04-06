@@ -236,7 +236,7 @@ class productutil extends object
 
         $content .=        '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
-                        	' . $product['mytitle'] . '<br><a href="#" class="adaptationLinks">' . $product['total']. ' adaptations</a>
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $product['noOfAdaptations']. ' adaptations</a>
                                 </div>
                                 <div class="tabsListingSpace"></div>';
         return $content;

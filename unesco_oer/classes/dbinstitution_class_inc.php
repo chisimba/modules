@@ -53,6 +53,7 @@ class dbinstitution extends dbtable {
         } else {
             return false;
         }
+        return count($this->getArray($sql));
     }
 
 }
