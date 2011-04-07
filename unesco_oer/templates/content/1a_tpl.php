@@ -673,7 +673,7 @@ $adaptationstring = "parent_id is null";
                         <div class="spaceBetweenRightBorderedDivs">
                             <div class="featuredHeader innerPadding">MOST...</div>
                         </div>
-                        <!--tabs --
+                        <!-- tabs
                         <div class="tabsOnState">ADOPTED</div>
                         <div class="tabsOffState">RATED</div>
                         <div class="tabsOffState">COMMENTED</div>
@@ -687,9 +687,10 @@ $adaptationstring = "parent_id is null";
                                         $objTabs = $this->newObject('tabcontent', 'htmlelements');
                                         $objTabs->setWidth(180);
                                         $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution);
+                                        $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
                                         $objTabs->addTab('Adapted', $mostAdapted);
                                         $objTabs->addTab('Rated', "rated goes here");
-                                        $objTabs->addTab('Commented', "commented goes here");
+                                        $objTabs->addTab('Commented', $mostCommented);
                                         echo $objTabs->show();
                                 ?>
 

@@ -272,5 +272,35 @@ class productutil extends object
                                             return $content;
     }
 
- }
+    public function displayMostCommented(&$objDbProducts, &$objDbComments){
+        $content = '';
+        $mostCommentedProducts = $objDbComments->getMostCommented(3);
+
+        foreach ($mostCommentedProducts as $commentedProduct) {
+            $product = $objDbProducts->getProductById($commentedProduct['product_id']);
+            
+            $product['noOfAdaptations'] = $objDbProducts->getNoOfAdaptations($commentedProduct['product_id']);
+            $content .= $this->populateMostCommented($product);
+        }
+
+        return $content;
+    }
+
+     /**
+     * This function populates a page with the most commented products in a most commented tab
+     * @param <type> $product
+     * @return <type> $content
+     */
+    public function populateMostCommented($product) {
+        $content = '';
+
+        $content .= '   <div class="leftImageTabsList"><img src="' . $product['thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
+                                <div class="rightTextTabsList">
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $product['noOfAdaptations'] . ' adaptations</a>
+                                </div>
+                                <div class="tabsListingSpace"></div>';
+        return $content;
+    }
+
+}
 ?>

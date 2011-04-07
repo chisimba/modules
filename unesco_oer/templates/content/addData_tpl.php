@@ -149,6 +149,19 @@ $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $table->addCell('&nbsp;&nbsp;' . $button->show());
 $table->endRow();
 
+//new comment options
+$header = new htmlHeading();
+$header->str = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newcomment','unesco_oer');
+$header->type = 2;
+$table->startRow();
+$table->addCell($header->show());
+$button = new button('addComment', "Add Comment");
+$uri = $this->uri(array('action' => 'chooseProductToComment'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$table->addCell('&nbsp;&nbsp;' . $button->show());
+$table->endRow();
+
 //return to Home
 $table->startRow();
 $button = new button('home', "HOME");

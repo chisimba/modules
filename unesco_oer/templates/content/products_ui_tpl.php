@@ -21,11 +21,7 @@ $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 
 //get parent if any
-$products = $this->objDbProducts->getProductByID($productID);
-$product = $products[0];
-
-if (count($products) > 1)
-    echo "warning: product ID not unique";
+$product = $this->objDbProducts->getProductByID($productID);
 
 // setup and show heading
 $header = new htmlHeading();

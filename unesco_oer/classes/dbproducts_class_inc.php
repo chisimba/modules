@@ -93,7 +93,7 @@ class dbproducts extends dbtable
         $products = $this->getArray($sql);
         return $products[0]; //TODO add error handler for non unique ID.
     }
-
+    
     /*
      * function takes a creator name and if it has an adaptation
      * @param $creatorName
