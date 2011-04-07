@@ -11,6 +11,7 @@ class unesco_oer extends controller {
     public $objFeaturedProducUtil;
     public $objDbGroups;
     public $objDbInstitution;
+    public $objDbComments;
     public $objUser;
     /**
      *
@@ -32,6 +33,7 @@ class unesco_oer extends controller {
         $this->objFeaturedProducUtil = $this->getObject('featuredproductutil');
         $this->objDbGroups = $this->getObject('dbgroups');
         $this->objDbInstitution = $this->getObject('dbinstitution');
+	$this->objDbComments = $this->getObject('dbcomments');
         $this->objUser = $this->getObject('user', 'security');
     }
 
@@ -421,6 +423,37 @@ test;
             }
         }
         return $results;
+    }
+
+    /*
+     * Method to display page with products to comment on
+     */
+
+    public function __chooseProductToComment() {
+        return 'chooseComment_tpl.php';
+    }
+
+    /*
+     * Method to display page with entry options for comment
+     */
+
+    public function __createComment() {
+        $id = $this->getParam('id');
+        $this->setVar('productID', $id);
+        return 'createComment_tpl.php';
+    }
+
+     /*
+     * Method to retrieve entries from user on the createGroupUI_tpl.php page
+     * and add it to the tbl_unesco_oer_group table
+     */
+
+    public function __createCommentSubmit() {
+        $id = $this->getParam('id');
+        $comment = $this->getParam('newComment');
+
+        $this->objDbComments->addComment($id, NULL, $comment);
+        return $this->__addData();
     }
 
 }
