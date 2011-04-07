@@ -51,7 +51,8 @@ class dbmediafiledata extends dbTable {
      */
     function init() {
         parent::init('tbl_podcaster_metadata_media');
-        $this->objUser = $this->getObject('user', 'security');        
+        $this->objUser = $this->getObject('user', 'security');
+        $this->userId = $this->objUser->userId();
     }
 
     /**
@@ -121,7 +122,22 @@ class dbmediafiledata extends dbTable {
      * @return array
      */
     public function getLatestPodcasts($published='1') {
-        return $this->getAll('where publishstatus="'.$published.'" ORDER BY datecreated DESC, timecreated DESC');
+        return $this->getAll('where publishstatus="' . $published . '" ORDER BY datecreated DESC, timecreated DESC');
+    }
+
+    /**
+     * Function that returns the latest 10 podcasts
+     * @param string $published Determine whether to return published or unpublished podcasts
+     * @return array
+     */
+    public function getLatestAccessiblePodcasts($published='1') {
+        $pods = Null;
+        if ($this->userId == NULL) {
+            $pods = $this->getAll('where publishstatus="' . $published . '" AND access="public" ORDER BY datecreated DESC, timecreated DESC');
+        } else {
+            $pods = $this->getAll('where publishstatus="' . $published . '" AND (access="public" or access="open") ORDER BY datecreated DESC, timecreated DESC');
+        }
+        return $pods;
     }
 
     /**
@@ -130,7 +146,7 @@ class dbmediafiledata extends dbTable {
      * @return array
      */
     public function getLatestFolderPodcasts($folderId, $published='1') {
-        return $this->getAll('where uploadpathid="' . $folderId . '" and publishstatus="'.$published.'" ORDER BY datecreated DESC, timecreated DESC');
+        return $this->getAll('where uploadpathid="' . $folderId . '" and publishstatus="' . $published . '" ORDER BY datecreated DESC, timecreated DESC');
     }
 
     /**
@@ -140,23 +156,24 @@ class dbmediafiledata extends dbTable {
      * @param string $sort How string should be ordered
      * @return array
      */
-    public function getAllAuthorPodcasts($creatorId,$sort='datecreated_desc') {
+    public function getAllAuthorPodcasts($creatorId, $sort='datecreated_desc') {
         $sortstring = "";
-        if($sort == 'datecreated_desc'){
+        if ($sort == 'datecreated_desc') {
             $sortstring = "datecreated DESC, timecreated DESC";
-        } elseif ($sort == 'datecreated_asc'){
+        } elseif ($sort == 'datecreated_asc') {
             $sortstring = "datecreated ASC, timecreated ASC";
-        } elseif ($sort == 'artist_asc'){
+        } elseif ($sort == 'artist_asc') {
             $sortstring = "artist ASC, datecreated DESC, timecreated DESC";
-        } elseif ($sort == 'artist_desc'){
+        } elseif ($sort == 'artist_desc') {
             $sortstring = "artist DESC, datecreated DESC, timecreated DESC";
-        } elseif ($sort == 'title_asc'){
+        } elseif ($sort == 'title_asc') {
             $sortstring = "title ASC";
-        } elseif ($sort == 'title_desc'){
+        } elseif ($sort == 'title_desc') {
             $sortstring = "title DESC";
         }
-        return $this->getAll('where creatorid="' . $creatorId . '" ORDER BY '.$sortstring);
+        return $this->getAll('where creatorid="' . $creatorId . '" ORDER BY ' . $sortstring);
     }
+
     /**
      * Function that returns the podcasts listed, why this - to allow sorting
      * @param string $list The id's that you want returned ("id1" or "id2" or "id3") note its double quotes
@@ -164,33 +181,34 @@ class dbmediafiledata extends dbTable {
      * @param string $sort How string should be ordered
      * @return array
      */
-    public function getAllListedPodcasts($list,$sort='datecreated_desc') {        
+    public function getAllListedPodcasts($list, $sort='datecreated_desc', $published='1') {
         $sortstring = "";
-        if($sort == 'datecreated_desc'){
+        if ($sort == 'datecreated_desc') {
             $sortstring = "datecreated DESC, timecreated DESC";
-        } elseif ($sort == 'datecreated_asc'){
+        } elseif ($sort == 'datecreated_asc') {
             $sortstring = "datecreated ASC, timecreated ASC";
-        } elseif ($sort == 'artist_asc'){
+        } elseif ($sort == 'artist_asc') {
             $sortstring = "artist ASC, datecreated DESC, timecreated DESC";
-        } elseif ($sort == 'artist_desc'){
+        } elseif ($sort == 'artist_desc') {
             $sortstring = "artist DESC, datecreated DESC, timecreated DESC";
-        } elseif ($sort == 'title_asc'){
+        } elseif ($sort == 'title_asc') {
             $sortstring = "title ASC";
-        } elseif ($sort == 'title_desc'){
+        } elseif ($sort == 'title_desc') {
             $sortstring = "title DESC";
         }
-        $podData = $this->getAll("where ".$list." ORDER BY ".$sortstring);
-        
+        $podData = $this->getAll("where publishstatus='" . $published . "' AND (" . $list . ") ORDER BY " . $sortstring);
         return $podData;
     }
+
     /**
      * Function that returns the latest podcasts by a certain author/creator/artist names
      * @param string $published Determine whether to return published or unpublished podcasts
      * @return array
      */
     public function getLatestAuthorPodcasts($author, $published='1') {
-        return $this->getAll('where artist="' . $author . '" and publishstatus="'.$published.'" ORDER BY datecreated DESC, timecreated DESC');
+        return $this->getAll('where artist="' . $author . '" and publishstatus="' . $published . '" ORDER BY datecreated DESC, timecreated DESC');
     }
+
     /*
      * Function to get podcast based on passed params
      * @param string $filter the type of parameter to use
@@ -223,13 +241,17 @@ class dbmediafiledata extends dbTable {
                 $sql .= "where B.tag like '%" . $filtervalue . "%'";
                 break;
             default:
-                $sql .= "where A.description like '%" . $filtervalue . "%' 
+                $sql .= "where (A.description like '%" . $filtervalue . "%'
                     or A.title like '%" . $filtervalue . "%' or A.artist like '%" . $filtervalue . "%'
-                        or A.filename like '%" . $filtervalue . "%' or B.tag like '%" . $filtervalue . "%'";
+                        or A.filename like '%" . $filtervalue . "%' or B.tag like '%" . $filtervalue . "%')";
                 break;
         }
-
-        $sql .= " and publishstatus='".$published."' ORDER BY datecreated DESC, timecreated DESC";
+        //If logged in
+        if (!empty($this->userId)) {            
+            $sql .= " and (A.access='open' or A.access='public') and A.publishstatus='" . $published . "' ORDER BY A.datecreated DESC, A.timecreated DESC";
+        } else {
+            $sql .= " and A.access='public' and A.publishstatus='" . $published . "' ORDER BY A.datecreated DESC, A.timecreated DESC";
+        }        
 
         $results = $this->getArray($sql);
         //Remove duplicates
@@ -252,7 +274,7 @@ class dbmediafiledata extends dbTable {
      * @return array
      */
     public function getLatestPodcast($published='1') {
-        return $this->getAll('where publishstatus="'.$published.'" ORDER BY datecreated, timecreated DESC LIMIT 1');
+        return $this->getAll('where publishstatus="' . $published . '" ORDER BY datecreated, timecreated DESC LIMIT 1');
     }
 
     /**
@@ -262,18 +284,18 @@ class dbmediafiledata extends dbTable {
      * @param string $description
      * @param string $license
      * @param string $artist
-     * @param string $event
+     * @param string $accesslevel
      * @param string $publishstatus
      * @return array
      */
-    public function updateFileDetails($id, $title, $description, $license, $artist, $event, $publishstatus) {
+    public function updateFileDetails($id, $title, $description, $license, $artist, $accesslevel, $publishstatus) {
         return $this->update('id', $id, array(
             'title' => $title,
             'description' => $description,
             'cclicense' => $license,
             'artist' => $artist,
             'publishstatus' => $publishstatus,
-            'event' => $event
+            'access' => $accesslevel
         ));
     }
 
@@ -299,5 +321,7 @@ class dbmediafiledata extends dbTable {
     function updateWidthHeight($fileId, $width, $height) {
         return $this->update('fileid', $fileId, array('width' => $width, 'height' => $height));
     }
+
 }
+
 ?>

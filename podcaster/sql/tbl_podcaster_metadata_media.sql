@@ -89,7 +89,7 @@ $fields = array(
         'type' => 'text',
         'length' => 10
         ),
-    'event' => array(
+    'access' => array(
         'type' => 'text',
         'length' => 50
         ),

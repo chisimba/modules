@@ -1,4 +1,5 @@
 <?php
+
 if (trim($query) == '') {
     echo '<h1>' . $this->objLanguage->languageText("mod_podcaster_search", "podcaster", 'Search') . '</h1>';
 } else {
@@ -41,11 +42,11 @@ if (trim($query) != '') {
     if ($query == '*') {
         $query = '';
     }
-    
-    $results = $this->objMediaFileData->searchFileInAllFields("all", $query);
+
+    $results = $this->objMediaFileData->searchFileInAllFields("all", $query, '1');
 
     $numHits = count($results);
-    
+
     $displayResults = $this->objViewer->displayAsTable($results);
 
 

@@ -437,7 +437,7 @@ class viewerutils extends object {
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objUser = $this->getObject('user', 'security');
         $objTags = $this->getObject('dbpodcastertags');
-        $latestFiles = $this->objMediaFileData->getLatestPodcasts();
+        $latestFiles = $this->objMediaFileData->getLatestAccessiblePodcasts();
 
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $latest10Desc = $objLanguage->languageText("mod_podcaster_latest10desc", "podcaster");

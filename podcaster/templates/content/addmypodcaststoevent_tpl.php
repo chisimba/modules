@@ -13,7 +13,7 @@ $this->loadClass('button', 'htmlelements');
 
 //Get Group Name
 $groupName = $this->_objGroupAdmin->getName($groupId);
-$groupName = explode("^", $groupName);
+$groupName = explode("^^", $groupName);
 $groupName = $groupName[1];
 
 $heading = new htmlheading();
@@ -80,8 +80,8 @@ if (count($files) == 0) {
     echo $podForm->show();
 }
 
-$homeLink = new link($this->uri(NULL));
-$homeLink->link = $this->objLanguage->languageText("mod_podcaster_backtohome", "podcaster", 'Back to home');
+$homeLink = new link($this->uri(array('action' => 'configure_events')));
+$homeLink->link = $this->objLanguage->languageText("mod_podcaster_backtoevents", "podcaster", 'Back to events');
 
 echo '<p>' . $homeLink->show() . '</p>';
 ?>

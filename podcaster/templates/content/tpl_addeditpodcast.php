@@ -7,6 +7,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass("htmltable", 'htmlelements');
 $this->loadClass("textinput", "htmlelements");
 $this->loadClass("dropdown", "htmlelements");
+$this->loadClass("radio", "htmlelements");
 
 
 $header = new htmlHeading();
@@ -79,13 +80,22 @@ $objTable->addCell($this->objLanguage->languageText('mod_podcaster_publishedstat
 $objTable->addCell($published->show(), Null, 'top', 'left');
 $objTable->endRow();
 
-//Event
-$podevent = new textinput("event", $filedata['event']);
-$podevent->size = 60;
+//Access
+$access = new radio('access');
+$access->setBreakSpace('<br />');
+$access->addOption('public', '<strong>' . $this->objLanguage->languageText('word_public', 'system', 'Public') . '</strong> - <span class="caption">' . $this->objLanguage->languageText('mod_podcaster_publicpodexplained', 'podcaster', 'Only the members of a certain event where this podcast is part of can access') . '</span>');
+$access->addOption('open', '<strong>' . $this->objLanguage->languageText('word_open', 'system', 'Open') . '</strong> - <span class="caption">' . $this->objLanguage->languageText('mod_podcaster_openpodexplained', 'podcaster', 'Podcast can be accessed by users that are logged in') . '</span>');
+$access->addOption('private', '<strong>' . $this->objLanguage->languageText('word_private', 'system', 'Private') . '</strong> - <span class="caption">' . $this->objLanguage->languageText('mod_podcaster_privatepodexplained', 'podcaster', 'Only the members of a certain event where this podcast is part of can access') . '<span class="caption">');
+
+if (!empty($eventsData['access'])) {
+    $access->setSelected($eventsData['access']);
+} else {
+    $access->setSelected('public');
+}
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_podcaster_event', 'podcaster', 'Event') . " :", 140, 'top', 'right');
-$objTable->addCell($podevent->show(), Null, 'top', 'left');
+$objTable->addCell($this->objLanguage->languageText('mod_podcaster_accesslevel', 'podcaster', 'Access level') . " :", 140, 'top', 'right');
+$objTable->addCell($access->show(), Null, 'top', 'left');
 $objTable->endRow();
 
 // CC licence

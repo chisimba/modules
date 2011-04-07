@@ -175,8 +175,8 @@ class podcaster extends controller {
         $tagCloud = $this->objTags->getTagCloud();
         $this->setVarByRef('tagCloud', $tagCloud);
 
-        $latestFiles = $this->objMediaFileData->getLatestPodcasts();
-        $this->setVarByRef('latestFiles', $latestFiles);
+        //$latestFiles = $this->objMediaFileData->getLatestAccessiblePodcasts();
+        //$this->setVarByRef('latestFiles', $latestFiles);
 
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $hometpl = $objSysConfig->getValue('HOMETPL', 'podcaster');
@@ -218,7 +218,7 @@ class podcaster extends controller {
         $this->setVarByRef('categoriesList', $categoriesList);
         $groupName = $this->_objGroupAdmin->getName($eventId);
 
-        $groupName = explode("^", $groupName);
+        $groupName = explode("^^", $groupName);
         $groupName = $groupName['1'];
         $eventsData = $this->objDbEvents->listByEvent($eventId);
         $this->setVarByRef('eventId', $eventId);
@@ -329,7 +329,6 @@ class podcaster extends controller {
             $access = $this->getParam('access', NULL);
             $publish = $this->getParam('publish', NULL);
             $eventId = $this->objEventUtils->addGroups($this->userId . "^^" . $event);
-
             $this->objDbEvents->insertSingle($eventId, $categoryId, $access, $publish);
         }
         return $this->nextAction('configure_events');
@@ -1475,6 +1474,25 @@ Sincerely,<br />
         $userId = $this->userId;
 
         $groupId = $this->getParam('id', '');
+        //Get group data
+        $groupData = $this->objDbEvents->listByEvent($groupId);
+        $access = $groupData[0]["access"];
+
+        if (empty($groupData)) {
+            return $this->nextAction('home');
+        } else {
+            //Check permissions
+            if (empty($userId) && $access != "public") {
+                //If not logged in, is event public?
+                return $this->nextAction('home');
+            } elseif ($access == "private") {
+                $isGrpMember = $this->_objGroupAdmin->isGroupMember($userId, $groupId);
+                if (!$isGrpMember) {
+                    return $this->nextAction('home');
+                }
+            }
+            //If access is open proceed as anyone logged in can view it
+        }
 
         if (empty($groupId)) {
             return $this->nextAction('myevents');
@@ -1703,13 +1721,13 @@ Sincerely,<br />
         $cclicense = $this->getParam("creativecommons", "");
         $artist = $this->getParam("artist", "");
         $description = $this->getParam("description", "");
-        $podevent = $this->getParam("event", "");
+        $accesslevel = $this->getParam("access", "");
         $publishstatus = $this->getParam("publishstatus", "");
         $tags = $this->getParam("tags", "");
         $tags = explode(",", $tags);
         $this->objTags->addTags($id, $tags);
 
-        $filedata = $this->objMediaFileData->updateFileDetails($id, $podtitle, $description, $cclicense, $artist, $podevent, $publishstatus);
+        $filedata = $this->objMediaFileData->updateFileDetails($id, $podtitle, $description, $cclicense, $artist, $accesslevel, $publishstatus);
         $this->setVarByRef("filedata", $filedata);
         return $this->nextAction('view', array('id' => $id, 'fileid' => $fileid));
     }
@@ -1961,6 +1979,7 @@ Sincerely,<br />
         $objViewer = $this->getObject('viewer');
         echo $objViewer->getUserFeed($userid);
     }
+
     /**
      * Used to display the latest podcasts of an event as an RSS Feed
      *
@@ -1969,8 +1988,8 @@ Sincerely,<br />
         $groupId = $this->getParam('groupId');
         $objViewer = $this->getObject('viewer');
         echo $objViewer->getEventFeed($groupId);
-
     }
+
     /**
      * Get own RSS Feed
      *

@@ -1,51 +1,50 @@
 <?php
+
 // security check - must be included in all scripts
-if(!$GLOBALS['kewl_entry_point_run']){
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
+
 // end of security
 
-class podcastertoolbar2 extends object
-{
+class podcastertoolbar2 extends object {
 
     /**
-    * Constructor
-    */
-    public function init()
-    {
+     * Constructor
+     */
+    public function init() {
 
         $this->loadClass('link', 'htmlelements');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
         $this->objLanguage = $this->getObject('language', 'language');
+        // Instantiate the user object.
+        $this->objUser = $this->getObject("user", "security");
     }
 
     /**
-    * Method to show the Toolbar
-    * @return string
-    */
-    public function show()
-    {
-        $objUser = $this->getObject('user', 'security');
-        $userIsLoggedIn = $objUser->isLoggedIn();
+     * Method to show the Toolbar
+     * @return string
+     */
+    public function show() {        
+        $userIsLoggedIn = $this->objUser->isLoggedIn();
 
         $menuOptions = array(
-            array('action'=>'steponeupload', 'text'=>'Upload', 'actioncheck'=>array('upload'), 'module'=>'podcaster', 'status'=>'loggedin'),
-            array('action'=>'myuploads', 'text'=>'My Uploads', 'actioncheck'=>array('myuploads'), 'module'=>'podcaster', 'status'=>'loggedin'),
-            array('action'=>'myevents', 'text'=>'My Events', 'actioncheck'=>array('myevents'), 'module'=>'podcaster', 'status'=>'loggedin'),
-            array('action'=>'viewcategories', 'text'=>'Categories', 'actioncheck'=>array('viewcategories'), 'module'=>'podcaster', 'status'=>'loggedin'),
-            array('action'=>'search', 'text'=>'Search', 'actioncheck'=>array('search'), 'module'=>'podcaster', 'status'=>'both'),
-            array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
-            array('action'=>NULL, 'text'=>'My Details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
-            array('action'=>'login', 'text'=>'Login', 'actioncheck'=>array('login'), 'module'=>'podcaster', 'status'=>'login'),
-            array('action'=>'login', 'text'=>'Register', 'actioncheck'=>array(), 'module'=>'userregistration', 'status'=>'login'),
-            array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin'),
+            array('action' => 'steponeupload', 'text' => 'Upload', 'actioncheck' => array('upload'), 'module' => 'podcaster', 'status' => 'loggedin'),
+            array('action' => 'myuploads', 'text' => 'My Uploads', 'actioncheck' => array('myuploads'), 'module' => 'podcaster', 'status' => 'loggedin'),
+            array('action' => 'myevents', 'text' => 'My Events', 'actioncheck' => array('myevents'), 'module' => 'podcaster', 'status' => 'loggedin'),
+            array('action' => 'viewcategories', 'text' => 'Categories', 'actioncheck' => array('viewcategories'), 'module' => 'podcaster', 'status' => 'admin'),
+            array('action' => 'search', 'text' => 'Search', 'actioncheck' => array('search'), 'module' => 'podcaster', 'status' => 'both'),
+            array('action' => NULL, 'text' => 'Admin', 'actioncheck' => array(), 'module' => 'toolbar', 'status' => 'admin'),
+            array('action' => NULL, 'text' => 'My Details', 'actioncheck' => array(), 'module' => 'userdetails', 'status' => 'loggedin'),
+            array('action' => 'login', 'text' => 'Login', 'actioncheck' => array('login'), 'module' => 'podcaster', 'status' => 'login'),
+            array('action' => 'login', 'text' => 'Register', 'actioncheck' => array(), 'module' => 'userregistration', 'status' => 'login'),
+            array('action' => 'logoff', 'text' => 'Logout', 'actioncheck' => array(), 'module' => 'security', 'status' => 'loggedin'),
         );
 
         $usedDefault = FALSE;
         $str = '';
 
-        foreach ($menuOptions as $option)
-        {
+        foreach ($menuOptions as $option) {
             // First Step, Check whether item will be added to menu
             // 1) Check Items to be Added whether user is logged in or not
             if ($option['status'] == 'both') {
@@ -60,7 +59,7 @@ class podcastertoolbar2 extends object
                 $okToAdd = TRUE;
 
                 // 4) Check if User is Admin
-            } else if ($option['status'] == 'admin' && $objUser->isAdmin() && $userIsLoggedIn) {
+            } else if ($option['status'] == 'admin' && $this->objUser->isAdmin() && $userIsLoggedIn) {
                 $okToAdd = TRUE;
             } else {
                 $okToAdd = FALSE; // ELSE FALSE
@@ -93,37 +92,36 @@ class podcastertoolbar2 extends object
 
         // Check whether Navigation has Current/Highlighted item
         // Invert Result for Home Link
-        $usedDefault = $usedDefault ? FALSE: TRUE;
+        $usedDefault = $usedDefault ? FALSE : TRUE;
 
         // Add Home Link
         $home = $this->generateItem(NULL, 'podcaster', 'Home', $usedDefault);
 
 
         // Return Toolbar
-        return '<div id="modernbricksmenum"><ul>'.$home.$str.'</ul>';
-
-
+        return '<div id="modernbricksmenum"><ul>' . $home . $str . '</ul>';
     }
 
-    private function generateItem($action='', $module='podcaster', $text, $isActive=FALSE)
-    {
-        switch ($module)
-        {
-            case '_default' : $isRegistered = TRUE; break;
-                default: $isRegistered = $this->objModules->checkIfRegistered($module); break;
-            }
-
-            if ($isRegistered) {
-                $link = new link ($this->uri(array('action'=>$action), $module));
-                $link->link = $text;
-
-                $isActive = $isActive ? ' id="current"' : '';
-
-                return '<li'.$isActive.'>'.$link->show().'</li>';
-            } else {
-                return '';
-            }
+    private function generateItem($action='', $module='podcaster', $text, $isActive=FALSE) {
+        switch ($module) {
+            case '_default' : $isRegistered = TRUE;
+                break;
+            default: $isRegistered = $this->objModules->checkIfRegistered($module);
+                break;
         }
 
+        if ($isRegistered) {
+            $link = new link($this->uri(array('action' => $action), $module));
+            $link->link = $text;
+
+            $isActive = $isActive ? ' id="current"' : '';
+
+            return '<li' . $isActive . '>' . $link->show() . '</li>';
+        } else {
+            return '';
+        }
     }
-    ?>
+
+}
+
+?>

@@ -105,6 +105,16 @@ class eventutils extends dbTable {
      * @var Object for context users
      */
     public $objContextUsers;
+    /**
+     *
+     * @var Object for DB dbpodcaster_events
+     */
+    public $objDBPodcasterEvents;
+    /**
+     *
+     * @var Object for DB dbpodcaster_category
+     */
+    public $objDBPodcasterCategory;
 
     /**
      *
@@ -126,6 +136,8 @@ class eventutils extends dbTable {
         $this->_objManageGroups = &$this->newObject('managegroups', 'contextgroups');
         $this->objContextUsers = $this->getObject('contextusers', 'contextgroups');
         $this->objMediaFileData = $this->getObject('dbmediafiledata');
+        $this->objDBPodcasterEvents = $this->getObject('dbpodcaster_events');
+        $this->objDBPodcasterCategory = $this->getObject('dbpodcaster_category');
         //TEMPORARY Check if class groupops exists
         if (file_exists($this->objConfig->getsiteRootPath() . "core_modules/groupadmin/classes/groupops_class_inc.php")) {
             $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
@@ -191,7 +203,7 @@ class eventutils extends dbTable {
         $groupId = $this->_objGroupAdmin->addGroupUser($newGroupId, $this->objUser->userId());
         // Now create the ACLS
         $this->_objManageGroups->createAcls($userPid, $title);
-        return $groupId;
+        return $newGroupId;
     }
 
     /**
@@ -205,7 +217,6 @@ class eventutils extends dbTable {
         $table = &$this->newObject('htmltable', 'htmlelements');
         $linkstable = &$this->newObject('htmltable', 'htmlelements');
         $objGroups = &$this->newObject('managegroups', 'contextgroups');
-        $mngfeatureBox = &$this->newObject('featurebox', 'navigation');
 
         $table->width = '40%';
         $linkstable->width = '40%';
@@ -230,110 +241,125 @@ class eventutils extends dbTable {
         $addlink->link = $this->objLanguage->languageText("mod_podcaster_addevent", 'podcaster', 'Add event');
         $linkAdd = $addlink->show();
         $linkstableRow = array(
-            '<hr/>' . $linkAdd . ' ' . $mylinkAdd
+            $linkAdd . ' ' . $mylinkAdd
         );
         $linkstable->addRow($linkstableRow);
+        $wordEvent = $this->objLanguage->languageText("mod_podcaster_event", 'podcaster', 'Event');
+        $wordCategory = $this->objLanguage->languageText("mod_podcaster_category", 'podcaster', 'Category');
+        $wordAccess = $this->objLanguage->languageText("mod_podcaster_access", 'podcaster', 'Access');
+        $wordPublished = $this->objLanguage->languageText("mod_podcaster_published", 'podcaster', 'Published') . "?";
+        $wordManage = $this->objLanguage->languageText("mod_podcaster_manage", 'podcaster', 'Manage');
+        //Add title
+        $tableRow = array(
+            "<b>" . $wordEvent . "</b> ", "<b>" . $wordCategory . "</b> ", "<b>" . $wordAccess . "</b> ", "<b>" . $wordPublished . "</b> ", "<b>" . $wordManage . "</b> "
+        );
+        $table->addRow($tableRow);
         //Get group members
         //Get group id
         $userPid = $this->objUser->PKId($this->objUser->userId());
         //get the descendents.
-        if (class_exists('groupops', false)) {
+        if (class_exists('groupops')) {
             $usergroupId = $this->_objGroupAdmin->getId($userPid);
             $usersubgroups = $this->_objGroupAdmin->getSubgroups($usergroupId);
+
             //Check if empty
             if (!empty($usersubgroups)) {
-                foreach ($usersubgroups as $subgroup) {
-                    // The member list of this group
-                    $myGroupId = array();
-                    foreach (array_keys($subgroup) as $myGrpId) {
-                        $myGroupId[] = $myGrpId;
+                $subgroup = $usersubgroups[0];
+                // The member list of this group
+                $myGroupsData = array();
+                foreach ($subgroup as $key => $myGrpId) {
+                    $groupName = $this->_objGroupAdmin->getName($key);
+                    $findme = "^^";
+                    $pos = strpos($groupName, $findme);
+                    if ($pos) {
+                        $groupName = explode("^^", $groupName);
+                        $groupName = $groupName[1];
+                        $myGroupsData[] = array('groupId' => $key, 'groupName' => $groupName);
                     }
                 }
             }
-            $fields = array(
-                'firstName',
-                'surname',
-                'tbl_users.id'
-            );
+            /* $fields = array(
+              'firstName',
+              'surname',
+              'tbl_users.id'
+              ); */
             //Check if empty
-            if (!empty($usersubgroups)) {
-                foreach ($myGroupId as $groupId) {
-                    $membersList = $this->_objGroupAdmin->getGroupUsers($groupId, $fields);
-                    $groupName = $this->_objGroupAdmin->getName($groupId);
-                    $groupName = explode("^^", $groupName);
-                    if (count($groupName) == 2) {
-                        $groupName = $groupName[1];
-                        foreach ($membersList as $users) {
-                            if ($users) {
-                                $fullName = $users['firstname'] . " " . $users['surname'];
-                                $userPKId = $users['id'];
-                                $tableRow = array(
-                                    $fullName
-                                );
-                                $table->addRow($tableRow);
-                            } else {
-                                $tableRow = array(
-                                    '<div align="left" style="font-size:small;font-weight:bold;color:#sCCCCCC;font-family: Helvetica, sans-serif;">' . $this->objLanguage->languageText('mod_podcaster_manage', 'podcaster', 'Manage') . '</div>'
-                                );
-                                $table->addRow($tableRow);
-                            }
-                        }
-                        //Add Users
-                        $iconManage = $this->getObject('geticon', 'htmlelements');
-                        $iconManage->setIcon('add_icon');
-                        $iconManage->alt = $this->objLanguage->languageText("mod_podcaster_add", 'podcaster', 'Add') . ' / ' . $this->objLanguage->languageText("mod_podcaster_edit", 'podcaster', 'Edit') . ' ' . $groupName;
-                        $iconManage->title = $this->objLanguage->languageText("mod_podcaster_add", 'podcaster', 'Add') . ' / ' . $this->objLanguage->languageText("mod_podcaster_edit", 'podcaster', 'Edit') . ' ' . $groupName;
-                        $mnglink = new link($this->uri(array(
-                                            'module' => 'podcaster',
-                                            'action' => 'viewevents',
-                                            'id' => $groupId
-                                        )));
-                        //	    		$mnglink->link = $this->objLanguage->languageText('mod_podcaster_manage', 'podcaster', 'Manage').' '.$subgroup['name'].' '.$iconManage->show();
-                        $mnglink->link = $iconManage->show();
-                        $linkManage = $mnglink->show();
+            if (!empty($myGroupsData)) {
+                foreach ($myGroupsData as $groupData) {
+                    $groupId = $groupData['groupId'];
+                    $groupName = $groupData['groupName'];
+                    //Add Users
+                    $iconManage = $this->getObject('geticon', 'htmlelements');
+                    $iconManage->setIcon('add_icon');
+                    $manageeventmembers = $this->objLanguage->languageText("mod_podcaster_manageeventmembers", 'podcaster', 'Manage event members');
+                    $iconManage->alt = $manageeventmembers;
+                    $iconManage->title = $manageeventmembers;
+                    $mnglink = new link($this->uri(array(
+                                        'module' => 'podcaster',
+                                        'action' => 'viewevents',
+                                        'id' => $groupId
+                                    )));
+                    $mnglink->link = $iconManage->show();
+                    $linkManage = $mnglink->show();
 
-                        //Edit Group Link
-                        $iconEdit = $this->getObject('geticon', 'htmlelements');
-                        $iconEdit->setIcon('edit');
-                        $iconEdit->title = $this->objLanguage->languageText("mod_podcaster_editevent", 'podcaster', 'Edit event');
-                        $iconEdit->alt = $this->objLanguage->languageText("mod_podcaster_editevent", 'podcaster', 'Edit event');
+                    //Edit Group Link
+                    $iconEdit = $this->getObject('geticon', 'htmlelements');
+                    $iconEdit->setIcon('edit');
+                    $editEventLang = $this->objLanguage->languageText("mod_podcaster_editevent", 'podcaster', 'Edit event');
+                    $iconEdit->title = $editEventLang;
+                    $iconEdit->alt = $editEventLang;
 
-                        $objLink = &$this->getObject('link', 'htmlelements');
-                        $objLink->link($this->uri(array(
-                                    'module' => 'podcaster',
-                                    'action' => 'edit_event',
-                                    'id' => $groupId
-                                )));
-                        $objLink->link = $iconEdit->show();
-                        $mylinkEdit = $objLink->show();
+                    $objLink = &$this->getObject('link', 'htmlelements');
+                    $objLink->link($this->uri(array(
+                                'module' => 'podcaster',
+                                'action' => 'edit_event',
+                                'id' => $groupId
+                            )));
+                    $objLink->link = $iconEdit->show();
+                    $mylinkEdit = $objLink->show();
 
-                        //Manage Events
-                        $iconShare = $this->getObject('geticon', 'htmlelements');
-                        $iconShare->setIcon('fileshare');
-                        $iconShare->alt = $this->objLanguage->languageText("mod_podcaster_configure", 'podcaster', 'Configure') . ' ' . $groupName . ' ' . $this->objLanguage->languageText("mod_podcaster_view", 'podcaster', 'View');
-                        $iconShare->title = $this->objLanguage->languageText("mod_podcaster_configure", 'podcaster', 'Configure') . ' ' . $groupName . ' ' . $this->objLanguage->languageText("mod_podcaster_view", 'podcaster', 'View');
-                        $mnglink = new link($this->uri(array(
-                                            'module' => 'podcaster',
-                                            'action' => 'manage_event',
-                                            'id' => $groupId
-                                        )));
-                        $mnglink->link = $iconShare->show();
-                        $linkMng = $mnglink->show();
-                        $tableRow = array(
-                            '<hr/>' . $linkManage . '  ' . $linkMng . " " . $mylinkEdit
-                        );
-                        $table->addRow($tableRow);
+                    //Manage Events
+                    $iconShare = $this->getObject('geticon', 'htmlelements');
+                    $iconShare->setIcon('fileshare');
+                    $addEventPods = $this->objLanguage->languageText("mod_podcaster_manageeventpodcasts", 'podcaster', 'Manage event podcasts');
+                    $iconShare->alt = $addEventPods;
+                    $iconShare->title = $addEventPods;
+                    $mnglink = new link($this->uri(array(
+                                        'module' => 'podcaster',
+                                        'action' => 'manage_event',
+                                        'id' => $groupId
+                                    )));
+                    $mnglink->link = $iconShare->show();
+                    $linkMng = $mnglink->show();
+                    //Get other group data
+                    $eventData = $this->objDBPodcasterEvents->listByEvent($groupId);
+                    $eventData = $eventData[0];
 
-                        $textinput = new textinput("groupname", $groupName);
-                        $str.= $mngfeatureBox->show($groupName, $table->show());
-                        $table = &$this->newObject('htmltable', 'htmlelements');
-                        $managelink = new link();
-                    }
-                } //end foreach
+                    //Check if already published
+                    $wordYes = $this->objLanguage->languageText("mod_podcaster_yes", 'podcaster', 'Yes');
+                    $wordNo = $this->objLanguage->languageText("mod_podcaster_no", 'podcaster', 'No');
+                    $publishStatus = ($eventData["publish_status"] == 'published' ? $wordYes : $wordNo);
+
+                    $eventAccess = ucwords($eventData["access"]);
+                    $categoryData = $this->objDBPodcasterCategory->listSingle($eventData['categoryid']);
+                    $categoryName = $categoryData[0]['category'];
+                    $tableRow = array(
+                        $groupName, $categoryName, $eventAccess, $publishStatus, $linkManage . '  ' . $linkMng . " " . $mylinkEdit
+                    );
+                    $table->addRow($tableRow);
+                }
+                $str.= $table->show();
+            }
+
+            if (empty($str)) {
+                $tableRow = array(
+                    $this->objLanguage->languageText("mod_podcaster_noeventsfound", 'podcaster', 'No events found')
+                );
+                $table->addRow($tableRow);
+                $str.= $table->show();
             }
         }
-        $str.= $mngfeatureBox->show(NULL, $linkstable->show());
-        return $str;
+        return $str . $linkstable->show();
         unset($users);
     }
 
@@ -359,81 +385,75 @@ class eventutils extends dbTable {
         //get the descendents.
         if (class_exists('groupops')) {
             //Get perm Id            
-            $usrGroups = $this->getUserPermGroups($userId);            
-            /*
-            $usergroupId = $this->_objGroupAdmin->getId($userPid);
-            $usersubgroups = $this->_objGroupAdmin->getSubgroups($usergroupId);
-            //Check if empty
-            if (!empty($usersubgroups)) {
-                foreach ($usersubgroups as $subgroup) {
-                    // The member list of this group
-                    $myGroupId = array();
-                    foreach (array_keys($subgroup) as $myGrpId) {
-                        $myGroupId[] = $myGrpId;
+            $usrGroups = $this->getUserPermGroups($userId);
+
+            if (!empty($usrGroups)) {
+                $myGroupsData = array();
+                //Retrieve the groupId's
+                foreach ($usrGroups as $thisGroup) {
+                    $groupId = $thisGroup['group_id'];
+                    $groupName = $this->_objGroupAdmin->getName($groupId);
+                    $findme = "^^";
+                    $pos = strpos($groupName, $findme);
+                    if ($pos) {
+                        $groupName = explode("^^", $groupName);
+                        $groupName = $groupName[1];
+                        $myGroupsData[] = array('groupId' => $groupId, 'groupName' => $groupName);
                     }
                 }
             }
-             */
-            if (!empty($usrGroups)) {
-                $myGroupId = array();
-                //Retrieve the groupId's
-                foreach ($usrGroups as $thisGroup) {
-                    $myGroupId[] = $thisGroup['group_id'];
-
-                }
-                $usersubgroups = $myGroupId;
-            }
-            
             $fields = array(
                 'firstName',
                 'surname',
                 'tbl_users.id'
             );
             //Check if empty
-            if (!empty($usersubgroups)) {
-                foreach ($myGroupId as $groupId) {
-                    $groupName = $this->_objGroupAdmin->getName($groupId);
-                    $groupName = explode("^^", $groupName);
+            if (!empty($myGroupsData)) {
+                foreach ($myGroupsData as $groupData) {
+                    $groupName = $groupData['groupName'];
+                    $groupId = $groupData['groupId'];
+                    //Add Users
+                    $iconManage = $this->getObject('geticon', 'htmlelements');
+                    $iconManage->setIcon('bookopen');
+                    $iconManage->alt = $this->objLanguage->languageText("mod_podcaster_vieweventpodcasts", 'podcaster', 'View event podcasts');
+                    $iconManage->title = $this->objLanguage->languageText("mod_podcaster_vieweventpodcasts", 'podcaster', 'View event podcasts');
 
-                    if (count($groupName) == 2) {
-                        $groupName = $groupName[1];
-                        //Add Users
-                        $iconManage = $this->getObject('geticon', 'htmlelements');
-                        $iconManage->setIcon('bookopen');
-                        $iconManage->alt = $this->objLanguage->languageText("mod_podcaster_vieweventpodcasts", 'podcaster', 'View event podcasts');
-                        $iconManage->title = $this->objLanguage->languageText("mod_podcaster_vieweventpodcasts", 'podcaster', 'View event podcasts');
+                    $mnglink = new link($this->uri(array(
+                                        'module' => 'podcaster',
+                                        'action' => 'event_podcasts',
+                                        'id' => $groupId
+                                    )));
 
-                        $mnglink = new link($this->uri(array(
-                                            'module' => 'podcaster',
-                                            'action' => 'event_podcasts',
-                                            'id' => $groupId
-                                        )));
+                    $mnglink->link = $iconManage->show();
 
-                        $mnglink->link = $iconManage->show();
+                    $linkManageImg = $mnglink->show();
 
-                        $linkManageImg = $mnglink->show();
+                    $mnglink = new link($this->uri(array(
+                                        'module' => 'podcaster',
+                                        'action' => 'event_podcasts',
+                                        'id' => $groupId
+                                    )));
 
-                        $mnglink = new link($this->uri(array(
-                                            'module' => 'podcaster',
-                                            'action' => 'event_podcasts',
-                                            'id' => $groupId
-                                        )));
+                    $mnglink->link = $groupName;
 
-                        $mnglink->link = $groupName;
+                    $linkManageTxt = $mnglink->show();
 
-                        $linkManageTxt = $mnglink->show();
-
-                        $tableRow = array(
-                            '<hr/>' . $linkManageTxt . '  ' . $linkManageImg
-                        );
-                        $table->addRow($tableRow);
-                        $str.= $table->show();
-                    }
+                    $tableRow = array(
+                        $linkManageTxt . '  ' . $linkManageImg
+                    );
+                    $table->addRow($tableRow);
+                    $str.= $table->show();
                 } //end foreach
             }
         }
+        if (empty($str)) {
+            $tableRow = array(
+                $this->objLanguage->languageText("mod_podcaster_noeventsfound", 'podcaster', 'No events found')
+            );
+            $table->addRow($tableRow);
+            $str.= $table->show();
+        }
         return $str;
-        unset($users);
     }
 
     /**
@@ -629,10 +649,10 @@ class eventutils extends dbTable {
             foreach ($subgroups as $subgroup) {
                 foreach ($subgroup as $grpData) {
                     $podId = $grpData['group_define_name'];
-                    $idHolder .= "id='".$podId."' or ";
-                    }
+                    $idHolder .= "id='" . $podId . "' or ";
+                }
             }
-            $idHolder = rtrim($idHolder, 'or ');            
+            $idHolder = rtrim($idHolder, 'or ');
             $podData = $this->objMediaFileData->getAllListedPodcasts($idHolder, $sort);
         }
         return $podData;
@@ -697,21 +717,23 @@ class eventutils extends dbTable {
     public function changeEventName($group_id, $newName) {
         parent::init('tbl_perms_groups');
         $userid = $this->objUser->userId();
-        $newName = $userid . "^^^^" . $newName;
+        $newName = $userid . "^^" . $newName;
         $this->update("group_id", $group_id, array(
             'group_define_name' => $newName
         ));
     }
+
     /**
      * Update group name
      * @param string $userId The User Id
      */
     public function getUserPermGroups($userId) {
-        parent::init('tbl_perms_groupusers');        
-        $usrPermId = $this->_objGroupAdmin->getPermUserId($userId);        
+        parent::init('tbl_perms_groupusers');
+        $usrPermId = $this->_objGroupAdmin->getPermUserId($userId);
         $usrGrps = $this->getAll('where perm_user_id="' . $usrPermId . '"');
         return $usrGrps;
     }
+
 }
 
 ?>

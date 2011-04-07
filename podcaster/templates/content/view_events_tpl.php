@@ -19,7 +19,7 @@ $mylinkConfig = $objLink->show();
 $header = new htmlheading();
 $header->type = 2;
 
-$header->str = $this->objLanguage->languageText('mod_podcaster_podcasts', 'podcaster', 'Podcasts') . " " . $mylinkConfig;
+$header->str = $this->objLanguage->languageText('mod_podcaster_eventlist', 'podcaster', 'Event list') . " " . $mylinkConfig;
 
 echo $header->show();
 
@@ -28,19 +28,6 @@ if (class_exists('groupops', false)) {
     $content = $this->objEventUtils->getUserEvents();
 }
 echo $content;
-//Add Group Link
-$objLink = &$this->getObject('link', 'htmlelements');
-$objLink->link($this->uri(array(
-            'module' => 'podcaster',
-            'action' => 'configure_events'
-        )));
-$objLink->link = $iconConfig->show();
-$mylinkAddImg = $objLink->show();
-
-$objLink->link($this->uri(array(
-            'module' => 'podcaster',
-            'action' => 'configure_events'
-        )));
 $objLink->link = $this->objLanguage->languageText("mod_podcaster_configureevents", 'podcaster', 'Configure events');
 $mylinkAddTxt = $objLink->show();
 
