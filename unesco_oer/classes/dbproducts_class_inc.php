@@ -38,6 +38,14 @@ class dbproducts extends dbtable
         return $this->getArray($sql);
     }
 
+    function getTotalEntries($filter)
+    {
+        $sql = "SELECT * FROM tbl_unesco_oer_products where $filter";
+        $count = $this->getArray($sql);
+
+        return count($count);
+    }
+
     function getFilteredProducts($filter)
     {
         $sql = "select * from tbl_unesco_oer_products where $filter";

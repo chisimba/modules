@@ -277,9 +277,47 @@ $adaptationstring = "parent_id is null";
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
                                     <div class="blueBackground">
-                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+
+
+
+
+                                              <?php
+                                            $products = $this->objDbProducts->getProducts(0, 10);
+                                            $filterNum = new dropdown('NumFilter');
+
+
+                                                $filterNum->addoption(null);
+                                                $filterNum->addOption('1');
+                                                $filterNum->addOption('2');
+                                                $filterNum->addOption('4');
+
+
+
+                                            $filterNum->setSelected($NumFilter);
+                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'LanguageFilter' => $LangFilter, "page" => '1a_tpl.php')));
+
+
+                                            $uri = $this->uri(array('action' => 'NumFilter'));
+                                            $filterNum->addOnChange('javascript: sendNumFilterform()');
+
+
+                                            $form->addtoform($filterNum->show());
+
+
+                                            echo $form->show();
+                        ?>
+
+
+
+
+
+
+
+
+
+<!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
                                             <option value="">All</option>
-                                        </select>
+                                        </select>-->
                                     </div>
                                     <br><br>
                                     <div class="blueBackground rightAlign">
@@ -548,7 +586,48 @@ $adaptationstring = "parent_id is null";
                                         <!-- Pagination-->
                                         <div class="paginationDiv">
                                             <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
-                                            <div class="paginationLinkDiv">
+
+                                              <?php
+
+
+
+//
+                                            $TotalRecords =  $this->objDbProducts->getTotalEntries($adaptationstring);
+
+                                           $TotalPages = $TotalRecords / $NumFilter;
+
+                                                echo $TotalRecords;
+                                                echo $NumFilter;
+                                                echo (int) $TotalPages;
+////////
+//////                                             foreach ($products as $product){
+////
+////                                                   $editdepartmentlink = new link($this->uri(array("action" => "edit", "id" => $row['id'])));
+////                                                    $editdepartmentlink->link = $objIcon->show();
+//                                             }
+////
+////
+//
+//
+//
+
+
+
+                                    ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--                                            <div class="paginationLinkDiv">
                                                 <a href="#" class="pagination">Prev</a>
                                                 <a href="#" class="pagination">1</a>
                                                 <a href="#" class="pagination">2</a>
@@ -561,7 +640,7 @@ $adaptationstring = "parent_id is null";
                                                 <a href="#" class="pagination">9</a>
                                                 <a href="#" class="pagination">10</a>
                                                 <a href="#" class="pagination">Next</a>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
 
@@ -702,6 +781,11 @@ $adaptationstring = "parent_id is null";
     function sendSortFilterform()
     {
         document.forms["SortFilter"].submit();
+    }
+
+    function sendNumFilterform()
+    {
+        document.forms["NumFilter"].submit();
     }
 
 </script>
