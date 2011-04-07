@@ -37,6 +37,83 @@ class dbgroups extends dbtable {
         $this->insert($data);
     }
 
+     /*
+      * This function take a groupId and return its latitude
+      * @param $GroupID
+      * return int
+      */
+
+     function  getGroupLatitude($GroupID){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$GroupID'";
+        $Group=$this->getArray($sql);
+        return $Group[0]['loclat'];
+    }
+
+    /*
+     * This function takes a groupId and return its longitude
+     * @param $GroupID
+     * return int
+     */
+    function getGroupLongitude($GroupID){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$GroupID'";
+        $Group=$this->getArray($sql);
+        return $Group[0]['loclong'];
+    }
+
+
+    /*
+     * This function get the Id's of all the group
+     * return array
+     */
+   function getAllGroups(){
+        $sql=" select id from tbl_unesco_oer_groups";
+        $GroupNames=$this->getArray($sql);
+        return $GroupNames;
+    }
+
+   /*
+    * This function take a groupId an return the group name
+    * @param $GroupId
+    * return name
+    */
+    function getGroupName($GroupID){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$GroupID'";
+        $GroupName=$this->getArray($sql);
+        return $GroupName[0]['name'];
+    }
+
+
+    /*
+     * This function convert the latitude and longitude and map it on a map
+     * @lat
+     * @lon
+     * @param $width
+     * @param $height
+     * return array
+     */
+    function getlocationcoords($lat, $lon, $width, $height) {
+        $x = (($lon + 180) * ($width / 360));
+        $y = ((($lat * -1) + 90) * ($height / 180));
+        return array("x" => round($x), "y" => round($y));
+    }
+
+    /*
+     * This function is  responsuble to draw the image
+     * @im
+     * @lat
+     * @lat
+     */
+    function MapHandler($im, $lat, $long) {
+        if (empty($long))$long =28.0316;
+        if (empty($lat))$lat =-26.19284;
+        $red = imagecolorallocate($im, 255, 0, 0);
+        $scale_x = imagesx($im);
+        $scale_y = imagesy($im);
+        $pt = $this->getlocationcoords($lat, $long, $scale_x, $scale_y);
+        imagefilledrectangle($im, $pt["x"] - 2, $pt["y"] - 2, $pt["x"] + 2, $pt["y"] + 2, $red);
+        header("Content-Type: image/png");
+    }
+
     public function getGroupThumbnail($name) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name = '$name'";
         $thumbnail = $this->getArray($sql);
@@ -58,3 +135,4 @@ class dbgroups extends dbtable {
 }
 
 ?>
+

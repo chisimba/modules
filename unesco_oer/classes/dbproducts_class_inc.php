@@ -94,5 +94,26 @@ class dbproducts extends dbtable
         return $products[0]; //TODO add error handler for non unique ID.
     }
 
+    /*
+     * function takes a creator name and if it has an adaptation
+     * @param $creatorName
+     * return boolean
+     */
+
+    function hasAnAdaptation($creatorName) {
+        $sql = "SELECT * FROM tbl_unesco_oer_products WHERE creator ='$creatorName'";
+        $Array = $this->getArray($sql);
+        for ($i = 0; $i < count($Array); $i++) {
+            if ($Array[$i]['id'] == $Array[$i]['parent_id']) {
+                $Adaptation = 1; // True;
+                return $Adaptation;
+            } else {
+                $Adaptation = 0; // False
+                return $Adaptation;
+            }
+        }
+       
+    }
+
 }
 ?>

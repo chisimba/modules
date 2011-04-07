@@ -634,13 +634,37 @@ $this->loadClass('checkbox', 'htmlelements');
                         </div>
                         <div class="rightColumnBorderedDiv">
                             <div class="rightColumnContentPadding">
+                               <?php
+                                $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
 
 
+                               $Institution = $this->objDbInstitution->getAllInstitution();
+                               for ($i = 0; $i < count($Institution); $i++) {
+                                   $InstitutionName = $this->objDbInstitution->getInstitutionName( $Institution[$i]['id']);
+                                   if ($this->objDbProducts->hasAnAdaptation($InstitutionName)) {
+                                       $lat = $this->objDbInstitution->getInstitutionLatitude($Institution[$i]['id']);
+                                       $long = $this->objDbInstitution->getInstitutionLongitude($Institution[$i]['id']);
+                                       $this->objDbInstitution->MapHandler($im, $lat, $long);
+                                       }
+                               }
 
-                            </div>
-                        </div>
-
-                    </div>
+                               $Groups =$this->objDbGroups->getAllGroups();
+                               for ($i = 0; $i < count($Groups); $i++) {
+                                   $GroupName = $this->objDbGroups->getGroupName($Groups[$i]['id']);
+                                   if ($this->objDbProducts->hasAnAdaptation($GroupName)) {
+                                       $lat = $this->objDbGroups->getGroupLatitude($Groups[$i]['id']);
+                                       $long = $this->objDbGroups->getGroupLongitude($Groups[$i]['id']);
+                                       $this->objDbGroups->MapHandler($im, $lat, $long);
+                                       }
+                               }
+                               //imagepng($im, "usrfiles/unesco_oer/map/Downloads.jpg");
+                               imagepng($im, "map_images/Downloads.jpg");
+                               ?>
+                                 <img src="map_images/Downloads.jpg" width="200" height="100">
+                              
+                                </div>
+                             </div>
+                      </div>
                 </div>
             </div>
             <!-- Footer-->
