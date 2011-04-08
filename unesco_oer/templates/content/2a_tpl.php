@@ -220,7 +220,7 @@ $this->loadClass('checkbox', 'htmlelements');
                      $filterTheme ->setSelected($ThemeFilter);
 
                     $uri = $this->uri(array('action' => 'ThemeFilter'));
-                    $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter,"page" => '2a_tpl.php')));
+                    $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
                    
 
                     $uri = $this->uri(array('action' => 'FilterProducts'));
@@ -258,7 +258,7 @@ $this->loadClass('checkbox', 'htmlelements');
                         }
                        
                          $filterLang ->setSelected($LangFilter);
-                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter,"page" => '2a_tpl.php')));
+                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
 
 
                         $uri = $this->uri(array('action' => 'LanguageFilter'));
@@ -299,7 +299,7 @@ $this->loadClass('checkbox', 'htmlelements');
                         }
                     
                    $filterAuth ->setSelected($AuthFilter);
-                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring,'ThemeFilter'=>$ThemeFilter, 'LanguageFilter' => $LangFilter,"page" => '2a_tpl.php')));
+                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
                
 
                         $uri = $this->uri(array('action' => 'AuthorFilter'));
@@ -323,10 +323,40 @@ $this->loadClass('checkbox', 'htmlelements');
                     <br>
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
                     <div class="blueBackground">
-                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+
+
+                                              <?php
+                                            $products = $this->objDbProducts->getProducts(0, 10);
+                                            $filterNum = new dropdown('NumFilter');
+
+
+                                                $filterNum->addoption(null);
+                                                $filterNum->addOption('1');
+                                                $filterNum->addOption('2');
+                                                $filterNum->addOption('3');
+
+
+
+                                            $filterNum->setSelected($NumFilter);
+                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts',   "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+
+
+                                            $uri = $this->uri(array('action' => 'NumFilter'));
+                                            $filterNum->addOnChange('javascript: sendNumFilterform()');
+
+
+                                            $form->addtoform($filterNum->show());
+
+
+                                            echo $form->show();
+                        ?>
+
+
+
+<!--                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
                             <option value="">All</option>
                            
-                        </select>
+                        </select>-->
                     </div>
                     <br><br>
                     <div class="blueBackground rightAlign">
@@ -359,7 +389,7 @@ $this->loadClass('checkbox', 'htmlelements');
 
 
                                             $filterLang->setSelected($SortFilter);
-                                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '2a_tpl.php')));
+                                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
 
 
                                             $uri = $this->uri(array('action' => 'SortFilter'));
@@ -592,7 +622,40 @@ $this->loadClass('checkbox', 'htmlelements');
                     <!-- Pagination-->
                     <div class="paginationDiv">
                         <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
-                        <div class="paginationLinkDiv">
+
+
+
+
+                          <?php
+
+
+
+//
+                                            $TotalRecords =  $this->objDbProducts->getTotalEntries($TotalEntries);
+
+                                           $TotalPages = ceil($TotalRecords / $NumFilter);
+
+//                                                echo $TotalRecords;
+//                                                echo $NumFilter;
+//                                                echo (int) $TotalPages;
+
+
+                                                    for ($i=1; $i<=$TotalPages; $i++)
+                                                    {
+
+                                                      $abLink = new link($this->uri(array("action" => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                                      $abLink->link = $i;
+                                                      echo $abLink->show();
+                                                     }
+
+
+//
+//
+
+
+
+                                    ?>
+<!--                        <div class="paginationLinkDiv">
                             <a href="#" class="pagination">Prev</a>
                             <a href="#" class="pagination">1</a>
                             <a href="#" class="pagination">2</a>
@@ -605,7 +668,7 @@ $this->loadClass('checkbox', 'htmlelements');
                             <a href="#" class="pagination">9</a>
                             <a href="#" class="pagination">10</a>
                             <a href="#" class="pagination">Next</a>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
 
@@ -730,5 +793,9 @@ function sendSortFilterform()
     document.forms["SortFilter"].submit();
     }
 
+  function sendNumFilterform()
+    {
+        document.forms["NumFilter"].submit();
+    }
 
 </script>
