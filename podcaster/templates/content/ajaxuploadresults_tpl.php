@@ -2,24 +2,20 @@
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 
-$buttonNote = $this->objLanguage->languageText('mod_podcaster_clicknexttwo', 'podcaster', 'Click on the "Next step" button to describe the podcast');
+$buttonNote = $this->objLanguage->languageText('mod_podcaster_clicknexttwolink', 'podcaster', 'Click on the "Next step" link to describe the podcast');
 
 $buttonLabel = $this->objLanguage->languageText('word_next', 'system', 'System')." ".$this->objLanguage->languageText('mod_podcaster_wordstep', 'podcaster', 'Step');
 
 $hasUploaded = $this->objLanguage->languageText('mod_podcaster_hasuploaded', 'podcaster', 'has been uploaded');
 
-$button = new button('create', $buttonLabel);
-
-$button->cssId = 'savebutton';
-
-$nextActionButton = $button->show();
-
+$nextStep = $this->objLanguage->languageText('mod_podcaster_nextstep', 'podcaster', 'Next Step');
+$nextStepBold = "<b>".$nextStep."</b>";
 $descProdLink = new link($this->uri(array(
     'module' => 'podcaster',
     'action' => 'describepodcast',
     'fileid' => $fileid,
     )));
-$descProdLink->link = $nextActionButton;
+$descProdLink->link = $nextStepBold;
 $linkDescribe = $descProdLink->show()." ".$buttonNote;
 
 $this->setVar('pageSuppressXML', TRUE);
