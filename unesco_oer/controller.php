@@ -120,8 +120,8 @@ class unesco_oer extends controller {
         $page = $this->getParam('page');
         $sort = $this->getParam('SortFilter');
             $NumFilter = $this->getParam('NumFilter');
-
-
+        $PageNum = $this->getParam('PageNum');
+         $TotalPages = $this->getParam('TotalPages');
         $adaptationstring = $this->getParam('adaptationstring');
 
 
@@ -140,13 +140,25 @@ class unesco_oer extends controller {
         else if ($sort == 'Alphabetical')
             $buildstring .= ' order by title';
 
+$TotalEntries = $buildstring;
 
-
-if ( $NumFilter != null)
+if ( $NumFilter != null & $PageNum == null)
 
 {
+    $start = 0;
+    $end = $start + $NumFilter;
+    $buildstring .= ' LIMIT '. $start .','. $end;
 
 
+}
+
+  else if ($NumFilter != null)
+{
+ 
+ $temp = $NumFilter*$PageNum-1;
+ $start = $temp-$NumFilter+1;
+ $end = $NumFilter;
+ $buildstring .= ' LIMIT '. $start .','. $end;
 
 }
 
@@ -158,12 +170,14 @@ if ( $NumFilter != null)
         $this->setVarByRef("LangFilter", $LangFilter);
         $this->setVarByRef("SortFilter", $sort);
          $this->setVarByRef("NumFilter", $NumFilter);
-
+             $this->setVarByRef("PageNum", $PageNum);
+            $this->setVarByRef("TotalPages", $TotalPages);
 
         $this->setVarByRef("finalstring", $buildstring);
+        $this->setVarByRef("TotalEntries", $TotalEntries);
 
 
-test;
+
 
 
 

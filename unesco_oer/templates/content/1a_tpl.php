@@ -185,7 +185,7 @@ $adaptationstring = "parent_id is null";
                                         $filterTheme->setSelected($ThemeFilter);
 
                                         $uri = $this->uri(array('action' => 'ThemeFilter'));
-                                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, "page" => '1a_tpl.php')));
+                                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
 
 
                                         $uri = $this->uri(array('action' => 'FilterProducts'));
@@ -217,7 +217,7 @@ $adaptationstring = "parent_id is null";
                                         }
 
                                         $filterLang->setSelected($LangFilter);
-                                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '1a_tpl.php')));
+                                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
 
 
                                         $uri = $this->uri(array('action' => 'LanguageFilter'));
@@ -254,7 +254,7 @@ $adaptationstring = "parent_id is null";
                                         }
 
                                         $filterAuth->setSelected($AuthFilter);
-                                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'LanguageFilter' => $LangFilter, "page" => '1a_tpl.php')));
+                                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
 
 
                                         $uri = $this->uri(array('action' => 'AuthorFilter'));
@@ -289,12 +289,12 @@ $adaptationstring = "parent_id is null";
                                                 $filterNum->addoption(null);
                                                 $filterNum->addOption('1');
                                                 $filterNum->addOption('2');
-                                                $filterNum->addOption('4');
+                                                $filterNum->addOption('3');
 
 
 
                                             $filterNum->setSelected($NumFilter);
-                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'LanguageFilter' => $LangFilter, "page" => '1a_tpl.php')));
+                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
 
 
                                             $uri = $this->uri(array('action' => 'NumFilter'));
@@ -353,7 +353,7 @@ $adaptationstring = "parent_id is null";
 
 
                                         $filterLang->setSelected($SortFilter);
-                                        $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, "page" => '1a_tpl.php')));
+                                        $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
 
 
                                         $uri = $this->uri(array('action' => 'SortFilter'));
@@ -592,22 +592,24 @@ $adaptationstring = "parent_id is null";
 
 
 //
-                                            $TotalRecords =  $this->objDbProducts->getTotalEntries($adaptationstring);
+                                            $TotalRecords =  $this->objDbProducts->getTotalEntries($TotalEntries);
 
-                                           $TotalPages = $TotalRecords / $NumFilter;
+                                           $TotalPages = ceil($TotalRecords / $NumFilter);
 
-                                                echo $TotalRecords;
-                                                echo $NumFilter;
-                                                echo (int) $TotalPages;
-////////
-//////                                             foreach ($products as $product){
-////
-////                                                   $editdepartmentlink = new link($this->uri(array("action" => "edit", "id" => $row['id'])));
-////                                                    $editdepartmentlink->link = $objIcon->show();
-//                                             }
-////
-////
-//
+//                                                echo $TotalRecords;
+//                                                echo $NumFilter;
+//                                                echo (int) $TotalPages;
+
+
+                                                    for ($i=1; $i<=$TotalPages; $i++)
+                                                    {
+
+                                                      $abLink = new link($this->uri(array("action" => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                                      $abLink->link = $i;
+                                                      echo $abLink->show();
+                                                     }
+                                                     
+                                      
 //
 //
 
