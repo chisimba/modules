@@ -247,7 +247,7 @@ class dbmediafiledata extends dbTable {
                 break;
         }
         //If logged in
-        if (!empty($this->userId)) {            
+        if (!empty($this->userId)) {
             $sql .= " and (A.access='open' or A.access='public') and A.publishstatus='" . $published . "' ORDER BY A.datecreated DESC, A.timecreated DESC";
         } else {
             $sql .= " and A.access='public' and A.publishstatus='" . $published . "' ORDER BY A.datecreated DESC, A.timecreated DESC";

@@ -9,8 +9,6 @@ $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 
-$objLatestFiles= $this->getObject('viewerutils','podcaster');
-
 $featured=
         "Ext.onReady(function(){
          Ext.QuickTips.init();
@@ -27,7 +25,7 @@ $featured=
         items:[
             {
 
-            html: '".$objLatestFiles->getFeatured()."'
+            html: '".$this->objViewerUtils->getFeatured()."'
 
             }
 
@@ -53,7 +51,7 @@ $content.='<div class="c85r">';
 $content.='<div id="lu_wrapper">';
 $content.='<div id="lu_inner">';
 $content.='<div class="ec_item" id="lu1">';
-//$content.=$objLatestFiles->getLatestUploads();
+//$content.=$this->objViewerUtils->getLatestUploads();
 $content.='</div>';
 $content.='</div>';
 $content.='</div>';
@@ -67,15 +65,15 @@ $content.='<div id="contentwrapper" class="subcolumns">';
 $content.='     <div id="homepagecontent" class="c85l">';
 $content.='          <div class="subcolumns">';
 $content.='            <div class="c59l" id="homepagestats">';
-$content.=$objLatestFiles->getLatestUploads();
+$content.=$this->objViewerUtils->getLatestUploads();
 $content.='             </div>';
-$content.=$objLatestFiles->getTagCloudContent($tagCloudContent);
+$content.=$this->objViewerUtils->getTagCloudContent($tagCloudContent);
 
 $content.="<script type=\"text/javascript\">".$featured."</script>";
 $content.='         </div>';
 $content.='     </div>';
-$content.=$objLatestFiles->getMostViewed();
-$content.=$objLatestFiles->getMostDownloaded();
+$content.=$this->objViewerUtils->getMostViewed();
+$content.=$this->objViewerUtils->getMostDownloaded();
 
 $content.='</div>';
 

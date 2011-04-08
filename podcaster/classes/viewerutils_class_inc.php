@@ -446,7 +446,12 @@ class viewerutils extends object {
 
         if (count($latestFiles) == 0) {
             $latestFilesContent = '';
-            return "<h1>" . $homepagetitle . "</h1><h3>" . $objLanguage->languageText("mod_podcaster_nopublishedpods", "podcaster", "No podcasts have been published yet") . "</h3>";
+            if($this->userId == Null){
+                $msg = "<h1>" . $homepagetitle . "</h1><h3>" . $objLanguage->languageText("mod_podcaster_nopublic", "podcaster", "No public podcasts have been published yet") . "</h3>";
+            } else {
+                $msg = "<h1>" . $homepagetitle . "</h1><h3>" . $objLanguage->languageText("mod_podcaster_noopenorpublic", "podcaster", "No open or public podcasts have been published yet") . "</h3>";
+            }
+            return $msg;
         } else {
             $latestFilesContent = '';
 

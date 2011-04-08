@@ -377,6 +377,16 @@ class eventutils extends dbTable {
         $table->width = '40%';
         $linkstable->width = '40%';
         $str = '';
+        $wordEvent = $this->objLanguage->languageText("mod_podcaster_event", 'podcaster', 'Event');
+        $wordCategory = $this->objLanguage->languageText("mod_podcaster_category", 'podcaster', 'Category');
+        $wordAccess = $this->objLanguage->languageText("mod_podcaster_access", 'podcaster', 'Access');
+        $wordOpen = $this->objLanguage->languageText("mod_podcaster_open", 'podcaster', 'Open');
+        //Add title
+        $tableRow = array(
+            "<b>" . $wordEvent . "</b> ", "<b>" . $wordCategory . "</b> ", "<b>" . $wordAccess . "</b> ", "<b>" . $wordOpen . "</b> "
+        );
+
+        $table->addRow($tableRow);
 
         //Get group members
         $userId = $this->objUser->userId();
@@ -437,9 +447,20 @@ class eventutils extends dbTable {
                     $mnglink->link = $groupName;
 
                     $linkManageTxt = $mnglink->show();
+                    //Get other group data
+                    $eventData = $this->objDBPodcasterEvents->listByEvent($groupId);
+                    $eventData = $eventData[0];
 
+                    //Check if already published
+                    $wordYes = $this->objLanguage->languageText("mod_podcaster_yes", 'podcaster', 'Yes');
+                    $wordNo = $this->objLanguage->languageText("mod_podcaster_no", 'podcaster', 'No');
+                    $publishStatus = ($eventData["publish_status"] == 'published' ? $wordYes : $wordNo);
+
+                    $eventAccess = ucwords($eventData["access"]);
+                    $categoryData = $this->objDBPodcasterCategory->listSingle($eventData['categoryid']);
+                    $categoryName = $categoryData[0]['category'];
                     $tableRow = array(
-                        $linkManageTxt . '  ' . $linkManageImg
+                        $linkManageTxt, $categoryName, $eventAccess, $linkManageImg
                     );
                     $table->addRow($tableRow);                    
                 } //end foreach

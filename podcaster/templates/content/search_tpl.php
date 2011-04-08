@@ -2,6 +2,7 @@
 
 if (trim($query) == '') {
     echo '<h1>' . $this->objLanguage->languageText("mod_podcaster_search", "podcaster", 'Search') . '</h1>';
+    echo '<p>' . $this->objLanguage->languageText("mod_podcaster_searchparams", "podcaster", 'Search podcasts by description, title, artist, file name or tag') . '</p>';
 } else {
     echo '<h1>' . $this->objLanguage->languageText("mod_podcaster_searchresultsfor", "podcaster", 'Search results for') . '<em> ' . $query . '</em></h1>';
 }
