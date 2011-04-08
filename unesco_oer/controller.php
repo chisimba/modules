@@ -123,11 +123,11 @@ class unesco_oer extends controller {
         $PageNum = $this->getParam('PageNum');
         $TotalPages = $this->getParam('TotalPages');
         $adaptationstring = $this->getParam('adaptationstring');
-         $Model = $this->getParam('Model');
-         $Handbook = $this->getParam('Handbook');
-         $Guide = $this->getParam('Guide');
-         $Manual = $this->getParam('Manual');
-         $Besoractile = $this->getParam('Besoractile');
+        $Model = $this->getParam('Model');
+        $Handbook = $this->getParam('Handbook');
+        $Guide = $this->getParam('Guide');
+        $Manual = $this->getParam('Manual');
+        $Besoractile = $this->getParam('Besoractile');
 
 
         $buildstring = $adaptationstring;
@@ -140,20 +140,16 @@ class unesco_oer extends controller {
         if ($LangFilter != Null)
             $buildstring .= ' and language = ' . "'$LangFilter'";
 
-         if ($Model == 'on')
+        if ($Model == 'on')
             $buildstring .= ' and resource_type = "Model"';
-         if ($Handbook == 'on')
+        if ($Handbook == 'on')
             $buildstring .= ' and resource_type = "handbook"';
-         if ($Guide == 'on')
+        if ($Guide == 'on')
             $buildstring .= ' and resource_type = "Guide"';
-         if ($Manual == 'on')
+        if ($Manual == 'on')
             $buildstring .= ' and resource_type = "Manual"';
-         if ($Besoractile == 'on')
+        if ($Besoractile == 'on')
             $buildstring .= ' and resource_type = "Besoractile"';
-
-
-
-
 
 
 
@@ -163,6 +159,9 @@ class unesco_oer extends controller {
             $buildstring .= ' order by title';
 
         $TotalEntries = $buildstring;
+
+
+
 
         if ($NumFilter != null & $PageNum == null) {
             $start = 0;
@@ -190,9 +189,6 @@ class unesco_oer extends controller {
 
         $this->setVarByRef("finalstring", $buildstring);
         $this->setVarByRef("TotalEntries", $TotalEntries);
-
-
-
 
 
 
