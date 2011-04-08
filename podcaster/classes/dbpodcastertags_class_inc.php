@@ -243,8 +243,6 @@ FROM tbl_podcaster_tags GROUP BY tbl_podcaster_tags.tag ORDER BY tbl_podcaster_t
         $sql = 'SELECT DISTINCT tbl_podcaster_metadata_media.id, tbl_podcaster_metadata_media.*, tbl_users.firstName as firstname, tbl_users.surname FROM tbl_podcaster_metadata_media, tbl_podcaster_tags, tbl_users
         WHERE (tbl_podcaster_tags.fileid = tbl_podcaster_metadata_media.id AND tbl_podcaster_metadata_media.creatorid = tbl_users.userid) AND tbl_podcaster_tags.tag LIKE \''.$tag.'\' AND tbl_podcaster_metadata_media.publishstatus="'.$published.'" ORDER BY '.$sortstring;
 
-        //echo $sql;
-
         return $this->getArray($sql);
     }
 

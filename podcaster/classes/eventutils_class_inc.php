@@ -441,6 +441,122 @@ class eventutils extends dbTable {
                     $tableRow = array(
                         $linkManageTxt . '  ' . $linkManageImg
                     );
+                    $table->addRow($tableRow);                    
+                } //end foreach
+                $str.= $table->show();
+            }
+        }
+        if (empty($str)) {
+            $tableRow = array(
+                $this->objLanguage->languageText("mod_podcaster_noeventsfound", 'podcaster', 'No events found')
+            );
+            $table->addRow($tableRow);
+            $str.= $table->show();
+        }
+        return $str;
+    }
+
+    /**
+     * Method to get the public/open groups. Renders output in a table
+     * @param string $natureofevent Either public or open events
+     * @return string
+     */
+    public function getOtherEvents($natureofevent='public') {
+        //load classes
+        $this->objLanguage = $this->getObject('language', 'language');
+        $icon = &$this->newObject('geticon', 'htmlelements');
+        $table = &$this->newObject('htmltable', 'htmlelements');
+        $objGroups = &$this->newObject('managegroups', 'contextgroups');
+        $table->width = '40%';
+        $str = '';
+        $wordEvent = $this->objLanguage->languageText("mod_podcaster_event", 'podcaster', 'Event');
+        $wordCategory = $this->objLanguage->languageText("mod_podcaster_category", 'podcaster', 'Category');
+        $wordAccess = $this->objLanguage->languageText("mod_podcaster_access", 'podcaster', 'Access');
+        $wordOpen = $this->objLanguage->languageText("mod_podcaster_open", 'podcaster', 'Open');
+        //Add title
+        $tableRow = array(
+            "<b>" . $wordEvent . "</b> ", "<b>" . $wordCategory . "</b> ", "<b>" . $wordAccess . "</b> ", "<b>" . $wordOpen . "</b> "
+        );
+        $table->addRow($tableRow);
+
+        //Get user Id
+        $userId = $this->objUser->userId();
+        //If not logged in, default to public events
+        if ($userId == Null) {
+            $prevaction = 'publicevents';
+            $natureofevent = 'public';
+        } else {
+            $prevaction = 'openevents';
+        }
+        //get the descendents.
+        if (class_exists('groupops')) {
+            //Get perm Id
+            $otherGroups = $this->objDBPodcasterEvents->listByAccessPublishStatus($natureofevent, 'published');
+
+            if (!empty($otherGroups)) {
+                $myGroupsData = array();
+                //Retrieve the groupId's
+                foreach ($otherGroups as $thisGroup) {
+                    $groupId = $thisGroup['eventid'];
+                    $groupName = $this->_objGroupAdmin->getName($groupId);
+                    $findme = "^^";
+                    $pos = strpos($groupName, $findme);
+                    if ($pos) {
+                        $groupName = explode("^^", $groupName);
+                        $groupName = $groupName[1];
+                        $myGroupsData[] = array('groupId' => $groupId, 'groupName' => $groupName);
+                    }
+                }
+            }
+            $fields = array(
+                'firstName',
+                'surname',
+                'tbl_users.id'
+            );
+            //Check if empty
+            if (!empty($myGroupsData)) {
+                foreach ($myGroupsData as $groupData) {
+                    $groupName = $groupData['groupName'];
+                    $groupId = $groupData['groupId'];
+                    //Add Users
+                    $iconManage = $this->getObject('geticon', 'htmlelements');
+                    $iconManage->setIcon('bookopen');
+                    $iconManage->alt = $this->objLanguage->languageText("mod_podcaster_vieweventpodcasts", 'podcaster', 'View event podcasts');
+                    $iconManage->title = $this->objLanguage->languageText("mod_podcaster_vieweventpodcasts", 'podcaster', 'View event podcasts');
+
+                    $mnglink = new link($this->uri(array(
+                                        'module' => 'podcaster',
+                                        'action' => 'event_podcasts',
+                                        'id' => $groupId,
+                                        'prevaction' => $prevaction
+                                    )));
+
+                    $mnglink->link = $iconManage->show();
+
+                    $linkManageImg = $mnglink->show();
+
+                    $mnglink->link = $groupName;
+
+                    $linkManageTxt = $mnglink->show();
+
+                    $tableRow = array(
+                        $linkManageTxt . '  ' . $linkManageImg
+                    );
+                    //Get other group data
+                    $eventData = $this->objDBPodcasterEvents->listByEvent($groupId);
+                    $eventData = $eventData[0];
+
+                    //Check if already published
+                    $wordYes = $this->objLanguage->languageText("mod_podcaster_yes", 'podcaster', 'Yes');
+                    $wordNo = $this->objLanguage->languageText("mod_podcaster_no", 'podcaster', 'No');
+                    $publishStatus = ($eventData["publish_status"] == 'published' ? $wordYes : $wordNo);
+
+                    $eventAccess = ucwords($eventData["access"]);
+                    $categoryData = $this->objDBPodcasterCategory->listSingle($eventData['categoryid']);
+                    $categoryName = $categoryData[0]['category'];
+                    $tableRow = array(
+                        $linkManageTxt, $categoryName, $eventAccess, $linkManageImg
+                    );
                     $table->addRow($tableRow);
                     $str.= $table->show();
                 } //end foreach

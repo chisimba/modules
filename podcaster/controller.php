@@ -102,7 +102,7 @@ class podcaster extends controller {
      * @return <type>
      */
     public function requiresLogin($action) {
-        $required = array('myevents', 'addusers', 'configure_events', 'viewevents', 'manage_event', 'add_event', 'viewsearchresults', 'myuploads', 'doajaxsendmail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
+        $required = array('openevents', 'myevents', 'addusers', 'configure_events', 'viewevents', 'manage_event', 'add_event', 'viewsearchresults', 'myuploads', 'doajaxsendmail', 'sendmail', 'describepodcast', 'login', 'steponeupload', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate', 'schedule', 'addfolder', 'removefolder', 'createfolder', 'folderexistscheck', 'renamefolder', 'deletetopic', 'deletefile', 'viewfolder', 'unpublishedpods');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -316,6 +316,29 @@ class podcaster extends controller {
         $userPid = $this->objUser->PKId($this->objUser->userId());
         $this->setVarByRef('userPid', $this->userPid);
         return "view_events_tpl.php";
+    }
+    /**
+     * Function that returns template with public events
+     * @return template
+     */
+    function __publicevents() {
+        $this->setVarByRef('userId', $this->userId);
+        $status = 'public';
+        $this->setVarByRef('natureofevent', $status);
+        return "other_events_tpl.php";
+    }
+    /**
+     * Function that returns template with open events
+     * @return template
+     */
+    function __openevents() {
+        if($this->userId==Null){
+            return $this->nextAction('home');
+        }
+        $this->setVarByRef('userId', $this->userId);
+        $status = 'open';
+        $this->setVarByRef('natureofevent', $status);
+        return "other_events_tpl.php";
     }
 
     /**
@@ -1474,6 +1497,7 @@ Sincerely,<br />
         $userId = $this->userId;
 
         $groupId = $this->getParam('id', '');
+        $prevaction = $this->getParam('prevaction', '');
         //Get group data
         $groupData = $this->objDbEvents->listByEvent($groupId);
         $access = $groupData[0]["access"];
@@ -1511,6 +1535,7 @@ Sincerely,<br />
 
         $this->setVarByRef('files', $files);
         $this->setVarByRef('sort', $sort);
+        $this->setVarByRef('prevaction', $prevaction);
         $this->setVarByRef('userId', $userId);
         $this->setVarByRef('groupId', $groupId);
 

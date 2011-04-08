@@ -24,10 +24,19 @@ class dbPodcaster_Events extends dbTable {
     /**
      * Return all records with a certain access level
      * @param string $access The Access level to search for (public|open|private)
-     * @return array The entries
+     * @return array The events
      */
     function listByAccess($access) {
         return $this->getAll("WHERE access='" . $access . "'");
+    }
+    /**
+     * Return all records with a certain access level
+     * @param string $access The Access level to search for (public|open|private)
+     * @param string $publish_status The Publish Status to search for (published|unpublished)
+     * @return array The events
+     */
+    function listByAccessPublishStatus($access, $publish_status='published') {
+        return $this->getAll("WHERE access='" . $access . "' AND publish_status='" . $publish_status . "'");
     }
 
     /**

@@ -114,10 +114,14 @@ class viewer extends object {
      * @return <type>
      */
     public function displayAsTable($files) {
-        if (count($files) == 0) {
-            return '';
+        $table = $this->newObject('htmltable', 'htmlelements');
+        if (count($files) == 0 || empty($files)) {
+            $table->startRow();
+            $table->addCell($this->objLanguage->languageText("mod_podcaster_norecords", "podcaster", 'No records found'));
+            $table->endRow();
+            return $table->show();
         } else {
-            $table = $this->newObject('htmltable', 'htmlelements');
+            
 
             $divider = '';
 

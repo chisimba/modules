@@ -32,6 +32,8 @@ class podcastertoolbar2 extends object {
             array('action' => 'steponeupload', 'text' => 'Upload', 'actioncheck' => array('upload'), 'module' => 'podcaster', 'status' => 'loggedin'),
             array('action' => 'myuploads', 'text' => 'My Uploads', 'actioncheck' => array('myuploads'), 'module' => 'podcaster', 'status' => 'loggedin'),
             array('action' => 'myevents', 'text' => 'My Events', 'actioncheck' => array('myevents'), 'module' => 'podcaster', 'status' => 'loggedin'),
+            array('action' => 'openevents', 'text' => 'Open events', 'actioncheck' => array('openevents'), 'module' => 'podcaster', 'status' => 'loggedin'),
+            array('action' => 'publicevents', 'text' => 'Public events', 'actioncheck' => array('publicevents'), 'module' => 'podcaster', 'status' => 'both'),
             array('action' => 'viewcategories', 'text' => 'Categories', 'actioncheck' => array('viewcategories'), 'module' => 'podcaster', 'status' => 'admin'),
             array('action' => 'search', 'text' => 'Search', 'actioncheck' => array('search'), 'module' => 'podcaster', 'status' => 'both'),
             array('action' => NULL, 'text' => 'Admin', 'actioncheck' => array(), 'module' => 'toolbar', 'status' => 'admin'),
