@@ -33,7 +33,7 @@ class unesco_oer extends controller {
         $this->objFeaturedProducUtil = $this->getObject('featuredproductutil');
         $this->objDbGroups = $this->getObject('dbgroups');
         $this->objDbInstitution = $this->getObject('dbinstitution');
-	$this->objDbComments = $this->getObject('dbcomments');
+        $this->objDbComments = $this->getObject('dbcomments');
         $this->objUser = $this->getObject('user', 'security');
     }
 
@@ -119,10 +119,15 @@ class unesco_oer extends controller {
         $LangFilter = $this->getParam('LanguageFilter');
         $page = $this->getParam('page');
         $sort = $this->getParam('SortFilter');
-            $NumFilter = $this->getParam('NumFilter');
+        $NumFilter = $this->getParam('NumFilter');
         $PageNum = $this->getParam('PageNum');
-         $TotalPages = $this->getParam('TotalPages');
+        $TotalPages = $this->getParam('TotalPages');
         $adaptationstring = $this->getParam('adaptationstring');
+         $Model = $this->getParam('Model');
+         $Handbook = $this->getParam('Handbook');
+         $Guide = $this->getParam('Guide');
+         $Manual = $this->getParam('Manual');
+         $Besoractile = $this->getParam('Besoractile');
 
 
         $buildstring = $adaptationstring;
@@ -135,32 +140,41 @@ class unesco_oer extends controller {
         if ($LangFilter != Null)
             $buildstring .= ' and language = ' . "'$LangFilter'";
 
+         if ($Model == 'on')
+            $buildstring .= ' and resource_type = "Model"';
+         if ($Handbook == 'on')
+            $buildstring .= ' and resource_type = "handbook"';
+         if ($Guide == 'on')
+            $buildstring .= ' and resource_type = "Guide"';
+         if ($Manual == 'on')
+            $buildstring .= ' and resource_type = "Manual"';
+         if ($Besoractile == 'on')
+            $buildstring .= ' and resource_type = "Besoractile"';
+
+
+
+
+
+
+
         if ($sort == 'Date Added')
             $buildstring .= ' order by created_on';
         else if ($sort == 'Alphabetical')
             $buildstring .= ' order by title';
 
-$TotalEntries = $buildstring;
+        $TotalEntries = $buildstring;
 
-if ( $NumFilter != null & $PageNum == null)
+        if ($NumFilter != null & $PageNum == null) {
+            $start = 0;
+            $end = $start + $NumFilter;
+            $buildstring .= ' LIMIT ' . $start . ',' . $end;
+        } else if ($NumFilter != null) {
 
-{
-    $start = 0;
-    $end = $start + $NumFilter;
-    $buildstring .= ' LIMIT '. $start .','. $end;
-
-
-}
-
-  else if ($NumFilter != null)
-{
- 
- $temp = $NumFilter*$PageNum-1;
- $start = $temp-$NumFilter+1;
- $end = $NumFilter;
- $buildstring .= ' LIMIT '. $start .','. $end;
-
-}
+            $temp = $NumFilter * $PageNum - 1;
+            $start = $temp - $NumFilter + 1;
+            $end = $NumFilter;
+            $buildstring .= ' LIMIT ' . $start . ',' . $end;
+        }
 
 
 
@@ -169,9 +183,10 @@ if ( $NumFilter != null & $PageNum == null)
         $this->setVarByRef("ThemeFilter", $ThemeFilter);
         $this->setVarByRef("LangFilter", $LangFilter);
         $this->setVarByRef("SortFilter", $sort);
-         $this->setVarByRef("NumFilter", $NumFilter);
-             $this->setVarByRef("PageNum", $PageNum);
-            $this->setVarByRef("TotalPages", $TotalPages);
+        $this->setVarByRef("NumFilter", $NumFilter);
+        $this->setVarByRef("PageNum", $PageNum);
+        $this->setVarByRef("TotalPages", $TotalPages);
+        $this->setVarByRef("Model", $Model);
 
         $this->setVarByRef("finalstring", $buildstring);
         $this->setVarByRef("TotalEntries", $TotalEntries);
@@ -457,7 +472,7 @@ if ( $NumFilter != null & $PageNum == null)
         return 'createComment_tpl.php';
     }
 
-     /*
+    /*
      * Method to retrieve entries from user on the createGroupUI_tpl.php page
      * and add it to the tbl_unesco_oer_group table
      */
@@ -471,5 +486,4 @@ if ( $NumFilter != null & $PageNum == null)
     }
 
 }
-
 ?>

@@ -152,36 +152,50 @@ $this->loadClass('checkbox', 'htmlelements');
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
 
                 <div class="blueBackground blueBackgroundCheckBoxText">
-<!--               <?php
+
+               <?php
 
                 $products = $this->objDbProducts->getProducts(0, 10);
 
 
-              $checkbox1 = new checkbox('test');
-              $checkbox2 = new checkbox('test2');
-        //        $checkbox3 = new checkbox('test3');
-//                foreach ($products as $product) {
-//                        $checkbox = new checkbox($product['resource_type']);
-//                        echo $product['resource_type'];
-//
-//
-             $guidelink = new link($this->uri(array("action" => "FilterProducts")));
-
-    $guidelink->link = $checkbox1->show();
+            
+        
+              $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
 
 
 
 
-            $form1 = new form('check');
+    $button = new button('Search','Search');
+    $button->setToSubmit();
+
+    $checkbox = new checkbox('Model');
+    $checkbox2 = new checkbox('Handbook');
+    $checkbox3 = new checkbox('Guide');
+    $checkbox4 = new checkbox('Manual');
+    $checkbox5 = new checkbox('Besoractile');
+
+    $form ->addToForm($checkbox->show());
+     $form ->addToForm('Model<br>');
+    $form ->addToForm($checkbox2->show());
+     $form ->addToForm('handbook<br>');
+     $form ->addToForm($checkbox3->show());
+      $form ->addToForm('Guide<br>');
+      $form ->addToForm($checkbox4->show());
+       $form ->addToForm('Manual<br>');
+       $form ->addToForm($checkbox5->show());
+        $form ->addToForm('Besoractile<br>');
+    $form->addToForm($button->show());
+
+
+echo $form->show();
+     echo $Model
+
+ 
+   
 
 
 
 
-
-                 $form1->addtoform($guidelink->show());
-                 $form1->addtoform($checkbox1->show());
-                 $form1->addtoform($checkbox2->show());
-                 echo $form1->show();
 
 
 
@@ -191,18 +205,17 @@ $this->loadClass('checkbox', 'htmlelements');
 
 
              ?>
--->
 
 
 
 
+<!--
                         <input type="checkbox"> Model<br>
                         <input type="checkbox"> Guide<br>
                         <input type="checkbox"> Handbook<br>
                         <input type="checkbox"> Manual<br>
-                        <input type="checkbox"> Bestoractile<br><!--
+                        <input type="checkbox"> Bestoractile<br>-->
 
--->
                     </div>
 
 
