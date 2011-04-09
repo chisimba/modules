@@ -462,7 +462,7 @@ class eventutils extends dbTable {
                     $tableRow = array(
                         $linkManageTxt, $categoryName, $eventAccess, $linkManageImg
                     );
-                    $table->addRow($tableRow);                    
+                    $table->addRow($tableRow);
                 } //end foreach
                 $str.= $table->show();
             }
@@ -870,7 +870,6 @@ class eventutils extends dbTable {
         $usrGrps = $this->getAll('where perm_user_id="' . $usrPermId . '"');
         return $usrGrps;
     }
-
 }
 
 ?>

@@ -31,7 +31,7 @@ class viewerutils extends object {
         $this->objAltConfig = $this->getObject('altconfig', 'config');
         $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'podcaster');
         $this->siteBase = $this->objAltConfig->getitem('KEWL_SITEROOT_PATH');
-        $this->siteUrl = $this->objAltConfig->getitem('KEWL_SITE_PATH');
+        $this->siteUrl = $this->objAltConfig->getSitePath();
         $this->objFileIcons = $this->getObject('fileicons', 'files');
     }
 
@@ -47,6 +47,26 @@ class viewerutils extends object {
         } else {
             return false;
         }
+    }
+
+    /**
+     * checks for user agent whether this is firefox or not
+     * @param void
+     * @return bool
+     * @author svetoslavm##gmail.com
+     * @link http://devquickref.com/
+     */
+    public function is_firefox() {
+        $agent = '';
+        // old php user agent can be found here
+        if (!empty($HTTP_USER_AGENT))
+            $agent = $HTTP_USER_AGENT;
+        // newer versions of php do have useragent here.
+        if (empty($agent) && !empty($_SERVER["HTTP_USER_AGENT"]))
+            $agent = $_SERVER["HTTP_USER_AGENT"];
+        if (!empty($agent) && preg_match("/firefox/si", $agent))
+            return true;
+        return false;
     }
 
     /**
@@ -116,9 +136,15 @@ class viewerutils extends object {
         $soundFile = str_replace(' ', '%20', $newpodpath);
 
         $objSoundPlayer->setSoundFile($soundFile);
+        $firefoxCheck = $this->is_firefox();
+        //If using firefox use soundplayer, else just embed
+        if ($firefoxCheck) {
+            $podInfo = $objSoundPlayer->show();
+        } else {
+            $podURL = $this->siteUrl . $newpodpath;
 
-        $podInfo = $objSoundPlayer->show();
-
+            $podInfo = '<embed src="' . $podURL . '" autostart="true" loop="false" width="300" height="42" controller="true" bgcolor="#FFFFFF"></embed>';
+        }
         $content = "";
 
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -446,7 +472,7 @@ class viewerutils extends object {
 
         if (count($latestFiles) == 0) {
             $latestFilesContent = '';
-            if($this->userId == Null){
+            if ($this->userId == Null) {
                 $msg = "<h1>" . $homepagetitle . "</h1><h3>" . $objLanguage->languageText("mod_podcaster_nopublic", "podcaster", "No public podcasts have been published yet") . "</h3>";
             } else {
                 $msg = "<h1>" . $homepagetitle . "</h1><h3>" . $objLanguage->languageText("mod_podcaster_noopenorpublic", "podcaster", "No open or public podcasts have been published yet") . "</h3>";
