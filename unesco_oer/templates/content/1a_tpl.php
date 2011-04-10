@@ -164,11 +164,83 @@ $adaptationstring = "parent_id is null";
                                 <div class="moduleSubHeader">Product matches filter criteria</div>
                                 <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
                                 <div class="blueBackground blueBackgroundCheckBoxText">
-                                    <input type="checkbox"> Model<br>
+
+                                       <?php
+
+                $products = $this->objDbProducts->getProducts(0, 10);
+
+
+
+
+              $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
+
+
+
+
+    $button = new button('Search','Search');
+    $button->setToSubmit();
+
+    $checkbox = new checkbox('Model');
+    $checkbox2 = new checkbox('Handbook');
+    $checkbox3 = new checkbox('Guide');
+    $checkbox4 = new checkbox('Manual');
+    $checkbox5 = new checkbox('Besoractile');
+
+
+
+   if ($Model == 'on')
+    $checkbox->ischecked = true;
+
+   if ($Handbook == 'on')
+    $checkbox2->ischecked = true;
+
+   if ($Guide == 'on')
+    $checkbox3->ischecked = true;
+
+   if ($Manual== 'on')
+    $checkbox4->ischecked = true;
+
+   if ($Besoractile == 'on')
+    $checkbox5->ischecked = true;
+
+
+    $form ->addToForm($checkbox->show());
+     $form ->addToForm('Model<br>');
+    $form ->addToForm($checkbox2->show());
+     $form ->addToForm('handbook<br>');
+     $form ->addToForm($checkbox3->show());
+      $form ->addToForm('Guide<br>');
+      $form ->addToForm($checkbox4->show());
+       $form ->addToForm('Manual<br>');
+       $form ->addToForm($checkbox5->show());
+        $form ->addToForm('Besoractile<br>');
+    $form->addToForm($button->show());
+
+
+echo $form->show();
+     echo $Model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             ?>
+
+<!--                                    <input type="checkbox"> Model<br>
                                     <input type="checkbox"> Guide<br>
                                     <input type="checkbox"> Handbook<br>
                                     <input type="checkbox"> Manual<br>
-                                    <input type="checkbox"> Bestoractile<br>
+                                    <input type="checkbox"> Bestoractile<br>-->
                                 </div>
                                 <br>
                                 <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
@@ -185,7 +257,7 @@ $adaptationstring = "parent_id is null";
                                         $filterTheme->setSelected($ThemeFilter);
 
                                         $uri = $this->uri(array('action' => 'ThemeFilter'));
-                                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
                                         $uri = $this->uri(array('action' => 'FilterProducts'));
@@ -217,7 +289,7 @@ $adaptationstring = "parent_id is null";
                                         }
 
                                         $filterLang->setSelected($LangFilter);
-                                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
                                         $uri = $this->uri(array('action' => 'LanguageFilter'));
@@ -254,7 +326,7 @@ $adaptationstring = "parent_id is null";
                                         }
 
                                         $filterAuth->setSelected($AuthFilter);
-                                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
                                         $uri = $this->uri(array('action' => 'AuthorFilter'));
@@ -294,7 +366,7 @@ $adaptationstring = "parent_id is null";
 
 
                                             $filterNum->setSelected($NumFilter);
-                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
                                             $uri = $this->uri(array('action' => 'NumFilter'));
@@ -353,7 +425,7 @@ $adaptationstring = "parent_id is null";
 
 
                                         $filterLang->setSelected($SortFilter);
-                                        $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                        $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
                                         $uri = $this->uri(array('action' => 'SortFilter'));
@@ -413,7 +485,10 @@ $adaptationstring = "parent_id is null";
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
                                         if ($finalstring == null)
+                                        {
                                             $finalstring = 'parent_id is null';
+                                            $TotalEntries = 'parent_id is null';
+                                        }
 
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
@@ -592,7 +667,7 @@ $adaptationstring = "parent_id is null";
 
 
 //
-                                            $TotalRecords =  $this->objDbProducts->getTotalEntries($TotalEntries);
+                                           $TotalRecords =  $this->objDbProducts->getTotalEntries($TotalEntries);
 
                                            $TotalPages = ceil($TotalRecords / $NumFilter);
 
@@ -604,7 +679,7 @@ $adaptationstring = "parent_id is null";
                                                     for ($i=1; $i<=$TotalPages; $i++)
                                                     {
 
-                                                      $abLink = new link($this->uri(array("action" => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                                      $abLink = new link($this->uri(array("action" => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
                                                       $abLink->link = $i;
                                                       echo $abLink->show();
                                                      }

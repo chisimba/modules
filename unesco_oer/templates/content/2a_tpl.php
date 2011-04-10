@@ -160,7 +160,7 @@ $this->loadClass('checkbox', 'htmlelements');
 
             
         
-              $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+              $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
 
@@ -173,6 +173,24 @@ $this->loadClass('checkbox', 'htmlelements');
     $checkbox3 = new checkbox('Guide');
     $checkbox4 = new checkbox('Manual');
     $checkbox5 = new checkbox('Besoractile');
+
+
+
+   if ($Model == 'on')
+    $checkbox->ischecked = true;
+   
+   if ($Handbook == 'on')
+    $checkbox2->ischecked = true;
+    
+   if ($Guide == 'on')
+    $checkbox3->ischecked = true;
+   
+   if ($Manual== 'on')
+    $checkbox4->ischecked = true;
+    
+   if ($Besoractile == 'on')
+    $checkbox5->ischecked = true;
+   
 
     $form ->addToForm($checkbox->show());
      $form ->addToForm('Model<br>');
@@ -233,7 +251,7 @@ echo $form->show();
                      $filterTheme ->setSelected($ThemeFilter);
 
                     $uri = $this->uri(array('action' => 'ThemeFilter'));
-                    $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                    $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
                    
 
                     $uri = $this->uri(array('action' => 'FilterProducts'));
@@ -271,7 +289,7 @@ echo $form->show();
                         }
                        
                          $filterLang ->setSelected($LangFilter);
-                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
                         $uri = $this->uri(array('action' => 'LanguageFilter'));
@@ -312,7 +330,7 @@ echo $form->show();
                         }
                     
                    $filterAuth ->setSelected($AuthFilter);
-                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
                
 
                         $uri = $this->uri(array('action' => 'AuthorFilter'));
@@ -351,7 +369,7 @@ echo $form->show();
 
 
                                             $filterNum->setSelected($NumFilter);
-                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts',   "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts',   "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
                                             $uri = $this->uri(array('action' => 'NumFilter'));
@@ -402,7 +420,7 @@ echo $form->show();
 
 
                                             $filterLang->setSelected($SortFilter);
-                                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
                                             $uri = $this->uri(array('action' => 'SortFilter'));
@@ -656,7 +674,7 @@ echo $form->show();
                                                     for ($i=1; $i<=$TotalPages; $i++)
                                                     {
 
-                                                      $abLink = new link($this->uri(array("action" => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                                                      $abLink = new link($this->uri(array("action" => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
                                                       $abLink->link = $i;
                                                       echo $abLink->show();
                                                      }

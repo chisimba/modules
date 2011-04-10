@@ -189,6 +189,11 @@ class unesco_oer extends controller {
 
         $this->setVarByRef("finalstring", $buildstring);
         $this->setVarByRef("TotalEntries", $TotalEntries);
+        $this->setVarByRef("Model", $Model);
+        $this->setVarByRef("Guide", $Guide);
+        $this->setVarByRef("Handbook", $Handbook);
+        $this->setVarByRef("Manual", $Manual);
+        $this->setVarByRef("Besoractile", $Besoractile);
 
 
 
