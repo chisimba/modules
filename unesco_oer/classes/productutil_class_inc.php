@@ -357,6 +357,12 @@ class productutil extends object
                                             return $content;
     }
 
+       /**
+     * This function Builds the String to Send to the DBhandler and return the total number of entries according to the selected Filter
+     * @param <type>$AuthFilter,$ThemeFilter,$LangFilter,$page,$sort,$TotalPages,$adaptationstring,$Model,$Handbook,$Guide,$Manual,$Besoractile
+     * @return <type> $TotalEntries
+     */
+
      public function FilterTotalProducts($AuthFilter,$ThemeFilter,$LangFilter,$page,$sort,$TotalPages,$adaptationstring,$Model,$Handbook,$Guide,$Manual,$Besoractile) {
 
           $buildstring = $adaptationstring;
@@ -389,7 +395,7 @@ class productutil extends object
 
         $TotalEntries = $buildstring;
 
-
+        
 
 
 
@@ -399,6 +405,12 @@ class productutil extends object
         return $TotalEntries;
     }
 
+
+     /**
+     * This functionTakes the Filtered string and Returns the Products according to the pagination filter seleted.
+     * @param <type>$NumFilter,$PageNum,$TotalEntries
+     * @return <type> $Buildstring
+     */
 
       public function FilterAllProducts($NumFilter,$PageNum,$TotalEntries) {
 
