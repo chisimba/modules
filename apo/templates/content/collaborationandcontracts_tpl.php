@@ -99,7 +99,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $radio = new radio ('f1a');
 $radio->addOption('y',"yes");
 $radio->addOption('n',"no");
-$radio->setSelected('1');
+$radio->setSelected('y');
 $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($f1a);
@@ -161,7 +161,7 @@ $table->endRow();
 $radio = new radio ('f2a');
 $radio->addOption('y',"yes");
 $radio->addOption('n',"no");
-$radio->setSelected('1');
+$radio->setSelected('y');
 $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($f1a);
@@ -221,7 +221,7 @@ $table->endRow();
 $radio = new radio ('f3a');
 $radio->addOption('y',"yes");
 $radio->addOption('n',"no");
-$radio->setSelected('1');
+$radio->setSelected('y');
 $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($f1a);

@@ -15,7 +15,7 @@
                     'mode' => array('type' => 'text','length' => 10, 'notnull'=>TRUE),
                     'active' => array('type' => 'text','length' => 1, 'notnull'=>TRUE),
                     'upload' => array('type' => 'text','length' => 1, 'notnull'=>TRUE),
-                    'currentuserid' => array('type' => 'text','length' => 10),
+                    'currentuserid' => array('type' => 'text','length' => 1024),
                     'deleteDoc'=>array('type' => 'text','length' => 1),
                     'rejectDoc'=>array('type' => 'text','length' => 1),
                     'version' => array('type' => 'text','length' => 2, 'notnull'=>TRUE, 'default'=>'1'),

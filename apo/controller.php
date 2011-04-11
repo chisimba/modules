@@ -1036,7 +1036,7 @@ class apo extends controller {
         $formdata["q3"] = $q3;
 
         $formdata = serialize($formdata);
-        $$issubmit = $this->getParam('next');
+        $issubmit = $this->getParam('next');
         if (!empty($issubmit)) {
             $this->objformdata->saveData($id, $formname, $formdata);
         }
@@ -1466,6 +1466,22 @@ class apo extends controller {
           $this->setVarByRef("mode", $mode);
           $this->setVarByRef("selected", $selected); */
         return "editCourseProposal_tpl.php";
+    }
+
+    public function __forwarding() {
+        $faculties = $this->faculties->getFaculties();
+     
+        print_r($faculties);
+
+        $this->setVarByRef("faculties", $faculties);
+        
+        $selected = $this->getParam('selected');
+        //$mode = "new";
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("id", $id);
+
+        return "showforwarding_tpl.php";
     }
 
     /**

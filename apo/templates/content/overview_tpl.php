@@ -49,6 +49,7 @@ $header->str = $xtitle;
 
 echo $header->show();
 
+
 $doclink = new link($this->uri(array("action" => "editdocument", 'id' => $id, 'formname'=>'overview')));
 $doclink->link = "Document";
 
@@ -241,5 +242,11 @@ $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 $form->extra = 'class="sections"';
+
+$forwardText = $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward');
+
+$button = new button('forward', $forwardText);
+$form->addToForm($button->show());
+
 echo $form->show();
 ?>
