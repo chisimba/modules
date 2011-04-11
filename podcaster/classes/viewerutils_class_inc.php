@@ -137,12 +137,12 @@ class viewerutils extends object {
 
         $objSoundPlayer->setSoundFile($soundFile);
         $firefoxCheck = $this->is_firefox();
+        //Create podcast url
+        $podURL = $this->siteUrl . $newpodpath;
         //If using firefox use soundplayer, else just embed
         if ($firefoxCheck) {
             $podInfo = $objSoundPlayer->show();
         } else {
-            $podURL = $this->siteUrl . $newpodpath;
-
             $podInfo = '<embed src="' . $podURL . '" autostart="true" loop="false" width="300" height="42" controller="true" bgcolor="#FFFFFF"></embed>';
         }
         $content = "";
@@ -204,7 +204,10 @@ class viewerutils extends object {
         $link = new link($this->uri(array('action' => 'download', 'id' => $id)));
         $link->link = $this->objFileIcons->getExtensionIcon($result['format']) . ' ' . $result['title'];
 
-        $content .= '<br /><p>' . $podInfo . " " . $license . '</p><p><strong>' . $this->objLanguage->languageText('mod_podcaster_downloadpodcast', 'podcaster', 'Download podcast') . ': ' . $link->show() . '</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>';
+        $embedCode = $this->objLanguage->languageText("mod_podcaster_embedcode", "podcaster", 'Embed code');
+        $content .= '<br /><p>' . $podInfo . " " . $license . '</p><p><strong>' . $this->objLanguage->languageText('mod_podcaster_downloadpodcast', 'podcaster', 'Download podcast') . ': ' . $link->show() .
+                '</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>'.
+                '<br /><p><b>'.$embedCode.': </b></p><p><textarea name="snippet" id="input_snippet" rows="4" cols="43"><embed src="' . $podURL . '" autostart="true" loop="false" width="300" height="42" controller="true" bgcolor="#FFFFFF"></embed></textarea></p>';
 //var_dump($newpodpath);exit;
         return array('podinfo' => $content, 'filename' => $filename, 'filedata' => $result, 'id' => $id, 'podpath' => $newpodpath);
     }
