@@ -163,6 +163,11 @@ $adaptationstring = "parent_id is null";
 
                                          <?php
 
+                                          if ($finalstring == null) {
+                                            $finalstring = 'parent_id is null';
+                                            $TotalEntries = 'parent_id is null';
+                                        }
+
                                        echo  $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
 
 
@@ -480,11 +485,7 @@ $adaptationstring = "parent_id is null";
                             <?php
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
-                                        if ($finalstring == null) {
-                                            $finalstring = 'parent_id is null';
-                                            $TotalEntries = 'parent_id is null';
-                                        }
-
+                                      
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
 
