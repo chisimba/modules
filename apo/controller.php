@@ -1781,6 +1781,14 @@ class apo extends controller {
             return $this->nextAction('usermanagement');
         }
     }
+
+
+
+    function __fowarddocument(){
+        $users=$this->getParam("selectedusers");
+        echo 'forwading to : '.$users;
+        die();
+    }
 }
 
 ?>

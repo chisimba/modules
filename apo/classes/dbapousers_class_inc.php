@@ -145,5 +145,16 @@ class dbapousers extends dbtable {
 
         return FALSE;
     }
+
+
+     /**
+     * returns all the users. Not efficient, need to use limits and include pagination
+     * @return <type>
+     */
+    function getAllUsers() {
+        $sql =
+                "select * from tbl_users";
+        return $this->getArray($sql);
+    }
 }
 ?>
