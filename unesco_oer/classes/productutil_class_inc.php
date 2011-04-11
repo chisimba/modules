@@ -314,7 +314,7 @@ class productutil extends object
 
         $content .=        '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
-                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $product['noOfAdaptations']. ' adaptations</a>
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">Rating = ' . $product['rating']. ' </a>
                                 </div>
                                 <div class="tabsListingSpace"></div>';
         return $content;
@@ -338,7 +338,7 @@ class productutil extends object
                                                 //Get the original products
                                                 $product = $objDbProducts->getProductById($childProduct['product_id']);
                                                 //Get number of adaptations for the product
-                                                $product['rating'] = $childProduct['total'];
+                                                $product['rating'] = $childProduct['avg_score'];
 
                                                 //Check if the creator is a group or an institution
                                                 $isGroupCreator = $objDbGroups->isGroup($product['creator']);
