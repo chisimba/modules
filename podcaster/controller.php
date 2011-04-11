@@ -1463,6 +1463,29 @@ Sincerely,<br />
     }
 
     /**
+     * Method to download a presentation
+     */
+    function __viewembed() {
+        $id = $this->getParam('id');
+        $result = $this->objMediaFileData->getFile($id);
+        if (!empty($result)) {
+            //Get the path
+            $pathdata = $this->folderPermissions->getById($result['uploadpathid']);
+            $pathdata = $pathdata[0];
+            $newpodpath = str_replace($this->siteBase, "/", $this->baseDir);
+            $newpodpath = $newpodpath . "/" . $result['creatorid'] . "/" . $pathdata['folderpath'] . '/' . $result['filename'];
+            $newpodpath = str_replace("//", "/", $newpodpath);
+            $fileurl = $newpodpath;
+            //Remove / at the start of path
+            $fileurl = ltrim($fileurl, '/');
+            $fileurl = str_replace("//", "/", $fileurl);
+            $fileurl = $this->siteUrl . $fileurl;
+            return $fileurl;
+        } else {
+            return $this->nextAction(NULL, array('error' => 'cannotfindfile'));
+        }
+    }
+    /**
      * Method to view a list of podcasts that match a particular tag
      *
      */
