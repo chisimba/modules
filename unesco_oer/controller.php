@@ -116,6 +116,7 @@ class unesco_oer extends controller {
     }
 
     public function __FilterProducts() {
+
         $AuthFilter = $this->getParam('AuthorFilter');
         $ThemeFilter = $this->getParam('ThemeFilter');
         $LangFilter = $this->getParam('LanguageFilter');
@@ -132,51 +133,8 @@ class unesco_oer extends controller {
         $Besoractile = $this->getParam('Besoractile');
 
 
-        $buildstring = $adaptationstring;
-        if ($AuthFilter != Null)
-            $buildstring .= ' and creator = ' . "'$AuthFilter'";
-
-        if ($ThemeFilter != Null)
-            $buildstring .= ' and theme = ' . "'$ThemeFilter'";
-
-        if ($LangFilter != Null)
-            $buildstring .= ' and language = ' . "'$LangFilter'";
-
-        if ($Model == 'on')
-            $buildstring .= ' and resource_type = "Model"';
-        if ($Handbook == 'on')
-            $buildstring .= ' and resource_type = "handbook"';
-        if ($Guide == 'on')
-            $buildstring .= ' and resource_type = "Guide"';
-        if ($Manual == 'on')
-            $buildstring .= ' and resource_type = "Manual"';
-        if ($Besoractile == 'on')
-            $buildstring .= ' and resource_type = "Besoractile"';
-
-
-
-        if ($sort == 'Date Added')
-            $buildstring .= ' order by created_on';
-        else if ($sort == 'Alphabetical')
-            $buildstring .= ' order by title';
-
-        $TotalEntries = $buildstring;
-
-
-
-
-        if ($NumFilter != null & $PageNum == null) {
-            $start = 0;
-            $end = $start + $NumFilter;
-            $buildstring .= ' LIMIT ' . $start . ',' . $end;
-        } else if ($NumFilter != null) {
-
-            $temp = $NumFilter * $PageNum - 1;
-            $start = $temp - $NumFilter + 1;
-            $end = $NumFilter;
-            $buildstring .= ' LIMIT ' . $start . ',' . $end;
-        }
-
+       $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter,$ThemeFilter,$LangFilter,$page,$sort,$TotalPages,$adaptationstring,$Model,$Handbook,$Guide,$Manual,$Besoractile);
+       $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter,$PageNum,$TotalEntries);
 
 
 
@@ -188,8 +146,7 @@ class unesco_oer extends controller {
         $this->setVarByRef("PageNum", $PageNum);
         $this->setVarByRef("TotalPages", $TotalPages);
         $this->setVarByRef("Model", $Model);
-
-        $this->setVarByRef("finalstring", $buildstring);
+        $this->setVarByRef("finalstring", $Buildstring);
         $this->setVarByRef("TotalEntries", $TotalEntries);
         $this->setVarByRef("Model", $Model);
         $this->setVarByRef("Guide", $Guide);
