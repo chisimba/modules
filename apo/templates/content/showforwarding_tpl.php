@@ -17,7 +17,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 
 
-$legend = "<b>Faculty</b>";
+$legend = $document['department'];
 
 
 
