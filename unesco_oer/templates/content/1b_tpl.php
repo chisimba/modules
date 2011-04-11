@@ -148,7 +148,15 @@ $this->loadClass('checkbox', 'htmlelements');
                     <div class="moduleHeader">FILTER PRODUCTS</div>
                     <div class="blueNumberBackground">
                         <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                        <div class="numberOffilteredProducts">56</div>
+                        <div class="numberOffilteredProducts">
+                            
+                             <?php
+
+                                       echo  $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
+
+
+                                    ?>
+                        </div>
                     </div>
                     <div class="moduleSubHeader">Product matches filter criteria</div>
                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
