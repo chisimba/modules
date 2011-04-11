@@ -17,13 +17,12 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 
 
-$legend = $document['department'];
-
+$legend = 'Faculty';
 
 
 $fs = new fieldset();
 $fs->setLegend($legend);
-//$fs->addContent();
+$fs->addContent('<b>'.$document['department'].'</b>');
 
 
 

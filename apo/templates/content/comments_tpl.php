@@ -209,5 +209,12 @@ $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
+$forwardText = $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward');
+
+$button = new button('forward', $forwardText);
+$uri = $this->uri(array('action'=>'forwarding', 'id'=>$id));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
+
 echo $form->show();
 ?>

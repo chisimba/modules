@@ -33,7 +33,6 @@ if ($formdata != null){
     $mode = "edit";
 }
 
-
 $action = 'showcomments';
 $form = new form('contactdetailsform', $this->uri(array('action' => $action, 'id'=>$id, 'formname'=>'contactdetails')));
 
@@ -236,6 +235,20 @@ $uri = $this->uri(array('action' => 'home'));
 $button->setToSubmit('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 $form->extra = 'class="sections"';
+
+$forwardText = $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward');
+
+$button = new button('forward', $forwardText);
+$uri = $this->uri(array('action'=>'forwarding', 'id'=>$id));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
+
+$forwardText = $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward');
+
+$button = new button('forward', $forwardText);
+$uri = $this->uri(array('action'=>'forwarding', 'id'=>$id));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
 
 echo $form->show();
 ?>
