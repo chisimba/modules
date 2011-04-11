@@ -375,16 +375,29 @@ class productutil extends object
         if ($LangFilter != Null)
             $buildstring .= ' and language = ' . "'$LangFilter'";
 
+        
+if (($Model == 'on') or ($Handbook == 'on') or ($Guide == 'on') or ($Manual == 'on') or ($Besoractile == 'on') )
+        $buildstring .= ' and (';
+
         if ($Model == 'on')
-            $buildstring .= ' and resource_type = "Model"';
+            $buildstring .= ' resource_type = "Model" or';
         if ($Handbook == 'on')
-            $buildstring .= ' and resource_type = "handbook"';
+            $buildstring .= ' resource_type = "Handbook" or';
         if ($Guide == 'on')
-            $buildstring .= ' and resource_type = "Guide"';
+            $buildstring .= ' resource_type = "Guide" or';
         if ($Manual == 'on')
-            $buildstring .= ' and resource_type = "Manual"';
+            $buildstring .= ' resource_type = "Manual" or';
         if ($Besoractile == 'on')
-            $buildstring .= ' and resource_type = "Besoractile"';
+            $buildstring .= ' resource_type = "Besoractile" or';
+
+        $length = strlen($buildstring);
+
+        if (($Model == 'on') or ($Handbook == 'on') or ($Guide == 'on') or ($Manual == 'on') or ($Besoractile == 'on') )
+        {
+        $buildstring=substr($buildstring,0,($length -2));
+
+        $buildstring .= ')';
+        }
 
 
 
