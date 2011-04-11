@@ -165,86 +165,70 @@ $adaptationstring = "parent_id is null";
                                 <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
                                 <div class="blueBackground blueBackgroundCheckBoxText">
 
-                                       <?php
-
-                $products = $this->objDbProducts->getProducts(0, 10);
-
-
-
-
-              $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
+                        <?php
+                                        $products = $this->objDbProducts->getProducts(0, 10);
 
 
 
 
-    $button = new button('Search','Search');
-    $button->setToSubmit();
-
-    $checkbox = new checkbox('Model');
-    $checkbox2 = new checkbox('Handbook');
-    $checkbox3 = new checkbox('Guide');
-    $checkbox4 = new checkbox('Manual');
-    $checkbox5 = new checkbox('Besoractile');
-
-
-
-   if ($Model == 'on')
-    $checkbox->ischecked = true;
-
-   if ($Handbook == 'on')
-    $checkbox2->ischecked = true;
-
-   if ($Guide == 'on')
-    $checkbox3->ischecked = true;
-
-   if ($Manual== 'on')
-    $checkbox4->ischecked = true;
-
-   if ($Besoractile == 'on')
-    $checkbox5->ischecked = true;
-
-
-    $form ->addToForm($checkbox->show());
-     $form ->addToForm('Model<br>');
-    $form ->addToForm($checkbox2->show());
-     $form ->addToForm('handbook<br>');
-     $form ->addToForm($checkbox3->show());
-      $form ->addToForm('Guide<br>');
-      $form ->addToForm($checkbox4->show());
-       $form ->addToForm('Manual<br>');
-       $form ->addToForm($checkbox5->show());
-        $form ->addToForm('Besoractile<br>');
-    $form->addToForm($button->show());
-
-
-echo $form->show();
-     echo $Model
+                                        $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
 
 
 
+                                        $button = new button('Search', 'Search');
+                                        $button->setToSubmit();
+
+                                        $checkbox = new checkbox('Model');
+                                        $checkbox2 = new checkbox('Handbook');
+                                        $checkbox3 = new checkbox('Guide');
+                                        $checkbox4 = new checkbox('Manual');
+                                        $checkbox5 = new checkbox('Besoractile');
 
 
 
+                                        if ($Model == 'on')
+                                            $checkbox->ischecked = true;
+
+                                        if ($Handbook == 'on')
+                                            $checkbox2->ischecked = true;
+
+                                        if ($Guide == 'on')
+                                            $checkbox3->ischecked = true;
+
+                                        if ($Manual == 'on')
+                                            $checkbox4->ischecked = true;
+
+                                        if ($Besoractile == 'on')
+                                            $checkbox5->ischecked = true;
 
 
+                                        $form->addToForm($checkbox->show());
+                                        $form->addToForm('Model<br>');
+                                        $form->addToForm($checkbox2->show());
+                                        $form->addToForm('handbook<br>');
+                                        $form->addToForm($checkbox3->show());
+                                        $form->addToForm('Guide<br>');
+                                        $form->addToForm($checkbox4->show());
+                                        $form->addToForm('Manual<br>');
+                                        $form->addToForm($checkbox5->show());
+                                        $form->addToForm('Besoractile<br>');
+                                        $form->addToForm($button->show());
 
 
+                                        echo $form->show();
+                                        echo $Model
+                        ?>
 
-
-
-
-             ?>
-
-<!--                                    <input type="checkbox"> Model<br>
-                                    <input type="checkbox"> Guide<br>
-                                    <input type="checkbox"> Handbook<br>
-                                    <input type="checkbox"> Manual<br>
-                                    <input type="checkbox"> Bestoractile<br>-->
-                                </div>
-                                <br>
-                                <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
-                                <div class="blueBackground">
+                <!--                                    <input type="checkbox"> Model<br>
+                                                    <input type="checkbox"> Guide<br>
+                                                    <input type="checkbox"> Handbook<br>
+                                                    <input type="checkbox"> Manual<br>
+                                                    <input type="checkbox"> Bestoractile<br>-->
+                                    </div>
+                                    <br>
+                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
+                                    <div class="blueBackground">
 
                         <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
@@ -257,7 +241,7 @@ echo $form->show();
                                         $filterTheme->setSelected($ThemeFilter);
 
                                         $uri = $this->uri(array('action' => 'ThemeFilter'));
-                                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
+                                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
 
                                         $uri = $this->uri(array('action' => 'FilterProducts'));
@@ -270,9 +254,9 @@ echo $form->show();
                                         echo $form->show();
                         ?>
 
-                                                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                            </select>-->
+                                                                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
@@ -289,7 +273,7 @@ echo $form->show();
                                         }
 
                                         $filterLang->setSelected($LangFilter);
-                                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
+                                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
 
                                         $uri = $this->uri(array('action' => 'LanguageFilter'));
@@ -302,15 +286,15 @@ echo $form->show();
                                         echo $form->show();
                         ?>
 
-                                                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
-                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                <option value="">English</option>
-                                                                                                                                                                                <option value="">Français</option>
-                                                                                                                                                                                <option value="">Español</option>
-                                                                                                                                                                                <option value="">Русский</option>
-                                                                                                                                                                                <option value="">لعربية</option>
-                                                                                                                                                                                <option value="">中文</option>
-                                                                                                                                                                            </select>-->
+                                                                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                <option value="">English</option>
+                                                                                                                                                                                                <option value="">Français</option>
+                                                                                                                                                                                                <option value="">Español</option>
+                                                                                                                                                                                                <option value="">Русский</option>
+                                                                                                                                                                                                <option value="">لعربية</option>
+                                                                                                                                                                                                <option value="">中文</option>
+                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">Author</div>
@@ -326,7 +310,7 @@ echo $form->show();
                                         }
 
                                         $filterAuth->setSelected($AuthFilter);
-                                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
+                                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
 
                                         $uri = $this->uri(array('action' => 'AuthorFilter'));
@@ -342,9 +326,9 @@ echo $form->show();
 
 
 
-                                                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
-                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                            </select>-->
+                                                                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
@@ -353,30 +337,30 @@ echo $form->show();
 
 
 
-                                              <?php
-                                            $products = $this->objDbProducts->getProducts(0, 10);
-                                            $filterNum = new dropdown('NumFilter');
+                        <?php
+                                        $products = $this->objDbProducts->getProducts(0, 10);
+                                        $filterNum = new dropdown('NumFilter');
 
 
-                                                $filterNum->addoption(null);
-                                                $filterNum->addOption('1');
-                                                $filterNum->addOption('2');
-                                                $filterNum->addOption('3');
+                                        $filterNum->addoption(null);
+                                        $filterNum->addOption('1');
+                                        $filterNum->addOption('2');
+                                        $filterNum->addOption('3');
 
 
 
-                                            $filterNum->setSelected($NumFilter);
-                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
+                                        $filterNum->setSelected($NumFilter);
+                                        $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
 
-                                            $uri = $this->uri(array('action' => 'NumFilter'));
-                                            $filterNum->addOnChange('javascript: sendNumFilterform()');
+                                        $uri = $this->uri(array('action' => 'NumFilter'));
+                                        $filterNum->addOnChange('javascript: sendNumFilterform()');
 
 
-                                            $form->addtoform($filterNum->show());
+                                        $form->addtoform($filterNum->show());
 
 
-                                            echo $form->show();
+                                        echo $form->show();
                         ?>
 
 
@@ -387,9 +371,9 @@ echo $form->show();
 
 
 
-<!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                                            <option value="">All</option>
-                                        </select>-->
+                <!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                                                            <option value="">All</option>
+                                                        </select>-->
                                     </div>
                                     <br><br>
                                     <div class="blueBackground rightAlign">
@@ -412,10 +396,10 @@ echo $form->show();
 
                                         <div class="sortBy">
 
-                                                                                                                                <!--                                                <select name="" class="contentDropDown">
-                                                                                                                                     <option value="">Date Added</option>
-                                                                                                                                 </select>-->
-                            <?php
+                                                                                                                                                <!--                                                <select name="" class="contentDropDown">
+                                                                                                                                                     <option value="">Date Added</option>
+                                                                                                                                                 </select>-->
+<?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('SortFilter');
 
@@ -425,7 +409,7 @@ echo $form->show();
 
 
                                         $filterLang->setSelected($SortFilter);
-                                        $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
+                                        $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
 
                                         $uri = $this->uri(array('action' => 'SortFilter'));
@@ -436,13 +420,13 @@ echo $form->show();
                                         $form->addtoform('Sort By:');
                                         $form->addtoform($filterLang->show());
                                         echo $form->show();
-                            ?>
+?>
 
 
 
-                                                                                                    <!--                                                <select name="" class="contentDropDown">
-                                                                                                        <option value="">DESC</option>
-                                                                                                    </select>-->
+                                                                                                                <!--                                                <select name="" class="contentDropDown">
+                                                                                                                    <option value="">DESC</option>
+                                                                                                                </select>-->
                                     </div>
                                     <div class="viewGrid">
                                         <div class="viewAsDiv">View as: </div>
@@ -455,14 +439,14 @@ echo $form->show();
                             ?>
 
                                         <div class="gridListDivView">
-                                <?php
+<?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
                                         $abLink->link = 'GRID';
                                         echo $abLink->show();
-                                ?>
-                                    </div>
+?>
+                                        </div>
 
-                                    <div class="gridListPipe">|</div>
+                                        <div class="gridListPipe">|</div>
 
                             <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
@@ -481,11 +465,10 @@ echo $form->show();
                                     </div>
                                 </div>
                             </div>
-                    <?php
+                            <?php
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
-                                        if ($finalstring == null)
-                                        {
+                                        if ($finalstring == null) {
                                             $finalstring = 'parent_id is null';
                                             $TotalEntries = 'parent_id is null';
                                         }
@@ -517,7 +500,7 @@ echo $form->show();
                                             }
                                         }
                                         echo $objTable->show();
-                    ?>
+                            ?>
                                         <!--
                                                             <table class="gridListingTable" cellspacing="0" cellpadding="0">
                                                                 <tr>
@@ -662,35 +645,28 @@ echo $form->show();
                                         <div class="paginationDiv">
                                             <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
 
-                                              <?php
-
-
-
+<?php
 //
-                                           $TotalRecords =  $this->objDbProducts->getTotalEntries($TotalEntries);
+                                        $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
 
-                                           $TotalPages = ceil($TotalRecords / $NumFilter);
+                                        $TotalPages = ceil($TotalRecords / $NumFilter);
 
 //                                                echo $TotalRecords;
 //                                                echo $NumFilter;
 //                                                echo (int) $TotalPages;
 
 
-                                                    for ($i=1; $i<=$TotalPages; $i++)
-                                                    {
+                                        for ($i = 1; $i <= $TotalPages; $i++) {
 
-                                                      $abLink = new link($this->uri(array("action" => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
-                                                      $abLink->link = $i;
-                                                      echo $abLink->show();
-                                                     }
-                                                     
-                                      
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                                            $abLink->link = $i;
+                                            echo $abLink->show();
+                                        }
+
+
 //
 //
-
-
-
-                                    ?>
+?>
 
 
 
@@ -704,72 +680,73 @@ echo $form->show();
 
 
 
-<!--                                            <div class="paginationLinkDiv">
-                                                <a href="#" class="pagination">Prev</a>
-                                                <a href="#" class="pagination">1</a>
-                                                <a href="#" class="pagination">2</a>
-                                                <a href="#" class="pagination">3</a>
-                                                <a href="#" class="pagination">4</a>
-                                                <a href="#" class="pagination">5</a>
-                                                <a href="#" class="pagination">6</a>
-                                                <a href="#" class="pagination">7</a>
-                                                <a href="#" class="pagination">8</a>
-                                                <a href="#" class="pagination">9</a>
-                                                <a href="#" class="pagination">10</a>
-                                                <a href="#" class="pagination">Next</a>
-                                            </div>-->
-                                        </div>
+                                        <!--                                            <div class="paginationLinkDiv">
+                                                                                        <a href="#" class="pagination">Prev</a>
+                                                                                        <a href="#" class="pagination">1</a>
+                                                                                        <a href="#" class="pagination">2</a>
+                                                                                        <a href="#" class="pagination">3</a>
+                                                                                        <a href="#" class="pagination">4</a>
+                                                                                        <a href="#" class="pagination">5</a>
+                                                                                        <a href="#" class="pagination">6</a>
+                                                                                        <a href="#" class="pagination">7</a>
+                                                                                        <a href="#" class="pagination">8</a>
+                                                                                        <a href="#" class="pagination">9</a>
+                                                                                        <a href="#" class="pagination">10</a>
+                                                                                        <a href="#" class="pagination">Next</a>
+                                                                                    </div>-->
                                     </div>
+                                </div>
 
-                                    <!-- Right column DIv -->
+                                <!-- Right column DIv -->
+                                <div class="rightColumnDiv">
                                     <div class="rightColumnDiv">
-                                        <div class="rightColumnDiv">
-                                            <div class="featuredHeader">FEATURED UNESCO PRODUCTS</div>
-                                            <div class="rightColumnBorderedDiv">
-                                                <div class="rightColumnContentPadding">
-                                <?php
+                                        <div class="featuredHeader">FEATURED UNESCO PRODUCTS</div>
+                                        <div class="rightColumnBorderedDiv">
+                                            <div class="rightColumnContentPadding">
+<?php
                                         $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
                                         $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
                                         if (sizeof($featuredProduct) > 0) {
                                             //TODO error handling
                                         }
                                         echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct[0]);
-                                ?>
-                                        <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+?>
+                                                <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
 
-                                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
-                                        <?php
+                                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
+<?php
                                         //The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
                                         $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
                                         $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
                                         echo"See all adaptations ($NOofAdaptation)"// This must be a link;
-                                        ?>
-                                    </a></div>
-                            </div>
-                        </div>
-                        <div class="spaceBetweenRightBorderedDivs">
-                            <div class="featuredHeader innerPadding">MOST...</div>
-                        </div>
-                        <!-- tabs
-                        <div class="tabsOnState">ADOPTED</div>
-                        <div class="tabsOffState">RATED</div>
-                        <div class="tabsOffState">COMMENTED</div>
-                        -->
+?>
+                                                    </a></div>
+                                            </div>
+                                        </div>
+                                        <div class="spaceBetweenRightBorderedDivs">
+                                            <div class="featuredHeader innerPadding">MOST...</div>
+                                        </div>
+                                        <!-- tabs
+                                        <div class="tabsOnState">ADOPTED</div>
+                                        <div class="tabsOffState">RATED</div>
+                                        <div class="tabsOffState">COMMENTED</div>
+                                        -->
 
-                        <div class="rightColumnBorderedDiv">
-                            <div class="rightColumnContentPadding">
+                                        <div class="rightColumnBorderedDiv">
+                                            <div class="rightColumnContentPadding">
 
 
-                                <?php
+<?php
                                         $objTabs = $this->newObject('tabcontent', 'htmlelements');
                                         $objTabs->setWidth(180);
                                         $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution);
                                         $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
+                                        $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
                                         $objTabs->addTab('Adapted', $mostAdapted);
-                                        $objTabs->addTab('Rated', "rated goes here");
+                                        $objTabs->addTab('Rated', $mostRated);
                                         $objTabs->addTab('Commented', $mostCommented);
                                         echo $objTabs->show();
-                                ?>
+?>
 
                             </div>
                         </div>
@@ -843,27 +820,27 @@ echo $form->show();
 
     function sendThemeFilterform()
     {
-        document.forms["ThemeFilter"].submit();
+    document.forms["ThemeFilter"].submit();
     }
 
     function sendLanguageFilterform()
     {
-        document.forms["LanguageFilter"].submit();
+    document.forms["LanguageFilter"].submit();
 
     }function sendAuthorFilterform()
     {
-        document.forms["AuthorFilter"].submit();
+    document.forms["AuthorFilter"].submit();
     }
 
 
     function sendSortFilterform()
     {
-        document.forms["SortFilter"].submit();
+    document.forms["SortFilter"].submit();
     }
 
     function sendNumFilterform()
     {
-        document.forms["NumFilter"].submit();
+    document.forms["NumFilter"].submit();
     }
 
 </script>

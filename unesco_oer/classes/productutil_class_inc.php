@@ -227,7 +227,7 @@ class productutil extends object
     }
 
         /**
-     * This function populates a page with the most adapted products in a most adapted tab
+     * This function populates a "section" with the most adapted products in a most adapted tab
      * @param <type> $product
      * @return <type> $content
      */
@@ -241,6 +241,12 @@ class productutil extends object
                                 <div class="tabsListingSpace"></div>';
         return $content;
     }
+
+            /**
+     * This function populates a "section of a page" with the most adapted products in a most adapted tab
+     * @param <type> $objDbProducts, $objDbGroups, $objDbInstitution
+     * @return <type> $content
+     */
 
     public function displayMostAdapted(&$objDbProducts, &$objDbGroups, &$objDbInstitution)
     {
@@ -300,6 +306,59 @@ class productutil extends object
                                 </div>
                                 <div class="tabsListingSpace"></div>';
         return $content;
+    }
+
+            /**
+     * This function populates a "section" with the most rated products in a most adapted tab
+     * @param <type> $product
+     * @return <type> $content
+     */
+    public function populateMostRated($product){
+        $content = '';
+
+        $content .=        '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
+                                <div class="rightTextTabsList">
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $product['noOfAdaptations']. ' adaptations</a>
+                                </div>
+                                <div class="tabsListingSpace"></div>';
+        return $content;
+    }
+
+            /**
+     * This function populates a "section of a page" with the most rated products in a most adapted tab
+     * @param <type> $objDbProducts, $objDbGroups, $objDbInstitution
+     * @return <type> $content
+     */
+
+    public function displayMostRated(&$objDbProducts, &$objDbGroups, &$objDbInstitution, &$objDbProductRatings)
+    {
+        $content ='';
+                                                    //TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
+                                            //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+
+                                            $mostRatedProducts = $objDbProductRatings->getMostRatedProducts();
+
+                                            foreach ($mostRatedProducts as $childProduct) {
+                                                //Get the original products
+                                                $product = $objDbProducts->getProductById($childProduct['product_id']);
+                                                //Get number of adaptations for the product
+                                                $product['rating'] = $childProduct['total'];
+
+                                                //Check if the creator is a group or an institution
+                                                $isGroupCreator = $objDbGroups->isGroup($product['creator']);
+
+                                                if ($isGroupCreator == true) {
+                                                    $thumbnail = $objDbGroups->getGroupThumbnail($product['creator']);
+                                                } else {
+                                                    $thumbnail = $objDbInstitution->getInstitutionThumbnail($product['creator']);
+                                                }
+
+                                                $product['institution_thumbnail'] = $thumbnail['thumbnail'];
+                                                //$product['institution'] = $this->objInstitution->getInstitution();
+                                                $content .= $this->populateMostRated($product);
+                                            }
+
+                                            return $content;
     }
 
 }

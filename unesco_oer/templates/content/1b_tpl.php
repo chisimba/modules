@@ -734,15 +734,26 @@ Sort By:
                                     <div class="spaceBetweenRightBorderedDivs">
                                         <div class="featuredHeader innerPadding">MOST...</div>
                                     </div>
-                                    <!--tabs -->
-                                    <div class="tabsOnState">ADOPTED</div>
-                                    <div class="tabsOffState">RATED</div>
-                                    <div class="tabsOffState">COMMENTED</div>
+                                        <!-- tabs
+                                        <div class="tabsOnState">ADOPTED</div>
+                                        <div class="tabsOffState">RATED</div>
+                                        <div class="tabsOffState">COMMENTED</div>
+                                        -->
 
-                                    <div class="rightColumnBorderedDiv">
-                                        <div class="rightColumnContentPadding">
+                                        <div class="rightColumnBorderedDiv">
+                                            <div class="rightColumnContentPadding">
+
+
 <?php
-            echo $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution);
+                                        $objTabs = $this->newObject('tabcontent', 'htmlelements');
+                                        $objTabs->setWidth(180);
+                                        $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution);
+                                        $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
+                                        $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
+                                        $objTabs->addTab('Adapted', $mostAdapted);
+                                        $objTabs->addTab('Rated', $mostRated);
+                                        $objTabs->addTab('Commented', $mostCommented);
+                                        echo $objTabs->show();
 ?>
                                             
                             </div>
