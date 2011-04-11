@@ -18,10 +18,13 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
+$this->loadClass('adddatautil','unesco_oer');
+
+$utility = new adddatautil();
 
 // setup and show heading
 $header = new htmlHeading();
-$header->str = "Write comment";
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_comment_input', 'unesco_oer');
 $header->type = 2;
 echo $header->show();
 
@@ -29,12 +32,8 @@ echo $header->show();
 $table = $this->newObject('htmltable', 'htmlelements');
 
 //group name input options
-$textinput = new textinput('newComment');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Type Comment:');
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_comment_input', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'newComment', 60, '', $table);
 
 //submission button
 $table->startRow();

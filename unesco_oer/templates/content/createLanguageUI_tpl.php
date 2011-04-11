@@ -18,10 +18,13 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('textinput','htmlelements');
+$this->loadClass('adddatautil', 'unesco_oer');
+
+$utility = new adddatautil();
 
 // setup and show heading
 $header = new htmlHeading();
-$header->str = "Create new Language";
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_language_heading', 'unesco_oer');
 $header->type = 2;
 echo $header->show();
 
@@ -29,20 +32,12 @@ echo $header->show();
 $table = $this->newObject('htmltable', 'htmlelements');
 
 //input options for language code
-$textinput = new textinput('newLanguageCode');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Type code(optional)(3 chars):');
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_language_code', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'newLanguageCode', 60, '', $table);
 
 //input options for language name
-$textinput = new textinput('newLanguageName');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Type Name:');
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_language_name', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'newLanguageName', 60, '', $table);
 
 //Submit button
 $table->startRow();

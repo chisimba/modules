@@ -18,10 +18,13 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('textinput','htmlelements');
+$this->loadClass('adddatautil','unesco_oer');
+
+$utility = new adddatautil();
 
 // setup and show heading
 $header = new htmlHeading();
-$header->str = "Create new Group";
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_group_heading', 'unesco_oer');
 $header->type = 2;
 echo $header->show();
 
@@ -29,28 +32,16 @@ echo $header->show();
 $table = $this->newObject('htmltable', 'htmlelements');
 
 //group name input options
-$textinput = new textinput('newGroup');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Type Name:');
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_group_name', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'newGroup', 60, '', $table);
 
 //group latitude input options
-$textinput = new textinput('loclat');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Input latitued:');
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_group_loclat', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'loclat', 60, '', $table);
 
 //group longitued input options
-$textinput = new textinput('loclong');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Input longitued:');
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_group_loclong', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'loclong', 60, '', $table);
 
 //group thumbnail input options
 $objUpload = $this->getObject('uploadinput', 'filemanager');

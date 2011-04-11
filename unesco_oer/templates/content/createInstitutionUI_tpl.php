@@ -18,10 +18,13 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('textinput','htmlelements');
+$this->loadClass('adddatautil', 'unesco_oer');
+
+$utility = new adddatautil();
 
 // setup and show heading
 $header = new htmlHeading();
-$header->str = "Create new Institution";
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_institution_heading', 'unesco_oer');
 $header->type = 2;
 echo $header->show();
 
@@ -29,28 +32,16 @@ echo $header->show();
 $table = $this->newObject('htmltable', 'htmlelements');
 
 //Institution name input options
-$textinput = new textinput('newInstitution');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Type Name:');
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_institution_name', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'newInstitution', 60, '', $table);
 
 //Institution latitude input options
-$textinput = new textinput('loclat');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Input latitued:');
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_institution_loclat', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'loclat', 60, '', $table);
 
 //Institution longitued input options
-$textinput = new textinput('loclong');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Input longitued:');
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_institution_loclong', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'loclong', 60, '', $table);
 
 //Institution input options
 $objUpload = $this->getObject('uploadinput', 'filemanager');

@@ -18,9 +18,9 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('textinput','htmlelements');
-//$this->loadClass('adddatautil','unesco_oer');
+$this->loadClass('adddatautil','unesco_oer');
 
-//$utility = new adddatautil();
+$utility = new adddatautil();
 
 // setup and show heading
 $header = new htmlHeading();
@@ -34,140 +34,88 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = '10';
 
 //new product options
-$header = new htmlHeading();
-$header->str = $this->objLanguage->
+$headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_product_heading', 'unesco_oer');
-$header->type = 2;
-$table->startRow();
-$table->addCell($header->show());
-$table->endRow();
-//$headingText = $this->objLanguage->
-//        languageText('mod_unesco_oer_add_data_product_heading', 'unesco_oer');
-//$utility->addTitleToTable($headingText, 2, $table);
+$utility->addTitleToTable($headingText, 2, $table);
 
 //new OER product options
-$table->startRow();
-$table->addCell($this->objLanguage->
-        languageText('mod_unesco_oer_add_data_newOERproduct','unesco_oer'));
-$button = new button('createOERproduct', "Create OER Product");
-$uri = $this->uri(array('action' => 'createOERproduct'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
-$table->endRow();
-//$headingText = $this->objLanguage->
-//        languageText('mod_unesco_oer_add_data_newOERproduct', 'unesco_oer');
-//$buttonText = $this->objLanguage->
-//        languageText('mod_unesco_oer_add_data_newOERproductBtn', 'unesco_oer');
-//$actionURI = $this->uri(array('action' => 'createOERproduct'));
-//$utility->addButtonToTable($headingText, 4, $buttonText, $actionURI, $table);
+$headingText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newOERproduct', 'unesco_oer');
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newOERproductBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'createOERproduct'));
+$utility->addButtonToTable($headingText, 4, $buttonText, $actionURI, $table);
 
 //new adaptation options
-$table->startRow();
-$table->addCell($this->objLanguage->
-        languageText('mod_unesco_oer_add_data_newAdaptation','unesco_oer'));
-$button = new button('createAdaptation', "Create Adaptation");
-$uri = $this->uri(array('action' => 'chooseProductToAdapt'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
-$table->endRow();
+$headingText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newAdaptation', 'unesco_oer');
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newAdaptationBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'chooseProductToAdapt'));
+$utility->addButtonToTable($headingText, 4, $buttonText, $actionURI, $table);
 
 //new type of resource options
-$header = new htmlHeading();
-$header->str = $this->objLanguage->
+$headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newProductType', 'unesco_oer');
-$header->type = 2;
-$table->startRow();
-$table->addCell($header->show());
-$button = new button('createProductType', "Create Product Type");
-$uri = $this->uri(array('action' => 'newResourceTypeUI'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
-$table->endRow();
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newProductTypeBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'newResourceTypeUI'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
 //new type of theme options
-$header = new htmlHeading();
-$header->str = $this->objLanguage->
+$headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newTheme', 'unesco_oer');
-$header->type = 2;
-$table->startRow();
-$table->addCell($header->show());
-$button = new button('createTheme', "Create Theme");
-$uri = $this->uri(array('action' => 'createThemeUI'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
-$table->endRow();
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newThemeBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'createThemeUI'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
 //new language options
-$header = new htmlHeading();
-$header->str = $this->objLanguage->
+$headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newLanguage', 'unesco_oer');
-$header->type = 2;
-$table->startRow();
-$table->addCell($header->show());
-$button = new button('createLanguage', "Create Language");
-$uri = $this->uri(array('action' => 'createLanguageUI'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
-$table->endRow();
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newLanguageBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'createLanguageUI'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
 //new featured product option
-$header = new htmlHeading();
-$header->str = $this->objLanguage->
+$headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newFeaturedProduct', 'unesco_oer');
-$header->type = 2;
-$table->startRow();
-$table->addCell($header->show());
-$button = new button('createFeaturedProduct', "Create Featured Product");
-$uri = $this->uri(array('action' => 'featuredProductUI'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
-$table->endRow();
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newFeaturedProductBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'featuredProductUI'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
 //new group options
-$header = new htmlHeading();
-$header->str = $this->objLanguage->
+$headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newGroup', 'unesco_oer');
-$header->type = 2;
-$table->startRow();
-$table->addCell($header->show());
-$button = new button('createGroup', "Create Group");
-$uri = $this->uri(array('action' => 'createGroupUI'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
-$table->endRow();
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newGroupBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'createGroupUI'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
 //new institution options
-$header = new htmlHeading();
-$header->str = $this->objLanguage->
+$headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
-$header->type = 2;
-$table->startRow();
-$table->addCell($header->show());
-$button = new button('createInstitution', "Create Institution");
-$uri = $this->uri(array('action' => 'createInstitutionUI'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
-$table->endRow();
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newInstitutionBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'createInstitutionUI'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
 //new comment options
-$header = new htmlHeading();
-$header->str = $this->objLanguage->
+$headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newcomment','unesco_oer');
-$header->type = 2;
-$table->startRow();
-$table->addCell($header->show());
-$button = new button('addComment', "Add Comment");
-$uri = $this->uri(array('action' => 'chooseProductToComment'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
-$table->endRow();
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newcommentBtn','unesco_oer');
+$actionURI = $this->uri(array('action' => 'chooseProductToComment'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
 //return to Home
 $table->startRow();
-$button = new button('home', "HOME");
-$uri = $this->uri(array('action' => 'home'));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$table->addCell('&nbsp;&nbsp;' . $button->show());
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_homeBtn','unesco_oer');
+$actionURI = $this->uri(array('action' => 'home'));
+$utility->addButtonToRow($buttonText, $actionURI, $table);
 $table->endRow();
 
 //createform, add fields to it and display

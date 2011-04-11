@@ -18,10 +18,13 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('textinput','htmlelements');
+$this->loadClass('adddatautil', 'unesco_oer');
+
+$utility = new adddatautil();
 
 // setup and show heading
 $header = new htmlHeading();
-$header->str = "Create new type theme";
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_theme_heading', 'unesco_oer');
 $header->type = 2;
 echo $header->show();
 
@@ -29,13 +32,12 @@ echo $header->show();
 $table = $this->newObject('htmltable', 'htmlelements');
 
 //theme description input options
-$textinput = new textinput('newTheme');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Type Description:');
-$table->addCell($textinput->show());
+$title = $this->objLanguage->languageText('mod_unesco_oer_theme_description', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'newTheme', 60, '', $table);
+
 $button = new button('submitProductType', "Submit Theme");
 $button->setToSubmit();
+$table->startRow();
 $table->addCell($button->show());
 $table->endRow();
 

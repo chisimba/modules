@@ -19,6 +19,9 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
+$this->loadClass('adddatautil','unesco_oer');
+
+$utility = new adddatautil();
 
 //get parent if any
 $product = $this->objDbProducts->getProductByID($productID);
@@ -34,13 +37,8 @@ echo $header->show();
 $table = $this->newObject('htmltable', 'htmlelements');
 
 //field for the title
-$textinput = new textinput('title');
-$textinput->size = 60;
-$textinput->setValue($product['title']);
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer'));
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'title', 60, $product['title'], $table);
 
 //field for the creator
 
@@ -61,13 +59,8 @@ $table->addCell($creatorDropdown->show());
 $table->endRow();
 
 //field for keywords
-$textinput = new textinput('keywords');
-$textinput->size = 60;
-$textinput->setValue($product['keywords']);
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_keywords', 'unesco_oer'));
-$table->addCell($textinput->show());
-$table->endRow();
+$title = $this->objLanguage->languageText('mod_unesco_oer_keywords', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'keywords', 60, $product['keywords'], $table);
 
 //field for the description
 $editor = $this->newObject('htmlarea', 'htmlelements');
