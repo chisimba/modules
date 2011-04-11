@@ -171,7 +171,8 @@ class rttutil extends object {
 <offline-allowed/>
     </information>
     <resources>
-          <jar href="commons-collections-3.1-rt.jar" />
+       <j2se version="1.6+" />
+        <jar href="commons-collections-3.1-rt.jar" />
         <jar href="commons-logging-api-rt.jar" />
         <jar href="quartz-all-1.6.0.jar" />
         <jar href="jta-rt.jar" />
@@ -181,81 +182,56 @@ class rttutil extends object {
         <jar href="smack.jar"/>
         <jar href="smackx.jar"/>
         <jar href="smackx-debug.jar"/>
-        <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
+        <jar href="httpcore-4.0.1.jar"/>
+        <jar href="apache-mime4j-0.6.jar"/>
+        <jar href="commons-codec-1.3.jar"/>
+        <jar href="commons-logging-1.1.1.jar"/>
+        <jar href="httpclient-4.0.3.jar"/>
+        <jar href="httpmime-4.0.3.jar"/>
         <jar href="xmlpull_1_1_3_4c.jar"/>
-         <jar href="google-api-translate-java-0.94.jar" />
+        <jar href="xpp3-1.1.4c.jar"/>
+         <jar href="google-api-translate-java-0.95.jar" />
         <jar href="proxy-vole_20100914.jar" />
         <jar href="looks-2.3.0.jar" />
+        <jar href="json-org.jar" />
         <jar href="rtt-2.0.0.jar" />
         <jar href="jspeex.jar" />
         <jar href="microba-0.4.4.3.jar" />
+        <jar href="icepdf-viewer.jar" />
+        <jar href="icepdf-core.jar" />
+        <jar href="serializable-doc-0.1.jar" />
 </resources>
 ';
-        /*
-          <jar href="commons-collections-3.1-rt.jar" />
-          <jar href="commons-logging-api-rt.jar" />
-          <jar href="quartz-all-1.6.0.jar" />
-          <jar href="jta-rt.jar" />
-          <jar href="PgsLookAndFeel.jar"/>
-          <jar href="l2fprod-common-all.jar"/>
-          <jar href="kunstsoff-rt.jar" />
-
-          <!--
-          <jar href="httpmime-4.0.3.jar" />
-          <jar href="httpcore-4.0.1.jar" />
-          <jar href="httpclient-4.0.3.jar" />
-
-          <jar href="asmack-jse.jar" />
-          <jar href="xmlpull_1_1_3_4c.jar" />
-          <jar href="xpp3-1.1.3.4.C.jar"/>
-          -->
-
-          <jar href="smack-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
-          <jar href="smackx-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
-          <jar href="smack-bosh-3.2.0-SNAPSHOT-jar-with-dependencies.jar"/>
 
 
-          <jar href="proxy-vole_20100914.jar" />
-          <jar href="looks-2.3.0.jar" />
-          <jar href="realtime2-chatmanager.jar" />
-          <jar href="realtime2-presentations.jar" />
-          <jar href="realtime2-audio.jar" />
-          <jar href="realtime2-core.jar" />
-          <jar href="jspeex.jar" />
-
-          <jar href="realtime2-usermanager.jar" />
-          <jar href="realtime2-roommanager.jar" />
-          <jar href="realtime2-whiteboard.jar" />
-          </resources>
-         */
-
-        $str.=' <application-desc    main-class="org.avoir.rtt.core.Main">
+         $str.='
+   <application-desc    main-class="org.avoir.rtt.core.Main">
     <argument>-slidesdir=/</argument>
     <argument>-maxstanzas=5</argument>
-    <argument>-admin=' . $enableDraw . '</argument>
+    <argument>-admin=true</argument>
     <argument>-debug=true</argument>
-    <argument>-enabledraw=' . $enableDraw . '</argument>
-    <argument>-skinclass=null </argument>
-    <argument>-httpbindhost=' . $openfireHttpBindUrlHost . '</argument>
-        <argument>-httpbindport=' . $openfireHttpBindUrlPort . '</argument>
-    <argument>-serverport=' . $openfirePort . '</argument>
-    <argument>-serverhost=' . $openfireHost . '</argument>
+    <argument>-enabledraw=true</argument>
+    <argument>-skinclass=null</argument>
+    <argument>-httpbindhost=173.230.134.28</argument>
+    <argument>-httpbindport=80</argument>
+    <argument>-serverport='.$openfirePort.'</argument>
+    <argument>-serverhost='.$openfireHost.'</argument>
     <argument>-mode=1</argument>
-    <argument>-plugins=' . $plugins . '</argument>
-    <argument>-username=' . $username . '</argument>
-    <argument>-names=' . $nickname . '</argument>
-    <argument>-email=' . $nickname . '@chisimba.com</argument>
-    <argument>-rtpPort=' . $rtpPort . '</argument>
-    <argument>-sipPort=' . $sipPort . '</argument>
+    <argument>-plugins=org.avoir.rtt.ruc.RucManager#org.avoir.rtt.whiteboard.WhiteboardManager</argument>
+    <argument>-username='.$username.'</argument>
+    <argument>-names='.$nickname.'</argument>
+    <argument>-email=demo@chisimba.com</argument>
+    <argument>-rtpPort='.$rtpPort.'</argument>
+    <argument>-sipPort='.$sipPort.'</argument>
     <argument>-isdemo=true</argument>
-    <argument>-outboundProxy=' . $outboundProxy . '</argument>
-    <argument>-password=' . $password . '</argument>
-    <argument>-domain=' . $sipDomain . '</argument>
-    <argument>-userpart=' . $callnumber . '</argument>
-    <argument>-roomname=' . $roomname . '</argument>
-    <argument>-languagebundles=' . $languageBundles . '</argument>
-</application-desc>
-
+    <argument>-outboundProxy=sip:173.230.134.28;lr</argument>
+    <argument>-password=1234</argument>
+    <argument>-domain=173.230.134.28</argument>
+    <argument>-userpart=7000</argument>
+    <argument>-conferencenumber=3000</argument>
+    <argument>-roomname='.$roomname.'</argument>
+    <argument>-chatwelcomemessage=This is a custom chat welcome message</argument>
+    </application-desc>
     <security>
         <all-permissions/>
     </security>
