@@ -17,16 +17,18 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 
 
-$legend = 'Faculty';
-
+$legend = "Faculty";
 
 $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent('<b>'.$document['department'].'</b>');
 
-
-
 echo $fs->show() . '<br/>';
+
+$button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$uri = $this->uri(array('action' => 'home'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+//$form->addToForm($button->show());
 
 $fs = new fieldset();
 $fs->setLegend('<b>Forward</b>');

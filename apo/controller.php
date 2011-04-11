@@ -1469,12 +1469,11 @@ class apo extends controller {
     }
 
     public function __forwarding() {
-        $id=$this->getParam('id');
-        // get the information for the current document
+        $id = $this->getParam('id');
+
         $document = $this->documents->getDocument($id);
-        
         $this->setVarByRef("document", $document);
-        
+
         $selected = $this->getParam('selected');
         //$mode = "new";
         $this->setVarByRef("mode", $mode);
