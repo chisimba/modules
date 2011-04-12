@@ -111,9 +111,9 @@ $adaptationstring = "parent_id is null";
                                             </div>
                                         </div>
                                         <div class="languagesDiv">
-                                            <a href="" class="languagesLinksActive">English</a> |
-                                            <a href="" class="languagesLinks">Français</a> |
-                                            <a href="" class="languagesLinks">Español</a> |
+                                            <a href="?module=unesco_oer&action=changelanguege&langugae=EN" class="languagesLinksActive">English</a> |
+                                            <a href="?module=unesco_oer&action=changelanguege&langugae=FR" class="languagesLinks">Français</a> |
+                                            <a href="?module=unesco_oer&action=changelanguege&langugae=SP" class="languagesLinks">Español</a> |
                                             <a href="" class="languagesLinks">Русский</a> |
                                             <a href="" class="languagesLinks">لعربية</a> |
                                             <a href="" class="languagesLinks">中文</a>
