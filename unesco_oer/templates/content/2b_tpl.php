@@ -739,16 +739,6 @@ $adaptationstring = "parent_id is not null";
 
                                             echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($featuredAdaptedProduct);
                         ?>
-                                                    </a>
-                                                    <br>
-                                                    <a href="#" class="adaptationLinks">See UNSECO orginals</a>
-
-                                                </div>
-                                                <div class="featuredAdaptedBy">Adapted By</div>
-                                                <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                                <span class="greyListingHeading">Polytechnic of Namibia</span>
-                                            </div>
-                                        </div>
                                         <div class="spaceBetweenRightBorderedDivs">
                                             <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
                                         </div>
