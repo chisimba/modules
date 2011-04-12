@@ -736,33 +736,56 @@ echo $form->show();
                         <div class="rightColumnBorderedDiv">
                             <div class="rightColumnContentPadding">
                                <?php
-                                $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
+//                                $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
+//
+//                              $Institution = $this->objDbInstitution->getAllInstitution();
+//                               for ($i = 0; $i < count($Institution); $i++) {
+//                                   $InstitutionName = $this->objDbInstitution->getInstitutionName( $Institution[$i]['id']);
+//                                   if ($this->objDbProducts->hasAnAdaptation($InstitutionName)) {
+//                                       $lat = $this->objDbInstitution->getInstitutionLatitude($Institution[$i]['id']);
+//                                       $long = $this->objDbInstitution->getInstitutionLongitude($Institution[$i]['id']);
+//                                       $this->objDbInstitution->MapHandler($im, $lat, $long);
+//                                       }
+//                               }
+//
+//                               $Groups =$this->objDbGroups->getAllGroups();
+//                               for ($i = 0; $i < count($Groups); $i++) {
+//                                   $GroupName = $this->objDbGroups->getGroupName($Groups[$i]['id']);
+//                                   if ($this->objDbProducts->hasAnAdaptation($GroupName)) {
+//                                       $lat = $this->objDbGroups->getGroupLatitude($Groups[$i]['id']);
+//                                       $long = $this->objDbGroups->getGroupLongitude($Groups[$i]['id']);
+//                                       $this->objDbGroups->MapHandler($im, $lat, $long);
+//                                       }
+//                               }
+//                               //imagepng($im, "usrfiles/unesco_oer/map/Downloads.jpg");
+//                               imagepng($im, "map_images/Downloads.jpg");
+                                //<img src="map_images/Downloads.jpg" width="200" height="100">
 
-
-                               $Institution = $this->objDbInstitution->getAllInstitution();
-                               for ($i = 0; $i < count($Institution); $i++) {
-                                   $InstitutionName = $this->objDbInstitution->getInstitutionName( $Institution[$i]['id']);
-                                   if ($this->objDbProducts->hasAnAdaptation($InstitutionName)) {
-                                       $lat = $this->objDbInstitution->getInstitutionLatitude($Institution[$i]['id']);
-                                       $long = $this->objDbInstitution->getInstitutionLongitude($Institution[$i]['id']);
-                                       $this->objDbInstitution->MapHandler($im, $lat, $long);
-                                       }
-                               }
-
-                               $Groups =$this->objDbGroups->getAllGroups();
-                               for ($i = 0; $i < count($Groups); $i++) {
-                                   $GroupName = $this->objDbGroups->getGroupName($Groups[$i]['id']);
-                                   if ($this->objDbProducts->hasAnAdaptation($GroupName)) {
-                                       $lat = $this->objDbGroups->getGroupLatitude($Groups[$i]['id']);
-                                       $long = $this->objDbGroups->getGroupLongitude($Groups[$i]['id']);
-                                       $this->objDbGroups->MapHandler($im, $lat, $long);
-                                       }
-                               }
-                               //imagepng($im, "usrfiles/unesco_oer/map/Downloads.jpg");
-                               imagepng($im, "map_images/Downloads.jpg");
                                ?>
-                                 <img src="map_images/Downloads.jpg" width="200" height="100">
-                              
+
+
+                                                               <?php
+                               $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
+
+                               $products = $this->objDbProducts->getFilteredProducts($finalstring);
+                               for ($i = 0; $i < count($products); $i++) {
+                                   $creator = $products[$i]['creator'];
+                                   if ($this->objDbProducts->hasAnAdaptation($creator) && ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator))) {
+                                       $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
+                                       $long = $this->objDbInstitution->getInstitutionLongitude($creator);
+                                       $this->objDbInstitution->MapHandler($im, $lat, $long);
+                                       $lat = $this->objDbGroups->getInstitutionLatitude($creator);
+                                       $long = $this->objDbGroups->getInstitutionLongitude($creator);
+                                       $this->objDbGroups->MapHandler($im, $lat, $long);
+
+                                   }
+                               }
+                               imagepng($im, "skins/unesco_oer/images/earthMap.jpg");
+                               ?>
+                               <img src="skins/unesco_oer/images/earthMap.jpg" width="200" height="100">
+
+
+
                                 </div>
                              </div>
                       </div>

@@ -115,6 +115,8 @@ class unesco_oer extends controller {
         return "2b_tpl.php";
     }
 
+    
+
     public function __FilterProducts() {
 
         $AuthFilter = $this->getParam('AuthorFilter');

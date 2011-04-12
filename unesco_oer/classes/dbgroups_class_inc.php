@@ -43,8 +43,8 @@ class dbgroups extends dbtable {
       * return int
       */
 
-     function  getGroupLatitude($GroupID){
-        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$GroupID'";
+     function  getGroupLatitude($name){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name='$name'";
         $Group=$this->getArray($sql);
         return $Group[0]['loclat'];
     }
@@ -54,8 +54,8 @@ class dbgroups extends dbtable {
      * @param $GroupID
      * return int
      */
-    function getGroupLongitude($GroupID){
-        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$GroupID'";
+    function getGroupLongitude($name){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name='$name'";
         $Group=$this->getArray($sql);
         return $Group[0]['loclong'];
     }
@@ -117,7 +117,6 @@ class dbgroups extends dbtable {
     public function getGroupThumbnail($name) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name = '$name'";
         $thumbnail = $this->getArray($sql);
-
         return $thumbnail[0];
     }
 
@@ -131,6 +130,10 @@ class dbgroups extends dbtable {
             return false;
         }
     }
+
+
+
+
 
 }
 

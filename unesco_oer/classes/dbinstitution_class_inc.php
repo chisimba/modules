@@ -46,8 +46,8 @@ class dbinstitution extends dbtable {
 
 // to get an institution longitude
 
-    function getInstitutionLongitude($InstitutionNameID){
-        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE id='$InstitutionNameID'";
+    function getInstitutionLongitude($name){
+        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name='$name'";
         $Institution=$this->getArray($sql);
         return $Institution[0]['loclong'];
     }
@@ -58,8 +58,8 @@ class dbinstitution extends dbtable {
         return $InstitutionNames;
     }
 
-    function getInstitutionName($InstitutionNameID){
-        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE id='$InstitutionNameID'";
+    function getInstitutionName($name){
+        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name='$name'";
         $InstitutionName=$this->getArray($sql);
         return $InstitutionName[0]['name'];
     }
@@ -97,11 +97,12 @@ class dbinstitution extends dbtable {
 
         $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name'";
         if (count($this->getArray($sql)) != 0) {
-            return true;
+            //return true;
+             return count($this->getArray($sql));
         } else {
             return false;
         }
-        return count($this->getArray($sql));
+        //return count($this->getArray($sql));
     }
 }
 
