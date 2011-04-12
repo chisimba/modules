@@ -17,9 +17,13 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
 
 class adddatautil {
 
+    /*
+     * This function adds a title to a given table
+     */
     function addTitleToTable($title, $titleType, $table) {
         $table->startRow();
         $this->addTitleToRow($title, $titleType, $table);
@@ -58,6 +62,29 @@ class adddatautil {
         $this->addTitleToRow($title, $titleType, $table);
         $this->addTextInputToRow($name, $size, $value, $table);
         $table->endRow();
+    }
+
+    function addDropDownToTable($title, $titleType, $name, $inputArray, $initValue, $field, $table){
+        $table->startRow();
+        $this->addTitleToRow($title, $titleType, $table);
+        $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table);
+        $table->endRow();
+    }
+
+    function addDropDownToRow($name, $inputArray, $initValue, $field, $table){
+        $dropdown = new dropdown($name);
+        foreach ($inputArray as $input) {
+            $dropdown->addOption($input[$field]);
+        }
+        $dropdown->addOption('none');
+
+        if (strlen($initValue) > 0){
+            $dropdown->setSelected($initValue);
+        }else{
+            $dropdown->setSelected('none');
+        }
+        
+        $table->addCell($dropdown->show());
     }
 }
 

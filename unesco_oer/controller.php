@@ -233,12 +233,24 @@ class unesco_oer extends controller {
             $product = $this->objDbProducts->getProductByID($parentID);
             $thumbnailPath = $product['thumbnail'];
         }
+        $institutionCount = $this->objDbInstitution->isInstitution($this->getParam('institution'));
+        $groupCount = $this->objDbGroups->isGroup($this->getParam('group'));
+        $creatorName = '';
+        if (($institutionCount > 1) || ($groupCount > 1)){
+            throw new customException('Group or institution has duplicate name');
+        }
+        if ($groupCount == 1){
+            $creatorName = $this->getParam('group');
+        }else{
+            if ($institutionCount == 1) $creatorName = $this->getParam('institution');
+            else throw new customException('No group or institution specified : '.$this->getParam('group'));
+        }
 
         //create array for uploading into data base
         $data = array(
             'parent_id' => $parentID,
             'title' => $this->getParam('title'),
-            'creator' => $this->getParam('creator'),
+            'creator' => $creatorName,
             'keywords' => trim($this->getParam('keywords')),
             'description' => $this->getParam('description'),
             'created_on' => $this->objDbProducts->now(),

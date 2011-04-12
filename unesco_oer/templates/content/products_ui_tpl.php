@@ -41,22 +41,27 @@ $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
 $utility->addTextInputToTable($title, 4, 'title', 60, $product['title'], $table);
 
 //field for the creator
+$title = $this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer');
+$utility->addTitleToTable($title, 4, $table);
 
+$groupName = '';
+if ($this->objDbGroups->isGroup($product['creator'])){
+    $groupName = $product['creator'];
+}
+$institutionName = '';
+if ($this->objDbInstitution->isInstitution($product['creator'])){
+    $institutionName = $product['creator'];
+}
+
+//field for Groups
+$title = $this->objLanguage->languageText('mod_unesco_oer_group', 'unesco_oer');
 $groups = $this->objDbGroups->getGroups();
-$creatorDropdown = new dropdown('creator');
-foreach ($groups as $group) {
-    $creatorDropdown->addOption($group['name']);
-}
+$utility->addDropDownToTable($title, 4, 'group', $groups, $groupName, 'name', $table);
 
+//field for Institutions
+$title = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
 $institutions = $this->objDbInstitution->getInstitutions();
-foreach ($institutions as $institution) {
-    $creatorDropdown->addOption($institution['name']);
-}
-$creatorDropdown->setSelected($product['creator']);
-$table->startRow();
-$table->addCell('Select creator');
-$table->addCell($creatorDropdown->show());
-$table->endRow();
+$utility->addDropDownToTable($title, 4, 'institution', $institutions, $institutionName, 'name', $table);
 
 //field for keywords
 $title = $this->objLanguage->languageText('mod_unesco_oer_keywords', 'unesco_oer');
@@ -74,45 +79,19 @@ $table->addCell($editor->show());
 $table->endRow();
 
 //field for resource type
-
+$title = $this->objLanguage->languageText('mod_unesco_oer_resource', 'unesco_oer');
 $resourceTypes = $this->objDbResourceTypes->getResourceTypes();
-$resourceDropdown = new dropdown('resourceType');
-foreach ($resourceTypes as $resourceType) {
-
-    $resourceDropdown->addOption($resourceType['description']);
-}
-$resourceDropdown->setSelected($product['resource_type']);
-$table->startRow();
-$table->addCell('Select resource type');
-$table->addCell($resourceDropdown->show());
-$table->endRow();
+$utility->addDropDownToTable($title, 4, 'resourceType', $resourceTypes, $product['resource_type'], 'description', $table);
 
 //field for the theme
-
+$title = $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer');
 $productThemes = $this->objDbProductThemes->getProductThemes();
-$productThemesDropdown = new dropdown('theme');
-foreach ($productThemes as $productTheme) {
-
-    $productThemesDropdown->addOption($productTheme['description']);
-}
-$resourceDropdown->setSelected($product['theme']);
-$table->startRow();
-$table->addCell('Select theme');
-$table->addCell($productThemesDropdown->show());
-$table->endRow();
+$utility->addDropDownToTable($title, 4, 'theme', $productThemes, $product['theme'], 'description', $table);
 
 //field for the language
+$title = $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer');
 $productLanguages = $this->objDbProductLanguages->getProductLanguages();
-$productLanguagesDropdown = new dropdown('language');
-foreach ($productLanguages as $productLanguage) {
-
-    $productLanguagesDropdown->addOption($productLanguage['code']);
-}
-$resourceDropdown->setSelected($product['language']);
-$table->startRow();
-$table->addCell('Select language');
-$table->addCell($productLanguagesDropdown->show());
-$table->endRow();
+$utility->addDropDownToTable($title, 4, 'language', $productLanguages, $product['language'], 'code', $table);
 
 //field for the thumbnail
 if ($productID == NULL) {

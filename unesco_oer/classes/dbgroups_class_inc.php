@@ -125,7 +125,8 @@ class dbgroups extends dbtable {
 
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name = '$name'";
         if (count($this->getArray($sql)) != 0) {
-            return true;
+            //return true;
+            return count($this->getArray($sql));
         } else {
             return false;
         }

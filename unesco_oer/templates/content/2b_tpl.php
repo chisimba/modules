@@ -742,27 +742,27 @@ $adaptationstring = "parent_id is not null";
                                         </div>
                                         <div class="rightColumnBorderedDiv">
                                             <div class="rightColumnContentPadding">
-<?php
-                                            $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
-
-                                            $products = $this->objDbProducts->getFilteredProducts($finalstring);
-                                            for ($i = 0; $i < count($products); $i++) {
-                                                $creator = $products[$i]['creator'];
-                                                if ($this->objDbProducts->hasAnAdaptation($creator) && ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator))) {
-                                                    $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
-                                                    $long = $this->objDbInstitution->getInstitutionLongitude($creator);
-                                                    $this->objDbInstitution->MapHandler($im, $lat, $long);
-                                                    $lat = $this->objDbGroups->getInstitutionLatitude($creator);
-                                                    $long = $this->objDbGroups->getInstitutionLongitude($creator);
-                                                    $this->objDbGroups->MapHandler($im, $lat, $long);
-                                                }
-                                            }
-                                            imagepng($im, "skins/unesco_oer/images/earthMap.jpg");
-?>
-                            <img src="skins/unesco_oer/images/earthMap.jpg" width="200" height="100">
-
+                               <?php
+                                $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
+                                $products = $this->objDbProducts->getFilteredProducts($finalstring);
+                                for ($i = 0; $i < count($products); $i++) {
+                                    $creator = $products[$i]['creator'];
+                                    if ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator)) {
+                                        $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
+                                        $long = $this->objDbInstitution->getInstitutionLongitude($creator);
+                                        $this->objDbInstitution->MapHandler($im, $lat, $long);
+                                        $lat = $this->objDbGroups->getGroupLatitude($creator);
+                                        $long = $this->objDbGroups->getGroupLongitude($creator);
+                                        $this->objDbGroups->MapHandler($im, $lat, $long);
+                                    }
+                                }
+                                imagepng($im, "skins/unesco_oer/images/earthMap.jpg");
+                            ?>
+                               <img src="skins/unesco_oer/images/earthMap.jpg" width="200" height="100">
 
 
+
+                            </div>
                         </div>
                     </div>
 
