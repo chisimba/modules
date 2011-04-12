@@ -1,6 +1,5 @@
 <?php
 
-
 if (!$GLOBALS['kewl_entry_point_run'])
     die("you cannot view directly");
 
@@ -24,20 +23,21 @@ if (!$GLOBALS['kewl_entry_point_run'])
  *
  * @author jcse4
  */
+class dbfeaturedproduct extends dbtable
+{
 
-class dbfeaturedproduct extends dbtable {
-
-    function init(){
+    function init()
+    {
         parent::init("tbl_unesco_oer_featured_products");
     }
 
+    /* This function checks that the database is empty,and insert a current featured unesco product in the database
+     * if the database already has a featured product on it,an update with the current unesco featured product done
+     * @param<type> $featuredProduct
+     */
 
-/*This function checks that the database is empty,and insert a current featured unesco product in the database
- *if the database already has a featured product on it,an update with the current unesco featured product done
- * @param<type> $featuredProduct
- */
-
-    function overRightCurrentFeaturedProduct($featuredProduct) {
+    function overRightCurrentFeaturedProduct($featuredProduct)
+    {
         if ($this->getRecordCount() == 0) {
             //$this->insert($featuredProduct);
             $data = array('product_id' => $featuredProduct);
@@ -55,11 +55,12 @@ class dbfeaturedproduct extends dbtable {
         }
     }
 
-    /*This function get the current featured product ID
+    /* This function get the current featured product ID
      * return int product_id
      */
 
-    function getCurrentFeaturedProductID() {
+    function getCurrentFeaturedProductID()
+    {
         $sql = 'select * from tbl_unesco_oer_featured_products ';
         $featuredProductArray = $this->getArray($sql);
         if (sizeof($featuredProductArray) > 1) {
@@ -69,7 +70,12 @@ class dbfeaturedproduct extends dbtable {
         return $featuredProduct['product_id'];
     }
 
+    public function getCurrentFeaturedAdaptedProduct(){
+     $sql = 'SELECT product_id FROM tbl_unesco_oer_featured_products';
+     $featuredAdaptedProduct = $this->getArray($sql);
 
+     return $featuredAdaptedProduct;
+    }
 }
-                ?>
+?>
 

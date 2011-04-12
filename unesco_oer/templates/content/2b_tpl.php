@@ -713,19 +713,31 @@ $adaptationstring = "parent_id is not null";
                                                 <div class="rightColumnBorderedDiv">
                                                     <div class="rightColumnContentPadding">
                         <?php
-                                            $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                            $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
-                                            if (sizeof($featuredProduct) > 0) {
-                                                //TODO error handling
-                                            }
-                                            echo $this->objFeaturedProducUtil->featuredProductViewSpan($featuredProduct[0]);
-                        ?>
+                                            $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
+                                            
+                                            foreach ($featuredProducts as $featuredProduct) {
+                                                //Check if it's an adapted product
+                                                $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
 
-                                                    <a href="#" class="adaptationLinks">
-                        <?php
-                                            $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                            $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
-                                            echo"See all adaptations ($NOofAdaptation)"// This must be a link;
+                                                //If the product is an adaptation
+                                                if ($product['parent_id'] != NULL) {
+                                                    $featuredAdaptedProduct = $product;
+                                                }
+                                            }
+
+                                           if ($this->objDbGroups->isGroup($featuredAdaptedProduct['creator'])) {
+                                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($featuredAdaptedProduct['creator']);
+                                                    $featuredAdaptedProduct['group_thumbnail'] = $thumbnail['thumbnail'];
+                                                    $featuredAdaptedProduct['institution_thumbnail'] = NULL;
+                                                } else {
+                                                    $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($featuredAdaptedProduct['creator']);
+                                                    $featuredAdaptedProduct['group_thumbnail'] = NULL;
+                                                    $featuredAdaptedProduct['institution_thumbnail'] = $thumbnail['thumbnail'];
+                                                }
+                                                //Get the number of adaptations
+                                                $featuredAdaptedProduct['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($featuredAdaptedProduct['id']);
+
+                                            echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($featuredAdaptedProduct);
                         ?>
                                                     </a>
                                                     <br>

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,26 +20,28 @@ class featuredproductutil extends object
 
     public function init()
     {
-        }
 
-/*This function populates a page with the current FEATURED UNESCO PRODUCTS
- *@param<type> $product
- * return string  a unesco featured product thumbnail and title
- */
+    }
+
+    /* This function populates a page with the current FEATURED UNESCO PRODUCTS
+     * @param<type> $product
+     * return string  a unesco featured product thumbnail and title
+     */
 
     function featuredProductView($product)
     {
         $content = '';
         $content.='
             <img src="' . $product['thumbnail'] . '" alt="Featured" width="136" height="176"><br>
-                <div class="greyListingHeading">"'. $product['title'] . '"</div>
+                <div class="greyListingHeading">"' . $product['title'] . '"</div>
                     <br>
                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                     ';
         return $content;
-        }
-        
-        function featuredProductViewSpan($product) {
+    }
+
+    function featuredProductViewSpan($product)
+    {
         $content = '';
         $content.='
             <img src="' . $product['thumbnail'] . '" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
@@ -55,13 +56,48 @@ class featuredproductutil extends object
 
 
 
-    function getlocationcoords($lat, $lon, $width, $height) {
-                                    $x = (($lon + 180) * ($width / 360));
-                                    $y = ((($lat * -1) + 90) * ($height / 180));
-                                    return array("x" => round($x), "y" => round($y));
-                                }
+    function getlocationcoords($lat, $lon, $width, $height)
+    {
+        $x = (($lon + 180) * ($width / 360));
+        $y = ((($lat * -1) + 90) * ($height / 180));
+        return array("x" => round($x), "y" => round($y));
+    }
 
+    public function displayFeaturedAdaptedProduct($featuredAdaptedProduct)
+    {
+        $content = '';
+
+        $content .= '<div class="rightColumnContentPadding">
+                                        <img src="' . $featuredAdaptedProduct['thumbnail'] . '" alt=' . $featuredAdaptedProduct['title'] . ' width="45" height="49"class="smallAdaptationImageGrid">
+                                        <div class="featuredAdaptationRightContentDiv">
+                                            <span class="greyListingHeading">' . $featuredAdaptedProduct['title'] . '</span>
+                                            <br><br>
+                                            <a href="#" class="adaptationLinks">See all adaptations (' . $featuredAdaptedProduct['noOfAdaptations'] . ')</a>
+                                            <br>
+                                            <a href="#" class="adaptationLinks">See UNSECO orginals</a>
+
+                                        </div>';
+
+        //If the adaptation was created by a group
+        if($featuredAdaptedProduct['group_thumbnail'] != NULL){
+                       $content .= '<div class="adaptedByDiv greenColor">Managed by:</div>
+                                        <img src="' . $featuredAdaptedProduct['group_thumbnail'] . '" alt= ' . $featuredAdaptedProduct['creator'] . ' width="45" height="49" class="smallAdaptationImageGrid">
+                                        <span class="greyListingHeading">' . $featuredAdaptedProduct['creator'] . '</span>
+                                    </div>
+                                </div>';
+        }else{  //If the adaptation was created by an institution
+            $content .= '<div class="featuredAdaptedBy">Adapted By</div>
+                                        <img src="' . $featuredAdaptedProduct['institution_thumbnail'] . '" alt= ' . $featuredAdaptedProduct['creator'] . ' width="45" height="49" class="smallAdaptationImageGrid">
+                                        <span class="greyListingHeading">' . $featuredAdaptedProduct['creator'] . '</span>
+                                    </div>
+                                </div>';
+        }
+                                        
+        
+        return $content;
+    }
+
+    //
 
 }
-
 ?>
