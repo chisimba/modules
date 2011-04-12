@@ -711,7 +711,7 @@ $adaptationstring = "parent_id is not null";
                                             <div class="rightColumnDiv">
                                                 <div class="featuredHeader">FEATURED ADAPTATION</div>
                                                 <div class="rightColumnBorderedDiv">
-                                                    <div class="rightColumnContentPadding">
+                                                    
                         <?php
                                             $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
                                             

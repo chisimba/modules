@@ -80,7 +80,7 @@ class featuredproductutil extends object
 
         //If the adaptation was created by a group
         if($featuredAdaptedProduct['group_thumbnail'] != NULL){
-                       $content .= '<div class="adaptedByDiv greenColor">Managed by:</div>
+                       $content .= '<div class="adaptedByDiv">Managed by:</div>
                                         <img src="' . $featuredAdaptedProduct['group_thumbnail'] . '" alt= ' . $featuredAdaptedProduct['creator'] . ' width="45" height="49" class="smallAdaptationImageGrid">
                                         <span class="greyListingHeading">' . $featuredAdaptedProduct['creator'] . '</span>
                                     </div>
