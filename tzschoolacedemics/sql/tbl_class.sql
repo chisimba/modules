@@ -1,8 +1,9 @@
 <?php
 /* 
-
+ * table to store a list of classes in a secondary school
+ *
 -- -----------------------------------------------------
--- Table `ERD_SMIS`.`tbl_class`
+-- Table `tbl_class`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tbl_class` (
   `id` INT NOT NULL AUTO_INCREMENT ,
