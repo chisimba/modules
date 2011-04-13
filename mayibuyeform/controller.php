@@ -12,6 +12,26 @@
  	var $email;
 	var $jobtitles;
 	var $organization;
+	var $postaladd;
+	var $physicaladd;
+	var $vatno;
+	var $jobnno;
+	var $telephone;
+	var $faxnumber2;
+	var $email2;
+	var $nameofresi;
+	var $jotitle;
+	var $organizationname;
+        var $postadd;
+	var $tel;
+	var $faxx;
+	var $stuno;
+	var $staffnum;
+	var $colection;
+	//var $image;
+        //var $project;
+       // var $time;
+
 
 public function init()
 {
@@ -80,12 +100,19 @@ public function SavestudentRecord()
                
 		
 	$subject = "New Reseacher";
-		$this->sendEmailNotification($subject, $message = 'date: ' . $date . '  ' . "\n" . ' name:  ' . 
-		$nameofreseacher . '   ' . "\n" . 'telno:' . $tellno . '   ' . "\n". 'Fax no'. $faxxno. '  ' . "\n". 'email adddress: '. 
-		$email .'  ' ."\n" . 'Name of Signator: '. $nameofsign . '  ' ."\n". 'job-title:'. 
-		$jobtitles. '  '. "\n" . 'organanization'. $organization );
- 			
-           return "research_tpl.php";
+		$this->sendEmailNotification($subject, $message = ' date: ' . $date . '  ' . "\n" . ' name:  ' . 
+					$nameofreseacher . '   ' . "\n" . ' telno: ' . $tellno . '   ' . "\n". 'Fax no '. 
+					$faxxno. '  ' . "\n". ' email adddress: '.$email .'  ' ."\n" . ' Name of Signator: '. 
+					$nameofsign . '  ' ."\n". ' job-title: '. $jobtitles. '   '. "\n" . 'organanization: '. 
+					$organization. '  ' ."\n". ' postal Address: '.	$postaladd. '  '."\n". 'Physical Address: '.
+					$physicaladd. '  '. "\n" . ' Vat-no: ' . $vatno. '  ' . "\n" . ' Job no '. $jobnno. ' ' . "\n". ' TelePhone: '. 
+					$telephone. '  '. "\n".	' Fax number: '. $faxnumber2. '  '. "\n". 'Emaill Address'.
+					$email2 . '  '. "\n". 'name of Sesignator:'. $nameofresi. '  '. "\n". 'Job title' .
+					$jotitle. '  '. "\n". 'Name of Organization'. $organizationname. '  '. "\n". 'postal address'. 
+					$$postadd. '  '. "\n". 'Telphone'. $tel. '  '. "\n". 'Fax no'. $faxx. '  '. "\n". 'Student No'.
+					$stuno. '  '. "\n". 'Staff num'.$staffnum. '  '. "\n". 'Department'. $colection);
+  
+			 return "research_tpl.php";
 
 
 }

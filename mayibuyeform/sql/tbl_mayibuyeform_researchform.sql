@@ -85,12 +85,12 @@ $fields = array(
 		),
 			
 			
-	'faxnumber'=>arry(
+	'faxnumber'=>array(
 			'type'=>'text',
 			'length'=>30
 		),
 
-	'email'=array(
+	'email'=>array(
 			'type'=>'text',
 			'length'=>30
 		),
@@ -100,7 +100,7 @@ $fields = array(
 			'length'=>30
 		),
 
-	'jobtitle2'=>arrya(
+	'jobtitle2'=>array(
 			'type'=>'text',
 			 'length'=>30
 		),
@@ -122,38 +122,38 @@ $fields = array(
 
 
 	'fax'=>array(
-			'type'=>'text'
+			'type'=>'text',
 			'length'=>30
 		),
 
 	'studentno'=>array(
-			'type'=>'text'
+			'type'=>'text',
 			'length'=>30
 		),
 		
 	'staffno'=>array(
-			'type'=>'text'
+			'type'=>'text',
 			'length'=>30
 		),
 
 	'collection'=>array(
-			'type'=>'text'
+			'type'=>'text',
 			'length'=>30
 		),	
 
 	'imageaudio'=>array(
-			'type'=>'text'  
+			'type'=>'text',  
 			'length'=>30
 		),         
                      
 
 	'projectname'=>array(
-			'type'=>'text'
+			'type'=>'text',
 			'length'=>30
 		), 
 
            'timeperido'=>array(
-			'type'=>'text'
+			'type'=>'text',
 			'length'=>30
 			
           

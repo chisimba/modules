@@ -277,7 +277,7 @@ private function buildForm()
 	$objButton = new button('send');
         // Set the button type to submit
 	$objButton->setToSubmit();
-	$objButton->setValue(' ' . $this->objLanguage->languageText("mod_mayibuye_commentsend", "mayibuyeform") . '............');
+	$objButton->setValue(' ' . $this->objLanguage->languageText("mod_mayibuye_commentsend", "mayibuyeform") . '');
 	$table->addCell($objButton->show());	
 	$table->endRow();
 
