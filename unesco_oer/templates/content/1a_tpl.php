@@ -252,7 +252,7 @@ $adaptationstring = "parent_id is null";
                                         $filterTheme = new dropdown('ThemeFilter');
 
                                         foreach ($products as $product) {
-                                            $filterTheme->addoption(null);
+                                            $filterTheme->addoption('All');
                                             $filterTheme->addOption($product['theme']);
                                         }
                                         $filterTheme->setSelected($ThemeFilter);

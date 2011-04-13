@@ -115,8 +115,6 @@ class unesco_oer extends controller {
         return "2b_tpl.php";
     }
 
-    
-
     public function __FilterProducts() {
 
         $AuthFilter = $this->getParam('AuthorFilter');
@@ -135,8 +133,8 @@ class unesco_oer extends controller {
         $Besoractile = $this->getParam('Besoractile');
 
 
-       $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter,$ThemeFilter,$LangFilter,$page,$sort,$TotalPages,$adaptationstring,$Model,$Handbook,$Guide,$Manual,$Besoractile);
-       $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter,$PageNum,$TotalEntries);
+        $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile);
+        $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter, $PageNum, $TotalEntries);
 
 
 
@@ -236,14 +234,16 @@ class unesco_oer extends controller {
         $institutionCount = $this->objDbInstitution->isInstitution($this->getParam('institution'));
         $groupCount = $this->objDbGroups->isGroup($this->getParam('group'));
         $creatorName = '';
-        if (($institutionCount > 1) || ($groupCount > 1)){
+        if (($institutionCount > 1) || ($groupCount > 1)) {
             throw new customException('Group or institution has duplicate name');
         }
-        if ($groupCount == 1){
+        if ($groupCount == 1) {
             $creatorName = $this->getParam('group');
-        }else{
-            if ($institutionCount == 1) $creatorName = $this->getParam('institution');
-            else throw new customException('No group or institution specified : '.$this->getParam('group'));
+        } else {
+            if ($institutionCount == 1)
+                $creatorName = $this->getParam('institution');
+            else
+                throw new customException('No group or institution specified : ' . $this->getParam('group'));
         }
 
         //create array for uploading into data base
@@ -479,4 +479,5 @@ class unesco_oer extends controller {
     }
 
 }
+
 ?>
