@@ -249,7 +249,7 @@ $adaptationstring = "parent_id is null";
 
 
                                         echo $form->show();
-                                        echo $Model
+                                     
                         ?>
 
                 <!--                                    <input type="checkbox"> Model<br>
@@ -272,9 +272,9 @@ $adaptationstring = "parent_id is null";
                         <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterTheme = new dropdown('ThemeFilter');
-
+                                        $filterTheme->addoption('All');
                                         foreach ($products as $product) {
-                                            $filterTheme->addoption('All');
+                                           
                                             $filterTheme->addOption($product['theme']);
                                         }
                                         $filterTheme->setSelected($ThemeFilter);
