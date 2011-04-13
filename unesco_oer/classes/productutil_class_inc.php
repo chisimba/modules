@@ -39,6 +39,7 @@ class productutil extends object
         $content = '';
          $abLink = new link($this->uri(array("action" => 'ViewProduct')));
          $abLink->link = $product['title'];
+
          $parentid = $product['id'];
          
          $CommentLink = new link($this->uri(array("action" => 'FilterAdaptaions', 'parentid' => $parentid)));
@@ -93,6 +94,11 @@ class productutil extends object
          $abLink = new link($this->uri(array("action" => 'ViewProduct')));
          $abLink->link = $product['title'];
 
+           $parentid = $product['id'];
+
+         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptaions', 'parentid' => $parentid)));
+         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
@@ -111,7 +117,7 @@ class productutil extends object
                   	</div>
                     <div class="productlistViewLeftFloat">
                         <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">' . $product['noOfAdaptations'] . ' adaptations </a></div>
+                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">' .$CommentLink->show() . ' </a></div>
                     </div>
                     <div class="productlistViewLeftFloat">
                         <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
