@@ -665,7 +665,7 @@ $adaptationstring = "parent_id is null";
 
                                 <!-- Pagination-->
                                 <div class="paginationDiv">
-                                    <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
+<!--                                    <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>-->
 
 <?php
 //
@@ -673,9 +673,14 @@ $adaptationstring = "parent_id is null";
 
                                             $TotalPages = ceil($TotalRecords / $NumFilter);
 
-//                                                echo $TotalRecords;
-//                                                echo $NumFilter;
-//                                                echo (int) $TotalPages;
+                                     
+
+                                        if ($TotalPages > 0) {
+
+
+
+
+                                            echo '<div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>';
 
 
                                             for ($i = 1; $i <= $TotalPages; $i++) {
@@ -685,7 +690,7 @@ $adaptationstring = "parent_id is null";
                                                 echo $abLink->show();
                                             }
 
-
+                                        }
 //
 //
 ?>

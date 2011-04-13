@@ -157,28 +157,23 @@ $adaptationstring = "parent_id is null";
                             <!-- Left Colum -->
                             <div class="leftColumnDiv">
                                 <div class="moduleHeader">
-                                  <?php
-                                  echo  $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer')
-
-
-                                  ?>
+                        <?php
+                                        echo $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer')
+                        ?>
 
                                     </div>
-                                <div class="blueNumberBackground">
-                                    <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                                    <div class="numberOffilteredProducts">
+                                    <div class="blueNumberBackground">
+                                        <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
+                                        <div class="numberOffilteredProducts">
 
-                                         <?php
-
-                                          if ($finalstring == null) {                       //Initialization check
+<?php
+                                        if ($finalstring == null) {                       //Initialization check
                                             $finalstring = 'parent_id is null';
                                             $TotalEntries = 'parent_id is null';
                                         }
 
-                                       echo  $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
-
-
-                                    ?>
+                                        echo $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
+?>
 
 
 
@@ -188,13 +183,11 @@ $adaptationstring = "parent_id is null";
                                 <div class="moduleSubHeader">Product matches filter criteria</div>
                                 <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">
 
-                                     <?php
-                                         echo  $this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer')
+<?php
+                                        echo $this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer')
+?>
 
-
-                                        ?>
-
-                                    </div>
+                                </div>
                                 <div class="blueBackground blueBackgroundCheckBoxText">
 
                         <?php
@@ -208,7 +201,7 @@ $adaptationstring = "parent_id is null";
 
 
 
-                                        $button = new button('Search',$this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+                                        $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
                                         $button->setToSubmit();
 
                                         $checkbox = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_model', 'unesco_oer'));
@@ -249,32 +242,29 @@ $adaptationstring = "parent_id is null";
 
 
                                         echo $form->show();
-                                     
                         ?>
 
-                <!--                                    <input type="checkbox"> Model<br>
-                                                    <input type="checkbox"> Guide<br>
-                                                    <input type="checkbox"> Handbook<br>
-                                                    <input type="checkbox"> Manual<br>
-                                                    <input type="checkbox"> Bestoractile<br>-->
+                                <!--                                    <input type="checkbox"> Model<br>
+                                                                    <input type="checkbox"> Guide<br>
+                                                                    <input type="checkbox"> Handbook<br>
+                                                                    <input type="checkbox"> Manual<br>
+                                                                    <input type="checkbox"> Bestoractile<br>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">
-                                        <?php
-                                         echo  $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer')
+<?php
+                                        echo $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer')
+?>
 
-
-                                        ?>
-
-                                        </div>
+                                    </div>
                                     <div class="blueBackground">
 
-                        <?php
+<?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterTheme = new dropdown('ThemeFilter');
                                         $filterTheme->addoption('All');
                                         foreach ($products as $product) {
-                                           
+
                                             $filterTheme->addOption($product['theme']);
                                         }
                                         $filterTheme->setSelected($ThemeFilter);
@@ -291,35 +281,32 @@ $adaptationstring = "parent_id is null";
                                         $form->addtoform($filterTheme->show());
 
                                         echo $form->show();
-                        ?>
+?>
 
-                                                                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                            </select>-->
+                                                                                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">
-                                         <?php
-                                         echo  $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer')
+                        <?php
+                                        echo $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer')
+                        ?>
 
 
-                                        ?>
-
-
-                                        </div>
+                                    </div>
                                     <div class="blueBackground">
 
 
-                        <?php
-                                
+<?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('LanguageFilter');
-                                         $filterLang->addOption('All');
+                                        $filterLang->addOption('All');
                                         foreach ($products as $product) {
-                                      
+
                                             $filterLang->addOption($product['language']);
                                         }
- 
+
                                         $filterLang->setSelected($LangFilter);
                                         $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
@@ -332,36 +319,34 @@ $adaptationstring = "parent_id is null";
 
 
                                         echo $form->show();
-                        ?>
+?>
 
-                                                                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                <option value="">English</option>
-                                                                                                                                                                                                <option value="">Français</option>
-                                                                                                                                                                                                <option value="">Español</option>
-                                                                                                                                                                                                <option value="">Русский</option>
-                                                                                                                                                                                                <option value="">لعربية</option>
-                                                                                                                                                                                                <option value="">中文</option>
-                                                                                                                                                                                            </select>-->
+                                                                                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                                <option value="">English</option>
+                                                                                                                                                                                                                <option value="">Français</option>
+                                                                                                                                                                                                                <option value="">Español</option>
+                                                                                                                                                                                                                <option value="">Русский</option>
+                                                                                                                                                                                                                <option value="">لعربية</option>
+                                                                                                                                                                                                                <option value="">中文</option>
+                                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">
-                                         <?php
-                                         echo  $this->objLanguage->languageText('mod_unesco_oer_author', 'unesco_oer')
+<?php
+                                        echo $this->objLanguage->languageText('mod_unesco_oer_author', 'unesco_oer')
+?>
 
 
-                                        ?>
-
-
-                                        </div>
+                                    </div>
                                     <div class="blueBackground">
 
-                        <?php
+<?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterAuth = new dropdown('AuthorFilter');
-                                          $filterAuth->addoption('All');
+                                        $filterAuth->addoption('All');
                                         foreach ($products as $product) {
-                                           
+
                                             $filterAuth->addOption($product['creator']);
                                         }
 
@@ -377,31 +362,29 @@ $adaptationstring = "parent_id is null";
 
 
                                         echo $form->show();
-                        ?>
+?>
 
 
 
 
-                                                                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                            </select>-->
+                                                                                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">
-                                         <?php
-                                         echo  $this->objLanguage->languageText('mod_unesco_oer_items_per_page', 'unesco_oer')
+                        <?php
+                                        echo $this->objLanguage->languageText('mod_unesco_oer_items_per_page', 'unesco_oer')
+                        ?>
 
 
-                                        ?>
-
-
-                                        </div>
+                                    </div>
                                     <div class="blueBackground">
 
 
 
 
-                        <?php
+<?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterNum = new dropdown('NumFilter');
 
@@ -425,7 +408,7 @@ $adaptationstring = "parent_id is null";
 
 
                                         echo $form->show();
-                        ?>
+?>
 
 
 
@@ -435,9 +418,9 @@ $adaptationstring = "parent_id is null";
 
 
 
-                <!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                                                            <option value="">All</option>
-                                                        </select>-->
+                                <!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                                                                            <option value="">All</option>
+                                                                        </select>-->
                                     </div>
                                     <br><br>
                                     <div class="blueBackground rightAlign">
@@ -460,9 +443,9 @@ $adaptationstring = "parent_id is null";
 
                                         <div class="sortBy">
 
-                                                                                                                                                <!--                                                <select name="" class="contentDropDown">
-                                                                                                                                                     <option value="">Date Added</option>
-                                                                                                                                                 </select>-->
+                                                                                                                                                                <!--                                                <select name="" class="contentDropDown">
+                                                                                                                                                                     <option value="">Date Added</option>
+                                                                                                                                                                 </select>-->
 <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('SortFilter');
@@ -481,16 +464,16 @@ $adaptationstring = "parent_id is null";
 
 
 
-                                        $form->addtoform( $this->objLanguage->languageText('mod_unesco_oer_sort_by', 'unesco_oer'));
+                                        $form->addtoform($this->objLanguage->languageText('mod_unesco_oer_sort_by', 'unesco_oer'));
                                         $form->addtoform($filterLang->show());
                                         echo $form->show();
 ?>
 
 
 
-                                                                                                                <!--                                                <select name="" class="contentDropDown">
-                                                                                                                    <option value="">DESC</option>
-                                                                                                                </select>-->
+                                                                                                                            <!--                                                <select name="" class="contentDropDown">
+                                                                                                                                <option value="">DESC</option>
+                                                                                                                            </select>-->
                                     </div>
                                     <div class="viewGrid">
                                         <div class="viewAsDiv">View as: </div>
@@ -512,11 +495,11 @@ $adaptationstring = "parent_id is null";
 
                                         <div class="gridListPipe">|</div>
 
-                            <?php
+<?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
                                         $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                                         echo $abLink->show();
-                            ?>
+?>
 
                                         <div class="gridListDivView">
 
@@ -532,10 +515,10 @@ $adaptationstring = "parent_id is null";
                             <?php
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
-                                      
+
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
-                                            echo $finalstring;
+                                        echo $finalstring;
                                         $newRow = true;
                                         $count = 0;
                                         $noOfAdaptations = 0;
@@ -704,17 +687,6 @@ $adaptationstring = "parent_id is null";
                                         <!-- Pagination-->
                                         <div class="paginationDiv">
 
-                                            <?php
-
-                                            if ( $TotalPages != 0)
-
-                                             echo '<div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>';
-
-
-
-
-                                            ?>
-                                         
 <?php
 //
                                         $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
@@ -723,18 +695,22 @@ $adaptationstring = "parent_id is null";
 
 //                                                echo $TotalRecords;
 //                                                echo $NumFilter;
-                                        if ($TotalPages > 0)
+
+
+                                        if ($TotalPages > 0) {
 
 
 
-                                        for ($i = 1; $i <= $TotalPages; $i++) {
 
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-                                            $abLink->link = $i;
-                                            echo $abLink->show();
+                                            echo '<div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>';
+
+                                            for ($i = 1; $i <= $TotalPages; $i++) {
+
+                                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                                                $abLink->link = $i;
+                                                echo $abLink->show();
+                                            }
                                         }
-
-
 //
 //
 ?>
@@ -807,7 +783,7 @@ $adaptationstring = "parent_id is null";
                                             <div class="rightColumnContentPadding">
 
 
-<?php
+                                <?php
                                         $objTabs = $this->newObject('tabcontent', 'htmlelements');
                                         $objTabs->setWidth(180);
                                         $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution);
@@ -817,7 +793,7 @@ $adaptationstring = "parent_id is null";
                                         $objTabs->addTab('Rated', $mostRated);
                                         $objTabs->addTab('Commented', $mostCommented);
                                         echo $objTabs->show();
-?>
+                                ?>
 
                             </div>
                         </div>
