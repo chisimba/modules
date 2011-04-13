@@ -116,7 +116,11 @@ class unesco_oer extends controller {
         return "2b_tpl.php";
     }
 
+    public function __3a() {
+        return "3a_tpl.php";
+    }
 
+    
     public function __ViewProduct() {
 
         

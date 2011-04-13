@@ -81,6 +81,8 @@ class dbproducts extends dbtable
     }
 
     function getProductByID($id){
+        //TODO change function so it can identify if the $id is a puid or a normal id
+        //TODO this function currently fails when you have more than 99 products
         //If searching by id
         $sql = '';
         if (strlen($id)>2){

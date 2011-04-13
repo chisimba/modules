@@ -138,4 +138,10 @@ $table->endRow();
 $form_data = new form('add_products_ui');
 $form_data->addToForm($table->show());
 echo $form_data->show();
+//
+//$this->loadClass('commentapi','blogcomments');
+//
+//$commentUI = $this->newObject('commentapi','blogcomments');
+//
+//echo $commentUI->commentAddForm('postid', 'unesco_oer', $this->objDbComments, NULL, FALSE, FALSE, FALSE, FALSE, NULL, NULL);
 ?>
