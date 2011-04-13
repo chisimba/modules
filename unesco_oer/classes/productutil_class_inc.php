@@ -42,7 +42,7 @@ class productutil extends object
 
          $parentid = $product['id'];
          
-         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptaions', 'parentid' => $parentid)));
+         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
          $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
 
@@ -96,7 +96,7 @@ class productutil extends object
 
            $parentid = $product['id'];
 
-         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptaions', 'parentid' => $parentid)));
+         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
          $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         /* if ($product['new'] == 'true') {
@@ -216,6 +216,11 @@ class productutil extends object
          $abLink = new link($this->uri(array("action" => 'ViewProduct')));
          $abLink->link = $adaptedProduct['title'];
 
+          $parentid = $adaptedProduct['id'];
+
+         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+         $CommentLink->link = $adaptedProduct['noOfAdaptations'] . ' Adaptations';
+
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
@@ -234,7 +239,7 @@ class productutil extends object
                         <div class="productAdaptationListViewLeftColumn">
                             <h2><a href="#" class="adaptationListingLink">' . $abLink->show() . ' </a></h2><br>
                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">See all adaptations (' . $adaptedProduct['noOfAdaptations'] . ')</a></div>
+                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">See all adaptations (' . $CommentLink->show() . ')</a></div>
                         </div>';
         if ($adaptedProduct['group_thumbnail'] != NULL) {
             $content .= '<div class="productAdaptationListViewMiddleColumn">
@@ -301,10 +306,14 @@ class productutil extends object
     public function populateMostAdapted($product)
     {
         $content = '';
+         $parentid = $product['id'];
+
+         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptaions', 'parentid' => $parentid)));
+         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
-                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $product['noOfAdaptations'] . ' adaptations</a>
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $CommentLink->show(). '</a>
                                 </div>
                                 <div class="tabsListingSpace"></div>';
         return $content;
@@ -361,12 +370,19 @@ class productutil extends object
     }
 
     public function populateMostCommented($product)
+
+
     {
         $content = '';
 
+         $parentid = $product['id'];
+
+         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptaions', 'parentid' => $parentid)));
+         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
-                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $product['noOfAdaptations'] . ' adaptations</a>
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' .$CommentLink->show() . '</a>
                                 </div>
                                 <div class="tabsListingSpace"></div>';
         return $content;
