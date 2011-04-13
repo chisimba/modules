@@ -314,12 +314,12 @@ $adaptationstring = "parent_id is null";
                                 
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('LanguageFilter');
-                                       
+                                         $filterLang->addOption('All');
                                         foreach ($products as $product) {
                                       
                                             $filterLang->addOption($product['language']);
                                         }
-   $filterLang->addOption('All');
+ 
                                         $filterLang->setSelected($LangFilter);
                                         $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
@@ -359,9 +359,9 @@ $adaptationstring = "parent_id is null";
                         <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterAuth = new dropdown('AuthorFilter');
-
+                                          $filterAuth->addoption('All');
                                         foreach ($products as $product) {
-                                            $filterAuth->addoption(null);
+                                           
                                             $filterAuth->addOption($product['creator']);
                                         }
 
@@ -406,7 +406,7 @@ $adaptationstring = "parent_id is null";
                                         $filterNum = new dropdown('NumFilter');
 
 
-                                        $filterNum->addoption(null);
+                                        $filterNum->addoption('All');
                                         $filterNum->addOption('1');
                                         $filterNum->addOption('2');
                                         $filterNum->addOption('3');
@@ -467,7 +467,7 @@ $adaptationstring = "parent_id is null";
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('SortFilter');
 
-                                        $filterLang->addoption(null);
+                                        $filterLang->addoption('None');
                                         $filterLang->addoption('Date');
                                         $filterLang->addOption('Alphabetical');
 
@@ -535,7 +535,7 @@ $adaptationstring = "parent_id is null";
                                       
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
-
+                                            echo $finalstring;
                                         $newRow = true;
                                         $count = 0;
                                         $noOfAdaptations = 0;
@@ -703,8 +703,18 @@ $adaptationstring = "parent_id is null";
 
                                         <!-- Pagination-->
                                         <div class="paginationDiv">
-                                          <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
 
+                                            <?php
+
+                                            if ( $TotalPages != 0)
+
+                                             echo '<div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>';
+
+
+
+
+                                            ?>
+                                         
 <?php
 //
                                         $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);

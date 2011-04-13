@@ -450,13 +450,13 @@ class productutil extends object
     {
 
         $buildstring = $adaptationstring;
-        if ($AuthFilter != Null)
+        if (!($AuthFilter == Null or $AuthFilter == 'All'))
             $buildstring .= ' and creator = ' . "'$AuthFilter'";
 
-        if ($ThemeFilter != Null)
+        if (!($ThemeFilter == Null or $ThemeFilter == 'All'))
             $buildstring .= ' and theme = ' . "'$ThemeFilter'";
 
-       if ($LangFilter != Null)
+       if (!($LangFilter == Null or $LangFilter == 'All'))
             $buildstring .= ' and language = ' . "'$LangFilter'";
 
 
@@ -510,11 +510,11 @@ class productutil extends object
     {
 
 
-        if ($NumFilter != null & $PageNum == null) {
+        if ((!($NumFilter == null or $NumFilter == 'All')) & $PageNum == null) {
             $start = 0;
             $end = $start + $NumFilter;
             $TotalEntries .= ' LIMIT ' . $start . ',' . $end;
-        } else if ($NumFilter != null) {
+        } else if (!($NumFilter == null or $NumFilter == 'All')) {
 
             $temp = $NumFilter * $PageNum - 1;
             $start = $temp - $NumFilter + 1;

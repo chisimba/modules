@@ -250,9 +250,9 @@ $adaptationstring = "parent_id is null";
                         <?php
                                             $products = $this->objDbProducts->getProducts(0, 10);
                                             $filterTheme = new dropdown('ThemeFilter');
-
+                                             $filterTheme->addoption('All');
                                             foreach ($products as $product) {
-                                                $filterTheme->addoption(null);
+                                               
                                                 $filterTheme->addOption($product['theme']);
                                             }
                                             $filterTheme->setSelected($ThemeFilter);
@@ -286,9 +286,9 @@ $adaptationstring = "parent_id is null";
                         <?php
                                             $products = $this->objDbProducts->getProducts(0, 10);
                                             $filterLang = new dropdown('LanguageFilter');
-
+                                                $filterLang->addoption('All');
                                             foreach ($products as $product) {
-                                                $filterLang->addoption(null);
+                                                
                                                 $filterLang->addOption($product['language']);
                                             }
 
@@ -327,9 +327,9 @@ $adaptationstring = "parent_id is null";
                         <?php
                                             $products = $this->objDbProducts->getProducts(0, 10);
                                             $filterAuth = new dropdown('AuthorFilter');
-
+                                        $filterAuth->addoption('All');
                                             foreach ($products as $product) {
-                                                $filterAuth->addoption(null);
+                                                
                                                 $filterAuth->addOption($product['creator']);
                                             }
 
@@ -370,7 +370,7 @@ $adaptationstring = "parent_id is null";
                                             $filterNum = new dropdown('NumFilter');
 
 
-                                            $filterNum->addoption(null);
+                                            $filterNum->addoption('All');
                                             $filterNum->addOption('1');
                                             $filterNum->addOption('2');
                                             $filterNum->addOption('3');
@@ -415,7 +415,7 @@ $adaptationstring = "parent_id is null";
                                             $products = $this->objDbProducts->getProducts(0, 10);
                                             $filterLang = new dropdown('SortFilter');
 
-                                            $filterLang->addoption(null);
+                                            $filterLang->addoption('None');
                                             $filterLang->addoption('Date');
                                             $filterLang->addOption('Alphabetical');
 
