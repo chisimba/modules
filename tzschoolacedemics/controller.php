@@ -10,7 +10,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * which uses the vlc library to wrap and
 * create an online vlc player
 *
-* @author
+* @author UCC-MIP2011
 * @package  tzschoolacedemics
 *
 */
