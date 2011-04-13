@@ -3,7 +3,7 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
-  $adaptationstring ="parent_id is null";
+$adaptationstring = "parent_id is null";
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -110,261 +110,275 @@ $this->loadClass('checkbox', 'htmlelements');
                     <div class="navitemOnstate">
                         <div class="navitemInnerOnstate">
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
-                            $abLink->link = 'UNESCO OER PRODUCTS';
-                            echo $abLink->show();
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                            $abLink->link = 'UNESCO OER PRODUCTS';
+                                            echo $abLink->show();
                             ?>
-                        </div>
-                    </div>
-                    <div class="mainNavPipe">&nbsp;</div>
-                    <div class="navitem">
-                        <div class="navitemInner">
+                                        </div>
+                                    </div>
+                                    <div class="mainNavPipe">&nbsp;</div>
+                                    <div class="navitem">
+                                        <div class="navitemInner">
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
-                            $abLink->link = 'PRODUCT ADAPTATIONS';
-                            echo $abLink->show();
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
+                                            $abLink->link = 'PRODUCT ADAPTATIONS';
+                                            echo $abLink->show();
                             ?>
-                        </div>
-                    </div>
-                    <div class="mainNavPipe"></div>
-                    <div class="navitem">
-                        <div class="navitemInner"><a href="#">REPORTING</a></div>
-                    </div>
-                    <div class="mainNavPipe"></div>
-                    <div class="navitem">
-                        <div class="navitemInner"><a href="#">ABOUT</a></div>
-                    </div>
-                    <div class="mainNavPipe"></div>
-                    <div class="navitem">
-                        <div class="navitemInner"><a href="#">CONTACT</a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mainContentHolder">
-                <div class="subNavigation"></div>
-                <!-- Left Colum -->
-                <div class="leftColumnDiv">
-                    <div class="moduleHeader">FILTER PRODUCTS</div>
-                    <div class="blueNumberBackground">
-                        <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                        <div class="numberOffilteredProducts">
-                            
-                             <?php
-
-                                       echo  $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
-
-
-                                    ?>
-                        </div>
-                    </div>
-                    <div class="moduleSubHeader">Product matches filter criteria</div>
-                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
-                    <div class="blueBackground blueBackgroundCheckBoxText">
-                           <?php
-
-                $products = $this->objDbProducts->getProducts(0, 10);
-
-
-
-
-              $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
-
-
-
-
-    $button = new button('Search','Search');
-    $button->setToSubmit();
-
-    $checkbox = new checkbox('Model');
-    $checkbox2 = new checkbox('Handbook');
-    $checkbox3 = new checkbox('Guide');
-    $checkbox4 = new checkbox('Manual');
-    $checkbox5 = new checkbox('Besoractile');
-
-
-
-   if ($Model == 'on')
-    $checkbox->ischecked = true;
-
-   if ($Handbook == 'on')
-    $checkbox2->ischecked = true;
-
-   if ($Guide == 'on')
-    $checkbox3->ischecked = true;
-
-   if ($Manual== 'on')
-    $checkbox4->ischecked = true;
-
-   if ($Besoractile == 'on')
-    $checkbox5->ischecked = true;
-
-
-    $form ->addToForm($checkbox->show());
-     $form ->addToForm('Model<br>');
-    $form ->addToForm($checkbox2->show());
-     $form ->addToForm('handbook<br>');
-     $form ->addToForm($checkbox3->show());
-      $form ->addToForm('Guide<br>');
-      $form ->addToForm($checkbox4->show());
-       $form ->addToForm('Manual<br>');
-       $form ->addToForm($checkbox5->show());
-        $form ->addToForm('Besoractile<br>');
-    $form->addToForm($button->show());
-
-
-echo $form->show();
-     echo $Model
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-             ?>
-
-<!--                        <input type="checkbox"> Model<br>
-                        <input type="checkbox"> Guide<br>
-                        <input type="checkbox"> Handbook<br>
-                        <input type="checkbox"> Manual<br>
-                        <input type="checkbox"> Bestoractile<br>-->
-                    </div>
-                    <br>
-                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
-                    <div class="blueBackground">
-
-
-
-
-                          <?php
-                    $products = $this->objDbProducts->getProducts(0, 10);
-                    $filterTheme = new dropdown('ThemeFilter');
-
-                    foreach ($products as $product) {
-                        $filterTheme->addoption(null);
-                        $filterTheme->addOption($product['theme']);
-                    }
-                     $filterTheme ->setSelected($ThemeFilter);
-
-                    $uri = $this->uri(array('action' => 'ThemeFilter'));
-                    $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
-
-
-                    $uri = $this->uri(array('action' => 'FilterProducts'));
-                    $filterTheme->addOnChange('javascript: sendThemeFilterform()');
-
-
-
-                    $form->addtoform($filterTheme->show());
-
-                    echo $form->show();
-                    
-                    ?>
-<!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                            <option value="">All</option>
-                        </select>-->
-                    </div>
-                    <br>
-                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
-                    <div class="blueBackground">
- <?php
-
-                        $products = $this->objDbProducts->getProducts(0, 10);
-                        $filterLang = new dropdown('LanguageFilter');
-
-                        foreach ($products as $product) {
-                            $filterLang->addoption(null);
-                            $filterLang->addOption($product['language']);
-                        }
-
-                         $filterLang ->setSelected($LangFilter);
-                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
-
-
-                        $uri = $this->uri(array('action' => 'LanguageFilter'));
-                        $filterLang->addOnChange('javascript: sendLanguageFilterform()');
-
-
-                        $form->addtoform($filterLang->show());
-
-
-                        echo $form->show();
-
-
-
-
-
+                                        </div>
+                                    </div>
+                                    <div class="mainNavPipe"></div>
+                                    <div class="navitem">
+                                        <div class="navitemInner"><a href="#">REPORTING</a></div>
+                                    </div>
+                                    <div class="mainNavPipe"></div>
+                                    <div class="navitem">
+                                        <div class="navitemInner"><a href="#">ABOUT</a></div>
+                                    </div>
+                                    <div class="mainNavPipe"></div>
+                                    <div class="navitem">
+                                        <div class="navitemInner"><a href="#">CONTACT</a></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mainContentHolder">
+                                <div class="subNavigation"></div>
+                                <!-- Left Colum -->
+                                <div class="leftColumnDiv">
+                                    <div class="moduleHeader">
+
+                        <?php
+                                            echo $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer')
+                        ?>
+
+
+                                        </div>
+                                        <div class="blueNumberBackground">
+                                            <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
+                                            <div class="numberOffilteredProducts">
+
+<?php
+                                            echo $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
 ?>
+                                        </div>
+                                    </div>
+                                    <div class="moduleSubHeader">Product matches filter criteria</div>
+                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">
+                            <?php
+                                            echo $this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer')
+                            ?>
+                                    </div>
+
+                                    <div class="blueBackground blueBackgroundCheckBoxText">
+                        <?php
+                                            $products = $this->objDbProducts->getProducts(0, 10);
 
 
-<!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
-                            <option value="">All</option>
-                        </select>-->
-                    </div>
-                    <br>
-                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">Author</div>
-                    <div class="blueBackground">
+
+
+                                            $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
 
 
 
-                         <?php
-                        $products = $this->objDbProducts->getProducts(0, 10);
-                        $filterAuth = new dropdown('AuthorFilter');
-
-                        foreach ($products as $product) {
-                            $filterAuth->addoption(null);
-                            $filterAuth->addOption($product['creator']);
-                        }
-
-                   $filterAuth ->setSelected($AuthFilter);
-                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
 
 
-                        $uri = $this->uri(array('action' => 'AuthorFilter'));
-                        $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
+                                            $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+                                            $button->setToSubmit();
+
+                                            $checkbox = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_model', 'unesco_oer'));
+                                            $checkbox2 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_handbook', 'unesco_oer'));
+                                            $checkbox3 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_guide', 'unesco_oer'));
+                                            $checkbox4 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_manual', 'unesco_oer'));
+                                            $checkbox5 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_bestoractile', 'unesco_oer'));
 
 
-                        $form->addtoform($filterAuth->show());
+                                            if ($Model == 'on')
+                                                $checkbox->ischecked = true;
+
+                                            if ($Handbook == 'on')
+                                                $checkbox2->ischecked = true;
+
+                                            if ($Guide == 'on')
+                                                $checkbox3->ischecked = true;
+
+                                            if ($Manual == 'on')
+                                                $checkbox4->ischecked = true;
+
+                                            if ($Besoractile == 'on')
+                                                $checkbox5->ischecked = true;
 
 
-                        echo $form->show();
-                       
+                                            $form->addToForm($checkbox->show());
+                                            $form->addToForm('Model<br>');
+                                            $form->addToForm($checkbox2->show());
+                                            $form->addToForm('handbook<br>');
+                                            $form->addToForm($checkbox3->show());
+                                            $form->addToForm('Guide<br>');
+                                            $form->addToForm($checkbox4->show());
+                                            $form->addToForm('Manual<br>');
+                                            $form->addToForm($checkbox5->show());
+                                            $form->addToForm('Besoractile<br>');
+                                            $form->addToForm($button->show());
+
+
+                                            echo $form->show();
+                                            echo $Model
+                        ?>
+
+                    <!--                        <input type="checkbox"> Model<br>
+                                            <input type="checkbox"> Guide<br>
+                                            <input type="checkbox"> Handbook<br>
+                                            <input type="checkbox"> Manual<br>
+                                            <input type="checkbox"> Bestoractile<br>-->
+                                        </div>
+                                        <br>
+                                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">
+                                             <?php
+                                         echo  $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer')
+
+
+                                        ?>
+                                            
+                                            
+                                            
+                                            </div>
+                                        <div class="blueBackground">
+
+
+
+
+                        <?php
+                                            $products = $this->objDbProducts->getProducts(0, 10);
+                                            $filterTheme = new dropdown('ThemeFilter');
+
+                                            foreach ($products as $product) {
+                                                $filterTheme->addoption(null);
+                                                $filterTheme->addOption($product['theme']);
+                                            }
+                                            $filterTheme->setSelected($ThemeFilter);
+
+                                            $uri = $this->uri(array('action' => 'ThemeFilter'));
+                                            $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+
+
+                                            $uri = $this->uri(array('action' => 'FilterProducts'));
+                                            $filterTheme->addOnChange('javascript: sendThemeFilterform()');
+
+
+
+                                            $form->addtoform($filterTheme->show());
+
+                                            echo $form->show();
+                        ?>
+                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
+                                                <option value="">All</option>
+                                            </select>-->
+                                        </div>
+                                        <br>
+                                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">
+
+                                             <?php
+                                         echo  $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer')
+
+
+                                        ?></div>
+                                        <div class="blueBackground">
+                        <?php
+                                            $products = $this->objDbProducts->getProducts(0, 10);
+                                            $filterLang = new dropdown('LanguageFilter');
+
+                                            foreach ($products as $product) {
+                                                $filterLang->addoption(null);
+                                                $filterLang->addOption($product['language']);
+                                            }
+
+                                            $filterLang->setSelected($LangFilter);
+                                            $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+
+
+                                            $uri = $this->uri(array('action' => 'LanguageFilter'));
+                                            $filterLang->addOnChange('javascript: sendLanguageFilterform()');
+
+
+                                            $form->addtoform($filterLang->show());
+
+
+                                            echo $form->show();
+                        ?>
+
+
+                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
+                                                <option value="">All</option>
+                                            </select>-->
+                                        </div>
+                                        <br>
+                                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">
+
+                                             <?php
+                                         echo  $this->objLanguage->languageText('mod_unesco_oer_author', 'unesco_oer')
+
+
+                                        ?>
+                                        </div>
+                                        <div class="blueBackground">
+
+
+
+                        <?php
+                                            $products = $this->objDbProducts->getProducts(0, 10);
+                                            $filterAuth = new dropdown('AuthorFilter');
+
+                                            foreach ($products as $product) {
+                                                $filterAuth->addoption(null);
+                                                $filterAuth->addOption($product['creator']);
+                                            }
+
+                                            $filterAuth->setSelected($AuthFilter);
+                                            $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+
+
+                                            $uri = $this->uri(array('action' => 'AuthorFilter'));
+                                            $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
+
+
+                                            $form->addtoform($filterAuth->show());
+
+
+                                            echo $form->show();
                         ?>
 
 
 
 
-<!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
-                            <option value="">All</option>
-                        </select>-->
-                    </div>
-                    <br>
-                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
-                    <div class="blueBackground">
+                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
+                                                <option value="">All</option>
+                                            </select>-->
+                                        </div>
+                                        <br>
+                                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">
+                                             <?php
+                                         echo  $this->objLanguage->languageText('mod_unesco_oer_items_per_page', 'unesco_oer')
 
-                          <?php
+
+                                        ?>
+
+                                            </div>
+                                        <div class="blueBackground">
+
+                        <?php
                                             $products = $this->objDbProducts->getProducts(0, 10);
                                             $filterNum = new dropdown('NumFilter');
 
 
-                                                $filterNum->addoption(null);
-                                                $filterNum->addOption('1');
-                                                $filterNum->addOption('2');
-                                                $filterNum->addOption('3');
+                                            $filterNum->addoption(null);
+                                            $filterNum->addOption('1');
+                                            $filterNum->addOption('2');
+                                            $filterNum->addOption('3');
 
 
 
                                             $filterNum->setSelected($NumFilter);
-                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
+                                            $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
 
                                             $uri = $this->uri(array('action' => 'NumFilter'));
@@ -379,25 +393,25 @@ echo $form->show();
 
 
 
-<!--                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                            <option value="">All</option>
-                        </select>-->
-                    </div>
-                    <br><br>
-                    <div class="blueBackground rightAlign">
-                        <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                        <a href="#" class="resetLink">RESET</a>
-                    </div>
-                    <div class="rssFeed">
-                        <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
-                        <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
-                    </div>
-                </div>
-                <!-- Center column DIv -->
-                <div class="centerColumnDiv">
-                    <div class="GridListViewDiv">
-                        <div class="sortBy">
-                             <?php
+                    <!--                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                                                <option value="">All</option>
+                                            </select>-->
+                                        </div>
+                                        <br><br>
+                                        <div class="blueBackground rightAlign">
+                                            <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
+                                            <a href="#" class="resetLink">RESET</a>
+                                        </div>
+                                        <div class="rssFeed">
+                                            <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
+                                            <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
+                                        </div>
+                                    </div>
+                                    <!-- Center column DIv -->
+                                    <div class="centerColumnDiv">
+                                        <div class="GridListViewDiv">
+                                            <div class="sortBy">
+                        <?php
                                             $products = $this->objDbProducts->getProducts(0, 10);
                                             $filterLang = new dropdown('SortFilter');
 
@@ -407,7 +421,7 @@ echo $form->show();
 
 
                                             $filterLang->setSelected($SortFilter);
-                                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts',"adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
+                                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
 
                                             $uri = $this->uri(array('action' => 'SortFilter'));
@@ -415,10 +429,10 @@ echo $form->show();
 
 
 
-                                            $form->addtoform('Sort By:');
+                                            $form->addtoform($this->objLanguage->languageText('mod_unesco_oer_sort_by', 'unesco_oer'));
                                             $form->addtoform($filterLang->show());
                                             echo $form->show();
-                            ?>
+                        ?>
 
 
 
@@ -426,66 +440,66 @@ echo $form->show();
 
 
 
-<!--
+                                                <!--
 
-Sort By:
-                            <select name="" class="contentDropDown">
-                                <option value="">Date Added</option>
-                            </select>
-                            <select name="" class="contentDropDown">
-                                <option value="">DESC</option>
-                            </select>-->
-                        </div>
-                        <div class="viewGrid">
-                            <div class="viewAsDiv">View as: </div>
+                                                Sort By:
+                                                                            <select name="" class="contentDropDown">
+                                                                                <option value="">Date Added</option>
+                                                                            </select>
+                                                                            <select name="" class="contentDropDown">
+                                                                                <option value="">DESC</option>
+                                                                            </select>-->
+                                            </div>
+                                            <div class="viewGrid">
+                                                <div class="viewAsDiv">View as: </div>
 
 
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
-                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
-                            echo $abLink->show();
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
+                                            echo $abLink->show();
                             ?>
 
-                            <div class="gridListDivView">
-                                <?php
-                                $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
-                                $abLink->link = 'GRID';
-                                echo $abLink->show();
-                                ?>
-                            </div>
+                                            <div class="gridListDivView">
+                            <?php
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                            $abLink->link = 'GRID';
+                                            echo $abLink->show();
+                            ?>
+                                            </div>
 
-                            <div class="gridListPipe">|</div>
+                                            <div class="gridListPipe">|</div>
+
+<?php
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
+                                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
+                                            echo $abLink->show();
+?>
+
+                                            <div class="gridListDivView">
+
+<?php
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
+                                            $abLink->link = 'LIST';
+                                            echo $abLink->show();
+?>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Display the products in a list view-->
 
                             <?php
-                                $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
-                                $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
-                                echo $abLink->show();
+                                            $objTable = $this->getObject('htmltable', 'htmlelements');
+                                            $products = $this->objDbProducts->getFilteredProducts($finalstring);
+
+                                            //Loop through the products and display each in it's own line
+                                            foreach ($products as $product) {
+                                                //Get number of adaptations
+                                                $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
+                                                echo $this->objProductUtil->populateListView($product);
+                                            }
                             ?>
-
-                                <div class="gridListDivView">
-
-                                <?php
-                                $abLink = new link($this->uri(array("action" => 'FilterProducts',"adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
-                                $abLink->link = 'LIST';
-                                echo $abLink->show();
-                                ?>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!--Display the products in a list view-->
-
-                    <?php
-                                $objTable = $this->getObject('htmltable', 'htmlelements');
-                               $products = $this->objDbProducts->getFilteredProducts($finalstring);
-
-                                //Loop through the products and display each in it's own line
-                                foreach ($products as $product) {
-                                    //Get number of adaptations
-                                    $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
-                                    echo $this->objProductUtil->populateListView($product);
-                                }
-                    ?>
                                 <!--</div>-->
 
                                 <!--                    <div class="productsListView">
@@ -653,35 +667,28 @@ Sort By:
                                 <div class="paginationDiv">
                                     <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
 
-                                      <?php
-
-
-
+<?php
 //
-                                            $TotalRecords =  $this->objDbProducts->getTotalEntries($TotalEntries);
+                                            $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
 
-                                           $TotalPages = ceil($TotalRecords / $NumFilter);
+                                            $TotalPages = ceil($TotalRecords / $NumFilter);
 
 //                                                echo $TotalRecords;
 //                                                echo $NumFilter;
 //                                                echo (int) $TotalPages;
 
 
-                                                    for ($i=1; $i<=$TotalPages; $i++)
-                                                    {
+                                            for ($i = 1; $i <= $TotalPages; $i++) {
 
-                                                      $abLink = new link($this->uri(array("action" => 'FilterProducts',  "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages"=> $TotalPages, "NumFilter"=> $NumFilter, "PageNum" => $i,'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual'=> $Manual, 'Handbook'=> $Handbook , 'Model' => $Model, 'Besoractile'=> $Besoractile)));
-                                                      $abLink->link = $i;
-                                                      echo $abLink->show();
-                                                     }
+                                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                                                $abLink->link = $i;
+                                                echo $abLink->show();
+                                            }
 
 
 //
 //
-
-
-
-                                    ?>
+?>
 
 
 
@@ -698,72 +705,72 @@ Sort By:
 
 
 
-<!--                                    <div class="paginationLinkDiv">
-                                        <a href="#" class="pagination">Prev</a>
-                                        <a href="#" class="pagination">1</a>
-                                        <a href="#" class="pagination">2</a>
-                                        <a href="#" class="pagination">3</a>
-                                        <a href="#" class="pagination">4</a>
-                                        <a href="#" class="pagination">5</a>
-                                        <a href="#" class="pagination">6</a>
-                                        <a href="#" class="pagination">7</a>
-                                        <a href="#" class="pagination">8</a>
-                                        <a href="#" class="pagination">9</a>
-                                        <a href="#" class="pagination">10</a>
-                                        <a href="#" class="pagination">Next</a>
-                                    </div>-->
-                                </div>
-                            </div>
+                                                <!--                                    <div class="paginationLinkDiv">
+                                                                                        <a href="#" class="pagination">Prev</a>
+                                                                                        <a href="#" class="pagination">1</a>
+                                                                                        <a href="#" class="pagination">2</a>
+                                                                                        <a href="#" class="pagination">3</a>
+                                                                                        <a href="#" class="pagination">4</a>
+                                                                                        <a href="#" class="pagination">5</a>
+                                                                                        <a href="#" class="pagination">6</a>
+                                                                                        <a href="#" class="pagination">7</a>
+                                                                                        <a href="#" class="pagination">8</a>
+                                                                                        <a href="#" class="pagination">9</a>
+                                                                                        <a href="#" class="pagination">10</a>
+                                                                                        <a href="#" class="pagination">Next</a>
+                                                                                    </div>-->
+                                            </div>
+                                        </div>
 
-                            <!-- Right column DIv -->
-                            <div class="rightColumnDiv">
-                                <div class="rightColumnDiv">
-                                    <div class="featuredHeader">FEATURED UNESCO PRODUCTS</div>
-                                    <div class="rightColumnBorderedDiv">
-                                        <div class="rightColumnContentPadding">
-                                             <?php
+                                        <!-- Right column DIv -->
+                                        <div class="rightColumnDiv">
+                                            <div class="rightColumnDiv">
+                                                <div class="featuredHeader">FEATURED UNESCO PRODUCTS</div>
+                                                <div class="rightColumnBorderedDiv">
+                                                    <div class="rightColumnContentPadding">
+<?php
                                             $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
                                             $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
                                             if (sizeof($featuredProduct) > 0) {
                                                 //TODO error handling
                                             }
                                             echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct[0]);
-                                            ?>
-                                            
-                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
-                                                    <?php
-                                                    $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                                    $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
-                                                    echo"See all adaptations ($NOofAdaptation)"// This must be a link;
-                                                    ?>
-                                                    </a></div>
-                                        </div>
-                                    </div>
-                                    <div class="spaceBetweenRightBorderedDivs">
-                                        <div class="featuredHeader innerPadding">MOST...</div>
-                                    </div>
-                                        <!-- tabs
-                                        <div class="tabsOnState">ADOPTED</div>
-                                        <div class="tabsOffState">RATED</div>
-                                        <div class="tabsOffState">COMMENTED</div>
-                                        -->
+?>
 
-                                        <div class="rightColumnBorderedDiv">
-                                            <div class="rightColumnContentPadding">
+                                                    <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
+<?php
+                                            $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+                                            $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
+                                            echo"See all adaptations ($NOofAdaptation)"// This must be a link;
+?>
+                                                        </a></div>
+                                                </div>
+                                            </div>
+                                            <div class="spaceBetweenRightBorderedDivs">
+                                                <div class="featuredHeader innerPadding">MOST...</div>
+                                            </div>
+                                            <!-- tabs
+                                            <div class="tabsOnState">ADOPTED</div>
+                                            <div class="tabsOffState">RATED</div>
+                                            <div class="tabsOffState">COMMENTED</div>
+                                            -->
+
+                                            <div class="rightColumnBorderedDiv">
+                                                <div class="rightColumnContentPadding">
 
 
 <?php
-                                        $objTabs = $this->newObject('tabcontent', 'htmlelements');
-                                        $objTabs->setWidth(180);
-                                        $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution);
-                                        $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
-                                        $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
-                                        $objTabs->addTab('Adapted', $mostAdapted);
-                                        $objTabs->addTab('Rated', $mostRated);
-                                        $objTabs->addTab('Commented', $mostCommented);
-                                        echo $objTabs->show();
+                                            $objTabs = $this->newObject('tabcontent', 'htmlelements');
+                                            $objTabs->setWidth(180);
+                                            $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution);
+                                            $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
+                                            $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
+                                            $objTabs->addTab('Adapted', $mostAdapted);
+                                            $objTabs->addTab('Rated', $mostRated);
+                                            $objTabs->addTab('Commented', $mostCommented);
+                                            echo $objTabs->show();
 ?>
-                                            
+
                             </div>
                         </div>
                         <br>
@@ -814,29 +821,29 @@ Sort By:
 
 <script>
 
-function sendThemeFilterform()
-{
+    function sendThemeFilterform()
+    {
     document.forms["ThemeFilter"].submit();
-}
+    }
 
-function sendLanguageFilterform()
-{
+    function sendLanguageFilterform()
+    {
     document.forms["LanguageFilter"].submit();
 
-}function sendAuthorFilterform()
-{
+    }function sendAuthorFilterform()
+    {
     document.forms["AuthorFilter"].submit();
-}
+    }
 
 
-function sendSortFilterform()
+    function sendSortFilterform()
     {
     document.forms["SortFilter"].submit();
     }
 
-     function sendNumFilterform()
+    function sendNumFilterform()
     {
-        document.forms["NumFilter"].submit();
+    document.forms["NumFilter"].submit();
     }
 
 

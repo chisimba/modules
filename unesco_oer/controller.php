@@ -116,6 +116,35 @@ class unesco_oer extends controller {
         return "2b_tpl.php";
     }
 
+
+    public function __ViewProduct() {
+
+        
+
+
+        return "1a_tpl.php";
+
+    }
+
+    public function __FilterAdaptaions() {
+
+        $parentid = $this->getParam('parentid');
+        $adaptationstring = 'parent_id = ' . "'$parentid'";
+
+        $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile);
+        $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter, $PageNum, $TotalEntries);
+
+
+         $this->setVarByRef("finalstring", $Buildstring);
+        $this->setVarByRef("TotalEntries", $TotalEntries);
+        $this->setVarByRef("adaptationstring", $adaptationstring);
+
+
+        return "2a_tpl.php";
+
+    }
+
+
     public function __FilterProducts() {
 
         $AuthFilter = $this->getParam('AuthorFilter');
@@ -154,6 +183,7 @@ class unesco_oer extends controller {
         $this->setVarByRef("Handbook", $Handbook);
         $this->setVarByRef("Manual", $Manual);
         $this->setVarByRef("Besoractile", $Besoractile);
+         $this->setVarByRef("adaptationstring", $adaptationstring);
 
 
 

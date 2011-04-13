@@ -1,8 +1,10 @@
 <?php
-
+$this->loadClass('link', 'htmlelements');
 //Display errors
 error_reporting(E_ALL);
 ini_set('display_errors', 'Off');
+
+
 
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -35,6 +37,14 @@ class productutil extends object
     public function populateGridView($product)
     {
         $content = '';
+         $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink->link = $product['title'];
+         $parentid = $product['id'];
+         
+         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptaions', 'parentid' => $parentid)));
+         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+
+
 
         //TODO Ntsako find out what makes a product new
         if ($product['new'] == 'true') {
@@ -55,7 +65,7 @@ class productutil extends object
                                     <div class="imageBotomFlag"></div>
                                 </div>
                                 <br>
-                                <div class="blueListingHeading">' . $product['title'] . '</div>
+                                <div class="blueListingHeading">' .  $abLink->show()  . '</div>
                                 <div class="listingLanguageLinkAndIcon">
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                     <div class="listingLanuagesDropdownDiv">
@@ -66,7 +76,7 @@ class productutil extends object
                                 </div>
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                    <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks"> ' . $product['noOfAdaptations'] . ' adaptations</a></div>
+                                    <div class="listingAdaptationLinkDiv"> ' . $CommentLink->show() . '</a></div>
                                 </div>
 ';
         return $content;
@@ -80,6 +90,8 @@ class productutil extends object
     public function populateListView($product)
     {
         $content = '';
+         $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink->link = $product['title'];
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -92,7 +104,7 @@ class productutil extends object
 
         $content.='
                   <div class="productsListView">
-                   <h2>' . $product['title'] . '</h2><br>
+                   <h2>' . $abLink->show() . '</h2><br>
                     <div class="productlistViewLeftFloat">
                         <img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"class="imgFloatRight">
                         <div class="listingAdaptationLinkDiv">new</div>
@@ -130,6 +142,8 @@ class productutil extends object
     public function populateAdaptedGridView($adaptedProduct)
     {
         $content = '';
+         $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink->link = $adaptedProduct['title'];
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -152,7 +166,7 @@ class productutil extends object
                        <div class="imageBotomFlag"></div>
                    </div>
                    <br>
-                   <div class="orangeListingHeading">' . $adaptedProduct['title'] . '</div>';
+                   <div class="orangeListingHeading">' .  $abLink->show()  . '</div>';
 
         //Check the creator of the adaptation
         if ($adaptedProduct['group_thumbnail'] != NULL) {
@@ -191,7 +205,10 @@ class productutil extends object
      */
     public function populateAdaptedListView($adaptedProduct)
     {
+        $this->loadClass('link', 'htmlelements');
         $content = '';
+         $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink->link = $adaptedProduct['title'];
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -209,7 +226,7 @@ class productutil extends object
         $content.='
                     <div class="adaptationListView">
                         <div class="productAdaptationListViewLeftColumn">
-                            <h2><a href="#" class="adaptationListingLink">' . $adaptedProduct['title'] . ' </a></h2><br>
+                            <h2><a href="#" class="adaptationListingLink">' . $abLink->show() . ' </a></h2><br>
                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                             <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">See all adaptations (' . $adaptedProduct['noOfAdaptations'] . ')</a></div>
                         </div>';
@@ -417,7 +434,7 @@ class productutil extends object
         if ($ThemeFilter != Null)
             $buildstring .= ' and theme = ' . "'$ThemeFilter'";
 
-        if ($LangFilter != Null)
+       if ($LangFilter != Null)
             $buildstring .= ' and language = ' . "'$LangFilter'";
 
 

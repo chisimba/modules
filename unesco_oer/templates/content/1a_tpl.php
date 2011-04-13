@@ -156,14 +156,21 @@ $adaptationstring = "parent_id is null";
                             <div class="subNavigation"></div>
                             <!-- Left Colum -->
                             <div class="leftColumnDiv">
-                                <div class="moduleHeader">FILTER PRODUCTS</div>
+                                <div class="moduleHeader">
+                                  <?php
+                                  echo  $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer')
+
+
+                                  ?>
+
+                                    </div>
                                 <div class="blueNumberBackground">
                                     <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
                                     <div class="numberOffilteredProducts">
 
                                          <?php
 
-                                          if ($finalstring == null) {
+                                          if ($finalstring == null) {                       //Initialization check
                                             $finalstring = 'parent_id is null';
                                             $TotalEntries = 'parent_id is null';
                                         }
@@ -179,7 +186,15 @@ $adaptationstring = "parent_id is null";
                                     </div>
                                 </div>
                                 <div class="moduleSubHeader">Product matches filter criteria</div>
-                                <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
+                                <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">
+
+                                     <?php
+                                         echo  $this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer')
+
+
+                                        ?>
+
+                                    </div>
                                 <div class="blueBackground blueBackgroundCheckBoxText">
 
                         <?php
@@ -193,14 +208,14 @@ $adaptationstring = "parent_id is null";
 
 
 
-                                        $button = new button('Search', 'Search');
+                                        $button = new button('Search',$this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
                                         $button->setToSubmit();
 
-                                        $checkbox = new checkbox('Model');
-                                        $checkbox2 = new checkbox('Handbook');
-                                        $checkbox3 = new checkbox('Guide');
-                                        $checkbox4 = new checkbox('Manual');
-                                        $checkbox5 = new checkbox('Besoractile');
+                                        $checkbox = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_model', 'unesco_oer'));
+                                        $checkbox2 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_handbook', 'unesco_oer'));
+                                        $checkbox3 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_guide', 'unesco_oer'));
+                                        $checkbox4 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_manual', 'unesco_oer'));
+                                        $checkbox5 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_bestoractile', 'unesco_oer'));
 
 
 
@@ -244,7 +259,14 @@ $adaptationstring = "parent_id is null";
                                                     <input type="checkbox"> Bestoractile<br>-->
                                     </div>
                                     <br>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
+                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">
+                                        <?php
+                                         echo  $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer')
+
+
+                                        ?>
+
+                                        </div>
                                     <div class="blueBackground">
 
                         <?php
@@ -276,19 +298,28 @@ $adaptationstring = "parent_id is null";
                                                                                                                                                                                             </select>-->
                                     </div>
                                     <br>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
+                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">
+                                         <?php
+                                         echo  $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer')
+
+
+                                        ?>
+
+
+                                        </div>
                                     <div class="blueBackground">
 
 
                         <?php
+                                
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('LanguageFilter');
-
+                                       
                                         foreach ($products as $product) {
-                                            $filterLang->addoption(null);
+                                      
                                             $filterLang->addOption($product['language']);
                                         }
-
+   $filterLang->addOption('All');
                                         $filterLang->setSelected($LangFilter);
                                         $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
@@ -314,7 +345,15 @@ $adaptationstring = "parent_id is null";
                                                                                                                                                                                             </select>-->
                                     </div>
                                     <br>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">Author</div>
+                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">
+                                         <?php
+                                         echo  $this->objLanguage->languageText('mod_unesco_oer_author', 'unesco_oer')
+
+
+                                        ?>
+
+
+                                        </div>
                                     <div class="blueBackground">
 
                         <?php
@@ -348,7 +387,15 @@ $adaptationstring = "parent_id is null";
                                                                                                                                                                                             </select>-->
                                     </div>
                                     <br>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
+                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">
+                                         <?php
+                                         echo  $this->objLanguage->languageText('mod_unesco_oer_items_per_page', 'unesco_oer')
+
+
+                                        ?>
+
+
+                                        </div>
                                     <div class="blueBackground">
 
 
@@ -434,7 +481,7 @@ $adaptationstring = "parent_id is null";
 
 
 
-                                        $form->addtoform('Sort By:');
+                                        $form->addtoform( $this->objLanguage->languageText('mod_unesco_oer_sort_by', 'unesco_oer'));
                                         $form->addtoform($filterLang->show());
                                         echo $form->show();
 ?>
@@ -656,7 +703,7 @@ $adaptationstring = "parent_id is null";
 
                                         <!-- Pagination-->
                                         <div class="paginationDiv">
-                                            <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
+                                          <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>
 
 <?php
 //
@@ -666,7 +713,8 @@ $adaptationstring = "parent_id is null";
 
 //                                                echo $TotalRecords;
 //                                                echo $NumFilter;
-//                                                echo (int) $TotalPages;
+                                        if ($TotalPages > 0)
+
 
 
                                         for ($i = 1; $i <= $TotalPages; $i++) {
