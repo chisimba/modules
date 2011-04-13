@@ -350,6 +350,25 @@ class unesco_oer extends controller {
     }
 
     /*
+     * Method to retrieve the current featured unesco adaptation from user on the featuredAdaptatoinUI_tpl.php
+     * return a page 1a_tpl.php with the current featured product
+     */
+
+    public function __createFeaturedAdaptation() {
+        $featuredadaptation = $this->getParam('id');
+        $this->objDbFeaturedProduct->overRightCurrentFeaturedAdaptation($featuredadaptation);
+        return "1a_tpl.php";
+    }
+
+    /*
+     * method to dispaly page to create a new unesco featured product
+     */
+
+    public function __featuredAdaptationUI() {
+        return "featuredAdaptationUI_tpl.php";
+    }
+
+    /*
      * Method to display page for creating a new group
      */
 

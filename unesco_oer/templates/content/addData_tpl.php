@@ -86,6 +86,14 @@ $buttonText = $this->objLanguage->
 $actionURI = $this->uri(array('action' => 'featuredProductUI'));
 $utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
+//new featured apaptation option
+$headingText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newFeaturedAdaptation', 'unesco_oer');
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newFeaturedAdaptationBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'featuredAdaptationUI'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
+
 //new group options
 $headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newGroup', 'unesco_oer');

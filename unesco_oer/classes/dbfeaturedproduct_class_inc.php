@@ -26,6 +26,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class dbfeaturedproduct extends dbtable
 {
 
+    //TODO rewrite functions overRightCurrentFeaturedAdaptation and overRightCurrentFeaturedProduct to support the existence of both the featured product and adaptation
+
     function init()
     {
         parent::init("tbl_unesco_oer_featured_products");
@@ -38,7 +40,7 @@ class dbfeaturedproduct extends dbtable
 
     function overRightCurrentFeaturedProduct($featuredProduct)
     {
-        if ($this->getRecordCount() == 0) {
+        if ($this->getRecordCount() < 1) {
             //$this->insert($featuredProduct);
             $data = array('product_id' => $featuredProduct);
             return $this->insert($data);
@@ -47,6 +49,30 @@ class dbfeaturedproduct extends dbtable
             //TODO add error handling for case of more than one featured product 
             //in array
             $currentFeaturedProduct = $currentFeaturedProductArray[0];
+            return $this->update(
+                    'puid',
+                    $currentFeaturedProduct['puid'],
+                    array('product_id' => $featuredProduct)
+            );
+        }
+    }
+
+    /* This function checks that the database is empty,and insert a current featured unesco adaptation in the database
+     * if the database already has a featured adaptaion in it,an update with the current unesco featured adaptation is done
+     * @param<type> $featuredProduct
+     */
+
+    function overRightCurrentFeaturedAdaptation($featuredProduct)
+    {
+        if ($this->getRecordCount() < 2) {
+            //$this->insert($featuredProduct);
+            $data = array('product_id' => $featuredProduct);
+            return $this->insert($data);
+        } else {
+            $currentFeaturedProductArray = $this->getAll();
+            //TODO add error handling for case of more than one featured product
+            //in array
+            $currentFeaturedProduct = $currentFeaturedProductArray[1];
             return $this->update(
                     'puid',
                     $currentFeaturedProduct['puid'],
