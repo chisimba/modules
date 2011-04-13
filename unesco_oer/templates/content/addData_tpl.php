@@ -118,6 +118,14 @@ $buttonText = $this->objLanguage->
 $actionURI = $this->uri(array('action' => 'chooseProductToComment'));
 $utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
+//Rate product options
+$headingText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_addrating','unesco_oer');
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_addratingBtn','unesco_oer');
+$actionURI = $this->uri(array('action' => 'chooseProductToRate'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
+
 //return to Home
 $table->startRow();
 $buttonText = $this->objLanguage->

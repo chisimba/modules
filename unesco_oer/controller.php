@@ -36,6 +36,7 @@ class unesco_oer extends controller {
         $this->objDbGroups = $this->getObject('dbgroups');
         $this->objDbInstitution = $this->getObject('dbinstitution');
         $this->objDbComments = $this->getObject('dbcomments');
+        $this->objProductRatings = $this->getObject('dbproductratings');
         $this->objUser = $this->getObject('user', 'security');
     }
 
@@ -350,25 +351,6 @@ class unesco_oer extends controller {
     }
 
     /*
-     * Method to retrieve the current featured unesco adaptation from user on the featuredAdaptatoinUI_tpl.php
-     * return a page 1a_tpl.php with the current featured product
-     */
-
-    public function __createFeaturedAdaptation() {
-        $featuredadaptation = $this->getParam('id');
-        $this->objDbFeaturedProduct->overRightCurrentFeaturedAdaptation($featuredadaptation);
-        return "1a_tpl.php";
-    }
-
-    /*
-     * method to dispaly page to create a new unesco featured product
-     */
-
-    public function __featuredAdaptationUI() {
-        return "featuredAdaptationUI_tpl.php";
-    }
-
-    /*
      * Method to display page for creating a new group
      */
 
@@ -455,6 +437,14 @@ class unesco_oer extends controller {
         return 'chooseComment_tpl.php';
     }
 
+        /*
+     * Method to display page with products to rate
+     */
+
+    public function __chooseProductToRate() {
+        return 'chooseProductToRate_tpl.php';
+    }
+
     /*
      * Method to display page with entry options for comment
      */
@@ -463,6 +453,16 @@ class unesco_oer extends controller {
         $id = $this->getParam('id');
         $this->setVar('productID', $id);
         return 'createComment_tpl.php';
+    }
+
+        /*
+     * Method to display page with entry options for rating
+     */
+
+    public function __addProductRating() {
+        $id = $this->getParam('id');
+        $this->setVar('productID', $id);
+        return 'addProductRating_tpl.php';
     }
 
     /*
@@ -475,6 +475,19 @@ class unesco_oer extends controller {
         $comment = $this->getParam('newComment');
 
         $this->objDbComments->addComment($id, NULL, $comment);
+        return $this->__addData();
+    }
+
+        /*
+     * Method to retrieve entries from user on the addProductRating_tpl.php page
+     * and add it to the tbl_unesco_oer_products_ratings table
+     */
+
+    public function __addProductRatingSubmit() {
+        $id = $this->getParam('id');
+        $rating = $this->getParam('newRating');
+
+        $this->objDbProductRatings->addRating($id, $rating);
         return $this->__addData();
     }
 

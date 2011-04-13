@@ -27,5 +27,14 @@ class dbproductratings extends dbtable {
         return $this->getArray($sql);
     }
 
+        function addRating($product_id, $rating) {
+        $data = array(
+            'product_id' => $product_id,
+            'score' => $rating,
+        );
+
+        $this->insert($data);
+    }
+
 }
 ?>
