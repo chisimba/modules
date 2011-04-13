@@ -1,12 +1,13 @@
 <?php
 
 /*
-academic table
- table academic year
+ *table for academic years of a secondary school
+ *
+ *  
  -- -----------------------------------------------------
--- Table `ERD_SMIS`.`tbl_academic_year`
+-- Table `tbl_academic_year`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `ERD_SMIS`.`tbl_academic_year` (
+CREATE  TABLE IF NOT EXISTS `tbl_academic_year` (
   `id` INT NOT NULL ,
   `year_name` VARCHAR(20) NOT NULL ,
   PRIMARY KEY (`id`) ,
