@@ -32,7 +32,7 @@ $adaptationstring = 'parent_id is not null';
                 ?>
                 <div class="logOutSearchDiv">
                     <div class="logoutSearchDivLeft">
-                        <div class="nameDiv">?php echo "Hello"."".$this->objUser->fullname(); ?</div>
+                        <div class="nameDiv"><?php echo "Hello"." ".$this->objUser->fullname(); ?></div>
                         <div class="logoutDiv">
                             <div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
                             <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
