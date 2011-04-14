@@ -240,6 +240,8 @@ class unesco_oer extends controller {
 
     public function __createOERproduct() {
         $id = NULL;
+         $this->setLayoutTemplate('1a_layout_tpl.php');
+
         $this->setVar('productID', $id);
         return $this->__productsUi();
     }
