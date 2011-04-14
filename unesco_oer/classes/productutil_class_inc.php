@@ -38,11 +38,13 @@ class productutil extends object
     {
         $content = '';
          $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink->cssClass = "listingLanguageLinkAndIcon";
          $abLink->link = $product['title'];
 
          $parentid = $product['id'];
          
          $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+         $CommentLink->cssClass = 'adaptationLinks';
          $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
 
@@ -77,7 +79,7 @@ class productutil extends object
                                 </div>
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                    <div class="listingAdaptationLinkDiv"> ' . $CommentLink->show() . '</a></div>
+                                    <div class="listingAdaptationLinkDiv"> ' . $CommentLink->show() . '</div>
                                 </div>
 ';
         return $content;
@@ -92,11 +94,13 @@ class productutil extends object
     {
         $content = '';
          $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink->cssClass = "listingLanguageLinkAndIcon";
          $abLink->link = $product['title'];
 
            $parentid = $product['id'];
 
          $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+         $CommentLink->cssClass = 'adaptationLinks';
          $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         /* if ($product['new'] == 'true') {
@@ -149,6 +153,7 @@ class productutil extends object
     {
         $content = '';
          $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $CommentLink->cssClass = 'adaptationLinks';
          $abLink->link = $adaptedProduct['title'];
 
         /* if ($product['new'] == 'true') {
@@ -214,11 +219,13 @@ class productutil extends object
         $this->loadClass('link', 'htmlelements');
         $content = '';
          $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink->cssClass = "listingLanguageLinkAndIcon";
          $abLink->link = $adaptedProduct['title'];
 
           $parentid = $adaptedProduct['id'];
 
          $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+         $CommentLink->cssClass = 'adaptationLinks';
          $CommentLink->link = $adaptedProduct['noOfAdaptations'] . ' Adaptations';
 
         /* if ($product['new'] == 'true') {
@@ -309,6 +316,7 @@ class productutil extends object
          $parentid = $product['id'];
 
          $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+         $CommentLink->cssClass = 'adaptationLinks';
          $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
@@ -378,6 +386,7 @@ class productutil extends object
          $parentid = $product['id'];
 
          $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+         $CommentLink->cssClass = 'adaptationLinks';
          $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
