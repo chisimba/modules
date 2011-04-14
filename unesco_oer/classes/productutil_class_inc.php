@@ -37,10 +37,10 @@ class productutil extends object
     public function populateGridView($product)
     {
         $content = '';
-         $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
          $abLink->cssClass = "listingLanguageLinkAndIcon";
          $abLink->link = $product['title'];
-
+         
          $parentid = $product['id'];
          
          $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
@@ -152,7 +152,7 @@ class productutil extends object
     public function populateAdaptedGridView($adaptedProduct)
     {
         $content = '';
-         $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink = new link($this->uri(array("action" => 'ViewProduct', 'id' => $adaptedProduct['id'])));
          $CommentLink->cssClass = 'adaptationLinks';
          $abLink->link = $adaptedProduct['title'];
 

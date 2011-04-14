@@ -19,7 +19,11 @@ $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 
-class adddatautil {
+class adddatautil extends object {
+
+    public function init() {
+        parent::init();
+    }
 
     /*
      * This function adds a title to a given table

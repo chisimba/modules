@@ -432,13 +432,13 @@ $adaptationstring = "parent_id is null";
                                         <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
                                     </div>
                                 </div>
-                                <!-- Center column DIv -->
-
-                                 <?php
-                                 //echo the content
-                                 echo $this->getContent();
-
-                                 ?>
+                            <!-- Center column DIv -->
+                            <div class="centerColumnDiv">
+                                <?php
+                                //echo the content
+                                echo $this->getContent();
+                                ?>
+                            </div>
                                 <!-- Right column DIv -->
                                 <div class="rightColumnDiv">
                                     <div class="rightColumnDiv">

@@ -38,7 +38,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 //field for the title
 $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
-$utility->addTextInputToTable($title, 4, 'title', 60, $product['title'], $table);
+$utility->addTextInputToTable($title, 4, 'title', 0, $product['title'], $table);
 
 //field for the creator
 $title = $this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer');
@@ -65,13 +65,14 @@ $utility->addDropDownToTable($title, 4, 'institution', $institutions, $instituti
 
 //field for keywords
 $title = $this->objLanguage->languageText('mod_unesco_oer_keywords', 'unesco_oer');
-$utility->addTextInputToTable($title, 4, 'keywords', 60, $product['keywords'], $table);
+$utility->addTextInputToTable($title, 4, 'keywords', 0, $product['keywords'], $table);
 
 //field for the description
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
 $editor->height = '100px';
-$editor->width = '550px';
+$editor->width = '430px';
+$editor->setBasicToolBar();
 $editor->setContent($product['description']);
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));

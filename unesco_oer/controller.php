@@ -123,10 +123,13 @@ class unesco_oer extends controller {
     
     public function __ViewProduct() {
 
-        
+        $id = $this->getParam('id');
 
-
-        return "1a_tpl.php";
+        if ($this->objDbProducts->isAdaptation($id)){
+            return "1a_tpl.php";
+        }else{
+            return "3a_tpl.php";
+        }
 
     }
 

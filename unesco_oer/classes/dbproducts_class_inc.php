@@ -116,5 +116,14 @@ class dbproducts extends dbtable
         }       
     }
 
+    function isAdaptation($id){
+        $product = $this->getProductByID($id);
+        if ($product['parent_id'] == null){
+            return FALSE;
+        }else{
+            return TRUE;
+        }
+    }
+
 }
 ?>

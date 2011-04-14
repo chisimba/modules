@@ -240,9 +240,27 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     <img src="images/icon-comment-post.png" class="commentIcon">
                     Integer venenatis, augue vel iaculis commodo, ante nisi bibendum.
                 <div class="viewAllnewsBlueDiv"><a href="#" class="blueText noUnderline">See all comments</a></div>
-                    <textarea class="commentTextBox">Leave comment</textarea>
+
+<!--                    <textarea class="commentTextBox">Leave comment</textarea>-->
+
+                    <?php
+                        $this->loadClass('textarea', 'htmlelements');
+                        $test = new textarea('test');
+                        $test->setCssClass("commentTextBox");
+                        echo $test->show();
+                    ?>
                     <div class="commentSubmit">
-                        <div class="submiText"><a href="" class="searchGoLink">SUBMIT</a></div>
+                        <div class="submiText">
+<!--                            <a href="" class="searchGoLink">SUBMIT</a>-->
+                        <?php
+
+                            $this->loadClass('link', 'htmlelements');
+                            $testLink = new link($this->uri(array('action' => '3a')));
+                            $testLink->cssClass = "searchGoLink";
+                            $testLink->link = 'SUBMIT';
+                            echo $testLink->show();
+                        ?>
+                        </div>
                         <a href=""><img src="images/button-search.png" width="17" height="17" class="submitCommentImage"></a>
                     </div>
                 </div>
