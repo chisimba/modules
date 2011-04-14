@@ -308,7 +308,7 @@ class productutil extends object
         $content = '';
          $parentid = $product['id'];
 
-         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptaions', 'parentid' => $parentid)));
+         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
          $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
@@ -377,7 +377,7 @@ class productutil extends object
 
          $parentid = $product['id'];
 
-         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptaions', 'parentid' => $parentid)));
+         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
          $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
