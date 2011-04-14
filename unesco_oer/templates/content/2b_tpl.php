@@ -26,9 +26,12 @@ $adaptationstring = "parent_id is not null";
         <div class="blueHorizontalStrip"></div>
         <div class="mainWrapper">
             <div class="topContent">
+                  <?php
+                if ($this->objUser->isLoggedIn()) {
+                ?>
                 <div class="logOutSearchDiv">
                     <div class="logoutSearchDivLeft">
-                        <div class="nameDiv">Hello Igor Nuk</div>
+                        <div class="nameDiv">?php echo "Hello"."".$this->objUser->fullname(); ?</div>
                         <div class="logoutDiv">
                             <div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
                             <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
@@ -93,6 +96,15 @@ $adaptationstring = "parent_id is not null";
                         </div>
                     </div>
                 </div>
+                <?php
+                                        } else {
+                ?>
+                                            <div id="loginDiv">
+                                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
+                                            </div>
+                <?php
+                                        }
+                ?>
                 <div class="logoAndHeading">
                     <img src="skins/unesco_oer/images/logo-unesco.gif" class="imgFloatRight" alt="logo">
                     <div class="logoText">
