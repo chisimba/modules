@@ -14,11 +14,19 @@ $this->setVar('pageSuppressXML', TRUE);
 //$this->loadClass('button', 'htmlelements');
 
 $table = $this->newObject('htmltable', 'htmlelements');
-$table->startRow();
-$table->addCell($document['department']);
-$table->endRow();
+
+$form = new form('forwardform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'forward')));
+
+$legend = "Faculty";
+
+$fs = new fieldset();
+$fs->setLegend($legend);
+$fs->addContent( $document['department']);
+
+echo $fs->show() . '<br/>';
 
 $table->startRow();
+$table->boarder='1';
 $table->addCell('Current editor:&nbsp;' . $this->objUser->fullname($document['currentuserid']));
 $table->endRow();
 
@@ -35,33 +43,28 @@ foreach ($allUsers as $user) {
     $label = new label(' ' . $user['firstname'] . ',' . $user['surname'], 'user_' . $user['userid']);
 
     $userlist .= ' ' . $checkbox->show() . $label->show() . '<br />';
-}
 
+}
+   
 $table->startRow();
 $table->addCell($userlist);
 $table->endRow();
 
-$legend = "Faculty";
 
-$fs = new fieldset();
-$fs->setLegend($legend);
-$fs->addContent('<b>' . $table->show() . '</b>');
-
-echo $fs->show() . '<br/>';
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'showeditdocument', 'id' => $id));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 //$form->addToForm($button->show());
 
-$forwardbutton = new button('forward', 'Forward');
+$forwardbutton = new button('forward', $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward'));
 $uri = $this->uri(array('action' => 'fowarddocument', 'id' => $id));
 $forwardbutton->setOnClick('javascript: window.location=\'' . $uri . '\'');
 
 
 $fs = new fieldset();
 $fs->setLegend('Forward');
-$fs->addContent($button->show().'&nbsp;'.$forwardbutton->show());
+$fs->addContent($table->show() .$button->show().'&nbsp;'.$forwardbutton->show());
 
 
 echo $fs->show() . '<br/>';

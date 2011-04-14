@@ -14,12 +14,25 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->setVar('pageSuppressXML', TRUE);
 
 $formdata = $this->objformdata->getFormData("outcomesandassessmenttwo", $id);
-if ($formdata != null) {
+
+if ($formdata['id1'] == '0' && $formdata['id2'] == '0' && $formdata['id3'] == '0' && $formdata['id4'] == '0' && $formdata['id5'] == '0' && $formdata['id6'] == '0' && $formdata['id7'] == '0' && $formdata['id8'] == '0') {
+    $mode = "new";
+} else {
     $mode = "edit";
 }
 
-    //print_r($mode);
-    ///die();
+
+///if ($formdata['id1'] = '0' & $formdata['id2'] = '0' & $formdata['id3'] = '0'& $formdata['id4'] = '0'&& $formdata['id5'] = '0'&& $formdata['id6'] = '0'&& $formdata['id7'] = '0'& $formdata['id8'] = '0'){
+// $mode = "new";
+//}/else{
+// $mode = "edit";
+//}
+//foreach ($formdata as $data) {
+//            $data["id" . $formdata] = "0";
+//        }
+
+print_r($mode);
+//die();
 
 $faculty = $this->documents->getFaculty($id);
 if ($faculty == "Science") {
@@ -38,43 +51,43 @@ $header->str = $xtitle;
 
 echo $header->show();
 
-$doclink = new link($this->uri(array("action" => "editdocument","id"=>$id)));
+$doclink = new link($this->uri(array("action" => "editdocument", "id" => $id)));
 $doclink->link = "Document";
 
-$overviewlink = new link($this->uri(array("action" => "showoverview","id"=>$id)));
+$overviewlink = new link($this->uri(array("action" => "showoverview", "id" => $id)));
 $overviewlink->link = "Overview";
 
-$rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone","id"=>$id)));
+$rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone", "id" => $id)));
 $rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
-$rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo","id"=>$id)));
+$rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo", "id" => $id)));
 $rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
-$subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements","id"=>$id)));
+$subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements", "id" => $id)));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
-$outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone","id"=>$id)));
+$outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone", "id" => $id)));
 $outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
-$outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree","id"=>$id)));
+$outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree", "id" => $id)));
 $outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
-$resourceslink = new link($this->uri(array("action" => "showresources","id"=>$id)));
+$resourceslink = new link($this->uri(array("action" => "showresources", "id" => $id)));
 $resourceslink->link = "Resources";
 
-$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts","id"=>$id)));
+$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts", "id" => $id)));
 $collaborationandcontractslink->link = "Collaboration and Contracts";
 
-$reviewlink = new link($this->uri(array("action" => "showreview","id"=>$id)));
+$reviewlink = new link($this->uri(array("action" => "showreview", "id" => $id)));
 $reviewlink->link = "Review";
 
-$contactdetailslink = new link($this->uri(array("action" => "showcontactdetails","id"=>$id)));
+$contactdetailslink = new link($this->uri(array("action" => "showcontactdetails", "id" => $id)));
 $contactdetailslink->link = "Contact Details";
 
-$commentslink = new link($this->uri(array("action" => "showcomments","id"=>$id)));
+$commentslink = new link($this->uri(array("action" => "showcomments", "id" => $id)));
 $commentslink->link = "Comments";
 
-$feedbacklink = new link($this->uri(array("action" => "showfeedback","id"=>$id)));
+$feedbacklink = new link($this->uri(array("action" => "showfeedback", "id" => $id)));
 $feedbacklink->link = "Feedback";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
@@ -82,7 +95,7 @@ $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&n
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         "<b>Outcomes and Assessment - Page Two</b>" . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
-        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() .'&nbsp;|&nbsp;' . $commentslink->show() . '&nbsp;|&nbsp;' .
+        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '&nbsp;|&nbsp;' . $commentslink->show() . '&nbsp;|&nbsp;' .
         $feedbacklink->show() . '<br/>';
 
 $fs = new fieldset();
@@ -94,6 +107,7 @@ echo $fs->show() . '<br/>';
 $legend = "<b>Section D: Outcomes and Assessment - Page Two</b>";
 
 $table = $this->newObject('htmltable', 'htmlelements');
+
 $groupstoselect = array();
 $groups = array();
 $groups[] = array('id' => '1', 'description' => " Identify and solve problems in which responses display that responsible decisions using critical and creative thinking have been made.<br>");
@@ -166,7 +180,7 @@ $form->addToForm('<br/>' . $button->show());
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 if ($faculty == "Science") {
     $uri = $this->uri(array('action' => 'showoutcomesandassessmentoneScience', 'id' => $id));
-}else {
+} else {
     $uri = $this->uri(array('action' => 'showoutcomesandassessmentone', 'id' => $id));
 }
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');

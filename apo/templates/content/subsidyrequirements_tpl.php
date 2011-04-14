@@ -182,8 +182,9 @@ if ($mode == "edit") {
 }
 //$textinput->setExtra("maxlength = 6");
 $textinput->setCss("required");
+$cesmLink->link($this->uri(array('http://intranet.wits.ac.za/Academic/APO/CESMs.htm')));
 $table->startRow();
-$table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from http://intranet.wits.ac.za/Academic/APO/CESMs.htm):', '100');
+$table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from '. $cesmLink->show(), '100');
 $table->endRow();
 
 $table->startRow();
