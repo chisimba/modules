@@ -130,7 +130,7 @@ class unesco_oer extends controller {
 
     }
 
-    public function __FilterAdaptaions() {
+    public function __FilterAdaptations() {
 
         $parentid = $this->getParam('parentid');
         $adaptationstring = 'parent_id = ' . "'$parentid'";
