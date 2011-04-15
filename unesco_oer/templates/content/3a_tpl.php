@@ -3,7 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>UNESCO</title>
+<script type="text/javascript" src="ratingsys.js"></script>
 <link href="style.css" rel="stylesheet" type="text/css">
+<link href="rate_stars.css" rel="stylesheet" type="text/css">
 <!--[if IE]>
     <style type="text/css" media="screen">
     body {
@@ -22,37 +24,27 @@
                 	<div class="nameDiv">Hello Igor Nuk</div>
                     <div class="logoutDiv">
                     	<div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
-                        <img src="images/icon-logout.png" alt="logout" class="imgFloatLeft"> 
+                        <img src="images/icon-logout.png" alt="logout" class="imgFloatLeft">
                     </div>
                     <div class="profileBookmarkGroupsMessengerDiv">
-                    <table class="profileBookmarkGroupsMessengerTable" cellpadding="0" cellspacing="0">
-                        	<tr>
-                            	<td><img src="images/icon-my-profile.png"></td>
-                                <td><a href="#" class="prifileLinks">My Profile</a></td>
-                                <td><img src="images/icon-my-bookmarks.png"></td>
-                                <td><a href="#" class="prifileLinks">My Bookmarks</a></td>
-                                <td><img src="images/icon-my-administration-tools.png"></td>
-                                <td><a href="#" class="prifileLinks">Administration Tools</a></td>
-                            </tr>
-                            <tr>
-                            	<td><img src="images/icon-my-groups.png"></td>
-                                <td><a href="#" class="prifileLinks">My Groups</a></td>
-                                <td><img src="images/icon-my-messenger.png"></td>
-                                <td><a href="#" class="prifileLinks">My Messenger</a></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </table>
-                    	
+                        <a href="#"><img src="images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
+                        <div class="spacingBetweenUserIcons">&nbsp;</div>
+                        <a href="#"><img src="images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
+                        <div class="spacingBetweenUserIcons">&nbsp;</div>
+                        <a href="#"><img src="images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
+                        <div class="spacingBetweenUserIcons">&nbsp;</div>
+                        <a href="#"><img src="images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a><div class="numberNextToUserIcons"></div>
+                        <div class="spacingBetweenUserIcons">&nbsp;</div>
+                        <a href="#"><img src="images/icon-my-messenger.png" alt="My Messages" width="20" height="20" class="userIcons" title="My Messages"></a><div class="numberNextToUserIcons"></div>
                     </div>
                 </div>
                 <div class="logoutSearchDivRight">
                 	<div class="searctInputTextDiv">
-                    	<div class="searchGoButton"><a href=""><img src="images/button-search.png" width="17" height="17" class="searchGoImage"></a>
-                        <a href="" class="searchGoLink">GO</a></div>
+                    	<div class="searchGoButton"><a href=""><img src="images/button-search.png" alt="Search" width="17" height="17" class="searchGoImage"></a>
+                      <a href="" class="searchGoLink">GO</a></div>
                         <div class="searchInputBoxDiv">
-                        	<input type="text" name="" id="" class="searchInput" value="Type search term here...">
-                            <select name="" id="" class="searchDropDown">
+                        	<input type="text" name="" class="searchInput" value="Type search term here...">
+                            <select name="" class="searchDropDown">
                             	<option value="">All</option>
                             </select>
                         </div>
@@ -60,20 +52,20 @@
                         <img src="images/icon-search.png" alt="Search" class="imgFloatLeft">
                     </div>
                     <div class="facebookShareDiv">
-                    	
+
                          <!-- AddThis Button BEGIN -->
                         <div class="shareDiv">
                         <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=jabulane"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=jabulane"></script>
-                        
+
                         <!-- AddThis Button END -->
                         </div>
-                        
+
                         <div class="likeDiv">
                         <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fexample.com%2Fpage%2Fto%2Flike&amp;layout=button_count&amp;show_faces=true&amp;width=50&amp;action=like&amp;font=tahoma&amp;colorscheme=light&amp;"></iframe>
-                        
+
                         </div>
-                        
-                        
+
+
                     </div>
                 </div>
             </div>
@@ -93,11 +85,11 @@
                     <a href="" class="languagesLinks">لعربية</a> |
                     <a href="" class="languagesLinks">中文</a>
                     </div>
-                    <img src="images/icon-languages.png" class="languagesMainIcon">
+                    <img src="images/icon-languages.png" alt="Languages" class="languagesMainIcon">
     			</div>
                 <div class="mainNavigation">
                     <ul id="sddm">
-                         <li class="onState"><a href="#">UNESCO OER PRODUCTS</a></li>
+                         <li class="onStateProducts"><a href="#">UNESCO OER PRODUCTS</a></li>
                          <li class="mainNavPipe">&nbsp;</li>
                          <li><a href="#">PRODUCT ADAPTATIONS</a></li>
 						 <li class="mainNavPipe">&nbsp;</li>
@@ -111,29 +103,35 @@
                     </ul>
                 </div>
         </div>
-        
+
         <div class="mainContentHolder">
         	<div class="subNavigation"></div>
         	<!-- Left Wide column DIv -->
             <div class="LeftWideColumnDiv">
             	<div class="breadCrumb">
-                	<a href="#" class="BreadCrumb blueText noUnderline">UNESCO OER Products</a> | 
-                    <a href="#" class="BreadCrumb blueText noUnderline">Model Curriculum for Journalism Education</a>
+                	<a href="#" class="blueText noUnderline">UNESCO OER Products</a> |
+                    <a href="#" class="blueText noUnderline">Model Curriculum for Journalism Education</a>
                 </div>
-                
-                <div class="innerLeftContent">
-               	  <h2 class="blueText">Model Curricula for Journalism Education</h2><br />
-                    <div class="leftImageHolder">
-                    	<img src="images/3a-placeholder.jpg"><br />
-                        <div class="ratingStars">
-                        	<img src="images/icon-full-star.png">
-                            <img src="images/icon-half-star.png">
-                            <img src="images/icon-empty-star.png" width="18" height="18">
-                            <img src="images/icon-empty-star.png" width="18" height="18">
-                            <img src="images/icon-empty-star.png" width="18" height="18">
+
+                <div class="productsBackgroundColor">
+                	<div class="innerLeftContent">
+               	  			<div class="tenPixelPaddingLeft">
+                        	<h2 class="blueText">Model Curricula for Journalism Education</h2><br>
+
+                            <div class="leftImageHolder">
+                    	<img src="images/3a-placeholder.jpg" alt="Placeholder" width="121" height="156"><br>
+                    	<span id="rateStatus"></span>
+                        <div id="rateMe" title="">
+                            <a id="_1" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
+                            <a id="_2" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
+                            <a id="_3" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
+                            <a id="_4" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
+                            <a id="_5" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
                         </div>
-                        <img src="images/icon-comment-post.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                        <div class="listingAdaptationLinkDiv"><a href="#" class="bookmarkLinks">25 comments</a></div>
+                        <div class="commentsLinkUnderRatingStarsDiv">
+                        <img src="images/icon-comment-post.png" alt="Comments" width="18" height="18"class="smallLisitngIcons">
+                        <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">25 comments</a></div>
+                        </div>
                   </div>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
 <br><br>
@@ -147,14 +145,16 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 <br><br>
 <img src="images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
 <div class="listingAdaptationLinkDivWide"><a href="#" class="adaptationLinks">See existing adaptations of this UNESCO Product (15)</a></div>
-                    <div class="sectionsHead">
-                        <h3 class="floaLeft blueText">Sections:</h3>
+
+
+                   <div class="sectionsHead">
+                        <h3 class="floaLeft greyText">Sections:</h3>
                         <div class="addNewMode">
-                            <img src="images/icon-product-add-node.png" alt="New mode" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="addNewModeLink">add new mode</a></div>
+                            <img src="images/icon-product-add-node.png" alt="New mode" width="18" height="18"class="smallLisitngIcons">
+                            <div class="addNewModeDiv"><a href="#" class="addNewModeLink">add new mode</a></div>
                         </div>
                     </div>
-            
+
                     <div class="unOrderedListDiv">
                     	<ul class="ulMinusPublish">
                             <li><a href="">Foundation of Journalism: Writing</a>
@@ -165,127 +165,135 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                                 </ul>
                             </li>
                         </ul>
-                        <ul class="ulMinusDisabled">
-                            <li class="red"><a href="">Foundation of Journalism: Writing</a>
+                        <ul class="ulMinusPublish">
+                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
                             	<ul class="ulDocument">
-                                	<li class="red"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="red"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="red"><a href="">Foundation of Journalism: Writing</a></li>
+                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
                                 </ul>
                             </li>
                         </ul>
                         <ul class="ulPlusPublish">
+                            <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                        </ul>
+                        <ul class="ulMinusPublish">
                             <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	
-                            </li>
-                        </ul>
-                        <ul class="ulPlusDisabled">
-                            <li class="red"><a href="">Foundation of Journalism: Writing</a>
-                            	
-                            </li>
-                        </ul>
-                        <ul class="ulMinusDraft">
-                            <li class="pink"><a href="">Foundation of Journalism: Writing</a>
                             	<ul class="ulDocument">
-                                	<li class="pink"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="pink"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="pink"><a href="">Foundation of Journalism: Writing</a></li>
+                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                    <ul class="ulMinusPublish">
+                                        <li class="grey"><a href="">Foundation of Journalism: Writing</a>
+                                        	<ul class="ulDocument">
+                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
                                 </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulPlusDraft">
-                            <li class="pink"><a href="">Foundation of Journalism: Writing</a>
-                            	
                             </li>
                         </ul>
                     </div>
 
-                </div>
-                <div class="innerRightContent">
-                	<div class="printEmailDownloadIcons">
-                    	<a href="#"><img src="images/icon-content-top-print.png" width="19" height="15"></a>
-                        <a href="#"><img src="images/icon-content-top-email.png" width="19" height="15"></a>
-                        <a href="#"><img src="images/icon-content-top-download.png" width="19" height="15"></a>
+                        </div>
+
+                	</div>
+
+                	<div class="innerRightContent">
+                    	<div class="twentyPixelPaddingLeft">
+                        	<div class="printEmailDownloadIcons">
+                    	<a href="#"><img src="images/icon-content-top-print.png" alt="Print" width="19" height="15"></a>
+                        <a href="#"><img src="images/icon-content-top-email.png" alt="Email" width="19" height="15"></a>
+                        <a href="#"><img src="images/icon-content-top-download.png" alt="Download" width="19" height="15"></a>
                     </div>
                     <br><br>
-                    <span class="blueText fontBold">Author(s):</span> John Doe
+                    <span class="greyText fontBold">Author(s):</span> John Doe
 					<br><br><br>
-                    <span class="blueText fontBold">UNESCO contacts:</span> Harra Padhy | Abel Caine | Igor Nuk
+                    <span class="greyText fontBold">UNESCO contacts:</span> Harra Padhy | Abel Caine | Igor Nuk
                     <br><br><br>
-                    <span class="blueText fontBold">Published by:</span> UNESCO
+                    <span class="greyText fontBold">Published by:</span> UNESCO
                     <br><br><br>
-                    <span class="blueText fontBold">Category:</span> <a href="#" class="greyTextLink">Journalism Education</a>
+                    <span class="greyText fontBold">Category:</span> <a href="#" class="greyTextLink">Journalism Education</a>
                     <br><br><br>
-                    <span class="blueText fontBold">Keywords:</span> <a href="#" class="greyTextLink">Journalism</a> | <a href="#" class="greyTextLink">Education</a>
+                    <span class="greyText fontBold">Keywords:</span> <a href="#" class="greyTextLink">Journalism</a> | <a href="#" class="greyTextLink">Education</a>
                     <br><br><br>
-                    <span class="blueText fontBold">See language versions of this product:</span>
+                    <span class="greyText fontBold">See language versions of this product:</span>
                     <ul>
                     	<li><a href="#" class="liStyleLink">English</a></li>
                         <li><a href="#" class="liStyleLink">Français</a></li>
                         <li><a href="#" class="liStyleLink">Español</a></li>
                         <li><a href="#" class="liStyleLink">Русский</a></li>
+
                         <li><a href="#" class="liStyleLink">لعربية</a></li>
                         <li><a href="#" class="liStyleLink">中文</a></li>
                     </ul>
-                    <span class="blueText fontBold">Related news:</span>
-                    <br /><br />
+                    <span class="greyText fontBold">Related news:</span>
+                    <br><br>
                     Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
-                    <div class="viewAllnewsBlueDiv"><a href="#" class="blueText noUnderline">See all related news</a></div>
-                    <span class="blueText fontBold">Related events:</span>
-                    <br /><br />
+                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related news</a></div>
+                    <span class="greyText fontBold">Related events:</span>
+                    <br><br>
                     Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
-                    <div class="viewAllnewsBlueDiv"><a href="#" class="blueText noUnderline">See all related events</a></div>
-                    <span class="blueText fontBold">User comments:</span>
-                    <br /><br />
-                    <img src="images/icon-comment-post.png" class="commentIcon">
-                    Integer venenatis, augue vel iaculis commodo, ante nisi bibendum.
-                <div class="viewAllnewsBlueDiv"><a href="#" class="blueText noUnderline">See all comments</a></div>
-
-<!--                    <textarea class="commentTextBox">Leave comment</textarea>-->
-
-                    <?php
-                        $this->loadClass('textarea', 'htmlelements');
-                        $test = new textarea('test');
-                        $test->setCssClass("commentTextBox");
-                        echo $test->show();
-                    ?>
+                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related events</a></div>
+                    <span class="greyText fontBold">User comments:</span>
+                    <br><br>
+                    <div class="commentsDiv">
+                        <div class="communityRelatedInfoIcon"><img src="images/icon-comment-post.png" alt="Comments"></div>
+                        <div class="comments">Integer venenatis, augue vel iaculis commodo, ante nisi bibendum.</div>
+                    </div>
+                    <div class="commentsDiv">
+                        <div class="communityRelatedInfoIcon"><img src="images/icon-comment-post.png" alt="Comments"></div>
+                        <div class="comments">Integer venenatis, augue vel iaculis commodo, ante nisi bibendum.</div>
+                    </div>
+                	<div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all comments</a></div>
+<!--                    <textarea class="commentTextBox">Leave comment</textarea> -->
+			<?php
+		            $this->loadClass('textarea', 'htmlelements');
+		            $test = new textarea('test');
+		            $test->setCssClass("commentTextBox");
+		            echo $test->show();
+		        ?>
                     <div class="commentSubmit">
-                        <div class="submiText">
-<!--                            <a href="" class="searchGoLink">SUBMIT</a>-->
+<!--                        <div class="submiText"><a href="" class="searchGoLink">SUBMIT</a></div> -->
                         <?php
-
                             $this->loadClass('link', 'htmlelements');
                             $testLink = new link($this->uri(array('action' => '3a')));
                             $testLink->cssClass = "searchGoLink";
                             $testLink->link = 'SUBMIT';
                             echo $testLink->show();
                         ?>
-                        </div>
-                        <a href=""><img src="images/button-search.png" width="17" height="17" class="submitCommentImage"></a>
+                        <a href=""><img src="images/button-search.png" alt="Submit" width="17" height="17" class="submitCommentImage"></a>
                     </div>
+
+                        </div>
+                    </div>
+
+
                 </div>
+
             </div>
             <!-- Right column DIv -->
             <div class="rightColumnDiv">
-            	<div class="rightColumnDiv">
             	<div class="featuredHeader blueText">FEATURED UNESCO PRODUCTS</div>
                 <div class="rightColumnBorderedDiv">
                 	<div class="rightColumnContentPadding">
                     	<img src="images/feature-img-holder.gif" alt="Featured" width="136" height="176"><br>
                         <div class="greyListingHeading">Manual for Investigative Journalists</div>
                         <br>
-                        <img src="images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
+                        <img src="images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
                      </div>
                 </div>
                 <div class="spaceBetweenRightBorderedDivs">
                 	<div class="featuredHeader innerPadding blueText">MOST...</div>
                 </div>
-                <!--tabs --->
+                <!--tabs -->
                 	<div class="tabsOffState">ADAPTED</div>
                     <div class="tabsOnState">RATED</div>
                     <div class="tabsOffState">COMMENTED</div>
-                
+
                 <div class="rightColumnBorderedDiv">
                 	<div class="rightColumnContentPadding">
                     	<div class="leftImageTabsList"><img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="placeholder" width="45" height="49"></div>
@@ -317,7 +325,6 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     </div>
                 </div>
                 <br>
-            </div>
         </div>
         </div>
         <!-- Footer-->
@@ -348,14 +355,14 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
             </div>
             <div class="footerBottomText">
             	<img src="images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
-                <a href="" class="footerLink">UNESCO</a> | 
-                <a href="" class="footerLink">Communication and Information</a> | 
-                <a href="" class="footerLink">About OER Platform</a> | 
-                <a href="" class="footerLink">F.A.Q.</a> | 
-                <a href="" class="footerLink">Glossary</a> | 
-                <a href="" class="footerLink">Terms of use</a> | 
-                <a href="" class="footerLink">Contact</a> | 
-                <a href="" class="footerLink">Sitemap</a> | &copy; UNESCO 1995-2011
+                <a href="" class="footerLink">UNESCO</a> |
+                <a href="" class="footerLink">Communication and Information</a> |
+                <a href="" class="footerLink">About OER Platform</a> |
+                <a href="" class="footerLink">F.A.Q.</a> |
+                <a href="" class="footerLink">Glossary</a> |
+                <a href="" class="footerLink">Terms of use</a> |
+                <a href="" class="footerLink">Contact</a> |
+                <a href="" class="footerLink">Sitemap</a>
             </div>
         </div>
     </div>
