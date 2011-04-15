@@ -433,7 +433,7 @@ $adaptationstring = 'parent_id is not null';
 
 
 
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2b_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
                                         $abLink->link =  $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
                                         echo $abLink->show();
                                             ?>
