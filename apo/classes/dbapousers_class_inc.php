@@ -39,11 +39,11 @@ class dbapousers extends dbtable {
      * @access public
      * @return none
      */
+
     public function init() {
         parent::init($this->tablename);
         $this->objUser = $this->getObject('user', 'security');
     }
-
 
     /*
      * adds new user record
@@ -54,11 +54,12 @@ class dbapousers extends dbtable {
      * @access public
      * @return none
      */
+
     public function addUser($record) {
 
         $date = date("Y m d");
         $userid = $this->objUser->userId();
-        
+
         $data = array(
             'name' => $record['name'],
             'role' => $record['role'],
@@ -66,7 +67,7 @@ class dbapousers extends dbtable {
             'date_created' => 'NOW()',
             'userid' => $userid,
             'telephone' => $record['telephone'],
-            'deleted'=>'N',
+            'deleted' => 'N',
         );
 
         $this->insert($data);
@@ -79,6 +80,7 @@ class dbapousers extends dbtable {
      * @return none
      * @access public
      */
+
     public function editUser($id, $data) {
         $this->update("id", $id, $data);
     }
@@ -89,6 +91,7 @@ class dbapousers extends dbtable {
      * @return none
      * @access public
      */
+
     public function deleteUser($id) {
         $this->delete("id", $id);
     }
@@ -98,6 +101,7 @@ class dbapousers extends dbtable {
      * @access public
      * @return array containing all the data for all the users
      */
+
     public function getUsers() {
         return $this->getAll();
     }
@@ -107,6 +111,7 @@ class dbapousers extends dbtable {
      * @access public
      * @return array containing all the data for that users
      */
+
     public function getUser($id) {
         return $this->getRow("id", $id);
     }
@@ -118,36 +123,35 @@ class dbapousers extends dbtable {
      * @access public
      * @return <String> $count The number of users
      */
+
     public function getNumUsers($role = NULL) {
 
-        if(!empty($role)) {
+        if (!empty($role)) {
             $this->getAll("role = '$role'");
-        }
-        else {
+        } else {
             return count($this->getUsers());
         }
     }
 
-    
     /*
      * This method checks whether the user that is being created already exists
      * @param $name The name of the user that is being checked for existence.
      * @access public
      * @return boolean TRUE/FALSE which says whether the user exists or not
      */
-    public function exists($name){
-        $sql=
-        "select * from ".$this->tablename." where name ='$name'";
-        $rows=$this->getArray($sql);
-        if(count($rows) > 0){
+
+    public function exists($name) {
+        $sql =
+                "select * from " . $this->tablename . " where name ='$name'";
+        $rows = $this->getArray($sql);
+        if (count($rows) > 0) {
             return TRUE;
         }
 
         return FALSE;
     }
 
-
-     /**
+    /**
      * returns all the users. Not efficient, need to use limits and include pagination
      * @return <type>
      */
@@ -156,5 +160,26 @@ class dbapousers extends dbtable {
                 "select * from tbl_users";
         return $this->getArray($sql);
     }
+
+     function sendEmail($subject, $message, $recipientEmailAddress) {
+        $recipients = array($recipientEmailAddress);
+        $objMailer = $this->getObject('email', 'mail');
+        $message = html_entity_decode($message);
+        $message = trim($message, "\x00..\x1F");
+        $message = strip_tags($message);
+
+        $objMailer->setValue('to', $recipients);
+        $objMailer->setValue('from', $this->objUser->email());
+        $objMailer->setValue('fromName', $this->objUser->fullname());
+        $objMailer->setValue('subject', $subject);
+        $objMailer->setValue('body', $message);
+
+        $objMailer->setValue('AltBody', $message);
+
+
+        $objMailer->send();
+    }
+
 }
+
 ?>

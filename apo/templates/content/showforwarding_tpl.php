@@ -37,7 +37,7 @@ $allUsers = $objUsers->getAllUsers();
 
 $userlist = "";
 foreach ($allUsers as $user) {
-    $checkbox = new checkbox('selectedusers', $user['userid']);
+    $checkbox = new checkbox('selectedusers[]', $user['userid']);
     $checkbox->value = $user['userid'];
     $checkbox->cssId = 'user_' . $user['id'];
     $checkbox->cssClass = 'user_option';

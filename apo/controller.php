@@ -1787,11 +1787,14 @@ class apo extends controller {
     }
 
     public function __fowarddocument() {
+        $users = $this->getParam("selectedusers");
 
-            $users = $this->getParam("selectedusers[]");
-            echo 'forwading to : ' . $users;
-            die();
-       
+        if (count($users) > 0) {
+            $recipientUserId = $users[0];
+            $recipientEmailAddress = $this->objUser->email($recipientUserId);
+            $recipientEmailAddress = 'david.wafula@wits.ac.za';
+            $this->users->sendEmail('Test APO', 'Test Message', $recipientEmailAddress);
+        }
     }
 
 }
