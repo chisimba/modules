@@ -160,7 +160,7 @@ class unesco_oer extends controller {
 
 
 
-        return "$page";
+        return "results_tpl.php";
 
 
     }
