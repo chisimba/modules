@@ -3,6 +3,7 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
 if ($adaptationstring == null)
 $adaptationstring = "parent_id is not null";
 ?>
@@ -69,10 +70,53 @@ $adaptationstring = "parent_id is not null";
                             <div class="searchGoButton"><a href=""><img src="skins/unesco_oer/images/button-search.png" class="searchGoImage" alt="Search"></a>
                                 <a href="" class="searchGoLink">GO</a></div>
                             <div class="searchInputBoxDiv">
-                                <input type="text" name="" class="searchInput" value="Type search term here...">
+
+
+
+                                  <?php
+//
+
+
+                                        $button = new button('Search','GO');
+                                        $button->setToSubmit();
+
+                                            $textinput = new textinput('SearchInput');
+                                            $textinput->cssClass = "searchInput";
+
+
+
+                                            $filterSearch = new dropdown('SearchFilter');
+                                            $filterSearch->cssClass = "searchDropDown";
+
+                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'));
+                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
+                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_creator', 'unesco_oer'));
+
+
+
+                                            $form = new form('SearchField', $this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => '2b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+
+
+
+
+
+
+
+                                            $form->addToForm($textinput->show());
+                                            $form->addtoform($filterSearch->show());
+                                            $form->addToForm($button->show());
+
+
+                                            echo $form->show();
+
+                                            echo $buildstring;
+
+                                ?>
+<!--
+<!--                                <input type="text" name="" class="searchInput" value="Type search term here...">
                                 <select name="" class="searchDropDown">
                                     <option value="">All</option>
-                                </select>
+                                </select>-->
                             </div>
                             <div class="textNextToRightFloatedImage">Search</div>
                             <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">

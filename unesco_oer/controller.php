@@ -133,6 +133,41 @@ class unesco_oer extends controller {
 
     }
 
+    public function __Search() {
+
+        $SearchField= $this->getParam('SearchInput');
+        $SearchOption = $this->getParam('SearchFilter');
+        $adaptationstring = $this->getParam('adaptationstring');
+         $page = $this->getParam('page');
+
+
+
+        $Buildstring = $SearchOption . ' Like ' . "'%" . $SearchField . "%'";
+         $totalentries = $Buildstring;
+
+
+
+
+
+
+
+
+         $this->setVarByRef("finalstring", $Buildstring);
+            $this->setVarByRef("TotalEntries", $totalentries);
+
+     
+
+
+
+
+        return "$page";
+
+
+    }
+
+
+
+
     public function __FilterAdaptations() {
 
         $parentid = $this->getParam('parentid');
