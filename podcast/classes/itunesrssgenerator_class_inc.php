@@ -137,6 +137,7 @@ class itunesrssgenerator extends object
         
         if (isset($this->rssfeedlink)) {
             $rssInfo[] = "\r\n".'<link>'.$this->rssfeedlink.'</link>';
+            $rssInfo[] = "\r\n".'<atom:link href="'.$this->rssfeedlink.'" rel="self" type="application/rss+xml"/>';
         }
         
         if (isset($this->author)) {
