@@ -105,7 +105,7 @@ class itunesrssgenerator extends object
     public function show()
     {
         $str = '<?xml version="1.0"?>
-<rss xmlns:itunes="http://www.itunes.com/DTDs/Podcast-1.0.dtd" version="2.0">
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>';
         
         $str .= $this->getFeedInfo();
