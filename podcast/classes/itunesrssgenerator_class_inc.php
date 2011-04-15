@@ -158,7 +158,7 @@ class itunesrssgenerator extends object
         
         if ($this->lastBuildDate != '') {
             // Date of Last Build - automatically generated
-            $rssInfo[] = "\r\n".'<lastBuildDate>'.$this->lastBuildDate.'</lastBuildDate>';
+            $rssInfo[] = "\r\n".'<lastBuildDate>'.date('r', strtotime($this->lastBuildDate)).'</lastBuildDate>';
         }
         
         if (isset($this->author) || isset($this->email)) {
@@ -226,7 +226,7 @@ class itunesrssgenerator extends object
                 $rssInfo[] = "\r\n".'<source url="'.$this->rssfeedlink.'"  />';
             }
             
-            $rssInfo[] = "\r\n".'<pubDate>'.$podcast['date'].'</pubDate>';
+            $rssInfo[] = "\r\n".'<pubDate>'.date('r', strtotime($podcast['date'])).'</pubDate>';
             
             
             $itunesInfo[] = "\r\n".'<itunes:author>'.$podcast['author'].'</itunes:author>';
