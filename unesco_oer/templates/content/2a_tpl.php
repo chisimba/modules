@@ -267,7 +267,7 @@ $adaptationstring = 'parent_id is not null';
                         <?php
                                             $products = $this->objDbProducts->getProducts(0, 10);
                                             $filterTheme = new dropdown('ThemeFilter');
-                                            $filterTheme->addoption('All');
+                                            $filterTheme->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                                             foreach ($products as $product) {
                                                 
                                                 $filterTheme->addOption($product['theme']);
@@ -311,7 +311,7 @@ $adaptationstring = 'parent_id is not null';
                         <?php
                                             $products = $this->objDbProducts->getProducts(0, 10);
                                             $filterLang = new dropdown('LanguageFilter');
-                                             $filterLang->addoption('All');
+                                             $filterLang->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                                             foreach ($products as $product) {
                                                
                                                 $filterLang->addOption($product['language']);
@@ -354,7 +354,7 @@ $adaptationstring = 'parent_id is not null';
                         <?php
                                             $products = $this->objDbProducts->getProducts(0, 10);
                                             $filterAuth = new dropdown('AuthorFilter');
-                                              $filterAuth->addoption('All');
+                                              $filterAuth->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                                             foreach ($products as $product) {
                                               
                                                 $filterAuth->addOption($product['creator']);
@@ -397,7 +397,7 @@ $adaptationstring = 'parent_id is not null';
                                             $filterNum = new dropdown('NumFilter');
 
 
-                                            $filterNum->addoption('All');
+                                            $filterNum->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                                             $filterNum->addOption('1');
                                             $filterNum->addOption('2');
                                             $filterNum->addOption('3');
@@ -428,7 +428,18 @@ $adaptationstring = 'parent_id is not null';
                                         <br><br>
                                         <div class="blueBackground rightAlign">
                                             <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                                            <a href="#" class="resetLink">RESET</a>
+                                            <a href="#" class="resetLink">
+                                                 <?php
+
+
+
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2b_tpl.php')));
+                                        $abLink->link =  $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
+                                        echo $abLink->show();
+                                            ?>
+
+
+                                            </a>
                                         </div>
                                         <div class="filterheader">
 
