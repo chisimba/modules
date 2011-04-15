@@ -13,9 +13,11 @@ $this->setVar('pageSuppressXML', TRUE);
 //$this->loadClass('iframe', 'htmlelements');
 //$this->loadClass('button', 'htmlelements');
 
-$table = $this->newObject('htmltable', 'htmlelements');
+$action = 'fowarddocument';
 
 $form = new form('forwardform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'forward')));
+
+$table = $this->newObject('htmltable', 'htmlelements');
 
 $legend = "Faculty";
 
@@ -35,7 +37,7 @@ $allUsers = $objUsers->getAllUsers();
 
 $userlist = "";
 foreach ($allUsers as $user) {
-    $checkbox = new checkbox('selectedusers[]', $user['userid']);
+    $checkbox = new checkbox('selectedusers', $user['userid']);
     $checkbox->value = $user['userid'];
     $checkbox->cssId = 'user_' . $user['id'];
     $checkbox->cssClass = 'user_option';
@@ -45,27 +47,28 @@ foreach ($allUsers as $user) {
     $userlist .= ' ' . $checkbox->show() . $label->show() . '<br />';
 
 }
-   
+
 $table->startRow();
 $table->addCell($userlist);
 $table->endRow();
 
 
+$fs = new fieldset();
+$fs->setLegend('Forward');
+$fs->addContent($table->show());
+$form->addToForm($fs->show().'</br>');
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'showeditdocument', 'id' => $id));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-//$form->addToForm($button->show());
+$form->addToForm($button->show().'&nbsp');
 
 $forwardbutton = new button('forward', $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward'));
-$uri = $this->uri(array('action' => 'fowarddocument', 'id' => $id));
-$forwardbutton->setOnClick('javascript: window.location=\'' . $uri . '\'');
+//$uri = $this->uri(array('action' => 'fowarddocument', 'id' => $id));
+$forwardbutton->setToSubmit();
+
+$form->addToForm($forwardbutton->show());
 
 
-$fs = new fieldset();
-$fs->setLegend('Forward');
-$fs->addContent($table->show() .$button->show().'&nbsp;'.$forwardbutton->show());
-
-
-echo $fs->show() . '<br/>';
+echo $form->show()
 ?>

@@ -251,8 +251,8 @@ class apo extends controller {
             "version" => $version
         );
 
-       $this->documents->updateInfo($id, $data);
-       $this->nextAction('showoverview', array('id' => $id));
+        $this->documents->updateInfo($id, $data);
+        $this->nextAction('showoverview', array('id' => $id));
     }
 
     function __showeditdocument() {
@@ -537,7 +537,7 @@ class apo extends controller {
         }
 
         $selected = $this->getParam('selected');
-        $mode = "new";
+        // $mode = "new";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
@@ -563,15 +563,17 @@ class apo extends controller {
         $formdata["id6"] = "0";
         $formdata["id7"] = "0";
         $formdata["id8"] = "0";
-        /* foreach ($selectedOpts as $opt) {
-          $formdata["id" . $opt] = "1";
-          } */
+
+        //  foreach ($selectedOpts as $opt) {
+        //        $formdata["id" . $opt] = "1";
+        //   }
+
 
         $formdata = serialize($formdata);
-        $issubmit = $this->getParam('next');
-        if (!empty($issubmit)) {
-            $this->objformdata->saveData($id, $formname, $formdata);
-        }
+        //   $issubmit = $this->getParam('next');
+        //   if (!empty($issubmit)) {
+        //         $this->objformdata->saveData($id, $formname, $formdata);
+        //       }
 
         $selected = $this->getParam('selected');
         $mode = "new";
@@ -1741,6 +1743,7 @@ class apo extends controller {
      * @return the template displaying how to add, delete, edit users, and also shows
      * the number of users together with their roles
      */
+
     public function __usermanagement() {
         $users = $this->users->getUsers();
         $this->setVarByRef("users", $users);
@@ -1754,6 +1757,7 @@ class apo extends controller {
      * @access public
      * @return the user template that displays all the users
      */
+
     public function __registeruser() {
         $name = $this->getParam('name');
         $role = $this->getParam('role');
@@ -1764,31 +1768,32 @@ class apo extends controller {
             $errormessage = "User Name already exists";
             die();
         } else {
-            /*$parentid = $this->getParam('parentfolder');
-            $fac = $this->faculties->getFaculty($parentid);
-            $parent = $fac['path'];
-            $path = "";
-            if ($parent) {
-                $path .= $parent . '/' . $name;
-            } else {
-                $path .= $name;
-            }*/
+            /* $parentid = $this->getParam('parentfolder');
+              $fac = $this->faculties->getFaculty($parentid);
+              $parent = $fac['path'];
+              $path = "";
+              if ($parent) {
+              $path .= $parent . '/' . $name;
+              } else {
+              $path .= $name;
+              } */
 
-            $data = array("name" => $name, "role" => $role, "email"=> $email, "telephone" => $telephone);
-            
+            $data = array("name" => $name, "role" => $role, "email" => $email, "telephone" => $telephone);
+
             $this->users->addUser($data);
 
             return $this->nextAction('usermanagement');
         }
     }
 
+    public function __fowarddocument() {
 
-
-    function __fowarddocument(){
-        $users=$this->getParam("selectedusers");
-        echo 'forwading to : '.$users;
-        die();
+            $users = $this->getParam("selectedusers[]");
+            echo 'forwading to : ' . $users;
+            die();
+       
     }
+
 }
 
 ?>
