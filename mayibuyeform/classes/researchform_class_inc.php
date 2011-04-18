@@ -108,6 +108,7 @@ private function buildForm()
 	$objdateLabel =  new label($this->objLanguage->languageText("mod_mayibuye_commentdate","mayibuyeform"),"date"); 
 	$table->addCell($objdateLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objdate->show(),'', 'center', 'left', '');
+	$objForm->addRule('date', $this->objLanguage->languageText("mod_author2_required", "mayibuyeform"), 'required');
         $table->endRow();
 
         $table->startRow();
@@ -134,6 +135,7 @@ private function buildForm()
 	$objEmailaddressLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentemailaddress","mayibuyeform"),"email");
 	$table->addCell($objEmailaddressLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objEmailaddress->show(),'', 'center', 'left', '');
+ 	$objForm->addRule('emailaddress', 'Not a valid Email', 'email');
 	$table->endRow();  
   
 	$table->startRow();
@@ -310,10 +312,9 @@ private function buildForm()
  //Submit button
         $table->startRow();
 	$objButton = new button('send');
-        // Set the button type to submit
-	$objButton->setToSubmit();
+      	$objButton->setToSubmit();
 	$objButton->setValue(' ' . $this->objLanguage->languageText("mod_mayibuye_commentsend", "mayibuyeform") . '');
-	$table->addCell($objButton->show());	
+	//$table->addCell($objButton->show());	
 	$table->endRow();
 	$objForm->addToForm($table->show());
 // captcha
