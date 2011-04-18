@@ -74,9 +74,14 @@ class dbproducts extends dbtable
         return count($child);
     }
 
-    function getMostAdaptedProducts() {
-        $sql = "SELECT parent_id, creator, count(*) AS total FROM tbl_unesco_oer_products WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC LIMIT 3";
-
+    function getMostAdaptedProducts($displayAllMostAdaptedProducts) {
+        //If the more link has been clicked, retrieve all adapted products
+        if($displayAllMostAdaptedProducts == true){
+            $sql = "SELECT parent_id, creator, count(*) AS total FROM tbl_unesco_oer_products WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC";
+        }else{//By default, display only the three most adapted products
+            $sql = "SELECT parent_id, creator, count(*) AS total FROM tbl_unesco_oer_products WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC LIMIT 3";
+        }
+        
         return $this->getArray($sql);
     }
 

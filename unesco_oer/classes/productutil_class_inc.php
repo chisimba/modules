@@ -1,4 +1,5 @@
 <?php
+
 $this->loadClass('link', 'htmlelements');
 //Display errors
 error_reporting(E_ALL);
@@ -37,17 +38,15 @@ class productutil extends object
     public function populateGridView($product)
     {
         $content = '';
-         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
-         $abLink->cssClass = "listingLanguageLinkAndIcon";
-         $abLink->link = $product['title'];
-         
-         $parentid = $product['id'];
-         
-         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
-         $CommentLink->cssClass = 'adaptationLinks';
-         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+        $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
+        $abLink->cssClass = "listingLanguageLinkAndIcon";
+        $abLink->link = $product['title'];
 
+        $parentid = $product['id'];
 
+        $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+        $CommentLink->cssClass = 'adaptationLinks';
+        $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         //TODO Ntsako find out what makes a product new
         if ($product['new'] == 'true') {
@@ -68,7 +67,7 @@ class productutil extends object
                                     <div class="imageBotomFlag"></div>
                                 </div>
                                 <br>
-                                <div class="blueListingHeading">' .  $abLink->show()  . '</div>
+                                <div class="blueListingHeading">' . $abLink->show() . '</div>
                                 <div class="listingLanguageLinkAndIcon">
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                     <div class="listingLanuagesDropdownDiv">
@@ -97,11 +96,11 @@ class productutil extends object
          $abLink->cssClass = "listingLanguageLinkAndIcon";
          $abLink->link = $product['title'];
 
-           $parentid = $product['id'];
+        $parentid = $product['id'];
 
-         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
-         $CommentLink->cssClass = 'adaptationLinks';
-         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+        $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+        $CommentLink->cssClass = 'adaptationLinks';
+        $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -121,7 +120,7 @@ class productutil extends object
                   	</div>
                     <div class="productlistViewLeftFloat">
                         <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">' .$CommentLink->show() . ' </a></div>
+                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">' . $CommentLink->show() . ' </a></div>
                     </div>
                     <div class="productlistViewLeftFloat">
                         <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
@@ -140,7 +139,9 @@ class productutil extends object
                         </div>
                     </div>
                 </div>
-                    ';
+            </div>
+        </div>
+        ';
         return $content;
     }
 
@@ -152,9 +153,9 @@ class productutil extends object
     public function populateAdaptedGridView($adaptedProduct)
     {
         $content = '';
-         $abLink = new link($this->uri(array("action" => 'ViewProduct', 'id' => $adaptedProduct['id'])));
-         $CommentLink->cssClass = 'adaptationLinks';
-         $abLink->link = $adaptedProduct['title'];
+        $abLink = new link($this->uri(array("action" => 'ViewProduct', 'id' => $adaptedProduct['id'])));
+        $CommentLink->cssClass = 'adaptationLinks';
+        $abLink->link = $adaptedProduct['title'];
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -177,34 +178,34 @@ class productutil extends object
                        <div class="imageBotomFlag"></div>
                    </div>
                    <br>
-                   <div class="orangeListingHeading">' .  $abLink->show()  . '</div>';
+                   <div class="orangeListingHeading">' . $abLink->show() . '</div>';
 
         //Check the creator of the adaptation
         if ($adaptedProduct['group_thumbnail'] != NULL) {
             $content .='
                 <div class="adaptedByDiv greenColor">Managed by:</div>
-                            <div class="gridSmallImageAdaptation">
-                       <img src="' . $adaptedProduct['group_thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
-                       <span class="greyListingHeading">' . $adaptedProduct['creator'] . '</span>
-                   </div>
-                   <div class="gridAdaptationLinksDiv">
-                       <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['type'] . '</a> |
-                       <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['country'] . '</a> <br>
-                       <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['language'] . '</a>
-                   </div>
-                    ';
+                <div class="gridSmallImageAdaptation">
+                    <img src="' . $adaptedProduct['group_thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                    <span class="greyListingHeading">' . $adaptedProduct['creator'] . '</span>
+                </div>
+                <div class="gridAdaptationLinksDiv">
+                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['type'] . '</a> |
+                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['country'] . '</a> <br>
+                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['language'] . '</a>
+                </div>
+                ';
         } else {
             $content .='<div class="adaptedByDiv">Adapted by:</div>
-                   <div class="gridSmallImageAdaptation">
-                       <img src="' . $adaptedProduct['institution_thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
-                       <span class="greyListingHeading">' . $adaptedProduct['creator'] . '</span>
-                   </div>
-                   <div class="gridAdaptationLinksDiv">
-                       <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['type'] . '</a> |
-                       <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['country'] . '</a> <br>
-                       <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['language'] . '</a>
-                   </div>
-                    ';
+                <div class="gridSmallImageAdaptation">
+                    <img src="' . $adaptedProduct['institution_thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                    <span class="greyListingHeading">' . $adaptedProduct['creator'] . '</span>
+                </div>
+                <div class="gridAdaptationLinksDiv">
+                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['type'] . '</a> |
+                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['country'] . '</a> <br>
+                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['language'] . '</a>
+                </div>
+                ';
         }
         return $content;
     }
@@ -222,11 +223,11 @@ class productutil extends object
          $abLink->cssClass = "listingLanguageLinkAndIcon";
          $abLink->link = $adaptedProduct['title'];
 
-          $parentid = $adaptedProduct['id'];
+        $parentid = $adaptedProduct['id'];
 
-         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
-         $CommentLink->cssClass = 'adaptationLinks';
-         $CommentLink->link = $adaptedProduct['noOfAdaptations'] . ' Adaptations';
+        $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+        $CommentLink->cssClass = 'adaptationLinks';
+        $CommentLink->link = $adaptedProduct['noOfAdaptations'] . ' Adaptations';
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -250,32 +251,32 @@ class productutil extends object
                         </div>';
         if ($adaptedProduct['group_thumbnail'] != NULL) {
             $content .= '<div class="productAdaptationListViewMiddleColumn">
-                    	<img src="images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
-                        <span class="greenText">Managed by</span>
-                    </div>
-                    <div class="productAdaptationListViewRightColumn">
-                    	<h2 class="greenText">' . $adaptedProduct['creator'] . '</h2>
-                            <br>
-                            <div class="productAdaptationViewDiv">
-                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a> | <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a>
+                                <img src="images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
+                                <span class="greenText">Managed by</span>
+                            </div>
+                            <div class="productAdaptationListViewRightColumn">
+                                <h2 class="greenText">' . $adaptedProduct['creator'] . '</h2>
+                                <br>
+                                <div class="productAdaptationViewDiv">
+                                    <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                    <div class="listingAdaptationLinkDiv">
+                                        <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a> | <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a>
+                                    </div>
+                                </div>
+
+                                <div class="productAdaptationViewDiv">
+                                    <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
+                                    <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                </div>
+
+                                <div class="productAdaptationViewDiv">
+                                    <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
+                                    <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="adaptationLinks">make adaptation</a></div>
                                 </div>
                             </div>
-
-                            <div class="productAdaptationViewDiv">
-                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                                <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                            </div>
-
-                            <div class="productAdaptationViewDiv">
-                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-                                <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                            </div>
                         </div>
-                    </div>
-                    ';
-        }else{
+                        ';
+        } else {
             $content .='<div class="productAdaptationListViewMiddleColumn">
                             <img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
                             Adapted by
@@ -300,7 +301,7 @@ class productutil extends object
                                 <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="adaptationLinks">make adaptation</a></div>
                             </div>
                         </div>
-                    </div>';
+                        </div>';
         }
         return $content;
     }
@@ -313,15 +314,15 @@ class productutil extends object
     public function populateMostAdapted($product)
     {
         $content = '';
-         $parentid = $product['id'];
+        $parentid = $product['id'];
 
-         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
-         $CommentLink->cssClass = 'adaptationLinks';
-         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+        $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+        $CommentLink->cssClass = 'adaptationLinks';
+        $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
-                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $CommentLink->show(). '</a>
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $CommentLink->show() . '</a>
                                 </div>
                                 <div class="tabsListingSpace"></div>';
         return $content;
@@ -332,13 +333,13 @@ class productutil extends object
      * @param <type> $objDbProducts, $objDbGroups, $objDbInstitution
      * @return <type> $content
      */
-    public function displayMostAdapted(&$objDbProducts, &$objDbGroups, &$objDbInstitution)
+    public function displayMostAdapted(&$objDbProducts, &$objDbGroups, &$objDbInstitution, $displayAllMostAdaptedProducts)
     {
         $content = '';
         //TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
         //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
 
-        $MostAdaptedProducts = $objDbProducts->getMostAdaptedProducts();
+        $MostAdaptedProducts = $objDbProducts->getMostAdaptedProducts($displayAllMostAdaptedProducts);
 
         foreach ($MostAdaptedProducts as $childProduct) {
             //Get the original products
@@ -359,6 +360,10 @@ class productutil extends object
             $content .= $this->populateMostAdapted($product);
         }
 
+        $content .= '<div class="rightTextTabsList">
+                <a href="#" class="adaptationLinks">' . $this->viewMostAdaptedLink()->show() . '</a>
+                                        </div>';
+        
         return $content;
     }
 
@@ -378,22 +383,20 @@ class productutil extends object
     }
 
     public function populateMostCommented($product)
-
-
     {
         $content = '';
 
-         $parentid = $product['id'];
+        $parentid = $product['id'];
 
-         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
-         $CommentLink->cssClass = 'adaptationLinks';
-         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+        $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+        $CommentLink->cssClass = 'adaptationLinks';
+        $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
-                                <div class="rightTextTabsList">
-                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' .$CommentLink->show() . '</a>
-                                </div>
-                                <div class="tabsListingSpace"></div>';
+                                        <div class="rightTextTabsList">
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $CommentLink->show() . '</a>
+                                        </div>
+                                        <div class="tabsListingSpace"></div>';
         return $content;
     }
 
@@ -407,10 +410,10 @@ class productutil extends object
         $content = '';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
-                                <div class="rightTextTabsList">
+                                                <div class="rightTextTabsList">
                         	' . $product['title'] . '<br><a href="#" class="adaptationLinks">Rating = ' . $product['rating'] . ' </a>
-                                </div>
-                                <div class="tabsListingSpace"></div>';
+                                                </div>
+                                                <div class="tabsListingSpace"></div>';
         return $content;
     }
 
@@ -465,7 +468,7 @@ class productutil extends object
         if (!($ThemeFilter == Null or $ThemeFilter == 'All'))
             $buildstring .= ' and theme = ' . "'$ThemeFilter'";
 
-       if (!($LangFilter == Null or $LangFilter == 'All'))
+        if (!($LangFilter == Null or $LangFilter == 'All'))
             $buildstring .= ' and language = ' . "'$LangFilter'";
 
 
@@ -535,6 +538,21 @@ class productutil extends object
 
 
         return $Buildstring;
+    }
+
+        /**
+     * This function creates the link to display more adaptations 
+     * @param <type>
+     * @return <type> $moreAdaptedProductsLink->show();
+     */
+    private function viewMostAdaptedLink()
+    {
+
+        $mostAdaptedProductsArray = array("action" => 'viewAllMostAdaptedProducts', "displayAllMostAdaptedProducts" => true);
+        $moreAdaptedProductsLink = new link($this->uri($mostAdaptedProductsArray));
+        $moreAdaptedProductsLink->link = 'more...';
+
+        return $moreAdaptedProductsLink;
     }
 
 }

@@ -101,6 +101,9 @@ class unesco_oer extends controller {
      * Method to show the Home Page of the Module
      */
     public function __home() {
+        $displayAllMostAdaptedProducts = false;
+        $this->setVarByRef('displayAllMostAdaptedProducts', $displayAllMostAdaptedProducts);
+
         return "1a_tpl.php";
     }
 
@@ -134,6 +137,14 @@ class unesco_oer extends controller {
         }
 
     }
+
+    public function __viewAllMostAdaptedProducts(){
+
+        $displayAllMostAdaptedProducts = $this->getParam('displayAllMostAdaptedProducts');
+        $this->setVarByRef('displayAllMostAdaptedProducts', $displayAllMostAdaptedProducts);
+        return "1a_tpl.php";
+    }
+
 
     public function __Search() {
 
@@ -188,7 +199,7 @@ class unesco_oer extends controller {
         $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter, $PageNum, $TotalEntries);
 
 
-         $this->setVarByRef("finalstring", $Buildstring);
+        $this->setVarByRef("finalstring", $Buildstring);
         $this->setVarByRef("TotalEntries", $TotalEntries);
         $this->setVarByRef("adaptationstring", $adaptationstring);
 
@@ -580,6 +591,10 @@ class unesco_oer extends controller {
 
         $this->objDbProductRatings->addRating($id, $rating);
         return $this->__addData();
+    }
+
+        public function __mypage() {
+        return 'myPage.php';
     }
 
 }
