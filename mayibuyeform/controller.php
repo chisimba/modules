@@ -103,7 +103,7 @@ class mayibuyeform extends controller {
                 $telephone . '  ' . "\n" . ' Fax number: ' . $faxnumber2 . '  ' . "\n" . 'Emaill Address' .
                 $email2 . '  ' . "\n" . 'name of Sesignator:' . $nameofresi . '  ' . "\n" . 'Job title' .
                 $jotitle . '  ' . "\n" . 'Name of Organization' . $organizationname . '  ' . "\n" . 'postal address' .
-                $$postadd . '  ' . "\n" . 'Telphone' . $tel . '  ' . "\n" . 'Fax no' . $faxx . '  ' . "\n" . 'Student No' .
+                $postadd . '  ' . "\n" . 'Telphone' . $tel . '  ' . "\n" . 'Fax no' . $faxx . '  ' . "\n" . 'Student No' .
                 $stuno . '  ' . "\n" . 'Staff num' . $staffnum . '  ' . "\n" . 'Department' . $colection);
 
         return "confirm_tpl.php";

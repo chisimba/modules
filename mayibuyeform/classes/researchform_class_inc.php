@@ -55,6 +55,41 @@ $this->loadClass('label', 'htmlelements');
 // load button class
 $this->loadClass('button', 'htmlelements');
 
+$strjs = '<script type="text/javascript">
+		//<![CDATA[
+
+ 
+   
+	/***********************************************
+        *                                              *
+        *              FEEDBACK CLASS                  *
+        *                                              *
+        ***********************************************/
+        //<![CDATA[
+
+		function init () {
+			$(\'input_researchformredraw\').onclick = function () {
+				feedbackredraw();
+			}
+		}
+		function feedbackredraw () {
+			var url = \'index.php\';
+			var pars = \'module=security&action=generatenewcaptcha\';
+			var myAjax = new Ajax.Request( url, {method: \'get\', parameters: pars, onComplete: researchformShowResponse} );
+		}
+		function researchformLoad () {
+			$(\'load\').style.display = \'block\';
+		}
+		function researchformResponse (originalRequest) {
+			var newData = originalRequest.responseText;
+			$(\'researchformcaptchaDiv\').innerHTML = newData;
+		}
+		//]]>
+		</script>';
+
+        $this->appendArrayVar('headerParams', $strjs);
+
+
 }
 
 private function buildForm()
@@ -280,8 +315,20 @@ private function buildForm()
 	$objButton->setValue(' ' . $this->objLanguage->languageText("mod_mayibuye_commentsend", "mayibuyeform") . '');
 	$table->addCell($objButton->show());	
 	$table->endRow();
-
 	$objForm->addToForm($table->show());
+// captcha
+        $objCaptcha = $this->getObject('captcha', 'utilities');
+        $captcha = new textinput('researchform_captcha');
+        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_researchform_captcha');
+
+      	$required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+    	$strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as 	shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . 
+	'<br /><div id="researchformcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() .
+	 $required . '<a href="javascript:researchformredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
+       	 $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
+         $objForm->addRule('feedback_captcha', $this->objLanguage->languageText("mod_request_captcha_unrequired", 'mayibuyeform', 'Captcha cant be empty.Captcha is missing.'), 		'required');
+         	
+	$objForm->addToForm($objButton->show());
 
 	 return $objForm->show();
 
