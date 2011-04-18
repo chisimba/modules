@@ -93,7 +93,7 @@ class productutil extends object
     public function populateListView($product)
     {
         $content = '';
-         $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
          $abLink->cssClass = "listingLanguageLinkAndIcon";
          $abLink->link = $product['title'];
 
@@ -218,7 +218,7 @@ class productutil extends object
     {
         $this->loadClass('link', 'htmlelements');
         $content = '';
-         $abLink = new link($this->uri(array("action" => 'ViewProduct')));
+         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
          $abLink->cssClass = "listingLanguageLinkAndIcon";
          $abLink->link = $adaptedProduct['title'];
 

@@ -125,8 +125,10 @@ class unesco_oer extends controller {
 
         $id = $this->getParam('id');
 
+        $this->setVarByRef('productID', $id);
+
         if ($this->objDbProducts->isAdaptation($id)){
-            return "1a_tpl.php";
+            return "5a_tpl.php";
         }else{
             return "3a_tpl.php";
         }
@@ -556,9 +558,15 @@ class unesco_oer extends controller {
     public function __createCommentSubmit() {
         $id = $this->getParam('id');
         $comment = $this->getParam('newComment');
+        $nextPage = $this->getParam('pageName');
 
-        $this->objDbComments->addComment($id, NULL, $comment);
-        return $this->__addData();
+        $this->objDbComments->addComment($id, $this->objUser->fullname(), $comment);
+
+        if($nextPage != NULL){
+            $this->nextAction($nextPage);
+        }else{
+            return $this->__addData();
+        }
     }
 
         /*

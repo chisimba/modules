@@ -22,20 +22,27 @@
  * @author manie
  */
 
-class commentManager_class_inc extends object
+$this->loadClass('dbcomments','unesco_oer');
+$this->loadClass('textarea','htmlelements');
+$this->loadClass('link','htmlelements');
+
+class commentmanager extends object
 {
-    var $objDbComments;
+    public $objDbComments;
 
-    var $textArea;
+    public $textArea;
 
-    var $submitLink;
+    public $submitLink;
+
+    public $submitLinkString;
 
     public function  init() {
         parent::init();
-        $this->objDbComments = $this->getObject('dbcomments');
-        $this->textArea = $this->getObject('textarea','htmlelements');
-        $this->submitLink = $this->getObject('link','htmlelements');
+        $this->objDbComments = new dbcomments();
+        $this->textArea = new textarea();
+        $this->submitLink = new link();
         $this->submitLink->href = 'none';
+        $this->submitLinkString = '';
     }
 
     public function setCommentTextArea($name, $cssClass) {
@@ -45,18 +52,24 @@ class commentManager_class_inc extends object
         }
     }
 
-    public function setCommentLink($link, $action, $id, $cssClass, $user) {
+    public function setCommentLink($link, $action, $id, $cssClass = null, $user = null) {
         $this->submitLink->href = $this->uri(array('action' => $action, 'id' => $id, 'user' => $user));
         if ($cssClass != null){
             $this->submitLink->cssClass = $cssClass;
         }
         $this->submitLink->link = $link;
+        $this->submitLinkString .= $this->submitLink-show();
     }
 
-    public function showCommentInput(){
+    public function showCommentTextArea(){
         $output = '';
         $output .= $this->textArea->show();
-        $output .= $this->submitLink->show();
+        return $output;
+    }
+
+    public function showCommentLinks(){
+        $output = '';
+        $output .= $this->submitLinkString;
         return $output;
     }
 
