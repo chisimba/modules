@@ -811,41 +811,41 @@ $adaptationstring = $finalstring;
                                     </div>
 
                                     <!-- Right column DIv -->
-                                    <div class="rightColumnDiv">
+<!--                                    <div class="rightColumnDiv">
                                         <div class="rightColumnDiv">
                                             <div class="featuredHeader">FEATURED ADAPTATION</div>
-                                            <div class="rightColumnBorderedDiv">
+                                            <div class="rightColumnBorderedDiv">-->
                             <?php
-                                            $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
-                                            foreach ($featuredProducts as $featuredProduct) {
-                                                //Check if it's an adapted product
-                                                $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
-
-                                                //If the product is an adaptation
-                                                if ($product['parent_id'] != NULL) {
-                                                    $featuredAdaptedProduct = $product;
-                                                }
-                                            }
-
-                                           if ($this->objDbGroups->isGroup($featuredAdaptedProduct['creator'])) {
-                                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($featuredAdaptedProduct['creator']);
-                                                    $featuredAdaptedProduct['group_thumbnail'] = $thumbnail['thumbnail'];
-                                                    $featuredAdaptedProduct['institution_thumbnail'] = NULL;
-                                                } else {
-                                                    $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($featuredAdaptedProduct['creator']);
-                                                    $featuredAdaptedProduct['group_thumbnail'] = NULL;
-                                                    $featuredAdaptedProduct['institution_thumbnail'] = $thumbnail['thumbnail'];
-                                                }
-                                                //Get the number of adaptations
-                                                $featuredAdaptedProduct['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($featuredAdaptedProduct['id']);
-
-                                            echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($featuredAdaptedProduct);
-                            ?>
-                                            <div class="spaceBetweenRightBorderedDivs">
+//                                            $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
+//                                            foreach ($featuredProducts as $featuredProduct) {
+//                                                //Check if it's an adapted product
+//                                                $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
+//
+//                                                //If the product is an adaptation
+//                                                if ($product['parent_id'] != NULL) {
+//                                                    $featuredAdaptedProduct = $product;
+//                                                }
+//                                            }
+//
+//                                           if ($this->objDbGroups->isGroup($featuredAdaptedProduct['creator'])) {
+//                                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($featuredAdaptedProduct['creator']);
+//                                                    $featuredAdaptedProduct['group_thumbnail'] = $thumbnail['thumbnail'];
+//                                                    $featuredAdaptedProduct['institution_thumbnail'] = NULL;
+//                                                } else {
+//                                                    $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($featuredAdaptedProduct['creator']);
+//                                                    $featuredAdaptedProduct['group_thumbnail'] = NULL;
+//                                                    $featuredAdaptedProduct['institution_thumbnail'] = $thumbnail['thumbnail'];
+//                                                }
+//                                                //Get the number of adaptations
+//                                                $featuredAdaptedProduct['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($featuredAdaptedProduct['id']);
+//
+//                                            echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($featuredAdaptedProduct);
+//                            ?>
+<!--                                            <div class="spaceBetweenRightBorderedDivs">
                                                 <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
                                             </div>
                                             <div class="rightColumnBorderedDiv">
-                                                <div class="rightColumnContentPadding">
+                                                <div class="rightColumnContentPadding">-->
                                     <?php
 //                                $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
 //
@@ -875,22 +875,22 @@ $adaptationstring = $finalstring;
 
 
                                     <?php
-                                            $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
-                                            $products = $this->objDbProducts->getFilteredProducts($finalstring);
-                                            for ($i = 0; $i < count($products); $i++) {
-                                                $creator = $products[$i]['creator'];
-                                                if ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator)) {
-                                                    $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
-                                                    $long = $this->objDbInstitution->getInstitutionLongitude($creator);
-                                                    $this->objDbInstitution->MapHandler($im, $lat, $long);
-                                                    $lat = $this->objDbGroups->getGroupLatitude($creator);
-                                                    $long = $this->objDbGroups->getGroupLongitude($creator);
-                                                    $this->objDbGroups->MapHandler($im, $lat, $long);
-                                                }
-                                            }
-                                            imagepng($im, "skins/unesco_oer/images/earthMap.jpg");
-                                    ?>
-                                    <img src="skins/unesco_oer/images/earthMap.jpg" width="200" height="100">
+//                                            $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
+//                                            $products = $this->objDbProducts->getFilteredProducts($finalstring);
+//                                            for ($i = 0; $i < count($products); $i++) {
+//                                                $creator = $products[$i]['creator'];
+//                                                if ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator)) {
+//                                                    $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
+//                                                    $long = $this->objDbInstitution->getInstitutionLongitude($creator);
+//                                                    $this->objDbInstitution->MapHandler($im, $lat, $long);
+//                                                    $lat = $this->objDbGroups->getGroupLatitude($creator);
+//                                                    $long = $this->objDbGroups->getGroupLongitude($creator);
+//                                                    $this->objDbGroups->MapHandler($im, $lat, $long);
+//                                                }
+//                                            }
+//                                            imagepng($im, "skins/unesco_oer/images/earthMap.jpg");
+//                                    ?>
+<!--                                    <img src="skins/unesco_oer/images/earthMap.jpg" width="200" height="100">-->
 
                                 </div>
                             </div>
