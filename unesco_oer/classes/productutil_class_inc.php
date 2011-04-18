@@ -92,9 +92,9 @@ class productutil extends object
     public function populateListView($product)
     {
         $content = '';
-         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
-         $abLink->cssClass = "listingLanguageLinkAndIcon";
-         $abLink->link = $product['title'];
+        $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
+        $abLink->cssClass = "listingLanguageLinkAndIcon";
+        $abLink->link = $product['title'];
 
         $parentid = $product['id'];
 
@@ -219,9 +219,9 @@ class productutil extends object
     {
         $this->loadClass('link', 'htmlelements');
         $content = '';
-         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
-         $abLink->cssClass = "listingLanguageLinkAndIcon";
-         $abLink->link = $adaptedProduct['title'];
+        $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
+        $abLink->cssClass = "listingLanguageLinkAndIcon";
+        $abLink->link = $adaptedProduct['title'];
 
         $parentid = $adaptedProduct['id'];
 
@@ -361,9 +361,9 @@ class productutil extends object
         }
 
         $content .= '<div class="rightTextTabsList">
-                <a href="#" class="adaptationLinks">' . $this->viewMostAdaptedLink()->show() . '</a>
+                <a href="#" class="adaptationLinks">' . $this->viewMostAdaptedLink($displayAllMostAdaptedProducts)->show() . '</a>
                                         </div>';
-        
+
         return $content;
     }
 
@@ -540,17 +540,23 @@ class productutil extends object
         return $Buildstring;
     }
 
-        /**
+    /**
      * This function creates the link to display more adaptations 
      * @param <type>
-     * @return <type> $moreAdaptedProductsLink->show();
+     * @return <type> $moreAdaptedProductsLink;
      */
-    private function viewMostAdaptedLink()
+    private function viewMostAdaptedLink($displayAllMostAdaptedProducts)
     {
+        if ($displayAllMostAdaptedProducts) {
+            $mostAdaptedProductsArray = array("action" => 'viewAllMostAdaptedProducts', "displayAllMostAdaptedProducts" => false);
+            $moreAdaptedProductsLink = new link($this->uri($mostAdaptedProductsArray));
+            $moreAdaptedProductsLink->link = 'less...';
+        } else {
+            $mostAdaptedProductsArray = array("action" => 'viewAllMostAdaptedProducts', "displayAllMostAdaptedProducts" => true);
+            $moreAdaptedProductsLink = new link($this->uri($mostAdaptedProductsArray));
+            $moreAdaptedProductsLink->link = 'more...';
+        }
 
-        $mostAdaptedProductsArray = array("action" => 'viewAllMostAdaptedProducts', "displayAllMostAdaptedProducts" => true);
-        $moreAdaptedProductsLink = new link($this->uri($mostAdaptedProductsArray));
-        $moreAdaptedProductsLink->link = 'more...';
 
         return $moreAdaptedProductsLink;
     }
