@@ -543,37 +543,37 @@ $adaptationstring = $finalstring;
                                                                         </select>-->
                                         </div>
                                         <div class="viewGrid">
-                                            <div class="viewAsDiv">View as: </div>
+<!--                                            <div class="viewAsDiv">View as: </div>-->
 
 
                             <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php')));
-                                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
-                                            echo $abLink->show();
+//                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => 'results_tpl.php')));
+//                                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
+//                                            echo $abLink->show();
                             ?>
 
                                             <div class="gridListDivView">
                                 <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php')));
-                                            $abLink->link = 'GRID';
-                                            echo $abLink->show();
+//                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => 'results_tpl.php')));
+//                                            $abLink->link = 'GRID';
+//                                            echo $abLink->show();
                                 ?>
                                         </div>
 
-                                        <div class="gridListPipe">|</div>
+<!--                                        <div class="gridListPipe">|</div>-->
 
                             <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2b_tpl.php')));
-                                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
-                                            echo $abLink->show();
+//                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => 'resultslist_tpl.php')));
+//                                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
+//                                            echo $abLink->show();
                             ?>
 
                                             <div class="gridListDivView">
 
                                 <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2b_tpl.php')));
-                                            $abLink->link = 'LIST';
-                                            echo $abLink->show();
+//                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => 'resultslist_tpl.php')));
+//                                            $abLink->link = 'LIST';
+//                                            echo $abLink->show();
                                 ?>
 
                                         </div>
