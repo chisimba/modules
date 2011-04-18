@@ -101,8 +101,8 @@ class unesco_oer extends controller {
      * Method to show the Home Page of the Module
      */
     public function __home() {
-        $displayAllMostAdaptedProducts = false;
-        $this->setVarByRef('displayAllMostAdaptedProducts', $displayAllMostAdaptedProducts);
+//        $displayAllMostAdaptedProducts = false;s', $displayAllMostAdaptedProducts
+//        $this->setVarByRef('displayAllMostAdaptedProducts', $displayAllMostAdaptedProducts);
 
         return "1a_tpl.php";
     }
