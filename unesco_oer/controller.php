@@ -137,7 +137,7 @@ class unesco_oer extends controller {
 
         $SearchField= $this->getParam('SearchInput');
         $SearchOption = $this->getParam('SearchFilter');
-        $adaptationstring = $this->getParam('adaptationstring');
+       
          $page = $this->getParam('page');
 
 
@@ -154,6 +154,10 @@ class unesco_oer extends controller {
 
          $this->setVarByRef("finalstring", $Buildstring);
             $this->setVarByRef("TotalEntries", $totalentries);
+              $this->setVarByRef("SearchField", $SearchField);
+               $this->setVarByRef("Searchoption", $SearchOption);
+
+
 
      
 
