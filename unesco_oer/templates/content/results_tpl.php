@@ -90,12 +90,12 @@ $adaptationstring = $finalstring;
 
                                             $filterSearch = new dropdown('SearchFilter');
                                             $filterSearch->cssClass = "searchDropDown";
-                                            $filterSearch->value = $SearchOption;
+                                            $filterSearch->setSelected($SearchOption);
 
                                             $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'));
                                             $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
-                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_creator', 'unesco_oer'));
-
+                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_creator', 'unesco_oer'));
+                                                  $filterSearch->setSelected($SearchOption);
 
 
                                             $form = new form('SearchField', $this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => 'results_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));

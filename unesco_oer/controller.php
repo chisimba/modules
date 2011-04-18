@@ -137,12 +137,17 @@ class unesco_oer extends controller {
 
         $SearchField= $this->getParam('SearchInput');
         $SearchOption = $this->getParam('SearchFilter');
+
+        if ($SearchOption == 'Date')
+            $SearchOptionString = 'created_on';
+        else
+             $SearchOptionString = $SearchOption;
        
          $page = $this->getParam('page');
 
 
 
-        $Buildstring = $SearchOption . ' Like ' . "'%" . $SearchField . "%'";
+        $Buildstring = $SearchOptionString . ' Like ' . "'%" . $SearchField . "%'";
          $totalentries = $Buildstring;
 
 
@@ -155,7 +160,7 @@ class unesco_oer extends controller {
          $this->setVarByRef("finalstring", $Buildstring);
             $this->setVarByRef("TotalEntries", $totalentries);
               $this->setVarByRef("SearchField", $SearchField);
-               $this->setVarByRef("Searchoption", $SearchOption);
+               $this->setVarByRef("SearchOption", $SearchOption);
 
 
 

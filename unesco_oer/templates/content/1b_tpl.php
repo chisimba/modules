@@ -86,7 +86,7 @@ $adaptationstring = "parent_id is null";
 
                                             $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'));
                                             $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
-                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_creator', 'unesco_oer'));
+                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_creator', 'unesco_oer'));
 
 
 

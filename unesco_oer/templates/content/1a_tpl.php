@@ -83,7 +83,6 @@ $adaptationstring = "parent_id is null";
                                 <?php
 //
 
-
                                         $button = new button('Search','GO');
                                         $button->setToSubmit();
 
@@ -97,7 +96,7 @@ $adaptationstring = "parent_id is null";
 
                                             $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'));
                                             $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
-                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_creator', 'unesco_oer'));
+                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_creator', 'unesco_oer'));
 
 
                                           
@@ -106,17 +105,21 @@ $adaptationstring = "parent_id is null";
 
                                             
 
+                                         $Link = new link($this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                                          $Link->link = 'GO';
 
 
 
                                             $form->addToForm($textinput->show());
                                             $form->addtoform($filterSearch->show());
-                                            $form->addToForm($button->show());
+                                           $form->addToForm($button->show());
+                                    //       $form->addToForm($link->show());
 
 
                                             echo $form->show();
+                                       
                                            
-                                            echo $buildstring;
+                                           
                                            
                                 ?>
 
