@@ -95,6 +95,12 @@ class commentapi extends object
 		//start the inputs
 		//textinput for author name
 		$author = new textinput('commentauthor');
+                if ($this->objUser->isLoggedIn() == TRUE) {
+                    $authorName = $this->objUser->fullName($postuserid);
+                } else {
+                    $authorName = "";
+                }
+                $author->setValue($authorName);
 		$authorlabel = new label($this->objLanguage->languageText("mod_blogcomments_yourname", "blogcomments") . ':', 'comm_input_name');
 		$ctbl->startRow();
 		$ctbl->addCell($authorlabel->show());
