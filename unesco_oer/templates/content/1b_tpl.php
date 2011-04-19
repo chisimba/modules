@@ -72,40 +72,40 @@ $adaptationstring = "parent_id is null";
                              <?php
 //
 
-
-                                        $button = new button('Search','GO');
-                                        $button->setToSubmit();
-
-                                            $textinput = new textinput('SearchInput');
-                                            $textinput->cssClass = "searchInput";
-
-
-
-                                            $filterSearch = new dropdown('SearchFilter');
-                                            $filterSearch->cssClass = "searchDropDown";
-
-                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'));
-                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
-                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_creator', 'unesco_oer'));
-
-
-
-                                            $form = new form('SearchField', $this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-
-
-
-
-
-
-
-                                            $form->addToForm($textinput->show());
-                                            $form->addtoform($filterSearch->show());
-                                            $form->addToForm($button->show());
-
-
-                                            echo $form->show();
-
-                                            echo $buildstring;
+//
+//                                        $button = new button('Search','GO');
+//                                        $button->setToSubmit();
+//
+//                                            $textinput = new textinput('SearchInput');
+//                                            $textinput->cssClass = "searchInput";
+//
+//
+//
+//                                            $filterSearch = new dropdown('SearchFilter');
+//                                            $filterSearch->cssClass = "searchDropDown";
+//
+//                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'));
+//                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
+//                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_creator', 'unesco_oer'));
+//
+//
+//
+//                                            $form = new form('SearchField', $this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+//
+//
+//
+//
+//
+//
+//
+//                                            $form->addToForm($textinput->show());
+//                                            $form->addtoform($filterSearch->show());
+//                                            $form->addToForm($button->show());
+//
+//
+//                                            echo $form->show();
+//
+//                                            echo $buildstring;
 
                                 ?>
 <!--                           

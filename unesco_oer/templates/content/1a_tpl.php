@@ -592,7 +592,7 @@ $adaptationstring = "parent_id is null";
 
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
-                                        echo $finalstring;
+                         
                                         $newRow = true;
                                         $count = 0;
                                         $noOfAdaptations = 0;

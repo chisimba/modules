@@ -581,18 +581,33 @@ $adaptationstring = $finalstring;
                                 </div>
 
                     <?php
-                                            $objTable = $this->getObject('htmltable', 'htmlelements');
+
+                                        //Creates chisimba table
+                                        $objTable = $this->getObject('htmltable', 'htmlelements');
 
 
+                                        $products = $this->objDbProducts->getFilteredProducts($finalstring);
 
+                                        $newRow = true;
+                                        $count = 0;
+                                        $noOfAdaptations = 0;
+                                        foreach ($products as $product) {               //populates table
+                                            if ($product['parent_id'] == null) {
+                                                $count++;
+                                                $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
 
+                                                if ($newRow) {
+                                                    $objTable->startRow();
+                                                    $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
+                                                    $newRow = false;
+                                                } else {
+                                                    $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
+                                                }
+                                            }
 
-                                            $products = $this->objDbProducts->getFilteredProducts($finalstring);
-                                            $newRow = true;
-                                            $count = 0;
+                                            else {
 
-                                            foreach ($products as $product) {
-                                                $count++;                       //populates table
+                                                 $count++;                       //populates table
                                                 //Check if the creator is a group or an institution
                                                 if ($this->objDbGroups->isGroup($product['creator'])) {
                                                     $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
@@ -617,16 +632,28 @@ $adaptationstring = $finalstring;
                                                 }
 
 
-                                                //Display 3 products per row
-                                                if ($count == 3) {
-                                                    $newRow = true;
-                                                    $count = 0;
-                                                    $objTable->endRow();
-                                                }
+
+
+
+                                                
+
+
+
+
+
+
+
+
+
                                             }
 
-
-                                            echo $objTable->show();
+                                            if ($count == 3) {
+                                                $newRow = true;
+                                                $objTable->endRow();
+                                                $count = 0;
+                                            }
+                                        }
+                                        echo $objTable->show();
                     ?>
 
                                             <!--
