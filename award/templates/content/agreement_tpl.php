@@ -31,7 +31,7 @@ $objRadio->setSelected(0);
 $objRadio->extra = "onclick = 'javascript:changeSearch(this.value)'";
 
 $tInput = new textinput('filter');
-$objSearchButton = new button('button_search', $this->objLanguage->languageText('word_search', 'award', 'Search'), 'javascript:unitSearchByStr(document.getElementById("input_filter").value)');
+$objSearchButton = new button('button_search', $this->objLanguage->languageText('word_search', 'award', 'Search'), "javascript:unitSearchByStr(document.getElementById('input_filter').value)");
 $objselectUnits = new dropdown('unit');
 
 $unitId = $this->getParam('unitId');
