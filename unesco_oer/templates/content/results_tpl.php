@@ -68,8 +68,10 @@ $adaptationstring = $finalstring;
                     </div>
                     <div class="logoutSearchDivRight">
                         <div class="searctInputTextDiv">
-                            <div class="searchGoButton"><a href=""><img src="skins/unesco_oer/images/button-search.png" class="searchGoImage"></a>
-                                <a href="" class="searchGoLink">GO</a></div>
+                            <div class="searchGoButton"><a href="">
+                                    
+<!--                                    <img src="skins/unesco_oer/images/button-search.png" class="searchGoImage"></a>-->
+                                <a href="" class="searchGoLink"></a></div>
                             <div class="searchInputBoxDiv">
 
 
@@ -123,19 +125,19 @@ $adaptationstring = $finalstring;
                                 </select>-->
                             </div>
                             <div class="textNextToRightFloatedImage">Search</div>
-                            <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">
+<!--                            <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">-->
                         </div>
                         <div class="facebookShareDiv">
 
                             <!-- AddThis Button BEGIN -->
                             <div class="shareDiv">
-                                <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=jabulane"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=jabulane"></script>
+<!--                                <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=jabulane"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=jabulane"></script>-->
 
                                 <!-- AddThis Button END -->
                             </div>
 
                             <div class="likeDiv">
-                                <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fexample.com%2Fpage%2Fto%2Flike&amp;layout=button_count&amp;show_faces=true&amp;width=50&amp;action=like&amp;font=tahoma&amp;colorscheme=light&amp;"></iframe>
+<!--                                <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fexample.com%2Fpage%2Fto%2Flike&amp;layout=button_count&amp;show_faces=true&amp;width=50&amp;action=like&amp;font=tahoma&amp;colorscheme=light&amp;"></iframe>-->
 
                             </div>
 
@@ -584,6 +586,9 @@ $adaptationstring = $finalstring;
 
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
+                                        $objTable->cssClass = "gridListingTable";
+                                         $objTable->width = NULL;
+
 
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);

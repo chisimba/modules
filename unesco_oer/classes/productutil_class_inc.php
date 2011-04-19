@@ -68,14 +68,17 @@ class productutil extends object
                                 </div>
                                 <br>
                                 <div class="blueListingHeading">' . $abLink->show() . '</div>
+                                    <br>
                                 <div class="listingLanguageLinkAndIcon">
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                     <div class="listingLanuagesDropdownDiv">
                                         <select name="" class="listingsLanguageDropDown">
+
                                             <option value="">' . $product['language'] . '</option>
                                         </select>
                                     </div>
                                 </div>
+                                <br>
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                                     <div class="listingAdaptationLinkDiv"> ' . $CommentLink->show() . '</div>

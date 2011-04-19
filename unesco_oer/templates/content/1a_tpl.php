@@ -66,7 +66,8 @@ $adaptationstring = "parent_id is null";
                     </div>
                     <div class="logoutSearchDivRight">
                         <div class="searctInputTextDiv">
-                            <div class="searchGoButton"><a href=""><img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>
+                            <div class="searchGoButton"><a href="">
+<!--                                    <img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>-->
 
 
 
@@ -127,16 +128,16 @@ $adaptationstring = "parent_id is null";
                                                                     <select name="" id="" class="searchDropDown">ption>
                                                                     </select>-->
                                         </div>
-                                        <div class="textNextToRightFloatedImage">Search</div>
-                                        <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">
+<!--                                        <div class="textNextToRightFloatedImage">Search</div>
+                                        <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">-->
                                     </div>
                                     <div class="facebookShareDiv">
 
                                         <!-- AddThis Button BEGIN -->
                                         <div class="shareDiv">
-                                            <a class="addthis_button" href="#"><img src="#" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="#"></script>
+<!--                                            <a class="addthis_button" href="#"><img src="#" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="#"></script>
 
-                                            <!-- AddThis Button END -->
+                                             AddThis Button END -->
                                         </div>
 
                                         <div class="likeDiv">
@@ -589,6 +590,8 @@ $adaptationstring = "parent_id is null";
 <?php
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
+                                        $objTable->cssClass = "gridListingTable";
+                                        $objTable->width = NULL;
 
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
@@ -596,6 +599,7 @@ $adaptationstring = "parent_id is null";
                                         $newRow = true;
                                         $count = 0;
                                         $noOfAdaptations = 0;
+                                        
                                         foreach ($products as $product) {               //populates table
                                             if ($product['parent_id'] == null) {
                                                 $count++;
