@@ -128,7 +128,7 @@ $adaptationstring = "parent_id is null";
                                                                     <select name="" id="" class="searchDropDown">ption>
                                                                     </select>-->
                                         </div>
-<!--                                        <div class="textNextToRightFloatedImage">Search</div>
+                                        <div class="textNextToRightFloatedImage">Search</div><!--
                                         <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">-->
                                     </div>
                                     <div class="facebookShareDiv">
