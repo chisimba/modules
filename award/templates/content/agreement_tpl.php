@@ -84,7 +84,7 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell("<div id='label_filter'>".$this->objLanguage->languageText('mod_lrs_textfilter','award').": </div>","45%");
 $objTable->addCell($tInput->show());
-$objTable->addCell($objSearchButton);
+$objTable->addCell($objSearchButton->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell("<div id='label_sic' style='display: none'>".$this->objLanguage->languageText('mod_lrs_sicfilter', 'award').": </div>","45%");
