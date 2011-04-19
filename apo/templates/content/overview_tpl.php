@@ -89,7 +89,7 @@ $commentslink->link = "Comments";
 $feedbacklink = new link($this->uri(array("action" => "showfeedback","id"=>$id)));
 $feedbacklink->link = "Feedback";
 
-$links = $doclink->show() . '&nbsp;|&nbsp;' . "<b>Overview</b>" . '&nbsp;|&nbsp;' .
+$links =$message.'<br/>'. $doclink->show() . '&nbsp;|&nbsp;' . "<b>Overview</b>" . '&nbsp;|&nbsp;' .
         $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
@@ -246,7 +246,7 @@ $form->extra = 'class="sections"';
 $forwardText = $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward');
 
 $button = new button('forward', $forwardText);
-$uri = $this->uri(array('action'=>'forwarding', 'id'=>$id));
+$uri = $this->uri(array('action'=>'forwarding','from'=>'overview_tpl.php', 'id'=>$id));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

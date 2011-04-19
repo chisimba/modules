@@ -45,15 +45,14 @@ class dbdocuments extends dbtable {
         $sql = "select * from tbl_apo_documents where deleteDoc = 'N'";
         if (!$this->objUser->isadmin()) {
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
-        }
-        else if (!is_null($myId)) {
+        } else if (!is_null($myId)) {
             $sql.=" and (userid = '" . $myId . "')";
         }
 
         $sql.=' order by puid DESC';
         $rows = $this->getArray($sql);
         $docs = array();
-    
+
         foreach ($rows as $row) {
             if (strlen(trim($row['contact_person'])) == 0) {
                 $owner = $this->objUser->fullname($row['userid']);
@@ -98,7 +97,7 @@ class dbdocuments extends dbtable {
                 'version' => $row['version'],
             );
         }
-        
+
         return $docs;
     }
 
@@ -151,7 +150,7 @@ class dbdocuments extends dbtable {
      */
     function deleteDocs($docids) {
         $ids = explode(",", $docids);
-        
+
         foreach ($ids as $id) {
             if (strlen($id) > 0) {
                 $doc = $this->getDocument($id);
@@ -172,9 +171,8 @@ class dbdocuments extends dbtable {
         return $document;
     }
 
-
     function getUnapprovedDocsCount() {
-        $sql = "select count(id) as total from tbl_apo_documents where deleteDoc = 'N' and  active='N'"; /* and rejectDoc= 'N'*/
+        $sql = "select count(id) as total from tbl_apo_documents where deleteDoc = 'N' and  active='N'"; /* and rejectDoc= 'N' */
 
         if (!$this->objUser->isadmin()) {
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
@@ -219,6 +217,11 @@ class dbdocuments extends dbtable {
         $faculty = $faculty[0]['department'];
 
         return $faculty;
+    }
+
+    function changeCurrentDocumentUser($docid, $userid) {
+        $data = array('currentuserid' => $userid);
+        $this->update("id", $docid, $data);
     }
 
 }

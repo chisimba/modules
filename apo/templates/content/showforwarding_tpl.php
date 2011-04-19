@@ -15,7 +15,7 @@ $this->setVar('pageSuppressXML', TRUE);
 
 $action = 'fowarddocument';
 
-$form = new form('forwardform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'forward')));
+$form = new form('forwardform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'forward',"from"=>$from)));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -59,7 +59,7 @@ $fs->addContent($table->show());
 $form->addToForm($fs->show().'</br>');
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-$uri = $this->uri(array('action' => 'showeditdocument', 'id' => $id));
+$uri = $this->uri(array('action' => 'showSection','from'=>$from, 'id' => $id));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show().'&nbsp');
 

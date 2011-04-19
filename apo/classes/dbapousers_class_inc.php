@@ -161,23 +161,23 @@ class dbapousers extends dbtable {
         return $this->getArray($sql);
     }
 
-     function sendEmail($subject, $message, $recipientEmailAddress) {
-        $recipients = array($recipientEmailAddress);
-        $objMailer = $this->getObject('email', 'mail');
-        $message = html_entity_decode($message);
-        $message = trim($message, "\x00..\x1F");
-        $message = strip_tags($message);
-
-        $objMailer->setValue('to', $recipients);
-        $objMailer->setValue('from', $this->objUser->email());
-        $objMailer->setValue('fromName', $this->objUser->fullname());
-        $objMailer->setValue('subject', $subject);
-        $objMailer->setValue('body', $message);
-
-        $objMailer->setValue('AltBody', $message);
+    function sendEmail($subject, $message, $recipientEmailAddress) {
 
 
-        $objMailer->send();
+        $objMail = $this->getObject('email', 'mail');
+//send to multiple addressed
+        $list = array($recipientEmailAddress);
+        $objMail->to = ($list);
+// specify whom the email is coming from
+
+        $objMail->from = $this->objUser->email();
+//Give email subject and body
+//$objMail->subject=$emaill;
+        $objMail->subject = $subject;
+        $objMail->body = $message;
+        $objMail->AltBody = $message;
+// send email
+        $objMail->send();
     }
 
 }

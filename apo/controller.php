@@ -1472,10 +1472,10 @@ class apo extends controller {
 
     public function __forwarding() {
         $id = $this->getParam('id');
-
+        $from = $this->getParam('from');
         $document = $this->documents->getDocument($id);
         $this->setVarByRef("document", $document);
-
+        $this->setVarByRef('from', $from);
         $selected = $this->getParam('selected');
         //$mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1788,13 +1788,38 @@ class apo extends controller {
 
     public function __fowarddocument() {
         $users = $this->getParam("selectedusers");
+        $id = $this->getParam("id");
+        $from = $this->getParam('from');
+        $link = new link($this->uri(array("action" => "showeditdocument", "id" => $id)));
 
         if (count($users) > 0) {
             $recipientUserId = $users[0];
             $recipientEmailAddress = $this->objUser->email($recipientUserId);
             $recipientEmailAddress = 'david.wafula@wits.ac.za';
-            $this->users->sendEmail('Test APO', 'Test Message', $recipientEmailAddress);
+            $subject = $this->objSysConfig->getValue('FWD_DOC_EMAIL_SUB', 'apo');
+            $subject = str_replace("{sender}", $this->objUser->fullname(), $subject);
+            $subject = str_replace("{receiver}", $this->objUser->fullname($recipientUserId), $subject);
+
+            $body = $this->objSysConfig->getValue('FWD_DOC_EMAIL_BD', 'apo');
+
+            $body = str_replace("{link}", $link->href, $body);
+            $body = str_replace("{sender}", $this->objUser->fullname(), $body);
+            $body = str_replace("{receiver}", $this->objUser->fullname($recipientUserId), $body);
+
+
+            $this->users->sendEmail($subject, $body, $recipientEmailAddress);
+            //now update the current user
+            $this->documents->changeCurrentDocumentUser($id, $recipientUserId);
+            $message="Document forwarded. Email has been sent to " . $this->objUser->fullname($recipientUserId);
+            $this->setVarByRef("message", $message);
         }
+
+        return $from;
+    }
+
+    function __showSection() {
+        $from = $this->getParam('from');
+        return $from;
     }
 
 }
