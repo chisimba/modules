@@ -43,7 +43,7 @@ $headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newOERproduct', 'unesco_oer');
 $buttonText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newOERproductBtn', 'unesco_oer');
-$actionURI = $this->uri(array('action' => 'createOERproduct'));
+$actionURI = $this->uri(array('action' => 'createProduct', 'prevAction' => 'addData'));
 $utility->addButtonToTable($headingText, 4, $buttonText, $actionURI, $table);
 
 //new adaptation options

@@ -281,16 +281,6 @@ class unesco_oer extends controller {
     }
 
     /*
-     * Method to display page with data populated for an Adaptation
-     */
-
-    public function __createAdaptation() {
-        $id = $this->getParam('id');
-        $this->setVar('productID', $id);
-        return $this->__productsUi();
-    }
-
-    /*
      * Method to display page with adaptable products
      */
 
@@ -298,11 +288,31 @@ class unesco_oer extends controller {
         return 'newAdaptation_tpl.php';
     }
 
-    public function __createOERproduct() {
-        $id = NULL;
-         $this->setLayoutTemplate('1a_layout_tpl.php');
+    public function __createProduct() {
+        $id = $this->getParam('id');
+        $prevAction = $this->getParam('prevAction');
+        $isNewProduct = TRUE;
+        
+        $this->setVar('productID', $id);
+        $this->setVar('prevAction', $prevAction);
+        $this->setVar('isNewProduct', $isNewProduct);
+
+        $this->setLayoutTemplate('1a_layout_tpl.php');
+
+        return $this->__productsUi();
+    }
+
+    public function __editProduct() {
+        $id = $this->getParam('id');
+        $prevAction = $this->getParam('prevAction');
+        $isNewProduct = FALSE;
 
         $this->setVar('productID', $id);
+        $this->setVar('prevAction', $prevAction);
+        $this->setVar('isNewProduct', $isNewProduct);
+
+        $this->setLayoutTemplate('1a_layout_tpl.php');
+
         return $this->__productsUi();
     }
 
@@ -313,9 +323,11 @@ class unesco_oer extends controller {
 
     public function __uploadSubmit() {
         //Retrieve thumbnail and save it
+        $isNewProduct = $this->getParam('isNewProduct');
+        if ($isNewProduct === NULL) throw new customException ('Product state is not specified');
         $parentID = $this->getParam('parentID');
         $thumbnailPath = '';
-        if ($parentID == NULL) {
+        if ($parentID == NULL || !$this->objDbProducts->isAdaptation($parentID)) {
             $path = 'unesco_oer/products/' . $this->getParam('title') . '/thumbnail/';
             try {
                 $results = $this->uploadFile($path);
@@ -328,6 +340,8 @@ class unesco_oer extends controller {
             $product = $this->objDbProducts->getProductByID($parentID);
             $thumbnailPath = $product['thumbnail'];
         }
+
+        //Determine and Validate the creator
         $institutionCount = $this->objDbInstitution->isInstitution($this->getParam('institution'));
         $groupCount = $this->objDbGroups->isGroup($this->getParam('group'));
         $creatorName = '';
@@ -345,7 +359,6 @@ class unesco_oer extends controller {
 
         //create array for uploading into data base
         $data = array(
-            'parent_id' => $parentID,
             'title' => $this->getParam('title'),
             'creator' => $creatorName,
             'keywords' => trim($this->getParam('keywords')),
@@ -361,9 +374,15 @@ class unesco_oer extends controller {
             'thumbnail' => $thumbnailPath
         );
 
-        $this->objDbProducts->addProduct($data);
+        //determine if a new product must be added or an old one must be updated
+        if ($isNewProduct){
+            array_merge($data,array('parent_id' => $parentID));
+            $this->objDbProducts->addProduct($data);
+        }else{
+            $this->objDbProducts->updateProduct($parentID,$data);
+        }
 
-        return $this->__addData();
+        return $this->nextAction($this->getParam('prevAction'));
     }
 
     /*

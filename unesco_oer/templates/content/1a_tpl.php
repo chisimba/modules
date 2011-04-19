@@ -577,7 +577,7 @@ $adaptationstring = "parent_id is null";
                                         echo $abLink->show();
 ?>
                                 <?php
-                                        $newProductLink = new link($this->uri(array("action" => "createOERproduct")));
+                                        $newProductLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
                                         $newProductLink->link = "New product";
 
                                         echo '&nbsp;|&nbsp;' . $newProductLink->show();

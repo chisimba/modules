@@ -42,7 +42,10 @@ if (count($products) > 0){
     foreach ($products as $product) {
 
         $objIcon->setIcon('edit');
-        $newAdaptationLink = new link($this->uri(array('action' => "createAdaptation" , 'id' => $product['id'])));
+        $uri = $this->uri(array('action' => "createProduct" ,
+                                'id' => $product['id'],
+                                'prevAction' => 'addData'));
+        $newAdaptationLink = new link($uri);
         $newAdaptationLink->link = $objIcon->show();
 
         $table->startRow();

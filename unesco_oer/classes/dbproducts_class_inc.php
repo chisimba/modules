@@ -65,6 +65,13 @@ class dbproducts extends dbtable
         $this->insert($productArray);
     }
 
+    function updateProduct($productID, $productArray)
+    {
+        $product = $this->getProductByID($productID);
+
+        $this->update('puid', $product['puid'], $productArray   );
+    }
+
     //TODO Ntsako check the hierichal storage of data to make this more efficient
     function getNoOfAdaptations($parentId)
     {

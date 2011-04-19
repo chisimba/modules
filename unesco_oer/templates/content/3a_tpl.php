@@ -212,7 +212,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     	<div class="twentyPixelPaddingLeft">
                         	<div class="printEmailDownloadIcons">
                         <?php
-                            $uri = $this->uri(array('action' => '#', 'id' => $productID , 'pageName' => 'home'));
+                            $uri = $this->uri(array('action' => 'editProduct', 'id' => $productID , 'prevAction' => 'home'));
                             $editLink = new link($uri);
                             $editLink->cssClass = "searchGoLink";
                             $linkText = "edit product";

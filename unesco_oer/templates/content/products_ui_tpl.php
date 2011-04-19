@@ -95,7 +95,7 @@ $productLanguages = $this->objDbProductLanguages->getProductLanguages();
 $utility->addDropDownToTable($title, 4, 'language', $productLanguages, $product['language'], 'code', $table);
 
 //field for the thumbnail
-if ($productID == NULL) {
+if ($productID == NULL || !($this->objDbProducts->isAdaptation($productID) || $isNewProduct)) {
     $objUpload = $this->getObject('uploadinput', 'filemanager');
     $table->startRow();
     $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
@@ -110,7 +110,9 @@ $button->setToSubmit();
 //createform, add fields to it and display
 $uri = $this->uri(array(
             'action' => "uploadSubmit",
-            'parentID' => $productID));
+            'parentID' => $productID,
+            'prevAction' => $prevAction,
+            'isNewProduct' => $isNewProduct));
 $form_data = new form('add_products_ui', $uri);
 //TODO find out what this does.
 $form_data->extra = 'enctype="multipart/form-data"';
