@@ -31,7 +31,7 @@ $objRadio->setSelected(0);
 $objRadio->extra = "onclick = 'javascript:changeSearch(this.value)'";
 
 $tInput = new textinput('filter');
-$tInput->extra = " onkeyup='javascript:unitSearchByStr(this.value)'";
+$objSearchButton = new button('search', $this->objLanguage->languageText('word_search', 'Search'), 'javascript:unitSearchByStr(this.value)');
 $objselectUnits = new dropdown('unit');
 
 $unitId = $this->getParam('unitId');
@@ -84,6 +84,7 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell("<div id='label_filter'>".$this->objLanguage->languageText('mod_lrs_textfilter','award').": </div>","45%");
 $objTable->addCell($tInput->show());
+$objTable->addCell($objSearchButton);
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell("<div id='label_sic' style='display: none'>".$this->objLanguage->languageText('mod_lrs_sicfilter', 'award').": </div>","45%");
