@@ -1,9 +1,9 @@
 <?php
 // Table Name
-$tablename = 'tbl_imagevault_meta';
+$tablename = 'tbl_imagevault_meta_exif';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Imagevault metadata', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Imagevault exif metadata', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -19,31 +19,31 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
-    'filesize' => array(
+    'applicationnotes' => array(
         'type' => 'text',
         'length' => 100,
         ),
-    'filename' => array(
+    'exposuretime' => array(
         'type' => 'text',
         'length' => 100,
         ),
-    'cam_man' => array(
+    'fnumber' => array(
         'type' => 'text', 
-        'length' => 255,
+        'length' => 100,
         ),
-	'cam_model' => array(
+	'exposureprogram' => array(
 		'type' => 'text',
-		'length' => 255,
+		'length' => 100,
 		),
-	'exp_time' => array(
+	'spectralsensitivity' => array(
+		'type' => 'text',
+		'length' => 100,
+		),
+	'iso' => array(
 		'type' => 'text',
 		'length' => 50,
 		),
-	'fnumber' => array(
-		'type' => 'text',
-		'length' => 50,
-		),
-	'usercomment' => array(
+	'' => array(
 		'type' => 'text',
 		'length' => 255,
 		),

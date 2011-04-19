@@ -119,9 +119,49 @@ class dbvault extends dbtable
     }
     
     public function insertKeywords($kinsarr) {
-        $this->changeTable('tbl_imagevault_keywords');
+        $this->changeTable('tbl_imagevault_meta_keywords');
         $kinsarr['datecreated'] = $this->now();
         return $this->insert($kinsarr);
+    }
+    
+    public function insertFileData($insarr) {
+        $this->changeTable('tbl_imagevault_meta_file');
+        return $this->insert($insarr);
+    }
+    
+    public function insertComputed($insarr) {
+        $this->changeTable('tbl_imagevault_meta_computed');
+        return $this->insert($insarr);
+    }
+    
+    public function insertGPS($insarr) {
+        $this->changeTable('tbl_imagevault_meta_gps');
+        return $this->insert($insarr);
+    }
+    
+    public function insertIFD0Data($insarr) {
+        $this->changeTable('tbl_imagevault_meta_ifd0');
+        return $this->insert($insarr);
+    }
+    
+    public function insertIFD1Data($insarr) {
+        $this->changeTable('tbl_imagevault_meta_ifd1');
+        return $this->insert($insarr);
+    }
+    
+    public function insertSubIFDData($insarr) {
+        $this->changeTable('tbl_imagevault_meta_subifd');
+        return $this->insert($insarr);
+    }
+    
+    public function insertThumbData($insarr) {
+        $this->changeTable('tbl_imagevault_meta_thumbnail');
+        return $this->insert($insarr);
+    }
+    
+    public function insertExifData($insarr) {
+        $this->changeTable('tbl_imagevault_meta_exif');
+        return $this->insert($insarr);
     }
     
     public function changeTable($table) {

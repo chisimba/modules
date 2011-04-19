@@ -119,21 +119,16 @@ class imagevault extends controller
 
             case 'main' :
                 $userid = 1;
-                foreach(glob('/var/www/example_photos/*.jpg') as $image) {
+                foreach(glob('/var/www/example_photos/*') as $image) {
                     $this->objOps->insertImageData($userid, $image);
                 }
                 break;
 
             case 'exif' :
-                foreach(glob('/var/www/example_photos/*.jpg') as $image) {
-                    //echo $image."<br />";
-                    //echo $this->objExif->getImageType($image);
-                    var_dump($this->objExif->readHeaders($image));
-                    // var_dump($this->objExif->readHeadersByKey($image, "IFD0"));
-                    //echo $this->objExif->getExifThumb($image, 200, 200);
-                    echo "<br />";
-                    die();
+                foreach(glob('/var/www/example_photos/*') as $image) {
+                    $data[] = $this->objOps->getCommonExifJson($image);
                 }
+                var_dump($data);
                 break;
                 
             case 'iptc' :
