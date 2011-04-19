@@ -218,7 +218,9 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                             $editLink->cssClass = "searchGoLink";
                             $linkText = "edit product";
                             $editLink->link = $linkText;
-                            echo $editLink->show();
+                            if ($this->objUser->isLoggedIn()) {
+                                echo $editLink->show();
+                            }
                             ?>
                     	<a href="#"><img src="images/icon-content-top-print.png" width="19" height="15"></a>
                         <a href="#"><img src="images/icon-content-top-email.png" width="19" height="15"></a>

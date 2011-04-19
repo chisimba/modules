@@ -1,4 +1,6 @@
 <?php
+if (!$GLOBALS['kewl_entry_point_run'])
+	die("you cannot view directly");
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

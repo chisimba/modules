@@ -262,7 +262,7 @@ class unesco_oer extends controller {
     }
 
     public function requiresLogin($action) {
-        $required = array('addData');
+        $required = array('addData','editProduct');
         if (in_array($action, $required)) {
             return TRUE;
         } else {
@@ -337,11 +337,18 @@ class unesco_oer extends controller {
             $path = 'unesco_oer/products/' . $this->getParam('title') . '/thumbnail/';
             try {
                 $results = $this->uploadFile($path);
+                $thumbnailPath = 'usrfiles/' . $results['path'];
             } catch (customException $e) {
-                echo customException::cleanUp();
-                exit();
+                if (strpos($e->getMessage(),"nouploadedfileprovided")){
+                    $product = $this->objDbProducts->getProductByID($parentID);
+                    $thumbnailPath = $product['thumbnail'];
+                }else{
+                    //echo customException::cleanUp();
+                    exit();
+                }
+                
             }
-            $thumbnailPath = 'usrfiles/' . $results['path'];
+            
         } else {
             $product = $this->objDbProducts->getProductByID($parentID);
             $thumbnailPath = $product['thumbnail'];
@@ -469,6 +476,14 @@ class unesco_oer extends controller {
 
     public function __featuredProductUI() {
         return "featuredProductUI_tpl.php";
+    }
+
+    /*
+     * method to dispaly page to create a new unesco featured product
+     */
+
+    public function __featuredAdaptationUI() {
+        return "featuredAdaptationUI_tpl.php";
     }
 
     /*
