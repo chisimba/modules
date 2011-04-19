@@ -874,7 +874,7 @@ $adaptationstring = "parent_id is not null";
                                         $lat = $this->objDbGroups->getGroupLatitude($creator);
                                         $long = $this->objDbGroups->getGroupLongitude($creator);
                                         $this->objDbGroups->MapHandler($im, $lat, $long);
-                                    }
+                                        }
                                 }
                                 imagepng($im, "skins/unesco_oer/images/earthMap.jpg");
                             ?>

@@ -52,16 +52,6 @@ class featuredproductutil extends object
         return $content;
     }
 
-    //The function below does not need to be here
-
-
-
-    function getlocationcoords($lat, $lon, $width, $height)
-    {
-        $x = (($lon + 180) * ($width / 360));
-        $y = ((($lat * -1) + 90) * ($height / 180));
-        return array("x" => round($x), "y" => round($y));
-    }
 
     public function displayFeaturedAdaptedProduct($featuredAdaptedProduct)
     {

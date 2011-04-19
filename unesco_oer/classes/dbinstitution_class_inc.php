@@ -53,7 +53,7 @@ class dbinstitution extends dbtable {
     }
    
    function getAllInstitution(){
-        $sql=" select id from tbl_unesco_oer_institution";
+        $sql=" select * from tbl_unesco_oer_institution";
         $InstitutionNames=$this->getArray($sql);
         return $InstitutionNames;
     }
@@ -77,12 +77,12 @@ class dbinstitution extends dbtable {
     function MapHandler($im,$lat,$long) {
        if (empty($long))$long = 28.0316;
         if (empty($lat))$lat = -26.19284;
-        $red = imagecolorallocate($im, 255, 0, 0);
+        $red = imagecolorallocate($im, 255, 0,0);
         $scale_x = imagesx($im);
         $scale_y = imagesy($im);
         $pt = $this->getlocationcoords($lat, $long, $scale_x, $scale_y);
         imagefilledrectangle($im, $pt["x"] - 2, $pt["y"] - 2, $pt["x"] + 2, $pt["y"] + 2, $red);
-        header("Content-Type: image/png");
+         header("Content-Type: image/png");
        }
 
     public function getInstitutionThumbnail($name) {
@@ -104,6 +104,25 @@ class dbinstitution extends dbtable {
         }
         //return count($this->getArray($sql));
     }
+
+
+    //this function delete  a record
+
+    function deleteInstitution($puid,$name){
+        $sql="DELETE FROM tbl_unesco_oer_institution WHERE puid='$puid' AND name='$name'";
+        $this->getArray($sql);
+        }
+
+     //this function edit the instituin name
+        //TODO MUST ALSO EDIT THUMBNAIL
+    function editInstitution($id,$puid,$loclat,$loclong,$name){
+       return $this->update(
+                    'puid',
+                     $puid,
+                     array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'id'=>$id)
+            );
+        }
+  
 }
 
 ?>

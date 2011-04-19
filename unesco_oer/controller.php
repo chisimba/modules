@@ -14,6 +14,8 @@ class unesco_oer extends controller {
     public $objDbComments;
     public $objUser;
     public $objDbProductRatings;
+ 
+
     /**
      *
      * @var string $objLanguage String object property for holding the
@@ -38,6 +40,7 @@ class unesco_oer extends controller {
         $this->objDbComments = $this->getObject('dbcomments');
         $this->objProductRatings = $this->getObject('dbproductratings');
         $this->objUser = $this->getObject('user', 'security');
+       
     }
 
     /**
@@ -122,8 +125,11 @@ class unesco_oer extends controller {
     public function __3a() {
         return "3a_tpl.php";
     }
+    public function __4(){
+        return "4_tpl.php";
+    }
 
-    
+
     public function __ViewProduct() {
 
         $id = $this->getParam('id');
@@ -612,9 +618,40 @@ class unesco_oer extends controller {
         return $this->__addData();
     }
 
-        public function __mypage() {
-        return 'myPage.php';
+
+    public function __deleteInstitution(){
+        $puid=$this->getParam('puid');
+        $name=$this->getParam('name');
+        $this->objDbInstitution->deleteInstitution($puid,$name);
+        return 'editInstitutionUI1_tpl.php';
     }
+
+    public function __cancelEditInstitution(){
+       return 'addData_tpl.php';
+    }
+
+    public function __editInstitution(){
+        $puid = $this->getParam('puid');
+        $id = $this->getParam('id');
+        $name = $this->getParam('name');
+        $loclat = $this->getParam('loclat');
+        $loclong = $this->getParam('loclong');
+        //$thumbnail=$this->getParam('thumbnail');
+        $this->objDbInstitution->editInstitution($id,$puid,$loclat,$loclong,$name);
+        return "editInstitutionUI1_tpl.php";
+        }
+
+     public function __editInstitutionUI2(){
+         $puid = $this->getParam('puid');
+         $id = $this->getParam('id');
+         $this->setVar('InstitutionPUID', $puid);
+         $this->setVar('InstitutionID', $id);
+         return 'editInstitutionUI2_tpl.php';
+     }
+
+     public function __editInstitutionUI1(){
+         return 'editInstitutionUI1_tpl.php';
+     }
 
 }
 
