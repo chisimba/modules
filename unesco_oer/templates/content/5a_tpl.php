@@ -92,9 +92,25 @@
     			</div>
                 <div class="mainNavigation">
                     <ul id="sddm">
-                         <li><a href="#">UNESCO OER PRODUCTS</a></li>
+                         <li>
+                                      <?php
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                            $abLink->link = 'UNESCO OER PRODUCTS';
+                                            echo $abLink->show();
+                            ?>
+
+
+                         </li>
                          <li class="mainNavPipe">&nbsp;</li>
-                         <li class="onStateAdaptations"><a href="#">PRODUCT ADAPTATIONS</a></li>
+                         <li class="onStateAdaptations">
+                             
+                                                          <?php
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
+                                            $abLink->link = 'Product Adaptations';
+                                            echo $abLink->show();
+                            ?>
+                             
+<!--                             <a href="#">PRODUCT ADAPTATIONS</a></li>-->
 						 <li class="mainNavPipe">&nbsp;</li>
                          <li><a href="#">GROUPS</a></li>
 						 <li class="mainNavPipe">&nbsp;</li>
