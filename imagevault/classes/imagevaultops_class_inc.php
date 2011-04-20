@@ -221,7 +221,7 @@ class imagevaultops extends object {
     public function insertImageData($userid, $image) {
         $meta = $this->getMetaFromImage($image);
         
-        var_dump($meta);
+        // var_dump($meta);
         $data = file_get_contents($image);
         $hash = sha1($data);
         $thumb = $this->objExif->getExifThumb($image, 200, 200);
