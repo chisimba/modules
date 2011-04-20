@@ -124,11 +124,10 @@ class metadata extends controller
                     echo $image."<br />";
                     $contents = file_get_contents($image);
                     $hash = sha1($contents);
-                    echo $hash;
-                    echo "<br />";
+                    
                     $this->objExif->getImageType($image);
-                    var_dump($this->objExif->readHeaders($image));
-                    var_dump($this->objExif->readHeadersByKey($image, "IFD0"));
+                    var_dump($this->objExif->readHeaders($image, FALSE));
+                    //var_dump($this->objExif->readHeadersByKey($image, "IFD0"));
                     echo $this->objExif->getExifThumb($image, 200, 200);
                 }
                 break;
@@ -143,7 +142,8 @@ class metadata extends controller
                     $copyarr = $tagarr['2#116'];
                     $keywords = $tagarr['2#025'];
                     $data = array_merge($copyarr, $keywords);
-                    var_dump($data);
+                    var_dump($tagarr);
+                    var_dump($this->objIPTC->getTag('originating_program'));
                     echo "<br /><br />";
                 }
                 break;

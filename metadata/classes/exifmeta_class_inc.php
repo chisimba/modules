@@ -148,8 +148,11 @@ class exifmeta extends object {
      * @param string image
      * @return array of EXIF data
      */
-    public function readHeaders($image) {
+    public function readHeaders($image, $formattedarray = TRUE) {
         $exif = @exif_read_data($image, 0, true);
+        if($formattedarray == FALSE) {
+            return $exif;
+        }
         foreach ($exif as $key => $section) {
             foreach ($section as $name => $val) {
                 $data[] = array($key.$name, $val);
