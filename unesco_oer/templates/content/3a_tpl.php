@@ -26,9 +26,12 @@
 	<div class="blueHorizontalStrip"></div>
     <div class="mainWrapper">
     	<div class="topContent">
+             <?php
+                if ($this->objUser->isLoggedIn()) {
+                ?>
         	<div class="logOutSearchDiv">
             	<div class="logoutSearchDivLeft">
-                	<div class="nameDiv">Hello Igor Nuk</div>
+                	<div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
                     <div class="logoutDiv">
                     	<div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
                         <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
@@ -36,6 +39,9 @@
                     <div class="profileBookmarkGroupsMessengerDiv">
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
+                      
+                        
+                        
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger" width="20" height="20" class="userIcons" title="My Messenger"></a>
@@ -72,6 +78,18 @@
                     </div>
                 </div>
             </div>
+
+
+
+            <?php
+                                        } else {
+?>
+                            <div id="loginDiv">
+                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
+                            </div>
+<?php
+                                        }
+?>
           	<div class="logoAndHeading">
             	<img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
                  <div class="logoText">

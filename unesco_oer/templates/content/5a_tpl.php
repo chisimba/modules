@@ -26,9 +26,12 @@
 	<div class="blueHorizontalStrip"></div>
     <div class="mainWrapper">
     	<div class="topContent">
+             <?php
+                if ($this->objUser->isLoggedIn()) {
+                ?>
         	<div class="logOutSearchDiv">
             	<div class="logoutSearchDivLeft">
-                	<div class="nameDiv">Hello Igor Nuk</div>
+                	<div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
                     <div class="logoutDiv">
                     	<div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
                         <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
@@ -72,6 +75,16 @@
                     </div>
                 </div>
             </div>
+
+            <?php
+                                        } else {
+?>
+                            <div id="loginDiv">
+                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
+                            </div>
+<?php
+                                        }
+?>
           	<div class="logoAndHeading">
             	<img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
                  <div class="logoText">
