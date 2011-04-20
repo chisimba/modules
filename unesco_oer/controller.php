@@ -333,7 +333,6 @@ class unesco_oer extends controller {
         if ($isNewProduct === NULL) throw new customException ('Product state is not specified');
         $parentID = $this->getParam('parentID');
         $thumbnailPath = '';
-        if (TRUE) throw new customException ($this->getParam('fileupload'));
         if (!$this->objDbProducts->isAdaptation($parentID) && ($isNewProduct == ($parentID == null))){
             $path = 'unesco_oer/products/' . $this->getParam('title') . '/thumbnail/';
             try {
