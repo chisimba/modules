@@ -125,10 +125,10 @@ class imagevault extends controller
                 break;
 
             case 'exif' :
+               $userid = 1;
                 foreach(glob('/var/www/example_photos/*') as $image) {
-                    $data[] = $this->objOps->getCommonExifJson($image);
+                    $this->objOps->getCommonExifJson($image, $userid);
                 }
-                var_dump($data);
                 break;
                 
             case 'iptc' :

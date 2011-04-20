@@ -260,6 +260,8 @@ class imagevaultops extends object {
         $this->insertThumbnail($meta, $imgid, $userid);
         // EXIF section
         $this->insertExif($meta, $imgid, $userid);
+        // Generate the RDF file
+        $this->getExifRDF($image, $userid);
         
         return $imgid;
     }
@@ -833,9 +835,18 @@ class imagevaultops extends object {
         return $alt;
     }
     
-    public function getCommonExifJson($image) {
-        $blah = exec("exiftool -c -j $image", $return);
-        return $return;
+    private function getExifRDF($image, $userid) {
+        $fname = basename($image);
+        $fname = explode(".", $fname);
+        $file = $this->objConfig->getcontentBasePath()."imagevaultrdf/".$userid."/".$fname[0].".rdf";
+        if(!file_exists($this->objConfig->getcontentBasePath()."imagevaultrdf/")) {
+           mkdir($this->objConfig->getcontentBasePath()."imagevaultrdf/", 0777);
+        }
+        if(!file_exists($this->objConfig->getcontentBasePath()."imagevaultrdf/".$userid."/")) {
+            mkdir($this->objConfig->getcontentBasePath()."imagevaultrdf/".$userid."/", 0777);
+        }
+        @exec("exiftool -x Directory -x ExifToolVersion -x FilePermissions -H -b -X $image > $file", $return);
+        return $fname;
     }
 
 }
