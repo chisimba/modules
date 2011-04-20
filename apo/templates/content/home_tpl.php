@@ -83,5 +83,6 @@ if (count($documents) > 0) {
         }
     }
 }
+
 echo $table->show();
 ?>

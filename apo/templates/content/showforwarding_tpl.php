@@ -15,7 +15,7 @@ $this->setVar('pageSuppressXML', TRUE);
 
 $action = 'fowarddocument';
 
-$form = new form('forwardform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'forward',"from"=>$from)));
+$form = new form('forwardform', $this->uri(array('action' => $action, 'formname'=>'forward',"from"=>$from)));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -26,6 +26,7 @@ $fs->setLegend($legend);
 $fs->addContent( $document['department']);
 
 echo $fs->show() . '<br/>';
+
 
 $table->startRow();
 $table->boarder='1';
@@ -52,19 +53,17 @@ $table->startRow();
 $table->addCell($userlist);
 $table->endRow();
 
-
 $fs = new fieldset();
 $fs->setLegend('Forward');
 $fs->addContent($table->show());
 $form->addToForm($fs->show().'</br>');
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-$uri = $this->uri(array('action' => 'showSection','from'=>$from, 'id' => $id));
+$uri = $this->uri(array('action' => 'showSection','from'=>$from, 'id' => $id, 'mode'=> $mode));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show().'&nbsp');
 
 $forwardbutton = new button('forward', $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward'));
-//$uri = $this->uri(array('action' => 'fowarddocument', 'id' => $id));
 $forwardbutton->setToSubmit();
 
 $form->addToForm($forwardbutton->show());

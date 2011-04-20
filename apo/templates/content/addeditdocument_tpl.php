@@ -24,7 +24,6 @@ $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 
 
-
 if ($mode == 'new') {
     $action = 'registerdocument';
 }
@@ -32,14 +31,14 @@ $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 
 if ($mode == 'edit') {
     $action = "updatedocument";
-    $selected = $this->baseDir . $document['topic'];
+    // $selected = $this->baseDir . $document['topic'];
 }
 
-if ($selected == '') {
+/* if ($selected == '') {
 
-    $folders = $this->__getdefaultfolder($this->baseDir);
-    $selected = $folders[0];
-}
+  $folders = $this->__getdefaultfolder($this->baseDir);
+  $selected = $folders[0];
+  } */
 
 $this->loadClass('dropdown', 'htmlelements');
 
@@ -142,10 +141,9 @@ $fs->addContent($table->show());
 
 // Form
 
-$form = new form('registerdocumentform', $this->uri(array('action' => $action, 'id' => $id)));
+$form = new form('registerdocumentform', $this->uri(array('action' => $action, 'id' => $id, 'formname' => 'registerdocument')));
 $numberfield = new hiddeninput('number', $number);
 $form->addToForm($numberfield->show());
-
 
 $hiddenSelected = new hiddeninput('selected', $cfile);
 $form->addToForm($hiddenSelected->show());
@@ -186,14 +184,15 @@ $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
-/*
 
-$forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
+if ($mode == 'edit') {
+    $forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
 
-$button = new button('forward', $forwardText);
-$uri = $this->uri(array('action'=>'forwarding', 'id'=>$id));
-$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());*/
+    $button = new button('forward', $forwardText);
+    $uri = $this->uri(array('action' => 'forwarding', 'from' => 'addeditdocument_tpl.php', 'id' => $id, 'mode'=> $mode));
+    $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+    $form->addToForm($button->show());
+}
 
 echo $form->show();
 ?>

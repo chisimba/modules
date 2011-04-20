@@ -146,6 +146,8 @@ class apo extends controller {
     function __registerdocument() {
 
         $errormessages = $this->getParam('errormessages');
+        $document = $this->documents->getDocument($id);
+        $faculties = $this->faculties->getFaculties();
         $date = $this->getParam('date_created');
         $number = $this->getParam('number');
         $dept = $this->getParam('department');
@@ -221,6 +223,7 @@ class apo extends controller {
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
         $this->setVarByRef("refno", $refNo);
+        $this->setVarByRef("departments", $faculties);
 
         return "home_tpl.php";
     }
@@ -257,14 +260,16 @@ class apo extends controller {
 
     function __showeditdocument() {
         $faculties = $this->faculties->getFaculties();
+        $id = $this->getParam('id');
 
         $action = "updatedocument";
-        $id = $this->getParam('id');
+
 
         $document = $this->documents->getDocument($id);
 
         $mode = "edit";
         $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("id", $id);
         $this->setVarByRef("document", $document);
         $this->setVarByRef("departments", $faculties);
 
@@ -274,9 +279,10 @@ class apo extends controller {
     public function __showoverview() {
         $id = $this->getParam('id');
         $document = $this->documents->getDocument($id);
-        // print_r($id);
         $selected = $this->getParam('selected');
+        
         $mode = "new";
+
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
@@ -1472,12 +1478,13 @@ class apo extends controller {
 
     public function __forwarding() {
         $id = $this->getParam('id');
+        $mode = $this->getParam('mode');
         $from = $this->getParam('from');
-        $document = $this->documents->getDocument($id);
-        $this->setVarByRef("document", $document);
-        $this->setVarByRef('from', $from);
         $selected = $this->getParam('selected');
-        //$mode = "new";
+        $document = $this->documents->getDocument($id);
+        
+        $this->setVarByRef("document", $document);
+        $this->setVarByRef('from', $from);   
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
@@ -1792,10 +1799,11 @@ class apo extends controller {
         $from = $this->getParam('from');
         $link = new link($this->uri(array("action" => "showeditdocument", "id" => $id)));
 
+
         if (count($users) > 0) {
             $recipientUserId = $users[0];
             $recipientEmailAddress = $this->objUser->email($recipientUserId);
-            $recipientEmailAddress = 'david.wafula@wits.ac.za';
+            $recipientEmailAddress = 'palesa.mokwena@students.wits.ac.za';
             $subject = $this->objSysConfig->getValue('FWD_DOC_EMAIL_SUB', 'apo');
             $subject = str_replace("{sender}", $this->objUser->fullname(), $subject);
             $subject = str_replace("{receiver}", $this->objUser->fullname($recipientUserId), $subject);
@@ -1810,7 +1818,7 @@ class apo extends controller {
             $this->users->sendEmail($subject, $body, $recipientEmailAddress);
             //now update the current user
             $this->documents->changeCurrentDocumentUser($id, $recipientUserId);
-            $message="Document forwarded. Email has been sent to " . $this->objUser->fullname($recipientUserId);
+            $message = "Document forwarded. Email has been sent to " . $this->objUser->fullname($recipientUserId);
             $this->setVarByRef("message", $message);
         }
 
@@ -1819,6 +1827,16 @@ class apo extends controller {
 
     function __showSection() {
         $from = $this->getParam('from');
+        $id = $this->getParam('id');
+        $mode = $this->getParam('mode');
+        $document = $this->documents->getDocument($id);
+        $selected = $this->getParam('selected');
+
+        $this->setVarByRef("id", $id);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
+        $this->setVarByRef("document", $document);
+
         return $from;
     }
 

@@ -6,9 +6,9 @@
  * @author    Jacqueline Gil
  */
 
-$validatorjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/jquery.validate.js').'"></script>';
-$sectionsjs = '<script type="text/javascript" src="'.$this->getResourceURI('js/sections.js').'"></script>';
-$sectionscss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceURI('css/sections.css').'" media="screen">';
+$validatorjs = '<script type="text/javascript" src="' . $this->getResourceURI('js/jquery.validate.js') . '"></script>';
+$sectionsjs = '<script type="text/javascript" src="' . $this->getResourceURI('js/sections.js') . '"></script>';
+$sectionscss = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceURI('css/sections.css') . '" media="screen">';
 
 $this->appendArrayVar("headerParams", $validatorjs);
 $this->appendArrayVar("headerParams", $sectionsjs);
@@ -34,12 +34,12 @@ $this->baseDir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
 $action = 'showrulesandsyllabusone';
 
 $formdata = $this->objformdata->getFormData("overview", $id);
-if ($formdata != null){
+if ($formdata != null) {
     $mode = "edit";
 }
 
 //$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview','nextaction'=>$nextaction)));
-$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview', 'toform'=>'rulesandsyllabusone')));
+$form = new form('overviewform', $this->uri(array('action' => $action, 'id' => $id, 'formname' => 'overview', 'toform' => 'rulesandsyllabusone')));
 
 $xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Section A: Overview');
 
@@ -50,60 +50,88 @@ $header->str = $xtitle;
 echo $header->show();
 
 
-$doclink = new link($this->uri(array("action" => "editdocument", 'id' => $id, 'formname'=>'overview')));
+$doclink = new link($this->uri(array("action" => "editdocument", 'id' => $id, 'formname' => 'overview')));
 $doclink->link = "Document";
 
-$rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone", 'id' => $id, 'formname'=>'overview')));
+$rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsyllabusone", 'id' => $id, 'formname' => 'overview')));
 $rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
-$rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo", 'id' => $id, 'formname'=>'overview')));
+$rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo", 'id' => $id, 'formname' => 'overview')));
 $rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
-$subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements", 'id' => $id, 'formname'=>'overview')));
+$subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements", 'id' => $id, 'formname' => 'overview')));
 $subsidyrequirementslink->link = "Subsidy Requirements";
 
-$outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone", 'id' => $id, 'formname'=>'overview')));
+$outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutcomesandassessmentone", 'id' => $id, 'formname' => 'overview')));
 $outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
-$outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo", 'id' => $id, 'formname'=>'overview')));
+$outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo", 'id' => $id, 'formname' => 'overview')));
 $outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
 
-$outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree", 'id' => $id, 'formname'=>'overview')));
+$outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree", 'id' => $id, 'formname' => 'overview')));
 $outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
-$resourceslink = new link($this->uri(array("action" => "showresources", 'id' => $id, 'formname'=>'overview')));
+$resourceslink = new link($this->uri(array("action" => "showresources", 'id' => $id, 'formname' => 'overview')));
 $resourceslink->link = "Resources";
 
-$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts", 'id' => $id, 'formname'=>'overview')));
+$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts", 'id' => $id, 'formname' => 'overview')));
 $collaborationandcontractslink->link = "Collaboration and Contracts";
 
-$reviewlink = new link($this->uri(array("action" => "showreview", 'id' => $id, 'formname'=>'overview')));
+$reviewlink = new link($this->uri(array("action" => "showreview", 'id' => $id, 'formname' => 'overview')));
 $reviewlink->link = "Review";
 
-$contactdetailslink = new link($this->uri(array("action" => "showcontactdetails", 'id' => $id, 'formname'=>'overview')));
+$contactdetailslink = new link($this->uri(array("action" => "showcontactdetails", 'id' => $id, 'formname' => 'overview')));
 $contactdetailslink->link = "Contact Details";
 
-$commentslink = new link($this->uri(array("action" => "showcomments","id"=>$id)));
+$commentslink = new link($this->uri(array("action" => "showcomments", "id" => $id)));
 $commentslink->link = "Comments";
 
-$feedbacklink = new link($this->uri(array("action" => "showfeedback","id"=>$id)));
+$feedbacklink = new link($this->uri(array("action" => "showfeedback", "id" => $id)));
 $feedbacklink->link = "Feedback";
 
-$links =$message.'<br/>'. $doclink->show() . '&nbsp;|&nbsp;' . "<b>Overview</b>" . '&nbsp;|&nbsp;' .
+$links = $doclink->show() . '&nbsp;|&nbsp;' . "<b>Overview</b>" . '&nbsp;|&nbsp;' .
         $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
-        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() .'&nbsp;|&nbsp;' . $commentslink->show() . '&nbsp;|&nbsp;' .
+        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '&nbsp;|&nbsp;' . $commentslink->show() . '&nbsp;|&nbsp;' .
         $feedbacklink->show() . '<br/>';
 
 $fs = new fieldset();
 $fs->setLegend('<b>Navigation</b>');
 $fs->addContent($links);
 
-echo $fs->show() . '<br/>';
+echo $fs->show();
 
 $table = $this->newObject('htmltable', 'htmlelements');
+
+$button = new button('next', $this->objLanguage->languageText('word_next'));
+$button->setToSubmit();
+//$uri = $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview', 'toform'=>'rulesandsyllabusone'));
+//$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+
+$form->addToForm('<br/>' . $button->show() . '&nbsp');
+
+
+$button = new button('back', $this->objLanguage->languageText('word_back'));
+$uri = $this->uri(array('action' => 'showeditdocument', 'id' => $id, 'formname' => 'overview', 'toform' => 'addeditdocument'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+//$button->setToSubmit();
+$form->addToForm($button->show() . '&nbsp');
+
+$button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$uri = $this->uri(array('action' => 'home'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show() . '&nbsp');
+$form->extra = 'class="sections"';
+
+
+$forwardText = $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward');
+
+$button = new button('forward', $forwardText);
+$uri = $this->uri(array('action' => 'forwarding', 'from' => 'overview_tpl.php', 'id' => $id, 'mode'=> $mode));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
 
 $textinput = new textinput('a1');
 $textinput->size = 100;
@@ -145,7 +173,7 @@ $table->endRow();
 
 $textarea = new textarea('a3');
 $textarea->height = '70px';
-$textarea->cols=100;
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $a3;
 }
@@ -157,13 +185,13 @@ $table->startRow();
 $table->addCell("A.3. Provide a brief motivation for the introduction/amendment of the course/unit:");
 $table->endRow();
 $table->startRow();
-$table->addCell('<em>*</em>'.$textarea->show());
+$table->addCell('<em>*</em>' . $textarea->show());
 $table->endRow();
 
 $textarea = new textarea('a4');
 $textarea->height = '70px';
 $textarea->width = '500px';
-$textarea->cols=100;
+$textarea->cols = 100;
 if ($mode == "fixup") {
     $textarea->value = $a4;
 }
@@ -176,7 +204,7 @@ $table->addCell("A.4. Towards which qualification(s) can the course/unit be take
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<em>*</em>'.$textarea->show());
+$table->addCell('<em>*</em>' . $textarea->show());
 $table->endRow();
 
 $radio = new radio('a5');
@@ -195,7 +223,7 @@ if ($mode == "edit") {
 }
 $radio->cssClass = "required";
 $table->startRow();
-$table->addCell("A.5. This new or amended course proposal is:","100");
+$table->addCell("A.5. This new or amended course proposal is:", "100");
 $table->endRow();
 
 $table->startRow();
@@ -228,25 +256,24 @@ $button->setToSubmit();
 //$uri = $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview', 'toform'=>'rulesandsyllabusone'));
 //$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 
-$form->addToForm('<br/>' . $button->show());
-
+$form->addToForm('<br/>' . $button->show() . '&nbsp');
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
-$uri = $this->uri(array('action' => 'showeditdocument', 'id' => $id, 'formname'=>'overview', 'toform'=>'addeditdocument'));
+$uri = $this->uri(array('action' => 'showeditdocument', 'id' => $id, 'formname' => 'overview', 'toform' => 'addeditdocument'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 //$button->setToSubmit();
-$form->addToForm($button->show());
+$form->addToForm($button->show() . '&nbsp');
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show() . '&nbsp');
 $form->extra = 'class="sections"';
 
 $forwardText = $this->objLanguage->languageText('mod_apo_forward', 'apo', 'Forward');
 
 $button = new button('forward', $forwardText);
-$uri = $this->uri(array('action'=>'forwarding','from'=>'overview_tpl.php', 'id'=>$id));
+$uri = $this->uri(array('action' => 'forwarding', 'from' => 'overview_tpl.php', 'id' => $id, 'mode'=> $mode));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

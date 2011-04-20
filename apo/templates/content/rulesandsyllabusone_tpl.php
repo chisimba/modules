@@ -88,7 +88,7 @@ $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&n
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
         $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() .'&nbsp;|&nbsp;' . $commentslink->show() . '&nbsp;|&nbsp;' .
-        $feedbacklink->show() . '<br/>';
+        $feedbacklink->show();
 
 $fs = new fieldset();
 $fs->setLegend('<b>Navigation</b>');
@@ -97,6 +97,28 @@ $fs->addContent($links);
 echo $fs->show() . '<br/>';
 
 $table = $this->newObject('htmltable', 'htmlelements');
+
+$button = new button('next', $this->objLanguage->languageText('word_next'));
+$button->setToSubmit();
+$form->addToForm('<br/>'.$button->show(). '&nbsp');
+
+$button = new button('back', $this->objLanguage->languageText('word_back'));
+$uri = $this->uri(array('action' => 'showoverview', 'id' => $id, 'formname'=>'rulesandsyllabusone'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show(). '&nbsp');
+
+$button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$uri = $this->uri(array('action' => 'home'));;
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show(). '&nbsp');
+$form->extra = 'class="sections"';
+
+$forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
+
+$button = new button('forward', $forwardText);
+$uri = $this->uri(array('action'=>'forwarding', 'from' => 'rulesandsyllabusone_tpl.php', 'id'=>$id, 'mode'=> $mode));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
 
 $textarea = new textarea('b1');
 $textarea->height = '70px';
@@ -256,23 +278,23 @@ $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
 $button->setToSubmit();
-$form->addToForm('<br/>'.$button->show());
+$form->addToForm('<br/>'.$button->show(). '&nbsp');
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'showoverview', 'id' => $id, 'formname'=>'rulesandsyllabusone'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show(). '&nbsp');
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));;
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show(). '&nbsp');
 $form->extra = 'class="sections"';
 
 $forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
 
 $button = new button('forward', $forwardText);
-$uri = $this->uri(array('action'=>'forwarding', 'id'=>$id));
+$uri = $this->uri(array('action'=>'forwarding', 'from' => 'rulesandsyllabusone_tpl.php', 'id'=>$id, 'mode'=> $mode));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
