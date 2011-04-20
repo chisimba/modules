@@ -136,20 +136,20 @@ class dbfileuploads extends dbtable {
 
         return $this->getArray($sql);
     }
+
     /**
-     *Function that fetches all the node files within a specified limit
+     * Function that fetches all the node files within a specified limit
      *
      * @param string $node the node
      * @param array $limit contains the start and end limits
      * @return array
      */
-
     public function getNodeFiles($node, $limit=Null) {
 
         $sql = "select A.refno,A.telephone, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
               from tbl_wicid_documents as A
                 join tbl_wicid_fileuploads as B on A.id = B.docid
-              where B.parent = '$node' and A.active ='Y'
+              where B.filepath like '$node%' and A.active ='Y'
               order by A.date_created DESC";
 
         //Include limit if specified
@@ -158,14 +158,14 @@ class dbfileuploads extends dbtable {
 
         return $this->getArray($sql);
     }
+
     /**
-     *Function that fetches all the approved and non-approved node files within a specified limit
+     * Function that fetches all the approved and non-approved node files within a specified limit
      *
      * @param string $node the node
      * @param array $limit contains the start and end limits
      * @return array
      */
-
     public function getAllNodeFiles($node, $limit=Null) {
 
         $sql = "select A.refno,A.telephone, A.date_created, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
