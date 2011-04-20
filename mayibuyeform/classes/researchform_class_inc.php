@@ -29,7 +29,8 @@ if (!
 
 class researchform extends dbTable
 {
-   public $objLanguage;
+   	public $objLanguage;
+	var $captcha;
 
 
 
@@ -309,15 +310,14 @@ private function buildForm()
 	$table->addCell($objtermsLabel->show(),'', 'center', 'left', '');
 	$table->endRow();
 
- //Submit button
+	//Submit button
         $table->startRow();
 	$objButton = new button('send');
       	$objButton->setToSubmit();
 	$objButton->setValue(' ' . $this->objLanguage->languageText("mod_mayibuye_commentsend", "mayibuyeform") . '');
-	//$table->addCell($objButton->show());	
 	$table->endRow();
 	$objForm->addToForm($table->show());
-// captcha
+	// captcha
         $objCaptcha = $this->getObject('captcha', 'utilities');
         $captcha = new textinput('researchform_captcha');
         $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_researchform_captcha');
@@ -327,7 +327,8 @@ private function buildForm()
 	'<br /><div id="researchformcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() .
 	 $required . '<a href="javascript:researchformredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
        	 $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
-         $objForm->addRule('feedback_captcha', $this->objLanguage->languageText("mod_request_captcha_unrequired", 'mayibuyeform', 'Captcha cant be empty.Captcha is missing.'), 		'required');
+         $objForm->addRule('feedback_captcha', $this->objLanguage->languageText
+				("mod_request_captcha_unrequired", 'mayibuyeform', 'Captcha cant be empty.Captcha is missing.'), 'required');
          	
 	$objForm->addToForm($objButton->show());
 

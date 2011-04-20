@@ -28,6 +28,7 @@ class mayibuyeform extends controller {
     var $stuno;
     var $staffnum;
     var $colection;
+    var $captcha;
 
     //var $image;
     //var $project;
@@ -85,7 +86,21 @@ class mayibuyeform extends controller {
         $image = $this->getParam('subheading3');
         $project = $this->getParam('publication');
         $time = $this->getParam('project');
+	$captcha = $this->getParam('researchform_captcha');
 
+
+ 	$errormsg[] = array();
+
+        if ((md5(strtoupper($captcha)) != $this->getParam('captcha'))) {
+            $errormsg[] = 'badcaptcha';
+        }
+
+        //if form entry is in corect or invavalid
+        if (count($errormsg) > 0) {
+            $this->setVarByRef('errormsg', $errormsg);
+            $this->setVarByRef('insarr', $insarr);
+
+            }
 
         // insert into database
         $pid = $this->dbresearchform->insertStudentRecord($date, $nameofreseacher, $tellno, $faxxno, $email, $nameofsign,
@@ -115,7 +130,7 @@ class mayibuyeform extends controller {
         //send to multiple addressed   
         $list = array("pmahinga@uwc.ac.za");
         $objMail->to = ($list);
-        // specify whom the email is coming from
+        // specify to whom the email is coming from
         $objMail->from = "no-reply@uwc.ac.za";
         $objMail->from = "no-reply";
         //Give email subject and body
@@ -126,6 +141,14 @@ class mayibuyeform extends controller {
         // send email
         $objMail->send();
     }
+
+public function RequiresLogin()
+{
+	return TRUE;
+}
+
+
+
 
 }
 
