@@ -35,23 +35,19 @@
                     </div>
                     <div class="profileBookmarkGroupsMessengerDiv">
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a><div class="numberNextToUserIcons"></div>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messages" width="20" height="20" class="userIcons" title="My Messages"></a><div class="numberNextToUserIcons"></div>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger" width="20" height="20" class="userIcons" title="My Messenger"></a>
                     </div>
                 </div>
                 <div class="logoutSearchDivRight">
                 	<div class="searctInputTextDiv">
-                    	<div class="searchGoButton"><a href=""><img src="skins/unesco_oer/images/button-search.png" alt="Search" width="17" height="17" class="searchGoImage"></a>
-                      <a href="" class="searchGoLink">GO</a></div>
+                    	<div class="searchGoButton"><a href=""><img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>
+                        <a href="" class="searchGoLink">GO</a></div>
                         <div class="searchInputBoxDiv">
-                        	<input type="text" name="" class="searchInput" value="Type search term here...">
-                            <select name="" class="searchDropDown">
+                        	<input type="text" name="" id="" class="searchInput" value="Type search term here...">
+                            <select name="" id="" class="searchDropDown">
                             	<option value="">All</option>
                             </select>
                         </div>
@@ -297,7 +293,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 		        ?>
 <!--                <div class="commentSubmit">
                        <div class="submiText"><a href="" class="searchGoLink">SUBMIT</a></div> 
-                       <a href=""><img src="images/button-search.png" alt="Submit" width="17" height="17" class="submitCommentImage"></a>
+                       <a href=""><img src="skins/unesco_oer/images/button-search.png" alt="Submit" width="17" height="17" class="submitCommentImage"></a>
                     </div>-->
 
                         </div>
