@@ -28,17 +28,17 @@ class adddatautil extends object {
     /*
      * This function adds a title to a given table
      */
-    function addTitleToTable($title, $titleType, $table) {
+    function addTitleToTable($title, $titleType, $table, $colspan=null) {
         $table->startRow();
-        $this->addTitleToRow($title, $titleType, $table);
+        $this->addTitleToRow($title, $titleType, $table, $colspan);
         $table->endRow();
     }
     
-    function addTitleToRow($title, $titleType, $table){
+    function addTitleToRow($title, $titleType, $table, $colspan=null){
         $header = new htmlHeading();
         $header->str = $title;
         $header->type = $titleType;
-        $table->addCell($header->show());
+        $table->addCell($header->show(), null, null, null, null, "colspan=$colspan",null);
     }
 
     function addButtonToRow($caption, $actionURI, $table) {
@@ -90,6 +90,7 @@ class adddatautil extends object {
         
         $table->addCell($dropdown->show());
     }
+
 }
 
 ?>

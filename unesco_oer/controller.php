@@ -333,22 +333,16 @@ class unesco_oer extends controller {
         if ($isNewProduct === NULL) throw new customException ('Product state is not specified');
         $parentID = $this->getParam('parentID');
         $thumbnailPath = '';
-        if ($parentID == NULL || !$this->objDbProducts->isAdaptation($parentID)) {
+        if (TRUE) throw new customException ($this->getParam('fileupload'));
+        if (!$this->objDbProducts->isAdaptation($parentID) && ($isNewProduct == ($parentID == null))){
             $path = 'unesco_oer/products/' . $this->getParam('title') . '/thumbnail/';
             try {
                 $results = $this->uploadFile($path);
                 $thumbnailPath = 'usrfiles/' . $results['path'];
             } catch (customException $e) {
-                if (strpos($e->getMessage(),"nouploadedfileprovided")){
-                    $product = $this->objDbProducts->getProductByID($parentID);
-                    $thumbnailPath = $product['thumbnail'];
-                }else{
-                    //echo customException::cleanUp();
-                    exit();
-                }
-                
+                echo customException::cleanUp();
+                exit();
             }
-            
         } else {
             $product = $this->objDbProducts->getProductByID($parentID);
             $thumbnailPath = $product['thumbnail'];
@@ -389,7 +383,7 @@ class unesco_oer extends controller {
 
         //determine if a new product must be added or an old one must be updated
         if ($isNewProduct){
-            array_merge($data,array('parent_id' => $parentID));
+            $data = array_merge($data,array('parent_id' => $parentID));
             $this->objDbProducts->addProduct($data);
         }else{
             $this->objDbProducts->updateProduct($parentID,$data);
@@ -467,6 +461,17 @@ class unesco_oer extends controller {
     public function __createFeaturedProduct() {
         $featuredproduct = $this->getParam('id');
         $this->objDbFeaturedProduct->overRightCurrentFeaturedProduct($featuredproduct);
+        return "1a_tpl.php";
+    }
+
+    /*
+     * Method to retrieve the current featured unesco product from user on the featuredAdaptationUI_tpl.php
+     * return a page 1a_tpl.php with the current featured product
+     */
+
+    public function __createFeaturedAdaptation() {
+        $featuredproduct = $this->getParam('id');
+        $this->objDbFeaturedProduct->overRightCurrentFeaturedAdaptation($featuredproduct);
         return "1a_tpl.php";
     }
 

@@ -320,7 +320,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 		            $commentText->setCssClass("commentTextBox");
 
                             //TODO make parameter pagename dynamic
-                            $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID , 'pageName' => '2a'));
+                            $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID , 'pageName' => 'home'));
                             $commentLink = new link($uri);
                             $commentLink->cssClass = "searchGoLink";
                             $linkText = $this->objLanguage->

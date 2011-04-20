@@ -35,6 +35,7 @@ echo $header->show();
 
 // setup table and table headings with input fields
 $table = $this->newObject('htmltable', 'htmlelements');
+$table->cssClass = "moduleHeader";
 
 //field for the title
 $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
@@ -42,7 +43,7 @@ $utility->addTextInputToTable($title, 4, 'title', 0, $product['title'], $table);
 
 //field for the creator
 $title = $this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer');
-$utility->addTitleToTable($title, 4, $table);
+$utility->addTitleToTable($title, 4, $table,"2");
 
 $groupName = '';
 if ($this->objDbGroups->isGroup($product['creator'])){
@@ -70,8 +71,8 @@ $utility->addTextInputToTable($title, 4, 'keywords', 0, $product['keywords'], $t
 //field for the description
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
-$editor->height = '100px';
-$editor->width = '430px';
+$editor->height = '150px';
+$editor->width = '70%';
 $editor->setBasicToolBar();
 $editor->setContent($product['description']);
 $table->startRow();
