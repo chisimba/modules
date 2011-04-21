@@ -453,7 +453,7 @@ $adaptationstring = "parent_id is null";
                                         }
                                         echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct[0]);
                                 ?>
-                                        <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+<!--                                        <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">-->
 
                                         <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
                                         <?php

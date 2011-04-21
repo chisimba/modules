@@ -53,7 +53,6 @@ class unesco_oer extends controller {
          * Convert the action into a method (alternative to
          * using case selections)
          */
-        $this->setLayoutTemplate("gift_layout_tpl.php");
         $method = $this->getMethod($action);
         /*
          * Return the template determined by the method resulting
@@ -137,8 +136,10 @@ class unesco_oer extends controller {
         $this->setVarByRef('productID', $id);
 
         if ($this->objDbProducts->isAdaptation($id)){
+            $this->setLayoutTemplate('5a_layout_tpl.php');
             return "5a_tpl.php";
         }else{
+            $this->setLayoutTemplate('3a_layout_tpl.php');
             return "3a_tpl.php";
         }
 
@@ -317,7 +318,12 @@ class unesco_oer extends controller {
         $this->setVar('prevAction', $prevAction);
         $this->setVar('isNewProduct', $isNewProduct);
 
-        $this->setLayoutTemplate('1a_layout_tpl.php');
+        if ($this->objDbProducts->isAdaptation($id)){
+            $this->setLayoutTemplate('5a_layout_tpl.php');
+        }else{
+            $this->setLayoutTemplate('3a_layout_tpl.php');
+        }
+        //$this->setLayoutTemplate('1a_layout_tpl.php');
 
         return $this->__productsUi();
     }
@@ -333,15 +339,18 @@ class unesco_oer extends controller {
         if ($isNewProduct === NULL) throw new customException ('Product state is not specified');
         $parentID = $this->getParam('parentID');
         $thumbnailPath = '';
+        $results = FALSE;
         if (!$this->objDbProducts->isAdaptation($parentID) && ($isNewProduct == ($parentID == null))){
             $path = 'unesco_oer/products/' . $this->getParam('title') . '/thumbnail/';
             try {
-                $results = $this->uploadFile($path);
-                $thumbnailPath = 'usrfiles/' . $results['path'];
+                $results = $this->uploadFile($path);                
             } catch (customException $e) {
                 echo customException::cleanUp();
                 exit();
             }
+        }
+        if ($results) {
+            $thumbnailPath = 'usrfiles/' . $results['path'];
         } else {
             $product = $this->objDbProducts->getProductByID($parentID);
             $thumbnailPath = $product['thumbnail'];
@@ -562,8 +571,12 @@ class unesco_oer extends controller {
             //TODO return proper error page
             throw new customException('Upload failed: FATAL <br />');
         } else {
-            if (!$results['success']) { // upload was unsuccessfule
-                throw new customException('Upload failed: ' . $results['reason']); //TODO return proper error page containing error
+            if (!$results['success']) { // upload was unsuccessful
+                if ($results['reason'] != 'nouploadedfileprovided') {
+                    throw new customException('Upload failed: ' . $results['reason']); //TODO return proper error page containing error
+                } else {
+                    return FALSE;
+                }
             }
         }
         return $results;

@@ -578,10 +578,12 @@ $adaptationstring = "parent_id is null";
                                         echo $abLink->show();
 ?>
                                 <?php
+                                if ($this->objUser->isLoggedIn()) {
                                         $newProductLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
                                         $newProductLink->link = "New product";
 
                                         echo '&nbsp;|&nbsp;' . $newProductLink->show();
+                                }
                                 ?>
 
                                     </div>
@@ -830,20 +832,19 @@ $adaptationstring = "parent_id is null";
                                             <div class="rightColumnContentPadding">
 <?php
                                         $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                        $featuredProduct = $this->objDbProducts->getAll("where puid = '$featuredProductID'");
-                                        if (sizeof($featuredProduct) > 0) {
-                                            //TODO error handling
-                                        }
-                                        echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct[0]);
+                                        $featuredProduct = $this->objDbProducts->getProductByID($featuredProductID);
+                                        
+                                        echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct);
 ?>
-                                        <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+<!--                                        <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">-->
 
                                         <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
 <?php
                                         //The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
-                                        $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
-                                        $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
-                                        echo"See all adaptations ($NOofAdaptation)"// This must be a link;
+
+
+                                        $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id']);
+                                        echo"See all adaptations ($NOofAdaptation)";// This must be a link;
 ?>
                                     </a></div>
                             </div>
