@@ -836,9 +836,7 @@ $adaptationstring = "parent_id is null";
                                         
                                         echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct);
 ?>
-<!--                                        <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">-->
-
-                                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
+                                       <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
 <?php
                                         //The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
 

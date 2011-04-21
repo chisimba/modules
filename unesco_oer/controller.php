@@ -1,5 +1,7 @@
 <?php
 
+require('classes/googlemapapi_class_inc.php');
+
 class unesco_oer extends controller {
 
     public $objProductUtil;
@@ -14,6 +16,7 @@ class unesco_oer extends controller {
     public $objDbComments;
     public $objUser;
     public $objDbProductRatings;
+    //public $objGoogleMap;
  
 
     /**
@@ -40,7 +43,8 @@ class unesco_oer extends controller {
         $this->objDbComments = $this->getObject('dbcomments');
         $this->objProductRatings = $this->getObject('dbproductratings');
         $this->objUser = $this->getObject('user', 'security');
-       
+        //$this->objGoogleMap=$this->getObject('googlemapapi');
+        //$this->objGoogleMap = new googlemapapi();
     }
 
     /**
@@ -684,6 +688,9 @@ class unesco_oer extends controller {
      public function __editInstitutionUI1(){
          return 'editInstitutionUI1_tpl.php';
      }
+
+   
+
 
 }
 
