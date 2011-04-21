@@ -91,6 +91,33 @@ $fs->addContent($links);
 
 echo $fs->show() . '<br/>';
 
+$button = new button('next', $this->objLanguage->languageText('word_next'));
+$button->setToSubmit();
+//$uri = $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview', 'toform'=>'rulesandsyllabusone'));
+//$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+
+$form->addToForm($button->show().'&nbsp');
+
+
+$button = new button('back', $this->objLanguage->languageText('word_back'));
+$uri = $this->uri(array('action' => 'showcontactdetails', 'id' => $id, 'formname' => 'comment', 'toform' => 'addeditdocument'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+//$button->setToSubmit();
+$form->addToForm($button->show().'&nbsp');
+
+$button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$uri = $this->uri(array('action' => 'home'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show().'&nbsp');
+
+$forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
+
+$button = new button('forward', $forwardText);
+$uri = $this->uri(array('action'=>'forwarding', 'from' => 'comments_tpl.php', 'id' => $id, 'mode'=> $mode));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
+
+
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $textarea = new textarea('apo');
@@ -195,24 +222,24 @@ $button->setToSubmit();
 //$uri = $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'overview', 'toform'=>'rulesandsyllabusone'));
 //$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 
-$form->addToForm('<br/>' . $button->show());
+$form->addToForm('<br/>' . $button->show().'&nbsp');
 
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'showcontactdetails', 'id' => $id, 'formname' => 'comment', 'toform' => 'addeditdocument'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 //$button->setToSubmit();
-$form->addToForm($button->show());
+$form->addToForm($button->show().'&nbsp');
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show().'&nbsp');
 
 $forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
 
 $button = new button('forward', $forwardText);
-$uri = $this->uri(array('action'=>'forwarding', 'id'=>$id));
+$uri = $this->uri(array('action'=>'forwarding', 'from' => 'comments_tpl.php', 'id' => $id, 'mode'=> $mode));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

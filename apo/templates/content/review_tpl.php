@@ -100,6 +100,28 @@ $legend = "<b>Section G: Review</b>";
 
 //$form = new form('reviewform', $this->uri(array('action' => 'showcontactdetails')));
 
+$button = new button('next', $this->objLanguage->languageText('word_next'));
+$button->setToSubmit();
+$form->addToForm($button->show().'&nbsp');
+
+$button = new button('back', $this->objLanguage->languageText('word_back'));
+$uri = $this->uri(array('action' => 'showcollaborationandcontracts', 'id' => $id));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show().'&nbsp');
+
+$button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$uri = $this->uri(array('action' => 'home'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show().'&nbsp');
+$form->extra = 'class="sections"';
+
+$forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
+
+$button = new button('forward', $forwardText);
+$uri = $this->uri(array('action'=>'forwarding', 'from' => 'review_tpl.php', 'id' => $id, 'mode'=> $mode));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
+
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $textarea = new textarea('g1a');
@@ -261,23 +283,23 @@ $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
 $button->setToSubmit();
-$form->addToForm('<br/>' .$button->show());
+$form->addToForm('<br/>' .$button->show().'&nbsp');
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'showcollaborationandcontracts', 'id' => $id));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show().'&nbsp');
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show().'&nbsp');
 $form->extra = 'class="sections"';
 
 $forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
 
 $button = new button('forward', $forwardText);
-$uri = $this->uri(array('action'=>'forwarding', 'id'=>$id));
+$uri = $this->uri(array('action'=>'forwarding', 'from' => 'review_tpl.php', 'id' => $id, 'mode'=> $mode));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

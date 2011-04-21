@@ -20,6 +20,7 @@ $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('radio','htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
+$this->loadClass('href', 'htmlelements');
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->setVar('JQUERY_VERSION', '1.4.2');
@@ -100,11 +101,34 @@ $fs = new fieldset();
 $fs->setLegend('<b>Navigation</b>');
 $fs->addContent($links);
 
-echo $fs->show() . '<br/>';
+echo $fs->show();
 
 /* if ($mode == 'edit') {
   $legend = "Edit document";
   } */
+
+$button = new button('next', $this->objLanguage->languageText('word_next'));
+$button->setToSubmit();
+$form->addToForm('<br/>'.$button->show().'&nbsp');
+
+$button = new button('back', $this->objLanguage->languageText('word_back'));
+$uri = $this->uri(array('action' => 'showrulesandsyllabusone', 'id' => $id, 'formname'=>'rulesandsyllabustwo'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show().'&nbsp');
+
+$button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+$uri = $this->uri(array('action' => 'home', 'id' => $id, 'formname'=>'overview'));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show().'&nbsp');
+$form->extra = 'class="sections"';
+
+$forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
+
+$button = new button('forward', $forwardText);
+$uri = $this->uri(array('action'=>'forwarding', 'from' => 'subsidyrequirements_tpl.php', 'id'=>$id, 'mode'=> $mode));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show());
+
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $textarea = new textarea('c1');
@@ -182,9 +206,10 @@ if ($mode == "edit") {
 }
 //$textinput->setExtra("maxlength = 6");
 $textinput->setCss("required");
-//$cesmLink->link($this->uri(array('http://intranet.wits.ac.za/Academic/APO/CESMs.htm')));
+//$cesmLink= $this->href('http://intranet.wits.ac.za/Academic/APO/CESMs.html');
+
 $table->startRow();
-$table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from '. $cesmLink->show(), '100');
+$table->addCell('C.3. What is the third order CESM (Classification of Education Subject Matter) category for the course/unit? (The CESM manual can be downloaded from http://intranet.wits.ac.za/Academic/APO/CESMs.html', '100');
 $table->endRow();
 
 $table->startRow();
@@ -281,23 +306,23 @@ $form->addToForm($fs->show());
 
 $button = new button('next', $this->objLanguage->languageText('word_next'));
 $button->setToSubmit();
-$form->addToForm('<br/>'.$button->show());
+$form->addToForm('<br/>'.$button->show(). '&nbsp');
 
 $button = new button('back', $this->objLanguage->languageText('word_back'));
 $uri = $this->uri(array('action' => 'showrulesandsyllabustwo', 'id' => $id));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show(). '&nbsp');
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'home'));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show(). '&nbsp');
 $form->extra = 'class="sections"';
 
 $forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
 
 $button = new button('forward', $forwardText);
-$uri = $this->uri(array('action'=>'forwarding', 'id'=>$id));
+$uri = $this->uri(array('action'=>'forwarding', 'from' => 'subsidyrequirements_tpl.php', 'id' => $id, 'mode'=> $mode));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 

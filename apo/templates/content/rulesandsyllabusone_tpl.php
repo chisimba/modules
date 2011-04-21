@@ -94,7 +94,7 @@ $fs = new fieldset();
 $fs->setLegend('<b>Navigation</b>');
 $fs->addContent($links);
 
-echo $fs->show() . '<br/>';
+echo $fs->show();
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -118,7 +118,7 @@ $forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forwa
 $button = new button('forward', $forwardText);
 $uri = $this->uri(array('action'=>'forwarding', 'from' => 'rulesandsyllabusone_tpl.php', 'id'=>$id, 'mode'=> $mode));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show().'<br/>');
 
 $textarea = new textarea('b1');
 $textarea->height = '70px';
@@ -272,7 +272,7 @@ $legend = "<b>Section B: Rules and Syllabus - Page One</b>";
 $fs = new fieldset();
 $fs->setLegend($legend);
 $fs->addContent($table->show());
-$form->addToForm($fs->show());
+$form->addToForm('<br/>'.$fs->show());
 
 
 
