@@ -132,12 +132,17 @@ class imagevault extends controller
                 break;
                 
             case 'iptc' :
-                foreach(glob('/var/www/example_photos/*.jpg') as $image) {
+                foreach(glob('/var/www/example_photos/*') as $image) {
+                    
                     echo $image."<br />";
                     $this->objIPTC->setImage($image);
                     $valid = $this->objIPTC->isValid();
-                
+                    //$keywords = array('fok', 'shit', 'naai');
+                    //$this->objIPTC->setTag( 'keywords', $keywords );
+                    //$this->objIPTC->setTag( 'copyright_string', $this->objUser->userName() );
+                    //$this->objIPTC->save();
                     $tagarr = $this->objIPTC->getAllTags();
+                    var_dump($tagarr);
                     $copyarr = $tagarr['2#116'];
                     $keywords = $tagarr['2#025'];
                     $data = array_merge($copyarr, $keywords);

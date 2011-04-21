@@ -845,7 +845,12 @@ class imagevaultops extends object {
         if(!file_exists($this->objConfig->getcontentBasePath()."imagevaultrdf/".$userid."/")) {
             mkdir($this->objConfig->getcontentBasePath()."imagevaultrdf/".$userid."/", 0777);
         }
-        @exec("exiftool -x Directory -x ExifToolVersion -x FilePermissions -H -b -X $image > $file", $return);
+        if(strtolower($fname[1]) == 'cr2') {
+            $hash = sha1(file_get_contents($image));
+            $user = $this->objUser->userName($userid); 
+            @exec("exiftool -keywords=$hash -keywords=$user $image", $return);
+        } 
+        @exec("exiftool -x Directory -x ExifToolVersion -x FilePermissions -X PreviewImage -X JpgFromRaw -H -b -X $image > $file", $return);
         return $fname;
     }
 
