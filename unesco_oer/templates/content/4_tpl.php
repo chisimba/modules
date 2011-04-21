@@ -31,23 +31,23 @@ $adaptationstring = "parent_id is not null";
                 	<div class="nameDiv">Hello Igor Nuk</div>
                     <div class="logoutDiv">
                     	<div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
-                        <img src="images/icon-logout.png" alt="logout" class="imgFloatLeft">
+                        <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
                     </div>
                     <div class="profileBookmarkGroupsMessengerDiv">
-                        <a href="#"><img src="images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a><div class="numberNextToUserIcons"></div>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-messenger.png" alt="My Messages" width="20" height="20" class="userIcons" title="My Messages"></a><div class="numberNextToUserIcons"></div>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
+<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
+<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
+<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a><div class="numberNextToUserIcons"></div>
+<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messages" width="20" height="20" class="userIcons" title="My Messages"></a><div class="numberNextToUserIcons"></div>
                     </div>
                 </div>
                 <div class="logoutSearchDivRight">
                 	<div class="searctInputTextDiv">
-                    	<div class="searchGoButton"><a href=""><img src="images/button-search.png" width="17" height="17" class="searchGoImage"></a>
+                    	<div class="searchGoButton"><a href=""><img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>
                         <a href="" class="searchGoLink">GO</a></div>
                         <div class="searchInputBoxDiv">
                         	<input type="text" name="" id="" class="searchInput" value="Type search term here...">
@@ -56,7 +56,7 @@ $adaptationstring = "parent_id is not null";
                             </select>
                         </div>
                         <div class="textNextToRightFloatedImage">Search</div>
-                        <img src="images/icon-search.png" alt="Search" class="imgFloatLeft">
+                        <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">
                     </div>
                     <div class="facebookShareDiv">
 
@@ -77,7 +77,7 @@ $adaptationstring = "parent_id is not null";
                 </div>
             </div>
           	<div class="logoAndHeading">
-            	<img src="images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
+            	<img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
                  <div class="logoText">
                 <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
                 <h1>UNESCO OER PRODUCTS</h1>
@@ -92,7 +92,7 @@ $adaptationstring = "parent_id is not null";
                     <a href="" class="languagesLinks">لعربية</a> |
                     <a href="" class="languagesLinks">中文</a>
                     </div>
-                    <img src="images/icon-languages.png" class="languagesMainIcon">
+                    <img src="skins/unesco_oer/images/icon-languages.png" class="languagesMainIcon">
     			</div>
                 <div class="mainNavigation">
                     <ul id="sddm">
@@ -124,11 +124,11 @@ $adaptationstring = "parent_id is not null";
                  <div class="tenPixelLeftPadding twentyPixelRightPadding">
                	  <h2 class="adaptationListingLink">Politechnic of Namibia
                   </h2>
-                  <a href="#"><img src="images/icon-edit-section.png" class="Farright"></a>
+                  <a href="#"><img src="skins/unesco_oer/images/icon-edit-section.png" class="Farright"></a>
                   <a href="#" class="greyTextLink">Edit metadata</a><br>
            	    <br />
                     <div class="leftImageHolder rightTwent">
-                    	<img src="images/3a-placeholder.jpg"><br />
+                    	<img src="skins/unesco_oer/images/3a-placeholder.jpg"><br />
                	  </div>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
 <br><br>
@@ -137,11 +137,11 @@ $adaptationstring = "parent_id is not null";
 <div class="leftColumnDiv">
             	<div class="moduleHeader blueText">FILTER PRODUCTS</div>
                 <div class="blueNumberBackground">
-                	<div class="iconOnBlueBackground"><img src="images/icon-filter.png" alt="filter"></div>
+                	<div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
                     <div class="numberOffilteredProducts">4</div>
                 </div>
 <div class="moduleSubHeader">Product matches filter criteria</div>
-                <div class="moduleHeader darkBlueText"><img src="images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
+                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
                 <div class="blueBackground blueBackgroundCheckBoxText">
                 	<input type="checkbox"> Model<br>
                     <input type="checkbox"> Guide<br>
@@ -150,28 +150,28 @@ $adaptationstring = "parent_id is not null";
                     <input type="checkbox"> Bestoractile<br>
                 </div>
                 <br>
-                <div class="moduleHeader darkBlueText"><img src="images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
+                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
                 <div class="blueBackground">
                 	<select name="theme" id="theme" class="leftColumnSelectDropdown">
                     	<option value="">All</option>
                     </select>
                 </div>
                 <br>
-                <div class="moduleHeader darkBlueText"><img src="images/icon-filter-theme.png" alt="Theme" class="modulesImages">UNESCO Product</div>
+                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">UNESCO Product</div>
                 <div class="blueBackground">
                 	<select name="theme" id="theme" class="leftColumnSelectDropdown">
                     	<option value="">All</option>
                     </select>
                 </div>
                 <br>
-                <div class="moduleHeader darkBlueText"><img src="images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
+                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
                 <div class="blueBackground">
                 	<select name="language" id="language" class="leftColumnSelectDropdown">
                     	<option value="">All</option>
                     </select>
                 </div>
                 <br>
-                <div class="moduleHeader darkBlueText"><img src="images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
+                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
                 <div class="blueBackground">
                 	<select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
                     	<option value="">All</option>
@@ -179,7 +179,7 @@ $adaptationstring = "parent_id is not null";
                 </div>
                 <br><br>
           <div class="blueBackground rightAlign">
-                	<img src="images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
+                	<img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
                     <a href="#" class="resetLink">RESET</a>
           </div>
 
@@ -188,19 +188,19 @@ $adaptationstring = "parent_id is not null";
 				<div class="innerRightColumn4">
                	  <div class="listAdaptations">
                         <div class="floaLeftDiv">
-                            <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
+                            <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
                         </div>
                     <div class="rightColumInnerDiv">
                       <div class="blueListingHeading">Model Curricula for Journalism Education</div>
                             Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
                             <br>
                             <div class="listingAdaptationsLinkAndIcon">
-                               <img src="images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                               <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                    	  		</div>
 
                		  <div class="listingAdaptationsLinkAndIcon">
-                             <img src="images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                             <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
                              <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                       </div>
                         </div>
@@ -209,19 +209,19 @@ $adaptationstring = "parent_id is not null";
 
                     <div class="listAdaptations">
                         <div class="floaLeftDiv">
-                            <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
+                            <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
                         </div>
                     <div class="rightColumInnerDiv">
                       <div class="blueListingHeading">Model Curricula for Journalism Education</div>
                             Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
                             <br>
                             <div class="listingAdaptationsLinkAndIcon">
-                               <img src="images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                               <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                    	  		</div>
 
                		  <div class="listingAdaptationsLinkAndIcon">
-                             <img src="images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                             <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
                              <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                       </div>
                         </div>
@@ -230,19 +230,19 @@ $adaptationstring = "parent_id is not null";
 
                     <div class="listAdaptations">
                         <div class="floaLeftDiv">
-                            <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
+                            <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
                         </div>
                     <div class="rightColumInnerDiv">
                       <div class="blueListingHeading">Model Curricula for Journalism Education</div>
                             Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
                             <br>
                             <div class="listingAdaptationsLinkAndIcon">
-                               <img src="images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                               <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                    	  		</div>
 
                		  <div class="listingAdaptationsLinkAndIcon">
-                             <img src="images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                             <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
                              <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                       </div>
                         </div>
@@ -251,19 +251,19 @@ $adaptationstring = "parent_id is not null";
 
                     <div class="listAdaptations">
                         <div class="floaLeftDiv">
-                            <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
+                            <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
                         </div>
                     <div class="rightColumInnerDiv">
                       <div class="blueListingHeading">Model Curricula for Journalism Education</div>
                             Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
                             <br>
                             <div class="listingAdaptationsLinkAndIcon">
-                               <img src="images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                               <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                    	  		</div>
 
                		  <div class="listingAdaptationsLinkAndIcon">
-                             <img src="images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                             <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
                              <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                       </div>
                         </div>
@@ -276,8 +276,8 @@ $adaptationstring = "parent_id is not null";
                 <div class="innerRightContent">
                 	<div class="rightColumn4RightPadding">
                 	<div class="printEmailDownloadIcons">
-                    	<a href="#"><img src="images/icon-content-top-print.png" width="19" height="15"></a>
-                        <a href="#"><img src="images/icon-content-top-email.png" width="19" height="15"></a>
+                    	<a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15"></a>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" width="19" height="15"></a>
                     </div>
                     <br><br>
                     <span class="greyText fontBold">Type of institution:</span> <a href="#" class="greyTextLink">School</a>
@@ -299,27 +299,27 @@ $adaptationstring = "parent_id is not null";
                     <br><br>
                     <span class="greyText fontBold">Community related information:</span>
                     <div class="listCommunityRelatedInfoDiv">
-                    	<div class="communityRelatedInfoIcon"><img src="images/icon-comment-post.png" width="18" height="18"></div>
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" width="18" height="18"></div>
                         <div class="communityRelatedInfoText">Ignor uploaded a file (7 hours ago)</div>
                     </div>
                     <div class="listCommunityRelatedInfoDiv">
-                    	<div class="communityRelatedInfoIcon"><img src="images/icon-friend.png" width="18" height="18"></div>
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-friend.png" width="18" height="18"></div>
                         <div class="communityRelatedInfoText">Ignor became member of <a href="" class="greyTextLink">Politechnic Namibia</a> (7 hours ago)</div>
                     </div>
                     <div class="listCommunityRelatedInfoDiv">
-                    	<div class="communityRelatedInfoIcon"><img src="images/icon-member.png" width="18" height="18"></div>
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
                         <div class="communityRelatedInfoText">Ignor became member of <a href="" class="greyTextLink">Politechnic Namibia</a> (7 hours ago)</div>
                     </div>
                     <div class="listCommunityRelatedInfoDiv">
-                    	<div class="communityRelatedInfoIcon"><img src="images/icon-friend.png" width="18" height="18"></div>
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-friend.png" width="18" height="18"></div>
                         <div class="communityRelatedInfoText">Ignor became member of <a href="" class="greyTextLink">Politechnic Namibia</a> (7 hours ago)</div>
                     </div>
                     <div class="listCommunityRelatedInfoDiv">
-                    	<div class="communityRelatedInfoIcon"><img src="images/icon-comment-post.png" width="18" height="18"></div>
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" width="18" height="18"></div>
                         <div class="communityRelatedInfoText">Ignor became member of <a href="" class="greyTextLink">Politechnic Namibia</a> (7 hours ago)</div>
                     </div>
                     <div class="listCommunityRelatedInfoDiv">
-                    	<div class="communityRelatedInfoIcon"><img src="images/icon-member.png" width="18" height="18"></div>
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
                         <div class="communityRelatedInfoText">Ignor became member of <a href="" class="greyTextLink">Politechnic Namibia</a> (7 hours ago)</div>
                     </div>
                     </div>
@@ -333,17 +333,17 @@ $adaptationstring = "parent_id is not null";
             	<div class="featuredHeader pinkText">FEATURED ADAPTATION</div>
                 <div class="rightColumnBorderedDiv">
                 	<div class="rightColumnContentPadding">
-                	  <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
+                	  <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
                	  <div class="featuredAdaptationRightContentDiv">
                         	<span class="greyListingHeading">Manual for Investigative Journalists</span>
                             <br><br>
-                            <img src="images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
 
 
                         </div>
                         <div class="featuredAdaptedBy">Adapted By</div>
-                        <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
                         <span class="greyListingHeading">Polytechnic of Namibia</span>
                         </div>
                 </div>
@@ -388,7 +388,7 @@ $adaptationstring = "parent_id is not null";
                 <a href="" class="footerLink">Link 12</a>
             </div>
             <div class="footerBottomText">
-            	<img src="images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
+            	<img src="skins/unesco_oer/images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
                 <a href="" class="footerLink">UNESCO</a> |
                 <a href="" class="footerLink">Communication and Information</a> |
                 <a href="" class="footerLink">About OER Platform</a> |
