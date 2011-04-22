@@ -18,7 +18,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @package   SMIS Academics
  * @author    Boniface Chacha <bonifacechacha@gmail.com>
  */
-class tzacedemics extends controller {
+class tzschoolacedemics extends controller {
 
   public $lang;
 
