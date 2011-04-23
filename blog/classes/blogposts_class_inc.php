@@ -263,20 +263,20 @@ class blogposts extends object
                     $head = $objStickyIcon->show() . $headLink->show()
                       . " $rt $icons<br /><span class='blog-head-date'>$dt</span>";
                 } else {
-                	if($post['post_status'] == 1)
-                    {
-                    	$headLink = new href($this->uri(array(
+                    if($post['post_status'] == 1) {
+                        $headLink = new href($this->uri(array(
                         'action' => 'viewsingle',
                         'postid' => $post['id'],
                         'userid' => $post['userid']
-                    )) , stripslashes($this->objLanguage->languageText("mod_blog_draft","blog")." ".$this->objLanguage->languageText("mod_blog_word_post","blog").": ".$post['post_title']) , NULL);
-                    }
-                    else {
-                    	$headLink = new href($this->uri(array(
-                        	'action' => 'viewsingle',
-                        	'postid' => $post['id'],
-                        	'userid' => $post['userid']
-                    	)) , stripslashes($post['post_title']) , NULL);
+                        )) , stripslashes($this->objLanguage->languageText("mod_blog_draft","blog")
+                        ." ".$this->objLanguage->languageText("mod_blog_word_post","blog").": "
+                        .$post['post_title']) , NULL);
+                    } else {
+                        $headLink = new href($this->uri(array(
+                            'action' => 'viewsingle',
+                            'postid' => $post['id'],
+                            'userid' => $post['userid']
+                    )) , stripslashes($post['post_title']) , NULL);
                     }
                     $head = $headLink->show()
                       . " $rt $icons<br /><span class='blog-head-date'>$dt</span><br />";
@@ -286,8 +286,7 @@ class blogposts extends object
                 // do the BBCode Parsing
                 try {
                     $this->bbcode = $this->getObject('bbcodeparser', 'utilities');
-                }
-                catch(customException $e) {
+                } catch(customException $e) {
                     customException::cleanUp();
                 }
                 // $post['post_content'] = stripslashes($this->bbcode->parse4bbcode($post['post_content']));
@@ -373,6 +372,8 @@ class blogposts extends object
                     'module' => 'blog',
                     'postid' => $post['id']
                 ));
+                $permaHash = md5($bmurl);
+                $wallDiv = '<div class="wall" id="' . $permaHash . '">';
                 $bmurl = urlencode($bmurl);
                 $bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=" . $bmurl . "&amp;title=" . urlencode(addslashes(htmlentities($post['post_title'])));
                 $bmtext = '<img src="'.$this->getResourceUri('button1-bm.gif', 'blog').'" width="125" height="16" border="0" alt="' . $this->objLanguage->languageText("mod_blog_bookmarkpost", "blog") . '"/>';
@@ -382,13 +383,14 @@ class blogposts extends object
                 $pid = $post['id'];
                 $numtb = $this->objDbBlog->getTrackbacksPerPost($pid);
                 if ($numtb != 0) {
-                    $numtblnk = new href($this->uri(array(
+                    $pLink = $this->uri(array(
                         'module' => 'blog',
                         'action' => 'viewsingle',
                         'mode' => 'viewtb',
                         'postid' => $pid,
                         'userid' => $post['userid']
-                    )) , $this->objLanguage->languageText("mod_blog_vtb", "blog") , NULL);
+                    ));
+                    $numtblnk = new href($pLink, $this->objLanguage->languageText("mod_blog_vtb", "blog") , NULL);
                     // $numtb, NULL);
                     $numtb = $numtblnk->show();
                 } else {
@@ -415,32 +417,7 @@ class blogposts extends object
                     $tbl->cellpadding = 3;
                     $tbl->width = "100%";
                     $tbl->align = "center";
-                    // set up the header row
-                    $tbl->startHeaderRow();
-                    $tbl->addHeaderCell('');
-                    // $this->objLanguage->languageText("mod_blog_editpost", "blog"));
-                    // edit
-                    $tbl->addHeaderCell('');
-                    // $this->objLanguage->languageText("mod_blog_bookmarkpost", "blog"));
-                    // bookmark
-                    if ($post['comment_status'] == 'Y' || $post['comment_status'] == 'on') {
-                        $tbl->addHeaderCell('');
-                        // $this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
-                        // comments
-
-                    }
-                    $tbl->addHeaderCell('');
-                    // $this->objLanguage->languageText("mod_blog_trackbackurl", "blog"));
-                    // trackback
-                    $tbl->addHeaderCell('');
-                    // $this->objLanguage->languageText("mod_blog_cclic", "blog"));
-                    // Licence
-                    $tbl->addHeaderCell('');
-                    // save as pdf
-                    $tbl->endHeaderRow();
                     $tbl->startRow();
-                    //$tbl->addCell($edIcon);
-                    // edit icon
                     $tbl->addCell($bookmark->show());
                     // bookmark link(s)
                     if ($post['comment_status'] == 'Y' || $post['comment_status'] == 'on') {
@@ -476,6 +453,8 @@ class blogposts extends object
                         $tbl->addCell($pdflink->show() . $mtflink->show());
                     }
                     $tbl->endRow();
+
+                    $bottombar = '<div class="blog_bottombar">' . $tbl->show() . '</div>';
                     // echo $this->objTB->autodiscCode();
                     // tack the tags onto the end of the post content...
                     $thetags = $this->objDbBlog->getPostTags($post['id']);
@@ -497,8 +476,10 @@ class blogposts extends object
                       . "<div class='blog-item-base'><center><em><b>"
                       . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog")
                       . "</b><br />" . $linkstr . "</em><hr />"
-                      . $tbl->show() . "</center></div>");
-                    $ret.= $objFeatureBox->showContent($head, $fboxcontent);
+                      . $bottombar . "</center></div>");
+                    $ret.= '<div class="blogpost_before"></div>'
+                      . $objFeatureBox->showContent($head, $fboxcontent)
+                      . '<div class="blogpost_after"></div>';
                 } else {
                     // table of non logged in options
                     // Set the table name
@@ -506,24 +487,6 @@ class blogposts extends object
                     $tblnl->cellpadding = 3;
                     $tblnl->width = "100%";
                     $tblnl->align = "center";
-                    // set up the header row
-                    $tblnl->startHeaderRow();
-                    $tblnl->addHeaderCell('');
-                    // $this->objLanguage->languageText("mod_blog_bookmarkpost", "blog"));
-                    // bookmark
-                    $tblnl->addHeaderCell('');
-                    // $this->objLanguage->languageText("mod_blog_trackbackurl", "blog"));
-                    // trackback
-                    if ($post['comment_status'] == 'Y' || $post['comment_status'] == 'on') {
-                        $tblnl->addHeaderCell('');
-                        // $this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
-
-                    }
-                    $tblnl->addHeaderCell('');
-                    // $this->objLanguage->languageText("mod_blog_cclic", "blog"));
-                    // Licence
-                    $tblnl->addHeaderCell('');
-                    $tblnl->endHeaderRow();
                     $tblnl->startRow();
                     $tblnl->addCell($bookmark->show());
                     // bookmark link(s)
@@ -558,6 +521,9 @@ class blogposts extends object
                     }
                     // pdf icon
                     $tblnl->endRow();
+                    // Bottombar with bookmark, trackback, etc
+                    $bottombar = '<div class="blog_bottombar">' . $tblnl->show()
+                      . '</div>';
                     // echo $this->objTB->autodiscCode();
                     // tack the tags onto the end of the post content...
                     $thetags = $this->objDbBlog->getPostTags($post['id']);
@@ -574,20 +540,20 @@ class blogposts extends object
                     if (empty($linkstr)) {
                         $linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
-                    $ret.= $objFeatureBox->showContent($head, $post['post_content']
+                    
+                    $ret.= '<div class="blogpost_before"></div>'
+                      . $objFeatureBox->showContent($head, $post['post_content']
                       . $this->cleaner->cleanHtml("<br /><hr /><div class='blog-item-base'><center><em><b>"
                       . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog")
-                      . "</b><br />" . $linkstr . "</em><hr />"
-                      .  $tblnl->show() . "</center></div>" ));
+                      . "</b><br />" . $linkstr . "</em><br />"
+                      .  $bottombar . "</center></div>" ))
+                      . '<div class="blogpost_after"></div>';
                 }
             }
         } else {
             $ret = FALSE;
-            // "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
-
         }
-
-        return $ret;
+        return $ret ;
     }
     /**
      * Method to quick add a post to the posts table

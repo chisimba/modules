@@ -8,6 +8,7 @@ $middleColumn = NULL;
 if (!is_null($stickypost)) {
     $middleColumn.= $this->objblogPosts->showPosts($stickypost, TRUE);
 }
+
 if (!empty($latestpost) && !empty($posts)) {
     $this->loadClass('htmlheading', 'htmlelements');
     $header = new htmlheading();
@@ -18,14 +19,17 @@ if (!empty($latestpost) && !empty($posts)) {
     if ($posts[0]['id'] == $latestpost[0]['id']) {
         unset($posts[0]);
     }
+    //
     $middleColumn.= $this->objblogPosts->showPosts($latestpost);
     $middleColumn.= "<hr />";
     $headerprev = new htmlheading();
     $headerprev->type = 3;
     $headerprev->str = $this->objLanguage->languageText("mod_blog_previousposts", "blog");
     $middleColumn.= $headerprev->show();
-    $middleColumn.= ($this->objblogPosts->showPosts($posts));
+    //
+    $middleColumn.= $this->objblogPosts->showPosts($posts);
 } else {
+    // Case where there are no posts to display
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
     if (($this->objUser->userId() == $userid)&&($this->approvedBlogger())) {
         $linker = new href($this->uri(array(
@@ -36,8 +40,14 @@ if (!empty($latestpost) && !empty($posts)) {
         $middleColumn.= "<center>" . $linker->show() . "</center>";
     }
 }
+
+
+
+
+
 // left hand blocks
 $leftCol = $objUi->leftBlocks($userid);
+
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, $cats);
 if ($leftCol == NULL || $rightSideColumn == NULL) {
@@ -45,6 +55,7 @@ if ($leftCol == NULL || $rightSideColumn == NULL) {
 } else {
     $cssLayout->setNumColumns(3);
 }
+// Provide for RSS feeds
 if (!empty($rss)) {
     foreach($rss as $feeds) {
         $timenow = time();
@@ -58,8 +69,9 @@ if (!empty($rss)) {
         }
     }
 }
-$layoutToUse = $this->objSysConfig->getValue('blog_layout', 'blog');
 
+// What layout should we use
+$layoutToUse = $this->objSysConfig->getValue('blog_layout', 'blog');
 if ($layoutToUse == 'elearn') {
     $this->setLayoutTemplate('blogelearn_layout_tpl.php');
     echo $middleColumn;

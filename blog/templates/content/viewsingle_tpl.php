@@ -34,13 +34,22 @@ if (isset($comment) && isset($useremail)) {
 }
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 //show all the posts
-$middleColumn.= ($this->objblogPosts->showPosts($posts, TRUE));
+$middleColumn.= $this->objblogPosts->showPosts($posts, TRUE);
 
+
+// Show comments using the comment object
+$objCmt = $this->getObject('dynamiccomment', 'blog');
+$middleColumn.= $objCmt->show($postid);
+
+/*
 if ($this->commentsEnabled) {
     $middleColumn.= $this->objComments->showComments($postid);
 }
 
-$middleColumn.= $tracks = $this->objblogTrackbacks->showTrackbacks($postid);
+ 
+
+$tracks = $this->objblogTrackbacks->showTrackbacks($postid);
+$middleColumn.= $tracks;
 
 if ($this->commentsEnabled) {
     if ($this->objUser->isLoggedIn() == TRUE) {
@@ -49,7 +58,7 @@ if ($this->commentsEnabled) {
         $middleColumn.= $this->objblogPosts->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
     }
 }
-
+*/
 // Added by Tohir - Standard layout for elearn
 $layoutToUse = $this->objSysConfig->getValue('blog_layout', 'blog');
 

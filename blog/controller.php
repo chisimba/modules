@@ -543,7 +543,7 @@ class blog extends controller {
                 $permaLinkForPost = str_replace('&amp;', '&', $permaLinkForPost);
                 $canonicalLink = '<link rel="canonical" href="' . $permaLinkForPost . '"/>';
                 $this->appendArrayVar('headerParams', $canonicalLink);
-                $this->commentsEnabled = $this->objSysConfig->getValue('enabled', 'blogcomments');
+                $this->commentsEnabled = $this->objSysConfig->getValue('enabled', 'blogcomments'); //-------------
                 return 'viewsingle_tpl.php';
                 break;
 
