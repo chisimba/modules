@@ -95,5 +95,22 @@ class fbapps extends object
             <script src="http://connect.facebook.net/en_US/all.js#appId=' . $apikey . '&amp;xfbml=1"></script>
             <fb:comments numposts="' . $numPosts . '" width="' . $width . '" publish_feed="true"></fb:comments>';
     }
+
+    public function insertCommentCount()
+    {
+        $pageUrl = 'http';
+        if (!empty($_SERVER["HTTPS"])) {
+            $pageURL .= "s";
+        }
+        $pageUrl .= "://";
+         if ($_SERVER["SERVER_PORT"] != "80") {
+            $pageUrl .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+         } else {
+            $pageUrl .= $_SERVER["SERVER_NAME"].htmlentities($_SERVER["REQUEST_URI"]);
+         }
+         //echo 'HEREHEREHERE: ' . $pageUrl;
+         //$pageUrl = urlencode($pageUrl);
+         return "<fb:comments-count href=$pageUrl/></fb:comments-count> awesome comments ";
+    }
 }
 ?>

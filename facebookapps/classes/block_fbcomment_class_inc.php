@@ -101,7 +101,6 @@ class block_fbcomment extends object
     {
         $objApps = $this->getObject('fbapps', 'facebookapps');
         return $objApps->getComments();
-        
     }
 }
 ?>
