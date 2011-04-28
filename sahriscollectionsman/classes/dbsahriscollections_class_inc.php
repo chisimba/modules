@@ -95,10 +95,26 @@ class dbsahriscollections extends dbtable
         return $this->getAll();
     }
     
+    public function getCollById($id) {
+        $this->changeTable('tbl_sahriscollections_collections');
+        return $this->getAll("WHERE id = '$id'");
+    }
+    
     public function insertRecord($insarr) {
         $this->changeTable('tbl_sahriscollections_items');
         $insarr['datecreated'] = $this->now();
         return $this->insert($insarr);
+    }
+    
+    public function getSingleRecord($acno, $coll) {
+        $this->changeTable('tbl_sahriscollections_items');
+        return $this->getAll("WHERE accno = '$acno' AND collection = '$coll'");
+    }
+    
+    public function searchItems($q) {
+        $this->changeTable('tbl_sahriscollections_items');
+        $res = $this->getAll("WHERE description LIKE '%%$q%%' OR accno LIKE '%%$q%%' OR title LIKE '%%$q%%'");
+        return $res;
     }
     
     private function changeTable($table) {

@@ -274,6 +274,8 @@ class sahriscollectionsops extends object {
      */
     public function formatRecord($record)
     {
+        // var_dump($record); die();
+        $record = $record[0];
         $this->objWashout = $this->getObject('washout', 'utilities');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
@@ -282,28 +284,30 @@ class sahriscollectionsops extends object {
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->startRow();
 
-        $collLabel = new label($this->objLanguage->languageText('mod_collectionsman_collection', 'sahriscollectionsman').'&nbsp;', 'input_coll');
+        $collLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collection', 'sahriscollectionsman').'&nbsp;', 'input_coll');
         $table->addCell($collLabel->show(), 150, NULL, 'right');
+        $collname = $this->objDbColl->getCollById($record['collection']);
+        $collname = $collname[0]['collname'];
         $table->addCell('&nbsp;', 5);
-        $table->addCell($record['collection']);
+        $table->addCell($collname);
         $table->endRow();
 
         // accession number
-        $anoLabel = new label($this->objLanguage->languageText('mod_collectionsman_accno', 'sahriscollectionsman').'&nbsp;', 'input_ano');
+        $anoLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_accno', 'sahriscollectionsman').'&nbsp;', 'input_ano');
         $table->addCell($anoLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($record['accession number']);
+        $table->addCell($record['accno']);
         $table->endRow();
 
         // title
-        $titleLabel = new label($this->objLanguage->languageText('mod_collectionsman_title', 'sahriscollectionsman').'&nbsp;', 'input_title');
+        $titleLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_title', 'sahriscollectionsman').'&nbsp;', 'input_title');
         $table->addCell($titleLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($record['title']);
         $table->endRow();
 
         // description
-        $descLabel = new label($this->objLanguage->languageText('mod_collectionsman_description', 'sahriscollectionsman').'&nbsp;', 'input_desc');
+        $descLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_description', 'sahriscollectionsman').'&nbsp;', 'input_desc');
         $table->addCell($descLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $msg->toolbarSet = 'simple';
@@ -311,21 +315,21 @@ class sahriscollectionsops extends object {
         $table->endRow();
 
         // date created
-        $dcLabel = new label($this->objLanguage->languageText('mod_collectionsman_datecreated', 'sahriscollectionsman').'&nbsp;', 'input_datecreated');
+        $dcLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_datecreated', 'sahriscollectionsman').'&nbsp;', 'input_datecreated');
         $table->addCell($dcLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($record['date created']);
+        $table->addCell($record['datecreated']);
         $table->endRow();
 
         // media
-        $mediaLabel = new label($this->objLanguage->languageText('mod_collectionsman_media', 'sahriscollectionsman').'&nbsp;', 'input_media');
+        $mediaLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_media', 'sahriscollectionsman').'&nbsp;', 'input_media');
         $table->addCell($mediaLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($record['media']);
         $table->endRow();
 
         // comment
-        $commentLabel = new label($this->objLanguage->languageText('mod_collectionsman_comment', 'sahriscollectionsman').'&nbsp;', 'input_comment');
+        $commentLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_comment', 'sahriscollectionsman').'&nbsp;', 'input_comment');
         $table->addCell($commentLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($record['comment']);
@@ -338,6 +342,31 @@ class sahriscollectionsops extends object {
         $ret .= $fieldset->show();
 
         return $ret;
+    }
+    
+    public function menuBox() {
+        $ret = NULL;
+        $menubox = $this->newObject('featurebox', 'navigation');
+        
+        // create a collection
+        $createcoll = $this->newObject('link', 'htmlelements');
+        $createcoll->href = $this->uri(array('action' => 'collform'));
+        $createcoll->link = $this->objLanguage->languageText("mod_sahriscollectionsman_createcollection", "sahriscollectionsman");
+        $createcoll = $createcoll->show();
+        
+        // add a collection record
+        $addrec = $this->newObject('link', 'htmlelements');
+        $addrec->href = $this->uri(array('action' => 'addform'));
+        $addrec->link = $this->objLanguage->languageText("mod_sahriscollectionsman_addrectocoll", "sahriscollectionsman");
+        $addrec = $addrec->show();
+        
+        $txt = "<ul";
+        $txt .= "<li>".$createcoll."</li>";
+        $txt .= "<li>".$addrec."</li>";
+        $txt .= "</ul>";
+        
+        $ret = $menubox->show($this->objLanguage->languageText("mod_sahriscollectionsman_menu", "sahriscollectionsman"), $txt);
+        return $ret; 
     }
 
 }

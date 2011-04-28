@@ -5,6 +5,7 @@ $cssLayout->setNumColumns(2);
 // get the sidebar object
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
 $this->loadClass('htmlheading', 'htmlelements');
+$this->objCollOps    = $this->getObject('sahriscollectionsops');
         
 $middleColumn = NULL;
 $leftColumn = NULL;
@@ -18,6 +19,7 @@ $middleColumn .= $header->show();
 
 $middleColumn .= $form;
 $leftColumn .= $this->leftMenu->show();
+$leftColumn .= $this->objCollOps->menuBox();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);

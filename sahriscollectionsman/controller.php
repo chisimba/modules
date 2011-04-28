@@ -116,7 +116,14 @@ class sahriscollectionsman extends controller
             case NULL:
 
             case 'addform' :
-                $form = $this->objCollOps->addRecordForm();
+                // check that there is a collection to add to first...
+                $cnames = $this->objDbColl->getCollectionNames();
+                if(!empty($cnames)) {
+                    $form = $this->objCollOps->addRecordForm();   
+                }
+                else {
+                    $form = $this->objLanguage->languageText("mod_sahriscollectionsman_nocolldefined", "sahriscollectionsman");
+                }
                 $this->setVarByRef('form', $form);
                 return 'add_tpl.php';
                 break;
@@ -151,18 +158,21 @@ class sahriscollectionsman extends controller
 
             case 'getrecord' :
                 $acno = $this->getParam('acno');
-                
+                $coll = $this->getParam('coll');
+                $res = $this->objDbColl->getSingleRecord($acno, $coll);
+                $this->setVarByRef('res', $res);
                 return 'viewsingle_tpl.php';
                 break;
 
             case 'search':
                 $query = $this->getParam('q');
-                if ($query) {
-                    
-                } else {
-                    
+                $data = $this->objDbColl->searchItems($query);
+                $objwash = $this->getObject('washout', 'utilities');
+                foreach($data as $row) {
+                    $desc = strip_tags($objwash->parseText($row['description']));
+                    $contents[] = array('accno' => $row['accno'], 'title' => $row['title'], 'description' => $desc, 'comment' => $row['comment'], 'datecreated' => $row['datecreated']);
                 }
-                
+                // var_dump($contents);
                 $this->setVarByRef('contents', $contents);
                 $this->setVarByRef('query', $query);
                 return 'search_tpl.php';
