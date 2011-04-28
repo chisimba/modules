@@ -368,6 +368,41 @@ class sahriscollectionsops extends object {
         $ret = $menubox->show($this->objLanguage->languageText("mod_sahriscollectionsman_menu", "sahriscollectionsman"), $txt);
         return $ret; 
     }
+    
+    public function formatSearchResults($results) {
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cellspacing='1';
+        $table->cellpadding='10';
+            
+        $table->startHeaderRow();
+        $table->addHeaderCell('Accession Number');
+        $table->addHeaderCell('Title');
+        $table->addHeaderCell('Description');
+        $table->addHeaderCell('Comment');
+        $table->addHeaderCell('Date Created');
+        $table->addHeaderCell('Action');
+        $table->endHeaderRow();
+        
+        foreach($results as $row) {
+            $table->startRow();
+            $table->addCell($row['accno']);
+            $table->addCell($row['title']);
+            $table->addCell($row['description']);
+            $table->addCell($row['comment']);
+            $table->addCell($row['datecreated']);
+            $objIcon = $this->newObject('geticon', 'htmlelements');
+            $url = $this->uri(array('action' => 'viewsingle', 'id' => $row['id']));
+            $objIcon->setIcon('visible', 'gif');
+            $v = $this->newObject('link', 'htmlelements');
+            $v->href = $url;
+            $v->link = $objIcon->show();
+            $table->addCell($v->show());
+            $table->endRow();
+        }
+        
+        return $table->show();
+        
+    }
 
 }
 ?>

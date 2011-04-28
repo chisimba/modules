@@ -163,18 +163,18 @@ class sahriscollectionsman extends controller
                 $this->setVarByRef('res', $res);
                 return 'viewsingle_tpl.php';
                 break;
+                
+            case 'viewsingle' :
+                $id = $this->getParam('id');
+                $res = $this->objDbColl->getSingleRecordById($id);
+                $this->setVarByRef('res', $res);
+                return 'viewsingle_tpl.php';
+                break;
 
             case 'search':
                 $query = $this->getParam('q');
-                $data = $this->objDbColl->searchItems($query);
-                $objwash = $this->getObject('washout', 'utilities');
-                foreach($data as $row) {
-                    $desc = strip_tags($objwash->parseText($row['description']));
-                    $contents[] = array('accno' => $row['accno'], 'title' => $row['title'], 'description' => $desc, 'comment' => $row['comment'], 'datecreated' => $row['datecreated']);
-                }
-                // var_dump($contents);
-                $this->setVarByRef('contents', $contents);
-                $this->setVarByRef('query', $query);
+                $res = $this->objDbColl->searchItems($query);
+                $this->setVarByRef('res', $res);
                 return 'search_tpl.php';
 
             default:

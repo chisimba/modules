@@ -111,6 +111,11 @@ class dbsahriscollections extends dbtable
         return $this->getAll("WHERE accno = '$acno' AND collection = '$coll'");
     }
     
+    public function getSingleRecordById($id) {
+        $this->changeTable('tbl_sahriscollections_items');
+        return $this->getAll("WHERE id = '$id'");
+    }
+    
     public function searchItems($q) {
         $this->changeTable('tbl_sahriscollections_items');
         $res = $this->getAll("WHERE description LIKE '%%$q%%' OR accno LIKE '%%$q%%' OR title LIKE '%%$q%%'");

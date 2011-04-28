@@ -1,32 +1,27 @@
 <?php
-
-$objForm = $this->getObject('html5form', 'html5elements');
-$objTable = $this->getObject('html5table', 'html5elements');
-$this->objCollOps    = $this->getObject('sahriscollectionsops');
-$document = new DOMDocument();
-
-$form = $objForm->form($document, 'GET');
-$document->appendChild($form);
-
-$form->appendChild($objForm->hidden($document, 'module', $this->moduleName));
-$form->appendChild($objForm->hidden($document, 'action', 'search'));
-$form->appendChild($objForm->text($document, 'q', $query, 'Enter your query', NULL, TRUE, TRUE, TRUE));
-$form->appendChild($objForm->submit($document, 'Search'));
-
-$headers = array('Accesion Number', 'Title', 'Description', 'Comment', 'Date Created');
-$edit = array('action' => 'edit');
-$delete = array('action' => 'delete');
-
-$form->appendChild($objTable->table($document, NULL, $headers, $contents, $edit, $delete, $this->moduleName));
-
-$this->loadClass('htmlheading', 'htmlelements');
-$header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_collectionsman_search', 'collectionsman');
-$header->type = 1;
-
-$leftMenu = $this->newObject('usermenu', 'toolbar');
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(2);
-$cssLayout->setLeftColumnContent($leftMenu->show().$this->objCollOps->menuBox());
-$cssLayout->setMiddleColumnContent($header->show().$document->saveHTML());
+
+$this->objCollOps    = $this->getObject('sahriscollectionsops');
+
+// get the sidebar object
+$this->leftMenu = $this->newObject('usermenu', 'toolbar');
+$this->loadClass('htmlheading', 'htmlelements');
+        
+$middleColumn = NULL;
+$leftColumn = NULL;
+
+// Add in a heading
+$header = new htmlHeading();
+$header->str = $this->objLanguage->languageText('mod_collectionsman_viewresheader', 'collectionsman');
+$header->type = 1;
+
+$middleColumn .= $header->show();
+
+$middleColumn .= $this->objCollOps->formatSearchResults($res);
+$leftColumn .= $this->leftMenu->show();
+$leftColumn .= $this->objCollOps->menuBox();
+
+$cssLayout->setMiddleColumnContent($middleColumn);
+$cssLayout->setLeftColumnContent($leftColumn);
 echo $cssLayout->show();
