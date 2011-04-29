@@ -172,10 +172,23 @@ class sahriscollectionsman extends controller
                 break;
 
             case 'search':
-                $query = $this->getParam('q');
-                $res = $this->objDbColl->searchItems($query);
-                $this->setVarByRef('res', $res);
+                $query = $this->getParam('q', NULL);
+                if($query == NULL) {
+                    $res = NULL;
+                    return 'search_tpl.php';
+                }
+                else {
+                    $res = $this->objDbColl->searchItems($query);
+                    $this->setVarByRef('res', $res);
+                    return 'search_tpl.php';
+                }
+                break;
+                
+            case 'searchform' :
+                $form = $this->objCollOps->searchForm();
+                $this->setVarByRef('form', $form);
                 return 'search_tpl.php';
+                break;
 
             default:
                 $this->nextAction('');

@@ -403,6 +403,36 @@ class sahriscollectionsops extends object {
         return $table->show();
         
     }
+    
+    public function searchForm() {
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'sahriscollectionsman', 'Required').'</span>';
+        $ret = NULL;
+        $form = new form ('search', $this->uri(array('action'=>'search'), 'sahriscollectionsman'));
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $q = new textinput();
+        $q->name = 'q';
+        $q->width ='50%';
+        $qLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_keyword', 'sahriscollectionsman').'&nbsp;', 'input_q');
+        $table->addCell($qLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($q->show());
+        $table->endRow();
+        
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->legend = '';
+        $fieldset->contents = $table->show();
+        // add the form to the fieldset
+        $form->addToForm($fieldset->show());
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_sahriscollectionsman_search", "sahriscollectionsman"));
+        $button->setToSubmit();
+        $form->addToForm('<p align="center">'.$button->show().'</p>');
+        $ret .= $form->show();
+        
+        return $ret;
+    }
 
 }
 ?>

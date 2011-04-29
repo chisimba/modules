@@ -13,12 +13,18 @@ $leftColumn = NULL;
 
 // Add in a heading
 $header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_collectionsman_viewresheader', 'collectionsman');
+$header->str = $this->objLanguage->languageText('mod_collectionsman_viewresheader', 'sahriscollectionsman');
 $header->type = 1;
 
 $middleColumn .= $header->show();
-
-$middleColumn .= $this->objCollOps->formatSearchResults($res);
+if(!isset($res) || empty($res)) {
+    $middleColumn .= $this->objLanguage->languageText("mod_sahriscollectionsman_noresults", "sahriscollectionsman");
+    $middleColumn .= $this->objCollOps->searchForm();
+}
+else {
+    $middleColumn .= $this->objCollOps->searchForm();
+    $middleColumn .= $this->objCollOps->formatSearchResults($res);
+}
 $leftColumn .= $this->leftMenu->show();
 $leftColumn .= $this->objCollOps->menuBox();
 
