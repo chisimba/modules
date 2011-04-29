@@ -11,7 +11,7 @@
 $this->loadClass('dropdown','htmlelements');
 
 
-class academics_report_class_inc extends object{
+class academics_report extends object{
    var $objDb_student;
 
      public function init()
