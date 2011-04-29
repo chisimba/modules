@@ -12,7 +12,7 @@ $leftColumn = NULL;
 
 // Add in a heading
 $header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_collectionsman_createrecheader', 'collectionsman');
+$header->str = $this->objLanguage->languageText('mod_collectionsman_createrecheader', 'sahriscollectionsman');
 $header->type = 1;
 
 $middleColumn .= $header->show();

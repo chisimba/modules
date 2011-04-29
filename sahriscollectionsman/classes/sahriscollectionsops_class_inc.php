@@ -110,7 +110,7 @@ class sahriscollectionsops extends object {
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
-        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'collectionsman', 'Required').'</span>';
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'sahriscollectionsman', 'Required').'</span>';
         $ret = NULL;
         // start the form
         $form = new form ('addcoll', $this->uri(array('action'=>'createcollection'), 'sahriscollectionsman'));
