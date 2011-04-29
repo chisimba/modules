@@ -68,7 +68,7 @@ class tzschoolacademics extends controller {
     }
 
     private function __main(){
-        return 'mainacademics_tpl.php';
+        return 'academicsmain_tpl.php';
     }
 
     public function  requiresLogin($action) {
