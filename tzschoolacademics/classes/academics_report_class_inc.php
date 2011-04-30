@@ -54,6 +54,47 @@ return $output;
     return $class_dropdown;
     }
 
- 
+
+    /**method to get students results
+     * @access public
+     * @param  string $std_regno  student registration no
+     * @param  integer $year_id   academic year_id
+     * @param  integer $examId    examination type_id
+     * @param  integer $class_id  student class id
+     *
+     */
+    public function get_student_internal_results($std_regno,$class_id,$year_id,$exam_id){
+     //getting result scores details
+ $results_sql="SELECT `tbl_student_reg_no`, `score`,`subject_name`
+               FROM `tbl_result`,tbl_subjects  
+              WHERE tbl_result.`tbl_student_reg_no`='$std_regno' AND tbl_result.`tbl_academic_year_id`='$year_id'
+              AND tbl_result.`tbl_exam_id`='$exam_id' AND tbl_subjects.`puid`=tbl_result.`tbl_subjects_id` ";
+
+        ///getting students,class and academic year details
+ $student_sql="SELECT `firstname`, `lastname`, `othernames`,`class_name`,`year_name`
+               FROM `tbl_student`,tbl_class,tbl_academic_year,tbl_student_class
+               WHERE tbl_student.`reg_no`='$std_regno' AND tbl_academic_year.`puid`='$year_id' AND tbl_class.`puid`=tbl_student_class.`tbl_class_id`
+              AND tbl_student_class.`tbl_academic_year_id`='$year_id'  ";
+
+   $results=$this->objDb_student->getArray($results_sql);
+   ////extracting results data
+   foreach ($results as $result_data) {
+       ///format output here
+
+
+   }
+
+   $std_details=$this->objDb_student->getArray($student_sql);
+   ///extracting students information
+   foreach ($std_details as $std_data) {
+       ///format output
+   }
+
+
+    }
+
+
+
+    /////end of class
 }
 ?>
