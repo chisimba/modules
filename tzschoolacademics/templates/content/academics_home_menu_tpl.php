@@ -40,15 +40,15 @@ $link_table->cellpadding='1px';
 $link_table->cellspacing='1px';
 $link_table->attributes='bgcolor=black';
 $link_table->startRow();
-$link_table->addCell($adm_link->show(), $width='100%', $valign="middle", $align=center, $class=null, $attrib='bgcolor=white',$border = '4px');
+$link_table->addCell($adm_link->show(), $width='100%', $valign="middle", $align='center', $class=null, $attrib='bgcolor=white',$border = '4px');
 $link_table->endRow();
 
 $link_table->startRow();
-$link_table->addCell($result_link->show(), $width='100%', $valign="middle", $align=center, $class=null, $attrib='bgcolor=white',$border = '4px');
+$link_table->addCell($result_link->show(), $width='100%', $valign="middle", $align='center', $class=null, $attrib='bgcolor=white',$border = '4px');
 $link_table->endRow();
 
 $link_table->startRow();
-$link_table->addCell($report_Link->show(), $width='100%', $valign="middle", $align=center, $class=null, $attrib='bgcolor=white',$border = '4px');
+$link_table->addCell($report_Link->show(), $width='100%', $valign="middle", $align='center', $class=null, $attrib='bgcolor=white',$border = '4px');
 $link_table->endRow();
 
 return $link_table->show();
