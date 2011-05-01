@@ -31,13 +31,45 @@ class tzschoolacademics extends controller {
         $this->user=$this->getObject('user','security');
     }
 
-    public function dispatch(){
+    public function dispatch($action){
         //return 'AddEdit_tpl.php';
         $action=$this->getParam('action', 'main');
+        /*
         $method=$this->__getMethod($action);
         return $this->$method();
+         * 
+         */
 
+        ////start page redirection
+        switch ($action) {
+          case 'Admission':
+            echo $action;
+
+
+              break;
+
+          case 'Results':
+              echo $action;
+              break;
+
+          case 'Report':
+           echo $action;
+                break;
+
+
+
+            default:
+           //return 'academic_report_home_tpl.php';
+             return 'academicsmain_tpl.php';
+                break;
+        }
+
+
+        ///end of dispatch
     }
+
+
+
 
     function __getMethod(& $action)
     {
@@ -73,6 +105,82 @@ class tzschoolacademics extends controller {
 
     public function  requiresLogin($action) {
         return false;
+    }
+
+
+    /*
+     * method to redirect actions when report menus are accessed
+     * @access public
+     * @param string action   :An action received by displatch method of the controller
+     *
+     * @author: mhoja charles
+     * @email:  charlesmdack@gmail.com
+     */
+
+     function report_actions($action) {
+         echo $action;
+         exit;
+           if (strcmp($action,'Report') ) {
+            ////start page redirection
+        $action2 = $this->getParam('action2','main'); ///getting action2
+        echo $action2;
+        exit;
+            switch ($action2) {
+
+                case 'StudentResults':
+
+                    $middle_content = 'StudentResults';
+                    $this->setVar('content', $middle_content);
+                    return 'academic_report_home_tpl.php';
+                    break;
+
+                case 'ClassResults':
+
+                    $middle_content = 'ClassResults';
+                    $this->setVar('content', $middle_content);
+                    return 'academic_report_home_tpl.php';
+                    break;
+
+                case 'SubjectResults':
+
+                    $middle_content = 'ClassResults';
+                    $this->setVar('content', $middle_content);
+                    break;
+
+                case 'FailuredStudents':
+
+                    $middle_content = 'ClassResults';
+                    $this->setVar('content', $middle_content);
+                    break;
+
+                case 'BestStudents':
+
+                    $middle_content = 'ClassResults';
+                    $this->setVar('content', $middle_content);
+                    break;
+
+                case 'StudentReport':
+
+                    $middle_content = 'ClassResults';
+                    $this->setVar('content', $middle_content);
+                    break;
+
+                case 'StudentList':
+                    break;
+
+
+                default:
+                    //  echo 'bdbdbd';
+                    $middle_content = 'DATA HERE';
+                    $this->setVar('content', $middle_content);
+                    return 'academic_report_home_tpl.php';
+                    break;
+            }
+        }
+        //loading academic home page by default
+        else {
+            return 'academicsmain_tpl.php';
+        }
     }
 
 }
