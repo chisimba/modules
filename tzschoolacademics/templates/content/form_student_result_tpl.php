@@ -28,8 +28,9 @@ $student_result_form->displayType('2');
 
 $dropdown_obj=new dropdown('academic_yr');
 $dropdown_label=new label('Academic year');
-
-
+$acadm_year=new academics_report();
+$dropdown_obj->addOption()=$acadm_year->get_academic_year();
+ $student_result_form->addToFormEx($dropdown_label->show().$dropdown_obj->show());
 
 $textobj=new textinput('');
 $textinput_label=new label('Enter Student Registration number');
