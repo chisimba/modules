@@ -22,7 +22,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>UNESCO</title>
-<script type="text/javascript" src="ratingsys.js"></script>
+<!-- TODO chasimbanize the java script where appropriate -->
+<!--<script type="text/javascript" src="ratingsys.js"></script>-->
 <link href="style.css" rel="stylesheet" type="text/css">
 <link href="rate_stars.css" rel="stylesheet" type="text/css">
 <!--[if IE]>

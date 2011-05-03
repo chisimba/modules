@@ -654,6 +654,20 @@ class unesco_oer extends controller {
         return $this->__addData();
     }
 
+       /*
+     * Method to retrieve entries from user on the addProductRating_tpl.php page
+     * and add it to the tbl_unesco_oer_products_ratings table
+     */
+
+    public function __submitProductRating() {
+        $id = $this->getParam('id');
+
+
+
+        $this->objDbProductRatings->addRating($id, $rating);
+        return $this->__addData();
+    }
+
 
     public function __deleteInstitution(){
         $puid=$this->getParam('puid');
