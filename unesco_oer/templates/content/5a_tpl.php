@@ -4,6 +4,9 @@
     $this->loadClass('link', 'htmlelements');
     $this->loadClass('form','htmlelements');
     $this->loadClass('button','htmlelements');
+     //load java script
+    $js = '<script language="JavaScript" src="'.$this->getResourceUri('ratingsys.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
 ?>
             	<div class="breadCrumb">
                 	<a href="#" class="orangeListingHeading">Product adaptation</a> | 
@@ -19,13 +22,27 @@
                     <div class="leftImageHolder">
                     	<img src="skins/unesco_oer/images/3a-placeholder.jpg" width="121" height="156"><br />
                     	<span id="rateStatus"></span>
-                        <div id="rateMe" title="">
+<!--                        <div id="rateMe" title="">
                             <a id="_1" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
                             <a id="_2" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
                             <a id="_3" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
                             <a id="_4" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
                             <a id="_5" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
-                        </div>
+                        </div>-->
+                        <?php
+                            $content = '<div id="rateMe" title="">
+                            <a id="_1" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
+                            <a id="_2" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
+                            <a id="_3" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
+                            <a id="_4" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
+                            <a id="_5" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
+                            </div>';
+                            $form = new form('addProductRating_ui',$this->uri(array('action'=>'addProductRatingSubmit', 'id' => $productID)));
+                            $form->addToForm($content);
+                            echo $form->show();
+
+
+                        ?>
                         <div class="commentsLinkUnderRatingStarsDiv">
                         <img src="skins/unesco_oer/images/icon-comment-post.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">25 comments</a></div>
