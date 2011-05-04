@@ -17,7 +17,7 @@ if (!
  *
  * @category  Chisimba
  * @package   SMIS Academics
- * @author    Boniface Chacha <bonifacechacha@gmail.com>
+ * @author    Academic module team
  */
 class tzschoolacademics extends controller {
 
@@ -35,90 +35,18 @@ class tzschoolacademics extends controller {
 
         $action = $this->getParam('action', 'main');
         $this->setLayoutTemplate('main_layout_tpl.php');
-        switch ($action) {
-            case 'profile':
-                return 'demo_profile_tpl.php';
-                break;
-            case 'setup':
-                return 'demo_setup_tpl.php';
-                break;
-
-            default:
-                return 'demo_home_tpl.php';
-                break;
-        }
-
-        ////start page redirection
-        /**
-          switch ($action) {
-          case 'Admission':
-          echo $action;
-
-
-          break;
-
-          case 'Results':
-          echo $action;
-          break;
-
-          case 'Report':
-          echo $action;
-          break;
-
-
-
-          default:
-          //return 'academic_report_home_tpl.php';
-          return 'academicsmain_tpl.php';
-          break;
-
-
-          } */
-        ///end of dispatch
-    }
-
-    function __getMethod(& $action) {
-        if ($this->__validAction($action)) {
-            return "__" . $action;
-        } else {
-            return "__actionError";
+        switch ($action){
+            //case your_action:do something
+            //                  break;
+            
+            default:return 'academics_home_tpl.php';
+            
         }
     }
 
-    function __validAction(& $action) {
-        if (method_exists($this, "__" . $action)) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
-    private function __actionError() {
-        /* echo 'error';
-          $this->setVar('str', "<h3>"
-          . $this->objLanguage->languageText("phrase_unrecognizedaction")
-          .": " . $action . "</h3>");
-          return 'dump_tpl.php'; */
-        echo 'error';
-    }
-
-    private function __main() {
-        return 'academicsmain_tpl.php';
-    }
-
-    public function requiresLogin($action) {
+    public function  requiresLogin($action) {
         return false;
     }
-
-    /*
-     * method to redirect actions when report menus are accessed
-     * @access public
-     * @param string action   :An action received by displatch method of the controller
-     *
-     * @author: mhoja charles
-     * @email:  charlesmdack@gmail.com
-     */
-
     function report_actions($action) {
         echo $action;
         exit;
