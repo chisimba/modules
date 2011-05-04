@@ -31,7 +31,15 @@
  $sidemenus .= '    </ul>';
  $sidemenus .= '    </ul>';
  $sidemenus .= '</li>';
- $sidemenus .= '<li>Registration</li>';
+ $sidemenus .= '<li>Registration';
+ $sidemenus .= '    <ul type="square">';
+ $sidemenus .= '        <li>Students</li>';
+ $sidemenus .= '        <li>Teachers</li>';
+ $sidemenus .= '        <li>Subjects</li>';
+ $sidemenus .= '        <li>Classes</li>';
+ $sidemenus .= '        <li>Setup</li>';
+ $sidemenus .= '    </ul>';
+ $sidemenus .= '</li>';
  $sidemenus .= '<li>Setup</li>';
 
  $sidemenus .= '</ul>';
