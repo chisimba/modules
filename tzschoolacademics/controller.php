@@ -1,12 +1,13 @@
 <?php
+
 // security check - must be included in all scripts
 if (!
-/**
- * Description for $GLOBALS
- * @global unknown $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * Description for $GLOBALS
+         * @global unknown $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -20,59 +21,63 @@ $GLOBALS['kewl_entry_point_run']) {
  */
 class tzschoolacademics extends controller {
 
-  public $lang;
+    public $lang;
+    private $user;
 
-  private $user;
+    public function init() {
 
-  public function  init() {
-
-        $this->loadClass('user','security');
-        $this->lang=$this->getObject('language','language');
-        $this->user=$this->getObject('user','security');
+        $this->loadClass('user', 'security');
+        $this->lang = $this->getObject('language', 'language');
+        $this->user = $this->getObject('user', 'security');
     }
 
-    public function dispatch($action){
-        //return 'AddEdit_tpl.php';
-        $action=$this->getParam('action', 'main');
-        /*
-        $method=$this->__getMethod($action);
-        return $this->$method();
-         * 
-         */
+    public function dispatch($action) {
 
-        ////start page redirection
+        $action = $this->getParam('action', 'main');
+        $this->setLayoutTemplate('main_layout_tpl.php');
         switch ($action) {
-          case 'Admission':
-            echo $action;
-
-
-              break;
-
-          case 'Results':
-              echo $action;
-              break;
-
-          case 'Report':
-           echo $action;
+            case 'profile':
+                return 'demo_profile_tpl.php';
+                break;
+            case 'setup':
+                return 'demo_setup_tpl.php';
                 break;
 
-
-
             default:
-           //return 'academic_report_home_tpl.php';
-             return 'academicsmain_tpl.php';
+                return 'demo_home_tpl.php';
                 break;
         }
 
+        ////start page redirection
+        /**
+          switch ($action) {
+          case 'Admission':
+          echo $action;
 
+
+          break;
+
+          case 'Results':
+          echo $action;
+          break;
+
+          case 'Report':
+          echo $action;
+          break;
+
+
+
+          default:
+          //return 'academic_report_home_tpl.php';
+          return 'academicsmain_tpl.php';
+          break;
+
+
+          } */
         ///end of dispatch
     }
 
-
-
-
-    function __getMethod(& $action)
-    {
+    function __getMethod(& $action) {
         if ($this->__validAction($action)) {
             return "__" . $action;
         } else {
@@ -80,33 +85,30 @@ class tzschoolacademics extends controller {
         }
     }
 
-    function __validAction(& $action)
-    {
-        if (method_exists($this, "__".$action)) {
+    function __validAction(& $action) {
+        if (method_exists($this, "__" . $action)) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
 
-    private function __actionError()
-    {
-       /* echo 'error';
-        $this->setVar('str', "<h3>"
+    private function __actionError() {
+        /* echo 'error';
+          $this->setVar('str', "<h3>"
           . $this->objLanguage->languageText("phrase_unrecognizedaction")
           .": " . $action . "</h3>");
-        return 'dump_tpl.php';*/
+          return 'dump_tpl.php'; */
         echo 'error';
     }
 
-    private function __main(){
+    private function __main() {
         return 'academicsmain_tpl.php';
     }
 
-    public function  requiresLogin($action) {
+    public function requiresLogin($action) {
         return false;
     }
-
 
     /*
      * method to redirect actions when report menus are accessed
@@ -117,14 +119,14 @@ class tzschoolacademics extends controller {
      * @email:  charlesmdack@gmail.com
      */
 
-     function report_actions($action) {
-         echo $action;
-         exit;
-           if (strcmp($action,'Report') ) {
-            ////start page redirection
-        $action2 = $this->getParam('action2','main'); ///getting action2
-        echo $action2;
+    function report_actions($action) {
+        echo $action;
         exit;
+        if (strcmp($action, 'Report')) {
+            ////start page redirection
+            $action2 = $this->getParam('action2', 'main'); ///getting action2
+            echo $action2;
+            exit;
             switch ($action2) {
 
                 case 'StudentResults':
@@ -184,4 +186,5 @@ class tzschoolacademics extends controller {
     }
 
 }
+
 ?>
