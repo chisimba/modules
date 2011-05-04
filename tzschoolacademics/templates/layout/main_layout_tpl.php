@@ -3,26 +3,36 @@
 /**
  * Description: Layout template, for displaying html list side menus, to be used by all templates
  * @since 4th May 2011
+ *
  * @author - Academic Module Team
- *
- *
  */
 
  $sidemenus = '<ul type="square" id="ac_side_menu">';
 
  $sidemenus .= '<li><a href="?module=tzschoolacademics">Home</a></li>';
- $sidemenus .= '<li><a href="?module=tzschoolacademics&action=profile">My Profile</a></li>';
- $sidemenus .= '<li>';
- $sidemenus .= '<a href="?module=tzschoolacademics&action=setup">System Setup</a>';
+ $sidemenus .= '<li>Reports';
  $sidemenus .= '    <ul type="square">';
- $sidemenus .= '        <li>Subjects</li>';
- $sidemenus .= '        <li>Grades</li>';
- $sidemenus .= '        <li>Forms</li>';
- $sidemenus .= '        <li>Departments</li>';
+ $sidemenus .= '        <li>Student Result</li>';
+ $sidemenus .= '        <li>Class Result</li>';
+ $sidemenus .= '        <li> Subject Results</li>';
+ $sidemenus .= '        <li> Failed Students</li>';
+ $sidemenus .= '        <li> Best Students</li>';
+ $sidemenus .= '        <li>Academic Reports</li>';
+ $sidemenus .= '     </ul>';
+ $sidemenus.='</li>';
+ $sidemenus .= '<li>';
+ $sidemenus .= 'Results';
+ $sidemenus .= '    <ul type="square">';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=upload_result">Upload</a></li>';
+ $sidemenus .= '        <li>View</li>';
+ $sidemenus .= '    <ul>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=view_subject">View by subject</a></li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=search">Search</a></li>';
+ $sidemenus .= '    </ul>';
  $sidemenus .= '    </ul>';
  $sidemenus .= '</li>';
- $sidemenus .= '<li>Generate Reports</li>';
- $sidemenus .= '<li>User Management</li>';
+ $sidemenus .= '<li>Registration</li>';
+ $sidemenus .= '<li>Setup</li>';
 
  $sidemenus .= '</ul>';
 
@@ -32,6 +42,5 @@
  $objCssLayout->setMiddleColumnContent($this->getContent());
  
  echo $objCssLayout->show();
-
-
+ 
 ?>
