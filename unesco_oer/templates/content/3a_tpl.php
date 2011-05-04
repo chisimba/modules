@@ -36,7 +36,7 @@
                             <a id="_4" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
                             <a id="_5" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
                             </div>';
-                            $form = new form('addProductRating_ui',$this->uri(array('action'=>'addProductRatingSubmit', 'id' => $productID)));
+                            $form = new form('addProductRating_ui',$this->uri(array('action'=>'submitProductRating', 'productID' => $productID, 'rateSubmit' => '', 'prevAction' => 'home')));
                             $form->addToForm($content);
                             echo $form->show();
 

@@ -63,16 +63,9 @@ function rateIt(me){
 // Send the rating information somewhere using Ajax or something like that.
 function sendRate(sel){
 	alert("Your rating was: "+sel.id.replace("_", ''));
-//        $.ajax({
-//		type: "POST",
-//		url: "/path/to/vote/handler.php",
-//		data: "item_id=12345&vote=" amnt,
-//		dataType: "json",
-//		success: function(res){
-//			$('#current-rating').width(res.width);
-//			$('#current-rating-result').html(res.status);
-//		}
-//	});
-       // document.
+        var oldAction = document.forms["addProductRating_ui"].action;
+        var newAction = oldAction.replace("rateSubmit=","rateSubmit=" + sel.id.replace("_", ''));
+        document.forms["addProductRating_ui"].action = newAction;
+        document.forms["addProductRating_ui"].submit();
 }
 

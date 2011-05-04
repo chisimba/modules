@@ -660,12 +660,11 @@ class unesco_oer extends controller {
      */
 
     public function __submitProductRating() {
-        $id = $this->getParam('id');
-
-
+        $id = $this->getParam('productID');
+        $rating = $this->getParam("rateSubmit");
 
         $this->objDbProductRatings->addRating($id, $rating);
-        return $this->__addData();
+        return $this->nextAction($this->getParam('prevAction'));
     }
 
 
