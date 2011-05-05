@@ -11,11 +11,11 @@
 
 class upload_marks extends object {
 
-      public $db_access;
-    
+    public $db_access;
+
     public function init() {
 
-      $this->db_access = $this->newObject('marksdb', 'tzschoolacademics');
+        $this->db_access = $this->newObject('marksdb', 'tzschoolacademics');
     }
 
     /*
@@ -37,83 +37,75 @@ class upload_marks extends object {
 
         //load the dropdown class
 
-        $this->loadClass('dropdown','htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
     }
 
+    public function buildUploadForm() {
 
-    public  function buildUploadForm() {
-        
-     $this->loadElements();
-     
-     $objform = new form('uploadmarks');
-     $objform->setEncType($encType = 'multipart/form-data');
-  //-----------------------------------------------------------------------------------
-     $objlabel = new label('class');
-     $objdropdown = new dropdown('class');
-     $displayclass =  $this->db_access->load_classes();
-     foreach ($displayclass as $row)
-     {
-      $objdropdown->addOption($value=$row['puid'],$label=$row['class_name'].$row['stream']);
-     }
- //---------------------------------------------------------------------------------------------
-     $objsubjlabel = new label('subject');
-     $objsubjdropdown = new dropdown('subject');
-     $displaysubject = $this->db_access->load_subjects();
+        $this->loadElements();
 
-      foreach ($displaysubject as $row)
-      {
-       $objsubjdropdown->addOption($value=$row['puid'],$label=$row['subject_name']);
-      }
- //-------------------------------------------------------------------------------------------------
-      $objacalabel = new label('academic year');
-      $objacadropdown = new dropdown('academic_year');
-      $displayacademic_year = $this->db_access->load_academic_year();
-      foreach ($displayacademic_year as $row)
-      {
-      $objacadropdown->addOption($row['puid'], $row['year_name']);
-      }
-  //------------------------------------------------------------------------------------------------
-      $objtermlabel = new label('term');
-      $objtermdropdown = new dropdown('term');
-      $displayterm = $this->db_access->load_term ();
+        $objform = new form('uploadmarks');
+        $objform->setDisplayType(2);
+        $objform->setEncType($encType = 'multipart/form-data');
+        //-----------------------------------------------------------------------------------
+        $objlabel = new label('class');
+        $objdropdown = new dropdown('class');
+        $displayclass = $this->db_access->load_classes();
+        foreach ($displayclass as $row) {
+            $objdropdown->addOption($value = $row['puid'], $label = $row['class_name'] . $row['stream']);
+        }
+        //---------------------------------------------------------------------------------------------
+        $objsubjlabel = new label('subject');
+        $objsubjdropdown = new dropdown('subject');
+        $displaysubject = $this->db_access->load_subjects();
 
-      foreach ($displayterm as $row)
-      {
-      $objtermdropdown->addOption($row['puid'], $row['term_name']);
-      }
-  //------------------------------------------------------------------------------------------------------
-      $objexamtypelabel = new label('Exam');
+        foreach ($displaysubject as $row) {
+            $objsubjdropdown->addOption($value = $row['puid'], $label = $row['subject_name']);
+        }
+        //-------------------------------------------------------------------------------------------------
+        $objacalabel = new label('academic year');
+        $objacadropdown = new dropdown('academic_year');
+        $displayacademic_year = $this->db_access->load_academic_year();
+        foreach ($displayacademic_year as $row) {
+            $objacadropdown->addOption($row['puid'], $row['year_name']);
+        }
+        //------------------------------------------------------------------------------------------------
+        $objtermlabel = new label('term');
+        $objtermdropdown = new dropdown('term');
+        $displayterm = $this->db_access->load_term();
 
-      $objexamtypedropdown = new dropdown('exam');
-      $displayexam = $this->db_access->load_exam_type();
+        foreach ($displayterm as $row) {
+            $objtermdropdown->addOption($row['puid'], $row['term_name']);
+        }
+        //------------------------------------------------------------------------------------------------------
+        $objexamtypelabel = new label('Exam');
 
-      foreach ($displayexam as $row)
-      {
-      $objexamtypedropdown->addOption($row['puid'], $row['exam_type']);
-      }
-  //------------------------------------------------------------------------------------------------------------
-      $objform->addToForm($objlabel->show());
-      $objform->addToForm( $objdropdown->show());
-   
-      $objform->addToForm( $objsubjlabel->show());
-      $objform->addToForm(  $objsubjdropdown->show());
-          
-       $objform->addToForm(  $objacalabel->show());
-        $objform->addToForm(  $objacadropdown->show());
+        $objexamtypedropdown = new dropdown('exam');
+        $displayexam = $this->db_access->load_exam_type();
 
-         $objform->addToForm(   $objtermlabel->show());
-          $objform->addToForm(  $objtermdropdown->show());
+        foreach ($displayexam as $row) {
+            $objexamtypedropdown->addOption($row['puid'], $row['exam_type']);
+        }
+        //------------------------------------------------------------------------------------------------------------
+        $objform->addToForm($objlabel->show());
+        $objform->addToForm($objdropdown->show());
 
-           $objform->addToForm(   $objexamtypelabel->show());
-            $objform->addToForm(   $objexamtypedropdown->show());
-   
+        $objform->addToForm($objsubjlabel->show());
+        $objform->addToForm($objsubjdropdown->show());
 
-     
-   return $objform->show();
+        $objform->addToForm($objacalabel->show());
+        $objform->addToForm($objacadropdown->show());
+
+        $objform->addToForm($objtermlabel->show());
+        $objform->addToForm($objtermdropdown->show());
+
+        $objform->addToForm($objexamtypelabel->show());
+        $objform->addToForm($objexamtypedropdown->show());
 
 
+
+        return $objform->show();
     }
-
 
 }
 
