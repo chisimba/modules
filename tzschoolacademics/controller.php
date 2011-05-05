@@ -38,8 +38,12 @@ class tzschoolacademics extends controller {
         switch ($action){
             //case your_action:do something
             //                  break;
-            case  'register_student':return  'student_registration_tpl.php';
-                                      break;
+            case  'register_student':
+               return  'student_registration_tpl.php';
+                 break;
+            case 'upload_result':
+               return 'load_upload_form_tpl.php';
+
             
             default:return 'academics_home_tpl.php';
                 break;
