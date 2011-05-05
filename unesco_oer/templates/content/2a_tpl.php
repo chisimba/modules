@@ -846,7 +846,98 @@ if ($adaptationstring == null)
 //                                        echo $map->show();
                             ?>
 
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+  html { height: 100% }
+  body { height: 100%; margin: 0px; padding: 0px }
+  #map_canvas { height: 100% }
+</style>
+<script type="text/javascript"
+    src="http://maps.google.com/maps/api/js?sensor=true">
+</script>
+<script type="text/javascript">
 
+     
+var marker = new Array();
+
+  function initialize() {
+
+   myLatlng = [
+        new google.maps.LatLng(39.112456,-84.574779),
+        new google.maps.LatLng(20.314153,-84.261379),
+        new google.maps.LatLng(39.197099,-8.667579),
+        new google.maps.LatLng(10.16836,-40.479381)
+        ];
+
+
+   
+
+
+  var myOptions = {
+    zoom: 0,
+    center: myLatlng[0],
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+  }
+ var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+
+ for(i=0;i<myLatlng.length;i++)
+    {
+        marker[i] = new google.maps.Marker(
+           { position: myLatlng[i],
+            title:"Hello World!"
+
+           } );
+
+           var pos = marker[i].getPosition();
+           var lat = pos.toString();
+
+           var oldAction = document.forms["maps"].action;
+
+           google.maps.event.addListener(marker[i], 'click',
+            function() {
+
+          
+            alert(pos.toString());
+
+            document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
+
+             document.forms["maps"].submit();
+
+
+            
+                       } );
+
+           marker[i].setMap(map);
+
+           }
+
+
+
+
+
+
+
+
+
+
+
+  }
+
+</script>
+</head>
+<body onload="initialize()">
+  <div id="map_canvas" style="width:100%; height:20%"></div>
+  <?php
+  $form = new form('maps', $this->uri(array("action" => 'home',"page" => '2a_tpl.php')));
+  echo $form->show();
+ 
+  ?>
+</body>
+</html>
 
 
 
@@ -867,22 +958,22 @@ if ($adaptationstring == null)
 
 
 <?php
-                                        $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
-                                        $products = $this->objDbProducts->getFilteredProducts($finalstring);
-                                        for ($i = 0; $i < count($products); $i++) {
-                                            $creator = $products[$i]['creator'];
-                                            if ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator)) {
-                                                $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
-                                                $long = $this->objDbInstitution->getInstitutionLongitude($creator);
-                                                $this->objDbInstitution->MapHandler($im, $lat, $long);
-                                                $lat = $this->objDbGroups->getGroupLatitude($creator);
-                                                $long = $this->objDbGroups->getGroupLongitude($creator);
-                                                $this->objDbGroups->MapHandler($im, $lat, $long);
-                                            }
-                                        }
-                                        imagepng($im, "skins/unesco_oer/images/earthMap.jpg");
-?>
-                                    <img src="skins/unesco_oer/images/earthMap.jpg" width="200" height="100">
+//                                        $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
+//                                        $products = $this->objDbProducts->getFilteredProducts($finalstring);
+//                                        for ($i = 0; $i < count($products); $i++) {
+//                                            $creator = $products[$i]['creator'];
+//                                            if ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator)) {
+//                                                $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
+//                                                $long = $this->objDbInstitution->getInstitutionLongitude($creator);
+//                                                $this->objDbInstitution->MapHandler($im, $lat, $long);
+//                                                $lat = $this->objDbGroups->getGroupLatitude($creator);
+//                                                $long = $this->objDbGroups->getGroupLongitude($creator);
+//                                                $this->objDbGroups->MapHandler($im, $lat, $long);
+//                                            }
+//                                        }
+//                                        imagepng($im, "skins/unesco_oer/images/earthMap.jpg");
+//?>
+<!--                                    <img src="skins/unesco_oer/images/earthMap.jpg" width="200" height="100">-->
 
                                 </div>
                             </div>

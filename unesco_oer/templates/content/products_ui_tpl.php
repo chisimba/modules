@@ -39,11 +39,12 @@ $table->cssClass = "moduleHeader";
 
 //field for the title
 $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
-$utility->addTextInputToTable($title, 4, 'title', 0, $product['title'], $table);
+$utility->addTextInputToTable($title, 4, 'title', 0, $product['title'], $table,"colspan=2");
 
 //field for the creator
 $title = $this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer');
 $utility->addTitleToTable($title, 4, $table,"2");
+
 
 $groupName = '';
 if ($this->objDbGroups->isGroup($product['creator'])){

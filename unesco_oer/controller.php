@@ -199,6 +199,37 @@ class unesco_oer extends controller {
     }
 
 
+     public function __BrowseAdaptation() {
+
+     //   $lat = $this->getParam('lat');
+      //  $lng = $this->getparam('lng');
+        $page = $this->getParam('page');
+
+
+
+     //   $ProdId = $this->objProductUtil->BrowseAdaptation($lat,$lng);
+       //  $Adaptation = $this->objDbProducts->getFilteredProducts($ProdId);
+    //    $Buildstring = "where id = '$ProdId'";
+
+
+
+
+        $temp = 'parent_id is not null';
+
+     //   $this->setVarByRef("test", $Buildstring);
+      //   $this->setVarByRef("prodid", $ProdId);
+            $this->setVarByRef("finalstring", $temp);
+
+
+
+        return  "2a_tpl.php";
+
+    }
+
+
+
+
+
 
 
     public function __FilterAdaptations() {
@@ -349,7 +380,8 @@ class unesco_oer extends controller {
             try {
                 $results = $this->uploadFile($path);                
             } catch (customException $e) {
-                echo customException::cleanUp();
+               // echo customException::cleanUp();
+                echo "test";
                 exit();
             }
         }
@@ -523,8 +555,9 @@ class unesco_oer extends controller {
         $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
         try {
             $results = $this->uploadFile($path);
-        } catch (customException $e) {
-            echo customException::cleanUp();
+        } catch (Exception $e) {
+       //     echo customException::cleanUp();
+            echo "test";
             exit();
         }
         $thumbnailPath = 'usrfiles/' . $results['path'];

@@ -454,6 +454,34 @@ class productutil extends object
         return $content;
     }
 
+
+
+
+     public function BrowseAdaptation($lng,$lat)
+    {
+
+
+    $buildstring = "loclat = '$lat' and loclong = '$lng'";
+
+
+
+
+
+
+        return $buildstring;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * This function Builds the String to Send to the DBhandler and return the total number of entries according to the selected Filter
      * @param <type>$AuthFilter,$ThemeFilter,$LangFilter,$page,$sort,$TotalPages,$adaptationstring,$Model,$Handbook,$Guide,$Manual,$Besoractile
