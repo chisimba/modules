@@ -8,7 +8,6 @@
  */
 
  $sidemenus = '<ul type="square" id="ac_side_menu">';
-
  $sidemenus .= '<li><a href="?module=tzschoolacademics">Home</a></li>';
  $sidemenus .= '<li>Reports';
  $sidemenus .= '    <ul type="square">';
@@ -33,10 +32,10 @@
  $sidemenus .= '</li>';
  $sidemenus .= '<li>Registration';
  $sidemenus .= '    <ul type="square">';
- $sidemenus .= '        <li>Students</li>';
- $sidemenus .= '        <li>Teachers</li>';
- $sidemenus .= '        <li>Subjects</li>';
- $sidemenus .= '        <li>Classes</li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=register_student">Students</a></li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=register_teacher">Teachers</a></li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=register_subject">Subjects</a></li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=register_class">Classes</a></li>';
  $sidemenus .= '        <li>Setup</li>';
  $sidemenus .= '    </ul>';
  $sidemenus .= '</li>';
