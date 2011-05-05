@@ -1,6 +1,6 @@
 <?php
 
-require('classes/googlemapapi_class_inc.php');
+//require('classes/googlemapapi_class_inc.php');
 
 class unesco_oer extends controller {
 
@@ -16,9 +16,9 @@ class unesco_oer extends controller {
     public $objDbComments;
     public $objUser;
     public $objDbProductRatings;
-    //public $objGoogleMap;
- 
+    public $objGoogleMap;
 
+ 
     /**
      *
      * @var string $objLanguage String object property for holding the

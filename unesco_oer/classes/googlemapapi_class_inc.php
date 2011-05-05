@@ -1,7 +1,7 @@
 <?php
 
-//require ('GoogleMapAPI-2.5/GoogleMapAPI.class.php');
- // $map = new GoogleMapAPI('map');
+require ('GoogleMapAPI-2.5/GoogleMapAPI.class.php');
+$map = new GoogleMapAPI('map');
 class googlemapapi extends object {
 
     function init() {
@@ -14,7 +14,7 @@ class googlemapapi extends object {
     }
 
     public function addMarkerByCoords($long, $lat, $title, $desc) {
-        $this->map->addMarkerByCoords($long, $lat, $title, $desc);
+        $this->map->addMarkerByCoords($long, $lat, $title,'<b>$desc</b>');
     }
 
     public function show() {

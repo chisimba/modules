@@ -827,24 +827,24 @@ if ($adaptationstring == null)
                                         </div>
                                         <div class="rightColumnBorderedDiv">
                                             <div class="rightColumnContentPadding">
-
-                            <?php
-//                                        // create some map markers
-//                                        $products = $this->objDbProducts->getFilteredProducts($finalstring);
-//                                        $map=$this->getObject('googlemapapi');
-//                                        for ($i = 0; $i < count($products); $i++) {
-//                                            $creator = $products[$i]['creator'];
-//                                            if ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator)) {
-//                                                $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
-//                                                $long = $this->objDbInstitution->getInstitutionLongitude($creator);
-//                                                $map->addMarkerByCoords($lon, $lat, $title = '', $html = '');
-//                                                $lat = $this->objDbGroups->getGroupLatitude($creator);
-//                                                $long = $this->objDbGroups->getGroupLongitude($creator);
-//                                                $map->addMarkerByCoords($lon, $lat, $creator, "<b>$creator</b>");
-//                                            }
-//                                        }
-//                                        echo $map->show();
-                            ?>
+                                                
+           <?php
+//                                                $products = $this->objDbProducts->getFilteredProducts($finalstring);
+//                                                for ($i = 0; $i < count($products); $i++) {
+//                                                    $creator = $products[$i]['creator'];
+//                                                    if ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator)) {
+//                                                        $abLink = new link($this->uri(array("action" =>'3a')));
+//                                                        $abLink->link =$creator;
+//                                                        //echo $abLink->show();
+//                                                        $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
+//                                                        $long = $this->objDbInstitution->getInstitutionLongitude($creator);
+//                                                        $this->objDbInstitution->addMarkerByCoords($long, $lat, $creator ,$abLink->show());
+//                                                        $lat = $this->objDbGroups->getGroupLatitude($creator);
+//                                                        $long = $this->objDbGroups->getGroupLongitude($creator);
+//                                                        $this->objDbInstitution->addMarkerByCoords($long, $lat, $creator,$abLink->show());
+//                                                    }
+//                                                }
+           ?>
 
 <!DOCTYPE html>
 <html>
