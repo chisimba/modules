@@ -12,13 +12,23 @@
  */
 class studentform extends object{
    public $lang;
+   
    private $fNameValue='';
    private $lNameValue='';
    private $oNameValue='';
    private $dobValue='2011-08-01';
    private $genderValue='M';
    private $religionValue='';
-
+   private $gfNameValue='';
+   private $glNameValue='';
+   private $goNameValue='';
+   private $addressValue='';
+   private $locationValue='';
+   private $nationalityValue='';
+   private $telephoneValue='';
+   private $emailValue='';
+   private $faxValue='';
+   
    public function init(){
        $this->lang=$this->getObject('language', 'language');
     }
@@ -37,7 +47,8 @@ class studentform extends object{
         $this->load();
         
         $form=new form('Student',  $this->getAction());
-
+        $topLabel=new label('<h2>Student Information</h2><br/>');
+        $form->addToForm($topLabel->show());
         $fNameLabel=new label($this->lang->languageText('mod_tzschoolacademics_fname_label','tzschoolacademics'),'firstname');
         $fNameField=new textinput('firstname');
         $form->addToForm($fNameLabel->show());
@@ -77,16 +88,77 @@ class studentform extends object{
         $form->addToForm($religionLabel->show().'<br>');
         $religionField->setValue($this->religionValue);
         $form->addToForm($religionField->show().'<br>');
+
+        $middleLabel=new label('<h2>Guardian Information</h2><br/>');
+        $form->addToForm($middleLabel->show());
+      
+        $gfNameField=new textinput('gfirstname');
+        $form->addToForm($fNameLabel->show());
+        $gfNameField->setValue($this->gfNameValue);
+        $form->addToForm($gfNameField->show());
+
+        $glNameField=new textinput('glastname');
+        $form->addToForm($lNameLabel->show());
+        $glNameField->setValue($this->glNameValue);
+        $form->addToForm($gfNameField->show());
+
+        $goNameField=new textinput('gothernames');
+        $form->addToForm($oNameLabel->show());
+        $goNameField->setValue($this->goNameValue);
+        $form->addToForm($goNameField->show().'<br>');
+
+        $nationalityLabel=new label($this->lang->languageText('mod_tzschoolacademics_nationality_label','tzschoolacademics'),'nationality');
+        $nationalityField=new dropdown('nationality');
+        $form->addToForm($nationalityLabel->show().'<br/>');
+        $nationalityField->setValue($this->nationalityValue);
+        $form->addToForm($nationalityField->show().'<br>');
+
+        $addressLabel=new label($this->lang->languageText('mod_tzschoolacademics_address_label','tzschoolacademics'),'address');
+        $addressField=new textinput('address');
+        $form->addToForm($addressLabel->show().'<br>');
+        $addressField->setValue($this->addressValue);
+        $form->addToForm($addressField->show().'<br>');
+
+        $locationLabel=new label($this->lang->languageText('mod_tzschoolacademics_location_label','tzschoolacademics'),'location');
+        $locationField=new textinput('location');
+        $form->addToForm($locationLabel->show().'<br>');
+        $locationField->setValue($this->locationValue);
+        $form->addToForm($locationField->show().'<br>');
+
+    
+        $telephoneLabel=new label($this->lang->languageText('mod_tzschoolacademics_telephone_label','tzschoolacademics'),'telephone');
+        $telephoneField=new textinput('telephone');
+        $form->addToForm($telephoneLabel->show().'<br>');
+        $telephoneField->setValue($this->telephoneValue);
+        $form->addToForm($telephoneField->show().'<br>');
+        
+        $emailLabel=new label($this->lang->languageText('mod_tzschoolacademics_email_label','tzschoolacademics'),'email');
+        $emailField=new textinput('email');
+        $form->addToForm($emailLabel->show().'<br>');
+        $emailField->setValue($this->emailValue);
+        $form->addToForm($emailField->show().'<br>');
+
+        $faxLabel=new label($this->lang->languageText('mod_tzschoolacademics_fax_label','tzschoolacademics'),'fax');
+        $faxField=new textinput('fax');
+        $form->addToForm($faxLabel->show().'<br>');
+        $faxField->setValue($this->faxValue);
+        $form->addToForm($faxField->show().'<br>');
+
+        $saveButton=new button('register',$this->lang->languageText('mod_tzschoolacademics_register_label','tzschoolacademics'));
+       // $saveButton=new button('save','Submit');
+       $saveButton->setToSubmit();
+        $form->addToForm($saveButton->showDefault());
+
         echo $form->show();
     }
 
         private function getAction(){
         $action=$this->getParam('action','edit');
         if($action=='edit')
-            $formAction=  $this->uri(array('action'=>'edit'),'lean');
+            $formAction=  $this->uri(array('action'=>'edit'),'tzschoolacademics');
 
         else
-            $formAction=$this->uri (array('action'=>'add'),'lean');
+            $formAction=$this->uri (array('action'=>'add'),'tzschoolacademics');
         return $formAction;
     }
 
