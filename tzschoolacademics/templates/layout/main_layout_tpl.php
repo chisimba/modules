@@ -12,11 +12,11 @@
  $sidemenus .= '<li>Reports';
  $sidemenus .= '    <ul type="square">';
  $sidemenus .= '         <li><a href="?module=tzschoolacademics&action=StudentResults">Student Result</a></li>';
- $sidemenus .= '        <li>Class Result</li>';
- $sidemenus .= '        <li> Subject Results</li>';
- $sidemenus .= '        <li> Failed Students</li>';
- $sidemenus .= '        <li> Best Students</li>';
- $sidemenus .= '        <li>Academic Reports</li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=ClassResult">Class Result</a></li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=SubjectResults">Subject Results</a></li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=FailedStudents"> Failed Students</a></li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=BestStudents"> Best Students</a></li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=AcademicReport">Academic Reports</a></li>';
  $sidemenus .= '     </ul>';
  $sidemenus.='</li>';
  $sidemenus .= '<li>';
