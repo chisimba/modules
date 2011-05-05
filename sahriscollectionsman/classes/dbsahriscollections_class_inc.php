@@ -100,6 +100,12 @@ class dbsahriscollections extends dbtable
         return $this->getAll("WHERE id = '$id'");
     }
     
+    public function getCollByName($name) {
+        $this->changeTable('tbl_sahriscollections_collections');
+        $det = $this->getAll("WHERE collname = '$name'");
+        return $det[0]['id'];
+    }
+    
     public function insertRecord($insarr) {
         $this->changeTable('tbl_sahriscollections_items');
         $insarr['datecreated'] = $this->now();
