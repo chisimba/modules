@@ -4,7 +4,8 @@
  * A Facebook apps class
  *
  * A Facebook apps class to generate standard facebook snippets for inclusion
- * into Chisimba.
+ * into Chisimba. Note that you can to use
+ * $this->loadFbApiScript();
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +45,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * A Facebook apps class
  *
  * A Facebook apps class to generate standard facebook snippets for inclusion
- * into Chisimba.
+ * into Chisimba. Note that you can to use $this->loadFbApiScript();
  *
  * @category  Chisimba
  * @author    Derek Keats <derek@dkeats.com>
@@ -83,19 +84,43 @@ class fbapps extends object
         $this->objLanguage = $this->getObject('language', 'language');
     }
     /**
-     * Standard block show method.
+     * 
+     * Get Facebook comments for the current URL
      *
-     * @return string $this->display block rendered
+     * @return string Facebook comments
      */
     public function getComments($width=425, $numPosts=10)
     {
         $this->objDbSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
         $apikey = $this->objDbSysconfig->getValue('apid', 'facebookapps');
-        return '<div id="fb-root"></div>
-            <script src="http://connect.facebook.net/en_US/all.js#appId=' . $apikey . '&amp;xfbml=1"></script>
-            <fb:comments numposts="' . $numPosts . '" width="' . $width . '" publish_feed="true"></fb:comments>';
+        $script = $this->loadFbApiScript();
+
+        $this->appendArrayVar('afterBodyScripts','TEST');
+        $this->appendArrayVar('afterBodyScripts','TEST2');
+
+        return '<div id="fb-root"></div>' . $script . '<fb:comments numposts="'
+          . $numPosts . '" width="' . $width
+          . '" publish_feed="true"></fb:comments>';
     }
 
+    public function loadFbApiScript()
+    {
+        $this->objDbSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $apikey = $this->objDbSysconfig->getValue('apid', 'facebookapps');
+        $script = '<script src="http://connect.facebook.net/en_US/all.js#appId=' 
+          . $apikey . '&amp;xfbml=1"></script>';
+        //$this->appendArrayVar('headerParams', $script);
+        //return TRUE;
+        return $script;
+        
+    }
+
+    /**
+     *
+     * Get the number of comments from Facebook.
+     *
+     * @return string Comments and label
+     */
     public function insertCommentCount()
     {
         $pageUrl = 'http';
@@ -110,7 +135,7 @@ class fbapps extends object
          }
          //echo 'HEREHEREHERE: ' . $pageUrl;
          //$pageUrl = urlencode($pageUrl);
-         return "<fb:comments-count href=$pageUrl/></fb:comments-count> awesome comments ";
+         return "<fb:comments-count href=$pageUrl/></fb:comments-count>";
     }
 }
 ?>
