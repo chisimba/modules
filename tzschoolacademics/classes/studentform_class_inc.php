@@ -71,8 +71,7 @@ class studentform extends object{
         $genderField=new dropdown('gender');
         $form->addToForm($genderLabel->show().'<br>');
         $genderField->addOption('M','MALE');
-        $genderField->addOption('F','FEMALE');
-        
+        $genderField->addOption('F','FEMALE');        
         $genderField->setValue($this->genderValue);
         $form->addToForm($genderField->show().'<br>');
 
@@ -88,6 +87,20 @@ class studentform extends object{
         $form->addToForm($religionLabel->show().'<br>');
         $religionField->setValue($this->religionValue);
         $form->addToForm($religionField->show().'<br>');
+
+        $classLabel=new label($this->lang->languageText('mod_tzschoolacademics_class_label','tzschoolacademics'),'class');
+        $classField=new dropdown('class');
+        $form->addToForm($classLabel->show().'<br>');
+        $classField->addFromDB(null, null, null, null);
+        $classField->setValue($this->classValue);
+        $form->addToForm($classField->show().'<br>');
+
+        $yosLabel=new label($this->lang->languageText('mod_tzschoolacademics_yearofstudy_label','tzschoolacademics'),'yearofstudy');
+        $yosField=new dropdown('class');
+        $form->addToForm($yosLabel->show().'<br>');
+        $yosField->addFromDB(null, null, null, null);
+        $yosField->setValue($this->yosValue);
+        $form->addToForm($yosField->show().'<br>');
 
         $middleLabel=new label('<h2>Guardian Information</h2><br/>');
         $form->addToForm($middleLabel->show());
@@ -108,10 +121,12 @@ class studentform extends object{
         $form->addToForm($goNameField->show().'<br>');
 
         $nationalityLabel=new label($this->lang->languageText('mod_tzschoolacademics_nationality_label','tzschoolacademics'),'nationality');
-        $nationalityField=new dropdown('nationality');
+      //  $nationalityField=new dropdown('nationality');
+        $nationalityField=  $this->getObject('countries', 'utilities');
+       // $nationalityField->getDropDown();
         $form->addToForm($nationalityLabel->show().'<br/>');
-        $nationalityField->setValue($this->nationalityValue);
-        $form->addToForm($nationalityField->show().'<br>');
+       // $nationalityField->setValue($this->nationalityValue);
+        $form->addToForm( $nationalityField->getDropDown(null,$this->nationalityValue).'<br>');
 
         $addressLabel=new label($this->lang->languageText('mod_tzschoolacademics_address_label','tzschoolacademics'),'address');
         $addressField=new textinput('address');
@@ -161,6 +176,10 @@ class studentform extends object{
             $formAction=$this->uri (array('action'=>'add'),'tzschoolacademics');
         return $formAction;
     }
+
+        public function setValues($valuesArray=NULL){
+            
+        }
 
         public function show(){
         $this->build();
