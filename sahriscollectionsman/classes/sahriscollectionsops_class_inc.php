@@ -322,10 +322,11 @@ class sahriscollectionsops extends object {
         $table->endRow();
 
         // media
+        $objFile = $this->getObject('dbfile', 'filemanager');
         $mediaLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_media', 'sahriscollectionsman').'&nbsp;', 'input_media');
         $table->addCell($mediaLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($record['media']);
+        $table->addCell($objFile->getFileName($record['media']));
         $table->endRow();
 
         // comment
@@ -360,9 +361,16 @@ class sahriscollectionsops extends object {
         $addrec->link = $this->objLanguage->languageText("mod_sahriscollectionsman_addrectocoll", "sahriscollectionsman");
         $addrec = $addrec->show();
         
+        // search a collection record
+        $searchrec = $this->newObject('link', 'htmlelements');
+        $searchrec->href = $this->uri(array('action' => 'search'));
+        $searchrec->link = $this->objLanguage->languageText("mod_sahriscollectionsman_searchrecords", "sahriscollectionsman");
+        $searchrec = $searchrec->show();
+        
         $txt = "<ul";
         $txt .= "<li>".$createcoll."</li>";
         $txt .= "<li>".$addrec."</li>";
+        $txt .= "<li>".$searchrec."</li>";
         $txt .= "</ul>";
         
         $ret = $menubox->show($this->objLanguage->languageText("mod_sahriscollectionsman_menu", "sahriscollectionsman"), $txt);
