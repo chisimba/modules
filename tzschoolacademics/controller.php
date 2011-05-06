@@ -44,7 +44,11 @@ class tzschoolacademics extends controller {
              case 'register_teacher':
                  return 'teacher_registration_tpl.php';
                  break;
-            case 'upload_result':
+             case 'register_subject':
+                 return 'subject_registration_tpl.php';
+                 break;
+
+             case 'upload_result':
                return 'load_upload_form_tpl.php';
                break;
             
