@@ -210,28 +210,31 @@ class unesco_oer extends controller
         return "results_tpl.php";
     }
 
-    public function __BrowseAdaptation()
-    {
+  
 
-        //   $lat = $this->getParam('lat');
-        //  $lng = $this->getparam('lng');
+     public function __BrowseAdaptation() {
+
+       $lat = $this->getParam('lat');
+       $lng = $this->getparam('Lng');
         $page = $this->getParam('page');
 
 
 
-        //   $ProdId = $this->objProductUtil->BrowseAdaptation($lat,$lng);
-        //  $Adaptation = $this->objDbProducts->getFilteredProducts($ProdId);
-        //    $Buildstring = "where id = '$ProdId'";
+        $ProdId = $this->objProductUtil->BrowseAdaptation($lat,$lng);
+        $string = $this->objDbProducts->getAdaptedProducts($ProdId);
+        $temporary = $string[0]['name'];
+       $Buildstring = 'creator = ' . "'$temporary'" . ' and parent_id is not null';
+
 
 
 
 
         $temp = 'parent_id is not null';
 
-        //   $this->setVarByRef("test", $Buildstring);
-        //   $this->setVarByRef("prodid", $ProdId);
-        $this->setVarByRef("finalstring", $temp);
-
+       $this->setVarByRef("string", $string);
+        $this->setVarByRef("prodid", $Buildstring);
+            $this->setVarByRef("finalstring", $Buildstring);
+             $this->setVarByRef("TotalEntries", $Buildstring);
 
 
         return "2a_tpl.php";

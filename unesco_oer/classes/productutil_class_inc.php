@@ -481,11 +481,14 @@ class productutil extends object
         return $content;
     }
 
-    public function BrowseAdaptation($lng, $lat)
+
+
+
+     public function BrowseAdaptation($lat,$lng)
     {
 
 
-        $buildstring = "loclat = '$lat' and loclong = '$lng'";
+        $buildstring = ' where loclat = ' . "'$lat'". ' and loclong = ' ."'$lng'";
 
 
 

@@ -53,9 +53,9 @@ class dbproducts extends dbtable
         return $this->getArray($sql);
     }
 
-     function getadaptedProducts($filter)
+     function getAdaptedProducts($filter)
     {
-        $sql = "select id from tbl_unesco_oer_groups where $filter";
+        $sql = "select name from tbl_unesco_oer_groups $filter";
 
         return $this->getArray($sql);
     }

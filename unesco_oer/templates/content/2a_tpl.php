@@ -837,21 +837,27 @@ if ($adaptationstring == null)
                                             <div class="rightColumnContentPadding">
                                                 
            <?php
-//                                                $products = $this->objDbProducts->getFilteredProducts($finalstring);
-//                                                for ($i = 0; $i < count($products); $i++) {
-//                                                    $creator = $products[$i]['creator'];
-//                                                    if ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator)) {
-//                                                        $abLink = new link($this->uri(array("action" =>'3a')));
-//                                                        $abLink->link =$creator;
-//                                                        //echo $abLink->show();
-//                                                        $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
-//                                                        $long = $this->objDbInstitution->getInstitutionLongitude($creator);
-//                                                        $this->objDbInstitution->addMarkerByCoords($long, $lat, $creator ,$abLink->show());
-//                                                        $lat = $this->objDbGroups->getGroupLatitude($creator);
-//                                                        $long = $this->objDbGroups->getGroupLongitude($creator);
-//                                                        $this->objDbInstitution->addMarkerByCoords($long, $lat, $creator,$abLink->show());
-//                                                    }
-//                                                }
+
+          
+
+
+        
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
            ?>
 
 <!DOCTYPE html>
@@ -870,14 +876,15 @@ if ($adaptationstring == null)
 
      
 var marker = new Array();
+//var pos = new Array();
 
   function initialize() {
 
    myLatlng = [
-        new google.maps.LatLng(39.112456,-84.574779),
-        new google.maps.LatLng(20.314153,-84.261379),
-        new google.maps.LatLng(39.197099,-8.667579),
-        new google.maps.LatLng(10.16836,-40.479381)
+        new google.maps.LatLng(39.112456,-84.57477),
+        new google.maps.LatLng(20.31415,-84.26137),
+        new google.maps.LatLng(39.197099,-8.66757),
+        new google.maps.LatLng(50.16836,-40.47938)
         ];
 
 
@@ -887,10 +894,11 @@ var marker = new Array();
   var myOptions = {
     zoom: 0,
     center: myLatlng[0],
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
   }
  var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
+ var oldAction = document.forms["maps"].action;
 
  for(i=0;i<myLatlng.length;i++)
     {
@@ -901,23 +909,22 @@ var marker = new Array();
            } );
 
            var pos = marker[i].getPosition();
-           var lat = pos.toString();
-
-           var oldAction = document.forms["maps"].action;
-
-           google.maps.event.addListener(marker[i], 'click',
-            function() {
-
+           
           
-            alert(pos.toString());
 
-            document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
-
-             document.forms["maps"].submit();
-
-
-            
-                       } );
+           
+  
+           google.maps.event.addListener(marker[i], 'click',
+           (function(pos)
+            { return function()
+                {
+                    //alert(i);
+                    document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
+                    document.forms["maps"].submit();
+                };
+            }
+           )(pos)
+          );
 
            marker[i].setMap(map);
 
@@ -931,8 +938,11 @@ var marker = new Array();
 <body onload="initialize()">
   <div id="map_canvas" style="width:100%; height:20%"></div>
   <?php
-  $form = new form('maps', $this->uri(array("action" => 'home',"page" => '2a_tpl.php')));
+  $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation',"page" => '2a_tpl.php')));
+  
   echo $form->show();
+ echo $string[0]['name'];
+ echo $prodid;
  
   ?>
 </body>
