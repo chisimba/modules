@@ -89,7 +89,7 @@ class dbreports extends dbTable {
      * method to get all basic information of a student in a given academic year eg. student name,class.
      * @param regno:  student registration number
      * @param year_id:   academic year
-     * return $student_info:  associative array with student informations in if student information exists
+     * return student_info:  associative array with one row of student informations in if student information exists
      */
 
     function get_students_information($regno, $year_id) {
@@ -110,12 +110,12 @@ class dbreports extends dbTable {
     }
 
     /*
-     * method to get students result marks
+     * method to get students marks for all subject for given exam type,academic year and semmister
      * @param regno:  student registration number
      * @param  exam :  type of examination
      * @param term   academic year term/semmister
      * @param year_id:   academic year
-     * return subject_marks:  associative array with student informations in if student information exists
+     * return subject_marks:  associative array with student subject marks in if student information exists
      */
 
     function get_student_marks($regno, $exam, $term, $year_id) {
@@ -141,15 +141,15 @@ class dbreports extends dbTable {
         if (!empty($marks) && !empty($class)) {
             $class_level = $this->getRow($pk_field = 'puid', $pk_value = $class, $table = 'tbl_class');
             $c_level = $class_level['level'];  ///students class level
-
+     
             if($c_level) {
                 //getting grade name and ist remarks
-                $grade_sql = "SELECT grade_name,remarks
-                    FROM WHERE  level='$c_level' AND '$marks' IN BETWEEN('min_value','max_value')  ";
-                $marks_grade_infomation = $this->query($grade_sql);
-               if($marks_grade_infomation){
-                   $marks_grade=$marks_grade_infomation;
-                 return $marks_grade;
+                $grade_sql = "SELECT grade_name,remarks FROM tbl_grade
+                  WHERE  level LIKE'$c_level%' AND min_value<='$marks' AND max_value>='$marks' LIMIT 0,1";
+                
+                $marks_grade = $this->query($grade_sql);
+               if($marks_grade){
+                  return $marks_grade;
                }
                 
             }
