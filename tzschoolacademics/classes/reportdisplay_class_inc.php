@@ -202,7 +202,143 @@ class reportdisplay extends object {
         }
     }
 
-    ///end class
+    /*
+     * method to generate form_for class result
+    */
+
+   public function create_class_result_form(){
+       $this->get_html_elements();  ///loading html helper classes
+
+       $table=new htmlTable();
+
+        $form = new form('class_result_form');
+        $form->action = $this->uri(array('action' => 'ClassResult'), 'tzschoolacademics');  // creating a form action
+        $form->setDisplayType(2);
+
+     ///class drop down
+        $class = new dropdown('class');
+        $c_label = new label('Student Class');
+        $c_array = $this->objreportDb->get_classes();
+           foreach ($c_array as $classdata) {
+            $class->addOption($value = $classdata['puid'], $label = $classdata['class_name'] . $classdata['stream']);
+        }
+    //semester_dropdown
+      $semester=new dropdown('semester');
+      $semester_label=new label('Term/semester');
+      $objTerm=$this->newObject('marksdb', 'tzschoolacademics');
+      $semesters=$objTerm->load_term();
+      $semester->addFromDB($array=$semesters, $labelField='term_name', $valueField='puid');
+
+      //exam type dropdown
+      $exam=new dropdown('exam_type');
+      $exam_label=new label('Exam Type');
+      $exams=$this->objreportDb->get_exam_type();
+      $exam->addFromDB($exams,'exam_type', 'puid');
+
+      //academic year dropdown
+      $academic_year = new dropdown('academic_year');
+      $academic_year_label = new label('Academic Year');
+      $academic_year_array = $this->objreportDb->get_academic_year();
+      $academic_year->addFromDB($academic_year_array,'year_name','puid' );
+
+      $submit = new button('View');
+      $submit->setToSubmit();
+      $submit->value = 'View Class Result';
+
+      $table->startRow();
+      $table->addCell($c_label->show());
+      $table->addCell($class->show());
+      $table->endRow();
+
+      $table->startRow();
+      $table->addCell($exam_label->show());
+      $table->addCell($exam->show());
+      $table->endRow();
+
+      $table->startRow();
+      $table->addCell($academic_year_label->show());
+      $table->addCell($academic_year->show());
+      $table->endRow();
+
+      $table->startRow();
+      $table->addCell($semester_label->show());
+      $table->addCell($semester->show());
+      $table->endRow();
+
+      //adding elements to form
+      $form->addToForm($table->show());
+      $form->addToForm($submit->show());
+      return $form->show();  ///returning the form object
+
+   }
+
+     /*
+      * method to generate specified results category for a particular class in a give academic year and semester
+      * @param class_id   the id of the class
+      * @param exam_type  type of examination eg anual, semester
+      * @param year_id    academic year id
+      * @param term_id    academic year semester/term id
+      */
+
+     public function generate_class_result($exam_type, $term_id, $year_id, $class_id){
+      if(!empty ($exam_type) && !empty ($term_id) && !empty ($year_id) && !empty ($class_id)){
+       $student_in_class=$this->objreportDb->get_class_student($class_id, $year_id);
+       if($student_in_class){
+           ////getting all subjects i  given class
+          $class_subjects=$this->objreportDb->get_class_subject($class_id);
+        
+         if($class_subjects){
+         $dataTable=new htmlTable();
+         $dataTable->width='90%';
+         $dataTable->startHeaderRow();
+         foreach ($class_subjects as $cl_subject) {
+             $subj_name=$cl_subject['subject_name'];
+            
+             $dataTable->addHeaderCell($subj_name);
+         }
+         $dataTable->endHeaderRow();
+          }
+
+          return $dataTable->show();  //under test not yet finished
+          exit;
+          
+          //continue from here  still under construction
+
+
+          ///extracting all students
+          foreach($student_in_class as $students){
+            $st_regno=$students['reg_no'];
+            ///retrieving student results bases on received $st_regno
+         $student_result=$this->objreportDb->get_student_marks($st_regno, $exam_type, $term_id, $year_id);
+         foreach($student_result as $results){
+          $score=$results['score'];    ///result score
+          $subject=$results['subject_name'];  ///subject name
+          //format row for each student  here
+         }
+        ///format total output here
+
+
+          }
+        }
+       else{
+         $data="<p>No student found in the class in the specified year</p>";
+         return $data;
+       }
+          
+      }
+
+     }
+
+
+
+
+
+
+
+
+
+
+     ///end class
 }
 
 ?>
