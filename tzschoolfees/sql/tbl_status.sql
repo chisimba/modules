@@ -19,7 +19,7 @@ $fields = array(
 'length'=>32
 ),
 'status_name' => array(
-       'type' => 'varchar',
+       'type' => 'text',
        'length' => 25,
        'notnull' => TRUE
        )

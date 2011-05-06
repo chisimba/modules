@@ -17,7 +17,7 @@ table for class
 
 $fields = array(
 'id'=>array(
-'type'=>'integer',
+'type'=>'text',
 'length'=>32
 ),
 'class_name' => array(
