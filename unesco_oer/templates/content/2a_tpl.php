@@ -851,8 +851,7 @@ if ($adaptationstring == null)
                                             <script type="text/javascript"
                                                     src="http://maps.google.com/maps/api/js?sensor=true">
                                             </script>
-                                            <script type="text/javascript">
-
+ <script type="text/javascript">
      
                                                 var marker = new Array();
                                                 //var pos = new Array();
@@ -860,19 +859,20 @@ if ($adaptationstring == null)
                                                 function initialize() {
 
                                                     myLatlng = [
-                                            </script>
+                                          
                                             <?php
                                             $coords = array(
-                                                array("long" => "39.112456", "lat" => "-84.57477")
+                                                array("long" => "39.112456", "lat" => "-84.57477"),
+                                                 array("long" => "30.112456", "lat" => "-64.57477")
                                             );
                                             foreach ($coords as $coord) {
                                                 ?>
-                                                <script type="text/javascript">
-                                                            new google.maps.LatLng(</script><?php echo $coord['long'] . ',' . $coord['lat']; ?><script type="text/javascript">)
+                                                
+                                                            new google.maps.LatLng(<?php echo $coord['long'] . ',' . $coord['lat']; ?>),
             
-                                                </script>
+                                               
                                             <?php } ?>
-                                            <script type="text/javascript">
+                                           
                                                     ];
 
 
