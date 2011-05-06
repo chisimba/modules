@@ -11,6 +11,8 @@
  */
 class subjectform extends object {
     public $lang;
+    private $levelValue;
+    private $nameValue;
 
     public function init(){
        $this->lang=$this->getObject('language', 'language');
@@ -38,6 +40,14 @@ class subjectform extends object {
         $form->addToForm($nameLabel->show().'<br>');
         $nameField->setValue($this->nameValue);
         $form->addToForm($nameField->show().'<br>');
+
+        $levelLabel=new label($this->lang->languageText('mod_tzschoolacademics_level_label','tzschoolacademics'),'level');
+        $levelField=new dropdown('level');
+        $form->addToForm($levelLabel->show().'<br>');
+        $levelField->addOption('O','O LEVEL');
+        $levelField->addOption('A','A LEVEL');
+        $levelField->setValue($this->levelValue);
+        $form->addToForm($levelField->show().'<br>');
 
        $saveButton=new button('register',$this->lang->languageText('mod_tzschoolacademics_register_label','tzschoolacademics'));
        $saveButton->setToSubmit();
