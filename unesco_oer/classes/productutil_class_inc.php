@@ -4,9 +4,6 @@ $this->loadClass('link', 'htmlelements');
 //Display errors
 error_reporting(E_ALL);
 ini_set('display_errors', 'Off');
-
-
-
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +45,10 @@ class productutil extends object
         $CommentLink->cssClass = 'adaptationLinks';
         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
 
+        $key = array_search('language0', $product);
+        $endKey = count($product);
+        $productSize = $endKey - $key;
+
         //TODO Ntsako find out what makes a product new
         if ($product['new'] == 'true') {
             $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -72,9 +73,22 @@ class productutil extends object
                                 <div class="listingLanguageLinkAndIcon">
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                     <div class="listingLanuagesDropdownDiv">
-                                        <select name="" class="listingsLanguageDropDown">
+                                        <select name="" class="listingsLanguageDropDown">';
 
-                                            <option value="">' . $product['language'] . '</option>
+        $index = 0;
+        foreach ($product as $languages) {
+            //Check if languages is empty
+            foreach ($languages as $language) {
+                //print_r($language);
+                $content .= '<option value="">' . $language . '</option>';
+                $index++;
+            }
+        }
+        if ($index == 0) {
+            $content .= '<option value="">' . $product['language'] . '</option>';
+        }
+
+        $content .='
                                         </select>
                                     </div>
                                 </div>
@@ -136,9 +150,22 @@ class productutil extends object
                     <div class="productlistViewLeftFloat">
                       <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                         <div class="listingAdaptationLinkDiv">
-                        	<select name="" class="listingsLanguageDropDown">
-                            	<option value="">' . $product['language'] . '</option>
-                            </select>
+                        	<select name="" class="listingsLanguageDropDown">';
+
+        $index = 0;
+        foreach ($product as $languages) {
+            //Check if languages is empty
+            foreach ($languages as $language) {
+                //print_r($language);
+                $content .= '<option value="">' . $language . '</option>';
+                $index++;
+            }
+        }
+        if ($index == 0) {
+            $content .= '<option value="">' . $product['language'] . '</option>';
+        }
+
+        $content .= '</select>
                         </div>
                     </div>
                 </div>
@@ -454,14 +481,11 @@ class productutil extends object
         return $content;
     }
 
-
-
-
-     public function BrowseAdaptation($lng,$lat)
+    public function BrowseAdaptation($lng, $lat)
     {
 
 
-    $buildstring = "loclat = '$lat' and loclong = '$lng'";
+        $buildstring = "loclat = '$lat' and loclong = '$lng'";
 
 
 
@@ -470,17 +494,6 @@ class productutil extends object
 
         return $buildstring;
     }
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * This function Builds the String to Send to the DBhandler and return the total number of entries according to the selected Filter

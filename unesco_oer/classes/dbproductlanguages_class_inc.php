@@ -21,7 +21,7 @@ class dbproductlanguages extends dbtable {
     }
 
     function getProductLanguages(){
-        $sql = "select code from tbl_unesco_oer_product_languages";
+        $sql = "select code,name from tbl_unesco_oer_product_languages";
         return $this->getArray($sql);
     }
     function addLanguage($code,$name) {

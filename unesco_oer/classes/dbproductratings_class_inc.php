@@ -18,7 +18,7 @@
 class dbproductratings extends dbtable {
 
     function init() {
-        parent::init("tbl_unesco_oer_product_ratings");
+        parent::init("tbl_unesco_oer_available_product_languages");
     }
 
     function getMostRatedProducts() {

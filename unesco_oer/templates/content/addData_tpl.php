@@ -134,6 +134,12 @@ $buttonText = "Edit Institution";
 $actionURI = $this->uri(array('action' => 'editInstitutionUI1'));
 $utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
+//Add an additional language to a product
+$headingText = "Add language to product"; //MUST USE OBJECT LANGUAGE
+$buttonText = "Add language to product";
+$actionURI = $this->uri(array('action' => 'chooseProductToAddLanguageTo'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
+
 //return to Home
 $table->startRow();
 $buttonText = $this->objLanguage->

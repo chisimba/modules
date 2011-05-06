@@ -71,12 +71,12 @@ $adaptationstring = "parent_id is null";
 
 
 
-                                <a href="" class="searchGoLink">
+                                    <a href="" class="searchGoLink">
 
 
 
 
-                                </a></div>
+                                    </a></div>
                             <div class="searchInputBoxDiv">
 
 <!--                              <input type="text" name="" id="" class="searchInput" value="Type search term here...">-->
@@ -123,10 +123,10 @@ $adaptationstring = "parent_id is null";
 
 
 
-                                    <!--                                     <select name="" id="" class="searchDropDown">
-                                                                        <option value="">All</o    <input type="text" name="" id="" class="searchInput" value="Type search term here...">
-                                                                    <select name="" id="" class="searchDropDown">ption>
-                                                                    </select>-->
+                                                <!--                                     <select name="" id="" class="searchDropDown">
+                                                                                    <option value="">All</o    <input type="text" name="" id="" class="searchInput" value="Type search term here...">
+                                                                                <select name="" id="" class="searchDropDown">ption>
+                                                                                </select>-->
                                         </div>
                                         <div class="textNextToRightFloatedImage">Search</div><!--
                                         <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">-->
@@ -135,7 +135,7 @@ $adaptationstring = "parent_id is null";
 
                                         <!-- AddThis Button BEGIN -->
                                         <div class="shareDiv">
-<!--                                            <a class="addthis_button" href="#"><img src="#" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="#"></script>
+            <!--                                            <a class="addthis_button" href="#"><img src="#" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="#"></script>
 
                                              AddThis Button END -->
                                         </div>
@@ -149,15 +149,15 @@ $adaptationstring = "parent_id is null";
                                     </div>
                                 </div>
                             </div>
-<?php
+                <?php
                                         } else {
-?>
-                            <div id="loginDiv">
-                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
-                            </div>
-<?php
+                ?>
+                                            <div id="loginDiv">
+                                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
+                                            </div>
+                <?php
                                         }
-?>
+                ?>
                                         <div class="logoAndHeading">
                                             <img src="skins/unesco_oer/images/logo-unesco.gif" class="imgFloatRight" alt="logo">
                                             <div class="logoText">
@@ -176,21 +176,21 @@ $adaptationstring = "parent_id is null";
                                         <div class="mainNavigation">
                                             <div class="navitemOnstate">
                                                 <div class="navitemInnerOnstate">
-<?php
+                            <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
                                         $abLink->link = 'UNESCO OER PRODUCTS';
                                         echo $abLink->show();
-?>
+                            ?>
                                     </div>
                                 </div>
                                 <div class="mainNavPipe">&nbsp;</div>
                                 <div class="navitem">
                                     <div class="navitemInner">
-<?php
+                            <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
                                         $abLink->link = 'PRODUCT ADAPTATIONS';
                                         echo $abLink->show();
-?>
+                            ?>
 
                                     </div>
                                 </div>
@@ -212,23 +212,23 @@ $adaptationstring = "parent_id is null";
                             <!-- Left Colum -->
                             <div class="leftColumnDiv">
                                 <div class="moduleHeader">
-<?php
+                        <?php
                                         echo $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer')
-?>
+                        ?>
 
-                                </div>
-                                <div class="blueNumberBackground">
-                                    <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                                    <div class="numberOffilteredProducts">
+                                    </div>
+                                    <div class="blueNumberBackground">
+                                        <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
+                                        <div class="numberOffilteredProducts">
 
-<?php
+                            <?php
                                         if ($finalstring == null) {                       //Initialization check
                                             $finalstring = 'parent_id is null';
                                             $TotalEntries = 'parent_id is null';
                                         }
 
                                         echo $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
-?>
+                            ?>
 
 
 
@@ -238,14 +238,14 @@ $adaptationstring = "parent_id is null";
                                 <div class="moduleSubHeader">Product matches filter criteria</div>
                                 <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">
 
-<?php
+                        <?php
                                         echo $this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer')
-?>
+                        ?>
 
-                                </div>
-                                <div class="blueBackground blueBackgroundCheckBoxText">
+                                    </div>
+                                    <div class="blueBackground blueBackgroundCheckBoxText">
 
-<?php
+                        <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
 
 
@@ -297,24 +297,24 @@ $adaptationstring = "parent_id is null";
 
 
                                         echo $form->show();
-?>
+                        ?>
 
-                                                                                                <!--                                    <input type="checkbox"> Model<br>
-                                                                                                                                    <input type="checkbox"> Guide<br>
-                                                                                                                                    <input type="checkbox"> Handbook<br>
-                                                                                                                                    <input type="checkbox"> Manual<br>
-                                                                                                                                    <input type="checkbox"> Bestoractile<br>-->
+                                                                                                                <!--                                    <input type="checkbox"> Model<br>
+                                                                                                                                                    <input type="checkbox"> Guide<br>
+                                                                                                                                                    <input type="checkbox"> Handbook<br>
+                                                                                                                                                    <input type="checkbox"> Manual<br>
+                                                                                                                                                    <input type="checkbox"> Bestoractile<br>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">
-<?php
+                        <?php
                                         echo $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer')
-?>
+                        ?>
 
                                     </div>
                                     <div class="blueBackground">
 
-<?php
+                        <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterTheme = new dropdown('ThemeFilter');
                                         $filterTheme->cssClass = "leftColumnSelectDropdown";
@@ -338,24 +338,24 @@ $adaptationstring = "parent_id is null";
                                         $form->addtoform($filterTheme->show());
 
                                         echo $form->show();
-?>
+                        ?>
 
-                                                                                                                                                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                                                                                            </select>-->
+                                                                                                                                                                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">
-<?php
+                        <?php
                                         echo $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer')
-?>
+                        ?>
 
 
                                     </div>
                                     <div class="blueBackground">
 
 
-<?php
+                        <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('LanguageFilter');
                                         $filterLang->cssClass = "leftColumnSelectDropdown";
@@ -377,29 +377,29 @@ $adaptationstring = "parent_id is null";
 
 
                                         echo $form->show();
-?>
+                        ?>
 
-                                                                                                                                                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                                                                                                <option value="">English</option>
-                                                                                                                                                                                                                                                                                <option value="">Français</option>
-                                                                                                                                                                                                                                                                                <option value="">Español</option>
-                                                                                                                                                                                                                                                                                <option value="">Русский</option>
-                                                                                                                                                                                                                                                                                <option value="">لعربية</option>
-                                                                                                                                                                                                                                                                                <option value="">中文</option>
-                                                                                                                                                                                                                                                                            </select>-->
+                                                                                                                                                                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                                                                                                                <option value="">English</option>
+                                                                                                                                                                                                                                                                                                <option value="">Français</option>
+                                                                                                                                                                                                                                                                                                <option value="">Español</option>
+                                                                                                                                                                                                                                                                                                <option value="">Русский</option>
+                                                                                                                                                                                                                                                                                                <option value="">لعربية</option>
+                                                                                                                                                                                                                                                                                                <option value="">中文</option>
+                                                                                                                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">
-<?php
+                        <?php
                                         echo $this->objLanguage->languageText('mod_unesco_oer_author', 'unesco_oer')
-?>
+                        ?>
 
 
                                     </div>
                                     <div class="blueBackground">
 
-<?php
+                        <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterAuth = new dropdown('AuthorFilter');
                                         $filterAuth->cssClass = "leftColumnSelectDropdown";
@@ -421,20 +421,20 @@ $adaptationstring = "parent_id is null";
 
 
                                         echo $form->show();
-?>
+                        ?>
 
 
 
 
-                                                                                                                                                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                                                                                            </select>-->
+                                                                                                                                                                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">
-<?php
+                        <?php
                                         echo $this->objLanguage->languageText('mod_unesco_oer_items_per_page', 'unesco_oer')
-?>
+                        ?>
 
 
                                     </div>
@@ -443,7 +443,7 @@ $adaptationstring = "parent_id is null";
 
 
 
-<?php
+                        <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterNum = new dropdown('NumFilter');
                                         $filterNum->cssClass = "leftColumnSelectDropdown";
@@ -468,7 +468,7 @@ $adaptationstring = "parent_id is null";
 
 
                                         echo $form->show();
-?>
+                        ?>
 
 
 
@@ -478,20 +478,20 @@ $adaptationstring = "parent_id is null";
 
 
 
-                                                                                                <!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                                                                                                                                            <option value="">All</option>
-                                                                                                                                        </select>-->
+                                                                                                                <!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                                                                                                                                                            <option value="">All</option>
+                                                                                                                                                        </select>-->
                                     </div>
                                     <br><br>
                                     <div class="blueBackground rightAlign">
                                         <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
                                         <a href="#" class="resetLink">
 
-<?php
+                            <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
                                         $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
                                         echo $abLink->show();
-?>
+                            ?>
                                     </a>
                                 </div>
                                 <div class="rssFeed">
@@ -510,10 +510,10 @@ $adaptationstring = "parent_id is null";
 
                                     <div class="sortBy">
 
-                                                                                                                                                                                                                    <!--                                                <select name="" class="contentDropDown">
-                                                                                                                                                                                                                         <option value="">Date Added</option>
-                                                                                                                                                                                                                     </select>-->
-<?php
+                                                                                                                                                                                                                                <!--                                                <select name="" class="contentDropDown">
+                                                                                                                                                                                                                                     <option value="">Date Added</option>
+                                                                                                                                                                                                                                 </select>-->
+                            <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('SortFilter');
                                         $filterLang->cssClass = "contentDropDown";
@@ -536,60 +536,60 @@ $adaptationstring = "parent_id is null";
                                         $form->addtoform($this->objLanguage->languageText('mod_unesco_oer_sort_by', 'unesco_oer'));
                                         $form->addtoform($filterLang->show());
                                         echo $form->show();
-?>
+                            ?>
 
 
 
-                                                                                                                                                                            <!--                                                <select name="" class="contentDropDown">
-                                                                                                                                                                                <option value="">DESC</option>
-                                                                                                                                                                            </select>-->
+                                                                                                                                                                                        <!--                                                <select name="" class="contentDropDown">
+                                                                                                                                                                                            <option value="">DESC</option>
+                                                                                                                                                                                        </select>-->
                                     </div>
                                     <div class="viewGrid">
                                         <div class="viewAsDiv">View as: </div>
 
 
-<?php
+                            <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
                                         $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
                                         echo $abLink->show();
-?>
+                            ?>
 
                                         <div class="gridListDivView">
-                            <?php
+                                <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
                                         $abLink->link = 'GRID';
                                         echo $abLink->show();
-                            ?>
+                                ?>
                                     </div>
 
                                     <div class="gridListPipe">|</div>
 
-<?php
+                            <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
                                         $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                                         echo $abLink->show();
-?>
+                            ?>
 
                                         <div class="gridListDivView">
 
-<?php
+                                <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
                                         $abLink->link = 'LIST';
                                         echo $abLink->show();
-?>
+                                ?>
                                 <?php
-                                if ($this->objUser->isLoggedIn()) {
-                                        $newProductLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
-                                        $newProductLink->link = "New product";
+                                        if ($this->objUser->isLoggedIn()) {
+                                            $newProductLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
+                                            $newProductLink->link = "New product";
 
-                                        echo '&nbsp;|&nbsp;' . $newProductLink->show();
-                                }
+                                            echo '&nbsp;|&nbsp;' . $newProductLink->show();
+                                        }
                                 ?>
 
                                     </div>
                                 </div>
                             </div>
-<?php
+                    <?php
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
                                         $objTable->cssClass = "gridListingTable";
@@ -597,22 +597,25 @@ $adaptationstring = "parent_id is null";
 
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
-                         
+
                                         $newRow = true;
                                         $count = 0;
                                         $noOfAdaptations = 0;
-                                        
+
                                         foreach ($products as $product) {               //populates table
                                             if ($product['parent_id'] == null) {
                                                 $count++;
                                                 $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
 
+                                               $languages = $this->objDbAvailableProductLanguages->getProductLanguage($product['id']);
+                                               $theProduct = $product + $languages;
+
                                                 if ($newRow) {
                                                     $objTable->startRow();
-                                                    $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
+                                                    $objTable->addCell($this->objProductUtil->populateGridView($theProduct, $noOfAdaptations));
                                                     $newRow = false;
                                                 } else {
-                                                    $objTable->addCell($this->objProductUtil->populateGridView($product, $noOfAdaptations));
+                                                    $objTable->addCell($this->objProductUtil->populateGridView($theProduct, $noOfAdaptations));
                                                 }
                                             }
 
@@ -623,7 +626,7 @@ $adaptationstring = "parent_id is null";
                                             }
                                         }
                                         echo $objTable->show();
-?>
+                    ?>
                                         <!--
                                                             <table class="gridListingTable" cellspacing="0" cellpadding="0">
                                                                 <tr>
@@ -767,7 +770,7 @@ $adaptationstring = "parent_id is null";
                                         <!-- Pagination-->
                                         <div class="paginationDiv">
 
-<?php
+                        <?php
 //
                                         $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
 
@@ -793,7 +796,7 @@ $adaptationstring = "parent_id is null";
                                         }
 //
 //
-?>
+                        ?>
 
 
 
@@ -830,20 +833,20 @@ $adaptationstring = "parent_id is null";
                                         <div class="featuredHeader">FEATURED UNESCO PRODUCTS</div>
                                         <div class="rightColumnBorderedDiv">
                                             <div class="rightColumnContentPadding">
-<?php
+                                <?php
                                         $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
                                         $featuredProduct = $this->objDbProducts->getProductByID($featuredProductID);
-                                        
+
                                         echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct);
-?>
-                                       <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
-<?php
+                                ?>
+                                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
+                                        <?php
                                         //The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
 
 
                                         $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id']);
-                                        echo"See all adaptations ($NOofAdaptation)";// This must be a link;
-?>
+                                        echo"See all adaptations ($NOofAdaptation)"; // This must be a link;
+                                        ?>
                                     </a></div>
                             </div>
                         </div>
@@ -860,7 +863,7 @@ $adaptationstring = "parent_id is null";
                         <div class="rightColumnContentPadding">
 
 
-<?php
+                            <?php
                                         $objTabs = $this->newObject('tabcontent', 'htmlelements');
                                         $objTabs->setWidth(180);
 //                                        $objTabs->cssClass = "tabsOnState";
@@ -871,7 +874,7 @@ $adaptationstring = "parent_id is null";
                                         $objTabs->addTab('Rated', $mostRated);
                                         $objTabs->addTab('Commented', $mostCommented);
                                         echo $objTabs->show();
-?>
+                            ?>
 
                             <!--                            </div>-->
                         </div>
