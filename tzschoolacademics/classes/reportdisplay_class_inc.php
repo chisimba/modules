@@ -121,6 +121,7 @@ class reportdisplay extends object {
         //initiating the table for carrying and formating output result
         $data_table = $this->newObject('htmltable', 'htmlelements');
         $data_table->width = '80%';
+        $data_table->cellPadding='2px';
         //table header
 
         if ($validate_student) {
@@ -131,23 +132,23 @@ class reportdisplay extends object {
                  $data_table->startHeaderRow();
                 $data_table->addHeaderCell('Subject');
                 $data_table->addHeaderCell('Marks');
+                 $data_table->addHeaderCell('Grade');
                 $data_table->addHeaderCell('Remarks');
                 $data_table->endHeaderRow();
 
                 foreach ($student_info as $student_data) {
                     $st_regno = $student_data['reg_no'];
-                    $stuent_full_name = $student_data['firstname'] . ', ' . $student_data['othernames'] . ' ' . $student_data['lastname'];
+                    $student_full_name = $student_data['firstname'] . ', ' . $student_data['othernames'] . ' ' . $student_data['lastname'];
                     $class_name = $student_data['class_name'];
                     $year = $student_data['year_name'];
-                  
+                                    
                 }
-                //creating the heading of the results
-               $result_heading="<p><u>".$year." Results</u></p>
-                             <p>$stuent_full_name (reg# $st_regno) $class_name </p>";
-                echo $result_heading;
-                foreach ($student_result as $result_value) {
+              
+                 foreach ($student_result as $result_value) {
                     $marks = $result_value['score'];
                     $subject = $result_value['subject_name'];
+                    //$term=$result_value[''];
+                    $exam_type=$result_value['exam_type'];
 
                     $data_table->startRow();
                     $data_table->addCell($subject);
@@ -155,7 +156,12 @@ class reportdisplay extends object {
                     $data_table->addCell('');
                     $data_table->endRow();
                 }
-                return $data_table->show();
+                ///heading for student results
+                $result_heading="<h4><u>".$class_name." ". $exam_type." Results ".$year." </u></h4>";
+                $result_heading .="<p>Student Name: ".$student_full_name."</br>";
+                $result_heading .="Registration #: ".$st_regno."</p><br>";
+
+                return $result_heading.$data_table->show();
             }
         } else {
             $data_table->startRow();
