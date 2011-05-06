@@ -43,6 +43,10 @@ $utility->addTextInputToTable($title, 4, 'loclat', 60, '', $table);
 $title = $this->objLanguage->languageText('mod_unesco_oer_group_loclong', 'unesco_oer');
 $utility->addTextInputToTable($title, 4, 'loclong', 60, '', $table);
 
+//group country input options
+$title = $this->objLanguage->languageText('mod_unesco_oer_group_country', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'country', 60, '', $table);
+
 //group thumbnail input options
 $objUpload = $this->getObject('uploadinput', 'filemanager');
 $table->startRow();

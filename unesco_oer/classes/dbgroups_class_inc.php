@@ -26,11 +26,12 @@ class dbgroups extends dbtable {
         return $this->getArray($sql);
     }
 
-    function addGroup($name, $loclat, $loclong, $thumbnailPath) {
+    function addGroup($name, $loclat, $loclong, $thumbnailPath, $country = NULL) {
         $data = array(
             'name' => $name,
             'loclat' => $loclat,
             'loclong' => $loclong,
+            'country' => $country,
             'thumbnail' => $thumbnailPath
         );
 
@@ -134,7 +135,17 @@ class dbgroups extends dbtable {
 
 
 
-
+    /*
+    * This function takes a group name and returns the country of the first
+    * group found
+    * @param $Name
+    * return typeID
+    */
+    function getGroupCountry($name){
+        $sql = "SELECT * FROM $this->_tableName WHERE name='$name'";
+        $group=$this->getArray($sql);
+        return $group[0]['country'];
+    }
 
 }
 

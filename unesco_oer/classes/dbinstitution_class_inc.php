@@ -26,11 +26,13 @@ class dbinstitution extends dbtable {
         return $this->getArray($sql);
     }
 
-    function addInstitution($name, $loclat, $loclong, $thumbnailPath) {
+    function addInstitution($name, $loclat, $loclong, $thumbnailPath, $type = NULL, $country = NULL) {
         $data = array(
             'name' => $name,
             'loclat' => $loclat,
             'loclong' => $loclong,
+            'country'=> $country,
+            'type' => $type,
             'thumbnail' => $thumbnailPath
         );
 
@@ -127,7 +129,44 @@ class dbinstitution extends dbtable {
                      array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'id'=>$id)
             );
         }
-  
+
+    function getInstitutionByID($id){
+        //TODO change function so it can identify if the $id is a puid or a normal id
+        //TODO this function currently fails when you have more than 99 intitutions
+        //If searching by id
+        $sql = '';
+        if (strlen($id)>2){
+            $sql = "select * from $this->_tableName where id = '$id'";
+        }  else {
+            //If searching by puid
+            $sql = "select * from $this->_tableName where puid = '$id'";
+        }
+        $products = $this->getArray($sql);
+        return $products[0]; //TODO add error handler for non unique ID.
+    }
+
+    /*
+    * This function takes a institution name and returns the first type ID if found
+    * @param $Name
+    * return typeID
+    */
+    function findInstitutionTypeID($Name){
+        $sql = "SELECT * FROM $this->_tableName WHERE name='$Name'";
+        $institution=$this->getArray($sql);
+        return $institution[0]['type'];
+    }
+
+    /*
+    * This function takes a institution name and returns the country of the first
+    * institution found
+    * @param $Name
+    * return typeID
+    */
+    function getInstitutionCountry($name){
+        $sql = "SELECT * FROM $this->_tableName WHERE name='$name'";
+        $institution=$this->getArray($sql);
+        return $institution[0]['country'];
+    }
 }
 
 ?>

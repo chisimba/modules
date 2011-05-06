@@ -10,6 +10,8 @@ $fields = array(
                 'name' =>array('type' =>'text','length'=>128),
                 'loclat' =>array('type' =>'text','length'=>255),
                 'loclong' =>array('type' =>'text','length'=>255),
+                'country' =>array('type' =>'text','length'=>255),
+                'type' => array('type' => 'text','length' => 32),
 		'thumbnail' =>array('type' => 'text', 'length' =>255)
 );
 ?>

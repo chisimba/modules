@@ -30,6 +30,7 @@
                             <a id="_5" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
                         </div>-->
                         <?php
+                        if ($this->objUser->isLoggedIn()) {
                             $content = '<div id="rateMe" title="">
                             <a id="_1" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
                             <a id="_2" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
@@ -41,7 +42,7 @@
                             $form = new form('addProductRating_ui',$this->uri(array('action'=>'submitProductRating', 'productID' => $productID, 'rateSubmit' => '', 'prevAction' => 'home')));
                             $form->addToForm($content);
                             echo $form->show();
-
+                        }
 
                         ?>
                         <div class="commentsLinkUnderRatingStarsDiv">

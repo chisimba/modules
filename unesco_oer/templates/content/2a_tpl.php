@@ -580,13 +580,21 @@ if ($adaptationstring == null)
                                                 $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
                                                 $product['group_thumbnail'] = $thumbnail['thumbnail'];
                                                 $product['institution_thumbnail'] = NULL;
-                                                $product['country'] = 'Not Available';
+                                                //$product['country'] = 'Not Available';
+                                                $product['country'] = $this->objDbGroups->getGroupCountry($product['creator']);
                                                 $product['type'] = 'Not Available';
                                             } else {
                                                 $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
                                                 $product['group_thumbnail'] = NULL;
-                                                $product['country'] = 'Not Available';
-                                                $product['type'] = 'Not Available';
+                                                //$product['country'] = 'Not Available';
+
+                                                
+                                                $product['country'] = $this->objDbInstitution->getInstitutionCountry($product['creator']);
+                                                //$product['type'] = 'Not Available';
+
+                                                $institutionTypeID = $this->objDbInstitution->findInstitutionTypeID($product['creator']);
+                                                $product['type'] = $this->objDbInstitutionTypes->getTypeName($institutionTypeID);
+
                                                 $product['institution_thumbnail'] = $thumbnail['thumbnail'];
                                             }
 
@@ -914,15 +922,6 @@ var marker = new Array();
            marker[i].setMap(map);
 
            }
-
-
-
-
-
-
-
-
-
 
 
   }

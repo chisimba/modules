@@ -17,6 +17,7 @@ class unesco_oer extends controller
     public $objDbComments;
     public $objUser;
     public $objDbProductRatings;
+    public $objDbInstitutionTypes;
     public $objGoogleMap;
     public $objDbAvailableProductLanguages;
     /**
@@ -44,6 +45,7 @@ class unesco_oer extends controller
         $this->objDbInstitution = $this->getObject('dbinstitution');
         $this->objDbComments = $this->getObject('dbcomments');
         $this->objProductRatings = $this->getObject('dbproductratings');
+        $this->objDbInstitutionTypes = $this->getObject('dbinstitutiontypes');
         $this->objUser = $this->getObject('user', 'security');
         //$this->objGoogleMap=$this->getObject('googlemapapi');
         //$this->objGoogleMap = new googlemapapi();
@@ -386,7 +388,16 @@ class unesco_oer extends controller
         $parentID = $this->getParam('parentID');
         $thumbnailPath = '';
         $results = FALSE;
-        if (!$this->objDbProducts->isAdaptation($parentID) && ($isNewProduct == ($parentID == null))) {
+        /*
+         * This conditional statement only allows the uploading of a new thumbnail
+         * for a new original product or the editing of a original product.
+         * Firstly it tests if the product is an adpaptation. If it isn't then
+         * it is a new original product only if the the parameter @isNewProduct
+         * is true and parameter @parentID is NULL. It is an existing original product
+         * only if the parameter @parentID is not NULL and the parameter @isNewProduct
+         * is false
+         */
+        if (!$this->objDbProducts->isAdaptation($parentID) && ($isNewProduct == ($parentID == null))){
             $path = 'unesco_oer/products/' . $this->getParam('title') . '/thumbnail/';
             try {
                 $results = $this->uploadFile($path);
@@ -575,6 +586,7 @@ class unesco_oer extends controller
         $name = $this->getParam('newGroup');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
+        $country = $this->getParam('country');
         $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
         try {
             $results = $this->uploadFile($path);
@@ -585,7 +597,7 @@ class unesco_oer extends controller
         }
         $thumbnailPath = 'usrfiles/' . $results['path'];
 
-        $this->objDbGroups->addGroup($name, $loclat, $loclong, $thumbnailPath);
+        $this->objDbGroups->addGroup($name, $loclat, $loclong, $thumbnailPath, $country);
         return $this->__addData();
     }
 
@@ -608,6 +620,9 @@ class unesco_oer extends controller
         $name = $this->getParam('newInstitution');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
+        $institutionTypeName = $this->getParam('institutionType');
+        $institutionTypeID = $this->objDbInstitutionTypes->findTypeID($institutionTypeName);
+        $country = $this->getParam('country');
         $path = 'unesco_oer/institutions/' . $name . '/thumbnail/';
         try {
             $results = $this->uploadFile($path);
@@ -617,12 +632,31 @@ class unesco_oer extends controller
         }
         $thumbnailPath = 'usrfiles/' . $results['path'];
 
-        $this->objDbInstitution->addInstitution($name, $loclat, $loclong, $thumbnailPath);
+        $this->objDbInstitution->addInstitution($name, $loclat, $loclong, $thumbnailPath, $institutionTypeID, $country);
         return $this->__addData();
     }
 
-    private function uploadFile($path)
-    {
+      /*
+     * Method to display page for creating a new institution type
+     */
+
+    public function __createInstitutionTypeUI() {
+        return "createInstitutionTypeUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createGroupUI_tpl.php page
+     * and add it to the tbl_unesco_oer_group table
+     */
+
+    public function __createInstitutionTypeSubmit() {
+        $name = $this->getParam('newInstitutionType');
+
+        $this->objDbInstitutionTypes->addType($name);
+        return $this->__addData();
+    }
+
+    private function uploadFile($path) {
         $uploadedFile = $this->getObject('uploadinput', 'filemanager');
         $uploadedFile->enableOverwriteIncrement = TRUE;
         $uploadedFile->customuploadpath = $path;
