@@ -4,12 +4,12 @@
 /**
 table for class
 */
-    $tablename = 'tbl_fee';
+    $tablename = 'tbl_student2';
 /**
 
 */
 
-    $options = array('comment' => 'Table for saving class information', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+    $options = array('comment' => 'Table for saving student information', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 /**
 
 */
@@ -20,21 +20,19 @@ $fields = array(
 'type'=>'text',
 'length'=>32
 ),
-'amount_payable' => array(
+'student_fname' => array(
        'type' => 'text',
        'length' => 25,
        'notnull' => TRUE
        ),
-   'description' => array(
+   'student_mname' => array(
        'type' => 'text',
        'length' => 25,
        'notnull' => TRUE
        ),
- 'year_fee' => array(
+ 'student_fname' => array(
        'type' => 'text',
        'length' => 25,
        'notnull' => TRUE
-       )
-
-);
+       ));
 ?>

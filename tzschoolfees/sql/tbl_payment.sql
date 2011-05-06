@@ -1,15 +1,29 @@
 <?php
 
-$tablename = 'tbl_payments';
+$tablename = 'tbl_payment';
 
 $options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
-    'payment_id' => array(
-        'type' => 'integer',
-        'length' => 32,
-        'notnull' => FALSE
+    'id' => array(
+        'type' => 'text',
+        'length' => 32
         ),
+'tbl_student_classes_id'=>array(
+'type' => 'text',
+'length'=>32,
+'notnull'=>TRUE
+),
+'tbl_fee_id'=>array(
+'type' => 'text',
+'length'=>32,
+'notnull'=>TRUE
+),
+'tbl_status_id'=>array(
+'type' => 'text',
+'length'=>32,
+'notnull'=>TRUE
+),
     'amount_paid' => array(
         'type' => 'text',
         'length' => 255,
@@ -41,19 +55,15 @@ $fields = array(
             'type' => 'text',
             'length' => 32,
             'notnull' => TRUE
-     ),
+     ));
 
-
-
-
-;
-
-$name = 'tbl_context_has_tbl_context_parentnodes_FKIndex1';
-
+$name = 'tbl_payment_Fkindex1';
 $indexes = array(
-                'fields' => array(
-                    'tbl_context_id' => array(),
-                    'tbl_context_contextCode' => array()
-                )
-        );
+        'fields' => array(
+          'tbl_status_id'=>array(),
+          'tbl_student_classes_id'=>array(),
+          'tbl_fee_id'=>array()
+)
+);
+
 ?>

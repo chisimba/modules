@@ -2,39 +2,46 @@
 
 
 /**
-table for class
+table for class 
 */
-    $tablename = 'tbl_fee';
+    $tablename = 'tbl_classes';
 /**
 
 */
 
     $options = array('comment' => 'Table for saving class information', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 /**
-
+   
 */
 
 
 $fields = array(
 'id'=>array(
-'type'=>'text',
+'type'=>'integer',
 'length'=>32
 ),
-'amount_payable' => array(
+'class_name' => array(
        'type' => 'text',
        'length' => 25,
        'notnull' => TRUE
        ),
-   'description' => array(
+'tbl_fee_id'=>array(
+'type' => 'text',
+'length'=>32
+),
+   'class_stream' => array(
        'type' => 'text',
        'length' => 25,
        'notnull' => TRUE
        ),
- 'year_fee' => array(
-       'type' => 'text',
-       'length' => 25,
-       'notnull' => TRUE
-       )
 
 );
+
+$name = 'tbl_classes_Fkindex1';
+$indexes = array(
+        $fields = array(
+          'tbl_fee_id'=>array()
+)
+);
+
 ?>

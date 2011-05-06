@@ -14,10 +14,9 @@ table for class
 
 */
 $fields = array(
-"status_id"=>array(
-'type'=>'integer'
-'length'=>32,
-'notnulll'=>TRUE
+'id'=>array(
+'type'=>'text',
+'length'=>32
 ),
 'status_name' => array(
        'type' => 'varchar',
