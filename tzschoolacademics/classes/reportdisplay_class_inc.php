@@ -147,17 +147,30 @@ class reportdisplay extends object {
                  foreach ($student_result as $result_value) {
                     $marks = $result_value['score'];
                     $subject = $result_value['subject_name'];
-                    //$term=$result_value[''];
                     $exam_type=$result_value['exam_type'];
+                    $term_name=$result_value['term_name'];
+                    ////getting grade from marks
+                    $marks_grade=$this->objreportDb->get_marks_grade($marks, $class);
+                     foreach ($marks_grade as  $grade_data) {
+                       $grade=$grade_data['grade_name'];
+                       $gr_remarks=$grade_data['remarks'];
+                      }
 
+
+                     // echo $marks_grade['grade_name'];
+                     //echo $marks_grade['grade_name'].$marks_grade['remarks'];
+                     //exit;
+                     ////starting datatable row
                     $data_table->startRow();
                     $data_table->addCell($subject);
                     $data_table->addCell($marks);
-                    $data_table->addCell('');
+                    $data_table->addCell($grade);
+                    $data_table->addCell($gr_remarks);
                     $data_table->endRow();
+                    
                 }
                 ///heading for student results
-                $result_heading="<h4><u>".$class_name." ". $exam_type." Results ".$year." </u></h4>";
+                $result_heading="<h4><u>".$class_name." ". $exam_type." Examination Results ".$year."-".$term_name." </u></h4>";
                 $result_heading .="<p>Student Name: ".$student_full_name."</br>";
                 $result_heading .="Registration #: ".$st_regno."</p><br>";
 
