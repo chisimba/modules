@@ -584,7 +584,7 @@ class productutil extends object
 
     /**
      * This function creates the link to display more adaptations 
-     * @param <type>
+     * @param <type> $displayAllMostAdaptedProducts checks if the user has chosen to display all the most adapted products
      * @return <type> $moreAdaptedProductsLink;
      */
     private function viewMostAdaptedLink($displayAllMostAdaptedProducts)
