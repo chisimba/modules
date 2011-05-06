@@ -158,6 +158,7 @@ class unesco_oer extends controller
             return "5a_tpl.php";
         } else {
             $this->setLayoutTemplate('3a_layout_tpl.php');
+            $this->setLayoutTemplate("1a_layout_tpl.php");
             return "3a_tpl.php";
         }
     }

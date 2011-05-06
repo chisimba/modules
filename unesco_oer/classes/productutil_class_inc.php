@@ -34,6 +34,8 @@ class productutil extends object
      */
     public function populateGridView($product)
     {
+
+        
         $content = '';
         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
         $abLink->cssClass = "listingLanguageLinkAndIcon";
