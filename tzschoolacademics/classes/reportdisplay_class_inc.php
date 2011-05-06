@@ -128,7 +128,7 @@ class reportdisplay extends object {
             $student_result = $this->objreportDb->get_student_marks($regno, $exam, $term, $year_id);
 
             if ($student_info && $student_result) {
-                $data_table->startHeaderRow();
+                 $data_table->startHeaderRow();
                 $data_table->addHeaderCell('Subject');
                 $data_table->addHeaderCell('Marks');
                 $data_table->addHeaderCell('Remarks');
@@ -139,15 +139,19 @@ class reportdisplay extends object {
                     $stuent_full_name = $student_data['firstname'] . ', ' . $student_data['othernames'] . ' ' . $student_data['lastname'];
                     $class_name = $student_data['class_name'];
                     $year = $student_data['year_name'];
+                  
                 }
-
+                //creating the heading of the results
+               $result_heading="<p><u>".$year." Results</u></p>
+                             <p>$stuent_full_name (reg# $st_regno) $class_name </p>";
+                echo $result_heading;
                 foreach ($student_result as $result_value) {
                     $marks = $result_value['score'];
                     $subject = $result_value['subject_name'];
 
                     $data_table->startRow();
-                    $data_table->addCell($marks);
                     $data_table->addCell($subject);
+                    $data_table->addCell($marks);
                     $data_table->addCell('');
                     $data_table->endRow();
                 }
