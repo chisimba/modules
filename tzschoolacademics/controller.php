@@ -41,9 +41,12 @@ class tzschoolacademics extends controller {
             case  'register_student':
                return  'student_registration_tpl.php';
                  break;
+             case 'register_teacher':
+                 return 'teacher_registration_tpl.php';
+                 break;
             case 'upload_result':
                return 'load_upload_form_tpl.php';
-
+               break;
             
             default:return 'academics_home_tpl.php';
                 break;
@@ -119,7 +122,6 @@ class tzschoolacademics extends controller {
             return 'academicsmain_tpl.php';
         }
     }
-
 }
 
 ?>
