@@ -288,7 +288,7 @@ class productutil extends object
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                     <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a> | <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a>
+                                        <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a> | <a href="#" class="bookmarkLinks"></a>
                                     </div>
                                 </div>
 
@@ -315,7 +315,7 @@ class productutil extends object
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                 <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a> | <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a>
+                                    <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a> | <a href="#" class="bookmarkLinks"></a>
                                 </div>
                             </div>
 
