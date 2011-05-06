@@ -12,6 +12,8 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class dbreports extends dbTable {
 
+    public $_tableName;
+
     //constructor
     public function init() {
         parent::init('tbl_academic_year');
@@ -141,24 +143,63 @@ class dbreports extends dbTable {
         if (!empty($marks) && !empty($class)) {
             $class_level = $this->getRow($pk_field = 'puid', $pk_value = $class, $table = 'tbl_class');
             $c_level = $class_level['level'];  ///students class level
-     
-            if($c_level) {
+
+            if ($c_level) {
                 //getting grade name and ist remarks
                 $grade_sql = "SELECT grade_name,remarks FROM tbl_grade
                   WHERE  level LIKE'$c_level%' AND min_value<='$marks' AND max_value>='$marks' LIMIT 0,1";
-                
+
                 $marks_grade = $this->query($grade_sql);
-               if($marks_grade){
-                  return $marks_grade;
-               }
-                
+                if ($marks_grade) {
+                    return $marks_grade;
+                }
             }
         }
     }
 
+    /*
+     * method to det all Student in class in a specified academic year
+     * @param class_id  : class id
+     * @param year_id   academic year id
+     * @return array containing student in a class and their information
+     */
+
+    function get_class_student($class_id, $year_id) {
+        $sql = "SELECT `reg_no`, `firstname`, `lastname`, `othernames`, `gender`, `birthdate`, `religion`,`class_name`,`stream`
+      FROM `tbl_student`,tbl_student_class,tbl_class
+      WHERE tbl_student_class.`tbl_academic_year_id`='$year_id'  AND tbl_student_class.`tbl_class_id`='$class_id'
+      AND tbl_student.`reg_no`=tbl_student_class.`tbl_student_reg_no` AND  tbl_class.`puid`=tbl_student_class.`tbl_class_id`  ";
+        $student_in_class=$this->query($sql);
+        if($student_in_class){
+        return  $student_in_class;
+        }
+       else{
+            return FALSE;
+       }
+    }
 
 
+    /*
+     * method to get all  subjects in a class from the database
+     * @param class_id : class indetification
+     * @return array   : associative array containing all subjects in a class
+     */
+    function  get_class_subject($class_id){
+     $filter="SELECT subject_name from tbl_subjects,tbl_class_subjects
+        WHERE tbl_class_subjects.tbl_class_id='$class_id' AND tbl_subjects.puid=tbl_class_subjects.tbl_class_id ";
     
+     $subjects=$this->query($filter);
+     
+     if($subjects){
+         return $subjects;
+     }
+     else{
+         return FALSE;
+     }
+
+    }
+
+
 
 ////end of class
 }
