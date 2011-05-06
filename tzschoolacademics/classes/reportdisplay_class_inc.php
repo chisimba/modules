@@ -36,72 +36,89 @@ class reportdisplay extends object {
         $this->loadClass('label', 'htmlelements');
     }
 
-    /* method to create student result form
-     *
-     *
+    /* method to create a form used to view student result
+     *@return form for specifying result types
      */
 
     function create_students_result_form() {
-        $this->get_html_elements();
+        $this->get_html_elements();  //getting html helper classes for bulding form
+
+        $htmlTable=new htmlTable();
 
         $st_result_form = new form('student_result');
         $st_result_form->action = $this->uri(array('action' => 'StudentResults'), 'tzschoolacademics');  // creating a form action
+        $st_result_form->setDisplayType(2);
         ///class drop down
         $class = new dropdown('class');
-        $class_label = new label('Class');
+        $class_label = new label('Student Class');
         $class_array = $this->objreportDb->get_classes();
+        $labelField='class_name'.'stream';
         foreach ($class_array as $classdata) {
-
             $class->addOption($value = $classdata['puid'], $label = $classdata['class_name'] . $classdata['stream']);
         }
 
         ///academic year dropdown
         $academic_year = new dropdown();
         $academic_year->name = 'year';
-        $academic_year_label = new label('Year');
+        $academic_year_label = new label('Academic Year');
         $academic_year_array = $this->objreportDb->get_academic_year();
-        foreach ($academic_year_array as $data) {
-            $academic_year->addOption($value = $data['puid'], $label = $data['year_name']);
-        }
-
-
+        $academic_year->addFromDB($academic_year_array,'year_name','puid' );
+        
         //exam type dropdown
         $exam = new dropdown();
         $exam->name = 'exam';
-        $exam_label = new label('Exam');
+        $exam_label = new label('Exam Type');
         $exam_array = $this->objreportDb->get_exam_type();
-        foreach ($exam_array as $array) {
-            $exam->addOption($value = $array['puid'], $label = $array['exam_type']);
-        }
+        $exam->addFromDB($exam_array, 'exam_type', 'puid');
+     
 
         ////term drop down
         $term = new dropdown('term_id');
         $term_label = new label('Term/Semmister');
-        $term_array = $this->objreportDb->get_exam_type();
-        foreach ($term_array as $array) {
-            $term->addOption($value = $array['puid'], $label = $array['exam_type']);
-        }
-
+        $objTerm=$this->newObject('marksdb', 'tzschoolacademics');
+        $term_array = $objTerm->load_term ();
+        $term->addFromDB($array=$term_array, $labelField='term_name', $valueField='puid');
 
         //text box for student reg.no
         $student_reg = new textinput();
         $student_reg->name = 'st_reg';
-        $student_reg_label = new label('Reg#');
+        $student_reg_label = new label('Student Reg#');
 
         ////setting submit button
         $submit = new button('View');
         $submit->setToSubmit();
-        $submit->value = 'View';
+        $submit->value = 'View Student Result';
 
-        ////adding elements to the form
-        $st_result_form->addToForm($class_label->show() . $class->show());
-        $st_result_form->addToForm($academic_year_label->show() . $academic_year->show());
-        $st_result_form->addToForm($exam_label->show() . $exam->show());
-        $st_result_form->addToForm($term_label->show() . $term->show());
-        $st_result_form->addToForm($student_reg_label->show() . $student_reg->show());
-        $st_result_form->addToForm($submit->show());
+        ///creating form elements to table
+        
+        $htmlTable->startRow();
+        $htmlTable->addCell($class_label->show());
+        $htmlTable->addCell($class->show());
+        $htmlTable->endRow();
 
-        //echo $st_result_form->show();
+        $htmlTable->startRow();
+        $htmlTable->addCell($academic_year_label->show());
+        $htmlTable->addCell($academic_year->show());
+        $htmlTable->endRow();
+
+        $htmlTable->startRow();
+        $htmlTable->addCell($exam_label->show());
+        $htmlTable->addCell($exam->show());
+        $htmlTable->endRow();
+
+        $htmlTable->startRow();
+        $htmlTable->addCell($term_label->show());
+        $htmlTable->addCell($term->show());
+        $htmlTable->endRow();
+
+        $htmlTable->startRow();
+        $htmlTable->addCell($student_reg_label->show());
+        $htmlTable->addCell($student_reg->show());
+        $htmlTable->endRow();
+
+        //adding elements to the form
+        $st_result_form->addToForm($htmlTable->show());
+          $st_result_form->addToForm($submit->show());
 
         return $st_result_form->show();  ///returning the created form
     }
