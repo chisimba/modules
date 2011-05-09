@@ -17,22 +17,48 @@ if (!
  *
  * @category  Chisimba
  * @package   SMIS Fees
- * @author    Fees Team
+ * @author    john richard
+ * @date may 6 2011
  */
 class tzschoolfees extends controller {
 
     public $lang;
-    private $user;
+  
 
     public function init() {
+
+        $this->lang = $this->getObject('language','language');
 
     }
 
     public function dispatch($action) {
 
+        //action area
+$action = $this->getParam('action','main');
+ $this->setLayoutTemplate('general_layout_tpl.php');
+
+  //switch for selection according to the action perfomed
+  switch ($action) {
+      case 'add_details':
+             return 'add_payment_details_tpl.php';
+
+          break;
+      case 'view_details':
+          //return template page for viewing payment details
+          return 'view_payment_details_tpl.php';
+
+      default:
+          return 'fee_home_page_tpl.php';
+          break;
+  }
+
+
+     
         }
     
-
+ public function  requiresLogin($action) {
+        return false;
+    }
 }
 
 ?>
