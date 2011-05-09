@@ -232,7 +232,7 @@ if ($adaptationstring == null)
 
 
 
-                        $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
+                        $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries)));
 
 
 
@@ -314,7 +314,7 @@ if ($adaptationstring == null)
                         $filterTheme->setSelected($ThemeFilter);
 
                         $uri = $this->uri(array('action' => 'ThemeFilter'));
-                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
 
                         $uri = $this->uri(array('action' => 'FilterProducts'));
@@ -355,7 +355,7 @@ if ($adaptationstring == null)
                         }
 
                         $filterLang->setSelected($LangFilter);
-                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
 
                         $uri = $this->uri(array('action' => 'LanguageFilter'));
@@ -396,7 +396,7 @@ if ($adaptationstring == null)
                         }
 
                         $filterAuth->setSelected($AuthFilter);
-                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
 
                         $uri = $this->uri(array('action' => 'AuthorFilter'));
@@ -438,7 +438,7 @@ if ($adaptationstring == null)
 
 
                         $filterNum->setSelected($NumFilter);
-                        $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                        $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
 
                         $uri = $this->uri(array('action' => 'NumFilter'));
@@ -497,7 +497,7 @@ if ($adaptationstring == null)
 
 
                             $filterLang->setSelected($SortFilter);
-                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
 
                             $uri = $this->uri(array('action' => 'SortFilter'));
@@ -545,7 +545,7 @@ if ($adaptationstring == null)
                             <div class="gridListPipe">|</div>
 
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2b_tpl.php')));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2b_tpl.php','MapEntries' => $MapEntries)));
                             $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                             echo $abLink->show();
                             ?>
@@ -553,7 +553,7 @@ if ($adaptationstring == null)
                             <div class="gridListDivView">
 
                                 <?php
-                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2b_tpl.php')));
+                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2b_tpl.php','MapEntries' => $MapEntries)));
                                 $abLink->link = 'LIST';
                                 echo $abLink->show();
                                 ?>
@@ -774,7 +774,7 @@ if ($adaptationstring == null)
 
                             for ($i = 1; $i <= $TotalPages; $i++) {
 
-                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
                                 $abLink->link = $i;
                                 echo $abLink->show();
                             }
@@ -854,26 +854,43 @@ if ($adaptationstring == null)
  <script type="text/javascript">
      
                                                 var marker = new Array();
-                                                //var pos = new Array();
+                                               
 
                                                 function initialize() {
 
                                                     myLatlng = [
                                           
                                             <?php
-                                            $coords = array(
-                                                array("long" => "39.112456", "lat" => "-84.57477"),
-                                                 array("long" => "30.112456", "lat" => "-64.57477")
-                                            );
+
+                                            $coords = $this->objDbProducts->getAdaptedProducts();
+
                                             foreach ($coords as $coord) {
                                                 ?>
                                                 
-                                                            new google.maps.LatLng(<?php echo $coord['long'] . ',' . $coord['lat']; ?>),
+                                                            new google.maps.LatLng(<?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>),
             
                                                
                                             <?php } ?>
                                            
                                                     ];
+
+
+                                                    title = [
+
+                                            <?php
+
+                                            $title = $this->objDbProducts->getAdaptedProducts();
+
+                                            foreach ($title as $titles) {
+                                                ?>
+                                                      "  <?php           echo $titles['name']            ?>",
+
+
+
+                                            <?php } ?>
+
+                                                    ];
+
 
 
 
@@ -891,7 +908,7 @@ if ($adaptationstring == null)
                                                     {
                                                         marker[i] = new google.maps.Marker(
                                                         { position: myLatlng[i],
-                                                            title:"Hello World!"
+                                                            title: title[i]
 
                                                         } );
 
@@ -925,11 +942,11 @@ if ($adaptationstring == null)
                                         <body onload="initialize()">
                                             <div id="map_canvas" style="width:100%; height:20%"></div>
                                             <?php
-                                            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php')));
+                                            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php',  "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
                                             echo $form->show();
-                                            echo $string[0]['name'];
-                                            echo $prodid;
+                                            echo $coords[0]['name'];
+                                            echo $MapEntries;
                                             ?>
                                         </body>
                                     </html>
@@ -951,25 +968,6 @@ if ($adaptationstring == null)
 
 
 
-
-                                    <?php
-//                                        $im = imagecreatefromjpeg("skins/unesco_oer/images/earth_310.jpg");
-//                                        $products = $this->objDbProducts->getFilteredProducts($finalstring);
-//                                        for ($i = 0; $i < count($products); $i++) {
-//                                            $creator = $products[$i]['creator'];
-//                                            if ($this->objDbInstitution->isInstitution($creator) || $this->objDbGroups->isGroup($creator)) {
-//                                                $lat = $this->objDbInstitution->getInstitutionLatitude($creator);
-//                                                $long = $this->objDbInstitution->getInstitutionLongitude($creator);
-//                                                $this->objDbInstitution->MapHandler($im, $lat, $long);
-//                                                $lat = $this->objDbGroups->getGroupLatitude($creator);
-//                                                $long = $this->objDbGroups->getGroupLongitude($creator);
-//                                                $this->objDbGroups->MapHandler($im, $lat, $long);
-//                                            }
-//                                        }
-//                                        imagepng($im, "skins/unesco_oer/images/earthMap.jpg");
-//
-                                    ?>
-<!--                                    <img src="skins/unesco_oer/images/earthMap.jpg" width="200" height="100">-->
 
                                 </div>
                             </div>

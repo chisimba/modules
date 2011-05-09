@@ -55,7 +55,7 @@ class dbproducts extends dbtable
 
      function getAdaptedProducts($filter)
     {
-        $sql = "select name from tbl_unesco_oer_groups $filter";
+        $sql = "select * from tbl_unesco_oer_groups $filter";
 
         return $this->getArray($sql);
     }

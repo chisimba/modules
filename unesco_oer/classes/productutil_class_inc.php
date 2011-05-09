@@ -505,10 +505,15 @@ class productutil extends object
      * @param <type>$AuthFilter,$ThemeFilter,$LangFilter,$page,$sort,$TotalPages,$adaptationstring,$Model,$Handbook,$Guide,$Manual,$Besoractile
      * @return <type> $TotalEntries
      */
-    public function FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile)
+    public function FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile,$browsemapstring)
     {
 
+        if ($browsemapstring != null)
+        $buildstring = $browsemapstring;
+        else
         $buildstring = $adaptationstring;
+
+
         if (!($AuthFilter == Null or $AuthFilter == 'All'))
             $buildstring .= ' and creator = ' . "'$AuthFilter'";
 

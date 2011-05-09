@@ -219,10 +219,27 @@ class unesco_oer extends controller
        $lng = $this->getparam('Lng');
         $page = $this->getParam('page');
 
+        $AuthFilter = $this->getParam('AuthorFilter');
+        $ThemeFilter = $this->getParam('ThemeFilter');
+        $LangFilter = $this->getParam('LanguageFilter');
+
+        $sort = $this->getParam('SortFilter');
+        $NumFilter = $this->getParam('NumFilter');
+        $PageNum = $this->getParam('PageNum');
+        $TotalPages = $this->getParam('TotalPages');
+        $adaptationstring = $this->getParam('adaptationstring');
+        $Model = $this->getParam('Model');
+        $Handbook = $this->getParam('Handbook');
+        $Guide = $this->getParam('Guide');
+        $Manual = $this->getParam('Manual');
+        $Besoractile = $this->getParam('Besoractile');
+
 
 
         $ProdId = $this->objProductUtil->BrowseAdaptation($lat,$lng);
         $string = $this->objDbProducts->getAdaptedProducts($ProdId);
+
+
         $temporary = $string[0]['name'];
        $Buildstring = 'creator = ' . "'$temporary'" . ' and parent_id is not null';
 
@@ -230,15 +247,30 @@ class unesco_oer extends controller
 
 
 
-        $temp = 'parent_id is not null';
+     
 
-       $this->setVarByRef("string", $string);
-        $this->setVarByRef("prodid", $Buildstring);
+      $this->setVarByRef("AuthFilter", $AuthFilter);
+        $this->setVarByRef("ThemeFilter", $ThemeFilter);
+        $this->setVarByRef("LangFilter", $LangFilter);
+        $this->setVarByRef("SortFilter", $sort);
+        $this->setVarByRef("NumFilter", $NumFilter);
+        $this->setVarByRef("PageNum", $PageNum);
+        $this->setVarByRef("TotalPages", $TotalPages);
+        $this->setVarByRef("Model", $Model);
+        $this->setVarByRef("Guide", $Guide);
+        $this->setVarByRef("Handbook", $Handbook);
+        $this->setVarByRef("Manual", $Manual);
+        $this->setVarByRef("Besoractile", $Besoractile);
+        $this->setVarByRef("adaptationstring", $adaptationstring);
+       
+
+
             $this->setVarByRef("finalstring", $Buildstring);
              $this->setVarByRef("TotalEntries", $Buildstring);
+               $this->setVarByRef("MapEntries", $Buildstring);
 
 
-        return "2a_tpl.php";
+        return "$page";
     }
 
     public function __FilterAdaptations()
@@ -254,6 +286,8 @@ class unesco_oer extends controller
         $this->setVarByRef("finalstring", $Buildstring);
         $this->setVarByRef("TotalEntries", $TotalEntries);
         $this->setVarByRef("adaptationstring", $adaptationstring);
+       
+
 
 
         return "2a_tpl.php";
@@ -276,9 +310,11 @@ class unesco_oer extends controller
         $Guide = $this->getParam('Guide');
         $Manual = $this->getParam('Manual');
         $Besoractile = $this->getParam('Besoractile');
+        $browsemapstring = $this->getParam('MapEntries');
+         
 
 
-        $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile);
+        $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile,$browsemapstring);
         $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter, $PageNum, $TotalEntries);
 
 
@@ -299,6 +335,7 @@ class unesco_oer extends controller
         $this->setVarByRef("Manual", $Manual);
         $this->setVarByRef("Besoractile", $Besoractile);
         $this->setVarByRef("adaptationstring", $adaptationstring);
+        $this->setVarByRef("MapEntries", $browsemapstring);
 
 
 
