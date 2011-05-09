@@ -18,6 +18,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 $displayObj=$this->newObject('reportdisplay', 'tzschoolacademics');
 if(strcmp($option,'view')==0){
 echo $displayObj->generate_student_resut($regno, $exam, $term, $year_id, $class);
+  
 }
 else{ 
 echo $displayObj->create_students_result_form();
