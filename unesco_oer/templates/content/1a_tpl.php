@@ -286,13 +286,13 @@ $adaptationstring = "parent_id is null";
                                         $form->addToForm($checkbox->show());
                                         $form->addToForm('Model<br>');
                                         $form->addToForm($checkbox2->show());
-                                        $form->addToForm('handbook<br>');
+                                        $form->addToForm('Handbook<br>');
                                         $form->addToForm($checkbox3->show());
                                         $form->addToForm('Guide<br>');
                                         $form->addToForm($checkbox4->show());
                                         $form->addToForm('Manual<br>');
                                         $form->addToForm($checkbox5->show());
-                                        $form->addToForm('Besoractile<br>');
+                                        $form->addToForm('Best Practices<br>');
                                         $form->addToForm($button->show());
 
 

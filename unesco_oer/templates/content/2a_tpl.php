@@ -267,13 +267,13 @@ if ($adaptationstring == null)
                         $form->addToForm($checkbox->show());
                         $form->addToForm('Model<br>');
                         $form->addToForm($checkbox2->show());
-                        $form->addToForm('handbook<br>');
+                        $form->addToForm('Handbook<br>');
                         $form->addToForm($checkbox3->show());
                         $form->addToForm('Guide<br>');
                         $form->addToForm($checkbox4->show());
                         $form->addToForm('Manual<br>');
                         $form->addToForm($checkbox5->show());
-                        $form->addToForm('Besoractile<br>');
+                        $form->addToForm('Best Practices<br>');
                         $form->addToForm($button->show());
 
 
@@ -306,6 +306,7 @@ if ($adaptationstring == null)
                         <?php
                         $products = $this->objDbProducts->getProducts(0, 10);
                         $filterTheme = new dropdown('ThemeFilter');
+                         $filterTheme->cssClass = "leftColumnSelectDropdown";
                         $filterTheme->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                         foreach ($products as $product) {
 
@@ -348,6 +349,7 @@ if ($adaptationstring == null)
                         <?php
                         $products = $this->objDbProducts->getProducts(0, 10);
                         $filterLang = new dropdown('LanguageFilter');
+                         $filterLang->cssClass = "leftColumnSelectDropdown";
                         $filterLang->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                         foreach ($products as $product) {
 
@@ -389,6 +391,7 @@ if ($adaptationstring == null)
                         <?php
                         $products = $this->objDbProducts->getProducts(0, 10);
                         $filterAuth = new dropdown('AuthorFilter');
+                         $filterAuth->cssClass = "leftColumnSelectDropdown";
                         $filterAuth->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                         foreach ($products as $product) {
 
@@ -428,6 +431,7 @@ if ($adaptationstring == null)
                         <?php
                         $products = $this->objDbProducts->getProducts(0, 10);
                         $filterNum = new dropdown('NumFilter');
+                         $filterNum->cssClass = "leftColumnSelectDropdown";
 
 
                         $filterNum->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
@@ -490,6 +494,7 @@ if ($adaptationstring == null)
                             <?php
                             $products = $this->objDbProducts->getProducts(0, 10);
                             $filterLang = new dropdown('SortFilter');
+                             $filterLang->cssClass = "leftColumnSelectDropdown";
 
                             $filterLang->addoption('None');
                             $filterLang->addoption('Date');
@@ -883,7 +888,7 @@ if ($adaptationstring == null)
 
                                             foreach ($title as $titles) {
                                                 ?>
-                                                      "  <?php           echo $titles['name']            ?>",
+                                                      "<?php           echo $titles['name']            ?>",
 
 
 
@@ -945,8 +950,7 @@ if ($adaptationstring == null)
                                             $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php',  "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
                                             echo $form->show();
-                                            echo $coords[0]['name'];
-                                            echo $MapEntries;
+                                           
                                             ?>
                                         </body>
                                     </html>

@@ -266,13 +266,13 @@ $adaptationstring = "parent_id is null";
                                         $form->addToForm($checkbox->show());
                                         $form->addToForm('Model<br>');
                                         $form->addToForm($checkbox2->show());
-                                        $form->addToForm('handbook<br>');
+                                        $form->addToForm('Handbook<br>');
                                         $form->addToForm($checkbox3->show());
                                         $form->addToForm('Guide<br>');
                                         $form->addToForm($checkbox4->show());
                                         $form->addToForm('Manual<br>');
                                         $form->addToForm($checkbox5->show());
-                                        $form->addToForm('Besoractile<br>');
+                                        $form->addToForm('Best Practices<br>');
                                         $form->addToForm($button->show());
 
 
@@ -303,6 +303,7 @@ $adaptationstring = "parent_id is null";
                         <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterTheme = new dropdown('ThemeFilter');
+                                         $filterTheme->cssClass = "leftColumnSelectDropdown";
                                         $filterTheme->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                                         foreach ($products as $product) {
 
@@ -337,6 +338,7 @@ $adaptationstring = "parent_id is null";
                         <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('LanguageFilter');
+                                         $filterLang->cssClass = "leftColumnSelectDropdown";
                                         $filterLang->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                                         foreach ($products as $product) {
 
@@ -376,6 +378,7 @@ $adaptationstring = "parent_id is null";
                         <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterAuth = new dropdown('AuthorFilter');
+                                         $filterAuth->cssClass = "leftColumnSelectDropdown";
                                         $filterAuth->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
                                         foreach ($products as $product) {
 
@@ -415,6 +418,7 @@ $adaptationstring = "parent_id is null";
                         <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterNum = new dropdown('NumFilter');
+                                         $filterNum->cssClass = "leftColumnSelectDropdown";
 
 
                                         $filterNum->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
@@ -473,6 +477,7 @@ $adaptationstring = "parent_id is null";
                             <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('SortFilter');
+                                         $filterLang->cssClass = "leftColumnSelectDropdown";
 
                                         $filterLang->addoption('None');
                                         $filterLang->addoption('Date');
