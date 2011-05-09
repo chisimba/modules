@@ -4,9 +4,9 @@
 $this->loadClass('csslayout','htmlelements');
 
 $lef_nav = '<ul><li><a href="?module=tzschoolfees">Home</a></li>';
-$lef_nav .= '<li><a href="?module=tzschoolfees&action=add_details">Add student details</li>';
-$lef_nav .= "<li>View</li>";
-$lef_nav .= "<li>Generate receipt</li></ul>";
+$lef_nav .= '<li><a href="?module=tzschoolfees&action=add_details">Add Payment Details</a></li>';
+$lef_nav .= '<li><a href="?module=tzschoolfees&action=view_details">View Payment Details</a></li>';
+$lef_nav .= '<li><a href="?module=tzschoolfees&action=generate_receipt">Generate receipt</a></li></ul>';
 
 //$cssLayout = $this->newObject('csslayout','htmlelements');
 $cssLayout = $this->newObject('csslayout','htmlelements');
