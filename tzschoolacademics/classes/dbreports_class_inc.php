@@ -36,9 +36,12 @@ class dbreports extends dbTable {
         $this->_tableName = 'tbl_academic_year';
         $acadm_years = $this->getAll();
         if ($acadm_years) {
-
+         return $acadm_years;  //associative array contain all the school academic years
         }
-        return $acadm_years;  //associative array contain all the school academic years
+     else{
+            return FALSE;
+     }
+        
     }
 
     /* methid to get all classes in a given school in an array
@@ -52,6 +55,9 @@ class dbreports extends dbTable {
         if ($classes) {
             return $classes;   ///associative array containg all the classes
         }
+      else{
+          return FALSE;
+      }
     }
 
     /*
@@ -65,6 +71,9 @@ class dbreports extends dbTable {
         $exams = $this->getAll();
         if ($exams) {
             return $exams;
+        }
+        else{
+            return FALSE;
         }
     }
 
@@ -130,6 +139,9 @@ class dbreports extends dbTable {
         if ($subject_marks) {
             return $subject_marks;
         }
+       else{
+            return FALSE;
+       }
     }
 
     /*
@@ -153,6 +165,9 @@ class dbreports extends dbTable {
                 if ($marks_grade) {
                     return $marks_grade;
                 }
+              else{
+                return FALSE;
+              }
             }
         }
     }
@@ -196,6 +211,36 @@ class dbreports extends dbTable {
      else{
          return FALSE;
      }
+
+    }
+
+
+     /*
+     * method to get all  subjects 
+     * @return array   : associative array containing all subjects in a class
+     */
+    function  get_all_subject(){
+      $this->_tableName='tbl_subjects';
+     $subjects=$this->getAll();
+     if($subjects){
+         return $subjects;
+     }
+     else{
+         return FALSE;
+     }
+
+    }
+
+    /*
+     * method to get result for a specified subject
+     * @param subj_id id of the subject
+     * @param class id of the class
+     * @year academic year id
+     * @term semmester id
+     *@exam exam type id
+     */
+    function get_subject_result($subj_id,$class_id,$year,$term,$exam ){
+       echo 'bsdh';
 
     }
 
