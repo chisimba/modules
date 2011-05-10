@@ -39,81 +39,88 @@ class tzschoolacademics extends controller {
             case 'register_student':
                 return 'student_registration_tpl.php';
                 break;
-             case 'register_teacher':
-                 return 'teacher_registration_tpl.php';
-                 break;
-             case 'register_subject':
-                 return 'subject_registration_tpl.php';
-                 break;
-             case 'register_class':
-                 return 'class_registration_tpl.php';
-                 break;
-
-             case 'upload_result':
-                return 'load_upload_form_tpl.php';
-               break;
-                
-            case 'StudentResults':
-                $view=$this->getParam('View');
-              if(!empty ($view)) {
-                  $regno=  $this->getParam('st_reg');
-                  $exam=$this->getParam('exam');
-                  $term=$this->getParam('term_id');
-                  $year_id=$this->getParam('year');
-                  $class=$this->getParam('class');
-                  
-                 $this->setVar('option', 'view');
-                 $this->setVar('regno', $regno);
-                 $this->setVar('exam', $exam);
-                 $this->setVar('term', $term);
-                 $this->setVar('year_id', $year_id);
-                 $this->setVar('class', $class);
-                 return 'student_results_tpl.php';
-                 }
-             else {
-                    return 'student_results_tpl.php';
-              }
+            case 'register_teacher':
+                return 'teacher_registration_tpl.php';
                 break;
-                
+            case 'register_subject':
+                return 'subject_registration_tpl.php';
+                break;
+            case 'register_class':
+                return 'class_registration_tpl.php';
+                break;
 
-             case 'ClassResult':
-                 $view=$this->getParam('View');
-                 if(!empty ($view)) {
+            case 'upload_result':
+                return 'load_upload_form_tpl.php';
+                break;
 
-                  $exam_type=$this->getParam('exam_type');
-                  $term_id=$this->getParam('semester');
-                  $year_id=$this->getParam('academic_year');
-                  $class_id=$this->getParam('class');
+            case 'StudentResults':
+                $view = $this->getParam('View');
+                if (!empty($view)) {
+                    $regno = $this->getParam('st_reg');
+                    $exam = $this->getParam('exam');
+                    $term = $this->getParam('term_id');
+                    $year_id = $this->getParam('year');
+                    $class = $this->getParam('class');
 
-                 $this->setVar('option', 'view');
-                 $this->setVar('exam_type', $exam_type);
-                 $this->setVar('term_id', $term_id);
-                 $this->setVar('year_id', $year_id);
-                 $this->setVar('class_id', $class_id);
-
-
-                    $this->setVar('option','sub_result');
-                     return 'class_result_tpl.php';
-                 }
-                 else{
-                     return 'class_result_tpl.php';
-                 }
-                 break;
-
-             //////
-
-               case 'SubjectResults':
-                 $view=$this->getParam('View');
-                 if(!empty ($view)) {
-                  
-                 }
-               else{
-                  return 'subject_result_tpl.php';
-                  break;
-               } 
+                    $this->setVar('option', 'view');
+                    $this->setVar('regno', $regno);
+                    $this->setVar('exam', $exam);
+                    $this->setVar('term', $term);
+                    $this->setVar('year_id', $year_id);
+                    $this->setVar('class', $class);
+                    return 'student_results_tpl.php';
+                } else {
+                    return 'student_results_tpl.php';
+                }
+                break;
 
 
-                 ////deafult page- home tpl
+            case 'ClassResult':
+                $view = $this->getParam('View');
+                if (!empty($view)) {
+
+                    $exam_type = $this->getParam('exam_type');
+                    $term_id = $this->getParam('semester');
+                    $year_id = $this->getParam('academic_year');
+                    $class_id = $this->getParam('class');
+
+                    $this->setVar('exam_type', $exam_type);
+                    $this->setVar('term_id', $term_id);
+                    $this->setVar('year_id', $year_id);
+                    $this->setVar('class_id', $class_id);
+
+                    $this->setVar('option', 'class_result');
+                    return 'class_result_tpl.php';
+                } else {
+                    return 'class_result_tpl.php';
+                }
+                break;
+
+            //////
+
+            case 'SubjectResults':
+                $view = $this->getParam('View');
+                if (!empty($view)) {
+                    $class = $this->getParam('class');
+                    $exam = $this->getParam('exam');
+                    $term = $this->getParam('term_id');
+                    $year_id = $this->getParam('year');
+                    $class = $this->getParam('class');
+
+                    $this->setVar('regno', $class);
+                    $this->setVar('exam', $exam);
+                    $this->setVar('term', $term);
+                    $this->setVar('year_id', $year_id);
+                    $this->setVar('class', $class);
+
+                    $this->setVar('option', 'sub_result');
+                    return 'subject_result_tpl.php';
+                } else {
+                    return 'subject_result_tpl.php';
+                }
+
+
+            ////deafult page- home tpl
             default:return 'academics_home_tpl.php';
                 break;
         }
@@ -122,7 +129,6 @@ class tzschoolacademics extends controller {
     public function requiresLogin($action) {
         return false;
     }
-
 
 }
 
