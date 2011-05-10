@@ -1,13 +1,14 @@
 <?php
 
-/*
- * The contents of this file are subject to the Meeting Manager Public license you may not use or change this file except in
- * compliance with the License. You may obtain a copy of the License by emailing this address udsmmeetingmanager@googlegroups.com
- *  @author victor katemana
- *  @email princevickatg@gmail.com
-
-
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
  */
+$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
 
 class upload_marks extends object {
 
@@ -45,6 +46,7 @@ class upload_marks extends object {
         $this->loadElements();
 
         $objform = new form('uploadmarks');
+        $objform->action=$this->uri(array('action' =>'upload'),'academic');
         $objform->setDisplayType(2);
         $objform->setEncType($encType = 'multipart/form-data');
         //-----------------------------------------------------------------------------------
@@ -86,8 +88,22 @@ class upload_marks extends object {
         foreach ($displayexam as $row) {
             $objexamtypedropdown->addOption($row['puid'], $row['exam_type']);
         }
-        //------------------------------------------------------------------------------------------------------------
+        
+        $objectuploadlabel = new label('browse result file');
+        $fileinput = new textinput('file', $value=null, 'file', $size=null);
+
+      //------------------------------------------------------------------------------------------------------------
+
+     /* creates a new button object
+      */
+
+        $objsubmit = new button('upload', 'upload');
+        $objsubmit->setToSubmit();
+        $objsubmit->setToReset();
+      //----------------------------------------------------------------------------------------------------------------
+
         $objform->addToForm($objlabel->show());
+
         $objform->addToForm($objdropdown->show());
 
         $objform->addToForm($objsubjlabel->show());
@@ -102,6 +118,11 @@ class upload_marks extends object {
         $objform->addToForm($objexamtypelabel->show());
         $objform->addToForm($objexamtypedropdown->show());
 
+        $objform->addToForm( $objectuploadlabel->show());
+        $objform->addToForm($fileinput->show());
+
+        $objform->addToForm($objsubmit->show());
+ 
 
 
         return $objform->show();
