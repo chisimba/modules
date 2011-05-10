@@ -16,11 +16,11 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 //loading thereport display class
 $displayObj=$this->newObject('reportdisplay', 'tzschoolacademics');
-if(strcmp($option,'view')==0){
-echo $displayObj->generate_subject_resut($regno, $exam, $term, $year_id, $class);
+if(strcmp($option,'sub_result')==0){
+echo $displayObj->generate_subject_result($subjectId, $exam, $term, $year_id, $class);
 
 }
 else{
-echo $displayObj->create_subject_result_form();
+  echo $displayObj->create_subject_result_form();
 }
 ?>
