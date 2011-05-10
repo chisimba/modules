@@ -35,12 +35,10 @@ class tzschoolacademics extends controller {
 
         $action = $this->getParam('action', 'main');
         $this->setLayoutTemplate('main_layout_tpl.php');
-        switch ($action){
-            //case your_action:do something
-            //                  break;
-            case  'register_student':
-               return  'student_registration_tpl.php';
-                 break;
+        switch ($action) {
+            case 'register_student':
+                return 'student_registration_tpl.php';
+                break;
              case 'register_teacher':
                  return 'teacher_registration_tpl.php';
                  break;
@@ -52,83 +50,80 @@ class tzschoolacademics extends controller {
                  break;
 
              case 'upload_result':
-               return 'load_upload_form_tpl.php';
+                return 'load_upload_form_tpl.php';
                break;
-            
+                
+            case 'StudentResults':
+                $view=$this->getParam('View');
+              if(!empty ($view)) {
+                  $regno=  $this->getParam('st_reg');
+                  $exam=$this->getParam('exam');
+                  $term=$this->getParam('term_id');
+                  $year_id=$this->getParam('year');
+                  $class=$this->getParam('class');
+                  
+                 $this->setVar('option', 'view');
+                 $this->setVar('regno', $regno);
+                 $this->setVar('exam', $exam);
+                 $this->setVar('term', $term);
+                 $this->setVar('year_id', $year_id);
+                 $this->setVar('class', $class);
+                 return 'student_results_tpl.php';
+                 }
+             else {
+                    return 'student_results_tpl.php';
+              }
+                break;
+                
+
+             case 'ClassResult':
+                 $view=$this->getParam('View');
+                 if(!empty ($view)) {
+
+                  $exam_type=$this->getParam('exam_type');
+                  $term_id=$this->getParam('semester');
+                  $year_id=$this->getParam('academic_year');
+                  $class_id=$this->getParam('class');
+
+                 $this->setVar('option', 'view');
+                 $this->setVar('exam_type', $exam_type);
+                 $this->setVar('term_id', $term_id);
+                 $this->setVar('year_id', $year_id);
+                 $this->setVar('class_id', $class_id);
+
+
+                    $this->setVar('option','sub_result');
+                     return 'class_result_tpl.php';
+                 }
+                 else{
+                     return 'class_result_tpl.php';
+                 }
+                 break;
+
+             //////
+
+               case 'SubjectResults':
+                 $view=$this->getParam('View');
+                 if(!empty ($view)) {
+                  
+                 }
+               else{
+                  return 'subject_result_tpl.php';
+                  break;
+               } 
+
+
+                 ////deafult page- home tpl
             default:return 'academics_home_tpl.php';
                 break;
-            
         }
     }
 
-    public function  requiresLogin($action) {
+    public function requiresLogin($action) {
         return false;
     }
-    function report_actions($action) {
-        echo $action;
-        exit;
-        if (strcmp($action, 'Report')) {
-            ////start page redirection
-            $action2 = $this->getParam('action2', 'main'); ///getting action2
-            echo $action2;
-            exit;
-            switch ($action2) {
-
-                case 'StudentResults':
-
-                    $middle_content = 'StudentResults';
-                    $this->setVar('content', $middle_content);
-                    return 'academic_report_home_tpl.php';
-                    break;
-
-                case 'ClassResults':
-
-                    $middle_content = 'ClassResults';
-                    $this->setVar('content', $middle_content);
-                    return 'academic_report_home_tpl.php';
-                    break;
-
-                case 'SubjectResults':
-
-                    $middle_content = 'ClassResults';
-                    $this->setVar('content', $middle_content);
-                    break;
-
-                case 'FailuredStudents':
-
-                    $middle_content = 'ClassResults';
-                    $this->setVar('content', $middle_content);
-                    break;
-
-                case 'BestStudents':
-
-                    $middle_content = 'ClassResults';
-                    $this->setVar('content', $middle_content);
-                    break;
-
-                case 'StudentReport':
-
-                    $middle_content = 'ClassResults';
-                    $this->setVar('content', $middle_content);
-                    break;
-
-                case 'StudentList':
-                    break;
 
 
-                default:
-                    //  echo 'bdbdbd';
-                    $middle_content = 'DATA HERE';
-                    $this->setVar('content', $middle_content);
-                    return 'academic_report_home_tpl.php';
-                    break;
-            }
-        }
-        //loading academic home page by default
-        else {
-            return 'academicsmain_tpl.php';
-        }
-    }
 }
 
 ?>
