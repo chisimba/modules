@@ -47,7 +47,7 @@ class forumemail extends object
     function setContextCode($context)
     {
         $this->contextCode = $context;
-        //$this->objMailer =& $this->getObject('kngemail', 'utilities');
+        $this->objMailer =& $this->getObject('kngemail', 'utilities');
     }
     
     /**
