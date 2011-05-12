@@ -273,16 +273,21 @@ class reportdisplay extends object {
      */
 
     public function generate_class_result($exam_type, $term_id, $year_id, $class_id) {
+       
         if (!empty($exam_type) && !empty($term_id) && !empty($year_id) && !empty($class_id)) {
+           
             $student_in_class = $this->objreportDb->get_class_student($class_id, $year_id);
+           
             if ($student_in_class) {
                 ////getting all subjects i  given class
-                $class_subjects = $this->objreportDb->get_class_subject($class_id);
+                 $class_subjects = $this->objreportDb->get_class_subject($class_id);
 
-                if ($class_subjects) {
+               if ($class_subjects) {
+                   $this->get_html_elements();
                     $dataTable = new htmlTable();
                     $dataTable->width = '90%';
                     $dataTable->startHeaderRow();
+                    $dataTable->addHeaderCell('Student Name');
                     foreach ($class_subjects as $cl_subject) {
                         $subj_name = $cl_subject['subject_name'];
 
@@ -290,23 +295,33 @@ class reportdisplay extends object {
                     }
                     $dataTable->endHeaderRow();
                 }
-                return $dataTable->show();  //under test not yet finished
-                exit;
-
-                //continue from here  still under construction
-                ///extracting all students
+                ///extracting all students marks
                 foreach ($student_in_class as $students) {
                     $st_regno = $students['reg_no'];
-                    ///retrieving student results bases on received $st_regno
-                    $student_result = $this->objreportDb->get_student_marks($st_regno, $exam_type, $term_id, $year_id);
-                    foreach ($student_result as $results) {
+                    $st_name=$students['firstname'].', '.$students['othernames'].' '.$students['lastname'];  //``, `lastname`, `othernames`,
+                    $dataTable->startRow();  //creating a table row for a perticular students results
+                    $dataTable->addCell($st_name);
+                     ///retrieving student results based on received $st_regno
+                    foreach ($class_subjects as $cl_subject) {
+                        $subj_id = $cl_subject['subj_id'];
+                        $student_result = $this->objreportDb->get_student_specific_marks($st_regno,$subj_id,$exam_type, $term_id, $year_id);
+                       
+                         foreach ($student_result as $results) {
                         $score = $results['score'];    ///result score
-                        $subject = $results['subject_name'];  ///subject name
-                        //format row for each student  here
+                         $dataTable->addCell($score);
+                        
                     }
-                    ///format total output here
+                    }
+                       
+                
+                $dataTable->endRow();  //end of student result
+                   
                 }
-            } else {
+                      return $dataTable->show();  //under test not yet finished
+
+            }
+            ///default
+            else {
                 $data = "<p>No student found in the class in the specified year</p>";
                 return $data;
             }
