@@ -101,21 +101,22 @@ class tzschoolacademics extends controller {
             case 'SubjectResults':
                 $view = $this->getParam('View');
                 if (!empty($view)) {
-                    $class = $this->getParam('class');
+                    $subject = $this->getParam('subjct');
                     $exam = $this->getParam('exam');
                     $term = $this->getParam('term_id');
                     $year_id = $this->getParam('year');
                     $class = $this->getParam('class');
 
-                    $this->setVar('regno', $class);
-                    $this->setVar('exam', $exam);
-                    $this->setVar('term', $term);
+                    $this->setVar('subject_id', $subject);
+                    $this->setVar('exam_id', $exam);
+                    $this->setVar('term_id', $term);
                     $this->setVar('year_id', $year_id);
-                    $this->setVar('class', $class);
+                    $this->setVar('class_id', $class);
 
                     $this->setVar('option', 'sub_result');
                     return 'subject_result_tpl.php';
-                } else {
+                }
+                else {
                     return 'subject_result_tpl.php';
                 }
 
