@@ -235,8 +235,11 @@ class dbreports extends dbTable {
 
 
     /*method to get student result marks
-     *
-     *
+     *@param st_regno   :student registration no
+     *@param subject_id :id of the subject
+     *@param exam_type  :examination type
+     *@param term_id    :term/semmister id
+     * @param year_id   :academic year id
      */
     function get_student_specific_marks($st_regno,$subject_id,$exam_type, $term_id, $year_id){
          $marks_sql="SELECT `subject_name`,exam_type,`score`,term_name  FROM `tbl_result`,tbl_subjects,tbl_exam,tbl_term
@@ -256,20 +259,60 @@ class dbreports extends dbTable {
       
     }
 
-    
 
-    /*
-     * method to get result for a specified subject
+
+    /* method to check results for a subject if arleady uploaded
+     *@param subject_id :id of the subject
+     *@param exam_id  :examination type
+     *@param term_id    :term/semmister id
+     * @param year_id   :academic year id
+     * return :TRUE if results have been uploaded for atleast one student in a given class under specifications parameters
+     * return FALSE: if no data found
+     */
+    function subject_resultExist($subject_id,$exam_id, $term_id, $year_id){
+        $filter="WHERE tbl_subjects_id='$subject_id' AND tbl_exam_id='$exam_id' AND tbl_academic_year_id='$year_id' AND tbl_term_id='$term_id' 	";
+        $this->_tableName='tbl_result';
+        $count=$this->getRecordCount($filter);  ////counting the no of rows returned by the query
+        if($count>0){
+            return TRUE;
+        }
+      else{
+            return FALSE;
+      }
+    }
+
+
+
+
+
+/*
+     * method to check if subject a belong to a certain class
      * @param subj_id id of the subject
      * @param class id of the class
      * @year academic year id
-     * @term semmester id
-     *@exam exam type id
+     * return :TRUE when subject  exists and FALSE otherwise
      */
-    function get_subject_result($subj_id,$class_id,$year,$term,$exam ){
-       echo 'bsdh';
+    function check_subject_class($subj_id,$class_id,$year){   ///suggestion on the use of year
+
+        $this->_tableName='tbl_class_subjects';
+        $filter="WHERE tbl_class_id='$class_id' AND tbl_subject_id='$subj_id' ";
+        $count=$this->getRecordCount($filter);
+      if($count==1){
+          return TRUE;
+      }
+      else{
+          return FALSE;
+      }
 
     }
+
+
+
+
+
+    
+
+
 
 
 
