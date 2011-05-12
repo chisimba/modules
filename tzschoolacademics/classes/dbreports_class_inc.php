@@ -133,7 +133,7 @@ class dbreports extends dbTable {
         $sql = "SELECT `subject_name`,exam_type,`score`,term_name  FROM `tbl_result`,tbl_subjects,tbl_exam,tbl_term
         WHERE tbl_subjects.`puid`=tbl_result.`tbl_subjects_id` AND tbl_term.puid=tbl_result.tbl_term_id 	
         AND tbl_result.tbl_student_reg_no='$regno' AND tbl_result.tbl_exam_id='$exam' AND tbl_result.tbl_academic_year_id='$year_id' 
-        AND tbl_result.tbl_term_id='$term' AND tbl_exam.puid=tbl_result.tbl_exam_id ";
+        AND tbl_result.tbl_term_id='$term' AND tbl_exam.puid=tbl_result.tbl_exam_id ORDER BY subject_name";
 
         $subject_marks = $this->query($sql);
         if ($subject_marks) {
@@ -143,6 +143,8 @@ class dbreports extends dbTable {
             return FALSE;
        }
     }
+
+
 
     /*
      * method to calculate grade from the suplied student marks
@@ -200,11 +202,10 @@ class dbreports extends dbTable {
      * @return array   : associative array containing all subjects in a class
      */
     function  get_class_subject($class_id){
-     $filter="SELECT subject_name from tbl_subjects,tbl_class_subjects
-        WHERE tbl_class_subjects.tbl_class_id='$class_id' AND tbl_subjects.puid=tbl_class_subjects.tbl_class_id ";
-    
-     $subjects=$this->query($filter);
-     
+     $filter="SELECT subject_name,tbl_subjects.puid as subj_id  from tbl_subjects,tbl_class_subjects
+        WHERE tbl_class_subjects.tbl_class_id='$class_id' AND tbl_subjects.puid=tbl_class_subjects.tbl_subject_id ORDER BY subject_name ";
+       $subjects=$this->query($filter);
+      
      if($subjects){
          return $subjects;
      }
@@ -230,6 +231,32 @@ class dbreports extends dbTable {
      }
 
     }
+
+
+
+    /*method to get student result marks
+     *
+     *
+     */
+    function get_student_specific_marks($st_regno,$subject_id,$exam_type, $term_id, $year_id){
+         $marks_sql="SELECT `subject_name`,exam_type,`score`,term_name  FROM `tbl_result`,tbl_subjects,tbl_exam,tbl_term
+        WHERE tbl_subjects.`puid`=tbl_result.`tbl_subjects_id` AND tbl_term.puid=tbl_result.tbl_term_id
+        AND tbl_result.tbl_student_reg_no='$st_regno' AND tbl_result.tbl_exam_id='$exam_type' AND tbl_result.tbl_academic_year_id='$year_id'
+        AND tbl_result.tbl_term_id='$term_id' AND tbl_exam.puid=tbl_result.tbl_exam_id AND tbl_result.tbl_subjects_id='$subject_id'
+        ORDER BY subject_name";
+       $result=$this->query($marks_sql);
+       
+       if($result){
+           return $result;
+       }
+    else{
+         $result['score']='_';
+         return $result;
+    }
+      
+    }
+
+    
 
     /*
      * method to get result for a specified subject
