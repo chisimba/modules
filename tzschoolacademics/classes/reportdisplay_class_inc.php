@@ -277,13 +277,17 @@ class reportdisplay extends object {
         if (!empty($exam_type) && !empty($term_id) && !empty($year_id) && !empty($class_id)) {
            
             $student_in_class = $this->objreportDb->get_class_student($class_id, $year_id);
-           
+            //cheching existence of students in a class
             if ($student_in_class) {
                 ////getting all subjects i  given class
                  $class_subjects = $this->objreportDb->get_class_subject($class_id);
-
+              //checking existence of subjects in class
                if ($class_subjects) {
-                   $this->get_html_elements();
+                 
+             //checking if results have been uploaded not done
+
+             
+                     $this->get_html_elements();  //loading htmlelement classes
                     $dataTable = new htmlTable();
                     $dataTable->width = '90%';
                     $dataTable->startHeaderRow();
@@ -294,7 +298,7 @@ class reportdisplay extends object {
                         $dataTable->addHeaderCell($subj_name);
                     }
                     $dataTable->endHeaderRow();
-                }
+                
                 ///extracting all students marks
                 foreach ($student_in_class as $students) {
                     $st_regno = $students['reg_no'];
@@ -305,24 +309,23 @@ class reportdisplay extends object {
                     foreach ($class_subjects as $cl_subject) {
                         $subj_id = $cl_subject['subj_id'];
                         $student_result = $this->objreportDb->get_student_specific_marks($st_regno,$subj_id,$exam_type, $term_id, $year_id);
-                       
-                         foreach ($student_result as $results) {
-                        $score = $results['score'];    ///result score
+                       foreach ($student_result as $results) {
+                         $score = $results['score'];    ///result score
                          $dataTable->addCell($score);
-                        
-                    }
+                     }
                     }
                        
                 
                 $dataTable->endRow();  //end of student result
                    
                 }
+            }
                       return $dataTable->show();  //under test not yet finished
 
             }
             ///default
             else {
-                $data = "<p>No student found in the class in the specified year</p>";
+                $data = "<p>No Details Found please check</p>";
                 return $data;
             }
         }
@@ -418,13 +421,76 @@ class reportdisplay extends object {
     }
 
 
+    /*method to generate a display for results of a particular subject
+     *@param subjectId
+     *@param exam
+     *@param term
+     * @param year_id
+     * @param class
+     */
+
     function generate_subject_result($subjectId, $exam, $term, $year_id, $class){
-    
+        $this->get_html_elements();  //loading htmlelements 
+
      if(!empty ($subjectId) && !empty ($exam) && !empty ($term) && !empty ($year_id) && !empty ($class)){
-        echo 'here';
+       //checking if subject exist in that class
+       $subject_ckeck=$this->objreportDb->check_subject_class($subjectId,$class,$year);
+      if($subject_ckeck){
+       //checking if results have been uploaded
+      $result_check=$this->objreportDb->subject_resultExist($subjectId,$exam, $term, $year_id);
+      if($result_check){
+     /////formating the display using htmltable
+        $dataTable=new htmlTable();
+        $dataTable->startHeaderRow();
+        $dataTable->addHeaderCell('No');
+        $dataTable->addHeaderCell('Student name');
+        $dataTable->addHeaderCell('Marks');
+        $dataTable->addHeaderCell('Grade');
+        $dataTable->addHeaderCell('Remarks');
+        $dataTable->endHeaderRow();
+
+       //getting student in a class
+       $student_in_class=$this->objreportDb->get_class_student($class,$year_id);
+       $i=0;
+       foreach ($student_in_class as $student_info) {
+         $student_name=$student_info['firstname'].' '.$student_info['othernames'].' '.$student_info['lastname'];
+         $st_regno=$student_info['reg_no'];
+         $i++;
+    $student_subject_result=$this->objreportDb->get_student_specific_marks($st_regno,$subjectId,$exam, $term, $year_id);
+    foreach ($student_subject_result as $result_value) {
+         $student_marks=$result_value['score'];
+       ///getting score grade
+         $grade=$this->objreportDb->get_marks_grade($student_marks, $class);
+         foreach ($grade as $value) {
+          $grade_name=$value['grade_name'];
+          $remarks=$value['remarks'];
+          //adding display row
+          $dataTable->startRow();
+          $dataTable->addCell($i);
+          $dataTable->addCell($student_name);
+          $dataTable->addCell($student_marks);
+          $dataTable->addCell($grade_name);
+          $dataTable->addCell($remarks);
+          $dataTable->endRow();
+             }
+          }
+       }
+       return $dataTable->show();
+      }
+      else{
+          return '<P>Results Not Yet Uploaded</P>';
+      }
+
+          }
+     
      }
 
 
+     ///default
+     else{
+    return '<p>Fill all the required fields</p>';
+
+     }
     }
 
 
