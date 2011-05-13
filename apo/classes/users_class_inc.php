@@ -48,6 +48,7 @@ class users extends object {
 
     function showUserForm($name='') {
         $roles = array(
+            array('label' => 'apo', 'value' => 'APO'),
             array('label' => 'subsidy', 'value' => 'Subsidy Office'),
             array('label' => 'library', 'value' => 'Library'),
             array('label' => 'facultyregistrar', 'value' => 'Faculty Registrar'),

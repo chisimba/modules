@@ -91,7 +91,7 @@ class userutils extends object {
     public function getTree($treeType='dhtml', $selected='', $treeMode='side', $action='') {
         $baseFolder = $this->objSysConfig->getValue('FILES_DIR', 'apo');
         
-        $rolesArray = array('subsidy'=>'Subsidy Office', 'library'=>'Library', 'faculty'=>'Faculty Registrar', 'legal' => 'Legal Office');
+        $rolesArray = array('apo'=>'APO','subsidy'=>'Subsidy Office', 'library'=>'Library', 'faculty'=>'Faculty Registrar', 'legal' => 'Legal Office');
         $baseFolderId = "0";
         
         $icon = '';

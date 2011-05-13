@@ -23,7 +23,7 @@ if ($formdata != null){
     $mode = "edit";
 }
 
-$action = 'showfeedback';
+$action = 'finishdocument';
 
 $form = new form('commentsform', $this->uri(array('action' => $action, 'id' => $id, 'formname' => 'comments')));
 
@@ -71,19 +71,20 @@ $reviewlink->link = "Review";
 $contactdetailslink = new link($this->uri(array("action" => "showcontactdetails", 'id' => $id, 'formname' => 'comments')));
 $contactdetailslink->link = "Contact Details";
 
+$feedbacklink = new link($this->uri(array("action" => "showfeedback","id"=>$id)));
+$feedbacklink->link = "Feedback";
+
 $commentslink = new link($this->uri(array("action" => "showcomments","id"=>$id)));
 $commentslink->link = "Comments";
 
-$feedbacklink = new link($this->uri(array("action" => "showfeedback","id"=>$id)));
-$feedbacklink->link = "Feedback";
 
 $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&nbsp;' .
         $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
-        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '&nbsp;|&nbsp;' . "<b>Comments</b>" .
-        '&nbsp;|&nbsp;' . $feedbacklink->show() . '<br/>';
+        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '&nbsp;|&nbsp;' .$feedbacklink->show()  .
+        '&nbsp;|&nbsp;' ."<b>Comments</b>"  . '<br/>';
 
 $fs = new fieldset();
 $fs->setLegend('<b>Navigation</b>');

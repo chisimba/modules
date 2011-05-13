@@ -22,7 +22,7 @@ if ($formdata != null){
     $mode = "edit";
 }
 
-$action = 'finishdocument';
+$action = 'showcomments';
 
 $form = new form('feedbackform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'feedback')));
 
@@ -78,7 +78,7 @@ $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&n
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         $resourceslink->show() . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
-        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '&nbsp;|&nbsp;' . $commentslink->show() . '&nbsp;|&nbsp;' . "<b>Feedback</b>".'<br/>';
+        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() . '&nbsp;|&nbsp;' . "<b>Feedback</b>". '&nbsp;|&nbsp;' .$commentslink->show() .'<br/>';
 
 $fs = new fieldset();
 $fs->setLegend('<b>Navigation</b>');

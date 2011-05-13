@@ -84,8 +84,8 @@ $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&n
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
         "<b>Resources</b>" . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
-        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show(). '&nbsp;|&nbsp;'  . $commentslink->show() . '&nbsp;|&nbsp;' .
-        $feedbacklink->show() . '<br/>';
+        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show(). '&nbsp;|&nbsp;'  . $feedbacklinklink->show() . '&nbsp;|&nbsp;' .
+        $commentslink->show() . '<br/>';
 
 $fs = new fieldset();
 $fs->setLegend('<b>Navigation</b>');
