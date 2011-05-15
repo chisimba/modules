@@ -14,7 +14,7 @@ foreach (array('subject', 'predicate', 'object') as $field) {
 }
 
 $p = $document->createElement('p');
-$p->appendChild($html5form->submit($document, 'Add'));
+$p->appendChild($html5form->submit($document, $this->objLanguage->languageText('mod_triplestore_add', 'triplestore')));
 $form->appendChild($p);
 
 echo $document->saveHTML();

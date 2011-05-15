@@ -1,9 +1,12 @@
 <?php
 
-$document = new DOMDocument('1.0');
-
+$html5common = $this->getObject('html5common', 'html5elements');
 $html5form = $this->getObject('html5form', 'html5elements');
 $html5table = $this->getObject('html5table', 'html5elements');
+
+$document = new DOMDocument('1.0');
+
+$document->appendChild($html5common->link($document, array('action'=>'edit'), 'triplestore', $this->objLanguage->languageText('mod_triplestore_add', 'triplestore')));
 
 $form = $html5form->form($document, 'POST', array('action'=>'search'), 'triplestore');
 $document->appendChild($form);
