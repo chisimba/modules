@@ -216,21 +216,20 @@ class triplestore extends controller {
      * @access private
      *
      */
-    private function __save() {
-        $mode = $this->getParam("mode", NULL);
-        $subject = $this->getParam('subject', NULL);
-        $predicate = $this->getParam('predicate', NULL);
-        $tripobject = $this->getParam('object', NULL);
+    private function __save()
+    {
+        $id = $this->getParam('id');
+        $subject = $this->getParam('subject');
+        $predicate = $this->getParam('predicate');
+        $object = $this->getParam('object');
 
-        if ($mode == "edit") {
-            $id = $this->getParam('id', NULL);
-            $this->objTriplestore->update($id, $subject, $predicate, $tripobject);
+        if ($id) {
+            $this->objTriplestore->update($id, $subject, $predicate, $object);
         } else {
-            $this->objTriplestore->insert($subject, $predicate, $tripobject);
+            $this->objTriplestore->insert($subject, $predicate, $object);
         }
-        $extjs['success'] = true;
-        echo json_encode($extjs);
-        exit(0);
+
+        $this->nextAction('search');
     }
 
     /**
