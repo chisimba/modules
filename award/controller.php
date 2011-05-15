@@ -1040,8 +1040,13 @@ class award extends controller
                 $abbreviation = $this->getParam('abbreviation');
                 $name = $this->getParam('name');
                 
-                $valuefields = array('id'=>$unionId, 'name'=>$name, 'abbreviation'=>$abbreviation);
-                $this->objDbParty->update('id', $unionId, $valuefields);
+                if ($unionId) {
+                    $valuefields = array('id'=>$unionId, 'name'=>$name, 'abbreviation'=>$abbreviation);
+                    $this->objDbParty->update('id', $unionId, $valuefields);
+                } else {
+                    $unionId = $this->objDbParty->insert(array('name'=>$name, 'abbreviation'=>$abbreviation));
+                }
+
                 return $this->nextAction('viewtradeunion', array('selected'=>'init_10'));
 
             case 'deletebranch':
