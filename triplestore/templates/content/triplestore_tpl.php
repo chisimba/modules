@@ -19,7 +19,6 @@ $p->appendChild($html5form->submit($document, 'Search'));
 
 $title = 'Triples';
 $headers = array('Identifier', 'Subject', 'Predicate', 'Object');
-var_dump($this->triples);
 
 $table = $html5table->table($document, $title, $headers, $this->triples);
 $document->appendChild($table);
