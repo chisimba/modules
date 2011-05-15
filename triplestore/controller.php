@@ -341,7 +341,21 @@ class triplestore extends controller {
      * Default Action for triplestore module
      * @access private
      */
-    private function __home() {
+    private function __home()
+    {
+        $id = $this->getParam('id');
+        $subject = $this->getParam('subject');
+        $predicate = $this->getParam('predicate');
+        $object = $this->getParam('object');
+
+        $filters = array();
+        if ($id) $filters['id'] = $id;
+        if ($subject) $filters['subject'] = $subject;
+        if ($predicate) $filters['predicate'] = $predicate;
+        if ($object) $filters['object'] = $object;
+
+        $this->triples = $this->objTriplestore->getTriples($triples);
+        $this->setVarByRef('triples', $triples);
 
         return 'triplestore_tpl.php';
     }
