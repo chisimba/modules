@@ -11,14 +11,14 @@ $document->appendChild($form);
 $p = $document->createElement('p');
 $form->appendChild($p);
 
-$p->appendChild($html5form->text($document, 'id', NULL, 'Identifier'));
-$p->appendChild($html5form->text($document, 'subject', NULL, 'Subject'));
-$p->appendChild($html5form->text($document, 'predicate', NULL, 'Predicate'));
-$p->appendChild($html5form->text($document, 'object', NULL, 'Object'));
-$p->appendChild($html5form->submit($document, 'Search'));
+$headers = array();
+foreach (array('id', 'subject', 'predicate', 'object') as $field) {
+    $header = $this->objLanguage->languageText('mod_triplestore_'.$field, 'triplestore');
+    $p->appendChild($html5form->text($document, $field, NULL, $header));
+    $headers[] = $header;
+}
 
-$title = 'Triples';
-$headers = array('Identifier', 'Subject', 'Predicate', 'Object');
+$title = $this->objLanguage->languageText('mod_triplestore_triples', 'triplestore');
 
 $table = $html5table->table($document, $title, $headers, $this->triples);
 $document->appendChild($table);
