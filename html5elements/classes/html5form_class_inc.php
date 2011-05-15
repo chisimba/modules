@@ -91,6 +91,24 @@ class html5form extends object
     }
 
     /**
+      * Generates a label for input fields.
+      * @access public
+      * @param  object $document The DOMDocument to use.
+      * @param  string $id       The identifier of the input field.
+      * @param  string $caption  The label text.
+      * @return object The generated DOMElement.
+      */
+    public function label(DOMDocument $document, $id, $caption)
+    {
+        $label = $document->createElement('label');
+        $label->setAttribute('for', $id);
+        $label->appendChild($document->createTextNode($caption));
+
+        return $label;
+    }
+     
+
+    /**
      * Generates an HTML5 input element for text values.
      *
      * @access public
