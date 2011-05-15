@@ -2,7 +2,7 @@
 
 $document = new DOMDocument('1.0');
 $html5form = $this->getObject('html5form', 'html5elements');
-$form = $html5form->form($document, 'POST');
+$form = $html5form->form($document, 'POST', array('action'=>'save'), 'triplestore');
 $document->appendChild($form);
 
 foreach (array('subject', 'predicate', 'object') as $field) {
