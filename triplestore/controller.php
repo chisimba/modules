@@ -354,7 +354,9 @@ class triplestore extends controller {
         if ($predicate) $filters['predicate'] = $predicate;
         if ($object) $filters['object'] = $object;
 
-        $this->triples = $this->objTriplestore->getTriples($triples);
+        $columns = array('id', 'subject', 'predicate', 'object');
+
+        $this->triples = $this->objTriplestore->getTriples($triples, $columns);
         $this->setVarByRef('triples', $triples);
 
         return 'triplestore_tpl.php';
