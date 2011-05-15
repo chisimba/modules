@@ -45,6 +45,23 @@ class html5common extends object
 
         return $p;
     }
+
+    /**
+     * @public
+     * @param  object $document The DOMDocument to use.
+     * @param  array  $params   The parameters to include in the link.
+     * @param  string $module   The name of the module to link to.
+     * @param  string $text     The caption of the link.
+     * @return object The generated DOMElement.
+     */
+    public function link(DOMDocument $document, array $params, $module, $text)
+    {
+        $a = $document->createElement('a');
+        $a->setAttribute('href', $this->uri($params, $module, '', FALSE, TRUE, TRUE));
+        $a->appendChild($document->createTextNode($text));
+
+        return $a;
+    }
 }
 
 ?>
