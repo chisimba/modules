@@ -72,7 +72,8 @@ class dbtriplestore extends dbTable {
 
         // Instance of the user object of the security class.
         $this->objUser = $this->getObject('user', 'security');
-        //Instance of the xml serial class
+
+        // Instance of the xml serial class.
         $this->objXMLSerial = $this->getObject('xmlserial', 'utilities');
     }
 
