@@ -21,6 +21,8 @@ foreach (array('id', 'subject', 'predicate', 'object') as $field) {
     $headers[] = $header;
 }
 
+$p->appendChild($html5form->submit($document, $this->objLanguage->languageText('mod_triplestore_filter', 'triplestore')));
+
 $title = $this->objLanguage->languageText('mod_triplestore_triples', 'triplestore');
 
 $table = $html5table->table($document, $title, $headers, $this->triples);
