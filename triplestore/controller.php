@@ -105,9 +105,8 @@ class triplestore extends controller {
         echo json_encode($nestedTriples);
     }
 
-    public function dispatch($action) {
-        // Get action from query string and set default to view.
-        //$action=$this->getParam('action', 'view');
+    public function dispatch($action)
+    {
         // Convert the action into a method.
         $method = $this->__getMethod($action);
         // Return the template determined by the action.
