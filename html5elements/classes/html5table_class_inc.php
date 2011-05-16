@@ -148,7 +148,7 @@ class html5table extends object
                     $tr->appendChild($td);
 
                     if (count($edit) > 0) {
-                        $edit['id'] = $i;
+                        $edit['id'] = is_integer($i) ? $row['id'] : $i;
 
                         $a = $document->createElement('a');
                         $a->setAttribute('href', $this->uri($edit, $module, '', FALSE, TRUE, TRUE));
