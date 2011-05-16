@@ -7,11 +7,14 @@ $document->appendChild($form);
 
 $form->appendChild($html5form->hidden($document, 'id', $this->getParam('id')));
 
+$triple = $this->getVarByRef('triple');
+
 foreach (array('subject', 'predicate', 'object') as $field) {
     $caption = $this->objLanguage->languageText('mod_triplestore_'.$field, 'triplestore');
+    $value = isset($triple[$field]) ? $triple[$field] : '';
     $p = $document->createElement('p');
     $p->appendChild($html5form->label($document, $field, $caption.': '));
-    $p->appendChild($html5form->text($document, $field));
+    $p->appendChild($html5form->text($document, $field, $value));
     $form->appendChild($p);
 }
 
