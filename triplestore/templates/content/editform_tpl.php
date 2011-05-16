@@ -5,6 +5,8 @@ $html5form = $this->getObject('html5form', 'html5elements');
 $form = $html5form->form($document, 'POST', array('action'=>'save'), 'triplestore');
 $document->appendChild($form);
 
+$form->appendChild($html5form->hidden($document, 'id', $this->getParam('id')));
+
 foreach (array('subject', 'predicate', 'object') as $field) {
     $caption = $this->objLanguage->languageText('mod_triplestore_'.$field, 'triplestore');
     $p = $document->createElement('p');
