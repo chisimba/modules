@@ -43,7 +43,7 @@ $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
 if (count($documents) > 0) {
     foreach ($documents as $document) {
-        $makepdf = new link($this->uri(array("action"=>"selectpdf", "id"=>$document['id'])));
+        $makepdf = new link($this->uri(array("action"=>"makepdf", "id"=>$document['id'], "all"=>"on")));
         $objIcon->setIcon('pdf');
         $makepdf->link = $objIcon->show();
         if ($document['currentuserid'] == "Administrative User") {
