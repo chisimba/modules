@@ -25,7 +25,7 @@ $p->appendChild($html5form->submit($document, $this->objLanguage->languageText('
 
 if (count($this->triples) > 0) {
     $title = $this->objLanguage->languageText('mod_triplestore_triples', 'triplestore');
-    $table = $html5table->table($document, $title, $headers, $this->triples);
+    $table = $html5table->table($document, $title, $headers, $this->triples, array('action'=>'edit'), array('action'=>'delete'), 'triplestore');
     $document->appendChild($table);
 } else {
     $document->appendChild($html5common->paragraph($document, $this->objLanguage->languageText('mod_triplestore_empty', 'triplestore')));
