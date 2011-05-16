@@ -319,14 +319,15 @@ class reportdisplay extends object {
                 $dataTable->endRow();  //end of student result
                    
                 }
+
             }
-                      return $dataTable->show();  //under test not yet finished
+             return $dataTable->show();  //under test not yet finished
 
             }
             ///default
             else {
-                $data = "<p>No Details Found please check</p>";
-                return $data;
+                
+                return FALSE;
             }
         }
     }
