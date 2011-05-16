@@ -17,7 +17,7 @@ $form->appendChild($p);
 $headers = array();
 foreach (array('id', 'subject', 'predicate', 'object') as $field) {
     $header = $this->objLanguage->languageText('mod_triplestore_'.$field, 'triplestore');
-    $p->appendChild($html5form->text($document, $field, NULL, $header));
+    $p->appendChild($html5form->text($document, $field, $this->getParam($field), $header));
     $headers[] = $header;
 }
 
