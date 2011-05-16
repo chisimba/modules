@@ -192,6 +192,18 @@ class triplestore extends controller {
     }
 
     /**
+     * Action to delete a triple.
+     *
+     * @access private
+     */
+    private function __delete()
+    {
+        $id = $this->getParam('id');
+        $this->objTriplestore->delete($id);
+        $this->nextAction('search');
+    }
+
+    /**
      *
      * Method corresponding to the asjson action.  It gets a specific
      * set of triples as json
