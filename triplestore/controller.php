@@ -179,8 +179,8 @@ class triplestore extends controller {
      * @access private
      *
      */
-    private function __edit() {
-        $this->setvar('mode', "edit");
+    private function __edit()
+    {
         return 'editform_tpl.php';
     }
 
