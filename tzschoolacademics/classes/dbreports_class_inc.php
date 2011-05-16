@@ -44,6 +44,44 @@ class dbreports extends dbTable {
         
     }
 
+
+    /* method to get a specific academic years
+     * @returns year_name  the name of a given academic yeaar
+     */
+
+    public function get_year($year_id) {
+    $acadm_years = $this->getRow($pk_field='puid', $year_id, $table = 'tbl_academic_year');
+        if ($acadm_years) {
+          $year_name=$acadm_years['year_name'];
+         return $year_name;  //associative array contain all the school academic years
+        }
+     else{
+            return FALSE;
+     }
+
+    }
+
+   /*method to get term details from a given specified term id
+    * @param term_id
+    * $return term_name  yhe name of the given semmister/term
+    */
+
+    public function get_term_name ($term_id)
+  {
+   $result =$this->getRow($pk_field='puid', $term_id, $table = 'tbl_term');
+   if($result)
+   {
+       return $result['term_name'];
+   }
+   else
+   {
+       return FALSE;
+   }
+
+  }
+
+
+
     /* methid to get all classes in a given school in an array
      * @return class_list  an associative array contains all the classes in a school
      *
@@ -59,6 +97,30 @@ class dbreports extends dbTable {
           return FALSE;
       }
     }
+
+
+
+
+    /* methid to get informations about a given class
+     * @param class_id: id of the class whose details is to be found
+     * @return class_details  an associative array contains all the classes in a school |FALSE if no details forund
+     *
+     */
+
+    public function get_class_details($class_id) {
+        $stmt="SELECT `class_name`, `level`, `stream` FROM `tbl_class`
+               WHERE tbl_class.`puid`='$class_id' ";
+        $class_details = $this->getArray($stmt);
+    
+        if ($class_details) {
+            return $class_details;   ///associative array containg class details
+        }
+      else{
+          return FALSE;
+      }
+    }
+
+
 
     /*
      * method to get_all types of exams in an array
@@ -76,6 +138,26 @@ class dbreports extends dbTable {
             return FALSE;
         }
     }
+
+    /*
+     * method exam details for a given specified exam type id
+     * @param exam_id  id of the exam
+     * @return exam_details as associative array
+     *
+     */
+
+    public function get_exam_detail($exam_id) {
+        $this->_tableName = 'tbl_exam';
+        $filter="WHERE puid='$exam_id' ";
+        $exam_details = $this->getAll($filter);
+        if ($exam_details) {
+            return $exam_details;
+        }
+        else{
+            return FALSE;
+        }
+    }
+
 
     /*
      * method to check if student is registered to a given class in agiven academic year.
@@ -231,6 +313,25 @@ class dbreports extends dbTable {
      }
 
     }
+
+
+
+    /*
+     * method to get a specific subjects details
+     * @return subject_name   name of the subject
+     */
+    function  get_subject($subject_id){
+     $subjects=$this->getRow($pk_field='puid', $pk_value=$subject_id,'tbl_subjects');
+     if($subjects){
+         return $subjects['subject_name'];
+     }
+     else{
+         return FALSE;
+     }
+
+    }
+
+
 
 
 
