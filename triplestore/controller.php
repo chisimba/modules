@@ -185,7 +185,7 @@ class triplestore extends controller {
 
         if ($id) {
             $triples = $this->objTriplestore->getTriples(array('id' => $id));
-            $this->setVar('triple', $triples[0]);
+            $this->setVarByRef('triple', $triples[0]);
         }
 
         return 'editform_tpl.php';
