@@ -165,7 +165,7 @@ class html5table extends object
                     }
 
                     if (count($delete) > 0) {
-                        $delete['id'] = $i;
+                        $delete['id'] = is_integer($i) ? $row['id'] : $i;
 
                         $a = $document->createElement('a');
                         $a->setAttribute('href', html_entity_decode($this->uri($delete, $module)));
