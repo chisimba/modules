@@ -23,9 +23,12 @@ foreach (array('id', 'subject', 'predicate', 'object') as $field) {
 
 $p->appendChild($html5form->submit($document, $this->objLanguage->languageText('mod_triplestore_filter', 'triplestore')));
 
-$title = $this->objLanguage->languageText('mod_triplestore_triples', 'triplestore');
-
-$table = $html5table->table($document, $title, $headers, $this->triples);
-$document->appendChild($table);
+if (count($this->triples) > 0) {
+    $title = $this->objLanguage->languageText('mod_triplestore_triples', 'triplestore');
+    $table = $html5table->table($document, $title, $headers, $this->triples);
+    $document->appendChild($table);
+} else {
+    $document->appendChild($html5common->paragraph($document, $this->objLanguage->languageText('mod_triplestore_empty', 'triplestore')));
+}
 
 echo $document->saveHTML();
