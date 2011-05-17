@@ -42,6 +42,13 @@ class mayibuyeform extends controller {
         $this->objMail = $this->getObject('email', 'mail');
 
         $this->dbresearchform = $this->getObject('researchform', 'mayibuyeform');
+
+        $this->dbresearchft = $this->getObject('researchft','mayibuyeform');
+
+	$this->dbresearchstud = $this->getObject('researchstud','mayibuyeform');
+ 
+	$this->dbresearchlast = $this->getObject('researchlast','mayibuyeform');
+
     }
 
     public function dispatch($action) {
@@ -52,8 +59,24 @@ class mayibuyeform extends controller {
             default:
                 return 'research_tpl.php';
 
-            case 'save_researchform':
-                return $this->SavestudentRecord();
+        case 'send_researchform':
+                $this->SavestudentRecord();
+		return "researchft_tpl.php";
+		
+	
+	case 'send_researchft':
+
+		$this->SavestudentRecord();
+
+		return "researchstudent_tpl.php";
+
+             
+	case 'send_researchlast';
+
+		$this->SavestudentRecord();
+		
+		return "researchlast.php";
+	
                
         }
     }
@@ -121,7 +144,7 @@ class mayibuyeform extends controller {
                 $postadd . '  ' . "\n" . 'Telphone:' . $tel . '  ' . "\n" . 'Fax no:' . $faxx . '  ' . "\n" . 'Student No:' .
                 $stuno . '  ' . "\n" . 'Staff num:' . $staffnum . '  ' . "\n" . 'Department:' . $colection);
 
-        return "confirm_tpl.php";
+        return "researchft_tpl.php";
     }
 
     public function sendEmailNotification($subject, $message) {
