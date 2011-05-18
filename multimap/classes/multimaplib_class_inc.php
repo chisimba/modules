@@ -64,16 +64,20 @@ class multimaplib extends object
      * Returns the HTML to display a map with a single POI.
      *
      * @access public
-     * @param  float  $latitude     The latitude of the POI.
-     * @param  float  $logitude     The longitude of the POI.
-     * @param  string $description  The description of the POI.
+     * @param  string $width       The width of the iframe.
+     * @param  string $height      The height of the iframe.
+     * @param  float  $latitude    The latitude of the POI.
+     * @param  float  $logitude    The longitude of the POI.
+     * @param  string $description The description of the POI.
      */
-    public function poi($latitude, $longitude, $description)
+    public function poi($width, $height,$latitude, $longitude, $description)
     {
         $document = new DOMDocument();
         $iframe = $document->createElement('iframe');
         $iframe->setAttribute('src', $this->getResourceUri('map.html', 'multimap').'#'.$latitude.'|'.$longitude.'|'.urlencode($description));
-        return $document->asHTML($iframe);
+        $iframe->setAttribute('style', 'border:none;width:'.$width.';height:'.$height);
+        $document->appendChild($iframe);
+        return $document->saveHTML();
     }
 }
 
