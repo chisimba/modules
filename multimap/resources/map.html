@@ -27,11 +27,12 @@
 <div class="canvas" id="bing_canvas"></div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 <script>
- var firstpipe = location.hash.indexOf("|");
- var secondpipe = location.hash.indexOf("|", firstpipe + 1);
- var latitude = location.hash.substring(1, firstpipe);
- var longitude = location.hash.substring(firstpipe + 1, secondpipe);
- var content = unescape(location.hash.substr(secondpipe + 1));
+ var hash = unescape(location.hash.substr(1));
+ var firstpipe = hash.indexOf("|");
+ var secondpipe = hash.indexOf("|", firstpipe + 1);
+ var latitude = hash.substring(0, firstpipe);
+ var longitude = hash.substring(firstpipe + 1, secondpipe);
+ var content = hash.substr(secondpipe + 1);
  var osmLoaded = false;
  var googleLoaded = false;
  var bingLoaded = false;

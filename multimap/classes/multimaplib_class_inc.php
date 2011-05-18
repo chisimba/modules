@@ -74,7 +74,7 @@ class multimaplib extends object
     {
         $document = new DOMDocument();
         $iframe = $document->createElement('iframe');
-        $iframe->setAttribute('src', $this->getResourceUri('map.html', 'multimap').'#'.urlencode($latitude.'|'.$longitude.'|'.$description));
+        $iframe->setAttribute('src', $this->getResourceUri('map.html', 'multimap').'#'.rawurlencode($latitude.'|'.$longitude.'|'.$description));
         $iframe->setAttribute('style', 'border:none;width:'.$width.';height:'.$height);
         $document->appendChild($iframe);
         return $document->saveHTML();
