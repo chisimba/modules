@@ -364,6 +364,7 @@ $class = NULL;
 if (!empty($activitylist)) {
     $i = 0;
     $actcount = 0;
+    $affcount = 0;
     foreach($activitylist as $item) {
         //Get context title
         $objDbContext = &$this->getObject('dbcontext', 'context');
@@ -518,6 +519,7 @@ $transcriptTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_dis
 $transcriptTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
+$transcount = 0;
 if (!empty($transcriptlist)) {
     $transcount = 0;
     foreach($transcriptlist as $item) {
@@ -586,6 +588,7 @@ $qclTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_display", 
 $qclTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
+$qclcount = 0;
 if (!empty($qclList)) {
     $qclcount = 0;
     foreach($qclList as $qclItem) {
@@ -655,6 +658,7 @@ $goalsTable->addCell("&nbsp;");
 $goalsTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
+$goacount = 0;
 if (!empty($goalsList)) {
     $i = 0;
     $goacount = 0;
@@ -796,6 +800,7 @@ $interestTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_displ
 $interestTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
+$intcount = 0;
 if (!empty($interestList)) {
     $intcount = 0;
     foreach($interestList as $item) {
