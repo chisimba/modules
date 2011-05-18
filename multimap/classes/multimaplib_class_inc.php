@@ -51,8 +51,29 @@ if (!
  */
 class multimaplib extends object
 {
+    /**
+     * Nothing to initialise.
+     *
+     * @access public
+     */
     public function init()
     {
+    }
+
+    /**
+     * Returns the HTML to display a map with a single POI.
+     *
+     * @access public
+     * @param  float  $latitude     The latitude of the POI.
+     * @param  float  $logitude     The longitude of the POI.
+     * @param  string $description  The description of the POI.
+     */
+    public function poi($latitude, $longitude, $description)
+    {
+        $document = new DOMDocument();
+        $iframe = $document->createElement('iframe');
+        $iframe->setAttribute('src', $this->getResourceUri('map.html', 'multimap').'#'.$latitude.'|'.$longitude.'|'.urlencode($description));
+        return $document->asHTML($iframe);
     }
 }
 
