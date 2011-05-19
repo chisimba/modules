@@ -23,12 +23,14 @@ class tzschoolacademics extends controller {
 
     public $lang;
     private $user;
+    private $registrar;
 
     public function init() {
 
         $this->loadClass('user', 'security');
         $this->lang = $this->getObject('language', 'language');
         $this->user = $this->getObject('user', 'security');
+        $this->registrar=$this->getObject('registrar');
     }
 
     public function dispatch($action) {
@@ -48,11 +50,29 @@ class tzschoolacademics extends controller {
             case 'register_class':
                 return 'class_registration_tpl.php';
                 break;
+            case 'reg_setup':
+                return 'registration_setup_tpl.php';
+                break;
 
             case 'upload_result':
                 return 'load_upload_form_tpl.php';
                 break;
-
+            case 'add_student':
+                $this->registrar->registerStudent();
+                return 'student_registration_tpl.php';
+                break;
+            case 'add_class':
+                $this->registrar->registerClass();
+                return 'class_registration_tpl.php';
+                break;
+            case 'add_teacher':
+                $this->registrar->registerTeacher();
+                return 'teacher_registration_tpl.php';
+                break;
+            case 'add_subject':
+                $this->registrar->registerSubject();
+                return 'subject_registration_tpl.php';
+                break;
             case 'StudentResults':
                 $view = $this->getParam('View');
                 if (!empty($view)) {
@@ -122,7 +142,8 @@ class tzschoolacademics extends controller {
 
 
             ////deafult page- home tpl
-            default:return 'academics_home_tpl.php';
+            default:
+                return 'academics_home_tpl.php';
                 break;
         }
     }
