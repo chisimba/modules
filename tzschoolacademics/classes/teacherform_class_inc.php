@@ -50,7 +50,7 @@ class teacherform extends object{
         $lNameField=new textinput('lastname');
         $form->addToForm($lNameLabel->show());
         $lNameField->setValue($this->lNameValue);
-        $form->addToForm($fNameField->show());
+        $form->addToForm($lNameField->show());
 
         $oNameLabel=new label($this->lang->languageText('mod_tzschoolacademics_oname_label','tzschoolacademics'),'othernames');
         $oNameField=new textinput('othernames');
@@ -79,12 +79,12 @@ class teacherform extends object{
     }
 
      public function getAction(){
-        $action=$this->getParam('action',  'edit');
-        if($action=='edit')
-            $formAction=  $this->uri(array('action'=> 'edit'),'tzschoolacademics');
+        $action=$this->getParam('action',  'edit_teacher');
+        if($action=='edit_teacher')
+            $formAction=  $this->uri(array('action'=> 'edit_teacher'),'tzschoolacademics');
 
         else
-            $formAction=$this->uri (array('action'=>  'add'),'tzschoolacademics');
+            $formAction=$this->uri (array('action'=>  'add_teacher'),'tzschoolacademics');
         return $formAction;
     }
     public  function setValues($valuesArray=NULL){
