@@ -54,7 +54,7 @@ class nodechatlib extends object
     /**
      * Instance of the dbsysconfig class of the sysconfig module.
      *
-     * @author private
+     * @access private
      * @var    object
      */
     private $objSysConfig;
