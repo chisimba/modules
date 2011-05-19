@@ -81,6 +81,17 @@ class nodechat extends controller
 
         return 'main_tpl.php';
     }
+
+    /**
+     * This module does not require a login.
+     *
+     * @access public
+     * @return boolean Will always be false.
+     */
+    public function requiresLogin()
+    {
+        return FALSE;
+    }
 }
 
 ?>
