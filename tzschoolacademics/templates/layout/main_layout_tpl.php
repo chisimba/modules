@@ -16,7 +16,7 @@
  $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=SubjectResults">Subject Results</a></li>';
  $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=FailedStudents"> Failed Students</a></li>';
  $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=BestStudents"> Best Students</a></li>';
- $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=AcademicReport">Academic Reports</a></li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=StudentReport">Student Report</a></li>';
  $sidemenus .= '     </ul>';
  $sidemenus.='</li>';
  $sidemenus .= '<li>';
