@@ -52,12 +52,21 @@ if (!
 class nodechatlib extends object
 {
     /**
-     * Nothing to initialise.
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @author private
+     * @var    object
+     */
+    private $objSysConfig;
+
+    /**
+     * Initialises object properties.
      *
      * @access public
      */
     public function init()
     {
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
     /**
@@ -66,11 +75,15 @@ class nodechatlib extends object
      * @access public
      * @param  string $width  The width of the iframe.
      * @param  string $height The height of the iframe.
-     * @param  string $port   The port running Node.js
+     * @param  string $port   The port running Node.js. Defaults to the module configuration setting.
      * @return string The iframe HTML.
      */
-    public function poi($width, $height, $port=8080)
+    public function iframe($width, $height, $port=NULL)
     {
+        if ($port === NULL) {
+            $port = $this->objSysConfig->getValue('port', 'nodechat');
+        }
+
         $document = new DOMDocument();
         $iframe = $document->createElement('iframe');
         $iframe->setAttribute('src', 'http://'.$_SERVER['HOST_NAME'].':'.$port);
