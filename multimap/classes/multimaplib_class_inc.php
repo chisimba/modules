@@ -69,8 +69,9 @@ class multimaplib extends object
      * @param  float  $latitude    The latitude of the POI.
      * @param  float  $logitude    The longitude of the POI.
      * @param  string $description The description of the POI.
+     * @return string The iframe HTML.
      */
-    public function poi($width, $height,$latitude, $longitude, $description)
+    public function poi($width, $height, $latitude, $longitude, $description)
     {
         $document = new DOMDocument();
         $iframe = $document->createElement('iframe');
