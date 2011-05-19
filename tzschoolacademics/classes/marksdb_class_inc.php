@@ -81,6 +81,26 @@ parent::init('tbl_exam');
 
   }
 
+
+
+   public function get_term_name ($term_id)
+  {
+   $this->_tableName = 'tbl_term';
+   $filter="WHERE term_name='$term_id' ";
+   $result = $this->getAll($filter);
+   if($result)
+   {
+       return $result;
+   }
+   else
+   {
+       return FALSE;
+   }
+
+  }
+
+
+
   public function load_exam_type()
   {
       $this->_tableName = 'tbl_exam';
