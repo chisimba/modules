@@ -109,7 +109,7 @@ private function buildForm()
 	$objdateLabel =  new label($this->objLanguage->languageText("mod_mayibuye_commentdate","mayibuyeform"),"date"); 
 	$table->addCell($objdateLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objdate->show(),'', 'center', 'left', '');
-	$objForm->addRule('date', $this->objLanguage->languageText("mod_author2_required", "mayibuyeform"), 'required');
+	$objForm->addRule('date', $this->objLanguage->languageText("mod_mayibuye_date_required", "mayibuyeform"), 'required');
         $table->endRow();
 
         $table->startRow();
@@ -181,29 +181,7 @@ function insertStudentRecord($date, $nameofreseacher, $tellno, $faxxno, $email, 
 		'name'=>$nameofreseacher,
 		'telno' =>$tellno,
 		'faxno' =>$faxxno,
-		'emailaddress' =>$email,
-		'nameofsignotory' =>$nameofsign,
-		'jobtitle' => $jobtitles,
-		'nameoforganization' =>$organization,
-		'postaladdress'=>$postaladd,
-		'physicaladdress'=>$physicaladd,
-		'vatnum'=>$vatno,
-		'jobno'=>$jobnno,
-		'telephone'=>$telephone,
-		'faxnumber'=>$faxnumber2,
-		'email'=>$email2,
-		'nameofresgn'=>$nameofresi,
-		'jobtitle2'=>$jotitle,
-		'organizationname'=>$organizationname,
-                'postalddress2'=>$postadd,
-		'tell'=>$tel,
-		'fax'=>$faxx,
-		'studentno'=>$stuno,
-		'staffno'=>$staffnum,
-		'collection'=>$colection,
-		'imageaudio'=>$image,
-                'projectname'=>$project,
-              	'timeperido'=>$time
+		'emailaddress' =>$email	
         ));
         return $id;
 }

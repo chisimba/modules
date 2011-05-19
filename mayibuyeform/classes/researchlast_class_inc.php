@@ -28,6 +28,40 @@ $this->loadClass('label', 'htmlelements');
 // load button class
 $this->loadClass('button', 'htmlelements');
 
+$strjs = '<script type="text/javascript">
+		//<![CDATA[
+
+ 
+   
+	/***********************************************
+        *                                              *
+        *              FEEDBACK CLASS                  *
+        *                                              *
+        ***********************************************/
+        //<![CDATA[
+
+		function init () {
+			$(\'input_researchformredraw\').onclick = function () {
+				feedbackredraw();
+			}
+		}
+		function feedbackredraw () {
+			var url = \'index.php\';
+			var pars = \'module=security&action=generatenewcaptcha\';
+			var myAjax = new Ajax.Request( url, {method: \'get\', parameters: pars, onComplete: researchformShowResponse} );
+		}
+		function researchformLoad () {
+			$(\'load\').style.display = \'block\';
+		}
+		function researchformResponse (originalRequest) {
+			var newData = originalRequest.responseText;
+			$(\'researchformcaptchaDiv\').innerHTML = newData;
+		}
+		//]]>
+		</script>';
+
+        $this->appendArrayVar('headerParams', $strjs);
+
 }
 
 private function buildForm()
@@ -37,6 +71,11 @@ private function buildForm()
    	$objForm = new form('researchform', $this->getFormAction());
 	$table = $this->newObject('htmltable', 'htmlelements');
  
+	$table->startRow();      
+	$objsubheadingLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsublabel3","mayibuyeform"),"subheading");
+	$table->addCell($objsubheadingLabel->show(),'', 'center', 'left', ''); 
+	$table->endRow();
+
 	$table->startRow();	
 	$objuwc= new textinput('uwc');
 	$objuwcLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentuwc","mayibuyeform"),"uwc");
@@ -106,35 +145,33 @@ private function buildForm()
 
 
 
+	// captcha
+        $objCaptcha = $this->getObject('captcha', 'utilities');
+        $captcha = new textinput('researchform_captcha');
+        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_researchform_captcha');
+
+      	$required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+    	$strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as 	shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . 
+	'<br /><div id="researchformcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() .
+	 $required . '<a href="javascript:researchformredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
+       	 $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
+         $objForm->addRule('feedback_captcha', $this->objLanguage->languageText
+				("mod_request_captcha_unrequired", 'mayibuyeform', 'Captcha cant be empty.Captcha is missing.'), 'required');
+
+	$objForm->addToForm($objCaptcha->show());
+
+
+
+
+
+
+
 }
 
-function insertStudentRecord($date, $nameofreseacher, $tellno, $faxxno, $email, $nameofsign, $jobtitles, $organization,$postaladd,$physicaladd,$vatno,
-				$jobnno,$telephone,$faxnumber2,$email2,$nameofresi,$jotitle,$organizationname,$postadd,$tel,$faxx,$stuno,$staffnum,
-				$colection,$image,$project,$time)
+function insertStudentRecord($stuno,$staffnum,$colection,$image,$project,$time)
 	 {
            $id = $this->insert(array(
-                'date'=>$date,
-		'name'=>$nameofreseacher,
-		'telno' =>$tellno,
-		'faxno' =>$faxxno,
-		'emailaddress' =>$email,
-		'nameofsignotory' =>$nameofsign,
-		'jobtitle' => $jobtitles,
-		'nameoforganization' =>$organization,
-		'postaladdress'=>$postaladd,
-		'physicaladdress'=>$physicaladd,
-		'vatnum'=>$vatno,
-		'jobno'=>$jobnno,
-		'telephone'=>$telephone,
-		'faxnumber'=>$faxnumber2,
-		'email'=>$email2,
-		'nameofresgn'=>$nameofresi,
-		'jobtitle2'=>$jotitle,
-		'organizationname'=>$organizationname,
-                'postalddress2'=>$postadd,
-		'tell'=>$tel,
-		'fax'=>$faxx,
-		'studentno'=>$stuno,
+                'studentno'=>$stuno,
 		'staffno'=>$staffnum,
 		'collection'=>$colection,
 		'imageaudio'=>$image,

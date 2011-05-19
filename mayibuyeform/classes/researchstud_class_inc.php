@@ -44,7 +44,7 @@ private function buildForm()
 
 	$table->startRow();
 	$objname = new textinput('name');
-	$objnameLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentname2","mayibuyeform"),"email");
+	$objnameLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentname2","mayibuyeform"),"name");
 	$table->addCell($objnameLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objname->show(),'', 'center', 'left', '');
 	$table->endRow();
@@ -84,11 +84,7 @@ private function buildForm()
 	$table->addCell($objFaxno3->show(),'', 'center', 'left', '');
 	$table->startRow();
 	
-	$table->startRow();      
-	$objsubheadingLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsublabel3","mayibuyeform"),"subheading");
-	$table->addCell($objsubheadingLabel->show(),'', 'center', 'left', ''); 
-	$table->endRow();
-
+	
 	//Submit button
         $table->startRow();
 	$objButton = new button('send');

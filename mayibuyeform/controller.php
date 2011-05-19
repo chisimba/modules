@@ -61,6 +61,7 @@ class mayibuyeform extends controller {
 
         case 'send_researchform':
                 $this->SavestudentRecord();
+
 		return "researchft_tpl.php";
 		
 	
@@ -70,13 +71,13 @@ class mayibuyeform extends controller {
 
 		return "researchstudent_tpl.php";
 
-             
-	case 'send_researchlast';
-
-		$this->SavestudentRecord();
-		
-		return "researchlast.php";
 	
+	case 'send_researchstud':
+		$this->SavestudentRecord();
+
+		return "researchlast_tpl.php";
+
+            	
                
         }
     }
