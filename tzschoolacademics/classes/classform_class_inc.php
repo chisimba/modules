@@ -15,9 +15,11 @@ class classform extends object{
     private $majorValue;
     private $levelValue;
     private $nameValue;
+    private $registrar;
 
     public function init(){
        $this->lang=$this->getObject('language', 'language');
+       $this->registrar=$this->getObject('registrar');
     }
 
     private function load(){
@@ -60,7 +62,8 @@ class classform extends object{
         $majorLabel=new label($this->lang->languageText('mod_tzschoolacademics_major_label','tzschoolacademics'),'major');
         $majorField=new dropdown('major');
         $form->addToForm($majorLabel->show().'<br>');
-        $majorField->addFromDB(null, null, null, null);
+        $this->registrar->_tableName='tbl_major';
+        $majorField->addFromDB($this->registrar->getAll(), 'name', 'puid');
         $majorField->setValue($this->majorValue);
         $form->addToForm($majorField->show().'<br>');
 
@@ -72,12 +75,12 @@ class classform extends object{
     }
 
      public function getAction(){
-        $action=$this->getParam('action',  'edit');
-        if($action=='edit')
-            $formAction=  $this->uri(array('action'=> 'edit'),'tzschoolacademics');
+        $action=$this->getParam('action',  'edit_class');
+        if($action=='edit_class')
+            $formAction=  $this->uri(array('action'=> 'edit_class'),'tzschoolacademics');
 
         else
-            $formAction=$this->uri (array('action'=>  'add'),'tzschoolacademics');
+            $formAction=$this->uri (array('action'=>  'add_class'),'tzschoolacademics');
         return $formAction;
     }
     public  function setValues($valuesArray=NULL){
