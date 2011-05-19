@@ -36,7 +36,7 @@
  $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=register_teacher">Teachers</a></li>';
  $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=register_subject">Subjects</a></li>';
  $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=register_class">Classes</a></li>';
- $sidemenus .= '        <li>Setup</li>';
+ $sidemenus .= '        <li><a href="?module=tzschoolacademics&action=reg_setup">Setup</a></li>';
  $sidemenus .= '    </ul>';
  $sidemenus .= '</li>';
  $sidemenus .= '<li>Setup</li>';
