@@ -349,8 +349,13 @@ class productutil extends object
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
         $CommentLink->cssClass = 'adaptationLinks';
         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
-
-        $content .= '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
+        $thumbnailPath = '';
+        if (file_exists($product['institution_thumbnail']) && is_file($product['institution_thumbnail'])) {
+            $thumbnailPath = $product['institution_thumbnail'];
+        } else {
+            $thumbnailPath = 'skins/unesco_oer/images/most-product-cover-placeholder.jpg';
+        }
+        $content .= '   <div class="leftImageTabsList"><img src="' . $thumbnailPath . '" alt="'.$product['creator'].'" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
                         	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $CommentLink->show() . '</a>
                                 </div>
