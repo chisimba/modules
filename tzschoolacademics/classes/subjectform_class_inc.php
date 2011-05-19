@@ -57,12 +57,12 @@ class subjectform extends object {
     }
     
      public function getAction(){
-        $action=$this->getParam('action',  'edit');
-        if($action=='edit')
-            $formAction=  $this->uri(array('action'=> 'edit'),'tzschoolacademics');
+        $action=$this->getParam('action',  'edit_subject');
+        if($action=='edit_subject')
+            $formAction=  $this->uri(array('action'=> 'edit_subject'),'tzschoolacademics');
 
         else
-            $formAction=$this->uri (array('action'=>  'add'),'tzschoolacademics');
+            $formAction=$this->uri (array('action'=>  'add_subject'),'tzschoolacademics');
         return $formAction;
     }
     public  function setValues($valuesArray=NULL){
