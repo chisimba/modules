@@ -86,7 +86,7 @@ class nodechatlib extends object
 
         $document = new DOMDocument();
         $iframe = $document->createElement('iframe');
-        $iframe->setAttribute('src', 'http://'.$_SERVER['HOST_NAME'].':'.$port);
+        $iframe->setAttribute('src', 'http://'.$_SERVER['SERVER_NAME'].':'.$port);
         $iframe->setAttribute('style', 'border:none;width:'.$width.';height:'.$height);
         $document->appendChild($iframe);
         return $document->saveHTML();
