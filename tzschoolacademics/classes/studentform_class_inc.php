@@ -28,6 +28,7 @@ class studentform extends object{
    private $telephoneValue='';
    private $emailValue='';
    private $faxValue='';
+   private $relationValue='';
    
    public function init(){
        $this->lang=$this->getObject('language', 'language');
@@ -59,7 +60,7 @@ class studentform extends object{
         $lNameField=new textinput('lastname');
         $form->addToForm($lNameLabel->show());
         $lNameField->setValue($this->lNameValue);
-        $form->addToForm($fNameField->show());
+        $form->addToForm($lNameField->show());
 
         $oNameLabel=new label($this->lang->languageText('mod_tzschoolacademics_oname_label','tzschoolacademics'),'othernames');
         $oNameField=new textinput('othernames');
@@ -77,6 +78,7 @@ class studentform extends object{
 
         $dobLabel=new label($this->lang->languageText('mod_tzschoolacademics_dob_label','tzschoolacademics'),'dob');
         $dobField=$this->getObject('datepicker', 'htmlelements');
+       // $dobField->setName('dob');
         $form->addToForm($dobLabel->show().'<br>');
        
         $dobField->setDefaultDate($this->dobValue);
@@ -96,7 +98,7 @@ class studentform extends object{
         $form->addToForm($classField->show().'<br>');
 
         $yosLabel=new label($this->lang->languageText('mod_tzschoolacademics_yearofstudy_label','tzschoolacademics'),'yearofstudy');
-        $yosField=new dropdown('class');
+        $yosField=new dropdown('yos');
         $form->addToForm($yosLabel->show().'<br>');
         $yosField->addFromDB(null, null, null, null);
         $yosField->setValue($this->yosValue);
@@ -113,20 +115,28 @@ class studentform extends object{
         $glNameField=new textinput('glastname');
         $form->addToForm($lNameLabel->show());
         $glNameField->setValue($this->glNameValue);
-        $form->addToForm($gfNameField->show());
+        $form->addToForm($glNameField->show());
 
         $goNameField=new textinput('gothernames');
         $form->addToForm($oNameLabel->show());
         $goNameField->setValue($this->goNameValue);
         $form->addToForm($goNameField->show().'<br>');
 
+        $relationLabel=new label($this->lang->languageText('mod_tzschoolacademics_relation_label','tzschoolacademics'),'relation');
+        $relationField=new textinput('relation');
+        $form->addToForm($relationLabel->show().'<br>');
+        $relationField->setValue($this->relationValue);
+        $form->addToForm($relationField->show().'<br/>');
+
         $nationalityLabel=new label($this->lang->languageText('mod_tzschoolacademics_nationality_label','tzschoolacademics'),'nationality');
-      //  $nationalityField=new dropdown('nationality');
+       // $nationalityField=new dropdown();
         $nationalityField=  $this->getObject('countries', 'utilities');
        // $nationalityField->getDropDown();
         $form->addToForm($nationalityLabel->show().'<br/>');
        // $nationalityField->setValue($this->nationalityValue);
-        $form->addToForm( $nationalityField->getDropDown(null,$this->nationalityValue).'<br>');
+        $nationality=$nationalityField->getDropDown('country',$this->nationalityValue);
+       // $nationality->name='nationality';
+        $form->addToForm( $nationality.'<br>');
 
         $addressLabel=new label($this->lang->languageText('mod_tzschoolacademics_address_label','tzschoolacademics'),'address');
         $addressField=new textinput('address');
@@ -168,12 +178,12 @@ class studentform extends object{
     }
 
         private function getAction(){
-        $action=$this->getParam('action','edit');
-        if($action=='edit')
-            $formAction=  $this->uri(array('action'=>'edit'),'tzschoolacademics');
+        $action=$this->getParam('action','edit_student');
+        if($action=='edit_student')
+            $formAction=  $this->uri(array('action'=>'edit_student'),'tzschoolacademics');
 
         else
-            $formAction=$this->uri (array('action'=>'add'),'tzschoolacademics');
+            $formAction=$this->uri (array('action'=>'add_student'),'tzschoolacademics');
         return $formAction;
     }
 
