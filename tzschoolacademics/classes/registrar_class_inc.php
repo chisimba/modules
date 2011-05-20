@@ -80,7 +80,6 @@ parent::init('tbl_contact');
                   'empl_id'=>  $this->getParam('employeeid'),
                     'rank'=>  $this->getParam('rank')
                 );
-                echo $teacher['lastname'];
                 $this->_tableName='tbl_teacher';
                 $this->insert($teacher);
     }
