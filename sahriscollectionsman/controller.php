@@ -114,6 +114,9 @@ class sahriscollectionsman extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
             case NULL:
+            default:
+                $this->nextAction('viewsites');
+                break;
 
             case 'addform' :
                 // check that there is a collection to add to first...
@@ -141,17 +144,57 @@ class sahriscollectionsman extends controller
                 $this->objDbColl->insertCollection($insarr);
                 $this->nextAction('');
                 break;
+                
+            case 'viewcollection' :
+                $siteid = $this->getParam('siteid');
+                $colls = $this->objDbColl->getCollectionsBySiteId($siteid);
+                $collect = $this->objCollOps->formatCollections($colls);
+                $this->setVarByRef('collect', $collect);
+                return 'sitecollections_tpl.php';
+                break;
 
             case 'addrec' :
-                $acno = $this->getParam('ano');
+                $sitename = $this->getParam('sitename');
+                $collection = $this->getParam('collection');
+                $objtype = $this->getParam('objtype');
+                $objloc = $this->getParam('objloc');
+                $objstatus = $this->getParam('objstatus');
+                // $username = $this->objUser->userName($this->objUser->userId());
+                $accno = $this->getParam('ano');
                 $coll = $this->getParam('coll');
                 $title = $this->getParam('title');
                 $desc = $this->getParam('desc');
                 // $datecreated = $this->getParam('datecreated');
                 $media = $this->getParam('media');
                 $comment = $this->getParam('comment');
-                $insarr = array('userid' => $this->objUser->userId(), 'accno' => $acno, 'collection' => $coll, 'title' => $title, 'description' => $desc, 'media' => $media, 'comment' => $comment);
-                
+                // parse the site name and optionally create a new one if needs be
+                $sid = $this->objDbColl->getSiteByName($sitename);
+                if($sid == NULL) {
+                    $siteabbr = metaphone($sitename, 3);
+                    $siteins = array('userid' => $this->objUser->userId(), 'sitename' => $sitename, 'siteabbr' => $siteabbr, 
+                                     'sitemanager' => NULL, 'sitecontact' => NULL, 'lat' => NULL, 'lon' => NULL, 'comment' => NULL);
+                    $sid = $this->objDbColl->addSiteData($siteins);
+                }
+                    
+                $sitedet = $this->objDbColl->getSiteDetails($sid);
+                $siteaccabbr = $sitedet[0]['siteabbr'];
+                $sitecount = $this->objDbColl->countItemsInSite($sid);
+                  
+                $siteacc = $siteaccabbr.$sitecount;
+                    
+                // get the collection id from name
+                $collid = $this->objDbColl->getCollByName($collection);
+                if($collid == NULL) {
+                    // create a collection as it doesn't exist
+                    $insarr = array('userid' => $this->objUser->userId(), 'collname' => $collection, 'comment' => NULL, 
+                                    'sitename' => $sitename, 'siteid' => $sid);
+                    $collid = $this->objDbColl->insertCollection($insarr);
+                }
+                    
+                $insarr = array('userid' => $this->objUser->userId(), 'siteid' => $sid, 'siteacc' => $siteacc,
+                                'accno' => $accno, 'objtype' => $objtype, 'collection' => $collid, 
+                                'title' => $title, 'description' => $description, 'media' => $media, 'comment' => $comment, 'location' => $objloc, 
+                                'status' => $objstatus);
                 $res = $this->objDbColl->insertRecord($insarr);
                 $this->nextAction('');
                 break;
@@ -169,6 +212,17 @@ class sahriscollectionsman extends controller
                 $res = $this->objDbColl->getSingleRecordById($id);
                 $this->setVarByRef('res', $res);
                 return 'viewsingle_tpl.php';
+                break;
+                
+            case 'viewrecords' :
+                $collid = $this->getParam('collid');
+                $recs = $this->objDbColl->getCollRecords($collid);
+                $records = NULL;
+                foreach($recs as $rec) {
+                    $records .= $this->objCollOps->formatRecord($rec);
+                }
+                $this->setVarByRef('records', $records);
+                return 'collrecords_tpl.php';
                 break;
 
             case 'search':
@@ -189,10 +243,55 @@ class sahriscollectionsman extends controller
                 $this->setVarByRef('form', $form);
                 return 'search_tpl.php';
                 break;
-
-            default:
+                
+            case 'uploadcsv' :
+                $uploadform = $this->objCollOps->uploadCsvForm();
+                $this->setVarByRef('uploadform', $uploadform);
+                return 'uploadcsv_tpl.php';
+                break;
+                
+            case 'importcsv' :
+                $csv = $this->getParam('csv');
+                $objFile = $this->getObject('dbfile', 'filemanager');
+                $file = $objFile->getFullFilePath($csv);
+                $collarr = $this->objCollOps->parseCSV($file);
+                $this->objCollOps->processCsvData($collarr);
                 $this->nextAction('');
                 break;
+                
+            case 'viewsites' :
+                $sites = $this->objDbColl->getAllSites();
+                $details = $this->objCollOps->formatSites($sites);
+                $this->setVarByRef('details', $details);
+                return 'sitelist_tpl.php';
+                break;
+                
+            case 'editsite' :
+                $siteid = $this->getParam('siteid');
+                $siteform = $this->objCollOps->editSiteForm($siteid);
+                $this->setVarByRef('siteform', $siteform);
+                return 'site_tpl.php';
+                break;
+                
+            case 'updatesitedata' :
+                $id = $this->getParam('id');
+                $geotags = $this->getParam('geotag');
+                $locarr = explode(",", $geotags);
+                $lat = trim($locarr[0]);
+                $lon = trim($locarr[1]);
+                $sn = $this->getParam('sn');
+                $siteabbr = metaphone($sn, 3);
+                $sm = $this->getParam('sm');
+                $sc = $this->getParam('sc');
+                $scom = $this->getParam('scom');
+                
+                $updatearr = array('userid' => $this->objUser->userId(), 'sitename' => $sn, 'sitemanager' => $sm, 
+                                   'comment' => $scom, 'lat' => $lat, 'lon' => $lon, 'siteabbr' => $siteabbr, 'sitecontact' => $sc);
+                $this->objDbColl->updateSiteInfo($updatearr, $id);
+                $this->nextAction('viewsites');
+                break;
+
+            
         }
     }
 

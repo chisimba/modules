@@ -89,11 +89,12 @@ class sahriscollectionsops extends object {
      * @access public
      */
     public function init() {
-        $this->objLanguage   = $this->getObject('language', 'language');
-        $this->objConfig     = $this->getObject('altconfig', 'config');
-        $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
-        $this->objUser       = $this->getObject('user', 'security');
-        $this->objDbColl     = $this->getObject('dbsahriscollections');
+        $this->objLanguage    = $this->getObject('language', 'language');
+        $this->objConfig      = $this->getObject('altconfig', 'config');
+        $this->objSysConfig   = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->objUser        = $this->getObject('user', 'security');
+        $this->objDbColl      = $this->getObject('dbsahriscollections');
+        $this->objFileIndexer = $this->getObject('indexfileprocessor', 'filemanager');
     }
 
     /**
@@ -264,6 +265,53 @@ class sahriscollectionsops extends object {
 
         return $ret;
     }
+    
+    /**
+     * Method to show a form to upload a collection csv file
+     *
+     * @access public
+     * @param void
+     * @return string form
+     */
+    public function uploadCsvForm() {
+        $this->loadClass('form', 'htmlelements');
+        // $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('htmlheading', 'htmlelements');
+        // $this->loadClass('htmlarea', 'htmlelements');
+        // $this->loadClass('dropdown', 'htmlelements');
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'sahriscollectionsman', 'Required').'</span>';
+        $ret = NULL;
+        // start the form
+        $form = new form ('uploadcsv', $this->uri(array('action'=>'importcsv'), 'sahriscollectionsman'));
+        $form->extra = 'enctype="multipart/form-data"';
+        $table = $this->newObject('htmltable', 'htmlelements');        
+        // add some rules
+        //$form->addRule('csv', $this->objLanguage->languageText("mod_sahriscollectionsman_needcsv", "sahriscollectionsman"), 'required');
+
+        // csv file
+        $table->startRow();
+        $objUpload = $this->newObject('selectfile', 'filemanager');
+        $objUpload->name = 'csv';
+        $objUpload->restrictFileList = array('csv');
+        $csvLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_csvfile', 'sahriscollectionsman').'&nbsp;', 'input_csv');
+        $table->addCell($csvLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($objUpload->show().$required);
+        $table->endRow();
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->legend = ''; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
+        $fieldset->contents = $table->show();
+        // add the form to the fieldset
+        $form->addToForm($fieldset->show());
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_sahriscollectionsman_uploadcsv", "sahriscollectionsman"));
+        $button->setToSubmit();
+        $form->addToForm('<p align="center"><br />'.$button->show().'</p>');
+        $ret .= $form->show();
+
+        return $ret;
+    }
 
     /**
      * Method to format a single retrieved record and display it
@@ -275,7 +323,7 @@ class sahriscollectionsops extends object {
     public function formatRecord($record)
     {
         // var_dump($record); die();
-        $record = $record[0];
+        // $record = $record[0];
         $this->objWashout = $this->getObject('washout', 'utilities');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
@@ -367,10 +415,24 @@ class sahriscollectionsops extends object {
         $searchrec->link = $this->objLanguage->languageText("mod_sahriscollectionsman_searchrecords", "sahriscollectionsman");
         $searchrec = $searchrec->show();
         
+        // import CSV
+        $csvin = $this->newObject('link', 'htmlelements');
+        $csvin->href = $this->uri(array('action' => 'uploadcsv'));
+        $csvin->link = $this->objLanguage->languageText("mod_sahriscollectionsman_uploaddatafile", "sahriscollectionsman");
+        $csvin = $csvin->show();
+        
+        // Sites list
+        $sl = $this->newObject('link', 'htmlelements');
+        $sl->href = $this->uri(array('action' => 'viewsites'));
+        $sl->link = $this->objLanguage->languageText("mod_sahriscollectionsman_siteslist", "sahriscollectionsman");
+        $sl = $sl->show();
+        
         $txt = "<ul";
+        $txt .= "<li>".$sl."</li>";
         $txt .= "<li>".$createcoll."</li>";
         $txt .= "<li>".$addrec."</li>";
         $txt .= "<li>".$searchrec."</li>";
+        $txt .= "<li>".$csvin."</li>";
         $txt .= "</ul>";
         
         $ret = $menubox->show($this->objLanguage->languageText("mod_sahriscollectionsman_menu", "sahriscollectionsman"), $txt);
@@ -441,6 +503,382 @@ class sahriscollectionsops extends object {
         
         return $ret;
     }
+    
+    public function parseCSV($file) {
+        $row = 1;
+        if (($handle = fopen($file, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $num = count($data);
+                $rows[] = $data;
+                $row++;
+            }
+            fclose($handle);
+        }
+        return $rows;
+    }
+    
+    public function processMediaFromCSV($file, $username, $fname) {
+        $userid = $this->objUser->getUserId($username);
+        if(!file_exists($this->objConfig->getContentBasePath().'users/'.$userid."/"))
+        {
+            @mkdir($this->objConfig->getContentBasePath().'users/'.$userid."/");
+            @chmod($this->objConfig->getContentBasePath().'users/'.$userid."/", 0777);
+        }
+        
+        $objOverwriteIncrement = $this->getObject('overwriteincrement', 'filemanager');
+        $fname = $objOverwriteIncrement->checkfile($fname, 'users/'.$userid);
+        
+        $localfile = $this->objConfig->getContentBasePath().'users/'.$userid."/".$fname;
+        file_put_contents($localfile, $file);
 
+        $fmname = basename($fname);
+        $fmpath = 'users/'.$userid.'/'.$fmname;
+
+        // Add to users fileset
+        $fileId = $this->objFileIndexer->processIndexedFile($fmpath, $userid);
+        
+        return $fileId;
+    }
+    
+    public function processCsvData($collarr) {
+        foreach($collarr as $rec) {
+            $sitename = $rec[0];
+            $collection = $rec[1];
+            $accno = $rec[2];
+            $objtype = $rec[3];
+            $title = $rec[4];
+            $description = $rec[5];
+            $objloc = $rec[6];
+            $objstatus = $rec[7];
+            $comment = $rec[8];
+            $media64 = $rec[9];
+            $filename = $rec[10];
+            $username = $rec[11];
+            if($media64 != NULL) {
+                $media = $this->processMediaFromCSV($media64, $username, $filename);
+            }
+            else {
+                $media = NULL;
+            }
+                    
+            // parse the site name and optionally create a new one if needs be
+            $sid = $this->objDbColl->getSiteByName($sitename);
+            if($sid == NULL) {
+                $siteabbr = metaphone($sitename, 3);
+                $siteins = array('userid' => $this->objUser->userId($username), 'sitename' => $sitename, 'siteabbr' => $siteabbr, 
+                                 'sitemanager' => NULL, 'sitecontact' => NULL, 'lat' => NULL, 'lon' => NULL, 'comment' => NULL);
+                $sid = $this->objDbColl->addSiteData($siteins);
+            }
+                    
+            $sitedet = $this->objDbColl->getSiteDetails($sid);
+            $siteaccabbr = $sitedet[0]['siteabbr'];
+            $sitecount = $this->objDbColl->countItemsInSite($sid);
+                  
+            $siteacc = $siteaccabbr.$sitecount;
+                    
+            // get the collection id from name
+            $collid = $this->objDbColl->getCollByName($collection);
+            if($collid == NULL) {
+                // create a collection as it doesn't exist
+                $insarr = array('userid' => $this->objUser->userId($username), 'collname' => $collection, 'comment' => NULL, 
+                                'sitename' => $sitename, 'siteid' => $sid);
+                $collid = $this->objDbColl->insertCollection($insarr);
+            }
+                    
+            $insarr = array('userid' => $this->objUser->userId($username), 'siteid' => $sid, 'siteacc' => $siteacc,
+                            'accno' => $accno, 'objtype' => $objtype, 'collection' => $collid, 
+                            'title' => $title, 'description' => $description, 'media' => $media, 'comment' => $comment, 'location' => $objloc, 
+                            'status' => $objstatus);
+            $res = $this->objDbColl->insertRecord($insarr);
+            $insarr = NULL;
+            $media = NULL;
+        }
+    }
+    
+    public function formatSites($sites) {
+        $ret = NULL;
+        foreach($sites as $site) {
+            $fb = $this->newObject('featurebox', 'navigation');
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $edit = $this->newObject('geticon', 'htmlelements');
+            $edit->setIcon('edit_sm');
+            // edit link
+            $ed = $this->newObject('link', 'htmlelements');
+            $ed->href = $this->uri(array('action' => 'editsite', 'siteid' => $site['id']));
+            $ed->link = $edit->show();
+            
+            $table->startRow();
+            $smLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_sitemanager', 'sahriscollectionsman').'&nbsp;', 'input_sitemanager');
+            $table->addCell($smLabel->show(), 150, NULL, 'left');
+            $table->addCell('&nbsp;', 5);
+            $table->addCell($site['sitemanager']);
+            $table->endRow();
+            
+            $table->startRow();
+            $scLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_sitecontact', 'sahriscollectionsman').'&nbsp;', 'input_sitecontact');
+            $table->addCell($scLabel->show(), 150, NULL, 'left');
+            $table->addCell('&nbsp;', 5);
+            $table->addCell($site['sitecontact']);
+            $table->endRow();
+            
+            // get the number of collections at the site
+            $numcoll = $this->objDbColl->getCollCountBySite($site['id']);
+            // collections link list
+            $c = $this->newObject('link', 'htmlelements');
+            $c->href = $this->uri(array('action' => 'viewcollection', 'siteid' => $site['id']));
+            $c->link = $this->objLanguage->languageText("mod_sahriscollectionsman_viewcollectionsinsite", "sahriscollectionsman");
+            $c = $c->show();
+        
+            $table->startRow();
+            $ncLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_numcoll', 'sahriscollectionsman').'&nbsp;', 'input_numcoll');
+            $table->addCell($ncLabel->show(), 150, NULL, 'left');
+            $table->addCell('&nbsp;', 5);
+            $table->addCell($numcoll." (".$c.")");
+            $table->endRow();
+            
+            $ret .= $fb->show($site['sitename']." (".$site['siteabbr'].") ".$ed->show(), $table->show()); 
+        }
+        
+        return $ret;
+    }
+    
+    /**
+     * Method to show a form to edit a site
+     *
+     * @access public
+     * @param void
+     * @return string form
+     */
+    public function editSiteForm($siteid) {
+        $d = $this->objDbColl->getSiteDetails($siteid);
+        $d = $d[0];
+        
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('htmlheading', 'htmlelements');
+        $this->loadClass('htmlarea', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'sahriscollectionsman', 'Required').'</span>';
+      
+        $ret = NULL;
+        
+        // start the form
+        $form = new form ('add', $this->uri(array('action'=>'updatesitedata', 'id' => $d['id']), 'sahriscollectionsman'));
+        $form->extra = 'enctype="multipart/form-data"';
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->startRow();
+        // add some rules
+        // $form->addRule('', $this->objLanguage->languageText("mod_collectionsman_needsomething", "collectionsman"), 'required');
+
+        // Site name
+        $sn = new textinput();
+        $sn->name = 'sn';
+        $sn->width ='50%';
+        $sn->setValue($d['sitename']);
+        $snLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_sitename', 'sahriscollectionsman').'&nbsp;', 'input_sn');
+        $table->startRow();
+        $table->addCell($snLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($sn->show());
+        $table->endRow();
+        
+        // Site Manager
+        $sm = new textinput();
+        $sm->setValue($d['sitemanager']);
+        $sm->name = 'sm';
+        $sm->width ='50%';
+        $smLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_sitemanager', 'sahriscollectionsman').'&nbsp;', 'input_sm');
+        $table->startRow();
+        $table->addCell($smLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($sm->show());
+        $table->endRow();
+
+        // Site contact
+        $sc = $this->newObject('htmlarea', 'htmlelements');
+        $sc->name = 'sc';
+        $sc->value = $d['sitecontact'];
+        $sc->width ='80%';
+        $scLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_sitecontact', 'sahriscollectionsman').'&nbsp;', 'input_sc');
+        $table->startRow();
+        $table->addCell($scLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $msg->toolbarSet = 'simple';
+        $table->addCell($sc->show());
+        $table->endRow();
+        
+        // Site comment
+        $scom = new textinput();
+        $scom->name = 'scom';
+        $scom->setValue($d['comment']);
+        $scom->width ='50%';
+        $scomLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_sitecomment', 'sahriscollectionsman').'&nbsp;', 'input_scom');
+        $table->startRow();
+        $table->addCell($scomLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($scom->show());
+        $table->endRow();
+        
+        // site location map
+        $map = $this->geolocformelement($d);
+        $gtlabel = new label($this->objLanguage->languageText("mod_sahriscollectionsman_geoposition", "sahriscollectionsman") . ':', 'input_geotags');
+        $gtags = '<div id="map"></div>';
+        $geotags = new textinput('geotag', NULL, NULL, '100%');
+        if (isset($d['lat']) && isset($d['lon'])) {
+            $geotags->setValue($d['lat'].", ".$d['lon']);
+        }
+        
+        $table->startRow();
+        $table->addCell($gtlabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($gtags.$geotags->show());
+        $table->endRow();
+        
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->legend = ''; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
+        $fieldset->contents = $table->show();
+        // add the form to the fieldset
+        $form->addToForm($fieldset->show());
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_sahriscollectionsman_updatesite", "sahriscollectionsman"));
+        $button->setToSubmit();
+        $form->addToForm('<p align="center"><br />'.$button->show().'</p>');
+        $ret .= $form->show();
+
+        return $ret;
+    }
+    
+    /**
+     * Method used to set geolocation coordinates
+     *
+     * Users are able to set geographic coordinates by either completing a text input or clicking on a map
+     *
+     * @param array $editparams
+     * @param boolean $eventform
+     * @return string
+     */
+    public function geolocformelement($d) {
+        $lat = $d['lat'];
+        $lon = $d['lon'];
+        if($lat == NULL || $lon == NULL) {
+            //latlon defaults -29.113775395114,  26.2353515625
+            $lat = -29.113775395114;
+            $lon = 26.2353515625;
+        }
+        $zoom = 5;
+        $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
+        $css = '<style type="text/css">
+        #map {
+            width: 100%;
+            height: 350px;
+            border: 1px solid black;
+            background-color: white;
+        }
+    </style>';
+
+        $google = "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$gmapsapikey."' type=\"text/javascript\"></script>";
+        $olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
+        $js = "<script type=\"text/javascript\">
+        var lon = 5;
+        var lat = 40;
+        var zoom = 17;
+        var map, layer, drawControl, g;
+
+        OpenLayers.ProxyHost = \"/proxy/?url=\";
+        function init(){
+            g = new OpenLayers.Format.GeoRSS();
+            map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20, projection: new OpenLayers.Projection(\"EPSG:900913\"), displayProjection: new OpenLayers.Projection(\"EPSG:4326\") });
+            var normal = new OpenLayers.Layer.Google( \"Google Map\" , {type: G_NORMAL_MAP, 'maxZoomLevel':18} );
+            var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
+            
+            map.addLayers([normal, hybrid]);
+
+            map.addControl(new OpenLayers.Control.MousePosition());
+            map.addControl( new OpenLayers.Control.MouseDefaults() );
+            map.addControl( new OpenLayers.Control.LayerSwitcher() );
+            map.addControl( new OpenLayers.Control.PanZoomBar() );
+
+            map.setCenter(new OpenLayers.LonLat($lon,$lat), $zoom);
+
+            map.events.register(\"click\", map, function(e) {
+                var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" +
+                                          + lonlat.lon
+            });
+
+        }
+    </script>";
+
+        // add the lot to the headerparams...
+        $this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
+        $this->appendArrayVar('bodyOnLoad', "init();");
+    } 
+    
+    public function formatCollections($colls) {
+        $ret = NULL;
+        foreach($colls as $coll) {
+            //var_dump($coll);
+            $this->objWashout = $this->getObject('washout', 'utilities');
+            $this->loadClass('label', 'htmlelements');
+            $this->loadClass('htmlheading', 'htmlelements');
+            $this->loadClass('htmlarea', 'htmlelements');
+            $ret = NULL;
+            $table = $this->newObject('htmltable', 'htmlelements');
+            
+            $table->startRow();
+            $snLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_sitename', 'sahriscollectionsman').'&nbsp;', 'input_coll');
+            $table->addCell($snLabel->show(), 150, NULL, 'right');
+            $sname = $coll['sitename'];
+            $table->addCell('&nbsp;', 5);
+            $table->addCell($sname);
+            $table->endRow();
+            
+            $table->startRow();
+            $collLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collection', 'sahriscollectionsman').'&nbsp;', 'input_coll');
+            $table->addCell($collLabel->show(), 150, NULL, 'right');
+            $collname = $coll['collname'];
+            $table->addCell('&nbsp;', 5);
+            $table->addCell($collname);
+            $table->endRow();
+            
+            // comment
+            $table->startRow();
+            $commLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_notes', 'sahriscollectionsman').'&nbsp;', 'input_coll');
+            $table->addCell($commLabel->show(), 150, NULL, 'right');
+            $comm = $coll['comment'];
+            $table->addCell('&nbsp;', 5);
+            $table->addCell($comm);
+            $table->endRow();
+            
+            // date created
+            $table->startRow();
+            $dcLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_datecreated', 'sahriscollectionsman').'&nbsp;', 'input_coll');
+            $table->addCell($dcLabel->show(), 150, NULL, 'right');
+            $dc = $coll['datecreated'];
+            $table->addCell('&nbsp;', 5);
+            $table->addCell($dc);
+            $table->endRow();
+            
+            // view records link
+            $r = $this->newObject('link', 'htmlelements');
+            $r->href = $this->uri(array('action' => 'viewrecords', 'collid' => $coll['id']));
+            $r->link = $this->objLanguage->languageText("mod_sahriscollectionsman_viewrecordsincoll", "sahriscollectionsman");
+            $r = $r->show();
+            $table->startRow();
+            $table->addCell('');
+            $table->addCell('&nbsp;', 5);
+            $table->addCell($r);
+            $table->endRow();
+            
+            $fieldset = $this->newObject('fieldset', 'htmlelements');
+            $fieldset->legend = ''; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
+            $fieldset->contents = $table->show();
+
+            $ret .= $fieldset->show();
+
+        
+        }
+        return $ret;
+    }  
 }
 ?>

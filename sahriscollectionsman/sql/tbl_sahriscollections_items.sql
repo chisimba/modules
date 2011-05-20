@@ -23,12 +23,32 @@ $fields = array(
 	    'type' => 'text',
 	    'length' => 255,
 	    ),
+	'siteacc' => array(
+	    'type' => 'text',
+	    'length' => 255,
+	    ),
+	'siteid' => array(
+	    'type' => 'text',
+	    'length' => 255,
+	    ),
+	'objtype' => array(
+	    'type' => 'text',
+	    'length' => 255,
+	    ),
 	'title' => array(
 	    'type' => 'text',
 	    'length' => 255,
 	    ),
 	'description' => array(
 	    'type' => 'clob',
+	    ),
+	'location' => array(
+	    'type' => 'text',
+	    'length' => 255,
+	    ),
+	'status' => array(
+	    'type' => 'text',
+	    'length' => 255,
 	    ),
 	'media' => array(
 	    'type' => 'text',

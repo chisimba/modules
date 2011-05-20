@@ -1,9 +1,9 @@
 <?php
 // Table Name
-$tablename = 'tbl_sahriscollections_collections';
+$tablename = 'tbl_sahriscollections_sites';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'SAHRIS collections', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'SAHRIS Sites', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -15,15 +15,26 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
-    'sitename' => array(
+	'sitename' => array(
 	    'type' => 'text',
 	    'length' => 255,
 	    ),
-	'siteid' => array(
+	'siteabbr' => array(
 	    'type' => 'text',
 	    'length' => 255,
 	    ),
-	'collname' => array(
+	'sitemanager' => array(
+	    'type' => 'text',
+	    'length' => 255,
+	    ),
+	'sitecontact' => array(
+	    'type' => 'clob',
+	    ),
+	'lat' => array(
+	    'type' => 'text',
+	    'length' => 255,
+	    ),
+	'lon' => array(
 	    'type' => 'text',
 	    'length' => 255,
 	    ),

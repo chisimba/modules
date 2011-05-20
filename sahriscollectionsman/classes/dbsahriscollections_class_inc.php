@@ -106,6 +106,16 @@ class dbsahriscollections extends dbtable
         return $det[0]['id'];
     }
     
+    public function getCollectionsBySiteId($sid) {
+        $this->changeTable('tbl_sahriscollections_collections');
+        return $this->getAll("WHERE siteid = '$sid'");
+    }
+    
+    public function getCollCountBySite($sid) {
+        $this->changeTable('tbl_sahriscollections_collections');
+        return $this->getRecordCount("WHERE siteid = '$sid'");
+    }
+    
     public function insertRecord($insarr) {
         $this->changeTable('tbl_sahriscollections_items');
         $insarr['datecreated'] = $this->now();
@@ -117,6 +127,16 @@ class dbsahriscollections extends dbtable
         return $this->getAll("WHERE accno = '$acno' AND collection = '$coll'");
     }
     
+    public function getCollRecords($collid) {
+        $this->changeTable('tbl_sahriscollections_items');
+        return $this->getAll("WHERE collection = '$collid'");
+    }
+    
+    public function countItemsInSite($sid) {
+        $this->changeTable('tbl_sahriscollections_items');
+        return $this->getRecordCount("WHERE siteid = '$sid'");
+    }
+    
     public function getSingleRecordById($id) {
         $this->changeTable('tbl_sahriscollections_items');
         return $this->getAll("WHERE id = '$id'");
@@ -126,6 +146,36 @@ class dbsahriscollections extends dbtable
         $this->changeTable('tbl_sahriscollections_items');
         $res = $this->getAll("WHERE description LIKE '%%$q%%' OR accno LIKE '%%$q%%' OR title LIKE '%%$q%%'");
         return $res;
+    }
+    
+    public function addSiteData($siteins) {
+        $this->changeTable('tbl_sahriscollections_sites');
+        return $this->insert($siteins);
+    }
+    
+    public function getSiteByName($sitename) {
+        $this->changeTable('tbl_sahriscollections_sites');
+        $det = $this->getAll("WHERE sitename = '$sitename'");
+        return $det[0]['id'];
+    }
+    
+    public function getSiteDetails($sid) {
+        $this->changeTable('tbl_sahriscollections_sites');
+        $det = $this->getAll("WHERE id = '$sid'");
+        return $det;
+    }
+    
+    public function getAllSites() {
+        $this->changeTable('tbl_sahriscollections_sites');
+        return $this->getAll();
+    }
+    
+    public function updateSiteInfo($updatearr, $id) {
+        $this->changeTable('tbl_sahriscollections_sites');
+        $this->update('id', $id, $updatearr, 'tbl_sahriscollections_sites');
+        $this->changeTable('tbl_sahriscollections_collections');
+        $this->update('siteid', $id, array('sitename' => $updatearr['sitename']), 'tbl_sahriscollections_collections');
+        return;
     }
     
     private function changeTable($table) {

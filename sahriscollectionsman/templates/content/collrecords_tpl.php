@@ -13,12 +13,13 @@ $leftColumn = NULL;
 
 // Add in a heading
 $header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_collectionsman_viewrecheader', 'sahriscollectionsman');
+$header->str = $this->objLanguage->languageText('mod_sahriscollectionsman_collectionrecsheader', 'sahriscollectionsman');
 $header->type = 1;
 
 $middleColumn .= $header->show();
 
-$middleColumn .= $this->objCollOps->formatRecord($res[0]);
+$middleColumn .= $records;
+
 $leftColumn .= $this->leftMenu->show();
 $leftColumn .= $this->objCollOps->menuBox();
 
