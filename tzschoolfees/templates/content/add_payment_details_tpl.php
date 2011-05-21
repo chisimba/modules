@@ -4,6 +4,6 @@
  * and open the template in the editor.
  */
 $details = $this->getObject('paymentdetails');
-$details->show();
+echo $details->showCheckForm();
 
 ?>

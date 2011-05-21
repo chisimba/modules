@@ -23,7 +23,7 @@ if (!
 class tzschoolfees extends controller {
 
     public $lang;
-  
+
 
     public function init() {
 
@@ -41,15 +41,20 @@ $action = $this->getParam('action','main');
   switch ($action) {
       case 'add_details':
              return 'add_payment_details_tpl.php';
+             break;
 
-          break;
+      case 'add':
+            return 'after_confirm_tpl.php';
+            break;
+
+
       case 'view_details':
             $view = $this->getParam('submit');
 
             if (!empty($view)) {
 
                     $regno = $this->getParam('reg_no');
-                    
+
                     $this->setVar('option', 'view');
                     $this->setVar('regno', $regno);
                     return 'view_payment_details_tpl.php';
@@ -64,9 +69,9 @@ $action = $this->getParam('action','main');
   }
 
 
-     
+
         }
-    
+
  public function  requiresLogin($action) {
         return false;
     }

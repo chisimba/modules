@@ -51,7 +51,7 @@ class paymentdetails extends Object {
      
         
          $lname=new label('Surname');
-         $lnamefield = new textinput('lname');
+         $lnamefield = new textinput('middlename');
 
          $mname=new label('Other');
          $mnamefield = new textinput('mname');
@@ -59,7 +59,7 @@ class paymentdetails extends Object {
 
 //student class
         $classlabel=new label('Class name');
-        $classfield = new dropdown('class');
+        $classfield = new dropdown('class_name');
         $classfield->addOption('f1','FORM ONE');
         $classfield->addOption('f2','FORM TWO');
         $classfield->addOption('f3','FORM THREE');
@@ -69,7 +69,7 @@ class paymentdetails extends Object {
 
 //student stream
         $streamlabel=new label('Stream: ');
-        $streamfield = new dropdown('stream');
+        $streamfield = new dropdown('class_stream');
         $streamfield->addOption('a','A');
         $streamfield->addOption('b','B');
         $streamfield->addOption('c','C');
@@ -79,44 +79,51 @@ class paymentdetails extends Object {
 
 //Bank statement
         $banklabel = new label('Bank name: ');
-        $bankfield = new dropdown('bank');
+        $bankfield = new dropdown('bank_name');
         $bankfield->addOption('crdb','CRDB');
         $bankfield->addOption('nmb','NMB');
         $bankfield->addOption('nbc', 'NBC');
         $bankfield->addOption('exim','EXIM BANK');
 
         $branchlabel = new label('Branch');
-        $branchfield = new textinput('branch');
+        $branchfield = new textinput('branch_name');
+
+        $receiptLabel = new label('Receipt no#');
+        $receiptfield = new textinput('receipt_no');
 
 
 
 //amount paid by student
-        $amountlabel=new label('Amount ');
-        $amountfield = new textinput('amount');
+        $amountlabel=new label('Amount payable');
+        $amountfield = new textinput('amount_paid');
+
+ //desc.
+         $descriptionlabel=new label('Description');
+        $descriptionfield = new textinput('description');
 
  //Date when payment were done
         $datelabel = new label('Date ');
         $datepiki = $this->getObject('datepicker', 'htmlelements');
-        $datepiki->setName('payment_date');
+        $datepiki->setName('date_paid');
 
 //installments by student
         $installmntlabel=new label('Installment');
 
 
-        $installmentfield = new dropdown('installments');
-        $installmentfield->addOption('full','FULL PAYMENT');
-        $installmentfield->addOption('install','INSTALLMENT');
+        $installmentfield = new dropdown('installment');
+        $installmentfield->addOption('full','ANNUAL');
+        $installmentfield->addOption('install','TERM');
 
 
 //complete payment
-        $paymentlabel=new label('Complete payment');
+        $paymentlabel=new label('Amount');
         $paymentfield = new textinput('amount');
 
 
 
 //amount payable by student
-        $payablelabel=new label('Amount payable');
-        $payablefield = new textinput('payable');
+        $payablelabel=new label('Amount');
+        $payablefield = new textinput('amount_paid');
       
 
         $saveButton=new button('register');
@@ -124,103 +131,106 @@ class paymentdetails extends Object {
         $saveButton->value='Save details';
 
 
-        $objTable = new htmlTable();
+        $objTable1 = new htmlTable();
         
   //first row
-        $objTable->startRow();
+        $objTable1->startRow();
         
-        $objTable->addCell($fname->show().':');
-        $objTable->addCell($fnamefield->show());
+        $objTable1->addCell($fname->show().':');
+        $objTable1->addCell($fnamefield->show());
 
-        $objTable->addCell($lname->show().':');
-        $objTable->addCell($lnamefield->show());
+        $objTable1->addCell($lname->show().':');
+        $objTable1->addCell($lnamefield->show());
 
-        $objTable->addCell($mname->show().':');
-        $objTable->addCell($mnamefield->show());
-
-        $objTable->endRow();
+        $objTable1->endRow();
         
 //second row
-        $objTable->startRow();
+        $objTable1->startRow();
 
-        $objTable->addCell($classlabel->show().':');
-        $objTable->addCell($classfield->show());
+        $objTable1->addCell($classlabel->show().':');
+        $objTable1->addCell($classfield->show());
 
-        $objTable->addCell($streamlabel->show().':');
-        $objTable->addCell($streamfield->show());
+        $objTable1->addCell($streamlabel->show().':');
+        $objTable1->addCell($streamfield->show());
 
-        $objTable->addCell('');
-        $objTable->addCell('');
 
-        $objTable->endRow();
+        $objTable1->endRow();
+        
+        $objfield1 = new fieldset();
+        $objfield1->width=900;
+        $objfield1->align='center';
+        $objfield1->setLegend('STUDENT INFORMATION');
+
+        $objfield1->addContent($objTable1->show());
+        $objform->addToForm($objfield1->show());
+
         
 //third row
-        $objTable->startRow();
+        $objTable2 = new htmlTable();
 
-        $objTable->addCell($banklabel->show().':');
-        $objTable->addCell($bankfield->show());
+        $objTable2->startRow();
 
-        $objTable->addCell($branchlabel->show().':');
-        $objTable->addCell($branchfield->show());
+        $objTable2->addCell($banklabel->show().':');
+        $objTable2->addCell($bankfield->show());
 
-        $objTable->addCell('');
-        $objTable->addCell('');
+        $objTable2->addCell($branchlabel->show().':');
+        $objTable2->addCell($branchfield->show());
+
         
-        $objTable->endRow();
+        $objTable2->endRow();
 
 
 //fourth row
-        $objTable->startRow();
+        $objTable2->startRow();
 
-        $objTable->addCell($paymentlabel->show().':');
-        $objTable->addCell($paymentfield->show());
+        $objTable2->addCell($paymentlabel->show().':');
+        $objTable2->addCell($paymentfield->show());
 
-        $objTable->addCell($installmntlabel->show().':');
-        $objTable->addCell($installmentfield->show());
-
-        $objTable->addCell('');
-        $objTable->addCell('');
+        $objTable2->addCell($installmntlabel->show().':');
+        $objTable2->addCell($installmentfield->show());
         
-        $objTable->endRow();
+        $objTable2->endRow();
 
 //fifth row
-        $objTable->startRow();
+        $objTable2->startRow();
 
-        $objTable->addCell($datelabel->show().':');
-        $objTable->addCell($datepiki->show());
+        $objTable2->addCell($amountlabel->show().':');
+        $objTable2->addCell($amountfield->show());
 
-        $objTable->addCell('');
-        $objTable->addCell('');
+        $objTable2->addCell($descriptionlabel->show().':');
+        $objTable2->addCell($descriptionfield->show());
 
-        $objTable->addCell('');
-        $objTable->addCell('');
+        $objTable2->endRow();
 
-       $objTable->endRow();
+        $objTable2->startRow();
+
+        $objTable2->addCell($receiptLabel->show());
+        $objTable2->addCell($receiptfield->show());
+
+        $objTable2->addCell($datelabel->show().':');
+        $objTable2->addCell($datepiki->show());
+
+       $objTable2->endRow();
+
+        $objfield2 = new fieldset();
+        $objfield2->width=900;
+        $objfield2->align='center';
+        $objfield2->setLegend('BANK DETAILS');
+
+        $objfield2->addContent($objTable2->show());
+        $objform->addToForm($objfield2->show());
 
 //sixth row
-        $objTable->startRow();
+        $objTable= new htmlTable();
 
-        $objTable->addCell($payablelabel->show().':');
-        $objTable->addCell($payablefield->show());
-
-        $objTable->addCell('');
-        $objTable->addCell('');
-
-        $objTable->addCell('');
-        $objTable->addCell('');
-
-        $objTable->endRow();
-
+//seventh row
         $objTable->startRow();
 
         $objTable->addCell('');
         $objTable->addCell('');
 
         $objTable->addCell('');
-        $objTable->addCell('');
-
-        $objTable->addCell('');
-        $objTable->addCell($saveButton->show());
+        $objTable->addCell('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$saveButton->show());
         
         $objTable->endRow();
 
@@ -246,12 +256,52 @@ class paymentdetails extends Object {
         return $formAction;
     }
 
+    public function checkForm() {
+        $this->loadElements();
+
+        $objformcheck = new form('checker');
+        $objformcheck->action = $this->uri(array('action' => 'add'), 'tzschoolfees');
+        $objformcheck->method='post';
+        $objformcheck->setDisplayType(2);
+
+        $formcheckLabel = new label('<h4>Enter registration number to check if student is in the system:</h4>');
+        $objformcheck->addToForm($formcheckLabel->show());
+
+        $objFormInput = new textinput('regno');
+        $objFormInput->size = 7;
+        $objCheckButton = new button('Check');
+        $objCheckButton->setToSubmit();
+        $objCheckButton->value='CHECK';
+
+        $objTableCheck = new htmlTable();
+        $objTableCheck->width = 100;
+        $objTableCheck->border = 1;
+        $objTableCheck->cellpadding = 1;
+
+        $objTableCheck->startRow();
+
+        $objTableCheck->addCell($objFormInput->show());
+        $objTableCheck->addCell($objCheckButton->show());
+
+        $objTableCheck->endRow();
+
+        $objformcheck->addToForm($objTableCheck->show());
+
+        echo $objformcheck->show();
+    }
+
     public function setValues($valuesArray=NULL) {
 
     }
-    function show() {
+    function showAddForm() {
 
         return $this->buildForm();
+
+    }
+
+    function showCheckForm() {
+
+        return $this->checkForm();
 
     }
 
