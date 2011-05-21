@@ -133,15 +133,18 @@ class reportdisplay extends object {
      */
 
     function generate_student_resut($regno, $exam, $term, $year_id, $class) {
+        ///check student existence in the system
         $validate_student = $this->objreportDb->validate_student($regno, $year_id, $class);
-
+        ///check student result in the system
+        $results_exits=  $this->objreportDb->exist_student_result($regno,$exam, $term, $year_id);
         //initiating the table for carrying and formating output result
         $data_table = $this->newObject('htmltable', 'htmlelements');
-        $data_table->width = '80%';
+        $data_table->width = '90%';
         $data_table->cellPadding = '2px';
         //table header
 
         if ($validate_student) {
+            if($results_exits){
             $student_info = $this->objreportDb->get_students_information($regno, $year_id);
             $student_result = $this->objreportDb->get_student_marks($regno, $exam, $term, $year_id);
 
@@ -191,9 +194,18 @@ class reportdisplay extends object {
 
                 return $result_heading . $data_table->show();
             }
+         }
+        else{
+          $data_table->startRow();
+            $data_table->addCell('No student Results Found');
+            $data_table->endRow();
+
+            return $data_table->show();
+
+        }
         } else {
             $data_table->startRow();
-            $data_table->addCell('No details found');
+            $data_table->addCell('Student Does not exist');
             $data_table->endRow();
 
             return $data_table->show();
