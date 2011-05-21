@@ -108,7 +108,7 @@ class dbreports extends dbTable {
      */
 
     public function get_class_details($class_id) {
-        $stmt="SELECT `class_name`, `level`, `stream` FROM `tbl_class`
+        $stmt="SELECT * FROM `tbl_class`
                WHERE tbl_class.`puid`='$class_id' ";
         $class_details = $this->getArray($stmt);
     
