@@ -387,7 +387,7 @@ class dbreports extends dbTable {
 
 
 /*
-     * method to check if subject a belong to a certain class
+     * method to check if a subject  belong to a certain class
      * @param subj_id id of the subject
      * @param class id of the class
      * @year academic year id
@@ -408,7 +408,43 @@ class dbreports extends dbTable {
     }
 
 
+    /*method to validate student results if exists
+     *
+     *
+     *
+     */
 
+    function exist_student_result($st_regno,$exam_type, $term_id, $year_id){
+        $this->_tableName='tbl_result';
+        $filter=" WHERE tbl_result.tbl_student_reg_no='$st_regno' AND tbl_result.tbl_exam_id='$exam_type' AND tbl_result.tbl_academic_year_id='$year_id'
+                  AND tbl_result.tbl_term_id='$term_id' ";
+ 
+       
+      $count=$this->getRecordCount($filter);
+      if($count>=1){
+          return TRUE;
+      }
+      else{
+          return FALSE;
+      }
+
+
+
+    }
+
+
+    /* method to get subject_marks in descending order
+     *@param subject_id :id of the subject
+     * @param class_id : id of the class for which the subject belongs
+     *@param exam_type  :examination type
+     *@param term_id    :term/semmister id
+     * @param year_id   :academic year id
+    */
+
+    function get_subject_marks($subjectId,$class_id,$exam_id, $term_id, $year_id){
+
+
+    }
 
 
     
