@@ -44,8 +44,19 @@ $action = $this->getParam('action','main');
 
           break;
       case 'view_details':
-          //return template page for viewing payment details
-          return 'view_payment_details_tpl.php';
+            $view = $this->getParam('submit');
+
+            if (!empty($view)) {
+
+                    $regno = $this->getParam('reg_no');
+                    
+                    $this->setVar('option', 'view');
+                    $this->setVar('regno', $regno);
+                    return 'view_payment_details_tpl.php';
+                }
+                else {
+                    return 'view_payment_details_tpl.php';
+                }
 
       default:
           return 'fee_home_page_tpl.php';
