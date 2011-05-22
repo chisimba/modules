@@ -1,17 +1,19 @@
 <?php
 /* 
  * @author john richard
- * @module name:fee module
+ * @package:smis fee module
  * @date 2011 05 06
  * and open the template in the editor.
 */
 //class which shows student payment details
 class paymentdetails extends Object {
     public $lang;
+    public $validate;
 
     function  init() {
 
         $this->lang=$this->getObject('language','language');
+        $this->validate = $this->getObject('validator','htmlelements');
 
     }
     //function to load clases
@@ -55,6 +57,7 @@ class paymentdetails extends Object {
 
          $mname=new label('Other');
          $mnamefield = new textinput('mname');
+        $namefield =
 
 
 //student class
