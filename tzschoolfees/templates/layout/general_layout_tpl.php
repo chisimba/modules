@@ -1,5 +1,13 @@
 <?php
 
+
+/**
+ * @Author john richard
+ * @Copyright (c) UCC
+ * @Version 1.0
+ * @Package smis fee module
+ */
+
 //load css layout class
 $this->loadClass('csslayout','htmlelements');
 
