@@ -14,7 +14,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 include_once 'institution_class_inc.php';
-class institutionlist_class_inc extends object{
+class institutionmanager_class_inc extends object{
     private $_institutions;
 
     public function addLinkedGroup($institution, $group) {

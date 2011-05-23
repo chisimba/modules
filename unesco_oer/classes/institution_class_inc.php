@@ -97,22 +97,22 @@ class institution extends object {
      * @param <Group> $linkedGroups
      * @param <String> $thumbnail
      */
-    function __construct(
-    $name, $description, $type, $country, $address, $zip, $city, $websiteLink, $keywords, $linkedGroups, $thumbnail) {
-        $this->_name = $name;
-        $this->_description = $description;
-        $this->_type = $type;
-        $this->_country = $country;
-        $this->_address = $address;
-        $this->_zip = $zip;
-        $this->_city = $city;
-        $this->_websiteLink = $websiteLink;
-        $this->_keywords = $keywords;
-        $this->_linkedGroups = $linkedGroups;
-        $this->_thumbnail = $thumbnail;
-        $this->_latitude = NULL;
-        $this->_longitude = NULL;
-    }
+//    function __construct(
+//    $name, $description, $type, $country, $address, $zip, $city, $websiteLink, $keywords, $linkedGroups, $thumbnail) {
+//        $this->_name = $name;
+//        $this->_description = $description;
+//        $this->_type = $type;
+//        $this->_country = $country;
+//        $this->_address = $address;
+//        $this->_zip = $zip;
+//        $this->_city = $city;
+//        $this->_websiteLink = $websiteLink;
+//        $this->_keywords = $keywords;
+//        $this->_linkedGroups = $linkedGroups;
+//        $this->_thumbnail = $thumbnail;
+//        $this->_latitude = NULL;
+//        $this->_longitude = NULL;
+//    }
 
     /**
      * Standard getter for the name of the institution
