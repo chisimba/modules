@@ -33,7 +33,7 @@ class institution extends object {
      */
     private $_type;
     /**
-     * The country and code of the institution
+     * The name of the country that the institution is in
      * @var <PDCountry>
      */
     private $_country;
@@ -67,9 +67,38 @@ class institution extends object {
      * @var <Group>
      */
     private $_linkedGroups;
+    /**
+     * Latitude coordinates
+     * @var <String>
+     */
+    private $_latitude;
+    /**
+     * Longitude coordinates
+     * @var <String>
+     */
+    private $_longitude;
+    /**
+     * This is the thumbnail of the institution
+     * @var <String>
+     */
+    private $_thumbnail;
 
+    /**
+     *
+     * @param <String> $name
+     * @param <String> $description
+     * @param <PDInstitutionType> $type
+     * @param <PDCOuntry> $country
+     * @param <String> $address
+     * @param <Integer> $zip
+     * @param <String> $city
+     * @param <String> $websiteLink
+     * @param <String> $keywords
+     * @param <Group> $linkedGroups
+     * @param <String> $thumbnail
+     */
     function __construct(
-    $name, $description, $type, $country, $address, $zip, $city, $websiteLink, $keywords, $linkedGroups) {
+    $name, $description, $type, $country, $address, $zip, $city, $websiteLink, $keywords, $linkedGroups, $thumbnail) {
         $this->_name = $name;
         $this->_description = $description;
         $this->_type = $type;
@@ -78,22 +107,130 @@ class institution extends object {
         $this->_zip = $zip;
         $this->_city = $city;
         $this->_websiteLink = $websiteLink;
-        $this->_keyWords = $keywords;
+        $this->_keywords = $keywords;
         $this->_linkedGroups = $linkedGroups;
+        $this->_thumbnail = $thumbnail;
+        $this->_latitude = NULL;
+        $this->_longitude = NULL;
     }
 
-//    /**
-//     * Standard Dispatch Function for Controller
-//     * @param <type> $action
-//     * @return <type>
-//     */
-//    private function stringValidation($parameter, $argument) {
-//
-//    }
-//
-//    private function arrayValidation($parameter, $argument) {
-//        
-//    }
+    /**
+     * Standard getter for the name of the institution
+     * @param <type>
+     * @return <String> $this->_name
+     */
+    public function getName() {
+        return $this->_name;
+    }
+
+    /**
+     * Standard setter for the name of the institution
+     * @param <String> $name
+     * @return <Boolean> Returns the result of setting the name
+     */
+    public function setName($name) {
+        $this->_name = $name;
+    }
+
+    public function getDesciption() {
+        return $this->_description;
+    }
+
+    public function setDescription($description) {
+        $this->_description = $description;
+    }
+
+    public function getType() {
+        return $this->_type;
+    }
+
+    public function setType($type) {
+        $this->_type = $type;
+    }
+
+    public function getCountry() {
+        return $this->_country;
+    }
+
+    public function setCountry($country) {
+        $this->_country = $country;
+    }
+
+    public function getAddress() {
+        return $this->_address;
+    }
+
+    public function setAddress($adress) {
+        $this->_address = $adress;
+    }
+
+    public function getZipCode() {
+        return $this->_zip;
+    }
+
+    public function setZipCode($zipCode) {
+        $this->_zip = $zipCode;
+    }
+
+    public function setCity($city) {
+        $this->_city = $city;
+    }
+
+    public function getCity() {
+        return $this->_city;
+    }
+
+    public function setWebsiteLink($websiteLink) {
+        $this->_websiteLink = $websiteLink;
+    }
+
+    public function getWebsiteLink() {
+        return $this->_websiteLink;
+    }
+
+    public function getKeywords() {
+        return $this->_keywords;
+    }
+
+    public function setKeywords($keywords) {
+        $this->_keywords = $keywords;
+    }
+
+    public function getLatitude() {
+        $this->_latitude;
+    }
+
+    public function setLatitude($latitude) {
+        $this->_latitude = $latitude;
+    }
+
+    public function getLongitude() {
+        $this->_longitude;
+    }
+
+    public function setLongitude($longitude) {
+        $this->_longitude = $longitude;
+    }
+
+    public function setThumbnail($thumbnail) {
+        $this->_thumbnail = $thumbnail;
+    }
+
+    public function getTgumbnail($thumbnail) {
+        return $this->_thumbnail;
+    }
+
+    public function getLinkedGroup() {
+        return $this->_linkedGroups;
+    }
+
+    public function getAllLinkedGroups() {
+        return $this->_linkedGroups;
+    }
+
+    public function addLinkedGroup($group) {
+        $this->_linkedGroups = $group;
+    }
 
 }
 ?>
