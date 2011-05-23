@@ -24,6 +24,7 @@ class tzschoolacademics extends controller {
     public $lang;
     private $user;
     private $registrar;
+    var $dbobject;
 
     public function init() {
 
@@ -31,6 +32,7 @@ class tzschoolacademics extends controller {
         $this->lang = $this->getObject('language', 'language');
         $this->user = $this->getObject('user', 'security');
         $this->registrar=$this->getObject('registrar');
+        $this->dbobject = $this->getObject('dbsubjectmodule');
     }
 
     public function dispatch($action) {
@@ -73,6 +75,49 @@ class tzschoolacademics extends controller {
                 $this->registrar->registerSubject();
                 return 'subject_registration_tpl.php';
                 break;
+            
+            case 'view_subject':
+                return 'change_resultform_tpl.php';
+                break;
+
+            case 'display':
+                   $output = $this->getparam('display');
+                   if(!empty($output))
+                   {
+                   $subject = $this->getParam('subject');
+                   $academic_year = $this->getParam('aca_year');
+                   $term  = $this->getParam('term');
+                   $this->setVar('subject', $subject);
+                   $this->setVar('academic_year', $academic_year);
+                   $this->setVar('term', $term);
+                   $this->setVar('option', 'change_result');
+                   return 'change_result_tpl.php';
+                  }
+               break;
+
+             case 'editresults':
+                
+                 $regno = $this->getParam('id');
+                 $subj = $this->getParam('subject');
+                 $acayear = $this->getParam('aca_year');
+                 $term = $this->getParam('term');
+                 $this->setVar('regno', $regno);
+                 $this->setVar('subj', $subj);
+                 $this->setVar('term', $term);
+                 $this->setVar('acayear', $acayear);
+                 $this->setVar('option', 'editresults');
+                 return 'edit_results_tpl.php';
+                 break;
+             
+              case   'editbysubject':
+                    $regno = $this->getParam('regno');
+                    $score = $this->getParam('score');
+                    $field_array = array('score' => $score);
+                    $this->dbobject->update_marks($regno,$field_array);
+                    $this->setVar('option', 'change_result');
+                    return 'edit_results_tpl.php';
+                 break;
+             
             case 'StudentResults':
                 $view = $this->getParam('View');
                 if (!empty($view)) {
@@ -146,11 +191,13 @@ class tzschoolacademics extends controller {
                 return 'academics_home_tpl.php';
                 break;
         }
-    }
+}
 
+ /*
     public function requiresLogin($action) {
         return false;
     }
+  */
 
 }
 
