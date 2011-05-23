@@ -38,7 +38,8 @@ private function buildForm()
    	$this->loadElements();
    	$objForm = new form('researchft', $this->getFormAction());
 	$table = $this->newObject('htmltable', 'htmlelements');
-
+	$required = '<span class="required_field"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+ 
 	$table->startRow();
 	$objsubheadingLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentlabel","mayibuyeform"),"heading");
 	$table->addCell($objsubheadingLabel->show(),'', 'center', 'left', '');
@@ -48,21 +49,21 @@ private function buildForm()
 	$objNameofResignator = new textinput('resignatorname');
 	$objResignatorLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentnameofsignotor","mayibuyeform"),"name of resignator");
 	$table->addCell($objResignatorLabel->show(),'', 'center', 'left', '');
-        $table->addCell($objNameofResignator->show(),'', 'center', 'left', '');
+        $table->addCell($objNameofResignator->show().$required);
 	$table->endRow();
 	
 	$table->startRow();
 	$objjobtitle = new textinput('job_title');
 	$objjobtitleLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentjobtitle","mayibuyeform"),"job_title");
 	$table->addCell($objjobtitleLabel->show(),'', 'center', 'left', '');         
-	$table->addCell($objjobtitle->show(),'', 'center', 'left', '');
+	$table->addCell($objjobtitle->show().$required);
 	$table->endRow();
 
 	$table->startRow();
 	$objorganisation = new textinput('organization');
 	$objorganizationLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentorganizationname","mayibuyeform"),"organazation");
 	$table->addCell($objorganizationLabel->show(),'', 'center', 'left', '');         
-	$table->addCell($objorganisation->show(),'', 'center', 'left', '');
+	$table->addCell($objorganisation->show().$required);
 	$table->endRow();
 
 	$table->startRow();
@@ -111,18 +112,17 @@ private function buildForm()
 	$objEmail = new textinput('emails');
 	$objEmailLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentemailaddress","mayibuyeform"),"email");
 	$table->addCell($objEmailLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objEmail->show(),'', 'center', 'left', '');
+	$table->addCell($objEmail->show().$required);
 	
-	
+	$fieldset = $this->newObject('fieldset', 'htmlelements');
+	$fieldset->legend = $this->objLanguage->languageText('phrase_accountdetails', 'userregistration', 'Signatory Details');
+	$fieldset->contents = $table->show();
+	$objForm->addToForm($fieldset->show());
 
-	//Submit button
-        $table->startRow();
-	$objButton = new button('send');
-      	$objButton->setToSubmit();
-	$objButton->setValue(' ' . $this->objLanguage->languageText("mod_mayibuye_commentnext", "mayibuyeform") . '');
-	$table->endRow();
-	$objForm->addToForm($table->show());	     	
-	$objForm->addToForm($objButton->show());
+
+	$button = new button ('submitform', 'Continue');
+	$button->setToSubmit();
+       	$objForm->addToForm('<p align="center"><br />'.$button->show().'</p>');
 
 	 return $objForm->show();
 

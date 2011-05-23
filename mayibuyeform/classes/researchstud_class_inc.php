@@ -36,6 +36,8 @@ private function buildForm()
    	$this->loadElements();
    	$objForm = new form('researchft', $this->getFormAction());
 	$table = $this->newObject('htmltable', 'htmlelements');
+	$required = '<span class="required_field"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+ 
 
 	$table->startRow();
        	$objvatLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsubheading","mayibuyeform"),"heading");
@@ -46,21 +48,21 @@ private function buildForm()
 	$objname = new textinput('name');
 	$objnameLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentname2","mayibuyeform"),"name");
 	$table->addCell($objnameLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objname->show(),'', 'center', 'left', '');
+	$table->addCell($objname->show().$required);
 	$table->endRow();
 	
 	$table->startRow();
 	$objjob = new textinput('jobtitle');
 	$objjobLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentjobtitle","mayibuyeform"),"jobtitle");
 	$table->addCell($objjobLabel->show(),'', 'center', 'left', '');         
-	$table->addCell($objjob->show(),'', 'center', 'left', '');
+	$table->addCell($objjob->show().$required);
 	$table->endRow();
 
 	$table->startRow();	
 	$objorg = new textinput('orgranization2');
 	$objorgLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentorganizationname","mayibuyeform"),"organazation");
 	$table->addCell($objorgLabel->show(),'', 'center', 'left', '');         
-	$table->addCell($objorg->show(),'', 'center', 'left', '');
+	$table->addCell($objorg->show().$required);
 	$table->endRow();
 	
 	$table->startRow();
@@ -74,7 +76,7 @@ private function buildForm()
 	$objTelno3 = new textinput('tellno_3');
 	$objTel3Label = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commenttelno","mayibuyeform"),"telno_3");
 	$table->addCell($objTel3Label->show(),'', 'center', 'left', '');
-	$table->addCell($objTelno3->show(),'', 'center', 'left', '');
+	$table->addCell($objTelno3->show().$required);
 	$table->startRow();
 	
 	$table->startRow();
@@ -85,14 +87,16 @@ private function buildForm()
 	$table->startRow();
 	
 	
-	//Submit button
-        $table->startRow();
-	$objButton = new button('send');
-      	$objButton->setToSubmit();
-	$objButton->setValue(' ' . $this->objLanguage->languageText("mod_mayibuye_commentnext", "mayibuyeform") . '');
-	$table->endRow();
-	$objForm->addToForm($table->show());	     	
-	$objForm->addToForm($objButton->show());
+	$fieldset = $this->newObject('fieldset', 'htmlelements');
+	$fieldset->legend = $this->objLanguage->languageText('phrase_accountdetails', 'userregistration', 'Next of kin Details');
+	$fieldset->contents = $table->show();
+
+	$objForm->addToForm($fieldset->show());
+
+	$button = new button ('submitform', 'Continue');
+	$button->setToSubmit();
+        //$objForm->addToForm($table->show()); 	
+	$objForm->addToForm('<p align="center"><br />'.$button->show().'</p>');
 
 	 return $objForm->show();
 }

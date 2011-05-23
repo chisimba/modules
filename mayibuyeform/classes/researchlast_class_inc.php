@@ -29,33 +29,25 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 
 $strjs = '<script type="text/javascript">
-		//<![CDATA[
-
- 
-   
-	/***********************************************
-        *                                              *
-        *              FEEDBACK CLASS                  *
-        *                                              *
-        ***********************************************/
+		
         //<![CDATA[
 
 		function init () {
-			$(\'input_researchformredraw\').onclick = function () {
-				feedbackredraw();
+			$(\'input_researchredraw\').onclick = function () {
+				researchredraw();
 			}
 		}
-		function feedbackredraw () {
+		function researchredraw () {
 			var url = \'index.php\';
 			var pars = \'module=security&action=generatenewcaptcha\';
-			var myAjax = new Ajax.Request( url, {method: \'get\', parameters: pars, onComplete: researchformShowResponse} );
+			var myAjax = new Ajax.Request( url, {method: \'get\', parameters: pars, onComplete:researchShowResponse} );
 		}
-		function researchformLoad () {
+		function researchLoad () {
 			$(\'load\').style.display = \'block\';
 		}
-		function researchformResponse (originalRequest) {
+		function researchShowResponse (originalRequest) {
 			var newData = originalRequest.responseText;
-			$(\'researchformcaptchaDiv\').innerHTML = newData;
+			$(\'researchcaptchaDiv\').innerHTML = newData;
 		}
 		//]]>
 		</script>';
@@ -70,6 +62,8 @@ private function buildForm()
    $this->loadElements();
    	$objForm = new form('researchform', $this->getFormAction());
 	$table = $this->newObject('htmltable', 'htmlelements');
+	$required = '<span class="required_field"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+ 
  
 	$table->startRow();      
 	$objsubheadingLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsublabel3","mayibuyeform"),"subheading");
@@ -80,21 +74,21 @@ private function buildForm()
 	$objuwc= new textinput('uwc');
 	$objuwcLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentuwc","mayibuyeform"),"uwc");
 	$table->addCell($objuwcLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objuwc->show(),'', 'center', 'left', '');
+	$table->addCell($objuwc->show().$required);
 	$table->endRow();
 
 	$table->startRow();
 	$objstaffno = new textinput('staffno');
 	$objstaffLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsforstaffno","mayibuyeform"),"staffno");
 	$table->addCell($objstaffLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objstaffno->show(),'', 'center', 'left', '');
+	$table->addCell($objstaffno->show().$required);
 	$table->endRow();
 
 	$table->startRow();
 	$objdept= new textinput('dept');
 	$objdeptLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsDepartment","mayibuyeform"),"dept");
 	$table->addCell($objdeptLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objdept->show(),'', 'center', 'left', '');
+	$table->addCell($objdept->show().$required);
 	$table->endRow();	
 
 	$table->startRow();
@@ -130,40 +124,31 @@ private function buildForm()
 	$table->addCell($objtermsLabel->show(),'', 'center', 'left', '');
 	$table->endRow();
 
+	$fieldset = $this->newObject('fieldset', 'htmlelements');
+	$fieldset->legend = $this->objLanguage->languageText('phrase_accountdetails', 'userregistration', 'Collection Details');
+	$fieldset->contents = $table->show();
+	$objForm->addToForm($fieldset->show());
 
-
-//Submit button
-        $table->startRow();
-	$objButton = new button('send');
-      	$objButton->setToSubmit();
-	$objButton->setValue(' ' . $this->objLanguage->languageText("mod_mayibuye_commentnext", "mayibuyeform") . '');
-	$table->endRow();
-	$objForm->addToForm($table->show());	     	
-	$objForm->addToForm($objButton->show());
-
-	 return $objForm->show();
-
-
-
-	// captcha
+	//captcha
         $objCaptcha = $this->getObject('captcha', 'utilities');
-        $captcha = new textinput('researchform_captcha');
-        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_researchform_captcha');
+        $captcha = new textinput('research_captcha');
+        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_research_captcha');
 
-      	$required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
-    	$strutil = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as 	shown below. If you are unable to view the code, click on "Redraw" for a new one.')) . 
-	'<br /><div id="researchformcaptchaDiv">' . $objCaptcha->show() . '</div>' . $captcha->show() .
-	 $required . '<a href="javascript:researchformredraw();">' . $this->objLanguage->languageText('word_redraw', 'security', 'Redraw') . '</a>';
-       	 $objForm->addToForm('<br/><br/>' . $strutil . '<br/><br/>');
-         $objForm->addRule('feedback_captcha', $this->objLanguage->languageText
-				("mod_request_captcha_unrequired", 'mayibuyeform', 'Captcha cant be empty.Captcha is missing.'), 'required');
+$fieldset = $this->newObject('fieldset', 'htmlelements');
+$fieldset->legend = 'Verify Image';
+$fieldset->contents = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="captchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
 
-	$objForm->addToForm($objCaptcha->show());
+$objForm->addToForm($fieldset->show());
+	
+$button = new button ('submitform', 'Submit');
+$button->setToSubmit();
 
+$objForm->addToForm('<p align="center"><br />'.$button->show().'</p>');
+	
 
-
-
-
+	
+	return $objForm->show();
+	
 
 
 }
@@ -194,26 +179,4 @@ return $this->buildForm();
 
 }
 }
-?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>
