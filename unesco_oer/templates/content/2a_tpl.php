@@ -4,6 +4,8 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
+$this->loadClass('filter','unesco_oer');
+
 if ($adaptationstring == null)
     $adaptationstring = 'parent_id is not null';
 ?>
@@ -304,28 +306,23 @@ if ($adaptationstring == null)
                     </div>
                     <div class="blueBackground">
                         <?php
-                        $products = $this->objDbProducts->getProducts(0, 10);
-                        $filterTheme = new dropdown('ThemeFilter');
-                         $filterTheme->cssClass = "leftColumnSelectDropdown";
-                        $filterTheme->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
-                        foreach ($products as $product) {
+                        
+                      $themefilter = new filtermanager();
+                      
+                       $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
+                    //     $uri = $this->uri(array('action' => 'ThemeFilter'));
+                       
+                       $themefilter->ThemeFilter($form, $this->objDbProducts);
+                      
+                       // $uri = $this->uri(array('action' => 'ThemeFilter'));
+                       
+                  //      $form->addToForm($themefilter->show());
+                    //    echo $form->show();
 
-                            $filterTheme->addOption($product['theme']);
-                        }
-                        $filterTheme->setSelected($ThemeFilter);
+          
 
-                        $uri = $this->uri(array('action' => 'ThemeFilter'));
-                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
+                        
 
-
-                        $uri = $this->uri(array('action' => 'FilterProducts'));
-                        $filterTheme->addOnChange('javascript: sendThemeFilterform()');
-
-
-
-                        $form->addtoform($filterTheme->show());
-
-                        echo $form->show();
                         ?>
                         <!--
 
@@ -357,6 +354,7 @@ if ($adaptationstring == null)
                         }
 
                         $filterLang->setSelected($LangFilter);
+                        
                         $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
 
