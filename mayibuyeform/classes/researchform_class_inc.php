@@ -86,6 +86,7 @@ private function buildForm()
 	$objnameofReseacherLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentnameofresearch","mayibuyeform"),"name_resign");
 	$table->addCell($objnameofReseacherLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objnameofresearcher->show().$required);
+	$objForm->addRule('name_resign', $this->objLanguage->languageText("mod_mayibuye_name_required", "mayibuyeform"), 'required');
         $table->endRow();
 
         $table->StartRow();
@@ -93,6 +94,7 @@ private function buildForm()
 	$objTelLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commenttelno","mayibuyeform"),"Telno");
 	$table->addCell($objTelLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objTelno->show().$required);
+	$objForm->addRule('tellno', $this->objLanguage->languageText("mod_mayibuye_tell_required", "mayibuyeform"), 'required');
 	$table->EndRow();
 
 	
