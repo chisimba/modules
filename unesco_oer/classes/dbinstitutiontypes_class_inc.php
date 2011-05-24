@@ -22,36 +22,36 @@ class dbinstitutiontypes extends dbtable {
     }
 
     function getInstitutionTypes() {
-        $sql = "select * from $this->_tableName";
+        $sql = "select * from tbl_unesco_oer_institution_types";
         return $this->getArray($sql);
     }
 
-    function addType($name) {
+    function addType($type) {
         $data = array(
-            'name' => $name,
+            'type' => $type,
         );
 
         $this->insert($data);
     }
 
    /*
-    * This function takes a type Id an returns the type name
+    * This function takes a type Id an returns the type type
     * @param $typeId
-    * return name
+    * return type
     */
-    function getTypeName($typeID){
-        $sql = "SELECT * FROM $this->_tableName WHERE id='$typeID'";
-        $typeName=$this->getArray($sql);
-        return $typeName[0]['name'];
+    function getTypetype($typeID){
+        $sql = "SELECT * FROM tbl_unesco_oer_institution_types WHERE id='$typeID'";
+        $typetype=$this->getArray($sql);
+        return $typetype[0]['type'];
     }
 
     /*
-    * This function takes a type name an returns the first type ID if found
-    * @param $typeName
-    * return name
+    * This function takes a type type an returns the first type ID if found
+    * @param $typetype
+    * return type
     */
-    function findTypeID($typeName){
-        $sql = "SELECT * FROM $this->_tableName WHERE name='$typeName'";
+    function findTypeID($typetype){
+        $sql = "SELECT * FROM tbl_unesco_oer_institution_types WHERE type='$typetype'";
         $typeID=$this->getArray($sql);
         return $typeID[0]['id'];
     }

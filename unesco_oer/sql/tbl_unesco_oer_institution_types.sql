@@ -6,8 +6,8 @@ $options = array('comment'=>'Table to store institution types','collate'=>'utf8_
 
 //define fields
 $fields = array(
-		'id' => array('type' => 'text','length' => 32,'not null'),
-                'name' =>array('type' =>'text','length'=>255)
+		'id'    => array('type' => 'text', 'length' => 32, 'not null'),
+                'type'  => array('type' => 'text', 'length' => 32, 'not null')
                 );
 ?>
 

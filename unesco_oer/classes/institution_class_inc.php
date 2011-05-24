@@ -18,6 +18,11 @@
 class institution extends object {
 
     /**
+     * This is the id of the isntitution
+     * @var <String>
+     */
+    private $_id;
+    /**
      * This is the name of the isntitution
      * @var <String>
      */
@@ -99,6 +104,7 @@ class institution extends object {
      */
 //    function __construct(
 //    $name, $description, $type, $country, $address, $zip, $city, $websiteLink, $keywords, $linkedGroups, $thumbnail) {
+//        $this->_id = $id;
 //        $this->_name = $name;
 //        $this->_description = $description;
 //        $this->_type = $type;
@@ -113,6 +119,24 @@ class institution extends object {
 //        $this->_latitude = NULL;
 //        $this->_longitude = NULL;
 //    }
+
+    /**
+     * Standard getter for the id of the institution
+     * @param <type>
+     * @return <String> $this->_id
+     */
+    public function getId() {
+        return $this->_id;
+    }
+
+    /**
+     * Standard setter for the id of the institution
+     * @param <String> $id
+     * @return <Boolean> Returns the result of setting the id
+     */
+    public function setId($id) {
+        $this->_id = $id;
+    }
 
     /**
      * Standard getter for the name of the institution
@@ -228,8 +252,12 @@ class institution extends object {
         return $this->_linkedGroups;
     }
 
-    public function addLinkedGroup($group) {
+    public function addLinkedGroup($groupId) {
         $this->_linkedGroups = $group;
+    }
+
+    public function removeLinkedGroup($groupId) {
+
     }
 
 }

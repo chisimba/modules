@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,35 +15,54 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 include_once 'institution_class_inc.php';
-class institutionmanager_class_inc extends object{
-    private $_institutions;
+include_once 'dbinstitution_class_inc.php';
 
-    public function addLinkedGroup($institution, $group) {
+class institutionmanager extends object {
+
+    private $_institutionList;
+    private $_institution;
+    private $_objDbInstitution;
+    private $_groupList;
+    private $_group;
+
+    function init(){
+        $this->_objDbInstitution = $this->getObject('dbinstitution');
+        $this->_institution = NULL;
+        $this->_institutionList = NULL;
+        $this->_group = NULL;
+        $this->_groupList = NULL;
+    }
+
+    public function addLinkedGroup($institutionId, $groupId) {
         
     }
 
-    public function removeLinkedGroup($institution, $group) {
+    public function removeLinkedGroup($institutionId, $groupId) {
 
     }
 
-    public function addInstitution($institution) {
+    public function addInstitution(&$institution) {
+        //$myInstitution = $this->loadObject('institution', 'unesco_oer');
+        //TODO Ntsako Add this institution to the database
 
     }
 
-    public function editInstitution($institution) {
+    public function editInstitution($id) {
 
     }
 
-    public function removeInstitution($institutionName) {
+    public function removeInstitution($id) {
 
     }
 
-    public function getInstitution($institutionName) {
-
+    public function getInstitution($id) {
+        return $this->_objDbInstitution->getInstitutionById($id);
     }
 
     public function getAllInstitutions() {
-        $this->_institutions;
+        //$this->_institutionList = $this->_objDbInstitution->getAllInstitutions();
+        return $this->_objDbInstitution->getAllInstitutions();
     }
+
 }
 ?>

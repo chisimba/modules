@@ -2,10 +2,10 @@
 
 //require('classes/googlemapapi_class_inc.php');
 
-class unesco_oer extends controller
-{
+class unesco_oer extends controller {
 
     public $objProductUtil;
+    public $objInstitutionGUI;
     public $objDbProducts;
     public $objDbResourceTypes;
     public $objDbProductThemes;
@@ -14,10 +14,12 @@ class unesco_oer extends controller
     public $objFeaturedProducUtil;
     public $objDbGroups;
     public $objDbInstitution;
+    public $objDbInstitutionTypes;
+    public $objDbCountries;
+    public $objDbLinkedGroups;
     public $objDbComments;
     public $objUser;
     public $objDbProductRatings;
-    public $objDbInstitutionTypes;
     public $objGoogleMap;
     public $objDbAvailableProductLanguages;
     /**
@@ -29,8 +31,7 @@ class unesco_oer extends controller
      */
     public $objLanguage;
 
-    function init()
-    {
+    function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objProductUtil = $this->getObject('productutil');
         $this->objDbProducts = $this->getObject('dbproducts');
@@ -43,9 +44,11 @@ class unesco_oer extends controller
         $this->objDbProductRatings = $this->getObject('dbproductratings');
         $this->objDbGroups = $this->getObject('dbgroups');
         $this->objDbInstitution = $this->getObject('dbinstitution');
+        $this->objDbInstitutionTypes = $this->getObject('dbinstitutiontypes');
+        $this->objDbLinkedGroups = $this->getObject('dblinkedgroups');
+        $this->objDbCountries = $this->getObject('dbcountries');
         $this->objDbComments = $this->getObject('dbcomments');
         $this->objProductRatings = $this->getObject('dbproductratings');
-        $this->objDbInstitutionTypes = $this->getObject('dbinstitutiontypes');
         $this->objUser = $this->getObject('user', 'security');
         //$this->objGoogleMap=$this->getObject('googlemapapi');
         //$this->objGoogleMap = new googlemapapi();
@@ -56,8 +59,7 @@ class unesco_oer extends controller
      * @param <type> $action
      * @return <type>
      */
-    public function dispatch($action)
-    {
+    public function dispatch($action) {
         /*
          * Convert the action into a method (alternative to
          * using case selections)
@@ -80,8 +82,7 @@ class unesco_oer extends controller
      * @return string the name of the method
      *
      */
-    function getMethod(& $action)
-    {
+    function getMethod(& $action) {
         if ($this->validAction($action)) {
             return '__' . $action;
         } else {
@@ -101,8 +102,7 @@ class unesco_oer extends controller
      * @return boolean TRUE|FALSE
      *
      */
-    function validAction(& $action)
-    {
+    function validAction(& $action) {
         if (method_exists($this, '__' . $action)) {
             return TRUE;
         } else {
@@ -113,41 +113,34 @@ class unesco_oer extends controller
     /**
      * Method to show the Home Page of the Module
      */
-    public function __home()
-    {
+    public function __home() {
 //        $displayAllMostAdaptedProducts = false;s', $displayAllMostAdaptedProducts
 //        $this->setVarByRef('displayAllMostAdaptedProducts', $displayAllMostAdaptedProducts);
 
         return "1a_tpl.php";
     }
 
-    public function __1b()
-    {
+    public function __1b() {
         return "1b_tpl.php";
     }
 
-    public function __2a()
-    {
+    public function __2a() {
         return "2a_tpl.php";
     }
 
-    public function __2b()
-    {
+    public function __2b() {
         return "2b_tpl.php";
     }
 
-    public function __3a()
-    {
+    public function __3a() {
         return "3a_tpl.php";
     }
 
-    public function __4()
-    {
+    public function __4() {
         return "4_tpl.php";
     }
 
-    public function __ViewProduct()
-    {
+    public function __ViewProduct() {
 
         $id = $this->getParam('id');
 
@@ -163,16 +156,14 @@ class unesco_oer extends controller
         }
     }
 
-    public function __viewAllMostAdaptedProducts()
-    {
+    public function __viewAllMostAdaptedProducts() {
 
         $displayAllMostAdaptedProducts = $this->getParam('displayAllMostAdaptedProducts');
         $this->setVarByRef('displayAllMostAdaptedProducts', $displayAllMostAdaptedProducts);
         return "1a_tpl.php";
     }
 
-    public function __Search()
-    {
+    public function __Search() {
 
         $SearchField = $this->getParam('SearchInput');
         $SearchOption = $this->getParam('SearchFilter');
@@ -211,12 +202,10 @@ class unesco_oer extends controller
         return "results_tpl.php";
     }
 
-  
+    public function __BrowseAdaptation() {
 
-     public function __BrowseAdaptation() {
-
-       $lat = $this->getParam('lat');
-       $lng = $this->getparam('Lng');
+        $lat = $this->getParam('lat');
+        $lng = $this->getparam('Lng');
         $page = $this->getParam('page');
 
         $AuthFilter = $this->getParam('AuthorFilter');
@@ -236,20 +225,20 @@ class unesco_oer extends controller
 
 
 
-        $ProdId = $this->objProductUtil->BrowseAdaptation($lat,$lng);
+        $ProdId = $this->objProductUtil->BrowseAdaptation($lat, $lng);
         $string = $this->objDbProducts->getAdaptedProducts($ProdId);
 
 
         $temporary = $string[0]['name'];
-       $Buildstring = 'creator = ' . "'$temporary'" . ' and parent_id is not null';
+        $Buildstring = 'creator = ' . "'$temporary'" . ' and parent_id is not null';
 
 
 
 
 
-     
 
-      $this->setVarByRef("AuthFilter", $AuthFilter);
+
+        $this->setVarByRef("AuthFilter", $AuthFilter);
         $this->setVarByRef("ThemeFilter", $ThemeFilter);
         $this->setVarByRef("LangFilter", $LangFilter);
         $this->setVarByRef("SortFilter", $sort);
@@ -262,19 +251,18 @@ class unesco_oer extends controller
         $this->setVarByRef("Manual", $Manual);
         $this->setVarByRef("Besoractile", $Besoractile);
         $this->setVarByRef("adaptationstring", $adaptationstring);
-       
 
 
-            $this->setVarByRef("finalstring", $Buildstring);
-             $this->setVarByRef("TotalEntries", $Buildstring);
-               $this->setVarByRef("MapEntries", $Buildstring);
+
+        $this->setVarByRef("finalstring", $Buildstring);
+        $this->setVarByRef("TotalEntries", $Buildstring);
+        $this->setVarByRef("MapEntries", $Buildstring);
 
 
         return "$page";
     }
 
-    public function __FilterAdaptations()
-    {
+    public function __FilterAdaptations() {
 
         $parentid = $this->getParam('parentid');
         $adaptationstring = 'parent_id = ' . "'$parentid'";
@@ -286,15 +274,14 @@ class unesco_oer extends controller
         $this->setVarByRef("finalstring", $Buildstring);
         $this->setVarByRef("TotalEntries", $TotalEntries);
         $this->setVarByRef("adaptationstring", $adaptationstring);
-       
+
 
 
 
         return "2a_tpl.php";
     }
 
-    public function __FilterProducts()
-    {
+    public function __FilterProducts() {
 
         $AuthFilter = $this->getParam('AuthorFilter');
         $ThemeFilter = $this->getParam('ThemeFilter');
@@ -311,10 +298,10 @@ class unesco_oer extends controller
         $Manual = $this->getParam('Manual');
         $Besoractile = $this->getParam('Besoractile');
         $browsemapstring = $this->getParam('MapEntries');
-         
 
 
-        $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile,$browsemapstring);
+
+        $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile, $browsemapstring);
         $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter, $PageNum, $TotalEntries);
 
 
@@ -343,8 +330,7 @@ class unesco_oer extends controller
         return "$page";
     }
 
-    public function requiresLogin($action)
-    {
+    public function requiresLogin($action) {
         $required = array('addData', 'editProduct');
         if (in_array($action, $required)) {
             return TRUE;
@@ -357,8 +343,7 @@ class unesco_oer extends controller
      * Method to display page for creating a new product
      */
 
-    public function __productsUi()
-    {
+    public function __productsUi() {
         return "products_ui_tpl.php";
     }
 
@@ -366,8 +351,7 @@ class unesco_oer extends controller
      * Method to display page for selecting input option
      */
 
-    public function __addData()
-    {
+    public function __addData() {
         return "addData_tpl.php";
     }
 
@@ -375,13 +359,11 @@ class unesco_oer extends controller
      * Method to display page with adaptable products
      */
 
-    public function __chooseProductToAdapt()
-    {
+    public function __chooseProductToAdapt() {
         return 'newAdaptation_tpl.php';
     }
 
-    public function __createProduct()
-    {
+    public function __createProduct() {
         $id = $this->getParam('id');
         $prevAction = $this->getParam('prevAction');
         $isNewProduct = TRUE;
@@ -395,8 +377,7 @@ class unesco_oer extends controller
         return $this->__productsUi();
     }
 
-    public function __editProduct()
-    {
+    public function __editProduct() {
         $id = $this->getParam('id');
         $prevAction = $this->getParam('prevAction');
         $isNewProduct = FALSE;
@@ -420,8 +401,7 @@ class unesco_oer extends controller
      * and add it to the tbl_unesco_oer_products table
      */
 
-    public function __uploadSubmit()
-    {
+    public function __uploadSubmit() {
         //Retrieve thumbnail and save it
         $isNewProduct = $this->getParam('isNewProduct');
         if ($isNewProduct === NULL)
@@ -438,7 +418,7 @@ class unesco_oer extends controller
          * only if the parameter @parentID is not NULL and the parameter @isNewProduct
          * is false
          */
-        if (!$this->objDbProducts->isAdaptation($parentID) && ($isNewProduct == ($parentID == null))){
+        if (!$this->objDbProducts->isAdaptation($parentID) && ($isNewProduct == ($parentID == null))) {
             $path = 'unesco_oer/products/' . $this->getParam('title') . '/thumbnail/';
             try {
                 $results = $this->uploadFile($path);
@@ -503,8 +483,7 @@ class unesco_oer extends controller
      * Method to display page for creating a new resource type
      */
 
-    public function __newResourceTypeUI()
-    {
+    public function __newResourceTypeUI() {
         return "newResourceTypeUI_tpl.php";
     }
 
@@ -513,8 +492,7 @@ class unesco_oer extends controller
      * and add it to the tbl_unesco_oer_resource_types table
      */
 
-    public function __resourceTypeSubmit()
-    {
+    public function __resourceTypeSubmit() {
         $description = $this->getParam('newTypeDescription');
         $this->objDbResourceTypes->addType($description);
         return $this->__addData();
@@ -524,8 +502,7 @@ class unesco_oer extends controller
      * Method to display page for creating a new theme
      */
 
-    public function __createThemeUI()
-    {
+    public function __createThemeUI() {
         return "createThemeUI_tpl.php";
     }
 
@@ -534,8 +511,7 @@ class unesco_oer extends controller
      * and add it to the tbl_unesco_oer_product_themes table
      */
 
-    public function __createThemeSubmit()
-    {
+    public function __createThemeSubmit() {
         $description = $this->getParam('newTheme');
         $this->objDbProductThemes->addTheme($description);
         return $this->__addData();
@@ -545,8 +521,7 @@ class unesco_oer extends controller
      * Method to display page for creating a new theme
      */
 
-    public function __createLanguageUI()
-    {
+    public function __createLanguageUI() {
         return "createLanguageUI_tpl.php";
     }
 
@@ -555,8 +530,7 @@ class unesco_oer extends controller
      * and add it to the tbl_unesco_oer_product_themes table
      */
 
-    public function __createLanguageSubmit()
-    {
+    public function __createLanguageSubmit() {
         $code = $this->getParam('newLanguageCode');
         $name = $this->getParam('newLanguageName');
         if (strlen($code) == 0)
@@ -571,8 +545,7 @@ class unesco_oer extends controller
      * return a page 1a_tpl.php with the current featured product
      */
 
-    public function __createFeaturedProduct()
-    {
+    public function __createFeaturedProduct() {
         $featuredproduct = $this->getParam('id');
         $this->objDbFeaturedProduct->overRightCurrentFeaturedProduct($featuredproduct);
         return "1a_tpl.php";
@@ -583,8 +556,7 @@ class unesco_oer extends controller
      * return a page 1a_tpl.php with the current featured product
      */
 
-    public function __createFeaturedAdaptation()
-    {
+    public function __createFeaturedAdaptation() {
         $featuredproduct = $this->getParam('id');
         $this->objDbFeaturedProduct->overRightCurrentFeaturedAdaptation($featuredproduct);
         return "1a_tpl.php";
@@ -594,8 +566,7 @@ class unesco_oer extends controller
      * method to dispaly page to create a new unesco featured product
      */
 
-    public function __featuredProductUI()
-    {
+    public function __featuredProductUI() {
         return "featuredProductUI_tpl.php";
     }
 
@@ -603,8 +574,7 @@ class unesco_oer extends controller
      * method to dispaly page to create a new unesco featured product
      */
 
-    public function __featuredAdaptationUI()
-    {
+    public function __featuredAdaptationUI() {
         return "featuredAdaptationUI_tpl.php";
     }
 
@@ -612,8 +582,7 @@ class unesco_oer extends controller
      * Method to display page for creating a new group
      */
 
-    public function __createGroupUI()
-    {
+    public function __createGroupUI() {
         return "createGroupUI_tpl.php";
     }
 
@@ -622,8 +591,7 @@ class unesco_oer extends controller
      * and add it to the tbl_unesco_oer_group table
      */
 
-    public function __createGroupSubmit()
-    {
+    public function __createGroupSubmit() {
         $name = $this->getParam('newGroup');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
@@ -646,8 +614,7 @@ class unesco_oer extends controller
      * Method to display page for creating a new group
      */
 
-    public function __createInstitutionUI()
-    {
+    public function __createInstitutionUI() {
         return "createInstitutionUI_tpl.php";
     }
 
@@ -656,8 +623,7 @@ class unesco_oer extends controller
      * and add it to the tbl_unesco_oer_group table
      */
 
-    public function __createInstitutionSubmit()
-    {
+    public function __createInstitutionSubmit() {
         $name = $this->getParam('newInstitution');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
@@ -677,7 +643,7 @@ class unesco_oer extends controller
         return $this->__addData();
     }
 
-      /*
+    /*
      * Method to display page for creating a new institution type
      */
 
@@ -724,8 +690,7 @@ class unesco_oer extends controller
      * Method to display page with products to comment on
      */
 
-    public function __chooseProductToComment()
-    {
+    public function __chooseProductToComment() {
         return 'chooseComment_tpl.php';
     }
 
@@ -733,8 +698,7 @@ class unesco_oer extends controller
      * Method to display page with products to rate
      */
 
-    public function __chooseProductToRate()
-    {
+    public function __chooseProductToRate() {
         return 'chooseProductToRate_tpl.php';
     }
 
@@ -742,8 +706,7 @@ class unesco_oer extends controller
      * Method to display page with entry options for comment
      */
 
-    public function __createComment()
-    {
+    public function __createComment() {
         $id = $this->getParam('id');
         $this->setVar('productID', $id);
         return 'createComment_tpl.php';
@@ -753,8 +716,7 @@ class unesco_oer extends controller
      * Method to display page with entry options for rating
      */
 
-    public function __addProductRating()
-    {
+    public function __addProductRating() {
         $id = $this->getParam('id');
         $this->setVar('productID', $id);
         return 'addProductRating_tpl.php';
@@ -765,8 +727,7 @@ class unesco_oer extends controller
      * and add it to the tbl_unesco_oer_group table
      */
 
-    public function __createCommentSubmit()
-    {
+    public function __createCommentSubmit() {
         $id = $this->getParam('id');
         $comment = $this->getParam('newComment');
         $nextPage = $this->getParam('pageName');
@@ -785,8 +746,7 @@ class unesco_oer extends controller
      * and add it to the tbl_unesco_oer_products_ratings table
      */
 
-    public function __addProductRatingSubmit()
-    {
+    public function __addProductRatingSubmit() {
         $id = $this->getParam('id');
         $rating = $this->getParam('newRating');
 
@@ -799,8 +759,7 @@ class unesco_oer extends controller
      * and add it to the tbl_unesco_oer_products_ratings table
      */
 
-    public function __submitProductRating()
-    {
+    public function __submitProductRating() {
         $id = $this->getParam('productID');
         $rating = $this->getParam("rateSubmit");
 
@@ -808,21 +767,18 @@ class unesco_oer extends controller
         return $this->nextAction($this->getParam('prevAction'));
     }
 
-    public function __deleteInstitution()
-    {
+    public function __deleteInstitution() {
         $puid = $this->getParam('puid');
         $name = $this->getParam('name');
         $this->objDbInstitution->deleteInstitution($puid, $name);
         return 'editInstitutionUI1_tpl.php';
     }
 
-    public function __cancelEditInstitution()
-    {
+    public function __cancelEditInstitution() {
         return 'addData_tpl.php';
     }
 
-    public function __editInstitution()
-    {
+    public function __editInstitution() {
         $puid = $this->getParam('puid');
         $id = $this->getParam('id');
         $name = $this->getParam('name');
@@ -833,8 +789,7 @@ class unesco_oer extends controller
         return "editInstitutionUI1_tpl.php";
     }
 
-    public function __editInstitutionUI2()
-    {
+    public function __editInstitutionUI2() {
         $puid = $this->getParam('puid');
         $id = $this->getParam('id');
         $this->setVar('InstitutionPUID', $puid);
@@ -842,8 +797,7 @@ class unesco_oer extends controller
         return 'editInstitutionUI2_tpl.php';
     }
 
-    public function __editInstitutionUI1()
-    {
+    public function __editInstitutionUI1() {
         return 'editInstitutionUI1_tpl.php';
     }
 
@@ -851,8 +805,7 @@ class unesco_oer extends controller
      * Method to display page with products to comment on
      */
 
-    public function __chooseProductToAddLanguageTo()
-    {
+    public function __chooseProductToAddLanguageTo() {
         return 'chooseAdditionalLanguageUI_tpl.php';
     }
 
@@ -861,8 +814,7 @@ class unesco_oer extends controller
      */
 
     //public function __createComment()
-    public function __addAdditionalLanguage()
-    {
+    public function __addAdditionalLanguage() {
         $id = $this->getParam('id');
         $this->setVar('ID', $id);
         return 'createAdditionalLanguageUI_tpl.php';
@@ -874,8 +826,7 @@ class unesco_oer extends controller
      */
 
     //public function __addLanguageSubmit()
-    public function __addAdditionalLanguageSubmit()
-    {
+    public function __addAdditionalLanguageSubmit() {
         $language = $this->getParam('language');
         $id = $this->getParam('id');
 //        if (strlen($language) == 0)
@@ -883,6 +834,10 @@ class unesco_oer extends controller
 
         $this->objDbAvailableProductLanguages->addProductLanguage($id, $language);
         return $this->__addData();
+    }
+
+    public function __mypage() {
+        return "myPage_tpl.php";
     }
 
 }

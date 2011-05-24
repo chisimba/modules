@@ -45,12 +45,15 @@ $utility->addTextInputToTable($title, 4, 'loclong', 60, '', $table);
 
 //Institution country input options
 $title = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer');
-$utility->addTextInputToTable($title, 4, 'country', 60, '', $table);
+//$resourceTypes = $this->objDbCountries->getAllCountries();
+//$utility->addDropDownToTable($title, 4, 'countries', $resourceTypes, NULL, 'name', $table);
+$utility->addTextInputToTable($title, 4, 'countries', 60, '', $table);
 
 //Institution type input options
 $title = $this->objLanguage->languageText('mod_unesco_oer_institution_type', 'unesco_oer');
-$resourceTypes = $this->objDbInstitutionTypes->getInstitutionTypes();
-$utility->addDropDownToTable($title, 4, 'institutionType', $resourceTypes, NULL, 'name', $table);
+//$resourceTypes = $this->objDbInstitutionTypes->getInstitutionTypes();
+//$utility->addDropDownToTable($title, 4, 'institutionType', $resourceTypes, NULL, 'name', $table);
+$utility->addTextInputToTable($title, 4, 'institutionType', 60, '', $table);
 
 //Institution thumbnail input options
 $objUpload = $this->getObject('uploadinput', 'filemanager');

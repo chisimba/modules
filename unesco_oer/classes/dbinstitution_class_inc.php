@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -21,19 +21,34 @@ class dbinstitution extends dbtable {
         parent::init("tbl_unesco_oer_institution");
     }
 
-    function getInstitutions() {
-        $sql = "select * from tbl_unesco_oer_institution";
+    /**
+     *Returns an array with all institution objects
+     * @return <Array<Institution>>
+     */
+    function getAllInstitutions() {
+        $sql = "SELECT * FROM tbl_unesco_oer_institution";
         return $this->getArray($sql);
     }
 
-    function addInstitution($name, $loclat, $loclong, $thumbnailPath, $type = NULL, $country = NULL) {
+    function getInstitutionById($id) {
+        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE id = '$id'";
+        return $this->getArray($sql);
+    }
+    function addInstitution($name, $description, $type, $country, $address, $zip,
+            $city, $websiteLink, $keywords, $latitude, $longitude, $thumbnail) {
         $data = array(
-            'name' => $name,
-            'loclat' => $loclat,
-            'loclong' => $loclong,
-            'country'=> $country,
-            'type' => $type,
-            'thumbnail' => $thumbnailPath
+            'name'          => $name,
+            'description'   => $description,
+            'country'       => $country,
+            'type'          => $type,
+            'address'       => $address,
+            'city'          => $city,
+            'websiteLink'   => $websiteLink,
+            'keywords'      => $keywords,
+            'zip'           => $zip,
+            'latitude'      => $latitude,
+            'longitude'     => $longitude,
+            'thumbnail'     => $thumbnail
         );
 
         $this->insert($data);
@@ -129,21 +144,6 @@ class dbinstitution extends dbtable {
                      array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'id'=>$id)
             );
         }
-
-    function getInstitutionByID($id){
-        //TODO change function so it can identify if the $id is a puid or a normal id
-        //TODO this function currently fails when you have more than 99 intitutions
-        //If searching by id
-        $sql = '';
-        if (strlen($id)>2){
-            $sql = "select * from $this->_tableName where id = '$id'";
-        }  else {
-            //If searching by puid
-            $sql = "select * from $this->_tableName where puid = '$id'";
-        }
-        $products = $this->getArray($sql);
-        return $products[0]; //TODO add error handler for non unique ID.
-    }
 
     /*
     * This function takes a institution name and returns the first type ID if found

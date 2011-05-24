@@ -4,9 +4,8 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 if ($adaptationstring == null)
-$adaptationstring = "parent_id is not null";
+    $adaptationstring = "parent_id is not null";
 ?>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -35,13 +34,13 @@ $adaptationstring = "parent_id is not null";
                     </div>
                     <div class="profileBookmarkGroupsMessengerDiv">
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
-<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <div class="spacingBetweenUserIcons">&nbsp;</div>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
-<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <div class="spacingBetweenUserIcons">&nbsp;</div>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
-<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <div class="spacingBetweenUserIcons">&nbsp;</div>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a><div class="numberNextToUserIcons"></div>
-<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <div class="spacingBetweenUserIcons">&nbsp;</div>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messages" width="20" height="20" class="userIcons" title="My Messages"></a><div class="numberNextToUserIcons"></div>
                     </div>
                 </div>
