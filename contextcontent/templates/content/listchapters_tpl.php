@@ -74,13 +74,14 @@ if ($this->objModuleCatalogue->checkIfRegistered('scorm') && $this->isValid('add
 } else {
     $addScormChapter = '';
 }
-echo '<h1>' . $this->objLanguage->languageText("mod_contextcontent_contextpagesfor", 'contextcontent') . " " . $this->objContext->getTitle() . ' ' . $addChapter . ' ' . $addScormChapter . '</h1>';
+echo '<h1>' . $this->objContext->getTitle() . ' ' . $addChapter . ' ' . $addScormChapter . '</h1>';
 
 $counter = 1;
 $notVisibleCounter = 0;
 $addedCounter = 0;
 
 // Form for Quick Jump to a Chapter
+/**
 $form = new form($this->uri(array('action' => 'viewchapter')));
 $form->method = 'GET';
 
@@ -96,7 +97,7 @@ $form->addToForm($label->show());
 $dropdown = new dropdown('id');
 
 // End Form
-
+**/
 $chapterList = '<div id="allchapters">';
 
 $objWashout = $this->getObject('washout', 'utilities');
@@ -144,7 +145,7 @@ foreach ($chapters as $chapter) {
 
             if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
                 $hasPages = FALSE;
-                $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="' . $this->objLanguage->languageText('mod_contextcontent_chapterhasnopages', 'contextcontent') . '"');
+                //$dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="' . $this->objLanguage->languageText('mod_contextcontent_chapterhasnopages', 'contextcontent') . '"');
                 $notVisibleCounter++;
             } else {
                 $hasPages = TRUE;
@@ -206,11 +207,11 @@ foreach ($chapters as $chapter) {
 
             if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
                 $hasPages = FALSE;
-                $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="' . $this->objLanguage->languageText('mod_contextcontent_chapterhasnopages', 'contextcontent') . '"');
+                //$dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="' . $this->objLanguage->languageText('mod_contextcontent_chapterhasnopages', 'contextcontent') . '"');
                 $notVisibleCounter++;
             } else {
                 $hasPages = TRUE;
-                $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle']);
+                //$dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle']);
             }
 
             $editLink = new link($this->uri(array('action' => 'editchapter', 'id' => $chapter['chapterid'])));
@@ -300,12 +301,12 @@ foreach ($chapters as $chapter) {
             } else {
 
                 if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>' && $this->isValid('viewhiddencontent')) {
-                    $content .= '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentpages', 'contextcontent') . '</div>';
+                    $content .= '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_contextcontent_chapternewcontentpages', 'contextcontent') . '</div>';
 
                     // Empty variable for use later on
                     $chapterPages = '';
                 } else if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-                    $content .= '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentpages', 'contextcontent') . '</div>';
+                    $content .= '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_contextcontent_chapternewcontentpages', 'contextcontent') . '</div>';
 
                     // Empty variable for use later on
                     $chapterPages = '';
@@ -355,7 +356,7 @@ foreach ($chapters as $chapter) {
 
 $chapterList .= '</div>';
 
-
+/**
 if (count($chapters) > 1) {
     $form->addToForm($dropdown->show());
 
@@ -370,6 +371,7 @@ if (count($chapters) > 1) {
 
     echo $form->show();
 }
+**/
 
 echo $chapterList;
 

@@ -62,7 +62,7 @@ $content = "";
 
 $introheader = new htmlheading();
 $introheader->type = 3;
-$introheader->str = $chapter['chaptertitle'] . '&nbsp;&nbsp;-&nbsp;&nbsp;' . $this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction', 'contextcontent', 'Introduction)');
+$introheader->str = $chapter['chaptertitle'];
 
 $content.= $introheader->show() . $objWashout->parseText($chapter['introduction']);
 

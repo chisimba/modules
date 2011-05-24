@@ -1120,8 +1120,8 @@ class contextcontent extends controller {
                 return $this->nextAction(NULL, array('error' => 'chapterdoesnotexist'));
             } else {
                 $this->setVarByRef('chapter', $chapter);
-                $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
-                $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted.'));
+                $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapternewcontent', 'contextcontent', 'New Content'));
+                $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapternewcontentinstruction', 'contextcontent', 'Pages to be added here'));
                 return 'chapternocontent_tpl.php';
             }
         } else {
@@ -1174,8 +1174,8 @@ class contextcontent extends controller {
         // If Chapter has no pages
         if (count($pages) == 0) {
             // Send Error Message. Chapter has no Pages / Content
-            $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
-            $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted. Please choose another chapter'));
+            $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapternewcontent', 'contextcontent', 'New Content'));
+            $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapternewcontentinstruction', 'contextcontent', 'Pages to be added here'));
 
             return 'errormessage_tpl.php';
         } else {

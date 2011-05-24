@@ -64,10 +64,12 @@ if ($this->getParam('message') == 'chaptercreated') {
     echo '<p class="error">'.$errorTitle.'. '.$errorMessage.'</p>';
 }
 
+/** removed at request of Eteaching customer
 $introheader=new htmlheading();
 $introheader->type=3;
 $introheader->str=$this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction', 'contextcontent', 'About Chapter (Introduction)');
 echo $introheader->show();
+**/
 
 $objWashout = $this->getObject('washout', 'utilities');
 
