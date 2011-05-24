@@ -44,8 +44,11 @@ $objIcon->setIcon('edit');
 if (count($documents) > 0) {
     foreach ($documents as $document) {
         $makepdf = new link($this->uri(array("action"=>"makepdf", "id"=>$document['id'], "all"=>"on")));
+        $forwardDocument = new link($this->uri(array("action"=>"makepdf", "id"=>$document['id'], "all"=>"on")));
         $objIcon->setIcon('pdf');
         $makepdf->link = $objIcon->show();
+        $objIcon->setIcon('forward', 'png');
+        $forwardDocument->link  = "<img src='".$this->getResourceUri('images/', 'apo')."forward.png'>" ;
         if ($document['currentuserid'] == "Administrative User") {
             $link = new link($this->uri(array("action" => "showeditdocument", "id" => $document['id'])));
 
@@ -58,6 +61,7 @@ if (count($documents) > 0) {
             $table->addCell($document['telephone']);
             $table->addCell($document['date']);
             $table->addCell($makepdf->show());
+            $table->addCell($forwardDocument->show());
             $table->endRow();
         } else if ($document['owner'] == '' && $document['currentuserid'] != '') {
             $link = new link($this->uri(array("action" => "reclaimdocumentform", "id" => $document['id'])));
