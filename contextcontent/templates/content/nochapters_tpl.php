@@ -25,12 +25,13 @@ $table->addCell($label->show(), $tWidth, 'top', 'left');
 $table->addCell($title->show());
 $table->endRow();
 
-$label = new label ($this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction','contextcontent'), 'input_aboutchapter');
+//$label = new label ($this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction','contextcontent'), 'input_aboutchapter');
 $htmlArea = $this->newObject('htmlarea', 'htmlelements');
 $htmlArea->name = 'intro';
 $htmlArea->context = TRUE;
 $table->startRow();
-$table->addCell($label->show(), $tWidth, 'top', 'left');
+//$table->addCell($label->show(), $tWidth, 'top', 'left');
+$table->addCell('&nbsp;', $tWidth, 'top', 'left');
 $table->addCell($htmlArea->show());
 $table->endRow();
 
