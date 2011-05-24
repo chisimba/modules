@@ -34,7 +34,7 @@ private function buildForm()
 	{
 
    	$this->loadElements();
-   	$objForm = new form('researchft', $this->getFormAction());
+   	$objForm = new form('researchstud', $this->getFormAction());
 	$table = $this->newObject('htmltable', 'htmlelements');
 	$required = '<span class="required_field"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
  
@@ -49,6 +49,7 @@ private function buildForm()
 	$objnameLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentname2","mayibuyeform"),"name");
 	$table->addCell($objnameLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objname->show().$required);
+	$objForm->addRule('name', $this->objLanguage->languageText("mod_mayibuye_name_required", "mayibuyeform"), 'required');
 	$table->endRow();
 	
 	$table->startRow();
@@ -56,6 +57,7 @@ private function buildForm()
 	$objjobLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentjobtitle","mayibuyeform"),"jobtitle");
 	$table->addCell($objjobLabel->show(),'', 'center', 'left', '');         
 	$table->addCell($objjob->show().$required);
+	$objForm->addRule('jobtitle', $this->objLanguage->languageText("mod_mayibuye_job_required", "mayibuyeform"), 'required');
 	$table->endRow();
 
 	$table->startRow();	
@@ -63,6 +65,7 @@ private function buildForm()
 	$objorgLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentorganizationname","mayibuyeform"),"organazation");
 	$table->addCell($objorgLabel->show(),'', 'center', 'left', '');         
 	$table->addCell($objorg->show().$required);
+	$objForm->addRule('orgranization2', $this->objLanguage->languageText("mod_mayibuye_organization_required", "mayibuyeform"), 'required');
 	$table->endRow();
 	
 	$table->startRow();
@@ -77,6 +80,7 @@ private function buildForm()
 	$objTel3Label = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commenttelno","mayibuyeform"),"telno_3");
 	$table->addCell($objTel3Label->show(),'', 'center', 'left', '');
 	$table->addCell($objTelno3->show().$required);
+	$objForm->addRule('tellno_3', $this->objLanguage->languageText("mod_mayibuye_tell_required", "mayibuyeform"), 'required');
 	$table->startRow();
 	
 	$table->startRow();
