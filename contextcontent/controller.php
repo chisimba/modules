@@ -1125,6 +1125,8 @@ class contextcontent extends controller {
                 return 'chapternocontent_tpl.php';
             }
         } else {
+            return $this->nextAction('viewpage', array('id' => $firstPage['id'], 'message' => $this->getParam('message')));
+            /** code disabled due to Eteaching rejecting feature
             $chapter = $this->objContextChapters->getChapter($id);
             $page = $this->objContentOrder->getPage($firstPage['id'], $this->contextCode);
             $this->setVarByRef('nextPage', $this->objContentOrder->getNextPage($this->contextCode, $page['chapterid'], $page['lft']));
@@ -1138,6 +1140,7 @@ class contextcontent extends controller {
             $this->setVarByRef('prevchapterid', $id);
             $this->setLayoutTemplate('layout_firstpage_tpl.php');
             return 'viewchapter_tpl.php';
+            **/
             //   return $this->nextAction('viewpage', array('id' => $firstPage['id'], 'message' => $this->getParam('message')));
         }
     }
