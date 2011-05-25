@@ -298,6 +298,7 @@ class unesco_oer extends controller {
         $Manual = $this->getParam('Manual');
         $Besoractile = $this->getParam('Besoractile');
         $browsemapstring = $this->getParam('MapEntries');
+        $Filterinfo = $this->getsession('filter');
 
 
 
@@ -323,6 +324,7 @@ class unesco_oer extends controller {
         $this->setVarByRef("Besoractile", $Besoractile);
         $this->setVarByRef("adaptationstring", $adaptationstring);
         $this->setVarByRef("MapEntries", $browsemapstring);
+        $this->setVarByRef("Filterinfo", $Filterinfo);
 
 
 
