@@ -25,10 +25,10 @@ class institutionmanager extends object {
     private $_groupList;
     private $_group;
 
-    function init(){
+    function init() {
         $this->_objDbInstitution = $this->getObject('dbinstitution');
-        $this->_institution = NULL;
-        $this->_institutionList = NULL;
+        $this->_institution = $this->getObject('institution');
+        $this->_institutionList = array();
         $this->_group = NULL;
         $this->_groupList = NULL;
     }
@@ -44,7 +44,6 @@ class institutionmanager extends object {
     public function addInstitution(&$institution) {
         //$myInstitution = $this->loadObject('institution', 'unesco_oer');
         //TODO Ntsako Add this institution to the database
-
     }
 
     public function editInstitution($id) {
@@ -56,12 +55,35 @@ class institutionmanager extends object {
     }
 
     public function getInstitution($id) {
-        return $this->_objDbInstitution->getInstitutionById($id);
+        $this->_institution = $this->constructInstitution($id);
+
+        return $this->_institution;
     }
 
     public function getAllInstitutions() {
         //$this->_institutionList = $this->_objDbInstitution->getAllInstitutions();
         return $this->_objDbInstitution->getAllInstitutions();
+    }
+
+    private function constructInstitution($id) {
+        $parameters = $this->_objDbInstitution->getInstitutionById($id);
+
+        $myInstitution = $this->getObject('institution', 'unesco_oer');
+        $myInstitution->setId($parameters[0]['id']);
+        $myInstitution->setName($parameters[0]['name']);
+        $myInstitution->setDescription($parameters[0]['description']);
+        $myInstitution->setType($parameters[0]['type']);
+        $myInstitution->setCountry($parameters[0]['country']);
+        $myInstitution->setAddress($parameters[0]['address']);
+        $myInstitution->setZip($parameters[0]['zip']);
+        $myInstitution->setCity($parameters[0]['city']);
+        $myInstitution->setWebsiteLink($parameters[0]['websitelink']);
+        $myInstitution->setKeywords($parameters[0]['keywords']);
+        $myInstitution->addLinkedGroup($parameters[0]['linkedgroups']);
+        $myInstitution->setThumbnail($parameters[0]['thumbnail']);
+
+        return $myInstitution;
+
     }
 
 }

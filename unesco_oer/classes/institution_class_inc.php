@@ -73,16 +73,6 @@ class institution extends object {
      */
     private $_linkedGroups;
     /**
-     * Latitude coordinates
-     * @var <String>
-     */
-    private $_latitude;
-    /**
-     * Longitude coordinates
-     * @var <String>
-     */
-    private $_longitude;
-    /**
      * This is the thumbnail of the institution
      * @var <String>
      */
@@ -116,9 +106,21 @@ class institution extends object {
 //        $this->_keywords = $keywords;
 //        $this->_linkedGroups = $linkedGroups;
 //        $this->_thumbnail = $thumbnail;
-//        $this->_latitude = NULL;
-//        $this->_longitude = NULL;
 //    }
+    function init() {
+        $this->_id = NULL;
+        $this->_name = NULL;
+        $this->_description = NULL;
+        $this->_type = NULL;
+        $this->_country = NULL;
+        $this->_address = NULL;
+        $this->_zip = NULL;
+        $this->_city = NULL;
+        $this->_websiteLink = NULL;
+        $this->_keywords = NULL;
+        $this->_linkedGroups = NULL;
+        $this->_thumbnail = NULL;
+    }
 
     /**
      * Standard getter for the id of the institution
@@ -156,7 +158,7 @@ class institution extends object {
         $this->_name = $name;
     }
 
-    public function getDesciption() {
+    public function getDescription() {
         return $this->_description;
     }
 
@@ -188,11 +190,11 @@ class institution extends object {
         $this->_address = $adress;
     }
 
-    public function getZipCode() {
+    public function getZip() {
         return $this->_zip;
     }
 
-    public function setZipCode($zipCode) {
+    public function setZip($zipCode) {
         $this->_zip = $zipCode;
     }
 
@@ -220,27 +222,11 @@ class institution extends object {
         $this->_keywords = $keywords;
     }
 
-    public function getLatitude() {
-        $this->_latitude;
-    }
-
-    public function setLatitude($latitude) {
-        $this->_latitude = $latitude;
-    }
-
-    public function getLongitude() {
-        $this->_longitude;
-    }
-
-    public function setLongitude($longitude) {
-        $this->_longitude = $longitude;
-    }
-
     public function setThumbnail($thumbnail) {
         $this->_thumbnail = $thumbnail;
     }
 
-    public function getTgumbnail($thumbnail) {
+    public function getThumbnail($thumbnail) {
         return $this->_thumbnail;
     }
 
@@ -253,11 +239,11 @@ class institution extends object {
     }
 
     public function addLinkedGroup($groupId) {
-        $this->_linkedGroups = $group;
+        $this->_linkedGroups = $groupId;
     }
 
     public function removeLinkedGroup($groupId) {
-
+        
     }
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +15,69 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class institutiongui extends object{
+class institutiongui extends object {
+
 //    private $_institution;
     private $_institutionmanager;
+    private $_institution;
 
     function init() {
         $this->_institutionmanager = $this->getObject('institutionmanager', 'unesco_oer');
+        $this->_institution = $this->getObject('institution', 'unesco_oer');
     }
 
-    //Get the object and build it
-    function showInstitutionName($id){
-        $this->_institutionmanager = $this->getObject('institutionmanager', 'unesco_oer');
-        //$myInstitution = $this->_institutionmanager->getInstitution($id);
-//        echo is_object($this->_institutionmanager->getInstitution('gen15Srv41Nme47_69623_1306229613'));
-       // echo $myInstitution->getName();
+    function getInstitution($id) {
+        $this->_institution = $this->_institutionmanager->getInstitution($id);
     }
+
+    function showInstitutionName() {
+        echo $this->_institution->getName();
+    }
+
+    function showInstitutionDescription() {
+        echo $this->_institution->getDescription();
+    }
+
+    function showInstitutionType() {
+        echo $this->_institution->getType();
+    }
+
+    function showInstitutionCountry() {
+        echo $this->_institution->getCountry();
+    }
+
+    function showInstitutionKeywords() {
+        echo $this->_institution->getKeywords();
+    }
+
+    function showInstitutionAddress() {
+        echo $this->_institution->getAddress();
+    }
+
+    function showInstitutionWebsiteLink() {
+        echo $this->_institution->getWebsiteLink();
+    }
+
+    function showInstitutionLinkedGroups() {
+        echo $this->_institution->getAllLinkedGroups();
+    }
+
+    
+
+//    //Get the object and build it
+//    function showInstitutionName($id) {
+//        $myInstitution = $this->_institutionmanager->getInstitution($id);
+//        echo $myInstitution->getName();
+//    }
+//
+//    function showInstitutionDescription($id) {
+//        $myInstitution = $this->_institutionmanager->getInstitution($id);
+//        echo $myInstitution->getDescription();
+//    }
+
     function displayInstitution($institution) {
-
+        
     }
+
 }
 ?>
