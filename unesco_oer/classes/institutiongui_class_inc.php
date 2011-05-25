@@ -62,6 +62,10 @@ class institutiongui extends object {
         echo $this->_institution->getAllLinkedGroups();
     }
 
+    function showInstitutionThumbnail(){
+        echo '<img src="' . $this->_institution->getThumbnail() . '"><br />';
+    }
+
     
 
 //    //Get the object and build it

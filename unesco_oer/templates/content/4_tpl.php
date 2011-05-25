@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 'Off');
+ini_set('display_errors', 'On');
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
@@ -135,175 +135,177 @@ $institutionGUI->getInstitution('gen7Srv53Nme51_35455_1300785041');
                                 <a href="#" class="greyTextLink">Edit metadata</a><br>
                                 <br />
                                 <div class="leftImageHolder rightTwent">
-                                    <img src="skins/unesco_oer/images/3a-placeholder.jpg"><br />
+                                    <?php
+                                    $institutionGUI->showInstitutionThumbnail();
+                                    ?>
                                 </div>
                                 <?php
                                     $institutionGUI->showInstitutionDescription();
                                 ?>
-                                <br><br>
-                                <div class="adaptationInnerPageHeding"><h3 class="pinkText">Adaptations</h3></div>
-                                <br>
-                                <div class="leftColumnDiv">
-                                    <div class="moduleHeader blueText">FILTER PRODUCTS</div>
-                                    <div class="blueNumberBackground">
-                                        <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                                        <div class="numberOffilteredProducts">4</div>
-                                    </div>
-                                    <div class="moduleSubHeader">Product matches filter criteria</div>
-                                    <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
-                                    <div class="blueBackground blueBackgroundCheckBoxText">
-                                        <input type="checkbox"> Model<br>
-                                        <input type="checkbox"> Guide<br>
-                                        <input type="checkbox"> Handbook<br>
-                                        <input type="checkbox"> Manual<br>
-                                        <input type="checkbox"> Bestoractile<br>
-                                    </div>
+                                    <br><br>
+                                    <div class="adaptationInnerPageHeding"><h3 class="pinkText">Adaptations</h3></div>
                                     <br>
-                                    <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
-                                    <div class="blueBackground">
-                                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                            <option value="">All</option>
-                                        </select>
+                                    <div class="leftColumnDiv">
+                                        <div class="moduleHeader blueText">FILTER PRODUCTS</div>
+                                        <div class="blueNumberBackground">
+                                            <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
+                                            <div class="numberOffilteredProducts">4</div>
+                                        </div>
+                                        <div class="moduleSubHeader">Product matches filter criteria</div>
+                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
+                                        <div class="blueBackground blueBackgroundCheckBoxText">
+                                            <input type="checkbox"> Model<br>
+                                            <input type="checkbox"> Guide<br>
+                                            <input type="checkbox"> Handbook<br>
+                                            <input type="checkbox"> Manual<br>
+                                            <input type="checkbox"> Bestoractile<br>
+                                        </div>
+                                        <br>
+                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
+                                        <div class="blueBackground">
+                                            <select name="theme" id="theme" class="leftColumnSelectDropdown">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">UNESCO Product</div>
+                                        <div class="blueBackground">
+                                            <select name="theme" id="theme" class="leftColumnSelectDropdown">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
+                                        <div class="blueBackground">
+                                            <select name="language" id="language" class="leftColumnSelectDropdown">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
+                                        <div class="blueBackground">
+                                            <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                        <br><br>
+                                        <div class="blueBackground rightAlign">
+                                            <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
+                                            <a href="#" class="resetLink">RESET</a>
+                                        </div>
+
                                     </div>
-                                    <br>
-                                    <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">UNESCO Product</div>
-                                    <div class="blueBackground">
-                                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                            <option value="">All</option>
-                                        </select>
+
+                                    <div class="innerRightColumn4">
+                                        <div class="listAdaptations">
+                                            <div class="floaLeftDiv">
+                                                <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
+                                            </div>
+                                            <div class="rightColumInnerDiv">
+                                                <div class="blueListingHeading">Model Curricula for Journalism Education</div>
+                                                Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                <br>
+                                                <div class="listingAdaptationsLinkAndIcon">
+                                                    <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                                </div>
+
+                                                <div class="listingAdaptationsLinkAndIcon">
+                                                    <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="listAdaptations">
+                                            <div class="floaLeftDiv">
+                                                <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
+                                            </div>
+                                            <div class="rightColumInnerDiv">
+                                                <div class="blueListingHeading">Model Curricula for Journalism Education</div>
+                                                Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                <br>
+                                                <div class="listingAdaptationsLinkAndIcon">
+                                                    <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                                </div>
+
+                                                <div class="listingAdaptationsLinkAndIcon">
+                                                    <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="listAdaptations">
+                                            <div class="floaLeftDiv">
+                                                <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
+                                            </div>
+                                            <div class="rightColumInnerDiv">
+                                                <div class="blueListingHeading">Model Curricula for Journalism Education</div>
+                                                Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                <br>
+                                                <div class="listingAdaptationsLinkAndIcon">
+                                                    <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                                </div>
+
+                                                <div class="listingAdaptationsLinkAndIcon">
+                                                    <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="listAdaptations">
+                                            <div class="floaLeftDiv">
+                                                <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
+                                            </div>
+                                            <div class="rightColumInnerDiv">
+                                                <div class="blueListingHeading">Model Curricula for Journalism Education</div>
+                                                Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                                <br>
+                                                <div class="listingAdaptationsLinkAndIcon">
+                                                    <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                                </div>
+
+                                                <div class="listingAdaptationsLinkAndIcon">
+                                                    <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <br>
-                                    <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
-                                    <div class="blueBackground">
-                                        <select name="language" id="language" class="leftColumnSelectDropdown">
-                                            <option value="">All</option>
-                                        </select>
-                                    </div>
-                                    <br>
-                                    <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
-                                    <div class="blueBackground">
-                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                                            <option value="">All</option>
-                                        </select>
+
+                                </div>
+                            </div>
+                            <div class="innerRightContent">
+                                <div class="rightColumn4RightPadding">
+                                    <div class="printEmailDownloadIcons">
+                                        <a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15"></a>
+                                        <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" width="19" height="15"></a>
                                     </div>
                                     <br><br>
-                                    <div class="blueBackground rightAlign">
-                                        <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                                        <a href="#" class="resetLink">RESET</a>
-                                    </div>
-
-                                </div>
-
-                                <div class="innerRightColumn4">
-                                    <div class="listAdaptations">
-                                        <div class="floaLeftDiv">
-                                            <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
-                                        </div>
-                                        <div class="rightColumInnerDiv">
-                                            <div class="blueListingHeading">Model Curricula for Journalism Education</div>
-                                            Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                            <br>
-                                            <div class="listingAdaptationsLinkAndIcon">
-                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
-                                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                                            </div>
-
-                                            <div class="listingAdaptationsLinkAndIcon">
-                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                                                <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="listAdaptations">
-                                        <div class="floaLeftDiv">
-                                            <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
-                                        </div>
-                                        <div class="rightColumInnerDiv">
-                                            <div class="blueListingHeading">Model Curricula for Journalism Education</div>
-                                            Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                            <br>
-                                            <div class="listingAdaptationsLinkAndIcon">
-                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
-                                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                                            </div>
-
-                                            <div class="listingAdaptationsLinkAndIcon">
-                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                                                <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="listAdaptations">
-                                        <div class="floaLeftDiv">
-                                            <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
-                                        </div>
-                                        <div class="rightColumInnerDiv">
-                                            <div class="blueListingHeading">Model Curricula for Journalism Education</div>
-                                            Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                            <br>
-                                            <div class="listingAdaptationsLinkAndIcon">
-                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
-                                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                                            </div>
-
-                                            <div class="listingAdaptationsLinkAndIcon">
-                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                                                <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="listAdaptations">
-                                        <div class="floaLeftDiv">
-                                            <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder">
-                                        </div>
-                                        <div class="rightColumInnerDiv">
-                                            <div class="blueListingHeading">Model Curricula for Journalism Education</div>
-                                            Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
-                                            <br>
-                                            <div class="listingAdaptationsLinkAndIcon">
-                                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
-                                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                                            </div>
-
-                                            <div class="listingAdaptationsLinkAndIcon">
-                                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                                                <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="innerRightContent">
-                            <div class="rightColumn4RightPadding">
-                                <div class="printEmailDownloadIcons">
-                                    <a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15"></a>
-                                    <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" width="19" height="15"></a>
-                                </div>
-                                <br><br>
-                                <span class="greyText fontBold">Type of institution:</span> <?php $institutionGUI->showInstitutionType(); ?>
-                                <br><br>
-                                <span class="greyText fontBold">Country:</span>  <?php $institutionGUI->showInstitutionCountry(); ?>
-                                <br><br>
-                                <span class="greyText fontBold">Address:</span><?php $institutionGUI->showInstitutionAddress(); ?>
-                                <br><br>
-                                <span class="greyText fontBold">Institution website:</span> <a href="#" class="greyTextLink"><?php $institutionGUI->showInstitutionWebsiteLink(); ?></a>
-                                <br><br>
-                                <span class="greyText fontBold">Keywords:</span> <?php $institutionGUI->showInstitutionKeywords(); ?> | <?php $institutionGUI->showInstitutionKeywords(); ?>
-                                <br><br>
-                                <span class="greenText fontBold">Linked groups:</span>
-                                <br>
-                                <div class="linkedGroups">
-                                    <a href="#" class="greenTextLink"><?php $institutionGUI->showInstitutionLinkedGroups(); ?></a><br>
-                                    <a href="#" class="greenTextLink"><?php $institutionGUI->showInstitutionLinkedGroups(); ?></a>
+                                    <span class="greyText fontBold">Type of institution:</span> <?php $institutionGUI->showInstitutionType(); ?>
+                                    <br><br>
+                                    <span class="greyText fontBold">Country:</span>  <?php $institutionGUI->showInstitutionCountry(); ?>
+                                    <br><br>
+                                    <span class="greyText fontBold">Address:</span><?php $institutionGUI->showInstitutionAddress(); ?>
+                                    <br><br>
+                                    <span class="greyText fontBold">Institution website:</span> <a href="#" class="greyTextLink"><?php $institutionGUI->showInstitutionWebsiteLink(); ?></a>
+                                    <br><br>
+                                    <span class="greyText fontBold">Keywords:</span> <?php $institutionGUI->showInstitutionKeywords(); ?> | <?php $institutionGUI->showInstitutionKeywords(); ?>
+                                    <br><br>
+                                    <span class="greenText fontBold">Linked groups:</span>
+                                    <br>
+                                    <div class="linkedGroups">
+                                        <a href="#" class="greenTextLink"><?php $institutionGUI->showInstitutionLinkedGroups(); ?></a><br>
+                                        <a href="#" class="greenTextLink"><?php $institutionGUI->showInstitutionLinkedGroups(); ?></a>
                                 </div>
                                 <br><br>
                                 <span class="greyText fontBold">Community related information:</span>

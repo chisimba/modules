@@ -226,7 +226,7 @@ class institution extends object {
         $this->_thumbnail = $thumbnail;
     }
 
-    public function getThumbnail($thumbnail) {
+    public function getThumbnail() {
         return $this->_thumbnail;
     }
 
