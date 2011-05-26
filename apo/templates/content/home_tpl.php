@@ -48,7 +48,7 @@ if (count($documents) > 0) {
         $objIcon->setIcon('pdf');
         $makepdf->link = $objIcon->show();
         $objIcon->setIcon('forward', 'png');
-        $forwardDocument->link  = "<img src='".$this->getResourceUri('images/', 'apo')."forward.png'>" ;
+        $forwardDocument->link  = "<img src=".$this->getResourceUri('images/', 'apo')."forward.png>";
         if ($document['currentuserid'] == "Administrative User") {
             $link = new link($this->uri(array("action" => "showeditdocument", "id" => $document['id'])));
 
