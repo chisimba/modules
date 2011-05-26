@@ -54,6 +54,7 @@ class dbinstitution extends dbtable {
         $this->insert($data);
     }
 
+
     //to get an institution latitude
     function  getInstitutionLatitude($InstitutionNameID){
         $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE id='$InstitutionNameID'";

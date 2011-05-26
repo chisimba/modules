@@ -22,9 +22,38 @@ class dbgroups extends dbtable {
     }
 
     function getGroups() {
-        $sql = "select name from tbl_unesco_oer_groups";
+        $sql = "select * from tbl_unesco_oer_groups";
         return $this->getArray($sql);
     }
+
+    function getGroup($groupid){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
+        $GroupName=$this->getArray($sql);
+        return $GroupName[0]['name'];
+    }
+
+ 
+    function deleteGroup($groupid) {
+        $sql = "DELETE FROM tbl_unesco_oer_groups WHERE id='$groupid'";
+        $this->getArray($sql);
+    }
+
+     function editgroup($id,$puid,$loclat,$loclong,$name,$description){
+       return $this->update(
+                    'puid',
+                     $puid,
+                     array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'Description'=>$description,'id'=>$id)
+            );
+        }
+    
+    function leavegroup(){
+        
+    }
+
+
+
+
+
 
     function addGroup($name, $loclat, $loclong, $thumbnailPath, $country = NULL) {
         $data = array(
@@ -141,13 +170,47 @@ class dbgroups extends dbtable {
     * @param $Name
     * return typeID
     */
-    function getGroupCountry($name){
-        $sql = "SELECT * FROM $this->_tableName WHERE name='$name'";
-        $group=$this->getArray($sql);
-        return $group[0]['country'];
+
+      function getSubgroups($groupid){
+
     }
 
-}
+
+
+    function getDescription($groupid) {
+        $sql = " select * from tbl_unesco_oer_groups where id='$groupid'";
+        $GroupDescription = $this->getArray($sql);
+        return $GroupDescription[0]['Description'];
+    }
+
+    function getLinkedInstitution($groupid) {
+        $sql = " select * from tbl_unesco_oer_groups where id='$groupid'";
+        $Institution = $this->getArray($sql);
+        return $Institution[0]['LinkedInstitution'];
+    }
+    
+    function getMembers($groupid) {
+        $sql = " select * from tbl_unesco_oer_groups where id='$groupid'";
+        $GroupMembers = $this->getArray($sql);
+        return $GroupMembers[0]['Members'];
+    }
+
+    function getLinkedDiscussion($groupid){
+        $sql = " select * from tbl_unesco_oer_groups where id='$groupid'";
+        $Discussion = $this->getArray($sql);
+        return $Discussion[0]['LinkedDiscussion'];
+       }
+
+
+    function joinGroup($userid,$group){
+
+    }
+
+    function LeaveGroup($userid,$group){
+
+    }
+
+   }
 
 ?>
 

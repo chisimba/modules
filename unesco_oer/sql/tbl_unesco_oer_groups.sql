@@ -1,8 +1,8 @@
 <?php
 
 //define table
-$tablename = 'tbl_unesco_oer_groups';
-$options = array('comment'=>'Table to store groups','collate'=>'utf8_general_ci','character_set'=>'utf8');
+$tablename = 'tbl_unesco_oer_subgroups';
+$options = array('comment'=>'Table to store subgroups','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
 //define fields
 $fields = array(
@@ -11,7 +11,11 @@ $fields = array(
                 'loclat' =>array('type' =>'text','length'=>255),
                 'loclong' =>array('type' =>'text','length'=>255),
                 'country' =>array('type' =>'text','length'=>255),
-                'thumbnail' =>array('type' => 'text', 'length' =>255)
+                'thumbnail' =>array('type' => 'text', 'length' =>255),
+                'Description'=>array('type'=>'text','length'=>128,'not null'),
+                'LinkedInstitution' => array('type' => 'text','length' =>32,'not null'),
+                'LinkedDiscussion'=>array('type'=>'text','length'=>128,'not null'),
+                'Members' => array('type' => 'text','length' => 128,'not null')
 		
 );
 ?>

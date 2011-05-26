@@ -87,6 +87,14 @@ if ($adaptationstring == null)
                                         <td><a href="#" class="prifileLinks">My Groups</a></td>
                                         <td><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger"></td>
                                         <td><a href="#" class="prifileLinks">My Messenger</a></td>
+                                         <td><img src="skins/unesco_oer/images/icon-product-add-node.png"></td>
+                                          <td><a href="#" class="prifileLinks">
+                                            <?php
+                                            $abLink = new link($this->uri(array("action" => "userRegistrationForm")));
+                                            $abLink->link = 'Add User';
+                                            echo $abLink->show();
+                                            ?>
+                                            </a></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
@@ -181,6 +189,10 @@ if ($adaptationstring == null)
                             echo $abLink->show();
                             ?>
                         </div>
+                    </div>
+                    <div class="mainNavPipe"></div>
+                    <div class="navitem">
+                    <div class="navitemInner"><a href="#">GROUPS</a></div>
                     </div>
                     <div class="mainNavPipe"></div>
                     <div class="navitem">
@@ -594,6 +606,7 @@ if ($adaptationstring == null)
                                            
                                                     ];
 
+  
 
                                                     title = [
 
