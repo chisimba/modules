@@ -7,19 +7,27 @@ $options = array('comment'=>'Table to store Products','collate'=>'utf8_general_c
 //define fields
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
-                'parent_id' =>array('type' =>'text','length'=>32),
+                'relation' =>array('type' =>'text','length'=>32),
                 'title'=>array('type'=>'text','length'=>255,'not null'),
-                'creator' => array('type' => 'text','length' => 32),
-                'keywords' =>array('type' =>'text','length'=>255),
-                'description'=>array('type'=>'text'),
-                'created_on' => array('type' => 'timestamp'),
+                'alternative_title'=>array('type'=>'text','length'=>255,'not null'),
                 'resource_type' =>array('type' =>'text','length'=>32),
-                'content_type'=>array('type'=>'text','length'=>32),
-                'format'=> array('type' => 'text','length' => 32),
-                'source'=>array('type' =>'text','length'=>32),
+                'date' => array('type' => 'timestamp'),
+                'language'=>array('type' => 'text','length' => 32),
+                'description'=>array('type'=>'text'),
+                'abstract'=>array('type'=>'text'),
+                'table_of_contents'=>array('type'=>'text'),
+                'creator' => array('type' => 'text','length' => 32),
+                'contacts'=>array('type'=>'text'),  //unesco contacts
+                'publisher' =>array('type' =>'text','length'=>255),
                 'theme'=>array('type' =>'text','length'=>32),
-                'language'=>array('type' =>'text','length'=>3),
-                'content'=>array('type' =>'text'),
+                'keywords' =>array('type' =>'text','length'=>255),
+                'related_language' => array ('type' => 'text'), //consider using key to relate all translations
+                'other_contributors' => array ('type' => 'text'),
+                'format'=> array('type' => 'text','length' => 32),
+                'coverage' => array('type' => 'text', 'length'=>255),
+                'rights' => array('type' => 'text', 'length'=>512),
+                'rights_holder' => array('type' => 'text', 'length'=>255),
+                'provenance' => array('type' => 'text', 'length'=>512),
                 'thumbnail'=>array('type'=>'text','length'=>512)
  		);
 ?>

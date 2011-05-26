@@ -151,7 +151,6 @@ class unesco_oer extends controller {
             return "5a_tpl.php";
         } else {
             $this->setLayoutTemplate('3a_layout_tpl.php');
-            $this->setLayoutTemplate("1a_layout_tpl.php");
             return "3a_tpl.php";
         }
     }
@@ -230,7 +229,7 @@ class unesco_oer extends controller {
 
 
         $temporary = $string[0]['name'];
-        $Buildstring = 'creator = ' . "'$temporary'" . ' and parent_id is not null';
+        $Buildstring = 'creator = ' . "'$temporary'" . ' and relation is not null';
 
 
 
@@ -265,7 +264,7 @@ class unesco_oer extends controller {
     public function __FilterAdaptations() {
 
         $parentid = $this->getParam('parentid');
-        $adaptationstring = 'parent_id = ' . "'$parentid'";
+        $adaptationstring = 'relation = ' . "'$parentid'";
 
         $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile);
         $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter, $PageNum, $TotalEntries);
@@ -333,7 +332,7 @@ class unesco_oer extends controller {
     }
 
     public function requiresLogin($action) {
-        $required = array('addData', 'editProduct');
+        $required = array('addData', 'editProduct', 'test', 'savetest');
         if (in_array($action, $required)) {
             return TRUE;
         } else {
@@ -472,7 +471,7 @@ class unesco_oer extends controller {
 
         //determine if a new product must be added or an old one must be updated
         if ($isNewProduct) {
-            $data = array_merge($data, array('parent_id' => $parentID));
+            $data = array_merge($data, array('relation' => $parentID));
             $this->objDbProducts->addProduct($data);
         } else {
             $this->objDbProducts->updateProduct($parentID, $data);
@@ -842,5 +841,33 @@ class unesco_oer extends controller {
         return "myPage_tpl.php";
     }
 
+    public function __test() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+
+        return "test_tpl.php";
+    }
+
+    public function __savetest() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $defaultTemplate = "test_tpl.php";
+
+        switch (strtolower($this->getParam('submit'))) {
+            case "cancel":
+                return $defaultTemplate;
+                break;
+
+            case "upload":
+                $product = $this->getObject('product');
+                $product->handleUpload();
+                return $defaultTemplate;
+                break;
+
+            default:
+                return $defaultTemplate;
+                break;
+        }
+
+
+    }
 }
 ?>

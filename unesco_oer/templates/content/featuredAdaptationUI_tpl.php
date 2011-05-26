@@ -32,7 +32,7 @@ $header->str = "Select product to feature:";
 echo $header->show();
 
 // retrieve data from tbl_unesco_oer_feturedproducts
-$products = $this->objDbProducts->getArray('select id,title,parent_id,puid from tbl_unesco_oer_products where parent_id is not null');
+$products = $this->objDbProducts->getArray('select id,title,relation,puid from tbl_unesco_oer_products where relation is not null');
 
 //create headings for table
 $table->startHeaderRow();

@@ -378,7 +378,7 @@ class productutil extends object
 
         foreach ($MostAdaptedProducts as $childProduct) {
             //Get the original products
-            $product = $objDbProducts->getProductById($childProduct['parent_id']);
+            $product = $objDbProducts->getProductById($childProduct['relation']);
             //Get number of adaptations for the product
             $product['noOfAdaptations'] = $childProduct['total'];
             //Check if the creator is a group or an institution

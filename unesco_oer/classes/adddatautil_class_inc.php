@@ -34,7 +34,7 @@ class adddatautil extends object {
         $table->endRow();
     }
     
-    function addTitleToRow($title, $titleType, $table, $colspan=null){
+    function addTitleToRow($title, $titleType, $table){
         $header = new htmlHeading();
         $header->str = $title;
         $header->type = $titleType;
@@ -68,24 +68,24 @@ class adddatautil extends object {
         $table->endRow();
     }
 
-    function addDropDownToTable($title, $titleType, $name, $inputArray, $initValue, $field, $table){
+    function addDropDownToTable($title, $titleType, $name, $inputArray, $initValue, $field, $table, $value = null){
         $table->startRow();
         $this->addTitleToRow($title, $titleType, $table);
-        $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table);
+        $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value);
         $table->endRow();
     }
 
-    function addDropDownToRow($name, $inputArray, $initValue, $field, $table){
+    function addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value = null){
         $dropdown = new dropdown($name);
+        $dropdown->addOption(NULL, 'none');
         foreach ($inputArray as $input) {
-            $dropdown->addOption($input[$field]);
+            $dropdown->addOption($input['id'], $input[$field]);
         }
-        $dropdown->addOption('none');
-
+        
         if (strlen($initValue) > 0){
             $dropdown->setSelected($initValue);
         }else{
-            $dropdown->setSelected('none');
+            $dropdown->setSelected(NULL);
         }
         
         $table->addCell($dropdown->show());

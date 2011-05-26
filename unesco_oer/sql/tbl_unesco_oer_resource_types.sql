@@ -8,6 +8,7 @@ $options = array('comment'=>'Table to store resources types','collate'=>'utf8_ge
 //define fields
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
+                'table_name'=>array('type'=>'text','length'=>128),
 		'description'=>array('type'=>'text','length'=>128)
 		
 );

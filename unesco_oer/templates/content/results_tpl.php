@@ -173,7 +173,7 @@ $adaptationstring = $finalstring;
                     <div class="navitem">
                         <div class="navitemInner">
                             <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
                                             $abLink->link = 'UNESCO OER PRODUCTS';
                                             echo $abLink->show();
                             ?>
@@ -184,7 +184,7 @@ $adaptationstring = $finalstring;
                                     <div class="navitem">
                                         <div class="navitemInner">
                             <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
                                             $abLink->link = 'PRODUCT ADAPTATIONS';
                                             echo $abLink->show();
                             ?>
@@ -597,7 +597,7 @@ $adaptationstring = $finalstring;
                                         $count = 0;
                                         $noOfAdaptations = 0;
                                         foreach ($products as $product) {               //populates table
-                                            if ($product['parent_id'] == null) {
+                                            if ($product['relation'] == null) {
                                                 $count++;
                                                 $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
 
@@ -854,7 +854,7 @@ $adaptationstring = $finalstring;
 //                                                $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
 //
 //                                                //If the product is an adaptation
-//                                                if ($product['parent_id'] != NULL) {
+//                                                if ($product['relation'] != NULL) {
 //                                                    $featuredAdaptedProduct = $product;
 //                                                }
 //                                            }

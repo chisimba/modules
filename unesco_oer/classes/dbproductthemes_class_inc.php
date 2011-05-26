@@ -22,7 +22,7 @@ class dbproductthemes extends dbtable {
     }
 
     function getProductThemes() {
-        $sql = "select description from tbl_unesco_oer_product_themes";
+        $sql = "select * from tbl_unesco_oer_product_themes";
         return $this->getArray($sql);
     }
 

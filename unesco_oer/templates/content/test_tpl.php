@@ -14,23 +14,30 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class dbproductlanguages extends dbtable {
+$product = $this->getObject('product');
 
-    function init() {
-        parent::init("tbl_unesco_oer_product_languages");
-    }
+echo $product->showMetaDataInput(NULL);
 
-    function getProductLanguages(){
-        $sql = "select * from tbl_unesco_oer_product_languages";
-        return $this->getArray($sql);
-    }
-    function addLanguage($code,$name) {
-        $data=array(
-            'code'=>$code,
-            'name'=>$name
-        );
-
-        $this->insert($data);
-    }
-}
+//echo $product->dummyValue;
+//echo "<br>";
+//
+//
+//echo '$product->loadProduct()';
+//echo "<br>";
+//$product->loadProduct('gen14Srv22Nme13_7686_1306327564');
+//
+//echo $product->getIdentifier();
+//echo "<br>";
+//
+//echo '$product->setTitle("It changed")';
+//echo "<br>";
+//$product->setTitle('It changed');
+//
+//echo '$product->saveProduct()';
+//echo "<br>";
+//
+//$product->saveProduct();
+//
+//echo $product->dummyValue;
+//echo "<br>";
 ?>

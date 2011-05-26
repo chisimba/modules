@@ -33,14 +33,14 @@ class dbproducts extends dbtable
 
     function getProductTitle($title)
     {
-        $sql = "select * from tbl_unesco_oer_products where title = '$title'";
+        $sql = "select * from $this->_tableName where title = '$title'";
 
         return $this->getArray($sql);
     }
 
     function getTotalEntries($filter)
     {
-        $sql = "SELECT * FROM tbl_unesco_oer_products where $filter";
+        $sql = "SELECT * FROM $this->_tableName where $filter";
         $count = $this->getArray($sql);
 
         return count($count);
@@ -48,7 +48,7 @@ class dbproducts extends dbtable
 
     function getFilteredProducts($filter)
     {
-        $sql = "select * from tbl_unesco_oer_products where $filter";
+        $sql = "select * from $this->_tableName where $filter";
 
         return $this->getArray($sql);
     }
@@ -62,7 +62,7 @@ class dbproducts extends dbtable
 
     function getProducts($start, $end)
     {
-        $sql = "select * from tbl_unesco_oer_products limit $start,$end";
+        $sql = "select * from $this->_tableName limit $start,$end";
 
         return $this->getArray($sql);
     }
@@ -82,7 +82,7 @@ class dbproducts extends dbtable
     //TODO Ntsako check the hierichal storage of data to make this more efficient
     function getNoOfAdaptations($parentId)
     {
-        $sql = "SELECT * FROM tbl_unesco_oer_products WHERE parent_id = '$parentId'";
+        $sql = "SELECT * FROM $this->_tableName WHERE relation = '$parentId'";
         $child = $this->getArray($sql);
 
         return count($child);
@@ -91,9 +91,9 @@ class dbproducts extends dbtable
     function getMostAdaptedProducts($displayAllMostAdaptedProducts) {
         //If the more link has been clicked, retrieve all adapted products
         if($displayAllMostAdaptedProducts == true){
-            $sql = "SELECT parent_id, creator, count(*) AS total FROM tbl_unesco_oer_products WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC";
+            $sql = "SELECT relation, creator, count(*) AS total FROM $this->_tableName WHERE relation IS NOT NULL GROUP BY relation ORDER BY total DESC";
         }else{//By default, display only the three most adapted products
-            $sql = "SELECT parent_id, creator, count(*) AS total FROM tbl_unesco_oer_products WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC LIMIT 3";
+            $sql = "SELECT relation, creator, count(*) AS total FROM $this->_tableName WHERE relation IS NOT NULL GROUP BY relation ORDER BY total DESC LIMIT 3";
         }
         
         return $this->getArray($sql);
@@ -105,12 +105,12 @@ class dbproducts extends dbtable
         //If searching by id
         $sql = '';
         if (strlen($id)>2){
-            $sql = "select * from tbl_unesco_oer_products where id = '$id'";
+            $sql = "select * from $this->_tableName where id = '$id'";
         }  else {
             //If searching by puid
-            $sql = "select * from tbl_unesco_oer_products where puid = '$id'";
+            $sql = "select * from $this->_tableName where puid = '$id'";
         }
-        //$sql = "select * from tbl_unesco_oer_products where id = '$id'";
+        //$sql = "select * from $this->_tableName where id = '$id'";
         $products = $this->getArray($sql);
         return $products[0]; //TODO add error handler for non unique ID.
     }
@@ -122,10 +122,10 @@ class dbproducts extends dbtable
      */
 
     function hasAnAdaptation($creatorName) {
-        $sql = "SELECT * FROM tbl_unesco_oer_products WHERE creator ='$creatorName'";
+        $sql = "SELECT * FROM $this->_tableName WHERE creator ='$creatorName'";
         $Array = $this->getArray($sql);
         for ($i = 0; $i < count($Array); $i++) {
-            if ($Array[$i]['id'] == $Array[$i]['parent_id']) {
+            if ($Array[$i]['id'] == $Array[$i]['relation']) {
                 $Adaptation = 1; // True;
                 return $Adaptation;
             } else {
@@ -137,7 +137,7 @@ class dbproducts extends dbtable
 
     function isAdaptation($id){
         $product = $this->getProductByID($id);
-        if ($product['parent_id'] == null){
+        if ($product['relation'] == null){
             return FALSE;
         }else{
             return TRUE;

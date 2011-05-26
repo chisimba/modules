@@ -7,7 +7,7 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 if ($adaptationstring == null)
-    $adaptationstring = "parent_id is not null";
+    $adaptationstring = "relation is not null";
 $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 $institutionGUI->getInstitution('gen7Srv53Nme51_35455_1300785041');
 ?>

@@ -4,7 +4,7 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
-$adaptationstring = "parent_id is null";
+$adaptationstring = "relation is null";
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -66,7 +66,7 @@ $adaptationstring = "parent_id is null";
                     </div>
                     <div class="logoutSearchDivRight">
                         <div class="searctInputTextDiv">
-                            <div class="searchGoButton"><a href="">
+                            <div class="searchGoButton"> <!-- <a href="">
 <!--                                    <img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>-->
 
 
@@ -177,7 +177,7 @@ $adaptationstring = "parent_id is null";
                                             <div class="navitemOnstate">
                                                 <div class="navitemInnerOnstate">
                             <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
                                         $abLink->link = 'UNESCO OER PRODUCTS';
                                         echo $abLink->show();
                             ?>
@@ -187,7 +187,7 @@ $adaptationstring = "parent_id is null";
                                 <div class="navitem">
                                     <div class="navitemInner">
                             <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
                                         $abLink->link = 'PRODUCT ADAPTATIONS';
                                         echo $abLink->show();
                             ?>
@@ -223,8 +223,8 @@ $adaptationstring = "parent_id is null";
 
                             <?php
                                         if ($finalstring == null) {                       //Initialization check
-                                            $finalstring = 'parent_id is null';
-                                            $TotalEntries = 'parent_id is null';
+                                            $finalstring = 'relation is null';
+                                            $TotalEntries = 'relation is null';
                                         }
 
                                         echo $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
@@ -488,7 +488,7 @@ $adaptationstring = "parent_id is null";
                                         <a href="#" class="resetLink">
 
                             <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
                                         $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
                                         echo $abLink->show();
                             ?>
@@ -549,14 +549,14 @@ $adaptationstring = "parent_id is null";
 
 
                             <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
                                         $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
                                         echo $abLink->show();
                             ?>
 
                                         <div class="gridListDivView">
                                 <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
                                         $abLink->link = 'GRID';
                                         echo $abLink->show();
                                 ?>
@@ -565,7 +565,7 @@ $adaptationstring = "parent_id is null";
                                     <div class="gridListPipe">|</div>
 
                             <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1b_tpl.php')));
                                         $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                                         echo $abLink->show();
                             ?>
@@ -573,20 +573,31 @@ $adaptationstring = "parent_id is null";
                                         <div class="gridListDivView">
 
                                 <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1b_tpl.php')));
                                         $abLink->link = 'LIST';
                                         echo $abLink->show();
                                 ?>
+                                            </div>
+                                            
                                 <?php
+                                $divOpen = '<div class="gridListPipe">|</div>
+                                            <div class="gridListDivView">';
+                                $divClose = '</div>';
                                         if ($this->objUser->isLoggedIn()) {
-                                            $newProductLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
+                                            $abLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
+                                            $abLink->link = '<img src="skins/unesco_oer/images/icon-new-product.png" alt="New Product" width="20" height="20" class="imgFloatRight">';
+                                            
+                                            $newProductLink = new link($this->uri(array("action" => "test", 'prevAction' => 'home')));
                                             $newProductLink->link = "New product";
 
-                                            echo '&nbsp;|&nbsp;' . $newProductLink->show();
+                                            echo $divOpen;
+                                            echo  $abLink->show();
+                                            echo $newProductLink->show();
+                                            echo $divClose;
                                         }
                                 ?>
 
-                                    </div>
+                                    
                                 </div>
                             </div>
                     <?php
@@ -603,7 +614,7 @@ $adaptationstring = "parent_id is null";
                                         $noOfAdaptations = 0;
 
                                         foreach ($products as $product) {               //populates table
-                                            if ($product['parent_id'] == null) {
+                                            if ($product['relation'] == null) {
                                                 $count++;
                                                 $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
 

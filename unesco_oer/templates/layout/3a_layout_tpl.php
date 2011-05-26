@@ -125,7 +125,7 @@
                     <ul id="sddm">
                                                  <li class="onStateProducts">
                           <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
                                             $abLink->link = 'UNESCO OER PRODUCTS';
                                             echo $abLink->show();
                             ?>
@@ -143,7 +143,7 @@
 
                                                  <li>
                                                                        <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
                                             $abLink->link = 'Product Adaptations';
                                             echo $abLink->show();
                             ?>

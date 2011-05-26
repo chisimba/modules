@@ -16,7 +16,7 @@ $this->loadClass('search','unesco_oer');
 
 
 if ($adaptationstring == null)
-    $adaptationstring = 'parent_id is not null';
+    $adaptationstring = 'relation is not null';
 
 
 
@@ -165,7 +165,7 @@ if ($adaptationstring == null)
                     <div class="navitem">
                         <div class="navitemInner">
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
                             $abLink->link = 'UNESCO OER PRODUCTS';
                             echo $abLink->show();
                             ?>
@@ -176,7 +176,7 @@ if ($adaptationstring == null)
                     <div class="navitemOnstate">
                         <div class="navitemInnerOnstate">
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
                             $abLink->link = 'PRODUCT ADAPTATIONS';
                             echo $abLink->show();
                             ?>
@@ -209,7 +209,7 @@ if ($adaptationstring == null)
                         <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
                         <div class="numberOffilteredProducts">
                             <?php
-                            echo $TotalRecords = $this->objDbProducts->getTotalEntries('parent_id is not null');
+                            echo $TotalRecords = $this->objDbProducts->getTotalEntries('relation is not null');
                             ?>
                         </div>
                     </div>
@@ -289,7 +289,7 @@ if ($adaptationstring == null)
 
 
 
-                    $products = $this->objDbProducts->getFilteredProducts('parent_id is not null');
+                    $products = $this->objDbProducts->getFilteredProducts('relation is not null');
                     $newRow = true;
                     $count = 0;
 
@@ -478,7 +478,7 @@ if ($adaptationstring == null)
 
                         <?php
 //
-                        $TotalRecords = $this->objDbProducts->getTotalEntries('parent_id is not null');
+                        $TotalRecords = $this->objDbProducts->getTotalEntries('relation is not null');
 
                         $TotalPages = ceil($TotalRecords / $NumFilter);
 
@@ -531,7 +531,7 @@ if ($adaptationstring == null)
                                 $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
 
                                 //If the product is an adaptation
-                                if ($product['parent_id'] != NULL) {
+                                if ($product['relation'] != NULL) {
                                     $featuredAdaptedProduct = $product;
                                 }
                             }

@@ -28,7 +28,7 @@ echo $header->show();
 
 // retrieve data from tbl_unesco_oer_products
 $products = $this->objDbProducts->
-        getArray('select id,title,parent_id from tbl_unesco_oer_products');
+        getArray('select id,title,relation from tbl_unesco_oer_products');
 
 //create headings for table
 $table->startHeaderRow();
@@ -51,7 +51,7 @@ if (count($products) > 0){
         $table->startRow();
         $table->addCell($product['id'].$newAdaptationLink->show());
         $table->addCell($product['title']);
-        $table->addCell($product['parent_id']);
+        $table->addCell($product['relation']);
         $table->endRow();
     }
 }

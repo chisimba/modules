@@ -1,28 +1,17 @@
 <?php
-/* 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the
- * Free Software Foundation, Inc.,
- * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
-
-    $this->loadClass('commentmanager','unesco_oer');
-    $this->loadClass('link', 'htmlelements');
+$this->loadClass('link', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('checkbox', 'htmlelements');
+$adaptationstring = "relation is null";
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>UNESCO</title>
-<script type="text/javascript" language="javascript" src="ratingsys.js"></script>
+<!-- TODO chasimbanize the java script where appropriate -->
+<!--<script type="text/javascript" src="ratingsys.js"></script>-->
 <link href="style.css" rel="stylesheet" type="text/css">
 <link href="rate_stars.css" rel="stylesheet" type="text/css">
 <!--[if IE]>
@@ -51,6 +40,9 @@
                     <div class="profileBookmarkGroupsMessengerDiv">
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
+
+
+
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger" width="20" height="20" class="userIcons" title="My Messenger"></a>
@@ -88,6 +80,8 @@
                 </div>
             </div>
 
+
+
             <?php
                                         } else {
 ?>
@@ -113,29 +107,37 @@
                     <a href="" class="languagesLinks">لعربية</a> |
                     <a href="" class="languagesLinks">中文</a>
                     </div>
-                    <img src="skins/unesco_oer/images/icon-languages.png" class="languagesMainIcon">
+                    <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages" class="languagesMainIcon">
     			</div>
                 <div class="mainNavigation">
                     <ul id="sddm">
-                         <li>
-                                      <?php
+                                                 <li class="onStateProducts">
+                          <?php
                                             $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
                                             $abLink->link = 'UNESCO OER PRODUCTS';
                                             echo $abLink->show();
                             ?>
 
 
-                         </li>
-                         <li class="mainNavPipe">&nbsp;</li>
-                         <li class="onStateAdaptations">
 
-                                                          <?php
+
+<!--<a href="#">UNESCO OER PRODUCTS</a>      -->
+                                                 </li>
+                       <li class="mainNavPipe">&nbsp;</li>
+
+
+
+
+
+                                                 <li>
+                                                                       <?php
                                             $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
                                             $abLink->link = 'Product Adaptations';
                                             echo $abLink->show();
                             ?>
 
-<!--                             <a href="#">PRODUCT ADAPTATIONS</a></li>-->
+
+                                                 </li>
 						 <li class="mainNavPipe">&nbsp;</li>
                          <li><a href="#">GROUPS</a></li>
 						 <li class="mainNavPipe">&nbsp;</li>
@@ -145,50 +147,13 @@
 						 <li class="mainNavPipe">&nbsp;</li>
                          <li><a href="#">CONTACT</a></li>
                     </ul>
-				</div>
+                </div>
         </div>
 
         <div class="mainContentHolder">
-        	<div class="subNavigation"></div>
-        	<!-- Left Wide column DIv -->
-            <div class="LeftWideColumnDiv">
             <?php
-            //echo the content
-            echo $this->getContent();
+        	echo $this->getContent();
             ?>
-            </div>
-            <!-- Right column DIv -->
-            <div class="rightColumnDiv">
-            	<div class="rightColumnDiv">
-            	<div class="featuredHeader pinkText">FEATURED ADAPTATION</div>
-                <div class="rightColumnBorderedDiv">
-                	<div class="rightColumnContentPadding">
-                	  <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
-               	  <div class="featuredAdaptationRightContentDiv">
-                        	<span class="greyListingHeading">Manual for Investigative Journalists</span>
-                            <br><br>
-                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                        <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
-
-                        </div>
-                        <div class="featuredAdaptedBy">Adapted By</div>
-                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                        <span class="greyListingHeading">Polytechnic of Namibia</span>
-                        </div>
-                </div>
-                <div class="spaceBetweenRightBorderedDivs">
-                	<div class="featuredHeader pinkText">BROWSER ADAPTATION BY MAP</div>
-                </div>
-                <div class="rightColumnBorderedDiv">
-                	<div class="rightColumnContentPadding">
-
-
-
-                     </div>
-                </div>
-
-            </div>
-        </div>
         </div>
         <!-- Footer-->
         <div class="footerDiv">
@@ -217,7 +182,7 @@
                 <a href="" class="footerLink">Link 12</a>
             </div>
             <div class="footerBottomText">
-            	<img src="skins/unesco_oer/images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
+            	<img src="images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
                 <a href="" class="footerLink">UNESCO</a> |
                 <a href="" class="footerLink">Communication and Information</a> |
                 <a href="" class="footerLink">About OER Platform</a> |
@@ -231,3 +196,32 @@
     </div>
 </body>
 </html>
+<script>
+
+    function sendThemeFilterform()
+    {
+        document.forms["ThemeFilter"].submit();
+    }
+
+    function sendLanguageFilterform()
+    {
+        document.forms["LanguageFilter"].submit();
+
+    }function sendAuthorFilterform()
+    {
+        document.forms["AuthorFilter"].submit();
+    }
+
+
+    function sendSortFilterform()
+    {
+        document.forms["SortFilter"].submit();
+    }
+
+    function sendNumFilterform()
+    {
+        document.forms["NumFilter"].submit();
+    }
+
+</script>
+
