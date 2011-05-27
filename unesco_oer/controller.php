@@ -551,7 +551,8 @@ class unesco_oer extends controller {
 
     public function __resourceTypeSubmit() {
         $description = $this->getParam('newTypeDescription');
-        $this->objDbResourceTypes->addType($description);
+        $table = $this->getParam('newTypeTable');
+        $this->objDbResourceTypes->addType($description, $table);
         return $this->__addData();
     }
 

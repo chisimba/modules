@@ -22,10 +22,9 @@ $options = array('comment'=>'Table to store Curricula','collate'=>'utf8_general_
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
                 'product_id' =>array('type' =>'text','length'=>32, 'not null'),
-                'calendar_id'=>array('type'=>'text','length'=>32),
-                'title_page'=>array('type' =>'text'),
+                'content'=>array('type'=>'text','length'=>32),
                 'forward'=>array('type' =>'text'),
                 'background'=>array('type' =>'text'),
-                'introduction'=>array('type' =>'text')
+                'introductory_description'=>array('type' =>'text')
  		);
 ?>

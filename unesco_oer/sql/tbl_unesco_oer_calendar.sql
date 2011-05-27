@@ -15,7 +15,7 @@
  */
 
 //define table
-$tablename = 'tbl_unesco_oer_curriculum';
+$tablename = 'tbl_unesco_oer_calendar';
 $options = array('comment'=>'Table to store Curricula','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
 //define fields

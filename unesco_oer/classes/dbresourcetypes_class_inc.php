@@ -26,9 +26,10 @@ class dbresourcetypes extends dbtable {
         return $this->getArray($sql);
     }
 
-    function addType($description) {
+    function addType($description, $table) {
         $data = array(
-            'description' => $description
+            'description' => $description,
+            'table_name' => $table
         );
 
         $this->insert($data);

@@ -33,11 +33,19 @@ $textinput = new textinput('newTypeDescription');
 $textinput->size = 60;
 $table->startRow();
 $table->addCell('Type Description:');
+
+//input optins for submit button
 $table->addCell($textinput->show());
 $button = new button('submitProductType', "Submit Product Type");
 $button->setToSubmit();
 $table->addCell($button->show());
 $table->endRow();
+
+//input options for resource description
+$textinput = new textinput('newTypeTable');
+$textinput->size = 60;
+$table->startRow();
+$table->addCell('Type Description:');
 
 //createform, add fields to it and display
 $form_data = new form('newResourceType_ui',$this->uri(array('action'=>'resourceTypeSubmit')));
