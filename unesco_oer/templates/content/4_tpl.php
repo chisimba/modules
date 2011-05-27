@@ -6,6 +6,7 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
+$this->loadClass('filterdisplay', 'unesco_oer');
 if ($adaptationstring == null)
     $adaptationstring = "relation is not null";
 $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
@@ -153,46 +154,15 @@ $institutionGUI->getInstitution('gen7Srv53Nme51_35455_1300785041');
                                         </div>
                                         <div class="moduleSubHeader">Product matches filter criteria</div>
                                         <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
-                                        <div class="blueBackground blueBackgroundCheckBoxText">
-                                            <input type="checkbox"> Model<br>
-                                            <input type="checkbox"> Guide<br>
-                                            <input type="checkbox"> Handbook<br>
-                                            <input type="checkbox"> Manual<br>
-                                            <input type="checkbox"> Bestoractile<br>
-                                        </div>
-                                        <br>
-                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">Theme</div>
-                                        <div class="blueBackground">
-                                            <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                                <option value="">All</option>
-                                            </select>
-                                        </div>
-                                        <br>
-                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">UNESCO Product</div>
-                                        <div class="blueBackground">
-                                            <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                                <option value="">All</option>
-                                            </select>
-                                        </div>
-                                        <br>
-                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">Language</div>
-                                        <div class="blueBackground">
-                                            <select name="language" id="language" class="leftColumnSelectDropdown">
-                                                <option value="">All</option>
-                                            </select>
-                                        </div>
-                                        <br>
-                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Items per page</div>
-                                        <div class="blueBackground">
-                                            <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                                                <option value="">All</option>
-                                            </select>
-                                        </div>
-                                        <br><br>
-                                        <div class="blueBackground rightAlign">
-                                            <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                                            <a href="#" class="resetLink">RESET</a>
-                                        </div>
+
+
+<?php
+                            $filtering = $this->getobject('filterdisplay', 'unesco_oer');
+                             echo $filtering->SideFilter($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+?>
+
+
+
 
                                     </div>
 

@@ -1,11 +1,14 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 
 class filterdisplay extends object {
+
+    public $Filterinfo  = array();
 
     public function init() {
 
@@ -104,11 +107,6 @@ class filterdisplay extends object {
 
 
                     <br> 
-
-
-                   
-
-
 
  <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages"> ');
         $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer'));
