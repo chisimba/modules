@@ -35,6 +35,7 @@ class apo extends controller {
 
     function init() {
         $this->loadclass('link', 'htmlelements');
+        $this->objattach = $this->getObject('email', 'mail');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLog = $this->getObject('logactivity', 'logger');
         $this->objConfig = $this->getObject('altconfig', 'config');
@@ -280,7 +281,7 @@ class apo extends controller {
         $id = $this->getParam('id');
         $document = $this->documents->getDocument($id);
         $selected = $this->getParam('selected');
-        
+
         $mode = "new";
 
         $this->setVarByRef("mode", $mode);
@@ -616,9 +617,8 @@ class apo extends controller {
         $id = $this->getParam("id");
         $formname = $this->getParam('formname');
 
-        $errormessages = array();
-
         if ($formname == "outcomesandassessmentthree") {
+
             $a = $this->getParam("a");
             $b = $this->getParam("b");
             $c = $this->getParam("c");
@@ -644,10 +644,6 @@ class apo extends controller {
             $formdata = serialize($formdata);
             $issubmit = $this->getParam('next');
             if (!empty($issubmit)) {
-
-
-
-
                 $this->objformdata->saveData($id, $formname, $formdata);
             }
         } /* else if ($formname == "outcomesandassessmentthreeScience") {
@@ -821,7 +817,6 @@ class apo extends controller {
           $formdata = serialize($formdata);
           $this->objformdata->saveData($id, $formname, $formdata);
           } */
-
         $selected = $this->getParam('selected');
         $mode = "new";
         $this->setVarByRef("mode", $mode);
@@ -1008,25 +1003,25 @@ class apo extends controller {
         $formdata["h3b"] = $h3b;
 
         /*
-        $id = $this->getParam("id");
-        $document = $this->documents->getDocument($id);
-        $formname = $this->getParam('formname');
+          $id = $this->getParam("id");
+          $document = $this->documents->getDocument($id);
+          $formname = $this->getParam('formname');
 
-        $apo = $this->getParam("apo");
-        $subsidy = $this->getParam("subsidy");
-        $legal = $this->getParam("legal");
-        $library = $this->getParam("library");
-        $faculty = $this->getParam("faculty");
+          $apo = $this->getParam("apo");
+          $subsidy = $this->getParam("subsidy");
+          $legal = $this->getParam("legal");
+          $library = $this->getParam("library");
+          $faculty = $this->getParam("faculty");
 
 
-        $formdata = array();
-        $formdata["docid"] = $id;
-        $formdata["apo"] = $apo;
-        $formdata["subsidy"] = $subsidy;
-        $formdata["library"] = $library;
-        $formdata["legal"] = $legal;
-        $formdata["faculty"] = $faculty;
-*/
+          $formdata = array();
+          $formdata["docid"] = $id;
+          $formdata["apo"] = $apo;
+          $formdata["subsidy"] = $subsidy;
+          $formdata["library"] = $library;
+          $formdata["legal"] = $legal;
+          $formdata["faculty"] = $faculty;
+         */
         $formdata = serialize($formdata);
         $issubmit = $this->getParam('next');
         if (!empty($issubmit)) {
@@ -1501,14 +1496,46 @@ class apo extends controller {
         $from = $this->getParam('from');
         $selected = $this->getParam('selected');
         $document = $this->documents->getDocument($id);
-        
+
         $this->setVarByRef("document", $document);
-        $this->setVarByRef('from', $from);   
+        $this->setVarByRef('from', $from);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
 
         return "showforwarding_tpl.php";
+    }
+
+    public function __sendDoc() {
+        $users = $this->getParam("selectedusers");
+        $id = $this->getParam("id");
+        $comments = $this->getParam('comments');
+        $from = $this->getParam('from');
+        $link = new link($this->uri(array("action" => "showcomments", "id" => $id)));
+        /*
+          if (count($users) > 0) {
+          $recipientUserId = $users[0];
+          $recipientEmailAddress = $this->objUser->email($recipientUserId);
+          $recipientEmailAddress = 'palesa.mokwena@students.wits.ac.za';
+          $subject = $this->objSysConfig->getValue('FWD_DOC_EMAIL_SUB', 'apo');
+          $subject = str_replace("{sender}", $this->objUser->fullname(), $subject);
+          $subject = str_replace("{receiver}", $this->objUser->fullname($recipientUserId), $subject);
+
+          $body = $this->objSysConfig->getValue('FWD_DOC_EMAIL_BD', 'apo');
+
+          $body = str_replace("{link}", $link->href, $body);
+          $body = str_replace("{sender}", $this->objUser->fullname(), $body);
+          $body = str_replace("{receiver}", $this->objUser->fullname($recipientUserId), $body);
+
+
+          $this->users->sendEmail($subject, $body, $recipientEmailAddress);
+          //now update the current user
+          $this->documents->changeCurrentDocumentUser($id, $recipientUserId);
+          $message = "Document forwarded. Email has been sent to " . $this->objUser->fullname($recipientUserId);
+          $this->setVarByRef("message", $message);
+          }
+         */
+        return $from;
     }
 
     /**
@@ -1518,7 +1545,7 @@ class apo extends controller {
      * parameter of the querystring and executes the appropriate method,
      * returning its appropriate template. This template contains the code
      * which renders the module output.
-     *
+     * q
      * @access public
      * @param $action
      * @return A call to the appropriate method
@@ -1813,9 +1840,11 @@ class apo extends controller {
     }
 
     public function __fowarddocument() {
-        $users = $this->getParam("selectedusers");
+        // $users = $this->getParam("selectedusers");
         $id = $this->getParam("id");
         $from = $this->getParam('from');
+        $role = $this->getParam('role');
+
         $link = new link($this->uri(array("action" => "showeditdocument", "id" => $id)));
 
 
@@ -1857,6 +1886,50 @@ class apo extends controller {
         $this->setVarByRef("document", $document);
 
         return $from;
+    }
+
+    public function __forwardtoAPO() {
+
+        $id = $this->getParam("id");
+
+        $this->setVarByRef("id", $id);
+        return "forwardAPO_tpl.php";
+    }
+
+    public function __forwardDocAPO() {
+
+        $id = $this->getParam("id");
+        $from = $this->getParam('from');
+        $role = $this->getParam('role');
+
+        $link = new link($this->uri(array("action" => "showeditdocument", "id" => $id)));
+
+        $recipientEmailAddress = $this->objUser->email($recipientUserId);
+        $senderEmailAddress = $this->objUser->email($senderUserId);
+        $recipientEmailAddress = 'palesa.mokwena@students.wits.ac.za';
+        $subject = $this->objSysConfig->getValue('FWD_DOC_EMAIL_SUB', 'apo');
+        $subject = str_replace("{sender}", $this->objUser->fullname(), $subject);
+        $subject = str_replace("{receiver}", $this->objUser->fullname($recipientUserId), $subject);
+
+        $body = $this->objSysConfig->getValue('FWD_DOC_EMAIL_BD', 'apo');
+
+        $body = str_replace("{link}", $link->href, $body);
+        $body = str_replace("{sender}", $this->objUser->fullname(), $body);
+        $body = str_replace("{receiver}", $this->objUser->fullname($recipientUserId), $body);
+
+
+        $this->users->sendEmail($subject, $body, $recipientEmailAddress);
+        //now update the current user
+        $this->documents->changeCurrentDocumentUser($id, $recipientUserId);
+        $message = "Document forwarded. Email has been sent to " . $this->objUser->fullname($recipientUserId);
+        $this->setVarByRef("message", $message);
+
+        return $this->nextAction('confirmation');
+    }
+
+    public function __confirmation() {
+
+        return "confirmation_tpl.php";
     }
 
 }

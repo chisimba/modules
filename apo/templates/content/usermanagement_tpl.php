@@ -34,6 +34,7 @@ if (count($users) > 0) {
         $table->startRow();
         $table->addCell($user['name']);
         $table->addCell($user['role']);
+  
         $table->addCell($user['email']);
         $table->addCell($user['telephone']);
 

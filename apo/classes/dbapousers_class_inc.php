@@ -167,9 +167,13 @@ class dbapousers extends dbtable {
         $objMail = $this->getObject('email', 'mail');
 //send to multiple addressed
         $list = array($recipientEmailAddress);
+       // $list = array($senderEmailAddress);
         $objMail->to = ($list);
-// specify whom the email is coming from
+//attach a pdf document
+        //$path = '/home/palesa/Documents/Faith.odt';
+       // $objMail->attach($path,'Faith');
 
+// specify whom the email is coming from
         $objMail->from = $this->objUser->email();
 //Give email subject and body
 //$objMail->subject=$emaill;

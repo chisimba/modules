@@ -4,7 +4,7 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
-////$this->loadClass('textinput', 'htmlelements');
+//$this->loadClass('textinput', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
 
@@ -15,7 +15,7 @@ $this->setVar('pageSuppressXML', TRUE);
 
 $action = 'fowarddocument';
 
-$form = new form('forwardform', $this->uri(array('action' => $action, 'formname'=>'forward',"from"=>$from)));
+$form = new form('forwardform', $this->uri(array('action' => $action, 'formname'=>'forward',"from"=>$from, "id"=>$id)));
 
 $table = $this->newObject('htmltable', 'htmlelements');
 

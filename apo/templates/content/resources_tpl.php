@@ -21,8 +21,10 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('iframe', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
-$this->objformdata = $this->getObject('dbformdata');
+
+$this->setVar('pageSuppressXML', TRUE);
 
 $formdata = $this->objformdata->getFormData("resources", $id);
 if ($formdata != null){
@@ -50,7 +52,7 @@ $rulesandsyllabusonelink = new link($this->uri(array("action" => "showrulesandsy
 $rulesandsyllabusonelink->link = "Rules and Syllabus - Page One";
 
 $rulesandsyllabustwolink = new link($this->uri(array("action" => "showrulesandsyllabustwo","id"=>$id)));
-$rulesandsyllabustwolink->link = "Rules and Syllabus - Page two";
+$rulesandsyllabustwolink->link = "Rules and Syllabus - Page Two";
 
 $subsidyrequirementslink = new link($this->uri(array("action" => "showsubsidyrequirements","id"=>$id)));
 $subsidyrequirementslink->link = "Subsidy Requirements";
@@ -59,12 +61,12 @@ $outcomesandassessmentonelink = new link($this->uri(array("action" => "showoutco
 $outcomesandassessmentonelink->link = "Outcomes and Assessment - Page One";
 
 $outcomesandassessmenttwolink = new link($this->uri(array("action" => "showoutcomesandassessmenttwo","id"=>$id)));
-$outcomesandassessmenttwolink->link = "Outcomes and Assessment - Page Two";
+$outcomesandassessmenttwolink->link = "Outcomes and Assessment  - Page Two";
 
 $outcomesandassessmentthreelink = new link($this->uri(array("action" => "showoutcomesandassessmentthree","id"=>$id)));
 $outcomesandassessmentthreelink->link = "Outcomes and Assessment - Page Three";
 
-$collaborationandcontractslink = new link($this->uri(array("action" => "showcollaborationandcontracts","id"=>$id)));
+$collaborationandcontractslink = new link($this->uri(array("action" => "showresources","id"=>$id)));
 $collaborationandcontractslink->link = "Collaboration and Contracts";
 
 $reviewlink = new link($this->uri(array("action" => "showreview","id"=>$id)));
@@ -83,8 +85,8 @@ $links = $doclink->show() . '&nbsp;|&nbsp;' . $overviewlink->show() . '&nbsp;|&n
         $rulesandsyllabusonelink->show() . '&nbsp;|&nbsp;' . $rulesandsyllabustwolink->show() . '&nbsp;|&nbsp;' .
         $subsidyrequirementslink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentonelink->show() . '&nbsp;|&nbsp;' .
         $outcomesandassessmenttwolink->show() . '&nbsp;|&nbsp;' . $outcomesandassessmentthreelink->show() . '&nbsp;|&nbsp;' .
-        "<b>Resources</b>" . '&nbsp;|&nbsp;' . $collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
-        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show(). '&nbsp;|&nbsp;'  . $feedbacklinklink->show() . '&nbsp;|&nbsp;' .
+        "<b>Resources</b>" . '&nbsp;|&nbsp;' .$collaborationandcontractslink->show() . '&nbsp;|&nbsp;' .
+        $reviewlink->show() . '&nbsp;|&nbsp;' . $contactdetailslink->show() .'&nbsp;|&nbsp;' . $feedbacklink->show() . '&nbsp;|&nbsp;' .
         $commentslink->show() . '<br/>';
 
 $fs = new fieldset();

@@ -240,9 +240,16 @@ $form->addToForm($button->show().'&nbsp');
 $forwardText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Forward');
 
 $button = new button('forward', $forwardText);
+$uri = $this->uri(array('action'=>'sendDoc', 'id' => $id, 'mode'=> $mode));
+$button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+$form->addToForm($button->show(). '&nbsp');
+
+/*$sendDocText = $this->objLanguage->languageText('mod_apo_wicid', 'wicid', 'Send to APO');
+
+$button = new button('sendDoc', $sendDocText);
 $uri = $this->uri(array('action'=>'forwarding', 'from' => 'comments_tpl.php', 'id' => $id, 'mode'=> $mode));
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-$form->addToForm($button->show());
+$form->addToForm($button->show());*/
 
 echo $form->show();
 ?>

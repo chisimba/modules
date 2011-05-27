@@ -194,9 +194,9 @@ $table->endRow();
 //Section C.3.
 
 $textinput= new textinput('c3');
-//$maxlength = "6";
-//$c3->label='CEMS (must be 6 characters)';
-//$form->addRule(array('name'=>'c3','length'=>6), 'Check CESM manual','maxlength');
+$maxlength = "6";
+$c3->label='CEMS (must be 6 characters)';
+$form->addRule(array('name'=>'c3','length'=>6), 'Check CESM manual','maxlength');
 $textinput->size = 100;
 if ($mode == "fixup") {
     $textinput->value = $c3;
