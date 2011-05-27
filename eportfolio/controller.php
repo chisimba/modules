@@ -1700,7 +1700,7 @@ class eportfolio extends controller {
                 break;
 
             case 'viewsearchresults';
-                $groupId = $this->getSession('groupId', $groupId);
+                $groupId = $this->getSession('groupId', Null);
                 return $this->getResults($this->getParam('page', 1));
                 break;
 
@@ -1859,7 +1859,7 @@ class eportfolio extends controller {
         //Ehb-added-End
         $order = $this->getSession('order', 'firstName');
         $numResults = $this->getSession('numresults', 20);
-        $groupId = $this->getSession('groupId', $groupId);
+        $groupId = $this->getSession('groupId', Null);
         $this->setVar('searchfor', $searchFor);
         $this->setVar('field', $field);
         $this->setVar('order', $order);

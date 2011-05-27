@@ -1,4 +1,5 @@
 <?php
+
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
@@ -58,11 +59,12 @@ $categorytypepage = '';
 $groupname = $this->_objGroupAdmin->getName($groupId);
 //Get the subgroups which represent the various parts of the eportfolio ie a goal item, an activity item
 $isSubGroup = $this->_objGroupAdmin->getSubgroups($groupId);
-
+$gname = explode('^', $groupname);
+$gname = $gname[1];
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objHeading->align = 'center';
 $objHeading->type = 2;
-$objHeading->str = '<font color="#FF8800">' . $objUser->getSurname() . ', ' . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . ' ' . $groupname . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . '</font>';
+$objHeading->str = '<font color="#FF8800">' . $objLanguage->languageText("mod_eportfolio_wordManage", 'eportfolio') . ' ' . $gname . ' '  . '</font>';
 echo $objHeading->show();
 $mygroupId = new hiddeninput("mygroupId", $groupId);
 echo "</br>";
@@ -71,16 +73,16 @@ $iconSelect = $this->getObject('geticon', 'htmlelements');
 $iconSelect->setIcon('home');
 $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_eportfoliohome", 'eportfolio');
 $mnglink = new link($this->uri(array(
-    'module' => 'eportfolio'
-)));
+                    'module' => 'eportfolio'
+                )));
 $mnglink->link = $iconSelect->show();
 $linkManage = $mnglink->show();
 echo '<div align="center">' . $linkManage . '</div>';
 echo "</br>";
 $form = new form("add", $this->uri(array(
-    'module' => 'eportfolio',
-    'action' => 'addparts'
-)));
+                    'module' => 'eportfolio',
+                    'action' => 'addparts'
+                )));
 //Save button
 $button = new button("submit", $objLanguage->languageText("word_save")); //word_save
 $button->setToSubmit();
@@ -94,17 +96,17 @@ $hasAccess = $this->_objUser->isContextLecturer();
 $hasAccess|= $this->_objUser->isAdmin();
 $this->setVar('pageSuppressXML', true);
 $link = new link($this->uri(array(
-    'module' => 'eportfolio',
-    'action' => 'view_contact'
-)));
+                    'module' => 'eportfolio',
+                    'action' => 'view_contact'
+                )));
 $link->link = 'View Identification Details';
 //echo '<br clear="left" />'.$link->show();
 //Create Owner and Guest group for user
-$eportfoliogrpList = $this->_objGroupAdmin->getId($this->objUser->PKId($this->objUser->userId()) , $pkField = 'name');
+$eportfoliogrpList = $this->_objGroupAdmin->getId($this->objUser->PKId($this->objUser->userId()), $pkField = 'name');
 if (empty($eportfoliogrpList)) {
     //Add User to context groups
     $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
-    $this->createGroups($this->objUser->PKId($this->objUser->userId()) , $title);
+    $this->createGroups($this->objUser->PKId($this->objUser->userId()), $title);
 }
 //End Create
 //Start Address View
@@ -129,11 +131,11 @@ $addressTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_postad
 $addressTable->endRow();
 // Step through the list of addresses.
 if (!empty($addressList)) {
-    foreach($addressList as $addressItem) {
+    foreach ($addressList as $addressItem) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $addCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($addressItem['id'] == $subgrp['group_define_name']) {
                     $addCheck = 1;
                 }
@@ -150,9 +152,9 @@ if (!empty($addressList)) {
         $addressTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $addressItem['id'];
-        $objCheck->value=$addressItem['id'];
+        $objCheck->value = $addressItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $addressTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $addressTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $cattype = $this->objDbCategorytypeList->listSingle($addressItem['type']);
         $addressTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
         $addressTable->addCell($addressItem['street_no'], "", NULL, NULL, NULL, '');
@@ -197,14 +199,14 @@ $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contac
 $contactTable->endRow();
 // Step through the list of addresses.
 if (!empty($contactList)) {
-    foreach($contactList as $contactItem) {
+    foreach ($contactList as $contactItem) {
         // Display each field
         $cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
         $modetype = $this->objDbCategorytypeList->listSingle($contactItem['contact_type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $contCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($contactItem['id'] == $subgrp['group_define_name']) {
                     $contCheck = 1;
                 }
@@ -215,15 +217,15 @@ if (!empty($contactList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }  else {
+        } else {
             $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
         $contactTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $contactItem['id'];
-        $objCheck->value=$contactItem['id'];
+        $objCheck->value = $contactItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $contactTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $contactTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $contactTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
         $contactTable->addCell($modetype[0]['type'], "", NULL, NULL, NULL, '');
         $contactTable->addCell($contactItem['country_code'], "", NULL, NULL, NULL, '');
@@ -259,11 +261,11 @@ $emailTable->endRow();
 // Step through the list of addresses.
 $class = 'even';
 if (!empty($emailList)) {
-    foreach($emailList as $emailItem) {
+    foreach ($emailList as $emailItem) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $emailCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($emailItem['id'] == $subgrp['group_define_name']) {
                     $emailCheck = 1;
                 }
@@ -274,7 +276,7 @@ if (!empty($emailList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }  else {
+        } else {
             $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
         // Display each field for addresses
@@ -282,9 +284,9 @@ if (!empty($emailList)) {
         $emailTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $emailItem['id'];
-        $objCheck->value=$emailItem['id'];
+        $objCheck->value = $emailItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $emailTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $emailTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $emailTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
         $emailTable->addCell($emailItem['email'], "", NULL, NULL, NULL, '');
         $emailTable->endRow();
@@ -315,13 +317,13 @@ $demographicsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_n
 $demographicsTable->endRow();
 // Step through the list of addresses.
 if (!empty($demographicsList)) {
-    foreach($demographicsList as $demographicsItem) {
+    foreach ($demographicsList as $demographicsItem) {
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $demoCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($demographicsItem['id'] == $subgrp['group_define_name']) {
                     $demoCheck = 1;
                 }
@@ -332,17 +334,17 @@ if (!empty($demographicsList)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }  else {
+        } else {
             $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
         $demographicsTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $demographicsItem['id'];
-        $objCheck->value=$demographicsItem['id'];
+        $objCheck->value = $demographicsItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $demographicsTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $demographicsTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
-        $demographicsTable->addCell($this->objDate->formatDate($demographicsItem['birth']) , "", NULL, NULL, NULL, '');
+        $demographicsTable->addCell($this->objDate->formatDate($demographicsItem['birth']), "", NULL, NULL, NULL, '');
         $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
         $demographicsTable->endRow();
     }
@@ -411,7 +413,7 @@ $activityTable->endRow();
 $class = NULL;
 if (!empty($activitylist)) {
     $i = 0;
-    foreach($activitylist as $item) {
+    foreach ($activitylist as $item) {
         //Get context title
         $objDbContext = &$this->getObject('dbcontext', 'context');
         $mycontextRecord = $objDbContext->getContextDetails($item['contextid']);
@@ -423,7 +425,7 @@ if (!empty($activitylist)) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $actvCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $actvCheck = 1;
                 }
@@ -434,7 +436,7 @@ if (!empty($activitylist)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }  else {
+        } else {
             $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
         // Display each field for activities
@@ -442,13 +444,13 @@ if (!empty($activitylist)) {
         $activityTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->value=$item['id'];
+        $objCheck->value = $item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $activityTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $activityTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $activityTable->addCell($mycontextTitle, "", NULL, NULL, $class, '');
         $activityTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-        $activityTable->addCell($this->objDate->formatDate($item['start']) , "", NULL, NULL, $class, '');
-        $activityTable->addCell($this->objDate->formatDate($item['finish']) , "", NULL, NULL, $class, '');
+        $activityTable->addCell($this->objDate->formatDate($item['start']), "", NULL, NULL, $class, '');
+        $activityTable->addCell($this->objDate->formatDate($item['finish']), "", NULL, NULL, $class, '');
         $activityTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         $activityTable->endRow();
     }
@@ -483,13 +485,13 @@ $affiliationTable->endRow();
 $class = NULL;
 if (!empty($affiliationList)) {
     $i = 0;
-    foreach($affiliationList as $affiliationItem) {
+    foreach ($affiliationList as $affiliationItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($affiliationItem['type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $affiliationCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($affiliationItem['id'] == $subgrp['group_define_name']) {
                     $affiliationCheck = 1;
                 }
@@ -506,15 +508,15 @@ if (!empty($affiliationList)) {
         $affiliationTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $affiliationItem['id'];
-        $objCheck->value=$affiliationItem['id'];
+        $objCheck->value = $affiliationItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $affiliationTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $affiliationTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $affiliationTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
         $affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, $class, '');
         $affiliationTable->addCell($affiliationItem['role'], "", NULL, NULL, $class, '');
         $affiliationTable->addCell($affiliationItem['organisation'], "", NULL, NULL, $class, '');
-        $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['start']) , "", NULL, NULL, $class, '');
-        $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['finish']) , "", NULL, NULL, $class, '');
+        $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['start']), "", NULL, NULL, $class, '');
+        $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['finish']), "", NULL, NULL, $class, '');
         $affiliationTable->endRow();
     }
     unset($affiliationItem);
@@ -542,11 +544,11 @@ $transcriptTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($transcriptlist)) {
-    foreach($transcriptlist as $item) {
+    foreach ($transcriptlist as $item) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $transCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $transCheck = 1;
                 }
@@ -557,16 +559,16 @@ if (!empty($transcriptlist)) {
             } else {
                 $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
             }
-        }  else {
+        } else {
             $objCheck = new checkbox('arrayList[]', $label = NULL, $ischecked = false);
         }
         // Display each field for activities
         $transcriptTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->value=$item['id'];
+        $objCheck->value = $item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $transcriptTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $transcriptTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $transcriptTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         $transcriptTable->endRow();
     }
@@ -600,13 +602,13 @@ $qclTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($qclList)) {
-    foreach($qclList as $qclItem) {
+    foreach ($qclList as $qclItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($qclItem['qcl_type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $qclCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($qclItem['id'] == $subgrp['group_define_name']) {
                     $qclCheck = 1;
                 }
@@ -623,14 +625,14 @@ if (!empty($qclList)) {
         $qclTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $qclItem['id'];
-        $objCheck->value=$qclItem['id'];
+        $objCheck->value = $qclItem['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $qclTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $qclTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $qclTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
         $qclTable->addCell($qclItem['qcl_title'], "", NULL, NULL, $class, '');
         $qclTable->addCell($qclItem['organisation'], "", NULL, NULL, $class, '');
         $qclTable->addCell($qclItem['qcl_level'], "", NULL, NULL, $class, '');
-        $qclTable->addCell($this->objDate->formatDate($qclItem['award_date']) , "", NULL, NULL, $class, '');
+        $qclTable->addCell($this->objDate->formatDate($qclItem['award_date']), "", NULL, NULL, $class, '');
         $qclTable->endRow();
     }
     unset($qclItem);
@@ -659,11 +661,11 @@ $goalsTable->endRow();
 $class = NULL;
 if (!empty($goalsList)) {
     $i = 0;
-    foreach($goalsList as $item) {
+    foreach ($goalsList as $item) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $goalsCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $goalsCheck = 1;
                 }
@@ -681,9 +683,9 @@ if (!empty($goalsList)) {
         $goalsTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->value=$item['id'];
+        $objCheck->value = $item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $goalsTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $goalsTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $goalsTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         $goalsTable->endRow();
     }
@@ -714,13 +716,13 @@ $competencyTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($competencyList)) {
-    foreach($competencyList as $item) {
+    foreach ($competencyList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $ctyCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $ctyCheck = 1;
                 }
@@ -737,11 +739,11 @@ if (!empty($competencyList)) {
         $competencyTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->value=$item['id'];
+        $objCheck->value = $item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $competencyTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $competencyTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-        $competencyTable->addCell($this->objDate->formatDate($item['award_date']) , "", NULL, NULL, $class, '');
+        $competencyTable->addCell($this->objDate->formatDate($item['award_date']), "", NULL, NULL, $class, '');
         $competencyTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         $competencyTable->endRow();
     }
@@ -772,13 +774,13 @@ $interestTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($interestList)) {
-    foreach($interestList as $item) {
+    foreach ($interestList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $intrstCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $intrstCheck = 1;
                 }
@@ -795,11 +797,11 @@ if (!empty($interestList)) {
         $interestTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->value=$item['id'];
+        $objCheck->value = $item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $interestTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $interestTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-        $interestTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+        $interestTable->addCell($this->objDate->formatDate($item['creation_date']), "", NULL, NULL, $class, '');
         $interestTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         $interestTable->endRow();
     }
@@ -830,12 +832,12 @@ $reflectionTable->endRow();
 // Step through the list of addresses.
 $class = NULL;
 if (!empty($reflectionList)) {
-    foreach($reflectionList as $item) {
+    foreach ($reflectionList as $item) {
         //Check if this item has been checked already
 
         if (!empty($isSubGroup)) {
             $rfctnCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $rfctnCheck = 1;
                 }
@@ -853,11 +855,11 @@ if (!empty($reflectionList)) {
         $reflectionTable->startRow();
         // Show the manage item check box
         $objCheck->cssId = 'checkbox_' . $item['id'];
-        $objCheck->value=$item['id'];
+        $objCheck->value = $item['id'];
         $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-        $reflectionTable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+        $reflectionTable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
         $reflectionTable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-        $reflectionTable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+        $reflectionTable->addCell($this->objDate->formatDate($item['creation_date']), "", NULL, NULL, $class, '');
         $reflectionTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
         $reflectionTable->endRow();
     }
@@ -893,10 +895,10 @@ if (!$hasAccess) {
     // Step through the list of addresses.
     $class = NULL;
     if (!empty($Id)) {
-        foreach($Id as $groupId) {
+        foreach ($Id as $groupId) {
             //Get the group parent_id
             $parentId = $this->_objGroupAdmin->getParent($groupId);
-            foreach($parentId as $myparentId) {
+            foreach ($parentId as $myparentId) {
                 //Get the name from group table
                 $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                 $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
@@ -904,7 +906,7 @@ if (!$hasAccess) {
                     //Check if this item has been checked already
                     if (!empty($isSubGroup)) {
                         $asserCheck = 0;
-                        foreach($isSubGroup[0] as $subgrp) {
+                        foreach ($isSubGroup[0] as $subgrp) {
                             if ($assertionslist[0]['id'] == $subgrp['group_define_name']) {
                                 $asserCheck = 1;
                             }
@@ -922,12 +924,12 @@ if (!$hasAccess) {
                     $assertionstable->startRow();
                     // Show the manage item check box
                     $objCheck->cssId = 'checkbox_' . $assertionslist[0]['id'];
-                    $objCheck->value=$assertionslist[0]['id'];
+                    $objCheck->value = $assertionslist[0]['id'];
                     $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-                    $assertionstable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
-                    $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
+                    $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']), "", NULL, NULL, $class, '');
                     $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
-                    $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($this->objDate->formatDate($assertionslist[0]['creation_date']), "", NULL, NULL, $class, '');
                     $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
                     $assertionstable->endRow();
                 }
@@ -941,7 +943,6 @@ if (!$hasAccess) {
         $assertionstable->endRow();
     }
     //echo $assertionstable->show();
-    
 } else {
     //Language Items
     $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
@@ -963,11 +964,11 @@ if (!$hasAccess) {
     $class = NULL;
     //    $arrayLists = array();
     if (!empty($assertionslist)) {
-        foreach($assertionslist as $item) {
+        foreach ($assertionslist as $item) {
             //Check if this item has been checked already
             if (!empty($isSubGroup)) {
                 $assertCheck = 0;
-                foreach($isSubGroup[0] as $subgrp) {
+                foreach ($isSubGroup[0] as $subgrp) {
                     if ($item['id'] == $subgrp['group_define_name']) {
                         $assertCheck = 1;
                     }
@@ -985,11 +986,11 @@ if (!$hasAccess) {
             $assertionstable->startRow();
             // Show the manage item check box
             $objCheck->cssId = 'checkbox_' . $item['id'];
-            $objCheck->value=$item['id'];
+            $objCheck->value = $item['id'];
             $objCheck->extra = 'onclick="javascript:toggleChecked(this);"';
-            $assertionstable->addCell($objCheck->show() , "", NULL, NULL, NULL, '');
+            $assertionstable->addCell($objCheck->show(), "", NULL, NULL, NULL, '');
             $assertionstable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-            $assertionstable->addCell($this->objDate->formatDate($item['creation_date']) , "", NULL, NULL, $class, '');
+            $assertionstable->addCell($this->objDate->formatDate($item['creation_date']), "", NULL, NULL, $class, '');
             $assertionstable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
             $assertionstable->endRow();
         }
@@ -1003,7 +1004,6 @@ if (!$hasAccess) {
     //$groupId = new hiddeninput("groupId", $groupId);
     //$row = array( $groupId->show() );
     //$assertionstable->addRow($row, NULL);
-    
 } //end else hasAccess
 //End View Assertions
 //Information Title
@@ -1014,48 +1014,47 @@ $this->objTab->init();
 $this->objTab->tabId = TRUE;
 
 //For each tab, check if made visible and order as per the eportfolio blocks
-
 //Get Visible MAIN blocks
 $mainBlocks = $this->objEPBlocks->getVisibleBlocks('main');
 //Step through each Block
 foreach ($mainBlocks as $mainBlock) {
-    if ($mainBlock["title"]=='Identification') {
+    if ($mainBlock["title"] == 'Identification') {
         //Names tab (Visible By Default)
         $this->objTab->tabId = "minitab001";
         $this->objTab->addTab(array(
-            'name' => $this->objLanguage->languageText("word_name") ,
+            'name' => $this->objLanguage->languageText("word_name"),
             'content' => $userTable->show()
         ));
         //Get Visible IDENTIFICATION blocks
         $identityBlocks = $this->objEPBlocks->getVisibleBlocks('identity');
         //Step through each Block
         foreach ($identityBlocks as $identityBlock) {
-            if  ($identityBlock["title"]=='Address') {
+            if ($identityBlock["title"] == 'Address') {
                 //Address Tab
                 $this->objTab->tabId = "identitytab001";
                 $this->objTab->addTab(array(
-                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordAddress", 'eportfolio') ,
+                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordAddress", 'eportfolio'),
                     'content' => $addressTable->show()
                 ));
-            } elseif  ($identityBlock["title"]=='Contact') {
+            } elseif ($identityBlock["title"] == 'Contact') {
                 //Contact Tab
                 $this->objTab->tabId = "identitytab002";
                 $this->objTab->addTab(array(
-                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordContact", 'eportfolio') ,
+                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordContact", 'eportfolio'),
                     'content' => $contactTable->show()
                 ));
-            } elseif  ($identityBlock["title"]=='Email') {
+            } elseif ($identityBlock["title"] == 'Email') {
                 //Email Tab
                 $this->objTab->tabId = "identitytab003";
                 $this->objTab->addTab(array(
-                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordEmail", 'eportfolio') ,
+                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordEmail", 'eportfolio'),
                     'content' => $emailTable->show()
                 ));
-            } elseif  ($identityBlock["title"]=='Demographics') {
+            } elseif ($identityBlock["title"] == 'Demographics') {
                 //Demographics Tab
                 $this->objTab->tabId = "identitytab004";
                 $this->objTab->addTab(array(
-                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordDemographics", 'eportfolio') ,
+                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordDemographics", 'eportfolio'),
                     'content' => $demographicsTable->show()
                 ));
             }
@@ -1064,70 +1063,70 @@ foreach ($mainBlocks as $mainBlock) {
         //Identification Tab
         $this->objmainTab->tabId = "maintab001";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordInformation", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordInformation", 'eportfolio'),
             'content' => $infotabs
         ));
-    } elseif  ($mainBlock["title"]=='Activities') {
+    } elseif ($mainBlock["title"] == 'Activities') {
         //Activity Title
         $this->objmainTab->tabId = "maintab002";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordActivity", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordActivity", 'eportfolio'),
             'content' => $activityTable->show()
-        ));        
-    } elseif  ($mainBlock["title"]=='Affiliation') {
+        ));
+    } elseif ($mainBlock["title"] == 'Affiliation') {
         //Affiliation Title
         $this->objmainTab->tabId = "maintab003";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio'),
             'content' => $affiliationTable->show()
-        ));        
-    } elseif  ($mainBlock["title"]=='Transcripts') {
+        ));
+    } elseif ($mainBlock["title"] == 'Transcripts') {
         //Transcripts Title
         $this->objmainTab->tabId = "maintab004";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordTranscripts", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordTranscripts", 'eportfolio'),
             'content' => $transcriptTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Qualifications') {
+    } elseif ($mainBlock["title"] == 'Qualifications') {
         //Qualifications Title
         $this->objmainTab->tabId = "maintab005";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio'),
             'content' => $qclTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Goals') {
+    } elseif ($mainBlock["title"] == 'Goals') {
         //Goals Title
         $this->objmainTab->tabId = "maintab006";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordGoals", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordGoals", 'eportfolio'),
             'content' => $goalsTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Competencies') {
+    } elseif ($mainBlock["title"] == 'Competencies') {
         //Competencies Title
         $this->objmainTab->tabId = "maintab007";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordCompetency", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordCompetency", 'eportfolio'),
             'content' => $competencyTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Interests') {
+    } elseif ($mainBlock["title"] == 'Interests') {
         //Interests Title
         $this->objmainTab->tabId = "maintab008";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordInterests", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordInterests", 'eportfolio'),
             'content' => $interestTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Reflections') {
+    } elseif ($mainBlock["title"] == 'Reflections') {
         //Reflections Title
         $this->objmainTab->tabId = "maintab009";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordReflections", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordReflections", 'eportfolio'),
             'content' => $reflectionTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Assertions') {
+    } elseif ($mainBlock["title"] == 'Assertions') {
         //Assertions Title
         $this->objmainTab->tabId = "maintab010";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio'),
             'content' => $assertionstable->show()
         ));
     }
@@ -1135,9 +1134,9 @@ foreach ($mainBlocks as $mainBlock) {
 
 $myeportfolioTab = $this->objmainTab->show();
 $tabBox->addTab(array(
-    'name' => $this->objLanguage->languageText("phrase_myePortfolio", 'eportfolio') ,
+    'name' => $this->objLanguage->languageText("phrase_myePortfolio", 'eportfolio'),
     'content' => $myeportfolioTab
-) , 'winclassic-tab-style-sheet');
+        ), 'winclassic-tab-style-sheet');
 //echo $tabBox->show();
 $form->addToForm($myeportfolioTab . '<div align="center" >' . $button->show() . $mygroupId->show() . '</div>');
 echo $form->show();

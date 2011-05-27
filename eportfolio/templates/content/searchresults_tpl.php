@@ -24,7 +24,7 @@ $css = '<style type="text/css" title="text/css">
 $this->appendArrayVar('headerParams', $css);
 $this->appendArrayVar('bodyOnLoad', 'setUpLabelHighlight();');
 //Get Group Name
-$groupId = $this->getSession('groupId', $groupId);
+$groupId = $this->getSession('groupId', Null);
 $groupName = $this->_objGroupAdmin->getName($groupId);
 $groupName = explode("^", $groupName);
 $groupName = $groupName[1];
