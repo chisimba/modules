@@ -57,7 +57,7 @@ class regsetup_view extends object{
         $teacherLabel=new label($this->lang->languageText('mod_tzschoolacademics_'.$sname.'_label','tzschoolacademics'),'teacher');
         $teacherField=new dropdown($sname);
         $this->registrar->_tableName='tbl_'.$sname;
-        $subjectField->addFromDB($this->registrar->getAll(), $sdropdownValueName, 'puid');
+        $teacherField->addFromDB($this->registrar->getAll(), $sdropdownValueName, 'puid');
 
         $saveSTbutton=new button('save',$this->lang->languageText('mod_tzschoolacademics_save_label','tzschoolacademics'));
         $saveSTbutton->setToSubmit();
