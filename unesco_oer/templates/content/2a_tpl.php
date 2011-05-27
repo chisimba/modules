@@ -12,24 +12,8 @@ $this->loadClass('search','unesco_oer');
 
 
 
-
-
-
 if ($adaptationstring == null)
     $adaptationstring = 'relation is not null';
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -112,14 +96,8 @@ if ($adaptationstring == null)
 
 
 
-                                 $Search = $this->getobject('search','unesco_oer');
-                    echo  $Search->Searchdisp();
-
-
-
-
-
-
+                                 $Search = $this->getobject('filterdisplay','unesco_oer');
+                    echo  $Search->Search($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring,$NumFilter, $PageNum);
 
 
                                 ?>
@@ -236,7 +214,7 @@ if ($adaptationstring == null)
 
              <?php
                                     $filtering = $this->getobject('filterdisplay','unesco_oer');
-                    echo  $filtering->SideFilter($adaptationstring);
+                    echo  $filtering->SideFilter($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring,$NumFilter, $PageNum);
                 ?>
 
                 </div>
@@ -246,10 +224,11 @@ if ($adaptationstring == null)
 
 
  <?php
-                                    $search = $this->getobject('sort','unesco_oer');
-                    echo  $search->SortDisp();
+                                    $search = $this->getobject('filterdisplay','unesco_oer');
+                    echo  $search->SortDisp($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring,$NumFilter, $PageNum);
                     
-                    echo $Filterinfo['ThemeFilter'];
+                    echo $finalstring
+
                 ?>
 
 
@@ -302,12 +281,14 @@ if ($adaptationstring == null)
 
 
                     $products = $this->objDbProducts->getFilteredProducts('relation is not null');
+                    echo $finalstring;
                     $newRow = true;
                     $count = 0;
 
                     foreach ($products as $product) {
                         $count++;                       //populates table
                         //Check if the creator is a group or an institution
+                       
                         if ($this->objDbGroups->isGroup($product['creator'])) {
                             $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
                             $product['group_thumbnail'] = $thumbnail['thumbnail'];
@@ -325,7 +306,7 @@ if ($adaptationstring == null)
                             //$product['type'] = 'Not Available';
 
                             $institutionTypeID = $this->objDbInstitution->findInstitutionTypeID($product['creator']);
-                            $product['type'] = $this->objDbInstitutionTypes->getTypeName($institutionTypeID);
+                         //   $product['type'] = $this->objDbInstitutionTypes->getTypeName($institutionTypeID);
 
                             $product['institution_thumbnail'] = $thumbnail['thumbnail'];
                         }
@@ -482,53 +463,14 @@ if ($adaptationstring == null)
 
                     -->
                     <!-- Pagination-->
-                    <div class="paginationDiv">
-<!--                                                <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>-->
+  <div class="paginationDiv">
+                    <?php
+                    $Pagination = $this->getobject('filterdisplay','unesco_oer');
+                     $Pagination->Pagination($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring,$NumFilter, $PageNum,$pageinfo);
 
-
-
-
-                        <?php
-//
-                        $TotalRecords = $this->objDbProducts->getTotalEntries('relation is not null');
-
-                        $TotalPages = ceil($TotalRecords / $NumFilter);
-
-
-                        if ($TotalPages > 0) {
-
-
-
-
-                            echo '<div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>';
-
-
-
-                            for ($i = 1; $i <= $TotalPages; $i++) {
-
-                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
-                                $abLink->link = $i;
-                                echo $abLink->show();
-                            }
-                        }
-//
-//
-                        ?>
-                        <!--                        <div class="paginationLinkDiv">
-                                                    <a href="#" class="pagination">Prev</a>
-                                                    <a href="#" class="pagination">1</a>
-                                                    <a href="#" class="pagination">2</a>
-                                                    <a href="#" class="pagination">3</a>
-                                                    <a href="#" class="pagination">4</a>
-                                                    <a href="#" class="pagination">5</a>
-                                                    <a href="#" class="pagination">6</a>
-                                                    <a href="#" class="pagination">7</a>
-                                                    <a href="#" class="pagination">8</a>
-                                                    <a href="#" class="pagination">9</a>
-                                                    <a href="#" class="pagination">10</a>
-                                                    <a href="#" class="pagination">Next</a>
-                                                </div>-->
-                    </div>
+                    ?>
+      </div>
+           
                 </div>
 
                 <!-- Right column DIv -->
@@ -747,31 +689,18 @@ if ($adaptationstring == null)
             </div>
     </body>
 </html>
+
 <script>
-
-    function sendThemeFilterform()
-    {
-        document.forms["ThemeFilter"].submit();
-    }
-
-    function sendLanguageFilterform()
-    {
-        document.forms["LanguageFilter"].submit();
-
-    }function sendAuthorFilterform()
-    {
-        document.forms["AuthorFilter"].submit();
-    }
 
 
     function sendSortFilterform()
     {
-        document.forms["SortFilter"].submit();
+    document.forms["SortFilter"].submit();
     }
 
     function sendNumFilterform()
     {
-        document.forms["NumFilter"].submit();
+    document.forms["NumFilter"].submit();
     }
 
 </script>

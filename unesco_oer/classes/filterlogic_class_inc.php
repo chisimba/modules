@@ -36,7 +36,7 @@ class filterlogic extends object {
              $this->Filterinfo['Besoractile'] = $this->getParam('Besoractile');
               $this->Filterinfo['AuthorFilter'] = $this->getParam('AuthorFilter');
               $this->Filterinfo['LanguageFilter'] = $this->getParam('LanguageFilter');
-              $this->Filterinfo['page'] = $this->getParam('ThemeFilter');
+             
 
 
 
@@ -49,186 +49,7 @@ class filterlogic extends object {
 
     }
 
-    public function ThemeFilter() {
-
-       
-       $filter = $this->setSession("Filter", $this->Filterinfo);
-
-        $products = $this->objDbProducts->getProducts(0, 10);
-        $filterTheme = new dropdown('ThemeFilter');
-        $filterTheme->cssClass = "leftColumnSelectDropdown";
-        $all = $this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer');
-        $filterTheme->addoption($all);
-        foreach ($products as $product) {
-
-            $filterTheme->addOption($product['theme']);
-        }
-        $filterTheme->setSelected($ThemeFilter);
-
-
-        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries, 'Filterinfo' => $filter)));
-
-
-        $filterTheme->addOnChange('javascript: sendThemeFilterform()');
-        $form->addtoform($filterTheme->show());
-
-       echo $this->Filterinfo['Guide'];
-
-
-
-
-        return $form->show();
-    }
-
-    public function CheckBox() {
-
-
-
-
-
-        $products = $this->objDbProducts->getProducts(0, 10);
-
-
-
-
-        $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries)));
-
-
-
-
-        $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
-        $button->setToSubmit();
-
-        $checkbox = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_model', 'unesco_oer'));
-        $checkbox2 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_handbook', 'unesco_oer'));
-        $checkbox3 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_guide', 'unesco_oer'));
-        $checkbox4 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_manual', 'unesco_oer'));
-        $checkbox5 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_bestoractile', 'unesco_oer'));
-
-
-
-        if ($Model == 'on')
-            $checkbox->ischecked = true;
-
-        if ($Handbook == 'on')
-            $checkbox2->ischecked = true;
-
-        if ($Guide == 'on')
-            $checkbox3->ischecked = true;
-
-        if ($Manual == 'on')
-            $checkbox4->ischecked = true;
-
-        if ($Besoractile == 'on')
-            $checkbox5->ischecked = true;
-
-
-        $form->addToForm($checkbox->show());
-        $form->addToForm('Model<br>');
-        $form->addToForm($checkbox2->show());
-        $form->addToForm('Handbook<br>');
-        $form->addToForm($checkbox3->show());
-        $form->addToForm('Guide<br>');
-        $form->addToForm($checkbox4->show());
-        $form->addToForm('Manual<br>');
-        $form->addToForm($checkbox5->show());
-        $form->addToForm('Best Practices<br>');
-        $form->addToForm($button->show());
-
-
-        return $form->show();
-    }
-
-    public function FilterLanguage() {
-
-        $products = $this->objDbProducts->getProducts(0, 10);
-        $filterLang = new dropdown('LanguageFilter');
-        $filterLang->cssClass = "leftColumnSelectDropdown";
-        $filterLang->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
-        foreach ($products as $product) {
-
-            $filterLang->addOption($product['language']);
-        }
-
-        $filterLang->setSelected($LangFilter);
-
-        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
-
-
-        $uri = $this->uri(array('action' => 'LanguageFilter'));
-        $filterLang->addOnChange('javascript: sendLanguageFilterform()');
-
-
-        $form->addtoform($filterLang->show());
-
-
-        return $form->show();
-    }
-
-    public function AuthFilter() {
-
-
-        $products = $this->objDbProducts->getProducts(0, 10);
-        $filterAuth = new dropdown('AuthorFilter');
-        $filterAuth->cssClass = "leftColumnSelectDropdown";
-        $filterAuth->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
-        foreach ($products as $product) {
-
-            $filterAuth->addOption($product['creator']);
-        }
-
-        $filterAuth->setSelected($AuthFilter);
-        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
-
-
-        $uri = $this->uri(array('action' => 'AuthorFilter'));
-        $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
-
-
-        $form->addtoform($filterAuth->show());
-
-
-        return $form->show();
-    }
-
-    public Function NumFilter() {
-
-        $products = $this->objDbProducts->getProducts(0, 10);
-        $filterNum = new dropdown('NumFilter');
-        $filterNum->cssClass = "leftColumnSelectDropdown";
-
-
-        $filterNum->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
-        $filterNum->addOption('1');
-        $filterNum->addOption('2');
-        $filterNum->addOption('3');
-
-
-
-        $filterNum->setSelected($NumFilter);
-        $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
-
-
-        $uri = $this->uri(array('action' => 'NumFilter'));
-        $filterNum->addOnChange('javascript: sendNumFilterform()');
-
-
-        $form->addtoform($filterNum->show());
-
-
-        return $form->show();
-    }
-
-    public function Reset() {
-
-
-        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
-        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
-
-
-        return $abLink->show();
-    }
-
+   
     public function Sort(){
 
          $products = $this->objDbProducts->getProducts(0, 10);
@@ -241,7 +62,7 @@ class filterlogic extends object {
 
 
                             $filterLang->setSelected($SortFilter);
-                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
+                            $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $this->Filterinfo['Guide'], 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
 
                             $uri = $this->uri(array('action' => 'SortFilter'));
@@ -289,7 +110,7 @@ class filterlogic extends object {
 
 
 
-                                    $form = new form('SearchField', $this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
+                                    $form = new form('SearchField', $this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $this->Filterinfo['Guide'], 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
 
 
 
@@ -313,9 +134,136 @@ class filterlogic extends object {
 
 
 
+     
+
+
+
+
+      /**
+     * This function Builds the String to Send to the DBhandler and return the total number of entries according to the selected Filter
+     * @param <type>$AuthFilter,$ThemeFilter,$LangFilter,$page,$sort,$TotalPages,$adaptationstring,$Model,$Handbook,$Guide,$Manual,$Besoractile
+     * @return <type> $TotalEntries
+     */
+    public function FilterTotalProducts( $page, $sort, $TotalPages, $adaptationstring,$browsemapstring)
+    {
+
+        if ($browsemapstring != null)
+        $buildstring = $browsemapstring;
+        else
+        $buildstring = $adaptationstring;
+
+
+        if (!( $this->Filterinfo['AuthorFilter'] == Null or  $this->Filterinfo['AuthorFilter'] == 'All'))
+            $buildstring .= ' and creator = ' .$this->Filterinfo['AuthorFilter'];
+
+        if (!($this->Filterinfo['ThemeFilter'] == Null or $this->Filterinfo['ThemeFilter'] == 'All'))
+            $buildstring .= ' and theme = ' . $this->Filterinfo['ThemeFilter'];
+
+        if (!($this->Filterinfo['LanguageFilter'] == Null or $this->Filterinfo['LanguageFilter'] == 'All'))
+            $buildstring .= ' and language = ' . $this->Filterinfo['LanguageFilter'];
+
+
+        if (( $this->Filterinfo['Model'] == 'on') or ($this->Filterinfo['Handbook'] == 'on') or ($this->Filterinfo['Guide'] == 'on') or ($this->Filterinfo['Manual'] == 'on') or ($this->Filterinfo['Besoractile'] == 'on'))
+            $buildstring .= ' and (';
+
+        if ( $this->Filterinfo['Model'] == 'on')
+            $buildstring .= ' resource_type = "Model" or';
+        if ($this->Filterinfo['Handbook'] == 'on')
+            $buildstring .= ' resource_type = "Handbook" or';
+        if ($this->Filterinfo['Guide'] == 'on')
+            $buildstring .= ' resource_type = "Guide" or';
+        if ($this->Filterinfo['Manual'] == 'on')
+            $buildstring .= ' resource_type = "Manual" or';
+        if ($this->Filterinfo['Besoractile'] == 'on')
+            $buildstring .= ' resource_type = "Besoractile" or';
+
+        $length = strlen($buildstring);
+
+        if (( $this->Filterinfo['Model'] == 'on') or ($this->Filterinfo['Handbook'] == 'on') or ($this->Filterinfo['Guide'] == 'on') or ($this->Filterinfo['Manual'] == 'on') or ($this->Filterinfo['Besoractile'] == 'on')) {
+            $buildstring = substr($buildstring, 0, ($length - 2));
+
+            $buildstring .= ')';
+        }
+
+
+
+        if ($sort == 'Date Added')
+            $buildstring .= ' order by created_on';
+        else if ($sort == 'Alphabetical')
+            $buildstring .= ' order by title';
+
+        $TotalEntries = $buildstring;
+
+
+
+
+
+
+
+
+        return $TotalEntries;
+    }
+
+    /**
+     * This functionTakes the Filtered string and Returns the Products according to the pagination filter seleted.
+     * @param <type>$NumFilter,$PageNum,$TotalEntries
+     * @return <type> $Buildstring
+     */
+    public function FilterAllProducts($NumFilter, $PageNum, $TotalEntries)
+    {
+
+
+        if ((!($NumFilter == null or $NumFilter == 'All')) & $PageNum == null) {
+            $start = 0;
+            $end = $start + $NumFilter;
+            $TotalEntries .= ' LIMIT ' . $start . ',' . $end;
+        } else if (!($NumFilter == null or $NumFilter == 'All')) {
+
+            $temp = $NumFilter * $PageNum - 1;
+            $start = $temp - $NumFilter + 1;
+            $end = $NumFilter;
+            $TotalEntries .= ' LIMIT ' . $start . ',' . $end;
+        }
+
+        $Buildstring = $TotalEntries;
+
+
+        return $Buildstring;
+    }
+
+
 
 
 
 
 }
 ?>
+<script>
+
+    function sendThemeFilterform()
+    {
+        document.forms["ThemeFilter"].submit();
+        
+    }
+
+    function sendLanguageFilterform()
+    {
+        document.forms["LanguageFilter"].submit();
+
+    }function sendAuthorFilterform()
+    {
+        document.forms["AuthorFilter"].submit();
+    }
+
+
+    function sendSortFilterform()
+    {
+        document.forms["SortFilter"].submit();
+    }
+
+    function sendNumFilterform()
+    {
+        document.forms["NumFilter"].submit();
+    }
+
+</script>

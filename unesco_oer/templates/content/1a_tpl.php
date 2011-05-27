@@ -621,7 +621,7 @@ $adaptationstring = "relation is null";
 
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
-
+echo $finalstring;
                                         $newRow = true;
                                         $count = 0;
                                         $noOfAdaptations = 0;
@@ -795,13 +795,13 @@ $adaptationstring = "relation is null";
                                         <div class="paginationDiv">
 
                         <?php
-//
+
                                         $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
 
                                         $TotalPages = ceil($TotalRecords / $NumFilter);
 
 //                                                echo $TotalRecords;
-//                                                echo $NumFilter;
+                                            
 
 
                                         if ($TotalPages > 0) {
@@ -815,6 +815,7 @@ $adaptationstring = "relation is null";
 
                                                 $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
                                                 $abLink->link = $i;
+                                            
                                                 echo $abLink->show();
                                             }
                                         }

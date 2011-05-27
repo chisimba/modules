@@ -23,6 +23,7 @@ class unesco_oer extends controller {
     public $objGoogleMap;
     public $objDbAvailableProductLanguages;
     public $objUseExtra;
+        public $objfilterdisplay;
 
     /**
      *
@@ -34,7 +35,9 @@ class unesco_oer extends controller {
     public $objLanguage;
 
     function init() {
+        //session_start();
         $this->objLanguage = $this->getObject('language', 'language');
+         $this->objfilterdisplay = $this->getobject('filterdisplay', 'unesco_oer');
         $this->objProductUtil = $this->getObject('productutil');
         $this->objDbProducts = $this->getObject('dbproducts');
         $this->objDbResourceTypes = $this->getObject('dbresourcetypes');
@@ -53,11 +56,13 @@ class unesco_oer extends controller {
         $this->objProductRatings = $this->getObject('dbproductratings');
         $this->objUser = $this->getObject('user', 'security');
         $this->objUseExtra=$this->getObject('dbuserextra');
+
        
 
 
         //$this->objGoogleMap=$this->getObject('googlemapapi');
         //$this->objGoogleMap = new googlemapapi();
+
     }
 
     /**
@@ -338,48 +343,29 @@ class unesco_oer extends controller {
 
     public function __FilterProducts() {
 
-        $AuthFilter = $this->getParam('AuthorFilter');
-        $ThemeFilter = $this->getParam('ThemeFilter');
-        $LangFilter = $this->getParam('LanguageFilter');
+      
         $page = $this->getParam('page');
         $sort = $this->getParam('SortFilter');
         $NumFilter = $this->getParam('NumFilter');
         $PageNum = $this->getParam('PageNum');
         $TotalPages = $this->getParam('TotalPages');
         $adaptationstring = $this->getParam('adaptationstring');
-        $Model = $this->getParam('Model');
-        $Handbook = $this->getParam('Handbook');
-        $Guide = $this->getParam('Guide');
-        $Manual = $this->getParam('Manual');
-        $Besoractile = $this->getParam('Besoractile');
         $browsemapstring = $this->getParam('MapEntries');
-        $Filterinfo = $this->getsession('filter');
+       
+        $TotalEntries = $this->objfilterdisplay->FilterTotalProducts($page, $sort, $TotalPages, $adaptationstring, $browsemapstring);
+        $Buildstring = $this->objfilterdisplay->FilterAllProducts($NumFilter, $PageNum, $TotalEntries);
 
 
 
-        $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile, $browsemapstring);
-        $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter, $PageNum, $TotalEntries);
-
-
-
-        $this->setVarByRef("AuthFilter", $AuthFilter);
-        $this->setVarByRef("ThemeFilter", $ThemeFilter);
-        $this->setVarByRef("LangFilter", $LangFilter);
+      
         $this->setVarByRef("SortFilter", $sort);
         $this->setVarByRef("NumFilter", $NumFilter);
         $this->setVarByRef("PageNum", $PageNum);
-        $this->setVarByRef("TotalPages", $TotalPages);
-        $this->setVarByRef("Model", $Model);
+        $this->setVarByRef("TotalPages", $TotalPages);     
         $this->setVarByRef("finalstring", $Buildstring);
         $this->setVarByRef("TotalEntries", $TotalEntries);
-        $this->setVarByRef("Model", $Model);
-        $this->setVarByRef("Guide", $Guide);
-        $this->setVarByRef("Handbook", $Handbook);
-        $this->setVarByRef("Manual", $Manual);
-        $this->setVarByRef("Besoractile", $Besoractile);
-        $this->setVarByRef("adaptationstring", $adaptationstring);
         $this->setVarByRef("MapEntries", $browsemapstring);
-        $this->setVarByRef("Filterinfo", $Filterinfo);
+    
 
 
 

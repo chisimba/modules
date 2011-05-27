@@ -1,4 +1,5 @@
 <?php
+
 /* 
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -20,25 +21,59 @@ class search extends Object{
 
 
 
-   function Searchdisp(){
+   function Searchdisp($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring,$NumFilter, $PageNum){
 
-       $content ='';
-       $content .='
+        $form = new form('SearchField', $this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter)));
 
-       <div class="searchInputBoxDiv"> '.
+     
 
-
-$this->objfilterlogic->Search()
+    $form->addToForm('   <div class="searchInputBoxDiv"> ');
 
 
+   $button = new button('Search', 'GO');
+                                    $button->setToSubmit();
+
+                                    $textinput = new textinput('SearchInput');
+                                    $textinput->cssClass = "searchInput";
 
 
 
-                                .'
-                                </div>';
+                                    $filterSearch = new dropdown('SearchFilter');
+                                    $filterSearch->cssClass = "searchDropDown";
+
+                                    $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'));
+                                    $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
+                                    $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_creator', 'unesco_oer'));
 
 
-return $content;
+
+
+
+
+
+
+
+
+
+                                    $form->addToForm($textinput->show());
+                                    $form->addtoform($filterSearch->show());
+                                    $form->addToForm($button->show());
+
+
+                                  
+
+
+
+
+
+
+
+
+                                $form->addToForm('
+                                </div>');
+
+
+return $form->show();
 
 
 

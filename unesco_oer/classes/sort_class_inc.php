@@ -21,21 +21,45 @@ public function init()
 
 
 
-public function SortDisp()
+public function SortDisp($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring,$NumFilter, $PageNum)
 
-{
-$content = '';
-$content .= '
-      <div class="sortBy">
-'.
+{    
 
-$this->objfilterlogic->Sort()
+      $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries)));
 
-.'  </div>';
+  $form->addToForm('<div class="sortBy">');
 
 
+ $products = $this->objDbProducts->getProducts(0, 10);
+                            $filterLang = new dropdown('SortFilter');
+                             $filterLang->cssClass = "leftColumnSelectDropdown";
 
-return $content;
+                            $filterLang->addoption('None');
+                            $filterLang->addoption('Date');
+                            $filterLang->addOption('Alphabetical');
+
+
+                            $filterLang->setSelected($SortFilter);
+
+
+
+                            $uri = $this->uri(array('action' => 'SortFilter'));
+                            $filterLang->addOnChange('javascript: sendSortFilterform()');
+
+
+
+                            $form->addtoform($this->objLanguage->languageText('mod_unesco_oer_sort_by', 'unesco_oer'));
+                            $form->addtoform($filterLang->show());
+                          
+
+
+
+
+$form->addToForm('  </div>');
+
+
+
+return $form->show();
 
 
 
