@@ -63,9 +63,7 @@ foreach ($stories as $story)
     
     $storyLink->link = $this->objLanguage->languageText('mod_news_readstory', 'news', 'Read Story');
     $output .= ' ('.$storyLink->show().')';
-    
-    $output .= '</div><br clear="both" />';
-}
 
+}
 echo $output;
 ?>

@@ -79,9 +79,6 @@ class section_thumbnails extends object
 
                 $output .= '</div>';
             }
-
-            $output .= '<br clear="both" /><br />';
-
         }
 
         return $output;

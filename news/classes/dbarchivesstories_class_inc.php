@@ -346,7 +346,7 @@ WHERE tbl_news_stories.id = \''.$id.'\'';
                 $storyLink->link = 'Read Story';
                 $output .= ' ('.$storyLink->show().')';
 
-                $output .= '</div><br clear="both" />';
+                $output .= '</div>';
             }
 
             return array('topstoryids'=>$storyIds, 'stories'=>$output);

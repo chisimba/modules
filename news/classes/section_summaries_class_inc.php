@@ -83,11 +83,10 @@ class section_summaries extends object
                 $storyLink->link = 'Read Story';
                 $output .= '<div id="newsstorytext-footer"> ('.$storyLink->show().')</div>';
 
-                $output .= '</div><br clear="both" />';
+                $output .= '</div>';
             }
 
         }
-
         return $output;
     }
 
