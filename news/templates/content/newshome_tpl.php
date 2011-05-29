@@ -145,10 +145,10 @@ if (count($categories) > 0) {
             $nonTopStories = $this->objNewsStories->getNonTopStoriesFormatted($category['id'], $topStoriesId);
             if ($nonTopStories != '') {
 
-                if ($counter % 2 == 0) {
-                    $middle .= '<br clear="all" />';
-                }
-                $middle .= '<div style="width:50%; float:left; "><h3>' . $category['categoryname'] . '</h3>';
+                //if ($counter % 2 == 0) {
+                    //$middle .= '<br clear="all" />';
+                //}
+                $middle .= '<div  class="halfwidth_left"><h3>' . $category['categoryname'] . '</h3>';
                 $middle .= $nonTopStories . '</div>';
 
                 $counter++;
@@ -157,7 +157,7 @@ if (count($categories) > 0) {
     }
 }
 
-$middle .= '<br clear="both" />';
+//$middle .= '<br clear="both" />';
 $objCssLayout->middleColumnContent .= $middle;
 $button = new button('addleftblock', $objLanguage->languageText('mod_prelogin_addblock', 'prelogin', 'Add Block'));
 $button->cssId = 'leftbutton';
