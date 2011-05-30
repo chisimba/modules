@@ -39,6 +39,14 @@ class dbcomments extends dbtable {
         $this->insert($data);
     }
 
+    function getComment($productID){
+
+        $sql = "SELECT product_comment from tbl_unesco_oer_comments where product_id = null LIMIT 0,2";
+        return $this->getArray($sql);
+
+
+    }
+
 }
 
 ?>

@@ -4,6 +4,7 @@
     $this->loadClass('link', 'htmlelements');
     $this->loadClass('form','htmlelements');
     $this->loadClass('button','htmlelements');
+    $this->LoadClass('dbcomments','unesco_oer');
     //load java script
     $js = '<script language="JavaScript" src="'.$this->getResourceUri('ratingsys.js').'" type="text/javascript"></script>';
     $this->appendArrayVar('headerParams', $js);
@@ -166,11 +167,28 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     <br><br>
                     <div class="commentsDiv">
                         <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
-                        <div class="comments">Integer venenatis, augue vel iaculis commodo, ante nisi bibendum.</div>
+                        <div class="comments">
+                            <?php
+
+
+                            $comments = $this->objDbComments->getComment($productID);
+                            echo $comments[0]['product_comment'];
+echo $productID
+                            ?>
+
+                        </div>
                     </div>
                     <div class="commentsDiv">
                         <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
-                        <div class="comments">Integer venenatis, augue vel iaculis commodo, ante nisi bibendum.</div>
+                        <div class="comments">
+                            <?php
+                            
+                            
+                            $comments = $this->objDbComments->getComment($productID);
+                            echo $comments[1]['product_comment'];
+                            
+                            ?>
+                        </div>
                     </div>
                 	<div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all comments</a></div>
 <!--                    <textarea class="commentTextBox">Leave comment</textarea> -->
