@@ -142,6 +142,13 @@ $buttonText = "Edit Institution";
 $actionURI = $this->uri(array('action' => 'editInstitutionUI1'));
 $utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
+
+// uerRegistration form
+$headingText = "user registration form"; //MUST USE OBJECT LANGUAGE
+$buttonText = "Add User";
+$actionURI = $this->uri(array('action' => 'userRegistrationForm'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
+//
 //Add an additional language to a product
 $headingText = "Add language to product"; //MUST USE OBJECT LANGUAGE
 $buttonText = "Add language to product";

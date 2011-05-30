@@ -16,20 +16,25 @@
  */
 
 class dbuserextra extends dbtable{
-    
-//class dbuserextra extends seradmin_model2 {
+  
+    private $objAdmin;
     private $objUser;
 
       function init() {
          parent::init("tbl_unesco_oer_userextra");
-         $this->objUser=$this->getObject('useradmin_model2','security');
-
+         $this->objAdmin=$this->getObject('useradmin_model2','security');
+         $this->objUser=$this->getObject('user','security');
 
     }
 
 
-    function addUserInfo($title,$surname,$userid,$username,$password,$email,$firstname,$sex,$country,$birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $cellnumber, $DescriptionText, $WebsiteLink, $GroupMembership) {
+    function addUserInfo($title, $surname,$username, $password, $email, $firstname, $sex, $country,$cellnumber) {
+        $this->objAdmin->addUser($userid = "$password", $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = '', $accountType = 'useradmin', $accountstatus = '1');
+    }
+
+    function addUserInfoExtra($USERID=NULL,$username, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
         $data = array(
+            'userid' => $USERID,
             'birthday' => $birthdate,
             'address' => $address,
             'city' => $city,
@@ -39,19 +44,17 @@ class dbuserextra extends dbtable{
             'jobtittle' => $jobtittle,
             'typeoccapation' => $TypeOccapation,
             'workingphone' => $WorkingPhone,
-            'mobilephone' => $cellnumber,
             'description' => $DescriptionText,
             'websitelink' => $WebsiteLink,
             'groupmembership' => $GroupMembership
         );
         $this->insert($data);
-        $this->objUser->addUser($userid, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber='', $accountType='useradmin', $accountstatus='1');
-
-
+       
     }
 
 
     function editUserInfo($id,$staffnumber,$surname,$title,$userId,$username,$password,$email,$firstname,$sex,$country,$birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle,$WorkingPhone, $cellnumber, $DescriptionText, $WebsiteLink, $GroupMembership) {
+        $this->objAdmin->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='useradmin', $accountstatus='1');
         $data = array(
             'birthday' => $birthdate,
             'address' => $address,
@@ -67,7 +70,7 @@ class dbuserextra extends dbtable{
             'groupmembership' => $GroupMembership
         );
         $this->update($data);
-        $this->objUser->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='useradmin', $accountstatus='1');
+        //$this->objAdmin->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='useradmin', $accountstatus='1');
     }
 
     function getAllUser(){
