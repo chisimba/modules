@@ -173,7 +173,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
                             $comments = $this->objDbComments->getComment($productID);
                             echo $comments[0]['product_comment'];
-echo $productID
+
                             ?>
 
                         </div>
