@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 'On');
+ini_set('display_errors', 'off');
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
@@ -55,10 +55,10 @@ $institutionGUI->getInstitution('gen7Srv53Nme51_35455_1300785041');
                             <div class="searchGoButton"><a href=""><img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>
                                 <a href="" class="searchGoLink">GO</a></div>
                             <div class="searchInputBoxDiv">
-                                <input type="text" name="" id="" class="searchInput" value="Type search term here...">
-                                <select name="" id="" class="searchDropDown">
-                                    <option value="">All</option>
-                                </select>
+                               <?php
+    $Search = $this->getobject('filterdisplay', 'unesco_oer');
+    echo $Search->Search('4_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+?>
                             </div>
                             <div class="textNextToRightFloatedImage">Search</div>
                             <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">
@@ -146,25 +146,18 @@ $institutionGUI->getInstitution('gen7Srv53Nme51_35455_1300785041');
                                     <br><br>
                                     <div class="adaptationInnerPageHeding"><h3 class="pinkText">Adaptations</h3></div>
                                     <br>
-                                    <div class="leftColumnDiv">
-                                        <div class="moduleHeader blueText">FILTER PRODUCTS</div>
-                                        <div class="blueNumberBackground">
-                                            <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                                            <div class="numberOffilteredProducts">4</div>
-                                        </div>
-                                        <div class="moduleSubHeader">Product matches filter criteria</div>
-                                        <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">Type of product</div>
-
+                                  
+                                       
 
 <?php
                             $filtering = $this->getobject('filterdisplay', 'unesco_oer');
-                             echo $filtering->SideFilter($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+                             echo $filtering->SideFilter('4_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
 ?>
 
 
 
-
-                                    </div>
+                            </div>
+                               
 
                                     <div class="innerRightColumn4">
                                         <div class="listAdaptations">

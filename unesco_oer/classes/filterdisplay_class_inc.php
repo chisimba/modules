@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 'on');
+ini_set('display_errors', 'off');
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -42,10 +42,43 @@ class filterdisplay extends object {
 
 
 
-        $form = new form('temporary', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries)));
+        $form = new form('temporary', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => $page, "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries)));
 
 
-        $form->addToForm('  <div class="blueBackground blueBackgroundCheckBoxText">');
+            $form->addToForm(' 
+                <div class="leftColumnDiv">
+                    <div class="moduleHeader">');
+                           
+                           $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer'));
+
+
+
+
+
+
+
+
+     $form->addToForm('</div>
+                        <div class="blueNumberBackground">
+                        <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
+                        <div class="numberOffilteredProducts"> ');
+
+                             $TotalRecords = $this->objDbProducts->getTotalEntries('relation is not null');
+                           $form ->addToForm($TotalRecords);
+                         $form->addToForm('</div>
+                        </div>
+                        <div class="moduleSubHeader">Product matches filter criteria</div>
+                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages"> ');
+
+                        $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer'));
+
+
+                     
+
+        
+
+        $form->addToForm('  </div>
+                              <div class="blueBackground blueBackgroundCheckBoxText">');
 
         $products = $this->objDbProducts->getProducts(0, 10);
 
@@ -103,7 +136,7 @@ class filterdisplay extends object {
 
 
 
-        $form->addToForm('   </div>
+        $form->addToForm('</div>
 
 
                     <br> 
@@ -299,7 +332,7 @@ class filterdisplay extends object {
 
        
 
-                        $TotalRecords = $this->objDbProducts->getTotalEntries('parent_id is not null');
+                        $TotalRecords = $this->objDbProducts->getTotalEntries('relation is not null');
                         $TotalPages = ceil($TotalRecords / $NumFilter);
 
 

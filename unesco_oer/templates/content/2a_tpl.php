@@ -176,33 +176,11 @@ echo $abLink->show();
             <div class="mainContentHolder">
                 <div class="subNavigation"></div>
                 <!-- Left Colum -->
-                <div class="leftColumnDiv">
-                    <div class="moduleHeader">
-<?php
-                            echo $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer')
-?>
-
-                    </div>
-                    <div class="blueNumberBackground">
-                        <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                        <div class="numberOffilteredProducts">
-<?php
-                            echo $TotalRecords = $this->objDbProducts->getTotalEntries('relation is not null');
-?>
-                            </div>
-                        </div>
-                        <div class="moduleSubHeader">Product matches filter criteria</div>
-                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">
-<?php
-                            echo $this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer')
-?>
-
-                        </div>
-
+                
 
 <?php
-                            $filtering = $this->getobject('filterdisplay', 'unesco_oer');
-                             echo $filtering->SideFilter($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+                           $filtering = $this->getobject('filterdisplay', 'unesco_oer');
+                           echo $filtering->SideFilter('2a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
 ?>
 
                     </div>
@@ -212,10 +190,9 @@ echo $abLink->show();
 
 
                     <?php
-                            $search = $this->getobject('filterdisplay', 'unesco_oer');
-                            echo $search->SortDisp($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
-
-                            echo $finalstring
+                           $search = $this->getobject('filterdisplay', 'unesco_oer');
+                          echo $search->SortDisp('2a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+                           
                     ?>
 
 
@@ -314,7 +291,6 @@ echo $abLink->show();
                                         $objTable->endRow();
                                     }
                                 }
-
 
                                 echo $objTable->show();
                             ?>
@@ -452,8 +428,8 @@ echo $abLink->show();
                                 <!-- Pagination-->
                                 <div class="paginationDiv">
 <?php
-                                $Pagination = $this->getobject('filterdisplay', 'unesco_oer');
-                                $Pagination->Pagination($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum, $pageinfo)
+                            $Pagination = $this->getobject('filterdisplay', 'unesco_oer');
+                              $Pagination->Pagination('2a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum, $pageinfo)
 ?>
                                 </div>
 
