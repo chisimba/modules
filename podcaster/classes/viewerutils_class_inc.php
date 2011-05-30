@@ -144,7 +144,7 @@ class viewerutils extends object {
         if ($firefoxCheck) {
             $podInfo = $objSoundPlayer->show();
         } else {
-            $podInfo = '<embed src="' . $podURL . '" autostart="true" loop="false" width="300" height="42" controller="true" bgcolor="#FFFFFF"></embed>';
+            $podInfo = '<embed src="' . $podURL . '" autostart="true" loop="false" width="400" controller="true" bgcolor="#FFFFFF"></embed>';
         }
         $content = "";
 
@@ -208,7 +208,7 @@ class viewerutils extends object {
         $embedCode = $this->objLanguage->languageText("mod_podcaster_embedcode", "podcaster", 'Embed code');
         $content .= '<br /><p>' . $podInfo . " " . $license . '</p><p><strong>' . $this->objLanguage->languageText('mod_podcaster_downloadpodcast', 'podcaster', 'Download podcast') . ': ' . $link->show() .
                 '</strong> (' . $this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As') . ') ' . '</p>'.
-                '<br /><p><b>'.$embedCode.': </b></p><p><textarea name="snippet" id="input_snippet" rows="4" cols="43"><embed src="' . $linkEmbed->show() . '" autostart="true" loop="false" width="300" height="42" controller="true" bgcolor="#FFFFFF"></embed></textarea></p>';
+                '<br /><p><b>'.$embedCode.': </b></p><p><textarea name="snippet" id="input_snippet" rows="6" cols="60"><embed src="' . $linkEmbed->show() . '" autostart="true" loop="false" width="500" height="42" controller="true" bgcolor="#FFFFFF"></embed></textarea></p>';
 
         return array('podinfo' => $content, 'filename' => $filename, 'filedata' => $result, 'id' => $id, 'podpath' => $newpodpath);
     }
