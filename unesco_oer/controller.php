@@ -47,7 +47,7 @@ class unesco_oer extends controller {
         $this->objDbFeaturedProduct = $this->getObject('dbfeaturedproduct');
         $this->objFeaturedProducUtil = $this->getObject('featuredproductutil');
         $this->objDbProductRatings = $this->getObject('dbproductratings');
-        //$this->objDbGroups = $this->getObject('dbgroups');
+        $this->objDbGroups = $this->getObject('dbgroups');
         $this->objDbInstitution = $this->getObject('dbinstitution');
         $this->objDbInstitutionTypes = $this->getObject('dbinstitutiontypes');
         $this->objDbLinkedGroups = $this->getObject('dblinkedgroups');

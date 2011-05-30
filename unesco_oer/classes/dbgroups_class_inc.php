@@ -38,23 +38,14 @@ class dbgroups extends dbtable {
         $this->getArray($sql);
     }
 
-     function editgroup($id,$puid,$loclat,$loclong,$name,$description){
+     function editgroup($id,$puid,$loclat,$loclong,$namen){
        return $this->update(
                     'puid',
                      $puid,
-                     array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'Description'=>$description,'id'=>$id)
+                     array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'id'=>$id)
             );
         }
-    
-    function leavegroup(){
-        
-    }
-
-
-
-
-
-
+ 
     function addGroup($name, $loclat, $loclong, $thumbnailPath, $country = NULL) {
         $data = array(
             'name' => $name,
