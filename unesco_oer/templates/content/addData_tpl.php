@@ -148,6 +148,13 @@ $headingText = "user registration form"; //MUST USE OBJECT LANGUAGE
 $buttonText = "Add User";
 $actionURI = $this->uri(array('action' => 'userRegistrationForm'));
 $utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
+
+//edit User Info
+$headingText = "user LISTING FORM"; //MUST USE OBJECT LANGUAGE
+$buttonText = "Edit Users";
+$actionURI = $this->uri(array('action' => 'userListingForm'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
+
 //
 //Add an additional language to a product
 $headingText = "Add language to product"; //MUST USE OBJECT LANGUAGE

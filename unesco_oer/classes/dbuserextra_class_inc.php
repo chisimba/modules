@@ -32,15 +32,56 @@ class dbuserextra extends dbtable{
         $this->objAdmin->addUser($userid = "$password", $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = '', $accountType = 'useradmin', $accountstatus = '1');
     }
 
-    function addUserInfoExtra($USERID=NULL,$username, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
+//    function getlastInsewtedId(){
+//        $sql = "select LAST(id) from tbl_users";
+//        return $sql;
+//    }
+//
+//    function edit($id,$staffnumber,$surname,$title,$userId,$username,$password,$email,$firstname,$sex,$country,$birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle,$WorkingPhone, $cellnumber, $DescriptionText, $WebsiteLink, $GroupMembership){
+//       return $this->update(
+//                'id',
+//                $id,
+//               array(
+//                   'id'=>$id,
+//                   'staffnumber'=>$staffnumber,
+//                   'surname'=>$surname,
+//                   'tittle'=>$title
+//                   )
+//       );
+//    }
+//
+//    function editExtra($id, $title, $surname, $username, $password, $email, $firstname, $sex, $country, $cellnumber) {
+//        return $this->update(
+//                'id',
+//                $id,
+//                array(
+//                    'birthday' => $birthdate,
+//                    'address' => $address,
+//                    'city' => $city,
+//                    'state' => $state,
+//                    'postaladdress' => $postaladdress,
+//                    'organisation/company' => $organisation,
+//                    'jobtittle' => $jobtittle,
+//                    'typeoccapation' => $TypeOccapation,
+//                    'workingphone' => $WorkingPhone,
+//                    'description' => $DescriptionText,
+//                    'websitelink' => $WebsiteLink,
+//                    'groupmembership' => $GroupMembership,
+//                    'id' => $id
+//                    )
+//        );
+//    }
+
+    function addUserInfoExtra($username, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
         $data = array(
-            'userid' => $USERID,
+
+            'userid'=>$this->objUser->getUserId($username),
             'birthday' => $birthdate,
             'address' => $address,
             'city' => $city,
             'state' => $state,
             'postaladdress' => $postaladdress,
-            'organisation/company' => $organisation,
+            'organisation' => $organisation,
             'jobtittle' => $jobtittle,
             'typeoccapation' => $TypeOccapation,
             'workingphone' => $WorkingPhone,
@@ -49,12 +90,16 @@ class dbuserextra extends dbtable{
             'groupmembership' => $GroupMembership
         );
         $this->insert($data);
-       
     }
 
 
     function editUserInfo($id,$staffnumber,$surname,$title,$userId,$username,$password,$email,$firstname,$sex,$country,$birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle,$WorkingPhone, $cellnumber, $DescriptionText, $WebsiteLink, $GroupMembership) {
+
+
         $this->objAdmin->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='useradmin', $accountstatus='1');
+    }
+
+    function editUserInfoExtra($birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership){
         $data = array(
             'birthday' => $birthdate,
             'address' => $address,
@@ -70,8 +115,7 @@ class dbuserextra extends dbtable{
             'groupmembership' => $GroupMembership
         );
         $this->update($data);
-        //$this->objAdmin->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='useradmin', $accountstatus='1');
-    }
+        }
 
     function getAllUser(){
          $sql = "select * from tbl_users";

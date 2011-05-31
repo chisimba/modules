@@ -234,7 +234,7 @@ $table->addCell('Postal Address');
 $table->addCell($textinput->show());
 $table->endRow();
 
-$textinput = new textinput('organisation/company');
+$textinput = new textinput('organisation');
 $textinput->size = 20;
 $table->startRow();
 $table->addCell('Organisation/Company');
