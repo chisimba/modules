@@ -46,7 +46,9 @@ class institution extends object {
      * Address of the institution
      * @var <String>
      */
-    private $_address;
+    private $_address1;
+    private $_address2;
+    private $_address3;
     /**
      * Zip or postal code of the institution
      * @var <int>
@@ -66,7 +68,8 @@ class institution extends object {
      * Comma separated list of keywords associated with the institution
      * @var <String>
      */
-    private $_keywords;
+    private $_keyword1;
+    private $_keyword2;
     /**
      * List of references of groups that are linked with the institution
      * @var <Group>
@@ -113,11 +116,14 @@ class institution extends object {
         $this->_description = NULL;
         $this->_type = NULL;
         $this->_country = NULL;
-        $this->_address = NULL;
+        $this->_address1 = NULL;
+        $this->_address2 = NULL;
+        $this->_address3 = NULL;
         $this->_zip = NULL;
         $this->_city = NULL;
         $this->_websiteLink = NULL;
-        $this->_keywords = NULL;
+        $this->_keyword1 = NULL;
+        $this->_keyword2 = NULL;
         $this->_linkedGroups = NULL;
         $this->_thumbnail = NULL;
     }
@@ -182,12 +188,28 @@ class institution extends object {
         $this->_country = $country;
     }
 
-    public function getAddress() {
-        return $this->_address;
+    public function getAddress1() {
+        return $this->_address1;
     }
 
-    public function setAddress($adress) {
-        $this->_address = $adress;
+    public function setAddress1($adress1) {
+        $this->_address1 = $adress1;
+    }
+
+    public function getAddress2() {
+        return $this->_address2;
+    }
+
+    public function setAddress2($adress2) {
+        $this->_address2 = $adress2;
+    }
+
+    public function getAddress3() {
+        return $this->_address3;
+    }
+
+    public function setAddress3($adress3) {
+        $this->_address3 = $adress3;
     }
 
     public function getZip() {
@@ -214,12 +236,20 @@ class institution extends object {
         return $this->_websiteLink;
     }
 
-    public function getKeywords() {
-        return $this->_keywords;
+    public function getKeyword1() {
+        return $this->_keyword1;
     }
 
-    public function setKeywords($keywords) {
-        $this->_keywords = $keywords;
+    public function setKeyword1($keyword1) {
+        $this->_keyword1 = $keyword1;
+    }
+
+    public function getKeyword2() {
+        return $this->_keyword2;
+    }
+
+    public function setKeyword2($keyword2) {
+        $this->_keyword2 = $keyword2;
     }
 
     public function setThumbnail($thumbnail) {

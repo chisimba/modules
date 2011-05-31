@@ -26,7 +26,7 @@ class dbcountries extends dbtable {
      * @return <Array<Institution>>
      */
     function getAllCountries() {
-        $sql = "select * from tbl_unesco_oer_countries";
+        $sql = "SELECT * FROM tbl_unesco_oer_countries";
         return $this->getArray($sql);
     }
 

@@ -34,6 +34,7 @@ class institutionmanager extends object {
     }
 
     public function addLinkedGroup($institutionId, $groupId) {
+        //Check if the group and the institution are already linked
         
     }
 
@@ -42,8 +43,20 @@ class institutionmanager extends object {
     }
 
     public function addInstitution(&$institution) {
-        //$myInstitution = $this->loadObject('institution', 'unesco_oer');
-        //TODO Ntsako Add this institution to the database
+        $this->_objDbInstitution->addInstitution($institution->getName(),
+                                                $institution->getDescription(),
+                                                $institution->getType(),
+                                                $institution->getCountry(),
+                                                $institution->getAdress1(),
+                                                $institution->getAddress2(),
+                                                $institution->getAddress3(),
+                                                $institution->getZip(),
+                                                $institution->getCity(),
+                                                $institution->getWebsiteLink(),
+                                                $institution->getKeyword1(),
+                                                $institution->getKeyword2(),
+                                                $institution->getLinkedGroups(),
+                                                $institution->getThumbnail());
     }
 
     public function editInstitution($id) {
@@ -56,7 +69,7 @@ class institutionmanager extends object {
 
     public function getInstitution($id) {
         $this->_institution = $this->constructInstitution($id);
-
+        
         return $this->_institution;
     }
 
@@ -74,17 +87,18 @@ class institutionmanager extends object {
         $myInstitution->setDescription($parameters[0]['description']);
         $myInstitution->setType($parameters[0]['type']);
         $myInstitution->setCountry($parameters[0]['country']);
-        $myInstitution->setAddress($parameters[0]['address']);
+        $myInstitution->setAddress1($parameters[0]['address1']);
+        $myInstitution->setAddress2($parameters[0]['address2']);
+        $myInstitution->setAddress3($parameters[0]['address3']);
         $myInstitution->setZip($parameters[0]['zip']);
         $myInstitution->setCity($parameters[0]['city']);
         $myInstitution->setWebsiteLink($parameters[0]['websitelink']);
-        $myInstitution->setKeywords($parameters[0]['keywords']);
+        $myInstitution->setKeyword1($parameters[0]['keyword1']);
+        $myInstitution->setKeyword2($parameters[0]['keyword2']);
         $myInstitution->addLinkedGroup($parameters[0]['linkedgroups']);
         $myInstitution->setThumbnail($parameters[0]['thumbnail']);
-
+        
         return $myInstitution;
-
     }
-
 }
 ?>

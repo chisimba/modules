@@ -5,6 +5,8 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $adaptationstring = "relation is null";
+error_reporting(E_ALL);
+ini_set('display_errors', 'Off');
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -132,10 +134,10 @@ $adaptationstring = "relation is null";
 
 
 
-                                                <!--                                     <select name="" id="" class="searchDropDown">
-                                                                                    <option value="">All</o    <input type="text" name="" id="" class="searchInput" value="Type search term here...">
-                                                                                <select name="" id="" class="searchDropDown">ption>
-                                                                                </select>-->
+                                                            <!--                                     <select name="" id="" class="searchDropDown">
+                                                                                                <option value="">All</o    <input type="text" name="" id="" class="searchInput" value="Type search term here...">
+                                                                                            <select name="" id="" class="searchDropDown">ption>
+                                                                                            </select>-->
                                         </div>
                                         <div class="textNextToRightFloatedImage">Search</div><!--
                                         <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">-->
@@ -312,11 +314,11 @@ $adaptationstring = "relation is null";
                                         echo $form->show();
                         ?>
 
-                                                                                                                <!--                                    <input type="checkbox"> Model<br>
-                                                                                                                                                    <input type="checkbox"> Guide<br>
-                                                                                                                                                    <input type="checkbox"> Handbook<br>
-                                                                                                                                                    <input type="checkbox"> Manual<br>
-                                                                                                                                                    <input type="checkbox"> Bestoractile<br>-->
+                                                                                                                                <!--                                    <input type="checkbox"> Model<br>
+                                                                                                                                                                    <input type="checkbox"> Guide<br>
+                                                                                                                                                                    <input type="checkbox"> Handbook<br>
+                                                                                                                                                                    <input type="checkbox"> Manual<br>
+                                                                                                                                                                    <input type="checkbox"> Bestoractile<br>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">
@@ -353,9 +355,9 @@ $adaptationstring = "relation is null";
                                         echo $form->show();
                         ?>
 
-                                                                                                                                                                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                                                                                                            </select>-->
+                                                                                                                                                                                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">
@@ -392,15 +394,15 @@ $adaptationstring = "relation is null";
                                         echo $form->show();
                         ?>
 
-                                                                                                                                                                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                                                                                                                <option value="">English</option>
-                                                                                                                                                                                                                                                                                                <option value="">Français</option>
-                                                                                                                                                                                                                                                                                                <option value="">Español</option>
-                                                                                                                                                                                                                                                                                                <option value="">Русский</option>
-                                                                                                                                                                                                                                                                                                <option value="">لعربية</option>
-                                                                                                                                                                                                                                                                                                <option value="">中文</option>
-                                                                                                                                                                                                                                                                                            </select>-->
+                                                                                                                                                                                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                                                                                                                                <option value="">English</option>
+                                                                                                                                                                                                                                                                                                                <option value="">Français</option>
+                                                                                                                                                                                                                                                                                                                <option value="">Español</option>
+                                                                                                                                                                                                                                                                                                                <option value="">Русский</option>
+                                                                                                                                                                                                                                                                                                                <option value="">لعربية</option>
+                                                                                                                                                                                                                                                                                                                <option value="">中文</option>
+                                                                                                                                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">
@@ -439,9 +441,9 @@ $adaptationstring = "relation is null";
 
 
 
-                                                                                                                                                                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                                                                                                            </select>-->
+                                                                                                                                                                                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
+                                                                                                                                                                                                                                                                                                                <option value="">All</option>
+                                                                                                                                                                                                                                                                                                            </select>-->
                                     </div>
                                     <br>
                                     <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">
@@ -491,9 +493,9 @@ $adaptationstring = "relation is null";
 
 
 
-                                                                                                                <!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                                                                                                                                                            <option value="">All</option>
-                                                                                                                                                        </select>-->
+                                                                                                                                <!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                                                                                                                                                                            <option value="">All</option>
+                                                                                                                                                                        </select>-->
                                     </div>
                                     <br><br>
                                     <div class="blueBackground rightAlign">
@@ -523,9 +525,9 @@ $adaptationstring = "relation is null";
 
                                     <div class="sortBy">
 
-                                                                                                                                                                                                                                <!--                                                <select name="" class="contentDropDown">
-                                                                                                                                                                                                                                     <option value="">Date Added</option>
-                                                                                                                                                                                                                                 </select>-->
+                                                                                                                                                                                                                                            <!--                                                <select name="" class="contentDropDown">
+                                                                                                                                                                                                                                                 <option value="">Date Added</option>
+                                                                                                                                                                                                                                             </select>-->
                             <?php
                                         $products = $this->objDbProducts->getProducts(0, 10);
                                         $filterLang = new dropdown('SortFilter');
@@ -553,9 +555,9 @@ $adaptationstring = "relation is null";
 
 
 
-                                                                                                                                                                                        <!--                                                <select name="" class="contentDropDown">
-                                                                                                                                                                                            <option value="">DESC</option>
-                                                                                                                                                                                        </select>-->
+                                                                                                                                                                                                    <!--                                                <select name="" class="contentDropDown">
+                                                                                                                                                                                                        <option value="">DESC</option>
+                                                                                                                                                                                                    </select>-->
                                     </div>
                                     <div class="viewGrid">
                                         <div class="viewAsDiv">View as: </div>
@@ -631,8 +633,8 @@ echo $finalstring;
                                                 $count++;
                                                 $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
 
-                                               $languages = $this->objDbAvailableProductLanguages->getProductLanguage($product['id']);
-                                               $theProduct = $product + $languages;
+                                                $languages = $this->objDbAvailableProductLanguages->getProductLanguage($product['id']);
+                                                $theProduct = $product + $languages;
 
                                                 if ($newRow) {
                                                     $objTable->startRow();

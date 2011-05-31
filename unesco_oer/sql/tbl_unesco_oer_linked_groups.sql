@@ -6,8 +6,8 @@ $options = array('comment'=>'Table to store links between institutions and group
 
 //define fields
 $fields = array(
-		'id'                => array('type' => 'text', 'length' => 32, 'not null'),
-                'institution_id'    => array('type' => 'text', 'length' => 32, 'not null'),
-                'group_id'          => array('type' => 'text', 'length' => 32, 'not null')
+		'id'                => array('type' => 'text', 'length' => 32),
+                'institution_id'    => array('type' => 'text', 'length' => 32),
+                'group_id'          => array('type' => 'text', 'length' => 32)
                 );
 ?>

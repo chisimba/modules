@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -18,71 +18,70 @@
 class dbinstitution extends dbtable {
 
     function init() {
-        parent::init("tbl_unesco_oer_institution");
+        parent::init("tbl_unesco_oer_institutions");
     }
 
     /**
-     *Returns an array with all institution objects
+     * Returns an array with all institution objects
      * @return <Array<Institution>>
      */
     function getAllInstitutions() {
-        $sql = "SELECT * FROM tbl_unesco_oer_institution";
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions";
         return $this->getArray($sql);
     }
 
     function getInstitutionById($id) {
-        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE id = '$id'";
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE id = '$id'";
+
         return $this->getArray($sql);
     }
-    function addInstitution($name, $description, $type, $country, $address, $zip,
-            $city, $websiteLink, $keywords, $latitude, $longitude, $thumbnail) {
+
+    function addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
         $data = array(
-            'name'          => $name,
-            'description'   => $description,
-            'country'       => $country,
-            'type'          => $type,
-            'address'       => $address,
-            'city'          => $city,
-            'websiteLink'   => $websiteLink,
-            'keywords'      => $keywords,
-            'zip'           => $zip,
-            'latitude'      => $latitude,
-            'longitude'     => $longitude,
-            'thumbnail'     => $thumbnail
+            'name' => $name,
+            'description' => $description,
+            'country' => $country,
+            'type' => $type,
+            'address1' => $address1,
+            'address2' => $address2,
+            'address3' => $address3,
+            'city' => $city,
+            'websiteLink' => $websiteLink,
+            'keyword1' => $keyword1,
+            'keyword2' => $keyword2,
+            'zip' => $zip,
+            'thumbnail' => $thumbnail
         );
 
         $this->insert($data);
     }
 
-
     //to get an institution latitude
-    function  getInstitutionLatitude($InstitutionNameID){
-        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE id='$InstitutionNameID'";
-        $Institution=$this->getArray($sql);
+    function getInstitutionLatitude($InstitutionNameID) {
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE id='$InstitutionNameID'";
+        $Institution = $this->getArray($sql);
         return $Institution[0]['loclat'];
     }
 
 // to get an institution longitude
 
-    function getInstitutionLongitude($name){
-        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name='$name'";
-        $Institution=$this->getArray($sql);
+    function getInstitutionLongitude($name) {
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE name='$name'";
+        $Institution = $this->getArray($sql);
         return $Institution[0]['loclong'];
     }
-   
-   function getAllInstitution(){
-        $sql=" select * from tbl_unesco_oer_institution";
-        $InstitutionNames=$this->getArray($sql);
+
+    function getAllInstitution() {
+        $sql = " select * from tbl_unesco_oer_institutions";
+        $InstitutionNames = $this->getArray($sql);
         return $InstitutionNames;
     }
 
-    function getInstitutionName($name){
-        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name='$name'";
-        $InstitutionName=$this->getArray($sql);
+    function getInstitutionName($name) {
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE name='$name'";
+        $InstitutionName = $this->getArray($sql);
         return $InstitutionName[0]['name'];
     }
-
- 
 
     //To handle the latitude and longitude to feet on the map
     function getlocationcoords($lat, $lon, $width, $height) {
@@ -90,12 +89,14 @@ class dbinstitution extends dbtable {
         $y = ((($lat * -1) + 90) * ($height / 180));
         return array("x" => round($x), "y" => round($y));
     }
-      
+
     // function is responsible to dispaly the map and its images
-    function MapHandler($im,$lat,$long) {
-       if (empty($long))$long = 28.0316;
-        if (empty($lat))$lat = -26.19284;
-        $red = imagecolorallocate($im, 255, 0,0);
+    function MapHandler($im, $lat, $long) {
+        if (empty($long)
+            )$long = 28.0316;
+        if (empty($lat)
+            )$lat = -26.19284;
+        $red = imagecolorallocate($im, 255, 0, 0);
         $scale_x = imagesx($im);
         $scale_y = imagesy($im);
         $pt = $this->getlocationcoords($lat, $long, $scale_x, $scale_y);
@@ -106,11 +107,11 @@ class dbinstitution extends dbtable {
 //        }
         imagefilledrectangle($im, $pt["x"] - 2, $pt["y"] - 2, $pt["x"] + 2, $pt["y"] + 2, $red);
         header("Content-Type: image/png");
-       }
+    }
 
-    public function getInstitutionThumbnail($name) {
+    public function getInstitutionThumbnail($thumbnail) {
         //TODO Ntsako Handle the situation where the institution is not in the table
-        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name'";
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE thumbnail = '$thumbnail'";
         $thumbnail = $this->getArray($sql);
         return $thumbnail[0];
     }
@@ -118,56 +119,45 @@ class dbinstitution extends dbtable {
     public function isInstitution($name) {
         //$sql = "IF EXISTS(SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name')";
 
-        $sql = "SELECT * FROM tbl_unesco_oer_institution WHERE name = '$name'";
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE name = '$name'";
         if (count($this->getArray($sql)) != 0) {
             //return true;
-             return count($this->getArray($sql));
+            return count($this->getArray($sql));
         } else {
             return false;
         }
         //return count($this->getArray($sql));
     }
 
-
     //this function delete  a record
 
-    function deleteInstitution($puid,$name){
-        $sql="DELETE FROM tbl_unesco_oer_institution WHERE puid='$puid' AND name='$name'";
+    function deleteInstitution($puid, $name) {
+        $sql = "DELETE FROM tbl_unesco_oer_institutions WHERE puid='$puid' AND name='$name'";
         $this->getArray($sql);
-        }
-
-     //this function edit the instituin name
-        //TODO MUST ALSO EDIT THUMBNAIL
-    function editInstitution($id,$puid,$loclat,$loclong,$name){
-       return $this->update(
-                    'puid',
-                     $puid,
-                     array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'id'=>$id)
-            );
-        }
-
-    /*
-    * This function takes a institution name and returns the first type ID if found
-    * @param $Name
-    * return typeID
-    */
-    function findInstitutionTypeID($Name){
-        $sql = "SELECT * FROM $this->_tableName WHERE name='$Name'";
-        $institution=$this->getArray($sql);
-        return $institution[0]['type'];
     }
 
-    /*
-    * This function takes a institution name and returns the country of the first
-    * institution found
-    * @param $Name
-    * return typeID
-    */
-    function getInstitutionCountry($name){
-        $sql = "SELECT * FROM $this->_tableName WHERE name='$name'";
-        $institution=$this->getArray($sql);
-        return $institution[0]['country'];
+    //this function edit the instituin name
+    //TODO MUST ALSO EDIT THUMBNAIL
+    function editInstitution($id, $puid, $loclat, $loclong, $name) {
+        return $this->update(
+                'puid',
+                $puid,
+                array('loclat' => $loclat, 'loclong' => $loclong, 'name' => $name, 'id' => $id)
+        );
     }
+
+    public function getInstitutionCountry($country) {
+        //TODO Ntsako Handle the situation where the institution is not in the table
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE country = '$country'";
+        $country = $this->getArray($sql);
+        return $country[0];
+    }
+
+    function findInstitutionTypeID($type) {
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE type = '$type'";
+        $type = $this->getArray($sql);
+        return $type[0];
+    }
+
 }
-
 ?>

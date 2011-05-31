@@ -17,6 +17,7 @@
 
 class institutiongui extends object {
 
+//TODO remove as much html from this class
 //    private $_institution;
     private $_institutionmanager;
     private $_institution;
@@ -24,6 +25,7 @@ class institutiongui extends object {
     function init() {
         $this->_institutionmanager = $this->getObject('institutionmanager', 'unesco_oer');
         $this->_institution = $this->getObject('institution', 'unesco_oer');
+        $this->loadClass('link', 'htmlelements');
     }
 
     function getInstitution($id) {
@@ -31,56 +33,65 @@ class institutiongui extends object {
     }
 
     function showInstitutionName() {
-        echo $this->_institution->getName();
+        return $this->_institution->getName();
     }
 
     function showInstitutionDescription() {
-        echo $this->_institution->getDescription();
+        return $this->_institution->getDescription();
     }
 
     function showInstitutionType() {
-        echo $this->_institution->getType();
+        return $this->_institution->getType();
     }
 
     function showInstitutionCountry() {
-        echo $this->_institution->getCountry();
+        return $this->_institution->getCountry();
     }
 
     function showInstitutionKeywords() {
-        echo $this->_institution->getKeywords();
+        return $this->_institution->getKeyword1();
+
+        $keyword2 = $this->_institution->getKeyword2();
+        if (isset($keyword2)) {
+            return ' | ' . $this->_institution->getKeyword2();
+        }
     }
 
     function showInstitutionAddress() {
-        echo $this->_institution->getAddress();
+        $address = '';
+        $address .= $this->_institution->getAddress1();
+
+        $address2 = $this->_institution->getAddress2();
+        if (isset($address2)) {
+            $address .= ', ' . $this->_institution->getAddress2();
+        }
+
+        $address3 = $this->_institution->getAddress3();
+        if (isset($address3)) {
+            $address .= ', ' . $this->_institution->getAddress3();
+        }
+
+        return $address;
     }
 
     function showInstitutionWebsiteLink() {
-        echo $this->_institution->getWebsiteLink();
+        return $this->_institution->getWebsiteLink();
     }
 
     function showInstitutionLinkedGroups() {
-        echo $this->_institution->getAllLinkedGroups();
+        return $this->_institution->getAllLinkedGroups();
     }
 
-    function showInstitutionThumbnail(){
-        echo '<img src="' . $this->_institution->getThumbnail() . '"><br />';
+    function showInstitutionThumbnail() {
+        return $this->_institution->getThumbnail();
     }
 
-    
-
-//    //Get the object and build it
-//    function showInstitutionName($id) {
-//        $myInstitution = $this->_institutionmanager->getInstitution($id);
-//        echo $myInstitution->getName();
-//    }
-//
-//    function showInstitutionDescription($id) {
-//        $myInstitution = $this->_institutionmanager->getInstitution($id);
-//        echo $myInstitution->getDescription();
-//    }
-
-    function displayInstitution($institution) {
+    function showNewInstitutionLink() {
+        $acLink = new link($this->uri(array("action" => "institutionEditor")));
+        $acLink->cssClass = 'greyTextLink';
+        $acLink->link = '<a href="#"><img src="skins/unesco_oer/images/new-institution.png" width="18" height="18" class="Farright"></a> <a href="#" class="greyTextLink">Create new institution</a>';
         
+        return $acLink->show();
     }
 
 }

@@ -3,7 +3,7 @@
 $this->loadClass('link', 'htmlelements');
 //Display errors
 error_reporting(E_ALL);
-ini_set('display_errors', 'off');
+ini_set('display_errors', 'Off');
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +19,12 @@ ini_set('display_errors', 'off');
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class productutil extends object
-{
+class productutil extends object {
 
-    public function init()
-    {
+    private $_institutionGUI;
 
+    public function init() {
+        $this->_institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
     }
 
     /**
@@ -32,10 +32,9 @@ class productutil extends object
      * @param <type> $product
      * @return <type> $content
      */
-    public function populateGridView($product)
-    {
+    public function populateGridView($product) {
 
-        
+
         $content = '';
         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
         $abLink->cssClass = "listingLanguageLinkAndIcon";
@@ -51,14 +50,14 @@ class productutil extends object
         $endKey = count($product);
         $productSize = $endKey - $key;
 
-        //TODO Ntsako find out what makes a product new
+//TODO Ntsako find out what makes a product new
         if ($product['new'] == 'true') {
             $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
         } else {
             $content.= '<div class="newImageIcon"></div>';
         }
 
-        //This some how forces the page to display the 0
+//This some how forces the page to display the 0
         if ($product['noOfAdaptations'] == 0) {
             $product['noOfAdaptations'] = 0;
         }
@@ -79,9 +78,9 @@ class productutil extends object
 
         $index = 0;
         foreach ($product as $languages) {
-            //Check if languages is empty
+//Check if languages is empty
             foreach ($languages as $language) {
-                //print_r($language);
+//print_r($language);
                 $content .= '<option value="">' . $language . '</option>';
                 $index++;
             }
@@ -108,8 +107,7 @@ class productutil extends object
      * @param <type> $product
      * @return <type> $content
      */
-    public function populateListView($product)
-    {
+    public function populateListView($product) {
         $content = '';
         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
         $abLink->cssClass = "listingLanguageLinkAndIcon";
@@ -125,7 +123,7 @@ class productutil extends object
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
 
-        //This some how forces the page to display the 0
+//This some how forces the page to display the 0
         if ($product['noOfAdaptations'] == 0) {
             $product['noOfAdaptations'] = 0;
         }
@@ -156,9 +154,9 @@ class productutil extends object
 
         $index = 0;
         foreach ($product as $languages) {
-            //Check if languages is empty
+//Check if languages is empty
             foreach ($languages as $language) {
-                //print_r($language);
+//print_r($language);
                 $content .= '<option value="">' . $language . '</option>';
                 $index++;
             }
@@ -180,8 +178,7 @@ class productutil extends object
      * @param <type> $adaptedProduct
      * @return <type> $content
      */
-    public function populateAdaptedGridView($adaptedProduct)
-    {
+    public function populateAdaptedGridView($adaptedProduct) {
         $content = '';
         $abLink = new link($this->uri(array("action" => 'ViewProduct', 'id' => $adaptedProduct['id'])));
         $CommentLink->cssClass = 'adaptationLinks';
@@ -195,7 +192,7 @@ class productutil extends object
          * TODO Ntsako add code to check if the product was adapted by an institution or a group
          */
 
-        //This some how forces the page to display the 0
+//This some how forces the page to display the 0
         if ($product['noOfAdaptations'] == 0) {
             $product['noOfAdaptations'] = 0;
         }
@@ -210,7 +207,7 @@ class productutil extends object
                    <br>
                    <div class="orangeListingHeading">' . $abLink->show() . '</div>';
 
-        //Check the creator of the adaptation
+//Check the creator of the adaptation
         if ($adaptedProduct['group_thumbnail'] != NULL) {
             $content .='
                 <div class="adaptedByDiv greenColor">Managed by:</div>
@@ -225,15 +222,26 @@ class productutil extends object
                 </div>
                 ';
         } else {
+            $this->_institutionGUI->getInstitution($adaptedProduct['creator']);
+            $thumbnail = $this->_institutionGUI->showInstitutionThumbnail();
+            $type = $this->_institutionGUI->showInstitutionType();
+            $country = $this->_institutionGUI->showInstitutionCountry();
+            $name = $this->_institutionGUI->showInstitutionName();
+            $creator = $adaptedProduct['creator'];
+
+            $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $creator)));
+            $institutionLink->cssClass = 'darkGreyColour';
+            $institutionLink->link = $name;
+
             $content .='<div class="adaptedByDiv">Adapted by:</div>
                 <div class="gridSmallImageAdaptation">
-                    <img src="' . $adaptedProduct['institution_thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
-                    <span class="greyListingHeading">' . $adaptedProduct['creator'] . '</span>
+                    <img src="' . $thumbnail . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                    <span class="greyListingHeading">' . $institutionLink->show() . '</span>
                 </div>
                 <div class="gridAdaptationLinksDiv">
-                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['type'] . '</a> |
-                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['country'] . '</a> <br>
-                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['language'] . '</a>
+                    <a class="productAdaptationGridViewLinks">' . $type . '</a> |
+                    <a class="productAdaptationGridViewLinks">' . $country . '</a> <br>
+                    <a class="productAdaptationGridViewLinks">' . $adaptedProduct['language'] . '</a>
                 </div>
                 ';
         }
@@ -245,8 +253,7 @@ class productutil extends object
      * @param <type> $adaptedProduct
      * @return <type> $content
      */
-    public function populateAdaptedListView($adaptedProduct)
-    {
+    public function populateAdaptedListView($adaptedProduct) {
         $this->loadClass('link', 'htmlelements');
         $content = '';
         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
@@ -263,7 +270,7 @@ class productutil extends object
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
 
-        //This some how forces the page to display the 0
+//This some how forces the page to display the 0
         if ($product['noOfAdaptations'] == 0) {
             $product['noOfAdaptations'] = 0;
         }
@@ -307,12 +314,20 @@ class productutil extends object
                         </div>
                         ';
         } else {
+            $this->_institutionGUI->getInstitution($adaptedProduct['creator']);
+            $name = $this->_institutionGUI->showInstitutionName();
+            $creator = $adaptedProduct['creator'];
+
+            $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $creator)));
+            $institutionLink->cssClass = 'darkGreyColour';
+            $institutionLink->link = $name;
+
             $content .='<div class="productAdaptationListViewMiddleColumn">
                             <img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
                             Adapted by
                         </div>
                         <div class="productAdaptationListViewRightColumn">
-                            <h2 class="darkGreyColour">' . $adaptedProduct['creator'] . '</h2>
+                            <h2 class="darkGreyColour">' . $institutionLink->show() . '</h2>
                             <br>
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
@@ -341,8 +356,7 @@ class productutil extends object
      * @param <type> $product
      * @return <type> $content
      */
-    public function populateMostAdapted($product)
-    {
+    public function populateMostAdapted($product) {
         $content = '';
         $parentid = $product['id'];
 
@@ -355,7 +369,7 @@ class productutil extends object
         } else {
             $thumbnailPath = 'skins/unesco_oer/images/most-product-cover-placeholder.jpg';
         }
-        $content .= '   <div class="leftImageTabsList"><img src="' . $thumbnailPath . '" alt="'.$product['creator'].'" width="45" height="49"></div>
+        $content .= '   <div class="leftImageTabsList"><img src="' . $thumbnailPath . '" alt="' . $product['creator'] . '" width="45" height="49"></div>
                                 <div class="rightTextTabsList">
                         	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $CommentLink->show() . '</a>
                                 </div>
@@ -368,30 +382,30 @@ class productutil extends object
      * @param <type> $objDbProducts, $objDbGroups, $objDbInstitution
      * @return <type> $content
      */
-    public function displayMostAdapted(&$objDbProducts, &$objDbGroups, &$objDbInstitution, $displayAllMostAdaptedProducts)
-    {
+    public function displayMostAdapted(&$objDbProducts, &$objDbGroups, &$objDbInstitution, $displayAllMostAdaptedProducts) {
         $content = '';
-        //TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
-        //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+//TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
+//Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
 
         $MostAdaptedProducts = $objDbProducts->getMostAdaptedProducts($displayAllMostAdaptedProducts);
 
         foreach ($MostAdaptedProducts as $childProduct) {
-            //Get the original products
+//Get the original products
             $product = $objDbProducts->getProductById($childProduct['relation']);
-            //Get number of adaptations for the product
+//Get number of adaptations for the product
             $product['noOfAdaptations'] = $childProduct['total'];
-            //Check if the creator is a group or an institution
+//Check if the creator is a group or an institution
             $isGroupCreator = $objDbGroups->isGroup($product['creator']);
 
             if ($isGroupCreator == true) {
                 $thumbnail = $objDbGroups->getGroupThumbnail($product['creator']);
             } else {
-                $thumbnail = $objDbInstitution->getInstitutionThumbnail($product['creator']);
+                $this->_institution = $this->_institutionGUI->getInstitution($product['creator']);
+                //$thumbnail = $objDbInstitution->getInstitutionThumbnail();
             }
 
             $product['institution_thumbnail'] = $thumbnail['thumbnail'];
-            //$product['institution'] = $this->objInstitution->getInstitution();
+//$product['institution'] = $this->objInstitution->getInstitution();
             $content .= $this->populateMostAdapted($product);
         }
 
@@ -402,8 +416,7 @@ class productutil extends object
         return $content;
     }
 
-    public function displayMostCommented(&$objDbProducts, &$objDbComments)
-    {
+    public function displayMostCommented(&$objDbProducts, &$objDbComments) {
         $content = '';
         $mostCommentedProducts = $objDbComments->getMostCommented(3);
 
@@ -417,8 +430,7 @@ class productutil extends object
         return $content;
     }
 
-    public function populateMostCommented($product)
-    {
+    public function populateMostCommented($product) {
         $content = '';
 
         $parentid = $product['id'];
@@ -440,8 +452,7 @@ class productutil extends object
      * @param <type> $product
      * @return <type> $content
      */
-    public function populateMostRated($product)
-    {
+    public function populateMostRated($product) {
         $content = '';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
@@ -457,21 +468,20 @@ class productutil extends object
      * @param <type> $objDbProducts, $objDbGroups, $objDbInstitution
      * @return <type> $content
      */
-    public function displayMostRated(&$objDbProducts, &$objDbGroups, &$objDbInstitution, &$objDbProductRatings)
-    {
+    public function displayMostRated(&$objDbProducts, &$objDbGroups, &$objDbInstitution, &$objDbProductRatings) {
         $content = '';
-        //TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
-        //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
+//TODO Ntsako this might need Java script to implement properly as these tabs have to be updated independently
+//Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
 
         $mostRatedProducts = $objDbProductRatings->getMostRatedProducts();
 
         foreach ($mostRatedProducts as $childProduct) {
-            //Get the original products
+//Get the original products
             $product = $objDbProducts->getProductById($childProduct['product_id']);
-            //Get number of adaptations for the product
+//Get number of adaptations for the product
             $product['rating'] = $childProduct['avg_score'];
 
-            //Check if the creator is a group or an institution
+//Check if the creator is a group or an institution
             $isGroupCreator = $objDbGroups->isGroup($product['creator']);
 
             if ($isGroupCreator == true) {
@@ -481,21 +491,17 @@ class productutil extends object
             }
 
             $product['institution_thumbnail'] = $thumbnail['thumbnail'];
-            //$product['institution'] = $this->objInstitution->getInstitution();
+//$product['institution'] = $this->objInstitution->getInstitution();
             $content .= $this->populateMostRated($product);
         }
 
         return $content;
     }
 
+    public function BrowseAdaptation($lat, $lng) {
 
 
-
-     public function BrowseAdaptation($lat,$lng)
-    {
-
-
-        $buildstring = ' where loclat = ' . "'$lat'". ' and loclong = ' ."'$lng'";
+        $buildstring = ' where loclat = ' . "'$lat'" . ' and loclong = ' . "'$lng'";
 
 
 
@@ -510,13 +516,12 @@ class productutil extends object
      * @param <type>$AuthFilter,$ThemeFilter,$LangFilter,$page,$sort,$TotalPages,$adaptationstring,$Model,$Handbook,$Guide,$Manual,$Besoractile
      * @return <type> $TotalEntries
      */
-    public function FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile,$browsemapstring)
-    {
+    public function FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile, $browsemapstring) {
 
         if ($browsemapstring != null)
-        $buildstring = $browsemapstring;
+            $buildstring = $browsemapstring;
         else
-        $buildstring = $adaptationstring;
+            $buildstring = $adaptationstring;
 
 
         if (!($AuthFilter == Null or $AuthFilter == 'All'))
@@ -575,8 +580,7 @@ class productutil extends object
      * @param <type>$NumFilter,$PageNum,$TotalEntries
      * @return <type> $Buildstring
      */
-    public function FilterAllProducts($NumFilter, $PageNum, $TotalEntries)
-    {
+    public function FilterAllProducts($NumFilter, $PageNum, $TotalEntries) {
 
 
         if ((!($NumFilter == null or $NumFilter == 'All')) & $PageNum == null) {
@@ -598,12 +602,11 @@ class productutil extends object
     }
 
     /**
-     * This function creates the link to display more adaptations 
+     * This function creates the link to display more adaptations
      * @param <type> $displayAllMostAdaptedProducts checks if the user has chosen to display all the most adapted products
      * @return <type> $moreAdaptedProductsLink;
      */
-    private function viewMostAdaptedLink($displayAllMostAdaptedProducts)
-    {
+    private function viewMostAdaptedLink($displayAllMostAdaptedProducts) {
         if ($displayAllMostAdaptedProducts) {
             $mostAdaptedProductsArray = array("action" => 'viewAllMostAdaptedProducts', "displayAllMostAdaptedProducts" => false);
             $moreAdaptedProductsLink = new link($this->uri($mostAdaptedProductsArray));

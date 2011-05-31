@@ -6,7 +6,9 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('filterdisplay', 'unesco_oer');
 
-
+//Display errors
+error_reporting(E_ALL);
+ini_set('display_errors', 'off');
 
 
 

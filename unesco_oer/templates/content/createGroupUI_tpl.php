@@ -61,6 +61,8 @@ $button->setToSubmit();
 $table->addCell($button->show());
 $table->endRow();
 
+$myData = array();
+
 //createform, add fields to it and display
 $form_data = new form('createGroup_ui',$this->uri(array('action'=>'createGroupSubmit')));
 $form_data->extra = 'enctype="multipart/form-data"';
