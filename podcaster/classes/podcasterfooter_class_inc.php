@@ -73,29 +73,11 @@ class podcasterfooter extends object {
      * @return string $retstr which has the footer for the skin
      * @access public
      */
-    public function show() {
+
+    public function showLogo() {
         $chisimbaLink = new link("http://www.chisimba.com");
         $chisimbaLink->link = '<img src ="' . $this->skinpath . 'images/powered_by_chisimba.png" alt="Powered By Chisimba" title="Powered By Chisimba" />';
-        if($this->objUser->isLoggedIn()) {
-            $links = array(
-                'home' => 'Home',
-                'upload' => 'Upload',
-                'search' => 'Search',
-                'admin' => 'Admin',
-                'mydetals' => 'My Details',
-                'postlogin' => 'Login'
-            );
-        }
-        else {
-            $links = array(
-                'home' => 'Home',
-                'search' => 'Search',
-                'postlogin' => 'Login',
-                'news' => 'Register'
-            );
-        }
 
-        
         $retstr = '
            <!-- Start: Footer -->
             <div id="Footer">
@@ -105,6 +87,46 @@ class podcasterfooter extends object {
                 </div>
                 <!-- end .grid_4 -->
                 <div class="clear">&nbsp;</div>
+                <div class="grid_4">
+                </div>
+            </div>
+            <!-- End: Footer -->
+            <div class="clear">&nbsp;</div>';
+
+        return $retstr;
+    }
+
+    /*
+     * Method to display the footer of elsiskin
+     * @return string $retstr which has the footer for the skin
+     * @access public
+     */
+
+    public function show() {
+        if ($this->objUser->isLoggedIn()) {
+            $links = array(
+                'home' => 'Home',
+                'upload' => 'Upload',
+                'search' => 'Search',
+                'admin' => 'Admin',
+                'mydetals' => 'My Details',
+                'postlogin' => 'Login'
+            );
+        } else {
+            $links = array(
+                'home' => 'Home',
+                'search' => 'Search',
+                'postlogin' => 'Login',
+                'news' => 'Register'
+            );
+        }
+
+
+        $retstr = '
+           <!-- Start: Footer -->
+            <div id="Footer">
+                <!-- end .grid_4 -->
+                <div class="clear">&nbsp;</div>
                 <div class="grid_4"> ';
         $retstr .= " | ";
         foreach ($links as $key => $index) {
@@ -112,10 +134,10 @@ class podcasterfooter extends object {
             $eachLink = new link($this->uri(array('action' => $key)));
             $eachLink->link = $index;
             if ($key == 'postlogin') {
-                $eachLink = $this->objUser->isLoggedIn()?
-                            new link($this->uri(array("action"=>"logoff"), "security")):
-                            new link($this->uri(array('action' => 'home'), 'postlogin'));
-                $eachLink->link = $this->objUser->isLoggedIn()?"Log Out":"Log In";
+                $eachLink = $this->objUser->isLoggedIn() ?
+                        new link($this->uri(array("action" => "logoff"), "security")) :
+                        new link($this->uri(array('action' => 'home'), 'postlogin'));
+                $eachLink->link = $this->objUser->isLoggedIn() ? "Log Out" : "Log In";
             }
 
 

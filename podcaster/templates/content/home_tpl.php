@@ -246,7 +246,7 @@ if ($objModules->checkIfRegistered('blog')) {
 if ($tabCounter > 0) {
     $table->addCell($objTabs->show(), '37%');
 } else {
-    $table->addCell('<h3>10 Newest Uploads:</h3>'.$latestFilesContent, '37%');
+    $table->addCell('<h3>10 Newest Uploads:</h3>'.$latestFilesContent, '3%');
 }
 
 
