@@ -11,6 +11,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
+$objUsers = $this->newObject('users');
 
 $this->setVar('pageSuppressXML', TRUE);
 
@@ -32,16 +33,11 @@ $legend = "Faculty";
 
 $fs = new fieldset();
 $fs->setLegend($legend);
-$fs->addContent("Engineering");
+$fs->addContent( $document['department']);
 
 echo $fs->show() . '<br/>';
 
 $table = $this->newObject('htmltable', 'htmlelements');
-
-/*$table->startRow();
-$table->boarder='1';
-$table->addCell('Current editor:&nbsp;' . $this->objUser->fullname($document['currentuserid']));
-$table->endRow();*/
 
 $table->startRow();
 $table->width="50%";

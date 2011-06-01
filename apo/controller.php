@@ -265,7 +265,6 @@ class apo extends controller {
 
         $action = "updatedocument";
 
-
         $document = $this->documents->getDocument($id);
 
         $mode = "edit";
@@ -1799,6 +1798,9 @@ class apo extends controller {
 
     public function __usermanagement() {
         $users = $this->users->getUsers();
+        $faculties = $this->faculties->getFaculties();
+
+        $this->setVarByRef("departments", $faculties);
         $this->setVarByRef("users", $users);
         $this->setVarByRef("selected", $selected);
 
@@ -1814,6 +1816,8 @@ class apo extends controller {
     public function __registeruser() {
         $name = $this->getParam('name');
         $role = $this->getParam('role');
+        $faculties = $this->faculties->getFaculties();
+
         $email = $this->getParam('email');
         $telephone = $this->getParam('telephone');
 
@@ -1834,6 +1838,8 @@ class apo extends controller {
             $data = array("name" => $name, "role" => $role, "email" => $email, "telephone" => $telephone);
 
             $this->users->addUser($data);
+
+            $this->setVarByRef("departments", $faculties);
 
             return $this->nextAction('usermanagement');
         }
@@ -1889,9 +1895,14 @@ class apo extends controller {
     }
 
     public function __forwardtoAPO() {
+        $id = $this->getParam('id');
+        $mode = $this->getParam('mode');
+        $selected = $this->getParam('selected');
+        $document = $this->documents->getDocument($id);
 
-        $id = $this->getParam("id");
-
+        $this->setVarByRef("document", $document);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
         return "forwardAPO_tpl.php";
     }

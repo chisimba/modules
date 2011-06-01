@@ -43,10 +43,11 @@ class users extends object {
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
         $this->objUtils = $this->getObject('userutils');
+        
         $this->userLabel = "User";
     }
 
-    function showUserForm($name='') {
+    function showUserForm($departments,$name='') {
         $roles = array(
             array('label' => 'apo', 'value' => 'APO'),
             array('label' => 'subsidy', 'value' => 'Subsidy Office'),
@@ -79,6 +80,21 @@ class users extends object {
         $table->addCell($textinput->show());
         $table->endRow();
 
+        $textinput = new dropdown('department');
+        $textinput->addOption("", "Please select faculty...");
+        $textinput->addFromDB($departments, 'name', 'name', $document['department']);
+//$textinput->size = 60;
+        if ($mode == 'edit') {
+            $textinput->setSelected($document['department']);
+        }
+        if ($mode == "fixup") {
+            $textinput->setSelected($department);
+        }
+        $table->startRow();
+        $table->addCell("<b>Faculty</b>");
+        $table->addCell($textinput->show());
+        $table->endRow();
+
         $textinput = new textinput('email');
         $textinput->size = 40;
         $table->startRow();
@@ -105,7 +121,5 @@ class users extends object {
 
         return $fs->show();
     }
-
-   
 
 }

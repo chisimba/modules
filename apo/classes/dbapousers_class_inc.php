@@ -64,6 +64,7 @@ class dbapousers extends dbtable {
             'name' => $record['name'],
             'role' => $record['role'],
             'email' => $record['email'],
+            'department' => $record['department'],
             'date_created' => 'NOW()',
             'userid' => $userid,
             'telephone' => $record['telephone'],

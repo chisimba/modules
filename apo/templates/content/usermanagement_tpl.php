@@ -1,4 +1,5 @@
 <?php
+
 $this->loadClass('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objUsers = $this->newObject('users');
@@ -8,12 +9,13 @@ $header->str = $this->objLanguage->languageText('mod_apo_usermanagement', 'apo')
 
 echo $header->show();
 
-echo $objUsers->showUserForm();
+echo $objUsers->showUserForm($departments);
 
 $table = $this->getObject("htmltable", "htmlelements");
 $table->startHeaderRow();
 $table->addHeaderCell("Name");
 $table->addHeaderCell("Role");
+$table->addHeaderCell("Department");
 $table->addHeaderCell("Email");
 $table->addHeaderCell("Telephone");
 $table->addHeaderCell("Actions");
@@ -34,19 +36,19 @@ if (count($users) > 0) {
         $table->startRow();
         $table->addCell($user['name']);
         $table->addCell($user['role']);
-  
+        $table->addCell($user['department']);
         $table->addCell($user['email']);
         $table->addCell($user['telephone']);
 
-        $editOption = new link ($this->uri(array('action'=>'edituser', "selected" => $selected, 'id'=>$user['id'])));
+        $editOption = new link($this->uri(array('action' => 'edituser', "selected" => $selected, 'id' => $user['id'])));
         $editOption->link = $editIcon;
         $edit = $editOption->show();
 
-        $deleteLink = new link ($this->uri(array('action'=>'deleteuser', "selected" => $selected, 'id'=>$user['id'])));
+        $deleteLink = new link($this->uri(array('action' => 'deleteuser', "selected" => $selected, 'id' => $user['id'])));
         $deleteLink->link = $deleteIcon;
         $delete = $deleteLink->show();
 
-        $table->addCell($edit.' &nbsp; '.$delete, 100);
+        $table->addCell($edit . ' &nbsp; ' . $delete, 100);
         $table->endRow();
     }
 }
