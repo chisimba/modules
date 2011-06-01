@@ -14,17 +14,15 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-//TODO delete this file
-
 //define table
-$tablename = 'tbl_unesco_oer_calendar';
-$options = array('comment'=>'Table to store Curricula','collate'=>'utf8_general_ci','character_set'=>'utf8');
+$tablename = 'tbl_unesco_oer_product_theme_junction';
+$options = array('comment'=>'Table to store Product and theme relationships','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
 //define fields
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
-                'curriculum_id' => ('type' => 'text','length' => 32),
-                'content'=>array('type' =>'text')
- 		);
+                'product_id' =>array('type' =>'text','length'=>3),
+                'theme_id'=>array('type'=>'text','length'=>255)
+		);
 
 ?>

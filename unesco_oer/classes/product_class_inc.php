@@ -31,6 +31,7 @@ class product extends object
     public $objDbProductThemes;
     public $objDbProductLanguages;
     public $objThumbUploader;
+    public $objDbRelationTypes;
 
 
     //TODO move catorgorized parameters into structs. eg. <creationStruct>
@@ -83,11 +84,11 @@ class product extends object
      */
     private $_description;
 
-//    /**Description Abstract
-//     *
-//     * @var <type>
-//     */
-//    var $_abstract;
+    /**Description Abstract
+     *
+     * @var <type>
+     */
+    private $_abstract;
 
 //    /**Description Table of Contents
 //     *
@@ -95,6 +96,11 @@ class product extends object
 //     */
 //    private $_tableOfContents;
 
+    /**Other Contributors
+     *
+     * @var <type> 
+     */
+    private $_otherContributers;
 
     //////////   non-categorized parameters   //////////
 
@@ -112,6 +118,12 @@ class product extends object
      */
     private $_unescothemes;
 
+    /**coverage
+     *
+     * @var <type>
+     */
+    private $_coverage;
+
     //////////   Identification parameters   //////////
 
     /**Identifier
@@ -125,6 +137,12 @@ class product extends object
      * @var <type>
      */
     private $_relation;
+
+    /**Relation type;
+     *
+     * @var <type>
+     */
+    private $_relationtype;
 
     /**keywords
      *
@@ -193,6 +211,7 @@ class product extends object
         $this->objDbProductThemes = $this->getObject('dbproductthemes');
         $this->objDbProductLanguages = $this->getObject('dbproductlanguages');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
+        $this->objDbRelationTypes = $this->getObject('dbrelationtype');
     }
 
     ////////////////   METHODS   ////////////////
@@ -264,8 +283,7 @@ class product extends object
         try {
             $results = $this->objThumbUploader->uploadThumbnail($path);
         } catch (customException $e) {
-            // echo customException::cleanUp();
-            echo "test";
+            echo customException::cleanUp();
             exit();
         }
 
@@ -366,7 +384,18 @@ class product extends object
                                                     );
 
         //TODO Date published ??
-        //TODO Authors ??
+        
+        //Field for Authors
+        $fieldName = 'creator';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_title_creator', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    0,
+                                                    $product[$fieldName],
+                                                    $table
+                                                    );
 
         //field for publisher
         $fieldName = 'publisher';
@@ -380,7 +409,18 @@ class product extends object
                                                     $table
                                                     );
 
-        //TODO Contacts ??
+        
+        //Field for Contacts
+        $fieldName = 'contacts';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_contacts', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    0,
+                                                    $product[$fieldName],
+                                                    $table
+                                                    );
 
         //TODO Implement themes fully!
         //field for the theme
@@ -415,7 +455,35 @@ class product extends object
 
         //TODO Related Languages ??
 
-        //TODO Relation ??
+        //field for relation types
+        $fieldName = 'relation_type';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_relation_type', 'unesco_oer');
+        $relationTypes = $this->objDbRelationTypes->getRelationTypes();
+        $this->_objAddDataUtil->addDropDownToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    $relationTypes,
+                                                    $product[$fieldName],
+                                                    'description',
+                                                    $table,
+                                                    'id'
+                                                    );
+
+        //field for relation types
+        $fieldName = 'relation';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_relation', 'unesco_oer');
+        $products = $this->_objDbProducts->getAll();
+        $this->_objAddDataUtil->addDropDownToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    $products,
+                                                    $product[$fieldName],
+                                                    'title',
+                                                    $table,
+                                                    'id'
+                                                    );
 
         //field for coverage
         $fieldName = 'coverage';
@@ -520,5 +588,7 @@ class product extends object
 
         return $output;
     }
+
 }
+
 ?>

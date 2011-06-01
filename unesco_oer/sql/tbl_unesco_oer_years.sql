@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -14,17 +14,15 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-//TODO delete this file
-
 //define table
-$tablename = 'tbl_unesco_oer_calendar';
-$options = array('comment'=>'Table to store Curricula','collate'=>'utf8_general_ci','character_set'=>'utf8');
+$tablename = 'tbl_unesco_oer_years';
+$options = array('comment'=>'Table to store the years of a Curriculum','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
 //define fields
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
-                'curriculum_id' => ('type' => 'text','length' => 32),
-                'content'=>array('type' =>'text')
- 		);
+                'curriculum_id' => array('type' => 'text','length' => 32),
+                'year' => array('type' =>'text', 'length' => 255)
+);
 
 ?>

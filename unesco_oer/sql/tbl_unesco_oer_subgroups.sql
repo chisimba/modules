@@ -16,7 +16,7 @@ $fields = array(
                 'LinkedInstitution' => array('type' => 'text','length' =>32),
                 'LinkedDiscussion'=>array('type'=>'text','length'=>128),
                 'Members' => array('type' => 'text','length' => 128),
-                'groupid' => array('type' => 'text','length' => 32,'not null'),
+                'groupid' => array('type' => 'text','length' => 32,'not null')
 
 );
 ?>
