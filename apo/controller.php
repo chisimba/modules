@@ -1840,8 +1840,8 @@ class apo extends controller {
             $this->users->addUser($data);
 
             $this->setVarByRef("departments", $faculties);
-            print_r($this->user->getUsers());
-            //return $this->nextAction('usermanagement');
+            
+            return $this->nextAction('usermanagement');
         }
     }
 
