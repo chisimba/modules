@@ -176,23 +176,62 @@
             	<div class="featuredHeader blueText">FEATURED UNESCO PRODUCTS</div>
                 <div class="rightColumnBorderedDiv">
                 	<div class="rightColumnContentPadding">
-                    	<img src="skins/unesco_oer/images/feature-img-holder.gif" alt="Featured" width="136" height="176"><br>
-                        <div class="greyListingHeading">Manual for Investigative Journalists</div>
-                        <br>
-                        <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
+                    	               <div class="rightColumnContentPadding">
+                                <?php
+                                        $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+                                        $featuredProduct = $this->objDbProducts->getProductByID($featuredProductID);
+
+                                        echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct);
+                                ?>
+            
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">
+
+                                        <?php
+                                        //The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
+
+
+                                        $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id']);
+                                        echo"See all adaptations ($NOofAdaptation)"; // This must be a link;
+                                        ?>
+                               
+                             </a></div>
+                                            </div>
                      </div>
                 </div>
                 <div class="spaceBetweenRightBorderedDivs">
                 	<div class="featuredHeader innerPadding blueText">MOST...</div>
                 </div>
                 <!--tabs -->
-                	<div class="tabsOffState">ADAPTED</div>
+<!--                	<div class="tabsOffState">ADAPTED</div>
                     <div class="tabsOnState">RATED</div>
-                    <div class="tabsOffState">COMMENTED</div>
+                    <div class="tabsOffState">COMMENTED</div>-->
 
                 <div class="rightColumnBorderedDiv">
-                	<div class="rightColumnContentPadding">
+
+
+                        <?php
+                                        $objTabs = $this->newObject('tabcontent', 'htmlelements');
+                                        $objTabs->setWidth(180);
+//                                        $objTabs->cssClass = "tabsOnState";
+                                        $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $displayAllMostAdaptedProducts);
+                                        $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
+                                        $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
+                                        $objTabs->addTab('Adapted', $mostAdapted);
+                                        $objTabs->addTab('Rated', $mostRated);
+                                        $objTabs->addTab('Commented', $mostCommented);
+                                        echo $objTabs->show();
+                            ?>
+
+
+
+
+
+<!--
+
+
+
+
+<div class="rightColumnContentPadding">
                     	<div class="leftImageTabsList"><img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="placeholder" width="45" height="49"></div>
                         <div class="rightTextTabsList">
                         	Model Curricula for Journalism Education
@@ -219,7 +258,7 @@
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <br>
         </div>

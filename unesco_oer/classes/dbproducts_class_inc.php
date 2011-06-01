@@ -108,7 +108,7 @@ class dbproducts extends dbtable
             $sql = "select * from $this->_tableName where id = '$id'";
         }  else {
             //If searching by puid
-            $sql = "select * from $this->_tableName where puid = '$id'";
+            $sql = "select * from $this->_tableName where id = '$id'";
         }
         //$sql = "select * from $this->_tableName where id = '$id'";
         $products = $this->getArray($sql);

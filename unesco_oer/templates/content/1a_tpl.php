@@ -5,8 +5,13 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $adaptationstring = "relation is null";
-error_reporting(E_ALL);
-ini_set('display_errors', 'Off');
+if ($finalstring == null)
+
+   {
+            $finalstring = 'relation is null';
+             $TotalEntries = 'relation is null';
+    }
+
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -93,42 +98,9 @@ ini_set('display_errors', 'Off');
 <!--                              <input type="text" name="" id="" class="searchInput" value="Type search term here...">-->
 
                                 <?php
-//
 
-                                            $button = new button('Search', 'GO');
-                                            $button->setToSubmit();
-
-                                            $textinput = new textinput('SearchInput');
-                                            $textinput->cssClass = "searchInput";
-
-
-
-                                            $filterSearch = new dropdown('SearchFilter');
-                                            $filterSearch->cssClass = "searchDropDown";
-
-                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'));
-                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
-                                            $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_creator', 'unesco_oer'));
-
-
-
-                                            $form = new form('SearchField', $this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-
-
-
-                                            $Link = new link($this->uri(array('action' => 'Search', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-                                            $Link->link = 'GO';
-
-
-
-
-                                            $form->addToForm($textinput->show());
-                                            $form->addtoform($filterSearch->show());
-                                            $form->addToForm($button->show());
-                                            //       $form->addToForm($link->show());
-
-
-                                            echo $form->show();
+  $Search = $this->getobject('filterdisplay', 'unesco_oer');
+    echo $Search->Search($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
                                 ?>
 
 
@@ -225,294 +197,10 @@ ini_set('display_errors', 'Off');
                         <div class="mainContentHolder">
                             <div class="subNavigation"></div>
                             <!-- Left Colum -->
-                            <div class="leftColumnDiv">
-                                <div class="moduleHeader">
-                        <?php
-                                        echo $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer')
-                        ?>
-
-                                    </div>
-                                    <div class="blueNumberBackground">
-                                        <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                                        <div class="numberOffilteredProducts">
-
-                            <?php
-                                        if ($finalstring == null) {                       //Initialization check
-                                            $finalstring = 'relation is null';
-                                            $TotalEntries = 'relation is null';
-                                        }
-
-                                        echo $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
-                            ?>
-
-
-
-
-                                    </div>
-                                </div>
-                                <div class="moduleSubHeader">Product matches filter criteria</div>
-                                <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">
-
-                        <?php
-                                        echo $this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer')
-                        ?>
-
-                                    </div>
-                                    <div class="blueBackground blueBackgroundCheckBoxText">
-
-                        <?php
-                                        $products = $this->objDbProducts->getProducts(0, 10);
-
-
-
-
-                                        $form = new form('ProductType', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter)));
-
-
-
-
-                                        $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
-                                        $button->setToSubmit();
-
-                                        $checkbox = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_model', 'unesco_oer'));
-                                        $checkbox2 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_handbook', 'unesco_oer'));
-                                        $checkbox3 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_guide', 'unesco_oer'));
-                                        $checkbox4 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_manual', 'unesco_oer'));
-                                        $checkbox5 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_bestoractile', 'unesco_oer'));
-
-
-
-                                        if ($Model == 'on')
-                                            $checkbox->ischecked = true;
-
-                                        if ($Handbook == 'on')
-                                            $checkbox2->ischecked = true;
-
-                                        if ($Guide == 'on')
-                                            $checkbox3->ischecked = true;
-
-                                        if ($Manual == 'on')
-                                            $checkbox4->ischecked = true;
-
-                                        if ($Besoractile == 'on')
-                                            $checkbox5->ischecked = true;
-
-
-                                        $form->addToForm($checkbox->show());
-                                        $form->addToForm('Model<br>');
-                                        $form->addToForm($checkbox2->show());
-                                        $form->addToForm('Handbook<br>');
-                                        $form->addToForm($checkbox3->show());
-                                        $form->addToForm('Guide<br>');
-                                        $form->addToForm($checkbox4->show());
-                                        $form->addToForm('Manual<br>');
-                                        $form->addToForm($checkbox5->show());
-                                        $form->addToForm('Best Practices<br>');
-                                        $form->addToForm($button->show());
-
-
-                                        echo $form->show();
-                        ?>
-
-                                                                                                                                <!--                                    <input type="checkbox"> Model<br>
-                                                                                                                                                                    <input type="checkbox"> Guide<br>
-                                                                                                                                                                    <input type="checkbox"> Handbook<br>
-                                                                                                                                                                    <input type="checkbox"> Manual<br>
-                                                                                                                                                                    <input type="checkbox"> Bestoractile<br>-->
-                                    </div>
-                                    <br>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesImages">
-                        <?php
-                                        echo $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer')
-                        ?>
-
-                                    </div>
-                                    <div class="blueBackground">
-
-                        <?php
-                                        $products = $this->objDbProducts->getProducts(0, 10);
-                                        $filterTheme = new dropdown('ThemeFilter');
-                                        $filterTheme->cssClass = "leftColumnSelectDropdown";
-
-                                        $filterTheme->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
-                                        foreach ($products as $product) {
-
-                                            $filterTheme->addOption($product['theme']);
-                                        }
-                                        $filterTheme->setSelected($ThemeFilter);
-
-                                        $uri = $this->uri(array('action' => 'ThemeFilter'));
-                                        $form = new form('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-
-
-                                        $uri = $this->uri(array('action' => 'FilterProducts'));
-                                        $filterTheme->addOnChange('javascript: sendThemeFilterform()');
-
-
-
-                                        $form->addtoform($filterTheme->show());
-
-                                        echo $form->show();
-                        ?>
-
-                                                                                                                                                                                                                                                                                    <!--                        <select name="theme" id="theme" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                                                                                                                            </select>-->
-                                    </div>
-                                    <br>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesImages">
-                        <?php
-                                        echo $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer')
-                        ?>
-
-
-                                    </div>
-                                    <div class="blueBackground">
-
-
-                        <?php
-                                        $products = $this->objDbProducts->getProducts(0, 10);
-                                        $filterLang = new dropdown('LanguageFilter');
-                                        $filterLang->cssClass = "leftColumnSelectDropdown";
-                                        $filterLang->addOption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
-                                        foreach ($products as $product) {
-
-                                            $filterLang->addOption($product['language']);
-                                        }
-
-                                        $filterLang->setSelected($LangFilter);
-                                        $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-
-
-                                        $uri = $this->uri(array('action' => 'LanguageFilter'));
-                                        $filterLang->addOnChange('javascript: sendLanguageFilterform()');
-
-
-                                        $form->addtoform($filterLang->show());
-
-
-                                        echo $form->show();
-                        ?>
-
-                                                                                                                                                                                                                                                                                    <!--                        <select name="language" id="language" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                                                                                                                                <option value="">English</option>
-                                                                                                                                                                                                                                                                                                                <option value="">Français</option>
-                                                                                                                                                                                                                                                                                                                <option value="">Español</option>
-                                                                                                                                                                                                                                                                                                                <option value="">Русский</option>
-                                                                                                                                                                                                                                                                                                                <option value="">لعربية</option>
-                                                                                                                                                                                                                                                                                                                <option value="">中文</option>
-                                                                                                                                                                                                                                                                                                            </select>-->
-                                    </div>
-                                    <br>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">
-                        <?php
-                                        echo $this->objLanguage->languageText('mod_unesco_oer_author', 'unesco_oer')
-                        ?>
-
-
-                                    </div>
-                                    <div class="blueBackground">
-
-                        <?php
-                                        $products = $this->objDbProducts->getProducts(0, 10);
-                                        $filterAuth = new dropdown('AuthorFilter');
-                                        $filterAuth->cssClass = "leftColumnSelectDropdown";
-                                        $filterAuth->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
-                                        foreach ($products as $product) {
-
-                                            $filterAuth->addOption($product['creator']);
-                                        }
-
-                                        $filterAuth->setSelected($AuthFilter);
-                                        $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-
-
-                                        $uri = $this->uri(array('action' => 'AuthorFilter'));
-                                        $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
-
-
-                                        $form->addtoform($filterAuth->show());
-
-
-                                        echo $form->show();
-                        ?>
-
-
-
-
-                                                                                                                                                                                                                                                                                    <!--                        <select name="author" id="author" class="leftColumnSelectDropdown">
-                                                                                                                                                                                                                                                                                                                <option value="">All</option>
-                                                                                                                                                                                                                                                                                                            </select>-->
-                                    </div>
-                                    <br>
-                                    <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">
-                        <?php
-                                        echo $this->objLanguage->languageText('mod_unesco_oer_items_per_page', 'unesco_oer')
-                        ?>
-
-
-                                    </div>
-                                    <div class="blueBackground">
-
-
-
-
-                        <?php
-                                        $products = $this->objDbProducts->getProducts(0, 10);
-                                        $filterNum = new dropdown('NumFilter');
-                                        $filterNum->cssClass = "leftColumnSelectDropdown";
-
-
-                                        $filterNum->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
-                                        $filterNum->addOption('1');
-                                        $filterNum->addOption('2');
-                                        $filterNum->addOption('3');
-
-
-
-                                        $filterNum->setSelected($NumFilter);
-                                        $form = new form('NumFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-
-
-                                        $uri = $this->uri(array('action' => 'NumFilter'));
-                                        $filterNum->addOnChange('javascript: sendNumFilterform()');
-
-
-                                        $form->addtoform($filterNum->show());
-
-
-                                        echo $form->show();
-                        ?>
-
-
-
-
-
-
-
-
-
-                                                                                                                                <!--                                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                                                                                                                                                                            <option value="">All</option>
-                                                                                                                                                                        </select>-->
-                                    </div>
-                                    <br><br>
-                                    <div class="blueBackground rightAlign">
-                                        <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                                        <a href="#" class="resetLink">
-
-                            <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
-                                        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
-                                        echo $abLink->show();
-                            ?>
-                                    </a>
-                                </div>
-                                <div class="rssFeed">
-                                    <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
-                                    <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
-                                </div>
+                           <?php
+                           $filtering = $this->getobject('filterdisplay', 'unesco_oer');
+                           echo $filtering->SideFilter('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+?>
                             </div>
                             <!-- Center column DIv -->
                             <div class="centerColumnDiv">
@@ -528,31 +216,11 @@ ini_set('display_errors', 'Off');
                                                                                                                                                                                                                                             <!--                                                <select name="" class="contentDropDown">
                                                                                                                                                                                                                                                  <option value="">Date Added</option>
                                                                                                                                                                                                                                              </select>-->
-                            <?php
-                                        $products = $this->objDbProducts->getProducts(0, 10);
-                                        $filterLang = new dropdown('SortFilter');
-                                        $filterLang->cssClass = "contentDropDown";
+                             <?php
+                           $sort = $this->getobject('filterdisplay', 'unesco_oer');
+                          echo $sort->SortDisp('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
 
-
-                                        $filterLang->addoption('None');
-                                        $filterLang->addoption('Date');
-                                        $filterLang->addOption('Alphabetical');
-
-
-                                        $filterLang->setSelected($SortFilter);
-                                        $form = new form('SortFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-
-
-                                        $uri = $this->uri(array('action' => 'SortFilter'));
-                                        $filterLang->addOnChange('javascript: sendSortFilterform()');
-
-
-
-                                        $form->addtoform($this->objLanguage->languageText('mod_unesco_oer_sort_by', 'unesco_oer'));
-                                        $form->addtoform($filterLang->show());
-                                        echo $form->show();
-                            ?>
-
+                    ?>
 
 
                                                                                                                                                                                                     <!--                                                <select name="" class="contentDropDown">
@@ -796,43 +464,11 @@ echo $finalstring;
                                         <!-- Pagination-->
                                         <div class="paginationDiv">
 
-                        <?php
-
-                                        $TotalRecords = $this->objDbProducts->getTotalEntries($TotalEntries);
-
-                                        $TotalPages = ceil($TotalRecords / $NumFilter);
-
-//                                                echo $TotalRecords;
-                                            
-
-
-                                        if ($TotalPages > 0) {
-
-
-
-
-                                            echo '<div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>';
-
-                                            for ($i = 1; $i <= $TotalPages; $i++) {
-
-                                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile)));
-                                                $abLink->link = $i;
-                                            
-                                                echo $abLink->show();
-                                            }
-                                        }
-//
-//
-                        ?>
-
-
-
-
-
-
-
-
-
+                       
+<?php
+                            $Pagination = $this->getobject('filterdisplay', 'unesco_oer');
+                              $Pagination->Pagination('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum, $pageinfo)
+?>
 
 
 

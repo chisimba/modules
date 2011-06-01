@@ -162,19 +162,36 @@
             	<div class="rightColumnDiv">
             	<div class="featuredHeader pinkText">FEATURED ADAPTATION</div>
                 <div class="rightColumnBorderedDiv">
-                	<div class="rightColumnContentPadding">
-                	  <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
-               	  <div class="featuredAdaptationRightContentDiv">
-                        	<span class="greyListingHeading">Manual for Investigative Journalists</span>
-                            <br><br>
-                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                        <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
+                	<?php
+                             
+                                $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
+                                foreach ($featuredProducts as $featuredProduct) {
 
-                        </div>
-                        <div class="featuredAdaptedBy">Adapted By</div>
-                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                        <span class="greyListingHeading">Polytechnic of Namibia</span>
-                        </div>
+                                    //Check if it's an adapted product
+                                    $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
+
+                                    //If the product is an adaptation
+                                    if ($product['relation'] != NULL) {
+                                        $featuredAdaptedProduct = $product;
+                                    }
+                                }
+
+                                if ($this->objDbGroups->isGroup($featuredAdaptedProduct['creator'])) {
+                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($featuredAdaptedProduct['creator']);
+                                    $featuredAdaptedProduct['group_thumbnail'] = $thumbnail['thumbnail'];
+                                    $featuredAdaptedProduct['institution_thumbnail'] = NULL;
+                                } else {
+                                    $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($featuredAdaptedProduct['creator']);
+                                    $featuredAdaptedProduct['group_thumbnail'] = NULL;
+                                    $featuredAdaptedProduct['institution_thumbnail'] = $thumbnail['thumbnail'];
+                                }
+                                //Get the number of adaptations
+                                $featuredAdaptedProduct['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($featuredAdaptedProduct['id']);
+
+                                echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($featuredAdaptedProduct);
+?>
+
+
                 </div>
                 <div class="spaceBetweenRightBorderedDivs">
                 	<div class="featuredHeader pinkText">BROWSER ADAPTATION BY MAP</div>

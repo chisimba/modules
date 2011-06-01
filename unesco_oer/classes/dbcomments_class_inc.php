@@ -41,10 +41,18 @@ class dbcomments extends dbtable {
 
     function getComment($productID){
 
-        $sql = "SELECT product_comment from tbl_unesco_oer_comments where product_id = $productID LIMIT 0,2";
+        $sql = "SELECT product_comment from tbl_unesco_oer_comments where product_id = $productID";
         return $this->getArray($sql);
 
 
+    }
+
+    function getTotalcomments($productID)
+    {
+        $sql = "SELECT * FROM tbl_unesco_oer_comments where product_id = $productID";
+        $count = $this->getArray($sql);
+
+        return count($count);
     }
 
 }

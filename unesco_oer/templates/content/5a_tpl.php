@@ -47,7 +47,16 @@
                         ?>
                         <div class="commentsLinkUnderRatingStarsDiv">
                         <img src="skins/unesco_oer/images/icon-comment-post.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                        <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">25 comments</a></div>
+                        <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">
+                                <?php
+
+                              echo  $this->objDbComments->getTotalcomments($productID) . " Comments";
+
+
+                                ?>
+
+
+                            </a></div>
                         </div>
                   	</div>
                   	<div class="rightFixedContent">
@@ -175,13 +184,28 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     </div>
                     
                     <div class="textFloatLeftDivInnterColumn">
+
+                        <?php
+                    if (($this->objDbComments->getTotalcomments($productID) >= 2))
+                    {
+
+                    ?>
                     <span class="greyText fontBold">User comments:</span>
                     <br /><br />
                     <div class="listCommunityRelatedInfoDiv">
                     	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                         <div class="communityRelatedInfoText">
                         	<a href="#" class="greyTextLink">
-                            	Phasellus nec eleifend magna. Morbi vel nibh quis massa venenatis fermentum in at massa. Fusce dignissim eros
+                               <?php
+
+
+                         $Comment = $this->getobject('commentmanager', 'unesco_oer');
+                             $comments =  $Comment->recentcomment($productID);
+                             echo $comments[2];
+
+                            ?>
+
+                      
                             </a>
                         </div>
                     </div>
@@ -189,10 +213,18 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                         <div class="communityRelatedInfoText">
                         	<a href="#" class="greyTextLink">
-                            	Phasellus nec eleifend magna. Morbi vel nibh quis massa venenatis fermentum in at massa. Fusce dignissim eros
+                            <?php
+                    
+
+                        $Comment = $this->getobject('commentmanager', 'unesco_oer');
+                             $comments =  $Comment->recentcomment($productID);
+                             echo $comments[1];
+
+                            ?>
                             </a>
                         </div>
                     </div>
+                   
                     <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all comments</a></div>
 <!--                    <textarea class="commentTextBox">Leave comment</textarea>
                     <div class="commentSubmit">
@@ -200,35 +232,43 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         <a href=""><img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="submitCommentImage"></a>
                     </div>-->
                     <?php
-		            $commentText = new textarea('newComment');
-		            $commentText->setCssClass("commentTextBox");
+                    }
 
-                            //TODO make parameter pagename dynamic
-                            $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID , 'pageName' => 'home'));
-                            $commentLink = new link($uri);
-                            $commentLink->cssClass = "searchGoLink";
-                            $linkText = $this->objLanguage->
-                                    languageText('mod_unesco_oer_submit','unesco_oer');
-                            $commentLink->link = $linkText;
+                    else  if (($this->objDbComments->getTotalcomments($productID) == 1)) {
 
-                            $commentSubmitDiv = '<div class="commentSubmit">';
-                            $submiTextDiv = '<div class="submiText">';
-                            $submitCommentImage = '<img src="skins/unesco_oer/images/button-search.png" alt="Submit" width="17" height="17" class="submitCommentImage">';
-                            $closeDiv = '</div>';
 
-                            $button = new button('submitComment', $linkText);
-                            $button->setToSubmit();
+                   echo ' <span class="greyText fontBold">User comments:</span>
+                    <br /><br />
+                    <div class="listCommunityRelatedInfoDiv">
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
+                        <div class="communityRelatedInfoText">
+                        	<a href="#" class="greyTextLink">';
 
-                            $form = new form('3a_comments_ui', $uri);
-                            $form->addToForm($commentText->show());
-                            $form->addToForm($commentSubmitDiv);
-                            $form->addToForm($submiTextDiv);
-                            //$form->addToForm($commentLink->show());
-                            $form->addToForm($button->show()); //TODO use text link instead of button
-                            $form->addToForm($closeDiv);
-                            $form->addToForm($submitCommentImage);
-                            $form->addToForm($closeDiv);
-                            echo $form->show();
+
+
+                            $Comment = $this->getobject('commentmanager', 'unesco_oer');
+                             $comments =  $Comment->recentcomment($productID);
+                             echo $comments[1];
+
+
+
+                         echo'   </a>
+                        </div>
+                    </div>';
+
+
+
+                    }
+
+
+                    $Comments = $this->getobject('commentmanager', 'unesco_oer');
+                          echo   $Comments->commentbox($productID);
+
+
+
+
+
+
 		        ?>
                     </div>
                 </div>

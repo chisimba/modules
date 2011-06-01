@@ -443,7 +443,7 @@ echo $abLink->show();
                                     <div class="featuredHeader">FEATURED ADAPTATION</div>
                                     <div class="rightColumnBorderedDiv">
 <?php
-                                echo "testttttttttttt";
+                             
                                 $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
                                 foreach ($featuredProducts as $featuredProduct) {
 

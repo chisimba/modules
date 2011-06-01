@@ -63,7 +63,7 @@ class filterdisplay extends object {
                         <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
                         <div class="numberOffilteredProducts"> ');
 
-                             $TotalRecords = $this->objDbProducts->getTotalEntries('relation is not null');
+                             $TotalRecords = $this->objDbProducts->getTotalEntries($adaptationstring);
                            $form ->addToForm($TotalRecords);
                          $form->addToForm('</div>
                         </div>
@@ -157,7 +157,7 @@ class filterdisplay extends object {
         }
         $filterTheme->setSelected($this->Filterinfo['ThemeFilter']);
 
-        $temp = serialize($this->Filterinfo);
+      
         // $form = newform('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries,'inf' =>$temp)));
 
 
@@ -198,7 +198,7 @@ class filterdisplay extends object {
         //  $form = new form('LanguageFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries)));
 
 
-        $uri = $this->uri(array('action' => 'LanguageFilter'));
+       
         $filterLang->addOnChange('javascript: sendLanguageFilterform()');
 
 
@@ -238,7 +238,7 @@ class filterdisplay extends object {
         //   $form = new form('AuthorFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $this->Filterinfo['Guide'], 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
 
-        $uri = $this->uri(array('action' => 'AuthorFilter'));
+   
         $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
 
 
@@ -332,7 +332,7 @@ class filterdisplay extends object {
 
        
 
-                        $TotalRecords = $this->objDbProducts->getTotalEntries('relation is not null');
+                        $TotalRecords = $this->objDbProducts->getTotalEntries($adaptationstring);
                         $TotalPages = ceil($TotalRecords / $NumFilter);
 
 
@@ -341,7 +341,7 @@ class filterdisplay extends object {
                          echo   $thumbnail;
                             for ($i = 1; $i <= $TotalPages; $i++) {
 
-                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries, 'pageinfo' => $pageinfo)));
+                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => $page, "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries, 'pageinfo' => $pageinfo)));
                                 $abLink->link = $i;
                                      echo    $abLink->show();
 
@@ -367,25 +367,25 @@ class filterdisplay extends object {
 
 
  $products = $this->objDbProducts->getProducts(0, 10);
-                            $filterLang = new dropdown('SortFilter');
+                            $filtersort = new dropdown('SortFilter');
                              $filterLang->cssClass = "leftColumnSelectDropdown";
 
-                            $filterLang->addoption('None');
-                            $filterLang->addoption('Date');
-                            $filterLang->addOption('Alphabetical');
+                            $filtersort->addoption('None');
+                            $filtersort->addoption('Date');
+                            $filtersort->addOption('Alphabetical');
 
 
-                            $filterLang->setSelected($SortFilter);
+                            $filtersort->setSelected($SortFilter);
 
 
 
-                            $uri = $this->uri(array('action' => 'SortFilter'));
-                            $filterLang->addOnChange('javascript: sendSortFilterform()');
+                    
+                            $filtersort->addOnChange('javascript: sendSortFilterform()');
 
 
 
                             $form->addtoform($this->objLanguage->languageText('mod_unesco_oer_sort_by', 'unesco_oer'));
-                            $form->addtoform($filterLang->show());
+                            $form->addtoform($filtersort->show());
 
 
 
@@ -490,7 +490,7 @@ function Search($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapst
 
  $Auth  = $this->Filterinfo['AuthorFilter'];
  $Theme =  $this->Filterinfo['ThemeFilter'];
-  $Lang = $this->Filterinfo['LanguageFilter'];
+  $Language = $this->Filterinfo['LanguageFilter'];
 
 
         if (!( $this->Filterinfo['AuthorFilter'] == Null or  $this->Filterinfo['AuthorFilter'] == 'All'))
@@ -500,7 +500,7 @@ function Search($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapst
             $buildstring .= ' and theme = ' . "'$Theme'";
 
         if (!($this->Filterinfo['LanguageFilter'] == Null or $this->Filterinfo['LanguageFilter'] == 'All'))
-            $buildstring .= ' and language = ' . "'$lang'";
+            $buildstring .= ' and language = ' . "'$Language'";
 
 
         if (( $this->Filterinfo['Model'] == 'on') or ($this->Filterinfo['Handbook'] == 'on') or ($this->Filterinfo['Guide'] == 'on') or ($this->Filterinfo['Manual'] == 'on') or ($this->Filterinfo['Besoractile'] == 'on'))

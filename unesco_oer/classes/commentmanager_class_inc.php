@@ -1,5 +1,6 @@
 <?php
-/* 
+
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -14,67 +15,124 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-
 /**
  * Description of commentManager_class_inc
  *
  * @author manie
  */
+class commentmanager extends object {
 
-$this->loadClass('dbcomments','unesco_oer');
-$this->loadClass('textarea','htmlelements');
-$this->loadClass('link','htmlelements');
+  
 
-class commentmanager extends object
-{
-    public $objDbComments;
+    public function init() {
 
-    public $textArea;
+        $this->objLanguage = $this->getObject("language", "language");
+          $this->objDbComments = $this->getobject('dbcomments', 'unesco_oer');
 
-    public $submitLink;
+        $this->loadClass('link', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
+        $this->loadClass('checkbox', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('form', 'htmlelements');
+ 
+        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('link', 'htmlelements');
+          
 
-    public $submitLinkString;
 
-    public function  init() {
-        parent::init();
-        $this->objDbComments = new dbcomments();
-        $this->textArea = new textarea();
-        $this->submitLink = new link();
-        $this->submitLink->href = 'none';
-        $this->submitLinkString = '';
     }
 
-    public function setCommentTextArea($name, $cssClass) {
-        $this->textArea->name = $name;
-        if ($cssClass != NULL) {
-            $test->setCssClass($cssClass);
-        }
+
+
+
+
+
+      
+    public function commentbox($productID) {
+
+        $commentText = new textarea('newComment');
+        $commentText->setCssClass("commentTextBox");
+
+        //TODO make parameter pagename dynamic
+        $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
+        $commentLink = new link($uri);
+        $commentLink->cssClass = "searchGoLink";
+        $linkText = $this->objLanguage->
+                        languageText('mod_unesco_oer_submit', 'unesco_oer');
+        $commentLink->link = $linkText;
+
+        $commentSubmitDiv = '<div class="commentSubmit">';
+        $submiTextDiv = '<div class="submiText">';
+        $submitCommentImage = '<img src="skins/unesco_oer/images/button-search.png" alt="Submit" width="17" height="17" class="submitCommentImage">';
+        $closeDiv = '</div>';
+
+        $button = new button('submitComment', $linkText);
+        $button->setToSubmit();
+
+        $form = new form('3a_comments_ui', $uri);
+        $form->addToForm($commentText->show());
+        $form->addToForm($commentSubmitDiv);
+        $form->addToForm($submiTextDiv);
+        //$form->addToForm($commentLink->show());
+        $form->addToForm($button->show()); //TODO use text link instead of button
+        $form->addToForm($closeDiv);
+        $form->addToForm($submitCommentImage);
+        $form->addToForm($closeDiv);
+
+
+
+        return $form->show();
     }
 
-    public function setCommentLink($link, $action, $id, $cssClass = null, $user = null) {
-        $this->submitLink->href = $this->uri(array('action' => $action, 'id' => $id, 'user' => $user));
-        if ($cssClass != null){
-            $this->submitLink->cssClass = $cssClass;
-        }
-        $this->submitLink->link = $link;
-        $this->submitLinkString .= $this->submitLink-show();
+
+    public function recentcomment($productID){
+
+      $comment = array();
+
+       $totalcomments = $this->objDbComments->getTotalcomments($productID);
+     
+       $comment[3] = $last;
+       
+       if (($this->objDbComments->getTotalcomments($productID) >= 2)){
+       
+       $comments = $this->objDbComments->getComment($productID);
+             $comment1 = $comments[$totalcomments-1]['product_comment'];
+              $comment2 = $comments[$totalcomments-2]['product_comment'];
+
+
+
+      } else if (($this->objDbComments->getTotalcomments($productID) == 1)){
+
+          $comments = $this->objDbComments->getComment($productID);
+             $comment1 = $comments[$totalcomments-1]['product_comment'];
+              $comment2 = '';
+
+           
+       }
+
+       if (strlen($comment1) >8){
+
+           $comment[1] = substr($comment1,0,20)  . '...';
+       }
+           else $comment[1] = $comment1;
+
+
+  if (strlen($comment2) >8){
+
+           $comment[2] = substr($comment2,0,20)  . '...';
+       }
+           else $comment[2] = $comment2;
+
+
+
+        return $comment;
+
+
+
+
     }
 
-    public function showCommentTextArea(){
-        $output = '';
-        $output .= $this->textArea->show();
-        return $output;
-    }
 
-    public function showCommentLinks(){
-        $output = '';
-        $output .= $this->submitLinkString;
-        return $output;
-    }
-
-    public function  handleCommentUpload(){
-        
-    }
 }
 ?>
