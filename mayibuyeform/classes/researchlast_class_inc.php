@@ -60,7 +60,7 @@ private function buildForm()
 
 {
    $this->loadElements();
-   	$objForm = new form('researchlast', $this->getFormAction());
+   	$objForm = new form('researchform', $this->getFormAction());
 	$table = $this->newObject('htmltable', 'htmlelements');
 	$required = '<span class="required_field"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
  
@@ -75,7 +75,6 @@ private function buildForm()
 	$objuwcLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentuwc","mayibuyeform"),"uwc");
 	$table->addCell($objuwcLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objuwc->show().$required);
-	$objForm->addRule('uwc', $this->objLanguage->languageText("mod_mayibuye_uwc_required", "mayibuyeform"), 'required');
 	$table->endRow();
 
 	$table->startRow();
@@ -83,7 +82,6 @@ private function buildForm()
 	$objstaffLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsforstaffno","mayibuyeform"),"staffno");
 	$table->addCell($objstaffLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objstaffno->show().$required);
-	$objForm->addRule('staffno', $this->objLanguage->languageText("mod_mayibuye_staffno_required", "mayibuyeform"), 'required');
 	$table->endRow();
 
 	$table->startRow();
@@ -91,7 +89,6 @@ private function buildForm()
 	$objdeptLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsDepartment","mayibuyeform"),"dept");
 	$table->addCell($objdeptLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objdept->show().$required);
-	$objForm->addRule('dept', $this->objLanguage->languageText("mod_mayibuye_dept_required", "mayibuyeform"), 'required');
 	$table->endRow();	
 
 	$table->startRow();
@@ -106,8 +103,6 @@ private function buildForm()
 	$objpublicationLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentpublication","mayibuyeform"),"publications");
 	$table->addCell($objpublicationLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objpublication->show(),'', 'center', 'left', '');
-	$objForm->addRule('publication', $this->objLanguage->languageText("mod_mayibuye_publication_required", "mayibuyeform"), 'required');
-
 	$table->endRow();
 
 	$table->startRow();
@@ -158,7 +153,7 @@ $objForm->addToForm('<p align="center"><br />'.$button->show().'</p>');
 
 }
 
-function insertStudentRecord($stuno,$staffnum,$colection,$image,$project,$time)
+function insertResearchlastRecord($stuno,$staffnum,$colection,$image,$project,$time)
 	 {
            $id = $this->insert(array(
                 'studentno'=>$stuno,

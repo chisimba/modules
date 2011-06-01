@@ -11,7 +11,7 @@ class researchft extends dbTable
 
 {
  $this->objLanguage = $this->getObject('language', 'language');
- 	parent::init('tbl_mayibuyeform_researchform');
+ 	parent::init('tbl_mayibuyeform_researchft');
 }
 
 private function loadElements()
@@ -49,7 +49,6 @@ private function buildForm()
 	$objNameofResignator = new textinput('resignatorname');
 	$objResignatorLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentnameofsignotor","mayibuyeform"),"name of resignator");
 	$table->addCell($objResignatorLabel->show(),'', 'center', 'left', '');
-	$objForm->addRule('resignatorname', $this->objLanguage->languageText("mod_mayibuye_resignatorname_required", "mayibuyeform"), 'required');
         $table->addCell($objNameofResignator->show().$required);
 	$table->endRow();
 	
@@ -58,7 +57,6 @@ private function buildForm()
 	$objjobtitleLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentjobtitle","mayibuyeform"),"job_title");
 	$table->addCell($objjobtitleLabel->show(),'', 'center', 'left', '');         
 	$table->addCell($objjobtitle->show().$required);
-	$objForm->addRule('job_title', $this->objLanguage->languageText("mod_mayibuye_job_required", "mayibuyeform"), 'required');
 	$table->endRow();
 
 	$table->startRow();
@@ -66,7 +64,6 @@ private function buildForm()
 	$objorganizationLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentorganizationname","mayibuyeform"),"organazation");
 	$table->addCell($objorganizationLabel->show(),'', 'center', 'left', '');         
 	$table->addCell($objorganisation->show().$required);
-	$objForm->addRule('organization', $this->objLanguage->languageText("mod_mayibuye_organization_required", "mayibuyeform"), 'required');
 	$table->endRow();
 
 	$table->startRow();
@@ -74,7 +71,6 @@ private function buildForm()
 	$objpostalLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentpostaladrres","mayibuyeform"),"postaladdress");
 	$table->addcell($objpostalLabel->show(),'', 'center', 'left', '');         
 	$table->addcell($objpostal->show(),'', 'center', 'left', '');
-	//$objForm->addRule('postal_address', $this->objLanguage->languageText("mod_mayibuye_postal_required", "mayibuyeform"), 'required');
 	$table->endRow();   
 
 	$table->startRow();

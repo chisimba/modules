@@ -1,6 +1,18 @@
 
 <?php
 
+/**
+ *
+ *mayibuyeform
+
+ * mayibuyeform  application to produce material of the robben island museum archives
+ * @category  Chisimba
+ * @package   mayibuyeform
+ * @Author  Brenda Mayinga
+ */
+
+
+
 class mayibuyeform extends controller {
 
     public $objLanguage;
@@ -29,10 +41,9 @@ class mayibuyeform extends controller {
     var $staffnum;
     var $colection;
     var $captcha;
-
-    //var $image;
-    //var $project;
-    // var $time;
+    var $image;
+    var $project;
+    var $time;
 
 
     public function init() {
@@ -61,23 +72,22 @@ class mayibuyeform extends controller {
 
         case 'send_researchform':
                 $this->SavestudentRecord();
-
 		return "researchft_tpl.php";
 		
 	
 	case 'send_researchft':
-
 		$this->SavestudentRecord();
-
 		return "researchstudent_tpl.php";
 
 	
 	case 'send_researchstud':
 		$this->SavestudentRecord();
-
 		return "researchlast_tpl.php";
 
-            	
+        case 'send_researchlast':
+		$this->SavestudentRecord();
+		return "confirm_tpl.php";
+    
                
         }
     }
@@ -88,34 +98,62 @@ class mayibuyeform extends controller {
         $tellno = $this->getParam('tellno');
         $faxxno = $this->getParam('faxno');
         $email = $this->getParam('emailaddress');
-        $nameofsign = $this->getParam('resignatorname');
-        $jobtitles = $this->getParam('job_title');
-        $organization = $this->getParam('organization');
-        $postaladd = $this->getParam('postal_address');
-        $physicaladd = $this->getParam('phyiscal_address');
-        $vatno = $this->getParam('vat_no');
-        $jobnno = $this->getParam('job_no');
-        $telephone = $this->getParam('tell_no');
-        $faxnumber2 = $this->getParam('faxno_2');
-        $email2 = $this->getParam('emails');
-        $nameofresi = $this->getParam('name');
+         
+        // insert into database
+        $pid = $this->dbresearchform->insertStudentRecord($date, $nameofreseacher, $tellno, $faxxno, $email);
+
+}
+
+	public function SaveResearchRecord()
+		{
+
+		$nameofsign = $this->getParam('resignatorname');
+        	$jobtitles = $this->getParam('job_title');
+        	$organization = $this->getParam('organization');
+        	$postaladd = $this->getParam('postal_address');
+        	$physicaladd = $this->getParam('phyiscal_address');
+        	$vatno = $this->getParam('vat_no');
+        	$jobnno = $this->getParam('job_no');
+        	$telephone = $this->getParam('tell_no');
+        	$faxnumber2 = $this->getParam('faxno_2');
+        	$email2 = $this->getParam('emails');
+
+ // insert into database
+	$id=$this->dbresearchft->insertResearchRecord($nameofsign,$jobtitles, $organization, $postaladd, $physicaladd, $vatno,
+						 	$jobnno, $telephone, $faxnumber2, $email2);
+
+	}
+
+
+  public function SaveResearchStudRecord()
+	{     
+	$nameofresi = $this->getParam('name');
         $jotitle = $this->getParam('jobtitle');
         $organizationname = $this->getParam('orgranization2');
         $postadd = $this->getParam('postaladdress');
         $tel = $this->getParam('tellno_3');
         $faxx = $this->getParam('faxno_3');
+
+	// inserting researchstud record into database
+
+	$id = $this->dbresearchstud->SaveResearchStudRecord($nameofresi,$jotitle, $organizationname, $postadd, $tel, $faxx);
+
+}
+
+	public function SaveResearchLastRecord()
+	{
+
         $stuno = $this->getParam('uwc');
         $staffnum = $this->getParam('staffno');
         $colection = $this->getParam('dept');
         $image = $this->getParam('subheading3');
         $project = $this->getParam('publication');
         $time = $this->getParam('project');
-	$captcha = $this->getParam('researchform_captcha');
+	$captcha = $this->getParam('research_captcha');
 
+	$errormsg[] = array();
 
- 	$errormsg[] = array();
-
-        if ((md5(strtoupper($captcha)) != $this->getParam('captcha'))) {
+        if ((md5(strtoupper($captcha)) != $this->getParam('research_captcha'))) {
             $errormsg[] = 'badcaptcha';
         }
 
@@ -126,13 +164,12 @@ class mayibuyeform extends controller {
 
             }
 
-        // insert into database
-        $pid = $this->dbresearchform->insertStudentRecord($date, $nameofreseacher, $tellno, $faxxno, $email, $nameofsign,
-                        $jobtitles, $organization, $postaladd, $physicaladd, $vatno, $jobnno, $telephone, $faxnumber2, $email2, $nameofresi,
-                        $jotitle, $organizationname, $postadd, $tel, $faxx, $stuno, $staffnum, $colection, $image, $project, $time);
+// inserting researchlast record into database
+
+	$id =$this->dbresearchlast->SaveResearchLastRecord($stuno, $staffnum, $colection, $image, $project, $time);
 
 
-        $subject = "New Reseacher";
+ $subject = "New Reseacher";
         $this->sendEmailNotification($subject, $message = ' date: ' . $date . '  ' . "\n" . ' name:  ' .
                 $nameofreseacher . '   ' . "\n" . ' telno: ' . $tellno . '   ' . "\n" . 'Fax no: ' .
                 $faxxno . '  ' . "\n" . ' email adddress: ' . $email . '  ' . "\n" . ' Name of Signator: ' .
@@ -170,9 +207,6 @@ public function RequiresLogin()
 {
 	return TRUE;
 }
-
-
-
 
 }
 

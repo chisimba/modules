@@ -86,7 +86,6 @@ private function buildForm()
 	$objnameofReseacherLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentnameofresearch","mayibuyeform"),"name_resign");
 	$table->addCell($objnameofReseacherLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objnameofresearcher->show().$required);
-	$objForm->addRule('name_resign', $this->objLanguage->languageText("mod_mayibuye_name_required", "mayibuyeform"), 'required');
         $table->endRow();
 
         $table->StartRow();
@@ -94,7 +93,6 @@ private function buildForm()
 	$objTelLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commenttelno","mayibuyeform"),"Telno");
 	$table->addCell($objTelLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objTelno->show().$required);
-	$objForm->addRule('tellno', $this->objLanguage->languageText("mod_mayibuye_tell_required", "mayibuyeform"), 'required');
 	$table->EndRow();
 
 	
@@ -130,9 +128,7 @@ private function buildForm()
 
 }
 
-function insertStudentRecord($date, $nameofreseacher, $tellno, $faxxno, $email, $nameofsign, $jobtitles, $organization,$postaladd,$physicaladd,$vatno,
-				$jobnno,$telephone,$faxnumber2,$email2,$nameofresi,$jotitle,$organizationname,$postadd,$tel,$faxx,$stuno,$staffnum,
-				$colection,$image,$project,$time)
+function insertStudentRecord($date, $nameofreseacher, $tellno, $faxxno, $email)
 	 {
            $id = $this->insert(array(
                 'date'=>$date,
