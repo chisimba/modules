@@ -1817,7 +1817,7 @@ class apo extends controller {
         $name = $this->getParam('name');
         $role = $this->getParam('role');
         $faculties = $this->faculties->getFaculties();
-
+        $department = $this->getParam('department');
         $email = $this->getParam('email');
         $telephone = $this->getParam('telephone');
 
@@ -1835,13 +1835,13 @@ class apo extends controller {
               $path .= $name;
               } */
 
-            $data = array("name" => $name, "role" => $role, "email" => $email, "telephone" => $telephone);
+            $data = array("name" => $name, "role" => $role, "email" => $email, "telephone" => $telephone, "department"=>$department);
 
             $this->users->addUser($data);
 
             $this->setVarByRef("departments", $faculties);
-
-            return $this->nextAction('usermanagement');
+            print_r($this->user->getUsers());
+            //return $this->nextAction('usermanagement');
         }
     }
 
