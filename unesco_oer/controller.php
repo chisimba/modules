@@ -946,6 +946,78 @@ class unesco_oer extends controller {
         $this->objUseExtra->editUserInfoExtra($birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
     }
 
+
+    function __deleteUser(){
+        $id = $this->getParam('id');
+        $userid=$this->getParam('userid');
+        $this->objUseExtra->deleteUser($id,$userid);
+        // $this->objUseExtra->deleteUser($id);
+        return 'UserListingForm_tpl.php';
+    }
+
+    function __groupListingForm() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'groupListingForm_tpl.php';
+    }
+
+    function __addNewGroupForm(){
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'addNewGroupForm_tpl.php';
+
+    }
+
+
+    function __addNewGroup(){
+        $name=$this->getParam('groupname');
+        $email=$this->getParam('email');
+        $address=$this->getParam('address');
+        $city=$this->getParam('city');
+        $state=$this->getParam('state');
+        $postalcode=$this->getParam('postalcode');
+        $website=$this->getParam('website');
+        $institution=$this->getParam('institution');
+        $description=$this->getParam('description');
+        $loclat=$this->getParam('loclat');
+        $loclong=$this->getParam('loclong');
+        $this->objDbGroups->addNewGroup($name, $email, $address, $city, $state, $postalcode, $website, $institution,$loclat,$loclong);
+    }
+    
+    function __editGroup(){
+        $id=$this->getParam('id');
+        $name=$this->getParam('groupname');
+        $email=$this->getParam('email');
+        $address=$this->getParam('address');
+        $city=$this->getParam('city');
+        $state=$this->getParam('state');
+        $postalcode=$this->getParam('postalcode');
+        $website=$this->getParam('website');
+        $institution=$this->getParam('institution');
+        $description=$this->getParam('description');
+        $loclat=$this->getParam('loclat');
+        $loclong=$this->getParam('loclong');
+        $this->objDbGroups->editgroup($id,$name, $email, $address, $city, $state, $postalcode, $website, $institution, $loclat, $loclong);
+        }
+
+
+    function __deleteGroup() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $id = $this->getParam('id');
+        $name = $this->getParam('name');
+        $this->objDbGroups->deleteGroup($id, $name);
+        return 'groupListingForm_tpl.php';
+    }
+
+
+
+
+
+
+
+
+
+    
+
+
     public function __test() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
 

@@ -121,6 +121,15 @@ class dbuserextra extends dbtable{
          $sql = "select * from tbl_users";
          return $this->getArray($sql);
     }
+
+//    function deleteUser($id){
+//        return $this->objAdmin->apiUserDelete($id);
+//    }
+
+    function deleteUser($id,$userid){
+        $sql="DELETE FROM tbl_users WHERE id='$id' AND userid='$userid'";
+        return $this->getArray($sql);
+    }
 }
 
 ?>

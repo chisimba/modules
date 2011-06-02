@@ -38,12 +38,25 @@ class dbgroups extends dbtable {
         $this->getArray($sql);
     }
 
-     function editgroup($id,$puid,$loclat,$loclong,$namen){
-       return $this->update(
-                    'puid',
-                     $puid,
-                     array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'id'=>$id)
-            );
+     function editgroup($id,$name, $email, $address, $city, $state, $postalcode, $website, $institution, $loclat, $loclong) {
+        return $this->update(
+                'id',
+                $id,
+                //array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'id'=>$id)
+                $data = array(
+                    'id'=>$id,
+                    'name' => $name,
+                    'email' => $email,
+                    'address' => $address,
+                    'city' => $city,
+                    'state' => $state,
+                    'postalcode' => $postalcode,
+                    'website' => $website,
+                    'institution' => $institution,
+                    'loclat' => $loclat,
+                    'loclat' => $loclong
+                    )
+                );
         }
  
     function addGroup($name, $loclat, $loclong, $thumbnailPath, $country = NULL) {
@@ -57,6 +70,29 @@ class dbgroups extends dbtable {
 
         $this->insert($data);
     }
+
+
+    // PBROBLEM PROBLEM PROBLEM   #############################################
+    // Does a User need necessarily to know the Latitude and Longitude of the group Location?
+    //
+    function addNewGroup($name, $email, $address, $city, $state, $postalcode, $website, $institution,$loclat,$loclong) {
+        $data = array(
+            'name' => $name,
+            'email' => $email,
+            'address' => $address,
+            'city' => $city,
+            'state' => $state,
+            'postalcode' => $postalcode,
+            'website' => $website,
+            'institution' => $institution,
+            'loclat' => $loclat,
+            'loclat' => $loclong
+        );
+        $this->insert($data);
+    }
+
+
+
 
      /*
       * This function take a groupId and return its latitude
