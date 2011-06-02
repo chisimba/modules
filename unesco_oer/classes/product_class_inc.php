@@ -100,11 +100,11 @@ class product extends object
      *
      * @var <type> 
      */
-    private $_otherContributers;
+    private $_othercontributers;
 
     //////////   non-categorized parameters   //////////
 
-    //TODO Try to Categorize thes parameters
+    //TODO Try to Categorize these parameters
 
     /**UNESCO contacts
      *
@@ -123,6 +123,12 @@ class product extends object
      * @var <type>
      */
     private $_coverage;
+
+    /**status
+     *
+     * @var <type>
+     */
+    private $_status;
 
     //////////   Identification parameters   //////////
 
@@ -183,6 +189,14 @@ class product extends object
      * @var <type>
      */
     private $_objDbProducts;
+
+    //////////   Content   //////////
+
+    /**Variable for containing content of the product
+     *
+     * @var <type>
+     */
+    private $_content;
 
     //////////   Display objects   //////////
 
@@ -387,7 +401,19 @@ class product extends object
         
         //Field for Authors
         $fieldName = 'creator';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_title_creator', 'unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    0,
+                                                    $product[$fieldName],
+                                                    $table
+                                                    );
+
+        //Field for other contributors
+        $fieldName = 'other_contributors';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_other_contributors', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                                                     $title,
                                                     4,
@@ -509,8 +535,28 @@ class product extends object
                                                     $table
                                                     );
 
-        //TODO rights holder ??
-        //TODO provenance ??
+        //field for rights holder
+        $fieldName = 'rights_holder';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_rights_holder', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    0,
+                                                    $product[$fieldName],
+                                                    $table
+                                                    );
+        //field for provenance
+        $fieldName = 'provenance';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_provenance', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    0,
+                                                    $product[$fieldName],
+                                                    $table
+                                                    );
 
         //field for the description
         $fieldName = 'description';
@@ -525,9 +571,20 @@ class product extends object
         $table->addCell($editor->show());
         $table->endRow();
 
-        //TODO description abstract
+        //field description abstract
+        $fieldName = 'abstract';
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = $fieldName;
+        $editor->height = '150px';
+        $editor->width = '70%';
+        $editor->setBasicToolBar();
+        $editor->setContent($product[$fieldName]);
+        $table->startRow();
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description_abstract', 'unesco_oer'));
+        $table->addCell($editor->show());
+        $table->endRow();
 
-        //Implement keywords fully
+        //TODO Implement keywords fully
         //field for keywords
         $fieldName = 'keywords';
         $title = $this->objLanguage->languageText('mod_unesco_oer_keywords', 'unesco_oer');
@@ -539,10 +596,18 @@ class product extends object
                                                     $product[$fieldName],
                                                     $table
                                                     );
-
-        //TODO status ??
-
-        //TODO attach file ??
+        //TODO Implement status fully
+        //Field for status
+        $fieldName = 'status';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_status', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    0,
+                                                    $product[$fieldName],
+                                                    $table
+                                                    );
 
         //field for resource type
         $fieldName = 'resource_type';
@@ -564,6 +629,8 @@ class product extends object
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
         $table->addCell($this->objThumbUploader->show());
         $table->endRow();
+
+        //TODO attach file ??
 
         // setup button for submission
         $buttonSubmit = new button('submit', $this->objLanguage->

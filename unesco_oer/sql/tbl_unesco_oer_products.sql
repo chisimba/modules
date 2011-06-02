@@ -29,6 +29,7 @@ $fields = array(
                 'provenance' => array('type' => 'text', 'length'=>512),
                 'relation' =>array('type' =>'text','length'=>32),
                 'relation_type' =>array('type' =>'text','length'=>32),
+                'status' => array('type' => 'text', 'length'=>255),
                 'thumbnail'=>array('type'=>'text','length'=>512)
  		);
 ?>

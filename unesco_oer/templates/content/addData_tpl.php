@@ -120,6 +120,14 @@ $buttonText = $this->objLanguage->
 $actionURI = $this->uri(array('action' => 'createInstitutionTypeUI'));
 $utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
+//new relation type options
+$headingText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_relationType', 'unesco_oer');
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_relationTypeBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'createRelationTypeUI'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
+
 //new comment options
 $headingText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newcomment','unesco_oer');

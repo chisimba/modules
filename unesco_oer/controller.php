@@ -27,6 +27,7 @@ class unesco_oer extends controller {
     public $objDbAvailableProductLanguages;
     public $objUseExtra;
     public $objfilterdisplay;
+    public $objDbRelationType;
     /**
      *
      * @var string $objLanguage String object property for holding the
@@ -58,6 +59,7 @@ class unesco_oer extends controller {
         $this->objProductRatings = $this->getObject('dbproductratings');
         $this->objUser = $this->getObject('user', 'security');
         $this->objUseExtra = $this->getObject('dbuserextra');
+        $this->objDbRelationType = $this->getObject('dbrelationtype');
 
 
 
@@ -951,15 +953,15 @@ class unesco_oer extends controller {
     }
 
     public function __savetest() {
-        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $defaultTemplate = "test_tpl.php";
 
         switch (strtolower($this->getParam('submit'))) {
             case "cancel":
-                return $defaultTemplate;
+                return $this->__home();
                 break;
 
             case "upload":
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 $product = $this->getObject('product');
                 $product->handleUpload();
                 return $defaultTemplate;
@@ -978,7 +980,25 @@ class unesco_oer extends controller {
         return "institutionEditor_tpl.php";
     }
 
+    /*
+     * Method to display page for creating a new relation type
+     */
 
+    public function __createRelationTypeUI() {
+        return "createRelationTypeUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createRelationUI_tpl.php page
+     * and add it to the tbl_unesco_oer_relation_types table
+     */
+
+    public function __createRelationTypeSubmit() {
+        $name = $this->getParam('newRelationType');
+
+        $this->objDbRelationType->addRelation($name);
+        return $this->__addData();
+    }
 
 }
 ?>
