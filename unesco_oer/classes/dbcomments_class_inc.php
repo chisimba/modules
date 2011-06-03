@@ -41,7 +41,7 @@ class dbcomments extends dbtable {
 
     function getComment($productID){
 
-        $sql = "SELECT product_comment from tbl_unesco_oer_comments where product_id = $productID";
+        $sql = "SELECT product_comment from tbl_unesco_oer_comments where product_id = '$productID'";
         return $this->getArray($sql);
 
 
@@ -49,7 +49,7 @@ class dbcomments extends dbtable {
 
     function getTotalcomments($productID)
     {
-        $sql = "SELECT * FROM tbl_unesco_oer_comments where product_id = $productID";
+        $sql = "SELECT * FROM tbl_unesco_oer_comments where product_id = '$productID'";
         $count = $this->getArray($sql);
 
         return count($count);
