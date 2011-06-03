@@ -40,7 +40,8 @@ $this->loadClass('htmlheading', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 1;
-$header->str = $this->objLanguage->languageText('phrase_registeron', 'userregistration', 'Register on').' '.$this->objConfig->getSitename();
+$header->str =" Add New  User";
+//echo $header->show();
 
 echo '<div style="padding:10px;">'.$header->show();
 
@@ -53,7 +54,7 @@ $str = str_replace('[[SITENAME]]', $this->objConfig->getSitename(), $str);
 echo '<p>'.$str.'<br />';
 echo $this->objLanguage->languageText('mod_userregistration_pleaseenterdetails', 'userregistration', 'Please enter your details, email address and desired user name in the form below.').'</p>';
 
-$form = new form ('register', $this->uri(array('action'=>'addUserInfo'))); //register
+$form = new form ('register', $this->uri(array('action'=>'saveNewUser'))); //register
 
 $messages = array();
 
@@ -72,7 +73,7 @@ if ($mode == 'addfixup') {
     }
 }
 
-$table->addCell($usernameLabel->show(), 150, NULL, 'right');
+$table->addCell($usernameLabel->show());
 $table->addCell('&nbsp;', 5);
 $table->addCell($username->show().$required.' - <em>'.$usernameContents->show().'</em>');
 //, NULL, NULL, NULL, NULL, 'colspan="2"');
@@ -88,7 +89,7 @@ $confirmPassword = new textinput('register_confirmpassword');
 $confirmPassword->fldType = 'password';
 $confirmPassword->extra = 'maxlength=255';
 $confirmPasswordLabel = new label($this->objLanguage->languageText('phrase_confirmpassword', 'userregistration', 'Confirm Password'), 'input_register_confirmpassword');
-$table->addCell($passwordLabel->show(), 150, 'top', 'right');
+$table->addCell($passwordLabel->show());
 $table->addCell('&nbsp;', 5);
 $table->addCell($password->show().$required);
 
@@ -96,7 +97,7 @@ $table->endRow();
 
 $table->startRow();
 
-$table->addCell($confirmPasswordLabel->show(), 150, 'top', 'right');
+$table->addCell($confirmPasswordLabel->show());
 $table->addCell('&nbsp;', 5);
 $table->addCell($confirmPassword->show().$required);
 $table->endRow();
@@ -122,7 +123,7 @@ if ($mode == 'addfixup') {
     $titlesDropdown->setSelected($this->getParam('register_title'));
 }
 $table->startRow();
-$table->addCell($titlesLabel->show(), 150, NULL, 'right');
+$table->addCell($titlesLabel->show());
 $table->addCell($titlesDropdown->show());
 $table->endRow();
 
@@ -142,7 +143,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($firstnameLabel->show(), 150, NULL, 'right');
+$table->addCell($firstnameLabel->show());
 $table->addCell($firstname->show().$required);
 $table->endRow();
 
@@ -162,38 +163,49 @@ if (isset($userstring[1]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($surnameLabel->show(), 150, NULL, 'right');
+$table->addCell($surnameLabel->show());
 $table->addCell($surname->show().$required);
 $table->endRow();
 
-$staffnum = new textinput('register_staffnum');
-$staffnumLabel = new label($this->objLanguage->languageText('phrase_staffstudnumber', 'userregistration', 'Staff / Student number').'&nbsp;', 'input_register_staffnum');
-$staffnumguestLabel = new label($this->objLanguage->languageText('mod_userregistration_ifguestleaveblank', 'userregistration', 'If you are a guest, please leave this blank'), 'input_register_staffnum');
+//$staffnum = new textinput('register_staffnum');
+//$staffnumLabel = new label($this->objLanguage->languageText('phrase_staffstudnumber', 'userregistration', 'Staff / Student number').'&nbsp;', 'input_register_staffnum');
+//$staffnumguestLabel = new label($this->objLanguage->languageText('mod_userregistration_ifguestleaveblank', 'userregistration', 'If you are a guest, please leave this blank'), 'input_register_staffnum');
+//
+//if ($mode == 'addfixup') {
+//    $staffnum->value = $this->getParam('register_staffnum');
+//}
+//
+//$table->startRow();
+//$table->addCell($staffnumLabel->show(), 150, NULL, 'right');
+//$table->addCell($staffnum->show().' <em>'.$staffnumguestLabel->show().'</em>');
+//$table->endRow();
+//
+//$cellnum = new textinput('register_cellnum');
+//$cellnumLabel = new label($this->objLanguage->languageText('phrase_cellnumber', 'userregistration', 'Cell Number').'&nbsp;', 'input_register_cellnum');
+//
+//if ($mode == 'addfixup') {
+//    $cellnum->value = $this->getParam('register_cellnum');
+//}
+//
+//$table->startRow();
+//$table->addCell($cellnumLabel->show(), 150, NULL, 'right');
+//$table->addCell($cellnum->show());
+//$table->endRow();
 
-if ($mode == 'addfixup') {
-    $staffnum->value = $this->getParam('register_staffnum');
-}
 
+$textinput = new textinput('register_surname');
+$textinput->size = 20;
 $table->startRow();
-$table->addCell($staffnumLabel->show(), 150, NULL, 'right');
-$table->addCell($staffnum->show().' <em>'.$staffnumguestLabel->show().'</em>');
+$table->addCell('Last Name');
+$table->addCell($textinput->show());
 $table->endRow();
 
-$cellnum = new textinput('register_cellnum');
-$cellnumLabel = new label($this->objLanguage->languageText('phrase_cellnumber', 'userregistration', 'Cell Number').'&nbsp;', 'input_register_cellnum');
-
-if ($mode == 'addfixup') {
-    $cellnum->value = $this->getParam('register_cellnum');
-}
-
+$textinput = new textinput('register_cellnum');
+$textinput->size = 20;
 $table->startRow();
-$table->addCell($cellnumLabel->show(), 150, NULL, 'right');
-$table->addCell($cellnum->show());
+$table->addCell('Mobile Phone');
+$table->addCell($textinput->show());
 $table->endRow();
-
-
-
-
 
 
 
@@ -201,7 +213,7 @@ $table->endRow();
 $textinput = new textinput('Date of birth');
 $textinput->size = 20;
 $table->startRow();
-$table->addCell('Date of Birth');
+$table->addCell('Birth date');
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -230,7 +242,7 @@ $table->endRow();
 $textinput = new textinput('postaladdress');
 $textinput->size = 20;
 $table->startRow();
-$table->addCell('Postal Address');
+$table->addCell('Postal code');
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -251,7 +263,7 @@ $table->endRow();
 $textinput = new textinput('typeofoccapation');
 $textinput->size = 20;
 $table->startRow();
-$table->addCell('Type Of Occapation');
+$table->addCell('Type Of Occupation');
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -276,15 +288,16 @@ $table->addCell('Website Link');
 $table->addCell($textinput->show());
 $table->endRow();
 
-$textinput = new textinput('groupmembership');
-$textinput->size = 20;
+$dd=new dropdown('groupmembership');
+$dd->addOption('1','A');
+$dd->addOption('2','B');
+$dd->addOption('3','c');
+$dd->addOption('4','d'); /// this must be cathed from the database
 $table->startRow();
-$table->addCell('Drop down Of group list');
-$table->addCell($textinput->show());
+$table->addCell('Group Membership');
+$table->addCell($dd->show());
 $table->endRow();
-
-
-
+  
 
 $sexRadio = new radio ('register_sex');
 $sexRadio->addOption('M', $this->objLanguage->languageText('word_male', 'system'));
@@ -298,13 +311,13 @@ if ($mode == 'addfixup') {
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('word_gender', 'userregistration', 'Gender').'&nbsp;', 150, NULL, 'right');
+$table->addCell($this->objLanguage->languageText('word_gender', 'userregistration', 'Gender'));
 $table->addCell($sexRadio->show());
 $table->endRow();
 
 $table->startRow();
     $objCountries=&$this->getObject('languagecode','language');
-    $table->addCell($this->objLanguage->languageText('word_country', 'system').'&nbsp;', 150, NULL, 'right');
+    $table->addCell($this->objLanguage->languageText('word_country', 'system'));
     if ($mode == 'addfixup') {
         $table->addCell($objCountries->countryAlpha($this->getParam('country')));
     } else {
@@ -341,7 +354,7 @@ if (isset($userstring[2]) && $mode == 'add')
     $confirmEmail->value = $userstring[2];
 }
 
-$table->addCell($emailInfoLabel->show(), 150, NULL, 'right');
+$table->addCell($emailInfoLabel->show());
 $table->addCell('&nbsp;', 10);
 $table->addCell($emailLabel->show().$required.'<br />'.$email->show(), '20%');
 $table->addCell($confirmEmailLabel->show().$required.'<br />'.$confirmEmail->show());

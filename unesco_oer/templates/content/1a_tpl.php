@@ -68,8 +68,8 @@ if ($finalstring == null)
 
                                     <td><a href="#" class="prifileLinks">
                                             <?php
-                                            $abLink = new link($this->uri(array("action" => "userRegistrationForm")));
-                                            $abLink->link = 'Add User';
+                                            $abLink = new link($this->uri(array("action" => "userListingForm")));
+                                            $abLink->link = 'User';
                                             echo $abLink->show();
                                             ?>
                                             </a></td>

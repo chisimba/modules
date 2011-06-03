@@ -27,8 +27,14 @@ $objIcon = $this->newObject('geticon','htmlelements');
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
-$header->str = "Edit User:";
+$header->str = "Users:";
 echo $header->show();
+
+$button = new button('Add Button', "Add User");
+$button->setToSubmit();
+$addUserLink =new link($this->uri(array('action' => "userRegistrationForm",'id' => $user['id'])));
+$addUserLink->link = $button->show();
+echo $addUserLink->show();
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '60%';
