@@ -1014,16 +1014,6 @@ class unesco_oer extends controller {
     }
 
 
-
-
-
-
-
-
-
-    
-
-
     public function __test() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
