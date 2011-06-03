@@ -292,20 +292,11 @@ class product extends object
             //$this->dummyValue = "With Out ID: ".$tempData['title'];
         }
 
-        $results = FALSE;
-        $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
-        try {
-            $results = $this->objThumbUploader->uploadThumbnail($path);
-        } catch (customException $e) {
-            echo customException::cleanUp();
-            exit();
-        }
-
-        if ($results)
+        if ($this->objThumbUploader->results)
         {
             $this->_objDbProducts->updateProduct(
                                             $this->getIdentifier(),
-                                            array( 'thumbnail' => 'usrfiles/'.$results['path'])
+                                            array( 'thumbnail' => 'usrfiles/'.$this->objThumbUploader->results['path'])
                                         );
         }
     }
@@ -332,6 +323,7 @@ class product extends object
      */
     function handleUpload()
     {
+        $changed = FALSE;
         $sql = 'DESCRIBE tbl_unesco_oer_products';
         $fields = $this->_objDbProducts->getArray($sql);
 
@@ -340,17 +332,50 @@ class product extends object
             if ($parameter){
                 $property = '_'.preg_replace("#_#i", "", $field['field']);
                 $this->$property = $parameter;
+                $changed = TRUE;
             }
         }
 
-        $this->saveProduct();
+        $results = FALSE;
+        $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
+        try {
+            $results = $this->objThumbUploader->uploadThumbnail($path);
+        } catch (customException $e) {
+            echo customException::cleanUp();
+            exit();
+        }
+
+        if ($changed || $results){
+            $this->saveProduct();
+        }
+    }
+
+    /**This function validates the input on product meta data input page
+     *
+     */
+    function validateMetaData()
+    {
+        $valid = TRUE;
+
+        $sql = 'DESCRIBE tbl_unesco_oer_products';
+        $fields = $this->_objDbProducts->getArray($sql);
+
+        foreach ($fields as $field) {
+            $property = '_'.preg_replace("#_#i", "", $field['field']);
+            if (empty ($this->$property))
+            {
+                $valid = false;
+            }
+        }
+
+        return $valid;
     }
 
     /**This function returns a display for entering product metadata
      *
      * @return string
      */
-    function showMetaDataInput($productID)
+    function showMetaDataInput()
     {
         $output = '';
 
@@ -360,13 +385,13 @@ class product extends object
         $this->loadClass('adddatautil','unesco_oer');
 
         //get parent if any
-        $product = $this->_objDbProducts->getProductByID($productID);
+        $product = $this->_objDbProducts->getProductByID($this->_identifier);
 
         // setup and show heading
         $header = new htmlHeading();
         $header->str = $this->objLanguage->
                 languageText('mod_unesco_oer_product_upload_heading', 'unesco_oer');
-        $header->type = 2;
+        $header->type = 1;
         echo $header->show();
 
         // setup table and table headings with input fields
@@ -381,7 +406,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_title,
                                                     $table
                                                     );
 
@@ -393,7 +418,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_alternativetitle,
                                                     $table
                                                     );
 
@@ -407,7 +432,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_creator,
                                                     $table
                                                     );
 
@@ -419,7 +444,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_othercontributers,
                                                     $table
                                                     );
 
@@ -431,7 +456,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_publisher,
                                                     $table
                                                     );
 
@@ -444,7 +469,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_unescocontacts,
                                                     $table
                                                     );
 
@@ -473,7 +498,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     $productLanguages,
-                                                    $product[$fieldName],
+                                                    $this->_language,
                                                     'code',
                                                     $table,
                                                     'id'
@@ -490,7 +515,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     $relationTypes,
-                                                    $product[$fieldName],
+                                                    $this->_relationtype,
                                                     'description',
                                                     $table,
                                                     'id'
@@ -505,7 +530,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     $products,
-                                                    $product[$fieldName],
+                                                    $this->_relation,
                                                     'title',
                                                     $table,
                                                     'id'
@@ -519,7 +544,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_coverage,
                                                     $table
                                                     );
 
@@ -531,7 +556,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_rights,
                                                     $table
                                                     );
 
@@ -543,7 +568,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_rightsholder,
                                                     $table
                                                     );
         //field for provenance
@@ -554,7 +579,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_provenance,
                                                     $table
                                                     );
 
@@ -565,7 +590,7 @@ class product extends object
         $editor->height = '150px';
         $editor->width = '70%';
         $editor->setBasicToolBar();
-        $editor->setContent($product[$fieldName]);
+        $editor->setContent($this->_description);
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
         $table->addCell($editor->show());
@@ -578,7 +603,7 @@ class product extends object
         $editor->height = '150px';
         $editor->width = '70%';
         $editor->setBasicToolBar();
-        $editor->setContent($product[$fieldName]);
+        $editor->setContent($this->_abstract);
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description_abstract', 'unesco_oer'));
         $table->addCell($editor->show());
@@ -593,7 +618,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_keywords,
                                                     $table
                                                     );
         //TODO Implement status fully
@@ -605,7 +630,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     0,
-                                                    $product[$fieldName],
+                                                    $this->_keywords,
                                                     $table
                                                     );
 
@@ -618,7 +643,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     $resourceTypes,
-                                                    $product[$fieldName],
+                                                    $this->_resourcetype,
                                                     'description',
                                                     $table,
                                                     'id'
@@ -645,9 +670,8 @@ class product extends object
         //createform, add fields to it and display
         $uri = $this->uri(array(
                     'action' => "savetest",
-                    'parentID' => $productID,
-                    'prevAction' => $prevAction,
-                    'isNewProduct' => $isNewProduct));
+                    'productID' => $this->_identifier,
+                    'prevAction' => $prevAction));
         $form_data = new form('add_products_ui', $uri);
         $form_data->extra = 'enctype="multipart/form-data"';
         $form_data->addToForm($table->show() . '<br />' . $buttonSubmit->show() . $buttonCancel->show());

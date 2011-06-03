@@ -17,8 +17,11 @@
 
 class dbproductthemes extends dbtable {
 
+    private $umbrella_theme_table;
+
     function init() {
         parent::init("tbl_unesco_oer_product_themes");
+        $this->umbrella_theme_table = "tbl_unesco_oer_umbrella_themes";
     }
 
     function getProductThemes() {

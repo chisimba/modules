@@ -8,7 +8,7 @@ $options = array('comment'=>'Table to store product_themes','collate'=>'utf8_gen
 //define fields
 $fields = array(
 		'id' => array('type' =>'text','length' => 32,'not null'),
-                'theme' => array('type'=>'text','length'=>128),
-		'description' => array('type'=>'text','length'=>128) //subtheme
+                'theme' => array('type'=>'text','length'=>128), //main theme
+		'umbrella_theme_id' => array('type'=>'text','length'=>128) //subtheme
 );
 ?>

@@ -18,7 +18,7 @@
 
 class thumbnailuploader extends object{
 
-    public $resultsArray;
+    public $results;
 
     private $_uploadInput;
 
@@ -36,23 +36,23 @@ class thumbnailuploader extends object{
         $this->_uploadInput->enableOverwriteIncrement = TRUE;
         $this->_uploadInput->customuploadpath = $path;
 
-        $results = $this->_uploadInput->handleUpload($this->getParam('fileupload'));
+        $this->results = $this->_uploadInput->handleUpload($this->getParam('fileupload'));
         //Test if file was successfully uploaded
         // Technically, FALSE can never be returned, this is just a precaution
         // FALSE means there is no fileinput with that name
-        if ($results == FALSE) {
+        if ($this->results == FALSE) {
             //TODO return proper error page
             throw new customException('Upload failed: FATAL <br />');
         } else {
-            if (!$results['success']) { // upload was unsuccessful
-                if ($results['reason'] != 'nouploadedfileprovided') {
+            if (!$this->results['success']) { // upload was unsuccessful
+                if ($this->results['reason'] != 'nouploadedfileprovided') {
                     throw new customException('Upload failed: ' . $results['reason']); //TODO return proper error page containing error
                 } else {
                     return FALSE;
                 }
             }
         }
-        return $results;
+        return $this->results;
     }
 
     public function show()

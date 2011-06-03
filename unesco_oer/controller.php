@@ -1031,8 +1031,17 @@ class unesco_oer extends controller {
             case "upload":
                 $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 $product = $this->getObject('product');
+                //test for edit
+                if ($this->getParam('productID')) $product->loadProduct($this->getParam('productID'));
                 $product->handleUpload();
-                return $defaultTemplate;
+                $this->setVar('productID', $product->getIdentifier());
+                //test if all fields have been filled
+                if ($product->validateMetaData()){
+                    return $this->__home();
+                }else{
+                    return $defaultTemplate;
+                }
+                
                 break;
 
             default:

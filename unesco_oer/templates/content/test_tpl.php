@@ -15,8 +15,9 @@
  */
 
 $product = $this->getObject('product');
+$product->loadProduct($productID);
 
-echo $product->showMetaDataInput(NULL);
+echo $product->showMetaDataInput();
 
 //echo $product->dummyValue;
 //echo "<br>";

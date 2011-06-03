@@ -14,33 +14,15 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class dbproductlanguages extends dbtable {
+//define table
+$tablename = 'tbl_unesco_oer_umbrella_themes';
 
-    function init() {
-        parent::init("tbl_unesco_oer_product_languages");
-    }
+$options = array('comment'=>'Table to store umbrella themes for products','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
-    function getProductLanguages(){
-        $sql = "select * from tbl_unesco_oer_product_languages";
-        return $this->getArray($sql);
-    }
-    function addLanguage($code,$name) {
-        $data=array(
-            'code'=>$code,
-            'name'=>$name
-        );
+//define fields
+$fields = array(
+		'id' => array('type' =>'text','length' => 32,'not null'),
+                'theme' => array('type'=>'text','length'=>128), //main theme
+);
 
-        $this->insert($data);
-    }
-
-    function getLanguageDescriptionByID($id){
-        $row = $this->getRow('id', $id);
-        return $row['description'];
-    }
-
-    function getLanguageCodeByID($id){
-        $row = $this->getRow('id', $id);
-        return $row['code'];
-    }
-}
 ?>
