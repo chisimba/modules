@@ -238,7 +238,7 @@ echo $abLink->show();
                             </div>
                         </div>
                     </div>
-
+                <div id='ajaxDiv'>
                             <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
 
@@ -294,9 +294,9 @@ echo $abLink->show();
                                     }
                                 }
 
-                                echo $objTable->show();
+                               echo $objTable->show();
                             ?>
-
+</div>
                                 <!--
                                                     <table class="gridListingTable" cellspacing="0" cellpadding="0">
                                                         <tr>
@@ -653,17 +653,47 @@ echo $abLink->show();
     </body>
 </html>
 
-<script>
+<script language="javascript" type="text/javascript">
 
 
-    function sendSortFilterform()
-    {
-    document.forms["SortFilter"].submit();
-    }
 
-    function sendNumFilterform()
-    {
-    document.forms["NumFilter"].submit();
-    }
+   function ajaxFunction(){
+	var ajaxRequest;
+
+	try{
+		// Opera 8.0+, Firefox, Safari
+		ajaxRequest = new XMLHttpRequest();
+	} catch (e){
+		// Internet Explorer Browsers
+		try{
+			ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch (e) {
+			try{
+				ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch (e){
+				// Something went wrong
+				alert("Your browser broke!");
+				return false;
+			}
+		}
+	}
+	// Create a function that will receive data sent from the server
+	ajaxRequest.onreadystatechange = function(){
+		if(ajaxRequest.readyState == 4){
+			var ajaxDisplay = document.getElementById('ajaxDiv');
+			ajaxDisplay.innerHTML = ajaxRequest.responseText;
+		}
+	}
+	var age = document.getElementById('input_ThemeFilter').value;
+
+	var queryString = "age=" + age;
+     
+	ajaxRequest.open("GET", "index.php?moduler=unesco_oer&action=JavaFilter&" + queryString, true);
+	ajaxRequest.send(null);
+}
 
 </script>
+
+
+
+

@@ -191,6 +191,12 @@ class unesco_oer extends controller {
         return "11c_tpl.php";
     }
 
+    public function __JavaFilter() {
+//        $age = getPa
+
+        return "JavaFilter_tpl.php";
+    }
+
     public function __ViewProduct() {
 
         $id = $this->getParam('id');

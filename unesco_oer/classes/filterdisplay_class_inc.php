@@ -32,6 +32,7 @@ class filterdisplay extends object {
         $this->Filterinfo['AuthorFilter'] = $this->getParam('AuthorFilter');
         $this->Filterinfo['LanguageFilter'] = $this->getParam('LanguageFilter');
         $this->Filterinfo['NumFilter'] = $this->getParam('NumFilter');
+
         
  
     }
@@ -40,7 +41,7 @@ class filterdisplay extends object {
 
 
 
-
+ $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
 
         $form = new form('temporary', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => $page, "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries)));
 
@@ -161,7 +162,7 @@ class filterdisplay extends object {
         // $form = newform('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries,'inf' =>$temp)));
 
 
-        $filterTheme->addOnChange('javascript: sendThemeFilterform()');
+        $filterTheme->addOnChange('javascript:ajaxFunction()');
         $form->addtoform($filterTheme->show());
 
 
@@ -348,7 +349,7 @@ class filterdisplay extends object {
                             }
                         };
   
-        
+       
 
     }
 
