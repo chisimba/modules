@@ -4,6 +4,7 @@
     $this->loadClass('link', 'htmlelements');
     $this->loadClass('form','htmlelements');
     $this->loadClass('button','htmlelements');
+    $this->objDbComments = $this->getobject('dbcomments', 'unesco_oer');
      //load java script
     $js = '<script language="JavaScript" src="'.$this->getResourceUri('ratingsys.js').'" type="text/javascript"></script>';
     $this->appendArrayVar('headerParams', $js);
@@ -228,7 +229,60 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         </div>
                     </div>
                    
-                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all comments</a></div>
+                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">
+
+                                  
+                           view all comments
+                      
+
+
+                        </a></div>
+
+                      <button>Show it</button>
+                         <script src="http://code.jquery.com/jquery-latest.js"></script>
+                            <script>
+                            $("button").click(function () {
+                            $("div").show("slow");
+                            });
+                            </script>
+
+
+
+                            <div style="display: none">
+                                <?php
+                              $comments = $this->objDbComments->getComment($productID);
+                        $content ='';
+
+                        foreach ($comments as $comment) {
+                    $content .= '        <div class="listCommunityRelatedInfoDiv">
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
+                        <div class="communityRelatedInfoText">
+                        	<a href="#" class="greyTextLink">' . $comment['product_comment'] .
+
+                             
+
+
+                       
+
+                         
+                      
+                           ' </a>
+                        </div>
+                    </div>';
+
+
+                         
+
+                        }
+
+                    echo $content
+
+                                ?>  </div>
+
+
+
+
+
 <!--                    <textarea class="commentTextBox">Leave comment</textarea>
                     <div class="commentSubmit">
                         <div class="submiText"><a href="" class="searchGoLink">SUBMIT</a></div>
