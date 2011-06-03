@@ -184,7 +184,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                    
                     <div class="commentsDiv">
                         <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
-                        <div class="comments">
+                        <div class="communityRelatedInfoText">
                             <?php
 
 
@@ -199,7 +199,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     </div>
                     <div class="commentsDiv">
                         <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
-                        <div class="comments">
+                        <div class="communityRelatedInfoText">
                             <?php
                             
                             
@@ -222,7 +222,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                    echo '
                     <div class="commentsDiv">
                         <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
-                        <div class="comments">';
+                        <div class="communityRelatedInfoText">';
 
 
 

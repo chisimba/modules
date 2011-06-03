@@ -192,10 +192,13 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     ?>
                     <span class="greyText fontBold">User comments:</span>
                     <br /><br />
+                    
+
                     <div class="listCommunityRelatedInfoDiv">
                     	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                         <div class="communityRelatedInfoText">
                         	<a href="#" class="greyTextLink">
+
                                <?php
 
 

@@ -111,22 +111,25 @@ class commentmanager extends object {
            
        }
 
-       if (strlen($comment1) >8){
+//       if (strlen($comment1) >8){
+//
+//           $comment[1] = substr($comment1,0,20)  . '...';
+//       }
+//           else $comment[1] = $comment1;
+//
+//
+//  if (strlen($comment2) >8){
+//
+//           $comment[2] = substr($comment2,0,20)  . '...';
+//       }
+//           else $comment[2] = $comment2;
+//
+//
+//
+       $comment[1] = $comment1;
+        $comment[2] = $comment2;
 
-           $comment[1] = substr($comment1,0,20)  . '...';
-       }
-           else $comment[1] = $comment1;
-
-
-  if (strlen($comment2) >8){
-
-           $comment[2] = substr($comment2,0,20)  . '...';
-       }
-           else $comment[2] = $comment2;
-
-
-
-        return $comment;
+       return $comment;
 
 
 
