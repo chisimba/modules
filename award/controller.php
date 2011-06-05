@@ -504,7 +504,7 @@ class award extends controller
             	$year = $this->getParam('year',date('Y')-3);
 				$agreeTypeId = $this->getParam('agreeTypeId','all');
 				$socId = $this->getParam('socid',$defaultSoc['id']);
-				$sampleTypeId = $this->getParam('sampleTypeId','1');
+				$sampleTypeId = $this->getParam('sampleTypeId','3');
 				$this->setVar('year',$year);
 				$this->setVar('agreeTypeId',$agreeTypeId);
 				$this->setVar('socId',$socId);
