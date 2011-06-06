@@ -11,6 +11,7 @@ echo $header->show();
 
 echo $objUsers->showUserForm($departments);
 
+
 $table = $this->getObject("htmltable", "htmlelements");
 $table->startHeaderRow();
 $table->addHeaderCell("Name");

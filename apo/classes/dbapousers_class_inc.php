@@ -113,7 +113,7 @@ class dbapousers extends dbtable {
      * @return array containing all the data for that users
      */
 
-    public function getUser($id) {
+    public function getUser($id, $department) {
         return $this->getRow("id", $id);
     }
 
@@ -124,6 +124,12 @@ class dbapousers extends dbtable {
      * @access public
      * @return <String> $count The number of users
      */
+
+    public function getDepartmentUser($departmentID){
+        $sql = "select user.name, user.email, user.telephone, dept.name as department from tbl_apo_users user, tbl_apo_faculties dept where dept.id=user.department and user.department ='$departmentID' limit 1";
+
+        return $this->getArray($sql);
+    }
 
     public function getNumUsers($role = NULL) {
 

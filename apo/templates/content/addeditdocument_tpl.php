@@ -77,7 +77,12 @@ $table->endRow();
 $number = 'S';
 $textinput = new dropdown('department');
 $textinput->addOption("", "Please select department...");
-$textinput->addFromDB($departments, 'name', 'name', $document['department']);
+
+foreach ($departments as $department) {
+
+            $textinput->addOption($department['id'], $department['name']);
+        }
+//$textinput->addFromDB($departments, 'name', 'name', $document['department']);
 //$textinput->size = 60;
 if ($mode == 'edit') {
     $textinput->setSelected($document['department']);

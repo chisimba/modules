@@ -42,14 +42,14 @@ class dbdocuments extends dbtable {
     }
 
     public function getdocuments($start, $end, $mode="default", $rejected = "N", $myId = NULL) {
-        $sql = "select * from tbl_apo_documents where deleteDoc = 'N'";
+        $sql = "select doc.id, doc.docname,dept.name as department, doc.userid, doc.telephone, doc.date_created from tbl_apo_documents doc, tbl_apo_faculties dept where doc.department = dept.id and deleteDoc = 'N'";
         if (!$this->objUser->isadmin()) {
             $sql.=" and (userid = '" . $this->objUser->userid() . "' or userid='1')";
         } else if (!is_null($myId)) {
             $sql.=" and (userid = '" . $myId . "')";
         }
 
-        $sql.=' order by puid DESC';
+        $sql.=' order by doc.puid DESC';
         $rows = $this->getArray($sql);
         $docs = array();
 
@@ -214,7 +214,7 @@ class dbdocuments extends dbtable {
     function getFaculty($docid) {
         $sql = "select department from tbl_apo_documents where id='$docid'";
         $faculty = $this->getArray($sql);
-        $faculty = $faculty[0]['department'];
+        $faculty = $faculty[0]['name'];
 
         return $faculty;
     }

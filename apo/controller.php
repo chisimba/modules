@@ -132,6 +132,7 @@ class apo extends controller {
         $selected = $this->getParam('selected');
         $id = $this->getParam("docid");
         $faculties = $this->faculties->getFaculties();
+        $document = $this->documents->getDocument($id);
 
         $mode = "new";
 
@@ -140,56 +141,29 @@ class apo extends controller {
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
         $this->setVarByRef("departments", $faculties);
+        $this->setVarByRef("document", $document);
 
         return "addeditdocument_tpl.php";
     }
 
     function __registerdocument() {
 
-        $errormessages = $this->getParam('errormessages');
         $document = $this->documents->getDocument($id);
         $faculties = $this->faculties->getFaculties();
         $date = $this->getParam('date_created');
         $number = $this->getParam('number');
         $dept = $this->getParam('department');
-
-        if ($dept == '') {
-            $errormessages[] = "Fill in department";
-        }
         $title = $this->getParam('title');
-
-        if ($title == 'title') {
-            $errormessages[] = "Fill in course title";
-        }
         $selectedfolder = $this->getParam('parentfolder');
 
         $refno = $number . date("Y");
         $contact = $this->getParam('contact', '');
+        
         if ($contact == null || $contact == '') {
             $contact = $this->objUser->fullname();
         }
         $telephone = $this->getParam('telephone');
 
-
-        if ($telephone == '') {
-            $errormessages[] = "Fill in telephone";
-        }
-
-        if (count($errormessages) > 0) {
-
-            $this->setVarByRef("errormessages", $errormessages);
-            $this->setVarByRef("department", $dept);
-            $this->setVarByRef("contact", $contact);
-            $this->setVarByRef("telephone", $telephone);
-            $this->setVarByRef("title", $title);
-            $this->setVarByRef("number", $number);
-
-            $mode = "fixup";
-            $this->setVarByRef("mode", $mode);
-            $this->setVarByRef("action", $action);
-
-            return "addeditdocument_tpl.php";
-        }
         $status = $this->getParam('status');
         if ($status == '' || $status == NULL) {
             $status = "0";
@@ -1835,12 +1809,12 @@ class apo extends controller {
               $path .= $name;
               } */
 
-            $data = array("name" => $name, "role" => $role, "email" => $email, "telephone" => $telephone, "department"=>$department);
+            $data = array("name" => $name, "role" => $role, "email" => $email, "telephone" => $telephone, "department" => $departmentID);
 
             $this->users->addUser($data);
 
             $this->setVarByRef("departments", $faculties);
-            
+
             return $this->nextAction('usermanagement');
         }
     }
@@ -1896,11 +1870,20 @@ class apo extends controller {
 
     public function __forwardtoAPO() {
         $id = $this->getParam('id');
+
         $mode = $this->getParam('mode');
         $selected = $this->getParam('selected');
         $document = $this->documents->getDocument($id);
+        $users = $this->users->getUsers();
+        $faculties = $this->faculties->getFaculties();
+        $department = $this->getParam("department");
 
+
+
+        $this->setVarByRef("users", $users);
+        $this->setVarByRef("departments", $faculties);
         $this->setVarByRef("document", $document);
+        $this->setVarByRef("department", $department);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);

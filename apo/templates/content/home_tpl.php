@@ -48,6 +48,7 @@ if (count($documents) > 0) {
         $objIcon->setIcon('pdf');
         $makepdf->link = $objIcon->show();
         $forwardDocument->link  = "<img src=".$this->getResourceUri('images/', 'apo')."forward.png>";
+        
         if ($document['currentuserid'] == "Administrative User") {
             $link = new link($this->uri(array("action" => "showeditdocument", "id" => $document['id'])));
 
@@ -62,7 +63,7 @@ if (count($documents) > 0) {
             $table->addCell($makepdf->show());
             $table->addCell($forwardDocument->show());
             $table->endRow();
-        } else if ($document['owner'] == '' && $document['currentuserid'] != '') {
+        } else if ($document['contact_person'] == '' && $document['currentuserid'] != '') {
             $link = new link($this->uri(array("action" => "reclaimdocumentform", "id" => $document['id'])));
             $link->link = $document['filename'];
 

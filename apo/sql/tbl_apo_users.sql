@@ -6,6 +6,7 @@
                 'name' => array('type' => 'text', 'notnull'=>TRUE),
                 'date_created' => array('type' => 'date', 'notnull'=>TRUE),
                 'userid' => array('type' => 'text','length' => 15, 'notnull'=>TRUE),
+                'department' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                 'role' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                 'email' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
                 'telephone' => array('type' => 'text','length' => 32, 'notnull'=>TRUE),
