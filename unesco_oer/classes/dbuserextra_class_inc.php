@@ -28,10 +28,6 @@ class dbuserextra extends dbtable{
     }
 
 
-    function addUserInfo($title, $surname,$username, $password, $email, $firstname, $sex, $country,$cellnumber) {
-        $this->objAdmin->addUser($userid = "$password", $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = '', $accountType = 'useradmin', $accountstatus = '1');
-    }
-
 //    function getlastInsewtedId(){
 //        $sql = "select LAST(id) from tbl_users";
 //        return $sql;
@@ -71,11 +67,12 @@ class dbuserextra extends dbtable{
 //                    )
 //        );
 //    }
-
-    function addUserInfoExtra($username, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
+       
+      
+   function SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
         $data = array(
-
-            'userid'=>$this->objUser->getUserId($username),
+            'id' => $id,
+            'userid' => $userId,
             'birthday' => $birthdate,
             'address' => $address,
             'city' => $city,
@@ -90,13 +87,6 @@ class dbuserextra extends dbtable{
             'groupmembership' => $GroupMembership
         );
         $this->insert($data);
-    }
-
-
-    function editUserInfo($id,$staffnumber,$surname,$title,$userId,$username,$password,$email,$firstname,$sex,$country,$birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle,$WorkingPhone, $cellnumber, $DescriptionText, $WebsiteLink, $GroupMembership) {
-
-
-        $this->objAdmin->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='useradmin', $accountstatus='1');
     }
 
     function editUserInfoExtra($birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership){
@@ -129,6 +119,12 @@ class dbuserextra extends dbtable{
     function deleteUser($id,$userid){
         $sql="DELETE FROM tbl_users WHERE id='$id' AND userid='$userid'";
         return $this->getArray($sql);
+    }
+
+    function getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex){
+       $sql="SELECT * FROM tbl_users WHERE userid='$userId' AND username='$username'AND title='$title' AND surname='$surname' AND emailaddress='$email' AND  sex='$sex'";
+       $id= $this->getArray($sql);
+       return $id[0]['id'];
     }
 }
 

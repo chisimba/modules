@@ -6,8 +6,8 @@ $options = array('comment'=>'Table to store user extra INFO','collate'=>'utf8_ge
 
 //define fields
 $fields = array(
-		'id' => array('type' => 'text','length' => 32,'not null'),
-                'userid'=>array('type'=>'text','lenghth'=>32,'not null'),
+		'id' => array('type' => 'text','length' => 32),
+                'userid'=>array('type'=>'text','lenghth'=>25),
                 'birthday' =>array('type' =>'text','length'=>255),
                 'address' =>array('type' =>'text','length'=>255),
                 'city' =>array('type' =>'text','length'=>255),

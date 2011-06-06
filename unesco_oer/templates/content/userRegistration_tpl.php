@@ -58,6 +58,7 @@ $form = new form ('register', $this->uri(array('action'=>'saveNewUser'))); //reg
 
 $messages = array();
 
+
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $username = new textinput('register_username');
@@ -383,16 +384,18 @@ $form->addToForm($fieldset->show());
 $button = new button ('submitform', 'Complete Registration');
 $button->setToSubmit();
 
+
 $form->addToForm('<p align="center"><br />'.$button->show().'</p>');
 
 if ($mode == 'addfixup') {
 
     foreach ($problems as $problem)
     {
-        $messages[] = $this->explainProblemsInfo($problem);
+        $messages[] = $this->__explainProblemsInfo($problem);
     }
 
 }
+
 
 if ($mode == 'addfixup' && count($messages) > 0) {
     echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_userdetails_infonotsavedduetoerrors', 'userdetails').'</span>';
