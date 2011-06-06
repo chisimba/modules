@@ -915,34 +915,6 @@ class unesco_oer extends controller {
         return 'userRegistration_tpl.php';
     }
 
-    public function __editUserInfo(){
-        $id=$this->getParam('id'); // pass id to a template
-        $staffnumber=$this->getParam('register_staffnum');
-        $username = $this->getParam('register_username');
-        $password = $this->getParam('register_password');
-        $email = $this->getParam('register_email');
-        $title = $this->getParam('register_title');
-        $userId = $this->getParam('register_confirmpassword');
-        $firstname = $this->getParam('register_firstname');
-        $surname = $this->getParam('register_surname');
-        $cellnumber = $this->getParam('register_cellnum');
-        $birthdate = $this->getParam('Date of birth');
-        $address = $this->getParam('Address');
-        $city = $this->getParam('city');
-        $state = $this->getParam('state');
-        $postaladdress = $this->getParam('postaladdress');
-        $organisation = $this->getParam('organisation');
-        $jobtittle = $this->getParam('jobtittle');
-        $WorkingPhone = $this->getParam('workingphone');
-        $DescriptionText = $this->getParam('descriprion');
-        $WebsiteLink = $this->getParam('websitelink');
-        $GroupMembership = $this->getParam('groupmembership');
-        $sex = $this->getParam('register_sex');
-        $country = $this->getParam('country');
-        $this->objUseExtra->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType='', $accountstatus='1');
-        $this->objUseExtra->editUserInfoExtra($birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
-    }
-
 
     function __deleteUser(){
         $id = $this->getParam('id');
@@ -951,6 +923,9 @@ class unesco_oer extends controller {
         // $this->objUseExtra->deleteUser($id);
         return 'UserListingForm_tpl.php';
     }
+
+
+
 
 
 

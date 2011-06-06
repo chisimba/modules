@@ -116,16 +116,29 @@ class dbuserextra extends dbtable{
 //        return $this->objAdmin->apiUserDelete($id);
 //    }
 
-    function deleteUser($id,$userid){
+    function deleteUserInfo1($id,$userid){
         $sql="DELETE FROM tbl_users WHERE id='$id' AND userid='$userid'";
         return $this->getArray($sql);
+        }
+
+     function deleteUserInfo2($id,$userid){
+         $sql="DELETE FROM tbl_unesco_oer_userextra WHERE id='$id' AND userid='$userid'";
+         return $this->getArray($sql);
+       }
+
+    function deleteUser($id,$userid){
+        $this->deleteUserInfo1($id,$userid);
+        $this->deleteUserInfo2($id,$userid);
     }
+
+
 
     function getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex){
        $sql="SELECT * FROM tbl_users WHERE userid='$userId' AND username='$username'AND title='$title' AND surname='$surname' AND emailaddress='$email' AND  sex='$sex'";
        $id= $this->getArray($sql);
        return $id[0]['id'];
     }
+
 }
 
 ?>
