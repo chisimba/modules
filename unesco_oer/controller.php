@@ -938,20 +938,11 @@ class unesco_oer extends controller {
 
 
     function __deleteUser(){
-        $id = $this->getParam('id');
-        $userid=$this->getParam('userid');
-        $this->objUseExtra->deleteUser($id,$userid);
+        $this->objUserAdmin->apiUserDelete($this->getParam('id'));
+        $this->objUseExtra->deleteUser($this->getParam('id'),$this->getParam('userid'));
         // $this->objUseExtra->deleteUser($id);
         return 'UserListingForm_tpl.php';
     }
-
-
-
-
-
-
-
-
 
 
     function __saveNewUser()
@@ -1047,6 +1038,173 @@ class unesco_oer extends controller {
             //$this->setSession('password', $password);
             $this->setSession('time', $password);
             return $this->nextAction('detailssent');
+        }
+    }
+
+
+    function __editUserDetailsForm(){
+        $id=$this->getParam('id');
+        $userId=$this->getParam('userid');
+        $username=$this->getParam('username');
+        $this->setVar('id', $id);
+        $this->setVar('userid', $userId);
+        $this->setVar('username',$username);
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'editUserDetails_tpl.php';
+    }
+
+
+    function __updateUserDetails(){
+
+        $id = $this->getParam('id');
+        $user = $this->isValidUser($id, 'userdetailsupdate');
+        $this->setVarByRef('user', $user);
+
+        // Fix up proper redirection
+        if (!$_POST) {
+            return $this->nextAction(NULL);
+        }
+        $id=$this->getParam('id');
+        $userId=$this->getParam('userid');
+        $username = $this->getParam('username');
+        $password = $this->getParam('register_password');
+        $repeatpassword = $this->getParam('register_confirmpassword');
+        $title = $this->getParam('register_title');
+        $firstname = $this->getParam('register_firstname');
+        $surname = $this->getParam('register_surname');
+        $email = $this->getParam('register_email');
+        $repeatemail = $this->getParam('register_confirmemail');
+        $sex = $this->getParam('register_sex');
+        $cellnumber = $this->getParam('register_cellnum');
+        //$staffnumber = $this->getParam('register_staffnum');
+        $birthdate = $this->getParam('Date of birth');
+        $address = $this->getParam('Address');
+        $city = $this->getParam('city');
+        $state = $this->getParam('state');
+        $postaladdress = $this->getParam('postaladdress');
+        $organisation = $this->getParam('organisation');
+        $jobtittle = $this->getParam('jobtittle');
+        $WorkingPhone = $this->getParam('workingphone');
+        $DescriptionText = $this->getParam('descriprion');
+        $WebsiteLink = $this->getParam('websitelink');
+        $GroupMembership = $this->getParam('groupmembership');
+        $country = $this->getParam('country');
+        $accountstatus = 1; // Default Status Active
+        $accountType='useradmin';
+        $accountstatus = $this->getParam('accountstatus');
+
+        //$this->objUserAdmin->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType, $accountstatus);
+        //if($this->objUserAdmin->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accountType, $accountstatus)){
+          // $this->objUseExtra->updateUserInfo($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
+        //}
+      $userDetails = array(
+            'password'=>$password,
+            'repeatpassword'=>$repeatpassword,
+            'title'=>$title,
+            'firstname'=>$firstname,
+            'surname'=>$surname,
+            'email'=>$email,
+            'sex'=>$sex,
+            'country'=>$country
+            );
+
+        $this->setSession('userDetails', $userDetails);
+
+        // List Compulsory Fields, Cannot be Null
+        $checkFields = array($firstname, $surname, $email);
+
+        $results = array('id'=>$id);
+
+        // Check Fields
+        if (!$this->checkFields($checkFields)) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVar('problem', 'missingfields');
+            $this->setSession('showconfirmation', FALSE);
+            return 'editUserDetails_tpl.php';
+        }
+
+        // Check Email Address
+        if (!$this->objUrl->isValidFormedEmailAddress($email) && $email != $this->user['emailaddress']) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVar('problem', 'notvalidemail');
+            $this->setSession('showconfirmation', FALSE);
+            return 'editUserDetails_tpl.php';
+        }
+
+        if ($username != $user['username']) {
+            $available = $this->objUserAdmin->usernameAvailable($username);
+
+            if ($available == FALSE) {
+                $this->setVar('mode', 'addfixup');
+                $this->setVar('problem', 'usernametaken');
+                $this->setSession('showconfirmation', FALSE);
+                return 'editUserDetails_tpl.php';
+            }
+        }
+
+        $results['detailschanged']=TRUE;
+
+        // If account is switched from LDAP to useradmin, password is compulsory
+        if ($user['howcreated'] == 'LDAP' && $accountype = 'useradmin') {
+            if (($password == '') || ($repeatpassword=='')) {
+                $this->setVar('mode', 'addfixup');
+                $this->setVar('problem', 'nopasswordforldap');
+                $this->setSession('showconfirmation', FALSE);
+                return 'userdetails_tpl.php';
+            } else if ($password != $repeatpassword) {
+                $this->setVar('mode', 'addfixup');
+                $this->setVar('problem', 'ldappasswordnotmatching');
+                $this->setSession('showconfirmation', FALSE);
+                return 'edituserDetails_tpl.php';
+            }
+        }
+
+        // check for password changed
+        if ($password == '') { // none given, user does not want to change password
+            $password = '';
+            $results['passwordchanged'] = FALSE;
+        } else if ($password != $repeatpassword) { // do not match, user tried to change, but didn't match
+            $password = '';
+            $results['passwordchanged'] = FALSE;
+            $results['passworderror'] = 'passworddonotmatch';
+        } else { // OK - user tried, and passwords match
+            $results['passwordchanged'] = TRUE;
+        }
+
+
+
+        // Process Update
+        $update = $this->objUserAdmin->updateUserDetails($id, $username, $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password, $accounttype, $accountstatus);
+
+        if (count($results) > 0) {
+            $results['change'] = 'details';
+        }
+
+        $this->setSession('showconfirmation', TRUE);
+
+        $this->objUser->updateUserSession();
+        // Process Update Results
+        if ($update) {
+            $this->objUseExtra->updateUserInfo($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
+            return $this->nextAction('userdetails', $results);
+        } else {
+            return $this->nextAction('userdetails', array('id'=>$id, 'change'=>'details', 'error'=>'detailscouldnotbeupdated'));
+        }
+
+    }
+
+
+    function __isValidUser($id, $errorcode='userviewdoesnotexist') {
+        if ($id == '') {
+            return $this->nextAction(NULL, array('error' => 'noidgiven'));
+        }
+
+        $user = $this->objUserAdmin->getUserDetails($id);
+
+        if ($user == FALSE) {
+            return $this->nextAction(NULL, array('error' => $errorcode));
+        } else {
+            return $user;
         }
     }
 

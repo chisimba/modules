@@ -51,10 +51,11 @@ $str = $this->objLanguage->languageText('mod_userregistration_firstneedtoregiste
 
 $str = str_replace('[[SITENAME]]', $this->objConfig->getSitename(), $str);
 
-echo '<p>'.$str.'<br />';
-echo $this->objLanguage->languageText('mod_userregistration_pleaseenterdetails', 'userregistration', 'Please enter your details, email address and desired user name in the form below.').'</p>';
+//echo '<p>'.$str.'<br />';
+//echo $this->objLanguage->languageText('mod_userregistration_pleaseenterdetails', 'userregistration', 'Please enter your details, email address and desired user name in the form below.').'</p>';
 
 $form = new form ('register', $this->uri(array('action'=>'saveNewUser'))); //register
+//$form = new form ('register'); //register
 
 $messages = array();
 
@@ -193,16 +194,32 @@ $table->endRow();
 //$table->addCell($cellnum->show());
 //$table->endRow();
 
+//$editor = $this->newObject('htmlarea', 'htmlelements');
+//$editor->name = 'description';
+//$editor->height = '150px';
+//$editor->width = '70%';
+//$editor->setBasicToolBar();
+//$editor->setContent($product['description']);
+//$table->startRow();
+//$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+//$table->addCell($editor->show());
+//$table->endRow();
+
+
+
+
+
+
 
 $textinput = new textinput('register_surname');
-$textinput->size = 20;
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('Last Name');
 $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('register_cellnum');
-$textinput->size = 20;
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('Mobile Phone');
 $table->addCell($textinput->show());
@@ -212,21 +229,34 @@ $table->endRow();
 
 
 $textinput = new textinput('Date of birth');
-$textinput->size = 20;
+$textinput->size = 62;
 $table->startRow();
 $table->addCell('Birth date');
 $table->addCell($textinput->show());
 $table->endRow();
 
-$textinput = new textinput('Address');
-$textinput->size = 20;
+//$textinput = new textinput('Address');
+//$textinput->size = 20;
+//$table->startRow();
+//$table->addCell('Address');
+//$table->addCell($textinput->show());
+//$table->endRow();
+
+$editor = $this->newObject('htmlarea', 'htmlelements');
+$editor->name = 'Address';
+$editor->height = '150px';
+$editor->width = '70%';
+$editor->setBasicToolBar();
+$editor->setContent();
 $table->startRow();
 $table->addCell('Address');
-$table->addCell($textinput->show());
+$table->addCell($editor->show());
 $table->endRow();
 
+
+
 $textinput = new textinput('city');
-$textinput->size = 20;
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('City');
 $table->addCell($textinput->show());
@@ -234,56 +264,96 @@ $table->endRow();
 
 
 $textinput = new textinput('state');
-$textinput->size = 20;
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('State');
 $table->addCell($textinput->show());
 $table->endRow();
 
+
+
+
+
+
+
+
 $textinput = new textinput('postaladdress');
-$textinput->size = 20;
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('Postal code');
 $table->addCell($textinput->show());
 $table->endRow();
 
-$textinput = new textinput('organisation');
-$textinput->size = 20;
+//$textinput = new textinput('organisation');
+//$textinput->size = 20;
+//$table->startRow();
+//$table->addCell('Organisation/Company');
+//$table->addCell($textinput->show());
+//$table->endRow();
+
+
+$editor = $this->newObject('htmlarea', 'htmlelements');
+$editor->name = 'organisation';
+$editor->height = '150px';
+$editor->width = '70%';
+$editor->setBasicToolBar();
+$editor->setContent();
 $table->startRow();
 $table->addCell('Organisation/Company');
-$table->addCell($textinput->show());
+$table->addCell($editor->show());
 $table->endRow();
 
+
+
 $textinput = new textinput('jobtittle');
-$textinput->size = 20;
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('Job Tittle');
 $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('typeofoccapation');
-$textinput->size = 20;
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('Type Of Occupation');
 $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('workingphone');
-$textinput->size = 20;
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('Working Phone');
 $table->addCell($textinput->show());
 $table->endRow();
+//
+//$textinput = new textinput('descriprion');
+//$textinput->size = 20;
+//$table->startRow();
+//$table->addCell('Description');
+//$table->addCell($textinput->show());
+//$table->endRow();
 
-$textinput = new textinput('descriprion');
-$textinput->size = 20;
+
+
+$editor = $this->newObject('htmlarea', 'htmlelements');
+$editor->name = 'description';
+$editor->height = '150px';
+$editor->width = '70%';
+$editor->setBasicToolBar();
+$editor->setContent();
 $table->startRow();
-$table->addCell('Description');
-$table->addCell($textinput->show());
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+$table->addCell($editor->show());
 $table->endRow();
 
+
+
+
+
+
+
 $textinput = new textinput('websitelink');
-$textinput->size = 20;
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('Website Link');
 $table->addCell($textinput->show());
@@ -381,12 +451,20 @@ $fieldset->contents = stripslashes($this->objLanguage->languageText('mod_securit
 
 $form->addToForm($fieldset->show());
 
-$button = new button ('submitform', 'Complete Registration');
+$Cancelbutton = new button ('submitform', 'Cancel');
+$Cancelbutton->setToSubmit();
+$CancelLink = new link($this->uri(array('action' => "userListingForm",)));
+$CancelLink->link =$Cancelbutton->show();
+
+$button = new button ('submitform', 'Save');
 $button->setToSubmit();
+//$SaveLink = new link($this->uri(array('action' => "saveNewUser",)));
+//$SaveLink->link =$button->show();
 
 
-$form->addToForm('<p align="center"><br />'.$button->show().'</p>');
 
+$form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
+//$form->addToForm('<p align="right">'.$button.$CancelLink->show().'</p>');
 if ($mode == 'addfixup') {
 
     foreach ($problems as $problem)

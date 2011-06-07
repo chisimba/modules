@@ -89,14 +89,16 @@ class dbuserextra extends dbtable{
         $this->insert($data);
     }
 
-    function editUserInfoExtra($birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership){
+    function updateUserInfo($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
         $data = array(
+            'id' => $id,
+            'userid' => $userId,
             'birthday' => $birthdate,
             'address' => $address,
             'city' => $city,
             'state' => $state,
             'postaladdress' => $postaladdress,
-            'organisation/company' => $organisation,
+            'organisation' => $organisation,
             'jobtittle' => $jobtittle,
             'typeoccapation' => $TypeOccapation,
             'workingphone' => $WorkingPhone,
@@ -105,31 +107,20 @@ class dbuserextra extends dbtable{
             'groupmembership' => $GroupMembership
         );
         $this->update($data);
-        }
+    }
+
 
     function getAllUser(){
          $sql = "select * from tbl_users";
          return $this->getArray($sql);
     }
 
-//    function deleteUser($id){
-//        return $this->objAdmin->apiUserDelete($id);
-//    }
 
-    function deleteUserInfo1($id,$userid){
-        $sql="DELETE FROM tbl_users WHERE id='$id' AND userid='$userid'";
-        return $this->getArray($sql);
-        }
-
-     function deleteUserInfo2($id,$userid){
+     function deleteUser($id,$userid){
          $sql="DELETE FROM tbl_unesco_oer_userextra WHERE id='$id' AND userid='$userid'";
          return $this->getArray($sql);
        }
 
-    function deleteUser($id,$userid){
-        $this->deleteUserInfo1($id,$userid);
-        $this->deleteUserInfo2($id,$userid);
-    }
 
 
 

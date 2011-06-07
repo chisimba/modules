@@ -56,14 +56,15 @@ if (count($users) > 0) {
         $myTable->addCell($user['username']);
         $button = new button('Edit Button', "Edit User");
         $button->setToSubmit();
-        $editLink =new link($this->uri(array('action' => "userRegistrationForm",'id' => $user['id'])));
+        $editLink =new link($this->uri(array('action' => "editUserDetailsForm",'id' => $user['id'],'userid'=>$user['userid'],'username'=>$user['username'])));
         $editLink->link = $button->show();
         $myTable->addCell($editLink->show());
         $button = new button('Delete', "delete User");
         $button->setToSubmit();
         $DeleteLink =new link($this->uri(array('action' => "deleteUser",'id' => $user['id'],'userid'=>$user['userid'])));
-        $DeleteLink->link = $button->show();
-        $myTable->addCell($DeleteLink->show());
+        $href=$DeleteLink->href;
+        $finalDeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
+        $myTable->addCell($finalDeleteLink);
         $myTable->endRow();
     }
 }
@@ -72,3 +73,24 @@ echo $myTable->show();
 
 
 ?>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=deleteuser]").click(function(){
+
+        var r=confirm( "Are you sure you want to delete this user?");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+
+
+);
+
+}
+
+
+);
+</script>
