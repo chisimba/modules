@@ -235,34 +235,6 @@ class product extends object
 
     ////////////////   METHODS   ////////////////
 
-    //TODO implement getters and setters for every property that needs them
-
-    //TODO remove this method when it is no longer needed.
-
-    /**This is a temporary method used for getting and setting properties
-     *
-     * @param <type> $method
-     * @param <type> $arguments
-     * @return <type>
-     */
-    function __call($method, $arguments)
-    {
-        $prefix = strtolower(substr($method, 0, 3));
-        $property = "_".strtolower(substr($method, 3));
-
-        if (empty($prefix) || empty($property)) {
-            return;
-        }
-
-        if ($prefix == "get" && isset($this->$property)) {
-            return $this->$property;
-        }
-
-        if ($prefix == "set") {
-            $this->$property = $arguments[0];
-        }
-    }
-
     /**This function stores product data in the data base whether the product
      * already exists or not.
      */
@@ -385,7 +357,6 @@ class product extends object
 
         $this->dummyValue = $themesSelected;
 //        $this->setRelation($relation, $relationType);
-//        $this->setThemes($themeIDarray);
 //        $this->setKeyWords($keyWords);
         if ($this->validateMetaData()){
             $this->saveProduct();
@@ -395,27 +366,6 @@ class product extends object
         {
             return FALSE;
         }
-//        $changed = FALSE;
-//        $sql = 'DESCRIBE tbl_unesco_oer_products';
-//        $fields = $this->_objDbProducts->getArray($sql);
-
-        //TODO Temporary assignment loop
-//        foreach ($fields as $field) {
-//            $parameter = $this->getParam($field['field']);
-//            if ($parameter){
-//                $property = '_'.preg_replace("#_#i", "", $field['field']);
-//                $this->$property = $parameter;
-//                $changed = TRUE;
-//            }
-//        }
-        
-        
-
-
-
-
-        //TODO assign all data memebers like this
-//        $this->_unescocontacts = $this->getParam('contacts');
     }
 
     /**This function validates the input on product meta data input page
@@ -456,6 +406,7 @@ class product extends object
         return $valid;
     }
 
+    //TODO add language elements where required
     /**This function returns a display for entering product metadata
      *
      * @return string
@@ -502,7 +453,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_title,
+                                                    $this->getTitle(),
                                                     $table
                                                     );
 
@@ -516,7 +467,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_alternativetitle,
+                                                    $this->getAlternativeTitle(),
                                                     $table
                                                     );
 
@@ -555,7 +506,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_creator,
+                                                    $this->getAuthors(),
                                                     $table
                                                     );
 
@@ -567,7 +518,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_othercontributors,
+                                                    $this->getOtherContributers(),
                                                     $table
                                                     );
 
@@ -580,7 +531,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_publisher,
+                                                    $this->getPublisher(),
                                                     $table
                                                     );
         
@@ -600,7 +551,6 @@ class product extends object
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
-        //TODO Implement themes fully!
         //field for the theme
         $tableTheme = $this->newObject('htmltable', 'htmlelements');
         $tableTheme->cssClass = "moduleHeader";
@@ -624,21 +574,6 @@ class product extends object
         $themefieldset->setLegend('Themes'.'<font color="#FF2222">* '. $this->validationArray['theme']['message']. '</font>');
         $themefieldset->addContent($tableTheme->show());
 
-//        $fieldName = 'theme';
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer');
-//        $title .= ($this->_unescothemes ? '<font color="#000000">*</font>' : '<font color="#FF2222">*</font>');
-//        $productThemes = $this->objDbProductThemes->getProductThemes();
-//        $this->_objAddDataUtil->addDropDownToTable(
-//                                                    $title,
-//                                                    4,
-//                                                    $fieldName,
-//                                                    $productThemes,
-//                                                    $product[$fieldName],
-//                                                    'description',
-//                                                    $table,
-//                                                    'id'
-//                                                    );
-
          //field for the language
         $fieldName = 'language';
         $title = $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer');
@@ -649,7 +584,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     $productLanguages,
-                                                    $this->_language,
+                                                    $this->getLanguageID(),
                                                     'code',
                                                     $table,
                                                     'id'
@@ -662,7 +597,7 @@ class product extends object
         $editor->height = '150px';
         $editor->width = '70%';
         $editor->setBasicToolBar();
-        $editor->setContent($this->_description);
+        $editor->setContent($this->getDescription());
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
         $table->endRow();
@@ -677,7 +612,7 @@ class product extends object
         $editor->height = '150px';
         $editor->width = '70%';
         $editor->setBasicToolBar();
-        $editor->setContent($this->_abstract);
+        $editor->setContent($this->getAbstract());
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description_abstract', 'unesco_oer'));
         $table->endRow();
@@ -708,7 +643,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     $resourceTypes,
-                                                    $this->_resourcetype,
+                                                    $this->getContentType(),
                                                     'description',
                                                     $table,
                                                     'id'
@@ -739,7 +674,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_rights,
+                                                    $this->getRights(),
                                                     $table
                                                     );
 
@@ -751,7 +686,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_rightsholder,
+                                                    $this->getRightsHolder(),
                                                     $table
                                                     );
         //field for provenance
@@ -762,7 +697,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_provenance,
+                                                    $this->getProvenance(),
                                                     $table
                                                     );
 
@@ -790,10 +725,11 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_unescocontacts,
+                                                    $this->getContacts(),
                                                     $table
                                                     );
 
+        //TODO Implement relation types properly
         //field for relation types
         $fieldName = 'relation_type';
         $title = $this->objLanguage->languageText('mod_unesco_oer_relation_type', 'unesco_oer');
@@ -809,7 +745,7 @@ class product extends object
                                                     'id'
                                                     );
 
-        //field for relation types
+        //field for relations
         $fieldName = 'relation';
         $title = $this->objLanguage->languageText('mod_unesco_oer_relation', 'unesco_oer');
         $products = $this->_objDbProducts->getAll();
@@ -832,7 +768,7 @@ class product extends object
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->_coverage,
+                                                    $this->getCoverage(),
                                                     $table
                                                     );
 
@@ -992,7 +928,7 @@ class product extends object
         }
 
         foreach ($themeIDarray as $themeID) {
-            if ($themID != NULL){
+            if ($themeID != NULL){
                 $this->objDbProductThemes->addProductThemeJxn($this->_identifier, $themeID);
             }
         }
@@ -1003,12 +939,12 @@ class product extends object
     {
         $this->_unescothemes = $themeIDarray;
 
-        $flag  = TRUE;
+        $flag  = FALSE;
         foreach ($themeIDarray as $theme)
         {
-            if (empty($theme))
+            if (!empty($theme))
             {
-                $flag = FALSE;
+                $flag = TRUE;
             }
         }
         if ($flag)
