@@ -100,7 +100,7 @@ class product extends object
      *
      * @var <type> 
      */
-    private $_othercontributers;
+    private $_othercontributors;
 
     //////////   non-categorized parameters   //////////
 
@@ -206,6 +206,10 @@ class product extends object
      */
     private $_objAddDataUtil;
 
+    //////////   Validation objects   //////////
+    var $validationArray;
+
+
     //////////   Constructor   //////////
 
 //    public function __construct()
@@ -226,6 +230,7 @@ class product extends object
         $this->objDbProductLanguages = $this->getObject('dbproductlanguages');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objDbRelationTypes = $this->getObject('dbrelationtype');
+        $this->validationArray = array();
     }
 
     ////////////////   METHODS   ////////////////
@@ -265,20 +270,44 @@ class product extends object
     {
         $tempData = array();
 
-        $sql = 'DESCRIBE tbl_unesco_oer_products';
-        $fields = $this->_objDbProducts->getArray($sql);
+//        $sql = 'DESCRIBE tbl_unesco_oer_products';
+//        $fields = $this->_objDbProducts->getArray($sql);
+//
+//        foreach ($fields as $field)
+//        {
+//            $property = '_'.preg_replace("#_#i", "", $field['field']);
+//            $value = $this->$property;
+//            echo $property.' : '.$value.'<br>';
+//            if (isset($value))
+//            {
+//                $tempData[$field['field']] = $value;
+//            }
+//        }
 
-        foreach ($fields as $field)
-        {
-            $property = '_'.preg_replace("#_#i", "", $field['field']);
-            $value = $this->$property;
-            echo $property.' : '.$value.'<br>';
-            if (isset($value))
-            {
-                $tempData[$field['field']] = $value;
-            }
-        }
-
+        $tempData['title'] = $this->getTitle();
+        $tempData['alternative_title'] = $this->getAlternativeTitle();
+        $tempData['resource_type'] = $this->getContentType();
+        $tempData['language'] = $this->getLanguageID();
+        $tempData['description'] = $this->getDescription();
+        $tempData['abstract'] = $this->getAbstract();
+        //TODO $tempData['table of contents']
+        $tempData['creator'] = $this->getAuthors();
+        $tempData['contacts'] = $this->getContacts();
+        $tempData['publisher'] = $this->getPublisher();
+        //NOTE: themes are saved after an ID has been created
+        //TODO $tempData['keywords']
+        //TODO $tempData['related_language']
+        $tempData['other_contributors'] = $this->getOtherContributers();
+        //TODO format ??
+        $tempData['coverage'] = $this->getCoverage();
+        $tempData['rights'] = $this->getRights();
+        $tempData['rights_holder'] = $this->getRightsHolder();
+        $tempData['provenance'] = $this->getProvenance();
+        //TODO $tempData['relation']
+        //TODO $tempData['relation_type']
+        $tempData['status'] = $this->getStatus();
+        
+        
         if ($this->getIdentifier())
         {
             $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData);
@@ -286,17 +315,23 @@ class product extends object
         }
         else
         {
-            $tempData['date'] = $this->_objDbProducts->now();
+            $tempData['date'] = $this->getDate();
             $this->_objDbProducts->addProduct($tempData);
             $this->_identifier = $this->_objDbProducts->getLastInsertId();
             //$this->dummyValue = "With Out ID: ".$tempData['title'];
         }
 
-        if ($this->objThumbUploader->results)
+
+        $this->saveThemes($this->getThemes());
+
+        $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
+        $results = $this->uploadThumbNail($path);
+
+        if ($results)
         {
             $this->_objDbProducts->updateProduct(
                                             $this->getIdentifier(),
-                                            array( 'thumbnail' => 'usrfiles/'.$this->objThumbUploader->results['path'])
+                                            array( 'thumbnail' => 'usrfiles/'.$results['path'])
                                         );
         }
     }
@@ -323,31 +358,64 @@ class product extends object
      */
     function handleUpload()
     {
-        $changed = FALSE;
-        $sql = 'DESCRIBE tbl_unesco_oer_products';
-        $fields = $this->_objDbProducts->getArray($sql);
+        $this->setTitle($this->getParam('title'));
+        $this->setAlternativeTitle($this->getParam('alternative_title'));
+        $this->setContentType($this->getParam('resource_type'));
+        $this->setLanguage($this->getParam('language'));
+        $this->setAuthors($this->getParam('creator'));
+        $this->setPublisher($this->getParam('publisher'));
+        $this->setDescription($this->getParam('description'));
+        $this->setAbstract($this->getParam('abstract'));
+        $this->setOtherContributers($this->getParam('other_contributors'));
+        $this->setContacts($this->getParam('contacts'));
+        $this->setStatus($this->getParam('status'));
+        $this->setRights($this->getParam('rights'));
+        $this->setRightsHolder($this->getParam('rights_holder'));
+        $this->setProvenance($this->getParam('provenance'));;
+        $this->setCoverage($this->getParam('coverage'));
+        $this->setStatus($this->getParam('status'));
 
-        foreach ($fields as $field) {
-            $parameter = $this->getParam($field['field']);
-            if ($parameter){
-                $property = '_'.preg_replace("#_#i", "", $field['field']);
-                $this->$property = $parameter;
-                $changed = TRUE;
-            }
+        $themesSelected = array();
+        $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
+        foreach ($umbrellaThemes as $umbrellaTheme) {
+            $themesSelected[$umbrellaTheme['id']] = $this->getParam($umbrellaTheme['id']);
         }
 
-        $results = FALSE;
-        $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
-        try {
-            $results = $this->objThumbUploader->uploadThumbnail($path);
-        } catch (customException $e) {
-            echo customException::cleanUp();
-            exit();
-        }
+        $this->setThemes($themesSelected);
 
-        if ($changed || $results){
+        $this->dummyValue = $themesSelected;
+//        $this->setRelation($relation, $relationType);
+//        $this->setThemes($themeIDarray);
+//        $this->setKeyWords($keyWords);
+        if ($this->validateMetaData()){
             $this->saveProduct();
+            return TRUE;
         }
+        else
+        {
+            return FALSE;
+        }
+//        $changed = FALSE;
+//        $sql = 'DESCRIBE tbl_unesco_oer_products';
+//        $fields = $this->_objDbProducts->getArray($sql);
+
+        //TODO Temporary assignment loop
+//        foreach ($fields as $field) {
+//            $parameter = $this->getParam($field['field']);
+//            if ($parameter){
+//                $property = '_'.preg_replace("#_#i", "", $field['field']);
+//                $this->$property = $parameter;
+//                $changed = TRUE;
+//            }
+//        }
+        
+        
+
+
+
+
+        //TODO assign all data memebers like this
+//        $this->_unescocontacts = $this->getParam('contacts');
     }
 
     /**This function validates the input on product meta data input page
@@ -357,16 +425,33 @@ class product extends object
     {
         $valid = TRUE;
 
-        $sql = 'DESCRIBE tbl_unesco_oer_products';
-        $fields = $this->_objDbProducts->getArray($sql);
+//        $sql = 'DESCRIBE tbl_unesco_oer_products';
+//        $fields = $this->_objDbProducts->getArray($sql);
+//
+//        foreach ($fields as $field) {
+//            $property = '_'.preg_replace("#_#i", "", $field['field']);
+//            if (empty ($this->$property))
+//            {
+////                $valid = FALSE;
+//            }
+//        }
 
-        foreach ($fields as $field) {
-            $property = '_'.preg_replace("#_#i", "", $field['field']);
-            if (empty ($this->$property))
+        foreach ($this->validationArray as $validation) {
+            if (!$validation['valid'])
             {
-                $valid = false;
+                $valid = FALSE;
             }
         }
+
+        $fileInfoArray = array();
+
+        if (!$this->objThumbUploader->isFileValid($fileInfoArray))
+            {
+                $valid = FALSE;
+                $this->addValidationMessage('thumbnail', $valid, 'A thumbnail is required');
+            }
+
+//            $this->dummyValue = $fileInfoArray;
 
         return $valid;
     }
@@ -393,19 +478,30 @@ class product extends object
                 languageText('mod_unesco_oer_product_upload_heading', 'unesco_oer');
         $header->type = 1;
         echo $header->show();
+        echo '<font face="Arial" color="#FF2222">(*) indicates fields that are required. </font>';
+
+        /*                                              */
+        /*      Identification fields, eg. title        */
+        /*                                              */
 
         // setup table and table headings with input fields
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
+
+//        $table->startRow();
+
         //field for the title
         $fieldName = 'title';
         $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
+        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+//        $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
+//        $this->_objAddDataUtil->addTextInputToRow($fieldName, 0, $this->_title, $table);
         $this->_objAddDataUtil->addTextInputToTable(
                                                     $title,
                                                     4,
                                                     $fieldName,
-                                                    0,
+                                                    '90%',
                                                     $this->_title,
                                                     $table
                                                     );
@@ -413,25 +509,52 @@ class product extends object
         //field for alternative title
         $fieldName = 'alternative_title';
         $title = $this->objLanguage->languageText('mod_unesco_oer_title_alternative', 'unesco_oer');
+//        $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
+//        $this->_objAddDataUtil->addTextInputToRow($fieldName, 0, $this->_alternativetitle, $table);
         $this->_objAddDataUtil->addTextInputToTable(
                                                     $title,
                                                     4,
                                                     $fieldName,
-                                                    0,
+                                                    '90%',
                                                     $this->_alternativetitle,
                                                     $table
                                                     );
 
-        //TODO Date published ??
+        //field for the thumbnail
+        $table->startRow();
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . '<font color="#FF2222">* '. $this->validationArray['thumbnail']['message']. '</font>');
+        $table->endRow();
+        $table->startRow();
+        $table->addCell($this->objThumbUploader->show());
+        $table->endRow();
+
+//        $table->endRow();
+        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset->setLegend('Identity Information');
+        $fieldset->addContent($table->show());
+        $output .= $fieldset->show();
+        /*                 end of                       */
+        /*      Identification fields, eg. title        */
+        /*                                              */
+
+        /*                                              */
+        /*      Creator fields, eg. Authors             */
+        /*                                              */
+
+        // setup table and table headings with input fields
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cssClass = "moduleHeader";
         
         //Field for Authors
         $fieldName = 'creator';
         $title = $this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer');
+//        $title .= ($this->_creator ? '<font color="#000000">*</font>' : '<font color="#FF2222">*</font>');
+        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
         $this->_objAddDataUtil->addTextInputToTable(
                                                     $title,
                                                     4,
                                                     $fieldName,
-                                                    0,
+                                                    '90%',
                                                     $this->_creator,
                                                     $table
                                                     );
@@ -443,55 +566,83 @@ class product extends object
                                                     $title,
                                                     4,
                                                     $fieldName,
-                                                    0,
-                                                    $this->_othercontributers,
+                                                    '90%',
+                                                    $this->_othercontributors,
                                                     $table
                                                     );
 
         //field for publisher
         $fieldName = 'publisher';
         $title = $this->objLanguage->languageText('mod_unesco_oer_publisher', 'unesco_oer');
+        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
         $this->_objAddDataUtil->addTextInputToTable(
                                                     $title,
                                                     4,
                                                     $fieldName,
-                                                    0,
+                                                    '90%',
                                                     $this->_publisher,
                                                     $table
                                                     );
-
         
-        //Field for Contacts
-        $fieldName = 'contacts';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_contacts', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    0,
-                                                    $this->_unescocontacts,
-                                                    $table
-                                                    );
+        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset->setLegend('Creators Information');
+        $fieldset->addContent($table->show());
+        $output .= $fieldset->show();
+        /*               end of                         */
+        /*      Creator fields, eg. Authors             */
+        /*                                              */
+
+        /*                                              */
+        /*   Description fields, eg. Themes             */
+        /*                                              */
+
+        // setup table and table headings with input fields
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cssClass = "moduleHeader";
 
         //TODO Implement themes fully!
         //field for the theme
-        $fieldName = 'theme';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer');
-        $productThemes = $this->objDbProductThemes->getProductThemes();
-        $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $productThemes,
-                                                    $product[$fieldName],
-                                                    'description',
-                                                    $table,
-                                                    'id'
-                                                    );
+        $tableTheme = $this->newObject('htmltable', 'htmlelements');
+        $tableTheme->cssClass = "moduleHeader";
+
+        $tableTheme->startRow();
+        $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
+        foreach ($umbrellaThemes as $umbrellaTheme) {
+            $this->_objAddDataUtil->addTitleToRow($umbrellaTheme['theme'], 4 , $tableTheme);
+        }
+        $tableTheme->endRow();
+
+        $tableTheme->startRow();
+        $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
+        foreach ($umbrellaThemes as $umbrellaTheme) {
+            $themes = $this->objDbProductThemes->getThemesByUmbrellaID($umbrellaTheme['id']);
+            $this->_objAddDataUtil->addDropDownToRow($umbrellaTheme['id'], $themes, $this->_unescothemes[$umbrellaTheme['id']], 'theme', $tableTheme, 'id');
+        }
+        $tableTheme->endRow();
+
+        $themefieldset = $this->newObject('fieldset','htmlelements');
+        $themefieldset->setLegend('Themes'.'<font color="#FF2222">* '. $this->validationArray['theme']['message']. '</font>');
+        $themefieldset->addContent($tableTheme->show());
+
+//        $fieldName = 'theme';
+//        $title = $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer');
+//        $title .= ($this->_unescothemes ? '<font color="#000000">*</font>' : '<font color="#FF2222">*</font>');
+//        $productThemes = $this->objDbProductThemes->getProductThemes();
+//        $this->_objAddDataUtil->addDropDownToTable(
+//                                                    $title,
+//                                                    4,
+//                                                    $fieldName,
+//                                                    $productThemes,
+//                                                    $product[$fieldName],
+//                                                    'description',
+//                                                    $table,
+//                                                    'id'
+//                                                    );
 
          //field for the language
         $fieldName = 'language';
         $title = $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer');
+        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
         $productLanguages = $this->objDbProductLanguages->getProductLanguages();
         $this->_objAddDataUtil->addDropDownToTable(
                                                     $title,
@@ -504,7 +655,144 @@ class product extends object
                                                     'id'
                                                     );
 
-        //TODO Related Languages ??
+         //field for the description
+        $fieldName = 'description';
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = $fieldName;
+        $editor->height = '150px';
+        $editor->width = '70%';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_description);
+        $table->startRow();
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->endRow();
+        $table->startRow();
+        $table->addCell($editor->show());
+        $table->endRow();
+
+        //field description abstract
+        $fieldName = 'abstract';
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = $fieldName;
+        $editor->height = '150px';
+        $editor->width = '70%';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_abstract);
+        $table->startRow();
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description_abstract', 'unesco_oer'));
+        $table->endRow();
+        $table->startRow();
+        $table->addCell($editor->show());
+        $table->endRow();
+
+        //TODO Implement keywords fully
+        //field for keywords
+        $fieldName = 'keywords';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_keywords', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    '90%',
+                                                    $this->_keywords,
+                                                    $table
+                                                    );
+
+        //field for resource type
+        $fieldName = 'resource_type';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_resource', 'unesco_oer');
+        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        $resourceTypes = $this->objDbResourceTypes->getResourceTypes();
+        $this->_objAddDataUtil->addDropDownToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    $resourceTypes,
+                                                    $this->_resourcetype,
+                                                    'description',
+                                                    $table,
+                                                    'id'
+                                                    );
+
+        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset->setLegend('Description Information');
+        $fieldset->addContent($themefieldset->show());
+        $fieldset->addContent($table->show());
+        $output .= $fieldset->show();
+        /*               end of                         */
+        /*   Description fields, eg. Themes             */
+        /*                                              */
+
+        /*                                              */
+        /*         Legal fields, eg. rights             */
+        /*                                              */
+
+        // setup table and table headings with input fields
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cssClass = "moduleHeader";
+
+        //field for rights
+        $fieldName = 'rights';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_rights', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    '90%',
+                                                    $this->_rights,
+                                                    $table
+                                                    );
+
+        //field for rights holder
+        $fieldName = 'rights_holder';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_rights_holder', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    '90%',
+                                                    $this->_rightsholder,
+                                                    $table
+                                                    );
+        //field for provenance
+        $fieldName = 'provenance';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_provenance', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    '90%',
+                                                    $this->_provenance,
+                                                    $table
+                                                    );
+
+        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset->setLegend('Legal Information');
+        $fieldset->addContent($table->show());
+        $output .= $fieldset->show();
+        /*               end of                         */
+        /*         Legal fields, eg. rights             */
+        /*                                              */
+
+        /*                                              */
+        /*         Misc. fields, eg. rights             */
+        /*                                              */
+
+        // setup table and table headings with input fields
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cssClass = "moduleHeader";
+
+        //Field for Contacts
+        $fieldName = 'contacts';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_contacts', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    '90%',
+                                                    $this->_unescocontacts,
+                                                    $table
+                                                    );
 
         //field for relation types
         $fieldName = 'relation_type';
@@ -543,84 +831,11 @@ class product extends object
                                                     $title,
                                                     4,
                                                     $fieldName,
-                                                    0,
+                                                    '90%',
                                                     $this->_coverage,
                                                     $table
                                                     );
 
-        //field for rights
-        $fieldName = 'rights';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_rights', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    0,
-                                                    $this->_rights,
-                                                    $table
-                                                    );
-
-        //field for rights holder
-        $fieldName = 'rights_holder';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_rights_holder', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    0,
-                                                    $this->_rightsholder,
-                                                    $table
-                                                    );
-        //field for provenance
-        $fieldName = 'provenance';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_provenance', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    0,
-                                                    $this->_provenance,
-                                                    $table
-                                                    );
-
-        //field for the description
-        $fieldName = 'description';
-        $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = $fieldName;
-        $editor->height = '150px';
-        $editor->width = '70%';
-        $editor->setBasicToolBar();
-        $editor->setContent($this->_description);
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($editor->show());
-        $table->endRow();
-
-        //field description abstract
-        $fieldName = 'abstract';
-        $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = $fieldName;
-        $editor->height = '150px';
-        $editor->width = '70%';
-        $editor->setBasicToolBar();
-        $editor->setContent($this->_abstract);
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description_abstract', 'unesco_oer'));
-        $table->addCell($editor->show());
-        $table->endRow();
-
-        //TODO Implement keywords fully
-        //field for keywords
-        $fieldName = 'keywords';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_keywords', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    0,
-                                                    $this->_keywords,
-                                                    $table
-                                                    );
         //TODO Implement status fully
         //Field for status
         $fieldName = 'status';
@@ -629,33 +844,18 @@ class product extends object
                                                     $title,
                                                     4,
                                                     $fieldName,
-                                                    0,
-                                                    $this->_keywords,
+                                                    '90%',
+                                                    $this->_status,
                                                     $table
                                                     );
 
-        //field for resource type
-        $fieldName = 'resource_type';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_resource', 'unesco_oer');
-        $resourceTypes = $this->objDbResourceTypes->getResourceTypes();
-        $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $resourceTypes,
-                                                    $this->_resourcetype,
-                                                    'description',
-                                                    $table,
-                                                    'id'
-                                                    );
-
-        //field for the thumbnail
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
-        $table->addCell($this->objThumbUploader->show());
-        $table->endRow();
-
-        //TODO attach file ??
+        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset->setLegend('Misc. Information');
+        $fieldset->addContent($table->show());
+        $output .= $fieldset->show();
+        /*               end of                         */
+        /*         Misc. fields, eg. rights             */
+        /*                                              */
 
         // setup button for submission
         $buttonSubmit = new button('submit', $this->objLanguage->
@@ -674,11 +874,346 @@ class product extends object
                     'prevAction' => $prevAction));
         $form_data = new form('add_products_ui', $uri);
         $form_data->extra = 'enctype="multipart/form-data"';
-        $form_data->addToForm($table->show() . '<br />' . $buttonSubmit->show() . $buttonCancel->show());
-        $output = $form_data->show();
+        $form_data->addToForm($output .'<br />' . $buttonSubmit->show() . $buttonCancel->show());
 
-        return $output;
+        return $form_data->show();
+
+        //TODO Date published ??
+        //TODO Related Languages ??
     }
+
+    ////////////////   sETTERS   ////////////////
+
+    private function addValidationMessage($field, $valid, $message)
+    {
+        $this->validationArray[$field]['valid'] = $valid;
+        $this->validationArray[$field]['message'] = $message;
+    }
+
+    function setTitle($title)
+    {
+        $this->_title = $title;
+        if (empty($title))
+        {
+            $this->addValidationMessage('title', FALSE, 'Product must have a Title');
+        }
+        else
+        {
+            $this->addValidationMessage('title', TRUE, NULL);
+        }
+
+    }
+
+    function setAlternativeTitle($alternativeTitle)
+    {
+        $this->_alternativetitle = $alternativeTitle;
+    }
+
+    function setContentType($resourceType)
+    {
+        $this->_resourcetype = $resourceType;
+        if (empty($resourceType))
+        {
+            $this->addValidationMessage('resource_type', FALSE, 'Product must have content');
+        }
+        else
+        {
+            $this->addValidationMessage('resource_type', TRUE, NULL);
+        }
+    }
+
+    private function setDate($date){
+        $this->_date = $date;
+    }
+
+    function setLanguage($language)
+    {
+        $this->_language = $language;
+        if (empty($language))
+        {
+            $this->addValidationMessage('language', FALSE, 'Product must have a language');
+        }
+        else
+        {
+            $this->addValidationMessage('language', TRUE, NULL);
+        }
+    }
+
+    function setAuthors($creator)
+    {
+        $this->_creator = $creator;
+        if (empty($creator))
+        {
+            $this->addValidationMessage('creator', FALSE, 'Product must have an Author');
+        }
+        else
+        {
+            $this->addValidationMessage('creator', TRUE, NULL);
+        }
+    }
+
+    function setPublisher($publisher)
+    {
+        $this->_publisher = $publisher;
+        if (empty($publisher))
+        {
+            $this->addValidationMessage('publisher', FALSE, 'Product must have an Publisher');
+        }
+        else
+        {
+            $this->addValidationMessage('publisher', TRUE, NULL);
+        }
+    }
+
+    function setDescription($description)
+    {
+        $this->_description = $description;
+    }
+
+    function setAbstract($abstract)
+    {
+        $this->_abstract = $abstract;
+    }
+
+    function setOtherContributers($contributors)
+    {
+        $this->_othercontributors = $contributors;
+    }
+
+    function setContacts($contacts)
+    {
+        $this->_unescocontacts = $contacts;
+    }
+
+    function saveThemes($themeIDarray)
+    {
+        if($themeIDarray != NULL && !is_array($themeIDarray)){
+            $themeIDarray = array($themeIDarray);
+        }
+
+        foreach ($themeIDarray as $themeID) {
+            if ($themID != NULL){
+                $this->objDbProductThemes->addProductThemeJxn($this->_identifier, $themeID);
+            }
+        }
+
+    }
+
+    function setThemes($themeIDarray)
+    {
+        $this->_unescothemes = $themeIDarray;
+
+        $flag  = TRUE;
+        foreach ($themeIDarray as $theme)
+        {
+            if (empty($theme))
+            {
+                $flag = FALSE;
+            }
+        }
+        if ($flag)
+        {
+            $this->addValidationMessage('theme', TRUE, NULL);
+        }
+        else
+        {
+            $this->addValidationMessage('theme', FALSE, 'Product must have at least one Theme');
+        }
+    }
+
+   function setCoverage($coverage)
+   {
+       $this->_coverage = $coverage;
+   }
+
+   function setStatus($status)
+   {
+       $this->_status = $status;
+   }
+
+   private function setIdentifier($id)
+   {
+       $this->_identifier = $id;
+   }
+
+   function setRelation($relation, $relationType)
+   {
+       $this->_relation = $relation;
+       $this->_relationtype = $relationType;
+   }
+
+   function setKeyWords($keyWords) 
+   {
+       
+   }
+   
+   function uploadThumbNail($path)
+   {
+       $result = FALSE;
+       try {
+            $results = $this->objThumbUploader->uploadThumbnail($path);
+        } catch (customException $e) {
+            echo customException::cleanUp();
+            exit();
+        }
+        
+        return $results;
+   }
+
+   function setRights($rights)
+   {
+       $this->_rights = $rights;
+   }
+
+   function setRightsHolder($rightsholder)
+   {
+       $this->_rightsholder = $rightsholder;
+   }
+
+   function setProvenance($provenance)
+   {
+       $this->_provenance = $provenance;
+   }
+
+   function setContent($content)
+   {
+       $this->_content = $content;
+   }
+
+   ////////////////   GETTERS   ////////////////
+
+    function getTitle()
+    {
+        return $this->_title;
+    }
+
+    function getAlternativeTitle()
+    {
+        return $this->_alternativetitle;
+    }
+
+    function getContentType()
+    {
+        return $this->_resourcetype;
+    }
+
+    function getProductDate(){
+        return $this->_date;
+    }
+
+    private function getDate(){
+        return $this->_objDbProducts->now();
+    }
+
+    private function getLanguageID()
+    {
+        return $this->_language;
+    }
+
+    function getLanguageDescription()
+    {
+        return $this->objLanguage->getLanguageDescriptionByID( $this->getLanguageID() );
+    }
+
+    function getAuthors()
+    {
+        return $this->_creator;
+    }
+
+    function getPublisher()
+    {
+        return $this->_publisher;
+    }
+
+    function getDescription()
+    {
+        return $this->_description;
+    }
+
+    function getAbstract()
+    {
+        return $this->_abstract;
+    }
+
+    function getOtherContributers()
+    {
+        return $this->_othercontributors;
+    }
+
+    function getContacts()
+    {
+        return $this->_unescocontacts;
+    }
+
+    private function loadThemes()
+    {
+        $themeIDarray = array();
+
+        foreach ($this->objDbProductThemes-> getThemesByProductID($this->getIdentifier()) as $theme) {
+            $themeIDarray[$theme['umbrella_theme_id']][$theme['id']];
+        }
+
+        return $this->setThemes($themeIDarray);
+
+    }
+
+    function getThemes()
+    {
+        return $this->_unescothemes;
+    }
+
+   function getCoverage()
+   {
+       return $this->_coverage;
+   }
+
+   function getStatus()
+   {
+       return $this->_status;
+   }
+
+   function getIdentifier()
+   {
+       return $this->_identifier;
+   }
+
+   function getRelation()
+   {
+       $relation = $this->_relation;
+       $relationType = $this->_relationtype;
+
+       return array($relation, $relationType);
+   }
+
+   function getKeyWords()
+   {
+
+   }
+
+   function getThumbnailPath()
+   {
+       return $this->$_thumbnail;
+   }
+
+   function getRights()
+   {
+       return $this->_rights;
+   }
+
+   function getRightsHolder()
+   {
+       return $this->_rightsholder;
+   }
+
+   function getProvenance()
+   {
+       return $this->_provenance;
+   }
+
+   function getContent()
+   {
+       return $this->_content;
+   }
 
 }
 

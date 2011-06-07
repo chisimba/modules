@@ -270,7 +270,7 @@ if ($finalstring == null)
                                             $abLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
                                             $abLink->link = '<img src="skins/unesco_oer/images/icon-new-product.png" alt="New Product" width="20" height="20" class="imgFloatRight">';
                                             
-                                            $newProductLink = new link($this->uri(array("action" => "test", 'prevAction' => 'home')));
+                                            $newProductLink = new link($this->uri(array("action" => "savetest", 'prevAction' => 'home')));
                                             $newProductLink->link = "New product";
 
                                             echo $divOpen;

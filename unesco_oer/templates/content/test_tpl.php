@@ -14,10 +14,13 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-$product = $this->getObject('product');
-$product->loadProduct($productID);
+//$product = $this->getObject('product');
+//$product->loadProduct($productID);
 
 echo $product->showMetaDataInput();
+var_dump($product->dummyValue);
+
+
 
 //echo $product->dummyValue;
 //echo "<br>";

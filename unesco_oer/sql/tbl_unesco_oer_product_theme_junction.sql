@@ -21,8 +21,8 @@ $options = array('comment'=>'Table to store Product and theme relationships','co
 //define fields
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
-                'product_id' =>array('type' =>'text','length'=>3),
-                'theme_id'=>array('type'=>'text','length'=>255)
+                'product_id' =>array('type' =>'text','length'=>32),
+                'theme_id'=>array('type'=>'text','length'=>32)
 		);
 
 ?>

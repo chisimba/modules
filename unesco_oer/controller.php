@@ -573,7 +573,28 @@ class unesco_oer extends controller {
 
     public function __createThemeSubmit() {
         $description = $this->getParam('newTheme');
-        $this->objDbProductThemes->addTheme($description);
+        $umbrella = $this->getParam('umbrellatheme');
+        $this->objDbProductThemes->addTheme($description,$umbrella);
+        return $this->__addData();
+    }
+
+
+    /*
+     * Method to display page for creating a new theme
+     */
+
+    public function __createUmbrellaThemeUI() {
+        return "createUmbrellaThemeUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createThemeUI_tpl.php page
+     * and add it to the tbl_unesco_oer_product_themes table
+     */
+
+    public function __createUmbrellaThemeSubmit() {
+        $description = $this->getParam('newUmbrellaTheme');
+        $this->objDbProductThemes->addUmbrellaTheme($description);
         return $this->__addData();
     }
 
@@ -1149,29 +1170,29 @@ class unesco_oer extends controller {
 
     public function __savetest() {
         $defaultTemplate = "test_tpl.php";
-
+        $product = $this->getObject('product');
+        $this->setVarByRef('product', $product);
+//        //test for edit
+//        if ($this->getParam('productID')) $product->loadProduct($this->getParam('productID'));
+//
         switch (strtolower($this->getParam('submit'))) {
             case "cancel":
                 return $this->__home();
                 break;
 
             case "upload":
-                $this->setLayoutTemplate('maincontent_layout_tpl.php');
-                $product = $this->getObject('product');
-                //test for edit
-                if ($this->getParam('productID')) $product->loadProduct($this->getParam('productID'));
-                $product->handleUpload();
-                $this->setVar('productID', $product->getIdentifier());
-                //test if all fields have been filled
-                if ($product->validateMetaData()){
+                //test if all fields are valid
+                if ($product->handleUpload()){
                     return $this->__home();
                 }else{
+                    $this->setLayoutTemplate('maincontent_layout_tpl.php');
                     return $defaultTemplate;
                 }
                 
                 break;
 
             default:
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 return $defaultTemplate;
                 break;
         }

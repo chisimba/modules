@@ -38,7 +38,7 @@ class adddatautil extends object {
         $header = new htmlHeading();
         $header->str = $title;
         $header->type = $titleType;
-        $table->addCell($header->show(), null, null, null, null, "colspan=$colspan",null);
+        $table->addCell($header->show());
     }
 
     function addButtonToRow($caption, $actionURI, $table) {
@@ -64,6 +64,8 @@ class adddatautil extends object {
     function addTextInputToTable($title, $titleType, $name, $size, $value, $table) {
         $table->startRow();
         $this->addTitleToRow($title, $titleType, $table);
+        $table->endRow();
+        $table->startRow();
         $this->addTextInputToRow($name, $size, $value, $table);
         $table->endRow();
     }
@@ -71,6 +73,8 @@ class adddatautil extends object {
     function addDropDownToTable($title, $titleType, $name, $inputArray, $initValue, $field, $table, $value = null){
         $table->startRow();
         $this->addTitleToRow($title, $titleType, $table);
+        $table->endRow();
+        $table->startRow();
         $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value);
         $table->endRow();
     }

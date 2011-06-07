@@ -22,6 +22,10 @@ class thumbnailuploader extends object{
 
     private $_uploadInput;
 
+    private $_upload;
+
+    private $_restrictedFileList;
+
     /**
      * Constructor
      */
@@ -29,7 +33,9 @@ class thumbnailuploader extends object{
         parent::init();
         $this->_uploadInput = $this->getObject('uploadinput','filemanager');
         //define some MIME types for Images
-        $this->_uploadInput->restrictFileList = array('jpg','png','gif','tiff','ico');
+        $this->_restrictedFileList = array('jpg','png','gif','tiff','ico');
+
+        $this->_upload = $this->getObject('upload','filemanager');
     }
 
     public function uploadThumbnail($path) {
@@ -46,7 +52,7 @@ class thumbnailuploader extends object{
         } else {
             if (!$this->results['success']) { // upload was unsuccessful
                 if ($this->results['reason'] != 'nouploadedfileprovided') {
-                    throw new customException('Upload failed: ' . $results['reason']); //TODO return proper error page containing error
+                    throw new customException('Upload failed: ' . $this->results['reason']); //TODO return proper error page containing error
                 } else {
                     return FALSE;
                 }
@@ -57,7 +63,79 @@ class thumbnailuploader extends object{
 
     public function show()
     {
+        $this->_uploadInput->showTargetDir = false;
+        $this->_uploadInput->restrictFileList = $this->_restrictedFileList;
         return $this->_uploadInput->show();
+    }
+
+    /**This function determines if the uploaded file is a valid image file
+     *
+     * @param <type> $fileInfoArray
+     * @return <type>
+     */
+    function isFileValid(&$fileInfoArray){
+//        $fileInputName = $this->getParam('fileupload');  //TODO this is returning NULL, find a way around this
+        $objFileParts = $this->getObject('fileparts', 'files');
+        $fileInputName = 'fileupload';
+
+        // First Check if array key exists
+        if (array_key_exists($fileInputName, $_FILES)) {
+            $file = $_FILES[$fileInputName];
+        } else { // If not, return FALSE
+            return FALSE;
+        }
+
+        $fileInfoArray = array();
+
+        // Check that file is not forbidden
+        if ($this->_upload->isBannedFile($file['name'], $file['type']))
+            {
+                $fileInfoArray  = array ('success'=>FALSE, 'reason'=>'bannedfile', 'name'=>$file['name'], 'size'=>$file['size'], 'mimetype'=>$file['type'], 'errorcode'=>$file['error']);
+            }
+
+        // Check that file was not partially uploaded
+        else if ($file['error'] == 3)
+            {
+                $fileInfoArray  = array ('success'=>FALSE, 'reason'=>'partialuploaded');
+            }
+
+        // No File Provided
+        else if ($file['error'] == 4)
+            {
+                $fileInfoArray  = array ('success'=>FALSE, 'reason'=>'nouploadedfileprovided', 'errorcode'=>$file['error']);
+                $file['name'] = 'nofileprovided';
+            }
+            
+            //TODO add check for file exstension
+//        else if (is_array($ext) && !in_array($objFileParts->getExtension($file['name']), $ext)) {
+//            $fileInfoArray  = array ('success'=>FALSE, 'reason'=>'doesnotmeetextension', 'name'=>$file['name'], 'size'=>$file['size'], 'mimetype'=>$file['type'], 'errorcode'=>$file['error']);
+//        }
+
+//            $fileInfoArray  = array ('success'=>FALSE, 'errorCode'=>$file['error']);
+        if (empty($fileInfoArray))
+            {
+                return TRUE;
+            }
+        else
+            {
+                return FALSE;
+            }
+    }
+
+    /**This function adds additional image extensions
+     *
+     * @param <type> $ext
+     */
+    public function addAccecptableImageExt($ext)
+    {
+        if ($ext != NULL && !is_array($ext)) {
+            $ext = array($ext);
+        }
+
+        foreach ($ext as $extension) {
+            array_push($this->_restrictedFileList, $extension);
+        }
+
     }
 }
 
