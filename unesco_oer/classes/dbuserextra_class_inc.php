@@ -106,7 +106,7 @@ class dbuserextra extends dbtable{
             'websitelink' => $WebsiteLink,
             'groupmembership' => $GroupMembership
         );
-        $this->update($data);
+        $this->update('id', $id,$data);
     }
 
 
