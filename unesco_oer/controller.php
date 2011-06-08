@@ -27,6 +27,7 @@ class unesco_oer extends controller {
     public $objUseExtra;
     public $objfilterdisplay;
     public $objDbRelationType;
+    public $objDbProductKeywords;
 
      public $objConfig;
 
@@ -79,6 +80,7 @@ class unesco_oer extends controller {
         $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
         $this->objUser = $this->getObject('user', 'security');
         $this->objUrl = $this->getObject('url', 'strings');
+        $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
         //$this->objUtils = $this->getObject('utilities');
 
 
@@ -602,6 +604,25 @@ class unesco_oer extends controller {
     public function __createUmbrellaThemeSubmit() {
         $description = $this->getParam('newUmbrellaTheme');
         $this->objDbProductThemes->addUmbrellaTheme($description);
+        return $this->__addData();
+    }
+
+    /**Method to display page for creating a new keyword
+     *
+     * @return <type>
+     */
+    public function __createKeywordUI() {
+        return "createKeywordUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createKeywordUI_tpl.php page
+     * and add it to the tbl_unesco_oer_product_keywords table
+     */
+
+    public function __createKeywordSubmit() {
+        $keyword = $this->getParam('newKeyword');
+        $this->objDbProductKeywords->addKeyword($keyword);
         return $this->__addData();
     }
 
@@ -1338,7 +1359,7 @@ class unesco_oer extends controller {
 //        //test for edit
 //        if ($this->getParam('productID')) $product->loadProduct($this->getParam('productID'));
 //
-        switch (strtolower($this->getParam('submit'))) {
+        switch (strtolower($this->getParam('add_product_submit'))) {
             case "cancel":
                 return $this->__home();
                 break;

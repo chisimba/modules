@@ -64,12 +64,12 @@ $buttonText = $this->objLanguage->
 $actionURI = $this->uri(array('action' => 'newResourceTypeUI'));
 $utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
-//new type of theme options
+//new keyword options
 $headingText = $this->objLanguage->
-        languageText('mod_unesco_oer_add_data_newTheme', 'unesco_oer');
+        languageText('mod_unesco_oer_add_data_newKeyword', 'unesco_oer');
 $buttonText = $this->objLanguage->
-        languageText('mod_unesco_oer_add_data_newThemeBtn', 'unesco_oer');
-$actionURI = $this->uri(array('action' => 'createThemeUI'));
+        languageText('mod_unesco_oer_add_data_newKeywordBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'createKeywordUI'));
 $utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
 //new type of umbrella theme options
@@ -78,6 +78,14 @@ $headingText = $this->objLanguage->
 $buttonText = $this->objLanguage->
         languageText('mod_unesco_oer_add_data_newUmbrellaThemeBtn', 'unesco_oer');
 $actionURI = $this->uri(array('action' => 'createUmbrellaThemeUI'));
+$utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
+
+//new type of theme options
+$headingText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newTheme', 'unesco_oer');
+$buttonText = $this->objLanguage->
+        languageText('mod_unesco_oer_add_data_newThemeBtn', 'unesco_oer');
+$actionURI = $this->uri(array('action' => 'createThemeUI'));
 $utility->addButtonToTable($headingText, 2, $buttonText, $actionURI, $table);
 
 //new language options

@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,37 +18,34 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('textinput','htmlelements');
+$this->loadClass('adddatautil', 'unesco_oer');
+
+$utility = new adddatautil();
 
 // setup and show heading
 $header = new htmlHeading();
-$header->str = "Create new type of product";
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_keyword_heading', 'unesco_oer');
 $header->type = 2;
 echo $header->show();
 
 // setup table and table headings with input options
 $table = $this->newObject('htmltable', 'htmlelements');
 
-//input options for resource description
-$textinput = new textinput('newTypeDescription');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Type Description:');
+//theme description input options
+$title = $this->objLanguage->languageText('mod_unesco_oer_keyword_description', 'unesco_oer');
+$utility->addTextInputToTable($title, 4, 'newKeyword', 60, '', $table);
 
-//input options for resource table
-$textinput = new textinput('newTypeTable');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Type Table Name:');
-
-//input optins for submit button
-$table->addCell($textinput->show());
-$button = new button('submitProductType', "Submit Product Type");
+$button = new button('submitProductType', "Submit Keyword");
 $button->setToSubmit();
+$table->startRow();
 $table->addCell($button->show());
 $table->endRow();
 
 //createform, add fields to it and display
-$form_data = new form('newResourceType_ui',$this->uri(array('action'=>'resourceTypeSubmit')));
+$form_data = new form('createTheme_ui',$this->uri(array('action'=>'createKeywordSubmit')));
 $form_data->addToForm($table->show());
 echo $form_data->show();
+
 ?>
+
+

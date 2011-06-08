@@ -32,6 +32,7 @@ class product extends object
     public $objDbProductLanguages;
     public $objThumbUploader;
     public $objDbRelationTypes;
+    public $objDbProductKeywords;
 
 
     //TODO move catorgorized parameters into structs. eg. <creationStruct>
@@ -230,6 +231,7 @@ class product extends object
         $this->objDbProductLanguages = $this->getObject('dbproductlanguages');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objDbRelationTypes = $this->getObject('dbrelationtype');
+        $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
         $this->validationArray = array();
     }
 
@@ -346,6 +348,8 @@ class product extends object
         $this->setProvenance($this->getParam('provenance'));;
         $this->setCoverage($this->getParam('coverage'));
         $this->setStatus($this->getParam('status'));
+        $this->setKeyWords($this->getParam('keywords'));
+        $this->dummyValue = $this->getParam('keywords', 'nothing');
 
         $themesSelected = array();
         $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
@@ -354,10 +358,7 @@ class product extends object
         }
 
         $this->setThemes($themesSelected);
-
-        $this->dummyValue = $themesSelected;
 //        $this->setRelation($relation, $relationType);
-//        $this->setKeyWords($keyWords);
         if ($this->validateMetaData()){
             $this->saveProduct();
             return TRUE;
@@ -419,6 +420,7 @@ class product extends object
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('adddatautil','unesco_oer');
+        $this->loadClass('hiddeninput', 'htmlelements');
 
         //get parent if any
         $product = $this->_objDbProducts->getProductByID($this->_identifier);
@@ -623,16 +625,36 @@ class product extends object
         //TODO Implement keywords fully
         //field for keywords
         $fieldName = 'keywords';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_keywords', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->_keywords,
-                                                    $table
-                                                    );
+        $form_data = new form('add_products_ui', $uri);//////created here in order to include text boxes//////
 
+        // Create the selectbox object
+        $objSelectBox = $this->newObject('selectbox','htmlelements');
+        // Initialise the selectbox.
+        $objSelectBox->create( $form_data, 'leftList[]', 'Available keywords', $fieldName.'[]', 'Chosen keywords' );
+        //// Populate the selectboxes
+        $objSelectBox->insertLeftOptions( $this->objDbProductKeywords->getProductKeywords(), 'id', 'keyword');
+        $objSelectBox->insertRightOptions( array() );
+        //Construct tables for left selectboxes
+        $tblLeft = $this->newObject( 'htmltable','htmlelements');
+        $objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
+        //Construct tables for right selectboxes
+        $tblRight = $this->newObject( 'htmltable', 'htmlelements');
+        $objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
+        //Construct tables for selectboxes and headings
+        $tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
+        $tblSelectBox->width = '90%';
+        $tblSelectBox->startRow();
+            $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
+            $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
+        $tblSelectBox->endRow();
+        $tblSelectBox->startRow();
+            $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
+            $tblSelectBox->addCell( $tblRight->show(), '100pt' );
+        $tblSelectBox->endRow();
+        //////
+        $keywordfieldset = $this->newObject('fieldset','htmlelements');
+        $keywordfieldset->setLegend('Keywords'.'<font color="#FF2222">* '. $this->validationArray['keyword']['message']. '</font>');
+        $keywordfieldset->addContent($tblSelectBox->show() );
         //field for resource type
         $fieldName = 'resource_type';
         $title = $this->objLanguage->languageText('mod_unesco_oer_resource', 'unesco_oer');
@@ -652,6 +674,7 @@ class product extends object
         $fieldset = $this->newObject('fieldset','htmlelements');
         $fieldset->setLegend('Description Information');
         $fieldset->addContent($themefieldset->show());
+        $fieldset->addContent($keywordfieldset->show());
         $fieldset->addContent($table->show());
         $output .= $fieldset->show();
         /*               end of                         */
@@ -793,24 +816,32 @@ class product extends object
         /*         Misc. fields, eg. rights             */
         /*                                              */
 
+        $hiddenInput = new hiddeninput('add_product_submit');
+        $hiddenscript = "document.add_products_ui['add_product_submit'] = 'upload';";
+        $hiddenInput->setName('upload');
+
         // setup button for submission
-        $buttonSubmit = new button('submit', $this->objLanguage->
+        $buttonSubmit = new button('upload', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
-        $buttonSubmit->setToSubmit();
+        //$buttonSubmit->setToSubmit();
+        $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList ).$objSelectBox->submitForm();
+        $buttonSubmit->setOnClick('javascript: ' . $hiddenscript . $action);
 
         // setup button for cancellation
-        $buttonCancel = new button('submit', $this->objLanguage->
+        $buttonCancel = new button('upload', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer'));
-        $buttonCancel->setToSubmit();
+        $buttonCancel->setOnClick($objSelectBox->submitForm());
+
+        
 
         //createform, add fields to it and display
         $uri = $this->uri(array(
                     'action' => "savetest",
                     'productID' => $this->_identifier,
                     'prevAction' => $prevAction));
-        $form_data = new form('add_products_ui', $uri);
+        
         $form_data->extra = 'enctype="multipart/form-data"';
-        $form_data->addToForm($output .'<br />' . $buttonSubmit->show() . $buttonCancel->show());
+        $form_data->addToForm($output .'<br />' . $buttonSubmit->show() . $buttonCancel->show() . $hiddenInput->show());
 
         return $form_data->show();
 
@@ -980,7 +1011,12 @@ class product extends object
 
    function setKeyWords($keyWords) 
    {
-       
+       $this->_keywords = $keyWords;
+   }
+
+   function saveKeyWords($keyWords)
+   {
+       $this->_keywords = $keyWords;
    }
    
    function uploadThumbNail($path)
@@ -1123,7 +1159,7 @@ class product extends object
 
    function getKeyWords()
    {
-
+        return $this->_keywords;
    }
 
    function getThumbnailPath()
