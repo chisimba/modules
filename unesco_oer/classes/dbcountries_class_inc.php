@@ -30,5 +30,11 @@ class dbcountries extends dbtable {
         return $this->getArray($sql);
     }
 
+    function getCountryName($countryId) {
+        $sql = "SELECT * FROM tbl_unesco_oer_countries WHERE id='$countryId'";
+        $countryName = $this->getArray($sql);
+        return $countryName[0]['countryname'];
+    }
+
 }
 ?>

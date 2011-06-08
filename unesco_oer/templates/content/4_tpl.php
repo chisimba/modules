@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 'off');
+ini_set('display_errors', 'Off');
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
@@ -133,12 +133,13 @@ $institutionGUI->getInstitution($institutionId);
                                     ?>
                                 </h2>
                                 <a href="#"><img src="skins/unesco_oer/images/icon-edit-section.png" class="Farright"></a>
-                                <a href="#" class="greyTextLink">Edit metadata</a> |
-<!--                                <a href="#"><img src="" width="18" height="18" class="Farright"></a>-->
+                                <?php echo $institutionGUI->showEditInstitutionLink($institutionId) ?> |
+    <!--                                <a href="#"><img src="" width="18" height="18" class="Farright"></a>-->
+                                    <a href="#"><img src="skins/unesco_oer/images/new-institution.png" width="18" height="18" class="Farright"></a>
                                 <?php echo $institutionGUI->showNewInstitutionLink() ?> <br>
-                                <br />
-                                <div class="leftImageHolder rightTwent">
-                                    '<img src= "
+                                    <br />
+                                    <div class="leftImageHolder rightTwent">
+                                        '<img src= "
                                     <?php
                                     echo $institutionGUI->showInstitutionThumbnail();
                                     ?> "><br />
@@ -261,17 +262,36 @@ $institutionGUI->getInstitution($institutionId);
                                 <br><br>
                                 <span class="greyText fontBold">Country:</span>  <?php echo $institutionGUI->showInstitutionCountry(); ?>
                                 <br><br>
-                                <span class="greyText fontBold">Address:</span><?php echo $institutionGUI->showInstitutionAddress(); ?>
-                                <br><br>
-                                <span class="greyText fontBold">Institution website:</span> <a href="#" class="greyTextLink"><?php echo $institutionGUI->showInstitutionWebsiteLink(); ?></a>
-                                <br><br>
-                                <span class="greyText fontBold">Keywords:</span> <?php echo $institutionGUI->showInstitutionKeywords(); ?>
-                                <br><br>
-                                <span class="greenText fontBold">Linked groups:</span>
-                                <br>
-                                <div class="linkedGroups">
-                                    <a href="#" class="greenTextLink"><?php echo $institutionGUI->showInstitutionLinkedGroups(); ?></a><br>
-                                    <a href="#" class="greenTextLink"><?php echo $institutionGUI->showInstitutionLinkedGroups(); ?></a>
+                                <span class="greyText fontBold">Address:</span><?php
+                                    $address = $institutionGUI->showInstitutionAddress();
+
+                                    echo $address['address1'];
+
+                                    if (isset($address['address2'])) {
+                                        echo ', ' . $address['address2'];
+                                    }
+
+                                    if (isset($address['address3'])) {
+                                        echo ', ' . $address['address3'];
+                                    }
+                                ?>
+                                    <br><br>
+                                    <span class="greyText fontBold">Institution website:</span> <a href="#" class="greyTextLink"><?php echo $institutionGUI->showInstitutionWebsiteLink(); ?></a>
+                                    <br><br>
+                                    <span class="greyText fontBold">Keywords:</span> <?php
+                                    $keywords = $institutionGUI->showInstitutionKeywords();
+                                    echo $keywords['keyword1'];
+
+                                    if (isset($keywords['keyword2'])) {
+                                        echo ' | ' . $keywords['keyword2'];
+                                    }
+                                ?>
+                            <br><br>
+                            <span class="greenText fontBold">Linked groups:</span>
+                            <br>
+                            <div class="linkedGroups">
+                                <a href="#" class="greenTextLink">Group1</a><br>
+                                <a href="#" class="greenTextLink">Group2</a>
                             </div>
                             <br><br>
                             <span class="greyText fontBold">Community related information:</span>

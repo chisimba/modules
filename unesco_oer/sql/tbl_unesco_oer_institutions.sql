@@ -19,7 +19,6 @@ $fields = array(
                 'websitelink'   => array('type' => 'text', 'length' => 100),
                 'keyword1'      => array('type' => 'text', 'length' => 32),
                 'keyword2'      => array('type' => 'text', 'length' => 32),
-                'linkedGroups'  => array('type' => 'text', 'length' => 32),
                 'thumbnail'     => array('type' => 'text', 'length' => 255)
 );
 ?>

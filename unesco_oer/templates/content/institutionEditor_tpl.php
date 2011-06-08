@@ -7,229 +7,219 @@
     </head>
     <body>
         <?php
-        // set up html elements
+        //Display errors
+        error_reporting(E_ALL);
+        ini_set('display_errors', 'Off');
+
+        $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
+
+//$institutionGUI->getInstitution('gen15Srv41Nme47_69623_1306229613');
+//var_dump($institutionId);
+// set up html elements
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('adddatautil', 'unesco_oer');
 
-        //get parent if any
-        //$product = $this->_objDbProducts->getProductByID($productID);
-        // setup and show heading
+
+
+        
+//Check if a product is being edited
+        if (isset($institutionId)) {
+            $institutionGUI->getInstitution($institutionId);
+            $formData = $institutionGUI->showAllInstitutionData();
+            $formAction = "editInstitutionSubmit";
+        } else {
+            $formData = array();
+            $formAction = "createInstitutionSubmit";
+        }
+
+//get parent if any
+//$product = $this->_objDbProducts->getProductByID($productID);
+// setup and show heading
         $header = new htmlHeading();
         $header->str = $this->objLanguage->
                         languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
         $header->type = 2;
         echo $header->show();
 
-        // setup table and table headings with input fields
+// setup table and table headings with input fields
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
         $this->_objAddDataUtil = $this->getObject('adddatautil');
         $this->objDbInstitutionType = $this->getObject('dbinstitutiontypes');
 
-        //Stores the data from the array
-        //Obtains the data from an array that is passed  to it from the institution gui class
-        $formData = array();
 
-        //field for the name of the institution
-        $formData['name'] = 'Vito ra kona';
+//field for the name of the institution
+        $name = $institutionGUI->showInstitutionName();
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_name', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title,
                 4,
-                $formData['name'],
+                'name',
                 0,
-                $formData['name'],
+                $name,
                 $table
         );
 
 
-        //field for the description
-        $fieldName = 'description';
-        $formData['description'] = 'description';
+//field for the description
+        $description = $institutionGUI->showInstitutionDescription();
         $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = $formData['description'];
+        $editor->name = 'description';
         $editor->height = '150px';
         $editor->width = '70%';
-        $editor->setBasicToolBar();
-        $editor->setContent($formData['description']);
+        $editor->setBasicToolBar($description);
+        $editor->setContent($institutionGUI->showInstitutionDescription());
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
         $table->addCell($editor->show());
         $table->endRow();
 
-        //field for the institution type
-        $fieldName = 'institution_type';
+//field for the institution type
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_type', 'unesco_oer');
         $institutionTypes = $this->objDbInstitutionType->getInstitutionTypes();
         $this->_objAddDataUtil->addDropDownToTable(
                 $title,
                 4,
-                $fieldName,
+                'type',
                 $institutionTypes,
-                $fieldName,
+                $institutionGUI->showInstitutionTypeId(),
                 'type',
                 $table,
                 'id'
         );
 
-        //field for the Country where institution is located
+//field for the Country where institution is located
         $this->objDbCountries = $this->getObject('dbcountries');
-        $fieldName = 'country';
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer');
-        $country = $this->objDbCountries->getAllCountries();
+        $countryList = $this->objDbCountries->getAllCountries();
         $this->_objAddDataUtil->addDropDownToTable(
                 $title,
                 4,
-                $fieldName,
-                $country,
-                $fieldName,
+                'country',
+                $countryList,
+                $institutionGUI->showInstitutionCountryId(),
                 'countryname',
                 $table,
                 'id'
         );
 
 
-        //field for address1
-        $fieldName = 'address1';
+//field for address1
+        $address = $institutionGUI->showInstitutionAddress();
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address1', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title,
                 4,
-                $fieldName,
+                'address1',
                 0,
-                $fieldName,
+                $address['address1'],
                 $table
         );
 
-        //field for address2
-        $fieldName = 'address2';
+//field for address2
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address2', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title,
                 4,
-                $fieldName,
+                'address2',
                 0,
-                $fieldName,
+                $address['address2'],
                 $table
         );
 
-        //field for address3
-        $fieldName = 'address3';
+//field for address3
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address3', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title,
                 4,
-                $fieldName,
+                'address3',
                 0,
-                $fieldName,
+                $address['address3'],
                 $table
         );
 
-        //field for zip code
-        $fieldName = 'zip';
+//field for zip code
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_zip', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title,
                 4,
-                $fieldName,
+                'zip',
                 0,
-                $fieldName,
+                $institutionGUI->showInstitutionZip(),
                 $table
         );
 
-        //field for the city
-        $fieldName = 'city';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_title_alternative', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
-                $title,
-                4,
-                $fieldName,
-                0,
-                $fieldName,
-                $table
-        );
-
-        //field for the institutions website link
-        $fieldName = 'websitelink';
+//field for the city
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_city', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title,
                 4,
-                $fieldName,
+                'city',
                 0,
-                $fieldName,
+                $institutionGUI->showInstitutionCity(),
                 $table
         );
 
-        //field for the keywords
-        $fieldName = 'keyword1';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_title_alternative', 'unesco_oer');
+//field for the institutions website link
+
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_websitelink', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title,
                 4,
-                $fieldName,
+                'websiteLink',
                 0,
-                $fieldName,
+                $institutionGUI->showInstitutionWebsiteLink(),
                 $table
         );
 
-        //field for the institutions keywords
-        $fieldName = 'keyword2';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_title_alternative', 'unesco_oer');
+//field for the keywords
+        $keywords = $institutionGUI->showInstitutionKeywords();
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword1', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title,
                 4,
-                $fieldName,
+                'keyword1',
                 0,
-                $fieldName,
+                $keywords['keyword1'],
                 $table
         );
 
-        $this->objDbGroups = $this->getObject('dbgroups');
-
-        //field for the linking groups to institution
-        //Add functionality to add as many groups as one wants
-        $fieldName = 'groups';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_linked_groups', 'unesco_oer');
-        $groups = $this->objDbGroups->getGroups();
-        $this->_objAddDataUtil->addDropDownToTable(
+//field for the institutions keywords
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword2', 'unesco_oer');
+        $this->_objAddDataUtil->addTextInputToTable(
                 $title,
                 4,
-                $fieldName,
-                $groups,
-                $fieldName,
-                'name',
-                $table,
-                'id'
+                'keyword2',
+                0,
+                $keywords['keyword2'],
+                $table
         );
 
-        //field for the thumbnail
-        $this->objThumbUploader = $this->getObject('thumbnailuploader');
+//field for the thumbnail
+//field for the thumbnail
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . '<font color="#FF2222">* ' . $this->validationArray['thumbnail']['message'] . '</font>');
+        $table->endRow();
+        $table->startRow();
         $table->addCell($this->objThumbUploader->show());
         $table->endRow();
 
-        // setup button for submission
+// setup button for submission
         $buttonSubmit = new button('submit', $this->objLanguage->
-                                languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
+                                languageText('mod_unesco_oer_add_data_newInstitutionBtn', 'unesco_oer'));
         $buttonSubmit->setToSubmit();
 
-        // setup button for cancellation
+// setup button for cancellation
         $buttonCancel = new button('submit', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer'));
         $buttonCancel->setToSubmit();
 
-
         //createform, add fields to it and display
         $uri = $this->uri(array(
-                    'action' => "savetest",
-                    'parentID' => $productID,
-                    'prevAction' => $prevAction,
-                    'isNewProduct' => $isNewProduct));
-        $form_data = new form('add_products_ui', $uri);
+                    'action' => $formAction));
+        $form_data = new form('add_institution_ui', $uri);
         $form_data->extra = 'enctype="multipart/form-data"';
         $form_data->addToForm($table->show() . '<br />' . $buttonSubmit->show() . $buttonCancel->show());
         echo $form_data->show();

@@ -8,7 +8,7 @@ $this->loadClass('filterdisplay', 'unesco_oer');
 
 //Display errors
 error_reporting(E_ALL);
-ini_set('display_errors', 'off');
+ini_set('display_errors', 'Off');
 
 
 

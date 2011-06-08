@@ -93,8 +93,10 @@ class dbinstitution extends dbtable {
     // function is responsible to dispaly the map and its images
     function MapHandler($im, $lat, $long) {
         if (empty($long)
+
             )$long = 28.0316;
         if (empty($lat)
+
             )$lat = -26.19284;
         $red = imagecolorallocate($im, 255, 0, 0);
         $scale_x = imagesx($im);
@@ -131,18 +133,37 @@ class dbinstitution extends dbtable {
 
     //this function delete  a record
 
-    function deleteInstitution($puid, $name) {
-        $sql = "DELETE FROM tbl_unesco_oer_institutions WHERE puid='$puid' AND name='$name'";
+    function deleteInstitution($id) {
+        $sql = "DELETE FROM tbl_unesco_oer_institutions WHERE id='$id'";
         $this->getArray($sql);
     }
 
     //this function edit the instituin name
     //TODO MUST ALSO EDIT THUMBNAIL
-    function editInstitution($id, $puid, $loclat, $loclong, $name) {
+    function editInstitution($id, $name, $description, $type, $country, 
+                             $address1, $address2, $address3, $zip, $city,
+                             $websiteLink, $keyword1, $keyword2, $thumbnail) {
+        $sql = "SELECT puid FROM tbl_unesco_oer_institutions WHERE id = '$id'";
+        $tempPuid = $this->getArray($sql);
+        $puid = $tempPuid[0]['puid'];
+        echo $puid;
         return $this->update(
                 'puid',
                 $puid,
-                array('loclat' => $loclat, 'loclong' => $loclong, 'name' => $name, 'id' => $id)
+                array(
+                    'name' => $name,
+                    'description' => $description,
+                    'country' => $country,
+                    'type' => $type,
+                    'address1' => $address1,
+                    'address2' => $address2,
+                    'address3' => $address3,
+                    'city' => $city,
+                    'websiteLink' => $websiteLink,
+                    'keyword1' => $keyword1,
+                    'keyword2' => $keyword2,
+                    'zip' => $zip,
+                    'thumbnail' => $thumbnail)
         );
     }
 
@@ -157,6 +178,12 @@ class dbinstitution extends dbtable {
         $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE type = '$type'";
         $type = $this->getArray($sql);
         return $type[0];
+    }
+
+    function getLastInstitutionId() {
+        $sql = "SELECT id FROM tbl_unesco_oer_institutions ORDER BY puid DESC LIMIT 1";
+        $id = $this->getArray($sql);
+        return $id;
     }
 
 }

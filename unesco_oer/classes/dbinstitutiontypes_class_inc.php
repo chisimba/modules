@@ -39,7 +39,7 @@ class dbinstitutiontypes extends dbtable {
     * @param $typeId
     * return type
     */
-    function getTypetype($typeID){
+    function getType($typeID){
         $sql = "SELECT * FROM tbl_unesco_oer_institution_types WHERE id='$typeID'";
         $typetype=$this->getArray($sql);
         return $typetype[0]['type'];

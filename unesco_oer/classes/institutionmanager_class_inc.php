@@ -22,54 +22,44 @@ class institutionmanager extends object {
     private $_institutionList;
     private $_institution;
     private $_objDbInstitution;
-    private $_groupList;
-    private $_group;
+    private $_objDbInstitutionType;
+    private $_objDbCountries;
 
     function init() {
         $this->_objDbInstitution = $this->getObject('dbinstitution');
+        $this->_objDbInstitutionType = $this->getObject('dbinstitutiontypes');
+        $this->_objDbCountries = $this->getObject('dbcountries');
         $this->_institution = $this->getObject('institution');
         $this->_institutionList = array();
-        $this->_group = NULL;
-        $this->_groupList = NULL;
     }
 
-    public function addLinkedGroup($institutionId, $groupId) {
-        //Check if the group and the institution are already linked
+    public function addInstitution($name, $description, $type, $country, 
+                                    $address1, $address2, $address3, $zip, $city,
+                                    $websiteLink, $keyword1, $keyword2, $thumbnail) {
+
         
+        $this->_objDbInstitution->addInstitution($name, $description, $type,
+                $country, $address1, $address2, $address3, $zip,
+                $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
     }
 
-    public function removeLinkedGroup($institutionId, $groupId) {
+    public function editInstitution($id, $name, $description, $type, $country, 
+                                    $address1, $address2, $address3, $zip, $city,
+                                    $websiteLink, $keyword1, $keyword2, $thumbnail) {
 
-    }
-
-    public function addInstitution(&$institution) {
-        $this->_objDbInstitution->addInstitution($institution->getName(),
-                                                $institution->getDescription(),
-                                                $institution->getType(),
-                                                $institution->getCountry(),
-                                                $institution->getAdress1(),
-                                                $institution->getAddress2(),
-                                                $institution->getAddress3(),
-                                                $institution->getZip(),
-                                                $institution->getCity(),
-                                                $institution->getWebsiteLink(),
-                                                $institution->getKeyword1(),
-                                                $institution->getKeyword2(),
-                                                $institution->getLinkedGroups(),
-                                                $institution->getThumbnail());
-    }
-
-    public function editInstitution($id) {
-
+        $this->_objDbInstitution->editInstitution($id, $name, $description, $type, 
+                                    $country, $address1, $address2, $address3, $zip,
+                                    $city, $websiteLink, $keyword1, $keyword2,
+                                    $thumbnail);
     }
 
     public function removeInstitution($id) {
-
+        $this->_objDbInstitution->deleteInstitution($id);
     }
 
     public function getInstitution($id) {
         $this->_institution = $this->constructInstitution($id);
-        
+
         return $this->_institution;
     }
 
@@ -95,10 +85,103 @@ class institutionmanager extends object {
         $myInstitution->setWebsiteLink($parameters[0]['websitelink']);
         $myInstitution->setKeyword1($parameters[0]['keyword1']);
         $myInstitution->setKeyword2($parameters[0]['keyword2']);
-        $myInstitution->addLinkedGroup($parameters[0]['linkedgroups']);
         $myInstitution->setThumbnail($parameters[0]['thumbnail']);
-        
+
         return $myInstitution;
     }
+
+    public function getIdOfAddedInstitution() {
+        $id = $this->_objDbInstitution->getLastInstitutionId();
+
+        return $id[0]['id'];
+    }
+
+    function getInstitutionId() {
+        return $this->_institution->getId();
+    }
+
+    function getInstitutionName() {
+        return $this->_institution->getName();
+    }
+
+    function getInstitutionDescription() {
+        return $this->_institution->getDescription();
+    }
+
+    function getInstitutionType() {
+        $typeId = $this->_institution->getType();
+
+        return $this->_objDbInstitutionType->getType($typeId);
+    }
+
+    function getInstitutionTypeID() {
+        return $this->_institution->getType();
+    }
+
+    function getInstitutionZip() {
+        return $this->_institution->getZip();
+    }
+
+    function getInstitutionCity() {
+        return $this->_institution->getCity();
+    }
+
+    function getInstitutionWebsiteLink() {
+        return $this->_institution->getWebsiteLink();
+    }
+
+    function getInstitutionCountry() {
+        $countryId = $this->_institution->getCountry();
+
+        return $this->_objDbCountries->getCountryName($countryId);
+    }
+
+        function getInstitutionCountryId() {
+        return $this->_institution->getCountry();
+    }
+
+    function getInstitutionThumbnail() {
+        return $this->_institution->getThumbnail();
+    }
+
+    function getInstitutionKeywords() {
+        $keywords = array(
+            "keyword1" => $this->_institution->getKeyword1(),
+            "keyword2" => $this->_institution->getKeyword2());
+
+        return $keywords;
+    }
+
+    function getInstitutionAddress() {
+        $address = array(
+            "address1" => $this->_institution->getAddress1(),
+            "address2" => $this->_institution->getAddress2(),
+            "address3" => $this->_institution->getAddress3());
+
+        return $address;
+    }
+
+    //Get the values of all the current institution in an array
+    function getInstitutionData() {
+        $institutionData['name'] = $this->getInstitutionName();
+        $institutionData['id'] = $this->getInstitutionId();
+        $institutionData['description'] = $this->getInstitutionDescription();
+        $institutionData['type'] = $this->getInstitutionType();
+        $institutionData['country'] = $this->getInstitutionCountry();
+        $address = $this->getInstitutionAddress();
+        $institutionData['address1'] = $address['address1'];
+        $institutionData['address2'] = $address['address2'];
+        $institutionData['address3'] = $address['address3'];
+        $institutionData['zip'] = $this->getInstitutionZip();
+        $institutionData['city'] = $this->getInstitutionCity();
+        $institutionData['websiteLink'] = $this->getInstitutionWebsiteLink();
+        $keywords = $this->getInstitutionKeywords();
+        $institutionData['keyword1'] = $keywords['keyword1'];
+        $institutionData['keyword2'] = $keywords['keyword2'];
+        $institutionData['thumbnail'] = $this->getInstitutionThumbnail();
+
+        return $institutionData;
+    }
+
 }
 ?>

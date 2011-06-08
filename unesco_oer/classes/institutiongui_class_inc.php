@@ -20,77 +20,89 @@ class institutiongui extends object {
 //TODO remove as much html from this class
 //    private $_institution;
     private $_institutionmanager;
-    private $_institution;
 
     function init() {
         $this->_institutionmanager = $this->getObject('institutionmanager', 'unesco_oer');
-        $this->_institution = $this->getObject('institution', 'unesco_oer');
         $this->loadClass('link', 'htmlelements');
     }
 
     function getInstitution($id) {
-        $this->_institution = $this->_institutionmanager->getInstitution($id);
+        $this->_institutionmanager->getInstitution($id);
     }
 
     function showInstitutionName() {
-        return $this->_institution->getName();
+        return $this->_institutionmanager->getInstitutionName();
     }
 
     function showInstitutionDescription() {
-        return $this->_institution->getDescription();
+        return $this->_institutionmanager->getInstitutionDescription();
     }
 
     function showInstitutionType() {
-        return $this->_institution->getType();
+        return $this->_institutionmanager->getInstitutionType();
+    }
+
+    function showInstitutionTypeId() {
+        return $this->_institutionmanager->getInstitutionTypeID();
     }
 
     function showInstitutionCountry() {
-        return $this->_institution->getCountry();
+        return $this->_institutionmanager->getInstitutionCountry();
+    }
+
+    function showInstitutionCountryId() {
+        return $this->_institutionmanager->getInstitutionCountryId();
     }
 
     function showInstitutionKeywords() {
-        return $this->_institution->getKeyword1();
+        $keywords = $this->_institutionmanager->getInstitutionKeywords();
 
-        $keyword2 = $this->_institution->getKeyword2();
-        if (isset($keyword2)) {
-            return ' | ' . $this->_institution->getKeyword2();
-        }
+        return $keywords;
     }
 
     function showInstitutionAddress() {
-        $address = '';
-        $address .= $this->_institution->getAddress1();
-
-        $address2 = $this->_institution->getAddress2();
-        if (isset($address2)) {
-            $address .= ', ' . $this->_institution->getAddress2();
-        }
-
-        $address3 = $this->_institution->getAddress3();
-        if (isset($address3)) {
-            $address .= ', ' . $this->_institution->getAddress3();
-        }
+        $address = $this->_institutionmanager->getInstitutionAddress();
 
         return $address;
     }
 
-    function showInstitutionWebsiteLink() {
-        return $this->_institution->getWebsiteLink();
+    function showInstitutionZip() {
+        $zip = $this->_institutionmanager->getInstitutionZip();
+
+        return $zip;
     }
 
-    function showInstitutionLinkedGroups() {
-        return $this->_institution->getAllLinkedGroups();
+    function showInstitutionCity() {
+        $city = $this->_institutionmanager->getInstitutionCity();
+
+        return $city;
+    }
+
+    function showInstitutionWebsiteLink() {
+        return $this->_institutionmanager->getInstitutionWebsiteLink();
     }
 
     function showInstitutionThumbnail() {
-        return $this->_institution->getThumbnail();
+        return $this->_institutionmanager->getInstitutionThumbnail();
+    }
+
+    function showAllInstitutionData() {
+        return $this->_institutionmanager->getInstitutionData();
     }
 
     function showNewInstitutionLink() {
-        $acLink = new link($this->uri(array("action" => "institutionEditor")));
+        $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => NULL)));
         $acLink->cssClass = 'greyTextLink';
-        $acLink->link = '<a href="#"><img src="skins/unesco_oer/images/new-institution.png" width="18" height="18" class="Farright"></a> <a href="#" class="greyTextLink">Create new institution</a>';
-        
+        $acLink->link = 'Create new institution';
+
+        return $acLink->show();
+    }
+
+    function showEditInstitutionLink($institutionId) {
+        $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $institutionId)));
+        $acLink->cssClass = 'greyTextLink';
+        $acLink->link = 'Edit metadata';
+
         return $acLink->show();
     }
 

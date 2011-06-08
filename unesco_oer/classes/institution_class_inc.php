@@ -70,11 +70,7 @@ class institution extends object {
      */
     private $_keyword1;
     private $_keyword2;
-    /**
-     * List of references of groups that are linked with the institution
-     * @var <Group>
-     */
-    private $_linkedGroups;
+
     /**
      * This is the thumbnail of the institution
      * @var <String>
@@ -124,7 +120,6 @@ class institution extends object {
         $this->_websiteLink = NULL;
         $this->_keyword1 = NULL;
         $this->_keyword2 = NULL;
-        $this->_linkedGroups = NULL;
         $this->_thumbnail = NULL;
     }
 
@@ -259,22 +254,5 @@ class institution extends object {
     public function getThumbnail() {
         return $this->_thumbnail;
     }
-
-    public function getLinkedGroup() {
-        return $this->_linkedGroups;
-    }
-
-    public function getAllLinkedGroups() {
-        return $this->_linkedGroups;
-    }
-
-    public function addLinkedGroup($groupId) {
-        $this->_linkedGroups = $groupId;
-    }
-
-    public function removeLinkedGroup($groupId) {
-        
-    }
-
 }
 ?>
