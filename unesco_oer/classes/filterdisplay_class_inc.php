@@ -573,6 +573,11 @@ function Search($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapst
 
         return $Buildstring;
     }
+    
+    
+    
+    
+    
 
 }
 ?>

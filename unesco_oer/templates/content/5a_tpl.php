@@ -228,7 +228,12 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         </div>
                     </div>
                 
-  
+   <?php
+        
+                      if (($this->objDbComments->getTotalcomments($productID) > 2)){
+                          
+                       
+               ?>
                          <script src="http://code.jquery.com/jquery-latest.js"></script>
                             <script>
                            $(document).ready(function(){
@@ -302,7 +307,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
     
     <a href="javascript:void(0)" class="greyTextLink">hide comments</a></div>
                             
-
+<?php }?>
 
 
 

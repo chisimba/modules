@@ -213,7 +213,12 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                             </a>
                         </div>
                     </div>
-                
+        <?php
+        
+                      if (($this->objDbComments->getTotalcomments($productID) > 2)){
+                          
+                       
+               ?>
   
                          <script src="http://code.jquery.com/jquery-latest.js"></script>
                             <script>
@@ -289,7 +294,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
     <a href="javascript:void(0)" class="greyTextLink">hide comments</a></div>
                             
 
-
+<?php }?>
 
 			<?php
                     }
@@ -297,6 +302,8 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
 
                    echo '
+                        <span class="greyText fontBold">User comments:</span>
+                    <br><br>
                     <div class="commentsDiv">
                         <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
                         <div class="communityRelatedInfoText">';
