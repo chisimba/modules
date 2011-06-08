@@ -216,8 +216,10 @@ class sahriscollectionsman extends controller
                 
             case 'viewrecords' :
                 $collid = $this->getParam('collid');
+                var_dump($collid);
                 $recs = $this->objDbColl->getCollRecords($collid);
                 $records = NULL;
+                var_dump($recs);
                 foreach($recs as $rec) {
                     $records .= $this->objCollOps->formatRecord($rec);
                 }
@@ -280,7 +282,7 @@ class sahriscollectionsman extends controller
                 $lat = trim($locarr[0]);
                 $lon = trim($locarr[1]);
                 $sn = $this->getParam('sn');
-                $siteabbr = metaphone($sn, 3);
+                $siteabbr = $this->getParam('sa'); //metaphone($sn, 3);
                 $sm = $this->getParam('sm');
                 $sc = $this->getParam('sc');
                 $scom = $this->getParam('scom');

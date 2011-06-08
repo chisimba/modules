@@ -601,7 +601,7 @@ class sahriscollectionsops extends object {
             if($sid == NULL) {
                 // $siteabbr = metaphone($sitename, 3);
                 $siteins = array('userid' => $this->objUser->userId($username), 'sitename' => $sitename, 'siteabbr' => $siteabbr, 
-                                 'sitemanager' => NULL, 'sitecontact' => NULL, 'lat' => NULL, 'lon' => NULL, 'comment' => NULL);
+                                 'sitemanager' => $sitemanager, 'sitecontact' => NULL, 'lat' => NULL, 'lon' => NULL, 'comment' => NULL);
                 $sid = $this->objDbColl->addSiteData($siteins);
             }
                     
@@ -670,6 +670,7 @@ class sahriscollectionsops extends object {
                 'filename' => $filename,
                 'username' => $username,
                 'media' => $media,
+                'collectionid' => $collid,
             );
             
             // var_dump($insarr); die();
@@ -765,6 +766,18 @@ class sahriscollectionsops extends object {
         $table->addCell($snLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
         $table->addCell($sn->show());
+        $table->endRow();
+        
+        // Site abbreviation
+        $sa = new textinput();
+        $sa->setValue($d['siteabbr']);
+        $sa->name = 'sa';
+        $sa->width ='50%';
+        $saLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_siteabbr', 'sahriscollectionsman').'&nbsp;', 'input_sa');
+        $table->startRow();
+        $table->addCell($saLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($sa->show());
         $table->endRow();
         
         // Site Manager

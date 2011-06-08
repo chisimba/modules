@@ -202,6 +202,10 @@ $fields = array(
 	'datecreated' => array(
 	    'type' => 'timestamp',
 	    ),
+	'collectionid' => array(
+	    'type' => 'text',
+	    'length' => 255,
+	    ),
 	);
 
 //create other indexes here...
