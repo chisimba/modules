@@ -90,25 +90,100 @@ class dbuserextra extends dbtable{
     }
 
     function updateUserInfo($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
-        $data = array(
-            'id' => $id,
-            'userid' => $userId,
-            'birthday' => $birthdate,
-            'address' => $address,
-            'city' => $city,
-            'state' => $state,
-            'postaladdress' => $postaladdress,
-            'organisation' => $organisation,
-            'jobtittle' => $jobtittle,
-            'typeoccapation' => $TypeOccapation,
-            'workingphone' => $WorkingPhone,
-            'description' => $DescriptionText,
-            'websitelink' => $WebsiteLink,
-            'groupmembership' => $GroupMembership
-        );
-        $this->update('id', $id,$data);
+        if ($birthdate != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'birthday' => $birthdate);
+            $this->update('id', $id, $data);
+        }
+        if ($city != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'city' => $city);
+            $this->update('id', $id, $data);
+        }
+        if ($address != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'address' => $address);
+            $this->update('id', $id, $data);
+        }
+        if ($state != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'state' => $state);
+            $this->update('id', $id, $data);
+        }
+        if ($postaladdress != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'postaladdress' => $postaladdress);
+            $this->update('id', $id, $data);
+        }
+        if ($organisation != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'organisation' => $organisation);
+            $this->update('id', $id, $data);
+        }
+        if ($birthdate != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'birthday' => $birthdate);
+            $this->update('id', $id, $data);
+        }
+        if ($WorkingPhone != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'workingphone' => $WorkingPhone);
+            $this->update('id', $id, $data);
+        }
+        if ($DescriptionText != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'description' => $DescriptionText);
+            $this->update('id', $id, $data);
+        }
+        if ($WebsiteLink != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'websitelink' => $WebsiteLink);
+            $this->update('id', $id, $data);
+        }
+        if ($GroupMembership != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'groupmembership' => $GroupMembership);
+            $this->update('id', $id, $data);
+        }
+        
+           if ($TypeOccapation != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'typeoccapation' => $TypeOccapation);
+            $this->update('id', $id, $data);
+        }
+        
+           if ($jobtittle != '') {
+            $data = array(
+                'id' => $id,
+                'userid' => $userId,
+                'jobtittle' => $jobtittle);
+            $this->update('id', $id, $data);
+        }
     }
-
 
     function getAllUser(){
          $sql = "select * from tbl_users";

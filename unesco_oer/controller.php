@@ -988,7 +988,13 @@ class unesco_oer extends controller {
         return 'userRegistration_tpl.php';
     }
 
-    function __deleteUser() {
+
+    function __me(){
+        return 'userdetails_tpl.php';
+    }
+
+
+    function __deleteUser(){
         $this->objUserAdmin->apiUserDelete($this->getParam('id'));
         $this->objUseExtra->deleteUser($this->getParam('id'), $this->getParam('userid'));
         // $this->objUseExtra->deleteUser($id);
@@ -1105,26 +1111,31 @@ class unesco_oer extends controller {
     function __updateUserDetails() {
 
         $id = $this->getParam('id');
-        $userId = $this->getParam('userid');
-        $user = $this->objUserAdmin->getUserDetails($id);
-        //$user = $this->__isValidUser($id, 'userdetailsupdate');
+        $user = $this->__isValidUser($id, 'userdetailsupdate');
+        //$user = $this->objUserAdmin->getUserDetails($id);
         $this->setVarByRef('user', $user);
+        //$this->setVar('user,$user');
 
         // Fix up proper redirection
         if (!$_POST) {
             return $this->nextAction(NULL);
         }
-        //$userId=$this->getParam('userid');
-        $username = $this->getParam('username');
-        $password = $this->getParam('register_password');
-        $repeatpassword = $this->getParam('register_confirmpassword');
-        $title = $this->getParam('register_title');
-        $firstname = $this->getParam('register_firstname');
-        $surname = $this->getParam('register_surname');
-        $email = $this->getParam('register_email');
-        $repeatemail = $this->getParam('register_confirmemail');
-        $sex = $this->getParam('register_sex');
-        $cellnumber = $this->getParam('register_cellnum');
+
+        // Get Details from Form
+        $password = $this->getParam('useradmin_password');
+        $repeatpassword = $this->getParam('useradmin_repeatpassword');
+        $title = $this->getParam('useradmin_title');
+        $firstname = $this->getParam('useradmin_firstname');
+        $surname = $this->getParam('useradmin_surname');
+        $email = $this->getParam('useradmin_email');
+        $cellnumber = $this->getParam('useradmin_cellnumber');
+        //$staffnumber = $this->getParam('useradmin_staffnumber');
+        $sex = $this->getParam('useradmin_sex');
+        $country = $this->getParam('country');
+        $username = $this->getParam('useradmin_username');
+        //$accounttype = $this->getParam('accounttype');
+        $accountstatus = $this->getParam('accountstatus');
+    
         //$staffnumber = $this->getParam('register_staffnum');
         $birthdate = $this->getParam('Date of birth');
         $address = $this->getParam('Address');
@@ -1138,8 +1149,8 @@ class unesco_oer extends controller {
         $WebsiteLink = $this->getParam('websitelink');
         $GroupMembership = $this->getParam('groupmembership');
         $country = $this->getParam('country');
-        $accountstatus = 1; // Default Status Active
-        $accountType = 'useradmin';  //Type of account
+        //$accountstatus = 1; // Default Status Active
+        $accounttype='useradmin';  //Type of account
 
 
         $userDetails = array(
@@ -1162,28 +1173,31 @@ class unesco_oer extends controller {
 
         // Check Fields
         if (!$this->checkFields($checkFields)) {
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->setVar('mode', 'addfixup');
-            $this->setVar('problem', 'missingfields');
+            $this->setVar('problem','missingfields');
             $this->setSession('showconfirmation', FALSE);
-            return 'userdetails_tpl.php';
+            return 'editUserDetails_tpl.php';
         }
 
         // Check Email Address
         if (!$this->objUrl->isValidFormedEmailAddress($email) && $email != $this->user['emailaddress']) {
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->setVar('mode', 'addfixup');
-            $this->setVar('problem', 'notvalidemail');
+            $this->setVar('problem', 'emailnotvalid');
             $this->setSession('showconfirmation', FALSE);
-            return 'userdetails_tpl.php';
+            return 'editUserDetails_tpl.php';
         }
 
         if ($username != $user['username']) {
             $available = $this->objUserAdmin->usernameAvailable($username);
 
             if ($available == FALSE) {
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 $this->setVar('mode', 'addfixup');
                 $this->setVar('problem', 'usernametaken');
                 $this->setSession('showconfirmation', FALSE);
-                return 'userdetails_tpl.php';
+                return 'editUserDetails_tpl.php';
             }
         }
 
@@ -1192,15 +1206,17 @@ class unesco_oer extends controller {
         // If account is switched from LDAP to useradmin, password is compulsory
         if ($user['howcreated'] == 'LDAP' && $accountype = 'useradmin') {
             if (($password == '') || ($repeatpassword == '')) {
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 $this->setVar('mode', 'addfixup');
                 $this->setVar('problem', 'nopasswordforldap');
                 $this->setSession('showconfirmation', FALSE);
-                return 'userdetails_tpl.php';
+                return 'editUserDetails_tpl.php';
             } else if ($password != $repeatpassword) {
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 $this->setVar('mode', 'addfixup');
                 $this->setVar('problem', 'ldappasswordnotmatching');
                 $this->setSession('showconfirmation', FALSE);
-                return 'userdetails_tpl.php';
+                return 'editUserDetails_tpl.php';
             }
         }
 
@@ -1230,6 +1246,7 @@ class unesco_oer extends controller {
         $this->objUser->updateUserSession();
         // Process Update Results
         if ($update) {
+             $this->objUseExtra->updateUserInfo($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
             return $this->nextAction('userdetails', $results);
         } else {
             return $this->nextAction('userdetails', array('id' => $id, 'change' => 'details', 'error' => 'detailscouldnotbeupdated'));
@@ -1273,6 +1290,7 @@ class unesco_oer extends controller {
                 return 'No password was entered';
             case 'norepeatpasswordentered':
                 return 'No Repeat password was entered';
+            
         }
     }
 
