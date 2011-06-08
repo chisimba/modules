@@ -124,12 +124,12 @@ class dbsahriscollections extends dbtable
     
     public function getSingleRecord($acno, $coll) {
         $this->changeTable('tbl_sahriscollections_items');
-        return $this->getAll("WHERE accno = '$acno' AND collection = '$coll'");
+        return $this->getAll("WHERE accno = '$acno' AND collectionname = '$coll'");
     }
     
     public function getCollRecords($collid) {
         $this->changeTable('tbl_sahriscollections_items');
-        return $this->getAll("WHERE collection = '$collid'");
+        return $this->getAll("WHERE collectionname = '$collid'");
     }
     
     public function countItemsInSite($sid) {
@@ -144,7 +144,7 @@ class dbsahriscollections extends dbtable
     
     public function searchItems($q) {
         $this->changeTable('tbl_sahriscollections_items');
-        $res = $this->getAll("WHERE description LIKE '%%$q%%' OR accno LIKE '%%$q%%' OR title LIKE '%%$q%%'");
+        $res = $this->getAll("WHERE physdesc LIKE '%%$q%%' OR accno LIKE '%%$q%%' OR title LIKE '%%$q%%'");
         return $res;
     }
     

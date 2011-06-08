@@ -256,7 +256,7 @@ class sahriscollectionsman extends controller
                 $file = $objFile->getFullFilePath($csv);
                 $collarr = $this->objCollOps->parseCSV($file);
                 $this->objCollOps->processCsvData($collarr);
-                //$this->nextAction('');
+                $this->nextAction('');
                 break;
                 
             case 'viewsites' :
