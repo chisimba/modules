@@ -181,39 +181,116 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     <span class="greyText fontBold">User comments:</span>
                     <br><br>
 
-                   
-                    <div class="commentsDiv">
-                        <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
+                      <div class="listCommunityRelatedInfoDiv">
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                         <div class="communityRelatedInfoText">
-                            <?php
+                        	<a href="#" class="greyTextLink">
+
+                               <?php
 
 
-                          $Comment = $this->getobject('commentmanager', 'unesco_oer');
+                         $Comment = $this->getobject('commentmanager', 'unesco_oer');
                              $comments =  $Comment->recentcomment($productID);
                              echo $comments[2];
-
-
                             ?>
 
+                      
+                            </a>
                         </div>
                     </div>
-                    <div class="commentsDiv">
-                        <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
+                    <div class="listCommunityRelatedInfoDiv">
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                         <div class="communityRelatedInfoText">
+                        	<a href="#" class="greyTextLink">
                             <?php
-                            
-                            
-  $Comment = $this->getobject('commentmanager', 'unesco_oer');
+                    
+
+                        $Comment = $this->getobject('commentmanager', 'unesco_oer');
                              $comments =  $Comment->recentcomment($productID);
                              echo $comments[1];
-                            
+
                             ?>
+                            </a>
                         </div>
                     </div>
+                
+  
+                         <script src="http://code.jquery.com/jquery-latest.js"></script>
+                            <script>
+                           $(document).ready(function(){
 
-                  
-                	<div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all comments</a></div>
-<!--                    <textarea class="commentTextBox">Leave comment</textarea> -->
+ 
+        $(".slidingDiv").hide();
+
+        $(".greyTextLink").show();
+
+ 
+
+    $('.greyTextLink').click(function(){
+
+    $(".slidingDiv").slideToggle();
+
+    });
+
+
+});
+
+                            </script>
+
+
+
+                           <a href="javascript:void(0)" class="greyTextLink">Show all comments</a>
+
+                            <div class="slidingDiv">
+
+    
+                         <?php
+                        $comments = $this->objDbComments->getComment($productID);
+                        $content ='';
+                        $totalcomments = $this->objDbComments->getTotalcomments($productID);
+                        
+
+                        for ($i=0; $i<$totalcomments-2; $i++) {
+                            
+                            
+                    $content .= '        <div class="listCommunityRelatedInfoDiv">
+                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
+                        <div class="communityRelatedInfoText">
+                        	<a href="#" class="greyTextLink">' . $comments[$i]['product_comment'] .
+
+                             
+
+
+                       
+
+                         
+                      
+                           ' </a>
+                        </div>
+                    </div>';
+
+
+                         
+
+                        }
+
+                    echo $content
+
+                                ?> 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <a href="javascript:void(0)" class="greyTextLink">hide comments</a></div>
+                            
+
+
+
 			<?php
                     }
                       else  if (($this->objDbComments->getTotalcomments($productID) == 1)) {

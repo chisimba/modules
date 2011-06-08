@@ -206,7 +206,6 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                          $Comment = $this->getobject('commentmanager', 'unesco_oer');
                              $comments =  $Comment->recentcomment($productID);
                              echo $comments[2];
-
                             ?>
 
                       
@@ -228,36 +227,50 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                             </a>
                         </div>
                     </div>
-                   
-                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">
-
-                                  
-                           view all comments
-                      
-
-
-                        </a></div>
-
-                      <button>Show it</button>
+                
+  
                          <script src="http://code.jquery.com/jquery-latest.js"></script>
                             <script>
-                            $("button").click(function () {
-                            $("div").show("slow");
-                            });
+                           $(document).ready(function(){
+
+ 
+        $(".slidingDiv").hide();
+
+        $(".greyTextLink").show();
+
+ 
+
+    $('.greyTextLink').click(function(){
+
+    $(".slidingDiv").slideToggle();
+
+    });
+
+
+});
+
                             </script>
 
 
 
-                            <div style="display: none">
-                                <?php
-                              $comments = $this->objDbComments->getComment($productID);
-                        $content ='';
+                           <a href="javascript:void(0)" class="greyTextLink">Show all comments</a>
 
-                        foreach ($comments as $comment) {
+                            <div class="slidingDiv">
+
+    
+                         <?php
+                        $comments = $this->objDbComments->getComment($productID);
+                        $content ='';
+                        $totalcomments = $this->objDbComments->getTotalcomments($productID);
+                        
+
+                        for ($i=0; $i<$totalcomments-2; $i++) {
+                            
+                            
                     $content .= '        <div class="listCommunityRelatedInfoDiv">
                     	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                         <div class="communityRelatedInfoText">
-                        	<a href="#" class="greyTextLink">' . $comment['product_comment'] .
+                        	<a href="#" class="greyTextLink">' . $comments[$i]['product_comment'] .
 
                              
 
@@ -277,7 +290,18 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
                     echo $content
 
-                                ?>  </div>
+                                ?> 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <a href="javascript:void(0)" class="greyTextLink">hide comments</a></div>
+                            
 
 
 
