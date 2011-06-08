@@ -62,7 +62,7 @@ class dbproductkeywords extends dbtable
           'keyword_id' => $keywordID
         );
         
-        $this->insert($data);
+        $this->insert($data,  $this->product_keyword_jxn);
     }
 }
 ?>

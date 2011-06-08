@@ -297,6 +297,7 @@ class product extends object
 
 
         $this->saveThemes($this->getThemes());
+        $this->saveKeyWords($this->getKeyWords());
 
         $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
         $results = $this->uploadThumbNail($path);
@@ -349,7 +350,6 @@ class product extends object
         $this->setCoverage($this->getParam('coverage'));
         $this->setStatus($this->getParam('status'));
         $this->setKeyWords($this->getParam('keywords'));
-        $this->dummyValue = $this->getParam('keywords', 'nothing');
 
         $themesSelected = array();
         $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
@@ -655,6 +655,7 @@ class product extends object
         $keywordfieldset = $this->newObject('fieldset','htmlelements');
         $keywordfieldset->setLegend('Keywords'.'<font color="#FF2222">* '. $this->validationArray['keyword']['message']. '</font>');
         $keywordfieldset->addContent($tblSelectBox->show() );
+        
         //field for resource type
         $fieldName = 'resource_type';
         $title = $this->objLanguage->languageText('mod_unesco_oer_resource', 'unesco_oer');
@@ -765,7 +766,8 @@ class product extends object
                                                     $this->_relationtype,
                                                     'description',
                                                     $table,
-                                                    'id'
+                                                    'id',
+                                                    "javascript: toggleRelationDropDown('input_relation_type', 'input_relation');"
                                                     );
 
         //field for relations
@@ -816,21 +818,20 @@ class product extends object
         /*         Misc. fields, eg. rights             */
         /*                                              */
 
+        $this->appendArrayVar( 'headerParams', $this->getJavascriptFile('addProduct.js','unesco_oer') );
+
         $hiddenInput = new hiddeninput('add_product_submit');
-        $hiddenscript = "document.add_products_ui['add_product_submit'] = 'upload';";
-        $hiddenInput->setName('upload');
 
         // setup button for submission
         $buttonSubmit = new button('upload', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
-        //$buttonSubmit->setToSubmit();
-        $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList ).$objSelectBox->submitForm();
-        $buttonSubmit->setOnClick('javascript: ' . $hiddenscript . $action);
+        $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )."SubmitProduct('add_product_submit', 'upload');";
+        $buttonSubmit->setOnClick('javascript: ' . $action);
 
         // setup button for cancellation
         $buttonCancel = new button('upload', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer'));
-        $buttonCancel->setOnClick($objSelectBox->submitForm());
+        $buttonCancel->setOnClick("SubmitProduct('add_product_submit', 'cancel')");
 
         
 
@@ -1012,11 +1013,28 @@ class product extends object
    function setKeyWords($keyWords) 
    {
        $this->_keywords = $keyWords;
+
+        if (empty($keyWords))
+        {
+            $this->addValidationMessage('keyword', FALSE, 'Product must have at least one Keyword');
+        }
+        else
+        {
+            $this->addValidationMessage('keyword', TRUE, NULL);
+        }
    }
 
    function saveKeyWords($keyWords)
    {
-       $this->_keywords = $keyWords;
+       if($keyWords != NULL && !is_array($keyWords)){
+            $keyWords = array($keyWords);
+        }
+
+        foreach ($keyWords as $keyWords) {
+            if ($keyWords != NULL){
+                $this->objDbProductKeywords->addProductKeywordJxn($this->_identifier, $keyWords);
+            }
+        }
    }
    
    function uploadThumbNail($path)

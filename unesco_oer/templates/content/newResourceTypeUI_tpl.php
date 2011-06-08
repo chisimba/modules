@@ -33,17 +33,21 @@ $textinput = new textinput('newTypeDescription');
 $textinput->size = 60;
 $table->startRow();
 $table->addCell('Type Description:');
+$table->addCell($textinput->show());
+$table->endRow();
 
 //input options for resource table
 $textinput = new textinput('newTypeTable');
 $textinput->size = 60;
 $table->startRow();
 $table->addCell('Type Table Name:');
+$table->addCell($textinput->show());
+$table->endRow();
 
 //input optins for submit button
-$table->addCell($textinput->show());
 $button = new button('submitProductType', "Submit Product Type");
 $button->setToSubmit();
+$table->startRow();
 $table->addCell($button->show());
 $table->endRow();
 

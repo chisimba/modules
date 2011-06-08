@@ -70,16 +70,16 @@ class adddatautil extends object {
         $table->endRow();
     }
 
-    function addDropDownToTable($title, $titleType, $name, $inputArray, $initValue, $field, $table, $value = null){
+    function addDropDownToTable($title, $titleType, $name, $inputArray, $initValue, $field, $table, $value = null, $onChange = '') {
         $table->startRow();
         $this->addTitleToRow($title, $titleType, $table);
         $table->endRow();
         $table->startRow();
-        $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value);
+        $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value, $onChange);
         $table->endRow();
     }
 
-    function addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value = null){
+    function addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value = null, $onChange = ""){
         $dropdown = new dropdown($name);
         $dropdown->addOption(NULL, 'none');
         foreach ($inputArray as $input) {
@@ -91,8 +91,11 @@ class adddatautil extends object {
         }else{
             $dropdown->setSelected(NULL);
         }
-        
+
+        $dropdown->addOnchange($onChange);
+
         $table->addCell($dropdown->show());
+        return ;
     }
 
 }
