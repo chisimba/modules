@@ -543,17 +543,52 @@ class sahriscollectionsops extends object {
     public function processCsvData($collarr) {
         foreach($collarr as $rec) {
             $sitename = $rec[0];
-            $collection = $rec[1];
-            $accno = $rec[2];
-            $objtype = $rec[3];
-            $title = $rec[4];
-            $description = $rec[5];
-            $objloc = $rec[6];
-            $objstatus = $rec[7];
-            $comment = $rec[8];
-            $media64 = $rec[9];
-            $filename = $rec[10];
-            $username = $rec[11];
+            $siteabbr = $rec[1];
+            $sitemanager = $rec[2];
+            $collectionname = $rec[3];
+            $objname = $rec[4];
+            $objtype = $rec[5];
+            $accno = $rec[6];
+            $acqmethod = $rec[7];
+            $acqdate = $rec[8];
+            $acqsrc  = $rec[9];
+            $origmedia = $rec[10];
+            $commname = $rec[11];
+            $localname = $rec[12];
+            $classname = $rec[13];
+            $catbyform = $rec[14];
+            $catbytech = $rec[15];
+            $material = $rec[16];
+            $technique = $rec[17];
+            $dimensions = $rec[18];
+            $normalloc = $rec[19];
+            $currloc = $rec[20];
+            $reason = $rec[21];
+            $remover = $rec[22];
+            $physdesc = $rec[23];
+            $distfeat = $rec[24];
+            $currcond = $rec[25];
+            $conservemeth = $rec[26];
+            $conservedate = $rec[27];
+            $conservator = $rec[28];
+            $histcomments = $rec[29];
+            $maker = $rec[30];
+            $prodplace = $rec[31];
+            $prodperiod = $rec[32];
+            $histuser = $rec[33];
+            $placeofuse = $rec[34];
+            $periodofuse = $rec[35];
+            $provenance = $rec[36];
+            $collector = $rec[37];
+            $collectdate = $rec[38];
+            $collmethod = $rec[39];
+            $collnumber = $rec[40];
+            $pubref = $rec[41];
+            $gensite = $rec[42];
+            $media64 = $rec[43];
+            $filename = $rec[44];
+            $username = $rec[45];
+            
             if($media64 != NULL) {
                 $media = $this->processMediaFromCSV($media64, $username, $filename);
             }
@@ -564,17 +599,17 @@ class sahriscollectionsops extends object {
             // parse the site name and optionally create a new one if needs be
             $sid = $this->objDbColl->getSiteByName($sitename);
             if($sid == NULL) {
-                $siteabbr = metaphone($sitename, 3);
+                // $siteabbr = metaphone($sitename, 3);
                 $siteins = array('userid' => $this->objUser->userId($username), 'sitename' => $sitename, 'siteabbr' => $siteabbr, 
                                  'sitemanager' => NULL, 'sitecontact' => NULL, 'lat' => NULL, 'lon' => NULL, 'comment' => NULL);
                 $sid = $this->objDbColl->addSiteData($siteins);
             }
                     
             $sitedet = $this->objDbColl->getSiteDetails($sid);
-            $siteaccabbr = $sitedet[0]['siteabbr'];
+            $siteaccabbr = $gensite; //$sitedet[0]['siteabbr'];
             $sitecount = $this->objDbColl->countItemsInSite($sid);
                   
-            $siteacc = $siteaccabbr.$sitecount;
+            $siteacc = $gensite."_".$sitecount;
                     
             // get the collection id from name
             $collid = $this->objDbColl->getCollByName($collection);
@@ -584,11 +619,60 @@ class sahriscollectionsops extends object {
                                 'sitename' => $sitename, 'siteid' => $sid);
                 $collid = $this->objDbColl->insertCollection($insarr);
             }
-                    
-            $insarr = array('userid' => $this->objUser->userId($username), 'siteid' => $sid, 'siteacc' => $siteacc,
-                            'accno' => $accno, 'objtype' => $objtype, 'collection' => $collid, 
-                            'title' => $title, 'description' => $description, 'media' => $media, 'comment' => $comment, 'location' => $objloc, 
-                            'status' => $objstatus);
+            // and now the data     
+            $insarr = array(
+                'userid' => $this->objUser->userId($username),
+                'sitename' => $sitename,
+                'siteabbr' => $siteabbr,
+                'sitemanager' => $sitemanager,
+                'siteid' => $sid,
+                'collectionname' => $collectionname,
+                'objname' => $objname,
+                'objtype' => $objtype,
+                'accno' => $accno,
+                'acqmethod' => $acqmethod,
+                'acqdate' => $acqdate,
+                'acqsrc' => $acqsrc,
+                'origmedia' => $origmedia,
+                'commname' => $commname,
+                'localname' => $localname,
+                'classname' => $classname,
+                'catbyform' => $catbyform,
+                'catbytech' => $catbytech,
+                'material' => $material,
+                'technique' => $technique,
+                'dimensions' => $dimensions,
+                'normalloc' => $normalloc,
+                'currloc' => $currloc,
+                'reason' => $reason,
+                'remover' => $remover,
+                'physdesc' => $physdesc,
+                'distfeat' => $distfeat,
+                'currcond' => $currcond,
+                'conservemeth' => $conservemeth,
+                'conservedate' => $conservedate,
+                'conservator' => $conservator,
+                'histcomments' => $histcomments,
+                'maker' => $maker, 
+                'prodplace' => $prodplace,
+                'prodperiod' => $prodperiod,
+                'histuser' => $histuser,
+                'placeofuse' => $placeofuse,
+                'periodofuse' => $periodofuse,
+                'provenance' => $provenance,
+                'collector' => $collector,
+                'collectdate' => $collectdate,
+                'collmethod' => $collmethod,
+                'collnumber' => $collnumber,
+                'pubref' => $pubref,
+                'gensite' => $gensite,
+                'media64' => $media64,
+                'filename' => $filename,
+                'username' => $username,
+                'media' => $media,
+            );
+            
+            // var_dump($insarr); die();
             $res = $this->objDbColl->insertRecord($insarr);
             $insarr = NULL;
             $media = NULL;
