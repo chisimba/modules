@@ -92,7 +92,7 @@ class filterdisplay extends object {
 
 
         $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
-        $button->setToSubmit();
+        $button->onclick = 'javascript:ajaxFunction()';
 
         $checkbox = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_model', 'unesco_oer'));
         $checkbox2 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_handbook', 'unesco_oer'));
@@ -162,7 +162,7 @@ class filterdisplay extends object {
         // $form = newform('ThemeFilter', $this->uri(array('action' => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries,'inf' =>$temp)));
 
 
-        $filterTheme->addOnChange('javascript:ajaxFunction()');
+   //     $filterTheme->addOnChange('javascript:ajaxFunction()');
         $form->addtoform($filterTheme->show());
 
 
@@ -200,7 +200,7 @@ class filterdisplay extends object {
 
 
        
-        $filterLang->addOnChange('javascript: sendLanguageFilterform()');
+      //  $filterLang->addOnChange('javascript: sendLanguageFilterform()');
 
 
         $form->addtoform($filterLang->show());
@@ -240,7 +240,7 @@ class filterdisplay extends object {
 
 
    
-        $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
+   //     $filterAuth->addOnChange('javascript: sendAuthorFilterform()');
 
 
         $form->addtoform($filterAuth->show());
@@ -342,8 +342,14 @@ class filterdisplay extends object {
                          echo   $thumbnail;
                             for ($i = 1; $i <= $TotalPages; $i++) {
 
-                                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => $page, "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries, 'pageinfo' => $pageinfo)));
+                                $abLink = new link("javascript:void(0);");
+                                 $abLink->extra = "onclick = javascript:ajaxFunction($i) id = numfilter title=".$i;
+                                 
+                                  
+
+
                                 $abLink->link = $i;
+
                                      echo    $abLink->show();
 
                             }
@@ -381,7 +387,7 @@ class filterdisplay extends object {
 
 
                     
-                            $filtersort->addOnChange('javascript: sendSortFilterform()');
+                          //  $filtersort->addOnChange('javascript: sendSortFilterform()');
 
 
 
@@ -423,7 +429,7 @@ function Search($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapst
 
                                     $filterSearch = new dropdown('SearchFilter');
                                     $filterSearch->cssClass = "searchDropDown";
-
+                                   
                                     $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'));
                                     $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
                                     $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_creator', 'unesco_oer'));
@@ -528,10 +534,7 @@ function Search($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapst
 
 
 
-        if ($sort == 'Date')
-            $buildstring .= ' order by created_on';
-        else if ($sort == 'Alphabetical')
-            $buildstring .= ' order by title';
+       
 
         $TotalEntries = $buildstring;
 

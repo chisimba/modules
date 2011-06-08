@@ -12,6 +12,9 @@ if ($finalstring == null)
              $TotalEntries = 'relation is null';
     }
 
+    $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproducts.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
+    
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -283,6 +286,7 @@ if ($finalstring == null)
                                     
                                 </div>
                             </div>
+                                       <div id='filterDiv' title ="1a" >
                     <?php
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
@@ -291,7 +295,7 @@ if ($finalstring == null)
 
 
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
-echo $finalstring;
+
                                         $newRow = true;
                                         $count = 0;
                                         $noOfAdaptations = 0;
@@ -321,7 +325,7 @@ echo $finalstring;
                                         }
                                         echo $objTable->show();
                     ?>
-                                        <!--
+                      </div>                  <!--
                                                             <table class="gridListingTable" cellspacing="0" cellpadding="0">
                                                                 <tr>
                                                                     <td>

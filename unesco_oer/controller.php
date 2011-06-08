@@ -215,6 +215,13 @@ class unesco_oer extends controller {
 //        $age = getPa
 
         return "JavaFilter_tpl.php";
+        die();
+    }
+
+     public function __PaginationFilter() {
+//        $age = getPa
+
+        return "paginationfilter_tpl.php";
     }
 
     public function __ViewProduct() {

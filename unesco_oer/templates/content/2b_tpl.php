@@ -7,6 +7,9 @@ $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('filterdisplay', 'unesco_oer');
 if ($adaptationstring == null)
 $adaptationstring = "relation is not null";
+
+$js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproducts.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -235,7 +238,7 @@ $adaptationstring = "relation is not null";
                                             </div>
                                         </div>
                                     </div>
-
+                           <div id='filterDiv' title = "2b" >
                             <?php
                                             //$objTable = $this->getObject('htmltable', 'htmlelements');
 
@@ -267,7 +270,7 @@ $adaptationstring = "relation is not null";
                                                 }
                                             }
                             ?>
-
+                           </div>
                                 <!--
                                 <div class="adaptationListView">
                                     <div class="productAdaptationListViewLeftColumn">

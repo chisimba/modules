@@ -14,8 +14,13 @@ ini_set('display_errors', 'off');
 
 if ($adaptationstring == null)
     $adaptationstring = 'relation is not null';
+ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproducts.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
+
+
 ?>
 <script src="http://code.jquery.com/jquery-1.5.js"></script>
+
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -238,7 +243,7 @@ echo $abLink->show();
                             </div>
                         </div>
                     </div>
-                <div id='ajaxDiv'>
+                <div id='filterDiv' title = "2a" >
                             <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
 
@@ -428,11 +433,16 @@ echo $abLink->show();
 
                                 -->
                                 <!-- Pagination-->
+                              
+                               
                                 <div class="paginationDiv">
+                                    
+
 <?php
                             $Pagination = $this->getobject('filterdisplay', 'unesco_oer');
                               $Pagination->Pagination('2a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum, $pageinfo)
 ?>
+                                   
                                 </div>
 
                             </div>
@@ -440,7 +450,7 @@ echo $abLink->show();
                             <!-- Right column DIv -->
                             <div class="rightColumnDiv">
                                 <div class="rightColumnDiv">
-                                    <div class="featuredHeader">FEATURED ADAPTATION</div>
+                                    <div class="featuredHeader" >FEATURED ADAPTATION</div>
                                     <div class="rightColumnBorderedDiv">
 <?php
                              
@@ -653,46 +663,6 @@ echo $abLink->show();
     </body>
 </html>
 
-<script language="javascript" type="text/javascript">
-
-
-
-   function ajaxFunction(){
-	var ajaxRequest;
-
-	try{
-		// Opera 8.0+, Firefox, Safari
-		ajaxRequest = new XMLHttpRequest();
-	} catch (e){
-		// Internet Explorer Browsers
-		try{
-			ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
-		} catch (e) {
-			try{
-				ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
-			} catch (e){
-				// Something went wrong
-				alert("Your browser broke!");
-				return false;
-			}
-		}
-	}
-	// Create a function that will receive data sent from the server
-	ajaxRequest.onreadystatechange = function(){
-		if(ajaxRequest.readyState == 4){
-			var ajaxDisplay = document.getElementById('ajaxDiv');
-			ajaxDisplay.innerHTML = ajaxRequest.responseText;
-		}
-	}
-	var age = document.getElementById('input_ThemeFilter').value;
-
-	var queryString = "age=" + age;
-     
-	ajaxRequest.open("GET", "index.php?moduler=unesco_oer&action=JavaFilter&" + queryString, true);
-	ajaxRequest.send(null);
-}
-
-</script>
 
 
 
