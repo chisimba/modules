@@ -144,7 +144,6 @@ $button = new button ('submitform', 'Submit');
 $button->setToSubmit();
 
 $objForm->addToForm('<p align="center"><br />'.$button->show().'</p>');
-	
 
 	
 	return $objForm->show();

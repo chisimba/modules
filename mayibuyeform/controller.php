@@ -169,8 +169,8 @@ class mayibuyeform extends controller {
 	$id =$this->dbresearchlast->SaveResearchLastRecord($stuno, $staffnum, $colection, $image, $project, $time);
 
 
- $subject = "New Reseacher";
-        $this->sendEmailNotification($subject, $message = ' date: ' . $date . '  ' . "\n" . ' name:  ' .
+ 	$subject = "New Reseacher";
+        $this->sendEmailNotification($subject, $message = ' ***Researcher Details*** '. "\n". ' date: ' . $date . '  ' . "\n" . ' name:  ' .
                 $nameofreseacher . '   ' . "\n" . ' telno: ' . $tellno . '   ' . "\n" . 'Fax no: ' .
                 $faxxno . '  ' . "\n" . ' email adddress: ' . $email . '  ' . "\n" . ' Name of Signator: ' .
                 $nameofsign . '  ' . "\n" . ' job-title: ' . $jobtitles . '   ' . "\n" . 'organanization: ' .
