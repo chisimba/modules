@@ -195,6 +195,13 @@ class dbuserextra extends dbtable{
          $sql="DELETE FROM tbl_unesco_oer_userextra WHERE id='$id' AND userid='$userid'";
          return $this->getArray($sql);
        }
+     
+     function getUserDetails($id,$userid){
+         $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE id='$id' AND userid='$userid'";
+         return $this->getArray($sql);
+     }
+
+
 
 
 

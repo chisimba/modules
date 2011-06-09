@@ -61,9 +61,10 @@ if (count($users) > 0) {
         $myTable->addCell($user['firstname']);
         $myTable->addCell($user['title']);
         $myTable->addCell($user['emailaddress']);
+        //$array=$user;
 
         $objIcon->setIcon('edit');
-        $editLink =new link($this->uri(array('action' => "editUserDetailsForm",'id' => $user['id'],'userid'=>$user['userid'],'username'=>$user['username'],'user'=>$user)));
+        $editLink =new link($this->uri(array('action' => "editUserDetailsForm",'id' => $user['id'],'userid'=>$user['userid'],'username'=>$user['username'])));
         $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());
 
