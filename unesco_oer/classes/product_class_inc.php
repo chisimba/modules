@@ -33,6 +33,7 @@ class product extends object
     public $objThumbUploader;
     public $objDbRelationTypes;
     public $objDbProductKeywords;
+    public $objDbProductStatus;
 
 
     //TODO move catorgorized parameters into structs. eg. <creationStruct>
@@ -213,12 +214,6 @@ class product extends object
 
     //////////   Constructor   //////////
 
-//    public function __construct()
-//    {
-//
-//    }
-
-
     public function  init()
     {
         parent::init();
@@ -232,6 +227,7 @@ class product extends object
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objDbRelationTypes = $this->getObject('dbrelationtype');
         $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
+        $this->objDbProductStatus = $this->getObject('dbproductstatus');
         $this->validationArray = array();
     }
 
@@ -244,20 +240,6 @@ class product extends object
     {
         $tempData = array();
 
-//        $sql = 'DESCRIBE tbl_unesco_oer_products';
-//        $fields = $this->_objDbProducts->getArray($sql);
-//
-//        foreach ($fields as $field)
-//        {
-//            $property = '_'.preg_replace("#_#i", "", $field['field']);
-//            $value = $this->$property;
-//            echo $property.' : '.$value.'<br>';
-//            if (isset($value))
-//            {
-//                $tempData[$field['field']] = $value;
-//            }
-//        }
-
         $tempData['title'] = $this->getTitle();
         $tempData['alternative_title'] = $this->getAlternativeTitle();
         $tempData['resource_type'] = $this->getContentType();
@@ -268,8 +250,6 @@ class product extends object
         $tempData['creator'] = $this->getAuthors();
         $tempData['contacts'] = $this->getContacts();
         $tempData['publisher'] = $this->getPublisher();
-        //NOTE: themes are saved after an ID has been created
-        //TODO $tempData['keywords']
         //TODO $tempData['related_language']
         $tempData['other_contributors'] = $this->getOtherContributers();
         //TODO format ??
@@ -277,26 +257,25 @@ class product extends object
         $tempData['rights'] = $this->getRights();
         $tempData['rights_holder'] = $this->getRightsHolder();
         $tempData['provenance'] = $this->getProvenance();
-        //TODO $tempData['relation']
-        //TODO $tempData['relation_type']
+        $tempData['relation'] = $this->getRelation();
+        $tempData['relation_type'] = $this->getRelationType();
         $tempData['status'] = $this->getStatus();
         
         
         if ($this->getIdentifier())
         {
             $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData);
-            //$this->dummyValue = "With ID: ".$tempData['title'];
         }
         else
         {
             $tempData['date'] = $this->getDate();
             $this->_objDbProducts->addProduct($tempData);
             $this->_identifier = $this->_objDbProducts->getLastInsertId();
-            //$this->dummyValue = "With Out ID: ".$tempData['title'];
         }
 
-
+        //NOTE: themes are saved after an ID has been created
         $this->saveThemes($this->getThemes());
+        //NOTE: keywords are saved after an ID has been created
         $this->saveKeyWords($this->getKeyWords());
 
         $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
@@ -350,6 +329,7 @@ class product extends object
         $this->setCoverage($this->getParam('coverage'));
         $this->setStatus($this->getParam('status'));
         $this->setKeyWords($this->getParam('keywords'));
+        $this->setRelation($this->getParam('relation'), $this->getParam('relation_type'));
 
         $themesSelected = array();
         $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
@@ -358,7 +338,7 @@ class product extends object
         }
 
         $this->setThemes($themesSelected);
-//        $this->setRelation($relation, $relationType);
+
         if ($this->validateMetaData()){
             $this->saveProduct();
             return TRUE;
@@ -376,17 +356,6 @@ class product extends object
     {
         $valid = TRUE;
 
-//        $sql = 'DESCRIBE tbl_unesco_oer_products';
-//        $fields = $this->_objDbProducts->getArray($sql);
-//
-//        foreach ($fields as $field) {
-//            $property = '_'.preg_replace("#_#i", "", $field['field']);
-//            if (empty ($this->$property))
-//            {
-////                $valid = FALSE;
-//            }
-//        }
-
         foreach ($this->validationArray as $validation) {
             if (!$validation['valid'])
             {
@@ -401,8 +370,6 @@ class product extends object
                 $valid = FALSE;
                 $this->addValidationMessage('thumbnail', $valid, 'A thumbnail is required');
             }
-
-//            $this->dummyValue = $fileInfoArray;
 
         return $valid;
     }
@@ -448,8 +415,6 @@ class product extends object
         $fieldName = 'title';
         $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
         $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
-//        $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
-//        $this->_objAddDataUtil->addTextInputToRow($fieldName, 0, $this->_title, $table);
         $this->_objAddDataUtil->addTextInputToTable(
                                                     $title,
                                                     4,
@@ -462,8 +427,6 @@ class product extends object
         //field for alternative title
         $fieldName = 'alternative_title';
         $title = $this->objLanguage->languageText('mod_unesco_oer_title_alternative', 'unesco_oer');
-//        $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
-//        $this->_objAddDataUtil->addTextInputToRow($fieldName, 0, $this->_alternativetitle, $table);
         $this->_objAddDataUtil->addTextInputToTable(
                                                     $title,
                                                     4,
@@ -501,7 +464,6 @@ class product extends object
         //Field for Authors
         $fieldName = 'creator';
         $title = $this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer');
-//        $title .= ($this->_creator ? '<font color="#000000">*</font>' : '<font color="#FF2222">*</font>');
         $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
         $this->_objAddDataUtil->addTextInputToTable(
                                                     $title,
@@ -622,7 +584,7 @@ class product extends object
         $table->addCell($editor->show());
         $table->endRow();
 
-        //TODO Implement keywords fully
+        //TODO Load preselected keywords
         //field for keywords
         $fieldName = 'keywords';
         $form_data = new form('add_products_ui', $uri);//////created here in order to include text boxes//////
@@ -651,7 +613,7 @@ class product extends object
             $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
             $tblSelectBox->addCell( $tblRight->show(), '100pt' );
         $tblSelectBox->endRow();
-        //////
+    
         $keywordfieldset = $this->newObject('fieldset','htmlelements');
         $keywordfieldset->setLegend('Keywords'.'<font color="#FF2222">* '. $this->validationArray['keyword']['message']. '</font>');
         $keywordfieldset->addContent($tblSelectBox->show() );
@@ -753,17 +715,17 @@ class product extends object
                                                     $table
                                                     );
 
-        //TODO Implement relation types properly
         //field for relation types
         $fieldName = 'relation_type';
         $title = $this->objLanguage->languageText('mod_unesco_oer_relation_type', 'unesco_oer');
+        $title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
         $relationTypes = $this->objDbRelationTypes->getRelationTypes();
         $this->_objAddDataUtil->addDropDownToTable(
                                                     $title,
                                                     4,
                                                     $fieldName,
                                                     $relationTypes,
-                                                    $this->_relationtype,
+                                                    $this->getRelationType(),
                                                     'description',
                                                     $table,
                                                     'id',
@@ -773,6 +735,7 @@ class product extends object
         //field for relations
         $fieldName = 'relation';
         $title = $this->objLanguage->languageText('mod_unesco_oer_relation', 'unesco_oer');
+        $title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
         $products = $this->_objDbProducts->getAll();
         $this->_objAddDataUtil->addDropDownToTable(
                                                     $title,
@@ -797,18 +760,22 @@ class product extends object
                                                     $table
                                                     );
 
-        //TODO Implement status fully
-        //Field for status
+        //field for status
         $fieldName = 'status';
         $title = $this->objLanguage->languageText('mod_unesco_oer_status', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
+        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        $statuses = $this->objDbProductStatus->getAllStatuses();
+        $this->_objAddDataUtil->addDropDownToTable(
                                                     $title,
                                                     4,
                                                     $fieldName,
-                                                    '90%',
-                                                    $this->_status,
-                                                    $table
+                                                    $statuses,
+                                                    $this->getStatus(),
+                                                    'status',
+                                                    $table,
+                                                    'id'
                                                     );
+
 
         $fieldset = $this->newObject('fieldset','htmlelements');
         $fieldset->setLegend('Misc. Information');
@@ -837,7 +804,7 @@ class product extends object
 
         //createform, add fields to it and display
         $uri = $this->uri(array(
-                    'action' => "savetest",
+                    'action' => "saveProductMetaData",
                     'productID' => $this->_identifier,
                     'prevAction' => $prevAction));
         
@@ -850,7 +817,43 @@ class product extends object
         //TODO Related Languages ??
     }
 
-    ////////////////   sETTERS   ////////////////
+    //////// Save operations for external tables //////
+
+   /**This function adds keyword relationships for the current product
+    *
+    * @param <type> $keyWords
+    */
+   function saveKeyWords($keyWords)
+   {
+       if($keyWords != NULL && !is_array($keyWords)){
+            $keyWords = array($keyWords);
+        }
+
+        foreach ($keyWords as $keyWords) {
+            if ($keyWords != NULL){
+                $this->objDbProductKeywords->addProductKeywordJxn($this->_identifier, $keyWords);
+            }
+        }
+   }
+
+   /**This function adds theme relationships for the current product
+    *
+    * @param <type> $themeIDarray
+    */
+   function saveThemes($themeIDarray)
+    {
+        if($themeIDarray != NULL && !is_array($themeIDarray)){
+            $themeIDarray = array($themeIDarray);
+        }
+
+        foreach ($themeIDarray as $themeID) {
+            if ($themeID != NULL){
+                $this->objDbProductThemes->addProductThemeJxn($this->_identifier, $themeID);
+            }
+        }
+    }
+
+    ////////////////   SETTERS   ////////////////
 
     private function addValidationMessage($field, $valid, $message)
     {
@@ -953,20 +956,6 @@ class product extends object
         $this->_unescocontacts = $contacts;
     }
 
-    function saveThemes($themeIDarray)
-    {
-        if($themeIDarray != NULL && !is_array($themeIDarray)){
-            $themeIDarray = array($themeIDarray);
-        }
-
-        foreach ($themeIDarray as $themeID) {
-            if ($themeID != NULL){
-                $this->objDbProductThemes->addProductThemeJxn($this->_identifier, $themeID);
-            }
-        }
-
-    }
-
     function setThemes($themeIDarray)
     {
         $this->_unescothemes = $themeIDarray;
@@ -997,6 +986,15 @@ class product extends object
    function setStatus($status)
    {
        $this->_status = $status;
+
+       if (empty($status))
+        {
+            $this->addValidationMessage('status', FALSE, 'Product must have a status');
+        }
+        else
+        {
+            $this->addValidationMessage('status', TRUE, NULL);
+        }
    }
 
    private function setIdentifier($id)
@@ -1008,6 +1006,20 @@ class product extends object
    {
        $this->_relation = $relation;
        $this->_relationtype = $relationType;
+
+       if (empty($relation) && !empty($relationType))
+       {
+           $this->addValidationMessage('relation', FALSE, 'Given a relation type, a relation must be selected');
+       }
+       elseif (!empty($relation) && empty($relationType))
+       {
+           $this->addValidationMessage('relation_type', FALSE, 'Given a relation, a relation type must be selected');
+       }
+       else
+       {
+           $this->addValidationMessage('relation', TRUE, NULL);
+           $this->addValidationMessage('relation_type', TRUE, NULL);
+       }
    }
 
    function setKeyWords($keyWords) 
@@ -1021,19 +1033,6 @@ class product extends object
         else
         {
             $this->addValidationMessage('keyword', TRUE, NULL);
-        }
-   }
-
-   function saveKeyWords($keyWords)
-   {
-       if($keyWords != NULL && !is_array($keyWords)){
-            $keyWords = array($keyWords);
-        }
-
-        foreach ($keyWords as $keyWords) {
-            if ($keyWords != NULL){
-                $this->objDbProductKeywords->addProductKeywordJxn($this->_identifier, $keyWords);
-            }
         }
    }
    
@@ -1169,10 +1168,12 @@ class product extends object
 
    function getRelation()
    {
-       $relation = $this->_relation;
-       $relationType = $this->_relationtype;
+       return $this->_relation;
+   }
 
-       return array($relation, $relationType);
+   function getRelationType()
+   {
+       return $this->_relationtype;
    }
 
    function getKeyWords()

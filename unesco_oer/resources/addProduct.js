@@ -36,7 +36,7 @@ function toggleRelationDropDown(nameOfDropDown1, nameOfDropDown2)
 {
     var objDrop1 = document.getElementById(nameOfDropDown1);
     var objDrop2 = document.getElementById(nameOfDropDown2);
-    alert (objDrop1.options[objDrop1.selectedIndex].value);
+    
     if ( objDrop1.options[objDrop1.selectedIndex].value == '')
     {
         objDrop2.disabled=true;

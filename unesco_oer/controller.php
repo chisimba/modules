@@ -26,6 +26,7 @@ class unesco_oer extends controller {
     public $objfilterdisplay;
     public $objDbRelationType;
     public $objDbProductKeywords;
+    public $objDbProductStatus;
 
      public $objConfig;
 
@@ -72,6 +73,7 @@ class unesco_oer extends controller {
         $this->objProductRatings = $this->getObject('dbproductratings');
         $this->objUseExtra = $this->getObject('dbuserextra');
         $this->objDbRelationType = $this->getObject('dbrelationtype');
+        $this->objDbProductStatus = $this->getObject('dbproductstatus');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
         $this->objUser = $this->getObject('user', 'security');
@@ -396,7 +398,7 @@ class unesco_oer extends controller {
     }
 
     public function requiresLogin($action) {
-        $required = array('addData', 'editProduct', 'test', 'savetest');
+        $required = array('addData', 'editProduct', 'saveProductMetaData');
         if (in_array($action, $required)) {
             return TRUE;
         } else {
@@ -1393,14 +1395,8 @@ class unesco_oer extends controller {
         return 'groupListingForm_tpl.php';
     }
 
-    public function __test() {
-        $this->setLayoutTemplate('maincontent_layout_tpl.php');
-
-        return "test_tpl.php";
-    }
-
-    public function __savetest() {
-        $defaultTemplate = "test_tpl.php";
+    public function __saveProductMetaData() {
+        $defaultTemplate = "ProductMetaData_tpl.php";
         $product = $this->getObject('product');
         $this->setVarByRef('product', $product);
 //        //test for edit
@@ -1458,6 +1454,25 @@ class unesco_oer extends controller {
         return $this->__addData();
     }
 
+    /*
+     * Method to display page for creating a new relation type
+     */
+
+    public function __createStatusUI() {
+        return "createStatusUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createRelationUI_tpl.php page
+     * and add it to the tbl_unesco_oer_relation_types table
+     */
+
+    public function __createStatusSubmit() {
+        $name = $this->getParam('newStatus');
+
+        $this->objDbProductStatus->addStatus($name);
+        return $this->__addData();
+    }
 
 }
 ?>
