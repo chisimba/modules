@@ -197,7 +197,7 @@ if ($this->objUser->isLoggedIn()) {
                         <div class="groupMemberAndJoinLinkDiv">
                             
                              <?php
-                            $abLink = new link($this->uri(array("action" => 'editusers')));
+                            $abLink = new link($this->uri(array("action" =>'userListingForm')));
                              $abLink->cssClass = 'groupMemberAndJoinLinkDiv';
                             $abLink->link = 'Users';
                            
