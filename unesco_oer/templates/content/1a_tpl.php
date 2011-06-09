@@ -56,7 +56,7 @@ if ($finalstring == null)
                                         <td><img src="skins/unesco_oer/images/icon-my-administration-tools.png"></td>
                                         <td><a href="#" class="prifileLinks">
                                             <?php
-                                            $abLink = new link($this->uri(array("action" => "addData")));
+                                            $abLink = new link($this->uri(array("action" => "controlpanel")));
                                             $abLink->link = 'Administration Tools';
                                             echo $abLink->show();
                                             ?>

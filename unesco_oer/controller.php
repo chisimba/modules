@@ -286,6 +286,8 @@ class unesco_oer extends controller {
         $lat = $this->getParam('lat');
         $lng = $this->getparam('Lng');
         $page = $this->getParam('page');
+        
+        
 
         $AuthFilter = $this->getParam('AuthorFilter');
         $ThemeFilter = $this->getParam('ThemeFilter');
@@ -302,9 +304,9 @@ class unesco_oer extends controller {
         $Manual = $this->getParam('Manual');
         $Besoractile = $this->getParam('Besoractile');
 
-
-
-        $ProdId = $this->objProductUtil->BrowseAdaptation($lat, $lng);
+            $latShort = round($lat,3);
+            $lngshort = round($lng,3);
+        $ProdId = $this->objProductUtil->BrowseAdaptation($latShort, $lngshort);
         $string = $this->objDbProducts->getAdaptedProducts($ProdId);
 
 
@@ -318,6 +320,7 @@ class unesco_oer extends controller {
 
 
         $this->setVarByRef("AuthFilter", $AuthFilter);
+          $this->setVarByRef("temp", $ProdId);
         $this->setVarByRef("ThemeFilter", $ThemeFilter);
         $this->setVarByRef("LangFilter", $LangFilter);
         $this->setVarByRef("SortFilter", $sort);
@@ -413,9 +416,27 @@ class unesco_oer extends controller {
      * Method to display page for selecting input option
      */
 
-    public function __addData() {
+    public function __controlpanel() {
+        return "controlpanel_tpl.php";
+    }
+    
+    public function __adddata() {
         return "addData_tpl.php";
     }
+
+    public function __editusers() {
+        return "controlpanel_tpl.php";
+    }
+
+    public function __editgroups() {
+        return "controlpanel_tpl.php";
+    }
+    
+      public function __editinstitutions() {
+        return "controlpanel_tpl.php";
+    }
+
+
 
     /*
      * Method to display page with adaptable products

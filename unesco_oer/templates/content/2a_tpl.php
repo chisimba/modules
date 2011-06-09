@@ -61,7 +61,7 @@ if ($this->objUser->isLoggedIn()) {
                                     <td><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools"></td>
                                     <td><a href="#" class="prifileLinks">
 <?php
-    $abLink = new link($this->uri(array("action" => "addData")));
+    $abLink = new link($this->uri(array("action" => "controlpanel")));
     $abLink->link = 'Administration Tools';
     echo $abLink->show();
 ?>
@@ -251,7 +251,7 @@ echo $abLink->show();
 
 
 
-                                $products = $this->objDbProducts->getFilteredProducts('relation is not null');
+                                $products = $this->objDbProducts->getFilteredProducts($finalstring);
                                 echo $finalstring;
                                 $newRow = true;
                                 $count = 0;
@@ -594,6 +594,16 @@ echo $abLink->show();
                                                 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
 
                                                 echo $form->show();
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                echo $temp;
+                                                
+                                                
+                                                
+                                                
 ?>
                                         </body>
                                     </html>
