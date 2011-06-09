@@ -379,7 +379,7 @@ class product extends object
      *
      * @return string
      */
-    function showMetaDataInput()
+    function showMetaDataInput($nextAction = NULL)
     {
         $output = '';
 
@@ -806,7 +806,7 @@ class product extends object
         $uri = $this->uri(array(
                     'action' => "saveProductMetaData",
                     'productID' => $this->_identifier,
-                    'prevAction' => $prevAction));
+                    'nextAction' => $nextAction));
         
         $form_data->extra = 'enctype="multipart/form-data"';
         $form_data->addToForm($output .'<br />' . $buttonSubmit->show() . $buttonCancel->show() . $hiddenInput->show());
@@ -817,7 +817,7 @@ class product extends object
         //TODO Related Languages ??
     }
 
-    //////// Save operations for external tables //////
+    //////// operations for external tables //////
 
    /**This function adds keyword relationships for the current product
     *
@@ -851,6 +851,31 @@ class product extends object
                 $this->objDbProductThemes->addProductThemeJxn($this->_identifier, $themeID);
             }
         }
+    }
+
+   function uploadThumbNail($path)
+   {
+       $result = FALSE;
+       try {
+            $results = $this->objThumbUploader->uploadThumbnail($path);
+        } catch (customException $e) {
+            echo customException::cleanUp();
+            exit();
+        }
+
+        return $results;
+   }
+
+   private function loadThemes()
+    {
+        $themeIDarray = array();
+
+        foreach ($this->objDbProductThemes-> getThemesByProductID($this->getIdentifier()) as $theme) {
+            $themeIDarray[$theme['umbrella_theme_id']][$theme['id']];
+        }
+
+        return $this->setThemes($themeIDarray);
+
     }
 
     ////////////////   SETTERS   ////////////////
@@ -1036,19 +1061,6 @@ class product extends object
         }
    }
    
-   function uploadThumbNail($path)
-   {
-       $result = FALSE;
-       try {
-            $results = $this->objThumbUploader->uploadThumbnail($path);
-        } catch (customException $e) {
-            echo customException::cleanUp();
-            exit();
-        }
-        
-        return $results;
-   }
-
    function setRights($rights)
    {
        $this->_rights = $rights;
@@ -1132,18 +1144,6 @@ class product extends object
     function getContacts()
     {
         return $this->_unescocontacts;
-    }
-
-    private function loadThemes()
-    {
-        $themeIDarray = array();
-
-        foreach ($this->objDbProductThemes-> getThemesByProductID($this->getIdentifier()) as $theme) {
-            $themeIDarray[$theme['umbrella_theme_id']][$theme['id']];
-        }
-
-        return $this->setThemes($themeIDarray);
-
     }
 
     function getThemes()
