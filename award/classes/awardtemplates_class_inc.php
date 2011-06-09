@@ -71,9 +71,15 @@ class awardtemplates extends object {
     	$currency = $this->objSysConfig->getValue('CURRENCY_ABREVIATION','award');
         $indexName = $this->indexFacet->getIndexShortName($indexId);
     	//,"$indexName ".$this->objLanguage->languageText('phrase_avgincrease')
+        switch ($mode) {
+            case 'weigh': $modeWord = $this->objLanguage->languageText('mod_lrspostlogin_weightedavgs'); break;
+            case 'med': $modeWord = $this->objLanguage->languageText('word_median'); break;
+            default: $modeWord = $this->objLanguage->languageText('word_average'); break;
+        }
+
     	$wageTable->addHeader(array($this->objLanguage->languageText('word_year'),
 									$this->objLanguage->languageText('word_sample'),
-									"{$wageType['name']} ".$this->objLanguage->languageText('word_average')." ($currency)",
+									"{$wageType['name']} ".$modeWord." ($currency)",
 									$this->objLanguage->languageText('phrase_increasepercentage'),
 									$this->objLanguage->languageText('phrase_actualincrease')." ".$this->indexFacet->getIndexShortName($indexId),
 									$this->objLanguage->languageText('mod_lrspostlogin_agreeworkers','award' )));
