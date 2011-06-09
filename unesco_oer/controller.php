@@ -27,6 +27,7 @@ class unesco_oer extends controller {
     public $objDbRelationType;
     public $objDbProductKeywords;
     public $objDbProductStatus;
+    public $objjavafilt;
 
      public $objConfig;
 
@@ -79,6 +80,7 @@ class unesco_oer extends controller {
         $this->objUser = $this->getObject('user', 'security');
         $this->objUrl = $this->getObject('url', 'strings');
         $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
+         $this->objjavafilt = $this->getObject('javafilt');
         //$this->objUtils = $this->getObject('utilities');
         //$this->objGoogleMap=$this->getObject('googlemapapi');
         //$this->objGoogleMap = new googlemapapi();
@@ -210,9 +212,18 @@ class unesco_oer extends controller {
     }
 
     public function __JavaFilter() {
-//        $age = getPa
 
         return "JavaFilter_tpl.php";
+        die();
+    }
+    
+     public function __JavaFilternum() {
+//        $age = getPa
+         
+        
+         $temp = $this->objjavafilt->displayprods();
+          echo $temp;
+       
         die();
     }
 

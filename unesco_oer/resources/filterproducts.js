@@ -12,17 +12,88 @@
  * Free Software Foundation, Inc., 
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-function ajaxFunction2(id){
-      var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  ;
-  
-    jQuery.get("index.php?moduler=unesco_oer&action=JavaFilter&" + queryString, 
+
+
+function ajaxFunction23(id){
     
-    function(data) {
-    //  jQuery('.result').html(data);
-        alert("result == "+data);
-    });
+    var ajaxRequest;
+
+    try{
+        // Opera 8.0+, Firefox, Safari
+        ajaxRequest = new XMLHttpRequest();
+    } catch (e){
+        // Internet Explorer Browsers
+        try{
+            ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try{
+                ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e){
+                // Something went wrong
+                alert("Your browser broke!");
+                return false;
+            }
+        }
+    }
+    // Create a function that will receive data sent from the server
+    ajaxRequest.onreadystatechange = function(){
+        if(ajaxRequest.readyState == 4){
+            var ajaxDisplay = document.getElementById('filternumDiv');
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+                        
+        }
+    }
+    var theme = document.getElementById('input_ThemeFilter').value;
+    var lang = document.getElementById('input_LanguageFilter').value;
+    var auth = document.getElementById('input_AuthorFilter').value;
+    var numperpage = document.getElementById('input_NumFilter').value;
+    var model = document.getElementById('input_Model').value;
+    var handbook = document.getElementById('input_Handbook').value;
+    var guide = document.getElementById('input_Guide').value;
+    var manual = document.getElementById('input_Manual').value;
+    var bestprac = document.getElementById('input_Best Practices').value;
+    var sort = document.getElementById('input_SortFilter').value
+    var adaptation = document.getElementById('filterDiv').title;
+    
+   
+
+
+
+
+              
+
+    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  ;
+     
+    ajaxRequest.open("GET", "index.php?module=unesco_oer&action=JavaFilternum&" + queryString, true);
+    ajaxRequest.send(null);
+     
+    ///jQuery.get("index.php?moduler=unesco_oer&action=JavaFilter&" + queryString, 
+    
+    //function(data) {
+      //jQuery('div.filterS').html(data);
+      
+   // });
 
 }
+
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 function ajaxFunction(id){
     var ajaxRequest;
 

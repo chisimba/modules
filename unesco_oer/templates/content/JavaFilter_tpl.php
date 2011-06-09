@@ -349,7 +349,7 @@ switch ($pagelayout){
                             for ($i = 1; $i <= $TotalPages; $i++) {
 
                                 $abLink = new link("javascript:void(0);");
-                                 $abLink->extra = "onclick = javascript:ajaxFunction($i) id = numfilter title=".$i;
+                                 $abLink->extra = "onclick = javascript:ajaxFunction($i)";
                                  
                                   
 

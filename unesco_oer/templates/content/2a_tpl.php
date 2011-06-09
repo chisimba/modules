@@ -189,6 +189,42 @@ echo $abLink->show();
                            $filtering = $this->getobject('filterdisplay', 'unesco_oer');
                            echo $filtering->SideFilter('2a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
 ?>
+                
+                
+                
+                
+                            
+                             </div>
+                    <br><br>
+                    <div class="blueBackground rightAlign">
+                        <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
+                        <a href="#" class="resetLink"> 
+ <?php
+        $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+       
+        $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
+       echo $button->show();
+
+        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
+       echo $abLink->show();
+        
+           ?>
+      
+        </a>
+                    </div>
+                    <div class="filterheader">
+
+
+                     
+
+                    </div>
+                    <div class="rssFeed">
+                        <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
+                        <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
+                    </div>
+                            
+                            
 
                     </div>
                     <!-- Center column DIv -->

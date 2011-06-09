@@ -58,8 +58,10 @@ class filterdisplay extends object {
 
 
 
-
-     $form->addToForm('</div>
+    $form->addToForm(' <div id="filternumDiv">');
+     $form->addToForm('
+                         
+                        
                         <div class="blueNumberBackground">
                         <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
                         <div class="numberOffilteredProducts"> ');
@@ -68,8 +70,14 @@ class filterdisplay extends object {
                            $form ->addToForm($TotalRecords);
                          $form->addToForm('</div>
                         </div>
+                        </div>
+                        </div>
+                        
                         <div class="moduleSubHeader">Product matches filter criteria</div>
-                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages"> ');
+                        <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">
+                        
+
+                                ');
 
                         $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer'));
 
@@ -91,8 +99,7 @@ class filterdisplay extends object {
 
 
 
-        $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
-        $button->onclick = 'javascript:ajaxFunction()';
+        
 
         $checkbox = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_model', 'unesco_oer'));
         $checkbox2 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_handbook', 'unesco_oer'));
@@ -128,8 +135,7 @@ class filterdisplay extends object {
         $form->addToForm('Manual<br>');
         $form->addToForm($checkbox5->show());
         $form->addToForm('Best Practices<br>');
-        $form->addToForm($button->show());
-
+        
 
 
 
@@ -292,34 +298,9 @@ class filterdisplay extends object {
 
 
 
-        $form->addtoform('      </div>
-                    <br><br>
-                    <div class="blueBackground rightAlign">
-                        <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                        <a href="#" class="resetLink"> ');
-
-
-        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
-        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
-        $form->addtoform($abLink->show());
-
-        $form->addtoform(' </a>
-                    </div>
-                    <div class="filterheader">
-
-
-                        <?php ?>
-
-                    </div>
-                    <div class="rssFeed">
-                        <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
-                        <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
-                    </div>
-           ');
-
-
-
         return $form->show();
+        
+        
     }
 
 
@@ -343,7 +324,7 @@ class filterdisplay extends object {
                             for ($i = 1; $i <= $TotalPages; $i++) {
 
                                 $abLink = new link("javascript:void(0);");
-                                 $abLink->extra = "onclick = javascript:ajaxFunction($i) id = numfilter title=".$i;
+                                 $abLink->extra = "onclick = javascript:ajaxFunction($i)";
                                  
                                   
 
