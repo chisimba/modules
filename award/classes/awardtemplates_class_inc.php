@@ -72,9 +72,9 @@ class awardtemplates extends object {
         $indexName = $this->indexFacet->getIndexShortName($indexId);
     	//,"$indexName ".$this->objLanguage->languageText('phrase_avgincrease')
         switch ($mode) {
-            case 'weigh': $modeWord = $this->objLanguage->languageText('mod_lrspostlogin_weightedavgs'); break;
-            case 'med': $modeWord = $this->objLanguage->languageText('word_median'); break;
-            default: $modeWord = $this->objLanguage->languageText('word_average'); break;
+            case 'weigh': $modeWord = $this->objLanguage->languageText('mod_lrspostlogin_weightedavgs', 'award'); break;
+            case 'med': $modeWord = $this->objLanguage->languageText('word_median', 'award'); break;
+            default: $modeWord = $this->objLanguage->languageText('word_average', 'award'); break;
         }
 
     	$wageTable->addHeader(array($this->objLanguage->languageText('word_year'),
