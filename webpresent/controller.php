@@ -62,6 +62,11 @@ class webpresent extends controller
         $this->objSearch = $this->getObject('indexdata', 'search');
         $objExtJS = $this->getObject('extjs','ext');
         $objExtJS->show();
+        
+        // scriptaculous
+        $objProto = $this->getObject('scriptaculous', 'prototype');
+        $this->appendArrayVar('headerParams', $objProto->show('html'));
+
         //$this->presentManager = $this->getObject('presentmanager');
     }
         /**
