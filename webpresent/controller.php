@@ -60,6 +60,8 @@ class webpresent extends controller
         $this->realtimeManager = $this->getObject('realtimemanager');
         
         $this->objSearch = $this->getObject('indexdata', 'search');
+        $objExtJS = $this->getObject('extjs','ext');
+        $objExtJS->show();
         //$this->presentManager = $this->getObject('presentmanager');
     }
         /**
