@@ -16,9 +16,18 @@ $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_sahriscollectionsman_collectionrecsheader', 'sahriscollectionsman');
 $header->type = 1;
 
-$middleColumn .= $header->show();
+// $middleColumn .= $header->show();
 
-$middleColumn .= $records;
+$objPagination = $this->newObject ( 'pagination', 'navigation' );
+$objPagination->module = 'sahriscollectionsman';
+$objPagination->action = 'viewrecsajax&collid='.$collid;
+$objPagination->id = 'sahriscollectionsman';
+$objPagination->numPageLinks = $pages;
+$objPagination->currentPage = $pages - 1;
+
+$middleColumn .= $header->show () . '<br/>' . $objPagination->show ();
+
+// $middleColumn .= $records;
 
 $leftColumn .= $this->leftMenu->show();
 $leftColumn .= $this->objCollOps->menuBox();

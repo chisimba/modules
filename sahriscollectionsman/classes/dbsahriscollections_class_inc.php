@@ -129,7 +129,18 @@ class dbsahriscollections extends dbtable
     
     public function getCollRecords($collid) {
         $this->changeTable('tbl_sahriscollections_items');
-        return $this->getAll("WHERE collectionname = '$collid'");
+        return $this->getAll("WHERE collectionid = '$collid'");
+    }
+    
+    public function getCollRecordCount($collid) {
+        $this->changeTable('tbl_sahriscollections_items');
+        return $this->getRecordCount("WHERE collectionid = '$collid'");
+    }
+    
+    public function getRange($collid, $start, $num) {
+        $this->changeTable('tbl_sahriscollections_items');
+        $range = $this->getAll ( "WHERE collectionid='$collid' ORDER BY puid ASC LIMIT {$start}, {$num}" );
+        return  $range;
     }
     
     public function countItemsInSite($sid) {

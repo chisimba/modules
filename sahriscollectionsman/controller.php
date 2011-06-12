@@ -216,15 +216,37 @@ class sahriscollectionsman extends controller
                 
             case 'viewrecords' :
                 $collid = $this->getParam('collid');
-                var_dump($collid);
+                $count = $this->objDbColl->getCollRecordCount($collid);
+                $pages = ceil ( $count / 1 );
+                $this->setVarByRef ( 'pages', $pages );
+                $this->setVarByRef('collid', $collid);
+                header("Content-Type: text/html;charset=utf-8");
+                return 'collrecords_tpl.php';
+
+            
+                
+                /*// var_dump($collid);
                 $recs = $this->objDbColl->getCollRecords($collid);
                 $records = NULL;
-                var_dump($recs);
+                // var_dump($recs);
                 foreach($recs as $rec) {
                     $records .= $this->objCollOps->formatRecord($rec);
                 }
                 $this->setVarByRef('records', $records);
-                return 'collrecords_tpl.php';
+                return 'collrecords_tpl.php';*/
+                break;
+                
+            case 'viewrecsajax' :
+                $page = intval ( $this->getParam ( 'page', 0 ) );
+                $collid = $this->getParam('collid');
+                if ($page < 0) {
+                    $page = 0;
+                }
+                $start = $page * 1;
+                $msgs = $this->objDbColl->getRange($collid, $start, 1);
+                $this->setVarByRef ( 'msgs', $msgs );
+                header("Content-Type: text/html;charset=utf-8");
+                return 'viewrecs_ajax_tpl.php';
                 break;
 
             case 'search':

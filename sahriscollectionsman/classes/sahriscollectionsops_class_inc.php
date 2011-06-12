@@ -322,22 +322,76 @@ class sahriscollectionsops extends object {
      */
     public function formatRecord($record)
     {
-        // var_dump($record); die();
-        // $record = $record[0];
+        
+        $record = $record[0];
+        // log_debug($record);
         $this->objWashout = $this->getObject('washout', 'utilities');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmlarea', 'htmlelements');
         $ret = NULL;
-        $table = $this->newObject('htmltable', 'htmlelements');
-        $table->startRow();
+        
+        // image
+        $objFile = $this->getObject('dbfile', 'filemanager');
+        $image = $objFile->getFilePath($record['media']);
+        $alt = $objFile->getFileName($record['media']);
+        $ret .= '<img src="'.$image.'" alt="'.$alt.'" />';
 
+        
+        $table = $this->newObject('htmltable', 'htmlelements');
+        
+        // site name
+        $table->startRow();
+        $snLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_sitename', 'sahriscollectionsman').'&nbsp;', 'input_sn');
+        $table->addCell($snLabel->show(), 150, NULL, 'right');
+        $sn = $record['sitename']; // $this->objDbColl->getCollById($record['collectionname']);
+        // $collname = $collname[0]['collname'];
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($sn);
+        $table->endRow();
+        
+        // site abbr
+        $table->startRow();
+        $sabbrLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_siteabbr', 'sahriscollectionsman').'&nbsp;', 'input_sa');
+        $table->addCell($sabbrLabel->show(), 150, NULL, 'right');
+        $sa = $record['siteabbr']; // $this->objDbColl->getCollById($record['collectionname']);
+        // $collname = $collname[0]['collname'];
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($sa);
+        $table->endRow();
+        
+        // site manager
+        $table->startRow();
+        $smLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_sitemanager', 'sahriscollectionsman').'&nbsp;', 'input_sm');
+        $table->addCell($smLabel->show(), 150, NULL, 'right');
+        $sm = $record['sitemanager']; // $this->objDbColl->getCollById($record['collectionname']);
+        // $collname = $collname[0]['collname'];
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($sm);
+        $table->endRow();
+        
+        // collection name
+        $table->startRow();
         $collLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collection', 'sahriscollectionsman').'&nbsp;', 'input_coll');
         $table->addCell($collLabel->show(), 150, NULL, 'right');
-        $collname = $this->objDbColl->getCollById($record['collection']);
-        $collname = $collname[0]['collname'];
+        $collname = $record['collectionname']; // $this->objDbColl->getCollById($record['collectionname']);
+        // $collname = $collname[0]['collname'];
         $table->addCell('&nbsp;', 5);
         $table->addCell($collname);
+        $table->endRow();
+        
+        // object name
+        $objnameLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_objname', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table->addCell($objnameLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($record['objname']);
+        $table->endRow();
+        
+        // object type
+        $objtypeLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_objtype', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table->addCell($objtypeLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($record['objtype']);
         $table->endRow();
 
         // accession number
@@ -347,49 +401,318 @@ class sahriscollectionsops extends object {
         $table->addCell($record['accno']);
         $table->endRow();
 
-        // title
-        $titleLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_title', 'sahriscollectionsman').'&nbsp;', 'input_title');
-        $table->addCell($titleLabel->show(), 150, NULL, 'right');
+        // acquisition meth
+        $acqmethLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_acqmeth', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table->addCell($acqmethLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($record['title']);
+        $table->addCell($record['acqmethod']);
         $table->endRow();
-
-        // description
-        $descLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_description', 'sahriscollectionsman').'&nbsp;', 'input_desc');
-        $table->addCell($descLabel->show(), 150, NULL, 'right');
+        
+        // acq date
+        $acdateLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_acqdate', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table->addCell($acdateLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $msg->toolbarSet = 'simple';
-        $table->addCell($this->objWashout->parseText($record['description']));
+        $table->addCell($record['acqdate']);
         $table->endRow();
-
-        // date created
-        $dcLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_datecreated', 'sahriscollectionsman').'&nbsp;', 'input_datecreated');
-        $table->addCell($dcLabel->show(), 150, NULL, 'right');
+        
+        // acq source
+        $acqsrcLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_acqsrc', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table->addCell($acqsrcLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($record['datecreated']);
+        $table->addCell($record['acqsrc']);
         $table->endRow();
-
-        // media
-        $objFile = $this->getObject('dbfile', 'filemanager');
-        $mediaLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_media', 'sahriscollectionsman').'&nbsp;', 'input_media');
-        $table->addCell($mediaLabel->show(), 150, NULL, 'right');
+        
+        // gen site accession
+        $gensiteLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_gensiteacc', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table->addCell($gensiteLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
-        $table->addCell($objFile->getFileName($record['media']));
+        $table->addCell($record['gensite']);
         $table->endRow();
-
-        // comment
-        $commentLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_comment', 'sahriscollectionsman').'&nbsp;', 'input_comment');
-        $table->addCell($commentLabel->show(), 150, NULL, 'right');
-        $table->addCell('&nbsp;', 5);
-        $table->addCell($record['comment']);
-        $table->endRow();
-
+        
+        
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend = ''; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
+        $fieldset->legend = 'Object Identification'; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
         $fieldset->contents = $table->show();
 
-        $ret .= $fieldset->show();
+        // $ret .= $fieldset->show();
+        
+        /*****/
+        
+        
+        
+        $table2 = $this->newObject('htmltable', 'htmlelements');
+        
+        // common name
+        $table2->startRow();
+        $commLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_commname', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($commLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['commname']);
+        $table2->endRow();
+        
+        // local name
+        $table2->startRow();
+        $locnameLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_locname', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($locnameLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['localname']);
+        $table2->endRow();
+        
+        // classified name
+        $table2->startRow();
+        $classnameLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_classname', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($classnameLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['classname']);
+        $table2->endRow();
+        
+        // cat by form
+        $table2->startRow();
+        $cbfLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_catbyform', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($cbfLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['catbyform']);
+        $table2->endRow();
+        
+        // cat by tech
+        $table2->startRow();
+        $cbtLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_catbytech', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($cbtLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['catbytech']);
+        $table2->endRow();
+        
+        //material
+        $table2->startRow();
+        $matLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_material', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($matLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['material']);
+        $table2->endRow();
+        
+        //technique
+        $table2->startRow();
+        $techLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_technique', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($techLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['technique']);
+        $table2->endRow();
+        
+        //dimensions
+        $table2->startRow();
+        $dimLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_dimensions', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($dimLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['dimensions']);
+        $table2->endRow();
+        
+        // normal loc
+        $table2->startRow();
+        $nlocLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_normalloc', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($nlocLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['normalloc']);
+        $table2->endRow();
+        
+        // curr loc
+        $table2->startRow();
+        $currlocLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_currloc', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($currlocLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['currloc']);
+        $table2->endRow();
+        
+        // currloc reason
+        $table2->startRow();
+        $locreasonLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_currlocreason', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($locreasonLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['reason']);
+        $table2->endRow();
+        
+        // remover
+        $table2->startRow();
+        $moverLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_remover', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($moverLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['remover']);
+        $table2->endRow();
+        
+        //phys desc
+        $table2->startRow();
+        $pdescLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_physdesc', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($pdescLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['physdesc']);
+        $table2->endRow();
+        
+        // dist feat
+        $table2->startRow();
+        $distfeatLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_distfeat', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($distfeatLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['distfeat']);
+        $table2->endRow();
+        
+        // curr cond
+        $table2->startRow();
+        $currcondLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_currcond', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($currcondLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['currcond']);
+        $table2->endRow();
+        
+        // conserve meth
+        $table2->startRow();
+        $cmethLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_conservemeth', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($cmethLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['conservemeth']);
+        $table2->endRow();
+        
+        // cons date
+        $table2->startRow();
+        $cdateLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_consdate', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($cdateLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['conservedate']);
+        $table2->endRow();
+        
+        // conservator
+        $table2->startRow();
+        $consLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_conservator', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table2->addCell($consLabel->show(), 150, NULL, 'right');
+        $table2->addCell('&nbsp;', 5);
+        $table2->addCell($record['conservator']);
+        $table2->endRow();
+        
+        $fieldset2 = $this->newObject('fieldset', 'htmlelements');
+        $fieldset2->legend = 'Object Details'; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
+        $fieldset2->contents = $table2->show();
 
+        //$ret .= $fieldset2->show();
+        
+        $table3 = $this->newObject('htmltable', 'htmlelements');
+        
+        // historical comments
+        $table3->startRow();
+        $hcLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_histcomm', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($hcLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['histcomments']);
+        $table3->endRow();
+        
+        // producer
+        $table3->startRow();
+        $prodLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_producer', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($prodLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['maker']);
+        $table3->endRow();
+        
+        // prodplace
+        $table3->startRow();
+        $ppLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_prodplace', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($ppLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['prodplace']);
+        $table3->endRow();
+        
+        // prodperiod
+        $table3->startRow();
+        $perLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_prodperiod', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($perLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['prodperiod']);
+        $table3->endRow();
+        
+        // user
+        $table3->startRow();
+        $uLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_histuser', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($uLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['histuser']);
+        $table3->endRow();
+        
+        // placeuse
+        $table3->startRow();
+        $pouLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_placeofuse', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($pouLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['placeofuse']);
+        $table3->endRow();
+        
+        // periodofuse
+        $table3->startRow();
+        $perLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_periodofuse', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($perLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['periodofuse']);
+        $table3->endRow();
+        
+        // provenance
+        $table3->startRow();
+        $provLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_provenance', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($provLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['provenance']);
+        $table3->endRow();
+        
+        // collector
+        $table3->startRow();
+        $collLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collector', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($collLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['collector']);
+        $table3->endRow();
+        
+        // collection date
+        $table3->startRow();
+        $cdLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collectdate', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($cdLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['collectdate']);
+        $table3->endRow();
+        
+        // collection method
+        $table3->startRow();
+        $cmLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collectmethod', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($cmLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['collmethod']);
+        $table3->endRow();
+        
+        // collection no
+        $table3->startRow();
+        $cnoLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collnumber', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($cnoLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['collnumber']);
+        $table3->endRow();
+        
+        // pubref
+        $table3->startRow();
+        $prLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_pubref', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table3->addCell($prLabel->show(), 150, NULL, 'right');
+        $table3->addCell('&nbsp;', 5);
+        $table3->addCell($record['pubref']);
+        $table3->endRow();
+        
+        $fieldset3 = $this->newObject('fieldset', 'htmlelements');
+        $fieldset3->legend = 'Object History'; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
+        $fieldset3->contents = $table3->show();
+
+        // $ret .= $fieldset3->show();
+
+        $table4 = $this->newObject('htmltable', 'htmlelements');
+        $table4->startRow();
+        $table4->addCell($fieldset->show().$fieldset3->show());
+        $table4->addCell($fieldset2->show());
+        $table4->endRow();
+        
+        $ret .= $table4->show();
+        
+        header ( "Content-Type: text/html;charset=utf-8" );
         return $ret;
     }
     
@@ -612,10 +935,10 @@ class sahriscollectionsops extends object {
             $siteacc = $gensite."_".$sitecount;
                     
             // get the collection id from name
-            $collid = $this->objDbColl->getCollByName($collection);
+            $collid = $this->objDbColl->getCollByName($collectionname);
             if($collid == NULL) {
                 // create a collection as it doesn't exist
-                $insarr = array('userid' => $this->objUser->userId($username), 'collname' => $collection, 'comment' => NULL, 
+                $insarr = array('userid' => $this->objUser->userId($username), 'collname' => $collectionname, 'comment' => NULL, 
                                 'sitename' => $sitename, 'siteid' => $sid);
                 $collid = $this->objDbColl->insertCollection($insarr);
             }
