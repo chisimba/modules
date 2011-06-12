@@ -122,9 +122,24 @@ class dbsahriscollections extends dbtable
         return $this->insert($insarr);
     }
     
+    public function updateRecord($id, $arr) {
+        $this->changeTable('tbl_sahriscollections_items');
+        $this->update('id', $id, $arr);
+    }
+    
+    public function deleterecord($recordid) {
+        $this->changeTable('tbl_sahriscollections_items');
+        return $this->delete('id', $recordid, 'tbl_sahriscollections_items');
+    }
+    
     public function getSingleRecord($acno, $coll) {
         $this->changeTable('tbl_sahriscollections_items');
         return $this->getAll("WHERE accno = '$acno' AND collectionname = '$coll'");
+    }
+    
+    public function getSingleRecordById($id) {
+        $this->changeTable('tbl_sahriscollections_items');
+        return $this->getAll("WHERE id = '$id'");
     }
     
     public function getCollRecords($collid) {
@@ -148,14 +163,10 @@ class dbsahriscollections extends dbtable
         return $this->getRecordCount("WHERE siteid = '$sid'");
     }
     
-    public function getSingleRecordById($id) {
-        $this->changeTable('tbl_sahriscollections_items');
-        return $this->getAll("WHERE id = '$id'");
-    }
     
     public function searchItems($q) {
         $this->changeTable('tbl_sahriscollections_items');
-        $res = $this->getAll("WHERE physdesc LIKE '%%$q%%' OR accno LIKE '%%$q%%' OR title LIKE '%%$q%%'");
+        $res = $this->getAll("WHERE physdesc LIKE '%%$q%%' OR accno LIKE '%%$q%%' OR objname LIKE '%%$q%%' OR objtype LIKE '%%$q%%'");
         return $res;
     }
     

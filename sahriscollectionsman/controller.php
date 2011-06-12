@@ -207,6 +207,137 @@ class sahriscollectionsman extends controller
                 return 'viewsingle_tpl.php';
                 break;
                 
+            case 'deleterecord' :
+                $recordid = $this->getParam('recordid');
+                $collid = $this->getParam('collectionid');
+                $this->objDbColl->deleterecord($recordid);
+               
+                $this->nextAction(array('module' => 'sahriscollectionsman', 'action' => 'viewrecords', 'collid' => $collid), 'sahriscollectionsman');
+                break;
+                
+            case 'editrecord' :
+                $recordid = $this->getParam('recordid');
+                $collid = $this->getParam('collectionid');
+                $data = $this->objDbColl->getSingleRecordById($recordid);
+                $this->setVarByRef('data', $data);
+                return 'editrecord_tpl.php';
+                break;
+                
+            case 'recedit' :
+                $recordid = $this->getParam('recordid');
+                $sitename = $this->getParam('sitename');
+                $gensite = $this->getParam('gensite');
+                $username = $this->objUser->userName();
+                $collectionname = $this->getParam('collectionname');
+                $objname = $this->getParam('objname');
+                $objtype = $this->getParam('objtype');
+                $accno = $this->getParam('accno');
+                $acqmethod = $this->getParam('acqmeth');
+                $acqdate = $this->getParam('acqdate');
+                $acqsrc  = $this->getParam('acqsrc');
+                $origmedia = $this->getParam('origmedia');
+                $commname = $this->getParam('commname');
+                $localname = $this->getParam('locname');
+                $classname = $this->getParam('classname');
+                $catbyform = $this->getParam('catbyform');
+                $catbytech = $this->getParam('catbytech');
+                $material = $this->getParam('material');
+                $technique = $this->getParam('technique');
+                $dimensions = $this->getParam('dimensions');
+                $normalloc = $this->getParam('normalloc');
+                $currloc = $this->getParam('currloc');
+                $reason = $this->getParam('reason');
+                $remover = $this->getParam('remover');
+                $physdesc = $this->getParam('physdesc');
+                $distfeat = $this->getParam('distfeat');
+                $currcond = $this->getParam('currcond');
+                $conservemeth = $this->getParam('conservemeth');
+                $conservedate = $this->getParam('conservedate');
+                $conservator = $this->getParam('conservator');
+                $histcomments = $this->getParam('histcomments');
+                $maker = $this->getParam('maker');
+                $prodplace = $this->getParam('prodplace');
+                $prodperiod = $this->getParam('prodperiod');
+                $histuser = $this->getParam('histuser');
+                $placeofuse = $this->getParam('placeofuse');
+                $periodofuse = $this->getParam('periodofuse');
+                $provenance = $this->getParam('provenance');
+                $collector = $this->getParam('collector');
+                $collectdate = $this->getParam('collectdate');
+                $collmethod = $this->getParam('collmethod');
+                $collnumber = $this->getParam('collnumber');
+                $pubref = $this->getParam('pubref');
+                $siteid = $this->getParam('siteid');
+                $collectionid = $this->getParam('collectionid');
+                $media = $this->getParam('media');
+                
+                // parse the site name and optionally create a new one if needs be
+            $sid = $siteid;
+            
+            
+                    
+            // get the collection id from name
+            $collid = $collectionid;
+            
+            // and now the data     
+            $insarr = array(
+                'userid' => $this->objUser->userId($username),
+                /*'sitename' => $sitename,
+                'siteabbr' => $siteabbr,
+                'sitemanager' => $sitemanager,
+                'siteid' => $sid,*/
+                'collectionname' => $collectionname,
+                'objname' => $objname,
+                'objtype' => $objtype,
+                'accno' => $accno,
+                'acqmethod' => $acqmethod,
+                'acqdate' => $acqdate,
+                'acqsrc' => $acqsrc,
+                // 'origmedia' => $origmedia,
+                'commname' => $commname,
+                'localname' => $localname,
+                'classname' => $classname,
+                'catbyform' => $catbyform,
+                'catbytech' => $catbytech,
+                'material' => $material,
+                'technique' => $technique,
+                'dimensions' => $dimensions,
+                'normalloc' => $normalloc,
+                'currloc' => $currloc,
+                'reason' => $reason,
+                'remover' => $remover,
+                'physdesc' => $physdesc,
+                'distfeat' => $distfeat,
+                'currcond' => $currcond,
+                'conservemeth' => $conservemeth,
+                'conservedate' => $conservedate,
+                'conservator' => $conservator,
+                'histcomments' => $histcomments,
+                'maker' => $maker, 
+                'prodplace' => $prodplace,
+                'prodperiod' => $prodperiod,
+                'histuser' => $histuser,
+                'placeofuse' => $placeofuse,
+                'periodofuse' => $periodofuse,
+                'provenance' => $provenance,
+                'collector' => $collector,
+                'collectdate' => $collectdate,
+                'collmethod' => $collmethod,
+                'collnumber' => $collnumber,
+                'pubref' => $pubref,
+                /*'gensite' => $gensite,
+                'media64' => $media64,
+                'filename' => $filename,
+                'username' => $username,*/
+                'media' => $media,
+                'collectionid' => $collid,
+                );
+            
+                $res = $this->objDbColl->updateRecord($recordid, $insarr);
+                $this->nextAction('');
+                break;
+               
+                
             case 'viewsingle' :
                 $id = $this->getParam('id');
                 $res = $this->objDbColl->getSingleRecordById($id);
@@ -222,18 +353,6 @@ class sahriscollectionsman extends controller
                 $this->setVarByRef('collid', $collid);
                 header("Content-Type: text/html;charset=utf-8");
                 return 'collrecords_tpl.php';
-
-            
-                
-                /*// var_dump($collid);
-                $recs = $this->objDbColl->getCollRecords($collid);
-                $records = NULL;
-                // var_dump($recs);
-                foreach($recs as $rec) {
-                    $records .= $this->objCollOps->formatRecord($rec);
-                }
-                $this->setVarByRef('records', $records);
-                return 'collrecords_tpl.php';*/
                 break;
                 
             case 'viewrecsajax' :

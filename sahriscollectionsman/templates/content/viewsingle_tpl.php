@@ -18,7 +18,7 @@ $header->type = 1;
 
 $middleColumn .= $header->show();
 
-$middleColumn .= $this->objCollOps->formatRecord($res[0]);
+$middleColumn .= $this->objCollOps->formatRecord($res);
 $leftColumn .= $this->leftMenu->show();
 $leftColumn .= $this->objCollOps->menuBox();
 

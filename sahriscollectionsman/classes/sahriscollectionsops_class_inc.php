@@ -312,6 +312,503 @@ class sahriscollectionsops extends object {
 
         return $ret;
     }
+    
+    public function editRecordForm($record) {
+        if(!isset($record[0])) {
+            return "Empty Collection";
+        }
+        $record = $record[0];
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('htmlheading', 'htmlelements');
+        $this->loadClass('htmlarea', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
+        $required = '<span class="warning"> * '.$this->objLanguage->languageText('word_required', 'sahriscollectionsman', 'Required').'</span>';
+        $ret = NULL;
+        // start the form
+        $form = new form ('recedit', $this->uri(array('action'=>'recedit', 'sitename' => $record['sitename'], 'gensite' => $record['gensite'], 'siteid' => $record['siteid'], 'collectionid' => $record['collectionid'], 'collectionname' => $record['collectionname'], 'recordid' => $record['id']), 'sahriscollectionsman'));
+        $form->extra = 'enctype="multipart/form-data"';
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $defmsg = $this->objLanguage->languageText("mod_sahriscollections_defmsg", "sahriscollectionsman");
+        
+        /*
+        // dropdown collection field
+        $table->startRow();
+        $coll = new dropdown('collectionname');
+        $list = $this->objDbColl->getCollectionNames();
+        if(empty($list)) {
+            $list = array();
+        }
+        foreach($list as $item) {
+            $coll->addOption($item['id'], $item['collname']);
+        }
+        $collLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collection', 'sahriscollectionsman').'&nbsp;', 'input_collectionname');
+        $table->addCell($collLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($coll->show());
+        $table->endRow();
+        */
+        // object name
+        $objname = new textinput();
+        $objname->name = 'objname';
+        $objname->width ='50%';
+        $objname->setValue($record['objname']);
+        $objnameLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_objname', 'sahriscollectionsman').'&nbsp;', 'input_objname');
+        $table->addCell($objnameLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($objname->show());
+        $table->endRow();
+        
+        // object type
+        $objtype = new textinput();
+        $objtype->name = 'objtype';
+        $objtype->width ='50%';
+        $objtype->setValue($record['objtype']);
+        $objtypeLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_objtype', 'sahriscollectionsman').'&nbsp;', 'input_objtype');
+        $table->addCell($objtypeLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($objtype->show());
+        $table->endRow();
+
+        // accession number
+        $accno = new textinput();
+        $accno->name = 'accno';
+        $accno->width ='50%';
+        $accno->setValue($record['accno']);
+        $anoLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_accno', 'sahriscollectionsman').'&nbsp;', 'input_accno');
+        $table->addCell($anoLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($accno->show());
+        $table->endRow();
+
+        // acquisition meth
+        $acqmeth = new textinput();
+        $acqmeth->name = 'acqmeth';
+        $acqmeth->width ='50%';
+        $acqmeth->setValue($record['acqmethod']);
+        $acqmethLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_acqmeth', 'sahriscollectionsman').'&nbsp;', 'input_acqmeth');
+        $table->addCell($acqmethLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($acqmeth->show());
+        $table->endRow();
+        
+        // acq date
+        $acqdate = new textinput();
+        $acqdate->name = 'acqdate';
+        $acqdate->width ='50%';
+        $acqdate->setValue($record['acqdate']);
+        $acdateLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_acqdate', 'sahriscollectionsman').'&nbsp;', 'input_acqdate');
+        $table->addCell($acdateLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($acqdate->show());
+        $table->endRow();
+        
+        // acq source
+        $acqsrc = new textinput();
+        $acqsrc->name = 'acqsrc';
+        $acqsrc->width ='50%';
+        $acqsrc->setValue($record['acqsrc']);
+        $acqsrcLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_acqsrc', 'sahriscollectionsman').'&nbsp;', 'input_acqsrc');
+        $table->addCell($acqsrcLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($acqsrc->show());
+        $table->endRow();
+        
+        // common name
+        $commname = new textinput();
+        $commname->name = 'commname';
+        $commname->width ='50%';
+        $commname->setValue($record['commname']);
+        $table->startRow();
+        $commLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_commname', 'sahriscollectionsman').'&nbsp;', 'input_commname');
+        $table->addCell($commLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($commname->show());
+        $table->endRow();
+        
+        // local name
+        $locname = new textinput();
+        $locname->name = 'locname';
+        $locname->width ='50%';
+        $locname->setValue($record['localname']);
+        $table->startRow();
+        $locnameLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_locname', 'sahriscollectionsman').'&nbsp;', 'input_locname');
+        $table->addCell($locnameLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($locname->show());
+        $table->endRow();
+        
+        // classified name
+        $classname = new textinput();
+        $classname->name = 'classname';
+        $classname->width ='50%';
+        $classname->setValue($record['classname']);
+        $table->startRow();
+        $classnameLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_classname', 'sahriscollectionsman').'&nbsp;', 'input_classname');
+        $table->addCell($classnameLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($classname->show());
+        $table->endRow();
+        
+        // cat by form
+        $catbyform = new textinput();
+        $catbyform->name = 'catbyform';
+        $catbyform->width ='50%';
+        $catbyform->setValue($record['catbyform']);
+        $table->startRow();
+        $cbfLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_catbyform', 'sahriscollectionsman').'&nbsp;', 'input_catbyform');
+        $table->addCell($cbfLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($catbyform->show());
+        $table->endRow();
+        
+        // cat by tech
+        $catbytech = new textinput();
+        $catbytech->name = 'catbytech';
+        $catbytech->width ='50%';
+        $catbytech->setValue($record['catbytech']);
+        $table->startRow();
+        $cbtLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_catbytech', 'sahriscollectionsman').'&nbsp;', 'input_catbytech');
+        $table->addCell($cbtLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($catbytech->show());
+        $table->endRow();
+        
+        //material
+        $material = new textinput();
+        $material->name = 'material';
+        $material->width ='50%';
+        $material->setValue($record['material']);
+        $table->startRow();
+        $matLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_material', 'sahriscollectionsman').'&nbsp;', 'input_material');
+        $table->addCell($matLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($material->show());
+        $table->endRow();
+        
+        //technique
+        $technique = new textinput();
+        $technique->name = 'technique';
+        $technique->width ='50%';
+        $technique->setValue($record['technique']);
+        $table->startRow();
+        $techLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_technique', 'sahriscollectionsman').'&nbsp;', 'input_technique');
+        $table->addCell($techLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($technique->show());
+        $table->endRow();
+        
+        //dimensions
+        $dimensions = new textinput();
+        $dimensions->name = 'dimensions';
+        $dimensions->width ='50%';
+        $dimensions->setValue($record['dimensions']);
+        $table->startRow();
+        $dimLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_dimensions', 'sahriscollectionsman').'&nbsp;', 'input_dimensions');
+        $table->addCell($dimLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($dimensions->show());
+        $table->endRow();
+        
+        // normalloc
+        $normalloc = new textinput();
+        $normalloc->name = 'normalloc';
+        $normalloc->width ='50%';
+        $normalloc->setValue($record['normalloc']);
+        $table->startRow();
+        $nlocLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_normalloc', 'sahriscollectionsman').'&nbsp;', 'input_normalloc');
+        $table->addCell($nlocLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($normalloc->show());
+        $table->endRow();
+        
+        // currloc
+        $currloc = new textinput();
+        $currloc->name = 'currloc';
+        $currloc->width ='50%';
+        $currloc->setValue($record['currloc']);
+        $table->startRow();
+        $currlocLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_currloc', 'sahriscollectionsman').'&nbsp;', 'input_currloc');
+        $table->addCell($currlocLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($currloc->show());
+        $table->endRow();
+        
+        // currloc reason
+        $reason = new textinput();
+        $reason->name = 'reason';
+        $reason->width ='50%';
+        $reason->setValue($record['reason']);
+        $table->startRow();
+        $locreasonLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_currlocreason', 'sahriscollectionsman').'&nbsp;', 'input_reason');
+        $table->addCell($locreasonLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($reason->show());
+        $table->endRow();
+        
+        // remover
+        $remover = new textinput();
+        $remover->name = 'remover';
+        $remover->width ='50%';
+        $remover->setValue($record['remover']);
+        $table->startRow();
+        $moverLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_remover', 'sahriscollectionsman').'&nbsp;', 'input_remover');
+        $table->addCell($moverLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($remover->show());
+        $table->endRow();
+        
+        //physdesc
+        $physdesc = new textinput();
+        $physdesc->name = 'physdesc';
+        $physdesc->width ='50%';
+        $physdesc->setValue($record['physdesc']);
+        $table->startRow();
+        $pdescLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_physdesc', 'sahriscollectionsman').'&nbsp;', 'input_physdesc');
+        $table->addCell($pdescLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($physdesc->show());
+        $table->endRow();
+        
+        // distfeat
+        $distfeat = new textinput();
+        $distfeat->name = 'distfeat';
+        $distfeat->width ='50%';
+        $distfeat->setValue($record['distfeat']);
+        $table->startRow();
+        $distfeatLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_distfeat', 'sahriscollectionsman').'&nbsp;', 'input_distfeat');
+        $table->addCell($distfeatLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($distfeat->show());
+        $table->endRow();
+        
+        // currcond
+        $currcond = new textinput();
+        $currcond->name = 'currcond';
+        $currcond->width ='50%';
+        $currcond->setValue($record['currcond']);
+        $table->startRow();
+        $currcondLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_currcond', 'sahriscollectionsman').'&nbsp;', 'input_currcond');
+        $table->addCell($currcondLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($currcond->show());
+        $table->endRow();
+        
+        // conservemeth
+        $conservemeth = new textinput();
+        $conservemeth->name = 'conservemeth';
+        $conservemeth->width ='50%';
+        $conservemeth->setValue($record['conservemeth']);
+        $table->startRow();
+        $cmethLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_conservemeth', 'sahriscollectionsman').'&nbsp;', 'input_conservemeth');
+        $table->addCell($cmethLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($conservemeth->show());
+        $table->endRow();
+        
+        // conservedate
+        $conservedate = new textinput();
+        $conservedate->name = 'conservedate';
+        $conservedate->width ='50%';
+        $conservedate->setValue($record['conservedate']);
+        $table->startRow();
+        $cdateLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_consdate', 'sahriscollectionsman').'&nbsp;', 'input_conservedate');
+        $table->addCell($cdateLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($conservedate->show());
+        $table->endRow();
+        
+        // conservator
+        $conservator = new textinput();
+        $conservator->name = 'conservator';
+        $conservator->width ='50%';
+        $conservator->setValue($record['conservator']);
+        $table->startRow();
+        $consLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_conservator', 'sahriscollectionsman').'&nbsp;', 'input_conservator');
+        $table->addCell($consLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($conservator->show());
+        $table->endRow();
+        
+        // histcomments
+        $histcomments = new textinput();
+        $histcomments->name = 'histcomments';
+        $histcomments->width ='50%';
+        $histcomments->setValue($record['histcomments']);
+        $table->startRow();
+        $hcLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_histcomm', 'sahriscollectionsman').'&nbsp;', 'input_histcomments');
+        $table->addCell($hcLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($histcomments->show());
+        $table->endRow();
+        
+        // maker
+        $maker = new textinput();
+        $maker->name = 'maker';
+        $maker->width ='50%';
+        $maker->setValue($record['maker']);
+        $table->startRow();
+        $prodLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_producer', 'sahriscollectionsman').'&nbsp;', 'input_maker');
+        $table->addCell($prodLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($maker->show());
+        $table->endRow();
+        
+        // prodplace
+        $prodplace = new textinput();
+        $prodplace->name = 'prodplace';
+        $prodplace->width ='50%';
+        $prodplace->setValue($record['prodplace']);
+        $table->startRow();
+        $ppLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_prodplace', 'sahriscollectionsman').'&nbsp;', 'input_prodplace');
+        $table->addCell($ppLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($prodplace->show());
+        $table->endRow();
+        
+        // prodperiod
+        $prodperiod = new textinput();
+        $prodperiod->name = 'prodperiod';
+        $prodperiod->width ='50%';
+        $prodperiod->setValue($record['prodperiod']);
+        $table->startRow();
+        $perLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_prodperiod', 'sahriscollectionsman').'&nbsp;', 'input_prodperiod');
+        $table->addCell($perLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($prodperiod->show());
+        $table->endRow();
+        
+        // histuser
+        $histuser = new textinput();
+        $histuser->name = 'histuser';
+        $histuser->width ='50%';
+        $histuser->setValue($record['histuser']);
+        $table->startRow();
+        $uLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_histuser', 'sahriscollectionsman').'&nbsp;', 'input_histuser');
+        $table->addCell($uLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($histuser->show());
+        $table->endRow();
+        
+        // placeofuse
+        $placeofuse = new textinput();
+        $placeofuse->name = 'placeofuse';
+        $placeofuse->width ='50%';
+        $placeofuse->setValue($record['placeofuse']);
+        $table->startRow();
+        $pouLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_placeofuse', 'sahriscollectionsman').'&nbsp;', 'input_placeofuse');
+        $table->addCell($pouLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($placeofuse->show());
+        $table->endRow();
+        
+        // periodofuse
+        $periodofuse = new textinput();
+        $periodofuse->name = 'periodofuse';
+        $periodofuse->width ='50%';
+        $periodofuse->setValue($record['periodofuse']);
+        $table->startRow();
+        $perLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_periodofuse', 'sahriscollectionsman').'&nbsp;', 'input_periodofuse');
+        $table->addCell($perLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($periodofuse->show());
+        $table->endRow();
+        
+        // provenance
+        $provenance = new textinput();
+        $provenance->name = 'provenance';
+        $provenance->width ='50%';
+        $provenance->setValue($record['provenance']);
+        $table->startRow();
+        $provLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_provenance', 'sahriscollectionsman').'&nbsp;', 'input_provenance');
+        $table->addCell($provLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($provenance->show());
+        $table->endRow();
+        
+        // collector
+        $collector = new textinput();
+        $collector->name = 'collector';
+        $collector->width ='50%';
+        $collector->setValue($record['collector']);
+        $table->startRow();
+        $collLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collector', 'sahriscollectionsman').'&nbsp;', 'input_collector');
+        $table->addCell($collLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($collector->show());
+        $table->endRow();
+        
+        // collectdate
+        $collectdate = new textinput();
+        $collectdate->name = 'collectdate';
+        $collectdate->width ='50%';
+        $collectdate->setValue($record['collectdate']);
+        $table->startRow();
+        $cdLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collectdate', 'sahriscollectionsman').'&nbsp;', 'input_collectdate');
+        $table->addCell($cdLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($collectdate->show());
+        $table->endRow();
+        
+        // collmethod
+        $collmethod = new textinput();
+        $collmethod->name = 'collmethod';
+        $collmethod->width ='50%';
+        $collmethod->setValue($record['collmethod']);
+        $table->startRow();
+        $cmLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collectmethod', 'sahriscollectionsman').'&nbsp;', 'input_collmethod');
+        $table->addCell($cmLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($collmethod->show());
+        $table->endRow();
+        
+        // collnumber
+        $collnumber = new textinput();
+        $collnumber->name = 'collnumber';
+        $collnumber->width ='50%';
+        $collnumber->setValue($record['collnumber']);
+        $table->startRow();
+        $cnoLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_collnumber', 'sahriscollectionsman').'&nbsp;', 'input_collnumber');
+        $table->addCell($cnoLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($collnumber->show());
+        $table->endRow();
+        
+        // pubref
+        $pubref = new textinput();
+        $pubref->name = 'pubref';
+        $pubref->width ='50%';
+        $pubref->setValue($record['pubref']);
+        $table->startRow();
+        $prLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_pubref', 'sahriscollectionsman').'&nbsp;', 'input_pubref');
+        $table->addCell($prLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($pubref->show());
+        $table->endRow();
+        
+        $table->startRow();
+        $objUpload = $this->newObject('selectfile', 'filemanager');
+        $objUpload->name = 'media';
+        $objUpload->restrictFileList = array('jpg', 'JPG', 'png', 'gif');
+        $csvLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_mediafile', 'sahriscollectionsman').'&nbsp;', 'input_media');
+        $table->addCell($csvLabel->show(), 150, NULL, 'right');
+        $table->addCell('&nbsp;', 5);
+        $table->addCell($objUpload->show());
+        $table->endRow();
+        
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->legend = ''; // $this->objLanguage->languageText('phrase_invitefriend', 'userregistration');
+        $fieldset->contents = $table->show();
+        // add the form to the fieldset
+        $form->addToForm($fieldset->show());
+        $button = new button ('submitform', $this->objLanguage->languageText("mod_sahriscollectionsman_modify", "sahriscollectionsman"));
+        $button->setToSubmit();
+        $form->addToForm('<p align="center"><br />'.$button->show().'</p>');
+        $ret .= $form->show();
+
+        return $ret;
+    }
 
     /**
      * Method to format a single retrieved record and display it
@@ -322,7 +819,9 @@ class sahriscollectionsops extends object {
      */
     public function formatRecord($record)
     {
-        
+        if(!isset($record[0])) {
+            return "Empty Collection";
+        }
         $record = $record[0];
         // log_debug($record);
         $this->objWashout = $this->getObject('washout', 'utilities');
@@ -335,7 +834,7 @@ class sahriscollectionsops extends object {
         $objFile = $this->getObject('dbfile', 'filemanager');
         $image = $objFile->getFilePath($record['media']);
         $alt = $objFile->getFileName($record['media']);
-        $ret .= '<img src="'.$image.'" alt="'.$alt.'" />';
+        $ret .= '<img src="'.$image.'" width="300" height="200" alt="'.$alt.'" />';
 
         
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -710,6 +1209,22 @@ class sahriscollectionsops extends object {
         $table4->addCell($fieldset2->show());
         $table4->endRow();
         
+        // edit and delete link
+        $e = $this->newObject('link', 'htmlelements');
+        $e->href = $this->uri(array('action' => 'editrecord', 'collectionid' => $record['collectionid'], 'recordid' => $record['id']));
+        $e->link = $this->objLanguage->languageText("mod_sahriscollectionsman_editrecord", "sahriscollectionsman");
+        $e = $e->show();
+        
+        // edit and delete link
+        $d = $this->newObject('link', 'htmlelements');
+        $d->href = $this->uri(array('action' => 'deleterecord', 'collectionid' => $record['collectionid'], 'recordid' => $record['id']));
+        $d->link = $this->objLanguage->languageText("mod_sahriscollectionsman_deleterecord", "sahriscollectionsman");
+        $d = $d->show();
+        
+        $table4->startRow();
+        $table4->addCell($e." ".$d);
+        $table4->endRow();
+        
         $ret .= $table4->show();
         
         header ( "Content-Type: text/html;charset=utf-8" );
@@ -726,11 +1241,11 @@ class sahriscollectionsops extends object {
         $createcoll->link = $this->objLanguage->languageText("mod_sahriscollectionsman_createcollection", "sahriscollectionsman");
         $createcoll = $createcoll->show();
         
-        // add a collection record
+        /* add a collection record
         $addrec = $this->newObject('link', 'htmlelements');
         $addrec->href = $this->uri(array('action' => 'addform'));
         $addrec->link = $this->objLanguage->languageText("mod_sahriscollectionsman_addrectocoll", "sahriscollectionsman");
-        $addrec = $addrec->show();
+        $addrec = $addrec->show(); */
         
         // search a collection record
         $searchrec = $this->newObject('link', 'htmlelements');
@@ -753,7 +1268,7 @@ class sahriscollectionsops extends object {
         $txt = "<ul";
         $txt .= "<li>".$sl."</li>";
         $txt .= "<li>".$createcoll."</li>";
-        $txt .= "<li>".$addrec."</li>";
+        // $txt .= "<li>".$addrec."</li>";
         $txt .= "<li>".$searchrec."</li>";
         $txt .= "<li>".$csvin."</li>";
         $txt .= "</ul>";
@@ -769,9 +1284,9 @@ class sahriscollectionsops extends object {
             
         $table->startHeaderRow();
         $table->addHeaderCell('Accession Number');
-        $table->addHeaderCell('Title');
+        $table->addHeaderCell('Object Name');
         $table->addHeaderCell('Description');
-        $table->addHeaderCell('Comment');
+        // $table->addHeaderCell('Comment');
         $table->addHeaderCell('Date Created');
         $table->addHeaderCell('Action');
         $table->endHeaderRow();
@@ -779,9 +1294,9 @@ class sahriscollectionsops extends object {
         foreach($results as $row) {
             $table->startRow();
             $table->addCell($row['accno']);
-            $table->addCell($row['title']);
-            $table->addCell($row['description']);
-            $table->addCell($row['comment']);
+            $table->addCell($row['objname']);
+            $table->addCell($row['physdesc']);
+            // $table->addCell($row['comment']);
             $table->addCell($row['datecreated']);
             $objIcon = $this->newObject('geticon', 'htmlelements');
             $url = $this->uri(array('action' => 'viewsingle', 'id' => $row['id']));
