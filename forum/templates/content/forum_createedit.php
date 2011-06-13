@@ -18,7 +18,7 @@ $header =& new htmlheading();
 $header->type=3;
 
 if ($action == 'edit') {
-    $header->str=$this->objLanguage->languageText('mod_forum_editForumSettings', 'forum').': '.$forum['forum_name'];
+    $header->str=$this->objLanguage->languageText('mod_forum_editforumsettings', 'forum').': '.$forum['forum_name'];
     $formAction = 'editforumsave';
 } else {
     $header->str=$this->objLanguage->languageText('mod_forum_createNewForum', 'forum','Create New Forum').': '.$contextTitle;
@@ -74,22 +74,22 @@ $table->endRow();
 if ($action == 'edit') {
 
     $table->startRow();
-    
+
     $table->addCell('<strong>'.$this->objLanguage->languageText('mod_forum_lockforum', 'forum').'</strong>');
-    
+
     $radioGroup =& new radio('lockforum');
     $radioGroup->setBreakSpace(' / ');
-    
+
     // The option NO comes before YES - as no is this preferred
     $radioGroup->addOption('N','No');
     $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
-    
+
     $radioGroup->setSelected($forum['forumlocked']);
-    
+
     $message = ' - '.$this->objLanguage->languageText('mod_forum_explainlocking', 'forum').'.';
-    
+
     $table->addCell($radioGroup->show().$message,  null,  null, null, null, ' colspan="3"' );
-    
+
     $table->endRow();
 
 }
@@ -105,20 +105,20 @@ if ($action == 'edit' && $forum['defaultforum'] == 'Y') {
     $hiddenIdInput = new textinput('visible');
     $hiddenIdInput->fldType = 'hidden';
     $hiddenIdInput->value = 'default';
-  
+
     $table->addCell($this->objLanguage->languageText('mod_forum_defaultforum', 'forum').$hiddenIdInput->show());
 } else {
     $radioGroup = new radio('visible');
     $radioGroup->setBreakSpace(' / ');
     $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes'));
     $radioGroup->addOption('N', $this->objLanguage->languageText('word_no'));
-    
+
     if ($action == 'edit') {
         $radioGroup->setSelected($forum['forum_visible']);
     } else {
         $radioGroup->setSelected('Y');
     }
-    
+
     $table->addCell($radioGroup->show());
 }
 
@@ -201,20 +201,20 @@ $table->endRow();
 
 if ($action == 'edit') {
     $table->startRow();
-    
+
     $table->addCell('<strong><nobr>'.$this->objLanguage->languageText('mod_forum_archivelabel', 'forum').':</nobr></strong>', 100);
-    
+
     $radioGroup = new radio('archivingRadio');
     $radioGroup->setBreakSpace(' / ');
-    
+
     // The option NO comes before YES - as no is this preferred
     $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system', 'No'));
     $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
     $radioGroup->extra='onclick="toggleArchiveInput()"';
-    
+
     $selectDateLink = $this->newObject('datepicker', 'htmlelements');
     $selectDateLink->setName('archivedate');
-    
+
     if ($forum['archivedate'] == '' || $forum['archivedate'] == '0000-00-00') {
         $radioGroup->setSelected('N');
         $selectDateLink->setDefaultDate(date('Y-m-d'));
@@ -222,11 +222,11 @@ if ($action == 'edit') {
         $radioGroup->setSelected('Y');
         $selectDateLink->setDefaultDate($forum['archivedate']);
     }
-    
-    
+
+
     $cell = $radioGroup->show().' <span id="dateSelect"> - '.$selectDateLink->show().' <br /><span class="warning">'.$this->objLanguage->languageText('mod_forum_archivewarning', 'forum').'</span></span>';
     $table->addCell($cell,  null,  null, null, null, ' colspan="3"');
-    
+
     $table->endRow();
 }
 
@@ -260,7 +260,7 @@ $this->appendArrayVar('bodyOnLoad', 'toggleArchiveInput();');
 <script language="JavaScript" type="text/javascript">
 //<![CDATA[
 if(!document.getElementById && document.all) {
-    document.getElementById = function(id){ return document.all[id]} 
+    document.getElementById = function(id){ return document.all[id]}
 }
 
 
@@ -273,9 +273,9 @@ if(!document.getElementById && document.all) {
             } else{
                 showhide('dateSelect', 'hidden');
             }
-            
+
     }
-    
+
     function showhide (id, visible)
     {
         var style = document.getElementById(id).style
