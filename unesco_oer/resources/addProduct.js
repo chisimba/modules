@@ -86,3 +86,7 @@ function removeOptionsByValue(selectbox, svalue)
         selectbox.remove(i);
     }
 }
+
+window.onload = function() {
+   toggleRelationDropDown('input_relation_type', 'input_relation');
+}
