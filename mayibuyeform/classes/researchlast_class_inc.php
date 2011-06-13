@@ -63,8 +63,11 @@ private function buildForm()
    	$objForm = new form('researchform', $this->getFormAction());
 	$table = $this->newObject('htmltable', 'htmlelements');
 	$required = '<span class="required_field"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+	 
+	$headingLabel = new label($this->objLanguage->languageText("mod_mayibuye_heading","mayibuyeform"),"heading");
+	$objForm->addToForm('<p align="center">'.$headingLabel->show().$required.'</p>');  
  
- 
+
 	$table->startRow();      
 	$objsubheadingLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsublabel3","mayibuyeform"),"subheading");
 	$table->addCell($objsubheadingLabel->show(),'', 'center', 'left', ''); 
@@ -74,21 +77,21 @@ private function buildForm()
 	$objuwc= new textinput('uwc');
 	$objuwcLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentuwc","mayibuyeform"),"uwc");
 	$table->addCell($objuwcLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objuwc->show().$required);
+	$table->addCell($objuwc->show());
 	$table->endRow();
 
 	$table->startRow();
 	$objstaffno = new textinput('staffno');
 	$objstaffLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsforstaffno","mayibuyeform"),"staffno");
 	$table->addCell($objstaffLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objstaffno->show().$required);
+	$table->addCell($objstaffno->show());
 	$table->endRow();
 
 	$table->startRow();
 	$objdept= new textinput('dept');
 	$objdeptLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsDepartment","mayibuyeform"),"dept");
 	$table->addCell($objdeptLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objdept->show().$required);
+	$table->addCell($objdept->show());
 	$table->endRow();	
 
 	$table->startRow();
@@ -112,7 +115,7 @@ private function buildForm()
 	$table->addCell($objproject->show(),'', 'center', 'left', '');
 	$table->endRow();	
 
-	$table->startRow();
+	/*$table->startRow();
 	$objrights = new textinput('rights');
 	$objrightsLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentrights","mayibuyeform"),"rights");
 	$table->addCell($objrightsLabel->show(),'', 'center', 'left', '');
@@ -122,7 +125,7 @@ private function buildForm()
 	$table->startRow();
 	$objtermsLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_comentterms","mayibuyeform"),"terms");
 	$table->addCell($objtermsLabel->show(),'', 'center', 'left', '');
-	$table->endRow();
+	$table->endRow();*/
 
 	$fieldset = $this->newObject('fieldset', 'htmlelements');
 	$fieldset->legend = $this->objLanguage->languageText('phrase_accountdetails', 'userregistration', 'Collection Details');

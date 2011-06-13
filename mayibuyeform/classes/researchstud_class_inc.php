@@ -38,7 +38,9 @@ private function buildForm()
 	$table = $this->newObject('htmltable', 'htmlelements');
 	$required = '<span class="required_field"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
  
-
+	$headingLabel = new label($this->objLanguage->languageText("mod_mayibuye_heading","mayibuyeform"),"heading");
+	$objForm->addToForm('<p align="center">'.$headingLabel->show().$required.'</p>');  
+	
 	$table->startRow();
        	$objvatLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsubheading","mayibuyeform"),"heading");
 	$table->addCell($objvatLabel->show(),'', 'center', 'left', '');
@@ -48,21 +50,24 @@ private function buildForm()
 	$objname = new textinput('name');
 	$objnameLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentname2","mayibuyeform"),"name");
 	$table->addCell($objnameLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objname->show().$required);
+	$table->addCell($objname->show());
+	$objForm->addRule('name','Please enter your name','required');
 	$table->endRow();
 	
 	$table->startRow();
 	$objjob = new textinput('jobtitle');
 	$objjobLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentjobtitle","mayibuyeform"),"jobtitle");
 	$table->addCell($objjobLabel->show(),'', 'center', 'left', '');         
-	$table->addCell($objjob->show().$required);
+	$table->addCell($objjob->show());
+	$objForm->addRule('jobtitle','Please enter your Job title','required');
 	$table->endRow();
 
 	$table->startRow();	
 	$objorg = new textinput('orgranization2');
 	$objorgLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentorganizationname","mayibuyeform"),"organazation");
 	$table->addCell($objorgLabel->show(),'', 'center', 'left', '');         
-	$table->addCell($objorg->show().$required);
+	$table->addCell($objorg->show());
+	$objForm->addRule('orgranization2','Please enter your Organization','required');
 	$table->endRow();
 	
 	$table->startRow();
@@ -76,7 +81,8 @@ private function buildForm()
 	$objTelno3 = new textinput('tellno_3');
 	$objTel3Label = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commenttelno","mayibuyeform"),"telno_3");
 	$table->addCell($objTel3Label->show(),'', 'center', 'left', '');
-	$table->addCell($objTelno3->show().$required);
+	$table->addCell($objTelno3->show());
+	$objForm->addRule('tellno_3', 'Telephone Must contain valid numbers', 'numeric');
 	$table->startRow();
 	
 	$table->startRow();

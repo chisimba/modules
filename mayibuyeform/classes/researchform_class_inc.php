@@ -67,17 +67,21 @@ private function buildForm()
 	$form = new form ('register', $this->uri(array('action'=>'register')));
 	$required = '<span class="required_field"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
  
- //Create a new label for the text labels
-	$titleLabel = new label($this->objLanguage->languageText("mod_mayibuyeform_commenttitle","mayibuyeform"),"title");
-	$table->addCell($titleLabel->show(),'', 'center', 'left', '');
+ 	//Create a new label for the text labels	
+	$headingLabel = new label($this->objLanguage->languageText("mod_mayibuye_heading","mayibuyeform"),"heading");
+	$objForm->addToForm('<p align="center">'.$headingLabel->show().$required.'</p>');  
 	
+	$table->startRow();
+	$titleLabel = new label($this->objLanguage->languageText("mod_mayibuyeform_commenttitle","mayibuyeform"),"title");
+	$table->addCell('<p>'.$titleLabel->show().'</p>'); 
+	$table->endRow(); 	
 
 	$table->startRow();
 	$objdate = new textinput('date');
 	$objdateLabel =  new label($this->objLanguage->languageText("mod_mayibuye_commentdate","mayibuyeform"),"date"); 
 	$table->addCell($objdateLabel->show(),'', 'center', 'left', '');
-	//$table->addCell('&nbsp;', 2);
-	$table->addCell($objdate->show().$required);
+	//$table->addCell($objdate->show().$required);
+	$table->addCell($objdate->show(),'','center','left','');
 	$objForm->addRule('date', $this->objLanguage->languageText("mod_mayibuye_date_required", "mayibuyeform"), 'required');
         $table->endRow();
 
@@ -85,14 +89,17 @@ private function buildForm()
 	$objnameofresearcher = new textinput('name_resign');
 	$objnameofReseacherLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentnameofresearch","mayibuyeform"),"name_resign");
 	$table->addCell($objnameofReseacherLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objnameofresearcher->show().$required);
+	$table->addCell($objnameofresearcher->show());
+	$objForm->addRule('name_resign','Please enter your name','required');
+
         $table->endRow();
 
         $table->StartRow();
 	$objTelno = new textinput('tellno');
 	$objTelLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commenttelno","mayibuyeform"),"Telno");
 	$table->addCell($objTelLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objTelno->show().$required);
+	$table->addCell($objTelno->show());
+	$objForm->addRule('tellno', 'Telephone Must contain valid numbers', 'numeric');
 	$table->EndRow();
 
 	
@@ -107,7 +114,7 @@ private function buildForm()
 	$objEmailaddress = new textinput('emailaddress');
 	$objEmailaddressLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentemailaddress","mayibuyeform"),"email");
 	$table->addCell($objEmailaddressLabel->show(),'', 'center', 'left', '');
-	$table->addCell($objEmailaddress->show().$required);
+	$table->addCell($objEmailaddress->show());
  	$objForm->addRule('emailaddress', 'Not a valid Email', 'email');
 	$table->endRow(); 
 	
@@ -120,10 +127,7 @@ private function buildForm()
    
 	$button = new button ('submitform', 'Continue');
 	$button->setToSubmit();
-        //$objForm->addToForm($table->show()); 	
-	$objForm->addToForm('<p align="center"><br />'.$button->show().'</p>');
-
-
+       	$objForm->addToForm('<p align="center"><br />'.$button->show().'</p>');
 	 return $objForm->show();
 
 }
