@@ -539,7 +539,7 @@ class forum extends controller {
      * @return redirects to the topic with a message to indicate the topic has been saved
      */
     public function saveNewTopic() {
-        
+
         $tempPostId = $_POST['temporaryId'];
         $this->saveTempAttachmentIfAny($tempPostId);
         $forum_id = $_POST['forum'];
@@ -1475,7 +1475,7 @@ class forum extends controller {
         $forumLinksFieldset = $this->getObject('fieldset', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
         $link = new link($this->uri(array('action' => 'administration')));
-        $link->link = $this->objLanguage->languageText('mod_forum_forumAdministration', 'forum');
+        $link->link = $this->objLanguage->languageText('mod_forum_forumadministration', 'forum');
         $forumLinksFieldset->addContent($link->show());
         $forumLinksFieldset->addContent(' / ');
         $link = new link($this->uri(array('action' => 'editforum', 'id' => $forum_id)));
