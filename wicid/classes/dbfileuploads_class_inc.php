@@ -111,13 +111,15 @@ class dbfileuploads extends dbtable {
         $sql = "select A.refno,A.telephone, A.docname, A.date_created, A.contact_person, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
               from tbl_wicid_documents as A
                 join tbl_wicid_fileuploads as B on A.id = B.docid ";
+        $refVal = explode("-", $filtervalue);
+
         //Derermine the where clause based on filter
         switch ($filter) {
             case 'Owner':
                 $sql .= "where A.contact_person like '%" . $filtervalue . "%'";
                 break;
             case 'Ref No':
-                $sql .= "where A.refno like '%" . $filtervalue . "%'";
+                $sql .= "where A.refno like '%" . $filtervalue . "%'";                
                 break;
             case 'Telephone':
                 $sql .= "where A.telephone like '%" . $filtervalue . "%'";
@@ -129,10 +131,10 @@ class dbfileuploads extends dbtable {
                 $sql .= "where A.docname like '%" . $filtervalue . "%'";
                 break;
             default:
-                $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.refno like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%'";
+                $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%' or (A.refno = '" . $refVal[0] . "' and A.userid = '" . $refVal[1] . "' )";
                 break;
         }
-        $sql .= " and A.active ='Y' order by A.date_created DESC";
+        $sql .= " and A.active ='Y' order by A.date_created DESC";        
 
         return $this->getArray($sql);
     }
