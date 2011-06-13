@@ -23,7 +23,7 @@
 
 
         
-//Check if a product is being edited
+//Check if an institution is being edited
         if (isset($institutionId)) {
             $institutionGUI->getInstitution($institutionId);
             $formData = $institutionGUI->showAllInstitutionData();

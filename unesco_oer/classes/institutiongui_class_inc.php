@@ -106,5 +106,9 @@ class institutiongui extends object {
         return $acLink->show();
     }
 
+    function showAllInstitutionsLink() {
+        
+    }
+
 }
 ?>

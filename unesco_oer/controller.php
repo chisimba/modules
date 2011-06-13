@@ -28,9 +28,8 @@ class unesco_oer extends controller {
     public $objDbProductKeywords;
     public $objDbProductStatus;
     public $objjavafilt;
-
-     public $objConfig;
-
+    public $objThumbUploader;
+    public $objConfig;
     /**
      * @var object $objLanguage Language Object
      */
@@ -80,7 +79,8 @@ class unesco_oer extends controller {
         $this->objUser = $this->getObject('user', 'security');
         $this->objUrl = $this->getObject('url', 'strings');
         $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
-         $this->objjavafilt = $this->getObject('javafilt');
+        $this->objjavafilt = $this->getObject('javafilt');
+        $this->objThumbUploader = $this->getObject('thumbnailuploader');
         //$this->objUtils = $this->getObject('utilities');
         //$this->objGoogleMap=$this->getObject('googlemapapi');
         //$this->objGoogleMap = new googlemapapi();
@@ -172,7 +172,6 @@ class unesco_oer extends controller {
         $institutionId = $this->getParam('institutionId');
         $this->setVarByRef('institutionId', $institutionId);
 
-        echo $insitutionId;
 
         return "4_tpl.php";
     }
@@ -216,14 +215,14 @@ class unesco_oer extends controller {
         return "JavaFilter_tpl.php";
         die();
     }
-    
-     public function __JavaFilternum() {
+
+    public function __JavaFilternum() {
 //        $age = getPa
-         
-        
-         $temp = $this->objjavafilt->displayprods();
-          echo $temp;
-       
+
+
+        $temp = $this->objjavafilt->displayprods();
+        echo $temp;
+
         die();
     }
 
@@ -299,8 +298,8 @@ class unesco_oer extends controller {
         $lat = $this->getParam('lat');
         $lng = $this->getparam('Lng');
         $page = $this->getParam('page');
-        
-        
+
+
 
         $AuthFilter = $this->getParam('AuthorFilter');
         $ThemeFilter = $this->getParam('ThemeFilter');
@@ -317,8 +316,8 @@ class unesco_oer extends controller {
         $Manual = $this->getParam('Manual');
         $Besoractile = $this->getParam('Besoractile');
 
-            $latShort = round($lat,3);
-            $lngshort = round($lng,3);
+        $latShort = round($lat, 3);
+        $lngshort = round($lng, 3);
         $ProdId = $this->objProductUtil->BrowseAdaptation($latShort, $lngshort);
         $string = $this->objDbProducts->getAdaptedProducts($ProdId);
 
@@ -333,7 +332,7 @@ class unesco_oer extends controller {
 
 
         $this->setVarByRef("AuthFilter", $AuthFilter);
-          $this->setVarByRef("temp", $ProdId);
+        $this->setVarByRef("temp", $ProdId);
         $this->setVarByRef("ThemeFilter", $ThemeFilter);
         $this->setVarByRef("LangFilter", $LangFilter);
         $this->setVarByRef("SortFilter", $sort);
@@ -432,7 +431,7 @@ class unesco_oer extends controller {
     public function __controlpanel() {
         return "controlpanel_tpl.php";
     }
-    
+
     public function __adddata() {
         return "addData_tpl.php";
     }
@@ -444,12 +443,10 @@ class unesco_oer extends controller {
     public function __editgroups() {
         return "controlpanel_tpl.php";
     }
-    
-      public function __editinstitutions() {
+
+    public function __editinstitutions() {
         return "controlpanel_tpl.php";
     }
-
-
 
     /*
      * Method to display page with adaptable products
@@ -634,10 +631,11 @@ class unesco_oer extends controller {
         return $this->__addData();
     }
 
-    /**Method to display page for creating a new keyword
+    /*     * Method to display page for creating a new keyword
      *
      * @return <type>
      */
+
     public function __createKeywordUI() {
         return "createKeywordUI_tpl.php";
     }
@@ -1022,10 +1020,7 @@ class unesco_oer extends controller {
         return 'userRegistration_tpl.php';
     }
 
-
-
-
-    function __deleteUser(){
+    function __deleteUser() {
         $this->objUserAdmin->apiUserDelete($this->getParam('id'));
         $this->objUseExtra->deleteUser($this->getParam('id'), $this->getParam('userid'));
         // $this->objUseExtra->deleteUser($id);
@@ -1139,24 +1134,20 @@ class unesco_oer extends controller {
         return 'editUserDetails_tpl.php';
     }
 
-
-
-
-   function __updateUserDetails()
-      {
+    function __updateUserDetails() {
 
         $this->user = $this->objUserAdmin->getUserDetails($this->getParam('id'));
         $this->setVarByRef('user', $this->user);
-        $userId=$this->getParam('userid');
+        $userId = $this->getParam('userid');
 
         if (!$_POST) {
             return $this->nextAction(NULL);
         }
-     
+
 
         // Get Details from Form
         $password = $this->getParam('input_useradmin_password');
-           
+
 
         $repeatpassword = $this->getParam('useradmin_repeatpassword');
         $title = $this->getParam('useradmin_title');
@@ -1168,7 +1159,7 @@ class unesco_oer extends controller {
         $sex = $this->getParam('useradmin_sex');
         $country = $this->getParam('country');
 
-          $birthdate = $this->getParam('Date of birth');
+        $birthdate = $this->getParam('Date of birth');
         $address = $this->getParam('Address');
         $city = $this->getParam('city');
         $state = $this->getParam('state');
@@ -1182,15 +1173,15 @@ class unesco_oer extends controller {
         $country = $this->getParam('country');
 
         $userDetails = array(
-            'password'=>$password,
-            'repeatpassword'=>$repeatpassword,
-            'title'=>$title,
-            'firstname'=>$firstname,
-            'surname'=>$surname,
-            'email'=>$email,
-            'sex'=>$sex,
-            'country'=>$country
-            );
+            'password' => $password,
+            'repeatpassword' => $repeatpassword,
+            'title' => $title,
+            'firstname' => $firstname,
+            'surname' => $surname,
+            'email' => $email,
+            'sex' => $sex,
+            'country' => $country
+        );
 
         $this->setSession('userDetails', $userDetails);
 
@@ -1198,7 +1189,7 @@ class unesco_oer extends controller {
         $checkFields = array($firstname, $surname, $email);
 
         $results = array();
-         echo $this->getParam('id');
+        echo $this->getParam('id');
         // Check Fields
         if (!$this->__checkFields($checkFields)) {
             $this->setVar('mode', 'addfixup');
@@ -1213,7 +1204,7 @@ class unesco_oer extends controller {
             return 'editUserDetails_tpl.php';
         }
 
-        $results['detailschanged']=TRUE;
+        $results['detailschanged'] = TRUE;
 
         // check for password changed
         if ($password == '') { // none given, user does not want to change password
@@ -1239,19 +1230,15 @@ class unesco_oer extends controller {
         $this->objUser->updateUserSession();
         // Process Update Results
         if ($update) {
-            $this->objUseExtra->updateUserInfo($id,$userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
+            $this->objUseExtra->updateUserInfo($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "UserListingForm_tpl.php";
         } else {
-            return $this->nextAction(NULL, array('change'=>'details', 'error'=>'detailscouldnotbeupdated'));
+            return $this->nextAction(NULL, array('change' => 'details', 'error' => 'detailscouldnotbeupdated'));
         }
-
     }
 
-
-
-    function __userDetails($id)
-    {
+    function __userDetails($id) {
         $user = $this->isValidUser($id, 'userviewdoesnotexist');
 
         $this->setVarByRef('user', $user);
@@ -1264,7 +1251,6 @@ class unesco_oer extends controller {
         $this->setSession('showconfirmation', FALSE);
 
         return 'editUserDetails_tpl.php';
-
     }
 
     function __isValidUser($id, $errorcode='userviewdoesnotexist') {
@@ -1304,7 +1290,6 @@ class unesco_oer extends controller {
                 return 'No password was entered';
             case 'norepeatpasswordentered':
                 return 'No Repeat password was entered';
-            
         }
     }
 
@@ -1386,16 +1371,18 @@ class unesco_oer extends controller {
         return 'groupListingForm_tpl.php';
     }
 
-    /**This function handles the uploading of product metadata
+    /*     * This function handles the uploading of product metadata
      *
      * @return string
      */
+
     public function __saveProductMetaData() {
         $defaultTemplate = "ProductMetaData_tpl.php";
         $product = $this->getObject('product');
         $this->setVarByRef('product', $product);
         //test for edit
-        if ($this->getParam('productID')) $product->loadProduct($this->getParam('productID'));
+        if ($this->getParam('productID'))
+            $product->loadProduct($this->getParam('productID'));
 
         switch (strtolower($this->getParam('add_product_submit'))) {
             case "cancel":
@@ -1467,6 +1454,17 @@ class unesco_oer extends controller {
 
         $this->objDbProductStatus->addStatus($name);
         return $this->__addData();
+    }
+
+        /*
+     * Method to view all institutions editing
+     */
+
+    public function __viewInstitutions() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        
+        
+        return "viewInstitutions_tpl.php";
     }
 
 }

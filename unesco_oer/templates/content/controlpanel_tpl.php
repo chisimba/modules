@@ -230,7 +230,7 @@ if ($this->objUser->isLoggedIn()) {
                         <div class="groupMemberAndJoinLinkDiv">
                             
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'editinstitutions')));
+                            $abLink = new link($this->uri(array("action" => 'viewInstitutions')));
                              $abLink->cssClass = 'groupMemberAndJoinLinkDiv';
                             $abLink->link = 'Institution';
                            

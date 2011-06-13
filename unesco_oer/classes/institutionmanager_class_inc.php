@@ -47,6 +47,8 @@ class institutionmanager extends object {
                                     $address1, $address2, $address3, $zip, $city,
                                     $websiteLink, $keyword1, $keyword2, $thumbnail) {
 
+        echo "Edit institution";
+
         $this->_objDbInstitution->editInstitution($id, $name, $description, $type, 
                                     $country, $address1, $address2, $address3, $zip,
                                     $city, $websiteLink, $keyword1, $keyword2,
