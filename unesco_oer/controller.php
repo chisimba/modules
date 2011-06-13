@@ -912,10 +912,10 @@ class unesco_oer extends controller {
     }
 
     public function __deleteInstitution() {
-        $puid = $this->getParam('puid');
-        $name = $this->getParam('name');
-        $this->objDbInstitution->deleteInstitution($puid, $name);
-        return 'editInstitutionUI1_tpl.php';
+        $institutionId = $this->getParam('institutionId');
+
+        $this->objDbInstitution->deleteInstitution($institutionId);
+        return 'viewInstitutions_tpl.php';
     }
 
     public function __cancelEditInstitution() {
@@ -1456,14 +1456,14 @@ class unesco_oer extends controller {
         return $this->__addData();
     }
 
-        /*
+    /*
      * Method to view all institutions editing
      */
 
     public function __viewInstitutions() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
-        
-        
+
+
         return "viewInstitutions_tpl.php";
     }
 

@@ -53,11 +53,11 @@ if (count($Institution) > 0) {
         $myTable->startRow();
         $myTable->addCell($Institutions['name']);
         $objIcon->setIcon('delete');
-        $deleteLink = new link($this->uri(array('action' => "deleteInstitution", 'puid' => $Institutions['puid'],'name'=>$Institutions['name'])));
+        $deleteLink = new link($this->uri(array('action' => "deleteInstitution", 'institutionId' => $Institutions['id'])));
         $deleteLink->link = $objIcon->show();
         $myTable->addCell($deleteLink->show());
         $objIcon->setIcon('edit');
-        $EditLink = new link($this->uri(array('action' => "editInstitutionUI2", 'puid' => $Institutions['puid'],'id'=>$Institutions['id'])));
+        $EditLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $Institutions['id'])));
         $EditLink->link = $objIcon->show();
         $myTable->addCell($EditLink->show());
         $myTable->endRow();
