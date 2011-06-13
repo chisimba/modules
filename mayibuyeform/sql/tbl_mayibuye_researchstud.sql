@@ -18,25 +18,30 @@ $fields = array(
 	'nameofresgn'=>array(
 		 'type'=>'text',
 		  'length'=>50
+		),
 	
 	'jobtitle2'=>array(
 		 'type'=>'text',
-		  'length'=>50	
+		  'length'=>50
+		),	
 
 	'organizationname'=>array(
 		 'type'=>'text',
 		  'length'=>50	
+		),
 
           'postalddress2'=>array(
 		 'type'=>'text',
 		  'length'=>60
+		),
 
 	 'tell'=>array(
 		 'type'=>'text',
 		  'length'=>20	
+		),
 
 	 'fax'=>array(
-		 'type'=>'text'
+		 'type'=>'text',
 		  'length'=>20
 		));
 	?>
