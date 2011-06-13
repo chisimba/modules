@@ -198,8 +198,11 @@ class dbsurvey extends dbTable {
      * @access public
      * @return array $data The survey data
      * */
-    public function listSurveys() {
+    public function listSurveys($surveyId=NULL) {
         $sql = "SELECT * FROM " . $this->table;
+        if (!is_null($surveyId)){
+            $sql.=" WHERE id='$surveyId' ";
+        }
         $sql.=" ORDER BY 'date_created' ";
         $data = $this->getArray($sql);
         if (!empty($data)) {
