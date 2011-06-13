@@ -1386,13 +1386,17 @@ class unesco_oer extends controller {
         return 'groupListingForm_tpl.php';
     }
 
+    /**This function handles the uploading of product metadata
+     *
+     * @return string
+     */
     public function __saveProductMetaData() {
         $defaultTemplate = "ProductMetaData_tpl.php";
         $product = $this->getObject('product');
         $this->setVarByRef('product', $product);
-//        //test for edit
-//        if ($this->getParam('productID')) $product->loadProduct($this->getParam('productID'));
-//
+        //test for edit
+        if ($this->getParam('productID')) $product->loadProduct($this->getParam('productID'));
+
         switch (strtolower($this->getParam('add_product_submit'))) {
             case "cancel":
                 return $this->__home();

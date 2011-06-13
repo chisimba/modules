@@ -297,13 +297,28 @@ class product extends object
     function loadProduct($id)
     {
         $product = $this->_objDbProducts->getProductByID($id);
-        foreach ($product as $field => $value)
-        {
-            $property = '_'.preg_replace("#_#i", "", $field);
-            $this->$property = $value;
-        }
 
-        $this->_identifier = $product['id'];
+        $this->setIdentifier($product['id']);
+        $this->setTitle($product['title']);
+        $this->setAlternativeTitle($product['alternative_title']);
+        $this->setContentType($product['resource_type']);
+        $this->setLanguage($product['language']);
+        $this->setAuthors($product['creator']);
+        $this->setPublisher($product['publisher']);
+        $this->setDescription($product['description']);
+        $this->setAbstract($product['abstract']);
+        $this->setOtherContributers($product['other_contributors']);
+        $this->setContacts($product['contacts']);
+        $this->setStatus($product['status']);
+        $this->setRights($product['rights']);
+        $this->setRightsHolder($product['rights_holder']);
+        $this->setProvenance($product['provenance']);;
+        $this->setCoverage($product['coverage']);
+        $this->setStatus($product['status']);
+        $this->setKeyWords($product['keywords']);
+        $this->setRelation($product['relation'], $product['relation_type']);
+        $this->loadThemes($product['id']);
+        $this->loadKeyWords($product['id']);
     }
 
     /**This function upadates relevant fields of the product provided you use
@@ -866,16 +881,20 @@ class product extends object
         return $results;
    }
 
-   private function loadThemes()
+   private function loadThemes($id)
     {
         $themeIDarray = array();
-
-        foreach ($this->objDbProductThemes-> getThemesByProductID($this->getIdentifier()) as $theme) {
-            $themeIDarray[$theme['umbrella_theme_id']][$theme['id']];
+        foreach ($this->objDbProductThemes->getThemesByProductID($id) as $theme) {
+            $themeIDarray[$theme['umbrella_theme_id']] = $theme['id'];
         }
 
         return $this->setThemes($themeIDarray);
 
+    }
+
+    private function loadKeyWords($id)
+    {
+        $this->setKeyWords($this->objDbProductKeywords->getKeywordsByProductID($id));
     }
 
     ////////////////   SETTERS   ////////////////

@@ -132,7 +132,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         	<div class="printEmailDownloadIcons">
                         <?php
                         if ($this->objUser->isLoggedIn()) {
-                            $uri = $this->uri(array('action' => 'editProduct', 'id' => $productID , 'prevAction' => 'home'));
+                            $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID , 'prevAction' => 'home'));
                             $editLink = new link($uri);
                             $editLink->cssClass = "searchGoLink";
                             $linkText = "edit product";

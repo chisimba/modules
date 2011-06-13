@@ -31,8 +31,8 @@ $fields = array(
                 'no_of_hours' => array('type' => 'text', 'length' => 32),
                 'associated_material' => array('type' => 'text'),
                 'assesment' => array('type' => 'text'),
-                'comments history' => array('type' => 'text'),
-                'schedule of classes' => array('type' => 'text')
+                'comments_history' => array('type' => 'text'),
+                'schedule_of_classes' => array('type' => 'text')
  		);
 
 ?>
