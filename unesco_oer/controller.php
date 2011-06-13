@@ -1114,11 +1114,12 @@ class unesco_oer extends controller {
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
 
             // Email Details to User
-            $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
-            $this->setSession('id', $pkid);
+            //$this->objUserAdmin->sendRegistrationMessage($pkid, $password);
+            //$this->setSession('id', $pkid);
             //$this->setSession('password', $password);
-            $this->setSession('time', $password);
-            return $this->nextAction('detailssent');
+            //$this->setSession('time', $password);
+            //return $this->nextAction('detailssent');
+            return $this->__userListingForm();
         }
     }
 
@@ -1322,52 +1323,53 @@ class unesco_oer extends controller {
         return 'confirm_tpl.php';
     }
 
-    function __groupListingForm() {
+   function __groupRegistationForm() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'groupRegistrationForm_tpl.php';
+    }
+
+     function __groupListingForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupListingForm_tpl.php';
     }
 
-    function __addNewGroupForm() {
-        $this->setLayoutTemplate('maincontent_layout_tpl.php');
-        return 'addNewGroupForm_tpl.php';
-    }
-
-    function __addNewGroup() {
-        $name = $this->getParam('groupname');
-        $email = $this->getParam('email');
-        $address = $this->getParam('address');
-        $city = $this->getParam('city');
-        $state = $this->getParam('state');
-        $postalcode = $this->getParam('postalcode');
-        $website = $this->getParam('website');
-        $institution = $this->getParam('institution');
+    function __saveNewGroup() {
+        $name = $this->getParam('group_name');
+        $email = $this->getParam('group_email');
+        $address = $this->getParam('group_address');
+        $city = $this->getParam('group_city');
+        $state = $this->getParam('group_state');
+        $country=$this->getParam('country');
+        $postalcode = $this->getParam('group_postalcode');
+        $website = $this->getParam('group_website');
+        $institution = $this->getParam('group_institutionlink');
         $description = $this->getParam('description');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
-        $this->objDbGroups->addNewGroup($name, $email, $address, $city, $state, $postalcode, $website, $institution, $loclat, $loclong);
+        $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state,$country, $postalcode, $website, $institution,$loclat,$loclong,$description);
     }
 
     function __editGroup() {
-        $id = $this->getParam('id');
-        $name = $this->getParam('groupname');
-        $email = $this->getParam('email');
-        $address = $this->getParam('address');
-        $city = $this->getParam('city');
-        $state = $this->getParam('state');
-        $postalcode = $this->getParam('postalcode');
-        $website = $this->getParam('website');
-        $institution = $this->getParam('institution');
+        $id=$this->getParam('id');
+        $name = $this->getParam('group_name');
+        $email = $this->getParam('group_email');
+        $address = $this->getParam('group_address');
+        $city = $this->getParam('group_city');
+        $state = $this->getParam('group_state');
+        $country=$this->getParam('country');
+        $postalcode = $this->getParam('group_postalcode');
+        $website = $this->getParam('group_website');
+        $institution = $this->getParam('group_institutionlink');
         $description = $this->getParam('description');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
-        $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $postalcode, $website, $institution, $loclat, $loclong);
+        $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
     }
 
     function __deleteGroup() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $id = $this->getParam('id');
-        $name = $this->getParam('name');
-        $this->objDbGroups->deleteGroup($id, $name);
+        $this->objDbGroups->deleteGroup($id);
         return 'groupListingForm_tpl.php';
     }
 

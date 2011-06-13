@@ -30,6 +30,13 @@ $header->type = 1;
 $header->str = "Edit User:";
 echo $header->show();
 
+$button = new button('Add Button', "Add Group");
+$button->setToSubmit();
+$addGroupLink =new link($this->uri(array('action' =>"groupRegistationForm")));
+$addGroupLink->link = $button->show();
+echo $addGroupLink->show();
+
+
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '60%';
 $myTable->border = '1';
@@ -38,6 +45,7 @@ $myTable->cellpadding = '10';
 
 $myTable->startHeaderRow();
 $myTable->addHeaderCell('Unesco_oer Group');
+$myTable->addHeaderCell('Group E-mail');
 $myTable->addHeaderCell('Edit');
 $myTable->addHeaderCell('Delete');
 $myTable->endHeaderRow();
@@ -48,21 +56,45 @@ if (count($groups) > 0) {
     foreach ($groups as $group) {
         $myTable->startRow();
         $myTable->addCell($group['name']);
+        $myTable->addCell($group['email']);
         $button = new button('Edit Button', "Edit Group");
         $button->setToSubmit();
-        $editLink =new link($this->uri(array('action' => "addNewGroupForm",'id' => $group['id'])));
+        $editLink =new link($this->uri(array('action' => "",'id' => $group['id'])));
         $editLink->link = $button->show();
         $myTable->addCell($editLink->show());
-        $button = new button('Delete', "Delete Group");
-        $button->setToSubmit();
-        $DeleteLink =new link($this->uri(array('action' => "deleteGroup",'id' => $group['id'])));
-        $DeleteLink->link = $button->show();
-        $myTable->addCell($DeleteLink->show());
-        $myTable->endRow();
+
+        $objIcon->setIcon('delete');
+        $deleteLink =new link($this->uri(array('action' => "deleteGroup",'id' => $group['id'])));
+        $deleteLink->link = $objIcon;
+        $href=$deleteLink->href;
+        $finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
+        $myTable->addCell($finaldeleteLink);
     }
 }
 echo $myTable->show();
 
+?>
 
 
 ?>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=deleteuser]").click(function(){
+
+        var r=confirm( "Are you sure you want to delete this group?");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+
+
+);
+
+}
+
+
+);
+</script>

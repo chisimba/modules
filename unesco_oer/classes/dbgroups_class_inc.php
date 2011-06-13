@@ -38,27 +38,130 @@ class dbgroups extends dbtable {
         $this->getArray($sql);
     }
 
-     function editgroup($id,$name, $email, $address, $city, $state, $postalcode, $website, $institution, $loclat, $loclong) {
-        return $this->update(
-                'id',
-                $id,
-                //array('loclat' => $loclat,'loclong'=>$loclong,'name'=>$name,'id'=>$id)
-                $data = array(
-                    'id'=>$id,
-                    'name' => $name,
-                    'email' => $email,
-                    'address' => $address,
-                    'city' => $city,
-                    'state' => $state,
-                    'postalcode' => $postalcode,
-                    'website' => $website,
-                    'institution' => $institution,
-                    'loclat' => $loclat,
-                    'loclat' => $loclong
-                    )
-                );
+    function editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description) {
+        if ($name != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'name' => $name)
+            );
         }
- 
+
+        if ($email != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'email' => $email)
+            );
+        }
+
+
+        if ($address != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'address' => $address)
+            );
+        }
+
+        if ($city != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'city' => $city)
+            );
+        }
+
+        if ($state != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'state' => $state)
+            );
+        }
+
+        if ($country != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'country' => $country)
+            );
+        }
+
+
+        if ($postalcode != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'postalcode' => $postalcode)
+            );
+        }
+
+        if ($website != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'website' => $website)
+            );
+        }
+
+        if ($institution != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'LinkedInstitution' => $institution)
+            );
+        }
+
+        if ($loclat != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'loclat' => $loclat)
+            );
+        }
+
+        if ($loclong != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'loclong' => $loclong)
+            );
+        }
+
+        if ($description != '') {
+            return $this->update(
+                    'id',
+                    $id,
+                    $data = array(
+                'id' => $id,
+                'description' => $description)
+            );
+        }
+    }
+
     function addGroup($name, $loclat, $loclong, $thumbnailPath, $country = NULL) {
         $data = array(
             'name' => $name,
@@ -75,18 +178,20 @@ class dbgroups extends dbtable {
     // PBROBLEM PROBLEM PROBLEM   #############################################
     // Does a User need necessarily to know the Latitude and Longitude of the group Location?
     //
-    function addNewGroup($name, $email, $address, $city, $state, $postalcode, $website, $institution,$loclat,$loclong) {
+    function saveNewGroup($name, $email, $address, $city, $state,$country, $postalcode, $website, $institution,$loclat,$loclong,$description) {
         $data = array(
             'name' => $name,
             'email' => $email,
             'address' => $address,
             'city' => $city,
             'state' => $state,
+            'country'=>$country,
             'postalcode' => $postalcode,
             'website' => $website,
-            'institution' => $institution,
+            'LinkedInstitution' => $institution,
             'loclat' => $loclat,
-            'loclat' => $loclong
+            'loclat' => $loclong,
+            'description'=>$description
         );
         $this->insert($data);
     }
