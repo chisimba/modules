@@ -11,7 +11,7 @@ class researchstud extends dbTable
 
 {
  $this->objLanguage = $this->getObject('language', 'language');
- 	parent::init('tbl_mayibuyeform_researchform');
+ 	parent::init('tbl_mayibuye_researchformstud');
 }
 
 private function loadElements()
