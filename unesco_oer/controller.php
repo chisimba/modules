@@ -1124,14 +1124,13 @@ class unesco_oer extends controller {
     }
 
     function __editUserDetailsForm() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $id = $this->getParam('id');
         $userId = $this->getParam('userid');
         $username = $this->getParam('username');
         $this->setVar('id', $id);
-        //$this->setVarByRef('id', $id);
         $this->setVar('userid', $userId);
         $this->setVar('username', $username);
-        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'editUserDetails_tpl.php';
     }
 

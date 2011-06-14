@@ -22,7 +22,7 @@ $userExtra= $this->objUseExtra->getUserDetails($deals,$userId);
  echo $userExtra['websitelink'];
 
 $header = new htmlheading();
-$header->str = $this->objLanguage->languageText('mod_userdetails_name', 'userdetails');
+$header->str = $this->objLanguage->languageText('mod_userdetails_name', 'userdetails').":".'&nbsp;'.$user['firstname'].'&nbsp;'.$user['surname'];
 $header->type = 1;
 echo $header->show();
 
@@ -94,7 +94,7 @@ if ($user['pass']=='6b3d7dbdce9d4d04c78473e3df832f5d785c2593'){
 //Create Form Elements, as well detect associated problems
 
     $firstname = new textinput ('useradmin_firstname');
-    $firstname->size = 70;
+    $firstname->size = 75;
     $firstname->extra = $editFlag.' maxlength="50"';
     $firstname->value = $user['firstname'];
 
@@ -107,7 +107,7 @@ if ($user['pass']=='6b3d7dbdce9d4d04c78473e3df832f5d785c2593'){
     }
 
     $surname = new textinput ('useradmin_surname');
-    $surname->size = 70;
+    $surname->size = 75;
     $surname->extra = $editFlag.' maxlength="50"';
     $surname->value = $user['surname'];
 
@@ -120,7 +120,7 @@ if ($user['pass']=='6b3d7dbdce9d4d04c78473e3df832f5d785c2593'){
     }
 
     $email = new textinput ('useradmin_email');
-    $email->size = 70;
+    $email->size = 75;
     $email->extra = ' maxlength="100"';
     $email->value = $user['emailaddress'];
 
@@ -144,19 +144,6 @@ if ($mode == 'addfixup' && count($messages) > 0) {
         }
     echo '</ul></li></ul>';
 }
-
-//$objBizCard = $this->getObject('userbizcard', 'useradmin');
-//$objBizCard->setUserArray($user);
-//$objBizCard->showResetImage = TRUE;
-//$objBizCard->resetModule = 'userdetails';
-//
-//echo $objBizCard->show();
-
-
-
-
-
-
 echo '<div id="formresults"></div>';
 
 
@@ -189,73 +176,34 @@ $table->startRow();
         $objDropdown->setSelected($user['title']);
     }
 
-    $table->addCell($label->show(), 140);
-   
-    $table->addCell($objDropdown->show());
+   $table->addCell($label->show(), 140);
+   $table->addCell($objDropdown->show());
 $table->endRow();
 
 // Firstname
 $table->startRow();
-    $label = new label ($this->objLanguage->languageText('phrase_firstname', 'system'), 'input_useradmin_firstname');
-
-
-
-    $table->addCell($label->show());
- 
-    $table->addCell($firstname->show());
+$label = new label ($this->objLanguage->languageText('phrase_firstname', 'system'), 'input_useradmin_firstname');
+$table->addCell($label->show());
+$table->addCell($firstname->show());
 $table->endRow();
 
-// Surname
-$table->startRow();
-    $label = new label ($this->objLanguage->languageText('word_surname', 'system'), 'input_useradmin_surname');
-
-
-
-    $table->addCell($label->show());
-    
-    $table->addCell($surname->show());
-$table->endRow();
-
-//// Staff Number
-//$table->startRow();
-//    $label = new label ('Staff/Student Number', 'input_useradmin_staffnumber');
-//
-//    $staffNumber = new textinput('useradmin_staffnumber', $user['staffnumber']);
-//    $table->addCell($label->show());
-//    $table->addCell('&nbsp;');
-//    $table->addCell($staffNumber->show());
-//$table->endRow();
-
-// Email
-$table->startRow();
-    $label = new label ($this->objLanguage->languageText('phrase_emailaddress', 'system'), 'input_useradmin_email');
-
-
-
-    $table->addCell($label->show());
-  
-    $table->addCell($email->show());
-$table->endRow();
-
-// Cell Number
-//$table->startRow();
-//    $label = new label ('Cell Number', 'input_useradmin_cellnumber');
-//
-//    $cellNumber = new textinput('useradmin_cellnumber', $user['cellnumber']);
-//    $table->addCell($label->show());
-//
-//    $table->addCell($cellNumber->show());
-//$table->endRow();
-
-
+//Surname or Last name
 $textinput = new textinput('register_surname');
-$textinput->size = 75;
+$textinput->size =75;
 $textinput->value = $user['surname'];
 $table->startRow();
 $table->addCell('Last Name');
 $table->addCell($textinput->show());
 $table->endRow();
 
+//Email
+$table->startRow();
+$label = new label ($this->objLanguage->languageText('phrase_emailaddress', 'system'), 'input_useradmin_email');
+$table->addCell($label->show());
+$table->addCell($email->show());
+$table->endRow();
+
+//Cell number or Mobile Number
 $textinput = new textinput('register_cellnum');
 $textinput->size = 75;
 $textinput->value = $user['cellnumber'];
@@ -266,7 +214,7 @@ $table->endRow();
 
 
 
-
+//Date of Birth
 $textinput = new textinput('Date of birth');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['birthday'];
@@ -275,6 +223,7 @@ $table->addCell('Birth date');
 $table->addCell($textinput->show());
 $table->endRow();
 
+//Address
 $textinput = new textinput('Address');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['postaladdress'];
@@ -283,19 +232,7 @@ $table->addCell('Address');
 $table->addCell($textinput->show());
 $table->endRow();
 
-//$editor = $this->newObject('htmlarea', 'htmlelements');
-//$editor->name = 'Address';
-//$editor->height = '150px';
-//$editor->width = '100%';
-//$editor->setBasicToolBar();
-//$editor->setContent();
-//$table->startRow();
-//$table->addCell('Address');
-//$table->addCell($editor->show());
-//$table->endRow();
-
-
-
+//City
 $textinput = new textinput('city');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['city'];
@@ -303,8 +240,7 @@ $table->startRow();
 $table->addCell('City');
 $table->addCell($textinput->show());
 $table->endRow();
-
-
+//state
 $textinput = new textinput('state');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['state'];
@@ -313,13 +249,7 @@ $table->addCell('State');
 $table->addCell($textinput->show());
 $table->endRow();
 
-
-
-
-
-
-
-
+//Postal Address
 $textinput = new textinput('postaladdress');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['postaladdress'];
@@ -328,6 +258,7 @@ $table->addCell('Postal code');
 $table->addCell($textinput->show());
 $table->endRow();
 
+//Organisation
 $textinput = new textinput('organisation');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['organisation'];
@@ -336,20 +267,7 @@ $table->addCell('Organisation/Company');
 $table->addCell($textinput->show());
 $table->endRow();
 
-
-//$editor = $this->newObject('htmlarea', 'htmlelements');
-//$editor->name = 'organisation';
-//$editor->height = '150px';
-//$editor->width = '100%';
-//$editor->setBasicToolBar();
-//$editor->setContent();
-//$table->startRow();
-//$table->addCell('Organisation/Company');
-//$table->addCell($editor->show());
-//$table->endRow();
-
-
-
+//Job Tittle
 $textinput = new textinput('jobtittle');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['jobtittle'];
@@ -358,6 +276,7 @@ $table->addCell('Job Tittle');
 $table->addCell($textinput->show());
 $table->endRow();
 
+//Type of Occupation
 $textinput = new textinput('typeofoccapation');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['typeoccapation'];
@@ -366,6 +285,7 @@ $table->addCell('Type Of Occupation');
 $table->addCell($textinput->show());
 $table->endRow();
 
+//Work phone Number
 $textinput = new textinput('workingphone');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['workingphone'];
@@ -373,21 +293,13 @@ $table->startRow();
 $table->addCell('Working Phone');
 $table->addCell($textinput->show());
 $table->endRow();
-//
-//$textinput = new textinput('descriprion');
-//$textinput->size = 20;
-//$table->startRow();
-//$table->addCell('Description');
-//$table->addCell($textinput->show());
-//$table->endRow();
 
-
-
+//Description
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
 $editor->height = '150px';
 $editor->width = '100%';
-//$editor->value = $userExtra[0]['description'];
+$editor->value = $userExtra[0]['description'];
 $editor->setBasicToolBar();
 $editor->setContent();
 $table->startRow();
@@ -395,12 +307,7 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', '
 $table->addCell($editor->show());
 $table->endRow();
 
-
-
-
-
-
-
+//website Link
 $textinput = new textinput('websitelink');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['websitelink'];
@@ -430,10 +337,6 @@ $table->addCell('Group Membership');
 $table->addCell($dd->show());
 $table->endRow();
 
-
-
-
-
 // Sex
 $table->startRow();
     $sexRadio = new radio ('useradmin_sex');
@@ -454,16 +357,9 @@ $table->endRow();
 
 // Country
 $table->startRow();
-    //$objCountries=&$this->getObject('countries','utilities');
-    $objCountries=$this->getObject('languagecode','language');
-
-    $table->addCell($this->objLanguage->languageText('word_country', 'system'));
-
-    //if ($mode == 'addfixup') {
-        $table->addCell($objCountries->countryAlpha($user['country']));
-    // } else {
-
-    // }
+$objCountries=$this->getObject('languagecode','language');
+$table->addCell($this->objLanguage->languageText('word_country', 'system'));
+$table->addCell($objCountries->countryAlpha($user['country']));
 $table->endRow();
 
 // Spacer
@@ -472,53 +368,40 @@ $table->startRow();
     $table->addCell('&nbsp;');
     $table->addCell('&nbsp;');
 $table->endRow();
-
 // Username
 $table->startRow();
-    $table->addCell($this->objLanguage->languageText('word_username', 'system'));
- 
-    $table->addCell($user['username']);
+$table->addCell($this->objLanguage->languageText('word_username', 'system'));
+$table->addCell($user['username']);
 $table->endRow();
 
 //if (strtolower($user['howcreated']) != 'ldap') {
 if ($user['pass']!='6b3d7dbdce9d4d04c78473e3df832f5d785c2593'){
-
-    // Password
+ // Password
     $table->startRow();
-        $label = new label ($this->objLanguage->languageText('word_password', 'system'), 'input_useradmin_password');
-
-        $textinput = new textinput ('useradmin_password');
-        $textinput->fldType = 'password';
-        $textinput->size = 25;
-        $textinput->extra = ' autocomplete="off"';
-
-        $table->addCell($label->show());
-       
-        $table->addCell($textinput->show().' - '.$this->objLanguage->languageText('phrase_leavepasswordblank', 'userdetails'));
+    $label = new label($this->objLanguage->languageText('word_password', 'system'), 'input_useradmin_password');
+    $textinput = new textinput('useradmin_password');
+    $textinput->fldType = 'password';
+    $textinput->size = 25;
+    $textinput->extra = ' autocomplete="off"';
+    $table->addCell($label->show());
+    $table->addCell($textinput->show() . ' - ' . $this->objLanguage->languageText('phrase_leavepasswordblank', 'userdetails'));
     $table->endRow();
-
     // Repeat Password
     $table->startRow();
-        $label = new label ($this->objLanguage->languageText('phrase_repeatpassword', 'userdetails'), 'input_useradmin_repeatpassword');
-
-        $textinput = new textinput ('useradmin_repeatpassword');
-        $textinput->fldType = 'password';
-        $textinput->size = 25;
-        $textinput->extra = ' autocomplete="off"';
-
-
-
-        $table->addCell($label->show());
-       
-        $table->addCell($textinput->show());
+    $label = new label ($this->objLanguage->languageText('phrase_repeatpassword', 'userdetails'), 'input_useradmin_repeatpassword');
+    $textinput = new textinput ('useradmin_repeatpassword');
+    $textinput->fldType = 'password';
+    $textinput->size = 25;
+    $textinput->extra = ' autocomplete="off"';
+    $table->addCell($label->show());
+    $table->addCell($textinput->show());
     $table->endRow();
-} else {
+    } else {
     // Password
     $table->startRow();
-
-        $table->addCell('Password');
-        $table->addCell('&nbsp;');
-        $table->addCell('<em>Using Network ID Password</em>');
+    $table->addCell('Password');
+    $table->addCell('&nbsp;');
+    $table->addCell('<em>Using Network ID Password</em>');
     $table->endRow();
 }
 
@@ -538,47 +421,10 @@ $form->addRule('useradmin_email',$this->objLanguage->languageText('mod_userdetai
 $form->addRule('useradmin_email', $this->objLanguage->languageText('mod_userdetails_entervalidemailaddress', 'userdetails'), 'email');
 
 
-
 echo $form->show();
+echo '</div>';
 
-//echo '</div>';
-//
-//
-//$phraseUserImage = $this->objLanguage->languageText('phrase_userimage', 'userdetails');
-//echo '<div><div style="width:25%;  float: left; padding: 5px;">';
-//echo '<h3>'.$phraseUserImage.':</h3>';
-
-
-
-//$objModule = $this->getObject('modules', 'modulecatalogue');
-//
-//if ($objModule->checkIfRegistered('filemanager')) {
-//    $changeimageform = new form('changeimage', $this->uri(array('action'=>'changeimage')));
-//
-//    $objSelectFile = $this->getObject('selectimage', 'filemanager');
-//    $objSelectFile->name = 'imageselect';
-//    $objSelectFile->restrictFileList = array('jpg', 'gif', 'png', 'jpeg', 'bmp');
-//    $changeimageform->addToForm($objSelectFile->show());
-//
-//    $button = new button ('changeimage', $this->objLanguage->languageText('phrase_updateimage', 'userdetails'));
-//    $button->setToSubmit();
-//
-//    $changeimageform->addToForm('<br />'.$button->show());
-//
-//    echo $changeimageform->show();
-//} else {
-//    $objUserPic = $this->getObject('imageupload', 'useradmin');
-//    echo '<img src="'.$objUserPic->userpicture($this->objUser->userId()).'" alt="'.$phraseUserImage.'" />';
-//    echo '<p>'.$this->objLanguage->languageText('mod_userdetails_filemanagerneeded', 'userdetails').'</p>';
-//}
-//
-//echo '</div>';
-//echo '</div>';
-
-
-
-
-
+//Link to Addministation
 $returnlink = new link($this->uri(array('action'=>'UserListingForm')));
 $returnlink->link = 'Return to Home Page';
 echo '<br clear="left" />'.$returnlink->show();
