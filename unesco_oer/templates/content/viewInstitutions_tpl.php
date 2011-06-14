@@ -43,6 +43,7 @@ echo '<br><br />';
 //$institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 //$institutionGUI->showAllInstitutions();
 // retrieve data from tbl_unesco_oer_feturedproducts
+$content = '';
 $Institution = $institutionGUI->showAllInstitutions();
 if (count($Institution) > 0) {
     foreach ($Institution as $Institutions) {
@@ -54,7 +55,7 @@ if (count($Institution) > 0) {
         $institutionLink->cssClass = 'darkGreyColour';
         $institutionLink->link = $name;
 
-        echo ' <div class="institutionsListView">
+        $content .=  ' <div class="institutionsListView">
                     <div class="productAdaptationListViewLeftColumn">
                     	   <img src="' . $institutionGUI->showInstitutionThumbnail() . '" alt="Adaptation" width="79" height="79" class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">' . $institutionGUI->showEditInstitutionLink($Institutions['id']) . '</a> |
@@ -90,5 +91,10 @@ if (count($Institution) > 0) {
 //        $myTable->endRow();
     }
 }
+        $fieldset1 = $this->newObject('fieldset', 'htmlelements');
+        $fieldset1->setLegend('Institution List');
+        $fieldset1->addContent($content);
+        echo $fieldset1->show();
+
 //echo $myTable->show();
 ?>
