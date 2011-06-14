@@ -46,10 +46,10 @@ $myTable->cellspacing = '1';
 $myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
-$myTable->addHeaderCell('Unesco_oer Group',null,null,null,"userheader",null);
-$myTable->addHeaderCell('Group E-mail',null,null,null,"userheader",null);
-$myTable->addHeaderCell('Edit',null,null,null,"userheader",null);
-$myTable->addHeaderCell('Delete',null,null,null,"userheader",null);
+$myTable->addHeaderCell('Unesco_oer Group',null,null,left,"userheader",null);
+$myTable->addHeaderCell('Group E-mail',null,null,left,"userheader",null);
+$myTable->addHeaderCell('Edit',null,null,left,"userheader",null);
+$myTable->addHeaderCell('Delete',null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
 $groups = $this->objDbGroups->getAllGroups();
