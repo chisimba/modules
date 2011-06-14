@@ -170,7 +170,7 @@ if ($this->objUser->isLoggedIn()) {
                   <br><br>
                   <table width="617" height="424" cellpadding="0" cellspacing="0" class="groupListingTable">
                     <tr>
-                      <td width="152"><div class="whiteBackgroundBox"> <img src="skins/unesco_oer/images/icon-original-product.png" alt="Adaptation placeholder" width="109" height="116" class="smallAdaptationImageGrid">
+                      <td width="152"><div class="whiteBackgroundBox"> <img src="skins/unesco_oer/images/icon-original-product.png" alt="Adaptation placeholder" width="88" height="105" class="smallAdaptationImageGrid">
                         <div class="groupMemberAndJoinLinkDiv">
                           <div align="center">
                              <?php
