@@ -1023,8 +1023,7 @@ class unesco_oer extends controller {
     function __deleteUser() {
         $this->objUserAdmin->apiUserDelete($this->getParam('id'));
         $this->objUseExtra->deleteUser($this->getParam('id'), $this->getParam('userid'));
-        // $this->objUseExtra->deleteUser($id);
-        return 'UserListingForm_tpl.php';
+         return 'UserListingForm_tpl.php';
     }
 
     function __saveNewUser() {
@@ -1045,7 +1044,6 @@ class unesco_oer extends controller {
         $repeatemail = $this->getParam('register_confirmemail');
         $sex = $this->getParam('register_sex');
         $cellnumber = $this->getParam('register_cellnum');
-        //$staffnumber = $this->getParam('register_staffnum');
         $birthdate = $this->getParam('Date of birth');
         $address = $this->getParam('Address');
         $city = $this->getParam('city');
@@ -1375,6 +1373,8 @@ class unesco_oer extends controller {
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
         $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'groupListingForm_tpl.php';
     }
 
     function __deleteGroup() {
