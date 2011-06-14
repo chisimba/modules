@@ -1114,7 +1114,7 @@ class unesco_oer extends controller {
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
 
             // Email Details to User
-            //$this->objUserAdmin->sendRegistrationMessage($pkid, $password);
+             $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
             //$this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             //$this->setSession('time', $password);
@@ -1333,6 +1333,10 @@ class unesco_oer extends controller {
         return 'groupListingForm_tpl.php';
     }
 
+    /*
+     *
+     */
+
     function __saveNewGroup() {
         $name = $this->getParam('group_name');
         $email = $this->getParam('group_email');
@@ -1347,6 +1351,14 @@ class unesco_oer extends controller {
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
         $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state,$country, $postalcode, $website, $institution,$loclat,$loclong,$description);
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'groupListingForm_tpl.php';
+    }
+
+    function __groupEditingForm(){
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'groupEditingForm_tpl.php';
+
     }
 
     function __editGroup() {

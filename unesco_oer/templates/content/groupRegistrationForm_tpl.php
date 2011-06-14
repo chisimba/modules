@@ -22,7 +22,7 @@ $this->loadClass('textinput','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
 
 
-$form = new form ('register', $this->uri(array('action'=>'saveGroup')));
+$form = new form ('register', $this->uri(array('action'=>'saveNewGroup')));
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;

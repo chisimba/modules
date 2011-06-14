@@ -27,7 +27,7 @@ $objIcon = $this->newObject('geticon','htmlelements');
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
-$header->str = "Edit User:";
+$header->str = "Unesco_OER GROUPS:";
 echo $header->show();
 
 $button = new button('Add Button', "Add Group");
@@ -39,7 +39,7 @@ echo $addGroupLink->show();
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '60%';
-$myTable->border = '1';
+$myTable->border = '2';
 $myTable->cellspacing = '1';
 $myTable->cellpadding = '10';
 
@@ -57,10 +57,10 @@ if (count($groups) > 0) {
         $myTable->startRow();
         $myTable->addCell($group['name']);
         $myTable->addCell($group['email']);
-        $button = new button('Edit Button', "Edit Group");
-        $button->setToSubmit();
-        $editLink =new link($this->uri(array('action' => "",'id' => $group['id'])));
-        $editLink->link = $button->show();
+    
+        $objIcon->setIcon('edit');
+        $editLink =new link($this->uri(array('action' => "",'id' =>$group['id'])));
+        $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());
 
         $objIcon->setIcon('delete');
@@ -69,12 +69,10 @@ if (count($groups) > 0) {
         $href=$deleteLink->href;
         $finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
         $myTable->addCell($finaldeleteLink);
+       //$myTable->endRow();
     }
 }
 echo $myTable->show();
-
-?>
-
 
 ?>
 <script type="text/javascript">
@@ -83,7 +81,7 @@ jQuery(document).ready(function(){
 
     jQuery("a[class=deleteuser]").click(function(){
 
-        var r=confirm( "Are you sure you want to delete this group?");
+        var r=confirm( "Are you sure you want to delete this user?");
         if(r== true){
             window.location=this.href;
         }

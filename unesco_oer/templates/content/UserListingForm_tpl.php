@@ -22,33 +22,44 @@
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link','htmlelements');
+$this->loadClass('fieldset','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
 
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
-$header->str = "Users:";
+$header->cssClass="manageusers";
+$header->str = "Users";
 echo $header->show();
 
 $button = new button('Add Button', "Add User");
 $button->setToSubmit();
 $addUserLink =new link($this->uri(array('action' => "userRegistrationForm",'id' => $user['id'])));
 $addUserLink->link = $button->show();
-echo $addUserLink->show();
+
+$button = new button('searchButton', "Search");
+//$button->setToSubmit();
+$searchUserLink =new link($this->uri(array('action' => "searchusers",'id' => $user['id'])));
+$searchUserLink->link = $button->show();
+
+
+
+echo $addUserLink->show().'&nbsp;'.$searchUserLink->show();;
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
-$myTable->width = '60%';
-$myTable->border = '1';
-$myTable->cellspacing = '1';
-$myTable->cellpadding = '10';
+$myTable->width = '100%';
+$myTable->border = '0';
+$myTable->cellspacing = '0';
+$myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
-$myTable->addHeaderCell('Unesco_oer Users');
-$myTable->addHeaderCell('firstname');
-$myTable->addHeaderCell('Title');
-$myTable->addHeaderCell('Email');
-$myTable->addHeaderCell('Edit');
-$myTable->addHeaderCell('Delete');
+//$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
+$myTable->addHeaderCell('Username',null,null,null,"userheader",null);
+$myTable->addHeaderCell('First name',null,null,null,"userheader",null);
+$myTable->addHeaderCell('Title',null,null,null,"userheader",null);
+$myTable->addHeaderCell('Email',null,null,null,"userheader",null);
+$myTable->addHeaderCell('Edit',null,null,null,"userheader",null);
+$myTable->addHeaderCell('Delete',null,null,null,"userheader",null);
 
 $myTable->endHeaderRow();
 
@@ -57,10 +68,13 @@ $users = $this->objUseExtra->getAllUser();
 if (count($users) > 0) {
     foreach ($users as $user) {
         $myTable->startRow();
-        $myTable->addCell($user['username']);
-        $myTable->addCell($user['firstname']);
-        $myTable->addCell($user['title']);
-        $myTable->addCell($user['emailaddress']);
+
+        //($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
+
+        $myTable->addCell($user['username'],null,null,null,"user",null,null);
+        $myTable->addCell($user['firstname'],null,null,null,"user",null,null);
+        $myTable->addCell($user['title'],null,null,null,"user",null,null);
+        $myTable->addCell($user['emailaddress'],null,null,null,"user",null,null);
         //$array=$user;
 
         $objIcon->setIcon('edit');
@@ -70,10 +84,10 @@ if (count($users) > 0) {
 
         $objIcon->setIcon('delete');
         $deleteLink =new link($this->uri(array('action' => "deleteUser",'id' => $user['id'],'userid'=>$user['userid'])));
-        $deleteLink->link = $objIcon;
+        $deleteLink->link = $objIcon->show();
         $href=$deleteLink->href;
-        $finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
-        $myTable->addCell($finaldeleteLink);
+        //$finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
+        $myTable->addCell($deleteLink->show());//$finaldeleteLink);
        
 
 
@@ -92,7 +106,12 @@ if (count($users) > 0) {
 //        $myTable->endRow();
     }
 }
-echo $myTable->show();
+
+
+$fs=new fieldset();
+$fs->setLegend("Users");
+$fs->addContent($myTable->show());
+echo $fs->show();
 
 
 

@@ -193,7 +193,7 @@ if ($this->objUser->isLoggedIn()) {
                           </div>
                         </div>
                       </div></td>
-                      <td width="152"><div class="whiteBackgroundBox"> <img src="skins/unesco_oer/images/icon-member.png" alt="Adaptation placeholder" width="98" height="114" class="smallAdaptationImageGrid">
+                      <td width="152"><div class="whiteBackgroundBox"> <img src="skins/unesco_oer/images/users.png" alt="Adaptation placeholder"  width="88" height="105"  class="smallAdaptationImageGrid">
                         <div class="groupMemberAndJoinLinkDiv">
                             
                              <?php
@@ -213,7 +213,7 @@ if ($this->objUser->isLoggedIn()) {
                         <div class="groupMemberAndJoinLinkDiv">  
 
  <?php
-                            $abLink = new link($this->uri(array("action" => 'editgroups')));
+                            $abLink = new link($this->uri(array("action" =>'groupListingForm')));
                              $abLink->cssClass = 'groupMemberAndJoinLinkDiv';
                             $abLink->link = 'Groups';
                            

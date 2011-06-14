@@ -21,7 +21,7 @@ class dbgroups extends dbtable {
         parent::init("tbl_unesco_oer_groups");
     }
 
-    function getGroups() {
+    function getAllGroups() {
         $sql = "select * from tbl_unesco_oer_groups";
         return $this->getArray($sql);
     }
@@ -161,18 +161,18 @@ class dbgroups extends dbtable {
             );
         }
     }
-
-    function addGroup($name, $loclat, $loclong, $thumbnailPath, $country = NULL) {
-        $data = array(
-            'name' => $name,
-            'loclat' => $loclat,
-            'loclong' => $loclong,
-            'country' => $country,
-            'thumbnail' => $thumbnailPath
-        );
-
-        $this->insert($data);
-    }
+//
+//    function addGroup($name, $loclat, $loclong, $thumbnailPath, $country = NULL) {
+//        $data = array(
+//            'name' => $name,
+//            'loclat' => $loclat,
+//            'loclong' => $loclong,
+//            'country' => $country,
+//            'thumbnail' => $thumbnailPath
+//        );
+//
+//        $this->insert($data);
+//    }
 
 
     // PBROBLEM PROBLEM PROBLEM   #############################################
@@ -223,15 +223,7 @@ class dbgroups extends dbtable {
     }
 
 
-    /*
-     * This function get the Id's of all the group
-     * return array
-     */
-   function getAllGroups(){
-        $sql=" select id from tbl_unesco_oer_groups";
-        $GroupNames=$this->getArray($sql);
-        return $GroupNames;
-    }
+ 
 
    /*
     * This function take a groupId an return the group name
