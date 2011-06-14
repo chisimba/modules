@@ -29,16 +29,20 @@ $header->type = 1;
 $header->str = "Group Details:";
 echo $header->show();
 
+//Get Group details
+$group=$this->objDbGroups->getAllGroups();
 
 //$table = $this->newObject('htmltable', 'htmlelements');
 $table = $this->newObject('htmltable', 'htmlelements');
-$table->width = '70%';
-//$table->border = '1';
+$table->width = '100%';
+$table->border = '0';
 $tableable->cellspacing = '0';
 $table->cellpadding = '2';
 
+//Group name
 $textinput = new textinput('group_name');
 $textinput->size = 70;
+$textinput->value = $group['name'];
 $table->startRow();
 $table->addCell('Group Name');
 $table->addCell($textinput->show());
@@ -46,6 +50,7 @@ $table->endRow();
 
 $textinput = new textinput('group_email');
 $textinput->size = 70;
+$textinput->value = $group['email'];
 $table->startRow();
 $table->addCell('E-mail');
 $table->addCell($textinput->show());
@@ -53,6 +58,7 @@ $table->endRow();
 
 $textinput = new textinput('group_address');
 $textinput->size = 70;
+$textinput->value = $group['address'];
 $table->startRow();
 $table->addCell('Address');
 $table->addCell($textinput->show());
@@ -60,6 +66,7 @@ $table->endRow();
 
 $textinput = new textinput('group_city');
 $textinput->size = 70;
+$textinput->value = $group['city'];
 $table->startRow();
 $table->addCell('City');
 $table->addCell($textinput->show());
@@ -67,6 +74,7 @@ $table->endRow();
 
 $textinput = new textinput('group_state');
 $textinput->size = 70;
+$textinput->value = $group['state'];
 $table->startRow();
 $table->addCell('State/Province');
 $table->addCell($textinput->show());
@@ -74,6 +82,7 @@ $table->endRow();
 
 $textinput = new textinput('group_loclat');
 $textinput->size = 70;
+$textinput->value = $group['loclat'];
 $table->startRow();
 $table->addCell('Latitude');
 $table->addCell($textinput->show());
@@ -81,6 +90,7 @@ $table->endRow();
 
 $textinput = new textinput('group_loclong');
 $textinput->size = 70;
+$textinput->value = $group['loclong'];
 $table->startRow();
 $table->addCell('Longitude');
 $table->addCell($textinput->show());
@@ -89,18 +99,19 @@ $table->endRow();
 
 
 $table->startRow();
-    $objCountries=&$this->getObject('languagecode','language');
-    $table->addCell($this->objLanguage->languageText('word_country', 'system'));
-    if ($mode == 'addfixup') {
-        $table->addCell($objCountries->countryAlpha($this->getParam('country')));
-    } else {
-        $table->addCell($objCountries->countryAlpha());
-    }
+$objCountries = &$this->getObject('languagecode', 'language');
+$table->addCell($this->objLanguage->languageText('word_country', 'system'));
+if ($mode == 'addfixup') {
+    $table->addCell($objCountries->countryAlpha($this->getParam('country')));
+} else {
+    $table->addCell($objCountries->countryAlpha());
+}
 $table->endRow();
 
 
 $textinput = new textinput('group_postalcode');
 $textinput->size = 70;
+$textinput->value = $group['postalcode'];
 $table->startRow();
 $table->addCell('Postal Code');
 $table->addCell($textinput->show());
@@ -108,6 +119,7 @@ $table->endRow();
 
 $textinput = new textinput('group_website');
 $textinput->size = 70;
+$textinput->value = $group['website'];
 $table->startRow();
 $table->addCell('Website');
 $table->addCell($textinput->show());
@@ -116,7 +128,7 @@ $table->endRow();
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
 $editor->height = '150px';
-$editor->width = '99%';
+$editor->width = '60%';
 $editor->setBasicToolBar();
 $editor->setContent();
 $table->startRow();
