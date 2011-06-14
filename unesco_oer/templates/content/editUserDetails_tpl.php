@@ -180,6 +180,9 @@ $table->startRow();
    $table->addCell($objDropdown->show());
 $table->endRow();
 
+
+
+
 // Firstname
 $table->startRow();
 $label = new label ($this->objLanguage->languageText('phrase_firstname', 'system'), 'input_useradmin_firstname');
@@ -187,13 +190,11 @@ $table->addCell($label->show());
 $table->addCell($firstname->show());
 $table->endRow();
 
-//Surname or Last name
-$textinput = new textinput('register_surname');
-$textinput->size =75;
-$textinput->value = $user['surname'];
+// Surname
 $table->startRow();
-$table->addCell('Last Name');
-$table->addCell($textinput->show());
+$label = new label ($this->objLanguage->languageText('word_surname', 'system'), 'input_useradmin_surname');
+$table->addCell($label->show());
+$table->addCell($surname->show());
 $table->endRow();
 
 //Email
