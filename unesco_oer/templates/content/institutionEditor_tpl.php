@@ -51,6 +51,9 @@
         $this->_objAddDataUtil = $this->getObject('adddatautil');
         $this->objDbInstitutionType = $this->getObject('dbinstitutiontypes');
 
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->legend = $this->objLanguage->languageText('phrase_accountdetails', 'userregistration', 'Account Details');
+        $fieldset->contents = $table->show();
 
         //field for the name of the institution
         $name = $institutionGUI->showInstitutionName();

@@ -107,12 +107,20 @@ class institutiongui extends object {
         return $acLink->show();
     }
 
+    function showDeleteInstitutionLink($institutionId) {
+        $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
+        $acLink->cssClass = 'greyTextLink';
+        $acLink->link = 'Delete Institution';
+
+        return $acLink->show();
+    }
+
     function showAllInstitutionsLink() {
         
     }
 
     function showAllInstitutions() {
-        $this->_institutionmanager = getAllInstitutions();
+        return $this->_institutionmanager->getAllInstitutions();
     }
 
 }

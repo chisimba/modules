@@ -31,37 +31,46 @@ $objIcon = $this->newObject('geticon','htmlelements');
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
-$header->str = "Edit Institution:";
+$header->str = "Institutions";
 echo $header->show();
 
-$myTable = $this->newObject('htmltable', 'htmlelements');
-$myTable->width = '60%';
-$myTable->border = '1';
-$myTable->cellspacing = '1';
-$myTable->cellpadding = '10';
+$institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 
-$myTable->startHeaderRow();
-$myTable->addHeaderCell('INSTITUTION');
-$myTable->addHeaderCell('DELETE');
-$myTable->addHeaderCell('EDIT');
-$myTable->endHeaderRow();
+echo '<a href="#"><img src="skins/unesco_oer/images/new-institution.png" width="18" height="18" class="Farright"></a>';
+echo $institutionGUI->showNewInstitutionLink();
+echo '<br><br />';
 
 //$institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 //$institutionGUI->showAllInstitutions();
 
 // retrieve data from tbl_unesco_oer_feturedproducts
-$Institution = $this->objDbInstitution->getAllInstitution();
+$Institution = $institutionGUI->showAllInstitutions();
 if (count($Institution) > 0) {
     foreach ($Institution as $Institutions) {
 
-
-    echo  '             <div class="discussionList">
-                            <img src="' . $Institutions['thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
-                            <div class="textNextToGroupIcon">
-                                <h2>' . $Institutions['name'] . '</h2>
-                                <a href="#" class="bookmarkLinks">' . $Institutions['country'] . '</a> | <a href="#" class="bookmarkLinks">' . $Institutions['websiteLink'] . '</a>
+        $institutionGUI->getInstitution($Institutions['id']);
+   echo ' <div class="adaptationListView">
+                    <div class="productAdaptationListViewLeftColumn">
+                    	   <img src="' . $institutionGUI->showInstitutionThumbnail() . '" alt="Adaptation" width="79" height="79" class="smallLisitngIcons">
+                        <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">' . $institutionGUI->showEditInstitutionLink($Institutions['id']) . '</a> |
+                        <a href="#" class="adaptationLinks">' . $institutionGUI->showDeleteInstitutionLink($Institutions['id']) . '</a></div>
+                    </div>
+                    <div class="productAdaptationListViewMiddleColumn">
+                    	
+                    </div>
+                    <div class="productAdaptationListViewRightColumn">
+                    	<h2 class="darkGreyColour">Polytechnic of Namibia</h2>
+                        <br>
+                        <div class="productAdaptationViewDiv">
+                            
+                            <div class="gridAdaptationLinksDiv">
+                            	<a class="greyListingHeading">' . $institutionGUI->showInstitutionWebsiteLink() . '</a> |
+                                <a class="greyListingHeading">' . $institutionGUI->showInstitutionCountry() . '</a> |
+                                <a class="greyListingHeading">' . $institutionGUI->showInstitutionCity() . '</a>
                             </div>
-                        </div>';
+                        </div>
+                    </div>
+                </div>';
 //
 //        $myTable->startRow();
 //        $myTable->addCell($Institutions['name']);

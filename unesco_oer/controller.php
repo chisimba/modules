@@ -1469,5 +1469,12 @@ class unesco_oer extends controller {
         return "viewInstitutions_tpl.php";
     }
 
+        public function __mypage() {
+        //$this->setLayoutTemplate('maincontent_layout_tpl.php');
+
+
+        return "myPage_tpl.php";
+    }
+
 }
 ?>
