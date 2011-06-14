@@ -361,35 +361,35 @@ $table->endRow();
 
 //$dd=new dropdown('groupmembership');
 $groups = $this->objDbGroups->getAllGroups();
+$dd=new dropdown('groupmembership');
 if(count($groups)>0){
     $i=1;
-    $dd=new dropdown('groupmembership');
+    //$dd=new dropdown('groupmembership');
     foreach ($groups as $group) {
         $dd->addOption($i,$group['name']);
         $i=$i+1;
-        $table->startRow();
-        $table->addCell('Group Membership');
-        $table->addCell($dd->show());
-        $table->endRow();
+//        $table->startRow();
+//        $table->addCell('Group Membership');
+//        $table->addCell($dd->show());
+//        $table->endRow();
         }
 }else{
-    $dd=new dropdown('groupmembership');
+    //$dd=new dropdown('groupmembership');
     $dd->addOption('1','None');
-    $table->startRow();
-            $table->addCell('Group Membership');
-            $table->addCell($dd->show());
-            $table->endRow();
+//    $table->startRow();
+//            $table->addCell('Group Membership');
+//            $table->addCell($dd->show());
+//            $table->endRow();
             }
 
-//
-//$dd->addOption('1','A');
-//$dd->addOption('2','B');
-//$dd->addOption('3','c');
-//$dd->addOption('4','d'); /// this must be cathed from the database
-//$table->startRow();
-//$table->addCell('Group Membership');
-//$table->addCell($dd->show());
-//$table->endRow();
+$table->startRow();
+$table->addCell('Group Membership');
+$table->addCell($dd->show());
+$table->endRow();
+
+
+
+
   
 
 $sexRadio = new radio ('register_sex');
