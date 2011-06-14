@@ -63,8 +63,8 @@ class institutionmanager extends object {
     }
 
     public function getAllInstitutions() {
-        //$this->_institutionList = $this->_objDbInstitution->getAllInstitutions();
-        return $this->_objDbInstitution->getAllInstitutions();
+        $this->_institutionList = $this->_objDbInstitution->getAllInstitutions();
+        return $this->_institutionList;
     }
 
     private function constructInstitution($id) {

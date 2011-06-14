@@ -46,22 +46,35 @@ $myTable->addHeaderCell('DELETE');
 $myTable->addHeaderCell('EDIT');
 $myTable->endHeaderRow();
 
+//$institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
+//$institutionGUI->showAllInstitutions();
+
 // retrieve data from tbl_unesco_oer_feturedproducts
 $Institution = $this->objDbInstitution->getAllInstitution();
 if (count($Institution) > 0) {
     foreach ($Institution as $Institutions) {
-        $myTable->startRow();
-        $myTable->addCell($Institutions['name']);
-        $objIcon->setIcon('delete');
-        $deleteLink = new link($this->uri(array('action' => "deleteInstitution", 'institutionId' => $Institutions['id'])));
-        $deleteLink->link = $objIcon->show();
-        $myTable->addCell($deleteLink->show());
-        $objIcon->setIcon('edit');
-        $EditLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $Institutions['id'])));
-        $EditLink->link = $objIcon->show();
-        $myTable->addCell($EditLink->show());
-        $myTable->endRow();
+
+
+    echo  '             <div class="discussionList">
+                            <img src="' . $Institutions['thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                            <div class="textNextToGroupIcon">
+                                <h2>' . $Institutions['name'] . '</h2>
+                                <a href="#" class="bookmarkLinks">' . $Institutions['country'] . '</a> | <a href="#" class="bookmarkLinks">' . $Institutions['websiteLink'] . '</a>
+                            </div>
+                        </div>';
+//
+//        $myTable->startRow();
+//        $myTable->addCell($Institutions['name']);
+//        $objIcon->setIcon('delete');
+//        $deleteLink = new link($this->uri(array('action' => "deleteInstitution", 'institutionId' => $Institutions['id'])));
+//        $deleteLink->link = $objIcon->show();
+//        $myTable->addCell($deleteLink->show());
+//        $objIcon->setIcon('edit');
+//        $EditLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $Institutions['id'])));
+//        $EditLink->link = $objIcon->show();
+//        $myTable->addCell($EditLink->show());
+//        $myTable->endRow();
     }
 }
-echo $myTable->show();
+//echo $myTable->show();
 ?>

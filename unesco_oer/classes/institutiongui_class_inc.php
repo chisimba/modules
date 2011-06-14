@@ -20,6 +20,7 @@ class institutiongui extends object {
 //TODO remove as much html from this class
 //    private $_institution;
     private $_institutionmanager;
+    private $_institutionList;
 
     function init() {
         $this->_institutionmanager = $this->getObject('institutionmanager', 'unesco_oer');
@@ -108,6 +109,10 @@ class institutiongui extends object {
 
     function showAllInstitutionsLink() {
         
+    }
+
+    function showAllInstitutions() {
+        $this->_institutionmanager = getAllInstitutions();
     }
 
 }

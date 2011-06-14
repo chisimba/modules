@@ -13,17 +13,15 @@
 
         $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 
-//$institutionGUI->getInstitution('gen15Srv41Nme47_69623_1306229613');
-//var_dump($institutionId);
-// set up html elements
+        // set up html elements
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('adddatautil', 'unesco_oer');
 
 
 
-        
-//Check if an institution is being edited
+
+        //Check if an institution is being edited
         if (isset($institutionId)) {
             $institutionGUI->getInstitution($institutionId);
             $formData = $institutionGUI->showAllInstitutionData();
@@ -33,16 +31,20 @@
             $formAction = "createInstitutionSubmit";
         }
 
-//get parent if any
-//$product = $this->_objDbProducts->getProductByID($productID);
-// setup and show heading
+        // setup and show heading
         $header = new htmlHeading();
-        $header->str = $this->objLanguage->
-                        languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
+        //Check if an institution is being edited
+        if (isset($institutionId)) {
+            $header->str = $this->objLanguage->
+                            languageText('mod_unesco_oer_institution_Update_heading', 'unesco_oer');
+        } else {
+            $header->str = $this->objLanguage->
+                            languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
+        }
         $header->type = 2;
         echo $header->show();
 
-// setup table and table headings with input fields
+        // setup table and table headings with input fields
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
@@ -50,7 +52,7 @@
         $this->objDbInstitutionType = $this->getObject('dbinstitutiontypes');
 
 
-//field for the name of the institution
+        //field for the name of the institution
         $name = $institutionGUI->showInstitutionName();
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_name', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
@@ -62,8 +64,7 @@
                 $table
         );
 
-
-//field for the description
+        //field for the description
         $description = $institutionGUI->showInstitutionDescription();
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = 'description';
@@ -73,10 +74,17 @@
         $editor->setContent($institutionGUI->showInstitutionDescription());
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->endRow();
+        $table->startRow();
         $table->addCell($editor->show());
         $table->endRow();
 
-//field for the institution type
+//        $fieldset = $this->newObject('fieldset', 'htmlelements');
+//        $fieldset->setLegend('Institution information');
+//        $fieldset->addContent($table->show());
+        //echo $fieldset->show();
+
+        //field for the institution type
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_type', 'unesco_oer');
         $institutionTypes = $this->objDbInstitutionType->getInstitutionTypes();
         $this->_objAddDataUtil->addDropDownToTable(
@@ -90,7 +98,7 @@
                 'id'
         );
 
-//field for the Country where institution is located
+        //field for the Country where institution is located
         $this->objDbCountries = $this->getObject('dbcountries');
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer');
         $countryList = $this->objDbCountries->getAllCountries();
@@ -106,7 +114,7 @@
         );
 
 
-//field for address1
+        //field for address1
         $address = $institutionGUI->showInstitutionAddress();
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address1', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
