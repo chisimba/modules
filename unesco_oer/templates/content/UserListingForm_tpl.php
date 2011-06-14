@@ -57,12 +57,12 @@ $myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
 //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
-$myTable->addHeaderCell('Title',null,null,null,"userheader",null);
-$myTable->addHeaderCell('Username',null,null,null,"userheader",null);
-$myTable->addHeaderCell('First name',null,null,null,"userheader",null);
-$myTable->addHeaderCell('Email',null,null,null,"userheader",null);
-$myTable->addHeaderCell('Edit',null,null,null,"userheader",null);
-$myTable->addHeaderCell('Delete',null,null,null,"userheader",null);
+$myTable->addHeaderCell('Title',null,null,left,"userheader",null);
+$myTable->addHeaderCell('Username',null,null,left,"userheader",null);
+$myTable->addHeaderCell('First name',null,null,left,"userheader",null);
+$myTable->addHeaderCell('Email',null,null,left,"userheader",null);
+$myTable->addHeaderCell('Edit',null,null,left,"userheader",null);
+$myTable->addHeaderCell('Delete',null,null,left,"userheader",null);
 
 $myTable->endHeaderRow();
 
