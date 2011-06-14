@@ -93,7 +93,7 @@ class institutiongui extends object {
 
     function showNewInstitutionLink() {
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => NULL)));
-        $acLink->cssClass = 'greyTextLink';
+        $acLink->cssClass = 'adaptationListingLink';
         $acLink->link = 'Create new institution';
 
         return $acLink->show();
@@ -111,12 +111,8 @@ class institutiongui extends object {
         $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'greyTextLink';
         $acLink->link = 'Delete Institution';
-
-        return $acLink->show();
-    }
-
-    function showAllInstitutionsLink() {
         
+        return $acLink->show();
     }
 
     function showAllInstitutions() {

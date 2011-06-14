@@ -18,15 +18,15 @@ ini_set('display_errors', 'Off');
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/*This is a FEATURED PRODUCT UI
+/* This is a FEATURED PRODUCT UI
  *
  */
 
 
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
-$this->loadClass('link','htmlelements');
-$objIcon = $this->newObject('geticon','htmlelements');
+$this->loadClass('link', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
 
 // setup and show heading
 $header = new htmlheading();
@@ -42,14 +42,19 @@ echo '<br><br />';
 
 //$institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 //$institutionGUI->showAllInstitutions();
-
 // retrieve data from tbl_unesco_oer_feturedproducts
 $Institution = $institutionGUI->showAllInstitutions();
 if (count($Institution) > 0) {
     foreach ($Institution as $Institutions) {
-
         $institutionGUI->getInstitution($Institutions['id']);
-   echo ' <div class="adaptationListView">
+        $name = $institutionGUI->showInstitutionName();
+        $creator = $adaptedProduct['creator'];
+
+        $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $Institutions['id'])));
+        $institutionLink->cssClass = 'darkGreyColour';
+        $institutionLink->link = $name;
+
+        echo ' <div class="institutionsListView">
                     <div class="productAdaptationListViewLeftColumn">
                     	   <img src="' . $institutionGUI->showInstitutionThumbnail() . '" alt="Adaptation" width="79" height="79" class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">' . $institutionGUI->showEditInstitutionLink($Institutions['id']) . '</a> |
@@ -59,7 +64,7 @@ if (count($Institution) > 0) {
                     	
                     </div>
                     <div class="productAdaptationListViewRightColumn">
-                    	<h2 class="darkGreyColour">Polytechnic of Namibia</h2>
+                    	<h2> ' . $institutionLink->show() . '</h2>
                         <br>
                         <div class="productAdaptationViewDiv">
                             

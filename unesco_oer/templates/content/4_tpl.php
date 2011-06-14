@@ -134,7 +134,9 @@ $institutionGUI->getInstitution($institutionId);
                 <div class="LeftWideColumnDiv">
                     <div class="breadCrumb">
                         <a href="#" class="orangeListingHeading">Product adaptation</a> |
-                        <a href="#" class="greyTextTwelveSize">Politechnic of Namibia</a>
+                        <a href="#" class="orangeListingHeading"> <?php
+                                    echo $institutionGUI->showInstitutionName();
+                                    ?></a>
                     </div>
                     <div class="adaptationsBackgroundColor">
                         <div class="innerLeftContent">
@@ -148,14 +150,16 @@ $institutionGUI->getInstitution($institutionId);
                                 <?php echo $institutionGUI->showEditInstitutionLink($institutionId) ?> |
     <!--                                <a href="#"><img src="" width="18" height="18" class="Farright"></a>-->
                                     <a href="#"><img src="skins/unesco_oer/images/new-institution.png" width="18" height="18" class="Farright"></a>
-                                <?php echo $institutionGUI->showNewInstitutionLink() ?> <br>
+
+                                <?php 
+                                    echo $institutionGUI->showNewInstitutionLink() ?> <br>
                                     <br />
                                     <div class="leftImageHolder rightTwent">
                                         '<img src= "
                                     <?php
                                     echo $institutionGUI->showInstitutionThumbnail();
                                     
-                                    ?> " width="121" height="156"><br />
+                                    ?> " width="70" height="105"><br />
                                 </div>
                                 <?php
                                     echo $institutionGUI->showInstitutionDescription();
@@ -164,8 +168,7 @@ $institutionGUI->getInstitution($institutionId);
                                     <div class="adaptationInnerPageHeding"><h3 class="pinkText">Adaptations</h3></div>
                                     <br>
 
-
-
+                                    
                                 <?php
                                     $filtering = $this->getobject('filterdisplay', 'unesco_oer');
                                     echo $filtering->SideFilter('4_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
@@ -174,7 +177,7 @@ $institutionGUI->getInstitution($institutionId);
 
 
                                 </div>
-
+                                </div>
 
                                 <div class="innerRightColumn4">
                                     <div class="listAdaptations">
