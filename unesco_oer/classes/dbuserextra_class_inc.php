@@ -27,48 +27,7 @@ class dbuserextra extends dbtable{
 
     }
 
-
-//    function getlastInsewtedId(){
-//        $sql = "select LAST(id) from tbl_users";
-//        return $sql;
-//    }
-//
-//    function edit($id,$staffnumber,$surname,$title,$userId,$username,$password,$email,$firstname,$sex,$country,$birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle,$WorkingPhone, $cellnumber, $DescriptionText, $WebsiteLink, $GroupMembership){
-//       return $this->update(
-//                'id',
-//                $id,
-//               array(
-//                   'id'=>$id,
-//                   'staffnumber'=>$staffnumber,
-//                   'surname'=>$surname,
-//                   'tittle'=>$title
-//                   )
-//       );
-//    }
-//
-//    function editExtra($id, $title, $surname, $username, $password, $email, $firstname, $sex, $country, $cellnumber) {
-//        return $this->update(
-//                'id',
-//                $id,
-//                array(
-//                    'birthday' => $birthdate,
-//                    'address' => $address,
-//                    'city' => $city,
-//                    'state' => $state,
-//                    'postaladdress' => $postaladdress,
-//                    'organisation/company' => $organisation,
-//                    'jobtittle' => $jobtittle,
-//                    'typeoccapation' => $TypeOccapation,
-//                    'workingphone' => $WorkingPhone,
-//                    'description' => $DescriptionText,
-//                    'websitelink' => $WebsiteLink,
-//                    'groupmembership' => $GroupMembership,
-//                    'id' => $id
-//                    )
-//        );
-//    }
-       
-      
+   
    function SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
         $data = array(
             'id' => $id,

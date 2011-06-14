@@ -157,7 +157,6 @@ $Cancelbutton->setToSubmit();
 $CancelLink = new link($this->uri(array('action' => "groupListingForm")));
 $CancelLink->link =$Cancelbutton->show();
 
-
 $form->addToForm($table->show());
 $form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
 $returnlink = new link($this->uri(array('action'=>'UserListingForm')));

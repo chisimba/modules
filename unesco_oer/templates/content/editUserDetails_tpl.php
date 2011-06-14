@@ -19,7 +19,7 @@ $user = $this->objUserAdmin->getUserDetails($id);
 $userId=$this->getParam('userid');
 $deals=$this->getParam('id');
 $userExtra= $this->objUseExtra->getUserDetails($deals,$userId);
- echo $userExtra['websitelink'];
+
 
 $header = new htmlheading();
 $header->str = $this->objLanguage->languageText('mod_userdetails_name', 'userdetails').":".'&nbsp;'.$user['firstname'].'&nbsp;'.$user['surname'];
