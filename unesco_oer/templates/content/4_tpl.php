@@ -142,7 +142,8 @@ $institutionGUI->getInstitution($institutionId);
                                         '<img src= "
                                     <?php
                                     echo $institutionGUI->showInstitutionThumbnail();
-                                    ?> "><br />
+                                    
+                                    ?> " width="121" height="156"><br />
                                 </div>
                                 <?php
                                     echo $institutionGUI->showInstitutionDescription();

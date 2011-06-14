@@ -218,7 +218,7 @@
 
         //createform, add fields to it and display
         $uri = $this->uri(array(
-                    'action' => $formAction));
+                    'action' => $formAction, 'institutionId' => $institutionId));
         $form_data = new form('add_institution_ui', $uri);
         $form_data->extra = 'enctype="multipart/form-data"';
         $form_data->addToForm($table->show() . '<br />' . $buttonSubmit->show() . $buttonCancel->show());

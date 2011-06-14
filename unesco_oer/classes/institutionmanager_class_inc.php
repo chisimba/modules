@@ -14,9 +14,6 @@
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-include_once 'institution_class_inc.php';
-include_once 'dbinstitution_class_inc.php';
-
 class institutionmanager extends object {
 
     private $_institutionList;
