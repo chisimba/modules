@@ -409,15 +409,27 @@ $table->addCell('Website Link');
 $table->addCell($textinput->show());
 $table->endRow();
 
+
+//***** this must change/
+//dispay user belonging group first  and allow a dropdown of other group
+$groups = $this->objDbGroups->getAllGroups();
 $dd=new dropdown('groupmembership');
-$dd->addOption('1','A');
-$dd->addOption('2','B');
-$dd->addOption('3','c');
-$dd->addOption('4','d'); /// this must be cathed from the database
+if(count($groups)>0){
+    $i=1;
+    //$dd=new dropdown('groupmembership');
+    foreach ($groups as $group) {
+        $dd->addOption($i,$group['name']);
+        $i=$i+1;
+        }
+}
+else{
+    $dd->addOption('1', 'None');}
+
 $table->startRow();
 $table->addCell('Group Membership');
 $table->addCell($dd->show());
 $table->endRow();
+
 
 
 

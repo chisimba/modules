@@ -57,9 +57,9 @@ $myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
 //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
+$myTable->addHeaderCell('Title',null,null,null,"userheader",null);
 $myTable->addHeaderCell('Username',null,null,null,"userheader",null);
 $myTable->addHeaderCell('First name',null,null,null,"userheader",null);
-$myTable->addHeaderCell('Title',null,null,null,"userheader",null);
 $myTable->addHeaderCell('Email',null,null,null,"userheader",null);
 $myTable->addHeaderCell('Edit',null,null,null,"userheader",null);
 $myTable->addHeaderCell('Delete',null,null,null,"userheader",null);
@@ -73,9 +73,9 @@ if (count($users) > 0) {
     foreach ($users as $user) {
         $myTable->startRow();
         //($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
+        $myTable->addCell($user['title'],null,null,null,"user",null,null);
         $myTable->addCell($user['username'],null,null,null,"user",null,null);
         $myTable->addCell($user['firstname'],null,null,null,"user",null,null);
-        $myTable->addCell($user['title'],null,null,null,"user",null,null);
         $myTable->addCell($user['emailaddress'],null,null,null,"user",null,null);
 
         $objIcon->setIcon('edit');

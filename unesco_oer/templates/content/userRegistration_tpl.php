@@ -358,29 +358,19 @@ $table->addCell('Website Link');
 $table->addCell($textinput->show());
 $table->endRow();
 
-//$dd=new dropdown('groupmembership');
+// Check that the group database is not empty and display group list dropdown
 $groups = $this->objDbGroups->getAllGroups();
-$dd=new dropdown('groupmembership');
-if(count($groups)>0){
-    $i=1;
+$dd = new dropdown('groupmembership');
+if (count($groups) > 0) {
+    $i = 1;
     //$dd=new dropdown('groupmembership');
     foreach ($groups as $group) {
-        $dd->addOption($i,$group['name']);
-        $i=$i+1;
-//        $table->startRow();
-//        $table->addCell('Group Membership');
-//        $table->addCell($dd->show());
-//        $table->endRow();
-        }
-}else{
-    //$dd=new dropdown('groupmembership');
-    $dd->addOption('1','None');
-//    $table->startRow();
-//            $table->addCell('Group Membership');
-//            $table->addCell($dd->show());
-//            $table->endRow();
-            }
-
+        $dd->addOption($i, $group['name']);
+        $i = $i + 1;
+    }
+} else {
+    $dd->addOption('1', 'None');
+}
 $table->startRow();
 $table->addCell('Group Membership');
 $table->addCell($dd->show());
