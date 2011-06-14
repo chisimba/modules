@@ -37,6 +37,9 @@ $button->setToSubmit();
 $addUserLink =new link($this->uri(array('action' => "userRegistrationForm",'id' => $user['id'])));
 $addUserLink->link = $button->show();
 
+
+
+
 $button = new button('searchButton', "Search");
 //$button->setToSubmit();
 $searchUserLink =new link($this->uri(array('action' => "searchusers",'id' => $user['id'])));
@@ -63,19 +66,17 @@ $myTable->addHeaderCell('Delete',null,null,null,"userheader",null);
 
 $myTable->endHeaderRow();
 
+//get user from the database
 $users = $this->objUseExtra->getAllUser();
 
 if (count($users) > 0) {
     foreach ($users as $user) {
         $myTable->startRow();
-
         //($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-
         $myTable->addCell($user['username'],null,null,null,"user",null,null);
         $myTable->addCell($user['firstname'],null,null,null,"user",null,null);
         $myTable->addCell($user['title'],null,null,null,"user",null,null);
         $myTable->addCell($user['emailaddress'],null,null,null,"user",null,null);
-        //$array=$user;
 
         $objIcon->setIcon('edit');
         $editLink =new link($this->uri(array('action' => "editUserDetailsForm",'id' => $user['id'],'userid'=>$user['userid'],'username'=>$user['username'])));
@@ -88,22 +89,9 @@ if (count($users) > 0) {
         $href=$deleteLink->href;
         //$finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
         $myTable->addCell($deleteLink->show());//$finaldeleteLink);
+        //$myTable->addCell($finaldeleteLink);
+
        
-
-
-//
-//        $button = new button('Edit Button', "Edit User");
-//        $button->setToSubmit();
-//        $editLink =new link($this->uri(array('action' => "editUserDetailsForm",'id' => $user['id'],'userid'=>$user['userid'],'username'=>$user['username'])));
-//        $editLink->link = $button->show();
-//        $myTable->addCell($editLink->show());
-//        $button = new button('Delete', "delete User");
-//        $button->setToSubmit();
-//        $DeleteLink =new link($this->uri(array('action' => "deleteUser",'id' => $user['id'],'userid'=>$user['userid'])));
-//        $href=$DeleteLink->href;
-//        $finalDeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
-//        $myTable->addCell($finalDeleteLink);
-//        $myTable->endRow();
     }
 }
 

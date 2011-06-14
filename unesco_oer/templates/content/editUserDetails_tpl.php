@@ -238,19 +238,19 @@ $table->startRow();
 $table->endRow();
 
 // Cell Number
-$table->startRow();
-    $label = new label ('Cell Number', 'input_useradmin_cellnumber');
-
-    $cellNumber = new textinput('useradmin_cellnumber', $user['cellnumber']);
-    $table->addCell($label->show());
-  
-    $table->addCell($cellNumber->show());
-$table->endRow();
+//$table->startRow();
+//    $label = new label ('Cell Number', 'input_useradmin_cellnumber');
+//
+//    $cellNumber = new textinput('useradmin_cellnumber', $user['cellnumber']);
+//    $table->addCell($label->show());
+//
+//    $table->addCell($cellNumber->show());
+//$table->endRow();
 
 
 $textinput = new textinput('register_surname');
 $textinput->size = 75;
-$textinput->value = $userExtra['lastname'];
+$textinput->value = $user['surname'];
 $table->startRow();
 $table->addCell('Last Name');
 $table->addCell($textinput->show());
@@ -258,7 +258,7 @@ $table->endRow();
 
 $textinput = new textinput('register_cellnum');
 $textinput->size = 75;
-$textinput->value = $userExtra['mobilephone'];
+$textinput->value = $user['cellnumber'];
 $table->startRow();
 $table->addCell('Mobile Phone');
 $table->addCell($textinput->show());
@@ -268,36 +268,37 @@ $table->endRow();
 
 
 $textinput = new textinput('Date of birth');
-$textinput->size = 75;
-$textinput->value = $userExtra[0]['dateofbirth'];
+$textinput->size =75;
+$textinput->value = $userExtra[0]['birthday'];
 $table->startRow();
 $table->addCell('Birth date');
 $table->addCell($textinput->show());
 $table->endRow();
 
-//$textinput = new textinput('Address');
-//$textinput->size = 20;
-//$table->startRow();
-//$table->addCell('Address');
-//$table->addCell($textinput->show());
-//$table->endRow();
-
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'Address';
-$editor->height = '150px';
-$editor->width = '100%';
-$editor->setBasicToolBar();
-$editor->setContent();
+$textinput = new textinput('Address');
+$textinput->size =75;
+$textinput->value = $userExtra[0]['postaladdress'];
 $table->startRow();
 $table->addCell('Address');
-$table->addCell($editor->show());
+$table->addCell($textinput->show());
 $table->endRow();
+
+//$editor = $this->newObject('htmlarea', 'htmlelements');
+//$editor->name = 'Address';
+//$editor->height = '150px';
+//$editor->width = '100%';
+//$editor->setBasicToolBar();
+//$editor->setContent();
+//$table->startRow();
+//$table->addCell('Address');
+//$table->addCell($editor->show());
+//$table->endRow();
 
 
 
 $textinput = new textinput('city');
-$textinput->size = 75;
-$textinput->value = $userExtra['city'];
+$textinput->size =75;
+$textinput->value = $userExtra[0]['city'];
 $table->startRow();
 $table->addCell('City');
 $table->addCell($textinput->show());
@@ -305,7 +306,7 @@ $table->endRow();
 
 
 $textinput = new textinput('state');
-$textinput->size = 75;
+$textinput->size =75;
 $textinput->value = $userExtra[0]['state'];
 $table->startRow();
 $table->addCell('State');
@@ -320,36 +321,37 @@ $table->endRow();
 
 
 $textinput = new textinput('postaladdress');
-$textinput->size = 75;
+$textinput->size =75;
 $textinput->value = $userExtra[0]['postaladdress'];
 $table->startRow();
 $table->addCell('Postal code');
 $table->addCell($textinput->show());
 $table->endRow();
 
-//$textinput = new textinput('organisation');
-//$textinput->size = 20;
-//$table->startRow();
-//$table->addCell('Organisation/Company');
-//$table->addCell($textinput->show());
-//$table->endRow();
-
-
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'organisation';
-$editor->height = '150px';
-$editor->width = '100%';
-$editor->setBasicToolBar();
-$editor->setContent();
+$textinput = new textinput('organisation');
+$textinput->size =75;
+$textinput->value = $userExtra[0]['organisation'];
 $table->startRow();
 $table->addCell('Organisation/Company');
-$table->addCell($editor->show());
+$table->addCell($textinput->show());
 $table->endRow();
+
+
+//$editor = $this->newObject('htmlarea', 'htmlelements');
+//$editor->name = 'organisation';
+//$editor->height = '150px';
+//$editor->width = '100%';
+//$editor->setBasicToolBar();
+//$editor->setContent();
+//$table->startRow();
+//$table->addCell('Organisation/Company');
+//$table->addCell($editor->show());
+//$table->endRow();
 
 
 
 $textinput = new textinput('jobtittle');
-$textinput->size = 75;
+$textinput->size =75;
 $textinput->value = $userExtra[0]['jobtittle'];
 $table->startRow();
 $table->addCell('Job Tittle');
@@ -357,15 +359,15 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('typeofoccapation');
-$textinput->size = 75;
-$textinput->value = $userExtra[0]['typeofoccapation'];
+$textinput->size =75;
+$textinput->value = $userExtra[0]['typeoccapation'];
 $table->startRow();
 $table->addCell('Type Of Occupation');
 $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('workingphone');
-$textinput->size = 75;
+$textinput->size =75;
 $textinput->value = $userExtra[0]['workingphone'];
 $table->startRow();
 $table->addCell('Working Phone');
@@ -385,6 +387,7 @@ $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
 $editor->height = '150px';
 $editor->width = '100%';
+//$editor->value = $userExtra[0]['description'];
 $editor->setBasicToolBar();
 $editor->setContent();
 $table->startRow();

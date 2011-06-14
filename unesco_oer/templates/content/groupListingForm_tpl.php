@@ -22,11 +22,13 @@
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link','htmlelements');
+$this->loadClass('fieldset','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
 
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
+$header->cssClass="manageusers";
 $header->str = "Unesco_OER GROUPS:";
 echo $header->show();
 
@@ -38,16 +40,16 @@ echo $addGroupLink->show();
 
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
-$myTable->width = '60%';
-$myTable->border = '2';
+$myTable->width = '100%';
+$myTable->border = '0';
 $myTable->cellspacing = '1';
-$myTable->cellpadding = '10';
+$myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
-$myTable->addHeaderCell('Unesco_oer Group');
-$myTable->addHeaderCell('Group E-mail');
-$myTable->addHeaderCell('Edit');
-$myTable->addHeaderCell('Delete');
+$myTable->addHeaderCell('Unesco_oer Group',null,null,null,"userheader",null);
+$myTable->addHeaderCell('Group E-mail',null,null,null,"userheader",null);
+$myTable->addHeaderCell('Edit',null,null,null,"userheader",null);
+$myTable->addHeaderCell('Delete',null,null,null,"userheader",null);
 $myTable->endHeaderRow();
 
 $groups = $this->objDbGroups->getAllGroups();
