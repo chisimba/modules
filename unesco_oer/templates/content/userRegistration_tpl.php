@@ -283,24 +283,24 @@ $table->addCell('Postal code');
 $table->addCell($textinput->show());
 $table->endRow();
 
-//$textinput = new textinput('organisation');
-//$textinput->size = 20;
-//$table->startRow();
-//$table->addCell('Organisation/Company');
-//$table->addCell($textinput->show());
-//$table->endRow();
-
-
-$editor = $this->newObject('htmlarea', 'htmlelements');
-$editor->name = 'organisation';
-$editor->height = '150px';
-$editor->width = '76%';
-$editor->setBasicToolBar();
-$editor->setContent();
+$textinput = new textinput('organisation');
+$textinput->size = 70;
 $table->startRow();
 $table->addCell('Organisation/Company');
-$table->addCell($editor->show());
+$table->addCell($textinput->show());
 $table->endRow();
+
+
+//$editor = $this->newObject('htmlarea', 'htmlelements');
+//$editor->name = 'organisation';
+//$editor->height = '150px';
+//$editor->width = '76%';
+//$editor->setBasicToolBar();
+//$editor->setContent();
+//$table->startRow();
+//$table->addCell('Organisation/Company');
+//$table->addCell($editor->show());
+//$table->endRow();
 
 
 
@@ -337,7 +337,7 @@ $table->endRow();
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
 $editor->height = '150px';
-$editor->width = '76%';
+$editor->width = '80%';
 $editor->setBasicToolBar();
 $editor->setContent();
 $table->startRow();
