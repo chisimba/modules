@@ -136,11 +136,10 @@ if ($finalstring == null)
 
                                             <div id="loginDiv">
                                                 <table class="" cellpadding="0" cellspacing="0">
-                                                 <tr>
-                                                     <td> <img src="skins/unesco_oer/images/icon-filter-number-of-adaptations.png" alt="logout" class="imgFloatLeft">  <a href="?module=unesco_oer&action=userRegistrationForm" >Register</a>
-                                                     <tr><img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a> </tr></td>
-                                                  
-                                                </tr>
+                                                 
+                                                     <td> <img src="skins/unesco_oer/images/icon-filter-number-of-adaptations.png" alt="logout" class="imgFloatLeft">  <a href="?module=unesco_oer&action=userRegistrationForm" >Register</a></td>
+                                                    <td>  <tr><img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a> </tr>
+                                                                                              
                                                        </table>
                                             </div>
                 <?php
