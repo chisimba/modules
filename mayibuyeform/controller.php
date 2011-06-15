@@ -103,10 +103,9 @@ class mayibuyeform extends controller {
         $pid = $this->dbresearchform->insertStudentRecord($date, $nameofreseacher, $tellno, $faxxno, $email);
 
 	$subject = "New Reseacher First form";
-
-	$this->sendEmailNotification($subject, $message = ' ***Researcher Details*** '. "\n". ' date: ' . $date . '  ' . "\n" . ' name:  ' .
-                $nameofreseacher . '   ' . "\n" . ' telno: ' . $tellno . '   ' . "\n" . 'Fax no: ' .
-                $faxxno . '  ' . "\n" . ' email adddress: ' . $email);
+	$this->sendEmailNotification($subject, $message = ' ***Researcher Details*** '. "\n". ' Date:' . $date . '  ' . "\n" . 'name:' .
+                $nameofreseacher . '   ' . "\n" . ' Telephone Number: ' . $tellno . '   ' . "\n" . 'Fax no: ' .
+                $faxxno . '  ' . "\n" . ' Email Adddress: ' . $email);
 
 }
 
@@ -149,6 +148,12 @@ class mayibuyeform extends controller {
 	// inserting researchstud record into database
 
 	$id = $this->dbresearchstud->insertResearchStudRecord($nameofresi,$jotitle, $organizationname, $postadd, $tel, $faxx);
+
+	$subject = "Next of Kin Details";
+
+	$this->sendEmailNotification($subject, $message = ' ***Next of Kin Details*** '. "\n". ' Name: ' .$nameofresi . '  ' . "\n" . 
+		' Job Title: ' .$jotitle . '   ' . "\n" . ' Organization Name: ' . $organizationname . '   ' . "\n" . 'Postal Address: ' .             			 $postadd . '  ' . "\n" . ' Telephone: ' . $tel. '   ' . "\n" . ' Fax Number:'. $faxx);
+
 
 }
 
