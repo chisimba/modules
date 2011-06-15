@@ -92,6 +92,7 @@ private function buildForm()
 	$objdeptLabel = new label($this->objLanguage->LanguageText("mod_mayibuye_commentsDepartment","mayibuyeform"),"dept");
 	$table->addCell($objdeptLabel->show(),'', 'center', 'left', '');
 	$table->addCell($objdept->show());
+	$objForm->addRule('dept','Please enter your Department','required');
 	$table->endRow();	
 
 	$table->startRow();

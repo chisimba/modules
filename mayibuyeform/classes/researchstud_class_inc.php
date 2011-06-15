@@ -75,6 +75,7 @@ private function buildForm()
 	$objpostaladLabel = new label($this->objLanguage->LanguageText("mod_mayibuyeform_commentpostaladrres","mayibuyeform"),"postaladdress");
 	$table->addCell($objpostaladLabel->show(),'', 'center', 'left', '');         
 	$table->addCell($objpostaladdress->show(),'', 'center', 'left', '');
+	$objForm->addRule('postaladdress','Please enter your Postal Address','required');
 	$table->endRow();
 
 	$table->startRow();
@@ -107,7 +108,7 @@ private function buildForm()
 	 return $objForm->show();
 }
 
-function insertResearchStudRecord($nameofresi,$jotitle,$organizationname,$postadd,$tel)
+function insertResearchStudRecord($nameofresi,$jotitle,$organizationname,$postadd,$tel,$faxx)
 	 {
            $id = $this->insert(array(
                 'nameofresgn'=>$nameofresi,
