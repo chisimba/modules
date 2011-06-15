@@ -135,21 +135,21 @@ if ($finalstring == null)
                                 </div>
                             </div>
                 <?php
-                                        } else {
+                } else {
                 ?>
 
-<div id="loginDiv">
+                    <div id="loginDiv">
 
-                                               <div id="loginDiv">
-                                                   <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a> 
-                                                                                             <div id="loginDiv">
-                                                   <img src="skins/unesco_oer/images/icon-filter-number-of-adaptations.png" alt="logout" class="imgFloatLeft">  <a href="?module=unesco_oer&action=userRegistrationForm" >Register</a>
-                                                    </div>
-                                                      
-                                            </div>
-                </div>
+                        <div id="loginDiv">
+                            <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
+                            <div id="loginDiv">
+                                <img src="skins/unesco_oer/images/icon-filter-number-of-adaptations.png" alt="logout" class="imgFloatLeft">  <a href="?module=unesco_oer&action=userRegistrationForm" >Register</a>
+                            </div>
+
+                        </div>
+                    </div>
                 <?php
-                                        }
+                }
                 ?>
                                         <div class="logoAndHeading">
                                             <img src="skins/unesco_oer/images/logo-unesco.gif" class="imgFloatRight" alt="logo">

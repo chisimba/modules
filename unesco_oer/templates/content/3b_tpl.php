@@ -34,18 +34,33 @@
 <body>
 	<div class="blueHorizontalStrip"></div>
     <div class="mainWrapper">
-    	<div class="topContent">
+            	<div class="topContent">
+                      <?php
+                if ($this->objUser->isLoggedIn()) {
+                ?>
         	<div class="logOutSearchDiv">
             	<div class="logoutSearchDivLeft">
-                	<div class="nameDiv">Hello Igor Nuk</div>
+                	<div class="nameDiv"><?php echo "Hello" . " " . $this->objUser->fullname(); ?></div>
                     <div class="logoutDiv">
                     	<div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
                         <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
                     </div>
                     <div class="profileBookmarkGroupsMessengerDiv">
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20"
+                                  <?php
+                                     $abLink = new link($this->uri(array("action" => "editUserDetailsForm",'id'=>$this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId()),'userid'=>$this->objUser->userId())));
+                                            $abLink->link = 'My Profile';
+                                            echo $abLink->show();
+                                            ?> </a>
+
+                                   
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20"
+                                                                                     <?php
+                                            $abLink = new link($this->uri(array("action" => "controlpanel")));
+                                            $abLink->link = 'Administration Tools';
+                                            echo $abLink->show();
+                                            ?></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger" width="20" height="20" class="userIcons" title="My Messenger"></a>
                     </div>
@@ -81,6 +96,23 @@
                     </div>
                 </div>
             </div>
+                    <?php
+                    } else {
+                    ?>
+
+                            <div id="loginDiv">
+
+                            <div id="loginDiv">
+                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
+                                <div id="loginDiv">
+                                    <img src="skins/unesco_oer/images/icon-filter-number-of-adaptations.png" alt="logout" class="imgFloatLeft">  <a href="?module=unesco_oer&action=userRegistrationForm" >Register</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    <?php
+                    }
+                    ?>
           	<div class="logoAndHeading">
             	<img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
                  <div class="logoText">
