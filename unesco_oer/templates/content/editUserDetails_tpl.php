@@ -216,13 +216,29 @@ $table->endRow();
 
 
 //Date of Birth
-$textinput = new textinput('Date_of_birth');
+$textinput = new textinput('Date_of_birth'); //
 $textinput->size =75;
 $textinput->value = $userExtra[0]['birthday'];
 $table->startRow();
 $table->addCell('Birth date');
 $table->addCell($textinput->show());
 $table->endRow();
+
+
+
+//$table->startRow();
+//$table->addCell('Date Of Birth');
+//$table->addCell($userExtra[0]['birthday']);
+//$table->endRow();
+//
+//$table->startRow();
+//$table->addCell('Change Date');
+//$objDateTime = $this->getObject('dateandtime', 'utilities');
+//$objDatePicker = $this->newObject('datepicker', 'htmlelements');
+//$objDatePicker->name = 'birthdate';
+//$table->addCell($objDatePicker->show());
+//$table->endRow();
+
 
 //Address
 $textinput = new textinput('Address');

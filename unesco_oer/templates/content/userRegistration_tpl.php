@@ -252,19 +252,6 @@ $table->addCell('Address');
 $table->addCell($textinput->show());
 $table->endRow();
 
-//$editor = $this->newObject('htmlarea', 'htmlelements');
-//$editor->name = 'Address';
-//$editor->height = '150px';
-//$editor->width = '70%';
-//$editor->setBasicToolBar();
-//$editor->setContent();
-//$table->startRow();
-//$table->addCell('Address');
-//$table->addCell($editor->show());
-//$table->endRow();
-
-
-
 $textinput = new textinput('city');
 $textinput->size =70;
 $table->startRow();

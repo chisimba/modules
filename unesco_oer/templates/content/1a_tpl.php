@@ -135,6 +135,9 @@ if ($finalstring == null)
                                             <div id="loginDiv">
                                                 <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
                                             </div>
+                                            <div id="loginDiv">
+                                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=unesco_oer&action=userRegistrationForm" >Register</a>
+                                            </div>
                 <?php
                                         }
                 ?>

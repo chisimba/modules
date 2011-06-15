@@ -34,7 +34,7 @@ $adaptationstring = "relation is null";
                         <div class="logoutSearchDivLeft">
                             <div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
                             <div class="logoutDiv">
-                                <div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
+                                <div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks"><?php echo $this->objUser->fullname(); ?></div>
                                 <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
                             </div>
                             <div class="profileBookmarkGroupsMessengerDiv">
@@ -45,7 +45,7 @@ $adaptationstring = "relation is null";
 
 <!--                                <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>-->
                                 <?php
-                                            $abLink = new link($this->uri(array("action" => "addData")));
+                                            $abLink = new link($this->uri(array("action" => "controlpanel")));
                                             $img = '<img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools">';
                                             $abLink->link = $img;
                                             echo $abLink->show();
