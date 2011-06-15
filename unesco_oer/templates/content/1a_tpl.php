@@ -133,15 +133,16 @@ if ($finalstring == null)
                                         } else {
                 ?>
 
+<div id="loginDiv">
 
-                                            <div id="loginDiv">
-                                                <table class="" cellpadding="0" cellspacing="0">
-                                                 
-                                                     <td> <img src="skins/unesco_oer/images/icon-filter-number-of-adaptations.png" alt="logout" class="imgFloatLeft">  <a href="?module=unesco_oer&action=userRegistrationForm" >Register</a></td>
-                                                    <td>  <tr><img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a> </tr>
-                                                                                              
-                                                       </table>
+                                               <div id="loginDiv">
+                                                   <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a> 
+                                                                                             <div id="loginDiv">
+                                                   <img src="skins/unesco_oer/images/icon-filter-number-of-adaptations.png" alt="logout" class="imgFloatLeft">  <a href="?module=unesco_oer&action=userRegistrationForm" >Register</a>
+                                                    </div>
+                                                      
                                             </div>
+                </div>
                 <?php
                                         }
                 ?>

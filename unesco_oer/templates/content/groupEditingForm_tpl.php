@@ -111,7 +111,7 @@ $table->endRow();
 
 $textinput = new textinput('group_postalcode');
 $textinput->size = 70;
-$textinput->value = $group['postalcode'];
+$textinput->value = $group[0]['postalcode'];
 $table->startRow();
 $table->addCell('Postal Code');
 $table->addCell($textinput->show());
@@ -119,7 +119,7 @@ $table->endRow();
 
 $textinput = new textinput('group_website');
 $textinput->size = 70;
-$textinput->value = $group['website'];
+$textinput->value = $group[0]['website'];
 $table->startRow();
 $table->addCell('Website');
 $table->addCell($textinput->show());
