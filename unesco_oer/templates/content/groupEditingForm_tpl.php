@@ -22,7 +22,7 @@ $this->loadClass('textinput','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
 
 
-$form = new form ('editer', $this->uri(array('action'=>'saveNewGroup')));
+$form = new form ('editer', $this->uri(array('action'=>'editGroup','id'=>$this->getParam('id'))));
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
@@ -30,7 +30,7 @@ $header->str = "Group Details:";
 echo $header->show();
 
 //Get Group details
-$group=$this->objDbGroups->getAllGroups();
+$group=$this->objDbGroups->getGroupInfo($this->getParam('id'));
 
 //$table = $this->newObject('htmltable', 'htmlelements');
 $table = $this->newObject('htmltable', 'htmlelements');
@@ -42,7 +42,7 @@ $table->cellpadding = '2';
 //Group name
 $textinput = new textinput('group_name');
 $textinput->size = 70;
-$textinput->value = $group['name'];
+$textinput->value = $group[0]['name'];
 $table->startRow();
 $table->addCell('Group Name');
 $table->addCell($textinput->show());
@@ -50,7 +50,7 @@ $table->endRow();
 
 $textinput = new textinput('group_email');
 $textinput->size = 70;
-$textinput->value = $group['email'];
+$textinput->value = $group[0]['email'];
 $table->startRow();
 $table->addCell('E-mail');
 $table->addCell($textinput->show());
@@ -58,7 +58,7 @@ $table->endRow();
 
 $textinput = new textinput('group_address');
 $textinput->size = 70;
-$textinput->value = $group['address'];
+$textinput->value = $group[0]['address'];
 $table->startRow();
 $table->addCell('Address');
 $table->addCell($textinput->show());
@@ -66,7 +66,7 @@ $table->endRow();
 
 $textinput = new textinput('group_city');
 $textinput->size = 70;
-$textinput->value = $group['city'];
+$textinput->value = $group[0]['city'];
 $table->startRow();
 $table->addCell('City');
 $table->addCell($textinput->show());
@@ -74,7 +74,7 @@ $table->endRow();
 
 $textinput = new textinput('group_state');
 $textinput->size = 70;
-$textinput->value = $group['state'];
+$textinput->value = $group[0]['state'];
 $table->startRow();
 $table->addCell('State/Province');
 $table->addCell($textinput->show());
@@ -82,7 +82,7 @@ $table->endRow();
 
 $textinput = new textinput('group_loclat');
 $textinput->size = 70;
-$textinput->value = $group['loclat'];
+$textinput->value = $group[0]['loclat'];
 $table->startRow();
 $table->addCell('Latitude');
 $table->addCell($textinput->show());
@@ -90,7 +90,7 @@ $table->endRow();
 
 $textinput = new textinput('group_loclong');
 $textinput->size = 70;
-$textinput->value = $group['loclong'];
+$textinput->value = $group[0]['loclong'];
 $table->startRow();
 $table->addCell('Longitude');
 $table->addCell($textinput->show());
@@ -149,24 +149,6 @@ $table->endRow();
 
 
 
-
-$table->startRow();
-$table->addCell('<b>Date Received</b>');
-$objDateTime = $this->getObject('dateandtime', 'utilities');
-$objDatePicker = $this->newObject('datepicker', 'htmlelements');
-$objDatePicker->name = 'date_recieved';
-if ($mode == 'edit') {
-    $objDatePicker->setDefaultDate(substr($document['date_recieved'], 0, 10));
-}
-
-
-$table->addCell($objDatePicker->show());
-$table->endRow();
-
-
-
-
-
 $button = new button ('submitform', 'Save');
 $button->setToSubmit();
 
@@ -177,8 +159,8 @@ $CancelLink->link =$Cancelbutton->show();
 
 $form->addToForm($table->show());
 $form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
-$returnlink = new link($this->uri(array('action'=>'UserListingForm')));
-$returnlink->link = 'Return to Home Page';
-echo '<br clear="left" />'.$returnlink->show();
+//$returnlink = new link($this->uri(array('action'=>'UserListingForm')));
+//$returnlink->link = 'Return to Home Page';
+//echo '<br clear="left" />'.$returnlink->show();
 
 echo $form->show();

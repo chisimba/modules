@@ -61,16 +61,19 @@ if (count($groups) > 0) {
         $myTable->addCell($group['email']);
     
         $objIcon->setIcon('edit');
-        $editLink =new link($this->uri(array('action' => "",'id' =>$group['id'])));
+        $editLink =new link($this->uri(array('action' =>"groupEditingForm",'id' =>$group['id'])));
         $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());
 
         $objIcon->setIcon('delete');
         $deleteLink =new link($this->uri(array('action' => "deleteGroup",'id' => $group['id'])));
-        $deleteLink->link = $objIcon;
-        $href=$deleteLink->href;
-        $finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
-        $myTable->addCell($finaldeleteLink);
+        $deleteLink->link = $objIcon->show();
+        $deleteLink->cssClass = 'deleteuser';
+        //$href=$deleteLink->href;
+        //$finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
+        $myTable->addCell($deleteLink->show());
+//        $finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
+//        $myTable->addCell($finaldeleteLink);
        //$myTable->endRow();
     }
 }

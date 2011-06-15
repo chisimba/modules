@@ -26,10 +26,10 @@ class dbgroups extends dbtable {
         return $this->getArray($sql);
     }
 
-    function getGroup($groupid){
+    function getGroupInfo($groupid){
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
-        $GroupName=$this->getArray($sql);
-        return $GroupName[0]['name'];
+        return $this->getArray($sql);
+       
     }
 
  
