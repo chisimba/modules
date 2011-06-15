@@ -25,7 +25,7 @@ $header = new htmlheading();
 $header->str = $this->objLanguage->languageText('mod_userdetails_name', 'userdetails').":".'&nbsp;'.$user['firstname'].'&nbsp;'.$user['surname'];
 $header->type = 1;
 echo $header->show();
-
+//echo $userExtra[0]['description'];
 
 if (isset($showconfirmation) && $showconfirmation) {
     echo '<div id="confirmationmessage">';
@@ -300,9 +300,8 @@ $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
 $editor->height = '150px';
 $editor->width = '100%';
-$editor->value = $userExtra[0]['description'];
 $editor->setBasicToolBar();
-$editor->setContent();
+$editor->setContent($userExtra[0]['description']);
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
 $table->addCell($editor->show());

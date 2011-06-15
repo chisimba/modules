@@ -227,7 +227,7 @@ $table->endRow();
 
 
 
-$textinput = new textinput('Date of birth');
+$textinput = new textinput('Date_of_birth');
 $textinput->size =70;
 $table->startRow();
 $table->addCell('Birth date');
@@ -311,7 +311,7 @@ $table->addCell('Job Tittle');
 $table->addCell($textinput->show());
 $table->endRow();
 
-$textinput = new textinput('typeofoccapation');
+$textinput = new textinput('type_of_occupation');
 $textinput->size =70;
 $table->startRow();
 $table->addCell('Type Of Occupation');

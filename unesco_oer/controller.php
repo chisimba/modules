@@ -1023,7 +1023,7 @@ class unesco_oer extends controller {
     function __deleteUser() {
         $this->objUserAdmin->apiUserDelete($this->getParam('id'));
         $this->objUseExtra->deleteUser($this->getParam('id'), $this->getParam('userid'));
-         return 'UserListingForm_tpl.php';
+        return $this->__userListingForm();
     }
 
     function __saveNewUser() {
@@ -1044,7 +1044,7 @@ class unesco_oer extends controller {
         $repeatemail = $this->getParam('register_confirmemail');
         $sex = $this->getParam('register_sex');
         $cellnumber = $this->getParam('register_cellnum');
-        $birthdate = $this->getParam('Date of birth');
+        $birthdate = $this->getParam('Date_of_birth');
         $address = $this->getParam('Address');
         $city = $this->getParam('city');
         $state = $this->getParam('state');
@@ -1052,10 +1052,11 @@ class unesco_oer extends controller {
         $organisation = $this->getParam('organisation');
         $jobtittle = $this->getParam('jobtittle');
         $WorkingPhone = $this->getParam('workingphone');
-        $DescriptionText = $this->getParam('descriprion');
+        $DescriptionText = $this->getParam('description');
         $WebsiteLink = $this->getParam('websitelink');
         $GroupMembership = $this->getParam('groupmembership');
         $country = $this->getParam('country');
+        $typeOfOccupation=$this->getParam('type_of_occupation');
         $accountstatus = 1; // Default Status Active
         // Create an array of fields that cannot be empty
         $checkFields = array(
@@ -1109,7 +1110,7 @@ class unesco_oer extends controller {
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = NULL, 'useradmin', $accountstatus);
             //add to table userextra
             $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
-            $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
+            $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
 
             // Email Details to User
              $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
