@@ -224,13 +224,6 @@ $table->addCell('Mobile Phone');
 $table->addCell($textinput->show());
 $table->endRow();
 
-//$textinput = new textinput('Date_of_birth');
-//$textinput->size =70;
-//$table->startRow();
-//$table->addCell('Birth date');
-//$table->addCell($textinput->show());
-//$table->endRow();
-
 $table->startRow();
 $table->addCell('Date of Birth');
 $objDateTime = $this->getObject('dateandtime', 'utilities');

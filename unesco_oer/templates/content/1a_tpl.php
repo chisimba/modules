@@ -51,7 +51,12 @@ if ($finalstring == null)
                                 <table class="profileBookmarkGroupsMessengerTable" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td><img src="skins/unesco_oer/images/icon-my-profile.png"></td>
-                                        <td><a href="#" class="prifileLinks">My Profile</a></td>
+                                        <td><a href="#" class="prifileLinks">
+                                           <?php
+                                            $abLink = new link($this->uri(array("action" => "editUserDetailsForm",'id'=>$this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId()),'userid'=>$this->objUser->userId())));
+                                            $abLink->link = 'My Profile';
+                                            echo $abLink->show();
+                                            ?> </a></td>
                                         <td><img src="skins/unesco_oer/images/icon-my-bookmarks.png"></td>
                                         <td><a href="#" class="prifileLinks">My Bookmarks</a></td>
                                         <td><img src="skins/unesco_oer/images/icon-my-administration-tools.png"></td>

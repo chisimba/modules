@@ -144,6 +144,12 @@ class dbuserextra extends dbtable{
         }
     }
 
+    function getUserbyUserIdbyUserID($userid){
+        $sql="SELECT * from tbl_users WHERE userid='$userid'";
+        $id=$this->getArray($sql);
+        return $id[0]['id'];
+    }
+
     function getAllUser(){
          $sql = "select * from tbl_users";
          return $this->getArray($sql);
