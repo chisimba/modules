@@ -149,6 +149,24 @@ $table->endRow();
 
 
 
+
+$table->startRow();
+$table->addCell('<b>Date Received</b>');
+$objDateTime = $this->getObject('dateandtime', 'utilities');
+$objDatePicker = $this->newObject('datepicker', 'htmlelements');
+$objDatePicker->name = 'date_recieved';
+if ($mode == 'edit') {
+    $objDatePicker->setDefaultDate(substr($document['date_recieved'], 0, 10));
+}
+
+
+$table->addCell($objDatePicker->show());
+$table->endRow();
+
+
+
+
+
 $button = new button ('submitform', 'Save');
 $button->setToSubmit();
 

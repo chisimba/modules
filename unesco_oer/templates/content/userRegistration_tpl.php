@@ -224,15 +224,26 @@ $table->addCell('Mobile Phone');
 $table->addCell($textinput->show());
 $table->endRow();
 
+//$textinput = new textinput('Date_of_birth');
+//$textinput->size =70;
+//$table->startRow();
+//$table->addCell('Birth date');
+//$table->addCell($textinput->show());
+//$table->endRow();
 
-
-
-$textinput = new textinput('Date_of_birth');
-$textinput->size =70;
 $table->startRow();
-$table->addCell('Birth date');
-$table->addCell($textinput->show());
+$table->addCell('Date of Birth');
+$objDateTime = $this->getObject('dateandtime', 'utilities');
+$objDatePicker = $this->newObject('datepicker', 'htmlelements');
+$objDatePicker->name = 'Date_of_birth';
+//if ($mode == 'edit') {
+//    $objDatePicker->setDefaultDate(substr($document['date_recieved'], 0, 10));
+//}
+$table->addCell($objDatePicker->show());
 $table->endRow();
+
+
+
 
 $textinput = new textinput('Address');
 $textinput->size =70;
