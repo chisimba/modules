@@ -76,16 +76,16 @@ class mayibuyeform extends controller {
 		
 	
 	case 'send_researchft':
-		$this->SavestudentRecord();
+		$this->SaveResearchRecord();
 		return "researchstudent_tpl.php";
 
 	
 	case 'send_researchstud':
-		$this->SavestudentRecord();
+		$this->SaveResearchStudRecord();
 		return "researchlast_tpl.php";
 
         case 'send_researchlast':
-		$this->SavestudentRecord();
+		$this->SaveResearchLastRecord();
 		return "confirm_tpl.php";
     
                
@@ -106,7 +106,6 @@ class mayibuyeform extends controller {
 
 	public function SaveResearchRecord()
 		{
-
 		$nameofsign = $this->getParam('resignatorname');
         	$jobtitles = $this->getParam('job_title');
         	$organization = $this->getParam('organization');
@@ -118,10 +117,9 @@ class mayibuyeform extends controller {
         	$faxnumber2 = $this->getParam('faxno_2');
         	$email2 = $this->getParam('emails');
 
- // insert into database
-	$id=$this->dbresearchft->insertResearchRecord($nameofsign,$jobtitles, $organization, $postaladd, $physicaladd, $vatno,
+ 		// insert into database
+		$id = $this->dbresearchft->insertResearchRecord($nameofsign, $jobtitles, $organization, $postaladd, $physicaladd, $vatno,
 						 	$jobnno, $telephone, $faxnumber2, $email2);
-
 	}
 
 
@@ -136,7 +134,7 @@ class mayibuyeform extends controller {
 
 	// inserting researchstud record into database
 
-	$id = $this->dbresearchstud->SaveResearchStudRecord($nameofresi,$jotitle, $organizationname, $postadd, $tel, $faxx);
+	$id = $this->dbresearchstud->insertResearchStudRecord($nameofresi,$jotitle, $organizationname, $postadd, $tel, $faxx);
 
 }
 
@@ -166,7 +164,7 @@ class mayibuyeform extends controller {
 
 // inserting researchlast record into database
 
-	$id =$this->dbresearchlast->SaveResearchLastRecord($stuno, $staffnum, $colection, $image, $project, $time);
+	$id =$this->dbresearchlast->insertResearchlastRecord($stuno, $staffnum, $colection, $image, $project, $time);
 
 
  	$subject = "New Reseacher";
