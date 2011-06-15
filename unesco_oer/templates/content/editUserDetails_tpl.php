@@ -339,9 +339,8 @@ $groups = $this->objDbGroups->getAllGroups();
 $dd=new dropdown('groupmembership');
 if(count($groups)>0){
     $i=1;
-    //$dd=new dropdown('groupmembership');
     foreach ($groups as $group) {
-        $dd->addOption($i,$group['name']);
+          $dd->addOption($i,$group['name']);
         $i=$i+1;
         }
 }

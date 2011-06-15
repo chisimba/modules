@@ -124,16 +124,23 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', '
 $table->addCell($editor->show());
 $table->endRow();
 
+//Register Institutions
+$Institutions = $this->objDbInstitution->getAllInstitutions();
 $dd=new dropdown('group_institutionlink');
-$dd->addOption('1','A');
-$dd->addOption('2','B');
-$dd->addOption('3','c');
-$dd->addOption('4','d'); /// this must be cathed from the database
+if(count($Institutions)>0){
+    $i=1;
+    foreach ($Institutions as $Institution) {
+        $dd->addOption($i,$Institution['name']);
+        $i=$i+1;
+        }
+}
+else{
+    $dd->addOption('1', 'None');}
 $table->startRow();
 $table->addCell('Institution');
 $table->addCell($dd->show());
 $table->endRow();
-//$form->addToForm($table->show());
+
 
 
 

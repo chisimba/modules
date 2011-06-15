@@ -130,7 +130,7 @@ $editor->name = 'description';
 $editor->height = '150px';
 $editor->width = '60%';
 $editor->setBasicToolBar();
-$editor->setContent();
+$editor->setContent($group[0]['description']);
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
 $table->addCell($editor->show());
