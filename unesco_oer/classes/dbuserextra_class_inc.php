@@ -48,29 +48,29 @@ class dbuserextra extends dbtable{
         $this->insert($data);
     }
 
-    function updateUserInfo($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
-        if ($birthdate != '') {
+    function updateUserInfo($id,$userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
+        if ($birthdate !='') {
             $data = array(
                 'id' => $id,
                 'userid' => $userId,
                 'birthday' => $birthdate);
-            $this->update('id', $id, $data);
+            $this->update('id', $id,$data);
         }
-        if ($city != '') {
+        if ($city !='') {
             $data = array(
                 'id' => $id,
                 'userid' => $userId,
                 'city' => $city);
             $this->update('id', $id, $data);
         }
-        if ($address != '') {
+        if ($address !='') {
             $data = array(
                 'id' => $id,
                 'userid' => $userId,
                 'address' => $address);
             $this->update('id', $id, $data);
         }
-        if ($state != '') {
+        if ($state !='') {
             $data = array(
                 'id' => $id,
                 'userid' => $userId,
@@ -111,7 +111,7 @@ class dbuserextra extends dbtable{
                 'userid' => $userId,
                 'description' => $DescriptionText);
             $this->update('id', $id, $data);
-        }
+            }
         if ($WebsiteLink != '') {
             $data = array(
                 'id' => $id,

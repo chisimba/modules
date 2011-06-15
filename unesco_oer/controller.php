@@ -1142,35 +1142,31 @@ class unesco_oer extends controller {
         if (!$_POST) {
             return $this->nextAction(NULL);
         }
-
-
         // Get Details from Form
+
         $password = $this->getParam('input_useradmin_password');
-
-
         $repeatpassword = $this->getParam('useradmin_repeatpassword');
         $title = $this->getParam('useradmin_title');
         $firstname = $this->getParam('useradmin_firstname');
         $surname = $this->getParam('useradmin_surname');
         $email = $this->getParam('useradmin_email');
-        $cellnumber = $this->getParam('useradmin_cellnumber');
-        $staffnumber = $this->getParam('useradmin_staffnumber');
+        //$cellnumber = $this->getParam('useradmin_cellnumber');
+        $cellnumber = $this->getParam('register_cellnum');
         $sex = $this->getParam('useradmin_sex');
         $country = $this->getParam('country');
-
-        $birthdate = $this->getParam('Date of birth');
+        $birthdate = $this->getParam('Date_of_birth');
         $address = $this->getParam('Address');
         $city = $this->getParam('city');
         $state = $this->getParam('state');
         $postaladdress = $this->getParam('postaladdress');
         $organisation = $this->getParam('organisation');
         $jobtittle = $this->getParam('jobtittle');
+        $TypeOccapation=$this->getParam('typeofoccapation');
         $WorkingPhone = $this->getParam('workingphone');
-        $DescriptionText = $this->getParam('descriprion');
+        $DescriptionText = $this->getParam('description');
         $WebsiteLink = $this->getParam('websitelink');
         $GroupMembership = $this->getParam('groupmembership');
-        $country = $this->getParam('country');
-
+     
         $userDetails = array(
             'password' => $password,
             'repeatpassword' => $repeatpassword,
@@ -1225,11 +1221,10 @@ class unesco_oer extends controller {
         }
 
         $this->setSession('showconfirmation', TRUE);
-
         $this->objUser->updateUserSession();
         // Process Update Results
         if ($update) {
-            $this->objUseExtra->updateUserInfo($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
+            $this->objUseExtra->updateUserInfo($this->getParam('id'),$userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "UserListingForm_tpl.php";
         } else {

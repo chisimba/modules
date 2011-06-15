@@ -216,7 +216,7 @@ $table->endRow();
 
 
 //Date of Birth
-$textinput = new textinput('Date of birth');
+$textinput = new textinput('Date_of_birth');
 $textinput->size =75;
 $textinput->value = $userExtra[0]['birthday'];
 $table->startRow();
