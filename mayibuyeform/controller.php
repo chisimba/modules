@@ -102,6 +102,12 @@ class mayibuyeform extends controller {
         // insert into database
         $pid = $this->dbresearchform->insertStudentRecord($date, $nameofreseacher, $tellno, $faxxno, $email);
 
+	$subject = "New Reseacher First form";
+
+	$this->sendEmailNotification($subject, $message = ' ***Researcher Details*** '. "\n". ' date: ' . $date . '  ' . "\n" . ' name:  ' .
+                $nameofreseacher . '   ' . "\n" . ' telno: ' . $tellno . '   ' . "\n" . 'Fax no: ' .
+                $faxxno . '  ' . "\n" . ' email adddress: ' . $email);
+
 }
 
 	public function SaveResearchRecord()
@@ -120,6 +126,14 @@ class mayibuyeform extends controller {
  		// insert into database
 		$id = $this->dbresearchft->insertResearchRecord($nameofsign, $jobtitles, $organization, $postaladd, $physicaladd, $vatno,
 						 	$jobnno, $telephone, $faxnumber2, $email2);
+	$subject = "New Reseacher second form";
+
+	$this->sendEmailNotification($subject, $message = ' ***Signatory Details*** '. "\n". ' Name of Signatory: ' .$nameofsign . '  ' . "\n" . 
+		' Job Title: ' .$jobtitles . '   ' . "\n" . ' Organization Name: ' . $organization . '   ' . "\n" . 'Postal Address: ' .             			 $postaladd . '  ' . "\n" . ' Physical Address: ' . $physicaladd. '   ' . "\n" . ' Vat No:'. $vatno . '   ' . "\n" . 'Job No: ' .
+		 $jobnno . '  ' . "\n" .'Telephone: '. $telephone . '  ' . "\n" . ' Fax Number: ' .
+		 $faxnumber2 .	'   ' . "\n" . ' Email Address: ' . $email2 );
+
+
 	}
 
 
@@ -166,19 +180,11 @@ class mayibuyeform extends controller {
 
 	$id =$this->dbresearchlast->insertResearchlastRecord($stuno, $staffnum, $colection, $image, $project, $time);
 
+ 	$subject = "New Reseacher Fouth form";
 
- 	$subject = "New Reseacher";
-        $this->sendEmailNotification($subject, $message = ' ***Researcher Details*** '. "\n". ' date: ' . $date . '  ' . "\n" . ' name:  ' .
-                $nameofreseacher . '   ' . "\n" . ' telno: ' . $tellno . '   ' . "\n" . 'Fax no: ' .
-                $faxxno . '  ' . "\n" . ' email adddress: ' . $email . '  ' . "\n" . ' Name of Signator: ' .
-                $nameofsign . '  ' . "\n" . ' job-title: ' . $jobtitles . '   ' . "\n" . 'organanization: ' .
-                $organization . '  ' . "\n" . ' postal Address: ' . $postaladd . '  ' . "\n" . 'Physical Address: ' .
-                $physicaladd . '  ' . "\n" . ' Vat-no: ' . $vatno . '  ' . "\n" . ' Job no: ' . $jobnno . ' ' . "\n" . ' TelePhone: ' .
-                $telephone . '  ' . "\n" . ' Fax number: ' . $faxnumber2 . '  ' . "\n" . 'Emaill Address:' .
-                $email2 . '  ' . "\n" . 'name of Sesignator:' . $nameofresi . '  ' . "\n" . 'Job title:' .
-                $jotitle . '  ' . "\n" . 'Name of Organization:' . $organizationname . '  ' . "\n" . 'postal address:' .
-                $postadd . '  ' . "\n" . 'Telphone:' . $tel . '  ' . "\n" . 'Fax no:' . $faxx . '  ' . "\n" . 'Student No:' .
-                $stuno . '  ' . "\n" . 'Staff num:' . $staffnum . '  ' . "\n" . 'Department:' . $colection);
+        $this->sendEmailNotification($subject, $message = ' ***Researcher Details*** '. "\n".'Student No:' .
+                $stuno . '  ' . "\n" . 'Staff num:' . $staffnum . '  ' . "\n" . 'Colection:' . 
+		$colection. ' '. "\n". 'Image: ' . $image . ' '. "\n". 	'Project:'. $project. ' '. "\n". ' Time: '. $time );
 
         return "researchft_tpl.php";
     }
