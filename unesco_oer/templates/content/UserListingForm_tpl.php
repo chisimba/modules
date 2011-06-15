@@ -86,7 +86,8 @@ if (count($users) > 0) {
         $objIcon->setIcon('delete');
         $deleteLink =new link($this->uri(array('action' => "deleteUser",'id' => $user['id'],'userid'=>$user['userid'])));
         $deleteLink->link = $objIcon->show();
-        $href=$deleteLink->href;
+        $deleteLink->cssClass = 'deleteuser';
+        //$href=$deleteLink->href;
         //$finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
         $myTable->addCell($deleteLink->show());//$finaldeleteLink);
         //$myTable->addCell($finaldeleteLink);
