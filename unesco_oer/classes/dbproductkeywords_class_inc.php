@@ -37,10 +37,17 @@ class dbproductkeywords extends dbtable
         return $this->getArray($sql);
     }
 
+    function getProductKeywordByID($id)
+    {
+        $sql = "SELECT * FROM $this->_tableName where id='$id'";
+        $result = $this->getArray($sql);
+        return $result[0];
+    }
+
     function getKeywordsByProductID($productID)
     {
-        $sqlJxnTable = "select * from $this->product_keyword_jxn where product_id = '$productID'";
-        $sql = "SELECT $this->_tableName.id, $this->_tableName.keyword
+        $sqlJxnTable = "select product_id, keyword_id from $this->product_keyword_jxn where product_id = '$productID'";
+        $sql = "SELECT *
                 FROM $this->_tableName
                 INNER JOIN ($sqlJxnTable) As t2
                 On $this->_tableName.id=t2.keyword_id";
@@ -63,6 +70,16 @@ class dbproductkeywords extends dbtable
         );
         
         $this->insert($data,  $this->product_keyword_jxn);
+    }
+
+    function deleteProductKeywordJxnByProductID($productID)
+    {
+//        $sql = "SELECT * FROM $this->product_keyword_jxn WHERE product_id='$productID'";
+//        $entries = $this->getArray($sql);
+//        foreach ($entries as $productKeywordJxn)
+//        {
+            $this->delete('product_id', $productID, $this->product_keyword_jxn);
+//        }
     }
 }
 ?>

@@ -156,7 +156,7 @@ class product extends object
      *
      * @var <type>
      */
-    private $_keywords;
+    private $_keywords = array();
 
     /**Thumbnail
      *
@@ -315,7 +315,6 @@ class product extends object
         $this->setProvenance($product['provenance']);;
         $this->setCoverage($product['coverage']);
         $this->setStatus($product['status']);
-        $this->setKeyWords($product['keywords']);
         $this->setRelation($product['relation'], $product['relation_type']);
         $this->loadThemes($product['id']);
         $this->loadKeyWords($product['id']);
@@ -609,8 +608,19 @@ class product extends object
         // Initialise the selectbox.
         $objSelectBox->create( $form_data, 'leftList[]', 'Available keywords', $fieldName.'[]', 'Chosen keywords' );
         //// Populate the selectboxes
-        $objSelectBox->insertLeftOptions( $this->objDbProductKeywords->getProductKeywords(), 'id', 'keyword');
-        $objSelectBox->insertRightOptions( array() );
+        $productKeywords = $this->objDbProductKeywords->getProductKeywords();
+        $diff = array_udiff(
+		$productKeywords,
+                $this->getKeyWords(),
+		create_function(
+			'$a,$b',
+                        'if ($a['.'"puid"'.'] == $b['.'"puid"'.']) return 0;
+                         elseif (($a['.'"puid"'.'] > $b['.'"puid"'.'])) return 1;
+                         else return -1;'
+ 		)
+        );
+        $objSelectBox->insertLeftOptions( $diff, 'id', 'keyword');
+        $objSelectBox->insertRightOptions( $this->getKeyWords(), 'id', 'keyword');
         //Construct tables for left selectboxes
         $tblLeft = $this->newObject( 'htmltable','htmlelements');
         $objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
@@ -844,9 +854,11 @@ class product extends object
             $keyWords = array($keyWords);
         }
 
-        foreach ($keyWords as $keyWords) {
-            if ($keyWords != NULL){
-                $this->objDbProductKeywords->addProductKeywordJxn($this->_identifier, $keyWords);
+        $this->objDbProductKeywords->deleteProductKeywordJxnByProductID($this->getIdentifier());
+
+        foreach ($keyWords as $keyWord) {
+            if ($keyWord != NULL){
+                $this->objDbProductKeywords->addProductKeywordJxn($this->_identifier, $keyWord['id']);
             }
         }
    }
@@ -894,7 +906,7 @@ class product extends object
 
     private function loadKeyWords($id)
     {
-        $this->setKeyWords($this->objDbProductKeywords->getKeywordsByProductID($id));
+        $this->_keywords = $this->objDbProductKeywords->getKeywordsByProductID($id);
     }
 
     ////////////////   SETTERS   ////////////////
@@ -1068,7 +1080,9 @@ class product extends object
 
    function setKeyWords($keyWords) 
    {
-       $this->_keywords = $keyWords;
+       foreach ($keyWords as $keyword) {
+           array_push($this->_keywords, $this->objDbProductKeywords->getProductKeywordByID($keyword));
+       }
 
         if (empty($keyWords))
         {
