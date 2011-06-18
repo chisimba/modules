@@ -1249,8 +1249,8 @@ class sahriscollectionsops extends object {
         
         // site report link
         $sr = $this->newObject('link', 'htmlelements');
-        $sr->href = $this->uri(array('action' => 'sitereport'));
-        $sr->link = $this->objLanguage->languageText("mod_sahriscollectionsman_sitereport", "sahriscollectionsman");
+        $sr->href = $this->uri(array('action' => 'sitesreport'));
+        $sr->link = $this->objLanguage->languageText("mod_sahriscollectionsman_sitesreport", "sahriscollectionsman");
         $sr = $sr->show();
         
         // search a collection record
