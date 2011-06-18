@@ -1247,6 +1247,12 @@ class sahriscollectionsops extends object {
         $addrec->link = $this->objLanguage->languageText("mod_sahriscollectionsman_addrectocoll", "sahriscollectionsman");
         $addrec = $addrec->show(); */
         
+        // site report link
+        $sr = $this->newObject('link', 'htmlelements');
+        $sr->href = $this->uri(array('action' => 'sitereport'));
+        $sr->link = $this->objLanguage->languageText("mod_sahriscollectionsman_sitereport", "sahriscollectionsman");
+        $sr = $sr->show();
+        
         // search a collection record
         $searchrec = $this->newObject('link', 'htmlelements');
         $searchrec->href = $this->uri(array('action' => 'search'));
@@ -1267,6 +1273,7 @@ class sahriscollectionsops extends object {
         
         $txt = "<ul";
         $txt .= "<li>".$sl."</li>";
+        $txt .= "<li>".$sr."</li>";
         $txt .= "<li>".$createcoll."</li>";
         // $txt .= "<li>".$addrec."</li>";
         $txt .= "<li>".$searchrec."</li>";
@@ -1815,5 +1822,170 @@ class sahriscollectionsops extends object {
         }
         return $ret;
     }  
+    
+    public function sitesReport($sites) {
+        $ret = NULL;
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->startHeaderRow();
+        $table->addHeaderCell('Site Name');
+        $table->addHeaderCell('Coordinates');
+        $table->addHeaderCell('Number of Collections');
+        $table->addHeaderCell('Number of Objects');
+        $table->endHeaderRow();
+        foreach($sites as $site) {
+            // tabulate the site data
+            $numcolls = NULL;
+            $numcolls .= $this->objDbColl->getCollCountBySite($site['id']);
+            $numobjs = NULL;
+            $numobjs .= $this->objDbColl->countItemsInSite($site['id']);
+            $table->startRow();
+            $table->addCell($site['sitename'], 150, NULL, 'left');
+            $table->addCell($site['lat']." ".$site['lon'], 150, NULL, 'left');
+            $table->addCell($numcolls, 150, NULL, 'center');
+            $table->addCell($numobjs, 150, NULL, 'center');
+            $table->endRow();
+        }
+        $ret .= $table->show();
+        
+        // coverage map
+        $kml = $this->generateKML($sites);
+        $ret .= $kml;
+        return $ret;
+        
+        
+    }
+    
+    public function generateKML($sites) {
+        $kml = NULL;
+        $kml .= '<?xml version="1.0" encoding="UTF-8"?>
+                     <kml xmlns="http://www.opengis.net/kml/2.2">
+                     <Document>';
+        foreach($sites as $site) {
+            $kml .= '<Placemark>
+                         <name>CDATA example</name>
+                         <description>
+                             <![CDATA[
+                                 <h1>'.$site['sitename'].'</h1>
+                                 <p>'.$site['sitecontact'].'</p>
+                             ]]>
+                         </description>
+                         <Point>
+                             <coordinates>'.$site['lon'].','.$site['lat'].'</coordinates>
+                         </Point>
+                     </Placemark>';
+        }
+        $kml .= '</Document>
+                 </kml>';
+        file_put_contents($this->objConfig->getsiterootPath().'usrfiles/tmp.kml', $kml);
+        $kfile = $this->objConfig->getsiteRoot().'usrfiles/tmp.kml';
+        // bang up the map itself now
+        $zoom = 15;
+        
+        $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
+        $css = '<style type="text/css">
+        #map {
+            width: 100%;
+            height: 512px;
+            /* border: 1px solid black;
+            background-color: white;
+            z-index:-5; */
+        }
+        </style>';
+
+        $google = "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$gmapsapikey."' type=\"text/javascript\"></script>";
+        //$google = "<script type='text/javascript' src='http://maps.google.com/maps/api/js?sensor=false'></script>";
+        // $olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
+        $js = '<script type="text/javascript">
+    //<![CDATA[
+    
+    
+
+ 
+      var map = new GMap2(document.getElementById("map"));
+      map.addControl(new GLargeMapControl());
+      map.addControl(new GMapTypeControl());
+      map.setCenter(new GLatLng(-30,17), 5);
+
+      // ==== Create a KML Overlay ====
+    
+      var kml = new GGeoXml("'.$kfile.'");
+      map.addOverlay(kml);
+
+    //]]>
+    </script>';
+        // add the lot to the headerparams...
+        $this->appendArrayVar('headerParams', $css.$google);
+        //$this->appendArrayVar('bodyOnLoad', "init();");
+        $gtags = '<div id="map"></div>';
+        return $gtags.$js;
+    }
+    
+    public function viewLocMap($lat, $lon, $zoom = 15) {
+        $gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
+        $css = '<style type="text/css">
+        #map {
+            width: 100%;
+            height: 350px;
+            border: 1px solid black;
+            background-color: white;
+            z-index:-5;
+        }
+        </style>';
+
+        $google = "<script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$gmapsapikey."' type=\"text/javascript\"></script>";
+        //$google = "<script type='text/javascript' src='http://maps.google.com/maps/api/js?sensor=false'></script>";
+        $olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
+        $js = "<script type=\"text/javascript\">
+        var lon = 5;
+        var lat = 40;
+        var zoom = $zoom;
+        var map, layer, drawControl, g;
+
+        OpenLayers.ProxyHost = \"/proxy/?url=\";
+        function init(){
+            g = new OpenLayers.Format.GeoRSS();
+            map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20, projection: new OpenLayers.Projection(\"EPSG:900913\"), displayProjection: new OpenLayers.Projection(\"EPSG:4326\") });
+            var normal = new OpenLayers.Layer.Google( \"Google Map\" , {type: G_NORMAL_MAP, 'maxZoomLevel':18 } );
+            var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18 } );
+            
+            
+            var markers = new OpenLayers.Layer.Markers( \"Markers\" );
+            map.addLayer(markers);
+
+            var size = new OpenLayers.Size(20,34);
+            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+            var icon = new OpenLayers.Icon('skins/_common/icons/marker.png',size,offset);
+
+            var proj = new OpenLayers.Projection(\"EPSG:900913\");
+            var point = new OpenLayers.LonLat($lon, $lat);
+            point.transform(proj, map.getProjectionObject());
+
+
+            markers.addMarker(new OpenLayers.Marker(point,icon));
+            
+            map.addLayers([normal, hybrid]);
+
+            map.addControl(new OpenLayers.Control.MousePosition());
+            map.addControl( new OpenLayers.Control.MouseDefaults() );
+            map.addControl( new OpenLayers.Control.LayerSwitcher() );
+            map.addControl( new OpenLayers.Control.PanZoomBar() );
+
+            map.setCenter(point, $zoom);
+
+            map.events.register(\"click\", map, function(e) {
+                var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" +
+                                          + lonlat.lon
+            });
+
+        }
+        </script>";
+
+        // add the lot to the headerparams...
+        $this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
+        $this->appendArrayVar('bodyOnLoad', "init();");
+        $gtags = '<div id="map"></div>';
+        return $gtags;
+    }
 }
 ?>

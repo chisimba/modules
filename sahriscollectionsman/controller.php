@@ -272,20 +272,16 @@ class sahriscollectionsman extends controller
                 $media = $this->getParam('media');
                 
                 // parse the site name and optionally create a new one if needs be
-            $sid = $siteid;
+                $sid = $siteid;
             
             
                     
-            // get the collection id from name
-            $collid = $collectionid;
+                // get the collection id from name
+                $collid = $collectionid;
             
-            // and now the data     
-            $insarr = array(
+                // and now the data     
+                $insarr = array(
                 'userid' => $this->objUser->userId($username),
-                /*'sitename' => $sitename,
-                'siteabbr' => $siteabbr,
-                'sitemanager' => $sitemanager,
-                'siteid' => $sid,*/
                 'collectionname' => $collectionname,
                 'objname' => $objname,
                 'objtype' => $objtype,
@@ -407,6 +403,13 @@ class sahriscollectionsman extends controller
                 $details = $this->objCollOps->formatSites($sites);
                 $this->setVarByRef('details', $details);
                 return 'sitelist_tpl.php';
+                break;
+                
+            case 'sitesreport' :
+                $sites = $this->objDbColl->getAllSites();
+                $details = $this->objCollOps->sitesReport($sites);
+                $this->setVarByRef('details', $details);
+                return 'sitesreport_tpl.php';
                 break;
                 
             case 'editsite' :
