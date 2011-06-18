@@ -1865,8 +1865,8 @@ class sahriscollectionsops extends object {
                          <name>'.$site['sitename'].'</name>
                          <description>
                              <![CDATA[
-                                 <h1>'.$site['sitename'].'</h1>
-                                 <h4>'.$site['sitecontact'].'</h4>
+                                 <h1>'.$site['sitename'].'
+                                 '.$site['sitecontact'].'</h1>
                              ]]>
                          </description>
                          <Point>
