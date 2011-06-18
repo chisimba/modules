@@ -83,6 +83,11 @@ class sahriscollectionsman extends controller
             $this->objRdf        = $this->getObject ('rdf', 'rdfgen');
             $this->objCollOps    = $this->getObject('sahriscollectionsops');
             $this->objDbColl     = $this->getObject('dbsahriscollections');
+            
+            //Get the activity logger class
+            $this->objLog = $this->newObject('logactivity', 'logger');
+            //Log this module call
+            $this->objLog->log();
 
 			// Define the paths we will be needing
 			define ( "RDFAPI_INCLUDE_DIR", $this->getResourcePath ('api/', 'rdfgen'));
