@@ -1862,11 +1862,11 @@ class sahriscollectionsops extends object {
                      <Document>';
         foreach($sites as $site) {
             $kml .= '<Placemark>
-                         <name>CDATA example</name>
+                         <name>'.$site['sitename'].'</name>
                          <description>
                              <![CDATA[
                                  <h1>'.$site['sitename'].'</h1>
-                                 <p>'.$site['sitecontact'].'</p>
+                                 '.$site['sitecontact'].'
                              ]]>
                          </description>
                          <Point>
@@ -1897,10 +1897,6 @@ class sahriscollectionsops extends object {
         // $olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
         $js = '<script type="text/javascript">
     //<![CDATA[
-    
-    
-
- 
       var map = new GMap2(document.getElementById("map"));
       map.addControl(new GLargeMapControl());
       map.addControl(new GMapTypeControl());
