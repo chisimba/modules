@@ -1253,6 +1253,12 @@ class sahriscollectionsops extends object {
         $sr->link = $this->objLanguage->languageText("mod_sahriscollectionsman_sitesreport", "sahriscollectionsman");
         $sr = $sr->show();
         
+        // activity
+        $su = $this->newObject('link', 'htmlelements');
+        $su->href = $this->uri(array('action' => ''), 'logger');
+        $su->link = $this->objLanguage->languageText("mod_sahriscollectionsman_userreport", "sahriscollectionsman");
+        $su = $su->show();
+        
         // search a collection record
         $searchrec = $this->newObject('link', 'htmlelements');
         $searchrec->href = $this->uri(array('action' => 'search'));
@@ -1274,6 +1280,7 @@ class sahriscollectionsops extends object {
         $txt = "<ul";
         $txt .= "<li>".$sl."</li>";
         $txt .= "<li>".$sr."</li>";
+        $txt .= "<li>".$su."</li>";
         $txt .= "<li>".$createcoll."</li>";
         // $txt .= "<li>".$addrec."</li>";
         $txt .= "<li>".$searchrec."</li>";
