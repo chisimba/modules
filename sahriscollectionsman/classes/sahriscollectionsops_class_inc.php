@@ -1441,7 +1441,7 @@ class sahriscollectionsops extends object {
             $filename = $rec[44];
             $username = $rec[45];
             
-            if($sitename == 'site name') {
+            if($sitename == 'site name' || $sitename == 'sitename') {
                 continue;
             }
             else {
