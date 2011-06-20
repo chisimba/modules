@@ -1441,38 +1441,42 @@ class sahriscollectionsops extends object {
             $filename = $rec[44];
             $username = $rec[45];
             
-            if($media64 != NULL) {
-                $media = $this->processMediaFromCSV($media64, $username, $filename);
+            if($sitename == 'site name') {
+                continue;
             }
             else {
-                $media = NULL;
-            }
+                if($media64 != NULL) {
+                    $media = $this->processMediaFromCSV($media64, $username, $filename);
+                }
+                else {
+                    $media = NULL;
+                }
                     
-            // parse the site name and optionally create a new one if needs be
-            $sid = $this->objDbColl->getSiteByName($sitename);
-            if($sid == NULL) {
-                // $siteabbr = metaphone($sitename, 3);
-                $siteins = array('userid' => $this->objUser->userId($username), 'sitename' => $sitename, 'siteabbr' => $siteabbr, 
-                                 'sitemanager' => $sitemanager, 'sitecontact' => NULL, 'lat' => NULL, 'lon' => NULL, 'comment' => NULL);
-                $sid = $this->objDbColl->addSiteData($siteins);
-            }
+                // parse the site name and optionally create a new one if needs be
+                $sid = $this->objDbColl->getSiteByName($sitename);
+                if($sid == NULL) {
+                    // $siteabbr = metaphone($sitename, 3);
+                    $siteins = array('userid' => $this->objUser->userId($username), 'sitename' => $sitename, 'siteabbr' => $siteabbr, 
+                                     'sitemanager' => $sitemanager, 'sitecontact' => NULL, 'lat' => NULL, 'lon' => NULL, 'comment' => NULL);
+                    $sid = $this->objDbColl->addSiteData($siteins);
+                }
                     
-            $sitedet = $this->objDbColl->getSiteDetails($sid);
-            $siteaccabbr = $gensite; //$sitedet[0]['siteabbr'];
-            $sitecount = $this->objDbColl->countItemsInSite($sid);
+                $sitedet = $this->objDbColl->getSiteDetails($sid);
+                $siteaccabbr = $gensite; //$sitedet[0]['siteabbr'];
+                $sitecount = $this->objDbColl->countItemsInSite($sid);
                   
-            $siteacc = $gensite."_".$sitecount;
+                $siteacc = $gensite."_".$sitecount;
                     
-            // get the collection id from name
-            $collid = $this->objDbColl->getCollByName($collectionname);
-            if($collid == NULL) {
-                // create a collection as it doesn't exist
-                $insarr = array('userid' => $this->objUser->userId($username), 'collname' => $collectionname, 'comment' => NULL, 
-                                'sitename' => $sitename, 'siteid' => $sid);
-                $collid = $this->objDbColl->insertCollection($insarr);
-            }
-            // and now the data     
-            $insarr = array(
+                // get the collection id from name
+                $collid = $this->objDbColl->getCollByName($collectionname);
+                if($collid == NULL) {
+                    // create a collection as it doesn't exist
+                    $insarr = array('userid' => $this->objUser->userId($username), 'collname' => $collectionname, 'comment' => NULL, 
+                                    'sitename' => $sitename, 'siteid' => $sid);
+                    $collid = $this->objDbColl->insertCollection($insarr);
+                }
+                // and now the data     
+                $insarr = array(
                 'userid' => $this->objUser->userId($username),
                 'sitename' => $sitename,
                 'siteabbr' => $siteabbr,
@@ -1523,12 +1527,13 @@ class sahriscollectionsops extends object {
                 'username' => $username,
                 'media' => $media,
                 'collectionid' => $collid,
-            );
+                );
             
-            // var_dump($insarr); die();
-            $res = $this->objDbColl->insertRecord($insarr);
-            $insarr = NULL;
-            $media = NULL;
+                // var_dump($insarr); die();
+                $res = $this->objDbColl->insertRecord($insarr);
+                $insarr = NULL;
+                $media = NULL;
+            }
         }
     }
     
