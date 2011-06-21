@@ -151,6 +151,8 @@ function ajaxFunction(id){
 
 
 
+
+
 function bookmarkupdate(location,time){
     var ajaxRequest;
 
