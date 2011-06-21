@@ -14,7 +14,7 @@
  */
 
 
-function ajaxfunction23(id){
+function ajaxFunction23(id){
     
     var ajaxRequest;
 
