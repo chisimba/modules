@@ -14,27 +14,28 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/*This is a Edit User  UI
+/* This is a Edit User  UI
  *
  */
 
 
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
-$this->loadClass('link','htmlelements');
-$this->loadClass('fieldset','htmlelements');
-$objIcon = $this->newObject('geticon','htmlelements');
+$this->loadClass('link', 'htmlelements');
+$this->loadClass('fieldset', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
 
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
-$header->cssClass="manageusers";
+$header->cssClass = "manageusers";
 $header->str = "Users";
+echo '<div id="userheading">';
 echo $header->show();
-
+echo '</div>';
 $button = new button('Add Button', "Add User");
 $button->setToSubmit();
-$addUserLink =new link($this->uri(array('action' => "userRegistrationForm",'id' => $user['id'])));
+$addUserLink = new link($this->uri(array('action' => "userRegistrationForm", 'id' => $user['id'])));
 $addUserLink->link = $button->show();
 
 
@@ -42,12 +43,13 @@ $addUserLink->link = $button->show();
 
 $button = new button('searchButton', "Search");
 //$button->setToSubmit();
-$searchUserLink =new link($this->uri(array('action' => "searchusers",'id' => $user['id'])));
+$searchUserLink = new link($this->uri(array('action' => "searchusers", 'id' => $user['id'])));
 $searchUserLink->link = $button->show();
 
 
 
-echo $addUserLink->show().'&nbsp;'.$searchUserLink->show();;
+echo $addUserLink->show() . '&nbsp;' . $searchUserLink->show();
+;
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '100%';
@@ -57,12 +59,12 @@ $myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
 //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
-$myTable->addHeaderCell('Title',null,null,left,"userheader",null);
-$myTable->addHeaderCell('Username',null,null,left,"userheader",null);
-$myTable->addHeaderCell('First name',null,null,left,"userheader",null);
-$myTable->addHeaderCell('Email',null,null,left,"userheader",null);
-$myTable->addHeaderCell('Edit',null,null,left,"userheader",null);
-$myTable->addHeaderCell('Delete',null,null,left,"userheader",null);
+$myTable->addHeaderCell('Title', null, null, left, "userheader", null);
+$myTable->addHeaderCell('Username', null, null, left, "userheader", null);
+$myTable->addHeaderCell('First name', null, null, left, "userheader", null);
+$myTable->addHeaderCell('Email', null, null, left, "userheader", null);
+$myTable->addHeaderCell('Edit', null, null, left, "userheader", null);
+$myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 
 $myTable->endHeaderRow();
 
@@ -73,55 +75,50 @@ if (count($users) > 0) {
     foreach ($users as $user) {
         $myTable->startRow();
         //($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-        $myTable->addCell($user['title'],null,null,null,"user",null,null);
-        $myTable->addCell($user['username'],null,null,null,"user",null,null);
-        $myTable->addCell($user['firstname'],null,null,null,"user",null,null);
-        $myTable->addCell($user['emailaddress'],null,null,null,"user",null,null);
+        $myTable->addCell($user['title'], null, null, null, "user", null, null);
+        $myTable->addCell($user['username'], null, null, null, "user", null, null);
+        $myTable->addCell($user['firstname'], null, null, null, "user", null, null);
+        $myTable->addCell($user['emailaddress'], null, null, null, "user", null, null);
 
         $objIcon->setIcon('edit');
-        $editLink =new link($this->uri(array('action' => "editUserDetailsForm",'id' => $user['id'],'userid'=>$user['userid'],'username'=>$user['username'])));
+        $editLink = new link($this->uri(array('action' => "editUserDetailsForm", 'id' => $user['id'], 'userid' => $user['userid'], 'username' => $user['username'])));
         $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());
 
         $objIcon->setIcon('delete');
-        $deleteLink =new link($this->uri(array('action' => "deleteUser",'id' => $user['id'],'userid'=>$user['userid'])));
+        $deleteLink = new link($this->uri(array('action' => "deleteUser", 'id' => $user['id'], 'userid' => $user['userid'])));
         $deleteLink->link = $objIcon->show();
         $deleteLink->cssClass = 'deleteuser';
         //$href=$deleteLink->href;
         //$finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
-        $myTable->addCell($deleteLink->show());//$finaldeleteLink);
+        $myTable->addCell($deleteLink->show()); //$finaldeleteLink);
         //$myTable->addCell($finaldeleteLink);
-
-       
     }
 }
 
 
-$fs=new fieldset();
+$fs = new fieldset();
 $fs->setLegend("Users");
 $fs->addContent($myTable->show());
 echo $fs->show();
-
-
-
 ?>
 <script type="text/javascript">
 
-jQuery(document).ready(function(){
+    jQuery(document).ready(function(){
 
-    jQuery("a[class=deleteuser]").click(function(){
+        jQuery("a[class=deleteuser]").click(function(){
 
-        var r=confirm( "Are you sure you want to delete this user?");
-        if(r== true){
-            window.location=this.href;
+            var r=confirm( "Are you sure you want to delete this user?");
+            if(r== true){
+                window.location=this.href;
+            }
+            return false;
         }
-        return false;
+
+
+    );
+
     }
-
-
-);
-
-}
 
 
 );

@@ -291,20 +291,25 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                             </div>
                             <!--Display the products in a list view-->
                               <div id='filterDiv' title = "1b" >
+                                  
+                                  
 
                     <?php
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
 
                                         //Loop through the products and display each in it's own line
-                                        foreach ($products as $product) {
+                                        
+                                        
+                                        
+                                    //    foreach ($products as $product) {
                                             //Get number of adaptations
-                                            $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
-                                            $languages = $this->objDbAvailableProductLanguages->getProductLanguage($product['id']);
-                                            $theProduct = $product + $languages;
+//                                            $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
+//                                            $languages = $this->objDbAvailableProductLanguages->getProductLanguage($product['id']);
+//                                            $theProduct = $product + $languages;
 
-                                            echo $this->objProductUtil->populateListView($theProduct);
-                                        }
+                                            echo $this->objProductUtil->populateListView($products);
+                                     //   }
                                         //echo $this->objProductUtil->populateListView();
                     ?>
                               </div>          <!--</div>-->

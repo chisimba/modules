@@ -249,24 +249,7 @@ if ($finalstring == null)
                     </div>
                             
                             
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
+                  
                             
                             </div>
                             <!-- Center column DIv -->

@@ -142,7 +142,15 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         ?>
                     	<a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Email" width="19" height="15"></a>
+                        
+                        
+                        
+                        
                         <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" alt="Download" width="19" height="15"></a>
+                        
+                        
+                        
+                        
                     </div>
                     <br><br>
                     <span class="greyText fontBold">Author(s):</span> John Doe
