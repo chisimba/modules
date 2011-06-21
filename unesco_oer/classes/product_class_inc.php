@@ -287,6 +287,7 @@ class product extends object
                                             $this->getIdentifier(),
                                             array( 'thumbnail' => 'usrfiles/'.$results['path'])
                                         );
+            $this->setThumbnailPath($results['path']);
         }
     }
 
@@ -312,10 +313,11 @@ class product extends object
         $this->setStatus($product['status']);
         $this->setRights($product['rights']);
         $this->setRightsHolder($product['rights_holder']);
-        $this->setProvenance($product['provenance']);;
+        $this->setProvenance($product['provenance']);
         $this->setCoverage($product['coverage']);
         $this->setStatus($product['status']);
         $this->setRelation($product['relation'], $product['relation_type']);
+        $this->setThumbnailPath($product['thumbnail']);
         $this->loadThemes($product['id']);
         $this->loadKeyWords($product['id']);
     }
@@ -854,7 +856,8 @@ class product extends object
             $keyWords = array($keyWords);
         }
 
-        $this->objDbProductKeywords->deleteProductKeywordJxnByProductID($this->getIdentifier());
+//        $this->objDbProductKeywords->deleteProductKeywordJxnByProductID($this->getIdentifier());
+        $this->objDbProductKeywords->deleteProductKeywordJxnByProductID($this->_identifier);
 
         foreach ($keyWords as $keyWord) {
             if ($keyWord != NULL){
@@ -1080,6 +1083,8 @@ class product extends object
 
    function setKeyWords($keyWords) 
    {
+       $this->_keywords = array();
+
        foreach ($keyWords as $keyword) {
            array_push($this->_keywords, $this->objDbProductKeywords->getProductKeywordByID($keyword));
        }
@@ -1092,6 +1097,11 @@ class product extends object
         {
             $this->addValidationMessage('keyword', TRUE, NULL);
         }
+   }
+
+   function setThumbnailPath($path)
+   {
+       $this->_thumbnail = $path;
    }
    
    function setRights($rights)
@@ -1144,9 +1154,9 @@ class product extends object
         return $this->_language;
     }
 
-    function getLanguageDescription()
+    function getLanguageName()
     {
-        return $this->objLanguage->getLanguageDescriptionByID( $this->getLanguageID() );
+        return $this->objDbProductLanguages->getLanguageNameByID( $this->getLanguageID() );
     }
 
     function getAuthors()
@@ -1184,6 +1194,18 @@ class product extends object
         return $this->_unescothemes;
     }
 
+    function getThemeNames()
+    {
+        $themeNameArray = array();
+
+        foreach ($this->getThemes() as $themeID) {            
+            $theme = $this->objDbProductThemes->getThemeByID($themeID);
+            array_push($themeNameArray, $theme['theme']);
+        }
+
+        return $themeNameArray;
+    }
+
    function getCoverage()
    {
        return $this->_coverage;
@@ -1216,7 +1238,7 @@ class product extends object
 
    function getThumbnailPath()
    {
-       return $this->$_thumbnail;
+       return $this->_thumbnail;
    }
 
    function getRights()

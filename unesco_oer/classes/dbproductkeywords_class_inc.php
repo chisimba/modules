@@ -39,9 +39,8 @@ class dbproductkeywords extends dbtable
 
     function getProductKeywordByID($id)
     {
-        $sql = "SELECT * FROM $this->_tableName where id='$id'";
-        $result = $this->getArray($sql);
-        return $result[0];
+        $row = $this->getRow('id', $id);
+        return $row;
     }
 
     function getKeywordsByProductID($productID)
@@ -74,12 +73,9 @@ class dbproductkeywords extends dbtable
 
     function deleteProductKeywordJxnByProductID($productID)
     {
-//        $sql = "SELECT * FROM $this->product_keyword_jxn WHERE product_id='$productID'";
-//        $entries = $this->getArray($sql);
-//        foreach ($entries as $productKeywordJxn)
-//        {
-            $this->delete('product_id', $productID, $this->product_keyword_jxn);
-//        }
+        $sql = "DELETE FROM $this->product_keyword_jxn WHERE product_id = '$productID'";
+        //$this->_execute($sql);
+        $this->delete('product_id', $productID, $this->product_keyword_jxn);
     }
 }
 ?>

@@ -5,6 +5,8 @@
     $this->loadClass('form','htmlelements');
     $this->loadClass('button','htmlelements');
     $this->LoadClass('dbcomments','unesco_oer');
+    $product = $this->getObject('product','unesco_oer');
+    $product->loadProduct($productID);
     //load java script
     $js = '<script language="JavaScript" src="'.$this->getResourceUri('ratingsys.js').'" type="text/javascript"></script>';
     $this->appendArrayVar('headerParams', $js);
@@ -17,10 +19,19 @@
                 <div class="productsBackgroundColor">
                 	<div class="innerLeftContent">
                	  			<div class="tenPixelPaddingLeft">
-                        	<h2 class="blueText">Model Curricula for Journalism Education</h2><br>
+                        	<h2 class="blueText">
+                                    <?php
+                                        echo $product->getTitle();
+                                    ?>
+                                </h2><br>
 
                             <div class="leftImageHolder">
-                    	<img src="skins/unesco_oer/images/3a-placeholder.jpg" alt="Placeholder" width="121" height="156"><br>
+                                <?php
+                                    $thumbnailPath = $product->getThumbnailPath();
+                                    $imageTag = "<img src='$thumbnailPath' alt='Placeholder' width='121' height='156'<br>";
+                                    echo $imageTag;
+                                ?>
+<!--                    	<img src="skins/unesco_oer/images/3a-placeholder.jpg" alt="Placeholder" width="121" height="156"><br>-->
                     	<span id="rateStatus"></span>
 <!--                        <div id="rateMe" title="">
                             <a id="_1" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
@@ -59,13 +70,17 @@
                             </a></div>
                         </div>
                   </div>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
+                  <?php
+                    echo $product->getDescription();
+                  ?>
+<!--                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
 <br><br>
 Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue. Nunc congue, nisl a aliquet lacinia, ipsum enim feugiat purus, a lobortis orci nisl bibendum nunc.
 <br><br>
 Suspendisse sodales magna ut turpis venenatis pellentesque. Maecenas ut metus nisl, eu consectetur nibh. Aliquam aliquet, nibh in tempus bibendum, arcu diam accumsan est, vitae tempor mauris ligula ullamcorper lacus.
 <br><br>
-Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat suscipit, enim tellus tincidunt dolor, vel aliquet arcu nisi vitae nisl.<br><br>
+Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat suscipit, enim tellus tincidunt dolor, vel aliquet arcu nisi vitae nisl.<br>-->
+<br>
 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
 <div class="listingAdaptationLinkDivWide"><a href="#" class="adaptationLinks">Make a new adaptation using this UNESCO Product</a></div>
 <br><br>
@@ -153,25 +168,61 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         
                     </div>
                     <br><br>
-                    <span class="greyText fontBold">Author(s):</span> John Doe
+                    <span class="greyText fontBold">Author(s):</span> 
+                    <?php
+                    echo $product->getAuthors();
+                    ?>
 					<br><br><br>
-                    <span class="greyText fontBold">UNESCO contacts:</span> Harra Padhy | Abel Caine | Igor Nuk
+                    <span class="greyText fontBold">UNESCO contacts:</span>
+<!--                    Harra Padhy | Abel Caine | Igor Nuk-->
+                    <?php
+                    echo $product->getContacts();
+                    ?>
                     <br><br><br>
-                    <span class="greyText fontBold">Published by:</span> UNESCO
+                    <span class="greyText fontBold">Published by:</span> 
+<!--                    UNESCO-->
+                    <?php
+                    echo $product->getPublisher();
+                    ?>
                     <br><br><br>
-                    <span class="greyText fontBold">Category:</span> <a href="#" class="greyTextLink">Journalism Education</a>
+                    <span class="greyText fontBold">Category:</span> 
+<!--                    <a href="#" class="greyTextLink">Journalism Education</a>-->
+                    <?php
+                    $themes = $product->getThemeNames();
+                    foreach ($themes as $theme) {
+                        $themeTag = "<a href='#' class='greyTextLink'>$theme</a>";
+                        echo $themeTag . " ";
+                    }
+                    ?>
                     <br><br><br>
-                    <span class="greyText fontBold">Keywords:</span> <a href="#" class="greyTextLink">Journalism</a> | <a href="#" class="greyTextLink">Education</a>
+                    <span class="greyText fontBold">Keywords:</span> 
+<!--                    <a href="#" class="greyTextLink">Journalism</a> | <a href="#" class="greyTextLink">Education</a>-->
+                    <?php
+                    $keywords = $product->getKeyWords();
+                    $keywordsSize = count($keywords);
+                    for ($index = 0; $index < $keywordsSize; $index++) {
+                        $keywordText = $keywords[$index]['keyword'];
+                        $keywordTag = "<a href='#' class='greyTextLink'>$keywordText</a>";
+                        echo $keywordTag;
+                        if ($index < $keywordsSize - 1) echo " | ";
+                    }
+
+                    ?>
                     <br><br><br>
                     <span class="greyText fontBold">See language versions of this product:</span>
                     <ul>
-                    	<li><a href="#" class="liStyleLink">English</a></li>
+                        <?php
+                        $language = $product->getLanguageName();
+                        $languageTag = "<li><a href='#' class='liStyleLink'>$language</a></li>";
+                        echo $languageTag;
+                        ?>
+<!--                    	<li><a href="#" class="liStyleLink">English</a></li>
                         <li><a href="#" class="liStyleLink">Français</a></li>
                         <li><a href="#" class="liStyleLink">Español</a></li>
                         <li><a href="#" class="liStyleLink">Русский</a></li>
 
                         <li><a href="#" class="liStyleLink">لعربية</a></li>
-                        <li><a href="#" class="liStyleLink">中文</a></li>
+                        <li><a href="#" class="liStyleLink">中文</a></li>-->
                     </ul>
                     <span class="greyText fontBold">Related news:</span>
                     <br><br>

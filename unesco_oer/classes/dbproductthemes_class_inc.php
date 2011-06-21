@@ -52,6 +52,12 @@ class dbproductthemes extends dbtable {
         return $this->getArray($sql);
     }
 
+    function getThemeByID($id)
+    {
+        $row = $this->getRow('id', $id);
+        return $row;
+    }
+
     function addTheme($themeName, $umbrellID = NULL) {
         $data = array(
             'theme' => $themeName,

@@ -33,9 +33,9 @@ class dbproductlanguages extends dbtable {
         $this->insert($data);
     }
 
-    function getLanguageDescriptionByID($id){
+    function getLanguageNameByID($id){
         $row = $this->getRow('id', $id);
-        return $row['description'];
+        return $row['name'];
     }
 
     function getLanguageCodeByID($id){
