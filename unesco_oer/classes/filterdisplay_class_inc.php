@@ -99,15 +99,15 @@ class filterdisplay extends object {
 
 
 
-        
-
-        $checkbox = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_model', 'unesco_oer'));
-        $checkbox2 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_handbook', 'unesco_oer'));
-        $checkbox3 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_guide', 'unesco_oer'));
-        $checkbox4 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_manual', 'unesco_oer'));
-        $checkbox5 = new checkbox($this->objLanguage->languageText('mod_unesco_oer_filter_bestoractile', 'unesco_oer'));
 
 
+        $checkbox = new checkbox('Model');
+        $checkbox2 = new checkbox('Handbook');
+        $checkbox3 = new checkbox('Guide');
+        $checkbox4 = new checkbox('Manual');
+        $checkbox5 = new checkbox('BestPractices');
+
+ 
 
         if ($this->Filterinfo['Model'] == 'on')
             $checkbox->ischecked = true;

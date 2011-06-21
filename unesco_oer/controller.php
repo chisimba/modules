@@ -24,12 +24,14 @@ class unesco_oer extends controller {
     public $objDbAvailableProductLanguages;
     public $objUseExtra;
     public $objfilterdisplay;
+     public $objbookmarkmanager;
     public $objDbRelationType;
     public $objDbProductKeywords;
     public $objDbProductStatus;
     public $objjavafilt;
     public $objThumbUploader;
     public $objConfig;
+      
     /**
      * @var object $objLanguage Language Object
      */
@@ -81,6 +83,7 @@ class unesco_oer extends controller {
         $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
         $this->objjavafilt = $this->getObject('javafilt');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
+        $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
         //$this->objUtils = $this->getObject('utilities');
         //$this->objGoogleMap=$this->getObject('googlemapapi');
         //$this->objGoogleMap = new googlemapapi();
@@ -215,9 +218,24 @@ class unesco_oer extends controller {
         return "JavaFilter_tpl.php";
         die();
     }
+    
+     public function __bookmarkdata() {
+         $label = $this->getParam('Title');
+         $description= $this->getParam('Description');
+          $time= $this->getParam('time');
+           $url= $this->getParam('location');
+
+      $this->objbookmarkmanager->addbookmark($label,$description,$url);
+         
+         
+        
+         
+         
+        
+    }
 
     public function __JavaFilternum() {
-//        $age = getPa
+
 
 
         $temp = $this->objjavafilt->displayprods();
@@ -227,7 +245,7 @@ class unesco_oer extends controller {
     }
 
     public function __PaginationFilter() {
-//        $age = getPa
+
 
         return "paginationfilter_tpl.php";
     }

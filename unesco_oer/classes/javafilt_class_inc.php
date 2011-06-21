@@ -66,11 +66,11 @@ $NumFilter = $this->getParam('numperpage');
         if (!($AuthFilter == Null or $AuthFilter == 'All'))
             $buildstring .= ' and creator = ' . "'$AuthFilter'";
 
-        if (!($ThemeFilter == Null or $ThemeFilter == 'All'))
+       if (!($ThemeFilter == Null or $ThemeFilter == 'All'))
             $buildstring .= ' and theme = ' . "'$ThemeFilter'";
 
-        if (!($LangFilter == Null or $LangFilter == 'All'))
-            $buildstring .= ' and language = ' . "'$LangFilter'";
+       if (!($LangFilter == Null or $LangFilter == 'All'))
+           $buildstring .= ' and language = ' . "'$LangFilter'";
 
 
         if (($Model == 'on') or ($Handbook == 'on') or ($Guide == 'on') or ($Manual == 'on') or ($Besoractile == 'on'))

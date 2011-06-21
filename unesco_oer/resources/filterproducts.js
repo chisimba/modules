@@ -14,7 +14,7 @@
  */
 
 
-function ajaxFunction23(id){
+function ajaxfunction23(id){
     
     var ajaxRequest;
 
@@ -51,7 +51,7 @@ function ajaxFunction23(id){
     var handbook = document.getElementById('input_Handbook').value;
     var guide = document.getElementById('input_Guide').value;
     var manual = document.getElementById('input_Manual').value;
-    var bestprac = document.getElementById('input_Best Practices').value;
+    var bestprac = document.getElementById('input_BestPractices').value;
     var sort = document.getElementById('input_SortFilter').value
     var adaptation = document.getElementById('filterDiv').title;
     
@@ -130,7 +130,7 @@ function ajaxFunction(id){
     var handbook = document.getElementById('input_Handbook').value;
     var guide = document.getElementById('input_Guide').value;
     var manual = document.getElementById('input_Manual').value;
-    var bestprac = document.getElementById('input_Best Practices').value;
+    var bestprac = document.getElementById('input_BestPractices').value;
     var sort = document.getElementById('input_SortFilter').value
     var adaptation = document.getElementById('filterDiv').title;
 
@@ -139,16 +139,52 @@ function ajaxFunction(id){
 
               
 
-    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  ;
+    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation ;
      
     ajaxRequest.open("GET", "index.php?module=unesco_oer&action=JavaFilter&" + queryString, true);
     ajaxRequest.send(null);
      
-    ///jQuery.get("index.php?moduler=unesco_oer&action=JavaFilter&" + queryString, 
-    
-    //function(data) {
-      //jQuery('div.filterS').html(data);
-      
-   // });
+   
 
 }
+
+
+
+
+function bookmarkupdate(location,time){
+    var ajaxRequest;
+
+    try{
+        // Opera 8.0+, Firefox, Safari
+        ajaxRequest = new XMLHttpRequest();
+    } catch (e){
+        // Internet Explorer Browsers
+        try{
+            ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try{
+                ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e){
+                // Something went wrong
+                alert("Your browser broke!");
+                return false;
+            }
+        }
+    }
+  
+    var Title = document.getElementById('input_bookmarktitle').value;
+    var Description = document.getElementById('input_newComment').value;
+   
+
+
+              
+
+    var queryString = "Title=" + Title + "&Description=" + Description  + "&time=" + time + "&location=" + location ;
+     
+    ajaxRequest.open("GET", "index.php?module=unesco_oer&action=bookmarkdata&" + queryString, true);
+    ajaxRequest.send(null);
+     
+   
+
+}
+
