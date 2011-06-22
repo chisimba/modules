@@ -38,7 +38,7 @@ echo $header->show();
 
 $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 
-echo '<a href="#"><img src="skins/unesco_oer/images/new-institution.png" width="18" height="18" class="Farright"></a>';
+echo '<a href="#"><img src="skins/unesco_oer/images/icon-filter-institution-type.png" width="18" height="18" class="Farright"></a>';
 echo $institutionGUI->showNewInstitutionLink();
 echo '<br><br />';
 echo '</div>';

@@ -926,6 +926,7 @@ class unesco_oer extends controller {
     }
 
     public function __deleteInstitution() {
+         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $institutionId = $this->getParam('institutionId');
 
         $this->objDbInstitution->deleteInstitution($institutionId);

@@ -18,23 +18,30 @@ $institutionGUI->getInstitution($institutionId);
     <!-- Left Wide column DIv -->
     <div class="LeftWideColumnDiv">
         <div class="breadCrumb">
-            <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="orangeListingHeading">Product adaptation</a> | 
-            <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="greyTextTwelveSize">Politechnic of Namibia</a>
+            <a href="#" class="orangeListingHeading">Product adaptation</a> |
+            <a href="#" class="greyTextTwelveSize">
+                <?php
+                echo $institutionGUI->showInstitutionName();
+                ?>
+            </a>
         </div>
         <div class="adaptationsBackgroundColor">
             <div class="innerLeftContent">
                 <div class="tenPixelLeftPadding twentyPixelRightPadding">
-                    <h2 class="adaptationListingLink">Politechnic of Namibia
+                    <h2 class="adaptationListingLink">
+                        <?php
+                        echo $institutionGUI->showInstitutionName();
+                        ?>
                     </h2>
-                    <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#"><img src="skins/unesco_oer/images/icon-edit-section.png" class="Farright"></a>
-                    <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="greyTextLink">Edit metadata</a><br>
+                    <a><img src="skins/unesco_oer/images/icon-edit-section.png" class="Farright"></a>
+                    <a href="#" class="greyTextLink">Edit metadata</a><br>
                     <br>
                     <div class="leftImageHolderInstitution">
-                        <img src="images/3a-placeholder.jpg" alt="Placeholder" width="121" height="156"><br>
+                        <img src="skins/unesco_oer/images/3a-placeholder.jpg" alt="Placeholder" width="121" height="156"><br>
                     </div>
                     <div>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
-                    <br></div>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
+                        <br></div>
                     <br>
                     <div class="adaptationInnerPageHeding"><h3 class="pinkText">Adaptations</h3></div>
                     <br>
@@ -84,7 +91,7 @@ $institutionGUI->getInstitution($institutionId);
                         <br><br>
                         <div class="blueBackground rightAlign">
                             <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                            <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="resetLink">RESET</a> 
+                            <a href="#" class="resetLink">RESET</a>
                         </div>
 
                     </div>
@@ -96,16 +103,16 @@ $institutionGUI->getInstitution($institutionId);
                             </div>
                             <div class="rightColumInnerDiv">
                                 <div class="blueListingHeading">Model Curricula for Journalism Education</div>
-                                Adapted in <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="productAdaptationGridViewLinks">English</a>
+                                Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
                                 <br>
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="adaptationLinks">make adaptation</a></div>
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                                 </div>
 
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="bookmarkLinks">bookmark</a></div>
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                                 </div>
                             </div>
                         </div>
@@ -117,16 +124,16 @@ $institutionGUI->getInstitution($institutionId);
                             </div>
                             <div class="rightColumInnerDiv">
                                 <div class="blueListingHeading">Model Curricula for Journalism Education</div>
-                                Adapted in <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="productAdaptationGridViewLinks">English</a>
+                                Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
                                 <br>
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="adaptationLinks">make adaptation</a></div>
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                                 </div>
 
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="bookmarkLinks">bookmark</a></div>
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                                 </div>
                             </div>
                         </div>
@@ -138,16 +145,16 @@ $institutionGUI->getInstitution($institutionId);
                             </div>
                             <div class="rightColumInnerDiv">
                                 <div class="blueListingHeading">Model Curricula for Journalism Education</div>
-                                Adapted in <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="productAdaptationGridViewLinks">English</a>
+                                Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
                                 <br>
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="adaptationLinks">make adaptation</a></div>
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                                 </div>
 
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="bookmarkLinks">bookmark</a></div>
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                                 </div>
                             </div>
                         </div>
@@ -159,16 +166,16 @@ $institutionGUI->getInstitution($institutionId);
                             </div>
                             <div class="rightColumInnerDiv">
                                 <div class="blueListingHeading">Model Curricula for Journalism Education</div>
-                                Adapted in <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="productAdaptationGridViewLinks">English</a>
+                                Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
                                 <br>
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="adaptationLinks">make adaptation</a></div>
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                                 </div>
 
                                 <div class="listingAdaptationsLinkAndIcon">
                                     <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="bookmarkLinks">bookmark</a></div>
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                                 </div>
                             </div>
                         </div>
@@ -180,25 +187,25 @@ $institutionGUI->getInstitution($institutionId);
             <div class="innerRightContent">
                 <div class="rightColumn4RightPadding">
                     <div class="printEmailDownloadIcons">
-                        <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15"></a>
-                        <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#"><img src="skins/unesco_oer/images/icon-content-top-email.png" width="19" height="15"></a>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15"></a>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" width="19" height="15"></a>
                     </div>
                     <br><br>
-                    <span class="greyText fontBold">Type of institution:</span> <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="greyTextLink">School</a>
+                    <span class="greyText fontBold">Type of institution:</span> <a href="#" class="greyTextLink">School</a>
                     <br><br>
-                    <span class="greyText fontBold">Country:</span> <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="greyTextLink">Namibia</a>
+                    <span class="greyText fontBold">Country:</span> <a href="#" class="greyTextLink">Namibia</a>
                     <br><br>
                     <span class="greyText fontBold">Address:</span>124 Loremipsum leborthe 1254
                     <br><br>
-                    <span class="greyText fontBold">Institution website:</span> <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="greyTextLink">www.school.ac.za</a>
+                    <span class="greyText fontBold">Institution website:</span> <a href="#" class="greyTextLink">www.school.ac.za</a>
                     <br><br>
-                    <span class="greyText fontBold">Keywords:</span> <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="greyTextLink">Journalism</a> | <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="greyTextLink">Education</a>
+                    <span class="greyText fontBold">Keywords:</span> <a href="#" class="greyTextLink">Journalism</a> | <a href="#" class="greyTextLink">Education</a>
                     <br><br>
                     <span class="greenText fontBold">Linked groups:</span>
                     <br>
                     <div class="linkedGroups">
-                        <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="greenTextLink">Poithecnic Namibia</a><br>
-                        <a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="greenTextLink">Group 2</a>
+                        <a href="#" class="greenTextLink">Poithecnic Namibia</a><br>
+                        <a href="#" class="greenTextLink">Group 2</a>
                     </div>
                     <br><br>
                     <span class="greyText fontBold">Community related information:</span>
@@ -242,7 +249,7 @@ $institutionGUI->getInstitution($institutionId);
                         <span class="greyListingHeading">Manual for Investigative Journalists</span>
                         <br><br>
                         <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18" class="smallLisitngIcons">
-                        <div class="textNextToTheListingIconDiv"><a href="http://electricpencilinteractive.com/clients/jcse/v5/4.html#" class="adaptationLinks">See all adaptations (15)</a></div>
+                        <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
 
 
                     </div>
