@@ -13,7 +13,7 @@ ini_set('display_errors', 'Off');
 
 
 if ($adaptationstring == null)
-    $adaptationstring = 'relation is not null';
+    $adaptationstring = 'parent_id is not null';
  $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproducts.js').'" type="text/javascript"></script>';
     $this->appendArrayVar('headerParams', $js);
 
@@ -145,7 +145,7 @@ if ($this->objUser->isLoggedIn()) {
                     <div class="navitem">
                         <div class="navitemInner">
 <?php
-$abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+$abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
 $abLink->link = 'UNESCO OER PRODUCTS';
 echo $abLink->show();
 ?>
@@ -156,7 +156,7 @@ echo $abLink->show();
                     <div class="navitemOnstate">
                         <div class="navitemInnerOnstate">
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
                             $abLink->link = 'PRODUCT ADAPTATIONS';
                             echo $abLink->show();
                             ?>
@@ -204,7 +204,7 @@ echo $abLink->show();
         $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
        echo $button->show();
 
-        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
         $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
        echo $abLink->show();
         
@@ -496,7 +496,7 @@ echo $abLink->show();
                                     $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
 
                                     //If the product is an adaptation
-                                    if ($product['relation'] != NULL) {
+                                    if ($product['parent_id'] != NULL) {
                                         $featuredAdaptedProduct = $product;
                                     }
                                 }

@@ -174,7 +174,7 @@ $this->appendArrayVar('headerParams', $js);
                                     <br/>  
                                      <br/>  
                                     <?php
-                                    $abLink = new link($this->uri(array("action" => 'adddata')));
+                                    $abLink = new link($this->uri(array("action" => 'home')));
 
                                     $abLink->link = 'Products';
                                     echo  '&nbsp;'.$abLink->show();

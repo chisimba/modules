@@ -140,6 +140,12 @@ class product extends object
      */
     private $_identifier;
 
+    /**Parent ID
+     *
+     * @var <type>
+     */
+    private $_parentid;
+
     /**Relation
      *
      * @var <type>
@@ -209,7 +215,10 @@ class product extends object
     private $_objAddDataUtil;
 
     //////////   Validation objects   //////////
+   
     var $validationArray;
+
+    private $_deletionstatus;
 
 
     //////////   Constructor   //////////
@@ -240,6 +249,7 @@ class product extends object
     {
         $tempData = array();
 
+        $tempData['parent_id'] = $this->getParentID();
         $tempData['title'] = $this->getTitle();
         $tempData['alternative_title'] = $this->getAlternativeTitle();
         $tempData['resource_type'] = $this->getContentType();
@@ -260,6 +270,8 @@ class product extends object
         $tempData['relation'] = $this->getRelation();
         $tempData['relation_type'] = $this->getRelationType();
         $tempData['status'] = $this->getStatus();
+        $tempData['deleted'] = $this->isDeleted();
+        $tempData['thumbnail'] = $this->getThumbnailPath();
         
         
         if ($this->getIdentifier())
@@ -279,7 +291,10 @@ class product extends object
         $this->saveKeyWords($this->getKeyWords());
 
         $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
-        $results = $this->uploadThumbNail($path);
+        $results = FALSE;
+        if (!$this->isDeleted() && !$this->isAdaptation()){
+            $results = $this->uploadThumbNail($path);
+        }
 
         if ($results)
         {
@@ -300,6 +315,7 @@ class product extends object
         $product = $this->_objDbProducts->getProductByID($id);
 
         $this->setIdentifier($product['id']);
+        $this->setParentID($product['parent_id']);
         $this->setTitle($product['title']);
         $this->setAlternativeTitle($product['alternative_title']);
         $this->setContentType($product['resource_type']);
@@ -320,6 +336,7 @@ class product extends object
         $this->setThumbnailPath($product['thumbnail']);
         $this->loadThemes($product['id']);
         $this->loadKeyWords($product['id']);
+        $this->setDeletionStatus($product['deleted']);
     }
 
     /**This function upadates relevant fields of the product provided you use
@@ -346,6 +363,7 @@ class product extends object
         $this->setStatus($this->getParam('status'));
         $this->setKeyWords($this->getParam('keywords'));
         $this->setRelation($this->getParam('relation'), $this->getParam('relation_type'));
+        $this->setDeletionStatus(0);
 
         $themesSelected = array();
         $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
@@ -381,7 +399,7 @@ class product extends object
 
         $fileInfoArray = array();
 
-        if (!$this->objThumbUploader->isFileValid($fileInfoArray))
+        if (!$this->objThumbUploader->isFileValid($fileInfoArray) && !$this->isAdaptation())
             {
                 $valid = FALSE;
                 $this->addValidationMessage('thumbnail', $valid, 'A thumbnail is required');
@@ -405,9 +423,6 @@ class product extends object
         $this->loadClass('adddatautil','unesco_oer');
         $this->loadClass('hiddeninput', 'htmlelements');
 
-        //get parent if any
-        $product = $this->_objDbProducts->getProductByID($this->_identifier);
-
         // setup and show heading
         $header = new htmlHeading();
         $header->str = $this->objLanguage->
@@ -415,6 +430,8 @@ class product extends object
         $header->type = 1;
         echo $header->show();
         echo '<font face="Arial" color="#FF2222">(*) indicates fields that are required. </font>';
+
+        if ($this->isAdaptation()) echo '<br><font face="Arial" color="#FF2222">ADAPTATION</font>';
 
         /*                                              */
         /*      Identification fields, eg. title        */
@@ -453,12 +470,14 @@ class product extends object
                                                     );
 
         //field for the thumbnail
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . '<font color="#FF2222">* '. $this->validationArray['thumbnail']['message']. '</font>');
-        $table->endRow();
-        $table->startRow();
-        $table->addCell($this->objThumbUploader->show());
-        $table->endRow();
+        if(!$this->isAdaptation()){
+            $table->startRow();
+            $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . '<font color="#FF2222">* '. $this->validationArray['thumbnail']['message']. '</font>');
+            $table->endRow();
+            $table->startRow();
+            $table->addCell($this->objThumbUploader->show());
+            $table->endRow();
+        }
 
 //        $table->endRow();
         $fieldset = $this->newObject('fieldset','htmlelements');
@@ -603,6 +622,10 @@ class product extends object
         //TODO Load preselected keywords
         //field for keywords
         $fieldName = 'keywords';
+        $uri = $this->uri(array(
+            'action' => "saveProductMetaData",
+            'productID' => $this->_identifier,
+            'nextAction' => $nextAction));
         $form_data = new form('add_products_ui', $uri);//////created here in order to include text boxes//////
 
         // Create the selectbox object
@@ -830,10 +853,6 @@ class product extends object
         
 
         //createform, add fields to it and display
-        $uri = $this->uri(array(
-                    'action' => "saveProductMetaData",
-                    'productID' => $this->_identifier,
-                    'nextAction' => $nextAction));
         
         $form_data->extra = 'enctype="multipart/form-data"';
         $form_data->addToForm($output .'<br />' . $buttonSubmit->show() . $buttonCancel->show() . $hiddenInput->show());
@@ -1124,6 +1143,16 @@ class product extends object
        $this->_content = $content;
    }
 
+   private function setDeletionStatus($delete)
+   {
+       $this->_deletionstatus = $delete;
+   }
+
+   private function setParentID($id)
+   {
+       $this->_parentid = $id;
+   }
+
    ////////////////   GETTERS   ////////////////
 
     function getTitle()
@@ -1261,6 +1290,44 @@ class product extends object
        return $this->_content;
    }
 
+   function getParentID()
+   {
+       return $this->_parentid;
+   }
+
+   function isDeleted()
+   {
+       return $this->_deletionstatus;
+   }
+
+   function isAdaptation()
+   {
+       $temp = $this->getParentID();
+       return !empty($temp);
+   }
+
+   function deleteProduct()
+   {
+       $this->setDeletionStatus(1);
+       $this->saveProduct();
+   }
+
+   function makeAdaptation()
+   {
+       $tempId = $this->getIdentifier();
+       $tempParentID = $this->getParentID();
+
+       $this->setParentID($this->getIdentifier());
+       $this->setIdentifier(NULL);
+
+       $tempProduct = clone $this;
+       $tempProduct->saveProduct();
+
+       $this->setParentID($tempParentID);
+       $this->setIdentifier($tempId);
+
+       return $tempProduct;
+   }
 }
 
 ?>

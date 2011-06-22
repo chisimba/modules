@@ -7,6 +7,7 @@ $options = array('comment'=>'Table to store Products','collate'=>'utf8_general_c
 //define fields
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
+                'parent_id' => array('type' => 'text','length' => 32),
                 'title'=>array('type'=>'text','length'=>255,'not null'),
                 'alternative_title'=>array('type'=>'text','length'=>255,'not null'),
                 'resource_type' =>array('type' =>'text','length'=>32),
@@ -28,6 +29,7 @@ $fields = array(
                 'relation' =>array('type' =>'text','length'=>32),
                 'relation_type' =>array('type' =>'text','length'=>32),
                 'status' => array('type' => 'text', 'length'=>255),
-                'thumbnail'=>array('type'=>'text','length'=>512)
+                'thumbnail'=>array('type'=>'text','length'=>512),
+                'deleted' => array('type' => 'integer','length' => 1,'default' => '0')
  		);
 ?>

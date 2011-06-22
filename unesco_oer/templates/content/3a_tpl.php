@@ -4,7 +4,7 @@
     $this->loadClass('link', 'htmlelements');
     $this->loadClass('form','htmlelements');
     $this->loadClass('button','htmlelements');
-    $this->LoadClass('dbcomments','unesco_oer');
+    $this->loadClass('dbcomments','unesco_oer');
     $product = $this->getObject('product','unesco_oer');
     $product->loadProduct($productID);
     //load java script
@@ -13,7 +13,12 @@
 ?>
             	<div class="breadCrumb">
                 	<a href="#" class="blueText noUnderline">UNESCO OER Products</a> |
-                    <a href="#" class="blueText noUnderline">Model Curriculum for Journalism Education</a>
+                    <a href="#" class="blueText noUnderline">
+<!--                        Model Curriculum for Journalism Education-->
+                    <?php
+                        echo $product->getTitle();
+                    ?>
+                    </a>
                 </div>
 
                 <div class="productsBackgroundColor">
@@ -81,8 +86,28 @@ Suspendisse sodales magna ut turpis venenatis pellentesque. Maecenas ut metus ni
 <br><br>
 Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat suscipit, enim tellus tincidunt dolor, vel aliquet arcu nisi vitae nisl.<br>-->
 <br>
-<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-<div class="listingAdaptationLinkDivWide"><a href="#" class="adaptationLinks">Make a new adaptation using this UNESCO Product</a></div>
+<!--<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">-->
+<!--<div class="listingAdaptationLinkDivWide">-->
+<!--    <a href="#" class="adaptationLinks">Make a new adaptation using this UNESCO Product</a>-->
+<?php
+$adaptationDivStart = '<div class="listingAdaptationLinkDivWide">';
+$adaptationDivEnd = '</div>';
+$adaptationImg = '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">';
+
+if ($this->objUser->isLoggedIn()) {
+    $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID , 'prevAction' => 'home'));
+    $adaptLink = new link($uri);
+    $adaptLink->cssClass = "adaptationLinks";
+    $linkText = 'Make a new adaptation using this UNESCO Product';
+    $adaptLink->link = $linkText;
+
+    echo $adaptationImg;
+    echo $adaptationDivStart;
+    echo $adaptLink->show();
+    echo $adaptationDivEnd;
+}
+?>
+<!--</div>-->
 <br><br>
 <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
 <div class="listingAdaptationLinkDivWide"><a href="#" class="adaptationLinks">See existing adaptations of this UNESCO Product (15)</a></div>
@@ -149,10 +174,17 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         if ($this->objUser->isLoggedIn()) {
                             $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID , 'prevAction' => 'home'));
                             $editLink = new link($uri);
-                            $editLink->cssClass = "searchGoLink";
-                            $linkText = "edit product";
+                            $editLink->title = "Edit Metadata";
+                            $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';
                             $editLink->link = $linkText;
                             echo $editLink->show();
+
+                            $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID , 'prevAction' => 'home'));
+                            $deleteLink = new link($uri);
+                            $deleteLink->title = "Delete Product";
+                            $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
+                            $deleteLink->link = $linkText;
+                            echo $deleteLink->show();
                         }
                         ?>
                     	<a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15"></a>

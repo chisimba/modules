@@ -18,8 +18,8 @@
                 <div class="innerLeftContent">
                 	<div class="tenPixelPaddingLeft">
                	  <h2 class="adaptationListingLink">Model Curricula for Journalism Education</h2>
-                  <a href="#"><img src="skins/unesco_oer/images/icon-edit-section.png" class="Farright"></a>
-                  <a href="#" class="greyTextLink">Edit metadata</a><br><br>
+<!--                  <a href="#"><img src="skins/unesco_oer/images/icon-edit-section.png" class="Farright"></a>
+                  <a href="#" class="greyTextLink">Edit metadata</a><br>--><br>
                     <div class="leftImageHolder">
                     	<img src="skins/unesco_oer/images/3a-placeholder.jpg" width="121" height="156"><br />
                     	<span id="rateStatus"></span>

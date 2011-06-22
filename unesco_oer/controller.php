@@ -426,7 +426,7 @@ class unesco_oer extends controller {
     }
 
     public function requiresLogin($action) {
-        $required = array('addData', 'editProduct', 'saveProductMetaData');
+        $required = array('addData', 'editProduct', "saveProductMetaData");
         if (in_array($action, $required)) {
             return TRUE;
         } else {
@@ -1434,6 +1434,22 @@ class unesco_oer extends controller {
         }
     }
 
+    function __deleteProduct() {
+        $product = $this->getObject('product','unesco_oer');
+        $product->loadProduct($this->getParam('productID'));
+        $product->deleteProduct();
+        return $this->__home();
+    }
+
+    function __adaptProduct() {
+        $product = $this->getObject('product','unesco_oer');
+        $product->loadProduct($this->getParam('productID'));
+        $adaptation = $product->makeAdaptation();
+        $this->setVarByRef('product', $adaptation);
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return "ProductMetaData_tpl.php";
+    }
+
     //Function to display the institution editor page
     public function __institutionEditor() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -1442,6 +1458,8 @@ class unesco_oer extends controller {
 
         return "institutionEditor_tpl.php";
     }
+
+
 
     /*
      * Method to display page for creating a new relation type
