@@ -24,14 +24,13 @@ class unesco_oer extends controller {
     public $objDbAvailableProductLanguages;
     public $objUseExtra;
     public $objfilterdisplay;
-     public $objbookmarkmanager;
+    public $objbookmarkmanager;
     public $objDbRelationType;
     public $objDbProductKeywords;
     public $objDbProductStatus;
     public $objjavafilt;
     public $objThumbUploader;
     public $objConfig;
-      
     /**
      * @var object $objLanguage Language Object
      */
@@ -172,9 +171,9 @@ class unesco_oer extends controller {
     }
 
     public function __4() {
+         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $institutionId = $this->getParam('institutionId');
         $this->setVarByRef('institutionId', $institutionId);
-
 
         return "4_tpl.php";
     }
@@ -218,20 +217,14 @@ class unesco_oer extends controller {
         return "JavaFilter_tpl.php";
         die();
     }
-    
-     public function __bookmarkdata() {
-         $label = $this->getParam('Title');
-         $description= $this->getParam('Description');
-          $time= $this->getParam('time');
-           $url= $this->getParam('location');
 
-      $this->objbookmarkmanager->addbookmark($label,$description,$url);
-         
-         
-        
-         
-         
-        
+    public function __bookmarkdata() {
+        $label = $this->getParam('Title');
+        $description = $this->getParam('Description');
+        $time = $this->getParam('time');
+        $url = $this->getParam('location');
+
+        $this->objbookmarkmanager->addbookmark($label, $description, $url);
     }
 
     public function __JavaFilternum() {
@@ -778,6 +771,7 @@ class unesco_oer extends controller {
     public function __createInstitutionSubmit() {
         $name = $this->getParam('name');
         $description = $this->getParam('description');
+        
         $type = $this->getParam('type');
         $country = $this->getParam('country');
         $address1 = $this->getParam('address1');
@@ -800,9 +794,11 @@ class unesco_oer extends controller {
         $thumbnail = 'usrfiles/' . $results['path'];
 
         $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-        $institutionId = $this->objInstitutionManager->getIdOfAddedInstitution();
-        $this->setVarByRef('institutionId', $institutionId);
-        return "4_tpl.php";
+        // $institutionId = $this->objInstitutionManager->getIdOfAddedInstitution();
+        // $this->setVarByRef('institutionId', $institutionId);
+        // return "4_tpl.php";
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return "viewInstitutions_tpl.php";
     }
 
     /*
@@ -933,6 +929,7 @@ class unesco_oer extends controller {
         $institutionId = $this->getParam('institutionId');
 
         $this->objDbInstitution->deleteInstitution($institutionId);
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'viewInstitutions_tpl.php';
     }
 
@@ -1074,7 +1071,7 @@ class unesco_oer extends controller {
         $WebsiteLink = $this->getParam('websitelink');
         $GroupMembership = $this->getParam('groupmembership');
         $country = $this->getParam('country');
-        $typeOfOccupation=$this->getParam('type_of_occupation');
+        $typeOfOccupation = $this->getParam('type_of_occupation');
         $accountstatus = 1; // Default Status Active
         // Create an array of fields that cannot be empty
         $checkFields = array(
@@ -1131,7 +1128,7 @@ class unesco_oer extends controller {
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
 
             // Email Details to User
-             $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
+            $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
             //$this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             //$this->setSession('time', $password);
@@ -1179,12 +1176,12 @@ class unesco_oer extends controller {
         $postaladdress = $this->getParam('postaladdress');
         $organisation = $this->getParam('organisation');
         $jobtittle = $this->getParam('jobtittle');
-        $TypeOccapation=$this->getParam('typeofoccapation');
+        $TypeOccapation = $this->getParam('typeofoccapation');
         $WorkingPhone = $this->getParam('workingphone');
         $DescriptionText = $this->getParam('description');
         $WebsiteLink = $this->getParam('websitelink');
         $GroupMembership = $this->getParam('groupmembership');
-     
+
         $userDetails = array(
             'password' => $password,
             'repeatpassword' => $repeatpassword,
@@ -1242,7 +1239,7 @@ class unesco_oer extends controller {
         $this->objUser->updateUserSession();
         // Process Update Results
         if ($update) {
-            $this->objUseExtra->updateUserInfo($this->getParam('id'),$userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
+            $this->objUseExtra->updateUserInfo($this->getParam('id'), $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "UserListingForm_tpl.php";
         } else {
@@ -1334,12 +1331,12 @@ class unesco_oer extends controller {
         return 'confirm_tpl.php';
     }
 
-   function __groupRegistationForm() {
+    function __groupRegistationForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupRegistrationForm_tpl.php';
     }
 
-     function __groupListingForm() {
+    function __groupListingForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupListingForm_tpl.php';
     }
@@ -1354,32 +1351,31 @@ class unesco_oer extends controller {
         $address = $this->getParam('group_address');
         $city = $this->getParam('group_city');
         $state = $this->getParam('group_state');
-        $country=$this->getParam('country');
+        $country = $this->getParam('country');
         $postalcode = $this->getParam('group_postalcode');
         $website = $this->getParam('group_website');
         $institution = $this->getParam('group_institutionlink');
         $description = $this->getParam('description');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
-        $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state,$country, $postalcode, $website, $institution,$loclat,$loclong,$description);
+        $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupListingForm_tpl.php';
     }
 
-    function __groupEditingForm(){
+    function __groupEditingForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupEditingForm_tpl.php';
-
     }
 
     function __editGroup() {
-        $id=$this->getParam('id');
+        $id = $this->getParam('id');
         $name = $this->getParam('group_name');
         $email = $this->getParam('group_email');
         $address = $this->getParam('group_address');
         $city = $this->getParam('group_city');
         $state = $this->getParam('group_state');
-        $country=$this->getParam('country');
+        $country = $this->getParam('country');
         $postalcode = $this->getParam('group_postalcode');
         $website = $this->getParam('group_website');
         $institution = $this->getParam('group_institutionlink');
@@ -1507,12 +1503,10 @@ class unesco_oer extends controller {
 
     public function __viewInstitutions() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
-
-
         return "viewInstitutions_tpl.php";
     }
 
-        public function __mypage() {
+    public function __mypage() {
         //$this->setLayoutTemplate('maincontent_layout_tpl.php');
 
 
@@ -1520,4 +1514,5 @@ class unesco_oer extends controller {
     }
 
 }
+
 ?>

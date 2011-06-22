@@ -32,14 +32,16 @@ $objIcon = $this->newObject('geticon', 'htmlelements');
 $header = new htmlheading();
 $header->type = 1;
 $header->str = "Institutions";
+echo '<div id="institutionheading">';
 echo $header->show();
+
 
 $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 
 echo '<a href="#"><img src="skins/unesco_oer/images/new-institution.png" width="18" height="18" class="Farright"></a>';
 echo $institutionGUI->showNewInstitutionLink();
 echo '<br><br />';
-
+echo '</div>';
 //$institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 //$institutionGUI->showAllInstitutions();
 // retrieve data from tbl_unesco_oer_feturedproducts
@@ -55,7 +57,7 @@ if (count($Institution) > 0) {
         $institutionLink->cssClass = 'darkGreyColour';
         $institutionLink->link = $name;
 
-        $content .=  ' <div class="institutionsListView">
+        $content .= ' <div class="institutionsListView">
                     <div class="productAdaptationListViewLeftColumn">
                     	   <img src="' . $institutionGUI->showInstitutionThumbnail() . '" alt="Adaptation" width="79" height="79" class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">' . $institutionGUI->showEditInstitutionLink($Institutions['id']) . '</a> |
@@ -91,10 +93,31 @@ if (count($Institution) > 0) {
 //        $myTable->endRow();
     }
 }
-        $fieldset1 = $this->newObject('fieldset', 'htmlelements');
-        $fieldset1->setLegend('Institution List');
-        $fieldset1->addContent($content);
-        echo $fieldset1->show();
+$fieldset1 = $this->newObject('fieldset', 'htmlelements');
+$fieldset1->setLegend('Institution List');
+$fieldset1->addContent($content);
+echo $fieldset1->show();
 
 //echo $myTable->show();
 ?>
+<script type="text/javascript">
+
+    jQuery(document).ready(function(){
+
+        jQuery("a[class=deleteinstitution]").click(function(){
+
+            var r=confirm( "Are you sure you want to delete this institution?");
+            if(r== true){
+                window.location=this.href;
+            }
+            return false;
+        }
+
+
+    );
+
+    }
+
+
+);
+</script>

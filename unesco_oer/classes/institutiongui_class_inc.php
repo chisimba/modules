@@ -109,7 +109,7 @@ class institutiongui extends object {
 
     function showDeleteInstitutionLink($institutionId) {
         $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
-        $acLink->cssClass = 'greyTextLink';
+        $acLink->cssClass = 'deleteinstitution';
         $acLink->link = 'Delete';
         
         return $acLink->show();
