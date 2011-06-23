@@ -60,8 +60,8 @@ if (count($Institution) > 0) {
         $content .= ' <div class="institutionsListView">
                     <div class="productAdaptationListViewLeftColumn">
                     	   <img src="' . $institutionGUI->showInstitutionThumbnail() . '" alt="Adaptation" width="79" height="79" class="smallLisitngIcons">
-                        <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">' . $institutionGUI->showEditInstitutionLink($Institutions['id']) . '</a> |
-                        <a href="#" class="adaptationLinks">' . $institutionGUI->showDeleteInstitutionLink($Institutions['id']) . '</a></div>
+                        <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">' . $institutionGUI->showEditInstitutionLinkThumbnail($Institutions['id']) . '</a> |
+                        <a href="#" class="adaptationLinks">' . $institutionGUI->showDeleteInstitutionLinkThumbnail($Institutions['id']) . '</a></div>
                     </div>
                     <div class="productAdaptationListViewMiddleColumn">
                     	

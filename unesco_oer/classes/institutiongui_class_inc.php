@@ -135,8 +135,8 @@ class institutiongui extends object {
     function showDeleteInstitutionLinkThumbnail($institutionId) {
         $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'deleteinstitution';
-        $acLink->link = 'Delete';
-
+        $acLink->link = '<img src="skins/unesco_oer/images/icon-delete.png">';
+        
         return $acLink->show();
     }
 

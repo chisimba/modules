@@ -33,7 +33,8 @@
             $formData['websiteLink'] = $websiteLink;
             $formData['keyword1'] = $keyword1;
             $formData['keyword2'] = $keyword2;
-        }
+            $formAction = $prevFormAction;
+        }else
         //Check if an institution is being edited
         if (isset($institutionId)) {
             $institutionGUI->getInstitution($institutionId);
