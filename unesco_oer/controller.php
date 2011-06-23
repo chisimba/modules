@@ -151,6 +151,7 @@ class unesco_oer extends controller {
 //        $displayAllMostAdaptedProducts = false;s', $displayAllMostAdaptedProducts
 //        $this->setVarByRef('displayAllMostAdaptedProducts', $displayAllMostAdaptedProducts);
 
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "1a_tpl.php";
     }
 
@@ -440,6 +441,7 @@ class unesco_oer extends controller {
      */
 
     public function __controlpanel() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "controlpanel_tpl.php";
     }
 
@@ -448,14 +450,17 @@ class unesco_oer extends controller {
     }
 
     public function __editusers() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "controlpanel_tpl.php";
     }
 
     public function __editgroups() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "controlpanel_tpl.php";
     }
 
     public function __editinstitutions() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "controlpanel_tpl.php";
     }
 
@@ -1572,4 +1577,5 @@ class unesco_oer extends controller {
     }
 
 }
+
 ?>

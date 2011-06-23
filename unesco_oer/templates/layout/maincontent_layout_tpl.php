@@ -32,9 +32,9 @@ $adaptationstring = "relation is null";
                 ?>
                     <div class="logOutSearchDiv">
                         <div class="logoutSearchDivLeft">
-                            <div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
+                            <div class="nameDiv"><?php echo 'Logged in as '. $this->objUser->fullname(); ?></div>
                             <div class="logoutDiv">
-                                <div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks"><?php echo $this->objUser->fullname(); ?></div>
+                                <div class="textNextToRightFloatedImage"><a href="?module=security&action=logoff" class="prifileLinks">Log out</a></div>
                                 <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
                             </div>
                             <div class="profileBookmarkGroupsMessengerDiv">
@@ -71,15 +71,12 @@ $adaptationstring = "relation is null";
 
                                 <!-- AddThis Button BEGIN -->
                                 <div class="shareDiv">
-                                    <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=jabulane"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=jabulane"></script>
+                                    <a class="addthis_button" href="#"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=jabulane"></script>
 
                                     <!-- AddThis Button END -->
                                 </div>
 
-                                <div class="likeDiv">
-                                    <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fexample.com%2Fpage%2Fto%2Flike&amp;layout=button_count&amp;show_faces=true&amp;width=50&amp;action=like&amp;font=tahoma&amp;colorscheme=light&amp;"></iframe>
-
-                                </div>
+                                
 
 
                             </div>

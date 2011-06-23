@@ -33,7 +33,170 @@ $this->appendArrayVar('headerParams', $js);
     <body>
         <div class="blueHorizontalStrip"></div>
         <div class="mainWrapper">
-            
+            yyy
+            <div class="topContent">
+                <?php
+                if ($this->objUser->isLoggedIn()) {
+                    ?>
+                    <div class="logOutSearchDiv">
+                        <div class="logoutSearchDivLeft">
+                            <div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
+                            <div class="logoutDiv">
+                                <div class="textNextToRightFloatedImage"><a href="?module=security&action=logoff" class="prifileLinks">Log out</a></div>
+                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
+                            </div>
+                            <div class="profileBookmarkGroupsMessengerDiv">
+                                <table class="profileBookmarkGroupsMessengerTable" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td><img src="skins/unesco_oer/images/icon-my-profile.png"></td>
+                                        <td><a href="#" class="prifileLinks">
+                                                <?php
+                                                $abLink = new link($this->uri(array("action" => "editUserDetailsForm", 'id' => $this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId()), 'userid' => $this->objUser->userId())));
+                                                $abLink->link = 'My Profile';
+                                                echo $abLink->show();
+                                                ?> </a></td>
+                                        <td><img src="skins/unesco_oer/images/icon-my-bookmarks.png"></td>
+                                        <td><a href="#" class="prifileLinks">My Bookmarks</a></td>
+                                        <td><img src="skins/unesco_oer/images/icon-my-administration-tools.png"></td>
+                                        <td><a href="#" class="prifileLinks">
+                                                <?php
+                                                $abLink = new link($this->uri(array("action" => "controlpanel")));
+                                                $abLink->link = 'Administration Tools';
+                                                echo $abLink->show();
+                                                ?>
+                                            </a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><img src="skins/unesco_oer/images/icon-my-groups.png"></td>
+                                        <td><a href="#" class="prifileLinks">My Groups</a></td>
+                                        <td><img src="skins/unesco_oer/images/icon-my-messenger.png"></td>
+                                        <td><a href="#" class="prifileLinks">My Messenger</a></td>
+
+                                        <!--                                            </a></td>-->
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div class="logoutSearchDivRight">
+                            <div class="searctInputTextDiv">
+                                <div class="searchGoButton"> <!-- <a href="">
+    <!--                                    <img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>-->
+
+
+
+                                    <a href="" class="searchGoLink">
+
+
+
+
+                                    </a></div>
+                                <div class="searchInputBoxDiv">
+
+                <!--                              <input type="text" name="" id="" class="searchInput" value="Type search term here...">-->
+
+                                    <?php
+                                    $Search = $this->getobject('filterdisplay', 'unesco_oer');
+                                    echo $Search->Search($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+                                    ?>
+
+
+
+
+                                                                            <!--                                     <select name="" id="" class="searchDropDown">
+                                                                                                                <option value="">All</o    <input type="text" name="" id="" class="searchInput" value="Type search term here...">
+                                                                                                            <select name="" id="" class="searchDropDown">ption>
+                                                                                                            </select>-->
+                                </div>
+                                <div class="textNextToRightFloatedImage">Search</div><!--
+                                <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">-->
+                            </div>
+                            <div class="facebookShareDiv">
+
+                                <!-- AddThis Button BEGIN -->
+                                <div class="shareDiv">
+    <!--                                            <a class="addthis_button" href="#"><img src="#" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="#"></script>
+
+                                     AddThis Button END -->
+                                </div>
+
+                                <div class="likeDiv">
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                } else {
+                    ?>
+
+                    <div id="loginDiv">
+                        <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" >  
+                        <a href="?module=security&action=login" >Log in</a>&nbsp;   
+                        <img src="skins/unesco_oer/images/icon-filter-number-of-adaptations.png" alt="logout">  
+                        <a href="?module=unesco_oer&action=userRegistrationForm" >Register</a>
+                    </div>
+                    <?php
+                }
+                ?>
+                <div class="logoAndHeading">
+                    <img src="skins/unesco_oer/images/logo-unesco.gif" class="imgFloatRight" alt="logo">
+                    <div class="logoText">
+                        <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
+                        <h1>UNESCO OER PRODUCTS</h1>
+                    </div>
+                </div>
+                <div class="languagesDiv">
+                    <a href="?module=unesco_oer&action=changelanguege&langugae=EN" class="languagesLinksActive">English</a> |
+                    <a href="?module=unesco_oer&action=changelanguege&langugae=FR" class="languagesLinks">Français</a> |
+                    <a href="?module=unesco_oer&action=changelanguege&langugae=SP" class="languagesLinks">Español</a> |
+                    <a href="" class="languagesLinks">Русский</a> |
+                    <a href="" class="languagesLinks">لعربية</a> |
+                    <a href="" class="languagesLinks">中文</a>
+                </div>
+                <div class="mainNavigation">
+                    <div class="navitemOnstate">
+                        <div class="navitemInnerOnstate">
+                            <?php
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                            $abLink->link = 'UNESCO OER PRODUCTS';
+                            echo $abLink->show();
+                            ?>
+                        </div>
+                    </div>
+                    <div class="mainNavPipe">&nbsp;</div>
+                    <div class="navitem">
+                        <div class="navitemInner">
+                            <?php
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null', "page" => '2a_tpl.php')));
+                            $abLink->link = 'PRODUCT ADAPTATIONS';
+                            echo $abLink->show();
+                            ?>
+
+                        </div>
+                    </div>
+                    <div class="mainNavPipe"></div>
+                    <div class="navitem">
+                        <div class="navitemInner"><a href="#">GROUPS</a></div>
+                    </div>
+                    <div class="mainNavPipe"></div>
+                    <div class="navitem">
+                        <div class="navitemInner"><a href="#">REPORTING</a></div>
+                    </div>
+                    <div class="mainNavPipe"></div>
+                    <div class="navitem">
+                        <div class="navitemInner"><a href="#">ABOUT</a></div>
+                    </div>
+                    <div class="mainNavPipe"></div>
+                    <div class="navitem"><div class="navitemInner"><a href="#">CONTACT</a></div></div>
+                </div>
+            </div>
+xxxx
             <div class="mainContentHolder">
                 <div class="subNavigation"></div>
                 <!-- Left Colum -->
