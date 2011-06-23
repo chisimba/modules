@@ -11,7 +11,7 @@ $this->loadClass('filterdisplay', 'unesco_oer');
 if ($adaptationstring == null)
     $adaptationstring = "relation is not null";
 $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
-$institutionGUI->getInstitution('gen12Srv48Nme44_12149_1308021870');
+$institutionGUI->getInstitution($institutionId);
 ?>
 <div class="mainContentHolder">
     <div class="subNavigation"></div>

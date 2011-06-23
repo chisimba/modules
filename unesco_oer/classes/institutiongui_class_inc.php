@@ -102,7 +102,7 @@ class institutiongui extends object {
     function showEditInstitutionLink($institutionId) {
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'greyTextLink';
-        $acLink->link = 'Edit';
+        $acLink->link = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Edit" width="18" height="18"">';
 
         return $acLink->show();
     }
@@ -110,7 +110,7 @@ class institutiongui extends object {
     function showDeleteInstitutionLink($institutionId) {
         $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'deleteinstitution';
-        $acLink->link = 'Delete';
+        $acLink->link = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Delete" width="18" height="18"">';
         
         return $acLink->show();
     }
@@ -143,6 +143,19 @@ class institutiongui extends object {
     function showAllInstitutions() {
         return $this->_institutionmanager->getAllInstitutions();
     }
-
 }
 ?>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+    jQuery("a[class=deleteInstitution]").click(function(){
+
+        var r=confirm( "Are you sure you want to delete this institution?");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+}
+</script>
