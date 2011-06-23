@@ -414,7 +414,7 @@ class unesco_oer extends controller {
 
 
 
-
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
         return "$page";
     }
