@@ -101,7 +101,7 @@ class filterdisplay extends object {
 
 
 
-        $checkbox = new checkbox('Model');
+       $checkbox = new checkbox('Model');
         $checkbox2 = new checkbox('Handbook');
         $checkbox3 = new checkbox('Guide');
         $checkbox4 = new checkbox('Manual');

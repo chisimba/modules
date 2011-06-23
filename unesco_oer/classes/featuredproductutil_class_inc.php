@@ -37,6 +37,7 @@ class featuredproductutil extends object
                     <br>
                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                     ';
+        echo $product['thumbnail'];
         return $content;
     }
 

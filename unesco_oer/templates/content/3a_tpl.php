@@ -185,9 +185,18 @@ if ($this->objUser->isLoggedIn()) {
                             $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
                             $deleteLink->link = $linkText;
                             echo $deleteLink->show();
+                            
+                             $uri = $this->uri(array('action' => "createFeaturedProduct" , 'id' => $productID));
+                            $editLink = new link($uri);
+                            $editLink->title = "Make Featured Product";
+                            $linkText = '<img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15">';
+                            $editLink->link = $linkText;
+                            echo $editLink->show();
+                            
+                            
                         }
                         ?>
-                    	<a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15"></a>
+                    
                         <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Email" width="19" height="15"></a>
                         
                         

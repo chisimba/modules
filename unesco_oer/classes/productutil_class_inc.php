@@ -27,6 +27,7 @@ class productutil extends object {
         $this->_institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
         $this->objLanguage = $this->getObject("language", "language");
         $this->objDbProducts = $this->getObject("dbproducts", "unesco_oer");
+         $this->objDbproductlanguages = $this->getObject("dbproductlanguages", "unesco_oer");
         $this->objDbAvailableProductLanguages = $this->getObject("dbavailableproductlanguages", "unesco_oer");
         $this->objUser = $this->getObject("user", "security");
     }
@@ -90,6 +91,7 @@ class productutil extends object {
                                         <select name="" class="listingsLanguageDropDown">';
 
         $index = 0;
+         $prodLanguages = $this->objDbproductlanguages->getProductLanguages();
         foreach ($product as $languages) {
 //Check if languages is empty
             foreach ($languages as $language) {
@@ -99,7 +101,7 @@ class productutil extends object {
             }
         }
         if ($index == 0) {
-            $content .= '<option value="">' . $product['language'] . '</option>';
+            $content .= '<option value="">' . $prodLanguages[0]['name'] . '</option>';  // REMOVE HARDCODE ENGLISH WHEN LANGUAGES TABLES FIXED
         }
 
         $content .='
@@ -300,6 +302,8 @@ class productutil extends object {
                 ";
 
             $index = 0;
+            $prodLanguages = $this->objDbproductlanguages->getProductLanguages();
+            
             foreach ($product as $languages) {
 //Check if languages is empty
                 foreach ($languages as $language) {
@@ -309,7 +313,7 @@ class productutil extends object {
                 }
             }
             if ($index == 0) {
-                $content .= '<option value="">' . $product['language'] . '</option>';
+                $content .= '<option value="">' . $prodLanguages[0]['name']. '</option>';
             }
 
             $content .= "</select>
@@ -640,7 +644,7 @@ class productutil extends object {
 
         foreach ($mostRatedProducts as $childProduct) {
 //Get the original products
-            $product = $objDbProducts->getProductById($childProduct['product_id']);
+            $product = $objDbProducts->getProductById($childProduct['id']);
 //Get number of adaptations for the product
             $product['rating'] = $childProduct['avg_score'];
 

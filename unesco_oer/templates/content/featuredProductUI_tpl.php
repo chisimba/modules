@@ -46,7 +46,7 @@ if (count($products) > 0){
     $i=1;
     foreach ($products as $product) {
         $objIcon->setIcon('select');
-        $newAdaptationLink = new link($this->uri(array('action' => "createFeaturedProduct" , 'id' => $product['puid'])));
+        $newAdaptationLink = new link($this->uri(array('action' => "createFeaturedProduct" , 'id' => $product['id'])));
         $newAdaptationLink->link = $objIcon->show();
         $table->startRow();
         $table->addCell($i++.$newAdaptationLink->show());

@@ -47,11 +47,11 @@ function ajaxFunction23(id){
     var lang = document.getElementById('input_LanguageFilter').value;
     var auth = document.getElementById('input_AuthorFilter').value;
     var numperpage = document.getElementById('input_NumFilter').value;
-    var model = document.getElementById('input_Model').value;
-    var handbook = document.getElementById('input_Handbook').value;
-    var guide = document.getElementById('input_Guide').value;
-    var manual = document.getElementById('input_Manual').value;
-    var bestprac = document.getElementById('input_BestPractices').value;
+    var model = document.getElementById('input_Model').checked;
+    var handbook = document.getElementById('input_Handbook').checked;
+    var guide = document.getElementById('input_Guide').checked;
+    var manual = document.getElementById('input_Manual').checked;
+    var bestprac = document.getElementById('input_BestPractices').checked;
     var sort = document.getElementById('input_SortFilter').value
     var adaptation = document.getElementById('filterDiv').title;
     
@@ -62,7 +62,7 @@ function ajaxFunction23(id){
 
               
 
-    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  ;
+    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&models=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  ;
      
     ajaxRequest.open("GET", "index.php?module=unesco_oer&action=JavaFilternum&" + queryString, true);
     ajaxRequest.send(null);
@@ -126,11 +126,11 @@ function ajaxFunction(id){
     var lang = document.getElementById('input_LanguageFilter').value;
     var auth = document.getElementById('input_AuthorFilter').value;
     var numperpage = document.getElementById('input_NumFilter').value;
-    var model = document.getElementById('input_Model').value;
-    var handbook = document.getElementById('input_Handbook').value;
-    var guide = document.getElementById('input_Guide').value;
-    var manual = document.getElementById('input_Manual').value;
-    var bestprac = document.getElementById('input_BestPractices').value;
+    var model = document.getElementById('input_Model').checked;
+    var handbook = document.getElementById('input_Handbook').checked;
+    var guide = document.getElementById('input_Guide').checked;
+    var manual = document.getElementById('input_Manual').checked;
+    var bestprac = document.getElementById('input_BestPractices').checked;
     var sort = document.getElementById('input_SortFilter').value
     var adaptation = document.getElementById('filterDiv').title;
 

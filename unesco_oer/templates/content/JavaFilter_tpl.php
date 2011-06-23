@@ -81,29 +81,29 @@ switch ($pagelayout){
 //        if (!($LangFilter == Null or $LangFilter == 'All'))
 //            $buildstring .= ' and language = ' . "'$LangFilter'";
 
-
-        if (($Model == 'on') or ($Handbook == 'on') or ($Guide == 'on') or ($Manual == 'on') or ($Besoractile == 'on'))
-            $buildstring .= ' and (';
-
-        if ($Model == 'on')
-            $buildstring .= ' resource_type = "Model" or';
-        if ($Handbook == 'on')
-            $buildstring .= ' resource_type = "Handbook" or';
-        if ($Guide == 'on')
-            $buildstring .= ' resource_type = "Guide" or';
-        if ($Manual == 'on')
-            $buildstring .= ' resource_type = "Manual" or';
-        if ($Besoractile == 'on')
-            $buildstring .= ' resource_type = "Besoractile" or';
-
-        $length = strlen($buildstring);
-
-        if (($Model == 'on') or ($Handbook == 'on') or ($Guide == 'on') or ($Manual == 'on') or ($Besoractile == 'on')) {
-            $buildstring = substr($buildstring, 0, ($length - 2));
-
-            $buildstring .= ')';
-        }
-
+//
+//        if (($Model == 'on') or ($Handbook == 'on') or ($Guide == 'on') or ($Manual == 'on') or ($Besoractile == 'on'))
+//            $buildstring .= ' and (';
+//
+//        if ($Model == 'on')
+//            $buildstring .= ' resource_type = "Model" or';
+//        if ($Handbook == 'on')
+//            $buildstring .= ' resource_type = "Handbook" or';
+//        if ($Guide == 'on')
+//            $buildstring .= ' resource_type = "Guide" or';
+//        if ($Manual == 'on')
+//            $buildstring .= ' resource_type = "Manual" or';
+//        if ($Besoractile == 'on')
+//            $buildstring .= ' resource_type = "Besoractile" or';
+//
+//        $length = strlen($buildstring);
+//
+//        if (($Model == 'on') or ($Handbook == 'on') or ($Guide == 'on') or ($Manual == 'on') or ($Besoractile == 'on')) {
+//            $buildstring = substr($buildstring, 0, ($length - 2));
+//
+//            $buildstring .= ')';
+//        }
+//
 
 
         if ($sort == 'Date Added')
