@@ -696,6 +696,7 @@ class unesco_oer extends controller {
      */
 
     public function __createFeaturedProduct() {
+       
         $featuredproduct = $this->getParam('id');
         $this->objDbFeaturedProduct->overRightCurrentFeaturedProduct($featuredproduct);
         return "1a_tpl.php";

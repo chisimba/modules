@@ -10,28 +10,11 @@ if ($finalstring == null) {
     $finalstring = 'parent_id is null';
     $TotalEntries = 'parent_id is null';
 }
-
+  $this->setLayoutTemplate('maincontent_layout_tpl.php');
+       
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
 ?>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>UNESCO</title>
-
-        <!--[if IE]>
-            <style type="text/css" media="screen">
-            body {
-    	behavior: url(csshover.htc);
-            }
-            </style>
-        <![endif]-->
-    </head>
-
-    <body>
-        <div class="blueHorizontalStrip"></div>
         <div class="mainWrapper">
             
             <div class="mainContentHolder">
@@ -407,8 +390,10 @@ $this->appendArrayVar('headerParams', $js);
 
                     <?php
                     $objTabs = $this->newObject('tabcontent', 'htmlelements');
-                    $objTabs->setWidth(180);
-//                                        $objTabs->cssClass = "tabsOnState";
+                    $objTabs->setWidth(180);                                        
+                    
+                    
+                    
                     $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $displayAllMostAdaptedProducts);
                     $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
                     $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
@@ -444,14 +429,4 @@ $this->appendArrayVar('headerParams', $js);
                 <br>
             </div>
         </div>
-    </div>
-    <!-- Footer-->
-    
-</div>
-</body>
-</html>
-<script type="text/javascript">
-    $(document).ready(function(){
-        
-    });
-</script>
+  

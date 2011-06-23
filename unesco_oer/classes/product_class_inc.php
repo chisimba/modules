@@ -428,9 +428,10 @@ class product extends object
         $header->str = $this->objLanguage->
                 languageText('mod_unesco_oer_product_upload_heading', 'unesco_oer');
         $header->type = 1;
+        echo '<div id="productmetaheading">';
         echo $header->show();
         echo '<font face="Arial" color="#FF2222">(*) indicates fields that are required. </font>';
-
+        echo '</div>';
         if ($this->isAdaptation()) echo '<br><font face="Arial" color="#FF2222">ADAPTATION</font>';
 
         /*                                              */

@@ -46,9 +46,9 @@
             	<div class="logoutSearchDivLeft">
                 	<div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
                     <div class="logoutDiv">
-                    	<div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
-                        <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
-                    </div>
+                            <div class="textNextToRightFloatedImage"><a href="?module=security&action=logoff" class="prifileLinks">Log out</a></div>
+                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
+                        </div>
                     <div class="profileBookmarkGroupsMessengerDiv">
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
