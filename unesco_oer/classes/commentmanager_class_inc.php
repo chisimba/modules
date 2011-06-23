@@ -55,7 +55,7 @@ class commentmanager extends object {
         $commentText->setCssClass("commentTextBox");
 
         //TODO make parameter pagename dynamic
-        $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
+        $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'ViewProduct'));
         $commentLink = new link($uri);
         $commentLink->cssClass = "searchGoLink";
         $linkText = $this->objLanguage->

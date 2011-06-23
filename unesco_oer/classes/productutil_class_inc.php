@@ -66,11 +66,20 @@ class productutil extends object {
             $product['noOfAdaptations'] = 0;
         }
 
+        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid , 'prevAction' => 'home'));
+        $adaptLink = new link($uri);
+        $adaptLink->cssClass = "adaptationLinks";
+        $linkText = '  ';
+        $adaptLink->link = $linkText;
+
+        $objUser = $this->getObject('user', 'security');
+        $imageBottomFlag = $this->objUser->isLoggedIn() ? '<div class="imageBotomFlag">'. $adaptLink->show() .'</div>' : '';
+
         $content.='
                                 <div class="imageGridListing">
                                     <div class="imageTopFlag"></div>
                                     <img src="' . $product['thumbnail'] . '" width="79" height="101">
-                                    <div class="imageBotomFlag"></div>
+                                    '. $imageBottomFlag .'
                                 </div>
                                 <br>
                                 <div class="blueListingHeading">' . $abLink->show() . '</div>

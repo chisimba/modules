@@ -922,7 +922,7 @@ class unesco_oer extends controller {
         $this->objDbComments->addComment($id, $this->objUser->fullname(), $comment);
 
         if ($nextPage != NULL) {
-            $this->nextAction($nextPage);
+            $this->nextAction($nextPage, array('id' => $id));
         } else {
             return $this->__addData();
         }
@@ -947,11 +947,11 @@ class unesco_oer extends controller {
      */
 
     public function __submitProductRating() {
-        $id = $this->getParam('productID');
+        $id = $this->getParam('id');
         $rating = $this->getParam("rateSubmit");
 
         $this->objDbProductRatings->addRating($id, $rating);
-        return $this->nextAction($this->getParam('prevAction'));
+        return $this->nextAction($this->getParam('prevAction'), array('id' => $id));
     }
 
     public function __deleteInstitution() {

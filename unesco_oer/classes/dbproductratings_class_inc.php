@@ -18,7 +18,7 @@
 class dbproductratings extends dbtable {
 
     function init() {
-        parent::init("tbl_unesco_oer_available_product_languages");
+        parent::init("tbl_unesco_oer_product_ratings");
     }
 
     function getMostRatedProducts() {
@@ -27,10 +27,10 @@ class dbproductratings extends dbtable {
         return $this->getArray($sql);
     }
 
-        function addRating($product_id, $rating) {
+    function addRating($product_id, $rating) {
         $data = array(
-            'product_id' => $product_id,
-            'score' => $rating,
+        'product_id' => $product_id,
+        'score' => $rating,
         );
 
         $this->insert($data);
