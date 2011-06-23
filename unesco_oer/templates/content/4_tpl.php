@@ -12,6 +12,8 @@ if ($adaptationstring == null)
     $adaptationstring = "relation is not null";
 $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 $institutionGUI->getInstitution($institutionId);
+
+
 ?>
 <div class="mainContentHolder">
     <div class="subNavigation"></div>

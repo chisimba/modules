@@ -95,4 +95,22 @@
         <status>Published</status>
     </tbl_unesco_oer_product_status>
 
+        <!-- Institution types   -->
+    <tbl_unesco_oer_institution_types>
+        <id>insttype_1</id>
+        <type>IGO</type>
+    </tbl_unesco_oer_institution_types>
+    <tbl_unesco_oer_institution_types>
+        <id>insttype_2</id>
+        <type>NGO</type>
+    </tbl_unesco_oer_institution_types>
+    <tbl_unesco_oer_institution_types>
+        <id>insttype_3</id>
+        <type>Private Sector</type>
+    </tbl_unesco_oer_institution_types>
+        <tbl_unesco_oer_institution_types>
+        <id>insttype_4</id>
+        <type>School</type>
+    </tbl_unesco_oer_institution_types>
+
 </defaultdata>

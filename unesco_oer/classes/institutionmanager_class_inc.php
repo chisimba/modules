@@ -21,13 +21,13 @@ class institutionmanager extends object {
     private $_institution;
     private $_objDbInstitution;
     private $_objDbInstitutionType;
-    private $_objDbCountries;
+    private $_objCountry;
     private $_validation;
 
     function init() {
         $this->_objDbInstitution = $this->getObject('dbinstitution');
         $this->_objDbInstitutionType = $this->getObject('dbinstitutiontypes');
-        $this->_objDbCountries = $this->getObject('dbcountries');
+        $this->_objCountry = $this->getObject('languagecode', 'language');
         $this->_institution = $this->getObject('institution');
         $this->_institutionList = array();
         $this->_validation['valid'] = TRUE;
@@ -41,7 +41,7 @@ class institutionmanager extends object {
 
     public function editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
 
-      $this->_objDbInstitution->editInstitution($id, $name, $description, $type,
+        $this->_objDbInstitution->editInstitution($id, $name, $description, $type,
                 $country, $address1, $address2, $address3, $zip,
                 $city, $websiteLink, $keyword1, $keyword2,
                 $thumbnail);
@@ -124,10 +124,11 @@ class institutionmanager extends object {
         return $this->_institution->getWebsiteLink();
     }
 
+    //Get the country name by using the country ID stored in the database
     function getInstitutionCountry() {
         $countryId = $this->_institution->getCountry();
 
-        return $this->_objDbCountries->getCountryName($countryId);
+        return $this->_objCountry->getName($countryId);
     }
 
     function getInstitutionCountryId() {
@@ -178,7 +179,7 @@ class institutionmanager extends object {
     }
 
     function validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
-        $this->_validation['valid']= TRUE;
+        $this->_validation['valid'] = TRUE;
         //Check if a name has been provided
         if (empty($name)) {
             $this->_validation['valid'] = FALSE;
@@ -231,14 +232,14 @@ class institutionmanager extends object {
             $this->_validation['valid'] = FALSE;
             $this->_validation['keyword1'] = "Please provide at least one keyword.";
         }
-        
+
         //Ensure that thumbnail is provided
         if (empty($thumbnail)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['thumbnail'] = "Please provide a thumbnail.";
         }
 
-         return $this->_validation;
+        return $this->_validation;
     }
 
 }
