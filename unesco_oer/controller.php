@@ -171,7 +171,7 @@ class unesco_oer extends controller {
     }
 
     public function __4() {
-         $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $institutionId = $this->getParam('institutionId');
         $this->setVarByRef('institutionId', $institutionId);
 
@@ -771,7 +771,6 @@ class unesco_oer extends controller {
     public function __createInstitutionSubmit() {
         $name = $this->getParam('name');
         $description = $this->getParam('description');
-        
         $type = $this->getParam('type');
         $country = $this->getParam('country');
         $address1 = $this->getParam('address1');
@@ -782,7 +781,11 @@ class unesco_oer extends controller {
         $websiteLink = $this->getParam('websiteLink');
         $keyword1 = $this->getParam('keyword1');
         $keyword2 = $this->getParam('keyword2');
-        //$thumbnail = $this->getParam('thumbnail');
+
+        //Form related data members
+        $formAction = $this->getParam('formAction');
+        $formError = false;
+        $this->setVarByRef('formError', $formError);
 
         $path = 'unesco_oer/institutions/' . $name . '/thumbnail/';
         try {
@@ -793,12 +796,35 @@ class unesco_oer extends controller {
         }
         $thumbnail = 'usrfiles/' . $results['path'];
 
-        $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-        // $institutionId = $this->objInstitutionManager->getIdOfAddedInstitution();
-        // $this->setVarByRef('institutionId', $institutionId);
-        // return "4_tpl.php";
-        $this->setLayoutTemplate('maincontent_layout_tpl.php');
-        return "viewInstitutions_tpl.php";
+        $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+        if ($validate['valid']) {
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+
+            return "viewInstitutions_tpl.php";
+        } else {
+            //There has been an error, go back to the form to fix it
+            $formError = true;
+            $this->setVarByRef('formError', $formError);
+
+            $this->setVarByRef('name', $name);
+            $this->setVarByRef('description', $description);
+            $this->setVarByRef('type', $type);
+            $this->setVarByRef('country', $country);
+            $this->setVarByRef('address1', $address1);
+            $this->setVarByRef('address2', $address2);
+            $this->setVarByRef('address3', $address3);
+            $this->setVarByRef('zip', $zip);
+            $this->setVarByRef('city', $city);
+            $this->setVarByRef('websiteLink', $websiteLink);
+            $this->setVarByRef('keyword1', $keyword1);
+            $this->setVarByRef('keyword2', $keyword2);
+            $this->setVarByRef('formAction', $formAction);
+            $this->setVarByRef('errorMessage', $validate);
+
+            return "institutionEditor_tpl.php";
+        }
     }
 
     /*
@@ -926,7 +952,7 @@ class unesco_oer extends controller {
     }
 
     public function __deleteInstitution() {
-         $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $institutionId = $this->getParam('institutionId');
 
         $this->objDbInstitution->deleteInstitution($institutionId);
@@ -1432,14 +1458,14 @@ class unesco_oer extends controller {
     }
 
     function __deleteProduct() {
-        $product = $this->getObject('product','unesco_oer');
+        $product = $this->getObject('product', 'unesco_oer');
         $product->loadProduct($this->getParam('productID'));
         $product->deleteProduct();
         return $this->__home();
     }
 
     function __adaptProduct() {
-        $product = $this->getObject('product','unesco_oer');
+        $product = $this->getObject('product', 'unesco_oer');
         $product->loadProduct($this->getParam('productID'));
         $adaptation = $product->makeAdaptation();
         $this->setVarByRef('product', $adaptation);
@@ -1455,8 +1481,6 @@ class unesco_oer extends controller {
 
         return "institutionEditor_tpl.php";
     }
-
-
 
     /*
      * Method to display page for creating a new relation type
@@ -1515,5 +1539,4 @@ class unesco_oer extends controller {
     }
 
 }
-
 ?>

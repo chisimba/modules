@@ -115,6 +115,31 @@ class institutiongui extends object {
         return $acLink->show();
     }
 
+
+    function showNewInstitutionLinkThumbnail() {
+        $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => NULL)));
+        $acLink->cssClass = 'adaptationListingLink';
+        $acLink->link = 'Create new institution';
+
+        return $acLink->show();
+    }
+
+    function showEditInstitutionLinkThumbnail($institutionId) {
+        $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $institutionId)));
+        $acLink->cssClass = 'Farright';
+        $acLink->link = '<img src="skins/unesco_oer/images/icon-edit-section.png">';
+
+        return $acLink->show();
+    }
+
+    function showDeleteInstitutionLinkThumbnail($institutionId) {
+        $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
+        $acLink->cssClass = 'deleteinstitution';
+        $acLink->link = 'Delete';
+
+        return $acLink->show();
+    }
+
     function showAllInstitutions() {
         return $this->_institutionmanager->getAllInstitutions();
     }

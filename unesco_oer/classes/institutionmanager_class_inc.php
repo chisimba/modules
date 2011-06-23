@@ -14,6 +14,7 @@
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 class institutionmanager extends object {
 
     private $_institutionList;
@@ -21,6 +22,7 @@ class institutionmanager extends object {
     private $_objDbInstitution;
     private $_objDbInstitutionType;
     private $_objDbCountries;
+    private $_validation;
 
     function init() {
         $this->_objDbInstitution = $this->getObject('dbinstitution');
@@ -28,28 +30,21 @@ class institutionmanager extends object {
         $this->_objDbCountries = $this->getObject('dbcountries');
         $this->_institution = $this->getObject('institution');
         $this->_institutionList = array();
+        $this->_validation['valid'] = TRUE;
     }
 
-    public function addInstitution($name, $description, $type, $country, 
-                                    $address1, $address2, $address3, $zip, $city,
-                                    $websiteLink, $keyword1, $keyword2, $thumbnail) {
-
-        
+    public function addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
         $this->_objDbInstitution->addInstitution($name, $description, $type,
                 $country, $address1, $address2, $address3, $zip,
                 $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
     }
 
-    public function editInstitution($id, $name, $description, $type, $country, 
-                                    $address1, $address2, $address3, $zip, $city,
-                                    $websiteLink, $keyword1, $keyword2, $thumbnail) {
+    public function editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
 
-        echo "Edit institution";
-
-        $this->_objDbInstitution->editInstitution($id, $name, $description, $type, 
-                                    $country, $address1, $address2, $address3, $zip,
-                                    $city, $websiteLink, $keyword1, $keyword2,
-                                    $thumbnail);
+      $this->_objDbInstitution->editInstitution($id, $name, $description, $type,
+                $country, $address1, $address2, $address3, $zip,
+                $city, $websiteLink, $keyword1, $keyword2,
+                $thumbnail);
     }
 
     public function removeInstitution($id) {
@@ -135,7 +130,7 @@ class institutionmanager extends object {
         return $this->_objDbCountries->getCountryName($countryId);
     }
 
-        function getInstitutionCountryId() {
+    function getInstitutionCountryId() {
         return $this->_institution->getCountry();
     }
 
@@ -180,6 +175,70 @@ class institutionmanager extends object {
         $institutionData['thumbnail'] = $this->getInstitutionThumbnail();
 
         return $institutionData;
+    }
+
+    function validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
+        $this->_validation['valid']= TRUE;
+        //Check if a name has been provided
+        if (isempty($name)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['name'] = "Please enter a name for the institution.";
+        }
+
+        //Ensure that a description has been provided
+        if (isempty($description)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['description'] = "Please provide a description for the institution.";
+        }
+
+        //Ensure that a type has been selected
+        if (isempty($type)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['type'] = "Please select a type for the institution.";
+        }
+
+        //Ensure that a country has been selected
+        if (isempty($type)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['country'] = "Please select a country for the institution.";
+        }
+        //Ensure that an address1 has been provided
+        if (isempty($address1)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['address1'] = "Please provide a valid address for the institution.";
+        }
+
+        //Ensure that a city has been provided
+        if (isempty($city)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['city'] = "Please provide a city for the institution.";
+        }
+
+        //Ensure that a zip has been provided
+        if (isempty($zip)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['zip'] = "Please provide a valid zip/postal code.";
+        }
+
+        //Ensure that a websitelink has been provided
+        if (isempty($websiteLink)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['websiteLink'] = "Please provide a valid website link.";
+        }
+
+        //Ensure that at least 1 keyword has been provided
+        if (isempty($keyword1)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['keyword1'] = "Please provide at least one keyword.";
+        }
+        
+        //Ensure that thumbnail is provided
+        if (isempty($thumbnail)) {
+            $this->_validation['valid'] = FALSE;
+            $this->_validation['thumbnail'] = "Please provide a thumbnail.";
+        }
+
+         return $this->_validation;
     }
 
 }

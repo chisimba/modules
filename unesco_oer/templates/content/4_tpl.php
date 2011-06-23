@@ -33,14 +33,25 @@ $institutionGUI->getInstitution($institutionId);
                         echo $institutionGUI->showInstitutionName();
                         ?>
                     </h2>
-                    <a><img src="skins/unesco_oer/images/icon-edit-section.png" class="Farright"></a>
-                    <a href="#" class="greyTextLink">Edit metadata</a><br>
+                    <a>
+                        <?php
+                        echo $institutionGUI->showEditInstitutionLinkThumbnail($institutionId);
+                        ?>
+                    </a>
+                    <a>
+                        <?php
+                        echo $institutionGUI->showEditInstitutionLink($institutionId);
+                        ?>
+                    </a><br>
                     <br>
                     <div class="leftImageHolderInstitution">
                         <img src="skins/unesco_oer/images/3a-placeholder.jpg" alt="Placeholder" width="121" height="156"><br>
+                         <?php
+                        echo $institutionGUI->showInstitutionDescription();
+                        ?>
                     </div>
                     <div>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
+                       
                         <br></div>
                     <br>
                     <div class="adaptationInnerPageHeding"><h3 class="pinkText">Adaptations</h3></div>
