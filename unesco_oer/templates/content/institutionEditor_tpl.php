@@ -42,12 +42,12 @@
             $tableErrors->cssClass = "moduleHeader";
 
             foreach ($errorMessage as $key => $message) {
-                if(strlen($message)>1){
-                $tableErrors->startRow();
-                $required = '<span class="required_field"> * ' . $message . '</span>';
-                $requiredField[$key] = '<span class="required_field"> * </span>';
-                $tableErrors->addCell($required);
-                $tableErrors->endRow();
+                if (strlen($message) > 1) {
+                    $tableErrors->startRow();
+                    $required = '<span class="required_field"> * ' . $message . '</span>';
+                    $requiredField[$key] = '<span class="required_field"> * </span>';
+                    $tableErrors->addCell($required);
+                    $tableErrors->endRow();
                 }
             }
 
@@ -96,7 +96,6 @@
                 $title, 4, 'name', 0, $name, $tableinstitutioninfo
         );
         //$tableinstitutioninfo->addCell('*');
-
         //field for the description
         $description = $formData['description'];
         $editor = $this->newObject('htmlarea', 'htmlelements');
@@ -293,15 +292,29 @@
         $countryTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer') . $requiredField['country'];
         $this->_objAddDataUtil->addTitleToRow($countryTitle, 4, $table);
         $table->endRow();
+        
         $table->startRow();
-        $this->objDbCountries = $this->getObject('dbcountries');
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer');
-        $countryList = $this->objDbCountries->getAllCountries();
-        $this->_objAddDataUtil->addDropDownToRow(
-                'country', $countryList, $institutionGUI->showInstitutionCountryId(), 'countryname', $table, 'id'
-        );
+        $objCountries = &$this->getObject('languagecode', 'language');
+        //$table->addCell($this->objLanguage->languageText('word_country', 'system'));
+        if (!empty($formData['country'])) {
+            $table->addCell($objCountries->countryAlpha($formData['country']));
+        } else {
+            $table->addCell($objCountries->countryAlpha());
+        }
         $table->endRow();
 
+//        $table->startRow();
+//        $countryTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer') . $requiredField['country'];
+//        $this->_objAddDataUtil->addTitleToRow($countryTitle, 4, $table);
+//        $table->endRow();
+//        $table->startRow();
+//        $this->objDbCountries = $this->getObject('dbcountries');
+////        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer');
+//        $countryList = $this->objDbCountries->getAllCountries();
+//        $this->_objAddDataUtil->addDropDownToRow(
+//                'country', $countryList, $institutionGUI->showInstitutionCountryId(), 'countryname', $table, 'id'
+//        );
+//        $table->endRow();
         //Field for city
         $table->startRow();
         $city = $formData['city'];
