@@ -118,8 +118,8 @@ class institutiongui extends object {
 
     function showNewInstitutionLinkThumbnail() {
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => NULL)));
-        $acLink->cssClass = 'adaptationListingLink';
-        $acLink->link = 'Create new institution';
+        $acLink->cssClass = 'Farright';
+        $acLink->link = '<img src="skins/unesco_oer/images/icon-filter-institution-type.png" width="18" height="18">';
 
         return $acLink->show();
     }
