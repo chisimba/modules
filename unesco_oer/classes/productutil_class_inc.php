@@ -648,7 +648,7 @@ class productutil extends object {
 //Get number of adaptations for the product
             $product['rating'] = $childProduct['avg_score'];
 
-//Check if the creator is a group or an institution
+////Check if the creator is a group or an institution
             $isGroupCreator = $objDbGroups->isGroup($product['creator']);
 
             if ($isGroupCreator == true) {
@@ -657,7 +657,8 @@ class productutil extends object {
                 $thumbnail = $objDbInstitution->getInstitutionThumbnail($product['creator']);
             }
 
-            $product['institution_thumbnail'] = $thumbnail['thumbnail'];
+            $product['institution_thumbnail'] = $product['thumbnail'];
+            
 //$product['institution'] = $this->objInstitution->getInstitution();
             $content .= $this->populateMostRated($product);
         }
