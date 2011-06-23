@@ -147,9 +147,26 @@ switch ($pagelayout){
             $result= call_user_func_array("array_intersect",$filter_empty_arrays );
             }
             
-            
+           else  if ($total=1){
+               $results = $filter_empty_arrays;
+                  $result = array(); //convert to 1d array
+                   $i=0;
+                      foreach ($results as $result){
+                            
+                              $result[$i] = $results['product_id'];
+                                $i++;
+        }
+           }
+          else {
+
+              $result = array(
+                array(0, 1, 2),
+                    array(3, 4, 5),
+                    );
+ //convert to 1d array
+               
+          }
         
-         
       
        
        
@@ -252,13 +269,23 @@ switch ($pagelayout){
                                         $objTable->width = NULL;
 
 
-                                        $products = $this->objDbProducts->getFilteredProducts($TotalEntries);
+                                       // $products = $this->objDbProducts->getFilteredProducts($TotalEntries);
 
                                         $newRow = true;
                                         $count = 0;
                                         $noOfAdaptations = 0;
+                                        echo $total;
 
-                                        foreach ($products as $product) {               //populates table
+                                       foreach ($result as $results) {  
+
+                                        $prodID = " id = '$results' and $TotalEntries";
+                                             echo $prodID;
+                                      
+                                       $products = $this->objDbProducts->getFilteredProducts($prodID);
+                                       
+                                        foreach ($products as $product){
+
+                     
                                             if ($product['parent_id'] == null) {
                                                 $count++;
                                                 $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
@@ -281,12 +308,13 @@ switch ($pagelayout){
                                                 $count = 0;
                                             }
                                         }
+                                        }
                                         echo $objTable->show();     
                                     
                                         // echo $Themes[1]['product_id'];echo "<br>"
                                        //  echo $result[1];
                                        //  echo $Auths[0]['id'];
-                                     
+                                    //   echo $TotalEntries;
                                             var_dump($result);
         
         
@@ -306,14 +334,16 @@ switch ($pagelayout){
 
 
 
-                                $products = $this->objDbProducts->getFilteredProducts($TotalEntries);
-                                echo $$TotalEntries;
+                                $product = $this->objDbProducts->getFilteredProducts($TotalEntries);
+                               
                                 $newRow = true;
                                 $count = 0;
 
-                                foreach ($products as $product) {
+                                foreach ($result as $results) {
                                     $count++;                       //populates table
                                     //Check if the creator is a group or an institution
+                                    $prodID = " parent_id is null and id = '$results'";
+                            $product = $this->objDbProducts->getFilteredProducts("$prodID");
 
                                     if ($this->objDbGroups->isGroup($product['creator'])) {
                                         $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
