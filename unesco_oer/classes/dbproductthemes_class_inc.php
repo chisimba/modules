@@ -45,6 +45,14 @@ class dbproductthemes extends dbtable {
                 On $this->_tableName.id=t2.theme_id";
         return $this->getArray($sql);
     }
+    
+     function getproductIDBythemeID($id)
+    {
+        $sql = "select * from $this->product_theme_jxn_table where theme_id = '$id'";
+      
+        return $this->getArray($sql);
+    }
+    
 
     function getThemesByUmbrellaID($umbrellaID)
     {
@@ -82,6 +90,13 @@ class dbproductthemes extends dbtable {
         );
 
         $this->insert($data,$this->product_theme_jxn_table);
+    }
+    
+    function deleteProductThemesJxnByProductID($productID)
+    {
+        $sql = "DELETE FROM $this->product_theme_jxn_table WHERE product_id = '$productID'";
+        //$this->_execute($sql);
+        $this->delete('product_id', $productID, $this->product_theme_jxn_table);
     }
 
 }

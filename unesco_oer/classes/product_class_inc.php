@@ -895,6 +895,8 @@ class product extends object
         if($themeIDarray != NULL && !is_array($themeIDarray)){
             $themeIDarray = array($themeIDarray);
         }
+        
+        $this->objDbProductThemes->deleteProductThemesJxnByProductID($this->_identifier);
 
         foreach ($themeIDarray as $themeID) {
             if ($themeID != NULL){

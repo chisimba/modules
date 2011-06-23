@@ -21,6 +21,8 @@ class filterdisplay extends object {
         $this->loadClass('checkbox', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
+        $this->objDbproductthemes = $this->getobject('dbproductthemes', 'unesco_oer');
+        $this->objDbproductlanguages = $this->getobject('dbproductlanguages', 'unesco_oer');
      
 
         $this->Filterinfo['ThemeFilter'] = $this->getParam('ThemeFilter');
@@ -153,14 +155,17 @@ class filterdisplay extends object {
         $form->addToForm(' </div>
                     <div class="blueBackground">');
 
-        $products = $this->objDbProducts->getProducts(0, 10);
+        $products = $this->objDbproductthemes->getProductThemes();
         $filterTheme = new dropdown('ThemeFilter');
         $filterTheme->cssClass = "leftColumnSelectDropdown";
         $all = $this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer');
         $filterTheme->addoption($all);
+        
+        
         foreach ($products as $product) {
 
-            $filterTheme->addOption($product['theme']);
+            $filterTheme->addOption($product['id'],$product['theme']);
+            
         }
         $filterTheme->setSelected($this->Filterinfo['ThemeFilter']);
 
@@ -191,13 +196,13 @@ class filterdisplay extends object {
         $form->addtoform('</div>
                     <div class="blueBackground">');
 
-        $products = $this->objDbProducts->getProducts(0, 10);
+        $products = $this->objDbproductlanguages->getProductLanguages();
         $filterLang = new dropdown('LanguageFilter');
         $filterLang->cssClass = "leftColumnSelectDropdown";
         $filterLang->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
         foreach ($products as $product) {
 
-            $filterLang->addOption($product['language']);
+            $filterLang->addOption($product['id'],$product['name']);
         }
 
         $filterLang->setSelected($this->Filterinfo['LanguageFilter']);

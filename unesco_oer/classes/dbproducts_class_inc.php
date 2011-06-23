@@ -137,7 +137,7 @@ class dbproducts extends dbtable
 
     function isAdaptation($id){
         $product = $this->getProductByID($id);
-        if ($product['relation'] == null){
+        if ($product['parent_id'] == null){
             return FALSE;
         }else{
             return TRUE;

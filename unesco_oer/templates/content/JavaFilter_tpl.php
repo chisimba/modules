@@ -10,11 +10,14 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('filterdisplay', 'unesco_oer');
+ $this->objDbproductthemes = $this->getobject('dbproductthemes', 'unesco_oer');
+        $this->objDbproductlanguages = $this->getobject('dbproductlanguages', 'unesco_oer');
+        $this->objDbresourcetypes = $this->getobject('dbresourcetypes', 'unesco_oer');
 
 
 
 
-//$adaptationstring = "relation is not null";
+//$adaptationstring = "parent_id is not null";
 $ThemeFilter = $this->getParam('theme');
 $PageNum = $this->getParam('id');
 $AuthFilter = $this->getParam('auth');
@@ -32,23 +35,23 @@ $pagelayout = $this->getParam('adaptation');
 switch ($pagelayout){
     
     case "1a" : {
-     $adaptationstring = 'relation is null';
+     $adaptationstring = 'parent_id is null';
      $view = "grid";
      break;
         
     }
     case "2a" : {
-     $adaptationstring = 'relation is not null';
+     $adaptationstring = 'parent_id is not null';
      $view = "grid";
       break;  
     }
     case "1b" : {
-     $adaptationstring = 'relation is null';
+     $adaptationstring = 'parent_id is null';
      $view = "list";
      break;   
     }
     case "2b" : {
-     $adaptationstring = 'relation is not null';
+     $adaptationstring = 'parent_id is not null';
      $view = "list";
       break;  
     }
@@ -71,39 +74,129 @@ switch ($pagelayout){
         else
             $buildstring = $adaptationstring;
 
-//
-//        if (!($AuthFilter == Null or $AuthFilter == 'All'))
-//            $buildstring .= ' and creator = ' . "'$AuthFilter'";
-//
-//        if (!($ThemeFilter == Null or $ThemeFilter == 'All'))
-//            $buildstring .= ' and theme = ' . "'$ThemeFilter'";
-//
-//        if (!($LangFilter == Null or $LangFilter == 'All'))
-//            $buildstring .= ' and language = ' . "'$LangFilter'";
 
-//
-//        if (($Model == 'on') or ($Handbook == 'on') or ($Guide == 'on') or ($Manual == 'on') or ($Besoractile == 'on'))
-//            $buildstring .= ' and (';
-//
-//        if ($Model == 'on')
+       if (!($AuthFilter == Null or $AuthFilter == 'All')){
+           
+          $Auths = $this->objDbProducts->getFilteredProducts('creator = ' . "'$AuthFilter'");  
+          
+            
+             $TempAuth = array(); //convert to 1d array
+          $i=0;
+       foreach ($Auths as $Auth){
+           $i++;
+        $TempAuth[$i] = $Auth['id'];
+        }
+            
+                 
+                 
+             
+           
+       }
+        //   $buildstring .= ' and creator = ' . "'$AuthFilter'";
+       
+       
+       
+       
+       
+       if (!($ThemeFilter == Null or $ThemeFilter == 'All')){
+          
+          $Themes = $this->objDbproductthemes->getproductIDBythemeID($ThemeFilter);
+                
+          $TempTheme = array(); //convert to 1d array
+          $i=0;
+       foreach ($Themes as $Theme){ 
+           $i++;
+        $TempTheme[$i] = $Theme['product_id'];
+        }
+        
+           
+       }
+       
+       
+         
+       
+       
+       
+       
+       
+       
+       if (!($LangFilter == Null or $LangFilter == 'All')){
+           
+            $ProdLangIDs = $this->objDbProducts->getFilteredProducts('language = ' . "'$LangFilter'");           
+           
+             $Templang = array(); //convert to 1d array
+          $i=0;
+       foreach ($ProdLangIDs as $ProdLangID){
+           $i++;
+        $Templang[$i] = $ProdLangID['id'];
+        }
+            
+            
+            
+       }  
+       
+       
+       
+   $array_to_intersect = array($TempAuth,$TempTheme,$Templang);
+    $filter_empty_arrays = array_filter($array_to_intersect);
+
+    $total= count($filter_empty_arrays);
+
+        if ($total>=2)
+            {
+            $result= call_user_func_array("array_intersect",$filter_empty_arrays );
+            }
+            
+            
+        
+         
+      
+       
+       
+       
+         
+   //  $result = array_intersect($TempAuth,$TempTheme,$Templang);
+       
+       
+       
+       
+       
+           
+        //   $buildstring .= ' and language = ' . "'$LangFilter'";
+  
+  //$resource = $this->objDbresourcetypes->getResourceTypes();
+      
+//        if ($Model == 'on'){
+//            
+//           
+//            
+//            
+//            
+//        }
+//            
+//            
 //            $buildstring .= ' resource_type = "Model" or';
 //        if ($Handbook == 'on')
+//            
+//            
+//            
 //            $buildstring .= ' resource_type = "Handbook" or';
 //        if ($Guide == 'on')
+//            
+//            
+//            
 //            $buildstring .= ' resource_type = "Guide" or';
 //        if ($Manual == 'on')
+//            
+//            
 //            $buildstring .= ' resource_type = "Manual" or';
 //        if ($Besoractile == 'on')
+//            
+//            
+//           
 //            $buildstring .= ' resource_type = "Besoractile" or';
 //
-//        $length = strlen($buildstring);
-//
-//        if (($Model == 'on') or ($Handbook == 'on') or ($Guide == 'on') or ($Manual == 'on') or ($Besoractile == 'on')) {
-//            $buildstring = substr($buildstring, 0, ($length - 2));
-//
-//            $buildstring .= ')';
-//        }
-//
+//      
 
 
         if ($sort == 'Date Added')
@@ -166,7 +259,7 @@ switch ($pagelayout){
                                         $noOfAdaptations = 0;
 
                                         foreach ($products as $product) {               //populates table
-                                            if ($product['relation'] == null) {
+                                            if ($product['parent_id'] == null) {
                                                 $count++;
                                                 $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
 
@@ -189,8 +282,12 @@ switch ($pagelayout){
                                             }
                                         }
                                         echo $objTable->show();     
-        
-        
+                                    
+                                        // echo $Themes[1]['product_id'];echo "<br>"
+                                       //  echo $result[1];
+                                       //  echo $Auths[0]['id'];
+                                     
+                                            var_dump($result);
         
         
         
@@ -299,7 +396,7 @@ switch ($pagelayout){
 
 
                                             foreach ($products as $product) {
-                                                if ($product['relation'] != '') {
+                                                if ($product['parent_id'] != '') {
                                                     $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
 
                                                     //Get The adapters details
