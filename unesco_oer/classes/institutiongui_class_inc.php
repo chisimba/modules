@@ -101,8 +101,8 @@ class institutiongui extends object {
 
     function showEditInstitutionLink($institutionId) {
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $institutionId)));
-        $acLink->cssClass = 'greyTextLink';
-        $acLink->link = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Edit" width="18" height="18"">';
+        $acLink->cssClass = 'adaptationListingLink';
+        $acLink->link = 'Edit';
 
         return $acLink->show();
     }
@@ -110,7 +110,7 @@ class institutiongui extends object {
     function showDeleteInstitutionLink($institutionId) {
         $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'deleteinstitution';
-        $acLink->link = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Delete" width="18" height="18"">';
+        $acLink->link = 'Delete';
         
         return $acLink->show();
     }

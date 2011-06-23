@@ -20,6 +20,7 @@
         $this->loadClass('adddatautil', 'unesco_oer');
         $fieldsetErrors = $this->newObject('fieldset', 'htmlelements');
         $displayErrors = NULL;
+        $reqiuredField = array();
 
         if ($formError) {
             //If the user has entered invalid data
@@ -40,10 +41,14 @@
             $tableErrors = $this->newObject('htmltable', 'htmlelements');
             $tableErrors->cssClass = "moduleHeader";
 
-            foreach ($errorMessage as $message) {
+            foreach ($errorMessage as $key => $message) {
+                if(strlen($message)>1){
                 $tableErrors->startRow();
-                $tableErrors->addCell($required = '<span class="required_field"> * ' . $message . '</span>');
+                $required = '<span class="required_field"> * ' . $message . '</span>';
+                $requiredField[$key] = '<span class="required_field"> * </span>';
+                $tableErrors->addCell($required);
                 $tableErrors->endRow();
+                }
             }
 
             $fieldsetErrors->setLegend('There were errors in the form');
@@ -86,10 +91,11 @@
 
         //field for the name of the institution
         $name = $formData['name'];
-        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_name', 'unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_name', 'unesco_oer') . $requiredField['name'];
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, 'name', 0, $name, $tableinstitutioninfo
         );
+        //$tableinstitutioninfo->addCell('*');
 
         //field for the description
         $description = $formData['description'];
@@ -100,7 +106,7 @@
         $editor->setBasicToolBar($description);
         $editor->setContent($description);
         $tableinstitutioninfo->startRow();
-        $tableinstitutioninfo->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $tableinstitutioninfo->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer') . $requiredField['description']);
         $tableinstitutioninfo->endRow();
         $tableinstitutioninfo->startRow();
         $tableinstitutioninfo->addCell($editor->show());
@@ -108,14 +114,14 @@
 
         //field for the thumbnail
         $tableinstitutioninfo->startRow();
-        $tableinstitutioninfo->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . '<font color="#FF2222">* ' . $this->validationArray['thumbnail']['message'] . '</font>');
+        $tableinstitutioninfo->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . $requiredField['thumbnail']);
         $tableinstitutioninfo->endRow();
         $tableinstitutioninfo->startRow();
         $tableinstitutioninfo->addCell($this->objThumbUploader->show());
         $tableinstitutioninfo->endRow();
 
         $tableinstitutioninfo->startRow();
-        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_type', 'unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_type', 'unesco_oer') . $requiredField['type'];
         $this->_objAddDataUtil->addTitleToRow($title, 4, $tableinstitutioninfo);
         $tableinstitutioninfo->endRow();
 
@@ -128,7 +134,7 @@
         $tableinstitutioninfo->endRow();
 
         $tableinstitutioninfo->startRow();
-        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword1', 'unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword1', 'unesco_oer') . $requiredField['keyword1'];
         $this->_objAddDataUtil->addTitleToRow($title, 4, $tableinstitutioninfo);
         $tableinstitutioninfo->endRow();
 
@@ -198,7 +204,7 @@
         $table->cssClass = "moduleHeader";
         $address['address1'] = $formData['address1'];
         $table->startRow();
-        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address1', 'unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address1', 'unesco_oer') . $requiredField['address1'];
         $table->addCell($title);
         $table->endRow();
 
@@ -271,7 +277,7 @@
 
 
         $table->startRow();
-        $zipTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_zip', 'unesco_oer');
+        $zipTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_zip', 'unesco_oer') . $requiredField['zip'];
         $this->_objAddDataUtil->addTitleToRow($zipTitle, 4, $table);
         $table->endRow();
         $table->startRow();
@@ -284,7 +290,7 @@
 
         //Field for the country
         $table->startRow();
-        $countryTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer');
+        $countryTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer') . $requiredField['country'];
         $this->_objAddDataUtil->addTitleToRow($countryTitle, 4, $table);
         $table->endRow();
         $table->startRow();
@@ -299,7 +305,7 @@
         //Field for city
         $table->startRow();
         $city = $formData['city'];
-        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_city', 'unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_city', 'unesco_oer') . $requiredField['city'];
         $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
         $table->endRow();
         $table->startRow();
@@ -309,13 +315,12 @@
         $table->endRow();
 
         $table->startRow();
-        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_websitelink', 'unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_websitelink', 'unesco_oer') . $requiredField['websiteLink'];
         $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
         $table->endRow();
 
         $table->startRow();
         $websiteLink = $formData['websiteLink'];
-        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_websitelink', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToRow(
                 'websiteLink', 60, $websiteLink, $table
         );
