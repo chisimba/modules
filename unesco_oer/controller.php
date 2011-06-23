@@ -1576,6 +1576,12 @@ class unesco_oer extends controller {
         return "myPage_tpl.php";
     }
 
+        public function __gotoURL() {
+        $url = $this->getParam('url');
+        return $url;
+    }
+
+
 }
 
 ?>

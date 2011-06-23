@@ -57,8 +57,10 @@ $institutionGUI->getInstitution($institutionId);
                     <br>
                     <br />
                     <div class="leftImageHolder rightTwent">
-                        <img src=" <? echo $institutionGUI->showInstitutionThumbnail(); ?>"
-                             width="105" height =" 111"><br />
+                        <img src= "
+                        <?php
+                        echo $institutionGUI->showInstitutionThumbnail();
+                        ?> " width="79" height="101"><br />
                     </div>
                     <?php
                         echo $institutionGUI->showInstitutionDescription($institutionId);
@@ -75,7 +77,7 @@ $institutionGUI->getInstitution($institutionId);
                         echo $filtering->SideFilter('4_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
                     ?>
                     </div>
-                </div>    
+                </div>
 
                 <div class="innerRightColumn4">
                     <div class="listAdaptations">
@@ -189,9 +191,17 @@ $institutionGUI->getInstitution($institutionId);
                         }
                     ?>
                         <br><br>
-                        <span class="greyText fontBold">Institution website:</span> <a class="greyTextLink"><?php echo $institutionGUI->showInstitutionWebsiteLink(); ?></a>
-                        <br><br>
-                        <span class="greyText fontBold">Keywords:</span> <a class="greyText fontBold"><?php
+                        <span class="greyText fontBold">Institution website:</span> <a class="greyTextLink">
+                <?php
+                        //$acLink = new link($this->uri(array("action" => "gotoURL", "url" => $institutionGUI->showInstitutionWebsiteLink())));
+                        $acLink = new link('http://'.$institutionGUI->showInstitutionWebsiteLink());
+                        $acLink->cssClass = 'greyTextLink';
+                        $acLink->link = $institutionGUI->showInstitutionWebsiteLink();
+
+                        echo $acLink->show();
+                ?></a>
+                    <br><br>
+                    <span class="greyText fontBold">Keywords:</span> <a class="greyText fontBold"><?php
                         $keywords = $institutionGUI->showInstitutionKeywords();
                         echo $keywords['keyword1'];
 
