@@ -782,7 +782,6 @@ class unesco_oer extends controller {
         $keyword1 = $this->getParam('keyword1');
         $keyword2 = $this->getParam('keyword2');
 //        $prevFormAction = $this->getParam('formAction');
-
         //Form related data members
         $formAction = $this->getParam('formAction');
         $formError = false;
@@ -798,15 +797,17 @@ class unesco_oer extends controller {
         $thumbnail = 'usrfiles/' . $results['path'];
 
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+        
         if ($validate['valid']) {
+            
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-            $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
             return "viewInstitutions_tpl.php";
         } else {
+            
             //There has been an error, go back to the form to fix it
-            $formError = true;
+            $formError = TRUE;
             $this->setVarByRef('formError', $formError);
 
             $this->setVarByRef('name', $name);
@@ -824,6 +825,7 @@ class unesco_oer extends controller {
             $this->setVarByRef('formAction', $formAction);
             $this->setVarByRef('errorMessage', $validate);
 
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "institutionEditor_tpl.php";
         }
     }

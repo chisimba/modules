@@ -180,60 +180,60 @@ class institutionmanager extends object {
     function validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
         $this->_validation['valid']= TRUE;
         //Check if a name has been provided
-        if (isempty($name)) {
+        if (empty($name)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['name'] = "Please enter a name for the institution.";
         }
 
         //Ensure that a description has been provided
-        if (isempty($description)) {
+        if (empty($description)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['description'] = "Please provide a description for the institution.";
         }
 
         //Ensure that a type has been selected
-        if (isempty($type)) {
+        if (empty($type)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['type'] = "Please select a type for the institution.";
         }
 
         //Ensure that a country has been selected
-        if (isempty($type)) {
+        if (empty($type)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['country'] = "Please select a country for the institution.";
         }
         //Ensure that an address1 has been provided
-        if (isempty($address1)) {
+        if (empty($address1)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['address1'] = "Please provide a valid address for the institution.";
         }
 
         //Ensure that a city has been provided
-        if (isempty($city)) {
+        if (empty($city)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['city'] = "Please provide a city for the institution.";
         }
 
         //Ensure that a zip has been provided
-        if (isempty($zip)) {
+        if (empty($zip)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['zip'] = "Please provide a valid zip/postal code.";
         }
 
         //Ensure that a websitelink has been provided
-        if (isempty($websiteLink)) {
+        if (empty($websiteLink)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['websiteLink'] = "Please provide a valid website link.";
         }
 
         //Ensure that at least 1 keyword has been provided
-        if (isempty($keyword1)) {
+        if (empty($keyword1)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['keyword1'] = "Please provide at least one keyword.";
         }
         
         //Ensure that thumbnail is provided
-        if (isempty($thumbnail)) {
+        if (empty($thumbnail)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['thumbnail'] = "Please provide a thumbnail.";
         }

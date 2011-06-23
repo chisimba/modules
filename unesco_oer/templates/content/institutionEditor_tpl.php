@@ -18,6 +18,8 @@
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('adddatautil', 'unesco_oer');
+        $fieldsetErrors = $this->newObject('fieldset', 'htmlelements');
+        $displayErrors = NULL;
 
         if ($formError == TRUE) {
             //If the user has entered invalid data
@@ -33,8 +35,24 @@
             $formData['websiteLink'] = $websiteLink;
             $formData['keyword1'] = $keyword1;
             $formData['keyword2'] = $keyword2;
+
+            //Display the error messages
+            $tableErrors = $this->newObject('htmltable', 'htmlelements');
+            $tableErrors->cssClass = "moduleHeader";
+
+            foreach ($errorMessage as $message) {
+                $tableErrors->startRow();
+                $tableErrors->addCell($required = '<span class="required_field"> * ' . $message . '</span>');
+                $tableErrors->endRow();
+            }
+
+            $fieldsetErrors->setLegend('There were errors in the form');
+            $fieldsetErrors->addContent($tableErrors->show());
+            $displayErrors = $fieldsetErrors->show() . '<br />';
+
+//            $errorTable
             $formAction = $prevFormAction;
-        }else
+        } else
         //Check if an institution is being edited
         if (isset($institutionId)) {
             $institutionGUI->getInstitution($institutionId);
@@ -128,8 +146,8 @@
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword2', 'unesco_oer');
         $this->_objAddDataUtil->addTitleToRow($title, 4, $tableinstitutioninfo);
         $tableinstitutioninfo->endRow();
-        
-               //field for the institutions keywords
+
+        //field for the institutions keywords
         $keywords['keyword2'] = $formData['keyword2'];
         $tableinstitutioninfo->startRow();
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword2', 'unesco_oer');
@@ -409,7 +427,7 @@
                     'action' => $formAction, 'institutionId' => $institutionId, 'prevAction' => $prevAction));
         $form_data = new form('add_institution_ui', $uri);
         $form_data->extra = 'enctype="multipart/form-data"';
-        $form_data->addToForm($fieldsetInstitutionInfo->show() . '<br />' . $fieldset2->show() . '<br />' . $buttons);
+        $form_data->addToForm($displayErrors . $fieldsetInstitutionInfo->show() . '<br />' . $fieldset2->show() . '<br />' . $buttons);
         echo $form_data->show();
         ?>
     </body>
