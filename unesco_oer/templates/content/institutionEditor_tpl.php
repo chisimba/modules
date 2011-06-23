@@ -21,7 +21,7 @@
         $fieldsetErrors = $this->newObject('fieldset', 'htmlelements');
         $displayErrors = NULL;
 
-        if ($formError == TRUE) {
+        if ($formError) {
             //If the user has entered invalid data
             $formData['name'] = $name;
             $formData['description'] = $description;
@@ -51,7 +51,7 @@
             $displayErrors = $fieldsetErrors->show() . '<br />';
 
 //            $errorTable
-            $formAction = $prevFormAction;
+            $formAction = $formAction;
         } else
         //Check if an institution is being edited
         if (isset($institutionId)) {
