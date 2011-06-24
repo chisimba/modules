@@ -33,14 +33,14 @@ $this->appendArrayVar('headerParams', $js);
     <body>
         <div class="blueHorizontalStrip"></div>
         <div class="mainWrapper">
-            yyy
+          
             <div class="topContent">
                 <?php
                 if ($this->objUser->isLoggedIn()) {
                     ?>
                     <div class="logOutSearchDiv">
                         <div class="logoutSearchDivLeft">
-                            <div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
+                            <div class="nameDiv"><?php echo "Hello" . " " . $this->objUser->fullname(); ?></div>
                             <div class="logoutDiv">
                                 <div class="textNextToRightFloatedImage"><a href="?module=security&action=logoff" class="prifileLinks">Log out</a></div>
                                 <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
@@ -86,7 +86,7 @@ $this->appendArrayVar('headerParams', $js);
     <!--                                    <img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>-->
 
 
-
+z
                                     <a href="" class="searchGoLink">
 
 

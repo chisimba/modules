@@ -215,7 +215,7 @@ $textinput = new textinput('register_surname');
 $textinput->size =70;
 $table->startRow();
 $table->addCell('Last Name');
-$table->addCell($textinput->show());
+$table->addCell($textinput->show().$required);
 $table->endRow();
 
 $textinput = new textinput('register_cellnum');

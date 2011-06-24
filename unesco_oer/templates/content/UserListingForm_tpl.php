@@ -41,14 +41,14 @@ $addUserLink->link = $button->show();
 
 
 
-$button = new button('searchButton', "Search");
-//$button->setToSubmit();
-$searchUserLink = new link($this->uri(array('action' => "searchusers", 'id' => $user['id'])));
-$searchUserLink->link = $button->show();
+$button = new button('searchButton', "Back");
+$button->setToSubmit();
+$BackToControlPannelLink = new link($this->uri(array('action' => "controlpanel")));
+$BackToControlPannelLink->link = $button->show();
 
 
 
-echo $addUserLink->show() . '&nbsp;' . $searchUserLink->show();
+echo $addUserLink->show() . '&nbsp;' . $BackToControlPannelLink->show();
 ;
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
