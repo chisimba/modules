@@ -218,7 +218,7 @@ if (($LangFilter == Null or $LangFilter == 'All'))
             } else {
 
                 $start = 0;
-                $end = count($products);
+                $end = count($products) -1;
             }
 
 
