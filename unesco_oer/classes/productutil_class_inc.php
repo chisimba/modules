@@ -130,7 +130,7 @@ class productutil extends object {
      * @param <type> $product
      * @return <type> $content
      */
-    public function populateListView($data) {
+    public function populateListView($start,$end,$data) {
 
         $content = '     
                                       <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -336,7 +336,7 @@ class productutil extends object {
  
                 
              
-                " . $form->show() . "
+                " .  "
                                             
                   
                 </div>

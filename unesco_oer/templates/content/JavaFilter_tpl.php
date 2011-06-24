@@ -450,7 +450,7 @@ switch ($pagelayout) {
 //                $languages = $this->objDbAvailableProductLanguages->getProductLanguage($products[$i]['id']);
 //                $theProduct = $products + $languages;
 
-                echo $this->objProductUtil->populateListView($products);
+                echo $this->objProductUtil->populateListView($start,$end,$products);
             
 
 
