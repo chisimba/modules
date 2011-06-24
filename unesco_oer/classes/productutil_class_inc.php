@@ -95,18 +95,22 @@ class productutil extends object {
                                         <select name="" class="listingsLanguageDropDown">';
 
         $index = 0;
-         $prodLanguages = $this->objDbproductlanguages->getProductLanguages();
-        foreach ($product as $languages) {
-//Check if languages is empty
-            foreach ($languages as $language) {
-//print_r($language);
-                $content .= '<option value="">' . $language . '</option>';
-                $index++;
-            }
-        }
-        if ($index == 0) {
-            $content .= '<option value="">' . $prodLanguages[0]['name'] . '</option>';  // REMOVE HARDCODE ENGLISH WHEN LANGUAGES TABLES FIXED
-        }
+         $prodLanguages = $this->objDbproductlanguages->getLanguageNameByID($product['language']);
+         $content .= '<option value="">' . $prodLanguages . '</option>';
+
+//        foreach ($product as $languages) {
+////Check if languages is empty
+//            foreach ($languages as $language) {
+////print_r($language);
+//                $content .= '<option value="">' . $language . '</option>';
+//                $index++;
+//            }
+       // }
+//        if ($index == 0) {
+//            $content .= '<option value="">' . $prodLanguages[0]['name'] . '</option>';  // REMOVE HARDCODE ENGLISH WHEN LANGUAGES TABLES FIXED
+//        }
+
+        
 
         $content .='
                                         </select>
