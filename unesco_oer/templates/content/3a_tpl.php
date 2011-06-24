@@ -62,17 +62,18 @@
                         ?>
                         <div class="commentsLinkUnderRatingStarsDiv">
                         <img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments" width="18" height="18"class="smallLisitngIcons">
-                        <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">
-
+                        <div class="textNextToTheListingIconDiv"><!--<a href="#" class="bookmarkLinks">-->
+                            <div class ="bookmarkLinks">
                                 <?php
 
                               echo  $this->objDbComments->getTotalcomments($productID) . " Comments";
 
 
                                 ?>
+                            </div>
 
 
-                            </a></div>
+                            <!--</a>--></div>
                         </div>
                   </div>
                   <?php
@@ -122,7 +123,7 @@ if ($this->objUser->isLoggedIn()) {
                     </div>
 
                     <div class="unOrderedListDiv">
-                    	<ul class="ulMinusPublish">
+<!--                    	<ul class="ulMinusPublish">
                             <li><a href="">Foundation of Journalism: Writing</a>
                             	<ul class="ulDocument">
                                 	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
@@ -139,7 +140,7 @@ if ($this->objUser->isLoggedIn()) {
                                     <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
                                 </ul>
                             </li>
-                        </ul>
+                        </ul>-->
                         <ul class="ulPlusPublish">
                             <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
                         </ul>
