@@ -1253,6 +1253,12 @@ class sahriscollectionsops extends object {
         $sr->link = $this->objLanguage->languageText("mod_sahriscollectionsman_sitesreport", "sahriscollectionsman");
         $sr = $sr->show();
         
+        // objects report link
+        $or = $this->newObject('link', 'htmlelements');
+        $or->href = $this->uri(array('action' => 'objectreport'));
+        $or->link = $this->objLanguage->languageText("mod_sahriscollectionsman_objectsreport", "sahriscollectionsman");
+        $or = $or->show();
+        
         // activity
         $su = $this->newObject('link', 'htmlelements');
         $su->href = $this->uri(array('action' => ''), 'logger');
@@ -1280,6 +1286,7 @@ class sahriscollectionsops extends object {
         $txt = "<ul";
         $txt .= "<li>".$sl."</li>";
         $txt .= "<li>".$sr."</li>";
+        $txt .= "<li>".$or."</li>";
         $txt .= "<li>".$su."</li>";
         $txt .= "<li>".$createcoll."</li>";
         // $txt .= "<li>".$addrec."</li>";
@@ -1441,7 +1448,7 @@ class sahriscollectionsops extends object {
             $filename = $rec[44];
             $username = $rec[45];
             
-            if($sitename == 'site name' || $sitename == 'sitename') {
+            if($sitename == 'site name' || $sitename == 'sitename' || $sitename == NULL || $sitename == '') {
                 continue;
             }
             else {
@@ -1994,6 +2001,127 @@ class sahriscollectionsops extends object {
         $this->appendArrayVar('bodyOnLoad', "init();");
         $gtags = '<div id="map"></div>';
         return $gtags;
+    }
+    
+    /**
+     * Date manipulation method for getting posts by month/date
+     *
+     * @param  mixed selected date $sel_date
+     * @return array
+     */
+    public function retDates($sel_date = NULL)
+    {
+        if ($sel_date == NULL) {
+            $sel_date = mktime(0, 0, 0, date("m", time()) , 1, date("y", time()));
+        }
+        $t = getdate($sel_date);
+        $start_date = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon'], 1, $t['year']);
+        $start_date-= 86400*date('w', $start_date);
+        $prev_year = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon'], $t['mday'], $t['year']-1);
+        $prev_month = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon']-1, $t['mday'], $t['year']);
+        $next_year = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon'], $t['mday'], $t['year']+1);
+        $next_month = mktime($t['hours'], $t['minutes'], $t['seconds'], $t['mon']+1, $t['mday'], $t['year']);
+        return array(
+            'mbegin' => $sel_date,
+            'prevyear' => $prev_year,
+            'prevmonth' => $prev_month,
+            'nextyear' => $next_year,
+            'nextmonth' => $next_month
+        );
+    }
+    
+    /**
+     * Method to get the archiveed posts array for manipulation
+     *
+     * @param  string  $userid
+     * @return array
+     * @access private
+     */
+    private function _archiveArr()
+    {
+        // add in a foreach for each year
+        $allposts = $this->objDbColl->getAbsAllPosts();
+        //print_r($allposts);
+        // $revposts = array_reverse($allposts);
+        $revposts = $allposts;
+        $recs = count($revposts);
+        
+        if ($recs > 0) {
+            $recs = $recs-1;
+        }
+        if (!empty($revposts)) {
+            //echo count($revposts);
+            $lastrec = $revposts[$recs]['obj_ts'];
+            $firstrec = $revposts[0]['obj_ts'];
+            
+            $c1 = date("ym", $firstrec);
+            $c2 = date("ym", $lastrec);
+            $startdate = date("m", $firstrec);
+            $enddate = date("m", $lastrec);
+            // . " " .date("Y", $lastrec);
+            // create a while loop to get all the posts between start and end dates
+            $postarr = array();
+             
+             // echo $startdate, $enddate; die();
+            foreach($revposts as $themonths) {
+                $months[] = date("ym", $themonths['obj_ts']);
+                $posts = array();
+                $postarr[date("Ym", $themonths['obj_ts']) ] = $posts;
+            }
+            return $postarr;
+        } else {
+            return NULL;
+        }
+    }
+    
+    public function archive() {
+        // var_dump($this->_archiveArr());
+        $posts = $this->_archiveArr();
+        // print_r($posts);die();
+        if (!empty($posts)) {
+            $yearmonth = array_keys($posts);
+            $arks = NULL;
+            foreach($yearmonth as $months) {
+                $month = str_split($months, 4);
+                $thedate = mktime(0, 0, 0, intval($month[1]) , 1, intval($month[0]));
+                $arks[] = array(
+                    'formatted' => date("F", $thedate) . " " . date("Y", $thedate) ,
+                    'raw' => $month[1],
+                    'rfc' => $thedate
+                );
+            }
+            $thismonth = mktime(0, 0, 0, date("m", time()) , 1, date("y", time()));
+            //var_dump($arks);
+            $data = array();
+            foreach ($arks as $ark) {
+                $data['date'] = $ark['formatted']; 
+                $data['objects'] = $this->objDbColl->getMonthCount($ark['rfc']);
+                $info[] = $data;
+            }
+            
+            return $info;
+        } else {
+            return NULL;
+        }
+    }
+    
+    public function graphObjects($data) {
+        $ret = NULL;
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->startHeaderRow();
+        $table->addHeaderCell('Date');
+        $table->addHeaderCell('Number of Objects');
+        $table->endHeaderRow();
+        
+        foreach($data as $obj) {
+            $table->startRow();
+            $table->addCell($obj['date'], 150, NULL, 'left');
+            $table->addCell($obj['objects'], 150, NULL, 'left');
+            $table->endRow();
+        }
+        $ret .= $table->show();
+        
+        return $ret;
     }
 }
 ?>

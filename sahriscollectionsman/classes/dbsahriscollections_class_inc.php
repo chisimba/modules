@@ -103,7 +103,12 @@ class dbsahriscollections extends dbtable
     public function getCollByName($name) {
         $this->changeTable('tbl_sahriscollections_collections');
         $det = $this->getAll("WHERE collname = '$name'");
-        return $det[0]['id'];
+        if(empty($det)) {
+            return NULL;
+        }
+        else {
+            return $det[0]['id'];
+        }
     }
     
     public function getCollectionsBySiteId($sid) {
@@ -119,6 +124,7 @@ class dbsahriscollections extends dbtable
     public function insertRecord($insarr) {
         $this->changeTable('tbl_sahriscollections_items');
         $insarr['datecreated'] = $this->now();
+        $insarr['obj_ts'] = time();
         return $this->insert($insarr);
     }
     
@@ -140,6 +146,11 @@ class dbsahriscollections extends dbtable
     public function getSingleRecordById($id) {
         $this->changeTable('tbl_sahriscollections_items');
         return $this->getAll("WHERE id = '$id'");
+    }
+    
+    public function getAbsAllPosts() {
+        $this->changeTable('tbl_sahriscollections_items');
+        return $this->getAll();
     }
     
     public function getCollRecords($collid) {
@@ -178,7 +189,13 @@ class dbsahriscollections extends dbtable
     public function getSiteByName($sitename) {
         $this->changeTable('tbl_sahriscollections_sites');
         $det = $this->getAll("WHERE sitename = '$sitename'");
-        return $det[0]['id'];
+        // var_dump($det);
+        if(empty($det)) {
+            return NULL;
+        }
+        else {
+            return $det[0]['id'];
+        }
     }
     
     public function getSiteDetails($sid) {
@@ -198,6 +215,38 @@ class dbsahriscollections extends dbtable
         $this->changeTable('tbl_sahriscollections_collections');
         $this->update('siteid', $id, array('sitename' => $updatearr['sitename']), 'tbl_sahriscollections_collections');
         return;
+    }
+    
+    /**
+     * Method to get all the posts of objects made within a month
+     *
+     * @param  mixed  $startdate
+     * @param  string $userid
+     * @return array
+     */
+    public function getPostsMonthly($startdate)
+    {
+        $this->changeTable('tbl_sahriscollections_items');
+        $this->objCollOps = $this->getObject('sahriscollectionsops');
+        $times = $this->objCollOps->retDates($startdate);
+        print_r($times);
+        $now = date('r', mktime(0, 0, 0, date("m", time()) , date("d", time()) , date("y", time())));
+        echo date('Y,M,d', $startdate);
+        $monthstart = $times['mbegin'];
+        $prevmonth = $times['prevmonth'];
+        $nextmonth = $times['nextmonth'];
+        //get the entries from the db
+        $filter = "WHERE obj_ts > '$prevmonth' AND obj_ts < '$nextmonth' ORDER BY obj_ts DESC";
+        $ret = count($this->getAll($filter));
+        return $ret;
+    }
+    
+    public function getMonthCount($ts) {
+        $start = $ts;
+        $end = $ts+2629743;
+        $filter = "WHERE obj_ts > '$start' AND obj_ts < '$end' ORDER BY obj_ts DESC";
+        $ret = count($this->getAll($filter));
+        return $ret;     
     }
     
     private function changeTable($table) {

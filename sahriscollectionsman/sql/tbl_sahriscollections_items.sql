@@ -206,6 +206,10 @@ $fields = array(
 	    'type' => 'text',
 	    'length' => 255,
 	    ),
+	'obj_ts' => array(
+	    'type' => 'integer',
+	    'length' => 50,
+	    ),
 	);
 
 //create other indexes here...

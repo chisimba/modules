@@ -417,6 +417,14 @@ class sahriscollectionsman extends controller
                 return 'sitesreport_tpl.php';
                 break;
                 
+            case 'objectreport' :
+                ini_set('max_execution_time', -1);
+                $data = $this->objCollOps->archive();
+                $graph = $this->objCollOps->graphObjects($data);
+                $this->setVarByRef('graph', $graph);
+                return 'objectsreport_tpl.php';
+                break;
+                
             case 'editsite' :
                 $siteid = $this->getParam('siteid');
                 $siteform = $this->objCollOps->editSiteForm($siteid);
