@@ -32,7 +32,7 @@ $adaptationstring = "parent_id is null";
                         <img src="images/icon-logout.png" alt="logout" class="imgFloatLeft">
                     </div>
                     <div class="profileBookmarkGroupsMessengerDiv">
-                        <a href="#"><img src="images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
+                        <a href="?module=userdetails"><img src="images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
                         <div class="spacingBetweenUserIcons">&nbsp;</div>
                         <a href="#"><img src="images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
                         <div class="spacingBetweenUserIcons">&nbsp;</div>
@@ -401,44 +401,23 @@ $adaptationstring = "parent_id is null";
             </div>
         </div>
         </div>
-        <!-- Footer-->
-        <div class="footerDiv">
-        	<div class="footerLinksLists">
-            	<div class="footerLinksHeadings">Links Set One</div>
-                <a href="" class="footerLink">Link 1</a><br>
-                <a href="" class="footerLink">Link 2</a><br>
-                <a href="" class="footerLink">Link 3</a>
+     <!-- Start of Footer -->
+           <div class="footerDiv">
+
+                <h3>United Nations Educational, Scientific and Cultural ORganization</h3><br />
+                UNESCO Headquarters is established in Paris. Offices are located in two places in the same area:
+
+                7, place de Fontenoy 75352 Paris 07 SP France
+                1, rue Miollis 75732 Paris Cedex 15 France
+
+
+                General phone: 
+                +33 (0)1 45 68 10 00
+
+
+
             </div>
-            <div class="footerLinksLists">
-            	<div class="footerLinksHeadings">Links Set Two</div>
-                <a href="" class="footerLink">Link 4</a><br>
-                <a href="" class="footerLink">Link 5</a><br>
-                <a href="" class="footerLink">Link 6</a>
-            </div>
-            <div class="footerLinksLists">
-            	<div class="footerLinksHeadings">Links Set Three</div>
-                <a href="" class="footerLink">Link 7</a><br>
-                <a href="" class="footerLink">Link 8</a><br>
-                <a href="" class="footerLink">Link 9</a>
-            </div>
-            <div class="footerLinksLists">
-            	<div class="footerLinksHeadings">Links Set Four</div>
-                <a href="" class="footerLink">Link 10</a><br>
-                <a href="" class="footerLink">Link 11</a><br>
-                <a href="" class="footerLink">Link 12</a>
-            </div>
-            <div class="footerBottomText">
-            	<img src="images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
-                <a href="" class="footerLink">UNESCO</a> |
-                <a href="" class="footerLink">Communication and Information</a> |
-                <a href="" class="footerLink">About OER Platform</a> |
-                <a href="" class="footerLink">F.A.Q.</a> |
-                <a href="" class="footerLink">Glossary</a> |
-                <a href="" class="footerLink">Terms of use</a> |
-                <a href="" class="footerLink">Contact</a> |
-                <a href="" class="footerLink">Sitemap</a>
-            </div>
-        </div>
+            <!-- End of Footer -->
     </div>
 </body>
 </html>

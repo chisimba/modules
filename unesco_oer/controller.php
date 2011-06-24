@@ -420,11 +420,16 @@ class unesco_oer extends controller {
     }
 
     public function requiresLogin($action) {
-        $required = array('addData', 'editProduct', "saveProductMetaData");
-        if (in_array($action, $required)) {
-            return TRUE;
-        } else {
+
+        if($action == null){
             return FALSE;
+        }
+        $required = array('filterproducts','viewproduct');
+        
+        if (in_array($action, $required)) {
+            return FALSE;
+        } else {
+            return TRUE;
         }
     }
 
@@ -696,7 +701,7 @@ class unesco_oer extends controller {
      */
 
     public function __createFeaturedProduct() {
-       
+
         $featuredproduct = $this->getParam('id');
         $this->objDbFeaturedProduct->overRightCurrentFeaturedProduct($featuredproduct);
         return "1a_tpl.php";
@@ -1475,13 +1480,13 @@ class unesco_oer extends controller {
 
         switch (strtolower($this->getParam('add_product_submit'))) {
             case "cancel":
-                $this->nextAction($this->getParam('nextAction') , array('id' => $this->getParam('productID')));
+                $this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
                 break;
 
             case "upload":
                 //test if all fields are valid
                 if ($product->handleUpload()) {
-                    $this->nextAction($this->getParam('nextAction') , array('id' => $this->getParam('productID')));
+                    $this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
                 } else {
                     $this->setLayoutTemplate('maincontent_layout_tpl.php');
                     return $defaultTemplate;
@@ -1577,11 +1582,10 @@ class unesco_oer extends controller {
         return "myPage_tpl.php";
     }
 
-        public function __gotoURL() {
+    public function __gotoURL() {
         $url = $this->getParam('url');
         return $url;
     }
-
 
 }
 

@@ -58,13 +58,12 @@ class commentmanager extends object {
         $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'ViewProduct'));
         $commentLink = new link($uri);
         $commentLink->cssClass = "searchGoLink";
-        $linkText = $this->objLanguage->
-                        languageText('mod_unesco_oer_submit', 'unesco_oer');
+        $linkText = 'Add Commet';
         $commentLink->link = $linkText;
 
         $commentSubmitDiv = '<div class="commentSubmit">';
         $submiTextDiv = '<div class="submiText">';
-        $submitCommentImage = '<img src="skins/unesco_oer/images/button-search.png" alt="Submit" width="17" height="17" class="submitCommentImage">';
+        $submitCommentImage = '<img src="skins/unesco_oer/images/button-search.png" alt="Add Comment" width="17" height="17" class="submitCommentImage">';
         $closeDiv = '</div>';
 
         $button = new button('submitComment', $linkText);
