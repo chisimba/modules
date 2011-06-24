@@ -34,9 +34,13 @@ $NumFilter = $this->getParam('numperpage');
 $pagelayout = $this->getParam('adaptation');
 
 
-if ($PageNum == "undefined")
+if ($PageNum == "undefined"){
     $PageNum = $NumFilter;
+    
 
+    
+}
+    
 switch ($pagelayout) {
 
     case "1a" : {
@@ -205,7 +209,7 @@ if (($LangFilter == Null or $LangFilter == 'All'))
 
             if ((!($NumFilter == null or $NumFilter == 'All' )) & $PageNum == 'undefined') {
                 $start = $PageNum - 1;
-                $end = $start + $NumFilter - 1;
+                $end = $start + $NumFilter;
             } else if (!($NumFilter == null or $NumFilter == 'All')) {
 
                 //$temp = $NumFilter * $PageNum - 1;
@@ -220,9 +224,9 @@ if (($LangFilter == Null or $LangFilter == 'All'))
 
 
 
-           // echo $start;
-          //  echo $end;
-          //  echo $PageNum;
+            echo $start;
+          echo $end;
+           echo $PageNum;
 
 
 

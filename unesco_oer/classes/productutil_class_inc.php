@@ -633,11 +633,11 @@ class productutil extends object {
     public function populateMostRated($product) {
         $content = '';
 
-        $content .= '   <div class="leftImageTabsList"><img src="' . $product['institution_thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
+        $content .= '   <div class="leftImageTabsList"><img src="' . $product['thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
                                                 <div class="rightTextTabsList">
                         	' . $product['title'] . '<br><a href="#" class="adaptationLinks">Rating = ' . $product['rating'] . ' </a>
                                                 </div>
-                                                <div class="tabsListingSpace"></div>';
+                                                <div class="tabsListingSpace"></div>   ';
         return $content;
     }
 
@@ -652,10 +652,11 @@ class productutil extends object {
 //Maybe have a table for the most Adapted, Rated and Commented to limit access times to the database
 
         $mostRatedProducts = $objDbProductRatings->getMostRatedProducts();
-
+      
         foreach ($mostRatedProducts as $childProduct) {
 //Get the original products
-            $product = $objDbProducts->getProductById($childProduct['id']);
+            $product = $objDbProducts->getProductById($childProduct['product_id']);
+            
 //Get number of adaptations for the product
             $product['rating'] = $childProduct['avg_score'];
 
@@ -668,7 +669,8 @@ class productutil extends object {
                 $thumbnail = $objDbInstitution->getInstitutionThumbnail($product['creator']);
             }
 
-            $product['institution_thumbnail'] = $product['thumbnail'];
+       
+          
             
 //$product['institution'] = $this->objInstitution->getInstitution();
             $content .= $this->populateMostRated($product);
