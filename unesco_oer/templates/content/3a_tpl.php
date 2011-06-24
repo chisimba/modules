@@ -142,20 +142,20 @@ if ($this->objUser->isLoggedIn()) {
                             </li>
                         </ul>-->
                         <ul class="ulPlusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                            <li class="grey"><a href="">Folder 1</a></li>
                         </ul>
                         <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
+                            <li class="grey"><a href="">Folder 2</a>
                             	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                	<li class="grey"><a href="">Section 1</a></li>
+                                    <li class="grey"><a href="">Section 2</a></li>
+                                    <li class="grey"><a href="">Section 3</a></li>
                                     <ul class="ulMinusPublish">
-                                        <li class="grey"><a href="">Foundation of Journalism: Writing</a>
+                                        <li class="grey"><a href="">Sub-folder 1</a>
                                         	<ul class="ulDocument">
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
+                                                <li class="grey"><a href="">Section 4</a></li>
+                                                <li class="grey"><a href="">Section 5</a></li>
+                                                <li class="grey"><a href="">Section 6</a></li>
                                             </ul>
                                         </li>
                                     </ul>
