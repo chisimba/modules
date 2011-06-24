@@ -162,7 +162,7 @@ class institutionmanager extends object {
         $institutionData['id'] = $this->getInstitutionId();
         $institutionData['description'] = $this->getInstitutionDescription();
         $institutionData['type'] = $this->getInstitutionType();
-        $institutionData['country'] = $this->getInstitutionCountry();
+        $institutionData['country'] = $this->getInstitutionCountryId();
         $address = $this->getInstitutionAddress();
         $institutionData['address1'] = $address['address1'];
         $institutionData['address2'] = $address['address2'];
