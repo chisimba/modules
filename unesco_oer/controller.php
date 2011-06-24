@@ -1145,68 +1145,68 @@ class unesco_oer extends controller {
         $typeOfOccupation = $this->getParam('type_of_occupation');
         $accountstatus = 1; // Default Status Active
         // Create an array of fields that cannot be empty
-        $checkFields = array(
-            $captcha,
-            $username,
-            $firstname,
-            $surname,
-            $email,
-            $repeatemail,
-            $password,
-            $repeatpassword
-        );
+//        $checkFields = array(
+//            $captcha,
+//            $username,
+//            $firstname,
+//            $surname,
+//            $email,
+//            $repeatemail,
+//            $password,
+//            $repeatpassword
+//        );
         
         // now differentiate if registration is by user or Admin
         //replace the code
-//           $checkFields = array();
-//         if($this->objUser->isAdmin()){
-//             $checkFields = array(
-//                 $captcha,
-//                 $username,
-//                 $firstname,
-//                 $surname,
-//                 $email,
-//                 $repeatemail,
-//                 $password,
-//                 $repeatpassword
-//                 );
-//           }else{
-//               $checkFields = array(
-//                   $captcha,
-//                   $username,
-//                   $firstname,
-//                   $surname,
-//                   $email,
-//                   $repeatemail,
-//                   $password,
-//                   $repeatpassword,
-//                   $address,
-//                   $city,
-//                   $state,
-//                   $postaladdress
-//                   );
-//           }
-//
+           $checkFields='';
+         if($this->objUser->isAdmin()){
+             $checkFields = array(
+                 $captcha,
+                 $username,
+                 $firstname,
+                 $surname,
+                 $email,
+                 $repeatemail,
+                 $password,
+                 $repeatpassword
+                 );
+           }else{
+               $checkFields = array(
+                   $captcha,
+                   $username,
+                   $firstname,
+                   $surname,
+                   $email,
+                   $repeatemail,
+                   $password,
+                   $repeatpassword,
+                   $address,
+                   $city,
+                   $state,
+                   $postaladdress
+                   );
+           }
+
         // Create an Array to store problems
         $problems = array();
         
         //check that the resiter is not a user manager
-//        if(!$this->objUser->isAdmin()){
-//            if($address ==''){
-//                $problems[]='noAddress';
-//            }
-//
-//            if($city == ''){
-//                $problems[]='noCity';
-//            }
-//
-//            if($state ==''){
-//                $problems[]='noState';
-//            }
-//            if ($postaladdress==''){
-//                $problems='noPostalCode';
-//            }
-//        }
+        if(!$this->objUser->isAdmin()){
+            if($address ==''){
+                $problems[]='noAddress';
+            }
+
+            if($city == ''){
+                $problems[]='noCity';
+            }
+
+            if($state ==''){
+                $problems[]='noState';
+            }
+            if ($postaladdress==''){
+                $problems='noPostalCode';
+            }
+        }
         // Check that username is available
         if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
             $problems[] = 'usernametaken';
@@ -1253,21 +1253,22 @@ class unesco_oer extends controller {
 
 //Now differentiate if registration is by user or Admin
 //and replace the  code
-//            if($this->objUser->isAdmin()){
-//                return $this->__userListingForm();
-//            }else{
-//              $this->setSession('id', $pkid);
-//              $this->setSession('password', $password);
-//              $this->setSession('time', $password);
-//              return $this->nextAction('detailssent');
-//              }
+//
+            if($this->objUser->isAdmin()){
+                return $this->__userListingForm();
+            }else{
+              $this->setSession('id', $pkid);
+              $this->setSession('password', $password);
+              $this->setSession('time', $password);
+              return $this->nextAction('detailssent');
+              }
 
 
             //$this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             //$this->setSession('time', $password);
             //return $this->nextAction('detailssent');
-            return $this->__userListingForm();
+            //return $this->__userListingForm();
         }
     }
 
@@ -1478,6 +1479,7 @@ class unesco_oer extends controller {
         } else {
             $this->setVarByRef('user', $user);
         }
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'confirm_tpl.php';
     }
 

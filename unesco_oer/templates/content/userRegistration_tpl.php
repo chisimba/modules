@@ -148,26 +148,26 @@ $table->startRow();
 $table->addCell($firstnameLabel->show());
 $table->addCell($firstname->show().$required);
 $table->endRow();
-//
-//$surname = new textinput('register_surname');
-//$surnameLabel = new label($this->objLanguage->languageText('word_surname', 'system').'&nbsp;', 'input_register_surname');
-//
-//if ($mode == 'addfixup') {
-//    $surname->value = $this->getParam('register_surname');
-//
-//    if ($this->getParam('register_surname') == '') {
-//        $messages[] = $this->objLanguage->languageText('mod_userdetails_entersurname', 'userdetails');
-//    }
-//}
-//if (isset($userstring[1]) && $mode == 'add')
-//{
-//    $surname->value = $userstring[1];
-//}
-//
-//$table->startRow();
-//$table->addCell($surnameLabel->show(),10,10, 'null');
-//$table->addCell($surname->show().$required);
-//$table->endRow();
+
+$surname = new textinput('register_surname');
+$surnameLabel = new label("Last Name");
+
+if ($mode == 'addfixup') {
+    $surname->value = $this->getParam('register_surname');
+
+    if ($this->getParam('register_surname') == '') {
+        $messages[] = $this->objLanguage->languageText('mod_userdetails_entersurname', 'userdetails');
+    }
+}
+if (isset($userstring[1]) && $mode == 'add')
+{
+    $surname->value = $userstring[1];
+}
+
+$table->startRow();
+$table->addCell($surnameLabel->show(),10,10, 'null');
+$table->addCell($surname->show().$required);
+$table->endRow();
 
 //$staffnum = new textinput('register_staffnum');
 //$staffnumLabel = new label($this->objLanguage->languageText('phrase_staffstudnumber', 'userregistration', 'Staff / Student number').'&nbsp;', 'input_register_staffnum');
@@ -211,12 +211,12 @@ $table->endRow();
 
 
 
-$textinput = new textinput('register_surname');
-$textinput->size =70;
-$table->startRow();
-$table->addCell('Last Name');
-$table->addCell($textinput->show().$required);
-$table->endRow();
+//$textinput = new textinput('register_surname');
+//$textinput->size =70;
+//$table->startRow();
+//$table->addCell('Last Name');
+//$table->addCell($textinput->show().$required);
+//$table->endRow();
 
 $textinput = new textinput('register_cellnum');
 $textinput->size =70;
