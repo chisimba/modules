@@ -308,7 +308,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 //                                            $languages = $this->objDbAvailableProductLanguages->getProductLanguage($product['id']);
 //                                            $theProduct = $product + $languages;
 
-                                            echo $this->objProductUtil->populateListView($products);
+                                            echo $this->objProductUtil->populateListViewtemp($products);
                                      //   }
                                         //echo $this->objProductUtil->populateListView();
                     ?>

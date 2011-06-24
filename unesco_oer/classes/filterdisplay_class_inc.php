@@ -309,7 +309,7 @@ class filterdisplay extends object {
     }
 
 
-    public function Pagination($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring,$NumFilter,$PageNum,$pageinfo){
+    public function Pagination($page, $SortFilter, $TotalPages, $NumFilter, $PageNum,$products){
 
 
 
@@ -319,9 +319,9 @@ class filterdisplay extends object {
 
        
 
-                        $TotalRecords = $this->objDbProducts->getTotalEntries($adaptationstring);
-                        $TotalPages = ceil($TotalRecords / $NumFilter);
-
+                  //      $TotalRecords = $this->objDbProducts->getTotalEntries($adaptationstring);
+                     //   $TotalPages = ceil($TotalRecords / $NumFilter);
+                     $TotalPages = ceil(count($products)/$NumFilter);
 
                         if ($TotalPages > 0) {
 
@@ -364,7 +364,7 @@ class filterdisplay extends object {
                              $filterLang->cssClass = "leftColumnSelectDropdown";
 
                             $filtersort->addoption('None');
-                            $filtersort->addoption('Date');
+                         //   $filtersort->addoption('Date');
                             $filtersort->addOption('Alphabetical');
 
 

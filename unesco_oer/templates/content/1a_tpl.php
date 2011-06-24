@@ -328,8 +328,8 @@ $this->appendArrayVar('headerParams', $js);
 
 
                 <?php
-                $Pagination = $this->getobject('filterdisplay', 'unesco_oer');
-                $Pagination->Pagination('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum, $pageinfo)
+//                $Pagination = $this->getobject('filterdisplay', 'unesco_oer');
+//                $Pagination->Pagination('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum, $pageinfo)
                 ?>
 
 

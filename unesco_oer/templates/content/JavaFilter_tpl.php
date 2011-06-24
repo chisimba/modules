@@ -149,7 +149,7 @@ if (!($LangFilter == Null or $LangFilter == 'All')) {
                         
     //convert to 1d array
 }
-echo $total . "         eeeeeeeeeeeeeeeeee";
+
 
 if (($LangFilter == Null or $LangFilter == 'All')) 
   if  (($ThemeFilter == Null or $ThemeFilter == 'All'))
@@ -355,6 +355,9 @@ switch ($pagelayout) {
             }
 
             echo $objTable->show();
+            
+           
+
 
 
             // echo $Themes[1]['product_id'];echo "<br>"
@@ -510,8 +513,8 @@ $thumbnail = ' <div class="paginationDiv">
 
 
 
-$TotalRecords = $this->objDbProducts->getTotalEntries($buildstring);
-$TotalPages = ceil($TotalRecords / $NumFilter);
+
+$TotalPages = ceil(count($products) / $NumFilter);
 
 
 if ($TotalPages > 0) {

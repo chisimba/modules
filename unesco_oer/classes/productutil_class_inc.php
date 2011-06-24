@@ -715,6 +715,239 @@ class productutil extends object {
         return $moreAdaptedProductsLink;
     }
 
+
+
+
+
+
+
+public function populateListViewtemp($data) {
+
+        $content = '     
+                                      <script src="http://code.jquery.com/jquery-latest.js"></script>
+                            <script>
+                           $(document).ready(function(){';
+
+
+
+        foreach ($data as $products) {
+        
+      //  for ($i = $start; $i < ($end); $i++) { 
+
+            $divheading = '.' . $products['title'] . 'Div';
+            $linkheading = '.' . $products['title'] . 'Link';
+            $titleheading = '.' . $products['title'] . 'Title';
+
+            $content.= "
+                  $('$divheading').hide();
+
+                  $('$linkheading').show();
+                 
+
+
+ 
+
+                  $('$linkheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                   $('$titleheading ').slideToggle(); 
+
+                  });";
+        }
+
+        $content .= '        
+
+
+                                    });
+
+                            </script>
+                                        ';
+
+
+
+
+
+
+
+
+
+
+
+       foreach ($data as $products) {
+       //  for ($i = $start; $i < ($end); $i++) { 
+
+            $divheading = $products['title'] . 'Div';
+            $linkheading = $products['title'] . 'Link';
+            $titleheading = $products['title'] . 'Title';
+
+            $products['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($products['id']);
+            $languages = $this->objDbAvailableProductLanguages->getProductLanguage($products['id']);
+            $product = $products + $languages;
+
+
+            $editbutton = new button();
+            $editbutton->cssClass = "listingLanguageLinkAndIcon";
+
+
+            $parentid = $product['id'];
+
+            $textinput = new textinput("bookmarktitle");
+            $textinput->value = $product['title'];
+
+            $commentText = new textarea('newComment');
+            $commentText->setCssClass("commentTextBox");
+
+            //TODO make parameter pagename dynamic
+            $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
+
+            $button = new button('submitComment', $this->uri(array("action" => 'bookmarkdata', "label" => $product['id'])));
+            $time = time();
+            //  $userid = objdbuserextra->
+
+            $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            $button->onclick = "javascript:bookmarkupdate('$location','$time')";
+            $userid = $this->objUser->userId();
+
+
+
+
+            $form = new form('3a_comments_ui', $uri);
+            $form->addToForm($textinput);
+            $form->addToForm("<br><br>");
+            $form->addToForm($commentText);
+            $form->addToForm("<br><br>");
+
+            $form->addToForm($button->show()); //TODO use text link instead of button
+
+
+
+
+
+
+
+
+
+
+            $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
+            $abLink->cssClass = "listingLanguageLinkAndIcon";
+            $abLink->link = $product['title'];
+
+            $parentid = $product['id'];
+
+            $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+            $CommentLink->cssClass = 'adaptationLinks';
+            $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+
+            /* if ($product['new'] == 'true') {
+              $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
+              } */
+
+//This some how forces the page to display the 0
+            if ($product['noOfAdaptations'] == 0) {
+                $product['noOfAdaptations'] = 0;
+            }
+
+            $content.="
+                  <div class='productsListView'>
+                   <h2>" . $abLink->show() . "</h2><br>
+                    <div class='productlistViewLeftFloat'>
+                        <img src='skins/unesco_oer/images/icon-new.png' alt='New' width='18' height='18'class='imgFloatRight'>
+                        <div class='listingAdaptationLinkDiv'>new</div>
+                  	</div>
+                    <div class='productlistViewLeftFloat'>
+                        <img src='skins/unesco_oer/images/small-icon-adaptations.png' alt='Adaptation' width='18' height='18'class='imgFloatRight'>
+                        <div class='listingAdaptationLinkDiv'><a href='#' class='adaptationLinks'>" . $CommentLink->show() . " </a></div>
+                    </div>
+                    <div class='productlistViewLeftFloat'>
+                        <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='Bookmark' width='18' height='18'class='imgFloatRight'>
+                        <div class='listingAdaptationLinkDiv'>
+                        
+
+            </div>
+                    
+                <a href='javascript:void(0)'   class='$linkheading'>Bookmark
+              
+                
+                        
+
+                            
+                  
+                    
+                
+
+        
+
+      
+                   </div>
+                 
+                   
+                
+        
+                
+
+
+
+
+              
+              <div class='productlistViewLeftFloat'>
+                        <img src='skins/unesco_oer/images/small-icon-make-adaptation.png' alt='Make Adaptation' width='18' height='18'class='imgFloatRight'>
+                        <div class='listingAdaptationLinkDiv'><a href='#' class='adaptationLinks'>make adaptation</a></div>
+                  </div>
+                    <div class='productlistViewLeftFloat'>
+                      <img src='skins/unesco_oer/images/icon-languages.png' alt='Languages search' width='24' height='24'class='imgFloatRight'>
+                        <div class='listingAdaptationLinkDiv'>
+                        	<select name='' class='listingsLanguageDropDown'>
+                
+                
+                
+                
+                ";
+
+            $index = 0;
+            $prodLanguages = $this->objDbproductlanguages->getLanguageNameByID($product['language']);
+         $content .= '<option value="">' . $prodLanguages . '</option>';
+//            foreach ($product as $languages) {
+////Check if languages is empty
+//                foreach ($languages as $language) {
+////print_r($language);
+//                    $content .= '<option value="">' . $language . '</option>';
+//                    $index++;
+//                }
+//            }
+//            if ($index == 0) {
+//                $content .= '<option value="">' . $prodLanguages[0]['name']. '</option>';
+//            }
+
+            $content .= "</select>
+                        </div>
+        
+                    </div> <br><br><br><br>
+       
+       
+                    
+   <div class='$divheading'> 
+                
+ 
+                
+             
+                " .  "
+                                            
+                  
+                </div>
+                
+             </div>
+
+        ";
+        }
+        return $content;
+    }
+
+
+
+
+
+
+
 }
 
 ?>
