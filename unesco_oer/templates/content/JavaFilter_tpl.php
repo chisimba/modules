@@ -216,12 +216,9 @@ switch ($pagelayout){
 //      
 
 
-        if ($sort == 'Date Added')
-            $buildstring .= ' order by created_on';
-        else if ($sort == 'Alphabetical')
-            $buildstring .= ' order by title';
+       
 
-        $TotalEntries = $buildstring;
+
 
 
 
@@ -274,18 +271,40 @@ switch ($pagelayout){
                                         $newRow = true;
                                         $count = 0;
                                         $noOfAdaptations = 0;
-                                        echo $total;
-
+                                    
+                                      //  echo $total;
+                                        
+                                        $products = array();
+                                        
                                        foreach ($result as $results) {  
-
-                                        $prodID = " id = '$results' and $TotalEntries";
-                                             echo $prodID;
-                                      
-                                       $products = $this->objDbProducts->getFilteredProducts($prodID);
+                                         
+//                                        $prodID = " id = '$results'"; 
+                                          
+                                
+                                        array_push($products, $this->objDbProducts->getProductByID($results));
+                                    
+                                       }
+                                       
+                                       
+                                      if ($sort == 'Alphabetical'){
+                                           asort($products['title']);
+                                           array_pop($products);
+                                           
+                                           
+                                             }
+                                 //  $buildstring .= ' order by created_on';
+                                     //    else if ($sort == 'Alphabetical')
+                                     //         $buildstring .= ' order by title';
+                                       
+                                 
+                                  
+                                     //   var_dump($products);
+                                 
+                                        
                                        
                                         foreach ($products as $product){
-
-                     
+                                      
+                                          
                                             if ($product['parent_id'] == null) {
                                                 $count++;
                                                 $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
@@ -307,15 +326,16 @@ switch ($pagelayout){
                                                 $objTable->endRow();
                                                 $count = 0;
                                             }
-                                        }
-                                        }
-                                        echo $objTable->show();     
+                                        } 
+                                        
+                                        echo $objTable->show();  
+                                                
                                     
                                         // echo $Themes[1]['product_id'];echo "<br>"
                                        //  echo $result[1];
                                        //  echo $Auths[0]['id'];
                                     //   echo $TotalEntries;
-                                            var_dump($result);
+                                               //  var_dump($product);
         
         
         
