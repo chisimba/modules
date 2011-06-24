@@ -41,9 +41,13 @@ class productutil extends object {
 
 
         $content = '';
-        $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
+        $uri = $this->uri(array("action" => 'ViewProduct', "id" => $product['id']));
+        $abLink = new link($uri);
         $abLink->cssClass = "listingLanguageLinkAndIcon";
         $abLink->link = $product['title'];
+
+        $thumbLink = new link($uri);
+        $thumbLink->link = '<img src="' . $product['thumbnail'] . '" width="79" height="101">';
 
         $parentid = $product['id'];
 
@@ -79,7 +83,7 @@ class productutil extends object {
         $content.='
                                 <div class="imageGridListing">
                                     <div class="imageTopFlag"></div>
-                                    <img src="' . $product['thumbnail'] . '" width="79" height="101">
+                                    '. $thumbLink->show() .'
                                     '. $imageBottomFlag .'
                                 </div>
                                 <br>
