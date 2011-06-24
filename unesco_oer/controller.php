@@ -1475,13 +1475,13 @@ class unesco_oer extends controller {
 
         switch (strtolower($this->getParam('add_product_submit'))) {
             case "cancel":
-                return $this->__home();
+                $this->nextAction($this->getParam('nextAction') , array('id' => $this->getParam('productID')));
                 break;
 
             case "upload":
                 //test if all fields are valid
                 if ($product->handleUpload()) {
-                    return $this->__home();
+                    $this->nextAction($this->getParam('nextAction') , array('id' => $this->getParam('productID')));
                 } else {
                     $this->setLayoutTemplate('maincontent_layout_tpl.php');
                     return $defaultTemplate;
