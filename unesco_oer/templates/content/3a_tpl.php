@@ -173,7 +173,7 @@ if ($this->objUser->isLoggedIn()) {
                         	<div class="printEmailDownloadIcons">
                         <?php
                         if ($this->objUser->isLoggedIn()) {
-                            $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID , 'prevAction' => 'home'));
+                            $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID , 'prevAction' => 'ViewProduct'));
                             $editLink = new link($uri);
                             $editLink->title = "Edit Metadata";
                             $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';

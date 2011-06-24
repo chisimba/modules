@@ -14,7 +14,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-echo $product->showMetaDataInput();
+echo $product->showMetaDataInput($this->getParam('prevAction'));
 //var_dump($product->dummyValue);
 
 ?>

@@ -849,7 +849,7 @@ class product extends object
         // setup button for cancellation
         $buttonCancel = new button('upload', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer'));
-        $buttonCancel->setOnClick("SubmitProduct('add_product_submit', 'cancel')");
+        $buttonCancel->setOnClick("javascript: SubmitProduct('add_product_submit', 'cancel')");
 
         
 
