@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +79,11 @@ class institutiongui extends object {
     }
 
     function showInstitutionWebsiteLink() {
-        return $this->_institutionmanager->getInstitutionWebsiteLink();
+        $acLink = new link('http://' . $this->_institutionmanager->getInstitutionWebsiteLink());
+        $acLink->cssClass = 'greyTextLink';
+        $acLink->link = $this->_institutionmanager->getInstitutionWebsiteLink();
+
+        return $acLink->show();
     }
 
     function showInstitutionThumbnail() {
@@ -111,10 +114,9 @@ class institutiongui extends object {
         $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'deleteinstitution';
         $acLink->link = 'Delete';
-        
+
         return $acLink->show();
     }
-
 
     function showNewInstitutionLinkThumbnail() {
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => NULL)));
@@ -136,26 +138,27 @@ class institutiongui extends object {
         $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'deleteinstitution';
         $acLink->link = '<img src="skins/unesco_oer/images/icon-delete.png">';
-        
+
         return $acLink->show();
     }
 
     function showAllInstitutions() {
         return $this->_institutionmanager->getAllInstitutions();
     }
+
 }
 ?>
 
 <script type="text/javascript">
-jQuery(document).ready(function(){
+    jQuery(document).ready(function(){
 
     jQuery("a[class=deleteInstitution]").click(function(){
 
-        var r=confirm( "Are you sure you want to delete this institution?");
-        if(r== true){
-            window.location=this.href;
-        }
-        return false;
+    var r=confirm( "Are you sure you want to delete this institution?");
+    if(r== true){
+    window.location=this.href;
     }
-}
+    return false;
+    }
+    }
 </script>

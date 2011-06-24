@@ -54,7 +54,8 @@ if (count($Institution) > 0) {
 
         $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $Institutions['id'])));
         $institutionLink->cssClass = 'darkGreyColour';
-        $institutionLink->link = $name;
+        $institutionLink->link = '<img align="top"  width="79" height="79" src="' .
+                $institutionGUI->showInstitutionThumbnail() . '" />';
 
         //Trim the text of the description
         if (strlen($institutionGUI->showInstitutionDescription()) > 100) {
@@ -62,8 +63,10 @@ if (count($Institution) > 0) {
         } else {
             $description = $institutionGUI->showInstitutionDescription();
         }
-        $content.='<div id="institutions"><img align="top"  width="79" height="79" src="' .
-                $institutionGUI->showInstitutionThumbnail() . '" />&nbsp;&nbsp;'.$description.'<br/>
+
+
+        $content.='
+            <div id="institutions"> ' . $institutionLink->show() . '&nbsp;&nbsp;'.$description.'<br/>
           ' . $institutionGUI->showEditInstitutionLinkThumbnail($Institutions['id']) . ' |
           ' . $institutionGUI->showDeleteInstitutionLinkThumbnail($Institutions['id']) . '&nbsp;&nbsp;
 
