@@ -101,7 +101,7 @@ $institutionGUI->getInstitution($institutionId);
                         }
                     ?>
                         <br><br>
-                        <span class="greyText fontBold">Institution website:</span> <a href="#" class="greyTextLink"><?php echo $institutionGUI->showInstitutionCountry(); ?></a>
+                        <span class="greyText fontBold">Institution website:</span> <a href="#" class="greyTextLink"><?php echo $institutionGUI->showInstitutionWebsiteLink(); ?></a>
                         <br><br>
                         <span class="greyText fontBold">Keywords:</span> <a>
                 <?php
