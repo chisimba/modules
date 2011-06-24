@@ -631,11 +631,17 @@ class productutil extends object {
      * @return <type> $content
      */
     public function populateMostRated($product) {
+        
+        
+        $ratedLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
+        $ratedLink->cssClass = 'adaptationLinks';
+        $ratedLink->link = "Rating = " .$product['rating'];
+        
         $content = '';
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
                                                 <div class="rightTextTabsList">
-                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">Rating = ' . $product['rating'] . ' </a>
+                        	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $ratedLink->show() . ' </a>
                                                 </div>
                                                 <div class="tabsListingSpace"></div>   ';
         return $content;
