@@ -102,7 +102,7 @@ class institutiongui extends object {
     function showEditInstitutionLink($institutionId) {
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'adaptationListingLink';
-        $acLink->link = 'Edit';
+        $acLink->link = 'Update';
 
         return $acLink->show();
     }

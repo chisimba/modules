@@ -1,5 +1,4 @@
 <?php
-
 //Display errors
 error_reporting(E_ALL);
 ini_set('display_errors', 'Off');
@@ -33,7 +32,7 @@ $header = new htmlheading();
 $header->type = 1;
 $header->str = "Institutions";
 echo '<div id="institutionheading">';
-echo $header->show();
+echo $header->show() . '<br><br />';
 
 
 $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
@@ -57,28 +56,47 @@ if (count($Institution) > 0) {
         $institutionLink->cssClass = 'darkGreyColour';
         $institutionLink->link = $name;
 
-        $content .= ' <div class="institutionsListView">
-                    <div class="productAdaptationListViewLeftColumn">
-                    	   <img src="' . $institutionGUI->showInstitutionThumbnail() . '" alt="Adaptation" width="79" height="79" class="smallLisitngIcons">
-                        <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">' . $institutionGUI->showEditInstitutionLinkThumbnail($Institutions['id']) . '</a> |
-                        <a href="#" class="adaptationLinks">' . $institutionGUI->showDeleteInstitutionLinkThumbnail($Institutions['id']) . '</a></div>
-                    </div>
-                    <div class="productAdaptationListViewMiddleColumn">
-                    	
-                    </div>
-                    <div class="productAdaptationListViewRightColumn">
-                    	<h2> ' . $institutionLink->show() . '</h2>
-                        <br>
-                        <div class="productAdaptationViewDiv">
-                            
-                            <div class="gridAdaptationLinksDiv">
-                            	<a class="greyListingHeading">' . $institutionGUI->showInstitutionWebsiteLink() . '</a> |
-                                <a class="greyListingHeading">' . $institutionGUI->showInstitutionCountry() . '</a> |
-                                <a class="greyListingHeading">' . $institutionGUI->showInstitutionCity() . '</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>';
+        //Trim the text of the description
+        if (strlen($institutionGUI->showInstitutionDescription()) > 100) {
+            $description = substr($institutionGUI->showInstitutionDescription(), 0, 100) . '...';
+        } else {
+            $description = $institutionGUI->showInstitutionDescription();
+        }
+        $content.='<div id="institutions"><img align="top"  width="79" height="79" src="' .
+                $institutionGUI->showInstitutionThumbnail() . '" />&nbsp;&nbsp;'.$description.'<br/>
+          ' . $institutionGUI->showEditInstitutionLinkThumbnail($Institutions['id']) . ' |
+          ' . $institutionGUI->showDeleteInstitutionLinkThumbnail($Institutions['id']) . '&nbsp;&nbsp;
+
+          <a class="greyListingHeading">' . $institutionGUI->showInstitutionWebsiteLink() . '</a> |
+          <a class="greyListingHeading">' . $institutionGUI->showInstitutionCountry() . '</a> |
+          <a class="greyListingHeading">' . $institutionGUI->showInstitutionCity() . '</a>
+
+<br/>
+           </div> ';
+        /*
+          $content .= ' <div class="institutionsListView">
+          <div class="productAdaptationListViewLeftColumn">
+          <img src="' . $institutionGUI->showInstitutionThumbnail() . '" alt="Adaptation" width="79" height="79" class="smallLisitngIcons">
+          <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">' . $institutionGUI->showEditInstitutionLinkThumbnail($Institutions['id']) . '</a> |
+          <a href="#" class="adaptationLinks">' . $institutionGUI->showDeleteInstitutionLinkThumbnail($Institutions['id']) . '</a></div>
+          </div>
+          <div class="productAdaptationListViewMiddleColumn">
+
+          </div>
+          <div class="productAdaptationListViewRightColumn">
+          <h2> ' . $institutionLink->show() . '</h2>
+          <br>
+          <div class="institutionShortDescription">' . $description . ' </div>
+          <div class="productAdaptationViewDiv">
+          <div class="gridAdaptationLinksDiv">
+          <a class="greyListingHeading">' . $institutionGUI->showInstitutionWebsiteLink() . '</a> |
+          <a class="greyListingHeading">' . $institutionGUI->showInstitutionCountry() . '</a> |
+          <a class="greyListingHeading">' . $institutionGUI->showInstitutionCity() . '</a>
+          </div>
+          </div>
+          </div>
+          </div>';
+         */
 //
 //        $myTable->startRow();
 //        $myTable->addCell($Institutions['name']);
@@ -104,14 +122,14 @@ echo $fieldset1->show();
 
     jQuery(document).ready(function(){
 
-        jQuery("a[class=deleteinstitution]").click(function(){
+    jQuery("a[class=deleteinstitution]").click(function(){
 
-            var r=confirm( "Are you sure you want to delete this institution?");
-            if(r== true){
-                window.location=this.href;
-            }
-            return false;
-        }
+    var r=confirm( "Are you sure you want to delete this institution?");
+    if(r== true){
+    window.location=this.href;
+    }
+    return false;
+    }
 
 
     );
@@ -119,5 +137,5 @@ echo $fieldset1->show();
     }
 
 
-);
+    );
 </script>
