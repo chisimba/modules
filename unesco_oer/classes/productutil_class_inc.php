@@ -130,7 +130,7 @@ class productutil extends object {
      * @param <type> $product
      * @return <type> $content
      */
-    public function populateListView($start,$end,$data) {
+    public function populateListView($start,$end,$products) {
 
         $content = '     
                                       <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -139,11 +139,13 @@ class productutil extends object {
 
 
 
-        foreach ($data as $products) {
+       // foreach ($data as $products) {
+        
+        for ($i = $start; $i < ($end); $i++) { 
 
-            $divheading = '.' . $products['title'] . 'Div';
-            $linkheading = '.' . $products['title'] . 'Link';
-            $titleheading = '.' . $products['title'] . 'Title';
+            $divheading = '.' . $products[$i]['title'] . 'Div';
+            $linkheading = '.' . $products[$i]['title'] . 'Link';
+            $titleheading = '.' . $products[$i]['title'] . 'Title';
 
             $content.= "
                   $('$divheading').hide();
@@ -180,15 +182,16 @@ class productutil extends object {
 
 
 
-        foreach ($data as $products) {
+      //  foreach ($data as $products) {
+         for ($i = $start; $i < ($end); $i++) { 
 
-            $divheading = $products['title'] . 'Div';
-            $linkheading = $products['title'] . 'Link';
-            $titleheading = $products['title'] . 'Title';
+            $divheading = $products[$i]['title'] . 'Div';
+            $linkheading = $products[$i]['title'] . 'Link';
+            $titleheading = $products[$i]['title'] . 'Title';
 
-            $products['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($products['id']);
-            $languages = $this->objDbAvailableProductLanguages->getProductLanguage($products['id']);
-            $product = $products + $languages;
+            $products[$i]['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($products[$i]['id']);
+            $languages = $this->objDbAvailableProductLanguages->getProductLanguage($products[$i]['id']);
+            $product = $products[$i] + $languages;
 
 
             $editbutton = new button();
