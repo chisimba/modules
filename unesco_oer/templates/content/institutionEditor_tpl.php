@@ -36,6 +36,7 @@
             $formData['websiteLink'] = $websiteLink;
             $formData['keyword1'] = $keyword1;
             $formData['keyword2'] = $keyword2;
+            $formData['thumbnail'] = $thumbnail;
 
             //Display the error messages
             $tableErrors = $this->newObject('htmltable', 'htmlelements');
