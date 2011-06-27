@@ -4,11 +4,11 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
-$adaptationstring = 'parent_id is null';
+$adaptationstring = 'parent_id is null and deleted = 0';
 
 if ($finalstring == null) {
-    $finalstring = 'parent_id is null';
-    $TotalEntries = 'parent_id is null';
+    $finalstring = 'parent_id is null and deleted = 0';
+    $TotalEntries = 'parent_id is null and deleted = 0';
 }
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
@@ -42,7 +42,7 @@ $this->appendArrayVar('headerParams', $js);
             $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
             echo $button->show();
 
-            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
             $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
             echo $abLink->show();
             ?>
@@ -93,14 +93,14 @@ $this->appendArrayVar('headerParams', $js);
 
 
             <?php
-            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
             $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
             echo $abLink->show();
             ?>
 
             <div class="gridListDivView">
                 <?php
-                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1a_tpl.php')));
+                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
                 $abLink->link = 'GRID';
                 echo $abLink->show();
                 ?>
@@ -109,7 +109,7 @@ $this->appendArrayVar('headerParams', $js);
             <div class="gridListPipe">|</div>
 
             <?php
-            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
+            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php')));
             $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
             echo $abLink->show();
             ?>
@@ -117,7 +117,7 @@ $this->appendArrayVar('headerParams', $js);
             <div class="gridListDivView">
 
                 <?php
-                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null', "page" => '1b_tpl.php')));
+                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php')));
                 $abLink->link = 'LIST';
                 echo $abLink->show();
                 ?>

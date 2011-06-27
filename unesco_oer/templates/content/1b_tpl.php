@@ -7,7 +7,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('filterdisplay', 'unesco_oer');
-$adaptationstring = "relation is null";
+$adaptationstring = "parent_id is null and deleted = 0";
 
 $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproducts.js').'" type="text/javascript"></script>';
     $this->appendArrayVar('headerParams', $js);
@@ -38,7 +38,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
         $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
        echo $button->show();
 
-        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
         $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
        echo $abLink->show();
         
@@ -93,14 +93,14 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
 
                             <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation', "page" => '1a_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
                                         $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
                                         echo $abLink->show();
                             ?>
 
                                         <div class="gridListDivView">
                                 <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
                                         $abLink->link = 'GRID';
                                         echo $abLink->show();
                                 ?>
@@ -109,7 +109,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                     <div class="gridListPipe">|</div>
 
                             <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1b_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php')));
                                         $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                                         echo $abLink->show();
                             ?>
@@ -117,7 +117,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                         <div class="gridListDivView">
 
                                 <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1b_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php')));
                                         $abLink->link = 'LIST';
                                         echo $abLink->show();
                                 ?>
@@ -135,7 +135,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                         $products = $this->objDbProducts->getFilteredProducts($finalstring);
 
                                         //Loop through the products and display each in it's own line
-                                        
+                                          $TotalRecords = $this->objDbProducts->getTotalEntries($adaptationstring);
                                         
                                         
                                     //    foreach ($products as $product) {
@@ -144,9 +144,9 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 //                                            $languages = $this->objDbAvailableProductLanguages->getProductLanguage($product['id']);
 //                                            $theProduct = $product + $languages;
 
-                                            echo $this->objProductUtil->populateListViewtemp($products);
+                            //               echo $this->objProductUtil->populateListViewtemp($products);
                                      //   }
-                                        //echo $this->objProductUtil->populateListView();
+                                       echo $this->objProductUtil->populateListView('0',$TotalRecords ,$products);
                     ?>
                               </div>          <!--</div>-->
 

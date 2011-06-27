@@ -6,7 +6,7 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('filterdisplay', 'unesco_oer');
 if ($adaptationstring == null)
-$adaptationstring = "relation is not null";
+$adaptationstring = "parent_id is not null and deleted = 0";
 
 $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproducts.js').'" type="text/javascript"></script>';
     $this->appendArrayVar('headerParams', $js);
@@ -144,7 +144,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                     <div class="navitem">
                         <div class="navitemInner">
                             <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
                                             $abLink->link = 'UNESCO OER PRODUCTS';
                                             echo $abLink->show();
                             ?>
@@ -155,7 +155,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                     <div class="navitemOnstate">
                                         <div class="navitemInnerOnstate">
                             <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php')));
                                             $abLink->link = 'PRODUCT ADAPTATIONS';
                                             echo $abLink->show();
                             ?>
@@ -199,7 +199,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
         $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
        echo $button->show();
 
-        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
         $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
        echo $abLink->show();
         
@@ -245,14 +245,14 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
 
                             <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php','MapEntries' => $MapEntries)));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php','MapEntries' => $MapEntries)));
                                             $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
                                             echo $abLink->show();
                             ?>
 
                                             <div class="gridListDivView">
                             <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php','MapEntries' => $MapEntries)));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php','MapEntries' => $MapEntries)));
                                             $abLink->link = 'GRID';
                                             echo $abLink->show();
                             ?>
@@ -261,7 +261,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                             <div class="gridListPipe">|</div>
 
 <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation not is null', "page" => '2b_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" =>$adaptationstring, "page" => '2b_tpl.php')));
                                             $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                                             echo $abLink->show();
 ?>
@@ -269,7 +269,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                             <div class="gridListDivView">
 
 <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2b_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2b_tpl.php')));
                                             $abLink->link = 'LIST';
                                             echo $abLink->show();
 ?>

@@ -41,22 +41,22 @@ if ($PageNum == "undefined") {
 switch ($pagelayout) {
 
     case "1a" : {
-            $adaptationstring = 'parent_id is null';
+            $adaptationstring = 'parent_id is null and deleted = 0';
             $view = "grid";
             break;
         }
     case "2a" : {
-            $adaptationstring = 'parent_id is not null';
+            $adaptationstring = 'parent_id is not null  and deleted = 0';
             $view = "grid";
             break;
         }
     case "1b" : {
-            $adaptationstring = 'parent_id is null';
+            $adaptationstring = 'parent_id is null  and deleted = 0';
             $view = "list";
             break;
         }
     case "2b" : {
-            $adaptationstring = 'parent_id is not null';
+            $adaptationstring = 'parent_id is not null  and deleted = 0';
             $view = "list";
             break;
         }
@@ -77,6 +77,27 @@ if ($browsemapstring != null)
     $buildstring = $browsemapstring;
 else
     $buildstring = $adaptationstring;
+
+
+
+
+
+
+
+    $adaptations= $this->objDbProducts->getFilteredProducts($adaptationstring);
+    $tempadap = array(); //convert to 1d array
+    $i = 0;
+    foreach ($adaptations as $adap ) {
+        
+        $tempadap[$i] = $adap['id'];
+        $i++;
+    }
+    
+    
+
+
+
+
 
 
 if (!($AuthFilter == Null or $AuthFilter == 'All')) {
@@ -131,7 +152,7 @@ if (!($LangFilter == Null or $LangFilter == 'All')) {
 
 
 
-$array_to_intersect = array($TempAuth, $TempTheme, $Templang);
+$array_to_intersect = array($TempAuth, $TempTheme, $Templang,$tempadap);
 $filter_empty_arrays = array_filter($array_to_intersect);
 
 $total = count($filter_empty_arrays);
@@ -158,14 +179,14 @@ if ($total >= 2) {
 
     //convert to 1d array
 }
-var_dump($result);  
+     //var_dump($result);  
 
 if (($LangFilter == Null or $LangFilter == 'All'))
     if (($ThemeFilter == Null or $ThemeFilter == 'All'))
         if (($AuthFilter == Null or $AuthFilter == 'All')) {
 
 
-            $temp = $this->objDbProducts->getFilteredProducts("parent_id is null");
+            $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
             $result = array(); //convert to 1d array
             $i = 0;
             foreach ($temp as $temps) {

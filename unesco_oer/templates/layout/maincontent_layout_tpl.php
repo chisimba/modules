@@ -3,7 +3,8 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
-$adaptationstring = "relation is null";
+$origional = "parent_id is null and deleted = 0";
+$adaptation = "parent_id is not null and deleted = 0"
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -115,7 +116,7 @@ $adaptationstring = "relation is null";
                     <ul id="sddm">
                         <li class="onStateProducts">
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
                             $abLink->link = 'UNESCO OER PRODUCTS';
                             echo $abLink->show();
                             ?>
@@ -133,7 +134,7 @@ $adaptationstring = "relation is null";
 
                         <li>
                             <?php
-                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '2a_tpl.php')));
                             $abLink->link = 'Product Adaptations';
                             echo $abLink->show();
                             ?>
@@ -178,32 +179,3 @@ $adaptationstring = "relation is null";
         </div>
     </body>
 </html>
-<script>
-
-    function sendThemeFilterform()
-    {
-        document.forms["ThemeFilter"].submit();
-    }
-
-    function sendLanguageFilterform()
-    {
-        document.forms["LanguageFilter"].submit();
-
-    }function sendAuthorFilterform()
-    {
-        document.forms["AuthorFilter"].submit();
-    }
-
-
-    function sendSortFilterform()
-    {
-        document.forms["SortFilter"].submit();
-    }
-
-    function sendNumFilterform()
-    {
-        document.forms["NumFilter"].submit();
-    }
-
-</script>
-

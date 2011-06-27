@@ -22,7 +22,7 @@ class dbproductratings extends dbtable {
     }
 
     function getMostRatedProducts() {
-        $sql = "SELECT product_id, ROUND(AVG(score), 0) AS avg_score FROM tbl_unesco_oer_product_ratings GROUP BY product_id ORDER BY avg_score DESC LIMIT 3";
+        $sql = "SELECT product_id , ROUND(AVG(score), 0) AS avg_score FROM tbl_unesco_oer_product_ratings GROUP BY product_id ORDER BY avg_score DESC LIMIT 3";
 
         return $this->getArray($sql);
     }

@@ -37,7 +37,7 @@ $Manual = $this->getParam('manual');
 $Besoractile = $this->getParam('bestprac');
 $Guide = $this->GetParam('guide');
 $NumFilter = $this->getParam('numperpage');
-
+$pagelayout = $this->getParam('adaptation');
 $this->objDbproductthemes = $this->getobject('dbproductthemes', 'unesco_oer');
 $this->objDbproductlanguages = $this->getobject('dbproductlanguages', 'unesco_oer');
 $this->objDbresourcetypes = $this->getobject('dbresourcetypes', 'unesco_oer');
@@ -115,9 +115,58 @@ $this->objDbProducts = $this->getobject('dbproducts', 'unesco_oer');
 //         $TotalRecords = $objDbProducts->getTotalEntries($buildstring);
         
         
+switch ($pagelayout) {
+
+    case "1a" : {
+            $adaptationstring = 'parent_id is null and deleted = 0';
+            $view = "grid";
+            break;
+        }
+    case "2a" : {
+            $adaptationstring = 'parent_id is not null  and deleted = 0';
+            $view = "grid";
+            break;
+        }
+    case "1b" : {
+            $adaptationstring = 'parent_id is null  and deleted = 0';
+            $view = "list";
+            break;
+        }
+    case "2b" : {
+            $adaptationstring = 'parent_id is not null  and deleted = 0';
+            $view = "list";
+            break;
+        }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
         
         
+
+    $adaptations= $this->objDbProducts->getFilteredProducts($adaptationstring);
+    $tempadap = array(); //convert to 1d array
+    $i = 0;
+    foreach ($adaptations as $adap ) {
         
+        $tempadap[$i] = $adap['id'];
+        $i++;
+    }
+    
+    
+
+
+       
         
         
         
@@ -173,7 +222,7 @@ if (!($LangFilter == Null or $LangFilter == 'All')) {
 
 
 
-        $array_to_intersect = array($TempAuth, $TempTheme, $Templang);
+        $array_to_intersect = array($TempAuth, $TempTheme, $Templang, $tempadap);
         $filter_empty_arrays = array_filter($array_to_intersect);
 
         $total = count($filter_empty_arrays);

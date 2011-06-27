@@ -421,31 +421,3 @@ $adaptationstring = "parent_id is null";
     </div>
 </body>
 </html>
-<script>
-
-    function sendThemeFilterform()
-    {
-        document.forms["ThemeFilter"].submit();
-    }
-
-    function sendLanguageFilterform()
-    {
-        document.forms["LanguageFilter"].submit();
-
-    }function sendAuthorFilterform()
-    {
-        document.forms["AuthorFilter"].submit();
-    }
-
-
-    function sendSortFilterform()
-    {
-        document.forms["SortFilter"].submit();
-    }
-
-    function sendNumFilterform()
-    {
-        document.forms["NumFilter"].submit();
-    }
-
-</script>

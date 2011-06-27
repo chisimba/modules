@@ -142,10 +142,12 @@ class productutil extends object {
        // foreach ($data as $products) {
         
         for ($i = $start; $i < ($end); $i++) { 
+            
+             $temp = str_replace (" ", "", $products[$i]['title']);
 
-            $divheading = '.' . $products[$i]['title'] . 'Div';
-            $linkheading = '.' . $products[$i]['title'] . 'Link';
-            $titleheading = '.' . $products[$i]['title'] . 'Title';
+            $divheading = '.' . $temp . 'Div';
+            $linkheading = '.' . $temp . 'Link';
+            $titleheading = '.' . $temp . 'Title';
 
             $content.= "
                   $('$divheading').hide();
@@ -185,9 +187,11 @@ class productutil extends object {
       //  foreach ($data as $products) {
          for ($i = $start; $i < ($end); $i++) { 
 
-            $divheading = $products[$i]['title'] . 'Div';
-            $linkheading = $products[$i]['title'] . 'Link';
-            $titleheading = $products[$i]['title'] . 'Title';
+             
+             $temp = str_replace (" ", "", $products[$i]['title']);
+            $divheading = $temp. 'Div';
+            $linkheading = $temp . 'Link';
+            $titleheading = $temp . 'Title';
 
             $products[$i]['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($products[$i]['id']);
             $languages = $this->objDbAvailableProductLanguages->getProductLanguage($products[$i]['id']);
@@ -339,7 +343,7 @@ class productutil extends object {
  
                 
              
-                " .  "
+                " . $form->show().  "
                                             
                   
                 </div>
@@ -938,7 +942,7 @@ public function populateListViewtemp($data) {
  
                 
              
-                " .  "
+                " . $form->show() . "
                                             
                   
                 </div>
