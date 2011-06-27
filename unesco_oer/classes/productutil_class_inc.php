@@ -198,28 +198,34 @@ class productutil extends object {
             $product = $products[$i] + $languages;
 
 
-            $editbutton = new button();
-            $editbutton->cssClass = "listingLanguageLinkAndIcon";
+         //   $editbutton = new button( "Submit","Submit");
+          //  $editbutton->cssClass = "listingLanguageLinkAndIcon";
 
 
             $parentid = $product['id'];
-
-            $textinput = new textinput("bookmarktitle");
+          $textname = $temp . "text";
+          $commentboxname = $temp . "comment";
+            $textinput = new textinput($textname);
             $textinput->value = $product['title'];
 
-            $commentText = new textarea('newComment');
+            $commentText = new textarea($commentboxname);
             $commentText->setCssClass("commentTextBox");
 
             //TODO make parameter pagename dynamic
             $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
 
-            $button = new button('submitComment', $this->uri(array("action" => 'bookmarkdata', "label" => $product['id'])));
+            $button = new button('submitComment'," Submit Comment");
             $time = time();
             //  $userid = objdbuserextra->
+             $userid = $this->objUser->userId();
+
+            
 
             $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            $button->onclick = "javascript:bookmarkupdate('$location','$time')";
-            $userid = $this->objUser->userId();
+            
+            
+            $button->onclick = "javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname')";
+      
 
 
 

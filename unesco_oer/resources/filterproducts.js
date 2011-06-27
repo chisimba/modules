@@ -153,7 +153,7 @@ function ajaxFunction(id){
 
 
 
-function bookmarkupdate(location,time){
+function bookmarkupdate(time,parentid,userid,textname,commentboxname){
     var ajaxRequest;
 
     try{
@@ -173,17 +173,21 @@ function bookmarkupdate(location,time){
             }
         }
     }
+    
+    var temptext = "input_" + textname;
+    var tempcomment = "input_" + commentboxname;
+    
   
-    var Title = document.getElementById('input_bookmarktitle').value;
-    var Description = document.getElementById('input_newComment').value;
+    var Title = document.getElementById(temptext).value;
+    var Description = document.getElementById(tempcomment).value;
    
 
 
               
 
-    var queryString = "Title=" + Title + "&Description=" + Description  + "&time=" + time + "&location=" + location ;
+    var queryString = "Title=" + Title + "&Description=" + Description  + "&time=" + time  + "&parentid=" + parentid + "&userid=" + userid ;
      
-    ajaxRequest.open("GET", "index.php?module=unesco_oer&action=bookmarkdata&" + queryString, true);
+    ajaxRequest.open("GET", "index.php?module=unesco_oer&action=BookmarkData&" + queryString, true);
     ajaxRequest.send(null);
      
    

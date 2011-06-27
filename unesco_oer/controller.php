@@ -216,28 +216,39 @@ class unesco_oer extends controller {
     public function __JavaFilter() {
 
         return "JavaFilter_tpl.php";
-        die();
+       
     }
 
-    public function __bookmarkdata() {
-        $label = $this->getParam('Title');
-        $description = $this->getParam('Description');
-        $time = $this->getParam('time');
-        $url = $this->getParam('location');
-
-        $this->objbookmarkmanager->addbookmark($label, $description, $url);
-    }
-
+    
     public function __JavaFilternum() {
 
 
 
         $temp = $this->objjavafilt->displayprods();
         echo $temp;
+        
+           
 
         die();
     }
 
+    public function __BookmarkData() {
+          echo "ttttttttttttttttttttttttt";
+        $label = $this->getParam('Title');
+        $description = $this->getParam('Description');
+        $time = $this->getParam('time');
+        $url = $this->getParam('location');
+         $parentid = $this->getParam('parentid');
+          $userid = $this->getParam('userid');
+    
+
+        $this->objbookmarkmanager->addbookmark($label, $description, $url,$parentid,$userid);
+        
+        die();
+    }
+
+    
+    
     public function __PaginationFilter() {
 
 
