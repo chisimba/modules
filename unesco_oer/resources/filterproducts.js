@@ -180,17 +180,21 @@ function bookmarkupdate(time,parentid,userid,textname,commentboxname){
   
     var Title = document.getElementById(temptext).value;
     var Description = document.getElementById(tempcomment).value;
-   
-
-
-              
-
+    
+    
+    if ((Title == "") || (Description =="")){
+        alert("Please fill in the required fields")
+            
+    }
+    
+    else {
+         
     var queryString = "Title=" + Title + "&Description=" + Description  + "&time=" + time  + "&parentid=" + parentid + "&userid=" + userid ;
      
     ajaxRequest.open("GET", "index.php?module=unesco_oer&action=BookmarkData&" + queryString, true);
     ajaxRequest.send(null);
      
-   
+    }
 
 }
 

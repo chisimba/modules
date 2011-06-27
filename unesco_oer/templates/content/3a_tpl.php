@@ -7,6 +7,17 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('dbcomments', 'unesco_oer');
 $product = $this->getObject('product', 'unesco_oer');
 $product->loadProduct($productID);
+
+$js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
+$this->appendArrayVar('headerParams', $js);
+
+ $this->_institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
+        $this->objLanguage = $this->getObject("language", "language");
+        $this->objDbProducts = $this->getObject("dbproducts", "unesco_oer");
+         $this->objDbproductlanguages = $this->getObject("dbproductlanguages", "unesco_oer");
+        $this->objDbAvailableProductLanguages = $this->getObject("dbavailableproductlanguages", "unesco_oer");
+        $this->objUser = $this->getObject("user", "security");
+       
 //load java script
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('ratingsys.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
@@ -190,14 +201,36 @@ if ($this->objUser->isLoggedIn()) {
     $editLink->link = $linkText;
     echo $editLink->show();
 }
+
+
+
+         
+ $products = $this->objDbProducts->getProductByID($productID);
+   echo  $this->objProductUtil->populatebookmark($products);
+
+   
+
+
+
+
+
+
+
+
+
+
 ?>
 
-                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Email" width="19" height="15"></a>
+                
+                
+                
+                
+<!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Email" width="19" height="15"></a>-->
 
 
 
-
-                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" alt="Download" width="19" height="15"></a>
+<!--
+                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" alt="Download" width="19" height="15"></a>-->
 
 
 
