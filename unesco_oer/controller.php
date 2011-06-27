@@ -1185,7 +1185,7 @@ class unesco_oer extends controller {
                    $state,
                    $postaladdress
                    );
-           }
+           }//
 
         // Create an Array to store problems
         $problems = array();
@@ -1204,9 +1204,11 @@ class unesco_oer extends controller {
                 $problems[]='noState';
             }
             if ($postaladdress==''){
-                $problems='noPostalCode';
+                $problems[]='noPostalCode';
             }
         }
+        //
+
         // Check that username is available
         if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
             $problems[] = 'usernametaken';
@@ -1237,10 +1239,30 @@ class unesco_oer extends controller {
         }
         // If there are problems, present from to user to fix
         if (count($problems) > 0) {
-            $this->setLayoutTemplate('maincontent_layout_tpl.php');
-            $this->setVar('mode', 'addfixup');
-            $this->setVarByRef('problems', $problems);
-            return 'userRegistration_tpl.php';
+            //check that is admin
+            if(!$this->objUser->isAdmin()){
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
+                $this->setVar('mode', 'addfixup');
+                $this->setVarByRef('problems', $problems);
+                return 'RegistrationForm_tpl.php';
+
+            }else{
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
+                $this->setVar('mode', 'addfixup');
+                $this->setVarByRef('problems', $problems);
+                return 'userRegistration_tpl.php';
+                }
+
+//
+
+
+
+
+//
+//            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+//            $this->setVar('mode', 'addfixup');
+//            $this->setVarByRef('problems', $problems);
+//            return 'userRegistration_tpl.php';
         } else {
             // Else add to database
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = NULL, 'useradmin', $accountstatus);
@@ -1262,7 +1284,7 @@ class unesco_oer extends controller {
               $this->setSession('time', $password);
               return $this->nextAction('detailssent');
               }
-
+//
 
             //$this->setSession('id', $pkid);
             //$this->setSession('password', $password);
@@ -1273,9 +1295,9 @@ class unesco_oer extends controller {
     }
 
 
-    function __ownUserRegistrationForm(){
+    function __RegistrationForm(){
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
-        return 'OwnuserRegistrationForm_tpl.php';
+        return 'RegistrationForm_tpl.php';
 
     }
 
@@ -1441,14 +1463,14 @@ class unesco_oer extends controller {
                 return 'No password was entered';
             case 'norepeatpasswordentered':
                 return 'No Repeat password was entered';
-            case 'noAddress'    :
-                return 'No address entered';
-            case 'noCity':
-                return 'Please please your residential city';
-            case 'noState':
-                return 'Please provide your residential state';
-            case 'noPostalCode':
-                return 'please provide your postal code';
+//            case 'noAddress'    :
+//                return 'No address entered';
+//            case 'noCity':
+//                return 'Please provide your residential city';
+//            case 'noState':
+//                return 'Please provide your residential state';
+//            case 'noPostalCode':
+//                return 'please provide your postal code';
            
         }
     }

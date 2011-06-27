@@ -283,7 +283,7 @@ if ($mode == 'addfixup') {
     $state->value = $this->getParam('state');
 
     if ($this->getParam('state') == '') {
-        $messages[] = "No address entered ";
+        $messages[] = "Please provide your residential state";
     }
 }
 if (isset($userstring) && $mode == 'add')
@@ -315,92 +315,123 @@ $table->addCell('Postal code'.$required);
 $table->addCell($postalcode->show());
 $table->endRow();
 
-//
-//$textinput = new textinput('city');
-//$textinput->size =70;
-//$table->startRow();
-//$table->addCell('City'.$required);
-//$table->addCell($textinput->show());
-//$table->endRow();
+//Organisation or company registration
+$organisation = new textinput('organisation');
+if ($mode == 'addfixup') {
+    $organisation->value = $this->getParam('organisation');
 
+    if ($this->getParam('organisation') == '') {
+        $messages[] = "Please provide your Organisation/Company ";
+    }
+}
+if (isset($userstring) && $mode == 'add')
+{
+    $organisation->value = $userstring[5];
+}
 
-//$textinput = new textinput('state');
-//$textinput->size =70;
-//$table->startRow();
-//$table->addCell('State'.$required);
-//$table->addCell($textinput->show());
-//$table->endRow();
-
-
-//$textinput = new textinput('postaladdress');
-//$textinput->size =70;
-//$table->startRow();
-//$table->addCell('Postal code'.$required);
-//$table->addCell($textinput->show());
-//$table->endRow();
-
-$textinput = new textinput('organisation');
-$textinput->size = 70;
 $table->startRow();
 $table->addCell('Organisation/Company'.$required);
-$table->addCell($textinput->show());
+$table->addCell($organisation->show());
 $table->endRow();
 
+//Job tittle registration
+$jobtittle = new textinput('jobtittle');
+if ($mode == 'addfixup') {
+    $jobtittle->value = $this->getParam('jobtittle');
 
+    if ($this->getParam('jobtittle') == '') {
+        $messages[] = "Please provide your job tittle";
+    }
+}
+if (isset($userstring) && $mode == 'add')
+{
+    $jobtittle->value = $userstring[6];
+}
 
-
-$textinput = new textinput('jobtittle');
-$textinput->size =70;
 $table->startRow();
 $table->addCell('Job Tittle'.$required);
-$table->addCell($textinput->show());
+$table->addCell($jobtittle->show());
 $table->endRow();
 
-$textinput = new textinput('type_of_occupation');
-$textinput->size =70;
+//Type of occupation
+$typeOfOccupation = new textinput('type_of_occupation');
+if ($mode == 'addfixup') {
+    $typeOfOccupation->value = $this->getParam('type_of_occupation');
+
+    if ($this->getParam('type_of_occupation') == '') {
+        $messages[] = "Please provide your Occupation type";
+    }
+}
+if (isset($userstring) && $mode == 'add')
+{
+   $typeOfOccupation->value = $userstring[7];
+}
+
 $table->startRow();
-$table->addCell('Type Of Occupation');
-$table->addCell($textinput->show());
+$table->addCell('Type Of Occupation'.$required);
+$table->addCell($typeOfOccupation->show());
 $table->endRow();
 
-$textinput = new textinput('workingphone');
-$textinput->size =70;
+//Register working phone number
+$workPhone = new textinput('workingphone');
+if ($mode == 'addfixup') {
+    $workPhone->value = $this->getParam('workingphone');
+
+    if ($this->getParam('workingphone') == '') {
+        $messages[] = "Please provide your work phone number";
+    }
+}
+if (isset($userstring) && $mode == 'add')
+{
+   $workPhone->value = $userstring[8];
+}
+
 $table->startRow();
-$table->addCell('Working Phone');
-$table->addCell($textinput->show());
+$table->addCell('Working Phone'.$required);
+$table->addCell($workPhone->show());
 $table->endRow();
-//
-//$textinput = new textinput('descriprion');
-//$textinput->size = 20;
-//$table->startRow();
-//$table->addCell('Description');
-//$table->addCell($textinput->show());
-//$table->endRow();
 
-
-
+//Description registration
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
 $editor->height = '150px';
 $editor->width = '80%';
 $editor->setBasicToolBar();
 $editor->setContent();
+if ($mode == 'addfixup') {
+    $editor->value = $this->getParam('description');
+
+    if ($this->getParam('description') == '') {
+        $messages[] = "Please provide a description";
+    }
+}
+if (isset($userstring) && $mode == 'add')
+{
+   $editor->value = $userstring[9];
+}
+
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+$table->addCell('Description'.$required);
 $table->addCell($editor->show());
 $table->endRow();
 
+//Website Link
+$websiteLink = new textinput('websitelink');
+if ($mode == 'addfixup') {
+    $websiteLink->value = $this->getParam('websitelink');
 
+    if ($this->getParam('websitelink') == '') {
+        $messages[] = "Please provide your website link";
+    }
+}
+if (isset($userstring) && $mode == 'add')
+{
+   $websiteLink->value = $userstring[9];
+}
 
-
-
-
-
-$textinput = new textinput('websitelink');
-$textinput->size =70;
 $table->startRow();
-$table->addCell('Website Link');
-$table->addCell($textinput->show());
+$table->addCell('Website Link'.$required);
+$table->addCell($websiteLink->show());
 $table->endRow();
 
 // Check that the group database is not empty and display group list dropdown
@@ -497,6 +528,7 @@ $fieldset->contents = $table->show();
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
+// captcha
 $objCaptcha = $this->getObject('captcha', 'utilities');
 $captcha = new textinput('request_captcha');
 $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_request_captcha');
@@ -510,7 +542,7 @@ $form->addToForm($fieldset->show());
 
 $Cancelbutton = new button ('submitform', 'Cancel');
 $Cancelbutton->setToSubmit();
-$CancelLink = new link($this->uri(array('action' => "home",)));
+$CancelLink = new link($this->uri(array('action' => "home")));
 $CancelLink->link =$Cancelbutton->show();
 
 $button = new button ('submitform', 'Complete Registration');
