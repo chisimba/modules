@@ -1317,11 +1317,25 @@ class unesco_oer extends controller {
         return 'editUserDetails_tpl.php';
     }
 
-    function __searchUser(){   
-         return $this->__userListingForm() ;
-         }
+//search user by username or by name
+    function __searchUser() {
+        if ($this->objUseExtra->searchUserByUsername($this->getParam('search')) != '') {
+            $user = $this->objUseExtra->searchUserByUsername($this->getParam('search')); //search user by username
+            $this->setVar('user', $user);
+            echo $user;
+            return $this->__userListingForm();
 
+        } elseif ($this->objUseExtra->searchUserByName($this->getParam('search')) != '') {
+            $user = $this->objUseExtra->searchUserByName($this->getParam('search')); //search user by name
+            $this->setVar('user', $user);
 
+            return $this->__userListingForm();
+        } else {
+            $user = '';
+            $this->setVar('user', $user);
+            return $this->__userListingForm();
+        }
+    }
 
     function __updateUserDetails() {
 

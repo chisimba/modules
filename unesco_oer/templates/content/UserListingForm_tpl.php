@@ -88,6 +88,8 @@ $myTable->endHeaderRow();
 
 //get user from the database
 $users = $this->objUseExtra->getAllUser();
+//$users=$this->getParam('user');
+
 
 if (count($users) > 0) {
     foreach ($users as $user) {
