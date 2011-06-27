@@ -1254,11 +1254,6 @@ class unesco_oer extends controller {
                 }
 
 //
-
-
-
-
-//
 //            $this->setLayoutTemplate('maincontent_layout_tpl.php');
 //            $this->setVar('mode', 'addfixup');
 //            $this->setVarByRef('problems', $problems);
@@ -1285,7 +1280,6 @@ class unesco_oer extends controller {
               return $this->nextAction('detailssent');
               }
 //
-
             //$this->setSession('id', $pkid);
             //$this->setSession('password', $password);
             //$this->setSession('time', $password);
@@ -1311,6 +1305,12 @@ class unesco_oer extends controller {
         $this->setVar('username', $username);
         return 'editUserDetails_tpl.php';
     }
+
+    function __searchUser(){   
+         return $this->__userListingForm() ;
+         }
+
+
 
     function __updateUserDetails() {
 

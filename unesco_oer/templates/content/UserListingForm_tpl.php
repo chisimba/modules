@@ -24,6 +24,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('fieldset', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
 
 // setup and show heading
 $header = new htmlheading();
@@ -40,15 +41,32 @@ $addUserLink->link = $button->show();
 
 
 
+$table = $this->newObject('htmltable', 'htmlelements');
+$search = new textinput('state');
+$search->size =10;
+$table->startRow();
+$table->addCell('Search');
+$table->addCell($search->show());
+$table->endRow();
+//echo $table->show();
 
-$button = new button('searchButton', "Back");
+
+$button = new button('backButton', "Control Pannel");
 $button->setToSubmit();
 $BackToControlPannelLink = new link($this->uri(array('action' => "controlpanel")));
 $BackToControlPannelLink->link = $button->show();
 
+//button search user
+$button = new button('searchButton', "Go");
+$button->setToSubmit();
+$searchLink = new link($this->uri(array('action' => "searchUser")));
+$searchLink->link = $button->show();
+//text input search user
+$search = new textinput('search','type search user here....',"userheader",20);
 
 
-echo $addUserLink->show() . '&nbsp;' . $BackToControlPannelLink->show();
+
+echo $addUserLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$searchLink->show();
 ;
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
