@@ -34,13 +34,10 @@ $NumFilter = $this->getParam('numperpage');
 $pagelayout = $this->getParam('adaptation');
 
 
-if ($PageNum == "undefined"){
-    $PageNum = $NumFilter;
-    
-
-    
+if ($PageNum == "undefined") {
+    $PageNum = 1 ;
 }
-    
+
 switch ($pagelayout) {
 
     case "1a" : {
@@ -90,8 +87,9 @@ if (!($AuthFilter == Null or $AuthFilter == 'All')) {
     $TempAuth = array(); //convert to 1d array
     $i = 0;
     foreach ($Auths as $Auth) {
-        $i++;
+        
         $TempAuth[$i] = $Auth['id'];
+        $i++;
     }
 }
 //   $buildstring .= ' and creator = ' . "'$AuthFilter'";
@@ -107,12 +105,10 @@ if (!($ThemeFilter == Null or $ThemeFilter == 'All')) {
     $TempTheme = array(); //convert to 1d array
     $i = 0;
     foreach ($Themes as $Theme) {
-        $i++;
+        
         $TempTheme[$i] = $Theme['product_id'];
+        $i++;
     }
-
-
-
 }
 
 
@@ -127,107 +123,112 @@ if (!($LangFilter == Null or $LangFilter == 'All')) {
     $Templang = array(); //convert to 1d array
     $i = 0;
     foreach ($ProdLangIDs as $ProdLangID) {
-        $i++;
+  
         $Templang[$i] = $ProdLangID['id'];
+              $i++;
     }
 }
 
 
 
-        $array_to_intersect = array($TempAuth, $TempTheme, $Templang);
-        $filter_empty_arrays = array_filter($array_to_intersect);
+$array_to_intersect = array($TempAuth, $TempTheme, $Templang);
+$filter_empty_arrays = array_filter($array_to_intersect);
 
-        $total = count($filter_empty_arrays);
+$total = count($filter_empty_arrays);
 
-        if ($total >= 2) {
-             $result = call_user_func_array("array_intersect", $filter_empty_arrays);
-            } else if ($total = 1) {
-             $results = $filter_empty_arrays;
-                $result = array(); //convert to 1d array
-                    $i = 0;
-                foreach ($results as $result) {
-
-                  $result[$i] = $results['product_id'];
-                     $i++;
-                     }
-                        
-    //convert to 1d array
-}
-
-
-if (($LangFilter == Null or $LangFilter == 'All')) 
-  if  (($ThemeFilter == Null or $ThemeFilter == 'All'))
-     if    (($AuthFilter == Null or $AuthFilter == 'All')){
-    
-   
-         $temp = $this->objDbProducts->getFilteredProducts("parent_id is null");
-     
-   
-        
+if ($total >= 2) {
+    $result = call_user_func_array("array_intersect", $filter_empty_arrays);
+} else if ($total = 1) {
+    $temp = $filter_empty_arrays;
     
 
     $result = array(); //convert to 1d array
     $i = 0;
-    foreach ($temp as $temps) {
-        
-        $result[$i] = $temps['id'];
-         $i++;
-         
-  
-    
+    foreach ($temp as $results) {
+ 
+        $result = $results;
+       
+       $i++;
+     
+       
     }
+     
+    //   echo $i . "    tttttttttttt";
+   
+
+    //convert to 1d array
+}
+var_dump($result);  
+
+if (($LangFilter == Null or $LangFilter == 'All'))
+    if (($ThemeFilter == Null or $ThemeFilter == 'All'))
+        if (($AuthFilter == Null or $AuthFilter == 'All')) {
+
+
+            $temp = $this->objDbProducts->getFilteredProducts("parent_id is null");
+            $result = array(); //convert to 1d array
+            $i = 0;
+            foreach ($temp as $temps) {
+               
+                $result[$i] = $temps['id'];
+                 $i++;
+                
+                 
+            }
+         
+        };
+
+
+$products = array();
+
+foreach ($result as $resultant) {
+
+
+    array_push($products, $this->objDbProducts->getProductByID($resultant));
+}
+
+
     
-};
 
 
-   $products = array();
+if ($sort == 'Alphabetical') {
 
-            foreach ($result as $results) {
+    function cmp($a, $b) {
+        return strcmp($a["title"], $b["title"]);
+    }
 
-
-                array_push($products, $this->objDbProducts->getProductByID($results));
-            }
-
-
-
-
-
-   if ($sort == 'Alphabetical') {
-
-                function cmp($a, $b) {
-                    return strcmp($a["title"], $b["title"]);
-                }
-
-                usort($products, "cmp");
-            }
-            //  $buildstring .= ' order by created_on';
-            //    else if ($sort == 'Alphabetical')
-            //         $buildstring .= ' order by title';
-            //   var_dump($products);
+    usort($products, "cmp");
+}
+//  $buildstring .= ' order by created_on';
+//    else if ($sort == 'Alphabetical')
+//         $buildstring .= ' order by title';
+//   var_dump($products);
 
 
 
-            if ((!($NumFilter == null or $NumFilter == 'All' )) & $PageNum == 'undefined') {
-                $start = $PageNum - 1;
-                $end = $start + $NumFilter;
-            } else if (!($NumFilter == null or $NumFilter == 'All')) {
+if (!($NumFilter == null or $NumFilter == 'All' ))  {
+    $start = ($PageNum -1)* $NumFilter;
+    $end = $start+ $NumFilter;
+    if ($end > count($products)){
+    $end = count($products);     
+    }
+}
 
-                //$temp = $NumFilter * $PageNum - 1;
-                $start = $PageNum - 1;
-                $end = $start + $NumFilter;
-            } else {
+else {
 
-                $start = 0;
-                $end = count($products) -1;
-            }
+    $start = 0;
+    $end = count($products) ;
+}
 
 
 
 
-      //      echo $start;
-       //   echo $end;
-       //    echo $PageNum;
+echo $start;
+echo $end;
 
+echo $PageNum;
+echo $NumFilter;
+ 
 
 
 
@@ -319,17 +320,6 @@ switch ($pagelayout) {
             $noOfAdaptations = 0;
 
             //  echo $total;
-
-         
-
-
-
-
-
-         
-
-
-
             // foreach ($products as $product) {
 
             for ($i = $start; $i < ($end); $i++) {
@@ -359,8 +349,8 @@ switch ($pagelayout) {
             }
 
             echo $objTable->show();
-            
-           
+
+
 
 
 
@@ -448,8 +438,7 @@ switch ($pagelayout) {
     case "1b" : {
 
             $objTable = $this->getObject('htmltable', 'htmlelements');
-        //    $products = $this->objDbProducts->getFilteredProducts($TotalEntries);
-
+            //    $products = $this->objDbProducts->getFilteredProducts($TotalEntries);
             //Loop through the products and display each in it's own line
 //             for ($i = $start; $i < ($end); $i++) { 
 //                //Get number of adaptations
@@ -457,8 +446,8 @@ switch ($pagelayout) {
 //                $languages = $this->objDbAvailableProductLanguages->getProductLanguage($products[$i]['id']);
 //                $theProduct = $products + $languages;
 
-                echo $this->objProductUtil->populateListView($start,$end,$products);
-            
+            echo $this->objProductUtil->populateListView($start, $end, $products);
+
 
 
 

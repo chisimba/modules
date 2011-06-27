@@ -181,14 +181,18 @@ if (!($LangFilter == Null or $LangFilter == 'All')) {
         if ($total >= 2) {
              $result = call_user_func_array("array_intersect", $filter_empty_arrays);
             } else if ($total = 1) {
-             $results = $filter_empty_arrays;
-                $result = array(); //convert to 1d array
-                    $i = 0;
-                foreach ($results as $result) {
+           $temp = $filter_empty_arrays;
+    
 
-                  $result[$i] = $results['product_id'];
-                     $i++;
-                     }
+    $result = array(); //convert to 1d array
+    $i = 0;
+    foreach ($temp as $results) {
+ 
+        $result = $results;
+       
+       $i++;
+   
+           }
                         
     //convert to 1d array
 }
