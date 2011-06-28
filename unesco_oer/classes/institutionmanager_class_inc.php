@@ -199,7 +199,7 @@ class institutionmanager extends object {
         }
 
         //Ensure that a country has been selected
-        if (empty($type)) {
+        if (empty($country)) {
             $this->_validation['valid'] = FALSE;
             $this->_validation['country'] = "Please select a country for the institution.";
         }

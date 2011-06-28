@@ -44,7 +44,7 @@ $adaptation = "parent_id is not null and deleted = 0"
 
 
 
-                    <!--                                <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>-->
+                        <!--                                <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>-->
                             <?php
                             $abLink = new link($this->uri(array("action" => "controlpanel")));
                             $img = '<img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools">';
@@ -79,27 +79,22 @@ $adaptation = "parent_id is not null and deleted = 0"
                                     <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Share">
                                 </a>
                                 <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e09cecf254052c9"></script>
-
-
-
-
-
-                                </div>
-                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
 
 
-                        <?php
+                <?php
                         } else {
-                        ?>
+                ?>
                             <div id="loginDiv">
                                 <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
                             </div>
-                        <?php
+                <?php
                         }
-                        ?>
+                ?>
                         <div class="logoAndHeading">
                             <img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
                             <div class="logoText">
@@ -121,67 +116,67 @@ $adaptation = "parent_id is not null and deleted = 0"
                         <div class="mainNavigation">
                             <ul id="sddm">
                                 <li class="onStateProducts">
-                                    <?php
-                                    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
-                                    $abLink->link = 'UNESCO OER PRODUCTS';
-                                    echo $abLink->show();
-                                    ?>
+                            <?php
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
+                            $abLink->link = 'UNESCO OER PRODUCTS';
+                            echo $abLink->show();
+                            ?>
 
 
 
 
-                                    <!--<a href="#">UNESCO OER PRODUCTS</a>      -->
-                                </li>
-                                <li class="mainNavPipe">&nbsp;</li>
+                            <!--<a href="#">UNESCO OER PRODUCTS</a>      -->
+                        </li>
+                        <li class="mainNavPipe">&nbsp;</li>
 
 
 
 
 
-                                <li>
-                                    <?php
-                                    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '2a_tpl.php')));
-                                    $abLink->link = 'Product Adaptations';
-                                    echo $abLink->show();
-                                    ?>
+                        <li>
+                            <?php
+                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '2a_tpl.php')));
+                            $abLink->link = 'Product Adaptations';
+                            echo $abLink->show();
+                            ?>
 
 
-                                </li>
-                                <li class="mainNavPipe">&nbsp;</li>
-                                <li><a href="#">GROUPS</a></li>
-                                <li class="mainNavPipe">&nbsp;</li>
-                                <li><a href="#">REPORTING</a></li>
-                                <li class="mainNavPipe">&nbsp;</li>
-                                <li><a href="#">ABOUT</a></li>
-                                <li class="mainNavPipe">&nbsp;</li>
-                                <li><a href="#">CONTACT</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="mainContentHolder">
-                        <?php
-                                    echo $this->getContent();
-                        ?>
-                    </div>
-                    <!-- Footer-->
-                    <!-- Start of Footer -->
-                    <div class="footerDiv">
-
-                        <h3>United Nations Educational, Scientific and Cultural ORganization</h3><br />
-                        UNESCO Headquarters is established in Paris. Offices are located in two places in the same area:
-
-                        7, place de Fontenoy 75352 Paris 07 SP France
-                        1, rue Miollis 75732 Paris Cedex 15 France
-
-
-                        General phone:
-                        +33 (0)1 45 68 10 00
-
-
-
-                    </div>
-                    <!-- End of Footer -->
+                        </li>
+                        <li class="mainNavPipe">&nbsp;</li>
+                        <li><a href="#">GROUPS</a></li>
+                        <li class="mainNavPipe">&nbsp;</li>
+                        <li><a href="#">REPORTING</a></li>
+                        <li class="mainNavPipe">&nbsp;</li>
+                        <li><a href="#">ABOUT</a></li>
+                        <li class="mainNavPipe">&nbsp;</li>
+                        <li><a href="#">CONTACT</a></li>
+                    </ul>
                 </div>
-                </body>
-                </html>
+            </div>
+
+            <div class="mainContentHolder">
+                <?php
+                            echo $this->getContent();
+                ?>
+            </div>
+            <!-- Footer-->
+            <!-- Start of Footer -->
+            <div class="footerDiv">
+
+                <h3>United Nations Educational, Scientific and Cultural ORganization</h3><br />
+                UNESCO Headquarters is established in Paris. Offices are located in two places in the same area:
+
+                7, place de Fontenoy 75352 Paris 07 SP France
+                1, rue Miollis 75732 Paris Cedex 15 France
+
+
+                General phone:
+                +33 (0)1 45 68 10 00
+
+
+
+            </div>
+            <!-- End of Footer -->
+        </div>
+    </body>
+</html>

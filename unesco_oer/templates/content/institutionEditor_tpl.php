@@ -46,7 +46,7 @@
                 if (strlen($message) > 1) {
                     $tableErrors->startRow();
                     $required = '<span class="required_field"> * ' . $message . '</span>';
-                    $requiredField[$key] = '<span class="required_field"> * </span>';
+                    $requiredField[$key] = '<span class="required_field"> * ' . $message . ' </span>';
                     $tableErrors->addCell($required);
                     $tableErrors->endRow();
                 }
@@ -58,7 +58,15 @@
 
 //            $errorTable
             $formAction = $formAction;
-        } else
+        } else{
+
+       $requiredField['name'] = '<span class="required_field"> * </span>';
+       $requiredField['description'] = '<span class="required_field"> * </span>';
+       $requiredField['type'] = '<span class="required_field"> * </span>';
+       $requiredField['thumbnail'] = '<span class="required_field"> * </span>';
+       $requiredField['keyword1'] = '<span class="required_field"> * </span>';
+       $requiredField['address1'] = '<span class="required_field"> * </span>';
+
         //Check if an institution is being edited
         if (isset($institutionId)) {
             $institutionGUI->getInstitution($institutionId);
@@ -67,6 +75,7 @@
         } else {
             $formData = array();
             $formAction = "createInstitutionSubmit";
+        }
         }
 
         // setup and show heading
@@ -128,7 +137,7 @@
         $tableinstitutioninfo->startRow();
         $institutionTypes = $this->objDbInstitutionType->getInstitutionTypes();
         $this->_objAddDataUtil->addDropDownToRow(
-                'type', $institutionTypes, $institutionGUI->showInstitutionTypeId(), 'type', $tableinstitutioninfo, 'id'
+                'type', $institutionTypes, $formData['type'], 'type', $tableinstitutioninfo, 'id'
         );
 
         $tableinstitutioninfo->endRow();
@@ -142,7 +151,7 @@
         //field for the keywords
         $tableinstitutioninfo->startRow();
         $keywords['keyword1'] = $formData['keyword1'];
-        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword1', 'unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword1', 'unesco_oer') . $requiredField['keyword1'];
         $this->_objAddDataUtil->addTextInputToRow(
                 'keyword1', 0, $keywords['keyword1'], $tableinstitutioninfo
         );
@@ -161,39 +170,7 @@
                 'keyword2', 0, $keywords['keyword2'], $tableinstitutioninfo
         );
         $tableinstitutioninfo->endRow();
-        // $tableinstitutioninfo->startRow();
-//        $this->_objAddDataUtil->addDropDownToTable(
-//                $title,
-//                4,
-//                'type',
-//                $institutionTypes,
-//                $institutionGUI->showInstitutionTypeId(),
-//                'type',
-//                $tableinstitutioninfo,
-//                'id'
-//        );
-//
-//        //field for the keywords
-//        $keywords = $institutionGUI->showInstitutionKeywords();
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword1', 'unesco_oer');
-//        $this->_objAddDataUtil->addTextInputToRow(
-//                'keyword1',
-//                0,
-//                $keywords['keyword1'],
-//                $tableinstitutioninfo
-//        );
-//
-////field for the institutions keywords
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_keyword2', 'unesco_oer');
-//        $this->_objAddDataUtil->addTextInputToTable(
-//                $title,
-//                4,
-//                'keyword2',
-//                0,
-//                $keywords['keyword2'],
-//                $tableinstitutioninfo
-//        );
-//        $tableinstitutioninfo->endRow();
+       
 
         $fieldsetInstitutionInfo = $this->newObject('fieldset', 'htmlelements');
         $fieldsetInstitutionInfo->setLegend('Institution information');
@@ -241,41 +218,7 @@
                 'address3', 60, $address['address3'], $table
         );
         $table->endRow();
-        /*
-          $table->startRow();
-          $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address1', 'unesco_oer');
-          $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
-          $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address2', 'unesco_oer');
-          $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
-          $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address3', 'unesco_oer');
-          $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
-          $table->endRow();
-
-
-
-          $table->startRow();
-          //field for the Country where institution is located
-          //field for address1
-          $address = $institutionGUI->showInstitutionAddress();
-          //$title = $this->objLanguage->languageText('mod_unesco_oer_institution_address1', 'unesco_oer');
-          $this->_objAddDataUtil->addTextInputToRow(
-          'address1', 0, $address['address1'], $table
-          );
-
-          //field for address2
-          //        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address2', 'unesco_oer');
-          $this->_objAddDataUtil->addTextInputToRow(
-          'address2', 0, $address['address2'], $table
-          );
-
-          //field for address3
-          //        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address3', 'unesco_oer');
-          $this->_objAddDataUtil->addTextInputToRow(
-          'address3', 0, $address['address3'], $table
-          );
-          $table->endRow(); */
-
-
+        
         $table->startRow();
         $zipTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_zip', 'unesco_oer') . $requiredField['zip'];
         $this->_objAddDataUtil->addTitleToRow($zipTitle, 4, $table);
@@ -304,19 +247,6 @@
         }
         $table->endRow();
 
-//        $table->startRow();
-//        $countryTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer') . $requiredField['country'];
-//        $this->_objAddDataUtil->addTitleToRow($countryTitle, 4, $table);
-//        $table->endRow();
-//        $table->startRow();
-//        $this->objDbCountries = $this->getObject('dbcountries');
-////        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer');
-//        $countryList = $this->objDbCountries->getAllCountries();
-//        $this->_objAddDataUtil->addDropDownToRow(
-//                'country', $countryList, $institutionGUI->showInstitutionCountryId(), 'countryname', $table, 'id'
-//        );
-//        $table->endRow();
-        //Field for city
         $table->startRow();
         $city = $formData['city'];
         $title = $this->objLanguage->languageText('mod_unesco_oer_institution_city', 'unesco_oer') . $requiredField['city'];
@@ -340,89 +270,6 @@
         );
 
         $table->endRow();
-
-//        //field for the Country where institution is located
-//        $this->objDbCountries = $this->getObject('dbcountries');
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer');
-//        $countryList = $this->objDbCountries->getAllCountries();
-//        $this->_objAddDataUtil->addDropDownToTable(
-//                $title,
-//                4,
-//                'country',
-//                $countryList,
-//                $institutionGUI->showInstitutionCountryId(),
-//                'countryname',
-//                $table,
-//                'id'
-//        );
-//
-//        //field for address1
-//        $address = $institutionGUI->showInstitutionAddress();
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address1', 'unesco_oer');
-//        $this->_objAddDataUtil->addTextInputToTable(
-//                $title,
-//                4,
-//                'address1',
-//                0,
-//                $address['address1'],
-//                $table
-//        );
-//
-////field for address2
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address2', 'unesco_oer');
-//        $this->_objAddDataUtil->addTextInputToTable(
-//                $title,
-//                4,
-//                'address2',
-//                0,
-//                $address['address2'],
-//                $table
-//        );
-//
-////field for address3
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_address3', 'unesco_oer');
-//        $this->_objAddDataUtil->addTextInputToTable(
-//                $title,
-//                4,
-//                'address3',
-//                0,
-//                $address['address3'],
-//                $table
-//        );
-//
-////field for zip code
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_zip', 'unesco_oer');
-//        $this->_objAddDataUtil->addTextInputToTable(
-//                $title,
-//                4,
-//                'zip',
-//                0,
-//                $institutionGUI->showInstitutionZip(),
-//                $table
-//        );
-//
-////field for the city
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_city', 'unesco_oer');
-//        $this->_objAddDataUtil->addTextInputToTable(
-//                $title,
-//                4,
-//                'city',
-//                0,
-//                $institutionGUI->showInstitutionCity(),
-//                $table
-//        );
-//
-////field for the institutions website link
-//
-//        $title = $this->objLanguage->languageText('mod_unesco_oer_institution_websitelink', 'unesco_oer');
-//        $this->_objAddDataUtil->addTextInputToTable(
-//                $title,
-//                4,
-//                'websiteLink',
-//                0,
-//                $institutionGUI->showInstitutionWebsiteLink(),
-//                $table
-//        );
 
         $fieldset2 = $this->newObject('fieldset', 'htmlelements');
         $fieldset2->setLegend('Contact Details');

@@ -154,7 +154,7 @@ class institutiongui extends object {
 
     jQuery("a[class=deleteInstitution]").click(function(){
 
-    var r=confirm( "Are you sure you want to delete this institution?");
+    var r=confirm("Are you sure you want to delete this institution?");
     if(r== true){
     window.location=this.href;
     }

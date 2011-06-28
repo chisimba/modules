@@ -819,6 +819,11 @@ class unesco_oer extends controller {
         $thumbnail = 'usrfiles/' . $results['path'];
 
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+        $fileInfoArray = array();
+        if(!$this->objThumbUploader->isFileValid($fileInfoArray)){
+        $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
+        $validate['thumbnail'] = "Please provide a valid thumbnail";
+        }
 
         if ($validate['valid']) {
 
@@ -1021,6 +1026,11 @@ class unesco_oer extends controller {
         $this->setVarByRef('formError', $formError);
 
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+        $fileInfoArray = array();
+        if(!$this->objThumbUploader->isFileValid($fileInfoArray)){
+        $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
+        $validate['thumbnail'] = "Please provide a valid thumbnail";
+        }
 
         if ($validate['valid']) {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
