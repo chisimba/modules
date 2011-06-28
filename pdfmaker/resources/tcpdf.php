@@ -3680,6 +3680,9 @@ if (!class_exists('TCPDF')) {
                                  */
                                 public function Image($file, $x, $y, $w = 0, $h = 0, $type = '', $link = '', $align = '', $resize = false, $dpi = 300, $palign = '') 
                                 {
+                                   if (!(file_exists($file))){
+                                        return FALSE;
+                                   }
                                     // get image size
                                     list($pixw, $pixh) = getimagesize($file);
                                     // calculate image width and height on document
