@@ -190,6 +190,7 @@ if ($this->objUser->isLoggedIn()) {
     $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID, 'prevAction' => 'home'));
     $deleteLink = new link($uri);
     $deleteLink->title = "Delete Product";
+    $deleteLink->cssId = "deleteProduct";
     $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
     $deleteLink->link = $linkText;
     echo $deleteLink->show();
@@ -433,3 +434,25 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
 
 
 </div>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function(){
+
+    jQuery("a[id=deleteProduct]").click(function(){
+
+    var r=confirm( "Are you sure you want to delete this product?");
+    if(r== true){
+    window.location=this.href;
+    }
+    return false;
+    }
+
+
+    );
+
+    }
+
+
+    );
+</script>
