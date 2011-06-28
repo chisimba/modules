@@ -1630,9 +1630,20 @@ class unesco_oer extends controller {
     }
 
     function __deleteProduct() {
+        $productID = $this->getParam('productID');
         $product = $this->getObject('product', 'unesco_oer');
-        $product->loadProduct($this->getParam('productID'));
+        $product->loadProduct($productID);
         $product->deleteProduct();
+
+        $currentFeaturedProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+
+        if ($currentFeaturedProductID == $productID)
+        {
+            $filter = " where parent_id is null and deleted = 0";
+            $lastProductEntered = $this->objDbProducts->getLastEntry($filter, 'puid');
+            $this->objDbFeaturedProduct->overRightCurrentFeaturedProduct($lastProductEntered[0]['id']);
+        }
+
         return $this->__home();
     }
 
