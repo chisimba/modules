@@ -58,7 +58,7 @@ echo '<span class="required_field"> (*) '."Indicate fields that are required in 
 //echo $this->objLanguage->languageText('mod_userregistration_pleaseenterdetails', 'userregistration', 'Please enter your details, email address and desired user name in the form below.').'</p>';
 
 $form = new form ('register', $this->uri(array('action'=>'saveNewUser')));
-//$form = new form ('register'); //register
+
 
 $messages = array();
 

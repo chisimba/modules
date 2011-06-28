@@ -1319,21 +1319,22 @@ class unesco_oer extends controller {
 
 //search user by username or by name
     function __searchUser() {
-        if ($this->objUseExtra->searchUserByUsername($this->getParam('search')) != '') {
+        if (count($this->objUseExtra->searchUserByUsername($this->getParam('search')))!=0) {
             $user = $this->objUseExtra->searchUserByUsername($this->getParam('search')); //search user by username
             $this->setVar('user', $user);
-            echo $user;
-            return $this->__userListingForm();
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            return 'UserListingForm_tpl.php';
 
-        } elseif ($this->objUseExtra->searchUserByName($this->getParam('search')) != '') {
+        } elseif(count($this->objUseExtra->searchUserByName($this->getParam('search')))!=0) {
             $user = $this->objUseExtra->searchUserByName($this->getParam('search')); //search user by name
             $this->setVar('user', $user);
-
-            return $this->__userListingForm();
-        } else {
-            $user = '';
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            return 'UserListingForm_tpl.php';
+        }else{
+            $user='';
             $this->setVar('user', $user);
-            return $this->__userListingForm();
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            return 'UserListingForm_tpl.php';
         }
     }
 
@@ -1545,6 +1546,9 @@ class unesco_oer extends controller {
      */
 
     function __saveNewGroup() {
+        if (!$_POST) { // Check that user has submitted a page
+            return $this->nextAction(NULL);
+        }
         $name = $this->getParam('group_name');
         $email = $this->getParam('group_email');
         $address = $this->getParam('group_address');
@@ -1557,10 +1561,64 @@ class unesco_oer extends controller {
         $description = $this->getParam('description');
         $loclat = $this->getParam('loclat');
         $loclong = $this->getParam('loclong');
-        $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
-        $this->setLayoutTemplate('maincontent_layout_tpl.php');
-        return 'groupListingForm_tpl.php';
-    }
+
+        $checkFields = array(
+            $name,
+            $email,
+            $address,
+            $city,
+            $state,
+            $postalcode,
+            $website,
+            $loclat,
+            $loclong
+            );
+         $problems = array();
+        if ($name == '') {
+            $problems[] = 'noname';
+        }
+        if (!$this->objUrl->isValidFormedEmailAddress($email)) {
+            $problems[] = 'emailnotvalid';
+        }
+        if ($address == '') {
+            $problems[] = 'noAddress';
+        }
+        if ($city == '') {
+            $problems[] = 'noCity';
+        }
+
+        if ($state == '') {
+            $problems[] = 'noState';
+        }
+
+        if ($postalcode == '') {
+            $problems[] = 'noPostalCode';
+        }
+        if ($website == '') {
+            $problems[] = 'nowebsite';
+        }
+        if ($loclat == '') {
+            $problems[] = 'noloclate';
+        }
+        if ($loclong == '') {
+            $problems[] = 'noloclong';
+        }
+//          if (!$this->__checkFields($checkFields)) {
+//          $problems[] = 'missingfields';}
+
+        if(count($problems) > 0){
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            return 'groupRegistrationForm_tpl.php';
+
+        }else{
+            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            return 'groupListingForm_tpl.php';
+
+        }
+ }
 
     function __groupEditingForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');

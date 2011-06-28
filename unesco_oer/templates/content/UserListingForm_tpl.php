@@ -51,23 +51,22 @@ $table->endRow();
 //echo $table->show();
 
 
-$button = new button('backButton', "Control Pannel");
-$button->setToSubmit();
+$controlPannel = new button('backButton', "Back");
+$controlPannel->setToSubmit();
 $BackToControlPannelLink = new link($this->uri(array('action' => "controlpanel")));
-$BackToControlPannelLink->link = $button->show();
+$BackToControlPannelLink->link = $controlPannel->show();
 
 //button search user
-$button = new button('searchButton', "Go");
-$button->setToSubmit();
-$searchLink = new link($this->uri(array('action' => "searchUser")));
-$searchLink->link = $button->show();
+$buttonGO = new button('searchButton', "Go");
+$buttonGO->setToSubmit();
+$searchLink = new link($this->uri(array('action' => "searchUser",'search'=>$this->getParam('search'))));
+$searchLink->link = $buttonGO->show();
 //text input search user
-$search = new textinput('search','type search user here....',"userheader",20);
-
-
+$search = new textinput('search','',"",20);
+$textinput = new textinput('search');
+$textinput->size =20;
 
 echo $addUserLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$searchLink->show();
-;
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '100%';
@@ -88,7 +87,16 @@ $myTable->endHeaderRow();
 
 //get user from the database
 $users = $this->objUseExtra->getAllUser();
-//$users=$this->getParam('user');
+
+ //$users=$this->getParam('user');
+ 
+//check if the search input has data on it and the go button is clicked
+//
+//if($this->getParam('search')!='' && $buttonGO){
+//   $users=$this->getParam('user');
+//   }else{
+//    $users = $this->objUseExtra->getAllUser();
+//}
 
 
 if (count($users) > 0) {

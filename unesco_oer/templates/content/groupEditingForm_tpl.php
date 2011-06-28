@@ -19,18 +19,20 @@ $this->loadClass('form', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('textinput','htmlelements');
+$this->loadClass('fieldset','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
 
+//Get Group details
+$group=$this->objDbGroups->getGroupInfo($this->getParam('id'));
 
 $form = new form ('editer', $this->uri(array('action'=>'editGroup','id'=>$this->getParam('id'))));
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
-$header->str = "Group Details:";
+$header->str = $group[0]['name'].":"."Profile";  //objLang
 echo $header->show();
 
-//Get Group details
-$group=$this->objDbGroups->getGroupInfo($this->getParam('id'));
+
 
 //$table = $this->newObject('htmltable', 'htmlelements');
 $table = $this->newObject('htmltable', 'htmlelements');
@@ -47,76 +49,7 @@ $table->startRow();
 $table->addCell('Group Name');
 $table->addCell($textinput->show());
 $table->endRow();
-
-$textinput = new textinput('group_email');
-$textinput->size = 70;
-$textinput->value = $group[0]['email'];
-$table->startRow();
-$table->addCell('E-mail');
-$table->addCell($textinput->show());
-$table->endRow();
-
-$textinput = new textinput('group_address');
-$textinput->size = 70;
-$textinput->value = $group[0]['address'];
-$table->startRow();
-$table->addCell('Address');
-$table->addCell($textinput->show());
-$table->endRow();
-
-$textinput = new textinput('group_city');
-$textinput->size = 70;
-$textinput->value = $group[0]['city'];
-$table->startRow();
-$table->addCell('City');
-$table->addCell($textinput->show());
-$table->endRow();
-
-$textinput = new textinput('group_state');
-$textinput->size = 70;
-$textinput->value = $group[0]['state'];
-$table->startRow();
-$table->addCell('State/Province');
-$table->addCell($textinput->show());
-$table->endRow();
-
-$textinput = new textinput('group_loclat');
-$textinput->size = 70;
-$textinput->value = $group[0]['loclat'];
-$table->startRow();
-$table->addCell('Latitude');
-$table->addCell($textinput->show());
-$table->endRow();
-
-$textinput = new textinput('group_loclong');
-$textinput->size = 70;
-$textinput->value = $group[0]['loclong'];
-$table->startRow();
-$table->addCell('Longitude');
-$table->addCell($textinput->show());
-$table->endRow();
-
-
-
-$table->startRow();
-$objCountries = &$this->getObject('languagecode', 'language');
-$table->addCell($this->objLanguage->languageText('word_country', 'system'));
-if ($mode == 'addfixup') {
-    $table->addCell($objCountries->countryAlpha($this->getParam('country')));
-} else {
-    $table->addCell($objCountries->countryAlpha());
-}
-$table->endRow();
-
-
-$textinput = new textinput('group_postalcode');
-$textinput->size = 70;
-$textinput->value = $group[0]['postalcode'];
-$table->startRow();
-$table->addCell('Postal Code');
-$table->addCell($textinput->show());
-$table->endRow();
-
+//group website
 $textinput = new textinput('group_website');
 $textinput->size = 70;
 $textinput->value = $group[0]['website'];
@@ -124,11 +57,11 @@ $table->startRow();
 $table->addCell('Website');
 $table->addCell($textinput->show());
 $table->endRow();
-
+//group desctription
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
 $editor->height = '150px';
-$editor->width = '60%';
+$editor->width = '75%';
 $editor->setBasicToolBar();
 $editor->setContent($group[0]['description']);
 $table->startRow();
@@ -136,17 +69,132 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', '
 $table->addCell($editor->show());
 $table->endRow();
 
-$dd=new dropdown('group_institutionlink');
-$dd->addOption('1','A');
-$dd->addOption('2','B');
-$dd->addOption('3','c');
-$dd->addOption('4','d'); /// this must be cathed from the database
-$table->startRow();
-$table->addCell('Institution');
-$table->addCell($dd->show());
-$table->endRow();
-//$form->addToForm($table->show());
+$fs = new fieldset();
+$fs->setLegend("Group Details"); //objLang
+$fs->addContent($table->show());
+echo $fs->show();
 
+
+//group contact details
+$tablec = $this->newObject('htmltable', 'htmlelements');
+// EMAIL
+$textinput = new textinput('group_email');
+$textinput->size = 70;
+$textinput->value = $group[0]['email'];
+$tablec->startRow();
+$tablec->addCell('E-mail');
+$tablec->addCell($textinput->show());
+$tablec->endRow();
+//addressa
+$textinput = new textinput('group_address');
+$textinput->size = 70;
+$textinput->value = $group[0]['address'];
+$tablec->startRow();
+$tablec->addCell('Address');
+$tablec->addCell($textinput->show());
+$tablec->endRow();
+//CITY
+$textinput = new textinput('group_city');
+$textinput->size = 70;
+$textinput->value = $group[0]['city'];
+$tablec->startRow();
+$tablec->addCell('City');
+$tablec->addCell($textinput->show());
+$tablec->endRow();
+//STATE
+$textinput = new textinput('group_state');
+$textinput->size = 70;
+$textinput->value = $group[0]['state'];
+$tablec->startRow();
+$tablec->addCell('State/Province');
+$tablec->addCell($textinput->show());
+$tablec->endRow();
+
+//postal code
+$textinput = new textinput('group_postalcode');
+$textinput->size = 70;
+$textinput->value = $group[0]['postalcode'];
+$tablec->startRow();
+$tablec->addCell('Postal Code');
+$tablec->addCell($textinput->show());
+$tablec->endRow();
+
+$fs = new fieldset();
+$fs->setLegend("Group contact details"); //objLang
+$fs->addContent($tablec->show());
+echo $fs->show();
+
+
+//Group geographical location
+$tableL = $this->newObject('htmltable', 'htmlelements');
+
+$textinput = new textinput('group_loclat');
+$textinput->size = 70;
+$textinput->value = $group[0]['loclat'];
+$tableL->startRow();
+$tableL->addCell('Latitude');
+$tableL->addCell($textinput->show());
+$tableL->endRow();
+
+$textinput = new textinput('group_loclong');
+$textinput->size = 70;
+$textinput->value = $group[0]['loclong'];
+$tableL->startRow();
+$tableL->addCell('Longitude');
+$tableL->addCell($textinput->show());
+$tableL->endRow();
+
+//country
+$tableL->startRow();
+$objCountries = &$this->getObject('languagecode', 'language');
+$tableL->addCell($this->objLanguage->languageText('word_country', 'system'));
+if ($mode == 'addfixup') {
+    $tableL->addCell($objCountries->countryAlpha($this->getParam('country')));
+} else {
+    $tableL->addCell($objCountries->countryAlpha());
+}
+$tableL->endRow();
+
+$fs = new fieldset();
+$fs->setLegend("Group Geographical Location"); //objLang
+$fs->addContent($tableL->show());
+echo $fs->show();
+
+$tableI = $this->newObject('htmltable', 'htmlelements');
+// Linked institution
+// first the belonging instituion
+// then the list of all the insstritution the thedatabase
+$id=$this->getParam('id');
+$linkedInstitution=$this->objDbGroups->getLinkedInstitution($id);
+$Institutions=$this->objDbInstitution->getAllInstitutions();
+$dd=new dropdown('group_institutionlink');
+if(count($Institutions)>0){
+     $dd->addOption('1',$linkedInstitution);
+     $i=2;
+     foreach ($Institutions as $Institution) {
+        $dd->addOption($i,$Institution['name']);
+        $i=$i+1;
+        }
+    }else{
+         $dd->addOption('1','none');// obj lang
+
+    }
+
+//
+//$dd=new dropdown('group_institutionlink');
+//$dd->addOption('1','A');
+//$dd->addOption('2','B');
+//$dd->addOption('3','c');
+//$dd->addOption('4','d'); /// this must be cathed from the database
+$tableI->startRow();
+$tableI->addCell('Institution');
+$tableI->addCell($dd->show());
+$tableI->endRow();
+
+$fs = new fieldset();
+$fs->setLegend("Group Linked Institutions"); //objLang
+$fs->addContent($tableI->show());
+echo $fs->show();
 
 
 $button = new button ('submitform', 'Save');
@@ -157,7 +205,7 @@ $Cancelbutton->setToSubmit();
 $CancelLink = new link($this->uri(array('action' => "groupListingForm")));
 $CancelLink->link =$Cancelbutton->show();
 
-$form->addToForm($table->show());
+
 $form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
 //$returnlink = new link($this->uri(array('action'=>'UserListingForm')));
 //$returnlink->link = 'Return to Home Page';

@@ -77,7 +77,11 @@ if (count($groups) > 0) {
        //$myTable->endRow();
     }
 }
-echo $myTable->show();
+
+$fs = new fieldset();
+$fs->setLegend("Groups");
+$fs->addContent($myTable->show());
+echo $fs->show();
 
 ?>
 <script type="text/javascript">

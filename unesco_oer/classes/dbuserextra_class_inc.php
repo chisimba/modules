@@ -168,14 +168,16 @@ class dbuserextra extends dbtable{
          return $this->getArray($sql);
      }
 
-     function searchUserByName($name){
-         $sql="SELECT * FROM tbl_users WHERE name='$name'";
-         return $this->getArray($sql);
+     function searchUserByName($firstname){
+         $sql="select * from tbl_users WHERE firstname='$firstname'";
+         $user=$this->getArray($sql);
+         return $user;
      }
 
      function searchUserByUsername($username){
-         $sql="SELECT * FROM tbl_users WHERE username='$username'";
-         return $this->getArray($sql);
+         $sql="select * from tbl_users WHERE username='$username'";
+         $user=$this->getArray($sql);
+         return $user;
     }
 
 
