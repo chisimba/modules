@@ -550,6 +550,11 @@ class productutil extends object {
      * @return <type> $content
      */
     public function populateMostAdapted($product) {
+        
+         $origprouct = $this->objDbProducts->getProductByID($product['id']);  
+        
+        if ( $origprouct['deleted'] == '0'){
+        
         $content = '';
         $parentid = $product['id'];
 
@@ -566,7 +571,8 @@ class productutil extends object {
                                 <div class="rightTextTabsList">
                         	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $CommentLink->show() . '</a>
                                 </div>
-                                <div class="tabsListingSpace"></div>';
+             <div class="tabsListingSpace"></div>';
+        }
         return $content;
     }
 
@@ -624,6 +630,10 @@ class productutil extends object {
     }
 
     public function populateMostCommented($product) {
+      
+         $origprouct = $this->objDbProducts->getProductByID($product['id']);  
+        
+        if ( $origprouct['deleted'] == '0'){
         $content = '';
 
         $parentid = $product['id'];
@@ -637,6 +647,7 @@ class productutil extends object {
                         	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $CommentLink->show() . '</a>
                                         </div>
                                         <div class="tabsListingSpace"></div>';
+        }
         return $content;
     }
 
@@ -647,7 +658,9 @@ class productutil extends object {
      */
     public function populateMostRated($product) {
         
+         $origprouct = $this->objDbProducts->getProductByID($product['id']);  
         
+        if ( $origprouct['deleted'] == '0'){
         $ratedLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
         $ratedLink->cssClass = 'adaptationLinks';
         $ratedLink->link = "Rating = " .$product['rating'];
@@ -659,6 +672,7 @@ class productutil extends object {
                         	' . $product['title'] . '<br><a href="#" class="adaptationLinks">' . $ratedLink->show() . ' </a>
                                                 </div>
                                                 <div class="tabsListingSpace"></div>   ';
+        }
         return $content;
     }
 

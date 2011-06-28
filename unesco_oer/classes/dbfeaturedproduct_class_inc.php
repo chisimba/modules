@@ -87,7 +87,7 @@ class dbfeaturedproduct extends dbtable
 
     function getCurrentFeaturedProductID()
     {
-        $sql = 'select * from tbl_unesco_oer_featured_products ';
+        $sql = 'select * from tbl_unesco_oer_featured_products';
         $featuredProductArray = $this->getArray($sql);
         if (sizeof($featuredProductArray) > 1) {
             //TODO error handling (should never be greater than 1

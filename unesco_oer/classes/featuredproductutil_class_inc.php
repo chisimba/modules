@@ -20,6 +20,7 @@ class featuredproductutil extends object
 
     public function init()
     {
+        $this->objDbProducts = $this->getObject("dbproducts", "unesco_oer");
 
     }
 
@@ -30,6 +31,11 @@ class featuredproductutil extends object
 
     function featuredProductView($product)
     {
+        
+        $origprouct = $this->objDbProducts->getProductByID($product['id']);  
+        
+        if ( $origprouct['deleted'] == '0'){
+        
         $content = '';
         $content.='
             <img src="' . $product['thumbnail'] . '" alt="Featured" width="136" height="176"><br>
@@ -37,11 +43,32 @@ class featuredproductutil extends object
                     <br>
                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                     ';
+        }
+        
+        else {
+            
+              $content = '';
+        $content.='
+            <img src= skins/unesco_oer/images/icon-nofeature.png  alt="Featured" width="136" height="176"><br>
+                <div class="greyListingHeading">"' . "No Featured Product Selected" . '"</div>
+                    <br>
+                    <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                    ';
+            
+            
+            
+            
+        }
         return $content;
     }
 
     function featuredProductViewSpan($product)
     {
+        
+        
+        $origprouct = $this->objDbProducts->getProductByID($product['id']);  
+        
+        if ( $origprouct['deleted'] == '0'){
         $content = '';
         $content.='
             <img src="' . $product['thumbnail'] . '" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
@@ -49,12 +76,32 @@ class featuredproductutil extends object
                                     <span class="greyListingHeading">"' . $product['title'] . '</span>
                                     <br><br>
             ';
+        }
+        else{
+            
+              $content = '';
+        $content.='
+            <img src="' . "skins/unesco_oer/images/icon-nofeature.png" . '" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
+                                <div class="featuredAdaptationRightContentDiv">
+                                    <span class="greyListingHeading">"' . "No Featured Product Selected" . '</span>
+                                    <br><br>
+            ';
+            
+            
+            
+        }
         return $content;
     }
 
 
     public function displayFeaturedAdaptedProduct($featuredAdaptedProduct)
     {
+        
+          
+        $origprouct = $this->objDbProducts->getProductByID($featuredAdaptedProduct['id']);  
+        
+        if ( $origprouct['deleted'] == '0'){
+        
         $content = '';
 
         $content .= '<div class="rightColumnContentPadding">
@@ -82,7 +129,34 @@ class featuredproductutil extends object
                                     </div>
                                 </div>';
         }
-                                        
+        }
+        
+        
+        else{
+              $content = '';
+
+        $content .= '<div class="rightColumnContentPadding">
+                                        <img src="' ."skins/unesco_oer/images/icon-nofeature.png"  . '" alt=' . "No Featured Product Selected" . ' width="45" height="49"class="smallAdaptationImageGrid">
+                                        <div class="featuredAdaptationRightContentDiv">
+                                            <span class="greyListingHeading">' . "No Featured Adaptation Selected"  . '</span>
+                                            <br><br>
+                                           
+                                            <br>
+                                          
+                                        </div>
+
+      
+                                    </div>
+                                </div>';
+        }
+        
+        
+            
+            
+            
+            
+            
+        
         
         return $content;
     }
