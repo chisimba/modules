@@ -74,11 +74,11 @@ class productutil extends object {
         $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid , 'prevAction' => 'home'));
         $adaptLink = new link($uri);
         $adaptLink->cssClass = "adaptationLinks";
-        $linkText = '  ';
+        $linkText = '<div class="imageBotomFlag"></div>';
         $adaptLink->link = $linkText;
 
         $objUser = $this->getObject('user', 'security');
-        $imageBottomFlag = $this->objUser->isLoggedIn() ? '<div class="imageBotomFlag">'. $adaptLink->show() .'</div>' : '';
+        $imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
 
         $content.='
                                 <div class="imageGridListing">
