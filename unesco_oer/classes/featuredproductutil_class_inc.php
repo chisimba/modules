@@ -97,35 +97,32 @@ class featuredproductutil extends object
     public function displayFeaturedAdaptedProduct($featuredAdaptedProduct)
     {
         
-          
-        $origprouct = $this->objDbProducts->getProductByID($featuredAdaptedProduct['id']);  
-        
-        if ( $origprouct['deleted'] == '0'){
+        if ( !$featuredAdaptedProduct->isDeleted()){
         
         $content = '';
 
         $content .= '<div class="rightColumnContentPadding">
-                                        <img src="' . $featuredAdaptedProduct['thumbnail'] . '" alt=' . $featuredAdaptedProduct['title'] . ' width="45" height="49"class="smallAdaptationImageGrid">
+                                        <img src="' . $featuredAdaptedProduct->getThumbnailPath() . '" alt=' . $featuredAdaptedProduct->getTitle() . ' width="45" height="49" class="smallAdaptationImageGrid">
                                         <div class="featuredAdaptationRightContentDiv">
-                                            <span class="greyListingHeading">' . $featuredAdaptedProduct['title'] . '</span>
+                                            <span class="greyListingHeading">' . $featuredAdaptedProduct->getTitle() . '</span>
                                             <br><br>
-                                            <a href="#" class="adaptationLinks">See all adaptations (' . $featuredAdaptedProduct['noOfAdaptations'] . ')</a>
+                                            <a href="#" class="adaptationLinks">See all adaptations (' . $featuredAdaptedProduct->getNoOfAdaptations(). ')</a>
                                             <br>
                                             <a href="#" class="adaptationLinks">See UNSECO orginals</a>
-
                                         </div>';
 
+        $objInstitutionManager = $this->getObject('institutionmanager');
         //If the adaptation was created by a group
-        if($featuredAdaptedProduct['group_thumbnail'] != NULL){
+        if ($objInstitutionManager->getInstitution($featuredAdaptedProduct->getInstitutionID())) {
                        $content .= '<div class="adaptedByDiv">Managed by:</div>
-                                        <img src="' . $featuredAdaptedProduct['group_thumbnail'] . '" alt= ' . $featuredAdaptedProduct['creator'] . ' width="45" height="49" class="smallAdaptationImageGrid">
-                                        <span class="greyListingHeading">' . $featuredAdaptedProduct['creator'] . '</span>
+                                        <img src="' . $objInstitutionManager->getInstitutionThumbnail() . '" alt= ' . $objInstitutionManager->getInstitutionName() . ' width="45" height="49" class="smallAdaptationImageGrid">
+                                        <span class="greyListingHeading">' . $objInstitutionManager->getInstitutionName() . '</span>
                                     </div>
                                 </div>';
         }else{  //If the adaptation was created by an institution
             $content .= '<div class="featuredAdaptedBy">Adapted By</div>
                                         <img src="' . $featuredAdaptedProduct['institution_thumbnail'] . '" alt= ' . $featuredAdaptedProduct['creator'] . ' width="45" height="49" class="smallAdaptationImageGrid">
-                                        <span class="greyListingHeading">' . $featuredAdaptedProduct['creator'] . '</span>
+                                        <span class="greyListingHeading">Polyt Namibia</span>
                                     </div>
                                 </div>';
         }
@@ -133,9 +130,9 @@ class featuredproductutil extends object
         
         
         else{
-              $content = '';
+            $content = '';
 
-        $content .= '<div class="rightColumnContentPadding">
+            $content .= '<div class="rightColumnContentPadding">
                                         <img src="' ."skins/unesco_oer/images/icon-nofeature.png"  . '" alt=' . "No Featured Product Selected" . ' width="45" height="49"class="smallAdaptationImageGrid">
                                         <div class="featuredAdaptationRightContentDiv">
                                             <span class="greyListingHeading">' . "No Featured Adaptation Selected"  . '</span>
@@ -149,14 +146,6 @@ class featuredproductutil extends object
                                     </div>
                                 </div>';
         }
-        
-        
-            
-            
-            
-            
-            
-        
         
         return $content;
     }

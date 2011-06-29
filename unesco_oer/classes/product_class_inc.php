@@ -1531,6 +1531,11 @@ class product extends object
        return $this->_institution;
    }
 
+   function getNoOfAdaptations()
+   {
+       return $this->_objDbProducts->getNoOfAdaptations($this->getIdentifier());
+   }
+
    function isDeleted()
    {
        return $this->_deletionstatus;

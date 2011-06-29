@@ -341,21 +341,13 @@ if ($adaptationstring == null)
                                     if ($product['parent_id'] != NULL) {
                                         $featuredAdaptedProduct = $product;
                                     }
+
                                 }
 
-                                if ($this->objDbGroups->isGroup($featuredAdaptedProduct['creator'])) {
-                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($featuredAdaptedProduct['creator']);
-                                    $featuredAdaptedProduct['group_thumbnail'] = $thumbnail['thumbnail'];
-                                    $featuredAdaptedProduct['institution_thumbnail'] = NULL;
-                                } else {
-                                    $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($featuredAdaptedProduct['creator']);
-                                    $featuredAdaptedProduct['group_thumbnail'] = NULL;
-                                    $featuredAdaptedProduct['institution_thumbnail'] = $thumbnail['thumbnail'];
-                                }
-                                //Get the number of adaptations
-                                $featuredAdaptedProduct['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($featuredAdaptedProduct['id']);
+                                $objProduct = $this->getObject('product');
+                                $objProduct->loadProduct($featuredAdaptedProduct['id']);
 
-                                echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($featuredAdaptedProduct);
+                                echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
 ?>
                                 <div class="spaceBetweenRightBorderedDivs">
                                     <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
