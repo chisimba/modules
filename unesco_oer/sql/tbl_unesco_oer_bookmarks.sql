@@ -26,7 +26,8 @@ $fields = array(
                 'location'=>array('type' => 'text'),
                  'description'=>array('type' => 'text'),
                 'label' =>array('type' => 'text'),
-                'created_on' => array('type' => 'timestamp')
+                'created_on' => array('type' => 'timestamp'),
+		  'deleted'=>array('type' =>'text','length' => 32)
  		);
 
 ?>

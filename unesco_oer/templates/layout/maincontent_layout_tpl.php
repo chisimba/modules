@@ -39,17 +39,24 @@ $adaptation = "parent_id is not null and deleted = 0"
                                 <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
                             </div>
                             <div class="profileBookmarkGroupsMessengerDiv">
+                                
+                                
                                 <a href="?module=userdetails"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
-                                <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
+                                   <?php
+                            $booklink = new link($this->uri(array("action" => "Bookmarks")));
+                            $img2 = '<img src= "skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks">';
+                            $booklink->link = $img2;
+                            echo $booklink->show();
+                  
 
 
 
-                        <!--                                <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>-->
-                            <?php
+                
                             $abLink = new link($this->uri(array("action" => "controlpanel")));
                             $img = '<img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools">';
                             $abLink->link = $img;
-                            echo $abLink->show();
+                                 
+                         echo $abLink->show();
                             ?>
                             <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a>
                             <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger" width="20" height="20" class="userIcons" title="My Messenger"></a>

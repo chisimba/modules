@@ -59,142 +59,197 @@ class bookmarkmanager extends dbtable {
         }
         
         
-     
+       public function getBookmark($userid){
+             
+             $sql = "select * from $this->_tableName where user_id = $userid";
+
+        return $this->getArray($sql);
+             
+             
+             
+             
+         }
+         
+        public function deleteBookmark($userid){
+             
+             $sql = "select * from $this->_tableName where user_id = $userid";
+
+        return $this->getArray($sql); 
+         
+         
+        }     
         
-//         public function populateListView($products) {
-//             
-//             
-//             
-//       
-//        $content = '    
-//                           <script src="http://code.jquery.com/jquery-latest.js"></script>
-//                            <script>
-//                           $(document).ready(function(){';
-//             
-//             
-//             
-//             foreach ($products as $product){
-//                           
-//                $divheading = '.'. $product['title'] . 'Div';
-//                $linkheading = '.' . $product['title']. 'Link';
-//                $titleheading = '.' . $product['title']. 'Title';
-//
-//                $content.= "
-//                  $('$divheading').hide();
-//
-//                  $('$linkheading').show();
-//                 
-//
-//
-// 
-//
-//                  $('$linkheading').click(function(){
-//
-//                  $('$divheading').slideToggle();
-//                   $('$titleheading ').slideToggle(); 
-//
-//                  });";
-//
-//   
-//        
-//                                           
-//                                           
-//        
-//        }
-//        
-//        $content .= '        
-//
-//
-//                                    });
-//
-//                            </script>
-//                                        ';
-//        
-//        
-//        
-//              
-//         foreach ($products as $product) {
-//             
-//           $divheading =  $product['title'] . 'Div';
-//           $linkheading =  $product['title']. 'Link';    
-//           $titleheading =  $product['title']. 'Title';
-//         
-//             $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
-//             $abLink->cssClass = "listingLanguageLinkAndIcon";
-//             $abLink->link = $product['title'];
-//        
-//           $editbutton = new button();
-//        $editbutton->cssClass = "listingLanguageLinkAndIcon";
-//       
-//
-//        $parentid = $product['id'];
-//        
-//        $textinput = new textinput("bookmarktitle");
-//        $textinput->value = $product['title'];
-//                          
-//        $commentText = new textarea('newComment');
-//        $commentText->setCssClass("commentTextBox");
-//
-//        //TODO make parameter pagename dynamic
-//        $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
-//    
-//        $button = new button('submitComment', $linkText);
-//        $button->setToSubmit();
-//
-//        $form = new form('3a_comments_ui', $uri);
-//           $form->addToForm($textinput);
-//           $form->addToForm("<br><br>");
-//        $form->addToForm($commentText);
-//           $form->addToForm("<br><br>");
-// 
-//        $form->addToForm($button->show()); //TODO use text link instead of button
-//
-//        
-//        
-//        $content.="
-//        
-//            <div class=' $titleheading'>"
-//                  .  $abLink->show() . "             
-//                      
-//            </div>
-// <a href='javascript:void(0)'   class='$linkheading'>Edit</a>
-//              
-//                
-//                        
-//
-//                            <div class='$divheading'> " . $form->show() ."
-//
-//     
-//
-//
-//                                    
-//
-//
-//        
-//                                        
-//                                           
-//                                           
-//                      </div>  
-//                  
-//                  
-//                    
-//                 ";
-//
-//        
-//
-//        $content .= ' 
-//                   </div>
-//                   <br>
-//                   
-//                
-//        ';
-//        
-//        
-//         }
-//        return $content;
-//    }
-//
-//        
+        
+         public function testcheckboxes($products){
+               $checkboxes = array(); //convert to 1d array
+               $i = 0;
+              foreach ($products as $product){
+                   $temp = str_replace (" ", "", $product['label']);
+                  $checkboxes[$i] = $temp;
+                  $i++;
+                  
+              }
+              
+              
+              
+             
+             return $checkboxes;
+             
+             
+         }
+
+
+
+
+
+
+
+
+
+
+
+
+         public function populateListView($products) {
+             
+           
+             
+             
+       
+        $content = '    
+                           <script src="http://code.jquery.com/jquery-latest.js"></script>
+                            <script>
+                           $(document).ready(function(){';
+             
+             
+             
+             foreach ($products as $product){
+               $temp = str_replace (" ", "", $product['label']);
+             $divheading = '.' . $temp . 'Div';
+            $linkheading = '.' . $temp . 'Link';
+            $titleheading = '.' . $temp . 'Title';
+
+                $content.= "
+                  $('$divheading').hide();
+
+                  $('$linkheading').show();
+                 
+
+
+ 
+
+                  $('$linkheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                   $('$titleheading ').slideToggle(); 
+
+                  });";
+                                 
+        
+        }
+        
+        $content .= '        
+
+
+                                    });
+
+                            </script>
+                                        ';
+        
+        
+        
+              
+         foreach ($products as $product) {
+             
+             $temp = str_replace (" ", "", $product['label']);
+            $divheading = $temp. 'Div';
+            $linkheading = $temp . 'Link';
+            $titleheading = $temp . 'Title';
+         
+           $checkbox = new checkbox($temp);
+           
+           
+             $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
+             $abLink->cssClass = "listingLanguageLinkAndIcon";
+             $abLink->link = $product['label'];
+        
+           
+           $displayform =   new form("displaytext","");
+           $displayform->addToForm($checkbox);
+           $displayform->addToForm($abLink);
+           
+             
+        $editbutton = new button();
+        $editbutton->cssClass = "listingLanguageLinkAndIcon";
+       
+
+        $parentid = $product['id'];
+        $textinput = new textinput("bookmarktitle");
+        $textinput->value = $product['label'];
+                          
+        $commentText = new textarea('newComment');
+        $commentText->setCssClass("commentTextBox");
+        
+
+        //TODO make parameter pagename dynamic
+        $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
+    
+        $button = new button('submitComment', $linkText);
+        $button->setToSubmit();
+
+         
+            $form = new form('3a_comments_ui', $uri);
+            $form->addToForm("Label * <br>");
+            $form->addToForm($textinput);
+            $form->addToForm("<br>Bookmark Description *<br> ");
+            $form->addToForm($commentText);
+            $form->addToForm("<br><br>");
+            $form->addToForm($button->show()); //TODO use text link instead of button
+
+        
+        
+        $content.="
+             
+        <br><br>
+            <div class='productsListView'>
+                   <h2>" . $displayform->show() . "</h2><br>
+                <a href='javascript:void(0)'   class='$linkheading'>Edit</a> 
+                   <div class='$divheading'> " . $form->show() ."
+
+                                   
+                          
+                      </div>  
+              
+                
+            </div>
+                
+                
+                
+                         
+     
+              
+                
+                        
+
+                  
+                  
+                    
+                 ";
+
+        
+
+        $content .= ' 
+               
+               
+                   
+                
+        ';
+        
+        
+         }
+        return $content;
+    }
+
+        
         
         
         

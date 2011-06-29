@@ -45,11 +45,15 @@ $header->str =" Add New  User";
 
 echo '<div style="padding:10px;">'.$header->show();
 
+
+
 $required = '<span class="required_field"> * '.$this->objLanguage->languageText('word_required', 'system', 'Required').'</span>';
+
 
 $str = $this->objLanguage->languageText('mod_userregistration_firstneedtoregister', 'userregistration', 'In order to be able to access [[SITENAME]], you first need to register');
 
 $str = str_replace('[[SITENAME]]', $this->objConfig->getSitename(), $str);
+
 
 //echo '<p>'.$str.'<br />';
 //echo $this->objLanguage->languageText('mod_userregistration_pleaseenterdetails', 'userregistration', 'Please enter your details, email address and desired user name in the form below.').'</p>';
@@ -74,6 +78,7 @@ if ($mode == 'addfixup') {
         $messages[] = $this->objLanguage->languageText('phrase_enterusername', 'system', 'Please enter a username');
     }
 }
+
 
 $table->addCell($usernameLabel->show());
 $table->addCell('&nbsp;', 5);

@@ -170,6 +170,23 @@ class unesco_oer extends controller {
     public function __3a() {
         return "3a_tpl.php";
     }
+    
+    
+    public function __Bookmarks() {
+        return "Bookmarks_tpl.php";
+    }
+    
+    public function __deleteBookmarks() {
+        
+          $userid = $this->objUser->userId(); 
+          $bookmark = $this->objbookmarkmanager->getBookmark($userid);
+         $this->objbookmarkmanager->testcheckboxes($bookmark);
+        
+        
+        
+        return "Bookmarks_tpl.php";
+    }
+
 
     public function __4() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');

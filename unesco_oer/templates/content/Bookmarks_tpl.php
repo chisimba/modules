@@ -6,6 +6,14 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $adaptationstring = 'relation is null';
 
+
+        $this->_institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
+        $this->objLanguage = $this->getObject("language", "language");
+        $this->objDbProducts = $this->getObject("dbproducts", "unesco_oer");
+         $this->objDbproductlanguages = $this->getObject("dbproductlanguages", "unesco_oer");
+        $this->objDbAvailableProductLanguages = $this->getObject("dbavailableproductlanguages", "unesco_oer");
+        $this->objUser = $this->getObject("user", "security");
+
 if ($finalstring == null)
 
    {
@@ -228,16 +236,45 @@ if ($finalstring == null)
                         <div class="greyDivider"></div>
                         <br>
                        	<div class="groupSubLinksList">
-                           <img src="images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
+                           <img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
                            <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Add Bookmark</a></div>
                         </div>
+                      
                         <div class="groupSubLinksList">
-                           <img src="images/icon-group-discussion.png" alt="Group discussion" width="18" height="18" class="smallLisitngIcons">
-                          <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Edit Bookmark</a></div>
-                        </div>
-                        <div class="groupSubLinksList">
-                           <img src="images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
-                          <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Delete Bookmark</a></div>
+                            
+                            <?php
+                            
+                            
+                            $booklink = new link($this->uri(array("action" => "deleteBookmarks")));
+                            $booklink->cssClass = "linksTextNextToSubIcons";
+                            $booklink->link = "Delete Bookmark";
+                            
+                           
+                            
+                         
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            echo $booklink->show();
+                            
+                            ?>
+                            
+                           <img src="skins/unesco_oer/images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
+                       
                         </div>
                       
                         <div class="greyDivider"></div>
@@ -263,16 +300,16 @@ if ($finalstring == null)
                     <?php
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
-                                        $products = $this->objDbProducts->getFilteredProducts($finalstring);
+                                     
 
-                                        //Loop through the products and display each in it's own line
                                       
-                                            //Get number of adaptations
-                                            
-                                         
+                                            $userid = $this->objUser->userId(); 
+                                          $bookmark = $this->objbookmarkmanager->getBookmark($userid);
+                                     
                                             
 
-                                            echo $this->objbookmarkmanager->populateListView($products);
+                                            echo $this->objbookmarkmanager->populateListView($bookmark);
+                                             
                                         
                     ?>
                                            

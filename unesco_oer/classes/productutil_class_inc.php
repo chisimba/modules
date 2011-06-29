@@ -148,6 +148,7 @@ class productutil extends object {
             $divheading = '.' . $temp . 'Div';
             $linkheading = '.' . $temp . 'Link';
             $titleheading = '.' . $temp . 'Title';
+             $buttonname = $temp;
            
     
             $content.= "
@@ -166,7 +167,25 @@ class productutil extends object {
                   
               
 
-                  });";
+                  });
+            
+            $('btn').click(function () {
+             $('$divheading').slideToggle();
+              $('$titleheading ').slideToggle(); 
+    });
+            
+            
+            
+            
+            
+            
+            
+            
+           ";
+            
+            
+            
+            
         }
 
         $content .= '        
@@ -208,6 +227,7 @@ class productutil extends object {
             $parentid = $product['id'];
           $textname = $temp . "text";
           $commentboxname = $temp . "comment";
+          $buttonname = $temp;
             $textinput = new textinput($textname);
             $textinput->value = $product['title'];
 
@@ -217,21 +237,29 @@ class productutil extends object {
             //TODO make parameter pagename dynamic
             $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
 
-            $button = new button('submitComment'," Submit Bookmark");
+            $button = new button('submitComment',"Save Bookmark");
+            $button->cssId =  'btn';
+           
          
             $time = time();
             //  $userid = objdbuserextra->
              $userid = $this->objUser->userId();
 
-            
+            echo $userid;
 
             $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             
             
-            $button->onclick = "javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname') ";
+           $button->onclick = "  javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname')  "; 
+                                                             
+                  
+              
+
+                
+                   
+                    
       
-
-
+               //javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname'); 
 
 
             $form = new form('3a_comments_ui', $uri);
@@ -835,11 +863,13 @@ public function populatebookmark($product) {
 
             $button = new button('submitComment', "submit bookmark");
             $time = time();
+              $userid = $this->objUser->userId();
             //  $userid = objdbuserextra->
 
             $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             $button->onclick = "javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname')";
-            $userid = $this->objUser->userId();
+          
+    
 
 
 
