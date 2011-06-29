@@ -44,22 +44,28 @@
                 ?>
         	<div class="logOutSearchDiv">
             	<div class="logoutSearchDivLeft">
-                	<div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
-                    <div class="logoutDiv">
-                            <div class="textNextToRightFloatedImage"><a href="?module=security&action=logoff" class="prifileLinks">Log out</a></div>
+                            <div class="nameDiv"><?php echo 'Logged in as ' . $this->objUser->fullname(); ?></div>
+                            <div class="logoutDiv">
+                                <div class="textNextToRightFloatedImage"><a href="?module=security&action=logoff" class="prifileLinks">Log out</a></div>
                                 <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
+                            </div>
+                            <div class="profileBookmarkGroupsMessengerDiv">
+                                <a href="?module=userdetails"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
+                                <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
+
+
+
+                        <!--                                <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>-->
+                            <?php
+                            $abLink = new link($this->uri(array("action" => "controlpanel")));
+                            $img = '<img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools">';
+                            $abLink->link = $img;
+                            echo $abLink->show();
+                            ?>
+                            <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a>
+                            <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger" width="20" height="20" class="userIcons" title="My Messenger"></a>
                         </div>
-                    <div class="profileBookmarkGroupsMessengerDiv">
-                        <a href="?module=userdetails"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
-
-
-
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger" width="20" height="20" class="userIcons" title="My Messenger"></a>
                     </div>
-                </div>
                 <div class="logoutSearchDivRight">
                 	<div class="searctInputTextDiv">
                     	<div class="searchGoButton"><a href=""><img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>
@@ -125,7 +131,7 @@
                     <ul id="sddm">
                                                  <li class="onStateProducts">
                           <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null and deleted = 0', "page" => '1a_tpl.php')));
                                             $abLink->link = 'UNESCO OER PRODUCTS';
                                             echo $abLink->show();
                             ?>
@@ -143,7 +149,7 @@
 
                                                  <li>
                                                                        <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
+                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null and deleted = 0', "page" => '2a_tpl.php')));
                                             $abLink->link = 'Product Adaptations';
                                             echo $abLink->show();
                             ?>

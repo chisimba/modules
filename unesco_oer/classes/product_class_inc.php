@@ -381,6 +381,25 @@ class product extends object
         $this->loadThemes($product['id']);
         $this->loadKeyWords($product['id']);
         $this->setDeletionStatus($product['deleted']);
+
+        if ($this->isAdaptation())
+        {
+            $this->loadAdaptationData($id);
+        }
+    }
+
+    /**This is a private function to load data for an adaptation
+     *
+     * @param <type> $id
+     */
+    private function loadAdaptationData($id)
+    {
+        $data = $this->_objDbProducts->getAdaptationDataByProductID($id);
+
+        $this->setRegion($data['region']);
+        $this->setCountryCode($data['country_code']);
+        $this->setGroupID($data['group_id']);
+        $this->setInstitutionID($data['institution_id']);
     }
 
     /**This function upadates relevant fields of the product provided you use
@@ -931,8 +950,8 @@ class product extends object
             //$title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
             //TODO get this information from  the groups data base
             $groups = array(
-                            array('id' => '1', 'name' => 'Polytechnic of Namibia, jopurnalism department'),
-                            array('id' => '2', 'name' => 'Wits University, jopurnalism department')
+                            array('id' => '1', 'name' => 'Polytechnic of Namibia, journalism department'),
+                            array('id' => '2', 'name' => 'Wits University, journalism department')
                 );
             $this->_objAddDataUtil->addDropDownToTable(
                                                         $title,
@@ -956,7 +975,7 @@ class product extends object
                                                         4,
                                                         $fieldName,
                                                         $institutions,
-                                                        NULL,
+                                                        $this->getInstitutionID(),
                                                         'name',
                                                         $table,
                                                         'id'
@@ -1476,7 +1495,16 @@ class product extends object
    //TODO return group name in text with this
    function getGroupName()
    {
-       return " ";
+       switch ($this->getGroupID()) {
+           case 1: return 'Polytechnic of Namibia, journalism department';
+               break;
+
+           case 2: return 'Wits University, journalism department';
+               break;
+
+           default: return 'none';
+               break;
+       }
    }
 
    function getGroupID()
@@ -1487,7 +1515,15 @@ class product extends object
    //TODO return institution name in text with this
    function getInstitutionName()
    {
-       return " ";
+        $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+        $institution = $objInstitutionManager->getInstitution($this->getInstitutionID());
+        return $institution->getName();
+   }
+
+   function getInstitution()
+   {
+        $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+        return $objInstitutionManager->getInstitution($this->getInstitutionID());
    }
 
    function getInstitutionID()

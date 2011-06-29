@@ -196,45 +196,21 @@ if ($this->objUser->isLoggedIn()) {
     echo $editLink->show();
 }
 
-
-
-         
- $products = $this->objDbProducts->getProductByID($productID);
-   echo  $this->objProductUtil->populatebookmark($products);
-
-   
-
-
-
-
-
-
-
-
-
+$products = $this->objDbProducts->getProductByID($productID);
+echo  $this->objProductUtil->populatebookmark($products);
 
 ?>
-
-                
-                
-                
-                
+                                
 <!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Email" width="19" height="15"></a>-->
 
-
-
-<!--
-                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" alt="Download" width="19" height="15"></a>-->
-
-
-
+<!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" alt="Download" width="19" height="15"></a>-->
 
             </div>
             <br><br>
             <span class="greyText fontBold">Author(s):</span> 
-<?php
-echo $product->getAuthors();
-?>
+            <?php
+            echo $product->getAuthors();
+            ?>
             <br><br><br>
             <span class="greyText fontBold">UNESCO contacts:</span>
             <!--                    Harra Padhy | Abel Caine | Igor Nuk-->

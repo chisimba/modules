@@ -71,7 +71,7 @@ class productutil extends object {
             $product['noOfAdaptations'] = 0;
         }
 
-        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid , 'prevAction' => 'home'));
+        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid , 'prevAction' => 'ViewProduct'));
         $adaptLink = new link($uri);
         $adaptLink->cssClass = "adaptationLinks";
         $linkText = '<div class="imageBotomFlag"></div>';
@@ -401,10 +401,13 @@ class productutil extends object {
      */
     public function populateAdaptedGridView($adaptedProduct) {
         $content = '';
-        $abLink = new link($this->uri(array("action" => 'ViewProduct', 'id' => $adaptedProduct['id'])));
-        $CommentLink->cssClass = 'adaptationLinks';
+        $uri = $this->uri(array("action" => 'ViewProduct', "id" => $adaptedProduct['id']));
+        $abLink = new link($uri);
+        $abLink->cssClass = "listingLanguageLinkAndIcon";
         $abLink->link = $adaptedProduct['title'];
-
+        
+        $thumbLink = new link($uri);
+        $thumbLink->link = '<img src="' . $adaptedProduct['thumbnail'] . '" width="79" height="101">';
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
@@ -418,12 +421,21 @@ class productutil extends object {
             $product['noOfAdaptations'] = 0;
         }
 
+        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $adaptedProduct['id'] , 'prevAction' => 'ViewProduct'));
+        $adaptLink = new link($uri);
+        $adaptLink->cssClass = "adaptationLinks";
+        $linkText = '<div class="imageBotomFlag"></div>';
+        $adaptLink->link = $linkText;
+
+        $objUser = $this->getObject('user', 'security');
+        $imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
+
         $content.='
                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
                    <div class="imageGridListing">
                        <div class="imageTopFlag"></div>
-                       <img src="' . $adaptedProduct['thumbnail'] . '" width="79" height="101" alt="Placeholder">
-                       <div class="imageBotomFlag"></div>
+                       '. $thumbLink->show() .'
+                       '. $imageBottomFlag .'
                    </div>
                    <br>
                    <div class="orangeListingHeading">' . $abLink->show() . '</div>';

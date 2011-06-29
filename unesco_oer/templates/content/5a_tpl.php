@@ -13,7 +13,12 @@
 ?>
             	<div class="breadCrumb">
                 	<a href="#" class="orangeListingHeading">Product adaptation</a> | 
-                    <a href="#" class="greyTextTwelveSize">Politechnic of Namibia</a> |
+                    <a href="#" class="greyTextTwelveSize">
+<!--                        Politechnic of Namibia-->
+                    <?php
+                        echo $product->getGroupName();
+                    ?>
+                    </a> |
                     <span class="greyText">
 <!--                        GIE English-->
                     <?php
@@ -24,11 +29,21 @@
                 <div class="adaptationsBackgroundColor">
                 <div class="innerLeftContent">
                 	<div class="tenPixelPaddingLeft">
-               	  <h2 class="adaptationListingLink">Model Curricula for Journalism Education</h2>
+               	  <h2 class="adaptationListingLink">
+<!--                      Model Curricula for Journalism Education-->
+                    <?php
+                        echo $product->getTitle();
+                    ?>
+                  </h2>
 <!--                  <a href="#"><img src="skins/unesco_oer/images/icon-edit-section.png" class="Farright"></a>
                   <a href="#" class="greyTextLink">Edit metadata</a><br>--><br>
                     <div class="leftImageHolder">
-                    	<img src="skins/unesco_oer/images/3a-placeholder.jpg" width="121" height="156"><br />
+<!--                    	<img src="skins/unesco_oer/images/3a-placeholder.jpg" width="121" height="156"><br />-->
+                        <?php
+                        $thumbnailPath = $product->getThumbnailPath();
+                        $imageTag = "<img src='$thumbnailPath' alt='Placeholder' width='121' height='156'<br>";
+                        echo $imageTag;
+                        ?>
                     	<span id="rateStatus"></span>
 <!--                        <div id="rateMe" title="">
                             <a id="_1" title="" onmouseover="rating(this)" onmouseout="off(this)"></a>
@@ -68,17 +83,44 @@
                         </div>
                   	</div>
                   	<div class="rightFixedContent">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
+<!--                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
 <br><br>
-Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat suscipit, enim tellus tincidunt dolor, vel aliquet arcu nisi vitae nisl.<br><br>
+Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat suscipit, enim tellus tincidunt dolor, vel aliquet arcu nisi vitae nisl.-->
+                        <?php
+                            echo $product->getDescription();
+                        ?>
+<br><br>
 	<div class="listingAdaptationsLinkAndIcon ExtraWidthDiv">
         <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
         <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
 	</div>
-	<div class="listingAdaptationsLinkAndIcon ExtraWidthDiv">
+<!--	<div class="listingAdaptationsLinkAndIcon ExtraWidthDiv">
         <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
         <div class="textNextToTheListingIconDiv wideTextNextTiListingIconDiv"><a href="#" class="adaptationLinks">Make a new adaptation using this UNESCO Product</a></div>
-	</div>
+	</div>-->
+        <?php
+            $adaptationDivStart = '<div class="listingAdaptationsLinkAndIcon ExtraWidthDiv">';
+            $adaptationDivEnd = '</div>';
+            $adaptationImg = '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">';
+
+            $adaptationLinkDiv = '<div class="textNextToTheListingIconDiv wideTextNextTiListingIconDiv">';
+
+            if ($this->objUser->isLoggedIn()) {
+                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
+                $adaptLink = new link($uri);
+                $adaptLink->cssClass = "adaptationLinks";
+                $linkText = 'Make a new adaptation using this UNESCO Product';
+                $adaptLink->link = $linkText;
+
+                echo $adaptationDivStart;
+                echo $adaptationImg;
+                echo $adaptationLinkDiv;
+                echo $adaptLink->show();
+                echo $adaptationDivEnd;
+                echo $adaptationDivEnd;
+            }
+        ?>
+
     <div class="listingAdaptationsLinkAndIcon ExtraWidthDiv">
         <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
         <div class="textNextToTheListingIconDiv wideTextNextTiListingIconDiv"><a href="#" class="adaptationLinks">See existing adaptations of this UNESCO Product (15)</a></div>
@@ -93,7 +135,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     </div>
             
                     <div class="unOrderedListDiv">
-                    	<ul class="ulMinusPublish">
+<!--                    	<ul class="ulMinusPublish">
                             <li><a href="">Foundation of Journalism: Writing</a>
                             	<ul class="ulDocument">
                                 	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
@@ -131,6 +173,27 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                                     </ul>
                                 </ul>
                             </li>
+                        </ul>-->
+                        <ul class="ulPlusPublish">
+                            <li class="grey"><a href="">Folder 1</a></li>
+                        </ul>
+                        <ul class="ulMinusPublish">
+                            <li class="grey"><a href="">Folder 2</a>
+                                <ul class="ulDocument">
+                                    <li class="grey"><a href="">Section 1</a></li>
+                                    <li class="grey"><a href="">Section 2</a></li>
+                                    <li class="grey"><a href="">Section 3</a></li>
+                                    <ul class="ulMinusPublish">
+                                        <li class="grey"><a href="">Sub-folder 1</a>
+                                            <ul class="ulDocument">
+                                                <li class="grey"><a href="">Section 4</a></li>
+                                                <li class="grey"><a href="">Section 5</a></li>
+                                                <li class="grey"><a href="">Section 6</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
 					</div>
@@ -139,42 +202,37 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                 	<div class="printEmailDownloadIcons">
                             <?php
                             if ($this->objUser->isLoggedIn()) {
-                                //TODO send prevAction to 2a when that link is no longer broken
-                                $uri = $this->uri(array('action' => 'editProduct', 'id' => $productID , 'prevAction' => 'home'));
+                                $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
                                 $editLink = new link($uri);
-                                $editLink->cssClass = "searchGoLink";
-                                $linkText = "edit product";
+                                $editLink->title = "Edit Metadata";
+                                $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';
+                                $editLink->link = $linkText;
+                                echo $editLink->show();
+
+                                $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID, 'prevAction' => 'home'));
+                                $deleteLink = new link($uri);
+                                $deleteLink->title = "Delete Product";
+                                $deleteLink->cssId = "deleteProduct";
+                                $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
+                                $deleteLink->link = $linkText;
+                                echo $deleteLink->show();
+
+                                $uri = $this->uri(array('action' => "createFeaturedAdaptation", 'id' => $productID));
+                                $editLink = new link($uri);
+                                $editLink->title = "Make Featured Product";
+                                $linkText = '<img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15">';
                                 $editLink->link = $linkText;
                                 echo $editLink->show();
                             }
                             ?>
-                    	<a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15"></a>
+<!--                    	<a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" width="19" height="15"></a>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" width="19" height="15"></a>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" width="19" height="15"></a>-->
                         
                         <?php
-                        
-                        
-                        
-         
- $products = $this->objDbProducts->getProductByID($productID);
-   echo  $this->objProductUtil->populatebookmark($products);
-
-   
-
-
-                        
-                        
+                        $products = $this->objDbProducts->getProductByID($productID);
+                        echo  $this->objProductUtil->populatebookmark($products);
                         ?>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
                     </div>
                     <br><br>
                     
@@ -185,13 +243,34 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     
                     <div class="moveContentLeft">
                     
-                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                        <h2 class="pinkText">Polytechnic of Namibia</h2>
+                        <img width="45" height="50" src="
+                        <?php
+                        $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+                        $objInstitutionManager->getInstitution($product->getInstitutionID());
+                        echo $objInstitutionManager->getInstitutionThumbnail();
+                        ?>
+                             " alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                        <h2 class="pinkText">
+<!--                            Polytechnic of Namibia-->
+                        <?php
+                        echo $objInstitutionManager->getInstitutionName();
+                        ?>
+                        </h2>
                         
                         <div class="textFloatLeftDivInnerSmallColumn">
-                          <span class="greyText fontBold">Type of institution:</span> <a href="#" class="greyTextLink">School</a>
+                          <span class="greyText fontBold">Type of institution:</span> <a href="#" class="greyTextLink">
+<!--                              School-->
+                          <?php
+                          echo $objInstitutionManager->getInstitutionType();
+                          ?>
+                          </a>
                             <br><br><br>
-                            <span class="greyText fontBold">Country:</span> <a href="#" class="greyTextLink">Namibia</a>
+                            <span class="greyText fontBold">Country:</span> <a href="#" class="greyTextLink">
+<!--                                Namibia-->
+                            <?php
+                            echo $objInstitutionManager->getInstitutionCountry();
+                            ?>
+                            </a>
                             <br><br><br>
                             <span class="greyText fontBold">Adopted in:</span> English | <a href="#" class="greyTextLink">German</a>
                             <br><br>
@@ -208,7 +287,10 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     	<img src="skins/unesco_oer/images/icon-managed-by.png" width="24" height="24" class="floaLeft">
                         <div class="managedByTextPadding">
                         	<span class="greenColor">Managed By<br><br>
-                            Polithecnich of Namibia journalism department
+<!--                            Polithecnich of Namibia journalism department-->
+                            <?php
+                            echo $product->getGroupName();
+                            ?>
                             </span>
                             <br /><br />
                             <a href="#" class="greenTextLink">View group</a>
@@ -390,4 +472,24 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     </div>
                 </div>
                 </div>
-           
+<script type="text/javascript">
+
+    jQuery(document).ready(function(){
+
+    jQuery("a[id=deleteProduct]").click(function(){
+
+    var r=confirm( "Are you sure you want to delete this product?");
+    if(r== true){
+    window.location=this.href;
+    }
+    return false;
+    }
+
+
+    );
+
+    }
+
+
+    );
+</script>
