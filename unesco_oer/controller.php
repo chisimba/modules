@@ -1669,10 +1669,13 @@ class unesco_oer extends controller {
     public function __saveProductMetaData() {
         $defaultTemplate = "ProductMetaData_tpl.php";
         $product = $this->getObject('product');
-        $this->setVarByRef('product', $product);
+        
         //test for edit
-        if ($this->getParam('productID'))
+        if ($this->getParam('productID')){
             $product->loadProduct($this->getParam('productID'));
+        }
+            
+        $this->setVarByRef('product', $product);
 
         switch (strtolower($this->getParam('add_product_submit'))) {
             case "cancel":
@@ -1682,7 +1685,8 @@ class unesco_oer extends controller {
             case "upload":
                 //test if all fields are valid
                 if ($product->handleUpload()) {
-                    $this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
+                    //$this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
+                    $this->nextAction($this->getParam('nextAction'), array('id' => $product->getIdentifier()));
                 } else {
                     $this->setLayoutTemplate('maincontent_layout_tpl.php');
                     return $defaultTemplate;

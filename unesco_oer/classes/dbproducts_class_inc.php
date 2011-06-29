@@ -26,9 +26,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class dbproducts extends dbtable
 {
 
+    private $adaptationTable;
+
     function init()
     {
         parent::init("tbl_unesco_oer_products");
+        $this->adaptationTable = "tbl_unesco_oer_product_adaptation_data";
     }
 
     function getProductTitle($title)
@@ -67,16 +70,30 @@ class dbproducts extends dbtable
         return $this->getArray($sql);
     }
 
-    function addProduct($productArray)
+    function addProduct($productArray, $adaptationData = NULL)
     {
-        $this->insert($productArray);
+        $id = $this->insert($productArray);
+
+        if (is_array($adaptationData))
+        {
+            $adaptationData['product_id'] = $id;
+            $this->insert($adaptationData, $this->adaptationTable);
+        }
+
+        return $id;
     }
 
-    function updateProduct($productID, $productArray)
+    function updateProduct($productID, $productArray, $adaptationData = NULL)
     {
         $product = $this->getProductByID($productID);
 
         $this->update('puid', $product['puid'], $productArray   );
+
+        if (is_array($adaptationData))
+        {
+            $data = $this->getAdaptationDataByProductID($productID);
+            $this->update('puid', $data['puid'], $adaptationData, $this->adaptationTable);
+        }
     }
 
     //TODO Ntsako check the hierichal storage of data to make this more efficient
@@ -114,6 +131,13 @@ class dbproducts extends dbtable
         $products = $this->getArray($sql);
         return $products[0]; //TODO add error handler for non unique ID.
     }
+
+    function getAdaptationDataByProductID($id) {
+        $sql = "select * from $this->adaptationTable where product_id = '$id'";
+
+        $data = $this->getArray($sql);
+        return $data[0];
+    }
     
     /*
      * function takes a creator name and if it has an adaptation
@@ -143,6 +167,6 @@ class dbproducts extends dbtable
             return TRUE;
         }
     }
-
+    
 }
 ?>

@@ -103,7 +103,7 @@ $adaptationDivEnd = '</div>';
 $adaptationImg = '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">';
 
 if ($this->objUser->isLoggedIn()) {
-    $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'prevAction' => 'home'));
+    $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
     $adaptLink = new link($uri);
     $adaptLink->cssClass = "adaptationLinks";
     $linkText = 'Make a new adaptation using this UNESCO Product';

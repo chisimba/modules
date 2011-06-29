@@ -190,6 +190,32 @@ class product extends object
      */
     private $_provenance;
 
+    ////////// Adaptation Specific Parameters /////////
+
+    /**Region
+     *
+     * @var <type>
+     */
+    private $_region;
+
+    /**Country
+     *
+     * @var <type>
+     */
+    private $_country;
+
+    /**Group
+     *
+     * @var <type>
+     */
+    private $_group;
+
+    /**Institution
+     *
+     * @var <type>
+     */
+    private $_institution;
+
     //////////   Required database objects   //////////
 
     /**Database for accessing products
@@ -276,13 +302,15 @@ class product extends object
         
         if ($this->getIdentifier())
         {
-            $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData);
+            if ($this->isAdaptation()) $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData, $this->getAdaptationMetaDataArray());
+            else $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData);
         }
         else
         {
             $tempData['date'] = $this->getDate();
-            $this->_objDbProducts->addProduct($tempData);
-            $this->_identifier = $this->_objDbProducts->getLastInsertId();
+            if ($this->isAdaptation())  $this->_identifier = $this->_objDbProducts->addProduct($tempData, $this->getAdaptationMetaDataArray());
+            else  $this->_identifier = $this->_objDbProducts->addProduct($tempData);
+            //$this->_identifier = $this->_objDbProducts->getLastInsertId();
         }
 
         //NOTE: themes are saved after an ID has been created
@@ -304,6 +332,22 @@ class product extends object
                                         );
             $this->setThumbnailPath($results['path']);
         }
+    }
+
+    /**This is an internal function for saving adaptation specific metadata
+     *
+     * @return <type>
+     */
+    private function getAdaptationMetaDataArray()
+    {
+        $tempData = array();
+
+        $tempData['region'] = $this->getRegion();
+        $tempData['country_code'] = $this->getCountryCode();
+        $tempData['group_id'] = $this->getGroupID();
+        $tempData['institution_id'] = $this->getInstitutionID();
+
+        return $tempData;
     }
 
     /**This function retrieves product information, given the products identifier
@@ -373,6 +417,8 @@ class product extends object
 
         $this->setThemes($themesSelected);
 
+        if ($this->isAdaptation()) $this->handleAdaptationUpload();
+
         if ($this->validateMetaData()){
             $this->saveProduct();
             return TRUE;
@@ -381,6 +427,14 @@ class product extends object
         {
             return FALSE;
         }
+    }
+
+    private function handleAdaptationUpload()
+    {
+        $this->setRegion($this->getParam('region'));
+        $this->setCountryCode($this->getParam('country'));
+        $this->setGroupID($this->getParam('group'));
+        $this->setInstitutionID($this->getParam('institution'));
     }
 
     /**This function validates the input on product meta data input page
@@ -400,6 +454,7 @@ class product extends object
         $fileInfoArray = array();
 
         if (!$this->objThumbUploader->isFileValid($fileInfoArray) && !$this->isAdaptation())
+        //if (FALSE)
             {
                 $valid = FALSE;
                 $this->addValidationMessage('thumbnail', $valid, 'A thumbnail is required');
@@ -430,9 +485,10 @@ class product extends object
         $header->type = 1;
         echo '<div id="productmetaheading">';
         echo $header->show();
+        if ($this->isAdaptation()) echo '<font face="Arial" color="#FF2222">This is an ADAPTATION</font><br>';
         echo '<font face="Arial" color="#FF2222">(*) indicates fields that are required. </font>';
         echo '</div>';
-        if ($this->isAdaptation()) echo '<br><font face="Arial" color="#FF2222">ADAPTATION</font>';
+        
 
         /*                                              */
         /*      Identification fields, eg. title        */
@@ -620,7 +676,6 @@ class product extends object
         $table->addCell($editor->show());
         $table->endRow();
 
-        //TODO Load preselected keywords
         //field for keywords
         $fieldName = 'keywords';
         $uri = $this->uri(array(
@@ -747,7 +802,7 @@ class product extends object
         /*                                              */
 
         /*                                              */
-        /*         Misc. fields, eg. rights             */
+        /*         Misc. fields                         */
         /*                                              */
 
         // setup table and table headings with input fields
@@ -833,9 +888,91 @@ class product extends object
         $fieldset->addContent($table->show());
         $output .= $fieldset->show();
         /*               end of                         */
-        /*         Misc. fields, eg. rights             */
+        /*         Misc. fields                         */
         /*                                              */
 
+        /*                                              */
+        /*         Adaptation Fields                    */
+        /*                                              */
+
+        if ($this->isAdaptation())
+        {
+            // setup table and table headings with input fields
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->cssClass = "moduleHeader";
+
+            //Field for Region
+            $fieldName = 'region';
+            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_region', 'unesco_oer');
+            $this->_objAddDataUtil->addTextInputToTable(
+                                                        $title,
+                                                        4,
+                                                        $fieldName,
+                                                        '90%',
+                                                        $this->getRegion(),
+                                                        $table
+                                                        );
+
+            //field for country
+            $fieldName = 'country';
+            $table->startRow();
+            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_country', 'unesco_oer');
+            $table->addCell($title);
+            $table->endRow();
+            //$title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
+            $table->startRow();
+            $objCountries = &$this->getObject('languagecode', 'language');
+            $table->addCell($objCountries->countryAlpha($this->getCountryCode()));
+            $table->endRow();
+
+            //field for groups
+            $fieldName = 'group';
+            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_group', 'unesco_oer');
+            //$title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
+            //TODO get this information from  the groups data base
+            $groups = array(
+                            array('id' => '1', 'name' => 'Polytechnic of Namibia, jopurnalism department'),
+                            array('id' => '2', 'name' => 'Wits University, jopurnalism department')
+                );
+            $this->_objAddDataUtil->addDropDownToTable(
+                                                        $title,
+                                                        4,
+                                                        $fieldName,
+                                                        $groups,
+                                                        $this->getGroupID(),
+                                                        'name',
+                                                        $table,
+                                                        'id'
+                                                        );
+
+            //field for institution
+            $fieldName = 'institution';
+            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
+            //$title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+            $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+            $institutions = $objInstitutionManager->getAllInstitutions();
+            $this->_objAddDataUtil->addDropDownToTable(
+                                                        $title,
+                                                        4,
+                                                        $fieldName,
+                                                        $institutions,
+                                                        NULL,
+                                                        'name',
+                                                        $table,
+                                                        'id'
+                                                        );
+
+
+            $fieldset = $this->newObject('fieldset','htmlelements');
+            $fieldset->setLegend('Adaptation information');
+            $fieldset->addContent($table->show());
+            $output .= $fieldset->show();
+        }
+        /*               end of                         */
+        /*         Adaptation Fields                    */
+        /*                                              */
+
+        //load required javascript file
         $this->appendArrayVar( 'headerParams', $this->getJavascriptFile('addProduct.js','unesco_oer') );
 
         $hiddenInput = new hiddeninput('add_product_submit');
@@ -865,6 +1002,8 @@ class product extends object
     }
 
     //////// operations for external tables //////
+
+    //TODO move some of these functions into the db classes they belong
 
    /**This function adds keyword relationships for the current product
     *
@@ -1156,6 +1295,26 @@ class product extends object
        $this->_parentid = $id;
    }
 
+   private function setRegion($region)
+   {
+       $this->_region = $region;
+   }
+
+   private function setCountryCode($countryCode)
+   {
+       $this->_country = $countryCode;
+   }
+
+   private function setGroupID($groupID)
+   {
+       $this->_group = $groupID;
+   }
+
+   private function setInstitutionID($institutionID)
+   {
+       $this->_institution = $institutionID;
+   }
+
    ////////////////   GETTERS   ////////////////
 
     function getTitle()
@@ -1296,6 +1455,44 @@ class product extends object
    function getParentID()
    {
        return $this->_parentid;
+   }
+
+   function getRegion()
+   {
+       return $this->_region;
+   }
+
+   function getCountryCode()
+   {
+       return $this->_country;
+   }
+
+   //TODO return country name in text with this
+   function getCountryName()
+   {
+       return "";
+   }
+
+   //TODO return group name in text with this
+   function getGroupName()
+   {
+       return " ";
+   }
+
+   function getGroupID()
+   {
+       return $this->_group;
+   }
+
+   //TODO return institution name in text with this
+   function getInstitutionName()
+   {
+       return " ";
+   }
+
+   function getInstitutionID()
+   {
+       return $this->_institution;
    }
 
    function isDeleted()
