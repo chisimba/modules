@@ -150,6 +150,7 @@
         print "</div>\n";
     }
 
+    $this->objConfig=$this->getObject('dbsysconfig','sysconfig');
     $remoteServer=$this->objConfig->getValue('remotedata','userimport');
     if (($remoteServer!='REMOTE_SERVER') && (strlen($remoteServer)>5)){
         $rstring=$this->objLanguage->languageText('mod_userimport_remotelink','userimport');
