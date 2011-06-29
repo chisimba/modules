@@ -1293,7 +1293,9 @@ class sahriscollectionsops extends object {
         }
         // $txt .= "<li>".$addrec."</li>";
         $txt .= "<li>".$searchrec."</li>";
-        $txt .= "<li>".$csvin."</li>";
+        if($this->objUser->inAdminGroup($this->objUser->userId())) {
+            $txt .= "<li>".$csvin."</li>";
+        }
         $txt .= "</ul>";
         
         $ret = $menubox->show($this->objLanguage->languageText("mod_sahriscollectionsman_menu", "sahriscollectionsman"), $txt);
