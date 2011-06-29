@@ -132,7 +132,7 @@ class sahriscollectionsops extends object {
         $comment = $this->newObject('htmlarea', 'htmlelements');
         $comment->name = 'comment';
         $comment->value = $defmsg;
-        $comment->width ='50%';
+        $comment->width ='100%';
         $commentLabel = new label($this->objLanguage->languageText('mod_sahriscollectionsman_comment', 'sahriscollectionsman').'&nbsp;', 'input_comment');
         $table->addCell($commentLabel->show(), 150, NULL, 'right');
         $table->addCell('&nbsp;', 5);
@@ -1288,7 +1288,9 @@ class sahriscollectionsops extends object {
         $txt .= "<li>".$sr."</li>";
         $txt .= "<li>".$or."</li>";
         $txt .= "<li>".$su."</li>";
-        $txt .= "<li>".$createcoll."</li>";
+        if($this->objUser->inAdminGroup($this->objUser->userId())) {
+            $txt .= "<li>".$createcoll."</li>";
+        }
         // $txt .= "<li>".$addrec."</li>";
         $txt .= "<li>".$searchrec."</li>";
         $txt .= "<li>".$csvin."</li>";
