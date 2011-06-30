@@ -178,10 +178,11 @@ class unesco_oer extends controller {
     
     public function __deleteBookmarks() {
         
+          $users = $this->getParam("selectedusers");
           $userid = $this->objUser->userId(); 
-          $bookmark = $this->objbookmarkmanager->getBookmark($userid);
-         $this->objbookmarkmanager->testcheckboxes($bookmark);
-        
+         $bookmark = $this->objbookmarkmanager->deletebookmark($users);
+             
+           $this->setVarByRef("users", $users);
         
         
         return "Bookmarks_tpl.php";

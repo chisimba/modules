@@ -245,35 +245,18 @@ if ($finalstring == null)
                             <?php
                             
                             
-                            $booklink = new link($this->uri(array("action" => "deleteBookmarks")));
-                            $booklink->cssClass = "linksTextNextToSubIcons";
+                            $booklink = new link("#");
+                            $booklink->cssId = "deletebookmark";
                             $booklink->link = "Delete Bookmark";
                             
-                           
                             
-                         
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
+
                             
                             echo $booklink->show();
                             
-                            ?>
+                          
                             
-                           <img src="skins/unesco_oer/images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
+      echo '                     <img src="skins/unesco_oer/images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
                        
                         </div>
                       
@@ -294,10 +277,10 @@ if ($finalstring == null)
                             <!-- Center column DIv -->
                             <div class="centerColumnDiv">
                                 
-                                       <div id='filterDiv' title ="1a" >
+                                       <div id="filterDiv" title ="1a" >'; 
                                        
                                            
-                    <?php
+                  
                                         //Creates chisimba table
                                         $objTable = $this->getObject('htmltable', 'htmlelements');
                                      
@@ -309,7 +292,7 @@ if ($finalstring == null)
                                             
 
                                             echo $this->objbookmarkmanager->populateListView($bookmark);
-                                             
+                                             var_dump($users);
                                         
                     ?>
                                            
@@ -507,3 +490,7 @@ if ($finalstring == null)
         </div>
     </body>
 </html>
+
+   
+   
+    

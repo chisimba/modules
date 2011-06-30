@@ -42,7 +42,7 @@ class bookmarkmanager extends dbtable {
         
         
        $data = array(
-           'id' => $parentid,
+           'product_id' => $parentid,
            'user_id' => $userid,
           //   'location' => $url,
            'label' => $label,
@@ -72,42 +72,14 @@ class bookmarkmanager extends dbtable {
          
         public function deleteBookmark($userid){
              
-             $sql = "select * from $this->_tableName where user_id = $userid";
+           
 
-        return $this->getArray($sql); 
+      $this->update("id","$userid[0]",$data = array( 'deleted'=> 1 ));
          
          
         }     
         
-        
-         public function testcheckboxes($products){
-               $checkboxes = array(); //convert to 1d array
-               $i = 0;
-              foreach ($products as $product){
-                   $temp = str_replace (" ", "", $product['label']);
-                  $checkboxes[$i] = $temp;
-                  $i++;
-                  
-              }
-              
-              
-              
-             
-             return $checkboxes;
-             
-             
-         }
-
-
-
-
-
-
-
-
-
-
-
+   
 
          public function populateListView($products) {
              
@@ -142,7 +114,17 @@ class bookmarkmanager extends dbtable {
                   $('$divheading').slideToggle();
                    $('$titleheading ').slideToggle(); 
 
+                  });
+                
+                
+                 $('#deletebookmark').click(function(){
+
+                  document.forms['displaytext'].submit();
+
                   });";
+                
+                
+                
                                  
         
         }
@@ -155,34 +137,38 @@ class bookmarkmanager extends dbtable {
                             </script>
                                         ';
         
-        
+           $display =   new form("displaytext",$this->uri(array('action' => 'deleteBookmarks')));
         
               
          foreach ($products as $product) {
+             
              
              $temp = str_replace (" ", "", $product['label']);
             $divheading = $temp. 'Div';
             $linkheading = $temp . 'Link';
             $titleheading = $temp . 'Title';
          
-           $checkbox = new checkbox($temp);
+           $checkbox = new checkbox('selectedusers[]', $product['id']);
+            $checkbox->value = $product['id'];
+             $checkbox->cssId = 'user_' . $product['id'];
            
-           
-             $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
+             $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['product_id'])));
              $abLink->cssClass = "listingLanguageLinkAndIcon";
              $abLink->link = $product['label'];
         
            
-           $displayform =   new form("displaytext","");
-           $displayform->addToForm($checkbox);
-           $displayform->addToForm($abLink);
+        
+           $display->addToForm($checkbox);
+           $display->addToForm($abLink);
+           $display->addToForm("<br>");
+            
            
              
         $editbutton = new button();
         $editbutton->cssClass = "listingLanguageLinkAndIcon";
        
 
-        $parentid = $product['id'];
+        $parentid = $product['product_id'];
         $textinput = new textinput("bookmarktitle");
         $textinput->value = $product['label'];
                           
@@ -207,11 +193,10 @@ class bookmarkmanager extends dbtable {
 
         
         
-        $content.="
-             
-        <br><br>
+       
+         $display->addToForm("<br><br>
             <div class='productsListView'>
-                   <h2>" . $displayform->show() . "</h2><br>
+                   <h2>"  . "</h2><br>
                 <a href='javascript:void(0)'   class='$linkheading'>Edit</a> 
                    <div class='$divheading'> " . $form->show() ."
 
@@ -225,27 +210,18 @@ class bookmarkmanager extends dbtable {
                 
                 
                          
-     
-              
-                
-                        
-
-                  
-                  
-                    
-                 ";
-
+     ");   
         
-
-        $content .= ' 
+         }
+       $content .=   $display->show();
                
                
                    
                 
-        ';
         
         
-         }
+        
+         
         return $content;
     }
 

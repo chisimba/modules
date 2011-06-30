@@ -27,7 +27,7 @@ $fields = array(
                  'description'=>array('type' => 'text'),
                 'label' =>array('type' => 'text'),
                 'created_on' => array('type' => 'timestamp'),
-		  'deleted'=>array('type' =>'text','length' => 32)
+		     'deleted' => array('type' => 'integer','length' => 1,'default' => '0')
  		);
 
 ?>
