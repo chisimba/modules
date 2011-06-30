@@ -38,7 +38,7 @@ class thumbnailuploader extends object{
         $this->_upload = $this->getObject('upload','filemanager');
     }
 
-    public function uploadThumbnail($path) {
+    public function uploadThumbnail($path, $prevPath = NULL) {
         $this->_uploadInput->enableOverwriteIncrement = TRUE;
         $this->_uploadInput->customuploadpath = $path;
 
@@ -58,6 +58,15 @@ class thumbnailuploader extends object{
                 }
             }
         }
+
+        if (!empty($prevPath)) {
+            $objDelete = $this->getObject('del','files');
+            $objDelete->fullFilePath = $prevPath;
+            if (!$objDelete->delete()) {
+                throw new customException($objDelete->errMsg);
+            }
+        }
+
         return $this->results;
     }
 
