@@ -99,7 +99,7 @@ class dbproducts extends dbtable
     //TODO Ntsako check the hierichal storage of data to make this more efficient
     function getNoOfAdaptations($parentId)
     {
-        $sql = "SELECT * FROM $this->_tableName WHERE relation = '$parentId'";
+        $sql = "SELECT * FROM $this->_tableName WHERE parent_id = '$parentId'";
         $child = $this->getArray($sql);
 
         return count($child);
@@ -108,9 +108,9 @@ class dbproducts extends dbtable
     function getMostAdaptedProducts($displayAllMostAdaptedProducts) {
         //If the more link has been clicked, retrieve all adapted products
         if($displayAllMostAdaptedProducts == true){
-            $sql = "SELECT relation, creator, count(*) AS total FROM $this->_tableName WHERE relation IS NOT NULL GROUP BY relation ORDER BY total DESC";
+            $sql = "SELECT parent_id, creator, count(*) AS total FROM $this->_tableName WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC";
         }else{//By default, display only the three most adapted products
-            $sql = "SELECT relation, creator, count(*) AS total FROM $this->_tableName WHERE relation IS NOT NULL GROUP BY relation ORDER BY total DESC LIMIT 3";
+            $sql = "SELECT parent_id, creator, count(*) AS total FROM $this->_tableName WHERE parent_id IS NOT NULL GROUP BY parent_id ORDER BY total DESC LIMIT 3";
         }
         
         return $this->getArray($sql);
@@ -149,7 +149,7 @@ class dbproducts extends dbtable
         $sql = "SELECT * FROM $this->_tableName WHERE creator ='$creatorName'";
         $Array = $this->getArray($sql);
         for ($i = 0; $i < count($Array); $i++) {
-            if ($Array[$i]['id'] == $Array[$i]['relation']) {
+            if ($Array[$i]['id'] == $Array[$i]['parent_id']) {
                 $Adaptation = 1; // True;
                 return $Adaptation;
             } else {
