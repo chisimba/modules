@@ -299,7 +299,6 @@ class product extends object
         $tempData['deleted'] = $this->isDeleted();
         $tempData['thumbnail'] = $this->getThumbnailPath();
         
-        
         if ($this->getIdentifier())
         {
             if ($this->isAdaptation()) $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData, $this->getAdaptationMetaDataArray());
@@ -356,7 +355,12 @@ class product extends object
      */
     function loadProduct($id)
     {
-        $product = $this->_objDbProducts->getProductByID($id);
+        $product = NULL;
+        if (is_array($id)){
+            $product = $id;
+        }else{
+            $product = $this->_objDbProducts->getProductByID($id);
+        }
 
         $this->setIdentifier($product['id']);
         $this->setParentID($product['parent_id']);
@@ -384,7 +388,7 @@ class product extends object
 
         if ($this->isAdaptation())
         {
-            $this->loadAdaptationData($id);
+            $this->loadAdaptationData($this->getIdentifier());
         }
     }
 
@@ -1067,7 +1071,7 @@ class product extends object
    {
        $result = FALSE;
        try {
-            $results = $this->objThumbUploader->uploadThumbnail($path);
+            $results = $this->objThumbUploader->uploadThumbnail($path, $this->getThumbnailPath());
         } catch (customException $e) {
             echo customException::cleanUp();
             exit();

@@ -401,13 +401,13 @@ class productutil extends object {
      */
     public function populateAdaptedGridView($adaptedProduct) {
         $content = '';
-        $uri = $this->uri(array("action" => 'ViewProduct', "id" => $adaptedProduct['id']));
+        $uri = $this->uri(array("action" => 'ViewProduct', "id" => $adaptedProduct->getIdentifier()));
         $abLink = new link($uri);
         $abLink->cssClass = "listingLanguageLinkAndIcon";
-        $abLink->link = $adaptedProduct['title'];
+        $abLink->link = $adaptedProduct->getTitle();
         
         $thumbLink = new link($uri);
-        $thumbLink->link = '<img src="' . $adaptedProduct['thumbnail'] . '" width="79" height="101">';
+        $thumbLink->link = '<img src="' . $adaptedProduct->getThumbnailPath() . '" width="79" height="101">';
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
@@ -416,12 +416,12 @@ class productutil extends object {
          * TODO Ntsako add code to check if the product was adapted by an institution or a group
          */
 
-//This some how forces the page to display the 0
-        if ($product['noOfAdaptations'] == 0) {
-            $product['noOfAdaptations'] = 0;
-        }
+////This some how forces the page to display the 0
+//        if ($product['noOfAdaptations'] == 0) {
+//            $product['noOfAdaptations'] = 0;
+//        }
 
-        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $adaptedProduct['id'] , 'prevAction' => 'ViewProduct'));
+        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $adaptedProduct->getIdentifier() , 'prevAction' => 'ViewProduct'));
         $adaptLink = new link($uri);
         $adaptLink->cssClass = "adaptationLinks";
         $linkText = '<div class="imageBotomFlag"></div>';
@@ -440,29 +440,16 @@ class productutil extends object {
                    <br>
                    <div class="orangeListingHeading">' . $abLink->show() . '</div>';
 
+        $objInstitutionManager = $this->getObject('institutionmanager');
 //Check the creator of the adaptation
-        if ($adaptedProduct['group_thumbnail'] != NULL) {
-            $content .='
-                <div class="adaptedByDiv greenColor">Managed by:</div>
-                <div class="gridSmallImageAdaptation">
-                    <img src="' . $adaptedProduct['group_thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
-                    <span class="greyListingHeading">' . $adaptedProduct['creator'] . '</span>
-                </div>
-                <div class="gridAdaptationLinksDiv">
-                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['type'] . '</a> |
-                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['country'] . '</a> <br>
-                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct['language'] . '</a>
-                </div>
-                ';
-        } else {
-            $this->_institutionGUI->getInstitution($adaptedProduct['creator']);
-            $thumbnail = $this->_institutionGUI->showInstitutionThumbnail();
-            $type = $this->_institutionGUI->showInstitutionType();
-            $country = $this->_institutionGUI->showInstitutionCountry();
-            $name = $this->_institutionGUI->showInstitutionName();
-            $creator = $adaptedProduct['creator'];
+        if ($adaptedProduct->getInstitutionID()) {
+            $objInstitutionManager->getInstitution($adaptedProduct->getInstitutionID());
+            $thumbnail = $objInstitutionManager->getInstitutionThumbnail();
+            $type = $objInstitutionManager->getInstitutionType();
+            $country = $objInstitutionManager->getInstitutionCountry();
+            $name = $objInstitutionManager->getInstitutionName();
 
-            $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $creator)));
+            $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $adaptedProduct->getInstitutionID())));
             $institutionLink->cssClass = 'darkGreyColour';
             $institutionLink->link = $name;
 
@@ -474,7 +461,20 @@ class productutil extends object {
                 <div class="gridAdaptationLinksDiv">
                     <a class="productAdaptationGridViewLinks">' . $type . '</a> |
                     <a class="productAdaptationGridViewLinks">' . $country . '</a> <br>
-                    <a class="productAdaptationGridViewLinks">' . $adaptedProduct['language'] . '</a>
+                    <a class="productAdaptationGridViewLinks">' . $adaptedProduct->getLanguageName() . '</a>
+                </div>
+                ';
+        } else {
+            $content .='
+                <div class="adaptedByDiv greenColor">Managed by:</div>
+                <div class="gridSmallImageAdaptation">
+                    <img src="' . NULL . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                    <span class="greyListingHeading">' . $adaptedProduct->getGroupName(). '</span>
+                </div>
+                <div class="gridAdaptationLinksDiv">
+                    <a href="#" class="productAdaptationGridViewLinks">' . 'type' . '</a> |
+                    <a href="#" class="productAdaptationGridViewLinks">' . 'country' . '</a> <br>
+                    <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct->getLanguageName() . '</a>
                 </div>
                 ';
         }
@@ -630,7 +630,7 @@ class productutil extends object {
 
         foreach ($MostAdaptedProducts as $childProduct) {
 //Get the original products
-            $product = $objDbProducts->getProductById($childProduct['relation']);
+            $product = $objDbProducts->getProductById($childProduct['parent_id']);
 //Get number of adaptations for the product
             $product['noOfAdaptations'] = $childProduct['total'];
 //Check if the creator is a group or an institution

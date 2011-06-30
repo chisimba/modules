@@ -124,10 +124,6 @@ if ($adaptationstring == null)
                             <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
 
-
-
-
-
                                 $products = $this->objDbProducts->getFilteredProducts($finalstring);
                                 echo $finalstring;
                                 $newRow = true;
@@ -137,34 +133,37 @@ if ($adaptationstring == null)
                                     $count++;                       //populates table
                                     //Check if the creator is a group or an institution
 
-                                    if ($this->objDbGroups->isGroup($product['creator'])) {
-                                        $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
-                                        $product['group_thumbnail'] = $thumbnail['thumbnail'];
-                                        $product['institution_thumbnail'] = NULL;
-                                        //$product['country'] = 'Not Available';
-                                        $product['country'] = $this->objDbGroups->getGroupCountry($product['creator']);
-                                        $product['type'] = 'Not Available';
-                                    } else {
-                                        $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
-                                        $product['group_thumbnail'] = NULL;
-                                        //$product['country'] = 'Not Available';
-
-
-                                        $product['country'] = $this->objDbInstitution->getInstitutionCountry($product['creator']);
-                                        //$product['type'] = 'Not Available';
-
-                                        $institutionTypeID = $this->objDbInstitution->findInstitutionTypeID($product['creator']);
-                                        //   $product['type'] = $this->objDbInstitutionTypes->getTypeName($institutionTypeID);
-
-                                        $product['institution_thumbnail'] = $thumbnail['thumbnail'];
-                                    }
+                                    $objProduct = $this->getObject('product');
+                                    $objProduct->loadProduct($product);
+                                    
+//                                    if ($this->objDbGroups->isGroup($product['creator'])) {
+//                                        $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
+//                                        $product['group_thumbnail'] = $thumbnail['thumbnail'];
+//                                        $product['institution_thumbnail'] = NULL;
+//                                        //$product['country'] = 'Not Available';
+//                                        $product['country'] = $this->objDbGroups->getGroupCountry($product['creator']);
+//                                        $product['type'] = 'Not Available';
+//                                    } else {
+//                                        $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
+//                                        $product['group_thumbnail'] = NULL;
+//                                        //$product['country'] = 'Not Available';
+//
+//
+//                                        $product['country'] = $this->objDbInstitution->getInstitutionCountry($product['creator']);
+//                                        //$product['type'] = 'Not Available';
+//
+//                                        $institutionTypeID = $this->objDbInstitution->findInstitutionTypeID($product['creator']);
+//                                        //   $product['type'] = $this->objDbInstitutionTypes->getTypeName($institutionTypeID);
+//
+//                                        $product['institution_thumbnail'] = $thumbnail['thumbnail'];
+//                                    }
 
                                     if ($newRow) {
                                         $objTable->startRow();
-                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($objProduct));
                                         $newRow = false;
                                     } else {
-                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($product));
+                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($objProduct));
                                     }
 
 
