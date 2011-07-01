@@ -1,0 +1,53 @@
+<?php
+/* 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+$this->setLayoutTemplate('maincontent_layout_tpl.php');
+echo $content->showInput($this->getParam('prevAction'));
+
+?>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" >
+    $(document).ready(
+        function()
+        {
+           // $('.root').children().hide();
+        });
+
+//    $('select[name=root_dropdown]').click(
+//        function()
+//        {
+//            $('.root').slideToggle();
+//        });
+
+    $('select[name=new_dropdown]').change(
+    function()
+        {
+            //$('.' + $('select[name=root_dropdown]').val()).slideToggle();
+            switch ($(this).val())
+            {
+                case 'none':
+                    $('.root').html('');
+                    break;
+                case 'new':
+                    $('.root').show();
+                    break;
+                default:
+                    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&path=' + $(this).val());
+                    $('.root').show();
+            }
+        });
+</script>

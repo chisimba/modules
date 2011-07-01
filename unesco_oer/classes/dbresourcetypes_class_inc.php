@@ -35,6 +35,11 @@ class dbresourcetypes extends dbtable {
         $this->insert($data);
     }
 
+    function getResourceTypeDescription($id) {
+        $row = $this->getRow('id', $id);
+        return $row['description'];
+    }
+
 }
 
 ?>

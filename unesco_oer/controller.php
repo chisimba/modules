@@ -1685,7 +1685,7 @@ class unesco_oer extends controller {
      */
 
     public function __saveProductMetaData() {
-        $defaultTemplate = "ProductMetaData_tpl.php";
+        $defaultTemplate = "ProductMetaData_tpl.php";echo "gdsgdf";
         $product = $this->getObject('product');
         
         //test for edit
@@ -1706,14 +1706,19 @@ class unesco_oer extends controller {
                     //$this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
                     $this->nextAction($this->getParam('nextAction'), array('id' => $product->getIdentifier()));
                 } else {
-                    $this->setLayoutTemplate('maincontent_layout_tpl.php');
                     return $defaultTemplate;
                 }
-
+                break;
+            case "createcontent":
+                //test if all fields are valid
+                if ($product->handleUpload()) {
+                    $this->nextAction('saveContent', array('path' => $product->getIdentifier(), 'nextAction' => $this->getParam('nextAction')));
+                } else {
+                    return $defaultTemplate;
+                }
                 break;
 
             default:
-                $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 return $defaultTemplate;
                 break;
         }
@@ -1742,8 +1747,42 @@ class unesco_oer extends controller {
         $product->loadProduct($this->getParam('productID'));
         $adaptation = $product->makeAdaptation();
         $this->setVarByRef('product', $adaptation);
-        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "ProductMetaData_tpl.php";
+    }
+
+    function __saveContent()
+    {
+        $path = $this->getParam('path');
+        $option = $this->getParam('option');
+        $content = $this->getObject('content');
+        $product = $this->getObject('product');
+
+        if($path)
+        {            
+            $pathArray = $content->getPathArray($path);            
+            $product->loadProduct($pathArray[0]);
+            if ($product->getContent()) {
+                $this->setVarByRef('content', $product->getContent());
+            } else {
+                //$content->setType($product->getContentType());
+                $content->setPath($product->getIdentifier());
+                $content->setValidTypes($product->getContentTypeDescription());
+                $this->setVarByRef('content', $content);
+            }
+        }
+
+        switch ($option) {
+            case 'new':
+                echo $content->showInputByContentPath($path);
+                die();
+                break;
+
+            default:
+                break;
+        }
+        
+
+        return "CreateContent_tpl.php";
     }
 
     //Function to display the institution editor page

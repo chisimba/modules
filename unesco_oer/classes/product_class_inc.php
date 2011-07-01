@@ -264,6 +264,8 @@ class product extends object
         $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
         $this->objDbProductStatus = $this->getObject('dbproductstatus');
         $this->validationArray = array();
+
+        $this->setContent(NULL);
     }
 
     ////////////////   METHODS   ////////////////
@@ -1000,10 +1002,12 @@ class product extends object
 
         $hiddenInput = new hiddeninput('add_product_submit');
 
+        $submitOption = ($this->getContent()) ? "'upload'" : "'upload'"; //TODO here we add support to create new content
+
         // setup button for submission
         $buttonSubmit = new button('upload', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
-        $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )."SubmitProduct('add_product_submit', 'upload');";
+        $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )."SubmitProduct('add_product_submit', $submitOption);";
         $buttonSubmit->setOnClick('javascript: ' . $action);
 
         // setup button for cancellation
@@ -1353,6 +1357,13 @@ class product extends object
     function getContentType()
     {
         return $this->_resourcetype;
+    }
+
+    function getContentTypeDescription()
+    {
+        return $this->objDbResourceTypes->getResourceTypeDescription(
+                $this->getContentType()
+                );
     }
 
     function getProductDate(){
