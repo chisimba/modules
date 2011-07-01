@@ -56,6 +56,11 @@ $GLOBALS['kewl_entry_point_run']) {
 class block_sasiwebserver extends object {
 
     /**
+     * @var bool $requiresAdmin Specifies only admin usage
+     */
+    public $requiresAdmin = TRUE;
+
+    /**
      * @var object $objContext : The Context Object
      */
     public $objContext;
@@ -104,7 +109,7 @@ class block_sasiwebserver extends object {
 
         // Get Context Details
         $contextDetails = $this->dbSasicontext->getSasicontextByField('contextcode', $this->contextCode);
-        
+
         $link = new link ($this->uri(array('action'=>'showfac'), 'sasicontext'));
         $link->link = ucwords($this->objLanguage->code2Txt('mod_sasicontext_linkup', 'sasicontext'));
         $link->rel = 'facebox';
@@ -132,7 +137,7 @@ class block_sasiwebserver extends object {
             $table->endRow();
             return $table->show().'<p>'.$link->show().'</p>'.'<p>'.$link2->show().'</p>';
         }
-        
+
     }
 }
 ?>
