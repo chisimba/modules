@@ -120,11 +120,15 @@ class forum extends controller {
         $this->trimstrObj = & $this->getObject('trimstr', 'strings');
 
         // Workgroup Classes
-        $this->objWorkGroup = & $this->getObject('dbworkgroup', 'workgroup');
-        $this->objWorkGroupUser = & $this->getObject('dbworkgroupusers', 'workgroup');
+        $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
+        $this->usingWorkGroupsFlag=$this->objModuleCatalogue->checkIfRegistered('workgroups');
+        if ($this->usingWorkGroupsFlag){
+            $this->objWorkGroup = & $this->getObject('dbworkgroup', 'workgroup');
+            $this->objWorkGroupUser = & $this->getObject('dbworkgroupusers', 'workgroup');
+        }
 
         // Check for workgroup
-        if ($this->getParam('action') == 'workgroup' OR $this->getParam('type') == 'workgroup') {
+        if ($this->usingWorkGroupsFlag && ($this->getParam('action') == 'workgroup' OR $this->getParam('type') == 'workgroup')) {
             $this->getWorkGroupDetails();
         } else {
             $this->forumtype = 'context';
@@ -421,7 +425,7 @@ class forum extends controller {
         }
 
         // Check if user has access to workgroup forum
-        if ($forum['forum_workgroup'] != NULL && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
+        if ($this->usingWorkGroupsFlag && ($forum['forum_workgroup'] != NULL) && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
             return $this->nextAction('noaccess', array('id' => $forum['forum_workgroup']));
         }
 
@@ -1735,7 +1739,7 @@ class forum extends controller {
      * @param array $forum Array containing details of the forum
      */
     public function checkWorkgroupAccessOrRedirect($forum) {
-        if ($forum['forum_workgroup'] != NULL && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
+        if ($this->usingWorkGroupsFlag && ($forum['forum_workgroup'] != NULL) && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
             return $this->nextAction('noaccess', array('id' => $forum['forum_workgroup']));
         } else {
             $this->forumtype = 'workgroup';
