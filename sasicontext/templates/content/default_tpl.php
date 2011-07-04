@@ -14,6 +14,7 @@ $this->setVar('pageSuppressToolbar', TRUE);
 $this->setVar('suppressFooter', TRUE);
 $this->setVar('pageSuppressSkin', TRUE);
 $this->setVar('pageSuppressContainer', TRUE);
+$this->setVar('pageSuppressGoogleAnalytics', TRUE);
 
 $alertBox = $this->getObject('alertbox', 'htmlelements');
 $alertBox->putJs();
