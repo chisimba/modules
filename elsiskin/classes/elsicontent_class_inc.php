@@ -199,7 +199,7 @@ class elsicontent extends object {
 
         $retstr .= $documentation;
         
-        $retstr .= '<a 
+        $retstr .= '<br><a 
                         href=\'javascript:popOnLoad();\'>More Information Regarding ZAWWW Conference </a>';
         $retstr .= '<script type="text/javascript">
                         function popOnLoad()
