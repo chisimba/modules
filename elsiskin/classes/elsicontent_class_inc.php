@@ -90,7 +90,7 @@ class elsicontent extends object {
                 $this->mainContent->setNewsId($id);
             }
         }
-
+    
         return $this->getContent($action);
     }
 
@@ -198,7 +198,19 @@ class elsicontent extends object {
         }
 
         $retstr .= $documentation;
+        
+        $retstr .= '<a 
+                        href=\'javascript:popOnLoad();\'>Click Me </a>';
+        $retstr .= '<script type="text/javascript">
+                        function popOnLoad()
+                    {
+                        mywindow = window.open("http://'.$_SERVER['SERVER_NAME'].'/chisimba/'.$this->getResourceURI('flash').'/zawww.html",
+                                                "mywindow","location=1, status=1,scrollbars=1, width=850,height=450");
+                        mywindow.moveTo(0, 0);
+                    }
 
+                    </script>';
+        
         return $retstr;
     }
 

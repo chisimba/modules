@@ -566,7 +566,7 @@ class staffcards extends object {
 							<span class="fn org"><span class="unit">eLearning Support & Innovation</span>,&nbsp;
 							<span class="division">KIM</span></span>
 							<p><img src="' . $this->skinpath . 'images/staff/schoonara.jpg" class="left" alt="Shakira Choonara"></p>
-					  <p class="bio">
+					  <p class="bio">I ensure the smooth running of the eLearning Unit and it\'s operations. I am ambitious, hard-working and have a great passion for life.
 					  </p>
 							
 			
@@ -580,8 +580,9 @@ class staffcards extends object {
 					<h2><span class="fn">Shakira Choonara\'s</span> networks</h2>
 						<div id="networkmedia">
 						  <ul>        
-							<li>No networks supplied</li>
-						  </ul>
+                                                    <li><a target="_blank" href="http://twitter.com/#!/sharks3xy"><img src="' . $this->skinpath . 'images/profiles/twitter.png"><strong>Twitter</strong>twitter.com</a></li>					
+                                                    <li><a  target="_blank" href="http://www.facebook.com/profile.php?id=1270931108"><img src="' . $this->skinpath . 'images/profiles/facebook.png"><strong>Facebook</strong>facebook.com</a></li>
+                				  </ul>
 						  <div class="clear"></div>
 		
 						</div>
