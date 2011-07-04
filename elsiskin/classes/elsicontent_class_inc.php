@@ -198,7 +198,7 @@ class elsicontent extends object {
             }
         }
 
-        $retstr .= $documentation."::".$objSysConfig->siteRoot()."::";
+        $retstr .= $documentation;
         
         $retstr .= '<br><a 
                         href=\'javascript:popOnLoad();\'>More Information Regarding ZAWWW Conference </a>';
