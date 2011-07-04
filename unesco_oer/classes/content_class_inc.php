@@ -83,25 +83,36 @@ class content extends object
 
         $dropdown = new dropdown('new_dropdown');
         $dropdown->addOption('none', 'nothing selected');
-        foreach ($this->_content_types as $value) {
-            $dropdown->addOption(implode ( '__' , array($this->_path,'new') ), $value);
+        foreach ($this->_content_types as $key => $value) {
+            $dropdown->addOption(implode ( '__' , array($this->_path,$key) ), $value);
         }
         $dropdown->setSelected('none');
 
         $html .= $dropdown->show();
 
-        $html .= "<div class='root' style='display: none;' ></div>";
+        $html .= "<div class='root' ></div>";
 
-        $this->_contents;
+        $this->_contents; //TODO Add method to Display existing contents
 
-        return $html;
+        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset->setLegend('Test Heading');
+        $fieldset->addContent($html);
+
+        return $fieldset->show();
+        //return $html;
     }
 
-    public function showInputByContentID($id)
+    /**This returns the input for a given content ID
+     *
+     * @param string $id
+     * @return string
+     */
+    public function showInputByContentID($id) //TODO implement this as a recursive algorithm
     {
-        return $this->_content_types[$id];
+        return $this->_contents[$id]->showInput();
     }
 
+    //
     public function showInputByContentPath($path)
     {
         $array = $this->getPathArray($path);
@@ -111,6 +122,17 @@ class content extends object
             $content = $this->getObject($this->_content_types[0]);
             return $content->showInput();
         }
+    }
+
+    public function generateNewContent($contentPath)
+    {
+        $contentPathArray = $this->getPathArray($contentPath);
+        $contentType = array_pop($contentPathArray);
+        $newContent = $this->getObject($contentType);
+
+        $newContentPath = implode('__', $array); //TODO Extract this implode to a human readable function
+        $newContent->setPath($newContentPath);
+        return $newContent;
     }
 
     ////////// Getters //////////
@@ -137,11 +159,17 @@ class content extends object
         $this->_title = $title;
     }
 
-    public function setType($node_type)
+    public function setType($content_type)
     {
-        $this->_content_type = $node_type;
+        $this->_content_type = $content_type;
     }
 
+    /**This function sets the valid types of for this content to contain.
+     * It expects and array of descriptive values of the content types with their
+     * class names as keys.
+     *
+     * @param <type> $types
+     */
     public function setValidTypes($types)
     {
         if (!is_array($types)){

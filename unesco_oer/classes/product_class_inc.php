@@ -707,7 +707,7 @@ class product extends object
             'action' => "saveProductMetaData",
             'productID' => $this->_identifier,
             'nextAction' => $nextAction));
-        $form_data = new form('add_products_ui', $uri);//////created here in order to include text boxes//////
+        $form_data = new form('add_products_ui', $uri);//////created here in order to include select boxes for keywords//////
 
         // Create the selectbox object
         $objSelectBox = $this->newObject('selectbox','htmlelements');
@@ -1002,7 +1002,8 @@ class product extends object
 
         $hiddenInput = new hiddeninput('add_product_submit');
 
-        $submitOption = ($this->getContent()) ? "'upload'" : "'upload'"; //TODO here we add support to create new content
+//        $submitOption = ($this->getContent()) ? "'upload'" : "'createContent'"; //NOTE here we add support to create new content
+        $submitOption = ($this->getContent()) ? "'upload'" : "'upload'";
 
         // setup button for submission
         $buttonSubmit = new button('upload', $this->objLanguage->

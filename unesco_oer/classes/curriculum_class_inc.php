@@ -29,28 +29,93 @@ class curriculum extends content {
 
 
     public function showInput($prevAction = NULL) {
-        $html = '';
+        $uri = $this->uri(array(
+            'action' => "saveProductMetaData",
+            'productID' => $this->_identifier,
+            'nextAction' => $prevAction));
+        $form_data = new form('add_products_ui', $uri);
 
-        $html .= '  <h4 class="greyText fontBold labelSpacing">Foreward</h4>
-                    <h4 class="greyText fontBold labelSpacing">
-                        <span class="wideDivider">
-                            <textarea name="textarea3" class="wideInputTextAreaField"></textarea>
-                        </span>
-                    </h4>
-                    <h4 class="greyText fontBold labelSpacing">Background</h4>
-                    <h4 class="greyText fontBold labelSpacing">
-                        <span class="wideDivider">
-                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
-                        </span>
-                    </h4>
-                    <h4 class="greyText fontBold labelSpacing">Introductory Description</h4>
-                    <h4 class="greyText fontBold labelSpacing">
-                        <span class="wideDivider">
-                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
-                        </span>
-                    </h4>';
+//        $html .= '  <h4 class="greyText fontBold labelSpacing">Foreward</h4>
+//                    <h4 class="greyText fontBold labelSpacing">
+//                        <span class="wideDivider">
+//                            <textarea name="textarea3" class="wideInputTextAreaField"></textarea>
+//                        </span>
+//                    </h4>
+//                    <h4 class="greyText fontBold labelSpacing">Background</h4>
+//                    <h4 class="greyText fontBold labelSpacing">
+//                        <span class="wideDivider">
+//                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
+//                        </span>
+//                    </h4>
+//                    <h4 class="greyText fontBold labelSpacing">Introductory Description</h4>
+//                    <h4 class="greyText fontBold labelSpacing">
+//                        <span class="wideDivider">
+//                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
+//                        </span>
+//                    </h4>';
 
-        return $html;
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cssClass = "moduleHeader";
+
+        $fieldName = 'Foreward';
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = $fieldName;
+        $editor->height = '150px';
+        //$editor->width = '70%';
+        $editor->setBasicToolBar();
+        //$editor->setContent($this->getDescription());
+
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($editor->showFCKEditor());
+        $table->endRow();
+
+        $fieldName = 'Background';
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = $fieldName;
+        $editor->height = '150px';
+        //$editor->width = '70%';
+        $editor->setBasicToolBar();
+        //$editor->setContent($this->getDescription());
+
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($editor->showFCKEditor());
+        $table->endRow();
+
+        $fieldName = 'Introductory Description';
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = $fieldName;
+        $editor->height = '150px';
+        //$editor->width = '70%';
+        $editor->setBasicToolBar();
+        //$editor->setContent($this->getDescription());
+
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($editor->showFCKEditor());
+        $table->endRow();
+
+        $buttonSubmit = new button('upload', 'upload');
+        //$action = "";
+        //$buttonSubmit->setOnClick('javascript: ' . $action);
+        $buttonSubmit->setToSubmit();
+
+        $form_data->addToForm($table->show() . $buttonSubmit->show());
+
+        return $form_data->show();
     }
 
     public function init() {

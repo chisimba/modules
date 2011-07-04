@@ -1766,14 +1766,19 @@ class unesco_oer extends controller {
             } else {
                 //$content->setType($product->getContentType());
                 $content->setPath($product->getIdentifier());
-                $content->setValidTypes($product->getContentTypeDescription());
+                $content->setValidTypes(
+                        array(
+                            'curriculum' => $product->getContentTypeDescription()
+                        )
+                );
                 $this->setVarByRef('content', $content);
             }
         }
 
         switch ($option) {
             case 'new':
-                echo $content->showInputByContentPath($path);
+                $newContent = $content->generateNewContent($path);
+                echo $newContent->showInput();
                 die();
                 break;
 
