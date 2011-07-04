@@ -51,7 +51,7 @@ class elsicontent extends object {
     // news category object
     private $objCategory;
     private $objLanguage;
-
+    
     /**
      * Constructor
      */
@@ -181,6 +181,7 @@ class elsicontent extends object {
      *
      */
     public function getHomeIntrotextContent() {
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $retstr = "";
         $objCategories = $this->getObject("dbnewscategories", "news");
         $news = $this->getObject("dbnewsstories", "news");
@@ -197,14 +198,14 @@ class elsicontent extends object {
             }
         }
 
-        $retstr .= $documentation;
+        $retstr .= $documentation."::".$objSysConfig->siteRoot()."::";
         
         $retstr .= '<br><a 
                         href=\'javascript:popOnLoad();\'>More Information Regarding ZAWWW Conference </a>';
         $retstr .= '<script type="text/javascript">
                         function popOnLoad()
                     {
-                        mywindow = window.open("'.$this->objConfig->getValue("KEWL_SITE_ROOT").$this->getResourceURI('flash').'/zawww.html",
+                        mywindow = window.open("'.$objSysConfig->siteRoot().$this->getResourceURI('flash').'/zawww.html",
                                                 "mywindow","location=1, status=1,scrollbars=1, width=850,height=450");
                         mywindow.moveTo(0, 0);
                     }
