@@ -201,7 +201,7 @@ class elsicontent extends object {
         $retstr .= $documentation;
         
         $retstr .= '<br><a 
-                        href=\'javascript:popOnLoad();\'>More Information Regarding ZAWWW Conference </a>';
+                        href=\'javascript:popOnLoad();\'><img src="'.$this->getResourceURI('flash/images/launch.png').'" width="220" height="220" border="0"></a>';
         $retstr .= '<script type="text/javascript">
                         function popOnLoad()
                     {
