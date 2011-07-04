@@ -204,7 +204,7 @@ class elsicontent extends object {
         $retstr .= '<script type="text/javascript">
                         function popOnLoad()
                     {
-                        mywindow = window.open("http://'.$_SERVER['SERVER_NAME'].'/chisimba/'.$this->getResourceURI('flash').'/zawww.html",
+                        mywindow = window.open("http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'].$this->getResourceURI('flash').'/zawww.html",
                                                 "mywindow","location=1, status=1,scrollbars=1, width=850,height=450");
                         mywindow.moveTo(0, 0);
                     }
