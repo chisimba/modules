@@ -132,8 +132,8 @@ class apo extends controller {
         $selected = $this->getParam('selected');
         $id = $this->getParam("docid");
         $faculties = $this->faculties->getFaculties();
-        $document = $this->documents->getDocument($id);
-
+        //$document = $this->documents->getDocument($id);
+        
         $mode = "new";
 
         $this->setVarByRef("action", $action);
@@ -141,7 +141,7 @@ class apo extends controller {
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
         $this->setVarByRef("departments", $faculties);
-        $this->setVarByRef("document", $document);
+       // $this->setVarByRef("document", $document);
 
         return "addeditdocument_tpl.php";
     }
@@ -153,6 +153,9 @@ class apo extends controller {
         $date = $this->getParam('date_created');
         $number = $this->getParam('number');
         $dept = $this->getParam('department');
+        $userid = $this->getParam('userid');
+        $currentuserid = $this->getParam('userid');
+        //print_r($userid);die();
         $title = $this->getParam('title');
         $selectedfolder = $this->getParam('parentfolder');
 
@@ -199,7 +202,8 @@ class apo extends controller {
         $this->setVarByRef("id", $id);
         $this->setVarByRef("refno", $refNo);
         $this->setVarByRef("departments", $faculties);
-
+        $this->setVarByRef("currentuserid", $currentuserid);
+        
         return "home_tpl.php";
     }
 
@@ -215,6 +219,8 @@ class apo extends controller {
         $contact = $this->getParam('contact');
         $status = $this->getParam('status', "0");
         $currentuserid = $this->getParam('currentuserid');
+
+        //print_r($currentuserid);die();
         $version = $this->getParam('version', "0");
         $data = array(
             "department" => $dept,
@@ -230,22 +236,27 @@ class apo extends controller {
         );
 
         $this->documents->updateInfo($id, $data);
+
+        $this->setVarByRef("currentuserid", $currentuserid);
         $this->nextAction('showoverview', array('id' => $id));
     }
 
     function __showeditdocument() {
         $faculties = $this->faculties->getFaculties();
         $id = $this->getParam('id');
-
+        $document = $this->documents->getDocument($id);
+        
+       // print_r($document);die();
         $action = "updatedocument";
 
-        $document = $this->documents->getDocument($id);
-
+        
+        
         $mode = "edit";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("id", $id);
         $this->setVarByRef("document", $document);
         $this->setVarByRef("departments", $faculties);
+        $this->setVarByRef("currentuserid", $currentuserid);
 
         return "addeditdocument_tpl.php";
     }
@@ -253,8 +264,9 @@ class apo extends controller {
     public function __showoverview() {
         $id = $this->getParam('id');
         $document = $this->documents->getDocument($id);
+       
         $selected = $this->getParam('selected');
-
+        
         $mode = "new";
 
         $this->setVarByRef("mode", $mode);
@@ -1809,7 +1821,7 @@ class apo extends controller {
               $path .= $name;
               } */
 
-            $data = array("name" => $name, "role" => $role, "email" => $email, "telephone" => $telephone, "department" => $departmentID);
+            $data = array("name" => $name, "role" => $role, "email" => $email, "telephone" => $telephone, "department" => $department);
 
             $this->users->addUser($data);
 
@@ -1825,7 +1837,7 @@ class apo extends controller {
         $from = $this->getParam('from');
         $role = $this->getParam('role');
 
-        $link = new link($this->uri(array("action" => "showeditdocument", "id" => $id)));
+        $link = new link($this->uri(array("action" => "showcomments", "id" => $id)));
 
 
         if (count($users) > 0) {
@@ -1878,8 +1890,6 @@ class apo extends controller {
         $faculties = $this->faculties->getFaculties();
         $department = $this->getParam("department");
 
-
-
         $this->setVarByRef("users", $users);
         $this->setVarByRef("departments", $faculties);
         $this->setVarByRef("document", $document);
@@ -1887,7 +1897,7 @@ class apo extends controller {
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
-        return "forwardAPO_tpl.php";
+        return "commenting_tpl.php";
     }
 
     public function __forwardDocAPO() {
@@ -1896,7 +1906,7 @@ class apo extends controller {
         $from = $this->getParam('from');
         $role = $this->getParam('role');
 
-        $link = new link($this->uri(array("action" => "showeditdocument", "id" => $id)));
+        $link = new link($this->uri(array("action" => "showcomments", "id" => $id)));
 
         $recipientEmailAddress = $this->objUser->email($recipientUserId);
         $senderEmailAddress = $this->objUser->email($senderUserId);

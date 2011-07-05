@@ -133,9 +133,11 @@ $uri = $this->uri(array('action' => 'forwarding', 'from' => 'overview_tpl.php', 
 $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
 $form->addToForm($button->show());
 
+//print_r($document);die();
 $textinput = new textinput('a1');
 $textinput->size = 100;
 $textinput->value = $document['docname'];
+//$textinput->extra = 'readonly';
 if ($mode == "fixup") {
     $textinput->value = $a1;
 }
@@ -156,6 +158,7 @@ $radio->addOption('1', "proposal for a new course/unit ");
 $radio->addOption('2', "change to the outcomes or credit value of a course/unit");
 $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
+//$radio->extra = 'disabled';
 if ($mode == 'edit') {
     $radio->setSelected($formdata['a2']);
 }
@@ -174,11 +177,14 @@ $table->endRow();
 $textarea = new textarea('a3');
 $textarea->height = '70px';
 $textarea->cols = 100;
-if ($mode == "fixup") {
+//$textarea->extra = 'readonly';
+if ($mode == "fixup"&& $document['userid'] != $document['currentuserid']) {
     $textarea->value = $a3;
+   
 }
 if ($mode == "edit") {
     $textarea->value = $formdata['a3'];
+    //$textarea->extra = 'readonly';
 }
 $textarea->setCssClass("required");
 $table->startRow();
@@ -192,6 +198,7 @@ $textarea = new textarea('a4');
 $textarea->height = '70px';
 $textarea->width = '500px';
 $textarea->cols = 100;
+//$textarea->extra = 'readonly';
 if ($mode == "fixup") {
     $textarea->value = $a4;
 }
@@ -214,6 +221,7 @@ $radio->addOption('3', "linked to a new qualification/ programme proposal, or on
 $radio->addOption('4', "linked to a recent qualification/ programme amendment, or one currently in development");
 $radio->addOption('5', "not linked to any other recent academic developments, nor those currently in development");
 $radio->setSelected('1');
+//$radio->extra = 'disabled';
 $radio->setBreakSpace('</p><p>');
 if ($mode == "fixup") {
     $radio->setSelected($a5);
@@ -229,21 +237,6 @@ $table->endRow();
 $table->startRow();
 $table->addCell($radio->show());
 $table->endRow();
-
-
-$efs = new fieldset();
-$efs->setLegend('Errors');
-if (count($errormessages) > 0) {
-
-    $errorstr = '<ul>';
-
-    foreach ($errormessages as $errormessage) {
-        $errorstr.='<li class="error">' . $errormessage; //. '<li/>';
-    }
-    $errorstr.='</li>';
-    $efs->addContent($errorstr);
-    $form->addToForm($efs);
-}
 
 $legend = "<b>Section A: Overview</b>";
 $fs = new fieldset();

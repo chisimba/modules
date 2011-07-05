@@ -124,6 +124,7 @@ $textarea = new textarea('b1');
 $textarea->height = '70px';
 $textarea->width = '500px';
 $textarea->cols=100;
+//$textarea->extra = 'readonly';
 if ($mode == "fixup") {
     $textarea->value = $b1;
 }
@@ -143,6 +144,7 @@ $textarea = new textarea('b2');
 $textarea->height = '70px';
 $textarea->width = '500px';
 $textarea->cols=100;
+//$textarea->extra = 'readonly';
 if ($mode == "fixup") {
     $textarea->value = $b2;
 }
@@ -155,13 +157,14 @@ $table->addCell("B.2. Describe the course/unit syllabus:");
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<em>*</em>'.$textarea->show());
+$table->addCell('<em>*</em>' . $textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b3a');
 $textarea->height = '70px';
 $textarea->width = '500px';
-$textarea->cols=100;
+$textarea->cols = 100;
+//$textarea->extra = 'readonly';
 if ($mode == "fixup") {
     $textarea->value = $b3a;
 }
@@ -174,13 +177,14 @@ $table->addCell("B.3. a. What are the pre-requisites for the course/unit if any?
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<em>*</em>'.$textarea->show());
+$table->addCell('<em>*</em>' . $textarea->show());
 $table->endRow();
 
 $textarea = new textarea('b3b');
 $textarea->height = '70px';
 $textarea->width = '500px';
-$textarea->cols=100;
+$textarea->cols = 100;
+//$textarea->extra = 'readonly';
 if ($mode == "fixup") {
     $textarea->value = $b3b;
 }
@@ -193,15 +197,16 @@ $table->addCell("B.3.b. What are the co-requisites for the course/unit if any?")
 $table->endRow();
 
 $table->startRow();
-$table->addCell('<em>*</em>'.$textarea->show());
+$table->addCell('<em>*</em>' . $textarea->show());
 $table->endRow();
 
-$radio = new radio ('b4a');
-$radio->addOption('1',"a compulsory course/unit");
-$radio->addOption('2',"an optional course/unit");
-$radio->addOption('3',"both compulsory and optional as the course/unit is offered toward qualifications/ programmes with differing curriculum structures ");
+$radio = new radio('b4a');
+$radio->addOption('1', "a compulsory course/unit");
+$radio->addOption('2', "an optional course/unit");
+$radio->addOption('3', "both compulsory and optional as the course/unit is offered toward qualifications/ programmes with differing curriculum structures ");
 $radio->setSelected('1');
 $radio->setBreakSpace('</p><p>');
+//$radio->extra = 'disabled';
 if ($mode == "fixup") {
     $radio->setSelected($b4a);
 }
@@ -220,6 +225,7 @@ $textarea = new textarea('b4b');
 $textarea->height = '70px';
 $textarea->width = '500px';
 $textarea->cols=100;
+//$textarea->extra = 'readonly';
 if ($mode == "fixup") {
     $textarea->value = $b4b;
 }
@@ -239,6 +245,7 @@ $textarea = new textarea('b4c');
 $textarea->height = '70px';
 $textarea->width = '500px';
 $textarea->cols=100;
+//$textarea->extra = 'readonly';
 if ($mode == "fixup") {
     $textarea->value = $b4c;
 }

@@ -16,7 +16,7 @@ $table = $this->getObject("htmltable", "htmlelements");
 $table->startHeaderRow();
 $table->addHeaderCell("Name");
 $table->addHeaderCell("Role");
-$table->addHeaderCell("Department");
+//$table->addHeaderCell("Department");
 $table->addHeaderCell("Email");
 $table->addHeaderCell("Telephone");
 $table->addHeaderCell("Actions");
@@ -37,7 +37,7 @@ if (count($users) > 0) {
         $table->startRow();
         $table->addCell($user['name']);
         $table->addCell($user['role']);
-        $table->addCell($user['department']);
+        //$table->addCell($user['department']);
         $table->addCell($user['email']);
         $table->addCell($user['telephone']);
 

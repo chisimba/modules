@@ -18,7 +18,7 @@ $this->setVar('pageSuppressXML', TRUE);
 $action = 'showreview';
 $form = new form('forwardtoAPOform', $this->uri(array('action' => $action, 'id' => $id, 'formname'=>'forwardtoAPO')));
 
-$xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Forward to APO');
+$xtitle = $this->objLanguage->languageText('mod_wicid_newdocument', 'wicid', 'Forwarded Documents for Comments');
 
 $header = new htmlheading();
 $header->type = 2;
@@ -45,7 +45,7 @@ $table->endRow();*/
 
 $table->startRow();
 $table->width="50%";
-$table->addCell("<b> Your Document has been Send to APO </b>");
+$table->addCell("<b> Your Document has been send for Comments </b>");
 $table->endRow();
 
 //$legend = "Foward to APO";

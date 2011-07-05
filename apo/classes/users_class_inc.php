@@ -49,11 +49,11 @@ class users extends object {
 
     function showUserForm($departments, $name='') {
         $roles = array(
-            array('label' => 'apo', 'value' => 'APO'),
-            array('label' => 'subsidy', 'value' => 'Subsidy Office'),
-            array('label' => 'library', 'value' => 'Library'),
-            array('label' => 'facultyregistrar', 'value' => 'Faculty Registrar'),
-            array('label' => 'legal', 'value' => 'Legal Office'));
+            array('label' => 'APO', 'value' => 'APO'),
+            array('label' => 'Subsidy', 'value' => 'Subsidy Office'),
+            array('label' => 'Library', 'value' => 'Library'),
+            array('label' => 'Faculty Registrar', 'value' => 'Faculty Registrar'),
+            array('label' => 'Legal', 'value' => 'Legal Office'));
 
         $form = new form('registeruser', $this->uri(array('action' => 'registeruser')));
         //$textinput = new textinput('facultyname');

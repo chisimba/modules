@@ -41,6 +41,7 @@ $table->endHeaderRow();
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
+
 if (count($documents) > 0) {
     foreach ($documents as $document) {
         $makepdf = new link($this->uri(array("action"=>"makepdf", "id"=>$document['id'], "all"=>"on")));
@@ -48,7 +49,7 @@ if (count($documents) > 0) {
         $objIcon->setIcon('pdf');
         $makepdf->link = $objIcon->show();
         $forwardDocument->link  = "<img src=".$this->getResourceUri('images/', 'apo')."forward.png>";
-        
+       //print_r($document['currentuserid']);die();
         if ($document['currentuserid'] == "Administrative User") {
             $link = new link($this->uri(array("action" => "showeditdocument", "id" => $document['id'])));
 

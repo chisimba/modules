@@ -131,6 +131,13 @@ class dbapousers extends dbtable {
         return $this->getArray($sql);
     }
 
+    public function getCommentsUsers($departmentID){
+        $sql = "select user.role, user.name, user.email, user.telephone, dept.name as department from tbl_apo_users user, tbl_apo_faculties dept where dept.id=user.department and user.department ='$departmentID'";
+
+        return $this->getArray($sql);
+    }
+
+
     public function getNumUsers($role = NULL) {
 
         if (!empty($role)) {

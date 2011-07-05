@@ -166,6 +166,7 @@ class dbdocuments extends dbtable {
      * @return <type>
      */
     function getDocument($id) {
+
         $document = $this->getRow('id', $id);
 
         return $document;
