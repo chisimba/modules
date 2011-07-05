@@ -24,7 +24,7 @@
         print $objHeading->show();
 
         // Table heading
-        $headers=array('word_userId','word_username','phrase_firstname','word_surname');
+        $headers=array('word_userid','word_username','phrase_firstname','word_surname');
         $objTable->startHeaderRow();
         $objTable->addHeaderCell('Id');
         foreach ($headers as $element)

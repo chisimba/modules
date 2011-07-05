@@ -94,7 +94,7 @@ if (isset($remoteCode)){
         $this->loadClass('htmltable','htmlelements');
         $objTable=new htmltable();
         // Table heading 
-        $headers=array('word_userId','phrase_firstname','word_surname','word_sex','phrase_emailaddress','word_title','word_username');
+        $headers=array('word_userid','phrase_firstname','word_surname','word_sex','phrase_emailaddress','word_title','word_username');
         $objTable->startHeaderRow(); 
         foreach ($headers as $element) { 
             $objTable->addHeaderCell($this->objLanguage->languageText($element)); 

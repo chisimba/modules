@@ -30,7 +30,7 @@
         print $objHeading->show();
 
         // Table heading
-        $headers=array('word_userId','word_username','phrase_firstname','word_surname','word_title','word_sex','phrase_emailaddress');
+        $headers=array('word_userid','word_username','phrase_firstname','word_surname','word_title','word_sex','phrase_emailaddress');
         $objTable->startHeaderRow();
         foreach ($headers as $element)
         {
