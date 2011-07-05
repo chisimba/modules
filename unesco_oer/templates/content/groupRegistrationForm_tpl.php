@@ -59,7 +59,7 @@ if ($mode == 'addfixup') {
     $name->value = $this->getParam('group_name');
 
     if ($this->getParam('group_name') == '') {
-        $messages[] = "No group name provided";
+        $messages[0] = "No group name provided";
     }
 }
 if (isset($userstring[0]) && $mode == 'add')
@@ -78,7 +78,7 @@ if ($mode == 'addfixup') {
     $website->value = $this->getParam('group_website');
 
     if ($this->getParam('group_website') == '') {
-        $messages[] = "Please provide your website link"; //objlang
+        $messages[1] = "Please provide your website link"; //objlang
     }
 }
 if (isset($userstring[1]) && $mode == 'add')
@@ -102,7 +102,7 @@ if ($mode == 'addfixup') {
     $editor->value = $this->getParam('description');
 
     if ($this->getParam('description') == '') {
-        $messages[] = "Please provide a description";
+        $messages[2] = "Please provide a description";
     }
 }
 if (isset($userstring) && $mode == 'add')
@@ -115,35 +115,6 @@ $table->addCell('Description');
 $table->addCell($editor->show());
 $table->endRow();
 
-
-
-//$textinput = new textinput('group_name');
-//$textinput->size = 70;
-//$table->startRow();
-//$table->addCell('Group Name');
-//$table->addCell($textinput->show());
-//$table->endRow();
-
-
-//$textinput = new textinput('group_website');
-//$textinput->size = 70;
-//$table->startRow();
-//$table->addCell('Website');
-//$table->addCell($textinput->show());
-//$table->endRow();
-//
-//$editor = $this->newObject('htmlarea', 'htmlelements');
-//$editor->name = 'description';
-//$editor->height = '150px';
-//$editor->width = '99%';
-//$editor->setBasicToolBar();
-//$editor->setContent();
-//$table->startRow();
-//$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-//$table->addCell($editor->show());
-//$table->endRow();
-
-
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend ='GROUP Details';
 $fieldset->contents = $table->show();
@@ -154,19 +125,41 @@ $form->addToForm('<br />');
 
 //EMAIL
 $table = $this->newObject('htmltable', 'htmlelements');
-$textinput = new textinput('group_email');
-$textinput->size = 70;
-$table->startRow();
-$table->addCell('E-mail');
-$table->addCell($textinput->show());
+//$textinput = new textinput('register_email');
+//$textinput->size = 70;
+//$table->startRow();
+//$table->addCell('E-mail');
+//$table->addCell($textinput->show());
+//$table->endRow();
+
+$email = new textinput('register_email');
+//$confirmEmail = new textinput('register_confirmemail');
+if ($mode == 'addfixup') {
+    $email->value = $this->getParam('register_email');
+    //$confirmEmail->value = $this->getParam('register_confirmemail');
+}
+if (isset($userstring[9]) && $mode == 'add')
+{
+    $email->value = $userstring[9];
+    //$confirmEmail->value = $userstring[9];
+}
+
+$table->addCell('Email');
+$table->addCell($email->show()); //$table->addCell($email->show(), '30%');
+//$table->addCell('Confirm Email');
+//$table->addCell($confirmEmail->show());
 $table->endRow();
+
+
+
+
 //ADDRESS
 $address = new textinput('group_address');
 if ($mode == 'addfixup') {
     $address->value = $this->getParam('group_address');
 
     if ($this->getParam('group_address') == '') {
-        $messages[] = "Please provide your residential  address"; //objlang
+        $messages[3] = "Please provide your residential  address"; //objlang
     }
 }
 if (isset($userstring[3]) && $mode == 'add')
@@ -185,7 +178,7 @@ if ($mode == 'addfixup') {
     $city->value = $this->getParam('group_city');
 
     if ($this->getParam('group_city') == '') {
-        $messages[] = "Please provide your residential city"; //objlang
+        $messages[4] = "Please provide your residential city"; //objlang
     }
 }
 if (isset($userstring[4]) && $mode == 'add')
@@ -236,37 +229,6 @@ $table->addCell('Postal code'); // obj lang
 $table->addCell($code->show());
 $table->endRow();
 
-
-//$textinput = new textinput('group_address');
-//$textinput->size = 70;
-//$table->startRow();
-//$table->addCell('Address');
-//$table->addCell($textinput->show());
-//$table->endRow();
-////CITY
-//$textinput = new textinput('group_city');
-//$textinput->size = 70;
-//$table->startRow();
-//$table->addCell('City');
-//$table->addCell($textinput->show());
-//$table->endRow();
-//STATE
-//$textinput = new textinput('group_state');
-//$textinput->size = 70;
-//$table->startRow();
-//$table->addCell('State/Province');
-//$table->addCell($textinput->show());
-//$table->endRow();
-//POSTAL CODE
-//$textinput = new textinput('group_postalcode');
-//$textinput->size = 70;
-//$table->startRow();
-//$table->addCell('Postal Code');
-//$table->addCell($textinput->show());
-//$table->endRow();
-
-
-
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend = "Group contact details";
 $fieldset->contents = $table->show();
@@ -299,7 +261,7 @@ $table->addCell($longitude->show());
 $table->endRow();
 
 //latitude
-$latitude = new textinput('group_loclong');
+$latitude = new textinput('group_loclat');
 if ($mode == 'addfixup') {
     $latitude->value = $this->getParam('group_loclong');
 
@@ -317,20 +279,6 @@ $table->addCell('Latitude'); // obj lang
 $table->addCell($latitude->show());
 $table->endRow();
 
-//LONGITUDE
-//$textinput = new textinput('group_loclong');
-//$textinput->size = 70;
-//$table->startRow();
-//$table->addCell('Longitude');
-//$table->addCell($textinput->show());
-//$table->endRow();
-//LATITUDE
-//$textinput = new textinput('group_loclat');
-//$textinput->size = 70;
-//$table->startRow();
-//$table->addCell('Latitude');
-//$table->addCell($textinput->show());
-//$table->endRow();
 ////COUNTRY
 $table->startRow();
     $objCountries=&$this->getObject('languagecode','language');
@@ -409,6 +357,7 @@ if ($mode == 'addfixup' && count($messages) > 0) {
 }
 
 echo $form->show();
+
 echo '</div>';
 
 ?>

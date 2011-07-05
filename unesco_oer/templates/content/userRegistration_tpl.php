@@ -499,6 +499,7 @@ if ($mode == 'addfixup' && count($messages) > 0) {
 
 echo $form->show();
 
+
 echo '</div>';
 
 ?>

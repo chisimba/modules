@@ -1417,7 +1417,7 @@ class unesco_oer extends controller {
         $checkFields = array($firstname, $surname, $email);
 
         $results = array();
-        echo $this->getParam('id');
+       
         // Check Fields
         if (!$this->__checkFields($checkFields)) {
             $this->setVar('mode', 'addfixup');
@@ -1578,7 +1578,8 @@ class unesco_oer extends controller {
             return $this->nextAction(NULL);
         }
         $name = $this->getParam('group_name');
-        $email = $this->getParam('group_email');
+        $email = $this->getParam('register_email');
+        //$confirmemail=$this->getParam('register_confirmemail');
         $address = $this->getParam('group_address');
         $city = $this->getParam('group_city');
         $state = $this->getParam('group_state');
@@ -1587,52 +1588,34 @@ class unesco_oer extends controller {
         $website = $this->getParam('group_website');
         $institution = $this->getParam('group_institutionlink');
         $description = $this->getParam('description');
-        $loclat = $this->getParam('loclat');
-        $loclong = $this->getParam('loclong');
-
+        $loclat = $this->getParam('group_loclat');
+        $loclong = $this->getParam('group_loclong');
         $checkFields = array(
             $name,
-            $email,
+            //$confirmemail,
             $address,
             $city,
             $state,
             $postalcode,
             $website,
+            $description,
             $loclat,
             $loclong
-            );
-         $problems = array();
-        if ($name == '') {
-            $problems[] = 'noname';
+        );
+
+        $problems = array();
+
+        if (!$this->__checkFields($checkFields)) {
+            $problems[] = 'missingfields';
+        }
+
+    
+        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
+            $problems[] = 'emailtaken';
         }
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
-        if ($address == '') {
-            $problems[] = 'noAddress';
-        }
-        if ($city == '') {
-            $problems[] = 'noCity';
-        }
-
-        if ($state == '') {
-            $problems[] = 'noState';
-        }
-
-        if ($postalcode == '') {
-            $problems[] = 'noPostalCode';
-        }
-        if ($website == '') {
-            $problems[] = 'nowebsite';
-        }
-        if ($loclat == '') {
-            $problems[] = 'noloclate';
-        }
-        if ($loclong == '') {
-            $problems[] = 'noloclong';
-        }
-//          if (!$this->__checkFields($checkFields)) {
-//          $problems[] = 'missingfields';}
 
         if(count($problems) > 0){
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -1656,7 +1639,8 @@ class unesco_oer extends controller {
     function __editGroup() {
         $id = $this->getParam('id');
         $name = $this->getParam('group_name');
-        $email = $this->getParam('group_email');
+        $email = $this->getParam('register_email');
+        //$confirmemail=$this->getParam('register_confirmemail');
         $address = $this->getParam('group_address');
         $city = $this->getParam('group_city');
         $state = $this->getParam('group_state');
@@ -1665,11 +1649,47 @@ class unesco_oer extends controller {
         $website = $this->getParam('group_website');
         $institution = $this->getParam('group_institutionlink');
         $description = $this->getParam('description');
-        $loclat = $this->getParam('loclat');
-        $loclong = $this->getParam('loclong');
-        $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
-        $this->setLayoutTemplate('maincontent_layout_tpl.php');
-        return 'groupListingForm_tpl.php';
+        $loclat = $this->getParam('group_loclat');
+        $loclong = $this->getParam('group_loclong');
+        $checkFields = array(
+            $name,
+            //$confirmemail,
+            $address,
+            $city,
+            $state,
+            $postalcode,
+            $website,
+            $description,
+            $loclat,
+            $loclong
+        );
+
+        $problems = array();
+
+        if (!$this->__checkFields($checkFields)) {
+            $problems[] = 'missingfields';
+        }
+
+
+        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
+            $problems[] = 'emailtaken';
+        }
+        if (!$this->objUrl->isValidFormedEmailAddress($email)) {
+            $problems[] = 'emailnotvalid';
+        }
+        if(count($problems) > 0){
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            return 'groupEditingForm_tpl.php';
+        }else{
+            $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            return 'groupListingForm_tpl.php';
+           }
+//        $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
+//        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+//        return 'groupListingForm_tpl.php';
     }
 
     function __deleteGroup() {
