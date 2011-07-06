@@ -30,6 +30,7 @@ class productutil extends object {
          $this->objDbproductlanguages = $this->getObject("dbproductlanguages", "unesco_oer");
         $this->objDbAvailableProductLanguages = $this->getObject("dbavailableproductlanguages", "unesco_oer");
         $this->objUser = $this->getObject("user", "security");
+           $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
     }
 
     /**
@@ -39,8 +40,9 @@ class productutil extends object {
      */
     public function populateGridView($product) {
 
-
-        $content = '';
+           
+        
+     
         $uri = $this->uri(array("action" => 'ViewProduct', "id" => $product['id']));
         $abLink = new link($uri);
         $abLink->cssClass = "listingLanguageLinkAndIcon";
@@ -70,6 +72,13 @@ class productutil extends object {
         if ($product['noOfAdaptations'] == 0) {
             $product['noOfAdaptations'] = 0;
         }
+        
+          $bookLink = new link('#');
+        $bookLink->cssClass = "booklinksLinks";
+         $bookLink->cssId = $product['id'];
+        $linkText = '<div class="imageTopFlag"></div>';
+        $bookLink->link = $linkText;
+        
 
         $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid , 'prevAction' => 'ViewProduct'));
         $adaptLink = new link($uri);
@@ -81,9 +90,10 @@ class productutil extends object {
         $imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
 
         $content.='
-                                <div class="imageGridListing">
-                                    <div class="imageTopFlag"></div>
-                                    '. $thumbLink->show() .'
+                                <div class="imageGridListing">'.
+                                   
+                                   $bookLink->show()
+                                    . $thumbLink->show() .'
                                     '. $imageBottomFlag .'
                                 </div>
                                 <br>
@@ -121,6 +131,9 @@ class productutil extends object {
                                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                                     <div class="listingAdaptationLinkDiv"> ' . $CommentLink->show() . '</div>
                                 </div>
+                              
+                                
+              
 ';
         return $content;
     }
@@ -250,7 +263,7 @@ class productutil extends object {
             $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             
             
-           $button->onclick = "  javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname')  "; 
+           $button->onclick = "  javascript:bookmarksave('$time','$parentid','$userid','$textname','$commentboxname')  "; 
                                                              
                   
               

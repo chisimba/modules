@@ -176,13 +176,47 @@ class unesco_oer extends controller {
         return "Bookmarks_tpl.php";
     }
     
+    public function __Bookmarkpop() {
+        return "bookmarkpop_tpl.php";
+    }
+    
     public function __deleteBookmarks() {
         
           $users = $this->getParam("selectedusers");
           $userid = $this->objUser->userId(); 
-         $bookmark = $this->objbookmarkmanager->deletebookmark($users);
+         $bookmark = $this->objbookmarkmanager->deleteBookmark($users);
              
-           $this->setVarByRef("users", $users);
+       
+        
+        
+        return "Bookmarks_tpl.php";
+    }
+    
+     public function __BookmarkData() {
+        
+        $label = $this->getParam('Title');
+        $description = $this->getParam('Description');
+        $time = $this->getParam('time');
+        $url = $this->getParam('location');
+         $parentid = $this->getParam('parentid');
+          $userid = $this->getParam('userid');
+    
+
+        $this->objbookmarkmanager->addBookmark($label, $description, $url,$parentid,$userid);
+        
+        return "Bookmarks_tpl.php";
+    }
+
+    
+     public function __Bookmarkupdate() {
+         $bookmarkid = $this->getParam('bookmarkid');
+         $label = $this->getParam('Title');
+        $description = $this->getParam('Description');
+        $time = $this->getParam('time');
+          $this->objbookmarkmanager->updateBookmark($label, $description,$bookmarkid,$time);
+       
+             
+       
         
         
         return "Bookmarks_tpl.php";
@@ -250,21 +284,7 @@ class unesco_oer extends controller {
         die();
     }
 
-    public function __BookmarkData() {
-          echo "ttttttttttttttttttttttttt";
-        $label = $this->getParam('Title');
-        $description = $this->getParam('Description');
-        $time = $this->getParam('time');
-        $url = $this->getParam('location');
-         $parentid = $this->getParam('parentid');
-          $userid = $this->getParam('userid');
-    
-
-        $this->objbookmarkmanager->addbookmark($label, $description, $url,$parentid,$userid);
-        
-        die();
-    }
-
+   
     
     
     public function __PaginationFilter() {

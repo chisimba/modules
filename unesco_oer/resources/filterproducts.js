@@ -153,7 +153,7 @@ function ajaxFunction(id){
 
 
 
-function bookmarkupdate(time,parentid,userid,textname,commentboxname){
+function bookmarksave(time,parentid,userid,textname,commentboxname){
     var ajaxRequest;
 
     try{
@@ -198,3 +198,47 @@ function bookmarkupdate(time,parentid,userid,textname,commentboxname){
 
 }
 
+function bookmarkupdate(time,textname,commentboxname,bookmarkid){
+    var ajaxRequest;
+
+    try{
+        // Opera 8.0+, Firefox, Safari
+        ajaxRequest = new XMLHttpRequest();
+    } catch (e){
+        // Internet Explorer Browsers
+        try{
+            ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try{
+                ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e){
+                // Something went wrong
+                alert("Your browser broke!");
+                return false;
+            }
+        }
+    }
+    
+    var temptext = "input_" + textname;
+    var tempcomment = "input_" + commentboxname;
+    
+  
+    var Title = document.getElementById(temptext).value;
+    var Description = document.getElementById(tempcomment).value;
+    
+    
+    if ((Title == "") || (Description =="")){
+        alert("Please fill in the required fields")
+            
+    }
+    
+    else {
+         
+    var queryString = "Title=" + Title + "&Description=" + Description  + "&time=" + time  + "&bookmarkid=" + bookmarkid;
+     
+    ajaxRequest.open("GET", "index.php?module=unesco_oer&action=Bookmarkupdate&" + queryString, true);
+    ajaxRequest.send(null);
+     
+    }
+
+}

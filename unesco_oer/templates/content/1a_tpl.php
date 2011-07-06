@@ -12,9 +12,15 @@ if ($finalstring == null) {
 }
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
+	
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
+
+$js = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.bubblepopup.v2.3.1.min.js') . '" type="text/javascript"></script>';
+$this->appendArrayVar('headerParams', $js);
 ?>
+	
+
 <div class="mainWrapper">
 
     <div class="mainContentHolder">
@@ -183,7 +189,22 @@ $this->appendArrayVar('headerParams', $js);
         }
         echo $objTable->show();
         ?>
-    </div>                  <!--
+    </div>  
+    
+
+   
+      <?php
+        
+       $products = $this->objDbProducts->getFilteredProducts($finalstring);
+       $bookmark = $this->objbookmarkmanager->populateGridView($products);
+       echo $bookmark;
+    
+      
+      
+      
+          ?>
+                              
+                               <!--
                                           <table class="gridListingTable" cellspacing="0" cellpadding="0">
                                               <tr>
                                                   <td>
@@ -402,6 +423,11 @@ $this->appendArrayVar('headerParams', $js);
                 $objTabs->addTab('Rated', $mostRated);
                 $objTabs->addTab('Comments', $mostCommented);
                 echo $objTabs->show()
+              
+                        
+                        
+                        
+                        
                 ?>
 
                 <!--                            </div>-->
@@ -428,5 +454,9 @@ $this->appendArrayVar('headerParams', $js);
         </div>
         -->
         <br>
+           
     </div>
 </div>
+
+
+  

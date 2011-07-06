@@ -15,16 +15,13 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-
-
 class bookmarkmanager extends dbtable {
-    
-    
+
     public function init() {
-           parent::init("tbl_unesco_oer_bookmarks");
-             $this->objLanguage = $this->getObject("language", "language");
-   
+        parent::init("tbl_unesco_oer_bookmarks");
+        $this->objLanguage = $this->getObject("language", "language");
+        $this->objUser = $this->getObject("user", "security");
+
 
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
@@ -32,73 +29,81 @@ class bookmarkmanager extends dbtable {
         $this->loadClass('checkbox', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
- 
+
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
     }
 
+    public function addBookmark($label, $description, $url, $parentid, $userid) {
 
-    public function addbookmark($label,$description,$url,$parentid,$userid){
-        
-        
-       $data = array(
-           'product_id' => $parentid,
-           'user_id' => $userid,
-          //   'location' => $url,
-           'label' => $label,
-             'description' => $description,
-        //   'created_on' => $time
+
+        $data = array(
+            'product_id' => $parentid,
+            'user_id' => $userid,
+            //   'location' => $url,
+            'label' => $label,
+            'description' => $description,
+                //   'created_on' => $time
         );
-       $this->insert($data);
-        
-        
-        
-   
-        
-        
-        }
-        
-        
-       public function getBookmark($userid){
-             
-             $sql = "select * from $this->_tableName where user_id = $userid";
+        $this->insert($data);
+    }
+
+    public function getBookmark($userid) {
+
+        $sql = "select * from $this->_tableName where user_id = $userid";
 
         return $this->getArray($sql);
-             
-             
-             
-             
-         }
-         
-        public function deleteBookmark($userid){
-             
-           
+    }
 
-      $this->update("id","$userid[0]",$data = array( 'deleted'=> 1 ));
-         
-         
-        }     
-        
-   
+    public function deleteBookmark($userids) {
 
-         public function populateListView($products) {
-             
-           
-             
-             
-       
+        foreach ($userids as $userid) {
+
+            $this->update("id", "$userid", $data = array('deleted' => 1));
+        }
+    }
+
+    public function updateBookmark($label, $description, $bookmarkid, $time) {
+
+
+
+        $this->update("id", "$bookmarkid", $data = array('label' => $label, 'description' => $description,));
+    }
+
+    public function populateListView($products) {
+
+
+
+
+
         $content = '    
                            <script src="http://code.jquery.com/jquery-latest.js"></script>
                             <script>
-                           $(document).ready(function(){';
-             
-             
-             
-             foreach ($products as $product){
-               $temp = str_replace (" ", "", $product['label']);
-             $divheading = '.' . $temp . 'Div';
-            $linkheading = '.' . $temp . 'Link';
-            $titleheading = '.' . $temp . 'Title';
+                           $(document).ready(function(){' . " $('#deletebookmark').click(function(){
+                 if (confirm('Are you sure you want to delete')) {
+    
+                  document.forms['displaytext'].submit();
+                  }
+
+                  });"
+
+
+
+
+
+
+
+
+        ;
+
+
+
+        foreach ($products as $product) {
+            if ($product['deleted'] == 0) {
+
+                $divheading = '.' . $product['id'] . 'Div';
+                $linkheading = '.' . $product['id'] . 'Link';
+                $titleheading = '.' . $product['id'] . 'Title';
 
                 $content.= "
                   $('$divheading').hide();
@@ -117,18 +122,10 @@ class bookmarkmanager extends dbtable {
                   });
                 
                 
-                 $('#deletebookmark').click(function(){
-
-                  document.forms['displaytext'].submit();
-
-                  });";
-                
-                
-                
-                                 
-        
+               ";
+            }
         }
-        
+
         $content .= '        
 
 
@@ -136,69 +133,74 @@ class bookmarkmanager extends dbtable {
 
                             </script>
                                         ';
-        
-           $display =   new form("displaytext",$this->uri(array('action' => 'deleteBookmarks')));
-        
-              
-         foreach ($products as $product) {
-             
-             
-             $temp = str_replace (" ", "", $product['label']);
-            $divheading = $temp. 'Div';
-            $linkheading = $temp . 'Link';
-            $titleheading = $temp . 'Title';
-         
-           $checkbox = new checkbox('selectedusers[]', $product['id']);
-            $checkbox->value = $product['id'];
-             $checkbox->cssId = 'user_' . $product['id'];
-           
-             $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['product_id'])));
-             $abLink->cssClass = "listingLanguageLinkAndIcon";
-             $abLink->link = $product['label'];
-        
-           
-        
-           $display->addToForm($checkbox);
-           $display->addToForm($abLink);
-           $display->addToForm("<br>");
-            
-           
-             
-        $editbutton = new button();
-        $editbutton->cssClass = "listingLanguageLinkAndIcon";
-       
 
-        $parentid = $product['product_id'];
-        $textinput = new textinput("bookmarktitle");
-        $textinput->value = $product['label'];
-                          
-        $commentText = new textarea('newComment');
-        $commentText->setCssClass("commentTextBox");
-        
+        $display = new form("displaytext", $this->uri(array('action' => 'deleteBookmarks')));
 
-        //TODO make parameter pagename dynamic
-        $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
-    
-        $button = new button('submitComment', $linkText);
-        $button->setToSubmit();
 
-         
-            $form = new form('3a_comments_ui', $uri);
-            $form->addToForm("Label * <br>");
-            $form->addToForm($textinput);
-            $form->addToForm("<br>Bookmark Description *<br> ");
-            $form->addToForm($commentText);
-            $form->addToForm("<br><br>");
-            $form->addToForm($button->show()); //TODO use text link instead of button
+        foreach ($products as $product) {
 
-        
-        
-       
-         $display->addToForm("<br><br>
+            if ($product['deleted'] == 0) {
+
+
+                $divheading = $product['id'] . 'Div';
+                $linkheading = $product['id'] . 'Link';
+                $titleheading = $product['id'] . 'Title';
+
+                $checkbox = new checkbox('selectedusers[]', $product['id']);
+                $checkbox->value = $product['id'];
+                $checkbox->cssId = 'user_' . $product['id'];
+
+                $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['product_id'])));
+                $abLink->cssClass = "listingLanguageLinkAndIcon";
+                $abLink->link = $product['label'];
+
+
+
+                $display->addToForm($checkbox);
+                $display->addToForm($abLink);
+                $display->addToForm("<br>");
+
+
+
+
+
+
+                $bookmarkid = $product['id'];
+                $textname = $product['id'] . "text";
+                $commentboxname = $product['id'] . "comment";
+
+                $textinput = new textinput($textname);
+                $textinput->value = $product['label'];
+
+                $commentText = new textarea($commentboxname);
+                $commentText->setCssClass("commentTextBox");
+                $commentText->value = $product['description'];
+
+
+                //TODO make parameter pagename dynamic
+                $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
+
+                $button = new button('submitComment', "Save Bookmark");
+                $button->cssId = 'btn';
+                $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
+
+
+                $form = new form('3a_comments_ui', $uri);
+                $form->addToForm("Label * <br>");
+                $form->addToForm($textinput);
+                $form->addToForm("<br>Bookmark Description *<br> ");
+                $form->addToForm($commentText);
+                $form->addToForm("<br><br>");
+                $form->addToForm($button->show()); //TODO use text link instead of button
+
+
+
+
+                $display->addToForm("<br><br>
             <div class='productsListView'>
-                   <h2>"  . "</h2><br>
+                   <h2>" . "</h2><br>
                 <a href='javascript:void(0)'   class='$linkheading'>Edit</a> 
-                   <div class='$divheading'> " . $form->show() ."
+                   <div class='$divheading'> " . $form->show() . "
 
                                    
                           
@@ -210,37 +212,151 @@ class bookmarkmanager extends dbtable {
                 
                 
                          
-     ");   
-        
-         }
-       $content .=   $display->show();
-               
-               
-                   
-                
-        
-        
-        
-         
+     ");
+            }
+        }
+        $content .= $display->show();
+
+
+
+
+
+
+
+
         return $content;
     }
 
-        
-        
-        
-        
-        
-    }
+    public function populateGridView($products) {
+
+        $content = '';
+
+        foreach ($products as $product) {
+
+            $divheading = '#' . $product['id'] . "div";
+
+            $divid = $product['id'] . "div";
+            $buttonheading = '#' . $product['id'] . "btn";
+            $buttonid = $product['id'] . "btn";
+             $cancelbtnheading = '#' . $product['id'] . "cancelbtn";
+            $cancelbtnid = $product['id'] . "cancelbtn";
+
+
+            $IDheading = '#' . $product['id'];
+            $content .= "    <script src='http://code.jquery.com/jquery-latest.js'></script>
+                            <script>
+                           $(document).ready(function(){
+                           
+     
+
+                  $('$IDheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                  $('#filterDiv').slideToggle();
+                   
+                 
+
+                  });
+                
+                $('$buttonheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                  $('#filterDiv').slideToggle();
+                   
+                 
+
+                  });
+                
+                  $('$cancelbtnheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                  $('#filterDiv').slideToggle();
+                   
+                 
+
+                  });
+                          
+
+                     });
+
+                            </script>
+            
+
+
+";
+
+
+
+
+
+
+
+            $parentid = $product['id'];
+            $textname = $product['id'] . "text";
+            $commentboxname = $product['id'] . "comment";
+            $buttonname = $product['id'];
+            $textinput = new textinput($textname);
+            $textinput->value = $product['title'];
+
+            $commentText = new textarea($commentboxname);
+            $commentText->setCssClass("commentTextBox");
+
+            //TODO make parameter pagename dynamic
+            $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
+
+            $cancelbtn = new button('Cancel', "Cancel");
+            $cancelbtn->cssId = $cancelbtnid;
+            $button = new button('submitComment', "Save Bookmark");
+            $button->cssId = $buttonid;
+
+
+            $time = time();
+            //  $userid = objdbuserextra->
+            $userid = $this->objUser->userId();
+
+
+
+            $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+
+            $button->onclick = "javascript:bookmarksave('$time','$parentid','$userid','$textname','$commentboxname') ;";
+
+
+
+
+
+
+
+
+            //javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname'); 
+
+
+            $form = new form('3a_comments_ui');
+            $form->addToForm("Label * <br>");
+            $form->addToForm($textinput);
+            $form->addToForm("<br>Bookmark Description *<br> ");
+            $form->addToForm($commentText);
+            $form->addToForm("<br><br>");
+            $form->addToForm($button->show());
+            $form->addToForm($cancelbtn->show());
+            
+               $thumbnail = '<img src="' . $product['thumbnail'] . '" width="79" height="101">';
+               $producttitle = $product['title'];
+
+            $content .= "<div id='$divid' style= 'display:none'
+                   
+                     <div class='bookthumb' ". $thumbnail ." <br> ". $producttitle . "
     
+                            </div>".
+               
+                $form->show() ." 
+                                </div>      
+            ";
+        }
 
+        return $content;
+    }
 
-
-
-
-
-
-
-
-
+}
 
 ?>

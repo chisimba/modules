@@ -178,7 +178,7 @@ if ($finalstring == null)
                                             <div class="navitemOnstate">
                                                 <div class="navitemInnerOnstate">
                             <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is null', "page" => '1a_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is null and deleted = 0', "page" => '1a_tpl.php')));
                                         $abLink->link = 'BOOKMARKS';
                                         echo $abLink->show();
                             ?>
@@ -188,7 +188,7 @@ if ($finalstring == null)
                                 <div class="navitem">
                                     <div class="navitemInner">
                             <?php
-                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'relation is not null', "page" => '2a_tpl.php')));
+                                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => 'parent_id is not null and deleted = 1', "page" => '2a_tpl.php')));
                                         $abLink->link = 'PRODUCT ADAPTATIONS';
                                         echo $abLink->show();
                             ?>
@@ -241,12 +241,13 @@ if ($finalstring == null)
                         </div>
                       
                         <div class="groupSubLinksList">
-                            
+                      
                             <?php
                             
                             
                             $booklink = new link("#");
                             $booklink->cssId = "deletebookmark";
+                            $booklink->cssClass = "linksTextNextToSubIcons";
                             $booklink->link = "Delete Bookmark";
                             
                             
@@ -256,23 +257,15 @@ if ($finalstring == null)
                             
                           
                             
-      echo '                     <img src="skins/unesco_oer/images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
-                       
+      echo '       <img src="skins/unesco_oer/images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
+                     
                         </div>
                       
                         <div class="greyDivider"></div>
                    
                 </div>
 
-
-                     
-
-                
-                   
-                            
-                            
-                  
-                            
+ 
                           
                             <!-- Center column DIv -->
                             <div class="centerColumnDiv">
@@ -292,7 +285,7 @@ if ($finalstring == null)
                                             
 
                                             echo $this->objbookmarkmanager->populateListView($bookmark);
-                                             var_dump($users);
+                                            
                                         
                     ?>
                                            
@@ -303,153 +296,7 @@ if ($finalstring == null)
                             </div>
                         </div>
                         </div>
-                                
-                                <!--
-                                                            <table class="gridListingTable" cellspacing="0" cellpadding="0">
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                                                        <div class="imageGridListing">
-                                                                            <div class="imageTopFlag"></div>
-                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                            <div class="imageBotomFlag"></div>
-                                                                        </div>
-                                                                        <br>
-                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                        <div class="listingLanguageLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                            <div class="listingLanuagesDropdownDiv">
-                                                                                <select name="" class="listingsLanguageDropDown">
-                                                                                    <option value="">Languages</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="listingAdaptationsLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="newImageIcon"></div>
-                                                                        <div class="imageGridListing">
-                                                                            <div class="imageTopFlag"></div>
-                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                            <div class="imageBotomFlag"></div>
-                                                                        </div>
-                                                                        <br>
-                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                        <div class="listingLanguageLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                            <div class="listingLanuagesDropdownDiv">
-                                                                                <select name="" class="listingsLanguageDropDown">
-                                                                                    <option value="">Languages</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="listingAdaptationsLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="newImageIcon"></div>
-                                                                        <div class="imageGridListing">
-                                                                            <div class="imageTopFlag"></div>
-                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                            <div class="imageBotomFlag"></div>
-                                                                        </div>
-                                                                        <br>
-                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                        <div class="listingLanguageLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                            <div class="listingLanuagesDropdownDiv">
-                                                                                <select name="" class="listingsLanguageDropDown">
-                                                                                    <option value="">Languages</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="listingAdaptationsLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="newImageIcon"></div>
-                                                                        <div class="imageGridListing">
-                                                                            <div class="imageTopFlag"></div>
-                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                            <div class="imageBotomFlag"></div>
-                                                                        </div>
-                                                                        <br>
-                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                        <div class="listingLanguageLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                            <div class="listingLanuagesDropdownDiv">
-                                                                                <select name="" class="listingsLanguageDropDown">
-                                                                                    <option value="">Languages</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="listingAdaptationsLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                                                        <div class="imageGridListing">
-                                                                            <div class="imageTopFlag"></div>
-                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                            <div class="imageBotomFlag"></div>
-                                                                        </div>
-                                                                        <br>
-                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                        <div class="listingLanguageLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                            <div class="listingLanuagesDropdownDiv">
-                                                                                <select name="" class="listingsLanguageDropDown">
-                                                                                    <option value="">Languages</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="listingAdaptationsLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                                                                        <div class="imageGridListing">
-                                                                            <div class="imageTopFlag"></div>
-                                                                            <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
-                                                                            <div class="imageBotomFlag"></div>
-                                                                        </div>
-                                                                        <br>
-                                                                        <div class="blueListingHeading">Marovo Lagoon Encyclopaedia</div>
-                                                                        <div class="listingLanguageLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                                                            <div class="listingLanuagesDropdownDiv">
-                                                                                <select name="" class="listingsLanguageDropDown">
-                                                                                    <option value="">Languages</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="listingAdaptationsLinkAndIcon">
-                                                                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                                                                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">11 adaptations</a></div>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            </table> -->
-
-                          
-
-                                <!-- Right column DIv -->
-                               
-            
-            <!-- Footer-->
+                           
             <div class="footerDiv">
                 <div class="footerLinksLists">
                     <div class="footerLinksHeadings">Links Set One</div>
