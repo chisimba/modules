@@ -1369,22 +1369,27 @@ class unesco_oer extends controller {
 
 //search user by username or by name
     function __searchUser() {
-        if (count($this->objUseExtra->searchUserByUsername($this->getParam('search')))!=0) {
-            $user = $this->objUseExtra->searchUserByUsername($this->getParam('search')); //search user by username
-            $this->setVar('user', $user);
-            $this->setLayoutTemplate('maincontent_layout_tpl.php');
-            return 'UserListingForm_tpl.php';
+        if($this->getParam('search') ==''){
+            return $this->__userListingForm();
+            }
+            else{
 
-        } elseif(count($this->objUseExtra->searchUserByName($this->getParam('search')))!=0) {
-            $user = $this->objUseExtra->searchUserByName($this->getParam('search')); //search user by name
-            $this->setVar('user', $user);
-            $this->setLayoutTemplate('maincontent_layout_tpl.php');
-            return 'UserListingForm_tpl.php';
-        }else{
-            $user='';
-            $this->setVar('user', $user);
-            $this->setLayoutTemplate('maincontent_layout_tpl.php');
-            return 'UserListingForm_tpl.php';
+        if(count($this->objUseExtra->searchUserByUsername($this->getParam('search')))>0) {
+                $user = $this->objUseExtra->searchUserByUsername($this->getParam('search')); //search user by username
+                $this->setVar('user', $user);
+                $this->setvar('mode', 'addfixup');
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
+                return 'UserListingForm_tpl.php';
+            }else{
+                if(count($this->objUseExtra->searchUserByName($this->getParam('search')))>0){
+                $user = $this->objUseExtra->searchUserByName($this->getParam('search')); //search user by name
+                $this->setVar('user', $user);
+                $this->setvar('mode', 'addfixup');
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
+                return 'UserListingForm_tpl.php';
+            }
+            
+            }
         }
     }
 
@@ -1612,6 +1617,11 @@ class unesco_oer extends controller {
         $description = $this->getParam('description');
         $loclat = $this->getParam('group_loclat');
         $loclong = $this->getParam('group_loclong');
+
+        $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
+        $results = $this->objThumbUploader->uploadThumbnail($path);
+        $thumbnail = 'usrfiles/' . $results['path'];
+
         $checkFields = array(
             $name,
             //$confirmemail,
@@ -1625,16 +1635,16 @@ class unesco_oer extends controller {
             $loclong
         );
 
-        $problems = array();
+         $problems = array();
 
         if (!$this->__checkFields($checkFields)) {
             $problems[] = 'missingfields';
         }
 
     
-        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
-            $problems[] = 'emailtaken';
-        }
+//        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
+//            $problems[] = 'emailtaken';
+//        }
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
@@ -1646,7 +1656,7 @@ class unesco_oer extends controller {
             return 'groupRegistrationForm_tpl.php';
 
         }else{
-            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
+            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description,$thumbnail);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return 'groupListingForm_tpl.php';
 
@@ -1673,6 +1683,11 @@ class unesco_oer extends controller {
         $description = $this->getParam('description');
         $loclat = $this->getParam('group_loclat');
         $loclong = $this->getParam('group_loclong');
+
+        $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
+        $results = $this->objThumbUploader->uploadThumbnail($path);
+        $thumbnail = 'usrfiles/' . $results['path'];
+
         $checkFields = array(
             $name,
             //$confirmemail,
@@ -1692,10 +1707,10 @@ class unesco_oer extends controller {
             $problems[] = 'missingfields';
         }
 
-
-        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
-            $problems[] = 'emailtaken';
-        }
+//
+//        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
+//            $problems[] = 'emailtaken';
+//        }
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
@@ -1705,7 +1720,7 @@ class unesco_oer extends controller {
             $this->setVarByRef('problems', $problems);
             return 'groupEditingForm_tpl.php';
         }else{
-            $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
+            $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description,$thumbnail);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return 'groupListingForm_tpl.php';
            }

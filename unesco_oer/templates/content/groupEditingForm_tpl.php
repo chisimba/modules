@@ -35,6 +35,10 @@ $objIcon = $this->newObject('geticon','htmlelements');
 
 //Get Group details
 $group=$this->objDbGroups->getGroupInfo($this->getParam('id'));
+$linkedInstitution=$this->objDbGroups->getLinkedInstitution($this->getParam('id'));
+
+
+
 
 // setup and show heading
 $header = new htmlheading();
@@ -43,6 +47,7 @@ $header->str = $group[0]['name'].":"."Profile";  //objLang
 echo $header->show();
 
 $form = new form ('editer', $this->uri(array('action'=>'editGroup','id'=>$this->getParam('id'))));
+$form->extra = 'enctype="multipart/form-data"';
 $messages = array();
 
 
@@ -54,13 +59,13 @@ $table->cellpadding = '2';
 
 //Group name
 $name = new textinput('group_name');
-$name->size = 70;
+$name->size = 80;
 $name->value = $group[0]['name'];
 if ($mode == 'addfixup') {
     $name->value = $this->getParam('group_name');
 
     if ($this->getParam('group_name') == '') {
-        $messages[] = "No group name provided";
+        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message1', 'unesco_oer');
     }
 }
 if (isset($userstring[0]) && $mode == 'add')
@@ -69,20 +74,20 @@ if (isset($userstring[0]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Group Name'); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_name', 'unesco_oer')); // obj lang
 $table->addCell($name->show());
 $table->endRow();
 
 
 //group website
 $website = new textinput('group_website');
-$website->size = 70;
+$website->size = 80;
 $website->value = $group[0]['website'];
 if ($mode == 'addfixup') {
     $website->value = $this->getParam('group_website');
 
     if ($this->getParam('group_website') == '') {
-        $messages[] = "Please provide your website link"; //objlang
+        $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message2', 'unesco_oer');
     }
 }
 if (isset($userstring[1]) && $mode == 'add')
@@ -91,57 +96,40 @@ if (isset($userstring[1]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Website'); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_website', 'unesco_oer')); // obj lang
 $table->addCell($website->show());
 $table->endRow();
-
-//$textinput = new textinput('group_website');
-//$textinput->size = 70;
-//$textinput->value = $group[0]['website'];
-//$table->startRow();
-//$table->addCell('Website');
-//$table->addCell($textinput->show());
-//$table->endRow();
-
-
 
 //group desctription
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
 $editor->height = '150px';
-$editor->width = '80%';
+$editor->width = '85%';
 $editor->setBasicToolBar();
 $editor->setContent($group[0]['description']);
 if ($mode == 'addfixup') {
     $editor->value = $this->getParam('description');
 
     if ($this->getParam('description') == '') {
-        $messages[] = "Please provide a description";
-    }
+        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message3', 'unesco_oer');
+        }
 }
 if (isset($userstring) && $mode == 'add')
 {
    $editor->value = $userstring[2];
 }
-
 $table->startRow();
-$table->addCell('Description');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description', 'unesco_oer'));
 $table->addCell($editor->show());
 $table->endRow();
-
-//$editor = $this->newObject('htmlarea', 'htmlelements');
-//$editor->name = 'description';
-//$editor->height = '150px';
-//$editor->width = '75%';
-//$editor->setBasicToolBar();
-//$editor->setContent($group[0]['description']);
-//$table->startRow();
-//$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-//$table->addCell($editor->show());
-//$table->endRow();
+//field for the thumbnail
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
+$table->addCell($this->objThumbUploader->show());
+$table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend ='Group Details';
+$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset1', 'unesco_oer');
 $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
@@ -149,17 +137,9 @@ $form->addToForm('<br />');
 
 //group contact details
 $table = $this->newObject('htmltable', 'htmlelements');
-// EMAIL
-//$textinput = new textinput('group_email');
-//$textinput->size = 70;
-//$textinput->value = $group[0]['email'];
-//$table->startRow();
-//$table->addCell('E-mail');
-//$table->addCell($textinput->show());
-//$table->endRow();
 
 $email = new textinput('register_email');
-$email->size = 70;
+$email->size = 80;
 $email->value = $group[0]['email'];
 //$confirmEmail = new textinput('register_confirmemail');
 //$confirmEmail->value = $group[0]['email'];
@@ -173,25 +153,21 @@ if (isset($userstring[9]) && $mode == 'add')
     //$confirmEmail->value = $userstring[9];
 }
 
-$table->addCell('Email');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_email', 'unesco_oer'));
 $table->addCell($email->show());
-
 //$table->addCell('Confirm Email');
 //$table->addCell($confirmEmail->show());
 $table->endRow();
 
-
-
-
 //address
 $address = new textinput('group_address');
-$address->size = 70;
+$address->size = 80;
 $address->value = $group[0]['address'];
 if ($mode == 'addfixup') {
     $address->value = $this->getParam('group_address');
 
     if ($this->getParam('group_address') == '') {
-        $messages[] = "Please provide your residential  address"; //objlang
+        $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message4', 'unesco_oer');
     }
 }
 if (isset($userstring[3]) && $mode == 'add')
@@ -200,19 +176,19 @@ if (isset($userstring[3]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Address'); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_address', 'unesco_oer'));
 $table->addCell($address->show());
 $table->endRow();
 
 //CITY
 $city = new textinput('group_city');
-$city->size = 70;
+$city->size = 80;
 $city->value = $group[0]['city'];
 if ($mode == 'addfixup') {
     $city->value = $this->getParam('group_city');
 
     if ($this->getParam('group_city') == '') {
-        $messages[] = "Please provide your residential city"; //objlang
+        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message5', 'unesco_oer');
     }
 }
 if (isset($userstring[4]) && $mode == 'add')
@@ -221,19 +197,19 @@ if (isset($userstring[4]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('City'); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_city', 'unesco_oer'));
 $table->addCell($city->show());
 $table->endRow();
 
 //STATE
 $state = new textinput('group_state');
-$state->size = 70;
+$state->size = 80;
 $state->value = $group[0]['state'];
 if ($mode == 'addfixup') {
     $state->value = $this->getParam('group_state');
 
     if ($this->getParam('group_state') == '') {
-        $messages[] = "Please provide your residential state"; //objlang
+        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message6', 'unesco_oer');
     }
 }
 if (isset($userstring[5]) && $mode == 'add')
@@ -242,49 +218,46 @@ if (isset($userstring[5]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('State'); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_state', 'unesco_oer'));// obj lang
 $table->addCell($state->show());
 $table->endRow();
 
 //postal code
 $code = new textinput('group_postalcode');
-$code->size = 70;
+$code->size = 80;
 $code->value = $group[0]['postalcode'];
 if ($mode == 'addfixup') {
     $code->value = $this->getParam('group_postalcode');
 
     if ($this->getParam('group_postalcode') == '') {
-        $messages[] = "Please provide your residential postal code"; //objlang
-    }
+        $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message7', 'unesco_oer');
+        }
 }
 if (isset($userstring[6]) && $mode == 'add')
 {
     $code->value = $userstring[6];
 }
-
 $table->startRow();
-$table->addCell('Postal code'); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_postalcode', 'unesco_oer'));
 $table->addCell($code->show());
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend ='Group contact details';// obj lang
+$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset2', 'unesco_oer');
 $fieldset->contents = $table->show();
-
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
-//Group geographical location
-$table = $this->newObject('htmltable', 'htmlelements');
 //latitude
+$table = $this->newObject('htmltable', 'htmlelements');
 $latitude = new textinput('group_loclat');
-$latitude->size = 70;
+$latitude->size = 38;
 $latitude->value = $group[0]['loclat'];
 if ($mode == 'addfixup') {
     $latitude->value = $this->getParam('group_loclong');
 
     if ($this->getParam('group_loclong') == '') {
-        $messages[] = "Please provide your Geographical latitude"; //objlang
+        $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message8', 'unesco_oer');
     }
 }
 if (isset($userstring[7]) && $mode == 'add')
@@ -293,19 +266,18 @@ if (isset($userstring[7]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Latitude'); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_latitude', 'unesco_oer'));
 $table->addCell($latitude->show());
 $table->endRow();
-
 //longitude
 $longitude = new textinput('group_loclong');
-$longitude->size = 70;
+$longitude->size = 38;
 $longitude->value = $group[0]['loclong'];
 if ($mode == 'addfixup') {
     $longitude->value = $this->getParam('group_loclong');
 
     if ($this->getParam('group_loclong') == '') {
-        $messages[] = "Please provide your Geographical longitude"; //objlang
+        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message9', 'unesco_oer');
     }
 }
 if (isset($userstring[8]) && $mode == 'add')
@@ -314,10 +286,9 @@ if (isset($userstring[8]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Longitude'); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_longitude', 'unesco_oer'));
 $table->addCell($longitude->show());
 $table->endRow();
-
 //country
 $table->startRow();
 $objCountries = &$this->getObject('languagecode', 'language');
@@ -330,9 +301,8 @@ if ($mode == 'addfixup') {
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend ='Group Geographical Location';// obj lang
+$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset3', 'unesco_oer');
 $fieldset->contents = $table->show();
-
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
@@ -340,31 +310,26 @@ $table = $this->newObject('htmltable', 'htmlelements');
 // Linked institution
 // first the belonging instituion
 // then the list of all the insstritution the thedatabase
-$id=$this->getParam('id');
-$linkedInstitution=$this->objDbGroups->getLinkedInstitution($id);
 $Institutions=$this->objDbInstitution->getAllInstitutions();
 $dd=new dropdown('group_institutionlink');
+$dd->addOption($linkedInstitution);
 if(count($Institutions)>0){
-     $dd->addOption('1',$linkedInstitution);
-     $i=2;
      foreach ($Institutions as $Institution) {
-        $dd->addOption($i,$Institution['name']);
-        $i=$i+1;
-        }
+        $dd->addOption($Institution['name']);
+       }
     }else{
-         $dd->addOption('1','none');// obj lang
+         $dd->addOption('None');// obj lang
 
     }
 
 $table->startRow();
-$table->addCell('Institution');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
 $table->addCell($dd->show());
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend ='Group Linked Institutions';// obj lang
+$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset4', 'unesco_oer');
 $fieldset->contents = $table->show();
-
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
@@ -375,7 +340,6 @@ $Cancelbutton = new button ('submitform', 'Cancel');
 $Cancelbutton->setToSubmit();
 $CancelLink = new link($this->uri(array('action' => "groupListingForm")));
 $CancelLink->link =$Cancelbutton->show();
-
 
 $form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
 

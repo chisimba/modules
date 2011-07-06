@@ -40,11 +40,8 @@
 //        //echo $myInstitution->getAddress();
 ////        echo is_object($institutionmanager->getInstitution('gen15Srv41Nme47_69623_1306229613'));
 //        var_dump($institutionmanager->getInstitution('gen15Srv41Nme47_69623_1306229613'));
-       echo count($this->objUseExtra->searchUserByUsername(admin));
-       echo count($this->objUseExtra->searchUserByName(admin));
-       echo count($this->objUseExtra->getUserbyUserIdbyUserID(1));
-       echo count($this->objUseExtra->getAllUser());
-       echo "DEALS";
+        echo $this->objUseExtra->searchUserByUsername("97f9hfd");
+     
         ?>
     </body>
 </html>

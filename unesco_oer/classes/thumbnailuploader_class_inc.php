@@ -42,7 +42,7 @@ class thumbnailuploader extends object{
         $this->_uploadInput->enableOverwriteIncrement = TRUE;
         $this->_uploadInput->customuploadpath = $path;
 
-        $this->results = $this->_uploadInput->handleUpload($this->getParam('fileupload'));
+        $this->results = $this->_uploadInput->handleUpload();
         //Test if file was successfully uploaded
         // Technically, FALSE can never be returned, this is just a precaution
         // FALSE means there is no fileinput with that name

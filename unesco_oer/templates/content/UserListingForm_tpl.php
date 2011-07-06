@@ -63,8 +63,7 @@ $searchLink = new link($this->uri(array('action' => "searchUser",'search'=>$this
 $searchLink->link = $buttonGO->show();
 //text input search user
 $search = new textinput('search','',"",20);
-$textinput = new textinput('search');
-$textinput->size =20;
+
 
 echo $addUserLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$searchLink->show();
 
@@ -82,21 +81,18 @@ $myTable->addHeaderCell('First name', null, null, left, "userheader", null);
 $myTable->addHeaderCell('Email', null, null, left, "userheader", null);
 $myTable->addHeaderCell('Edit', null, null, left, "userheader", null);
 $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
-
 $myTable->endHeaderRow();
 
 //get user from the database
-$users = $this->objUseExtra->getAllUser();
+$users = "";
+$mode=$this->getParam('mode');
+if ($mode == 'addfixup'){
+    $users=$this->getParam('user');
+}else{
+    $users = $this->objUseExtra->getAllUser();
+    }
 
- //$users=$this->getParam('user');
- 
-//check if the search input has data on it and the go button is clicked
-//
-//if($this->getParam('search')!='' && $buttonGO){
-//   $users=$this->getParam('user');
-//   }else{
-//    $users = $this->objUseExtra->getAllUser();
-//}
+
 
 
 if (count($users) > 0) {

@@ -30,8 +30,9 @@ $header = new htmlheading();
 $header->type = 1;
 $header->cssClass="manageusers";
 $header->str = "Unesco_OER GROUPS:";
+echo '<div id="userheading">';
 echo $header->show();
-
+echo '</div>';
 $button = new button('Add Button', "Add Group");
 $button->setToSubmit();
 $addGroupLink =new link($this->uri(array('action' =>"groupRegistationForm")));
@@ -42,7 +43,7 @@ echo $addGroupLink->show();
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '100%';
 $myTable->border = '0';
-$myTable->cellspacing = '1';
+$myTable->cellspacing = '0';
 $myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();

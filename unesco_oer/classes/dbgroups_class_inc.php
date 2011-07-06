@@ -26,19 +26,17 @@ class dbgroups extends dbtable {
         return $this->getArray($sql);
     }
 
-    function getGroupInfo($groupid){
+    function getGroupInfo($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
         return $this->getArray($sql);
-       
     }
 
- 
     function deleteGroup($groupid) {
         $sql = "DELETE FROM tbl_unesco_oer_groups WHERE id='$groupid'";
         $this->getArray($sql);
     }
 
-    function editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description) {
+    function editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail) {
         if ($name != '') {
             return $this->update(
                     'id',
@@ -159,8 +157,18 @@ class dbgroups extends dbtable {
                 'id' => $id,
                 'description' => $description)
             );
+            if ($thumbnail != '') {
+                return $this->update(
+                        'id',
+                        $id,
+                        $data = array(
+                    'id' => $id,
+                    'thumbnail' => $thumbnail)
+                );
+            }
         }
     }
+
 //
 //    function addGroup($name, $loclat, $loclong, $thumbnailPath, $country = NULL) {
 //        $data = array(
@@ -173,41 +181,37 @@ class dbgroups extends dbtable {
 //
 //        $this->insert($data);
 //    }
-
-
     // PBROBLEM PROBLEM PROBLEM   #############################################
     // Does a User need necessarily to know the Latitude and Longitude of the group Location?
     //
-    function saveNewGroup($name, $email, $address, $city, $state,$country, $postalcode, $website, $institution,$loclat,$loclong,$description) {
+    function saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail) {
         $data = array(
             'name' => $name,
             'email' => $email,
             'address' => $address,
             'city' => $city,
             'state' => $state,
-            'country'=>$country,
+            'country' => $country,
             'postalcode' => $postalcode,
             'website' => $website,
             'LinkedInstitution' => $institution,
             'loclat' => $loclat,
-            'loclat' => $loclong,
-            'description'=>$description
+            'loclong' => $loclong,
+            'description' => $description,
+            'thumbnail' => $thumbnail
         );
         $this->insert($data);
     }
 
+    /*
+     * This function take a groupId and return its latitude
+     * @param $GroupID
+     * return int
+     */
 
-
-
-     /*
-      * This function take a groupId and return its latitude
-      * @param $GroupID
-      * return int
-      */
-
-     function  getGroupLatitude($name){
+    function getGroupLatitude($name) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name='$name'";
-        $Group=$this->getArray($sql);
+        $Group = $this->getArray($sql);
         return $Group[0]['loclat'];
     }
 
@@ -216,25 +220,32 @@ class dbgroups extends dbtable {
      * @param $GroupID
      * return int
      */
-    function getGroupLongitude($name){
+
+    function getGroupLongitude($name) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name='$name'";
-        $Group=$this->getArray($sql);
+        $Group = $this->getArray($sql);
         return $Group[0]['loclong'];
     }
 
+    /*
+     * This function take a groupId an return the group name
+     * @param $GroupId
+     * return name
+     */
 
- 
-
-   /*
-    * This function take a groupId an return the group name
-    * @param $GroupId
-    * return name
-    */
-    function getGroupName($GroupID){
+    function getGroupName($GroupID) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$GroupID'";
-        $GroupName=$this->getArray($sql);
+        $GroupName = $this->getArray($sql);
         return $GroupName[0]['name'];
+   
     }
+
+    function getLinkedInstitution($groupid){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
+        $linkedInstitution = $this->getArray($sql);
+        return $linkedInstitution[0]['linkedinstitution'];
+     }
+
 
 
     /*
@@ -245,6 +256,7 @@ class dbgroups extends dbtable {
      * @param $height
      * return array
      */
+
     function getlocationcoords($lat, $lon, $width, $height) {
         $x = (($lon + 180) * ($width / 360));
         $y = ((($lat * -1) + 90) * ($height / 180));
@@ -257,9 +269,12 @@ class dbgroups extends dbtable {
      * @lat
      * @lat
      */
+
     function MapHandler($im, $lat, $long) {
-        if (empty($long))$long =28.0316;
-        if (empty($lat))$lat =-26.19284;
+        if (empty($long)
+            )$long = 28.0316;
+        if (empty($lat)
+            )$lat = -26.19284;
         $red = imagecolorallocate($im, 255, 0, 0);
         $scale_x = imagesx($im);
         $scale_y = imagesy($im);
@@ -286,55 +301,7 @@ class dbgroups extends dbtable {
         }
     }
 
-
-
-    /*
-    * This function takes a group name and returns the country of the first
-    * group found
-    * @param $Name
-    * return typeID
-    */
-
-      function getSubgroups($groupid){
-
+        
     }
-
-
-
-    function getDescription($groupid) {
-        $sql = " select * from tbl_unesco_oer_groups where id='$groupid'";
-        $GroupDescription = $this->getArray($sql);
-        return $GroupDescription[0]['Description'];
-    }
-
-    function getLinkedInstitution($groupid) {
-        $sql = " select * from tbl_unesco_oer_groups where id='$groupid'";
-        $Institution = $this->getArray($sql);
-        return $Institution[0]['LinkedInstitution'];
-    }
-    
-    function getMembers($groupid) {
-        $sql = " select * from tbl_unesco_oer_groups where id='$groupid'";
-        $GroupMembers = $this->getArray($sql);
-        return $GroupMembers[0]['Members'];
-    }
-
-    function getLinkedDiscussion($groupid){
-        $sql = " select * from tbl_unesco_oer_groups where id='$groupid'";
-        $Discussion = $this->getArray($sql);
-        return $Discussion[0]['LinkedDiscussion'];
-       }
-
-
-    function joinGroup($userid,$group){
-
-    }
-
-    function LeaveGroup($userid,$group){
-
-    }
-
-   }
-
 ?>
 
