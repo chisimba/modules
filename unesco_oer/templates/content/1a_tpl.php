@@ -153,6 +153,9 @@ $this->appendArrayVar('headerParams', $js);
     <div id='filterDiv' title ="1a" >
         <?php
         //Creates chisimba table
+        
+        
+        
         $objTable = $this->getObject('htmltable', 'htmlelements');
         $objTable->cssClass = "gridListingTable";
         $objTable->width = NULL;

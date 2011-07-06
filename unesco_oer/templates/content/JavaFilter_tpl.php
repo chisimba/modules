@@ -505,7 +505,7 @@ switch ($pagelayout) {
                         $product['type'] = 'Not Available';
                         $product['institution_thumbnail'] = $thumbnail['thumbnail'];
                     }
-                    echo $this->objProductUtil->populateAdaptedListView($product);
+                 //   echo $this->objProductUtil->populateAdaptedListView($product);
                 }
             }
 

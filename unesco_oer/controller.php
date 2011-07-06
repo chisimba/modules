@@ -267,7 +267,9 @@ class unesco_oer extends controller {
 
     public function __JavaFilter() {
 
-        return "JavaFilter_tpl.php";
+           $temp = $this->objjavafilt->replaceprods();
+        echo $temp;
+        
        
     }
 

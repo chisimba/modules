@@ -178,7 +178,16 @@ if ($adaptationstring == null)
                                echo $objTable->show();
                             ?>
 </div>
-                                <!--
+                 <?php
+        
+       $products = $this->objDbProducts->getFilteredProducts($finalstring);
+       $bookmark = $this->objbookmarkmanager->populateGridView($products);
+       echo $bookmark;
+    
+      
+      
+      
+          ?>                <!--
                                                     <table class="gridListingTable" cellspacing="0" cellpadding="0">
                                                         <tr>
                                                             <td>
@@ -379,7 +388,7 @@ if ($adaptationstring == null)
                                                     myLatlng = [
 
 <?php
-                                $coords = $this->objDbProducts->getAdaptedProducts();
+                                $coords = $this->objDbGroups->getAllgroups();
 
                                 foreach ($coords as $coord) {
 ?>
@@ -396,7 +405,7 @@ if ($adaptationstring == null)
                                                 title = [
 
                                                 <?php
-                                                $title = $this->objDbProducts->getAdaptedProducts();
+                                                $title = $this->objDbGroups->getAllgroups();
 
                                                 foreach ($title as $titles) {
                                                 ?>

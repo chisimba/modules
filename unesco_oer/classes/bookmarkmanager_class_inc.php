@@ -229,7 +229,7 @@ class bookmarkmanager extends dbtable {
 
     public function populateGridView($products) {
 
-        $content = '';
+        $content = "<script src='http://code.jquery.com/jquery-latest.js'></script>";
 
         foreach ($products as $product) {
 
@@ -243,7 +243,7 @@ class bookmarkmanager extends dbtable {
 
 
             $IDheading = '#' . $product['id'];
-            $content .= "    <script src='http://code.jquery.com/jquery-latest.js'></script>
+            $content .= "    
                             <script>
                            $(document).ready(function(){
                            

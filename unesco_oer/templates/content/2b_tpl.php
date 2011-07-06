@@ -288,25 +288,29 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
 
                                             foreach ($products as $product) {
+                                                     
                                                 if ($product['relation'] != '') {
+                                                 
                                                     $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
 
                                                     //Get The adapters details
                                                     if ($this->objDbGroups->isGroup($product['creator'])) {
+                                                   
                                                         $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
                                                         $product['group_thumbnail'] = $thumbnail['thumbnail'];
                                                         $product['institution_thumbnail'] = NULL;
                                                         $product['country'] = 'Not Available';
                                                         $product['type'] = 'Not Available';
-                                                    } else {
+                                                    } else {   
+                                                  
                                                         $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
                                                         $product['group_thumbnail'] = NULL;
                                                         $product['country'] = 'Not Available';
                                                         $product['type'] = 'Not Available';
                                                         $product['institution_thumbnail'] = $thumbnail['thumbnail'];
-                                                    }
+                                                    }  
                                                     echo $this->objProductUtil->populateAdaptedListView($product);
-                                                }
+                                                }     
                                             }
                             ?>
                            </div>
@@ -522,7 +526,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                                     
                         <?php
                                             $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
-                                            
+                                       
                                             foreach ($featuredProducts as $featuredProduct) {
                                                 //Check if it's an adapted product
                                                 $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
@@ -534,7 +538,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                             }
 
                                            if ($this->objDbGroups->isGroup($featuredAdaptedProduct['creator'])) {
-                                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($featuredAdaptedProduct['creator']);
+                                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($featuredAdaptedProduct['creator']); 
                                                     $featuredAdaptedProduct['group_thumbnail'] = $thumbnail['thumbnail'];
                                                     $featuredAdaptedProduct['institution_thumbnail'] = NULL;
                                                 } else {
@@ -543,9 +547,10 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                                     $featuredAdaptedProduct['institution_thumbnail'] = $thumbnail['thumbnail'];
                                                 }
                                                 //Get the number of adaptations
+                                           
                                                 $featuredAdaptedProduct['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($featuredAdaptedProduct['id']);
 
-                                            echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($featuredAdaptedProduct);
+                                       //     echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($featuredAdaptedProduct);     
                         ?>
                                         <div class="spaceBetweenRightBorderedDivs">
                                             <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
@@ -576,7 +581,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
                                             <?php
 
-                                            $coords = $this->objDbProducts->getAdaptedProducts();
+                                              $coords = $this->objDbGroups->getAllgroups();
 
                                             foreach ($coords as $coord) {
                                                 ?>
@@ -593,7 +598,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
                                             <?php
 
-                                            $title = $this->objDbProducts->getAdaptedProducts();
+                                            $title = $this->objDbGroups->getAllgroups();
 
                                             foreach ($title as $titles) {
                                                 ?>

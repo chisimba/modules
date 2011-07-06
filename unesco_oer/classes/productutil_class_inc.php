@@ -156,18 +156,18 @@ class productutil extends object {
         
         for ($i = $start; $i < ($end); $i++) { 
             
-             $temp = str_replace (" ", "", $products[$i]['title']);
+             $temp = str_replace (" ", "", $products[$i]['id']);
 
-            $divheading = '.' . $temp . 'Div';
-            $linkheading = '.' . $temp . 'Link';
-            $titleheading = '.' . $temp . 'Title';
-             $buttonname = $temp;
+            $divheading = '#' . $temp . 'Div';
+            $linkheading = '#' . $temp . 'Link';
+           
+             $buttonidheading = '#' . $temp . 'btn';
            
     
             $content.= "
-                  $('$divheading').hide();
+                 
 
-                  $('$linkheading').show();
+              
                  
 
 
@@ -176,15 +176,15 @@ class productutil extends object {
                   $('$linkheading').click(function(){
 
                   $('$divheading').slideToggle();
-                   $('$titleheading ').slideToggle(); 
+              
                   
               
 
                   });
             
-            $('btn').click(function () {
+            $('$buttonidheading').click(function () {
              $('$divheading').slideToggle();
-              $('$titleheading ').slideToggle(); 
+            
     });
             
             
@@ -223,10 +223,10 @@ class productutil extends object {
          for ($i = $start; $i < ($end); $i++) { 
 
              
-             $temp = str_replace (" ", "", $products[$i]['title']);
+             $temp = str_replace (" ", "", $products[$i]['id']);
             $divheading = $temp. 'Div';
             $linkheading = $temp . 'Link';
-            $titleheading = $temp . 'Title';
+           
 
             $products[$i]['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($products[$i]['id']);
             $languages = $this->objDbAvailableProductLanguages->getProductLanguage($products[$i]['id']);
@@ -240,7 +240,7 @@ class productutil extends object {
             $parentid = $product['id'];
           $textname = $temp . "text";
           $commentboxname = $temp . "comment";
-          $buttonname = $temp;
+          $buttonid= $temp . 'btn';
             $textinput = new textinput($textname);
             $textinput->value = $product['title'];
 
@@ -251,7 +251,7 @@ class productutil extends object {
             $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
 
             $button = new button('submitComment',"Save Bookmark");
-            $button->cssId =  'btn';
+            $button->cssId =  $buttonid;
            
          
             $time = time();
@@ -330,7 +330,7 @@ class productutil extends object {
 
             </div>
                     
-                <a href='javascript:void(0)'   class='$linkheading'>Bookmark
+                <a href='javascript:void(0)'   id='$linkheading'>Bookmark
               
                 
                         
@@ -390,10 +390,10 @@ class productutil extends object {
        
        
                     
-   <div class='$divheading'> 
+   <div id='$divheading'  style= 'display:none' > 
                 
  
-                
+              
              
                 " . $form->show().  "
                                             
@@ -413,7 +413,14 @@ class productutil extends object {
      * @return <type> $content
      */
     public function populateAdaptedGridView($adaptedProduct) {
-        $content = '';
+        
+        
+        
+        
+        
+        
+        
+        
         $uri = $this->uri(array("action" => 'ViewProduct', "id" => $adaptedProduct->getIdentifier()));
         $abLink = new link($uri);
         $abLink->cssClass = "listingLanguageLinkAndIcon";
@@ -433,6 +440,12 @@ class productutil extends object {
 //        if ($product['noOfAdaptations'] == 0) {
 //            $product['noOfAdaptations'] = 0;
 //        }
+        
+           $bookLink = new link('#');
+        $bookLink->cssClass = "booklinksLinks";
+         $bookLink->cssId = $adaptedProduct->getIdentifier();
+        $linkText = '<div class="imageTopFlag"></div>';
+        $bookLink->link = $linkText;
 
         $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $adaptedProduct->getIdentifier() , 'prevAction' => 'ViewProduct'));
         $adaptLink = new link($uri);
@@ -445,8 +458,8 @@ class productutil extends object {
 
         $content.='
                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
-                   <div class="imageGridListing">
-                       <div class="imageTopFlag"></div>
+                   <div class="imageGridListing">'. $bookLink->show().'
+                     
                        '. $thumbLink->show() .'
                        '. $imageBottomFlag .'
                    </div>
