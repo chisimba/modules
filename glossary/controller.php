@@ -415,7 +415,7 @@ class glossary extends controller
 														'contextcode' => $this->contextCode,
 														'author' => $this->objUser->fullname(),
 														'description'=>$message));
-														
+
 				$this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
 														'link'=> $this->uri(array()),
 														'contextcode' => null,
@@ -515,7 +515,7 @@ class glossary extends controller
 
 
         // See Also Links - Number
-        $seeAlsoNum = $this->objGlossarySeeAlso->getNumRecords($id);
+        $seeAlsoNum = $this->objGlossarySeeAlso->getNumRecords($id, $this->contextCode);
         $this->setVarByRef('seeAlsoNum', $seeAlsoNum);
 
         // See Also Links - List
@@ -524,13 +524,17 @@ class glossary extends controller
 
         // Determines whether this record is linked to all other terms
         // If not, don't show link to add one
-        $notLinkedToNum = $this->objGlossary->getNumAllRecords($this->contextCode) - $seeAlsoNum;
+        $notLinkedToNum =
+            $this->objGlossary->getNumAllRecords($this->contextCode) // All terms
+            - 1 // This term
+            - $seeAlsoNum // "See also" terms
+            ;
 
 
 //$this->objGlossarySeeAlso->findNotLinkedToNum($id);
         $this->setVarByRef('notLinkedToNum', $notLinkedToNum);
 
-        $others = $this->objGlossarySeeAlso->findNotLinkedTo($id);
+        $others = $this->objGlossarySeeAlso->findNotLinkedTo($id, $this->contextCode);
         $this->setVarByRef('others', $others);
 
 
@@ -567,7 +571,7 @@ class glossary extends controller
 
         }
 
-        $this->setVarByRef('message', $message);
+        $this->setVarByRef('message', html_entity_decode($message));
 
         return "glossary_edit_tpl.php";
     }

@@ -32,19 +32,19 @@ if ($message != '') {
 
     $timeoutObject = $this->getObject('timeoutmessage', 'htmlelements');
     $timeoutObject->setMessage($message);
-    
+
     $editMessage = '<div class="" align="center">';
     $editMessage .= $timeoutObject->show();
-    $editMessage .= '<br /></div>';
-    
+    $editMessage .= '</div>'; //<br />
+
     echo $editMessage;
 }
 
 
 // Start of Form
 $editTermForm = new form('editWord', $this->uri(array(
-		'module' => 'glossary', 
-		'action' => 'editconfirm', 
+		'module' => 'glossary',
+		'action' => 'editconfirm',
 		'id'     => $record['item_id']
 	)));
 
@@ -113,55 +113,55 @@ $seeAlsoFieldset->addContent ( $this->seeAlsoTerm->show());
 
 // -------
 
-if ($seeAlsoNum == 0 && $numRecords > 1) 
+if ($seeAlsoNum == 0 && $numRecords > 1)
 {
 	$seeAlsoFieldset->addContent ($this->objLanguage->languageText('mod_glossary_noTermsLinked', 'glossary').'. ');
-	
+
 } else {
-	
-$seeAlsoFieldset->addContent ('<ul>');	
+
+$seeAlsoFieldset->addContent ('<ul>');
 
 	foreach ($seeAlsoList as $element) {
 		if(!empty($element['term1'])){
 		  $seeAlsoFieldset->addContent ('<li><p>');
-		
+
 		  if ($element['item_id'] != $id) {
 
 			 $seeAlsoFieldset->addContent ($element['term1']);
-			
+
 		  } else {
-			
+
 			 $seeAlsoFieldset->addContent ($element['term2']);
-			
+
 		  }
-		
-		
+
+
 		  // Delete Link
 		  $seeAlsoFieldset->addContent(' ');
-		
+
 		  // URL Delete Link
 		  $deleteLinkIcon =& $this->getObject('geticon', 'htmlelements');
 		  $deleteLinkIcon->setIcon('delete');
 		  $deleteLinkIcon->alt=$objLanguage->languageText('mod_glossary_delete', 'glossary');
 		  $deleteLinkIcon->title=$objLanguage->languageText('mod_glossary_delete', 'glossary');
-		
+
 		  $link = $this->uri(array(
-			 	'module'=>'glossary', 
-				'action'=>'deleteseealso', 
+			 	'module'=>'glossary',
+				'action'=>'deleteseealso',
 				'id'=>$record['item_id'] ,
 				'seealso'=>$element['id']
 			));
-			
+
 		  $deleteLink = new link("javascript:confirmDelete('$link', '".$objLanguage->languageText('mod_glossary_pop_deleteseealso', 'glossary')."');");
 		  $deleteLink->link = $deleteLinkIcon->show();
 
 
 		  $seeAlsoFieldset->addContent ($deleteLink->show());
-        
+
             $seeAlsoFieldset->addContent ('</p></li>');
         }
 	}
-	
+
 $seeAlsoFieldset->addContent('</ul>');
 
 }
@@ -175,50 +175,50 @@ if ($numRecords == 1)
 	$seeAlsoFieldset->addContent ('<p>'.$objLanguage->languageText('mod_glossary_onlyword', 'glossary').'</p>');
 
 } else if ($notLinkedToNum == 0) {
-	
-	
-		$seeAlsoFieldset->addContent ('<p>'.$record['term'].' '.$this->objLanguage->languageText('mod_glossary_isLinkedToAll', 'glossary').'</p>');
 
-	
+
+		$seeAlsoFieldset->addContent ('<p>'.$record['term'].' '.$this->objLanguage->languageText('mod_glossary_isLinkedtoAll', 'glossary').'</p>');
+
+
 } else {
 
 	// Form to Add See Also Link
 	// Start of Form
 	$addSeeAlsoForm = new form('addWord', $this->uri(array(
-			'module'=>'glossary', 
-			'action'=>'addseealsoconfirm' 
+			'module'=>'glossary',
+			'action'=>'addseealsoconfirm'
 		)));
-        
+
     $seeAlsoHiddenIdInput = new textinput('id');
     $seeAlsoHiddenIdInput->fldType = 'hidden';
     $seeAlsoHiddenIdInput->value = $record['item_id'];
     $addSeeAlsoForm->addToForm($seeAlsoHiddenIdInput->show());
-	
+
 	$seeAlso = new dropdown('seealso');
-	
+
 	foreach ($others as $element) {
-	
+
 		$seeAlso->addOption($element['id'], $element['term']);
-	
+
 	}
-	
+
 	// Instructions
     $seeAlsoLabel = new label($this->objLanguage->languageText('mod_glossary_selectTermLink', 'glossary'), 'input_seealso');
     $addSeeAlsoForm->addToForm($seeAlsoLabel->show().':', null);
 
 	//$addSeeAlsoForm->addToForm($this->objLanguage->languageText('mod_glossary_selectTermLink', 'glossary').':');
-	
+
 	// Add Drop Down
 	$addSeeAlsoForm->addToForm($seeAlso);
-	
-	
+
+
 	$submitButton = new button('submit', $this->objLanguage->languageText('mod_glossary_add', 'glossary'));
 	$submitButton->setToSubmit();
-	
-	
+
+
 	$addSeeAlsoForm->addToForm($submitButton);
 	$addSeeAlsoForm->displayType =3;
-	
+
 	$seeAlsoFieldset->addContent ('<p>'.$addSeeAlsoForm->show().'</p>');
 
 
@@ -239,25 +239,25 @@ $this->urlLinks->str=$this->objLanguage->languageText('mod_glossary_websiteLinks
 $urlFieldset->addContent($this->urlLinks->show());
 
 
-if ($urlNum == 0) 
+if ($urlNum == 0)
 {
 	$urlFieldset->addContent ('<ul><li>'.$this->objLanguage->languageText('mod_glossary_noUrlsFound', 'glossary').'. </li></ul>');
-	
+
 } else {
-	
-	$urlFieldset->addContent ('<ul>');	
-	
-	
+
+	$urlFieldset->addContent ('<ul>');
+
+
 	foreach ($urlList as $element) {
         if(!empty($element['url'])){
 		  $urlFieldset->addContent ('<li><p>');
-		
+
 		  $itemLink = new link($element['url']);
 		  $itemLink->target = '_blank';
 		  $itemLink->link =$element['url'];
-		
+
 		  $urlFieldset->addContent( $itemLink->show());
-		
+
 		  $urlFieldset->addContent( ' - ' );
 
 		  // URL Delete Link
@@ -265,14 +265,14 @@ if ($urlNum == 0)
 		  $deleteLinkIcon->setIcon('delete');
 		  $deleteLinkIcon->alt=$objLanguage->languageText('mod_glossary_delete', 'glossary');
 		  $deleteLinkIcon->title=$objLanguage->languageText('mod_glossary_delete', 'glossary');
-		
+
 		  $link = $this->uri(array(
-				'module'=>'glossary', 
-				'action'=>'deleteurl', 
+				'module'=>'glossary',
+				'action'=>'deleteurl',
 				'id'=>$record['item_id'] ,
 				'link'=>$element['id']
 			));
-			
+
 		  $deleteLink = new link("javascript:confirmDelete('$link', '".$objLanguage->languageText('mod_glossary_pop_deleteurl', 'glossary')."');");
 		  $deleteLink->link = $deleteLinkIcon->show();
 
@@ -282,7 +282,7 @@ if ($urlNum == 0)
 		}
 
 	}
-	
+
 	$urlFieldset->addContent ('</ul>');
 
 }
@@ -291,7 +291,7 @@ if ($urlNum == 0)
 
 // Start of Form
 $addUrlForm = new form('addWord', $this->uri(array(
-		'module'=>'glossary', 
+		'module'=>'glossary',
 		'action'=>'addurlconfirm'
 //		'id'=>$record['id']
 	)));
@@ -334,8 +334,8 @@ echo $urlFieldset->show();
 
 
 <iframe src="<?php echo $this->uri(array(
-		'module' => 'glossary', 
-		'action' => 'listimages', 
+		'module' => 'glossary',
+		'action' => 'listimages',
 		'id'     => $record['item_id']
 	)); ?>" width="99%" height="170" frameborder="0" scrolling="auto" style="overflow-x: hidden;" marginwidth="0" marginheight="0" hspace="0" vspace="0"></iframe>
 </fieldset>
