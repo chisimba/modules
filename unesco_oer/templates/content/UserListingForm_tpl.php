@@ -58,14 +58,13 @@ $BackToControlPannelLink->link = $controlPannel->show();
 
 //button search user
 $buttonGO = new button('searchButton', "Go");
-$buttonGO->setToSubmit();
-$searchLink = new link($this->uri(array('action' => "searchUser",'search'=>$this->getParam('search'))));
-$searchLink->link = $buttonGO->show();
+//$buttonGO->setOnClick("javascript: searchThis()");
+$buttonGO->show();
 //text input search user
 $search = new textinput('search','',"",20);
 
 
-echo $addUserLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$searchLink->show();
+echo $addUserLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$buttonGO->show();
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '100%';
@@ -83,16 +82,16 @@ $myTable->addHeaderCell('Edit', null, null, left, "userheader", null);
 $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 $myTable->endHeaderRow();
 
+
+
 //get user from the database
 $users = "";
-$mode=$this->getParam('mode');
-if ($mode == 'addfixup'){
-    $users=$this->getParam('user');
+//$mode=$this->getParam('mode');
+if (strcmp($mode, 'addfixup') == 0){
+    $users=$user;
 }else{
     $users = $this->objUseExtra->getAllUser();
-    }
-
-
+}
 
 
 if (count($users) > 0) {
@@ -119,13 +118,17 @@ if (count($users) > 0) {
         //$myTable->addCell($finaldeleteLink);
     }
 }
+echo $nouserfound;
+// some script language
+if($nouserfound!=''){
 
-
+}
 $fs = new fieldset();
 $fs->setLegend("Users");
 $fs->addContent($myTable->show());
 echo $fs->show();
 ?>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
 
     jQuery(document).ready(function(){
@@ -145,5 +148,21 @@ echo $fs->show();
     }
 
 
+
+
 );
+
+$('button[name=searchButton]').click(
+    function() {
+        window.location = 'index.php?module=unesco_oer&action=searchUser&search='+ $('input[name=search]').val();
+    }
+);
+
+//function searchThis(){
+//	alert("You are searching for: "+ document.getElementById("input_search").value);
+//        var oldAction = document.forms["addProductRating_ui"].action;
+////        var newAction = oldAction.replace("rateSubmit=","rateSubmit=" + sel.id.replace("_", ''));
+////        document.forms["addProductRating_ui"].action = newAction;
+////        document.forms["addProductRating_ui"].submit();
+//}
 </script>

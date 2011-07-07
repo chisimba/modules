@@ -246,6 +246,13 @@ class dbgroups extends dbtable {
         return $linkedInstitution[0]['linkedinstitution'];
      }
 
+     function getThumbnail($groupid){
+         $sql="select * from tnl_unesco_oer_groups where id='$groupid'";
+         $thumbnail=$this->getArray($sql);
+         return $thumbnail[0]['thumbnail'];
+      
+     }
+
 
 
     /*

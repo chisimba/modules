@@ -358,14 +358,11 @@ $table->endRow();
 $groups = $this->objDbGroups->getAllGroups();
 $dd = new dropdown('groupmembership');
 if (count($groups) > 0) {
-    $i = 1;
-    //$dd=new dropdown('groupmembership');
-    foreach ($groups as $group) {
-        $dd->addOption($i, $group['name']);
-        $i = $i + 1;
-    }
+  foreach ($groups as $group) {
+      $dd->addOption($group['name']);
+      }
 } else {
-    $dd->addOption('1', 'None');
+    $dd->addOption('None');
 }
 $table->startRow();
 $table->addCell('Group Membership');

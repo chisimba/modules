@@ -47,7 +47,7 @@ $myTable->cellspacing = '0';
 $myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
-$myTable->addHeaderCell('Unesco_oer Group',null,null,left,"userheader",null);
+$myTable->addHeaderCell('Group name',null,null,left,"userheader",null);
 $myTable->addHeaderCell('Group E-mail',null,null,left,"userheader",null);
 $myTable->addHeaderCell('Edit',null,null,left,"userheader",null);
 $myTable->addHeaderCell('Delete',null,null,left,"userheader",null);
@@ -58,8 +58,8 @@ $groups = $this->objDbGroups->getAllGroups();
 if (count($groups) > 0) {
     foreach ($groups as $group) {
         $myTable->startRow();
-        $myTable->addCell($group['name']);
-        $myTable->addCell($group['email']);
+        $myTable->addCell($group['name'],null, null, null, "user", null, null);
+        $myTable->addCell($group['email'], null, null, null, "user", null, null);
     
         $objIcon->setIcon('edit');
         $editLink =new link($this->uri(array('action' =>"groupEditingForm",'id' =>$group['id'])));
@@ -91,7 +91,7 @@ jQuery(document).ready(function(){
 
     jQuery("a[class=deleteuser]").click(function(){
 
-        var r=confirm( "Are you sure you want to delete this user?");
+        var r=confirm( "Are you sure you want to delete this group?");
         if(r== true){
             window.location=this.href;
         }

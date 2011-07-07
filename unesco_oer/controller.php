@@ -31,6 +31,7 @@ class unesco_oer extends controller {
     public $objjavafilt;
     public $objThumbUploader;
     public $objConfig;
+
     /**
      * @var object $objLanguage Language Object
      */
@@ -83,6 +84,7 @@ class unesco_oer extends controller {
         $this->objjavafilt = $this->getObject('javafilt');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
+      
         //$this->objUtils = $this->getObject('utilities');
         //$this->objGoogleMap=$this->getObject('googlemapapi');
         //$this->objGoogleMap = new googlemapapi();
@@ -1365,6 +1367,7 @@ class unesco_oer extends controller {
             //add to table userextra
             $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
+      
 
             // Email Details to User
             $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
@@ -1410,11 +1413,11 @@ class unesco_oer extends controller {
         if ($this->getParam('search') == '') {
             return $this->__userListingForm();
         } else {
-
             if (count($this->objUseExtra->searchUserByUsername($this->getParam('search'))) > 0) {
                 $user = $this->objUseExtra->searchUserByUsername($this->getParam('search')); //search user by username
                 $this->setVar('user', $user);
-                $this->setvar('mode', 'addfixup');
+                $mode = 'addfixup';
+                $this->setVarByRef('mode', $mode);
                 $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 return 'UserListingForm_tpl.php';
             } else {
@@ -1427,6 +1430,15 @@ class unesco_oer extends controller {
                 }
             }
         }
+        if(count($this->objUseExtra->searchUserByUsername($this->getParam('search')))==count($this->objUseExtra->searchUserByName($this->getParam('search')))){
+            $useruserfound="No user found";
+            $this->setVar('nouserfound', $useruserfound);
+            $mode = 'addfixup';
+            $this->setVarByRef('mode', $mode);
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            return 'UserListingForm_tpl.php';
+        }
+
     }
 
     function __updateUserDetails() {
@@ -1767,6 +1779,18 @@ class unesco_oer extends controller {
         $id = $this->getParam('id');
         $this->objDbGroups->deleteGroup($id);
         return 'groupListingForm_tpl.php';
+    }
+
+
+    function __groupPermission(){
+        if($this->objUser->isAdmin()){
+            $this->__groupListingForm();
+        }else{
+            
+
+        }
+
+
     }
 
     /*     * This function handles the uploading of product metadata

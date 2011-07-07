@@ -122,10 +122,17 @@ $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description', 'unesco_oer'));
 $table->addCell($editor->show());
 $table->endRow();
-//field for the thumbnail
+
+
+
+$content.='
+          <img src="' . $group[0]['thumbnail'] . '" alt="Featured" width="30" height="30"><br>
+
+                  ';
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
-$table->addCell($this->objThumbUploader->show());
+$table->addCell($content);
+//$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
+$table->addCell("Change Avatar".'&nbsp;'.$this->objThumbUploader->show());
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
