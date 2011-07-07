@@ -683,6 +683,9 @@ class unesco_oer extends controller {
         $umbrellaId = $this->getParam('umbrellaTheme');
         $themeId = $this->getParam('themeId');
 
+        echo "Editing theme";
+        die();
+
         $this->objDbProductThemes->updateTheme($themeId, $theme, $umbrellaId);
         
         return $this->__viewProductThemes();
@@ -725,6 +728,7 @@ class unesco_oer extends controller {
     public function __editUmbrellaThemeSubmit() {
         $theme = $this->getParam('newUmbrellaTheme');
         $themeId = $this->getParam('themeId');
+        
         $this->objDbProductThemes->updateUmbrellaTheme($themeId, $theme);
         return $this->__viewProductThemes();
     }
@@ -737,6 +741,7 @@ class unesco_oer extends controller {
     public function __createUmbrellaThemeSubmit() {
         $description = $this->getParam('newUmbrellaTheme');
         $this->objDbProductThemes->addUmbrellaTheme($description);
+
         return $this->__viewProductThemes();
     }
 
@@ -1100,7 +1105,7 @@ class unesco_oer extends controller {
         }
         $thumbnail = 'usrfiles/' . $results['path'];
 
-        $formAction = 'createInstitutionSubmit';
+        $formAction = 'editInstitutionSubmit';
         $formError = false;
         $this->setVarByRef('formError', $formError);
 

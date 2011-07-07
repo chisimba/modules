@@ -66,6 +66,9 @@
        $requiredField['thumbnail'] = '<span class="required_field"> * </span>';
        $requiredField['keyword1'] = '<span class="required_field"> * </span>';
        $requiredField['address1'] = '<span class="required_field"> * </span>';
+       $requiredField['zip'] = '<span class="required_field"> * </span>';
+       $requiredField['city'] = '<span class="required_field"> * </span>';
+       $requiredField['websiteLink'] = '<span class="required_field"> * </span>';
 
         //Check if an institution is being edited
         if (isset($institutionId)) {

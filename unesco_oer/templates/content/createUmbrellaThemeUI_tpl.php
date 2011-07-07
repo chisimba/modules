@@ -84,7 +84,7 @@ $umbrellaThemeFieldset->setLegend("Create Umbrella Theme");
 $umbrellaThemeFieldset->addContent($table->show());
 
 //createform, add fields to it and display
-$objForm = new form('createTheme_ui', $this->uri(array('action' => 'createUmbrellaThemeSubmit')));
+$objForm = new form('createTheme_ui', $this->uri(array('action' => $formAction)));
 //Add a rule for validating the field
 $objForm->addRule('newUmbrellaTheme', 'Please enter the name of the Umbrella theme', 'required');
 $objForm->addToForm($umbrellaThemeFieldset->show());
