@@ -343,9 +343,9 @@ class bookmarkmanager extends dbtable {
                $thumbnail = '<img src="' . $product['thumbnail'] . '" width="79" height="101">';
                $producttitle = $product['title'];
 
-            $content .= "<div id='$divid' style= 'display:none'
+            $content .= "<div id='$divid' style= 'display:none'>
                    
-                     <div class='bookthumb' ". $thumbnail ." <br> ". $producttitle . "
+                     <div class='bookthumb'> ". $thumbnail ." <br/> ". $producttitle . "
     
                             </div>".
                
