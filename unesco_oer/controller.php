@@ -663,6 +663,12 @@ class unesco_oer extends controller {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "createThemeUI_tpl.php";
     }
+    
+    public function __editThemeUI() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+//        $this->getParam("themeId", "themeId")
+        return "createThemeUI_tpl.php";
+    }
 
     /*
      * Method to retrieve entries from user on the createThemeUI_tpl.php page

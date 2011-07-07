@@ -17,7 +17,7 @@
 
 //Display errors
 error_reporting(E_ALL);
-ini_set('display_errors', 'Off');
+ini_set('display_errors', 'On');
 
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
@@ -26,7 +26,7 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('adddatautil', 'unesco_oer');
 
 
-$utility = new adddatautil();
+//$utility = new adddatautil();
 
 // setup and show heading
 $header = new htmlHeading();
@@ -41,7 +41,20 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 //theme description input options
 $title = $this->objLanguage->languageText('mod_unesco_oer_theme_description', 'unesco_oer');
-$utility->addTextInputToTable($title, 4, 'newUmbrellaTheme', 60, '', $table);
+//$utility->addTextInputToTable($title, 4, 'newUmbrellaTheme', 60, '', $table);
+//Add title to table
+$table->startRow();
+$table->addCell($title);
+$table->endRow();
+//Add textinput to table
+//required Field
+$table->startRow();
+$newUmbrellaTheme = new textinput('newUmbrellaTheme');
+$table->addCell($newUmbrellaTheme->show());
+$table->endRow();
+//$newUmbrellaTheme->label='Name(must be filled out)';
+
+
 
 $button = new button('submitProductType', "Submit Theme");
 $button->setToSubmit();
@@ -58,9 +71,11 @@ $umbrellaThemeFieldset->setLegend("Create Umbrella Theme");
 $umbrellaThemeFieldset->addContent($table->show());
 
 //createform, add fields to it and display
-$form_data = new form('createTheme_ui',$this->uri(array('action'=>'createUmbrellaThemeSubmit')));
-$form_data->addToForm($umbrellaThemeFieldset->show());
-echo $form_data->show();
+$objForm = new form('createTheme_ui',$this->uri(array('action'=>'createUmbrellaThemeSubmit')));
+//Add a rule for validating the field
+$objForm->addRule('newUmbrellaTheme','Please enter the name of the Umbrella theme','required');
+$objForm->addToForm($umbrellaThemeFieldset->show());
+echo $objForm->show();
 
 ?>
 

@@ -39,21 +39,46 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 //theme description input options
 $title = $this->objLanguage->languageText('mod_unesco_oer_theme_description', 'unesco_oer');
-$utility->addTextInputToTable($title, 4, 'newTheme', 60, '', $table);
+//$utility->addTextInputToTable($title, 4, 'newTheme', 60, '', $table);
+$table->startRow();
+$table->addCell($title);
+$table->endRow();
+//Add textinput to table
+//required Field
+$table->startRow();
+$newTheme = new textinput('newTheme');
+$table->addCell($newTheme->show());
+$table->endRow();
 
-$fieldName = 'umbrellatheme';
+//$fieldName = 'umbrellatheme';
+$table->startRow();
 $title = $this->objLanguage->languageText('mod_unesco_oer_Umbrellatheme', 'unesco_oer');
+$table->addCell($title);
+$table->endRow();
+
+//$table->startRow();
+//$umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
+//$table->addCell($title);
+//$table->endRow();
+
+$table->startRow();
 $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
-$utility->addDropDownToTable(
-                            $title,
-                            4,
-                            $fieldName,
-                            $umbrellaThemes,
-                            '',
-                            'theme',
-                            $table,
-                            'id'
-                            );
+$objUmbrellaTheme = new dropdown('user_dropdown');
+$objUmbrellaTheme->addFromDB($umbrellaThemes,'theme','id','none');
+// $objElement->label='User list';
+ $table->addCell($objUmbrellaTheme->show());
+ $table->endRow();
+
+//$utility->addDropDownToTable(
+//                            $title,
+//                            4,
+//                            $fieldName,
+//                            $umbrellaThemes,
+//                            '',
+//                            'theme',
+//                            $table,
+//                            'id'
+//                            );
 
 $button = new button('submitProductType', "Submit Theme");
 $button->setToSubmit();
@@ -70,9 +95,11 @@ $subThemeFieldset->setLegend("Create sub Theme");
 $subThemeFieldset->addContent($table->show());
 
 //createform, add fields to it and display
-$form_data = new form('createTheme_ui',$this->uri(array('action'=>'createThemeSubmit')));
-$form_data->addToForm($subThemeFieldset->show());
-echo $form_data->show();
+$objForm = new form('createTheme_ui',$this->uri(array('action'=>'createThemeSubmit')));
+$objForm->addRule('newTheme','Please enter the name of the subtheme','required');
+$objForm->addRule('theme','Please select an umbrella theme','select');
+$objForm->addToForm($subThemeFieldset->show());
+echo $objForm->show();
 
 ?>
 
