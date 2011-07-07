@@ -34,9 +34,9 @@ $header = new htmlheading();
 $header->type = 1;
 $header->cssClass = "manageusers";
 $header->str = "Product Themes";
-echo '<div id="themeheading">';
+echo '<div id="institutionheading">';
 echo $header->show();
-echo '</div>';
+
 $buttonUmbrellaTheme = new button('Add UbrellaTheme Button', "Add Umbrella Theme");
 $buttonUmbrellaTheme->setToSubmit();
 $addUmbrellaThemeLink = new link($this->uri(array('action' => "createUmbrellaThemeUI")));
@@ -45,7 +45,13 @@ $buttonSubTheme = new button('Add subTheme Button', "Add subTheme");
 $buttonSubTheme->setToSubmit();
 $addSubThemeLink = new link($this->uri(array('action' => "createThemeUI")));
 $addSubThemeLink->link = $buttonSubTheme->show();
+$controlPannel = new button('backButton', "Back");
+$controlPannel->setToSubmit();
+$BackToControlPanelLink = new link($this->uri(array('action' => "controlpanel")));
+$BackToControlPanelLink->link = $controlPannel->show();
 
+echo $addUmbrellaThemeLink->show() . '&nbsp;' . $addSubThemeLink->show() . '&nbsp;' . $BackToControlPanelLink->show();
+echo '</div>';
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
@@ -58,21 +64,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 //echo $table->show();
 
 
-$controlPannel = new button('backButton', "Back");
-$controlPannel->setToSubmit();
-$BackToControlPanelLink = new link($this->uri(array('action' => "controlpanel")));
-$BackToControlPanelLink->link = $controlPannel->show();
 
-//button search theme
-//$buttonGO = new button('searchButton', "Go");
-//$buttonGO->setToSubmit();
-//$searchLink = new link($this->uri(array('action' => "searchtheme",'search'=>$this->getParam('search'))));
-//$searchLink->link = $buttonGO->show();
-////text input search theme
-//$search = new textinput('search','',"",20);
-
-
-echo $addUmbrellaThemeLink->show() . '&nbsp;' . $addSubThemeLink->show() . '&nbsp;' . $BackToControlPanelLink->show();
 //. '&nbsp;' . $search->show() . '&nbsp;' . $searchLink->show();
 
 $themesTable = $this->newObject('htmltable', 'htmlelements');
