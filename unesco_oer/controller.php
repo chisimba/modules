@@ -660,6 +660,7 @@ class unesco_oer extends controller {
      */
 
     public function __createThemeUI() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "createThemeUI_tpl.php";
     }
 
@@ -672,7 +673,7 @@ class unesco_oer extends controller {
         $description = $this->getParam('newTheme');
         $umbrella = $this->getParam('umbrellatheme');
         $this->objDbProductThemes->addTheme($description, $umbrella);
-        return $this->__addData();
+        return $this->__viewProductThemes();
     }
 
     /*
@@ -680,6 +681,7 @@ class unesco_oer extends controller {
      */
 
     public function __createUmbrellaThemeUI() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "createUmbrellaThemeUI_tpl.php";
     }
 
@@ -691,7 +693,7 @@ class unesco_oer extends controller {
     public function __createUmbrellaThemeSubmit() {
         $description = $this->getParam('newUmbrellaTheme');
         $this->objDbProductThemes->addUmbrellaTheme($description);
-        return $this->__addData();
+        return $this->__viewProductThemes();
     }
 
     /*     * Method to display page for creating a new keyword
@@ -1899,10 +1901,11 @@ class unesco_oer extends controller {
     }
 
     function __deleteTheme() {
-        $this->objUserAdmin->apiUserDelete($this->getParam('id'));
-        $this->objUseExtra->deleteUser($this->getParam('id'), $this->getParam('userid'));
-        return $this->__userListingForm();
+        $this->objDbProductThemes->deleteTheme($this->getParam('id'));
+        return $this->__viewProductThemes();
     }
+
+    
 
 }
 ?>

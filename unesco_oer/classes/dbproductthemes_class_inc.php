@@ -36,8 +36,25 @@ class dbproductthemes extends dbtable {
         return $this->getArray($sql);
     }
 
-    function getThemesByProductID($productID)
-    {
+    function deleteTheme($id) {
+        //Check which table the theme falls under
+        //TODO should also cater for when umbrella theme is deleted, i.e. subthemes should also get deleted
+        $isUmbrella = $this->getArray("SELECT * FROM $this->umbrella_theme_table WHERE id = '$id'");
+        $isSubTheme = $this->getArray("SELECT * FROM $this->_tableName WHERE id = '$id'");
+
+        //Now delete the appropriate theme
+        if(count($isUmbrella) > 0){//If the theme id was found in the umbrella table
+            $this->getArray("DELETE FROM $this->umbrella_theme_table WHERE id = '$id'");
+            return true;
+        }elseif (count($isSubTheme) > 0){//If the theme is not an umbrella theme then it must be a subtheme
+            $this->getArray("DELETE FROM $this->_tableName WHERE id = '$id'");
+            return true;
+        }
+        //If the id was not found in either of the tables alert the calling function
+        return false;
+    }
+
+    function getThemesByProductID($productID) {
         $sqlJxnTable = "select * from $this->product_theme_jxn_table where product_id = '$productID'";
         $sql = "SELECT $this->_tableName.id, $this->_tableName.umbrella_theme_id, $this->_tableName.theme
                 FROM $this->_tableName
@@ -45,23 +62,19 @@ class dbproductthemes extends dbtable {
                 On $this->_tableName.id=t2.theme_id";
         return $this->getArray($sql);
     }
-    
-     function getproductIDBythemeID($id)
-    {
+
+    function getproductIDBythemeID($id) {
         $sql = "select * from $this->product_theme_jxn_table where theme_id = '$id'";
-      
+
         return $this->getArray($sql);
     }
-    
 
-    function getThemesByUmbrellaID($umbrellaID)
-    {
+    function getThemesByUmbrellaID($umbrellaID) {
         $sql = "select * from $this->_tableName where umbrella_theme_id = '$umbrellaID'";
         return $this->getArray($sql);
     }
 
-    function getThemeByID($id)
-    {
+    function getThemeByID($id) {
         $row = $this->getRow('id', $id);
         return $row;
     }
@@ -80,7 +93,7 @@ class dbproductthemes extends dbtable {
             'theme' => $umbrella
         );
 
-        $this->insert($data,$this->umbrella_theme_table);
+        $this->insert($data, $this->umbrella_theme_table);
     }
 
     function addProductThemeJxn($productID, $themeID) {
@@ -89,16 +102,14 @@ class dbproductthemes extends dbtable {
             'theme_id' => $themeID
         );
 
-        $this->insert($data,$this->product_theme_jxn_table);
+        $this->insert($data, $this->product_theme_jxn_table);
     }
-    
-    function deleteProductThemesJxnByProductID($productID)
-    {
+
+    function deleteProductThemesJxnByProductID($productID) {
         $sql = "DELETE FROM $this->product_theme_jxn_table WHERE product_id = '$productID'";
         //$this->_execute($sql);
         $this->delete('product_id', $productID, $this->product_theme_jxn_table);
     }
 
 }
-
 ?>

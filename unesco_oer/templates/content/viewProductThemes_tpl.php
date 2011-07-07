@@ -37,10 +37,14 @@ $header->str = "Product Themes";
 echo '<div id="themeheading">';
 echo $header->show();
 echo '</div>';
-$button = new button('Add Button', "Add Theme");
-$button->setToSubmit();
-$addThemeLink = new link($this->uri(array('action' => "themeEditor")));
-$addThemeLink->link = $button->show();
+$buttonUmbrellaTheme = new button('Add UbrellaTheme Button', "Add Umbrella Theme");
+$buttonUmbrellaTheme->setToSubmit();
+$addUmbrellaThemeLink = new link($this->uri(array('action' => "createUmbrellaThemeUI")));
+$addUmbrellaThemeLink->link = $buttonUmbrellaTheme->show();
+$buttonSubTheme = new button('Add subTheme Button', "Add subTheme");
+$buttonSubTheme->setToSubmit();
+$addSubThemeLink = new link($this->uri(array('action' => "createThemeUI")));
+$addSubThemeLink->link = $buttonSubTheme->show();
 
 
 
@@ -68,7 +72,7 @@ $BackToControlPanelLink->link = $controlPannel->show();
 //$search = new textinput('search','',"",20);
 
 
-echo $addThemeLink->show() . '&nbsp;' . $BackToControlPanelLink->show();
+echo $addUmbrellaThemeLink->show() . '&nbsp;' . $addSubThemeLink->show() . '&nbsp;' . $BackToControlPanelLink->show();
 //. '&nbsp;' . $search->show() . '&nbsp;' . $searchLink->show();
 
 $themesTable = $this->newObject('htmltable', 'htmlelements');
@@ -87,7 +91,6 @@ $themesTable->endHeaderRow();
 
 //get themes from the database
 $umbrellaThemesList = $this->objDbProductThemes->getUmbrellaThemes();
-//$subThemesList = $this->objDbProductThemes->getProductThemes();
 
 if (count($umbrellaThemesList) > 0) {
     foreach ($umbrellaThemesList as $umbrellaTheme) {
@@ -97,14 +100,14 @@ if (count($umbrellaThemesList) > 0) {
         $themesTable->addCell('-', null, null, null, "theme", null, null);
 
         $objIcon->setIcon('edit');
-        $editLink = new link($this->uri(array('action' => "editthemeDetailsForm", 'id' => $umbrellaTheme['id'], 'themeid' => $theme['themeid'], 'themename' => $theme['themename'])));
+        $editLink = new link($this->uri(array('action' => "editTheme", 'id' => $umbrellaTheme['id'])));
         $editLink->link = $objIcon->show();
         $themesTable->addCell($editLink->show());
 
         $objIcon->setIcon('delete');
-        $deleteLink = new link($this->uri(array('action' => "deletetheme", 'id' => $umbrellaTheme['id'], 'themeid' => $theme['themeid'])));
+        $deleteLink = new link($this->uri(array('action' => "deleteTheme", 'id' => $umbrellaTheme['id'])));
         $deleteLink->link = $objIcon->show();
-        $deleteLink->cssClass = 'deletetheme';
+        $deleteLink->cssClass = 'deleteTheme';
         $themesTable->addCell($deleteLink->show());
         $themesTable->endRow();
 
@@ -118,14 +121,14 @@ if (count($umbrellaThemesList) > 0) {
                 $themesTable->addCell($umbrellaTheme['theme'], null, null, null, "theme", null, null);
 
                 $objIcon->setIcon('edit');
-                $editLink = new link($this->uri(array('action' => "editthemeDetailsForm", 'id' => $subTheme['id'], 'themeid' => $theme['themeid'], 'themename' => $theme['themename'])));
+                $editLink = new link($this->uri(array('action' => "editTheme", 'id' => $subTheme['id'])));
                 $editLink->link = $objIcon->show();
                 $themesTable->addCell($editLink->show());
 
                 $objIcon->setIcon('delete');
-                $deleteLink = new link($this->uri(array('action' => "deletetheme", 'id' => $subTheme['id'], 'themeid' => $theme['themeid'])));
+                $deleteLink = new link($this->uri(array('action' => "deleteTheme", 'id' => $subTheme['id'])));
                 $deleteLink->link = $objIcon->show();
-                $deleteLink->cssClass = 'deletetheme';
+                $deleteLink->cssClass = 'deleteTheme';
                 $themesTable->addCell($deleteLink->show());
                 $themesTable->endRow();
             }
@@ -143,7 +146,7 @@ echo $fs->show();
 
     jQuery(document).ready(function(){
 
-    jQuery("a[class=deletetheme]").click(function(){
+    jQuery("a[class=deleteTheme]").click(function(){
 
     var r=confirm( "Are you sure you want to delete this theme?");
     if(r== true){
