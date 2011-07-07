@@ -23,7 +23,9 @@ $this->loadClass('textinput','htmlelements');
 $header = new htmlHeading();
 $header->str = "Create new type of product";
 $header->type = 2;
+echo '<div id="institutionheading">';
 echo $header->show();
+echo '</div>';
 
 // setup table and table headings with input options
 $table = $this->newObject('htmltable', 'htmlelements');
