@@ -51,8 +51,12 @@ $utility->addDropDownToTable(
 
 $button = new button('submitProductType', "Submit Theme");
 $button->setToSubmit();
+$controlPannel = new button('backButton', "Cancel");
+$controlPannel->setToSubmit();
+$BackToControlPanelLink = new link($this->uri(array('action' => "viewProductThemes")));
+$BackToControlPanelLink->link = $controlPannel->show();
 $table->startRow();
-$table->addCell($button->show());
+$table->addCell($button->show() . '&nbsp;' . $BackToControlPanelLink->show());
 $table->endRow();
 
 //createform, add fields to it and display
