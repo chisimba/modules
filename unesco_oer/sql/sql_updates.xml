@@ -38,4 +38,12 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_unesco_oer_curriculum</table>
+        <version>0.047</version>
+        <description>Remove calender field</description>
+        <data>
+            <remove>calendar</remove>
+        </data>
+    </update>
 </updates>

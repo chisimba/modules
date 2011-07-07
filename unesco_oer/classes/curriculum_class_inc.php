@@ -26,12 +26,28 @@ require_once 'content_class_inc.php';
 
 class curriculum extends content {
 
+    private $objDbCurricula;
+
+    private $_forward;
+    private $_background;
+    private $_introductory_description;
 
 
     public function showInput($prevAction = NULL) {
+
+        $path = $option = '';
+        if ($this->getID()) {
+            $path = $this->getFullPath();
+            $option = 'saveedit';
+        }else{
+            $path = $this->getPath().'__'.$this->getType();
+            $option = 'save';
+        }
+
         $uri = $this->uri(array(
-            'action' => "saveProductMetaData",
-            'productID' => $this->_identifier,
+            'action' => "saveContent",
+            'path' => $path,
+            'option' => $option,
             'nextAction' => $prevAction));
         $form_data = new form('add_products_ui', $uri);
 
@@ -57,13 +73,26 @@ class curriculum extends content {
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
-        $fieldName = 'Foreward';
+        $fieldName = 'title';
+        $textinput = new textinput($fieldName);
+        $textinput->setValue($this->_title);
+
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($textinput->show());
+        $table->endRow();
+
+        $fieldName = 'forward';
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = $fieldName;
         $editor->height = '150px';
         //$editor->width = '70%';
         $editor->setBasicToolBar();
-        //$editor->setContent($this->getDescription());
+        $editor->setContent($this->_forward);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -74,13 +103,13 @@ class curriculum extends content {
         $table->addCell($editor->showFCKEditor());
         $table->endRow();
 
-        $fieldName = 'Background';
+        $fieldName = 'background';
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = $fieldName;
         $editor->height = '150px';
         //$editor->width = '70%';
         $editor->setBasicToolBar();
-        //$editor->setContent($this->getDescription());
+        $editor->setContent($this->_background);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -91,13 +120,13 @@ class curriculum extends content {
         $table->addCell($editor->showFCKEditor());
         $table->endRow();
 
-        $fieldName = 'Introductory Description';
+        $fieldName = 'introductory_description';
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = $fieldName;
         $editor->height = '150px';
         //$editor->width = '70%';
         $editor->setBasicToolBar();
-        //$editor->setContent($this->getDescription());
+        $editor->setContent($this->_introductory_description);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -113,14 +142,79 @@ class curriculum extends content {
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
 
-        $form_data->addToForm($table->show() . $buttonSubmit->show());
+        $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->_path);
 
         return $form_data->show();
     }
 
     public function init() {
         $this->setType('curriculum');
+        $this->objDbCurricula = $this->getObject('dbcurricula');
     }
+
+    public function handleUpload() {
+        $this->_background = $this->getParam('background');
+        $this->_forward = $this->getParam('forward');
+        $this->_introductory_description = $this->getParam('introductory_description');
+        $this->_title = $this->getParam('title');
+
+        $pathArray = $this->getPathArray();
+
+        if (empty($this->_id)) {
+            $this->_id =  $this->objDbCurricula->addCurriculum(
+                    $pathArray[0], // This is the ID of the product this curruculum is contained in.
+                    $this->_title,
+                    $this->_forward,
+                    $this->_background,
+                    $this->_introductory_description
+                    );
+        }else{
+            $this->objDbCurricula->updateCurriculum(
+                    $this->_id,
+                    $pathArray[0], // This is the ID of the product this curruculum is contained in.
+                    $this->_title,
+                    $this->_forward,
+                    $this->_background,
+                    $this->_introductory_description
+                    );
+        }
+
+        
+
+        return TRUE;
+    }
+
+    public function loadContent($containerID = NULL) {
+        $curriculaData = $this->objDbCurricula->getCurriculaByProductID($containerID);
+        $curriculaArray = array();
+
+        foreach ($curriculaData as $curriculumData){
+            $tempCurriculum = $this->newObject('curriculum');
+            $tempCurriculum->loadCurriculum($curriculumData);
+            array_push($curriculaArray, $tempCurriculum);
+        }
+
+        return $curriculaArray;
+    }
+
+    public function loadCurriculum($id){
+        $dataArray = NULL;
+        if (is_array($id)){
+            $dataArray = $id;
+        }else{
+            $dataArray = $this->objDbCurricula->getCurriculumByID($id);
+        }
+
+        $this->_background = $dataArray['background'];
+        $this->_forward = $dataArray['forward'];
+        $this->_introductory_description = $dataArray['introductory_description'];
+        $this->_id = $dataArray['id'];
+        $this->_title = $dataArray['title'];
+        $this->_path = $dataArray['product_id'];
+
+        //TODO add code for this curriculum's contents
+    }
+
 }
 ?>
 

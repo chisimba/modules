@@ -1838,21 +1838,12 @@ class unesco_oer extends controller {
         $content = $this->getObject('content');
         $product = $this->getObject('product');
 
-        if ($path) {
-            $pathArray = $content->getPathArray($path);
+        if($path)
+        {
+            $pathArray = $content->getPathArray($path); 
             $product->loadProduct($pathArray[0]);
-            if ($product->getContent()) {
-                $this->setVarByRef('content', $product->getContent());
-            } else {
-                //$content->setType($product->getContentType());
-                $content->setPath($product->getIdentifier());
-                $content->setValidTypes(
-                        array(
-                            'curriculum' => $product->getContentTypeDescription()
-                        )
-                );
-                $this->setVarByRef('content', $content);
-            }
+            $content = $product->getContent();
+            $this->setVarByRef('content', $content);
         }
 
         switch ($option) {
@@ -1860,6 +1851,23 @@ class unesco_oer extends controller {
                 $newContent = $content->generateNewContent($path);
                 echo $newContent->showInput();
                 die();
+                break;
+
+            case 'save':
+                $newContent = $content->generateNewContent($path);
+                $newContent->handleUpload();
+                $content->loadContent();
+                return "CreateContent_tpl.php";
+                break;
+
+            case 'edit':
+                echo $content->showInputByContentPath($path);
+                die;
+                break;
+
+            case 'saveedit':
+                $existingContent = $content->getContentByContentPath($path);
+                $existingContent->handleUpload();
                 break;
 
             default:

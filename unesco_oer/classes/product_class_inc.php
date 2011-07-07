@@ -388,6 +388,8 @@ class product extends object
         $this->loadKeyWords($product['id']);
         $this->setDeletionStatus($product['deleted']);
 
+        $this->getContent();
+
         if ($this->isAdaptation())
         {
             $this->loadAdaptationData($this->getIdentifier());
@@ -1002,9 +1004,10 @@ class product extends object
 
         $hiddenInput = new hiddeninput('add_product_submit');
 
-//        $submitOption = ($this->getContent()) ? "'upload'" : "'createContent'"; //NOTE here we add support to create new content
-        $submitOption = ($this->getContent()) ? "'upload'" : "'upload'";
-
+        $content = $this->getContent();
+        $submitOption = ($content->hasContents()) ? "'upload'" : "'createContent'"; //NOTE here we add support to create new content
+//        $submitOption = ($this->getContent()) ? "'upload'" : "'upload'";
+        //$submitOption = 'upload';
         // setup button for submission
         $buttonSubmit = new button('upload', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
@@ -1484,6 +1487,16 @@ class product extends object
 
    function getContent()
    {
+       if (empty($this->_content)){
+           $this->_content = $this->newObject('content');
+           $this->_content->setPath($this->getIdentifier());
+           $this->_content->setValidTypes( //TODO this line should be inside a database or some managing class
+                            array(
+                                'curriculum' => $this->getContentTypeDescription()
+                            )
+                    );
+           $this->_content->loadContent();
+       }
        return $this->_content;
    }
 

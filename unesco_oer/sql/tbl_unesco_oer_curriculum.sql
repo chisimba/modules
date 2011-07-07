@@ -26,7 +26,7 @@ $fields = array(
                 'content'=>array('type'=>'text','length'=>32),
                 'forward'=>array('type' =>'text'),
                 'background'=>array('type' =>'text'),
-                'introductory_description'=>array('type' =>'text'),
-                'calendar' => array('type' =>'text', 'length' => 255)
+                'introductory_description'=>array('type' =>'text')
+                //'calendar' => array('type' =>'text', 'length' => 255)
  		);
 ?>

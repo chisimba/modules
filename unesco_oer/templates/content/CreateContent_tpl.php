@@ -24,30 +24,42 @@ echo $content->showInput($this->getParam('prevAction'));
     $(document).ready(
         function()
         {
-           // $('.root').children().hide();
-        });
-
-//    $('select[name=root_dropdown]').click(
-//        function()
-//        {
-//            $('.root').slideToggle();
-//        });
-
-    $('select[name=new_dropdown]').change(
-    function()
-        {
-            //$('.' + $('select[name=root_dropdown]').val()).slideToggle();
-            switch ($(this).val())
+        $('select[name=new_dropdown]').change(
+        function()
             {
+                //$('.' + $('select[name=root_dropdown]').val()).slideToggle();
+                switch ($(this).val())
+                {
+                    case 'none':
+                        $('.root').html('');
+                        break;
+                    case 'new':
+                        $('.root').show();
+                        break;
+                    default:
+                        $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&path=' + $(this).val());
+                        $('.root').show();
+                        break;
+                }
+            }
+        );
+
+        $('select[name=edit_dropdown]').change(
+        function()
+            {
+                switch ($(this).val()) {
                 case 'none':
                     $('.root').html('');
                     break;
-                case 'new':
+                default:
+                    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=edit&path=' + $(this).val());
                     $('.root').show();
                     break;
-                default:
-                    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&path=' + $(this).val());
-                    $('.root').show();
+                }
+
             }
+        );
+        
         });
+
 </script>

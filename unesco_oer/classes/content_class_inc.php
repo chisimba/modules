@@ -81,6 +81,13 @@ class content extends object
     {
         $html = '';
 
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cssClass = "moduleHeader";
+
+        $newDropHeading = new htmlHeading();
+        $newDropHeading->str = 'Create new content: ';
+        //$html .= $newDropHeading->show();
+
         $dropdown = new dropdown('new_dropdown');
         $dropdown->addOption('none', 'nothing selected');
         foreach ($this->_content_types as $key => $value) {
@@ -88,17 +95,46 @@ class content extends object
         }
         $dropdown->setSelected('none');
 
-        $html .= $dropdown->show();
+        //$html .= $dropdown->show();
+        $table->startRow();
+        $table->addCell($newDropHeading->show() . $dropdown->show());
+        
 
-        $html .= "<div class='root' ></div>";
+        $editDropHeading = new htmlHeading();
+        $editDropHeading->str = 'Edit existing content: ';
+        //$html .= $editDropHeading->show();
 
-        $this->_contents; //TODO Add method to Display existing contents
+        //TODO Add method to Display existing contents
+        if (!empty($this->_contents)){
+            $dropdown = new dropdown('edit_dropdown');
+            $dropdown->addOption('none', 'nothing selected');
+            foreach ($this->_contents as $content) {
+                $dropdown->addOption($content->getFullPath(), $content->getTitle());
+            }
+            $dropdown->setSelected('none');
+
+            //$html .= $dropdown->show();
+
+            $table->addCell($editDropHeading->show() . $dropdown->show());
+        }
+        $table->endRow();
+
+        //$html .= "<div class='root' ></div>";
+
+        $heading = new htmlHeading();
+        $heading->str = 'Create and Edit contents of product:';
+        $heading->type = 1;
 
         $fieldset = $this->newObject('fieldset','htmlelements');
-        $fieldset->setLegend('Test Heading');
-        $fieldset->addContent($html);
+        $fieldset->setLegend('Options:');
+        //$fieldset->addContent($html);
+        $fieldset->addContent($table->show());
 
-        return $fieldset->show();
+        $buttonSubmit = new button('done', 'Done');
+        $actionURI = $this->uri(array('action' => 'ViewProduct', 'id' => $this->getPath()));
+        $buttonSubmit->setOnClick('javascript: window.location=\'' . $actionURI . '\'');
+
+        return '<div id="productmetaheading">'.$heading->show(). '</div>' . $fieldset->show() . "<div class='root' ></div>" . $buttonSubmit->show();
         //return $html;
     }
 
@@ -113,24 +149,19 @@ class content extends object
     }
 
     //
-    public function showInputByContentPath($path)
+    public function showInputByContentPath($path, $level = 0)
     {
-        $array = $this->getPathArray($path);
-        $lastContent = array_pop($array);
-
-        if (strcmp($lastContent, "new") == 0){
-            $content = $this->getObject($this->_content_types[0]);
-            return $content->showInput();
-        }
+        $tempContent = $this->getContentByContentPath($path);
+        return $tempContent->showInput();
     }
 
     public function generateNewContent($contentPath)
     {
         $contentPathArray = $this->getPathArray($contentPath);
         $contentType = array_pop($contentPathArray);
-        $newContent = $this->getObject($contentType);
-
-        $newContentPath = implode('__', $array); //TODO Extract this implode to a human readable function
+        $newContent = $this->newObject($contentType);
+        
+        $newContentPath = implode('__', $contentPathArray); //TODO Extract this implode to a human readable function
         $newContent->setPath($newContentPath);
         return $newContent;
     }
@@ -149,7 +180,26 @@ class content extends object
 
     public function getPathArray($path)
     {
-        return explode("__", $path);
+        if (!empty($path)){
+            return explode("__", $path);
+        }else{
+            return explode("__", $this->getPath());
+        }
+    }
+
+    public function getFullPath()
+    {
+        return $this->getPath() . '__' . $this->getID();
+    }
+
+    public function getPath()
+    {
+        return $this->_path;
+    }
+
+    public function getID()
+    {
+        return $this->_id;
     }
 
     ////////// Setters //////////
@@ -186,6 +236,74 @@ class content extends object
 
     public function init() {
         $this->setType(NULL);
+    }
+
+    /**This is an abstract function intended for use with classes that extend this
+     * content class
+     *
+     *
+     */
+    public function handleUpload() {
+        return FALSE;
+    }
+
+    /**This function must be overridden by inhereting classes. It recieves the ID
+     * of the container containing the contents and returns all instances of said
+     * contents that have the ID as its container.
+     *
+     * @param string $containerID
+     * @return content[]
+     */
+    function loadContent($containerID = NULL) {
+
+        if (empty($containerID)){
+            $id = $this->getID();
+            if (empty($id)) {
+                $containerID = $this->getPath();
+            } else {
+                $containerID = $id;
+            }
+        }
+
+        $this->_contents = array();
+
+        foreach ($this->_content_types as $class => $description) {
+            $tempContent = $this->getObject($class);
+            $tempArray = $tempContent->loadContent($containerID);
+            $this->_contents = array_merge(
+                    $this->_contents,
+                    $tempArray
+                    );
+        }
+
+        return $this->_contents;
+    }
+
+    function getContentByContentPath($path, $level = 0) //TODO think about moving some functionality to a protected method so users can't insert the level
+    {
+        $pathArray = $this->getPathArray($path);
+
+        if (($level == 0) && (strcmp($pathArray[$level], $this->getPath()) == 0)) {
+            foreach ($this->_contents as $content) {
+                $output = $content->getContentByContentPath($path, $level+1);
+                if (!empty($output)) return $output;
+            }
+            //If loop completes, then the content was not found
+            return FALSE;
+        } else {
+            if (strcmp($pathArray[$level], $this->getID()) == 0){
+                return $this;
+            }else{
+                foreach ($this->_contents as $content) {
+                    $output = $content->getContentByContentPath($path, $level+1);
+                    if (!empty($output)) return $output;
+                }
+            }
+        }
+    }
+
+    function hasContents(){
+        return !empty($this->_contents);
     }
 }
 

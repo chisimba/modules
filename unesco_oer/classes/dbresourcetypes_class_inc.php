@@ -40,6 +40,10 @@ class dbresourcetypes extends dbtable {
         return $row['description'];
     }
 
+    function getResourceTypeTable($id){
+        $row = $this->getRow('id', $id);
+        return $row['table_name'];
+    }
 }
 
 ?>
