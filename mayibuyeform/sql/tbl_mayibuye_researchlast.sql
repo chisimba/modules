@@ -44,3 +44,4 @@ $fields = array(
 	        'type' => 'text',
 		'length' => 10
 		));
+?>
