@@ -14,6 +14,10 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+//Display errors
+error_reporting(E_ALL);
+ini_set('display_errors', 'Off');
+
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
@@ -26,7 +30,9 @@ $utility = new adddatautil();
 $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_unesco_oer_theme_heading', 'unesco_oer');
 $header->type = 2;
+echo '<div id="institutionheading">';
 echo $header->show();
+echo '</div>';
 
 // setup table and table headings with input options
 $table = $this->newObject('htmltable', 'htmlelements');
@@ -36,7 +42,7 @@ $title = $this->objLanguage->languageText('mod_unesco_oer_theme_description', 'u
 $utility->addTextInputToTable($title, 4, 'newTheme', 60, '', $table);
 
 $fieldName = 'umbrellatheme';
-$title = $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer');
+$title = $this->objLanguage->languageText('mod_unesco_oer_Umbrellatheme', 'unesco_oer');
 $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
 $utility->addDropDownToTable(
                             $title,
@@ -59,9 +65,13 @@ $table->startRow();
 $table->addCell($button->show() . '&nbsp;' . $BackToControlPanelLink->show());
 $table->endRow();
 
+$subThemeFieldset = $this->newObject('fieldset', 'htmlelements');
+$subThemeFieldset->setLegend("Create sub Theme");
+$subThemeFieldset->addContent($table->show());
+
 //createform, add fields to it and display
 $form_data = new form('createTheme_ui',$this->uri(array('action'=>'createThemeSubmit')));
-$form_data->addToForm($table->show());
+$form_data->addToForm($subThemeFieldset->show());
 echo $form_data->show();
 
 ?>

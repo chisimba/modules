@@ -35,7 +35,7 @@ $header->type = 1;
 $header->cssClass = "manageusers";
 $header->str = "Product Themes";
 echo '<div id="institutionheading">';
-echo $header->show();
+echo $header->show(). '<br><br />';
 
 $buttonUmbrellaTheme = new button('Add UbrellaTheme Button', "Add Umbrella Theme");
 $buttonUmbrellaTheme->setToSubmit();
