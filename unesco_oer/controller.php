@@ -663,13 +663,27 @@ class unesco_oer extends controller {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "createThemeUI_tpl.php";
     }
-    
+
     public function __editTheme() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $themeId = $this->getParam('themeId');
         $this->setVarByRef('themeId', $themeId);
-        
+
         return "createThemeUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createThemeUI_tpl.php page
+     * and add it to the tbl_unesco_oer_product_themes table
+     */
+
+    public function __editThemeSubmit() {
+        $theme = $this->getParam('newTheme');
+        $umbrellaId = $this->getParam('umbrellaTheme');
+        $themeId = $this->getParam('themeId');
+        $subTheme = array("id" => $themeId, "theme" => $theme, "umbrella_theme_id" => $umbrellaId);
+        $this->objDbProductThemes->updateTheme($themeId, $theme, $umbrellaId);
+        return $this->__viewProductThemes();
     }
 
     /*
@@ -1912,8 +1926,6 @@ class unesco_oer extends controller {
         $this->objDbProductThemes->deleteTheme($this->getParam('id'));
         return $this->__viewProductThemes();
     }
-
-    
 
 }
 ?>

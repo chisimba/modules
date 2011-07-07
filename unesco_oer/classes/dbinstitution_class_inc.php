@@ -146,7 +146,7 @@ class dbinstitution extends dbtable {
         $sql = "SELECT puid FROM tbl_unesco_oer_institutions WHERE id = '$id'";
         $tempPuid = $this->getArray($sql);
         $puid = $tempPuid[0]['puid'];
-        echo $puid;
+//        echo $puid;
         return $this->update(
                 'puid',
                 $puid,

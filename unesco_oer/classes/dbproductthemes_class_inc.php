@@ -37,21 +37,12 @@ class dbproductthemes extends dbtable {
     }
 
     function deleteTheme($id) {
-        //Check which table the theme falls under
-        //TODO should also cater for when umbrella theme is deleted, i.e. subthemes should also get deleted
-        $isUmbrella = $this->getArray("SELECT * FROM $this->umbrella_theme_table WHERE id = '$id'");
-        $isSubTheme = $this->getArray("SELECT * FROM $this->_tableName WHERE id = '$id'");
+//If the theme is not an umbrella theme then it must be a subtheme
+        return $this->getArray("DELETE FROM $this->_tableName WHERE id = '$id'");
+    }
 
-        //Now delete the appropriate theme
-        if(count($isUmbrella) > 0){//If the theme id was found in the umbrella table
-            $this->getArray("DELETE FROM $this->umbrella_theme_table WHERE id = '$id'");
-            return true;
-        }elseif (count($isSubTheme) > 0){//If the theme is not an umbrella theme then it must be a subtheme
-            $this->getArray("DELETE FROM $this->_tableName WHERE id = '$id'");
-            return true;
-        }
-        //If the id was not found in either of the tables alert the calling function
-        return false;
+    function deleteUmbrellaTheme($id) {
+        return $this->getArray("DELETE FROM $this->umbrella_theme_table WHERE id = '$id'");
     }
 
     function getThemesByProductID($productID) {
@@ -109,6 +100,13 @@ class dbproductthemes extends dbtable {
         $sql = "DELETE FROM $this->product_theme_jxn_table WHERE product_id = '$productID'";
         //$this->_execute($sql);
         $this->delete('product_id', $productID, $this->product_theme_jxn_table);
+    }
+
+    function updateTheme($id, $theme, $umbrellaId) {
+        return $this->update('id', $id,
+                array('id' => $id,
+                    'theme' => $theme,
+                    'umbrella_theme_id' => $umbrellaId));
     }
 
 }
