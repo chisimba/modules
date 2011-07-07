@@ -353,6 +353,7 @@ class bookmarkmanager extends dbtable {
                                 </div>      
             ";
         }
+        
 
         return $content;
     }
