@@ -86,7 +86,7 @@
 
                         </div>
                     </td>
-                                        <td width="269">
+                    <td width="269">
                         <div id="controlPanelCell">
 
                             <?php
@@ -98,6 +98,21 @@
                             echo '&nbsp;' . $link->show();
                             ?>
 
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="269">
+                        <div id="controlPanelCell">
+
+                            <?php
+                            $link = new link($this->uri(array("action" => 'viewProductTypes')));
+
+                            $link->link = '<img src="skins/unesco_oer/images/product-type.png" alt = "Product Type" height = "55" width = "55">
+                            <br/>
+                            <br/> Product Type';
+                            echo '&nbsp;' . $link->show();
+                            ?>
                         </div>
                     </td>
                 </tr>

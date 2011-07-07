@@ -640,6 +640,7 @@ class unesco_oer extends controller {
      */
 
     public function __newResourceTypeUI() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "newResourceTypeUI_tpl.php";
     }
 
@@ -1963,7 +1964,17 @@ class unesco_oer extends controller {
 
     function __deleteLanguage() {
         $this->objDbProductThemes->deleteTheme($this->getParam('id'));
-        return $this->__viewProductThemes();
+        return $this->__viewLanguages();
+    }
+
+    public function __viewProductTypes() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'viewProductTypes_tpl.php';
+    }
+
+    function __deleteProductType() {
+        $this->objDbProductThemes->deleteTheme($this->getParam('id'));
+        return $this->__viewLanguages();
     }
 
 }

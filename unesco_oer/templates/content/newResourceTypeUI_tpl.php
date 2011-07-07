@@ -32,7 +32,10 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $textinput = new textinput('newTypeDescription');
 $textinput->size = 60;
 $table->startRow();
-$table->addCell('Type Description:');
+$title = $this->objLanguage->languageText('mod_unesco_oer_theme_description', 'unesco_oer');
+$table->addCell($title);
+$table->endRow();
+$table->startRow();
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -41,18 +44,29 @@ $textinput = new textinput('newTypeTable');
 $textinput->size = 60;
 $table->startRow();
 $table->addCell('Type Table Name:');
+$table->endRow();
+$table->startRow();
 $table->addCell($textinput->show());
 $table->endRow();
 
 //input optins for submit button
 $button = new button('submitProductType', "Submit Product Type");
 $button->setToSubmit();
+$controlPannel = new button('backButton', "Cancel");
+$controlPannel->setToSubmit();
+$BackToControlPanelLink = new link($this->uri(array('action' => "viewProductTypes")));
+$BackToControlPanelLink->link = $controlPannel->show();
 $table->startRow();
-$table->addCell($button->show());
+$table->addCell($button->show() . '&nbsp;' . $BackToControlPanelLink->show());
 $table->endRow();
+
+$Legend = $this->objLanguage->languageText('mod_unesco_oer_theme_description', 'unesco_oer');
+$newResourceFieldset = $this->newObject('fieldset', 'htmlelements');
+$newResourceFieldset->setLegend($Legend);
+$newResourceFieldset->addContent($table->show());
 
 //createform, add fields to it and display
 $form_data = new form('newResourceType_ui',$this->uri(array('action'=>'resourceTypeSubmit')));
-$form_data->addToForm($table->show());
+$form_data->addToForm($newResourceFieldset->show());
 echo $form_data->show();
 ?>

@@ -39,7 +39,7 @@ echo $header->show(). '<br><br />';
 
 $buttonLanguage = new button('Add Language Button', "Add Language");
 $buttonLanguage->setToSubmit();
-$addLanguageLink = new link($this->uri(array('action' => "createLanguageUI")));
+$addLanguageLink = new link($this->uri(array('action' => "newResourceTypeUI")));
 $addLanguageLink->link = $buttonLanguage->show();
 $controlPannel = new button('backButton', "Back");
 $controlPannel->setToSubmit();
@@ -84,7 +84,7 @@ if (count(languageList) > 0) {
         $themesTable->startRow();
         //($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
         $themesTable->addCell($language['name'], null, null, null, "user", null, null);
-        
+
         $objIcon->setIcon('edit');
         $editLink = new link($this->uri(array('action' => "editUmbrellaTheme", 'themeId' => $umbrellaTheme['id'])));
         $editLink->link = $objIcon->show();
@@ -109,9 +109,9 @@ echo $fs->show();
 
     jQuery(document).ready(function(){
 
-    jQuery("a[class=deleteLanguage]").click(function(){
+    jQuery("a[class=deleteType]").click(function(){
 
-    var r=confirm( "Are you sure you want to delete this Language?");
+    var r=confirm( "Are you sure you want to delete this Product Type?");
     if(r== true){
     window.location=this.href;
     }

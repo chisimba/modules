@@ -52,6 +52,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 //theme description input options
 $title = $this->objLanguage->languageText('mod_unesco_oer_theme_description', 'unesco_oer');
+
 //$utility->addTextInputToTable($title, 4, 'newUmbrellaTheme', 60, '', $table);
 //Add title to table
 $table->startRow();
