@@ -16,7 +16,14 @@ $js = '<script language="JavaScript" src="' . $this->getResourceUri('ratingsys.j
 $this->appendArrayVar('headerParams', $js);
 ?>
 <div class="breadCrumb">
-    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> |
+    <?php
+    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
+    $abLink->link = 'UNESCO OER Products';
+    $abLink->cssClass = "blueText noUnderline";
+    echo $abLink->show();
+    ?>
+<!--    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> -->
+    |
     <a href="#" class="blueText noUnderline">
         <!--                        Model Curriculum for Journalism Education-->
         <?php

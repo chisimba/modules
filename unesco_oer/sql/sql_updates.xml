@@ -40,7 +40,7 @@
     </update>
     <update>
         <table>tbl_unesco_oer_curriculum</table>
-        <version>0.047</version>
+        <version>0.049</version>
         <description>Remove calender field</description>
         <data>
             <remove>calendar</remove>

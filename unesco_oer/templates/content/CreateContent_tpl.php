@@ -38,7 +38,7 @@ echo '<div class=rightWideColumnDiv style="border: 1px #004e89 solid;">'. $conte
                         $('.root').show();
                         break;
                     default:
-                        $('.root').load('index.php?module -7=unesco_oer&action=saveContent&option=new&path=' + $(this).val());
+                        $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&path=' + $(this).val());
                         $('.root').show();
                         break;
                 }
