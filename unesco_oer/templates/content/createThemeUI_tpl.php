@@ -1,5 +1,6 @@
 <?php
-/* 
+
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -20,8 +21,8 @@ ini_set('display_errors', 'Off');
 
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
-$this->loadClass('htmltable','htmlelements');
-$this->loadClass('textinput','htmlelements');
+$this->loadClass('htmltable', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
 $this->loadClass('adddatautil', 'unesco_oer');
 
 $utility = new adddatautil();
@@ -30,6 +31,16 @@ $utility = new adddatautil();
 $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_unesco_oer_theme_heading', 'unesco_oer');
 $header->type = 2;
+
+//Check if an institution is being edited
+if (isset($themeId)) {
+    $formData = $this->objDbProductThemes->getThemeByID($themeId);
+    $formAction = "editSubThemeSubmit";
+} else {
+    $formData = array();
+    $formAction = "createThemeSubmit";
+}
+
 echo '<div id="institutionheading">';
 echo $header->show();
 echo '</div>';
@@ -39,7 +50,7 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 //theme description input options
 $title = $this->objLanguage->languageText('mod_unesco_oer_theme_description', 'unesco_oer');
-//$utility->addTextInputToTable($title, 4, 'newTheme', 60, '', $table);
+
 $table->startRow();
 $table->addCell($title);
 $table->endRow();
@@ -47,6 +58,7 @@ $table->endRow();
 //required Field
 $table->startRow();
 $newTheme = new textinput('newTheme');
+$newTheme->setValue($formData['theme']);
 $table->addCell($newTheme->show());
 $table->endRow();
 
@@ -56,29 +68,13 @@ $title = $this->objLanguage->languageText('mod_unesco_oer_Umbrellatheme', 'unesc
 $table->addCell($title);
 $table->endRow();
 
-//$table->startRow();
-//$umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
-//$table->addCell($title);
-//$table->endRow();
-
 $table->startRow();
 $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
-$objUmbrellaTheme = new dropdown('user_dropdown');
-$objUmbrellaTheme->addFromDB($umbrellaThemes,'theme','id','none');
+$objUmbrellaTheme = new dropdown('umbrellaTheme');
+$objUmbrellaTheme->addFromDB($umbrellaThemes, 'theme', 'id', $formData['umbrella_theme_id']);
 // $objElement->label='User list';
- $table->addCell($objUmbrellaTheme->show());
- $table->endRow();
-
-//$utility->addDropDownToTable(
-//                            $title,
-//                            4,
-//                            $fieldName,
-//                            $umbrellaThemes,
-//                            '',
-//                            'theme',
-//                            $table,
-//                            'id'
-//                            );
+$table->addCell($objUmbrellaTheme->show());
+$table->endRow();
 
 $button = new button('submitProductType', "Submit Theme");
 $button->setToSubmit();
@@ -95,12 +91,11 @@ $subThemeFieldset->setLegend("Create sub Theme");
 $subThemeFieldset->addContent($table->show());
 
 //createform, add fields to it and display
-$objForm = new form('createTheme_ui',$this->uri(array('action'=>'createThemeSubmit')));
-$objForm->addRule('newTheme','Please enter the name of the subtheme','required');
-$objForm->addRule('theme','Please select an umbrella theme','select');
+$objForm = new form('createTheme_ui', $this->uri(array('action' => $formAction, 'id' => $themeId)));
+$objForm->addRule('newTheme', 'Please enter the name of the subtheme', 'required');
+$objForm->addRule('theme', 'Please select an umbrella theme', 'select');
 $objForm->addToForm($subThemeFieldset->show());
 echo $objForm->show();
-
 ?>
 
 

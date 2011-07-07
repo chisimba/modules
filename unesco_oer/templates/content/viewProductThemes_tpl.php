@@ -92,12 +92,12 @@ if (count($umbrellaThemesList) > 0) {
         $themesTable->addCell('-', null, null, null, "theme", null, null);
 
         $objIcon->setIcon('edit');
-        $editLink = new link($this->uri(array('action' => "editTheme", 'id' => $umbrellaTheme['id'])));
+        $editLink = new link($this->uri(array('action' => "editUmbrellaTheme", 'themeId' => $umbrellaTheme['id'])));
         $editLink->link = $objIcon->show();
         $themesTable->addCell($editLink->show());
 
         $objIcon->setIcon('delete');
-        $deleteLink = new link($this->uri(array('action' => "deleteTheme", 'id' => $umbrellaTheme['id'])));
+        $deleteLink = new link($this->uri(array('action' => "deleteUmbrellaTheme", 'themeId' => $umbrellaTheme['id'])));
         $deleteLink->link = $objIcon->show();
         $deleteLink->cssClass = 'deleteTheme';
         $themesTable->addCell($deleteLink->show());
@@ -113,12 +113,12 @@ if (count($umbrellaThemesList) > 0) {
                 $themesTable->addCell($umbrellaTheme['theme'], null, null, null, "theme", null, null);
 
                 $objIcon->setIcon('edit');
-                $editLink = new link($this->uri(array('action' => "editTheme", 'id' => $subTheme['id'])));
+                $editLink = new link($this->uri(array('action' => "editTheme", 'themeId' => $subTheme['id'])));
                 $editLink->link = $objIcon->show();
                 $themesTable->addCell($editLink->show());
 
                 $objIcon->setIcon('delete');
-                $deleteLink = new link($this->uri(array('action' => "deleteTheme", 'id' => $subTheme['id'])));
+                $deleteLink = new link($this->uri(array('action' => "deleteTheme", 'themeId' => $subTheme['id'])));
                 $deleteLink->link = $objIcon->show();
                 $deleteLink->cssClass = 'deleteTheme';
                 $themesTable->addCell($deleteLink->show());

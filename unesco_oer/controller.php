@@ -664,9 +664,11 @@ class unesco_oer extends controller {
         return "createThemeUI_tpl.php";
     }
     
-    public function __editThemeUI() {
+    public function __editTheme() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
-//        $this->getParam("themeId", "themeId")
+        $themeId = $this->getParam('themeId');
+        $this->setVarByRef('themeId', $themeId);
+        
         return "createThemeUI_tpl.php";
     }
 
@@ -677,7 +679,7 @@ class unesco_oer extends controller {
 
     public function __createThemeSubmit() {
         $description = $this->getParam('newTheme');
-        $umbrella = $this->getParam('umbrellatheme');
+        $umbrella = $this->getParam('umbrellaTheme');
         $this->objDbProductThemes->addTheme($description, $umbrella);
         return $this->__viewProductThemes();
     }
