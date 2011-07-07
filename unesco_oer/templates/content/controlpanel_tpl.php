@@ -10,7 +10,7 @@
                 <tr>
                     <td valign="top" align="middle" width="152">
                         <div id="controlPanelCell">
-                            
+
                             <?php
                             $abLink = new link($this->uri(array("action" => 'home')));
 
@@ -25,7 +25,7 @@
                     <td width="152">
 
                         <div id="controlPanelCell">
-                            
+
                             <?php
                             $link = new link($this->uri(array("action" => 'userListingForm')));
 
@@ -41,7 +41,7 @@
                     </td>
                     <td width="269">
                         <div id="controlPanelCell">
-                             
+
                             <?php
                             $link = new link($this->uri(array("action" => 'groupListingForm')));
 
@@ -58,7 +58,7 @@
                     <td>
 
                         <div id="controlPanelCell">
-                            
+
                             <?php
                             $link = new link($this->uri(array("action" => 'viewInstitutions')));
 
@@ -71,7 +71,22 @@
                         </div>
 
                     </td>
-                   
+
+                    <td width="269">
+                        <div id="controlPanelCell">
+
+                            <?php
+                            $link = new link($this->uri(array("action" => 'viewProductThemes')));
+
+                            $link->link = '<img src="skins/unesco_oer/images/product_theme.png" alt = "Themes" height = "55" width = "55">
+                            <br/>
+                            <br/> Themes';
+                            echo '&nbsp;' . $link->show();
+                            ?>
+
+                        </div>
+                    </td>
+
                 </tr>
             </table>
         </center>

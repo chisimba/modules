@@ -170,58 +170,55 @@ class unesco_oer extends controller {
     public function __3a() {
         return "3a_tpl.php";
     }
-    
-    
+
     public function __Bookmarks() {
         return "Bookmarks_tpl.php";
     }
-    
+
     public function __Bookmarkpop() {
         return "bookmarkpop_tpl.php";
     }
-    
+
     public function __deleteBookmarks() {
-        
-          $users = $this->getParam("selectedusers");
-          $userid = $this->objUser->userId(); 
-         $bookmark = $this->objbookmarkmanager->deleteBookmark($users);
-             
-       
-        
-        
+
+        $users = $this->getParam("selectedusers");
+        $userid = $this->objUser->userId();
+        $bookmark = $this->objbookmarkmanager->deleteBookmark($users);
+
+
+
+
         return "Bookmarks_tpl.php";
     }
-    
-     public function __BookmarkData() {
-        
+
+    public function __BookmarkData() {
+
         $label = $this->getParam('Title');
         $description = $this->getParam('Description');
         $time = $this->getParam('time');
         $url = $this->getParam('location');
-         $parentid = $this->getParam('parentid');
-          $userid = $this->getParam('userid');
-    
+        $parentid = $this->getParam('parentid');
+        $userid = $this->getParam('userid');
 
-        $this->objbookmarkmanager->addBookmark($label, $description, $url,$parentid,$userid);
-        
+
+        $this->objbookmarkmanager->addBookmark($label, $description, $url, $parentid, $userid);
+
         return "Bookmarks_tpl.php";
     }
 
-    
-     public function __Bookmarkupdate() {
-         $bookmarkid = $this->getParam('bookmarkid');
-         $label = $this->getParam('Title');
+    public function __Bookmarkupdate() {
+        $bookmarkid = $this->getParam('bookmarkid');
+        $label = $this->getParam('Title');
         $description = $this->getParam('Description');
         $time = $this->getParam('time');
-          $this->objbookmarkmanager->updateBookmark($label, $description,$bookmarkid,$time);
-       
-             
-       
-        
-        
+        $this->objbookmarkmanager->updateBookmark($label, $description, $bookmarkid, $time);
+
+
+
+
+
         return "Bookmarks_tpl.php";
     }
-
 
     public function __4() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -267,28 +264,22 @@ class unesco_oer extends controller {
 
     public function __JavaFilter() {
 
-           $temp = $this->objjavafilt->replaceprods();
+        $temp = $this->objjavafilt->replaceprods();
         echo $temp;
-        
-       
     }
 
-    
     public function __JavaFilternum() {
 
 
 
         $temp = $this->objjavafilt->displayprods();
         echo $temp;
-        
-           
+
+
 
         die();
     }
 
-   
-    
-    
     public function __PaginationFilter() {
 
 
@@ -472,11 +463,11 @@ class unesco_oer extends controller {
 
     public function requiresLogin($action) {
 
-        if($action == null){
+        if ($action == null) {
             return FALSE;
         }
-        $required = array('filterproducts','viewproduct');
-        
+        $required = array('filterproducts', 'viewproduct');
+
         if (in_array($action, $required)) {
             return FALSE;
         } else {
@@ -860,9 +851,9 @@ class unesco_oer extends controller {
 
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         $fileInfoArray = array();
-        if(!$this->objThumbUploader->isFileValid($fileInfoArray)){
-        $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
-        $validate['thumbnail'] = "Please provide a valid thumbnail";
+        if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
+            $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
+            $validate['thumbnail'] = "Please provide a valid thumbnail";
         }
 
         if ($validate['valid']) {
@@ -1067,9 +1058,9 @@ class unesco_oer extends controller {
 
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         $fileInfoArray = array();
-        if(!$this->objThumbUploader->isFileValid($fileInfoArray)){
-        $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
-        $validate['thumbnail'] = "Please provide a valid thumbnail";
+        if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
+            $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
+            $validate['thumbnail'] = "Please provide a valid thumbnail";
         }
 
         if ($validate['valid']) {
@@ -1216,60 +1207,57 @@ class unesco_oer extends controller {
 //            $password,
 //            $repeatpassword
 //        );
-        
         // now differentiate if registration is by user or Admin
         //replace the code
-           $checkFields='';
-         if($this->objUser->isAdmin()){
-             $checkFields = array(
-                 $captcha,
-                 $username,
-                 $firstname,
-                 $surname,
-                 $email,
-                 $repeatemail,
-                 $password,
-                 $repeatpassword
-                 );
-           }else{
-               $checkFields = array(
-                   $captcha,
-                   $username,
-                   $firstname,
-                   $surname,
-                   $email,
-                   $repeatemail,
-                   $password,
-                   $repeatpassword,
-                   $address,
-                   $city,
-                   $state,
-                   $postaladdress
-                   );
-           }//
-
+        $checkFields = '';
+        if ($this->objUser->isAdmin()) {
+            $checkFields = array(
+                $captcha,
+                $username,
+                $firstname,
+                $surname,
+                $email,
+                $repeatemail,
+                $password,
+                $repeatpassword
+            );
+        } else {
+            $checkFields = array(
+                $captcha,
+                $username,
+                $firstname,
+                $surname,
+                $email,
+                $repeatemail,
+                $password,
+                $repeatpassword,
+                $address,
+                $city,
+                $state,
+                $postaladdress
+            );
+        }//
         // Create an Array to store problems
         $problems = array();
-        
+
         //check that the resiter is not a user manager
-        if(!$this->objUser->isAdmin()){
-            if($address ==''){
-                $problems[]='noAddress';
+        if (!$this->objUser->isAdmin()) {
+            if ($address == '') {
+                $problems[] = 'noAddress';
             }
 
-            if($city == ''){
-                $problems[]='noCity';
+            if ($city == '') {
+                $problems[] = 'noCity';
             }
 
-            if($state ==''){
-                $problems[]='noState';
+            if ($state == '') {
+                $problems[] = 'noState';
             }
-            if ($postaladdress==''){
-                $problems[]='noPostalCode';
+            if ($postaladdress == '') {
+                $problems[] = 'noPostalCode';
             }
         }
         //
-
         // Check that username is available
         if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
             $problems[] = 'usernametaken';
@@ -1301,18 +1289,17 @@ class unesco_oer extends controller {
         // If there are problems, present from to user to fix
         if (count($problems) > 0) {
             //check that is admin
-            if(!$this->objUser->isAdmin()){
+            if (!$this->objUser->isAdmin()) {
                 $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 $this->setVar('mode', 'addfixup');
                 $this->setVarByRef('problems', $problems);
                 return 'RegistrationForm_tpl.php';
-
-            }else{
+            } else {
                 $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 $this->setVar('mode', 'addfixup');
                 $this->setVarByRef('problems', $problems);
                 return 'userRegistration_tpl.php';
-                }
+            }
 
 //
 //            $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -1332,14 +1319,14 @@ class unesco_oer extends controller {
 //Now differentiate if registration is by user or Admin
 //and replace the  code
 //
-            if($this->objUser->isAdmin()){
+            if ($this->objUser->isAdmin()) {
                 return $this->__userListingForm();
-            }else{
-              $this->setSession('id', $pkid);
-              $this->setSession('password', $password);
-              $this->setSession('time', $password);
-              return $this->nextAction('detailssent');
-              }
+            } else {
+                $this->setSession('id', $pkid);
+                $this->setSession('password', $password);
+                $this->setSession('time', $password);
+                return $this->nextAction('detailssent');
+            }
 //
             //$this->setSession('id', $pkid);
             //$this->setSession('password', $password);
@@ -1349,11 +1336,9 @@ class unesco_oer extends controller {
         }
     }
 
-
-    function __RegistrationForm(){
+    function __RegistrationForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'RegistrationForm_tpl.php';
-
     }
 
     function __editUserDetailsForm() {
@@ -1369,26 +1354,24 @@ class unesco_oer extends controller {
 
 //search user by username or by name
     function __searchUser() {
-        if($this->getParam('search') ==''){
+        if ($this->getParam('search') == '') {
             return $this->__userListingForm();
-            }
-            else{
+        } else {
 
-        if(count($this->objUseExtra->searchUserByUsername($this->getParam('search')))>0) {
+            if (count($this->objUseExtra->searchUserByUsername($this->getParam('search'))) > 0) {
                 $user = $this->objUseExtra->searchUserByUsername($this->getParam('search')); //search user by username
                 $this->setVar('user', $user);
                 $this->setvar('mode', 'addfixup');
                 $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 return 'UserListingForm_tpl.php';
-            }else{
-                if(count($this->objUseExtra->searchUserByName($this->getParam('search')))>0){
-                $user = $this->objUseExtra->searchUserByName($this->getParam('search')); //search user by name
-                $this->setVar('user', $user);
-                $this->setvar('mode', 'addfixup');
-                $this->setLayoutTemplate('maincontent_layout_tpl.php');
-                return 'UserListingForm_tpl.php';
-            }
-            
+            } else {
+                if (count($this->objUseExtra->searchUserByName($this->getParam('search'))) > 0) {
+                    $user = $this->objUseExtra->searchUserByName($this->getParam('search')); //search user by name
+                    $this->setVar('user', $user);
+                    $this->setvar('mode', 'addfixup');
+                    $this->setLayoutTemplate('maincontent_layout_tpl.php');
+                    return 'UserListingForm_tpl.php';
+                }
             }
         }
     }
@@ -1444,7 +1427,7 @@ class unesco_oer extends controller {
         $checkFields = array($firstname, $surname, $email);
 
         $results = array();
-       
+
         // Check Fields
         if (!$this->__checkFields($checkFields)) {
             $this->setVar('mode', 'addfixup');
@@ -1552,7 +1535,6 @@ class unesco_oer extends controller {
 //                return 'Please provide your residential state';
 //            case 'noPostalCode':
 //                return 'please provide your postal code';
-           
         }
     }
 
@@ -1635,13 +1617,13 @@ class unesco_oer extends controller {
             $loclong
         );
 
-         $problems = array();
+        $problems = array();
 
         if (!$this->__checkFields($checkFields)) {
             $problems[] = 'missingfields';
         }
 
-    
+
 //        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
 //            $problems[] = 'emailtaken';
 //        }
@@ -1649,19 +1631,17 @@ class unesco_oer extends controller {
             $problems[] = 'emailnotvalid';
         }
 
-        if(count($problems) > 0){
+        if (count($problems) > 0) {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->setVar('mode', 'addfixup');
             $this->setVarByRef('problems', $problems);
             return 'groupRegistrationForm_tpl.php';
-
-        }else{
-            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description,$thumbnail);
+        } else {
+            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return 'groupListingForm_tpl.php';
-
         }
- }
+    }
 
     function __groupEditingForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -1714,16 +1694,16 @@ class unesco_oer extends controller {
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
-        if(count($problems) > 0){
+        if (count($problems) > 0) {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->setVar('mode', 'addfixup');
             $this->setVarByRef('problems', $problems);
             return 'groupEditingForm_tpl.php';
-        }else{
-            $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description,$thumbnail);
+        } else {
+            $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return 'groupListingForm_tpl.php';
-           }
+        }
 //        $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
 //        $this->setLayoutTemplate('maincontent_layout_tpl.php');
 //        return 'groupListingForm_tpl.php';
@@ -1742,14 +1722,15 @@ class unesco_oer extends controller {
      */
 
     public function __saveProductMetaData() {
-        $defaultTemplate = "ProductMetaData_tpl.php";echo "gdsgdf";
+        $defaultTemplate = "ProductMetaData_tpl.php";
+        echo "gdsgdf";
         $product = $this->getObject('product');
-        
+
         //test for edit
-        if ($this->getParam('productID')){
+        if ($this->getParam('productID')) {
             $product->loadProduct($this->getParam('productID'));
         }
-            
+
         $this->setVarByRef('product', $product);
 
         switch (strtolower($this->getParam('add_product_submit'))) {
@@ -1789,8 +1770,7 @@ class unesco_oer extends controller {
 
         $currentFeaturedProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
 
-        if ($currentFeaturedProductID == $productID)
-        {
+        if ($currentFeaturedProductID == $productID) {
             $filter = " where parent_id is null and deleted = 0";
             $lastProductEntered = $this->objDbProducts->getLastEntry($filter, 'puid');
             $this->objDbFeaturedProduct->overRightCurrentFeaturedProduct($lastProductEntered[0]['id']);
@@ -1807,16 +1787,14 @@ class unesco_oer extends controller {
         return "ProductMetaData_tpl.php";
     }
 
-    function __saveContent()
-    {
+    function __saveContent() {
         $path = $this->getParam('path');
         $option = $this->getParam('option');
         $content = $this->getObject('content');
         $product = $this->getObject('product');
 
-        if($path)
-        {            
-            $pathArray = $content->getPathArray($path);            
+        if ($path) {
+            $pathArray = $content->getPathArray($path);
             $product->loadProduct($pathArray[0]);
             if ($product->getContent()) {
                 $this->setVarByRef('content', $product->getContent());
@@ -1842,7 +1820,7 @@ class unesco_oer extends controller {
             default:
                 break;
         }
-        
+
 
         return "CreateContent_tpl.php";
     }
@@ -1907,8 +1885,6 @@ class unesco_oer extends controller {
 
     public function __mypage() {
         //$this->setLayoutTemplate('maincontent_layout_tpl.php');
-
-
         return "myPage_tpl.php";
     }
 
@@ -1917,6 +1893,16 @@ class unesco_oer extends controller {
         return $url;
     }
 
-}
+    public function __viewProductThemes() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'viewProductThemes_tpl.php';
+    }
 
+    function __deleteTheme() {
+        $this->objUserAdmin->apiUserDelete($this->getParam('id'));
+        $this->objUseExtra->deleteUser($this->getParam('id'), $this->getParam('userid'));
+        return $this->__userListingForm();
+    }
+
+}
 ?>
