@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,17 +22,27 @@ ini_set('display_errors', 'On');
 
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
-$this->loadClass('htmltable','htmlelements');
-$this->loadClass('textinput','htmlelements');
+$this->loadClass('htmltable', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
 $this->loadClass('adddatautil', 'unesco_oer');
 
 
 //$utility = new adddatautil();
-
 // setup and show heading
 $header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_unesco_oer_theme_heading', 'unesco_oer');
 $header->type = 2;
+
+//Check if an institution is being edited
+if (isset($themeId)) {
+    $formData = $this->objDbProductThemes->getUmbrellaThemeByID($themeId);
+    $formAction = "editUmbrellaThemeSubmit";
+    $header->str = $this->objLanguage->languageText('mod_unesco_oer_Edit_theme_heading', 'unesco_oer');
+} else {
+    $header->str = $this->objLanguage->languageText('mod_unesco_oer_theme_heading', 'unesco_oer');
+    $formData = array();
+    $formAction = "createUmbrellaThemeSubmit";
+}
+
 echo '<div id="institutionheading">';
 echo $header->show();
 echo '</div>';
@@ -50,6 +61,7 @@ $table->endRow();
 //required Field
 $table->startRow();
 $newUmbrellaTheme = new textinput('newUmbrellaTheme');
+$newUmbrellaTheme->setValue($formData['theme']);
 $table->addCell($newUmbrellaTheme->show());
 $table->endRow();
 //$newUmbrellaTheme->label='Name(must be filled out)';
@@ -71,12 +83,11 @@ $umbrellaThemeFieldset->setLegend("Create Umbrella Theme");
 $umbrellaThemeFieldset->addContent($table->show());
 
 //createform, add fields to it and display
-$objForm = new form('createTheme_ui',$this->uri(array('action'=>'createUmbrellaThemeSubmit')));
+$objForm = new form('createTheme_ui', $this->uri(array('action' => 'createUmbrellaThemeSubmit')));
 //Add a rule for validating the field
-$objForm->addRule('newUmbrellaTheme','Please enter the name of the Umbrella theme','required');
+$objForm->addRule('newUmbrellaTheme', 'Please enter the name of the Umbrella theme', 'required');
 $objForm->addToForm($umbrellaThemeFieldset->show());
 echo $objForm->show();
-
 ?>
 
 

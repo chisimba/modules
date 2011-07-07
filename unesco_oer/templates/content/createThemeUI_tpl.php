@@ -36,9 +36,11 @@ $header->type = 2;
 if (isset($themeId)) {
     $formData = $this->objDbProductThemes->getThemeByID($themeId);
     $formAction = "editSubThemeSubmit";
+    $header->str = $this->objLanguage->languageText('mod_unesco_oer_edit_theme_heading', 'unesco_oer');
 } else {
     $formData = array();
     $formAction = "createThemeSubmit";
+    $header->str = $this->objLanguage->languageText('mod_unesco_oer_theme_heading', 'unesco_oer');
 }
 
 echo '<div id="institutionheading">';

@@ -681,7 +681,6 @@ class unesco_oer extends controller {
         $theme = $this->getParam('newTheme');
         $umbrellaId = $this->getParam('umbrellaTheme');
         $themeId = $this->getParam('themeId');
-        $subTheme = array("id" => $themeId, "theme" => $theme, "umbrella_theme_id" => $umbrellaId);
         $this->objDbProductThemes->updateTheme($themeId, $theme, $umbrellaId);
         return $this->__viewProductThemes();
     }
@@ -705,6 +704,26 @@ class unesco_oer extends controller {
     public function __createUmbrellaThemeUI() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "createUmbrellaThemeUI_tpl.php";
+    }
+
+    public function __editUmbrellaTheme() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $themeId = $this->getParam('themeId');
+        $this->setVarByRef('themeId', $themeId);
+
+        return "createUmbrellaThemeUI_tpl.php";
+    }
+
+    /*
+     * Method to retrieve entries from user on the createThemeUI_tpl.php page
+     * and add it to the tbl_unesco_oer_product_themes table
+     */
+
+    public function __editUmbrellaThemeSubmit() {
+        $theme = $this->getParam('newUmbrellaTheme');
+        $themeId = $this->getParam('themeId');
+        $this->objDbProductThemes->updateUmbrellaTheme($themeId, $theme);
+        return $this->__viewProductThemes();
     }
 
     /*

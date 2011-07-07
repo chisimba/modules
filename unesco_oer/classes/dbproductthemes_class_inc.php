@@ -70,6 +70,12 @@ class dbproductthemes extends dbtable {
         return $row;
     }
 
+    function getUmbrellaThemeByID($id) {
+        $sql = "SELECT * FROM $this->umbrella_theme_table where id = '$id'";
+        $row = $this->getArray($sql);
+        return $row[0];
+    }
+
     function addTheme($themeName, $umbrellID = NULL) {
         $data = array(
             'theme' => $themeName,
@@ -107,6 +113,15 @@ class dbproductthemes extends dbtable {
                 array('id' => $id,
                     'theme' => $theme,
                     'umbrella_theme_id' => $umbrellaId));
+    }
+
+    function updateUmbrellaTheme($id, $theme) {
+        $data = array(
+            'id' => $id,
+            'theme' => $theme
+        );
+
+        $this->update('id', $id, $data, $this->umbrella_theme_table);
     }
 
 }
