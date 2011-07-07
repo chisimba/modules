@@ -653,7 +653,7 @@ class unesco_oer extends controller {
         $description = $this->getParam('newTypeDescription');
         $table = $this->getParam('newTypeTable');
         $this->objDbResourceTypes->addType($description, $table);
-        return $this->__addData();
+        return $this->__viewProductTypes();
     }
 
     /*
@@ -782,7 +782,7 @@ class unesco_oer extends controller {
             $code = $name;
 
         $this->objDbProductLanguages->addLanguage($code, $name);
-        return $this->__addData();
+        return $this->__viewLanguages();
     }
 
     /*

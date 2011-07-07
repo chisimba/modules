@@ -42,14 +42,14 @@ $table->addCell($textinput->show());
 $table->endRow();
 
 //input options for resource table
-$textinput = new textinput('newTypeTable');
-$textinput->size = 60;
-$table->startRow();
-$table->addCell('Type Table Name:');
-$table->endRow();
-$table->startRow();
-$table->addCell($textinput->show());
-$table->endRow();
+//$textinput = new textinput('newTypeTable');
+//$textinput->size = 60;
+//$table->startRow();
+//$table->addCell('Type Table Name:');
+//$table->endRow();
+//$table->startRow();
+//$table->addCell($textinput->show());
+//$table->endRow();
 
 //input optins for submit button
 $button = new button('submitProductType', "Submit Product Type");

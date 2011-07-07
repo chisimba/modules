@@ -20,7 +20,7 @@
 
 //Display errors
 error_reporting(E_ALL);
-ini_set('display_errors', 'On');
+ini_set('display_errors', 'Off');
 
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
@@ -37,7 +37,8 @@ $header->str = "mod_unesco_oer_add_data_newLanguage";
 echo '<div id="institutionheading">';
 echo $header->show(). '<br><br />';
 
-$buttonLanguage = new button('Add Language Button', "Add Language");
+$buttonTitle = $this->objLanguage->languageText('mod_unesco_oer_add_data_newProductType', 'unesco_oer');
+$buttonLanguage = new button('Add Language Button', $buttonTitle);
 $buttonLanguage->setToSubmit();
 $addLanguageLink = new link($this->uri(array('action' => "newResourceTypeUI")));
 $addLanguageLink->link = $buttonLanguage->show();
@@ -71,27 +72,27 @@ $themesTable->cellpadding = '0';
 
 $themesTable->startHeaderRow();
 //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
-$themesTable->addHeaderCell('Language', null, null, left, "userheader", null);
+$themesTable->addHeaderCell('Product type', null, null, left, "userheader", null);
 $themesTable->addHeaderCell('Edit', null, null, left, "userheader", null);
 $themesTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 $themesTable->endHeaderRow();
 
 //get languages from the database
-$languageList = $this->objDbProductLanguages->getProductLanguages();
+$productTypesList = $this->objDbResourceTypes->getResourceTypes();
 
-if (count(languageList) > 0) {
-    foreach (languageList as $language) {
+if (count($productTypesList) > 0) {
+    foreach ($productTypesList as $productType) {
         $themesTable->startRow();
         //($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-        $themesTable->addCell($language['name'], null, null, null, "user", null, null);
+        $themesTable->addCell($productType['description'], null, null, null, "user", null, null);
 
         $objIcon->setIcon('edit');
-        $editLink = new link($this->uri(array('action' => "editUmbrellaTheme", 'themeId' => $umbrellaTheme['id'])));
+        $editLink = new link($this->uri(array('action' => "editProductType", 'productTypeId' => $productType['id'])));
         $editLink->link = $objIcon->show();
         $themesTable->addCell($editLink->show());
 
         $objIcon->setIcon('delete');
-        $deleteLink = new link($this->uri(array('action' => "deleteUmbrellaTheme", 'themeId' => $umbrellaTheme['id'])));
+        $deleteLink = new link($this->uri(array('action' => "deleteProductType", 'productTypeId' => $productType['id'])));
         $deleteLink->link = $objIcon->show();
         $deleteLink->cssClass = 'deleteTheme';
         $themesTable->addCell($deleteLink->show());
@@ -101,7 +102,7 @@ if (count(languageList) > 0) {
 
 
 $fs = new fieldset();
-$fs->setLegend("Themes");
+$fs->setLegend("Product types");
 $fs->addContent($themesTable->show());
 echo $fs->show();
 ?>
