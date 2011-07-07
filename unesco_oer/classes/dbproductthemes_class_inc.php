@@ -37,12 +37,14 @@ class dbproductthemes extends dbtable {
     }
 
     function deleteTheme($id) {
+        $sql = "DELETE FROM $this->_tableName WHERE id = '$id'";
 //If the theme is not an umbrella theme then it must be a subtheme
-        return $this->getArray("DELETE FROM $this->_tableName WHERE id = '$id'");
+        return $this->getArray($sql);
     }
 
     function deleteUmbrellaTheme($id) {
-        return $this->getArray("DELETE FROM $this->umbrella_theme_table WHERE id = '$id'");
+        $sql = "DELETE FROM $this->umbrella_theme_table WHERE id = '$id'";
+        return $this->getArray($sql);
     }
 
     function getThemesByProductID($productID) {

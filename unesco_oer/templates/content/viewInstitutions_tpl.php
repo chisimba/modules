@@ -1,3 +1,4 @@
+<div class="mainWrapper">
 <?php
 //Display errors
 error_reporting(E_ALL);
@@ -26,6 +27,7 @@ ini_set('display_errors', 'Off');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
+
 
 // setup and show heading
 $header = new htmlheading();
@@ -119,8 +121,10 @@ $fieldset1->setLegend('Institution List');
 $fieldset1->addContent($content);
 echo $fieldset1->show();
 
+
 //echo $myTable->show();
 ?>
+</div>
 <script type="text/javascript">
 
     jQuery(document).ready(function(){

@@ -32,10 +32,10 @@ $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_unesco_oer_theme_heading', 'unesco_oer');
 $header->type = 2;
 
-//Check if an institution is being edited
+//Check if an the theme is being edited
 if (isset($themeId)) {
     $formData = $this->objDbProductThemes->getThemeByID($themeId);
-    $formAction = "editSubThemeSubmit";
+    $formAction = "editThemeSubmit";
     $header->str = $this->objLanguage->languageText('mod_unesco_oer_edit_theme_heading', 'unesco_oer');
 } else {
     $formData = array();
@@ -93,7 +93,7 @@ $subThemeFieldset->setLegend("Create sub Theme");
 $subThemeFieldset->addContent($table->show());
 
 //createform, add fields to it and display
-$objForm = new form('createTheme_ui', $this->uri(array('action' => $formAction, 'id' => $themeId)));
+$objForm = new form('createTheme_ui', $this->uri(array('action' => $formAction, 'themeId' => $themeId)));
 $objForm->addRule('newTheme', 'Please enter the name of the subtheme', 'required');
 $objForm->addRule('theme', 'Please select an umbrella theme', 'select');
 $objForm->addToForm($subThemeFieldset->show());

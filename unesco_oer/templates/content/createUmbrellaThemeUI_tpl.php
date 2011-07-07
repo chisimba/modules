@@ -32,7 +32,7 @@ $this->loadClass('adddatautil', 'unesco_oer');
 $header = new htmlHeading();
 $header->type = 2;
 
-//Check if an institution is being edited
+//Check if an the umbrella theme is being edited
 if (isset($themeId)) {
     $formData = $this->objDbProductThemes->getUmbrellaThemeByID($themeId);
     $formAction = "editUmbrellaThemeSubmit";

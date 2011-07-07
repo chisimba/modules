@@ -682,7 +682,9 @@ class unesco_oer extends controller {
         $theme = $this->getParam('newTheme');
         $umbrellaId = $this->getParam('umbrellaTheme');
         $themeId = $this->getParam('themeId');
+
         $this->objDbProductThemes->updateTheme($themeId, $theme, $umbrellaId);
+        
         return $this->__viewProductThemes();
     }
 
@@ -1839,9 +1841,8 @@ class unesco_oer extends controller {
         $content = $this->getObject('content');
         $product = $this->getObject('product');
 
-        if($path)
-        {
-            $pathArray = $content->getPathArray($path); 
+        if ($path) {
+            $pathArray = $content->getPathArray($path);
             $product->loadProduct($pathArray[0]);
             $content = $product->getContent();
             $this->setVarByRef('content', $content);
@@ -1953,10 +1954,15 @@ class unesco_oer extends controller {
     }
 
     function __deleteTheme() {
-        $this->objDbProductThemes->deleteTheme($this->getParam('id'));
+        $this->objDbProductThemes->deleteTheme($this->getParam('themeId'));
         return $this->__viewProductThemes();
     }
-    
+
+    function __deleteUmbrellaTheme() {
+        $this->objDbProductThemes->deleteUmbrellaTheme($this->getParam('themeId'));
+        return $this->__viewProductThemes();
+    }
+
     public function __viewLanguages() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'viewLanguages_tpl.php';
