@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the
  * Free Software Foundation, Inc.,
@@ -15,7 +15,8 @@
  */
 
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
-echo $content->showInput($this->getParam('prevAction'));
+echo '<div class=leftColumnDiv style="border: 1px #004e89 solid;" >'. '<h1>This is just a filler</h1> ' . '</div>';
+echo '<div class=rightWideColumnDiv style="border: 1px #004e89 solid;">'. $content->showInput($this->getParam('prevAction')) . "</div>";
 
 ?>
 
@@ -37,7 +38,7 @@ echo $content->showInput($this->getParam('prevAction'));
                         $('.root').show();
                         break;
                     default:
-                        $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&path=' + $(this).val());
+                        $('.root').load('index.php?module -7=unesco_oer&action=saveContent&option=new&path=' + $(this).val());
                         $('.root').show();
                         break;
                 }
