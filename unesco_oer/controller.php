@@ -762,6 +762,7 @@ class unesco_oer extends controller {
      */
 
     public function __createLanguageUI() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "createLanguageUI_tpl.php";
     }
 
@@ -771,6 +772,7 @@ class unesco_oer extends controller {
      */
 
     public function __createLanguageSubmit() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $code = $this->getParam('newLanguageCode');
         $name = $this->getParam('newLanguageName');
         if (strlen($code) == 0)
@@ -1942,6 +1944,16 @@ class unesco_oer extends controller {
     }
 
     function __deleteTheme() {
+        $this->objDbProductThemes->deleteTheme($this->getParam('id'));
+        return $this->__viewProductThemes();
+    }
+    
+    public function __viewLanguages() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'viewLanguages_tpl.php';
+    }
+
+    function __deleteLanguage() {
         $this->objDbProductThemes->deleteTheme($this->getParam('id'));
         return $this->__viewProductThemes();
     }

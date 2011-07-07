@@ -86,7 +86,20 @@
 
                         </div>
                     </td>
+                                        <td width="269">
+                        <div id="controlPanelCell">
 
+                            <?php
+                            $link = new link($this->uri(array("action" => 'viewLanguages')));
+
+                            $link->link = '<img src="skins/unesco_oer/images/icon-languages.png" alt = "Languages">
+                            <br/>
+                            <br/> Languages';
+                            echo '&nbsp;' . $link->show();
+                            ?>
+
+                        </div>
+                    </td>
                 </tr>
             </table>
         </center>
