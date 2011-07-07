@@ -946,12 +946,12 @@ $this->setVarByRef('bodyParams',$bodyParams);
     * @param string $returnId  Record ID of the term, redirect to show images for term
     *
     */
-    private function deleteImage ($imageFileId, $returnId)
+    private function deleteImage ($id, $returnId)
     {
 
-        $this->objGlossaryImages->deleteImage($imageFileId);
+        $this->objGlossaryImages->deleteImage($id);
 
-        $this->objUploadDB->deleteFile($imageFileId);
+        //$this->objUploadDB->deleteFile($imageFileId);
 
 
         return $this->nextAction('listimages', array('id' => $returnId));

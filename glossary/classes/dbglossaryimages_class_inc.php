@@ -28,7 +28,7 @@ class dbglossaryimages extends dbTable
     public function init() {
         parent::init('tbl_glossary_images');
     }
-    
+
     /**
 	* Method to get a list of images for a particular term
 	*
@@ -37,13 +37,13 @@ class dbglossaryimages extends dbTable
 	*/
     public function getListImage($id)
     {
-        $sql = "SELECT *, tbl_glossary_images.id as imageid FROM tbl_glossary_images 
-        INNER JOIN tbl_files ON ( tbl_glossary_images.image = tbl_files.id ) 
+        $sql = "SELECT *, tbl_glossary_images.id as imageid FROM tbl_glossary_images
+        INNER JOIN tbl_files ON ( tbl_glossary_images.image = tbl_files.id )
         WHERE item_id = '".$id."'";
-        
+
         return $this->getArray ($sql);
     }
-    
+
     /**
 	* Method to fetch a row from the database
 	*
@@ -62,10 +62,10 @@ class dbglossaryimages extends dbTable
                 'userid' => $userId,
                 'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
         ));
-        
+
         return;
     }
-    
+
     /**
 	* Method to delete an image from the database
     *
@@ -74,9 +74,9 @@ class dbglossaryimages extends dbTable
 	*
 	* @param string $id: Record ID of the Image
 	*/
-    public function deleteImage ($imageId)
+    public function deleteImage ($id)
     {
-        return $this->delete('item_id', $imageId);
+        return $this->delete('id', $id);
     }
 
 

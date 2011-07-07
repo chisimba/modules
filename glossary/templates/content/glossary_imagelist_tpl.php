@@ -34,31 +34,31 @@ if (count($images) == 0)
 foreach ($images AS $image)
 {
     $listTable->startRow();
-    
+
     $link = $this->uri(array('action' => 'previewimage', 'id' => $image['image'], 'fname' => $image['filename']));
-    
-    
+
+
     $objPop->set('location',$link);
     $objPop->set('window_name','previewImage');
     $objPop->set('linktext',$image['caption']);
-    $objPop->set('width','10'); 
+    $objPop->set('width','10');
     $objPop->set('height','10');
     $objPop->set('left','100');
     $objPop->set('top','100');
-    
+
     $objConfirm=&$this->newObject('confirm','utilities');
-        
-    $url = $this->uri(array('action'=>'deleteimage', 'id' => $image['image'], 'returnid' => $id	)); 
-    
+
+    $url = $this->uri(array('action'=>'deleteimage', 'id' => $image['imageid'], 'returnid' => $id	)); //$image['image']
+
     $objConfirm->setConfirm($objIcon->show(),$url,$this->objLanguage->languageText('mod_glossary_areyousuredeleteimage', 'glossary'));
-    
+
     //echo ('<li>'.$image['filename'].'</li>');
-    
+
     $listTable->addCell($objPop->show());
     $listTable->addCell($objConfirm->show());
-    
+
     //echo ('<li>'.$objPop->show().' '.$objConfirm->show().'</li>');
-    
+
     $listTable->endRow();
 }
 
@@ -67,10 +67,10 @@ echo $listTable->show();
 //echo ('</ul>');
 
 $form = new form('uploadimage', $this->uri(array(
-		'module' => 'glossary', 
+		'module' => 'glossary',
 		'action' => 'uploadimage'
 	)));
-    
+
 $form->extra = 'enctype="multipart/form-data"';
 
 
@@ -115,13 +115,13 @@ $table->addCell($submitButton->show());
 
 $table->endRow();
 
-$form->addToForm($table->show());   
-$form->addRule('caption',$this->objLanguage->languageText('mod_glossary_caption_validation', 'glossary'),'required'); 
+$form->addToForm($table->show());
+$form->addRule('caption',$this->objLanguage->languageText('mod_glossary_caption_validation', 'glossary'),'required');
 
 /*
 $form->addRule(array('name'=>'caption','length'=>15), 'Your surname is too long', 'maxlength');
 $form->addRule('caption','Please enter your name','required');
 $form->addRule('userFile','Please enter your name','required');
 */
-echo $form->show();  
+echo $form->show();
 ?>
