@@ -139,9 +139,12 @@
 
         $tableinstitutioninfo->startRow();
         $institutionTypes = $this->objDbInstitutionType->getInstitutionTypes();
-        $this->_objAddDataUtil->addDropDownToRow(
-                'type', $institutionTypes, $formData['type'], 'type', $tableinstitutioninfo, 'id'
-        );
+//        $this->_objAddDataUtil->addDropDownToRow(
+//                'type', $institutionTypes, $formData['type'], 'type', $tableinstitutioninfo, 'id'
+//        );
+        $objInstitutionTypesdd = new dropdown('type');
+        $objInstitutionTypesdd->addFromDB($institutionTypes, 'type', 'id', $formData['type']);
+        $tableinstitutioninfo->addCell($objInstitutionTypesdd->show());
 
         $tableinstitutioninfo->endRow();
 
