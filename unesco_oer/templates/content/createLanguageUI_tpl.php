@@ -31,21 +31,13 @@ echo $header->show();
 // setup table and table headings with input options
 $table = $this->newObject('htmltable', 'htmlelements');
 
-////input options for language code
-//$title = $this->objLanguage->languageText('mod_unesco_oer_language_code', 'unesco_oer');
-//$utility->addTextInputToTable($title, 4, 'newLanguageCode', 60, '', $table);
-
 //input options for language name
 $title = $this->objLanguage->languageText('mod_unesco_oer_language_name', 'unesco_oer');
 $languageList = &$this->getObject('language', 'language');
-//$table->startRow();
-//$table->addCell($title);
-//$table->endRow;
 
 $table->startRow();
 $table->addCell($languageList->putlanguageChooser());
 $table->endRow();
-//$utility->addTextInputToTable($title, 4, 'newLanguageName', 60, '', $table);
 
 //Submit button
 $table->startRow();
