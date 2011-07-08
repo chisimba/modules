@@ -500,10 +500,9 @@ class glossary extends controller
         // Details of the Record
         $record = $this->objGlossary->showFullSingle($id, $this->contextCode);
 
+        $this->setVarByRef('record', $record[0]);
 
         $term = $record[0]['term'];
-
-        $this->setVarByRef('record', $record[0]);
 
         // Number of URL Links for the Record
         $urlNum = $this->objGlossaryUrls->getNumRecords($id);
@@ -543,6 +542,13 @@ class glossary extends controller
         $numRecords = $this->objGlossary->getNumAllRecords($this->contextCode);
         $this->setVarByRef('numRecords', $numRecords);
 
+        // Image edit fieldset
+
+        //$this->setVarByRef('id', $id);
+
+        $images = $this->objGlossaryImages->getListImage($id); //($id); $record[0]['item_id']
+        $this->setVarByRef('images', $images);
+
         /**
         * After saving changes, the page redirects to edit.
         *
@@ -567,7 +573,14 @@ class glossary extends controller
 
             case 'urldeleted'         : $message = $this->objLanguage->languageText('mod_glossary_urlHasBeenDeleted', 'glossary').' <strong>'.$term.'</strong>'; break;
 
-            default: $message = '';
+            case 'imageadded':
+                $message = $this->objLanguage->languageText('mod_glossary_imageadded', 'glossary').' <strong>'.$term.'</strong>';
+                break;
+            case 'imagedeleted':
+                $message = $this->objLanguage->languageText('mod_glossary_imagedeleted', 'glossary').' <strong>'.$term.'</strong>';
+                break;
+            default:
+                $message = '';
 
         }
 
@@ -599,7 +612,7 @@ class glossary extends controller
 		);
 
         // Redirect back to the edit page
-        return $this->nextAction('edit', array('id'=>$this->getParam('id', null), 'message'=>'termupdated'));
+        return $this->nextAction('edit', array('id'=>$id, 'message'=>'termupdated'));
 	}
 
 	/**
@@ -900,7 +913,8 @@ class glossary extends controller
             $this->objGlossaryImages->insertImage($item_id, $_POST['userFile'], $caption, $userId, $dateLastUpdated);
         //}
 
-        return $this->nextAction('listimages', array('id' => $item_id));
+        //return $this->nextAction('listimages', array('id' => $item_id));
+        return $this->nextAction('edit', array('id' => $item_id, 'message'=>'imageadded'));
 
     }
 
@@ -954,7 +968,8 @@ $this->setVarByRef('bodyParams',$bodyParams);
         //$this->objUploadDB->deleteFile($imageFileId);
 
 
-        return $this->nextAction('listimages', array('id' => $returnId));
+        //return $this->nextAction('listimages', array('id' => $returnId));
+        return $this->nextAction('edit', array('id' => $returnId, 'message'=>'imagedeleted'));
     }
 
 
