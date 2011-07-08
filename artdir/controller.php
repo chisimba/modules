@@ -248,6 +248,15 @@ class artdir extends controller
                 // return the default template for no mode set
                 return 'blogadminmenu_tpl.php';
                 break;
+                
+            case 'showsignin' :
+                return 'signin_tpl.php';
+                break;
+                
+            case 'search' :
+                $term = $this->getParam('search');
+                echo $term;
+                break;
 
                 
             default:
@@ -264,7 +273,7 @@ class artdir extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', NULL);
+        $allowedActions = array('', 'search', 'showsignin', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;

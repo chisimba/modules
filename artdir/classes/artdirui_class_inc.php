@@ -173,7 +173,7 @@ class artdirui extends object
      * @return string  Return string
      * @access public
      */
-    public function leftBlocks($userid, $cats = NULL)
+    public function leftBlocks($userid = NULL, $cats = NULL)
     {
         $leftCol = "left";
         return NULL; 
@@ -190,7 +190,7 @@ class artdirui extends object
      * @return string  string of blocks
      * @access public
      */
-    public function rightBlocks($userid, $cats = NULL)
+    public function rightBlocks($userid = NULL, $cats = NULL)
     {
         $rightCol = "right";
         return $rightCol;
@@ -303,6 +303,38 @@ class artdirui extends object
         }
         $sform = '<div id="dirsearch">'.$sform->show().'</div>';
         return $sform;
+    }
+    
+    public function signinBox() {
+        $ret = $this->showSignInBox();
+        $ret .= $this->showSignUpBox();
+        return $ret;
+    }
+    
+    /**
+     * Sign in block
+     *
+     * Used in conjunction with the welcome block as a alertbox link. The sign in simply displays the block to sign in to Chisimba
+     *
+     * @return string
+     */
+    public function showSignInBox() {
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_artdir_signin", "artdir"), $objBlocks->showBlock('login', 'security', 'none'));
+    }
+
+    /**
+     * Sign up block
+     *
+     * Method to generate a sign up (register) block for the module. It uses a linked alertbox to format the response
+     *
+     * @return string
+     */
+    public function showSignUpBox() {
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_artdir_signup", "artdir"), $objBlocks->showBlock('register', 'security', 'none'));
     }
     
 }
