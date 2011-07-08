@@ -16,7 +16,7 @@ $fields = array(
                     'length'=>50
                     ),
 
-    'jobtitle'=> array(
+    'jobtitle'=>array(
                      'type' =>'text',
                      'length'=>10
                       ),

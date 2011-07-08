@@ -10,7 +10,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-      'userid'=> array(
+      'userid'=>array(
 	        'type' => 'text',
 		'length' => 5
 		),
