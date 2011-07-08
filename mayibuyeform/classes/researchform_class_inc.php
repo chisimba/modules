@@ -1,31 +1,4 @@
-
 <?php
-if (!
-        /**
-         * The $GLOBALS is an array used to control access to certain constants.
-         * Here it is used to check if the file is opening in engine, if not it
-         * stops the file from running.
-         *
-         * @global entry point $GLOBALS['kewl_entry_point_run']
-         * @name   $kewl_entry_point_run
-         *
-         */
-        $GLOBALS['kewl_entry_point_run']) {
-    die("You cannot view this page directly");
-}
-// end security check
-
-/**
- *
- *mayibuyeform
-
- * mayibuyeform  application to produce material of the robben island museum archives
- * @category  Chisimba
- * @package   mayibuyeform
- *Author  Brenda
- */
-
-
 
 class researchform extends dbTable
 {

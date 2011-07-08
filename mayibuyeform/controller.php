@@ -1,4 +1,3 @@
-
 <?php
 
 /**
@@ -214,7 +213,7 @@ class mayibuyeform extends controller {
 
 public function RequiresLogin()
 {
-	return TRUE;
+	return FALSE;
 }
 
 }
