@@ -1784,11 +1784,11 @@ class unesco_oer extends controller {
 
     function __groupPermission(){
         if($this->objUser->isAdmin()){
-            $this->__groupListingForm();
-        }else{
-            
-
-        }
+            $this->__groupListingForm();}
+//        }else{
+//
+//
+//        }
 
 
     }

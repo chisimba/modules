@@ -27,13 +27,15 @@
                         <div id="controlPanelCell">
 
                             <?php
+                              if($this->objUser->isAdmin()){
+
                             $link = new link($this->uri(array("action" => 'userListingForm')));
 
                             $link->link = '<img src="skins/unesco_oer/images/users.png" alt="Institutions" >
                             <br/>  
                             <br/>  Users';
-                            echo '&nbsp;' . $link->show();
-                            ?> 
+                            echo '&nbsp;' . $link->show();}
+                            ?>
 
                         </div>
 
@@ -41,19 +43,26 @@
                     </td>
                     <td width="269">
                         <div id="controlPanelCell">
+                            <?php
+                            if($this->objUser->isAdmin()){
+                                ?>
                             <img src="skins/unesco_oer/images/users.png" alt="Groups" >
                             <br/>
                             <br/>
                             <a href="?module=groupadmin" class="prifileLinks">Groups</a>
-<!--
                             <?php
-
+                            }else{}
+                            ?>
+                            
+                   <!--
+                            <?php
+                             if($this->objUser->isAdmin()){
                             $link = new link($this->uri(array("action" => 'groupListingForm')));
 
                             $link->link = '<img src="skins/unesco_oer/images/users.png" alt="Groups" >
                             <br/>  
                             <br/> Groups';
-                            echo '&nbsp;' . $link->show();
+                            echo '&nbsp;' . $link->show();}
                             ?> -->
 
                         </div>
@@ -65,12 +74,13 @@
                         <div id="controlPanelCell">
 
                             <?php
+                             if($this->objUser->isAdmin()){
                             $link = new link($this->uri(array("action" => 'viewInstitutions')));
 
                             $link->link = ' <img src="skins/unesco_oer/images/institutions.png" alt="Institutions" >
                             <br/>  
                             <br/> Institutions';
-                            echo '&nbsp;' . $link->show();
+                            echo '&nbsp;' . $link->show();}
                             ?> 
 
                         </div>
