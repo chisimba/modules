@@ -152,6 +152,7 @@ echo $fs->show();
 
 );
 
+
 $('button[name=searchButton]').click(
     function() {
         window.location = 'index.php?module=unesco_oer&action=searchUser&search='+ $('input[name=search]').val();

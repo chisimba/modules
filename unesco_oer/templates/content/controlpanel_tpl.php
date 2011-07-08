@@ -41,15 +41,20 @@
                     </td>
                     <td width="269">
                         <div id="controlPanelCell">
-
+                            <img src="skins/unesco_oer/images/users.png" alt="Groups" >
+                            <br/>
+                            <br/>
+                            <a href="?module=groupadmin" class="prifileLinks">Groups</a>
+<!--
                             <?php
+
                             $link = new link($this->uri(array("action" => 'groupListingForm')));
 
                             $link->link = '<img src="skins/unesco_oer/images/users.png" alt="Groups" >
                             <br/>  
                             <br/> Groups';
                             echo '&nbsp;' . $link->show();
-                            ?> 
+                            ?> -->
 
                         </div>
                     </td>
