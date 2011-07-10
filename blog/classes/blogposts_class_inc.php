@@ -108,46 +108,47 @@ class blogposts extends object
     }
 
     /**
-     * method to clean up posts messed up by MS mail clients
-     * added by davidwaf
+     * Clean up posts messed up by MS mail clients
+     * added by davidwaf without any consideration of coding standards
+     *
+     * @param string $post THe post to clean
+     * @return strnig The cleaned post
      *
      */
-     function cleanPost($post){
+    function cleanPost($post){
         $lines=split("<br />",$post);
         $results="";
          foreach($lines as $line){
             $line=trim($line);
             if(trim($line) != '=20' ) {
-            if(strlen(trim($line)) < 1){
-            $results.=$line.'<br/>';
-            }else{
-
-            $results.=trim($line).' ';
+                if(strlen(trim($line)) < 1){
+                    $results.=$line.'<br/>';
+                } else {
+                    $results.=trim($line).' ';
+                }
             }
-
-           }
-         }
+        }
         $results2="";
         $lines2=split("<br/>",$results);
         foreach($lines2 as $line2){
             $line2=trim($line2);
-            if(strlen(trim($line2)) < 1){
-            $results2.=$line2.'<br/>';
-            }else{
-            $pos = strrpos($line2, "</a>");
-            if ($pos === false) { // note: three equal signs
-            //not found
-            }else{
-             $line2=str_replace('</a>','',$line2);
-             $line2.='</a>';
+            if(strlen(trim($line2)) < 1) {
+                $results2.=$line2.'<br/>';
+            } else {
+                $pos = strrpos($line2, "</a>");
+                if ($pos === false) { // note: three equal signs
+                //not found
+                } else {
+                    $line2=str_replace('</a>','',$line2);
+                    $line2.='</a>';
+                }
+                $results2.=trim($line2).'<br/>';
             }
-            $results2.=trim($line2).'<br/>';
-            }
-         }
-      $results2=str_replace('=20','',$results2);
-      $results2=str_replace('= ','',$results2);
-      return $results2;
-     }
+        }
+        $results2=str_replace('=20','',$results2);
+        $results2=str_replace('= ','',$results2);
+        return $results2;
+    }
 
     /**
      * Method to display the posts per user
@@ -158,6 +159,7 @@ class blogposts extends object
     public function showPosts($posts, $showsticky = FALSE)
     {
         $cleanPost=$this->sysConfig->getValue('blog_clean_ms_chars', 'blog');
+        $objCommentCounter = $this->getObject('dynamiccommentcounter', 'blog');
         $this->objComments = $this->getObject('commentapi', 'blogcomments');
         $this->objTB = $this->getObject("trackback");
         // set the trackback options
@@ -406,7 +408,17 @@ class blogposts extends object
                 $iconList = $this->objCC->show($cclic);
                 // $commentLink = $this->objComments->addCommentLink($type = NULL);
                 if ($post['comment_status'] == 'Y' || $post['comment_status'] == 'on') {
-                    $commentCount = $this->objComments->getCount($post['id']);
+
+
+
+                    $commentCount = $objCommentCounter->show($post['id']);
+                    //$this->objComments->getCount($post['id']);
+
+
+
+
+
+
                 }
                 // edit icon in a table 1 row x however number of things to do
                 if ($post['userid'] == $userid) {
@@ -618,7 +630,12 @@ class blogposts extends object
             'postdate' => $editparams['post_date']
         )));
         $pfieldset = $this->newObject('fieldset', 'htmlelements');
-        $pfieldset->setLegend($this->objLanguage->languageText('mod_blog_posthead', 'blog'));
+        if ($this->getParam('action', 'add')=='postedit') {
+            $pFieldSetLabel = $this->objLanguage->languageText('mod_blog_postedit', 'blog');
+        } else {
+            $pFieldSetLabel = $this->objLanguage->languageText('mod_blog_posthead', 'blog');
+        }
+        $pfieldset->setLegend(' ' . $pFieldSetLabel . ' ');
         $ptable = $this->newObject('htmltable', 'htmlelements');
         $ptable->cellpadding = 5;
         // post title field

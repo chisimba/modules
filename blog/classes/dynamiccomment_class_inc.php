@@ -98,6 +98,9 @@ class dynamiccomment extends object
     *
     * Show the appropriate comment block
     *
+    * @param string $postid The id of the post to which the comment applies
+    * @return string The rendered comment block
+    *
     */
     public function show($postid)
     {
@@ -109,6 +112,14 @@ class dynamiccomment extends object
         return $this->$commentType($postid);
     }
 
+    /**
+     *
+     * The default comment block using the blogcomments module.
+     *
+     * @param string $postid The id of the post to which the comment applies
+     * @return string The rendered comment block
+     *
+     */
     private function _default($postid)
     {
         $objComments = $this->getObject('commentapi', 'blogcomments');
@@ -124,13 +135,29 @@ class dynamiccomment extends object
         return $ret;
     }
 
+    /**
+     *
+     * A comment block using the facebook API apps (facebookapps) module.
+     *
+     * @param string $postid The id of the post to which the comment applies
+     * @return string The rendered comment block
+     *
+     */
     private function _facebook($postid)
     {
         $objApps = $this->getObject('fbapps', 'facebookapps');
-
-        return '<center>' . $objApps->insertCommentCount() . "<br />" . $objApps->getComments() . '<center>';
+        return '<center class="fb_comment_block">'
+          . $objApps->getComments() . '<center>';
     }
 
+    /**
+     *
+     * The wall comment block using the wall module.
+     *
+     * @param string $postid The id of the post to which the comment applies
+     * @return string The rendered comment block
+     *
+     */
     private function _wall($postid)
     {
         $objWallOps = $this->getObject('wallops', 'wall');
@@ -139,8 +166,12 @@ class dynamiccomment extends object
 
     /**
      *
+     * Set a parameter value
+     *
      * @param string $param The parameter to set a value for
      * @param mixed $value The value to set
+     * @return VOID
+     * 
      */
     public function set($param, $value)
     {
