@@ -18,7 +18,7 @@
 
 //Display errors
 error_reporting(E_ALL);
-ini_set('display_errors', 'On');
+ini_set('display_errors', 'Off');
 
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
@@ -69,9 +69,11 @@ $table->endRow();
 
 
 
-$button = new button('submitProductType', "Submit Theme");
+$button = new button('submitProductType', $this->objLanguage->
+                                languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
 $button->setToSubmit();
-$controlPannel = new button('backButton', "Cancel");
+$controlPannel = new button('backButton', $this->objLanguage->
+                                languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer'));
 $controlPannel->setToSubmit();
 $BackToControlPanelLink = new link($this->uri(array('action' => "viewProductThemes")));
 $BackToControlPanelLink->link = $controlPannel->show();
@@ -84,7 +86,7 @@ $umbrellaThemeFieldset->setLegend("Create Umbrella Theme");
 $umbrellaThemeFieldset->addContent($table->show());
 
 //createform, add fields to it and display
-$objForm = new form('createTheme_ui', $this->uri(array('action' => $formAction)));
+$objForm = new form('createTheme_ui', $this->uri(array('action' => $formAction, 'themeId' => $themeId)));
 //Add a rule for validating the field
 $objForm->addRule('newUmbrellaTheme', 'Please enter the name of the Umbrella theme', 'required');
 $objForm->addToForm($umbrellaThemeFieldset->show());

@@ -33,14 +33,25 @@ class institutionmanager extends object {
         $this->_validation['valid'] = TRUE;
     }
 
+    public function institutionNameExists($name) {
+        $checkName = $this->_objDbInstitution->getInstitutionName($name);
+
+        if(strlen($checkName) > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
+        //Check if institution exists
         $this->_objDbInstitution->addInstitution($name, $description, $type,
                 $country, $address1, $address2, $address3, $zip,
                 $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
     }
 
     public function editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
-
+        //First check if an institution with a similar name exists        
         $this->_objDbInstitution->editInstitution($id, $name, $description, $type,
                 $country, $address1, $address2, $address3, $zip,
                 $city, $websiteLink, $keyword1, $keyword2,

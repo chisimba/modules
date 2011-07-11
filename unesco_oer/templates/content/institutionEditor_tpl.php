@@ -296,7 +296,7 @@
         $CancelLink->link = $buttonCancel->show();
 
 
-        $buttons = '<div id="institutioncontrol">' . $buttonSubmit->show() . $CancelLink->show() . '</div>';
+        $buttons = '<div id="institutioncontrol">' . $buttonSubmit->show() . '&nbsp;' . $CancelLink->show() . '</div>';
 
         //createform, add fields to it and display
         $uri = $this->uri(array(

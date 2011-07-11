@@ -684,10 +684,6 @@ class unesco_oer extends controller {
         $theme = $this->getParam('newTheme');
         $umbrellaId = $this->getParam('umbrellaTheme');
         $themeId = $this->getParam('themeId');
-
-        echo "Editing theme";
-        die();
-
         $this->objDbProductThemes->updateTheme($themeId, $theme, $umbrellaId);
         
         return $this->__viewProductThemes();
@@ -729,9 +725,9 @@ class unesco_oer extends controller {
 
     public function __editUmbrellaThemeSubmit() {
         $theme = $this->getParam('newUmbrellaTheme');
-        $themeId = $this->getParam('themeId');
-        
+        $themeId = $this->getParam('themeId');        
         $this->objDbProductThemes->updateUmbrellaTheme($themeId, $theme);
+
         return $this->__viewProductThemes();
     }
 
@@ -905,6 +901,7 @@ class unesco_oer extends controller {
         $thumbnail = 'usrfiles/' . $results['path'];
 
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+                
         $fileInfoArray = array();
         if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
             $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
@@ -916,7 +913,7 @@ class unesco_oer extends controller {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
 
-            return "viewInstitutions_tpl.php";
+            return "__viewInstitutions()";
         } else {
 
             //There has been an error, go back to the form to fix it
@@ -1982,7 +1979,7 @@ class unesco_oer extends controller {
     }
 
     public function __mypage() {
-        //$this->setLayoutTemplate('maincontent_layout_tpl.php');
+$this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "myPage_tpl.php";
     }
 
