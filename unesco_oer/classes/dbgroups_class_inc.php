@@ -308,6 +308,12 @@ class dbgroups extends dbtable {
         }
     }
 
+    function searchGroupByName($groupname){
+         $sql="SELECT * FROM tbl_unesco_oer_groups WHERE name = '$groupname'";
+         return $this->getArray($sql);
+     }
+
+
         
     }
 ?>

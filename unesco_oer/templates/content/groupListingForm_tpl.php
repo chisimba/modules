@@ -24,6 +24,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link','htmlelements');
 $this->loadClass('fieldset','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
+$this->loadClass('textinput', 'htmlelements');
 
 // setup and show heading
 $header = new htmlheading();
@@ -37,8 +38,22 @@ $button = new button('Add Button', "Add Group");
 $button->setToSubmit();
 $addGroupLink =new link($this->uri(array('action' =>"groupRegistationForm")));
 $addGroupLink->link = $button->show();
-echo $addGroupLink->show();
+//echo $addGroupLink->show();
 
+$controlPannel = new button('backButton', "Back");
+$controlPannel->setToSubmit();
+$BackToControlPannelLink = new link($this->uri(array('action' => "controlpanel")));
+$BackToControlPannelLink->link = $controlPannel->show();
+
+//button search user
+$buttonGO = new button('searchButton', "Go");
+//$buttonGO->setOnClick("javascript: searchThis()");
+$buttonGO->show();
+//text input search user
+$search = new textinput('search','',"",20);
+
+
+echo $addGroupLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$buttonGO->show();
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '100%';
@@ -53,7 +68,15 @@ $myTable->addHeaderCell('Edit',null,null,left,"userheader",null);
 $myTable->addHeaderCell('Delete',null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
-$groups = $this->objDbGroups->getAllGroups();
+//$groups = $this->objDbGroups->getAllGroups();
+//get user from the database
+$groups = "";
+//$mode=$this->getParam('mode');
+if (strcmp($mode, 'addfixup') == 0){
+    $groups=$group;
+}else{
+    $groups = $this->objDbGroups->getAllGroups();
+}
 
 if (count($groups) > 0) {
     foreach ($groups as $group) {
@@ -79,12 +102,15 @@ if (count($groups) > 0) {
     }
 }
 
+echo $nogroupfound; // this must be a script
+
 $fs = new fieldset();
 $fs->setLegend("Groups");
 $fs->addContent($myTable->show());
 echo $fs->show();
 
 ?>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
 
 jQuery(document).ready(function(){
@@ -104,5 +130,11 @@ jQuery(document).ready(function(){
 }
 
 
+);
+
+$('button[name=searchButton]').click(
+    function() {
+        window.location = 'index.php?module=unesco_oer&action=searchGroup&search='+ $('input[name=search]').val();
+    }
 );
 </script>

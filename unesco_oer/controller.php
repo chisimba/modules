@@ -1781,17 +1781,31 @@ class unesco_oer extends controller {
         return 'groupListingForm_tpl.php';
     }
 
-
-    function __groupPermission(){
-        if($this->objUser->isAdmin()){
-            $this->__groupListingForm();}
-//        }else{
-//
-//
-//        }
-
-
+    function __searchGroup() {
+        if ($this->getParam('search') == '') {
+            return $this->__groupListingForm();
+        } else {
+            if(count($this->objDbGroups->searchGroupByName($this->getParam('search'))) >0) {
+                $group = $this->objDbGroups->searchGroupByName($this->getParam('search'));
+                $this->setVar('group', $group);
+                $mode = 'addfixup';
+                $this->setVarByRef('mode', $mode);
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
+                return 'groupListingForm_tpl.php';
+            } else {
+                $nogroupfound = "No group found";    // this must be some be a script
+                $this->setVar('nogroupfound', $nogroupfound);
+                $mode = 'addfixup';
+                $this->setVarByRef('mode', $mode);
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
+                return 'groupListingForm_tpl.php';
+            }
+        }
     }
+
+
+
+
 
     /*     * This function handles the uploading of product metadata
      *
