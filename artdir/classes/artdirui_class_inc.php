@@ -190,9 +190,9 @@ class artdirui extends object
      * @return string  string of blocks
      * @access public
      */
-    public function rightBlocks($userid = NULL, $cats = NULL)
+    public function rightBlocks()
     {
-        $rightCol = "right";
+        $rightCol = '<div id="categoryfeatureboxhead"><img src="'.$this->objConfig->getskinRoot().'artdir/images/categories.png" alt="search directory"" /></div>';
         return $rightCol;
     }
     
@@ -307,7 +307,7 @@ class artdirui extends object
     
     public function signinBox() {
         $ret = $this->showSignInBox();
-        $ret .= $this->showSignUpBox();
+        // $ret .= $this->showSignUpBox();
         return $ret;
     }
     

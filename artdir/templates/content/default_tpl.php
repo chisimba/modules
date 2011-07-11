@@ -5,15 +5,14 @@ echo $this->objTermsDialogue->show();
 
 //edit cats
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
-
-$middleColumn = NULL;
 $leftCol = NULL;
+$middleColumn = NULL;
 $rightSideColumn = NULL;
 $objUi = $this->getObject('artdirui');
-// left hand blocks
-$leftCol = $objUi->leftBlocks($userid);
+
 // right side blocks
-$rightSideColumn = $objUi->rightBlocks($userid, NULL);
+$rightSideColumn .= $objUi->rightBlocks();
+
 if ($leftCol == NULL || $rightSideColumn == NULL) {
     $cssLayout->setNumColumns(2);
 } else {
@@ -24,7 +23,7 @@ if ($leftCol == NULL || $rightSideColumn == NULL) {
 $middleColumn = $objUi->slider(); //$this->objCats->categoryEditor($userid);
 
 $cssLayout->setMiddleColumnContent($middleColumn);
-$cssLayout->setRightColumnContent($rightSideColumn);
+$cssLayout->setLeftColumnContent($rightSideColumn);
 echo $cssLayout->show();
 
 ?>

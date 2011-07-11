@@ -106,14 +106,14 @@ class artdir extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
             case NULL:
-                $userid = $this->objUser->userId();
+                $userid = '1'; //$this->objUser->userId();
                 $this->setVarByRef('userid', $userid);
                 //create the basic foaf profile from tbl_users
-                $this->objFoafOps->newPerson($this->objUser->userId());
+                $this->objFoafOps->newPerson($userid);
                 //add in other details if they exist
-                $this->objFoafOps->myFoaf($this->objUser->userId());
+                $this->objFoafOps->myFoaf($userid);
                 $this->objFoafOps->writeFoaf();
-                $midcontent = $this->objFoafOps->foaf2Object($this->objUser->userId());
+                $midcontent = $this->objFoafOps->foaf2Object($userid);
                 
                 return 'default_tpl.php';
                 break;
