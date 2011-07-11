@@ -44,6 +44,26 @@ class dbresourcetypes extends dbtable {
         $row = $this->getRow('id', $id);
         return $row['table_name'];
     }
+    
+    function getResourceTypeById($id){
+        $sql = "SELECT * FROM tbl_unesco_oer_resource_types WHERE id = '$id'";
+        $type = $this->getArray($sql);
+        return $type[0];
+    }
+    function updateType($id, $description, $table_name){
+        $data = array(
+            'id' => $id,
+            'description' => $description,
+            'table_name' => $table_name
+        );
+
+        $this->update('id', $id, $data, 'tbl_unesco_oer_resource_types');
+    }
+
+        function deleteType($id) {
+        $sql = "DELETE FROM tbl_unesco_oer_resource_types WHERE id='$id'";
+        $this->getArray($sql);
+    }
 }
 
 ?>

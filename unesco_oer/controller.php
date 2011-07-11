@@ -31,7 +31,6 @@ class unesco_oer extends controller {
     public $objjavafilt;
     public $objThumbUploader;
     public $objConfig;
-
     /**
      * @var object $objLanguage Language Object
      */
@@ -84,7 +83,7 @@ class unesco_oer extends controller {
         $this->objjavafilt = $this->getObject('javafilt');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
-      
+
         //$this->objUtils = $this->getObject('utilities');
         //$this->objGoogleMap=$this->getObject('googlemapapi');
         //$this->objGoogleMap = new googlemapapi();
@@ -651,11 +650,42 @@ class unesco_oer extends controller {
      * and add it to the tbl_unesco_oer_resource_types table
      */
 
-    public function __resourceTypeSubmit() {
+    public function __createResourceTypeSubmit() {
         $description = $this->getParam('newTypeDescription');
         $table = $this->getParam('newTypeTable');
         $this->objDbResourceTypes->addType($description, $table);
+
         return $this->__viewProductTypes();
+    }
+
+    /*
+     * Method to edir entries from user on the newResourceTypeUI_tpl.php page
+     * and add it to the tbl_unesco_oer_resource_types table
+     */
+
+    public function __editResourceTypeSubmit() {
+        $description = $this->getParam('newTypeDescription');
+        $table = $this->getParam('newTypeTable');
+        $id = $this->getParam('typeId');
+        $this->objDbResourceTypes->updateType($id, $description, $table);
+        return $this->__viewProductTypes();
+    }
+
+    /*
+     * Method to edir entries from user on the newResourceTypeUI_tpl.php page
+     * and add it to the tbl_unesco_oer_resource_types table
+     */
+
+    public function __editResourceType() {
+        $description = $this->getParam('newTypeDescription');
+        $table = $this->getParam('newTypeTable');
+        $typeId = $this->getParam('productTypeId');
+        $this->setVarByRef('typeId', $typeId);
+        $this->setVarByRef('newTypeTable', $table);
+        $this->setVarByRef('newTypeDescription', $description);
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+
+        return "newResourceTypeUI_tpl.php";
     }
 
     /*
@@ -685,7 +715,7 @@ class unesco_oer extends controller {
         $umbrellaId = $this->getParam('umbrellaTheme');
         $themeId = $this->getParam('themeId');
         $this->objDbProductThemes->updateTheme($themeId, $theme, $umbrellaId);
-        
+
         return $this->__viewProductThemes();
     }
 
@@ -725,7 +755,7 @@ class unesco_oer extends controller {
 
     public function __editUmbrellaThemeSubmit() {
         $theme = $this->getParam('newUmbrellaTheme');
-        $themeId = $this->getParam('themeId');        
+        $themeId = $this->getParam('themeId');
         $this->objDbProductThemes->updateUmbrellaTheme($themeId, $theme);
 
         return $this->__viewProductThemes();
@@ -901,7 +931,7 @@ class unesco_oer extends controller {
         $thumbnail = 'usrfiles/' . $results['path'];
 
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-                
+
         $fileInfoArray = array();
         if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
             $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
@@ -1364,7 +1394,7 @@ class unesco_oer extends controller {
             //add to table userextra
             $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
-      
+
 
             // Email Details to User
             $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
@@ -1427,15 +1457,14 @@ class unesco_oer extends controller {
                 }
             }
         }
-        if(count($this->objUseExtra->searchUserByUsername($this->getParam('search')))==count($this->objUseExtra->searchUserByName($this->getParam('search')))){
-            $useruserfound="No user found";
+        if (count($this->objUseExtra->searchUserByUsername($this->getParam('search'))) == count($this->objUseExtra->searchUserByName($this->getParam('search')))) {
+            $useruserfound = "No user found";
             $this->setVar('nouserfound', $useruserfound);
             $mode = 'addfixup';
             $this->setVarByRef('mode', $mode);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return 'UserListingForm_tpl.php';
         }
-
     }
 
     function __updateUserDetails() {
@@ -1782,7 +1811,7 @@ class unesco_oer extends controller {
         if ($this->getParam('search') == '') {
             return $this->__groupListingForm();
         } else {
-            if(count($this->objDbGroups->searchGroupByName($this->getParam('search'))) >0) {
+            if (count($this->objDbGroups->searchGroupByName($this->getParam('search'))) > 0) {
                 $group = $this->objDbGroups->searchGroupByName($this->getParam('search'));
                 $this->setVar('group', $group);
                 $mode = 'addfixup';
@@ -1799,10 +1828,6 @@ class unesco_oer extends controller {
             }
         }
     }
-
-
-
-
 
     /*     * This function handles the uploading of product metadata
      *
@@ -1979,7 +2004,7 @@ class unesco_oer extends controller {
     }
 
     public function __mypage() {
-$this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "myPage_tpl.php";
     }
 
@@ -2019,8 +2044,8 @@ $this->setLayoutTemplate('maincontent_layout_tpl.php');
     }
 
     function __deleteProductType() {
-        $this->objDbProductThemes->deleteTheme($this->getParam('id'));
-        return $this->__viewLanguages();
+        $this->objDbResourceTypes->deleteType($this->getParam('productTypeId'));
+        return $this->__viewProductTypes();
     }
 
 }

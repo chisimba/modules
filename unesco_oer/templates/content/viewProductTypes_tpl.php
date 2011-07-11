@@ -73,6 +73,7 @@ $themesTable->cellpadding = '0';
 $themesTable->startHeaderRow();
 //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
 $themesTable->addHeaderCell('Product type', null, null, left, "userheader", null);
+$themesTable->addHeaderCell('Product type table', null, null, left, "userheader", null);
 $themesTable->addHeaderCell('Edit', null, null, left, "userheader", null);
 $themesTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 $themesTable->endHeaderRow();
@@ -85,9 +86,10 @@ if (count($productTypesList) > 0) {
         $themesTable->startRow();
         //($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
         $themesTable->addCell($productType['description'], null, null, null, "user", null, null);
+        $themesTable->addCell($productType['table_name'], null, null, null, "user", null, null);
 
         $objIcon->setIcon('edit');
-        $editLink = new link($this->uri(array('action' => "editProductType", 'productTypeId' => $productType['id'])));
+        $editLink = new link($this->uri(array('action' => "editResourceType", 'productTypeId' => $productType['id'])));
         $editLink->link = $objIcon->show();
         $themesTable->addCell($editLink->show());
 
@@ -110,7 +112,7 @@ echo $fs->show();
 
     jQuery(document).ready(function(){
 
-    jQuery("a[class=deleteType]").click(function(){
+    jQuery("a[class=deleteProductType]").click(function(){
 
     var r=confirm( "Are you sure you want to delete this Product Type?");
     if(r== true){

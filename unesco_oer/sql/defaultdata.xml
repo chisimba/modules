@@ -58,6 +58,11 @@
         <table_name>tbl_unesco_oer_curriculum</table_name>
         <description>Curriculum</description>
     </tbl_unesco_oer_resource_types>
+    <tbl_unesco_oer_resource_types>
+        <id>init_2</id>
+        <table_name>tbl_unesco_oer_calender</table_name>
+        <description>Calender</description>
+    </tbl_unesco_oer_resource_types>
 
     <!-- Umbrella themes   -->
     <tbl_unesco_oer_umbrella_themes>
