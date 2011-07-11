@@ -58,27 +58,27 @@
 
 //            $errorTable
             $formAction = $formAction;
-        } else{
-
-       $requiredField['name'] = '<span class="required_field"> * </span>';
-       $requiredField['description'] = '<span class="required_field"> * </span>';
-       $requiredField['type'] = '<span class="required_field"> * </span>';
-       $requiredField['thumbnail'] = '<span class="required_field"> * </span>';
-       $requiredField['keyword1'] = '<span class="required_field"> * </span>';
-       $requiredField['address1'] = '<span class="required_field"> * </span>';
-       $requiredField['zip'] = '<span class="required_field"> * </span>';
-       $requiredField['city'] = '<span class="required_field"> * </span>';
-       $requiredField['websiteLink'] = '<span class="required_field"> * </span>';
-
-        //Check if an institution is being edited
-        if (isset($institutionId)) {
-            $institutionGUI->getInstitution($institutionId);
-            $formData = $institutionGUI->showAllInstitutionData();
-            $formAction = "editInstitutionSubmit";
         } else {
-            $formData = array();
-            $formAction = "createInstitutionSubmit";
-        }
+
+            $requiredField['name'] = '<span class="required_field"> * </span>';
+            $requiredField['description'] = '<span class="required_field"> * </span>';
+            $requiredField['type'] = '<span class="required_field"> * </span>';
+            $requiredField['thumbnail'] = '<span class="required_field"> * </span>';
+            $requiredField['keyword1'] = '<span class="required_field"> * </span>';
+            $requiredField['address1'] = '<span class="required_field"> * </span>';
+            $requiredField['zip'] = '<span class="required_field"> * </span>';
+            $requiredField['city'] = '<span class="required_field"> * </span>';
+            $requiredField['websiteLink'] = '<span class="required_field"> * </span>';
+
+            //Check if an institution is being edited
+            if (isset($institutionId)) {
+                $institutionGUI->getInstitution($institutionId);
+                $formData = $institutionGUI->showAllInstitutionData();
+                $formAction = "editInstitutionSubmit";
+            } else {
+                $formData = array();
+                $formAction = "createInstitutionSubmit";
+            }
         }
 
         // setup and show heading
@@ -92,8 +92,10 @@
                             languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
         }
         $header->type = 2;
+        echo '<div id="institutionheading">';
         echo $header->show();
         echo '<br>';
+        echo '</div>';
 
         // setup table and table headings with input fields
         $tableinstitutioninfo = $this->newObject('htmltable', 'htmlelements');
@@ -176,7 +178,7 @@
                 'keyword2', 0, $keywords['keyword2'], $tableinstitutioninfo
         );
         $tableinstitutioninfo->endRow();
-       
+
 
         $fieldsetInstitutionInfo = $this->newObject('fieldset', 'htmlelements');
         $fieldsetInstitutionInfo->setLegend('Institution information');
@@ -224,7 +226,7 @@
                 'address3', 60, $address['address3'], $table
         );
         $table->endRow();
-        
+
         $table->startRow();
         $zipTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_zip', 'unesco_oer') . $requiredField['zip'];
         $this->_objAddDataUtil->addTitleToRow($zipTitle, 4, $table);
@@ -242,7 +244,7 @@
         $countryTitle = $this->objLanguage->languageText('mod_unesco_oer_institution_country', 'unesco_oer') . $requiredField['country'];
         $this->_objAddDataUtil->addTitleToRow($countryTitle, 4, $table);
         $table->endRow();
-        
+
         $table->startRow();
         $objCountries = &$this->getObject('languagecode', 'language');
         //$table->addCell($this->objLanguage->languageText('word_country', 'system'));
@@ -290,9 +292,11 @@
         $buttonCancel = new button('submit', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer'));
         $buttonCancel->setToSubmit();
+        $CancelLink = new link($this->uri(array('action' => "viewInstitutions" )));
+        $CancelLink->link = $buttonCancel->show();
 
 
-        $buttons = '<div id="institutioncontrol">' . $buttonSubmit->show() . $buttonCancel->show() . '</div>';
+        $buttons = '<div id="institutioncontrol">' . $buttonSubmit->show() . $CancelLink->show() . '</div>';
 
         //createform, add fields to it and display
         $uri = $this->uri(array(
