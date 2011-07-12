@@ -82,10 +82,10 @@ class dbartdir extends dbTable
      * @param  integer $userid
      * @return array
      */
-    public function getParentCats($userid)
+    public function getParentCats()
     {
         $this->_changeTable('tbl_artdir_cats');
-        return $this->getAll("where userid = '$userid' AND cat_parent = '0'");
+        return $this->getAll("where cat_parent = '0'");
     }
     
     /**
@@ -95,13 +95,14 @@ class dbartdir extends dbTable
      * @param  string  $cat
      * @return unknown
      */
-    public function getChildCats($userid, $cat)
+    public function getChildCats($cat)
     {
         $this->_changeTable('tbl_artdir_cats');
-        $child = $this->getAll("where userid = '$userid' AND cat_parent = '$cat'");
-        return array(
-            'child' => $child
-        );
+        $child = $this->getAll("where cat_parent = '$cat'");
+        //return array(
+        //    'child' => $child
+        //);
+        return $child;
     }
     
     /**

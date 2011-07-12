@@ -106,13 +106,11 @@ class artdir extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
             case NULL:
-                
-                
                 return 'default_tpl.php';
                 break;
                 
             case 'genfoaf' :
-                $userid = $this->objUser->userId();
+                $userid = $this->getParam('userid'); //$this->objUser->userId();
                 $this->setVarByRef('userid', $userid);
                 //create the basic foaf profile from tbl_users
                 $this->objFoafOps->newPerson($userid);
@@ -262,6 +260,11 @@ class artdir extends controller
             case 'search' :
                 $term = $this->getParam('search');
                 echo $term;
+                break;
+                
+            case 'viewbycat' :
+                $cat = $this->getParam('cat');
+                echo $cat;
                 break;
 
                 

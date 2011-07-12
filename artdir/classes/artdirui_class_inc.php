@@ -145,6 +145,7 @@ class artdirui extends object
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->objDbArtdir      = $this->getObject('dbartdir');
     }
     
     /**
@@ -194,6 +195,21 @@ class artdirui extends object
     public function rightBlocks()
     {
         $rightCol = '<div id="categoryfeatureboxhead"><img src="'.$this->objConfig->getskinRoot().'artdir/images/categories.png" alt="search directory"" /></div>';
+        // Get top level cats then get sub cats
+        $parentcats = $this->objDbArtdir->getParentCats();
+        foreach($parentcats as $p) {
+            $children = $this->objDbArtdir->getChildCats($p['id']);
+            // var_dump($children);
+            $link = new link ($this->uri(array('action'=>'viewbycat', 'cat' => $p['id'])));
+            $link->link = $p['cat_nicename'];
+            $rightCol .= '<div id="catTop"><a href=#>'.$link->show().'</a></div>';
+            foreach($children as $c) {
+                $link = new link ($this->uri(array('action'=>'viewbycat', 'cat' => $c['id'])));
+                $link->link = $c['cat_nicename'];
+                $rightCol .= '<div id="cats"><a href=#>'.$link->show().'</a></div>';
+            }
+        }
+        
         return $rightCol;
     }
     
