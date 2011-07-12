@@ -40,13 +40,12 @@ class productthememanager extends object {
         return $this->_umbrellaTheme->addSubTheme($theme);
     }
 
-    
     //This returns a subtheme based on the provided id
     function getSubTheme($id) {
         $themeData = $this->_objDbProductThemes->getThemeByID($id);
         $this->_productTheme->setName($themeData['theme']);
         $this->_productTheme->setId($themeData['id']);
-        
+
         return $this->_productTheme;
     }
 
@@ -57,44 +56,86 @@ class productthememanager extends object {
         $this->_umbrellaTheme->setId($themeData['id']);
 
         //Add subthemes to the theme
-       $this->_umbrellaTheme->getAllSubThemes();
+        //$this->_umbrellaTheme->getAllSubThemes();
 
         return $this->_umbrellaTheme;
     }
 
-    //This returns a list of subthemes based on the provided id
+    //This returns an array of subthemes based on the provided id
     function getUmbrellaThemeSubThemes($id) {
-        $themeData = $this->_objDbProductThemes->getUmbrellaThemeByID($id);
-       
+        $this->_umbrellaTheme->setId($id);
+        
         return $this->_umbrellaTheme->getAllSubThemes();
     }
 
     //This function updates a subtheme given a theme id, theme, and umbrella theme id
-    function updateSubtheme($themeId, $theme, $umbrellaId) {
-        return $this->_objDbProductThemes->updateTheme($id, $theme, $umbrellaId);
+    function updateSubTheme($themeId, $theme, $umbrellaId) {
+        return $this->_objDbProductThemes->updateTheme($themeId, $theme, $umbrellaId);
     }
-    
+
     //This function updates a subtheme given a theme id, theme, and umbrella theme id
-    function updateUmbrellatheme($umbrellaId, $theme) {
+    function updateUmbrellaTheme($umbrellaId, $theme) {
         return $this->_objDbProductThemes->updateUmbrellaTheme($umbrellaId, $theme);
     }
 
+    /**
+     * These function deletes a subtheme from the tbl_unesco_oer_product_themes table
+     * @param <type> $id
+     * @return <type>
+     * Returns Array() if the theme is deleted or when the theme was not found in the table
+     * Returns FALSE
+     */
     function deleteSubTheme($id) {
         //Check if theme is in use
-        $isInUse = $this->objDbProductThemes->getproductIDBythemeID($id);
+        //Could also check if the theme exists
+        $isInUse = $this->subThemeInUse($id);
 
-        if(empty($isInUse)){
-//            $this->objDbProductThemes->deleteTheme($id);
-            return $this->objDbProductThemes->deleteTheme($id);
-        }else{
-            //Get list of products using the theme
-//            $usedbyList = $this->
+        if (!($isInUse)) {
+            return $this->_objDbProductThemes->deleteTheme($id);
+        } else {//If the subTheme is being used by a product
+            $themeInUse = $this->getSubTheme($id);
+            //Check for the product that is using the theme
+//            return "Theme is in use";
+            return FALSE;
+        }
+    }
+
+    function subThemeInUse($id) {
+        $isInUse = $this->_objDbProductThemes->getproductIDBythemeID($id);
+        
+        if (!(empty($isInUse))) {
+            return TRUE;
+        } else {//If the subTheme is being used by a product
+//            $themeInUse = $this->getSubTheme($id);
+            //Check for the product that is using the theme
+//            return "Theme is in use";
+            return FALSE;
         }
 
     }
 
-    function deleteUmbrellaTheme($id){
-        //Check if the theme has subthemes
+    function deleteUmbrellaTheme($id) {
+        //Check if the one of it's subthemes is in use
+        $this->_productthemelist = $this->getUmbrellaThemeSubThemes($id);
+
+        //Check if theme has subthemes
+        if(count($this->_productthemelist)>0){//Means Umbrella theme has sub themes
+            return FALSE;
+        }
+
+        $subThemeInUse = FALSE;
+        //Check if any of the subthemes that belong to the umbrella theme are in use
+        //I think this is redundant since an umbrella theme with subthemes can not be deleted
+        foreach ($this->_productthemelist as $subTheme) {
+            $subThemeId = $subTheme->getId();   //Get the current sub themes Id
+            $subThemeInUse = $this->subThemeInUse($subThemeId);
+            if($subThemeInUse){
+                return FALSE;
+            }
+        }//Else if non of the subthemes are in use
+
+        $this->_objDbProductThemes->deleteUmbrellaTheme($id);
+        return TRUE;
     }
 
 }

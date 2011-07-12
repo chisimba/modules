@@ -21,15 +21,17 @@ class umbrellaproducttheme extends producttheme {
      * This is an array containing the subthemes
      * @var <Array>
      */
-    private $_subThemes;
+    private $_subThemesList;
+    private $_subTheme;
     private $_objDbProductThemes;
 
     function init() {
         //Initialise all parameters
         parent::setName(NULL);
-        $this->_subThemes = array();
+        $this->_subThemesList = array();
         parent::setId(NULL);
         $this->_objDbProductThemes = $this->getObject('dbproductthemes');
+        $this->_subTheme = $this->getObject('producttheme');
     }
 
     /**
@@ -38,20 +40,25 @@ class umbrellaproducttheme extends producttheme {
      */
     function getAllSubThemes() {
         $umbrellaId = parent::getId();
-        $this->_subThemes = $this->_objDbProductThemes->getThemesByUmbrellaID($umbrellaId);
-        return $this->_subThemes;
+        $subThemes = $this->_objDbProductThemes->getThemesByUmbrellaID($umbrellaId);
+        foreach ($subThemes as $subTheme) {
+            //Create themes
+            $this->_subTheme->setId($subTheme['id']);
+            $this->_subTheme->setName($subTheme['theme']);
+            //Create list of subthemes
+            array_push($this->_subThemesList, $this->_subTheme);
+        }
+        return $this->_subThemesList;
     }
 
     function getSubTheme($id) {
-        return TRUE;
+        return $this->_objDbProductThemes->getThemeByID($id);
     }
 
     function addSubTheme($themeName) {
         if (!empty($themeName)) {
             $umbrellaId = parent::getId();
-            $this->_objDbProductThemes->addTheme($themeName, $umbrellId);
-            $this->_subThemes = $this->getAllSubThemes();
-            return $this->_subThemes;
+            return $this->_objDbProductThemes->addTheme($themeName, $umbrellId);
         } else {
             return FALSE;
         }

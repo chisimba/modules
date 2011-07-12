@@ -27,7 +27,7 @@ class producttheme extends object {/**
     }
 
     function getName() {
-        return parent::getName();
+        return $this->_name;
     }
 
     function getID() {
@@ -44,7 +44,7 @@ class producttheme extends object {/**
     }
 
     function setName($name) {
-        if (!empty($id)) {
+        if (!empty($name)) {
             $this->_name = $name;
             return TRUE;
         } else {
