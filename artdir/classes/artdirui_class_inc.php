@@ -201,7 +201,7 @@ class artdirui extends object
         $html = '<div class="main_view">
                      <div class="window">
                          <div class="image_reel">
-                             <a href="#"><img src="http://placekitten.com/716/394" alt="blerk" /></a>
+                             <a href="#"><img src="http://placekitten.com/716/394" alt="" /></a>
                              <a href="#"><img src="http://placekitten.com/716/394" alt="" /></a>
                              <a href="#"><img src="http://placekitten.com/716/394" alt="" /></a>
                              <a href="#"><img src="http://placekitten.com/716/394" alt="" /></a>
@@ -218,7 +218,6 @@ class artdirui extends object
         $js = '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>';
         $js .= '<script type="text/javascript">
                 $(document).ready(function() {
-	                //Code goes here
 	                //Show the paging and activate its first link
                     $(".paging").show(); 
                     $(".paging a:first").addClass("active");
@@ -359,7 +358,7 @@ class artdirui extends object
         $js .= $this->getFbCode();
         $js .= $this->tweetButton();
         $js .= $this->getPlusOneButton();
-        return $js;
+        return '<div id="socialbuttons">'.$js.'</div>';
     }
     
     public function getFbCode() {
@@ -367,7 +366,7 @@ class artdirui extends object
         $fb = "<div id=\"fb-root\"></div>
                <script>
                    window.fbAsyncInit = function() {
-                       FB.init({appId: '$fbapid', status: true, cookie: true,
+                       FB.init({appId: '$fbapid', status: false, cookie: true,
                        xfbml: true});
                    };
                    (function() {
