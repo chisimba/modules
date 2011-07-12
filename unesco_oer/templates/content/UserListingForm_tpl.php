@@ -83,17 +83,21 @@ $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 $myTable->endHeaderRow();
 
 
-
 //get user from the database
 $users = "";
-//$mode=$this->getParam('mode');
+$mode=$this->getParam('mode');
 if (strcmp($mode, 'addfixup') == 0){
     $users=$user;
 }else{
-    $users = $this->objUseExtra->getAllUser();
+    if(strcmp($this->getParam('mode'), 'groupuser') == 0){
+        $groupname= $this->objDbGroups->getGroupName($this->getParam('id'));
+        $userId =$this->objUseExtra->getGroupUser($groupname);
+        $users=$this->objUseExtra->getUserbyUserIdbyUserID($userid);
+    }else{
+        $users = $this->objUseExtra->getAllUser();}
 }
 
-
+echo $users;
 if (count($users) > 0) {
     foreach ($users as $user) {
         $myTable->startRow();

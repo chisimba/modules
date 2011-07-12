@@ -313,6 +313,19 @@ class dbgroups extends dbtable {
          return $this->getArray($sql);
      }
 
+    function getGroupProduct($creatorid){
+        $sql="SELECT * FROM tbl_unesco_oer_products WHERE creator = '$groupid'";
+        return $this->getArray($sql);
+    }
+
+   
+
+   function getGroupUsers($groupname){
+        $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE groupmembership = '$groupname'";
+        return $this->getArray($sql);
+   }
+
+
 
         
     }

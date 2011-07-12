@@ -62,7 +62,7 @@ $myTable->cellspacing = '0';
 $myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
-$myTable->addHeaderCell('Product name',null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_publisher', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_status', 'unesco_oer'),null,null,left,"userheader",null);
@@ -72,21 +72,17 @@ $myTable->endHeaderRow();
 
 //$groups = $this->objDbGroups->getAllGroups();
 //get user from the database
-$groups = "";
-//$mode=$this->getParam('mode');
-if (strcmp($mode, 'addfixup') == 0){
-    $groups=$group;
-}else{
-    $groups = $this->objDbGroups->getAllGroups();
-}
+
+  $groups = $this->objDbGroups->getGroupProduct($id);
+
 
 if (count($groups) > 0) {
     foreach ($groups as $group) {
         $myTable->startRow();
-        $myTable->addCell($group['name'],null, null, null, "user", null, null);
-        $myTable->addCell($group['email'], null, null, null, "user", null, null);
-        $myTable->addCell();
-        $myTable->addCell();
+        $myTable->addCell($group['title'],null, null, null, "user", null, null);
+        //$myTable->addCell($group['creator'], null, null, null, "user", null, null);
+        $myTable->addCell($group['publisher'], null, null, null, "user", null, null);
+        $myTable->addCell($group['status'], null, null, null, "user", null, null);
         $objIcon->setIcon('edit');
         $editLink =new link($this->uri(array('action' =>"groupEditingForm",'id' =>$group['id'])));
         $editLink->link = $objIcon->show();

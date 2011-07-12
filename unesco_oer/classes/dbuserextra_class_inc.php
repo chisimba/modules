@@ -162,8 +162,19 @@ class dbuserextra extends dbtable{
          $sql="DELETE FROM tbl_unesco_oer_userextra WHERE id='$id' AND userid='$userid'";
          return $this->getArray($sql);
        }
-     
-     function getUserDetails($id,$userid){
+
+     function getGroupUser($groupname){
+         $sql="SELECT* FROM tbl_unesco_oer_userextra WHERE groupmembership='$groupname'";
+         $user=$this->getArray($sql);
+         return $user[0]['id'];
+     }
+
+
+
+
+
+
+       function getUserDetails($id,$userid){
          $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE id='$id' AND userid='$userid'";
          return $this->getArray($sql);
      }

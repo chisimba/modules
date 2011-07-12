@@ -164,7 +164,7 @@ if (isset($userstring[3]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_address', 'unesco_oer')); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_address', 'unesco_oer')); 
 $table->addCell($address->show());
 $table->endRow();
 
@@ -184,7 +184,7 @@ if (isset($userstring[4]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_city', 'unesco_oer')); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_city', 'unesco_oer'));
 $table->addCell($city->show());
 $table->endRow();
 
@@ -322,7 +322,8 @@ $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
-$button = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
+$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button','unesco_oer'));
+$button->setToSubmit();
 
 $Cancelbutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 $Cancelbutton->setToSubmit();

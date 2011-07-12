@@ -101,7 +101,8 @@ if (count($groups) > 0) {
         $myTable->addCell($deleteLink->show());
 
         $objIcon->setIcon('view');
-        $editLink =new link($this->uri(array('action' =>"userListingForm",'id' =>$group['id'])));
+        $mode='groupuser';
+        $editLink =new link($this->uri(array('action' =>"userListingForm",'id' =>$group['id'],'mode'=>$mode)));
         $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());
         

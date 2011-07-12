@@ -1233,6 +1233,7 @@ class unesco_oer extends controller {
         return 'UserListingForm_tpl.php';
     }
 
+
     public function __userEditRegistrationForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $id = $this->getParam('id');
