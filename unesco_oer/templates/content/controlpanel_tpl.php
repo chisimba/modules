@@ -53,20 +53,23 @@
                             <?php
                             }else{}
                             ?>
-                            
-                   <!--
+                           
+                      </div>
+
+                    <td width="269">
+                        <div id="controlPanelCell">
                             <?php
                              if($this->objUser->isAdmin()){
                             $link = new link($this->uri(array("action" => 'groupListingForm')));
 
-                            $link->link = '<img src="skins/unesco_oer/images/users.png" alt="Groups" >
-                            <br/>  
+                            $link->link = ' <img src="skins/unesco_oer/images/institutions.png" alt="Institutions" >
+                            <br/>
                             <br/> Groups';
                             echo '&nbsp;' . $link->show();}
-                            ?> -->
-
-                        </div>
-                    </td>
+                             ?>
+                             </div>
+                         </td>
+                    
                 </tr>
                 <tr>
                     <td>
@@ -122,7 +125,6 @@
 
                             <?php
                             $link = new link($this->uri(array("action" => 'viewProductTypes')));
-
                             $link->link = '<img src="skins/unesco_oer/images/product-type.png" alt = "Product Type" height = "55" width = "55">
                             <br/>
                             <br/> Product Type';

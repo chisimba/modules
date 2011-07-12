@@ -187,6 +187,10 @@ class dbuserextra extends dbtable{
        return $id[0]['id'];
     }
 
+    function leaveGroup(){
+
+    }
+
 }
 
 ?>

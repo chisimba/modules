@@ -150,7 +150,12 @@ $adaptation = "parent_id is not null and deleted = 0"
 
                         </li>
                         <li class="mainNavPipe">&nbsp;</li>
-                        <li><a href="#">GROUPS</a></li>
+                        <li                            <?php
+                         $abLink = new link($this->uri(array("action" =>'groupListingForm')));
+                         $abLink->link = 'GROUPS';
+                          echo $abLink->show();
+                            ?>
+                            </li>
                         <li class="mainNavPipe">&nbsp;</li>
                         <li><a href="#">REPORTING</a></li>
                         <li class="mainNavPipe">&nbsp;</li>
