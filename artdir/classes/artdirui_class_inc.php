@@ -214,13 +214,16 @@ class artdirui extends object
     }
     
     public function slider() {
+        $path = $this->objConfig->getskinRoot().'artdir/images/slider/';
         $html = '<div class="main_view">
                      <div class="window">
                          <div class="image_reel">
-                             <a href="#"><img src="http://placekitten.com/716/394" alt="" /></a>
-                             <a href="#"><img src="http://placekitten.com/716/394" alt="" /></a>
-                             <a href="#"><img src="http://placekitten.com/716/394" alt="" /></a>
-                             <a href="#"><img src="http://placekitten.com/716/394" alt="" /></a>
+                             <a href="#"><img src="'.$path.'homepage_image_circus.jpg" alt="" /></a>
+                             <a href="#"><img src="'.$path.'homepage_image_dance.jpg" alt="" /></a>
+                             <a href="#"><img src="'.$path.'homepage_image_dj.jpg" alt="" /></a>
+                             <a href="#"><img src="'.$path.'homepage_image_mc.jpg" alt="" /></a>
+                             <a href="#"><img src="'.$path.'homepage_image_music.jpg" alt="" /></a>
+                             <a href="#"><img src="'.$path.'homepage_image_theatre.jpg" alt="" /></a>
                          </div>
                      </div>
                      <div class="paging">
@@ -228,6 +231,8 @@ class artdirui extends object
                          <a href="#" rel="2">2</a>
                          <a href="#" rel="3">3</a>
                          <a href="#" rel="4">4</a>
+                         <a href="#" rel="5">5</a>
+                         <a href="#" rel="6">6</a>
                      </div>
                  </div>';
         
