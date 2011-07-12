@@ -17,80 +17,85 @@
 
 class productthememanager extends object {
 
-    private $_producttheme;
+    private $_productTheme;
+    private $_umbrellaTheme;
     private $_productthemelist;
     private $_objDbProductThemes;
 
     function init() {
-        $this->_producttheme = $this->getObject('producttheme');
+        $this->_productTheme = $this->getObject('producttheme');
+        $this->_umbrellaTheme = $this->getObject('umbrellaproducttheme');
         $this->_productthemelist = array();
         $this->_objDbProductThemes = $this->getObject('dbproductthemes');
     }
 
-function init() {
-        $this->_name = NULL;
-        $this->_id = NULL;
-        $this->_themeType = NULL;
-        $this->_subThemes = array();
+    function createUmbrellaTheme($theme) {
+//        $this->_objDbProductThemes->addUmbrellaTheme($theme);
+//        $this->_umbrellaThemes = $this->_objDbProductThemes->getUmbrellaThemes();
+        return $this->_objDbProductThemes->addUmbrellaTheme($theme);
     }
 
-    function createTheme($themeParameters) {
-        if($themeParameters['themeType'] == 'umbrella'){
-            $this->_objDbProductThemes->addUmbrellaTheme($themeParameters['name']);
-        }  elseif (true) {
+    function createsubTheme($theme, $umbrellaId) {
+        $this->_umbrellaTheme = $this->_objDbProductThemes->getUmbrellaThemeByID($umbrellaId);
+        return $this->_umbrellaTheme->addSubTheme($theme);
+    }
 
+    
+    //This returns a subtheme based on the provided id
+    function getSubTheme($id) {
+        $themeData = $this->_objDbProductThemes->getThemeByID($id);
+        $this->_productTheme->setName($themeData['theme']);
+        $this->_productTheme->setId($themeData['id']);
+        
+        return $this->_productTheme;
+    }
+
+    //This returns an umbrella based on the provided id
+    function getUmbrellaTheme($id) {
+        $themeData = $this->_objDbProductThemes->getUmbrellaThemeByID($id);
+        $this->_umbrellaTheme->setName($themeData['theme']);
+        $this->_umbrellaTheme->setId($themeData['id']);
+
+        //Add subthemes to the theme
+       $this->_umbrellaTheme->getAllSubThemes();
+
+        return $this->_umbrellaTheme;
+    }
+
+    //This returns a list of subthemes based on the provided id
+    function getUmbrellaThemeSubThemes($id) {
+        $themeData = $this->_objDbProductThemes->getUmbrellaThemeByID($id);
+       
+        return $this->_umbrellaTheme->getAllSubThemes();
+    }
+
+    //This function updates a subtheme given a theme id, theme, and umbrella theme id
+    function updateSubtheme($themeId, $theme, $umbrellaId) {
+        return $this->_objDbProductThemes->updateTheme($id, $theme, $umbrellaId);
+    }
+    
+    //This function updates a subtheme given a theme id, theme, and umbrella theme id
+    function updateUmbrellatheme($umbrellaId, $theme) {
+        return $this->_objDbProductThemes->updateUmbrellaTheme($umbrellaId, $theme);
+    }
+
+    function deleteSubTheme($id) {
+        //Check if theme is in use
+        $isInUse = $this->objDbProductThemes->getproductIDBythemeID($id);
+
+        if(empty($isInUse)){
+//            $this->objDbProductThemes->deleteTheme($id);
+            return $this->objDbProductThemes->deleteTheme($id);
+        }else{
+            //Get list of products using the theme
+//            $usedbyList = $this->
         }
+
     }
 
-    function getName($id) {
-        return $this->_producttheme->getName();
+    function deleteUmbrellaTheme($id){
+        //Check if the theme has subthemes
     }
 
-    function getThemeType() {
-        return $this->_id;
-    }
-
-    function setID($id) {
-        if (!empty($id)) {
-            $this->_id = $id;
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
-    function setName($name) {
-        if (!empty($id)) {
-            $this->_name = $name;
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
-    function geThemeType() {
-        return $this->_themeType;
-    }
-
-    function setThemeType($themeType) {
-        if (!empty($themeType)) {
-            $this->_type = $themeType;
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
-    function getSubThemes() {
-        return $this->_subThemes;
-    }
-
-    function addSubThemes($subThemes) {
-        if (($this->_type != 'subtheme') && (!empty($subThemes))) {
-            return array_push($this->_subThemes, $subThemes);
-        } else {
-            return FALSE;
-        }
-    }
 }
 ?>

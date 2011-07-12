@@ -70,7 +70,7 @@ $table->endRow();
 
 
 $button = new button('submitProductType', $this->objLanguage->
-                                languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
+                                languageText('mod_unesco_oer_save', 'unesco_oer'));
 $button->setToSubmit();
 $controlPannel = new button('backButton', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer'));

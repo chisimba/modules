@@ -78,7 +78,7 @@ $objUmbrellaTheme->addFromDB($umbrellaThemes, 'theme', 'id', $formData['umbrella
 $table->addCell($objUmbrellaTheme->show());
 $table->endRow();
 
-$btnSaveCaption = $this->objLanguage->languageText('mod_unesco_oer_product_upload_button', 'unesco_oer');
+$btnSaveCaption = $this->objLanguage->languageText('mod_unesco_oer_save', 'unesco_oer');
 $button = new button('submitProductType', $btnSaveCaption);
 $button->setToSubmit();
 $btnCancelCaption = $this->objLanguage->languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer');
