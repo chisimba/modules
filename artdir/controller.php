@@ -106,7 +106,13 @@ class artdir extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
             case NULL:
-                $userid = '1'; //$this->objUser->userId();
+                
+                
+                return 'default_tpl.php';
+                break;
+                
+            case 'genfoaf' :
+                $userid = $this->objUser->userId();
                 $this->setVarByRef('userid', $userid);
                 //create the basic foaf profile from tbl_users
                 $this->objFoafOps->newPerson($userid);
@@ -115,7 +121,6 @@ class artdir extends controller
                 $this->objFoafOps->writeFoaf();
                 $midcontent = $this->objFoafOps->foaf2Object($userid);
                 
-                return 'default_tpl.php';
                 break;
                 
             case 'catadd':
@@ -250,7 +255,8 @@ class artdir extends controller
                 break;
                 
             case 'showsignin' :
-                return 'signin_tpl.php';
+                $objUi = $this->getObject('artdirui');
+                echo $objUi->signinBox();
                 break;
                 
             case 'search' :

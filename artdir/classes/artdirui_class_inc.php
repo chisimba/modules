@@ -144,6 +144,7 @@ class artdirui extends object
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
     }
     
     /**
@@ -318,10 +319,15 @@ class artdirui extends object
      *
      * @return string
      */
-    public function showSignInBox() {
+    public function showSignInBox($featurebox = FALSE) {
         $objBlocks = $this->getObject('blocks', 'blocks');
         $objFeatureBox = $this->getObject('featurebox', 'navigation');
-        return $objFeatureBox->show($this->objLanguage->languageText("mod_artdir_signin", "artdir"), $objBlocks->showBlock('login', 'security', 'none'));
+        if($featurebox == TRUE) {
+            return $objFeatureBox->show($this->objLanguage->languageText("mod_artdir_signin", "artdir"), $objBlocks->showBlock('login', 'security', 'none'));
+        }
+        else {
+            return $objBlocks->showBlock('login', 'security', 'none');
+        }
     }
 
     /**
@@ -335,6 +341,53 @@ class artdirui extends object
         $objBlocks = $this->getObject('blocks', 'blocks');
         $objFeatureBox = $this->getObject('featurebox', 'navigation');
         return $objFeatureBox->show($this->objLanguage->languageText("mod_artdir_signup", "artdir"), $objBlocks->showBlock('register', 'security', 'none'));
+    }
+    
+    public function getSocial() {
+        // fb code
+        $fbadmin = $this->objSysConfig->getValue('fbadminsid', 'facebookapps');
+        $fbapid = $this->objSysConfig->getValue('apid', 'facebookapps');
+        $oghead = '<meta property="fb:admins" content="'.$fbadmin.'"/>
+                   <meta property="fb:app_id" content="'.$fbapid.'" />
+	               <meta property="og:type" content="website" />		
+                   <meta property="og:title" content="'.$this->objConfig->getSiteName().'" />    	
+                   <meta property="og:url" content="'.$this->uri('').'" />';
+        // add the lot to the headerparams...
+        $this->appendArrayVar('headerParams', $oghead);
+        
+        $js = NULL;
+        $js .= $this->getFbCode();
+        $js .= $this->tweetButton();
+        $js .= $this->getPlusOneButton();
+        return $js;
+    }
+    
+    public function getFbCode() {
+        $fbapid = $this->objSysConfig->getValue('apid', 'facebookapps');
+        $fb = "<div id=\"fb-root\"></div>
+               <script>
+                   window.fbAsyncInit = function() {
+                       FB.init({appId: '$fbapid', status: true, cookie: true,
+                       xfbml: true});
+                   };
+                   (function() {
+                       var e = document.createElement('script'); e.async = true;
+                       e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+                       document.getElementById('fb-root').appendChild(e);
+                   }());
+             </script>
+             <fb:like action='like' colorscheme='light' layout='standard' show_faces='false' width='500'/>";
+        return $fb;
+    }
+    
+    public function tweetButton() {
+        $tweet = '<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal">Tweet</a>
+                  <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>';
+        return $tweet;
+    }
+    
+    public function getPlusOneButton() {
+        return '<g:plusone></g:plusone>';
     }
     
 }
