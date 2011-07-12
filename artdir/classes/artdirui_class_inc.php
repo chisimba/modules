@@ -376,7 +376,7 @@ class artdirui extends object
                        document.getElementById('fb-root').appendChild(e);
                    }());
              </script>
-             <fb:like action='like' colorscheme='light' layout='standard' show_faces='false' width='500'/>";
+             <fb:like action='like' colorscheme='light' layout='button_count' show_faces='false' width='90'/>";
         return $fb;
     }
     
