@@ -34,19 +34,22 @@ $header->str = "Unesco_OER GROUPS:";
 echo '<div id="userheading">';
 echo $header->show();
 echo '</div>';
-$button = new button('Add Button', "Add Group");
+
+
+
+$button = new button('Add Button', $this->objLanguage->languageText('mod_unesco_oer_group_heading', 'unesco_oer'));
 $button->setToSubmit();
 $addGroupLink =new link($this->uri(array('action' =>"groupRegistationForm")));
 $addGroupLink->link = $button->show();
 //echo $addGroupLink->show();
 
-$controlPannel = new button('backButton', "Back");
+$controlPannel = new button('backButton', $this->objLanguage->languageText('mod_unesco_oer_group_back_button', 'unesco_oer'));
 $controlPannel->setToSubmit();
 $BackToControlPannelLink = new link($this->uri(array('action' => "controlpanel")));
 $BackToControlPannelLink->link = $controlPannel->show();
 
 //button search user
-$buttonGO = new button('searchButton', "Go");
+$buttonGO = new button('searchButton',$this->objLanguage->languageText('mod_unesco_oer_group_go_button', 'unesco_oer') );
 //$buttonGO->setOnClick("javascript: searchThis()");
 $buttonGO->show();
 //text input search user
@@ -62,10 +65,12 @@ $myTable->cellspacing = '0';
 $myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
-$myTable->addHeaderCell('Group name',null,null,left,"userheader",null);
-$myTable->addHeaderCell('Group E-mail',null,null,left,"userheader",null);
-$myTable->addHeaderCell('Edit',null,null,left,"userheader",null);
-$myTable->addHeaderCell('Delete',null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_name', 'unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_email', 'unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_users', 'unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_product_upload_heading', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
 //$groups = $this->objDbGroups->getAllGroups();
@@ -93,19 +98,26 @@ if (count($groups) > 0) {
         $deleteLink =new link($this->uri(array('action' => "deleteGroup",'id' => $group['id'])));
         $deleteLink->link = $objIcon->show();
         $deleteLink->cssClass = 'deleteuser';
-        //$href=$deleteLink->href;
-        //$finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
         $myTable->addCell($deleteLink->show());
-//        $finaldeleteLink='<a class="deleteuser" href="'.$href.'">Delete</a>';
-//        $myTable->addCell($finaldeleteLink);
-       //$myTable->endRow();
+
+        $objIcon->setIcon('view');
+        $editLink =new link($this->uri(array('action' =>"userListingForm",'id' =>$group['id'])));
+        $editLink->link = $objIcon->show();
+        $myTable->addCell($editLink->show());
+        
+        $objIcon->setIcon('view');
+        $editLink =new link($this->uri(array('action' =>"groupProductForm",'id' =>$group['id'])));
+        $editLink->link = $objIcon->show();
+        $myTable->addCell($editLink->show());
+
+
     }
 }
 
 echo $nogroupfound; // this must be a script
 
 $fs = new fieldset();
-$fs->setLegend("Groups");
+$fs->setLegend($this->objLanguage->languageText('mod_unesco_oer_group_users', 'unesco_oer'));
 $fs->addContent($myTable->show());
 echo $fs->show();
 

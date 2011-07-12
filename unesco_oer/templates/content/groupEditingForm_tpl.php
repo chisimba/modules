@@ -148,22 +148,17 @@ $table = $this->newObject('htmltable', 'htmlelements');
 $email = new textinput('register_email');
 $email->size = 80;
 $email->value = $group[0]['email'];
-//$confirmEmail = new textinput('register_confirmemail');
-//$confirmEmail->value = $group[0]['email'];
 if ($mode == 'addfixup') {
     $email->value = $this->getParam('register_email');
-    //$confirmEmail->value = $this->getParam('register_confirmemail');
-}
+   }
 if (isset($userstring[9]) && $mode == 'add')
 {
     $email->value = $userstring[9];
-    //$confirmEmail->value = $userstring[9];
+    
 }
 
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_email', 'unesco_oer'));
 $table->addCell($email->show());
-//$table->addCell('Confirm Email');
-//$table->addCell($confirmEmail->show());
 $table->endRow();
 
 //address
@@ -340,10 +335,10 @@ $fieldset->contents = $table->show();
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
-$button = new button ('submitform', 'Update Details');
+$button = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_update_details_button', 'unesco_oer') );
 $button->setToSubmit();
 
-$Cancelbutton = new button ('submitform', 'Cancel');
+$Cancelbutton = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 $Cancelbutton->setToSubmit();
 $CancelLink = new link($this->uri(array('action' => "groupListingForm")));
 $CancelLink->link =$Cancelbutton->show();

@@ -322,10 +322,9 @@ $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
-$button = new button ('submitform', 'Save');
-$button->setToSubmit();
+$button = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
 
-$Cancelbutton = new button ('submitform', 'Cancel');
+$Cancelbutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 $Cancelbutton->setToSubmit();
 $CancelLink = new link($this->uri(array('action' => "groupListingForm")));
 $CancelLink->link =$Cancelbutton->show();

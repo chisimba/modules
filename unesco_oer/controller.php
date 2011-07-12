@@ -1829,6 +1829,15 @@ class unesco_oer extends controller {
         }
     }
 
+    function __groupProductForm(){
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'groupProductForm_tpl.php';
+
+    }
+
+
+
+
     /*     * This function handles the uploading of product metadata
      *
      * @return string
