@@ -68,7 +68,7 @@ if (count($Institution) > 0) {
 
 
         $content.='
-            <div id="institutions"> ' . $institutionLink->show() . '&nbsp;&nbsp;'.$description.'<br/>
+            <div id="institutions"> ' . $institutionLink->show() . '&nbsp;&nbsp;' . $description . '<br/>
           ' . $institutionGUI->showEditInstitutionLinkThumbnail($Institutions['id']) . ' |
           ' . $institutionGUI->showDeleteInstitutionLinkThumbnail($Institutions['id']) . '&nbsp;&nbsp;
 

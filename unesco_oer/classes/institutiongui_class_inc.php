@@ -97,7 +97,8 @@ class institutiongui extends object {
     function showNewInstitutionLink() {
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => NULL)));
         $acLink->cssClass = 'adaptationListingLink';
-        $acLink->link = 'Create new institution';
+        $newInstitutionCaption = $this->objLanguage->languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
+        $acLink->link = $newInstitutionCaption;
 
         return $acLink->show();
     }
@@ -105,7 +106,8 @@ class institutiongui extends object {
     function showEditInstitutionLink($institutionId) {
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'adaptationListingLink';
-        $acLink->link = 'Update';
+        $updateInstitutionCaption = $this->objLanguage->languageText('mod_unesco_oer_institution_Update_heading', 'unesco_oer');
+        $acLink->link = $updateInstitutionCaption;
 
         return $acLink->show();
     }
@@ -113,7 +115,8 @@ class institutiongui extends object {
     function showDeleteInstitutionLink($institutionId) {
         $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'deleteinstitution';
-        $acLink->link = 'Delete';
+        $deleteInstitutionCaption = $this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer');
+        $acLink->link = $deleteInstitutionCaption;
 
         return $acLink->show();
     }

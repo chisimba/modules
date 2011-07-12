@@ -14,12 +14,11 @@
 
                             <?php
                             $abLink = new link($this->uri(array("action" => 'home')));
-
+                            $productsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_products_title', 'unesco_oer');
                             $abLink->link = '<img src="skins/unesco_oer/images/products.png" alt="Adaptation placeholder" >
                             <br/>  
-                            <br/>';
-                            $productsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_products_title', 'unesco_oer');
-                            echo $productsTitle . '&nbsp;' . $abLink->show();
+                            <br/>  ' .  $productsTitle  ;
+                            echo '&nbsp;' . $abLink->show();
                             ?> 
 
                         </div>
@@ -32,12 +31,11 @@
                               if($this->objUser->isAdmin()){
 
                             $link = new link($this->uri(array("action" => 'userListingForm')));
-
+                            $usersTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_users_title', 'unesco_oer');
                             $link->link = '<img src="skins/unesco_oer/images/users.png" alt="Institutions" >
                             <br/>  
-                            <br/>';
-                            $usersTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_users_title', 'unesco_oer');
-                            echo $usersTitle . $link->show();}
+                            <br/>  ' . $usersTitle;
+                            echo '&nbsp;' . $link->show();}
                             ?>
 
                         </div>
@@ -55,7 +53,8 @@
                             <a href="?module=groupadmin" class="prifileLinks">
                                 <?php
                                 $groupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_groups_title', 'unesco_oer');
-                            echo $groupsTitle;?>
+                                echo $groupsTitle;
+                                ?>
                             </a>
                             <?php
                             }else{}
@@ -68,12 +67,11 @@
                             <?php
                              if($this->objUser->isAdmin()){
                             $link = new link($this->uri(array("action" => 'groupListingForm')));
-
+                            $groupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_groups_title', 'unesco_oer');
                             $link->link = ' <img src="skins/unesco_oer/images/institutions.png" alt="Institutions" >
                             <br/>
-                            <br/> ';
-                            $gfroupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_groups_title', 'unesco_oer');
-                            echo $groupsTitle . '&nbsp;' . $link->show();}
+                            <br/> ' . $groupsTitle;
+                            echo '&nbsp;' . $link->show();}
                              ?>
                              </div>
                          </td>
@@ -87,12 +85,12 @@
                             <?php
                              if($this->objUser->isAdmin()){
                             $link = new link($this->uri(array("action" => 'viewInstitutions')));
+                            $institutionsTitle = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
 
                             $link->link = ' <img src="skins/unesco_oer/images/institutions.png" alt="Institutions" >
                             <br/>  
-                            <br/>';
-                            $institutionsTitle = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
-                            echo $institutionsTitle . '&nbsp;' . $link->show();}
+                            <br/> ' . $institutionsTitle;
+                            echo '&nbsp;' . $link->show();}
                             ?> 
 
                         </div>
@@ -104,12 +102,12 @@
 
                             <?php
                             $link = new link($this->uri(array("action" => 'viewProductThemes')));
-
+                            $themesTitle = $this->objLanguage->languageText('mod_unesco_oer_product_themes', 'unesco_oer');
+                            
                             $link->link = '<img src="skins/unesco_oer/images/product_theme.png" alt = "Themes" height = "55" width = "55">
                             <br/>
-                            <br/>';
-                            $themesTitle = $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer');
-                            echo $themesTitle . '&nbsp;' . $link->show();
+                            <br/> ' . $themesTitle;
+                            echo '&nbsp;' . $link->show();
                             ?>
 
                         </div>
@@ -119,12 +117,12 @@
 
                             <?php
                             $link = new link($this->uri(array("action" => 'viewLanguages')));
-
-                            $link->link = '<img src="skins/unesco_oer/images/icon-languages.png" alt = "Languages">
+                            $languagesTitle = $this->objLanguage->languageText('mod_unesco_oer_languages', 'unesco_oer');
+                            
+                            $link->link = '<img src="skins/unesco_oer/images/large-icon-languages.png" alt = "Languages" height = "55" width = "55">
                             <br/>
-                            <br/> ';
-                            $languagesTitle = $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer');
-                            echo $languagesTitle . '&nbsp;' . $link->show();
+                            <br/> ' . $languagesTitle;
+                            echo '&nbsp;' . $link->show();
                             ?>
 
                         </div>
@@ -133,14 +131,14 @@
                 <tr>
                     <td width="269">
                         <div id="controlPanelCell">
-
                             <?php
                             $link = new link($this->uri(array("action" => 'viewProductTypes')));
+                            $productTypes = $this->objLanguage->languageText('mod_unesco_oer_control_panel_product_types_title', 'unesco_oer');
+
                             $link->link = '<img src="skins/unesco_oer/images/product-type.png" alt = "Product Type" height = "55" width = "55">
                             <br/>
-                            <br/> ';
-                            $languagesTitle = $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer');
-                            echo $languagesTitle . '&nbsp;' . $link->show();
+                            <br/> ' . $productTypes;
+                            echo '&nbsp;' . $link->show();
                             ?>
                         </div>
                     </td>
