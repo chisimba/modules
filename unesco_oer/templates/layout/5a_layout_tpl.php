@@ -63,6 +63,12 @@
                             ?>
                             <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a>
                             <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger" width="20" height="20" class="userIcons" title="My Messenger"></a>
+                                                        <a href="?module=forum"><img src="skins/_common/icons/modules/forum.gif" alt="My Forums" width="20" height="20" class="userIcons" title=
+                                <?php
+                                $myForumsCaption = $this->objLanguage->languageText('mod_unesco_oer_my_forums_caption', 'unesco_oer');
+                                echo $myForumsCaption;
+                                ?>
+                                                         ></a>
                         </div>
                     </div>
                 <div class="logoutSearchDivRight">

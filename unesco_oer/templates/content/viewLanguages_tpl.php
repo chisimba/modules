@@ -71,10 +71,10 @@ $themesTable->cellpadding = '0';
 
 $themesTable->startHeaderRow();
 //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
-$themesTable->addHeaderCell('Language', null, null, left, "userheader", null);
-$themesTable->addHeaderCell('Code', null, null, left, "userheader", null);
-$themesTable->addHeaderCell('Edit', null, null, left, "userheader", null);
-$themesTable->addHeaderCell('Delete', null, null, left, "userheader", null);
+$themesTable->addHeaderCell('Language', null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell('Code', null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell('Edit', null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell('Delete', null, null, 'left', "userheader", null);
 $themesTable->endHeaderRow();
 
 //get languages from the database

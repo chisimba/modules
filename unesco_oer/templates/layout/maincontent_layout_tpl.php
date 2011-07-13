@@ -39,27 +39,33 @@ $adaptation = "parent_id is not null and deleted = 0"
                                 <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
                             </div>
                             <div class="profileBookmarkGroupsMessengerDiv">
-                                
-                                
+
+
                                 <a href="?module=userdetails"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
-                                   <?php
+                            <?php
                             $booklink = new link($this->uri(array("action" => "Bookmarks")));
                             $img2 = '<img src= "skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks">';
                             $booklink->link = $img2;
                             echo $booklink->show();
-                  
 
 
 
-                
+
+
                             $abLink = new link($this->uri(array("action" => "controlpanel")));
                             $img = '<img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools">';
                             $abLink->link = $img;
-                                 
-                         echo $abLink->show();
+
+                            echo $abLink->show();
                             ?>
                             <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a>
                             <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger" width="20" height="20" class="userIcons" title="My Messenger"></a>
+                            <a href="?module=forum"><img src="skins/_common/icons/modules/forum.gif" alt="My Forums" width="20" height="20" class="userIcons" title=
+                                <?php
+                                $myForumsCaption = $this->objLanguage->languageText('mod_unesco_oer_my_forums_caption', 'unesco_oer');
+                                echo $myForumsCaption;
+                                ?>
+                                                         ></a>
                         </div>
                     </div>
                     <div class="logoutSearchDivRight">
@@ -94,35 +100,35 @@ $adaptation = "parent_id is not null and deleted = 0"
 
 
                 <?php
-                        } else {
+                            } else {
                 ?>
-                            <div id="loginDiv">
-                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
-                            </div>
+                                <div id="loginDiv">
+                                    <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
+                                </div>
                 <?php
-                        }
+                            }
                 ?>
-                        <div class="logoAndHeading">
-                            <img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
-                            <div class="logoText">
-                                <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
-                                <h1>UNESCO OER PRODUCTS</h1>
+                            <div class="logoAndHeading">
+                                <img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
+                                <div class="logoText">
+                                    <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
+                                    <h1>UNESCO OER PRODUCTS</h1>
+                                </div>
                             </div>
-                        </div>
-                        <div class="languagesDiv">
-                            <div class="languages">
-                                <a href="" class="languagesLinksActive">English</a> |
-                                <a href="" class="languagesLinks">Français</a> |
-                                <a href="" class="languagesLinks">Español</a> |
-                                <a href="" class="languagesLinks">Русский</a> |
-                                <a href="" class="languagesLinks">لعربية</a> |
-                                <a href="" class="languagesLinks">中文</a>
+                            <div class="languagesDiv">
+                                <div class="languages">
+                                    <a href="" class="languagesLinksActive">English</a> |
+                                    <a href="" class="languagesLinks">Français</a> |
+                                    <a href="" class="languagesLinks">Español</a> |
+                                    <a href="" class="languagesLinks">Русский</a> |
+                                    <a href="" class="languagesLinks">لعربية</a> |
+                                    <a href="" class="languagesLinks">中文</a>
+                                </div>
+                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages" class="languagesMainIcon">
                             </div>
-                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages" class="languagesMainIcon">
-                        </div>
-                        <div class="mainNavigation">
-                            <ul id="sddm">
-                                <li class="onStateProducts">
+                            <div class="mainNavigation">
+                                <ul id="sddm">
+                                    <li class="onStateProducts">
                             <?php
                             $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
                             $abLink->link = 'UNESCO OER PRODUCTS';
@@ -151,11 +157,11 @@ $adaptation = "parent_id is not null and deleted = 0"
                         </li>
                         <li class="mainNavPipe">&nbsp;</li>
                         <li                            <?php
-                         $abLink = new link($this->uri(array("action" =>'groupListingForm')));
-                         $abLink->link = 'GROUPS';
-                          echo $abLink->show();
+                            $abLink = new link($this->uri(array("action" => 'groupListingForm')));
+                            $abLink->link = 'GROUPS';
+                            echo $abLink->show();
                             ?>
-                            </li>
+                        </li>
                         <li class="mainNavPipe">&nbsp;</li>
                         <li><a href="#">REPORTING</a></li>
                         <li class="mainNavPipe">&nbsp;</li>
@@ -167,28 +173,28 @@ $adaptation = "parent_id is not null and deleted = 0"
             </div>
 
             <div class="mainContentHolder">
-                <?php
+            <?php
                             echo $this->getContent();
-                ?>
-            </div>
-            <!-- Footer-->
-            <!-- Start of Footer -->
-            <div class="footerDiv">
-
-                <h3>United Nations Educational, Scientific and Cultural ORganization</h3><br />
-                UNESCO Headquarters is established in Paris. Offices are located in two places in the same area:
-
-                7, place de Fontenoy 75352 Paris 07 SP France
-                1, rue Miollis 75732 Paris Cedex 15 France
-
-
-                General phone:
-                +33 (0)1 45 68 10 00
-
-
-
-            </div>
-            <!-- End of Footer -->
+            ?>
         </div>
-    </body>
+        <!-- Footer-->
+        <!-- Start of Footer -->
+        <div class="footerDiv">
+
+            <h3>United Nations Educational, Scientific and Cultural ORganization</h3><br />
+            UNESCO Headquarters is established in Paris. Offices are located in two places in the same area:
+
+            7, place de Fontenoy 75352 Paris 07 SP France
+            1, rue Miollis 75732 Paris Cedex 15 France
+
+
+            General phone:
+            +33 (0)1 45 68 10 00
+
+
+
+        </div>
+        <!-- End of Footer -->
+    </div>
+</body>
 </html>
