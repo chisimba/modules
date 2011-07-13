@@ -152,6 +152,11 @@ class dbuserextra extends dbtable{
         return $id[0]['id'];
     }
 
+    function getUserbyId($id){
+        $sql="SELECT * from tbl_users WHERE id='$id'";
+        return $this->getArray($sql);
+     }
+
     function getAllUser(){
          $sql = "select * from tbl_users";
          return $this->getArray($sql);
@@ -163,11 +168,17 @@ class dbuserextra extends dbtable{
          return $this->getArray($sql);
        }
 
-     function getGroupUser($groupname){
+     function getGroupUserID($groupname){
          $sql="SELECT* FROM tbl_unesco_oer_userextra WHERE groupmembership='$groupname'";
          $user=$this->getArray($sql);
          return $user[0]['id'];
      }
+
+     function getAlluserGroup($groupname){
+         $sql="SELECT* FROM tbl_unesco_oer_userextra WHERE groupmembership='$groupname'";
+         return $user=$this->getArray($sql);
+     }
+
 
 
 

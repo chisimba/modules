@@ -70,10 +70,10 @@ $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_e
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
-//$groups = $this->objDbGroups->getAllGroups();
-//get user from the database
 
-  $groups = $this->objDbGroups->getGroupProduct($id);
+// get product from tbl_product that have a creator with the id
+  //$groups = $this->objDbGroups->getGroupProduct($id);
+   $groups = $this->objDbGroups->getAllGroups();
 
 
 if (count($groups) > 0) {
@@ -89,10 +89,21 @@ if (count($groups) > 0) {
         $myTable->addCell($editLink->show());
 
         $objIcon->setIcon('delete');
-        $deleteLink =new link($this->uri(array('action' => "deleteGroup",'id' => $group['id'])));
-        $deleteLink->link = $objIcon->show();
-        $deleteLink->cssClass = 'deleteuser';
-        $myTable->addCell($deleteLink->show());
+        if ($this->objDbProducts->hasAnAdaptation($this->getParam('id'))) { //product has an adaptation can't be deleted
+            $deleteLink = new link($this->uri(array('action' => "deleteGroup", 'id' => $group['id'])));
+            $deleteLink->link = $objIcon->show();
+            $deleteLink->cssClass = 'deleteuser';
+            $myTable->addCell($deleteLink->show());
+        } else { //product has no adaptation can be deleted
+            $deleteLink = new link($this->uri(array('action' => "deleteGroup", 'id' => $group['id'])));
+            $deleteLink->link = $objIcon->show();
+            $deleteLink->cssClass = 'deleteresourcer';
+            $myTable->addCell($deleteLink->show());
+        }
+//        $deleteLink =new link($this->uri(array('action' => "",'id' => $group['id'])));
+//        $deleteLink->link = $objIcon->show();
+//        $deleteLink->cssClass = 'deleteuser';
+//        $myTable->addCell($deleteLink->show());
 
     }
 }
@@ -112,6 +123,23 @@ jQuery(document).ready(function(){
 
     jQuery("a[class=deleteuser]").click(function(){
 
+        var r=confirm( "This Product is being Adaptation \n Can not be deleted !!!");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+
+
+);
+}
+);
+
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=deleteresource]").click(function(){
+
         var r=confirm( "Are you sure you want to delete this Product?");
         if(r== true){
             window.location=this.href;
@@ -123,9 +151,8 @@ jQuery(document).ready(function(){
 );
 
 }
-
-
 );
+
 
 $('button[name=searchButton]').click(
     function() {

@@ -53,7 +53,12 @@ $table->endRow();
 
 $controlPannel = new button('backButton', "Back");
 $controlPannel->setToSubmit();
-$BackToControlPannelLink = new link($this->uri(array('action' => "controlpanel")));
+if(strcmp($this->getParam('mode'), 'groupuser') == 0){
+    $action="groupListingForm";
+}else{
+    $action="controlpanel";
+}
+$BackToControlPannelLink = new link($this->uri(array('action' => $action)));
 $BackToControlPannelLink->link = $controlPannel->show();
 
 //button search user
@@ -82,22 +87,32 @@ $myTable->addHeaderCell('Edit', null, null, left, "userheader", null);
 $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 $myTable->endHeaderRow();
 
-
+ 
 //get user from the database
 $users = "";
-$mode=$this->getParam('mode');
-if (strcmp($mode, 'addfixup') == 0){
-    $users=$user;
-}else{
-    if(strcmp($this->getParam('mode'), 'groupuser') == 0){
-        $groupname= $this->objDbGroups->getGroupName($this->getParam('id'));
-        $userId =$this->objUseExtra->getGroupUser($groupname);
-        $users=$this->objUseExtra->getUserbyUserIdbyUserID($userid);
-    }else{
-        $users = $this->objUseExtra->getAllUser();}
+$mode = $this->getParam('mode');
+if (strcmp($mode, 'addfixup') == 0) {
+    $users = $user;
+} else {
+    if (strcmp($this->getParam('mode'), 'groupuser') == 0) {
+        $groupname = $this->objDbGroups->getGroupName($this->getParam('id'));
+        $userIds = $this->objUseExtra->getAlluserGroup($groupname);
+        $users = array();
+        for ($i = 0; $i < count($userIds); $i++) {
+            $currUser = $this->objUseExtra->getUserbyId($userIds[$i]['id']);
+            $users[] = $currUser[0];
+            // array_push($users,$currUser[$i]);
+//            print_r($users)        ;
+///            die();
+        }
+    } else {
+        $users = $this->objUseExtra->getAllUser();
+//        print_r($users);
+//        die();
+    }
 }
 
-echo $users;
+
 if (count($users) > 0) {
     foreach ($users as $user) {
         $myTable->startRow();
