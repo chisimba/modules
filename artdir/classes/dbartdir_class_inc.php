@@ -271,6 +271,21 @@ class dbartdir extends dbTable
         }
     }
     
+    public function getRandArtists($onum = 3) {
+        $this->_changeTable('tbl_artdir_artists');
+        $people = $this->getAll();
+        if(!empty($people)) {
+            $count = count($people);
+            if($count = $onum) {
+                return $people;
+            }
+            else {
+                $people = array_rand($people, $onum);
+            }
+        }
+        return $people;
+    }
+    
     /**
      * Method to dynamically switch tables
      *

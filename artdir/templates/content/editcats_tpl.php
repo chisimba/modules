@@ -2,7 +2,9 @@
 
 // Display dialogue if necessary.
 echo $this->objTermsDialogue->show();
-
+if(!isset($catarr)) {
+    $catarr = NULL;
+}
 //edit cats
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 
@@ -14,13 +16,14 @@ $objUi = $this->getObject('artdirui');
 $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
+
 if ($leftCol == NULL || $rightSideColumn == NULL) {
     $cssLayout->setNumColumns(2);
 } else {
     $cssLayout->setNumColumns(3);
 }
 //get the category manager
-$middleColumn = $this->objCats->categoryEditor($userid);
+$middleColumn = $this->objCats->categoryEditor($userid, $mode, $catarr);
 
 
 if ($leftCol == NULL) {

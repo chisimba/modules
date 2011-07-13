@@ -121,6 +121,12 @@ class artdir extends controller
                 
                 break;
                 
+            case 'deletecat' :
+                $id = $this->getParam('id');
+                $this->objDbArtdir->deleteCat($id);
+                $this->nextAction('');
+                break;
+            
             case 'catadd':
                 if ($this->objUser->isLoggedIn() == FALSE) {
                     //not logged in - send to default action
@@ -135,17 +141,7 @@ class artdir extends controller
                 $catparent = $this->getParam('catparent');
                 $catdesc = $this->getParam('catdesc');
                 $id = $this->getParam('id');
-                //category quick add
-                if ($mode == 'quickadd') {
-                    if (empty($list)) {
-                        $this->nextAction('');
-                        break;
-                    }
-                    $this->objblogCategories->quickCatAdd($list, $userid);
-                    $this->nextAction('');
-
-                    break;
-                }
+                $this->setVarByRef('mode', $mode);
                 if ($mode == 'edit') {
                     //update the records in the db
                     //build the array again
@@ -162,7 +158,8 @@ class artdir extends controller
                     $this->setVarByRef('catarr', $catarr);
                     $this->setVarByRef('userid', $userid);
                     $this->setVarByRef('catid', $id);
-                    return 'cedit_tpl.php';
+                    
+                    return 'editcats_tpl.php';
                     break;
                 }
                 if ($mode == 'editcommit') {
@@ -223,17 +220,16 @@ class artdir extends controller
                 }
                 //check the mode
                 $mode = $this->getParam('mode');
+                $this->setVarByRef('mode', $mode);
                 switch ($mode) {
                     //return a specific template for the chosen mode
 
-                    case 'writepost':
-                        return 'writepost_tpl.php';
+                    case 'addartist':
+                        return 'addartist_tpl.php';
                         break;
 
-                    case 'editpost':
-                    //$this->setPageTemplate(NULL);
-                        //$this->setLayoutTemplate("block_2layout_tpl.php");
-                        return 'editpost_tpl.php';
+                    case 'editartist':
+                        return 'editartist_tpl.php';
                         break;
 
                     case 'editcats':
@@ -241,7 +237,7 @@ class artdir extends controller
                         break;
 
                     case 'acceptterms':
-                        $value = $this->objUserParams->setItem('accepted_blog_terms', 1);
+                        $value = $this->objUserParams->setItem('accepted_artdir_terms', 1);
                         $data = array('value' => $value);
                         $json = json_encode($data);
                         $this->setContentType('application/json');
@@ -249,7 +245,7 @@ class artdir extends controller
                         return;
                 }
                 // return the default template for no mode set
-                return 'blogadminmenu_tpl.php';
+                return 'artddiradminmenu_tpl.php';
                 break;
                 
             case 'showsignin' :

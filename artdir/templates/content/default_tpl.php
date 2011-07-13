@@ -8,6 +8,7 @@ $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $leftCol = NULL;
 $middleColumn = NULL;
 $rightSideColumn = NULL;
+
 $objUi = $this->getObject('artdirui');
 
 // right side blocks
@@ -21,6 +22,7 @@ if ($leftCol == NULL || $rightSideColumn == NULL) {
 
 //get the category manager
 $middleColumn = $objUi->slider(); //$this->objCats->categoryEditor($userid);
+$middleColumn .= $objUi->getFeaturedArtists();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($rightSideColumn);

@@ -146,8 +146,9 @@ class artdircategories extends object
      * @param  integer $userid
      * @return string
      */
-    public function categoryEditor($userid) 
+    public function categoryEditor($userid, $mode = NULL, $catarr = NULL) 
     {
+    // var_dump($catarr); die();
         // get the categories layout sorted
         $this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
@@ -206,10 +207,19 @@ class artdircategories extends object
         } else {
             $ctable = $this->objLanguage->languageText("mod_artdir_nocats", "artdir");
         }
-        // add a new category form:
-        $catform = new form('catadd', $this->uri(array(
-            'action' => 'catadd'
-        )));
+        
+        // edit or add a category?
+        if($mode == 'edit') {
+            $catform = new form('catedit', $this->uri(array(
+                'action' => 'catadd', 'mode' => 'editcommit', 'id' => $catarr['id']
+            )));
+        }
+        else {
+            // add a new category form:
+            $catform = new form('catadd', $this->uri(array(
+                'action' => 'catadd'
+            )));
+        }
         // $catform->addRule('catname', $this->objLanguage->languageText("mod_artdir_phrase_titlereq", "artdir") , 'required');
         $cfieldset = $this->getObject('fieldset', 'htmlelements');
         $cfieldset->setLegend($this->objLanguage->languageText('mod_artdir_catdetails', 'artdir'));
@@ -219,6 +229,9 @@ class artdircategories extends object
         $catadd->startRow();
         $clabel = new label($this->objLanguage->languageText('mod_artdir_catname', 'artdir') . ':', 'input_catname');
         $catname = new textinput('catname');
+        if($mode == 'edit') {
+            $catname->setValue($catarr['cat_name']);
+        }
         $catadd->addCell($clabel->show());
         $catadd->addCell($catname->show());
         $catadd->endRow();
@@ -246,6 +259,9 @@ class artdircategories extends object
         $cdesc = new textarea;
         // $this->newObject('textarea','htmlelements');
         $cdesc->setName('catdesc');
+        if($mode == 'edit') {
+            $cdesc->setValue($catarr['cat_desc']);
+        }
         // $cdesc->setBasicToolBar();
         $catadd->addCell($desclabel->show());
         $catadd->addCell($cdesc->show());

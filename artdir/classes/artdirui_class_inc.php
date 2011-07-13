@@ -208,6 +208,7 @@ class artdirui extends object
                 $link->link = $c['cat_nicename'];
                 $rightCol .= '<div id="cats"><a href=#>'.$link->show().'</a></div>';
             }
+            $rightCol .= '<hr />';
         }
         
         return $rightCol;
@@ -224,6 +225,7 @@ class artdirui extends object
                              <a href="#"><img src="'.$path.'homepage_image_mc.jpg" alt="" /></a>
                              <a href="#"><img src="'.$path.'homepage_image_music.jpg" alt="" /></a>
                              <a href="#"><img src="'.$path.'homepage_image_theatre.jpg" alt="" /></a>
+                             
                          </div>
                      </div>
                      <div class="paging">
@@ -233,6 +235,7 @@ class artdirui extends object
                          <a href="#" rel="4">4</a>
                          <a href="#" rel="5">5</a>
                          <a href="#" rel="6">6</a>
+                         
                      </div>
                  </div>';
         
@@ -408,6 +411,38 @@ class artdirui extends object
     
     public function getPlusOneButton() {
         return '<g:plusone></g:plusone>';
+    }
+    
+    public function getFeaturedArtists() {
+        $fart = NULL;
+        $fart .= '<div class="artistwindow">';
+        $artist = $this->objDbArtdir->getRandArtists();
+        // make a function here to get an image that has been uploaded. Replace the kittehz
+        if(isset($artist[0]) && !empty($artist[0])) {
+            $fart .= '<div id="artistleft">'.'<img src="http://placekitten.com/229/180" />'.'<h3>'.$artist[0]['actname'].'</h3></div>';
+        }
+        else {
+            $fart .= '<div id="artistleft"><img src="http://placekitten.com/229/180" />';
+        }
+        if(isset($artist[1]) && !empty($artist[1])) {
+            $fart .= '<div id="artistmiddle">'.'<img src="http://placekitten.com/229/180" />'.'<h3>'.$artist[1]['actname'].'</h3></div>';
+        }
+        else {
+            $fart .= '<div id="artistmiddle"><img src="http://placekitten.com/229/180" />';
+        }
+        if(isset($artist[2]) && !empty($artist[2])) {
+            $fart .= '<div id="artistright">'.'<img src="http://placekitten.com/229/180" />'.'<h3>'.$artist[2]['actname'].'</h3></div>';
+        }
+        else {
+            $fart .= '<div id="artistright"><img src="http://placekitten.com/229/180" />';
+        }
+        
+        /*$fart .= '<div id="blurbleft">'.$artist[0]['description'].'</div>';
+        $fart .= '<div id="blurbmiddle">'.$artist[1]['description'].'</div>';
+        $fart .= '<div id="blurbright">'.$artist[0]['description'].'</div>'; */
+        
+        $fart .= '</div>';
+        return $fart;
     }
     
 }
