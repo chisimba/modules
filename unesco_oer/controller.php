@@ -943,7 +943,7 @@ class unesco_oer extends controller {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
 
-            return "__viewInstitutions()";
+            return $this->__viewInstitutions();
         } else {
 
             //There has been an error, go back to the form to fix it
@@ -1100,7 +1100,7 @@ class unesco_oer extends controller {
 
         $this->objDbInstitution->deleteInstitution($institutionId);
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
-        return 'viewInstitutions_tpl.php';
+        return $this->__viewInstitutions();
     }
 
     public function __cancelEditInstitution() {
@@ -1149,7 +1149,7 @@ class unesco_oer extends controller {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->objInstitutionManager->editInstitution($institutionId, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
 
-            return "viewInstitutions_tpl.php";
+            return $this->__viewInstitutions();
         } else {
 
             //There has been an error, go back to the form to fix it

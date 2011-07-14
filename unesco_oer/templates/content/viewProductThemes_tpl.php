@@ -18,10 +18,6 @@
  *
  */
 
-//Display errors
-error_reporting(E_ALL);
-ini_set('display_errors', 'Off');
-
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');

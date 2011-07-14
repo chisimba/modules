@@ -7,9 +7,6 @@
     </head>
     <body>
         <?php
-        //Display errors
-        error_reporting(E_ALL);
-        ini_set('display_errors', 'Off');
 
         $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
         $institutionmanager = $this->getObject('institutionmanager', 'unesco_oer');

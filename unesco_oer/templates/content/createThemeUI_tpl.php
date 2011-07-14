@@ -14,11 +14,6 @@
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-//Display errors
-error_reporting(E_ALL);
-ini_set('display_errors', 'Off');
-
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');

@@ -1,8 +1,5 @@
 <div class="mainWrapper">
     <?php
-//Display errors
-    error_reporting(E_ALL);
-    ini_set('display_errors', 'On');
     /*
      * This program is free software; you can redistribute it and/or modify
      * it under the terms of the GNU General Public License as published by

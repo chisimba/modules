@@ -19,11 +19,13 @@ class dbproductthemes extends dbtable {
 
     private $umbrella_theme_table;
     private $product_theme_jxn_table;
+    public $objUser;
 
     function init() {
         parent::init("tbl_unesco_oer_product_themes");
         $this->umbrella_theme_table = "tbl_unesco_oer_umbrella_themes";
         $this->product_theme_jxn_table = "tbl_unesco_oer_product_theme_junction";
+        $objUser = $this->getObject('user', 'security');
     }
 
     function getProductThemes() {
@@ -38,13 +40,18 @@ class dbproductthemes extends dbtable {
 
     function deleteTheme($id) {
         $sql = "DELETE FROM $this->_tableName WHERE id = '$id'";
+        $objIndexData = $this->getObject('indexdata', 'search');
+        $objIndexData->removeIndex($id);
+        $this->getArray($sql);
 //If the theme is not an umbrella theme then it must be a subtheme
-        return $this->getArray($sql);
+        
     }
 
     function deleteUmbrellaTheme($id) {
         $sql = "DELETE FROM $this->umbrella_theme_table WHERE id = '$id'";
-        return $this->getArray($sql);
+        $this->getArray($sql);
+        $objIndexData = $this->getObject('indexdata', 'search');
+        $objIndexData->removeIndex($id);
     }
 
     function getThemesByProductID($productID) {
@@ -85,6 +92,24 @@ class dbproductthemes extends dbtable {
         );
 
         $this->insert($data);
+
+        // Prepare to add context to search index
+        $objIndexData = $this->getObject('indexdata', 'search');
+
+        $saveDate = date('Y-m-d H:M:S');
+        $url = $this->uri(array('action' => 'viewThemes', 'themeId' => ''), 'contextcontent');
+
+        $objTrimStr = $this->getObject('trimstr', 'strings');
+        $teaser = $objTrimStr->strTrim(strip_tags($themeName), 500);
+
+        $userId = 4;
+        //$this->objUser->userId();
+        $module = 'unesco_oer';
+
+        // Todo - Set permissions on entering course, e.g. iscontextmember.
+        $permissions = NULL;
+
+        $objIndexData->luceneIndex(NULL, $saveDate, $url, $themeName, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
     }
 
     function addUmbrellaTheme($umbrella) {
@@ -93,6 +118,24 @@ class dbproductthemes extends dbtable {
         );
 
         $this->insert($data, $this->umbrella_theme_table);
+
+        // Prepare to add context to search index
+        $objIndexData = $this->getObject('indexdata', 'search');
+
+        $saveDate = date('Y-m-d H:M:S');
+        $url = $this->uri(array('action' => 'viewThemes', 'themeId' => ''), 'contextcontent');
+
+        $objTrimStr = $this->getObject('trimstr', 'strings');
+        $teaser = $objTrimStr->strTrim(strip_tags($umbrella), 500);
+
+        $userId = $this->objUser->userId();
+        $module = 'unesco_oer';
+
+        // Todo - Set permissions on entering course, e.g. iscontextmember.
+        $permissions = NULL;
+
+        $objIndexData->luceneIndex(NULL, $saveDate, $url, $umbrella, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
+
     }
 
     function addProductThemeJxn($productID, $themeID) {

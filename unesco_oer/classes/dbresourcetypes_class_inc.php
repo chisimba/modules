@@ -16,9 +16,11 @@
  */
 
 class dbresourcetypes extends dbtable {
+    public $objUser;
 
     function init() {
         parent::init("tbl_unesco_oer_resource_types");
+        $objUser = $this->getObject('user', 'security');
     }
 
     function getResourceTypes() {
@@ -33,6 +35,23 @@ class dbresourcetypes extends dbtable {
         );
 
         $this->insert($data);
+        // Prepare to add context to search index
+        $objIndexData = $this->getObject('indexdata', 'search');
+
+        $saveDate = date('Y-m-d H:M:S');
+        $url = $this->uri(array('action' => '4', 'institutionId' => ''), 'contextcontent');
+
+        $objTrimStr = $this->getObject('trimstr', 'strings');
+        $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
+
+        $userId = 2;
+//        $this->objUser->userId();
+        $module = 'unesco_oer';
+
+        // Todo - Set permissions on entering course, e.g. iscontextmember.
+        $permissions = NULL;
+
+        $objIndexData->luceneIndex(NULL, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
     }
 
     function getResourceTypeDescription($id) {
@@ -40,17 +59,18 @@ class dbresourcetypes extends dbtable {
         return $row['description'];
     }
 
-    function getResourceTypeTable($id){
+    function getResourceTypeTable($id) {
         $row = $this->getRow('id', $id);
         return $row['table_name'];
     }
-    
-    function getResourceTypeById($id){
+
+    function getResourceTypeById($id) {
         $sql = "SELECT * FROM tbl_unesco_oer_resource_types WHERE id = '$id'";
         $type = $this->getArray($sql);
         return $type[0];
     }
-    function updateType($id, $description, $table_name){
+
+    function updateType($id, $description, $table_name) {
         $data = array(
             'id' => $id,
             'description' => $description,
@@ -60,10 +80,10 @@ class dbresourcetypes extends dbtable {
         $this->update('id', $id, $data, 'tbl_unesco_oer_resource_types');
     }
 
-        function deleteType($id) {
+    function deleteType($id) {
         $sql = "DELETE FROM tbl_unesco_oer_resource_types WHERE id='$id'";
         $this->getArray($sql);
     }
-}
 
+}
 ?>

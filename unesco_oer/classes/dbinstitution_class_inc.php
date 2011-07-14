@@ -17,8 +17,11 @@
 
 class dbinstitution extends dbtable {
 
+    public $objUser;
+
     function init() {
         parent::init("tbl_unesco_oer_institutions");
+        $objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -54,6 +57,24 @@ class dbinstitution extends dbtable {
         );
 
         $this->insert($data);
+
+
+        // Prepare to add context to search index
+        $objIndexData = $this->getObject('indexdata', 'search');
+
+
+
+        $saveDate = date('Y-m-d H:M:S');
+        $url = $this->uri(array('action' => '4', 'institutionId' => ''), 'contextcontent');
+
+        $objTrimStr = $this->getObject('trimstr', 'strings');
+        $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
+
+        $userId = 32;
+        ////        $this->objUser->userId();
+        $module = 'unesco_oer';
+
+        $objIndexData->luceneIndex(NULL, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
     }
 
     //to get an institution latitude
@@ -136,13 +157,14 @@ class dbinstitution extends dbtable {
     function deleteInstitution($id) {
         $sql = "DELETE FROM tbl_unesco_oer_institutions WHERE id='$id'";
         $this->getArray($sql);
+
+        $objIndexData = $this->getObject('indexdata', 'search');
+        $objIndexData->removeIndex($id);
     }
 
     //this function edit the instituin name
     //TODO MUST ALSO EDIT THUMBNAIL
-    function editInstitution($id, $name, $description, $type, $country, 
-                             $address1, $address2, $address3, $zip, $city,
-                             $websiteLink, $keyword1, $keyword2, $thumbnail) {
+    function editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
         $sql = "SELECT puid FROM tbl_unesco_oer_institutions WHERE id = '$id'";
         $tempPuid = $this->getArray($sql);
         $puid = $tempPuid[0]['puid'];
