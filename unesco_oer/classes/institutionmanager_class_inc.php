@@ -23,11 +23,16 @@ class institutionmanager extends object {
     private $_objDbInstitutionType;
     private $_objCountry;
     private $_validation;
+        /**
+     * @var object $objLanguage Language Object
+     */
+    private $_objLanguage;
 
     function init() {
         $this->_objDbInstitution = $this->getObject('dbinstitution');
         $this->_objDbInstitutionType = $this->getObject('dbinstitutiontypes');
         $this->_objCountry = $this->getObject('languagecode', 'language');
+        $this->_objLanguage = $this->getObject('language', 'language');
         $this->_institution = $this->getObject('institution');
         $this->_institutionList = array();
         $this->_validation['valid'] = TRUE;
@@ -194,60 +199,70 @@ class institutionmanager extends object {
         //Check if a name has been provided
         if (empty($name)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['name'] = "Please enter a name for the institution.";
+            $nameErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_name_error', 'unesco_oer');
+            $this->_validation['name'] = $nameErrMsg;
         }
 
         //Ensure that a description has been provided
         if (empty($description)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['description'] = "Please provide a description for the institution.";
+            $descriptionErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_type_error', 'unesco_oer');
+            $this->_validation['description'] = $descriptionErrMsg;
         }
 
         //Ensure that a type has been selected
         if (empty($type)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['type'] = "Please select a type for the institution.";
+            $typeErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_description_error', 'unesco_oer');
+            $this->_validation['type'] = $typeErrMsg;
         }
 
         //Ensure that a country has been selected
         if (empty($country)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['country'] = "Please select a country for the institution.";
+            $countryErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_country_error', 'unesco_oer');
+            $this->_validation['country'] = $countryErrMsg;
         }
         //Ensure that an address1 has been provided
         if (empty($address1)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['address1'] = "Please provide a valid address for the institution.";
+            $addressErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_address_error', 'unesco_oer');
+            $this->_validation['address1'] = $addressErrMsg;
         }
 
         //Ensure that a city has been provided
         if (empty($city)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['city'] = "Please provide a city for the institution.";
+            $cityErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_city_error', 'unesco_oer');
+            $this->_validation['city'] = $cityErrMsg;
         }
 
         //Ensure that a zip has been provided
         if (empty($zip)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['zip'] = "Please provide a valid zip/postal code.";
+            $zipErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_zip_error', 'unesco_oer');
+            $this->_validation['zip'] = $zipErrMsg;
         }
 
         //Ensure that a websitelink has been provided
         if (empty($websiteLink)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['websiteLink'] = "Please provide a valid website link.";
+            $urlErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_websitelink_error', 'unesco_oer');
+            $this->_validation['websiteLink'] = $urlErrMsg;
         }
 
         //Ensure that at least 1 keyword has been provided
         if (empty($keyword1)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['keyword1'] = "Please provide at least one keyword.";
+            $keywordErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_keyword_error', 'unesco_oer');
+            $this->_validation['keyword1'] = $keywordErrMsg;
         }
 
         //Ensure that thumbnail is provided
         if (empty($thumbnail)) {
             $this->_validation['valid'] = FALSE;
-            $this->_validation['thumbnail'] = "Please provide a thumbnail.";
+            $thumbnailErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_thumbnail_error', 'unesco_oer');
+            $this->_validation['thumbnail'] = $thumbnailErrMsg;
         }
 
         return $this->_validation;

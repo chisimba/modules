@@ -91,7 +91,8 @@ $table->addCell($button->show() . '&nbsp;' . $BackToControlPanelLink->show());
 $table->endRow();
 
 $subThemeFieldset = $this->newObject('fieldset', 'htmlelements');
-$subThemeFieldset->setLegend("Create sub Theme");
+$createThemeLegend = $this->objLanguage->languageText('mod_unesco_oer_add_data_newThemeBtn', 'unesco_oer');
+$subThemeFieldset->setLegend($createThemeLegend);
 $subThemeFieldset->addContent($table->show());
 
 //createform, add fields to it and display

@@ -33,15 +33,17 @@ $this->loadClass('textinput', 'htmlelements');
 $header = new htmlheading();
 $header->type = 1;
 $header->cssClass = "manageusers";
-$header->str = "Product Themes";
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_product_themes', 'unesco_oer');
 echo '<div id="institutionheading">';
 echo $header->show(). '<br><br />';
 
-$buttonUmbrellaTheme = new button('Add UbrellaTheme Button', "Add Umbrella Theme");
+$createButtonCaption = $this->objLanguage->languageText('mod_unesco_oer_add_data_newUmbrellaThemeBtn', 'unesco_oer');
+$buttonUmbrellaTheme = new button('Add UbrellaTheme Button', $createButtonCaption);
 $buttonUmbrellaTheme->setToSubmit();
 $addUmbrellaThemeLink = new link($this->uri(array('action' => "createUmbrellaThemeUI")));
 $addUmbrellaThemeLink->link = $buttonUmbrellaTheme->show();
-$buttonSubTheme = new button('Add subTheme Button', "Add subTheme");
+$createButtonCaption = $this->objLanguage->languageText('mod_unesco_oer_add_data_newThemeBtn', 'unesco_oer');
+$buttonSubTheme = new button('Add subTheme Button', $createButtonCaption);
 $buttonSubTheme->setToSubmit();
 $addSubThemeLink = new link($this->uri(array('action' => "createThemeUI")));
 $addSubThemeLink->link = $buttonSubTheme->show();
@@ -55,17 +57,6 @@ echo '</div>';
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
-//$search = new textinput('state');
-//$search->size = 10;
-//$table->startRow();
-//$table->addCell('Search');
-//$table->addCell($search->show());
-//$table->endRow();
-//echo $table->show();
-
-
-
-//. '&nbsp;' . $search->show() . '&nbsp;' . $searchLink->show();
 
 $themesTable = $this->newObject('htmltable', 'htmlelements');
 $themesTable->width = '100%';
@@ -74,11 +65,17 @@ $themesTable->cellspacing = '0';
 $themesTable->cellpadding = '0';
 
 $themesTable->startHeaderRow();
-//$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
-$themesTable->addHeaderCell('Theme', null, null, left, "userheader", null);
-$themesTable->addHeaderCell('Umbrella Theme', null, null, left, "userheader", null);
-$themesTable->addHeaderCell('Edit', null, null, left, "userheader", null);
-$themesTable->addHeaderCell('Delete', null, null, left, "userheader", null);
+
+//Add language elements
+$themeRowHeading = $this->objLanguage->languageText('mod_unesco_oer_product_themes', 'unesco_oer');
+$umbrellaThemeRowHeading = $this->objLanguage->languageText('mod_unesco_oer_Umbrellatheme', 'unesco_oer');
+$editRowHeading = $this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer');
+$deleteThemeRowHeading = $this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer');
+
+$themesTable->addHeaderCell($themeRowHeading, null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell($umbrellaThemeRowHeading, null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell($editRowHeading, null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell($deleteRowHeading, null, null, 'left', "userheader", null);
 $themesTable->endHeaderRow();
 
 //get themes from the database
@@ -87,7 +84,6 @@ $umbrellaThemesList = $this->objDbProductThemes->getUmbrellaThemes();
 if (count($umbrellaThemesList) > 0) {
     foreach ($umbrellaThemesList as $umbrellaTheme) {
         $themesTable->startRow();
-        //($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
         $themesTable->addCell($umbrellaTheme['theme'], null, null, null, "user", null, null);
         $themesTable->addCell('-', null, null, null, "theme", null, null);
 
@@ -130,7 +126,8 @@ if (count($umbrellaThemesList) > 0) {
 
 
 $fs = new fieldset();
-$fs->setLegend("Themes");
+$fieldsetLegend = $this->objLanguage->languageText('mod_unesco_oer_theme', 'unesco_oer');
+$fs->setLegend($fieldsetLegend);
 $fs->addContent($themesTable->show());
 echo $fs->show();
 ?>

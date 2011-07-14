@@ -26,7 +26,9 @@ $utility = new adddatautil();
 $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_unesco_oer_language_heading', 'unesco_oer');
 $header->type = 2;
+echo '<div id="institutionheading">';
 echo $header->show();
+echo '</div>';
 
 // setup table and table headings with input options
 $table = $this->newObject('htmltable', 'htmlelements');
@@ -41,14 +43,26 @@ $table->endRow();
 
 //Submit button
 $table->startRow();
-$button = new button('submitLanguage', "Submit Language");
+$button = new button('submitLanguage', $this->objLanguage->
+                                languageText('mod_unesco_oer_save', 'unesco_oer'));
 $button->setToSubmit();
-$table->addCell($button->show());
+$btnCancelCaption = $this->objLanguage->languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer');
+$controlPannel = new button('backButton', $btnCancelCaption);
+$controlPannel->setToSubmit();
+$BackToControlPanelLink = new link($this->uri(array('action' => "viewProductThemes")));
+$BackToControlPanelLink->link = $controlPannel->show();
+$table->startRow();
+$table->addCell($button->show() . '&nbsp;' . $BackToControlPanelLink->show());
 $table->endRow();
+
+$languageFieldset = $this->newObject('fieldset', 'htmlelements');
+$createThemeLegend = $this->objLanguage->languageText('mod_unesco_oer_language_heading', 'unesco_oer');
+$languageFieldset->setLegend($createThemeLegend);
+$languageFieldset->addContent($table->show());
 
 //createform, add fields to it and display
 $form_data = new form('createTheme_ui',$this->uri(array('action'=>'createLanguageSubmit')));
-$form_data->addToForm($table->show());
+$form_data->addToForm($languageFieldset->show());
 echo $form_data->show();
 
 ?>

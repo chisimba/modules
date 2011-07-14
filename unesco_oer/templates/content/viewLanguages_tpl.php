@@ -33,15 +33,18 @@ $this->loadClass('textinput', 'htmlelements');
 $header = new htmlheading();
 $header->type = 1;
 $header->cssClass = "manageusers";
-$header->str = "mod_unesco_oer_add_data_newLanguage";
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_languages', 'unesco_oer');
 echo '<div id="institutionheading">';
 echo $header->show(). '<br><br />';
 
-$buttonLanguage = new button('Add Language Button', "Add Language");
+$buttonLangCaption = $this->objLanguage->languageText('mod_unesco_oer_add_data_newLanguage', 'unesco_oer');
+$buttonLanguage = new button('Add Language Button', $buttonLangCaption);
 $buttonLanguage->setToSubmit();
 $addLanguageLink = new link($this->uri(array('action' => "createLanguageUI")));
 $addLanguageLink->link = $buttonLanguage->show();
-$controlPannel = new button('backButton', "Back");
+
+$buttonBackCaption = $this->objLanguage->languageText('mod_unesco_oer_group_back_button', 'unesco_oer');
+$controlPannel = new button('backButton', $buttonBackCaption);
 $controlPannel->setToSubmit();
 $BackToControlPanelLink = new link($this->uri(array('action' => "controlpanel")));
 $BackToControlPanelLink->link = $controlPannel->show();
@@ -51,17 +54,6 @@ echo '</div>';
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
-//$search = new textinput('state');
-//$search->size = 10;
-//$table->startRow();
-//$table->addCell('Search');
-//$table->addCell($search->show());
-//$table->endRow();
-//echo $table->show();
-
-
-
-//. '&nbsp;' . $search->show() . '&nbsp;' . $searchLink->show();
 
 $themesTable = $this->newObject('htmltable', 'htmlelements');
 $themesTable->width = '100%';
@@ -70,11 +62,16 @@ $themesTable->cellspacing = '0';
 $themesTable->cellpadding = '0';
 
 $themesTable->startHeaderRow();
-//$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
-$themesTable->addHeaderCell('Language', null, null, 'left', "userheader", null);
-$themesTable->addHeaderCell('Code', null, null, 'left', "userheader", null);
-$themesTable->addHeaderCell('Edit', null, null, 'left', "userheader", null);
-$themesTable->addHeaderCell('Delete', null, null, 'left', "userheader", null);
+
+$languagesRowTitle = $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer');
+$codeRowTitle = $this->objLanguage->languageText('mod_unesco_oer_language_code', 'unesco_oer');
+$editRowHeading = $this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer');
+$deleteThemeRowHeading = $this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer');
+
+$themesTable->addHeaderCell($languagesRowTitle, null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell($codeRowTitle, null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell($editRowHeading, null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell($deleteThemeRowHeading, null, null, 'left', "userheader", null);
 $themesTable->endHeaderRow();
 
 //get languages from the database
@@ -103,7 +100,8 @@ if (count($languageList) > 0) {
 
 
 $fs = new fieldset();
-$fs->setLegend("Themes");
+$langFsLegend = $this->objLanguage->languageText('mod_unesco_oer_languages', 'unesco_oer');
+$fs->setLegend($langFsLegend);
 $fs->addContent($themesTable->show());
 echo $fs->show();
 ?>

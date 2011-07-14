@@ -52,6 +52,7 @@
                 }
             }
 
+            $formErrorHeading = $title = $this->objLanguage->languageText('mod_unesco_oer_institution_form_error', 'unesco_oer');
             $fieldsetErrors->setLegend('There were errors in the form');
             $fieldsetErrors->addContent($tableErrors->show());
             $displayErrors = $fieldsetErrors->show() . '<br />';

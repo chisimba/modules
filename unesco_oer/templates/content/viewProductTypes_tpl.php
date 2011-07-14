@@ -20,7 +20,7 @@
 
 //Display errors
 error_reporting(E_ALL);
-ini_set('display_errors', 'Off');
+ini_set('display_errors', 'On');
 
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
@@ -33,16 +33,18 @@ $this->loadClass('textinput', 'htmlelements');
 $header = new htmlheading();
 $header->type = 1;
 $header->cssClass = "manageusers";
-$header->str = "mod_unesco_oer_add_data_newLanguage";
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_control_panel_product_types_title', 'unesco_oer');
+
 echo '<div id="institutionheading">';
-echo $header->show(). '<br><br />';
+echo $header->show() . '<br><br />';
 
 $buttonTitle = $this->objLanguage->languageText('mod_unesco_oer_add_data_newProductType', 'unesco_oer');
 $buttonLanguage = new button('Add Language Button', $buttonTitle);
 $buttonLanguage->setToSubmit();
 $addLanguageLink = new link($this->uri(array('action' => "newResourceTypeUI")));
 $addLanguageLink->link = $buttonLanguage->show();
-$controlPannel = new button('backButton', "Back");
+$backButtonTitle = $this->objLanguage->languageText('mod_unesco_oer_group_back_button', 'unesco_oer');
+$controlPannel = new button('backButton', $backButtonTitle);
 $controlPannel->setToSubmit();
 $BackToControlPanelLink = new link($this->uri(array('action' => "controlpanel")));
 $BackToControlPanelLink->link = $controlPannel->show();
@@ -59,9 +61,6 @@ $table = $this->newObject('htmltable', 'htmlelements');
 //$table->addCell($search->show());
 //$table->endRow();
 //echo $table->show();
-
-
-
 //. '&nbsp;' . $search->show() . '&nbsp;' . $searchLink->show();
 
 $themesTable = $this->newObject('htmltable', 'htmlelements');
@@ -72,10 +71,13 @@ $themesTable->cellpadding = '0';
 
 $themesTable->startHeaderRow();
 //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
-$themesTable->addHeaderCell('Product type', null, null, left, "userheader", null);
-$themesTable->addHeaderCell('Product type table', null, null, left, "userheader", null);
-$themesTable->addHeaderCell('Edit', null, null, left, "userheader", null);
-$themesTable->addHeaderCell('Delete', null, null, left, "userheader", null);
+$productTypeRowTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_product_types_title', 'unesco_oer');
+$editProductTypeRowTitle = $this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer');
+$deleteProductTypeRowTitle = $this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer');
+
+$themesTable->addHeaderCell($productTypeRowTitle, null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell($editProductTypeRowTitle, null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell($deleteProductTypeRowTitle, null, null, 'left', "userheader", null);
 $themesTable->endHeaderRow();
 
 //get languages from the database
@@ -84,10 +86,7 @@ $productTypesList = $this->objDbResourceTypes->getResourceTypes();
 if (count($productTypesList) > 0) {
     foreach ($productTypesList as $productType) {
         $themesTable->startRow();
-        //($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
         $themesTable->addCell($productType['description'], null, null, null, "user", null, null);
-        $themesTable->addCell($productType['table_name'], null, null, null, "user", null, null);
-
         $objIcon->setIcon('edit');
         $editLink = new link($this->uri(array('action' => "editResourceType", 'productTypeId' => $productType['id'])));
         $editLink->link = $objIcon->show();
@@ -102,9 +101,9 @@ if (count($productTypesList) > 0) {
     }
 }
 
-
 $fs = new fieldset();
-$fs->setLegend("Product types");
+$productTypeFieldsetTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_product_types_title', 'unesco_oer');
+$fs->setLegend($productTypeFieldsetTitle);
 $fs->addContent($themesTable->show());
 echo $fs->show();
 ?>

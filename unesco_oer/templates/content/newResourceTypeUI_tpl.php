@@ -21,11 +21,8 @@ $this->loadClass('textinput','htmlelements');
 
 // setup and show heading
 $header = new htmlHeading();
-$header->str = "Create new type of product";
 $header->type = 2;
-echo '<div id="institutionheading">';
-echo $header->show();
-echo '</div>';
+
 
 if (isset($typeId)) {
     $formData = $this->objDbResourceTypes->getResourceTypeById($typeId);
@@ -36,6 +33,9 @@ if (isset($typeId)) {
     $formData = array();
     $formAction = "createResourceTypeSubmit";
 }
+echo '<div id="institutionheading">';
+echo $header->show();
+echo '</div>';
 
 // setup table and table headings with input options
 $table = $this->newObject('htmltable', 'htmlelements');
