@@ -33,7 +33,7 @@ $header->cssClass="manageusers";
 $header->str = "Unesco_OER GROUPS:";
 echo '<div id="userheading">';
 echo $header->show();
-echo '</div>';
+
 $button = new button('Add Button',$this->objLanguage->languageText('mod_unesco_oer_add_data_product_heading', 'unesco_oer'));
 $button->setToSubmit();
 $addGroupLink =new link($this->uri(array('action' =>"saveProductMetaData")));
@@ -54,7 +54,7 @@ $search = new textinput('search','',"",20);
 
 
 echo $addGroupLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$buttonGO->show();
-
+echo '</div>';
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '100%';
 $myTable->border = '0';
@@ -71,9 +71,9 @@ $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_d
 $myTable->endHeaderRow();
 
 
-// get product from tbl_product that have a creator with the id
-  //$groups = $this->objDbGroups->getGroupProduct($id);
-   $groups = $this->objDbGroups->getAllGroups();
+// This must get product from tbl_product by creatorID
+  //$groups = $this->objDbGroups->getGroupProductbyproduct($this->getParam('id'));
+
 
 
 if (count($groups) > 0) {

@@ -33,11 +33,13 @@ $header->cssClass = "manageusers";
 $header->str = "Users";
 echo '<div id="userheading">';
 echo $header->show();
-echo '</div>';
+
+
 $button = new button('Add Button', "Add User");
 $button->setToSubmit();
 $addUserLink = new link($this->uri(array('action' => "userRegistrationForm", 'id' => $user['id'])));
 $addUserLink->link = $button->show();
+
 
 
 
@@ -70,7 +72,7 @@ $search = new textinput('search','',"",20);
 
 
 echo $addUserLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$buttonGO->show();
-
+echo '</div>';
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '100%';
 $myTable->border = '0';

@@ -153,8 +153,7 @@ $table->addCell($firstname->show().$required);
 $table->endRow();
 
 $surname = new textinput('register_surname');
-$surnameLabel = new label('Last Name');
-
+$surnameLabel = new label($this->objLanguage->languageText('mod_unesco_oer_users_lastname', 'unesco_oer'));
 if ($mode == 'addfixup') {
     $surname->value = $this->getParam('register_surname');
 
@@ -210,12 +209,12 @@ $table->endRow();
 
 $textinput = new textinput('register_cellnum');
 $textinput->size =70;
-$table->addCell('Mobile Phone'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_mobile_phone', 'unesco_oer').$required);
 $table->addCell($textinput->show());
 $table->endRow();
 
 $table->startRow();
-$table->addCell('Date of Birth');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_date_of_birth', 'unesco_oer'));
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 $objDatePicker = $this->newObject('datepicker', 'htmlelements');
 $objDatePicker->name = 'Date_of_birth';
@@ -251,7 +250,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Address'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_address', 'unesco_oer').$required);
 $table->addCell($address->show());
 $table->endRow();
 
@@ -272,7 +271,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('City'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_city', 'unesco_oer').$required);
 $table->addCell($city->show());
 $table->endRow();
 
@@ -292,7 +291,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('State'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_state', 'unesco_oer').$required);
 $table->addCell($state->show());
 $table->endRow();
 
@@ -311,7 +310,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Postal code'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_postal_code', 'unesco_oer').$required);
 $table->addCell($postalcode->show());
 $table->endRow();
 
@@ -330,7 +329,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Organisation/Company'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_company', 'unesco_oer').$required);
 $table->addCell($organisation->show());
 $table->endRow();
 
@@ -349,7 +348,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Job Tittle'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_job_tittle', 'unesco_oer').$required);
 $table->addCell($jobtittle->show());
 $table->endRow();
 
@@ -368,7 +367,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Type Of Occupation'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_type_occupation', 'unesco_oer').$required);
 $table->addCell($typeOfOccupation->show());
 $table->endRow();
 
@@ -387,7 +386,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Working Phone'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_work_phone', 'unesco_oer').$required);
 $table->addCell($workPhone->show());
 $table->endRow();
 
@@ -411,7 +410,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Description'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_description', 'unesco_oer').$required);
 $table->addCell($editor->show());
 $table->endRow();
 
@@ -430,7 +429,7 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('Website Link'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_website_link', 'unesco_oer').$required);
 $table->addCell($websiteLink->show());
 $table->endRow();
 
@@ -438,17 +437,15 @@ $table->endRow();
 $groups = $this->objDbGroups->getAllGroups();
 $dd = new dropdown('groupmembership');
 if (count($groups) > 0) {
-    $i = 1;
-    //$dd=new dropdown('groupmembership');
     foreach ($groups as $group) {
-        $dd->addOption($i, $group['name']);
-        $i = $i + 1;
+        $dd->addOption($group['name']);
+       
     }
 } else {
-    $dd->addOption('1', 'None');
+    $dd->addOption('None');
 }
 $table->startRow();
-$table->addCell('Group Membership'.$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer').$required);
 $table->addCell($dd->show());
 $table->endRow();
 
@@ -540,12 +537,12 @@ $fieldset->contents = stripslashes($this->objLanguage->languageText('mod_securit
 
 $form->addToForm($fieldset->show());
 
-$Cancelbutton = new button ('submitform', 'Cancel');
+$Cancelbutton = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 $Cancelbutton->setToSubmit();
 $CancelLink = new link($this->uri(array('action' => "home")));
 $CancelLink->link =$Cancelbutton->show();
 
-$button = new button ('submitform', 'Complete Registration');
+$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_users_complete_registration', 'unesco_oer'));
 $button->setToSubmit();
 //$SaveLink = new link($this->uri(array('action' => "saveNewUser",)));
 //$SaveLink->link =$button->show();

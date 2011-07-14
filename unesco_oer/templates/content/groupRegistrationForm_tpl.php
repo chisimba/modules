@@ -204,7 +204,7 @@ if (isset($userstring[5]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell('State'); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_state', 'unesco_oer')); 
 $table->addCell($state->show());
 $table->endRow();
 

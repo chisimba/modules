@@ -33,7 +33,7 @@ $header->cssClass="manageusers";
 $header->str = "Unesco_OER GROUPS:";
 echo '<div id="userheading">';
 echo $header->show();
-echo '</div>';
+
 
 
 
@@ -57,6 +57,7 @@ $search = new textinput('search','',"",20);
 
 
 echo $addGroupLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$buttonGO->show();
+echo '</div>';
 
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '100%';
@@ -110,7 +111,7 @@ if (count($groups) > 0) {
         $editLink =new link($this->uri(array('action' =>"groupProductForm",'id' =>$group['id'])));
         $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());
-
+        $myTable->endRow();
 
     }
 }

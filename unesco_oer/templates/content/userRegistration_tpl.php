@@ -155,7 +155,7 @@ $table->addCell($firstname->show().$required);
 $table->endRow();
 
 $surname = new textinput('register_surname');
-$surnameLabel = new label("Last Name");
+$surnameLabel = new label($this->objLanguage->languageText('mod_unesco_oer_users_lastname', 'unesco_oer'));
 
 if ($mode == 'addfixup') {
     $surname->value = $this->getParam('register_surname');
@@ -225,7 +225,7 @@ $table->endRow();
 
 $textinput = new textinput('register_cellnum');
 $textinput->size =70;
-$table->addCell('Mobile Phone');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_mobile_phone', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -246,14 +246,14 @@ $table->endRow();
 $textinput = new textinput('Address');
 $textinput->size =70;
 $table->startRow();
-$table->addCell('Address');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_address', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('city');
 $textinput->size =70;
 $table->startRow();
-$table->addCell('City');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_city', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -261,28 +261,22 @@ $table->endRow();
 $textinput = new textinput('state');
 $textinput->size =70;
 $table->startRow();
-$table->addCell('State');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_state', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
-
-
-
-
-
-
 
 
 $textinput = new textinput('postaladdress');
 $textinput->size =70;
 $table->startRow();
-$table->addCell('Postal code');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_postal_code', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('organisation');
 $textinput->size = 70;
 $table->startRow();
-$table->addCell('Organisation/Company');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_company', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -303,21 +297,21 @@ $table->endRow();
 $textinput = new textinput('jobtittle');
 $textinput->size =70;
 $table->startRow();
-$table->addCell('Job Tittle');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_job_tittle', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('type_of_occupation');
 $textinput->size =70;
 $table->startRow();
-$table->addCell('Type Of Occupation');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_type_occupation', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
 
 $textinput = new textinput('workingphone');
 $textinput->size =70;
 $table->startRow();
-$table->addCell('Working Phone');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_work_phone', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
 //
@@ -342,15 +336,10 @@ $table->addCell($editor->show());
 $table->endRow();
 
 
-
-
-
-
-
 $textinput = new textinput('websitelink');
 $textinput->size =70;
 $table->startRow();
-$table->addCell('Website Link');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_website_link', 'unesco_oer'));
 $table->addCell($textinput->show());
 $table->endRow();
 
@@ -365,7 +354,7 @@ if (count($groups) > 0) {
     $dd->addOption('None');
 }
 $table->startRow();
-$table->addCell('Group Membership');
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer'));
 $table->addCell($dd->show());
 $table->endRow();
 
@@ -455,12 +444,12 @@ $fieldset->contents = stripslashes($this->objLanguage->languageText('mod_securit
 
 $form->addToForm($fieldset->show());
 
-$Cancelbutton = new button ('submitform', 'Cancel');
+$Cancelbutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 $Cancelbutton->setToSubmit();
 $CancelLink = new link($this->uri(array('action' => "userListingForm",)));
 $CancelLink->link =$Cancelbutton->show();
 
-$button = new button ('submitform', 'Save');
+$button = new button ('submitform',$this->objLanguage->languageText(' mod_unesco_oer_group_save_button', 'unesco_oer'));
 $button->setToSubmit();
 //$SaveLink = new link($this->uri(array('action' => "saveNewUser",)));
 //$SaveLink->link =$button->show();

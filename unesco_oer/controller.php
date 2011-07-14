@@ -1730,8 +1730,9 @@ class unesco_oer extends controller {
             return 'groupRegistrationForm_tpl.php';
         } else {
             $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
-            $this->setLayoutTemplate('maincontent_layout_tpl.php');
-            return 'groupListingForm_tpl.php';
+//            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+//            return 'groupListingForm_tpl.php';
+            return $this->__groupListingForm();
         }
     }
 
@@ -1793,8 +1794,9 @@ class unesco_oer extends controller {
             return 'groupEditingForm_tpl.php';
         } else {
             $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
-            $this->setLayoutTemplate('maincontent_layout_tpl.php');
-            return 'groupListingForm_tpl.php';
+//            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+//            return 'groupListingForm_tpl.php';
+            return $this->__groupListingForm();
         }
 //        $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
 //        $this->setLayoutTemplate('maincontent_layout_tpl.php');
