@@ -209,9 +209,18 @@ class dbuserextra extends dbtable{
        return $id[0]['id'];
     }
 
-    function leaveGroup(){
 
-    }
+
+
+
+//     function hasGroup($id){
+//         $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE id='$id'";
+//         $group=$this->getArray($sql);
+//         if($group[0]['groupmembership'])
+//
+//     }
+
+
 
 }
 

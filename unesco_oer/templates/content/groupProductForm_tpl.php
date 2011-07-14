@@ -34,11 +34,11 @@ $header->str = "Unesco_OER GROUPS:";
 echo '<div id="userheading">';
 echo $header->show();
 
-$button = new button('Add Button',$this->objLanguage->languageText('mod_unesco_oer_add_data_product_heading', 'unesco_oer'));
-$button->setToSubmit();
-$addGroupLink =new link($this->uri(array('action' =>"saveProductMetaData")));
-$addGroupLink->link = $button->show();
-//echo $addGroupLink->show();
+//$button = new button('Add Button',$this->objLanguage->languageText('mod_unesco_oer_add_data_product_heading', 'unesco_oer'));
+//$button->setToSubmit();
+//$addGroupLink =new link($this->uri(array('action' =>"saveProductMetaData")));
+//$addGroupLink->link = $button->show();
+////echo $addGroupLink->show();
 
 $controlPannel = new button('backButton', $this->objLanguage->languageText('mod_unesco_oer_group_back_button', 'unesco_oer'));
 $controlPannel->setToSubmit();
@@ -53,7 +53,7 @@ $buttonGO->show();
 $search = new textinput('search','',"",20);
 
 
-echo $addGroupLink->show() .'&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$buttonGO->show();
+echo '&nbsp;'.$BackToControlPannelLink->show(). '&nbsp;'. $search->show(). '&nbsp;'.$buttonGO->show();
 echo '</div>';
 $myTable = $this->newObject('htmltable', 'htmlelements');
 $myTable->width = '100%';
@@ -66,14 +66,13 @@ $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_title',
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_publisher', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_status', 'unesco_oer'),null,null,left,"userheader",null);
-$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer'),null,null,left,"userheader",null);
-$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'),null,null,left,"userheader",null);
+//$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer'),null,null,left,"userheader",null);
+//$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
 
 // This must get product from tbl_product by creatorID
-  //$groups = $this->objDbGroups->getGroupProductbyproduct($this->getParam('id'));
-
+//$group=$this->objGroups->getGroupProductadaptation($this->getParam('id'));
 
 
 if (count($groups) > 0) {
@@ -88,18 +87,18 @@ if (count($groups) > 0) {
         $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());
 
-        $objIcon->setIcon('delete');
-        if ($this->objDbProducts->hasAnAdaptation($this->getParam('id'))) { //product has an adaptation can't be deleted
-            $deleteLink = new link($this->uri(array('action' => "deleteGroup", 'id' => $group['id'])));
-            $deleteLink->link = $objIcon->show();
-            $deleteLink->cssClass = 'deleteuser';
-            $myTable->addCell($deleteLink->show());
-        } else { //product has no adaptation can be deleted
-            $deleteLink = new link($this->uri(array('action' => "deleteGroup", 'id' => $group['id'])));
-            $deleteLink->link = $objIcon->show();
-            $deleteLink->cssClass = 'deleteresourcer';
-            $myTable->addCell($deleteLink->show());
-        }
+//        $objIcon->setIcon('delete');
+//        if ($this->objDbProducts->hasAnAdaptation($this->getParam('id'))) { //product has an adaptation can't be deleted
+//            $deleteLink = new link($this->uri(array('action' => "deleteGroup", 'id' => $group['id'])));
+//            $deleteLink->link = $objIcon->show();
+//            $deleteLink->cssClass = 'deleteuser';
+//            $myTable->addCell($deleteLink->show());
+//        } else { //product has no adaptation can be deleted
+//            $deleteLink = new link($this->uri(array('action' => "deleteGroup", 'id' => $group['id'])));
+//            $deleteLink->link = $objIcon->show();
+//            $deleteLink->cssClass = 'deleteresourcer';
+//            $myTable->addCell($deleteLink->show());
+//        }
 //        $deleteLink =new link($this->uri(array('action' => "",'id' => $group['id'])));
 //        $deleteLink->link = $objIcon->show();
 //        $deleteLink->cssClass = 'deleteuser';

@@ -313,8 +313,8 @@ class dbgroups extends dbtable {
          return $this->getArray($sql);
      }
 
-    function getGroupProduct($creatorid){
-        $sql="SELECT * FROM tbl_unesco_oer_products WHERE creator = '$groupid'";
+    function getGroupProductadaptation($groupid){
+        $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE  group_id= '$groupid'";
         return $this->getArray($sql);
     }
 

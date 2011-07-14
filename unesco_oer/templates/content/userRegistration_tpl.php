@@ -349,6 +349,8 @@ $dd = new dropdown('groupmembership');
 if (count($groups) > 0) {
   foreach ($groups as $group) {
       $dd->addOption($group['name']);
+      $groupid=$group['id'];
+      $this->setVar('groupid', $groupid);
       }
 } else {
     $dd->addOption('None');

@@ -71,7 +71,7 @@ $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_e
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_users', 'unesco_oer'),null,null,left,"userheader",null);
-$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_product_upload_heading', 'unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_legend_oerprosucts', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
 //$groups = $this->objDbGroups->getAllGroups();
@@ -96,10 +96,16 @@ if (count($groups) > 0) {
         $myTable->addCell($editLink->show());
 
         $objIcon->setIcon('delete');
-        $deleteLink =new link($this->uri(array('action' => "deleteGroup",'id' => $group['id'])));
-        $deleteLink->link = $objIcon->show();
-        $deleteLink->cssClass = 'deleteuser';
-        $myTable->addCell($deleteLink->show());
+        if ($grouphasanadaptationcannotbedeleted) { /// condition needed
+            $deleteLink->link = $objIcon->show();
+            $deleteLink->cssClass = 'deletegroupadaptation';
+            $myTable->addCell($deleteLink->show());
+        } else {
+            $deleteLink = new link($this->uri(array('action' => "deleteGroup", 'id' => $group['id'])));
+            $deleteLink->link = $objIcon->show();
+            $deleteLink->cssClass = 'deleteuser';
+            $myTable->addCell($deleteLink->show());
+        }
 
         $objIcon->setIcon('view');
         $mode='groupuser';
@@ -142,8 +148,22 @@ jQuery(document).ready(function(){
 );
 
 }
+);
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=deletegroupadaptation]").click(function(){
+
+        var r=confirm( "This group is in use with product adaptation\n First delete it's adaptations then you can delete the group !!!");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
 
 
+);
+}
 );
 
 $('button[name=searchButton]').click(

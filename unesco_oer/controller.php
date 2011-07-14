@@ -13,6 +13,7 @@ class unesco_oer extends controller {
     public $objDbFeaturedProduct;
     public $objFeaturedProducUtil;
     public $objDbGroups;
+    public $ObjDbUserGroups;
     public $objDbInstitution;
     public $objInstitutionManager;
     public $objDbInstitutionTypes;
@@ -83,6 +84,7 @@ class unesco_oer extends controller {
         $this->objjavafilt = $this->getObject('javafilt');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
+        $this->ObjDbUserGroups=$this->getParam('dbusergroups');
 
         //$this->objUtils = $this->getObject('utilities');
         //$this->objGoogleMap=$this->getObject('googlemapapi');
