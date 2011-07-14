@@ -12,8 +12,10 @@ $acceptLink-> link = 'Accept';
 $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 $policyURL=$objSysConfig->getValue('GIFT_POLICY_URL', 'gift');
 
-$objWashout = $this->getObject('washout', 'utilities');
-$policy=$objWashout->parseText('[PDF]'.$policyURL.'[/PDF]');
+
+
+
+$policy='<a href="'.$policyURL.'">Click here to view the policy</a>';
 
 
 
