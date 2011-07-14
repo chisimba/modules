@@ -133,7 +133,7 @@ class apo extends controller {
         $id = $this->getParam("docid");
         $faculties = $this->faculties->getFaculties();
         //$document = $this->documents->getDocument($id);
-        
+
         $mode = "new";
 
         $this->setVarByRef("action", $action);
@@ -141,7 +141,7 @@ class apo extends controller {
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
         $this->setVarByRef("departments", $faculties);
-       // $this->setVarByRef("document", $document);
+        // $this->setVarByRef("document", $document);
 
         return "addeditdocument_tpl.php";
     }
@@ -155,13 +155,13 @@ class apo extends controller {
         $dept = $this->getParam('department');
         $userid = $this->getParam('userid');
         $currentuserid = $this->getParam('userid');
-        //print_r($userid);die();
+       
         $title = $this->getParam('title');
         $selectedfolder = $this->getParam('parentfolder');
 
         $refno = $number . date("Y");
         $contact = $this->getParam('contact', '');
-        
+
         if ($contact == null || $contact == '') {
             $contact = $this->objUser->fullname();
         }
@@ -203,7 +203,9 @@ class apo extends controller {
         $this->setVarByRef("refno", $refNo);
         $this->setVarByRef("departments", $faculties);
         $this->setVarByRef("currentuserid", $currentuserid);
-        
+
+
+
         return "home_tpl.php";
     }
 
@@ -245,12 +247,12 @@ class apo extends controller {
         $faculties = $this->faculties->getFaculties();
         $id = $this->getParam('id');
         $document = $this->documents->getDocument($id);
-        
-       // print_r($document);die();
+
+        // print_r($document);die();
         $action = "updatedocument";
 
-        
-        
+
+
         $mode = "edit";
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("id", $id);
@@ -264,9 +266,9 @@ class apo extends controller {
     public function __showoverview() {
         $id = $this->getParam('id');
         $document = $this->documents->getDocument($id);
-       
+
         $selected = $this->getParam('selected');
-        
+
         $mode = "new";
 
         $this->setVarByRef("mode", $mode);
@@ -1031,6 +1033,7 @@ class apo extends controller {
         $subsidy = $this->getParam("subsidy");
         $legal = $this->getParam("legal");
         $library = $this->getParam("library");
+        $teaching = $this->getParam("teaching");
         $faculty = $this->getParam("faculty");
 
         $formdata = array();
@@ -1039,6 +1042,7 @@ class apo extends controller {
         $formdata["subsidy"] = $subsidy;
         $formdata["library"] = $library;
         $formdata["legal"] = $legal;
+        $formdata["teaching"] = $teaching;
         $formdata["faculty"] = $faculty;
 
 
@@ -1481,8 +1485,15 @@ class apo extends controller {
         $from = $this->getParam('from');
         $selected = $this->getParam('selected');
         $document = $this->documents->getDocument($id);
-
+        $faculties = $this->faculties->getFaculties();
+       // $department = $this->getParam("department");
+        $faculty = $this->faculties->getFaculty($document['department']);
+    
+        $this->setVarByRef("users", $users);
         $this->setVarByRef("document", $document);
+        $this->setVarByRef("faculty",$faculty);
+        $this->setVarByRef("departments", $faculties);
+        $this->setVarByRef("department", $department);
         $this->setVarByRef('from', $from);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
@@ -1832,7 +1843,7 @@ class apo extends controller {
     }
 
     public function __fowarddocument() {
-        // $users = $this->getParam("selectedusers");
+        $users = $this->getParam("selectedusers");
         $id = $this->getParam("id");
         $from = $this->getParam('from');
         $role = $this->getParam('role');
@@ -1897,6 +1908,7 @@ class apo extends controller {
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("selected", $selected);
         $this->setVarByRef("id", $id);
+
         return "commenting_tpl.php";
     }
 

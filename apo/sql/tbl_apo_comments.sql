@@ -7,6 +7,7 @@
                     'subsidy' => array('type' => 'text'),
                     'library' => array('type' => 'text'),
                     'legal' => array('type' => 'text'),
+                    'teaching' => array('type' => 'text'),
                     'faculty' => array('type' => 'text')
                     );
 ?>

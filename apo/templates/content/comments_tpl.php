@@ -204,6 +204,24 @@ if ($mode == "edit") {
     $textarea->value = $formdata['faculty'];
 }
 $table->startRow();
+$table->addCell("Teaching and Learning Committe Comments:");
+$table->endRow();
+
+$table->startRow();
+$table->addCell($textarea->show());
+$table->endRow();
+
+$textarea = new textarea('teaching');
+$textarea->height = '70px';
+$textarea->width = '500px';
+$textarea->cols = 100;
+if ($mode == "fixup") {
+    $textarea->value = $faculty;
+}
+if ($mode == "edit") {
+    $textarea->value = $formdata['teaching'];
+}
+$table->startRow();
 $table->addCell("Faculty Board Comments:");
 $table->endRow();
 

@@ -12,6 +12,13 @@ $this->setVar('pageSuppressXML', TRUE);
 
 //$this->loadClass('iframe', 'htmlelements');
 //$this->loadClass('button', 'htmlelements');
+$xtitle = $this->objLanguage->languageText('mod_wicid_document', 'wicid', 'Send Document to Academics');
+
+$header = new htmlheading();
+$header->type = 2;
+$header->str = $xtitle;
+
+echo $header->show();
 
 $action = 'fowarddocument';
 
@@ -23,7 +30,7 @@ $legend = "Faculty";
 
 $fs = new fieldset();
 $fs->setLegend($legend);
-$fs->addContent( $document['department']);
+$fs->addContent( $faculty['name']);
 
 echo $fs->show() . '<br/>';
 
@@ -57,6 +64,7 @@ $fs = new fieldset();
 $fs->setLegend('Forward');
 $fs->addContent($table->show());
 $form->addToForm($fs->show().'</br>');
+
 
 $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $uri = $this->uri(array('action' => 'showSection','from'=>$from, 'id' => $id, 'mode'=> $mode));
