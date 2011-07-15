@@ -116,9 +116,13 @@ class stackui extends object
         $this->appendArrayVar('headerParams', $oghead);
         
         $js = NULL;
-        $js .= $this->tweetButton();
-        $js .= $this->getPlusOneButton();
-        $js .= $this->getFbCode();
+        $js .= "<ul>";
+        $js .= "<li>".$this->tweetButton()."</li>";
+        $js .= "<li>".$this->getPlusOneButton()."</li>";
+        $js .= "<li>".$this->getFbCode()."</li>";
+        if($this->objUser->isLoggedIn()) {
+            $js .= "<li>".'<a href="'.$this->uri(array('action' => 'createalbum')).'">Manage Albums</a>'."</li>";
+        }
         return '<div id="socialbuttons">'.$js.'</div>';
     }
     

@@ -8,11 +8,7 @@ $objUi = $this->getObject('stackui');
 $cssLayout->setNumColumns(2);
 
 $middleColumn = $objUi->getGallery($userid);
-// $middleColumn .= $objUi->getSocial();
-
-if(!$this->objUser->isLoggedIn()) {
-    $leftCol .= $objUi->showSignInBox(TRUE);
-}
+$leftCol .= $objUi->getSocial();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
