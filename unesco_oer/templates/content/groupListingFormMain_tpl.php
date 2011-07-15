@@ -70,7 +70,7 @@ $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_n
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_email', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_number_of_group_user', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_join', 'unesco_oer'),null,null,left,"userheader",null);
-//$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_users', 'unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_leave', 'unesco_oer'),null,null,left,"userheader",null);
 //$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_legend_oerprosucts', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
@@ -84,11 +84,29 @@ if (count($groups) > 0) {
         $myTable->addCell($group['email'], null, null, null, "user", null, null);
         $myTable->addCell($this->ObjDbUserGroups->groupMembers($group['id']), null, null, null, "user", null, null);
         $objIcon->setIcon('add');
+       // echo $this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId());
+//echo $this->ObjDbUserGroups->ismemberOfgroup($this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId()),$group['id']); die();
+        if($this->ObjDbUserGroups->ismemberOfgroup($this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId()),$group['id'])){
+            $joinLink = new link($this->uri(array('action' =>"groupListingFormMain")));
+            $joinLink->link= $objIcon->show();
+            $joinLink->cssClass ='memberofgroup';
+            $myTable->addCell($joinLink->show());
+
+        }else{
+
+            $joinLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'])));
+            $joinLink->link = $objIcon->show();
+            $joinLink->cssClass = 'deleteuser';
+            $myTable->addCell($joinLink->show());
+
+            }
+
+        $objIcon->setIcon('leave');
         //$currLoggedInID=$this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId());
         //$this->ObjDbUserGroups->joingroup($currLoggedInID,$group['id']);
-        $deleteLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'])));
+        $deleteLink = new link($this->uri(array('action' =>"", 'id' => $group['id'])));
         $deleteLink->link = $objIcon->show();
-        $deleteLink->cssClass = 'deleteuser';
+        $deleteLink->cssClass = 'leavegroup';
         $myTable->addCell($deleteLink->show());
 
 
@@ -117,8 +135,6 @@ jQuery(document).ready(function(){
         }
         return false;
     }
-
-
 );
 
 }
@@ -126,9 +142,9 @@ jQuery(document).ready(function(){
 
 jQuery(document).ready(function(){
 
-    jQuery("a[class=deletegroupadaptation]").click(function(){
+    jQuery("a[class=memberofgroup]").click(function(){
 
-        var r=confirm( "This group is in use with product adaptation\n First delete it's adaptations then you can delete the group !!!");
+        var r=confirm( "Your are a member of this group\n you can not join !!!");
         if(r== true){
             window.location=this.href;
         }
@@ -137,6 +153,22 @@ jQuery(document).ready(function(){
 
 
 );
+}
+);
+
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=leavegroup]").click(function(){
+
+        var r=confirm( "Are you want to leave this group?");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+);
+
 }
 );
 

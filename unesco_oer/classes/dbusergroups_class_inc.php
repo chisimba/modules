@@ -64,6 +64,19 @@ class dbusergroups extends dbtable{
 
     }
 
+    //Check that a user belongs to a  group
+
+    function ismemberOfgroup($id,$groupid){
+        $sql="SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid' AND id='$id'";
+        $array=$this->getArray($sql);
+        if(count($array)>0){
+            return 1; //TRUE
+        }else{
+            return 0;
+        }
+
+    }
+
 
 
   
