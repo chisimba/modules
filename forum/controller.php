@@ -121,7 +121,7 @@ class forum extends controller {
 
         // Workgroup Classes
         $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
-        $this->usingWorkGroupsFlag=$this->objModuleCatalogue->checkIfRegistered('workgroups');
+        $this->usingWorkGroupsFlag=$this->objModuleCatalogue->checkIfRegistered('workgroup');
         if ($this->usingWorkGroupsFlag){
             $this->objWorkGroup = & $this->getObject('dbworkgroup', 'workgroup');
             $this->objWorkGroupUser = & $this->getObject('dbworkgroupusers', 'workgroup');
@@ -1706,14 +1706,11 @@ class forum extends controller {
         // Get the Workgroup
         $this->workgroupId = $this->objWorkGroup->getWorkgroupId();
         $this->workgroupDescription = $this->objWorkGroup->getDescription($this->workgroupId);
-        //echo $this->objUser->isContextLecturer($this->userId, $this->contextCode)?'T':'F';
         if ($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $this->workgroupId)||$this->objUser->isContextLecturer($this->userId, $this->contextCode)) {
             $this->forumtype = 'workgroup';
         } else {
             $this->forumtype = 'context';
         }
-        //echo '['.$this->forumtype.']';
-        //die;
     }
 
     /**
