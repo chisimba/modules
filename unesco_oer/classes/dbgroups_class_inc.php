@@ -209,8 +209,8 @@ class dbgroups extends dbtable {
      * return int
      */
 
-    function getGroupLatitude($name) {
-        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name='$name'";
+    function getGroupLatitude($groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
         $Group = $this->getArray($sql);
         return $Group[0]['loclat'];
     }
@@ -221,8 +221,8 @@ class dbgroups extends dbtable {
      * return int
      */
 
-    function getGroupLongitude($name) {
-        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name='$name'";
+    function getGroupLongitude($groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
         $Group = $this->getArray($sql);
         return $Group[0]['loclong'];
     }
@@ -238,6 +238,12 @@ class dbgroups extends dbtable {
         $GroupName = $this->getArray($sql);
         return $GroupName[0]['name'];
    
+    }
+
+    function getGroupID($groupname){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name='$groupname'";
+        $groupID = $this->getArray($sql);
+        return $groupID[0]['id'];
     }
 
     function getLinkedInstitution($groupid){
@@ -324,6 +330,25 @@ class dbgroups extends dbtable {
         $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE groupmembership = '$groupname'";
         return $this->getArray($sql);
    }
+
+
+
+
+   //To get adapted product co ordinates
+   function getAdaptedProductLat($productid){
+       $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE product_id='$productid'";
+       $array=$this->getArray($sql);
+       $groupid=$array[0]['group_id'];
+       return $this->getGroupLatitude($groupid);
+   }
+
+   function getAdaptedProductLon($productid){
+       $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE product_id='$productid'";
+       $array=$this->getArray($sql);
+       $groupid=$array[0]['group_id'];
+       return $this->getGroupLongitude($groupid);
+   }
+
 
 
 

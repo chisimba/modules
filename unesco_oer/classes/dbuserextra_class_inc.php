@@ -44,13 +44,13 @@ class dbuserextra extends dbtable{
             'typeoccapation' => $TypeOccapation,
             'workingphone' => $WorkingPhone,
             'description' => $DescriptionText,
-            'websitelink' => $WebsiteLink,
-            'groupmembership' => $GroupMembership
+            'websitelink' => $WebsiteLink
+         //   'groupmembership' => $GroupMembership//
         );
         $this->insert($data);
     }
 
-    function updateUserInfo($id,$userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
+    function updateUserInfo($id,$userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink) {
         if ($birthdate !='') {
             $data = array(
                 'id' => $id,
@@ -121,13 +121,13 @@ class dbuserextra extends dbtable{
                 'websitelink' => $WebsiteLink);
             $this->update('id', $id, $data);
         }
-        if ($GroupMembership != '') {
-            $data = array(
-                'id' => $id,
-                'userid' => $userId,
-                'groupmembership' => $GroupMembership);
-            $this->update('id', $id, $data);
-        }
+//        if ($GroupMembership != '') {
+//            $data = array(
+//                'id' => $id,
+//                'userid' => $userId,
+//                'groupmembership' => $GroupMembership);
+//            $this->update('id', $id, $data);
+//        }
         
            if ($TypeOccapation != '') {
             $data = array(
@@ -145,7 +145,7 @@ class dbuserextra extends dbtable{
             $this->update('id', $id, $data);
         }
     }
-
+//get user id by userid
     function getUserbyUserIdbyUserID($userid){
         $sql="SELECT * from tbl_users WHERE userid='$userid'";
         $id=$this->getArray($sql);
@@ -167,6 +167,8 @@ class dbuserextra extends dbtable{
          $sql="DELETE FROM tbl_unesco_oer_userextra WHERE id='$id' AND userid='$userid'";
          return $this->getArray($sql);
        }
+
+     
 
      function getGroupUserID($groupname){
          $sql="SELECT* FROM tbl_unesco_oer_userextra WHERE groupmembership='$groupname'";

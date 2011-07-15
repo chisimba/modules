@@ -97,16 +97,17 @@ if (strcmp($mode, 'addfixup') == 0) {
     $users = $user;
 } else {
     if (strcmp($this->getParam('mode'), 'groupuser') == 0) {
-        $groupname = $this->objDbGroups->getGroupName($this->getParam('id'));
-        $userIds = $this->objUseExtra->getAlluserGroup($groupname);
+        //$groupname = $this->objDbGroups->getGroupName($this->getParam('id'));
+        //$userIds = $this->objUseExtra->getAlluserGroup($groupname);
         $users = array();
-        for ($i = 0; $i < count($userIds); $i++) {
-            $currUser = $this->objUseExtra->getUserbyId($userIds[$i]['id']);
+        $groupusers=$this->ObjDbUserGroups->getGroupUser($this->getParam('id'));
+
+        foreach($groupusers as $groupuser){
+            $currUserid=$groupuser['id'];
+            $currUser=$this->objUseExtra->getUserbyId($currUserid);
             $users[] = $currUser[0];
-            // array_push($users,$currUser[$i]);
-//            print_r($users)        ;
-///            die();
         }
+
     } else {
         $users = $this->objUseExtra->getAllUser();
 //        print_r($users);

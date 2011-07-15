@@ -138,7 +138,7 @@
 
                             <?php
                             $link = new link($this->uri(array("action" => 'groupRegistationForm')));
-                            $link->link = '<img src="images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
+                            $link->link = '<img src="skins/unesco_oer/images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
                             Create Group';
                             echo '&nbsp;' . $link->show();
                             ?>
@@ -147,7 +147,7 @@
                         </a></div>
                 </div>
                 <br><br>
-                <div class="moduleHeader darkBlueText"><img src="images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
+                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
 
 
                 <div class="blueBackground">
@@ -173,7 +173,7 @@
                     </div>
                     <div class="viewGrid">
                     	<div class="viewAsDiv">View as: </div>
-                        <a href="#" class="gridListViewLinks"><img src="images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>
+                        <a href="#" class="gridListViewLinks"><img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>
                         <a href="#" class="gridListViewLinks"><img src="images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>
                     </div>
 
@@ -184,14 +184,14 @@
                 	<tr>
                     	<td>
                         	<div class="whiteBackgroundBox">
-                            <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                            <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
                             <div class="groupGridViewHeading greenText">
 
                             	Polytechnic of Namibia, journalism department
                             </div>
                             <div class="groupMemberAndJoinLinkDiv">
                             	<span class="greenText">Members :</span> 12<br><br>
-                                <a href="#"><img src="images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
+                                <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
                				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">Join</a></div>
                             </div>
 
@@ -199,14 +199,14 @@
                         </td>
                         <td>
                         	<div class="whiteBackgroundBox">
-                           <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                           <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
                                 <div class="groupGridViewHeading greenText">
                             	Journalism section group of university of namibia
                             	</div>
                             <div class="groupMemberAndJoinLinkDiv">
 
                             	<span class="greenText">Members :</span> 32<br><br>
-                                <a href="#"><img src="images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
+                                <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
                				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">Join</a></div>
                             </div>
                             </div>
@@ -214,13 +214,13 @@
                         <td>
 
                         	<div class="whiteBackgroundBox">
-                        	 <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                        	 <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
                                 <div class="groupGridViewHeading greenText">
                                 Rhodes university journalism department
                             	</div>
                             <div class="groupMemberAndJoinLinkDiv">
                             	<span class="greenText">Members :</span> 9<br><br>
-                                <a href="#"><img src="images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
+                                <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
 
                				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">Join</a></div>
                             </div>
@@ -231,13 +231,13 @@
                     	<td>
                         	<div class="whiteBackgroundBox">
 
-                                <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                                <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
                                 <div class="groupGridViewHeading greenText">
                                 	Laggon of Cambera community
                                 </div>
                                 <div class="groupMemberAndJoinLinkDiv">
                                   <span class="greenText">Members :</span> 7<br><br>
-                                    <a href="#"><img src="images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
+                                    <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
                				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">Join</a></div>
 
                                 </div>
@@ -263,25 +263,25 @@
                 <div class="rightColumnBorderedDiv">
 
                 	<div class="rightColumnContentPadding">
-                	  <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
+                	  <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
                	  <div class="featuredAdaptationRightContentDiv">
                         	<span class="greyListingHeading">Manual for Investigative Journalists</span>
                             <br><br>
 
                             <div class="listingAdaptationsLinkAndIcon">
-                            	<img src="images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                            	<img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">See all adaptations (15)</a></div>
 
                             </div>
                             <div class="listingAdaptationsLinkAndIcon">
-                            	<img src="images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                            	<img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">See UNSECO orginals</a></div>
                             </div>
 
 
                         </div>
                         <div class="featuredAdaptedBy">Adapted By</div>
-                        <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                        <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
 
                                 <span class="greyListingHeading">Polytechnic of Namibia</span>
                      </div>
@@ -332,7 +332,7 @@
 
             </div>
             <div class="footerBottomText">
-            	<img src="images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
+            	<img src="skins/unesco_oer/images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
                 <a href="" class="footerLink">UNESCO</a> |
                 <a href="" class="footerLink">Communication and Information</a> |
                 <a href="" class="footerLink">About OER Platform</a> |

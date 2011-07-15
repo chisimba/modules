@@ -346,14 +346,12 @@ $table->endRow();
 // Check that the group database is not empty and display group list dropdown
 $groups = $this->objDbGroups->getAllGroups();
 $dd = new dropdown('groupmembership');
+$dd->addOption('None');
 if (count($groups) > 0) {
   foreach ($groups as $group) {
       $dd->addOption($group['name']);
-      $groupid=$group['id'];
-      $this->setVar('groupid', $groupid);
       }
-} else {
-    $dd->addOption('None');
+
 }
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer'));

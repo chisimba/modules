@@ -84,7 +84,7 @@ class unesco_oer extends controller {
         $this->objjavafilt = $this->getObject('javafilt');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
-        $this->ObjDbUserGroups = $this->getParam('dbusergroups');
+        $this->ObjDbUserGroups=$this->getObject('dbusergroups');
 
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
@@ -1265,7 +1265,7 @@ class unesco_oer extends controller {
         if (!$_POST) { // Check that user has submitted a page
             return $this->nextAction(NULL);
         }
-// Generate User Id
+         // Generate User Id
         $userId = $this->objUserAdmin->generateUserId();
 // Capture all Submitted Fields
         $captcha = $this->getParam('request_captcha');
@@ -1408,7 +1408,9 @@ class unesco_oer extends controller {
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = NULL, 'useradmin', $accountstatus);
 //add to table userextra
             $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
-            $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
+            $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink);
+            $this->ObjDbUserGroups->joingroup($id,$this->objDbGroups->getGroupID($GroupMembership));
+            
 
 
 // Email Details to User
@@ -1682,6 +1684,22 @@ class unesco_oer extends controller {
     function __groupListingForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupListingForm_tpl.php';
+    }
+
+    function __groupListingFormMain(){
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'groupListingFormMain_tpl.php';
+        
+    }
+
+    function __joinGroup(){
+        if (!$this->objUser->isAdmin()){
+            $currLoggedInID=$this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId());
+        }else{
+            $currLoggedInID=$this->objUser->userId();
+        }
+        $this->ObjDbUserGroups->joingroup($currLoggedInID,$this->getParam('id'));
+        return $this->__groupListingFormMain();
     }
 
     /*

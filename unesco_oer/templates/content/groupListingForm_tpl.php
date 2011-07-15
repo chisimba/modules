@@ -96,7 +96,7 @@ if (count($groups) > 0) {
         $myTable->addCell($editLink->show());
 
         $objIcon->setIcon('delete');
-        if ($grouphasanadaptationcannotbedeleted) { /// condition needed
+        if ($grouphasanadaptationcannotbedeleted) { #############  NEED CONDITION  ########
             $deleteLink->link = $objIcon->show();
             $deleteLink->cssClass = 'deletegroupadaptation';
             $myTable->addCell($deleteLink->show());

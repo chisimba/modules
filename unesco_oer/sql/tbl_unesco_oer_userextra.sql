@@ -18,8 +18,8 @@ $fields = array(
                 'typeoccapation' => array('type' => 'text','length' => 255),
                 'workingphone' =>array('type' =>'text','length'=>255),
                 'description' =>array('type' =>'text','length'=>255),
-                'websitelink' => array('type' => 'text','length' => 255),
-                'groupmembership' =>array('type' =>'text','length'=>255)
+                'websitelink' => array('type' => 'text','length' => 255)
+
             
 		
 );
