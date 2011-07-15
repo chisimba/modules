@@ -33,6 +33,13 @@ class dbproductlanguages extends dbtable {
         $this->insert($data);
     }
 
+    function updateLanguage($id, $code, $name){
+               return $this->update('id', $id,
+                array('id' => $id,
+                    'code' => $code,
+                    'name' => $name));
+    }
+
     function getLanguageNameByID($id){
         $row = $this->getRow('id', $id);
         return $row['name'];
@@ -41,6 +48,16 @@ class dbproductlanguages extends dbtable {
     function getLanguageCodeByID($id){
         $row = $this->getRow('id', $id);
         return $row['code'];
+    }
+
+    function getLanguage($id){
+        $row = $this->getRow('id', $id);
+        return $row;
+    }
+
+    function deleteLanguage($id){
+               $sql = "DELETE FROM tbl_unesco_oer_product_languages WHERE id='$id'";
+        $this->getArray($sql);
     }
 }
 ?>

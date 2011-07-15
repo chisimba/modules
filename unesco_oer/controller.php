@@ -84,7 +84,7 @@ class unesco_oer extends controller {
         $this->objjavafilt = $this->getObject('javafilt');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
-        $this->ObjDbUserGroups=$this->getObject('dbusergroups');
+        $this->ObjDbUserGroups = $this->getObject('dbusergroups');
 
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
@@ -707,6 +707,18 @@ class unesco_oer extends controller {
         return "createThemeUI_tpl.php";
     }
 
+    public function __editLanguage() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $languageId = $this->getParam('languageId');
+//        $name = $this->getParam('name');
+//        $code = $this->getParam('code');
+//        $this->setVarByRef('name', $name);
+//        $this->setVarByRef('code', $code);
+        $this->setVarByRef('languageId', $languageId);
+
+        return "createLanguageUI_tpl.php";
+    }
+
     /*
      * Method to retrieve entries from user on the createThemeUI_tpl.php page
      * and add it to the tbl_unesco_oer_product_themes table
@@ -719,6 +731,19 @@ class unesco_oer extends controller {
         $this->objDbProductThemes->updateTheme($themeId, $theme, $umbrellaId);
 
         return $this->__viewProductThemes();
+    }
+    /*
+     * Method to retrieve entries from user on the createThemeUI_tpl.php page
+     * and add it to the tbl_unesco_oer_product_themes table
+     */
+
+    public function __editLanguageSubmit() {
+        $name = $this->getParam('name');
+        $languageId = $this->getParam('languageId');
+        $code = $this->getParam('code');
+        $this->objDbProductLanguages->updateLanguage($languageId, $code, $name);
+
+        return $this->__viewLanguages();
     }
 
     /*
@@ -811,10 +836,14 @@ class unesco_oer extends controller {
 
     public function __createLanguageSubmit() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
-        $code = $this->getParam('newLanguageCode');
-        $name = $this->getParam('newLanguageName');
-        if (strlen($code) == 0)
-            $code = $name;
+        $code = $this->getParam('code');
+        $name = $this->getParam('name');
+
+
+//Form related data members
+        $formAction = 'createLanguageSubmit';
+        $formError = false;
+        $this->setVarByRef('formError', $formError);
 
         $this->objDbProductLanguages->addLanguage($code, $name);
         return $this->__viewLanguages();
@@ -1265,7 +1294,7 @@ class unesco_oer extends controller {
         if (!$_POST) { // Check that user has submitted a page
             return $this->nextAction(NULL);
         }
-         // Generate User Id
+        // Generate User Id
         $userId = $this->objUserAdmin->generateUserId();
 // Capture all Submitted Fields
         $captcha = $this->getParam('request_captcha');
@@ -1409,8 +1438,8 @@ class unesco_oer extends controller {
 //add to table userextra
             $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink);
-            $this->ObjDbUserGroups->joingroup($id,$this->objDbGroups->getGroupID($GroupMembership));
-            
+            $this->ObjDbUserGroups->joingroup($id, $this->objDbGroups->getGroupID($GroupMembership));
+
 
 
 // Email Details to User
@@ -1686,19 +1715,18 @@ class unesco_oer extends controller {
         return 'groupListingForm_tpl.php';
     }
 
-    function __groupListingFormMain(){
+    function __groupListingFormMain() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupListingFormMain_tpl.php';
-        
     }
 
-    function __joinGroup(){
-        if (!$this->objUser->isAdmin()){
-            $currLoggedInID=$this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId());
-        }else{
-            $currLoggedInID=$this->objUser->userId();
+    function __joinGroup() {
+        if (!$this->objUser->isAdmin()) {
+            $currLoggedInID = $this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId());
+        } else {
+            $currLoggedInID = $this->objUser->userId();
         }
-        $this->ObjDbUserGroups->joingroup($currLoggedInID,$this->getParam('id'));
+        $this->ObjDbUserGroups->joingroup($currLoggedInID, $this->getParam('id'));
         return $this->__groupListingFormMain();
     }
 
@@ -2080,7 +2108,7 @@ class unesco_oer extends controller {
     }
 
     function __deleteLanguage() {
-        $this->objDbProductThemes->deleteTheme($this->getParam('id'));
+        $this->objDbProductLanguages->deleteLanguage($this->getParam('languageId'));
         return $this->__viewLanguages();
     }
 
