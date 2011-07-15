@@ -53,7 +53,7 @@ class unesco_oer extends controller {
      *
      */
     function init() {
-        //session_start();
+//session_start();
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objfilterdisplay = $this->getobject('filterdisplay', 'unesco_oer');
         $this->objProductUtil = $this->getObject('productutil');
@@ -84,11 +84,11 @@ class unesco_oer extends controller {
         $this->objjavafilt = $this->getObject('javafilt');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
-        $this->ObjDbUserGroups=$this->getParam('dbusergroups');
+        $this->ObjDbUserGroups = $this->getParam('dbusergroups');
 
-        //$this->objUtils = $this->getObject('utilities');
-        //$this->objGoogleMap=$this->getObject('googlemapapi');
-        //$this->objGoogleMap = new googlemapapi();
+//$this->objUtils = $this->getObject('utilities');
+//$this->objGoogleMap=$this->getObject('googlemapapi');
+//$this->objGoogleMap = new googlemapapi();
     }
 
     /**
@@ -550,7 +550,7 @@ class unesco_oer extends controller {
         } else {
             $this->setLayoutTemplate('3a_layout_tpl.php');
         }
-        //$this->setLayoutTemplate('1a_layout_tpl.php');
+//$this->setLayoutTemplate('1a_layout_tpl.php');
 
         return $this->__productsUi();
     }
@@ -561,7 +561,7 @@ class unesco_oer extends controller {
      */
 
     public function __uploadSubmit() {
-        //Retrieve thumbnail and save it
+//Retrieve thumbnail and save it
         $isNewProduct = $this->getParam('isNewProduct');
         if ($isNewProduct === NULL)
             throw new customException('Product state is not specified');
@@ -582,7 +582,7 @@ class unesco_oer extends controller {
             try {
                 $results = $this->uploadFile($path);
             } catch (customException $e) {
-                // echo customException::cleanUp();
+// echo customException::cleanUp();
                 echo "test";
                 exit();
             }
@@ -594,7 +594,7 @@ class unesco_oer extends controller {
             $thumbnailPath = $product['thumbnail'];
         }
 
-        //Determine and Validate the creator
+//Determine and Validate the creator
         $institutionCount = $this->objDbInstitution->isInstitution($this->getParam('institution'));
         $groupCount = $this->objDbGroups->isGroup($this->getParam('group'));
         $creatorName = '';
@@ -610,7 +610,7 @@ class unesco_oer extends controller {
                 throw new customException('No group or institution specified : ' . $this->getParam('group'));
         }
 
-        //create array for uploading into data base
+//create array for uploading into data base
         $data = array(
             'title' => $this->getParam('title'),
             'creator' => $creatorName,
@@ -627,7 +627,7 @@ class unesco_oer extends controller {
             'thumbnail' => $thumbnailPath
         );
 
-        //determine if a new product must be added or an old one must be updated
+//determine if a new product must be added or an old one must be updated
         if ($isNewProduct) {
             $data = array_merge($data, array('relation' => $parentID));
             $this->objDbProducts->addProduct($data);
@@ -881,7 +881,7 @@ class unesco_oer extends controller {
         try {
             $results = $this->uploadFile($path);
         } catch (Exception $e) {
-            //     echo customException::cleanUp();
+//     echo customException::cleanUp();
             echo "test";
             exit();
         }
@@ -917,31 +917,35 @@ class unesco_oer extends controller {
         $websiteLink = $this->getParam('websiteLink');
         $keyword1 = $this->getParam('keyword1');
         $keyword2 = $this->getParam('keyword2');
+        $prevThumbnail = $this->getParam('thumbnail');
 
-        //Form related data members
+//Form related data members
         $formAction = 'createInstitutionSubmit';
         $formError = false;
         $this->setVarByRef('formError', $formError);
-
-        $path = 'unesco_oer/institutions/' . $name . '/thumbnail/';
-        try {
-            $results = $this->uploadFile($path);
-        } catch (customException $e) {
-            echo customException::cleanUp();
-            exit();
+//Check if the thumbnail has been set
+        if (empty($prevThumbnail)) {
+            $path = 'unesco_oer/institutions/' . $name . '/thumbnail/';
+            try {
+                $results = $this->uploadFile($path);
+            } catch (customException $e) {
+                echo customException::cleanUp();
+                exit();
+            }
+            $thumbnail = 'usrfiles/' . $results['path'];
+        } else {
+            $thumbnail = $prevThumbnail;
+            //Validate the thumbnail
+            $fileInfoArray = array();
+            if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
+                $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
+                $validate['thumbnail'] = "Please provide a valid thumbnail";
+            }
         }
-        $thumbnail = 'usrfiles/' . $results['path'];
 
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
 
-        $fileInfoArray = array();
-        if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
-            $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
-            $validate['thumbnail'] = "Please provide a valid thumbnail";
-        }
-
         if ($validate['valid']) {
-
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
 
@@ -966,6 +970,7 @@ class unesco_oer extends controller {
             $this->setVarByRef('keyword2', $keyword2);
             $this->setVarByRef('formAction', $formAction);
             $this->setVarByRef('errorMessage', $validate);
+            $this->setVarByRef('thumbnail', $thumbnail);
 
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "institutionEditor_tpl.php";
@@ -997,11 +1002,11 @@ class unesco_oer extends controller {
         $uploadedFile->enableOverwriteIncrement = TRUE;
         $uploadedFile->customuploadpath = $path;
         $results = $uploadedFile->handleUpload($this->getParam('fileupload'));
-        //Test if file was successfully uploaded
-        // Technically, FALSE can never be returned, this is just a precaution
-        // FALSE means there is no fileinput with that name
+//Test if file was successfully uploaded
+// Technically, FALSE can never be returned, this is just a precaution
+// FALSE means there is no fileinput with that name
         if ($results == FALSE) {
-            //TODO return proper error page
+//TODO return proper error page
             throw new customException('Upload failed: FATAL <br />');
         } else {
             if (!$results['success']) { // upload was unsuccessful
@@ -1123,29 +1128,35 @@ class unesco_oer extends controller {
         $websiteLink = $this->getParam('websiteLink');
         $keyword1 = $this->getParam('keyword1');
         $keyword2 = $this->getParam('keyword2');
+        $prevThumbnail = $this->getParam('thumbnail');
 
-        //$thumbnail = $this->getParam('thumbnail');
 
-
-        $path = 'unesco_oer/institutions/' . $name . '/thumbnail/';
-        try {
-            $results = $this->uploadFile($path);
-        } catch (customException $e) {
-            echo customException::cleanUp();
-            exit();
+//Check if the thumbnail has been set
+        if (empty($prevThumbnail)) {
+            $path = 'unesco_oer/institutions/' . $name . '/thumbnail/';
+            try {
+                $results = $this->uploadFile($path);
+            } catch (customException $e) {
+                echo customException::cleanUp();
+                exit();
+            }
+            $thumbnail = 'usrfiles/' . $results['path'];
+        } else {
+            $thumbnail = $prevThumbnail;
+//Validate the thumbnail
+            $fileInfoArray = array();
+            if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
+                $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
+                $validate['thumbnail'] = "Please provide a valid thumbnail";
+            }
         }
-        $thumbnail = 'usrfiles/' . $results['path'];
 
+//        $prevThumbnail = $thumbnail;
         $formAction = 'editInstitutionSubmit';
         $formError = false;
         $this->setVarByRef('formError', $formError);
 
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-        $fileInfoArray = array();
-        if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
-            $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
-            $validate['thumbnail'] = "Please provide a valid thumbnail";
-        }
 
         if ($validate['valid']) {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -1154,7 +1165,7 @@ class unesco_oer extends controller {
             return $this->__viewInstitutions();
         } else {
 
-            //There has been an error, go back to the form to fix it
+//There has been an error, go back to the form to fix it
             $formError = TRUE;
             $this->setVarByRef('formError', $formError);
 
@@ -1172,6 +1183,8 @@ class unesco_oer extends controller {
             $this->setVarByRef('keyword2', $keyword2);
             $this->setVarByRef('formAction', $formAction);
             $this->setVarByRef('errorMessage', $validate);
+            $this->setVarByRef('thumbnail', $thumnail);
+//Stores the address of the previous thumbnail;
 
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "institutionEditor_tpl.php";
@@ -1202,7 +1215,7 @@ class unesco_oer extends controller {
      * Method to display page with entry options for comment
      */
 
-    //public function __createComment()
+//public function __createComment()
     public function __addAdditionalLanguage() {
         $id = $this->getParam('id');
         $this->setVar('ID', $id);
@@ -1214,7 +1227,7 @@ class unesco_oer extends controller {
      * and add it to the tbl_unesco_oer_group table
      */
 
-    //public function __addLanguageSubmit()
+//public function __addLanguageSubmit()
     public function __addAdditionalLanguageSubmit() {
         $language = $this->getParam('language');
         $id = $this->getParam('id');
@@ -1235,7 +1248,6 @@ class unesco_oer extends controller {
         return 'UserListingForm_tpl.php';
     }
 
-
     public function __userEditRegistrationForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $id = $this->getParam('id');
@@ -1253,9 +1265,9 @@ class unesco_oer extends controller {
         if (!$_POST) { // Check that user has submitted a page
             return $this->nextAction(NULL);
         }
-        // Generate User Id
+// Generate User Id
         $userId = $this->objUserAdmin->generateUserId();
-        // Capture all Submitted Fields
+// Capture all Submitted Fields
         $captcha = $this->getParam('request_captcha');
         $username = $this->getParam('register_username');
         $password = $this->getParam('register_password');
@@ -1281,7 +1293,7 @@ class unesco_oer extends controller {
         $country = $this->getParam('country');
         $typeOfOccupation = $this->getParam('type_of_occupation');
         $accountstatus = 1; // Default Status Active
-        // Create an array of fields that cannot be empty
+// Create an array of fields that cannot be empty
 //        $checkFields = array(
 //            $captcha,
 //            $username,
@@ -1292,8 +1304,8 @@ class unesco_oer extends controller {
 //            $password,
 //            $repeatpassword
 //        );
-        // now differentiate if registration is by user or Admin
-        //replace the code
+// now differentiate if registration is by user or Admin
+//replace the code
         $checkFields = '';
         if ($this->objUser->isAdmin()) {
             $checkFields = array(
@@ -1322,10 +1334,10 @@ class unesco_oer extends controller {
                 $postaladdress
             );
         }//
-        // Create an Array to store problems
+// Create an Array to store problems
         $problems = array();
 
-        //check that the resiter is not a user manager
+//check that the resiter is not a user manager
         if (!$this->objUser->isAdmin()) {
             if ($address == '') {
                 $problems[] = 'noAddress';
@@ -1342,16 +1354,16 @@ class unesco_oer extends controller {
                 $problems[] = 'noPostalCode';
             }
         }
-        //
-        // Check that username is available
+//
+// Check that username is available
         if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
             $problems[] = 'usernametaken';
         }
-        //check that the email address is unique
+//check that the email address is unique
         if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
             $problems[] = 'emailtaken';
         }
-        // Check for any problems with password
+// Check for any problems with password
         if ($password == '') {
             $problems[] = 'nopasswordentered';
         } else if ($repeatpassword == '') {
@@ -1359,21 +1371,21 @@ class unesco_oer extends controller {
         } else if ($password != $repeatpassword) {
             $problems[] = 'passwordsdontmatch';
         }
-        // Check that all required field are not empty
+// Check that all required field are not empty
         if (!$this->__checkFields($checkFields)) {
             $problems[] = 'missingfields';
         }
-        // Check that email address is valid
+// Check that email address is valid
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
-        // Check whether user matched captcha
+// Check whether user matched captcha
         if (md5(strtoupper($captcha)) != $this->getParam('captcha')) {
             $problems[] = 'captchadoesntmatch';
         }
-        // If there are problems, present from to user to fix
+// If there are problems, present from to user to fix
         if (count($problems) > 0) {
-            //check that is admin
+//check that is admin
             if (!$this->objUser->isAdmin()) {
                 $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 $this->setVar('mode', 'addfixup');
@@ -1392,14 +1404,14 @@ class unesco_oer extends controller {
 //            $this->setVarByRef('problems', $problems);
 //            return 'userRegistration_tpl.php';
         } else {
-            // Else add to database
+// Else add to database
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = NULL, 'useradmin', $accountstatus);
-            //add to table userextra
+//add to table userextra
             $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
 
 
-            // Email Details to User
+// Email Details to User
             $this->objUserAdmin->sendRegistrationMessage($pkid, $password);
 
 //Now differentiate if registration is by user or Admin
@@ -1414,11 +1426,11 @@ class unesco_oer extends controller {
                 return $this->nextAction('detailssent');
             }
 //
-            //$this->setSession('id', $pkid);
-            //$this->setSession('password', $password);
-            //$this->setSession('time', $password);
-            //return $this->nextAction('detailssent');
-            //return $this->__userListingForm();
+//$this->setSession('id', $pkid);
+//$this->setSession('password', $password);
+//$this->setSession('time', $password);
+//return $this->nextAction('detailssent');
+//return $this->__userListingForm();
         }
     }
 
@@ -1479,7 +1491,7 @@ class unesco_oer extends controller {
         if (!$_POST) {
             return $this->nextAction(NULL);
         }
-        // Get Details from Form
+// Get Details from Form
 
         $password = $this->getParam('input_useradmin_password');
         $repeatpassword = $this->getParam('useradmin_repeatpassword');
@@ -1487,7 +1499,7 @@ class unesco_oer extends controller {
         $firstname = $this->getParam('useradmin_firstname');
         $surname = $this->getParam('useradmin_surname');
         $email = $this->getParam('useradmin_email');
-        //$cellnumber = $this->getParam('useradmin_cellnumber');
+//$cellnumber = $this->getParam('useradmin_cellnumber');
         $cellnumber = $this->getParam('register_cellnum');
         $sex = $this->getParam('useradmin_sex');
         $country = $this->getParam('country');
@@ -1517,19 +1529,19 @@ class unesco_oer extends controller {
 
         $this->setSession('userDetails', $userDetails);
 
-        // List Compulsory Fields, Cannot be Null
+// List Compulsory Fields, Cannot be Null
         $checkFields = array($firstname, $surname, $email);
 
         $results = array();
 
-        // Check Fields
+// Check Fields
         if (!$this->__checkFields($checkFields)) {
             $this->setVar('mode', 'addfixup');
             $this->setSession('showconfirmation', FALSE);
             return 'editUserDetails_tpl.php';
         }
 
-        // Check Email Address
+// Check Email Address
         if (!$this->objUrl->isValidFormedEmailAddress($email) && $email != $this->user['emailaddress']) {
             $this->setVar('mode', 'addfixup');
             $this->setSession('showconfirmation', FALSE);
@@ -1538,7 +1550,7 @@ class unesco_oer extends controller {
 
         $results['detailschanged'] = TRUE;
 
-        // check for password changed
+// check for password changed
         if ($password == '') { // none given, user does not want to change password
             $password = '';
             $results['passwordchanged'] = FALSE;
@@ -1550,7 +1562,7 @@ class unesco_oer extends controller {
             $results['passwordchanged'] = TRUE;
         }
 
-        // Process Update
+// Process Update
         $update = $this->objUserAdmin->updateUserDetails($this->user['id'], $this->user['username'], $firstname, $surname, $title, $email, $sex, $country, $cellnumber, $staffnumber, $password);
 
         if (count($results) > 0) {
@@ -1559,7 +1571,7 @@ class unesco_oer extends controller {
 
         $this->setSession('showconfirmation', TRUE);
         $this->objUser->updateUserSession();
-        // Process Update Results
+// Process Update Results
         if ($update) {
             $this->objUseExtra->updateUserInfo($this->getParam('id'), $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -1682,7 +1694,7 @@ class unesco_oer extends controller {
         }
         $name = $this->getParam('group_name');
         $email = $this->getParam('register_email');
-        //$confirmemail=$this->getParam('register_confirmemail');
+//$confirmemail=$this->getParam('register_confirmemail');
         $address = $this->getParam('group_address');
         $city = $this->getParam('group_city');
         $state = $this->getParam('group_state');
@@ -1747,7 +1759,7 @@ class unesco_oer extends controller {
         $id = $this->getParam('id');
         $name = $this->getParam('group_name');
         $email = $this->getParam('register_email');
-        //$confirmemail=$this->getParam('register_confirmemail');
+//$confirmemail=$this->getParam('register_confirmemail');
         $address = $this->getParam('group_address');
         $city = $this->getParam('group_city');
         $state = $this->getParam('group_state');
@@ -1834,14 +1846,10 @@ class unesco_oer extends controller {
         }
     }
 
-    function __groupProductForm(){
+    function __groupProductForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupProductForm_tpl.php';
-
     }
-
-
-
 
     /*     * This function handles the uploading of product metadata
      *
@@ -1853,7 +1861,7 @@ class unesco_oer extends controller {
         echo "gdsgdf";
         $product = $this->getObject('product');
 
-        //test for edit
+//test for edit
         if ($this->getParam('productID')) {
             $product->loadProduct($this->getParam('productID'));
         }
@@ -1866,16 +1874,16 @@ class unesco_oer extends controller {
                 break;
 
             case "upload":
-                //test if all fields are valid
+//test if all fields are valid
                 if ($product->handleUpload()) {
-                    //$this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
+//$this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
                     $this->nextAction($this->getParam('nextAction'), array('id' => $product->getIdentifier()));
                 } else {
                     return $defaultTemplate;
                 }
                 break;
             case "createcontent":
-                //test if all fields are valid
+//test if all fields are valid
                 if ($product->handleUpload()) {
                     $this->nextAction('saveContent', array('path' => $product->getIdentifier(), 'nextAction' => $this->getParam('nextAction')));
                 } else {
@@ -1959,7 +1967,7 @@ class unesco_oer extends controller {
         return "CreateContent_tpl.php";
     }
 
-    //Function to display the institution editor page
+//Function to display the institution editor page
     public function __institutionEditor() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $institutionId = $this->getParam('institutionId');

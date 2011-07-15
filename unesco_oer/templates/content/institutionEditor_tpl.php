@@ -8,6 +8,10 @@
     <body>
         <?php
 
+        //Display errors
+error_reporting(E_ALL);
+ini_set('display_errors', 'Off');
+
         $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
         $institutionmanager = $this->getObject('institutionmanager', 'unesco_oer');
 
@@ -15,6 +19,7 @@
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('adddatautil', 'unesco_oer');
+        $this->loadClass('hiddeninput', 'htmlelements');
         $fieldsetErrors = $this->newObject('fieldset', 'htmlelements');
         $displayErrors = NULL;
         $reqiuredField = array();
@@ -48,9 +53,9 @@
                     $tableErrors->endRow();
                 }
             }
-
+            
             $formErrorHeading = $title = $this->objLanguage->languageText('mod_unesco_oer_institution_form_error', 'unesco_oer');
-            $fieldsetErrors->setLegend('There were errors in the form');
+            $fieldsetErrors->setLegend($formErrorHeading);
             $fieldsetErrors->addContent($tableErrors->show());
             $displayErrors = $fieldsetErrors->show() . '<br />';
 
@@ -129,6 +134,13 @@
         $tableinstitutioninfo->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . $requiredField['thumbnail']);
         $tableinstitutioninfo->endRow();
         $tableinstitutioninfo->startRow();
+        $tester = new hiddeninput('thumbnail');
+        $tester->value = $formData['thumbnail'];
+//        $taster = '<input type="text" name="thumbnail" value=' . $formData['thumbnail'] . '>';
+        $tableinstitutioninfo->addCell($tester->show());
+        $tableinstitutioninfo->endRow();
+        $tableinstitutioninfo->startRow();
+//        $this->objThumbUploader->path($formData['thumbnail']);
         $tableinstitutioninfo->addCell($this->objThumbUploader->show());
         $tableinstitutioninfo->endRow();
 
