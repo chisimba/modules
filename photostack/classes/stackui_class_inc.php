@@ -121,7 +121,10 @@ class stackui extends object
         $js .= "<li>".$this->getPlusOneButton()."</li>";
         $js .= "<li>".$this->getFbCode()."</li>";
         if($this->objUser->isLoggedIn()) {
-            $js .= "<li>".'<a href="'.$this->uri(array('action' => 'createalbum')).'">Manage Albums</a>'."</li>";
+            $this->loadClass('link', 'htmlelements');
+            $link = new link ($this->uri(array('action'=>'createalbum'),'photostack'));
+            $link->link=$this->objLanguage->languageText("mod_photostack_managealbums", "photostack");
+            $js .= "<li>".$link->show()."</li>";
         }
         return '<div id="socialbuttons">'.$js.'</div>';
     }
