@@ -133,7 +133,10 @@ echo $fs->show();
 
     jQuery("a[class=deleteTheme]").click(function(){
 
-    var r=confirm( "Are you sure you want to delete this theme?");
+    var r=confirm( "
+    <?php
+    $this->objLanguage->languageText('mod_unesco_oer_product_theme_delete_confirm', 'unesco_oer');
+    ?>");
     if(r== true){
     window.location=this.href;
     }
