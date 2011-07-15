@@ -1,5 +1,6 @@
 <?php
-/* 
+
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -16,8 +17,8 @@
 
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
-$this->loadClass('htmltable','htmlelements');
-$this->loadClass('textinput','htmlelements');
+$this->loadClass('htmltable', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
 
 // setup and show heading
 $header = new htmlHeading();
@@ -54,13 +55,17 @@ $table->endRow();
 
 //input options for resource table
 $textinput = new textinput('newTypeTable');
-$textinput->size = 60;
-$textinput->setValue($formData['table_name']);
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_product_type_table', 'unesco_oer'));
 $table->endRow();
 $table->startRow();
-$table->addCell($textinput->show());
+$table->startRow();
+$tableNames = $this->objDbResourceTypes->getResourceTypes();
+$objTableNamesdd = new dropdown('table_name');
+$formatTableName = substr($formData['table_name'], 15, strlen($formData['table_name']));
+$objTableNamesdd->addFromDB($tableNames, 'table_name', 'id', $formData['table_name']);
+$table->addCell($objTableNamesdd->show());
+$table->endRow();
 $table->endRow();
 
 //input optins for submit button
@@ -80,7 +85,7 @@ $newResourceFieldset->setLegend($Legend);
 $newResourceFieldset->addContent($table->show());
 
 //createform, add fields to it and display
-$objForm = new form('newResourceType_ui',$this->uri(array('action'=> $formAction, 'typeId' => $typeId)));
+$objForm = new form('newResourceType_ui', $this->uri(array('action' => $formAction, 'typeId' => $typeId)));
 $objForm->addToForm($newResourceFieldset->show());
 $objForm->addRule('newTypeDescription', 'Please enter the product type', 'required');
 $objForm->addRule('newTypeTable', 'Please enter the product type table', 'required');

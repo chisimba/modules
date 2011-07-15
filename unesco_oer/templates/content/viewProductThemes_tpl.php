@@ -71,7 +71,7 @@ $deleteThemeRowHeading = $this->objLanguage->languageText('mod_unesco_oer_group_
 $themesTable->addHeaderCell($themeRowHeading, null, null, 'left', "userheader", null);
 $themesTable->addHeaderCell($umbrellaThemeRowHeading, null, null, 'left', "userheader", null);
 $themesTable->addHeaderCell($editRowHeading, null, null, 'left', "userheader", null);
-$themesTable->addHeaderCell($deleteRowHeading, null, null, 'left', "userheader", null);
+$themesTable->addHeaderCell($deleteThemeRowHeading, null, null, 'left', "userheader", null);
 $themesTable->endHeaderRow();
 
 //get themes from the database
@@ -135,7 +135,7 @@ echo $fs->show();
 
     var r=confirm( "
     <?php
-    $this->objLanguage->languageText('mod_unesco_oer_product_theme_delete_confirm', 'unesco_oer');
+    echo $this->objLanguage->languageText('mod_unesco_oer_product_theme_delete_confirm', 'unesco_oer');
     ?>");
     if(r== true){
     window.location=this.href;

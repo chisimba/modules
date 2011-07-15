@@ -51,14 +51,6 @@ echo '</div>';
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
-//$search = new textinput('state');
-//$search->size = 10;
-//$table->startRow();
-//$table->addCell('Search');
-//$table->addCell($search->show());
-//$table->endRow();
-//echo $table->show();
-//. '&nbsp;' . $search->show() . '&nbsp;' . $searchLink->show();
 
 $themesTable = $this->newObject('htmltable', 'htmlelements');
 $themesTable->width = '100%';
@@ -92,7 +84,7 @@ if (count($productTypesList) > 0) {
         $objIcon->setIcon('delete');
         $deleteLink = new link($this->uri(array('action' => "deleteProductType", 'productTypeId' => $productType['id'])));
         $deleteLink->link = $objIcon->show();
-        $deleteLink->cssClass = 'deleteTheme';
+        $deleteLink->cssClass = 'deleteProductType';
         $themesTable->addCell($deleteLink->show());
         $themesTable->endRow();
     }
@@ -110,7 +102,10 @@ echo $fs->show();
 
     jQuery("a[class=deleteProductType]").click(function(){
 
-    var r=confirm( "Are you sure you want to delete this Product Type?");
+    var r=confirm( "
+<?php
+    echo $this->objLanguage->languageText('mod_unesco_oer_product_type_delete_confirm', 'unesco_oer');
+    ?>");
     if(r== true){
     window.location=this.href;
     }

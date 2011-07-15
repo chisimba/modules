@@ -87,7 +87,7 @@ if (count($languageList) > 0) {
         $objIcon->setIcon('delete');
         $deleteLink = new link($this->uri(array('action' => "deleteLanguage", 'languageId' => $language['id'])));
         $deleteLink->link = $objIcon->show();
-        $deleteLink->cssClass = 'deleteTheme';
+        $deleteLink->cssClass = 'deleteLanguage';
         $themesTable->addCell($deleteLink->show());
         $themesTable->endRow();
     }
@@ -106,7 +106,9 @@ echo $fs->show();
 
     jQuery("a[class=deleteLanguage]").click(function(){
 
-    var r=confirm( "Are you sure you want to delete this Language?");
+    var r=confirm( "<?php
+    echo $this->objLanguage->languageText('mod_unesco_oer_product_language_delete_confirm', 'unesco_oer');
+    ?>");
     if(r== true){
     window.location=this.href;
     }
