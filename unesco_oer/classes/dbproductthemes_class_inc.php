@@ -128,7 +128,8 @@ class dbproductthemes extends dbtable {
         $objTrimStr = $this->getObject('trimstr', 'strings');
         $teaser = $objTrimStr->strTrim(strip_tags($umbrella), 500);
 
-        $userId = $this->objUser->userId();
+        $userId = 45;
+        //// $this->objUser->userId();
         $module = 'unesco_oer';
 
         // Todo - Set permissions on entering course, e.g. iscontextmember.
