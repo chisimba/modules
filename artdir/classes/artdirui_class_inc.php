@@ -461,7 +461,7 @@ class artdirui extends object
         // categories
         $catlabel = new label($this->objLanguage->languageText('mod_artdir_category', 'artdir'));
         $dtable->addCell($catlabel->show());
-        $dtable->addCell($artist['catid']);
+        $dtable->addCell($this->objDbArtdir->getCatById($artist['catid']));
         $dtable->endRow();
         // contact person
         $dtable->startRow();
@@ -497,7 +497,7 @@ class artdirui extends object
         $dtable->startRow();
         $linkslabel = new label($this->objLanguage->languageText('mod_artdir_links', 'artdir'));
         $dtable->addCell($linkslabel->show());
-        $dtable->addCell("I think this needs to move elsewhere...");
+        $dtable->addCell("");
         $dtable->endRow();
         
         // 1 row, 2 cells
