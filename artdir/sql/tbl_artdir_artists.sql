@@ -16,10 +16,12 @@ $fields = array(
 		'length' => 50,
 		),
 	'actname' => array(
-		'type' => 'clob',
+		'type' => 'text',
+		'length' => 255,
 		),
 	'description' => array(
-		'type' => 'clob',
+		'type' => 'text',
+		'length' => 255,
 		),
 	'catid' => array(
 		'type' => 'text',
@@ -42,11 +44,16 @@ $fields = array(
 		'length' => 255,
 		),
 	'website' => array(
-		'type' => 'clob',
+		'type' => 'text',
+		'length' => 255,
 		),
 	'bio' => array(
 		'type' => 'clob',
 		),
+    'thumbnail' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
 	);
 
 //create other indexes here...

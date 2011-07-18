@@ -286,6 +286,12 @@ class dbartdir extends dbTable
         return $people;
     }
     
+    public function getArtistById($id) {
+        $this->_changeTable('tbl_artdir_artists');
+        $artist = $this->getAll("WHERE id = '$id'");
+        return $artist[0];
+    }
+    
     /**
      * Method to dynamically switch tables
      *

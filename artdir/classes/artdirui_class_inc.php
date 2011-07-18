@@ -146,6 +146,7 @@ class artdirui extends object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objSysConfig  = $this->getObject ( 'dbsysconfig', 'sysconfig' );
         $this->objDbArtdir      = $this->getObject('dbartdir');
+        $this->objFile = $this->getObject('dbfile', 'filemanager');
     }
     
     /**
@@ -418,31 +419,112 @@ class artdirui extends object
         $fart .= '<div class="artistwindow">';
         $artist = $this->objDbArtdir->getRandArtists();
         // make a function here to get an image that has been uploaded. Replace the kittehz
-        if(isset($artist[0]) && !empty($artist[0])) {
-            $fart .= '<div id="artistleft">'.'<img src="http://placekitten.com/229/180" />'.'<h3>'.$artist[0]['actname'].'</h3></div>';
+        $count = 0;
+        foreach($artist as $a) {
+            if($count == 0) {
+                $artistcontainer = 'artistleft';
+            }
+            elseif($count == 1) {
+                $artistcontainer = 'artistmiddle';
+            }
+            else {
+                $artistcontainer = 'artistright';
+            }
+            $artist = '<div id="'.$artistcontainer.'">'.'<img src="'.$this->objFile->getFilePath($a['thumbnail']).'" width="229" height="180" />'.
+                         '<h3>'.$a['actname'].'</h3>'.$a['description'].'</div>';
+            $artlink = new link ($this->uri(array('action'=>'viewartist', 'id' => $a['id'])));
+            $artlink->link = $artist;
+            $fart .= $artlink->show();
+            $count++;
         }
-        else {
-            $fart .= '<div id="artistleft"><img src="http://placekitten.com/229/180" />';
-        }
-        if(isset($artist[1]) && !empty($artist[1])) {
-            $fart .= '<div id="artistmiddle">'.'<img src="http://placekitten.com/229/180" />'.'<h3>'.$artist[1]['actname'].'</h3></div>';
-        }
-        else {
-            $fart .= '<div id="artistmiddle"><img src="http://placekitten.com/229/180" />';
-        }
-        if(isset($artist[2]) && !empty($artist[2])) {
-            $fart .= '<div id="artistright">'.'<img src="http://placekitten.com/229/180" />'.'<h3>'.$artist[2]['actname'].'</h3></div>';
-        }
-        else {
-            $fart .= '<div id="artistright"><img src="http://placekitten.com/229/180" />';
-        }
-        
-        /*$fart .= '<div id="blurbleft">'.$artist[0]['description'].'</div>';
-        $fart .= '<div id="blurbmiddle">'.$artist[1]['description'].'</div>';
-        $fart .= '<div id="blurbright">'.$artist[0]['description'].'</div>'; */
         
         $fart .= '</div>';
         return $fart;
+    }
+    
+    public function formatArtist($artist) {
+        $this->objWashout = $this->getObject("washout", "utilities");
+        $this->loadClass('href', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        
+        $str = NULL;
+        
+        // details table inside a container table
+        $ctable = $this->newObject('htmltable', 'htmlelements');
+        $ctable->cellpadding = 3;
+        
+        // details table
+        $dtable = $this->newObject('htmltable', 'htmlelements');
+        $dtable->cellpadding = 3;
+        // build the artist details now
+        $dtable->startRow();
+        // categories
+        $catlabel = new label($this->objLanguage->languageText('mod_artdir_category', 'artdir'));
+        $dtable->addCell($catlabel->show());
+        $dtable->addCell($artist['catid']);
+        $dtable->endRow();
+        // contact person
+        $dtable->startRow();
+        $conlabel = new label($this->objLanguage->languageText('mod_artdir_contactp', 'artdir'));
+        $dtable->addCell($conlabel->show());
+        $dtable->addCell($artist['contactperson']);
+        $dtable->endRow();
+        // telephone
+        $dtable->startRow();
+        $contlabel = new label($this->objLanguage->languageText('mod_artdir_contactnum', 'artdir'));
+        $dtable->addCell($contlabel->show());
+        $dtable->addCell($artist['contactnum']);
+        $dtable->endRow();
+        // telephone 2
+        $dtable->startRow();
+        $altlabel = new label($this->objLanguage->languageText('mod_artdir_altnum', 'artdir'));
+        $dtable->addCell($altlabel->show());
+        $dtable->addCell($artist['altnum']);
+        $dtable->endRow();
+        // email
+        $dtable->startRow();
+        $emaillabel = new label($this->objLanguage->languageText('mod_artdir_email', 'artdir'));
+        $dtable->addCell($emaillabel->show());
+        $dtable->addCell($this->objWashout->parseText($artist['email']));
+        $dtable->endRow();
+        // website
+        $dtable->startRow();
+        $weblabel = new label($this->objLanguage->languageText('mod_artdir_website', 'artdir'));
+        $dtable->addCell($weblabel->show());
+        $dtable->addCell($this->objWashout->parseText($artist['website']));
+        $dtable->endRow();
+        // links
+        $dtable->startRow();
+        $linkslabel = new label($this->objLanguage->languageText('mod_artdir_links', 'artdir'));
+        $dtable->addCell($linkslabel->show());
+        $dtable->addCell("I think this needs to move elsewhere...");
+        $dtable->endRow();
+        
+        // 1 row, 2 cells
+        $ctable->startRow();
+        // artist pic
+        $ctable->addCell('<img src="'.$this->objFile->getFilePath($artist['thumbnail']).'" width="229" height="180" />');
+        // artis details table
+        $ctable->addCell($dtable->show());
+        $ctable->endRow();
+        
+        $str .= $ctable->show();
+        $str .= "<br />";
+        $str .= $artist['bio'];
+        $str .= "<hr />";
+        
+        // grab any images associated with the profile
+        
+        // get any linked videos
+        
+        
+        return $str;
+    }
+    
+    public function returnlink() {
+        $retlink = new link ($this->uri(array(''), 'artdir'));
+        $retlink->link = $this->objLanguage->languageText("mod_artdir_return", "artdir");
+        return $retlink->show();
     }
     
 }

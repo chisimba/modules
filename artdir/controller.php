@@ -88,6 +88,7 @@ class artdir extends controller
             $this->objTermsDialogue = $this->getObject('artdirtermsdialogue');
             $this->objCats          = $this->getObject('artdircategories');
             $this->objDbArtdir      = $this->getObject('dbartdir');
+            $this->objUi            = $this->getObject('artdirui');
         }
         catch ( customException $e ) {
             customException::cleanUp ();
@@ -262,6 +263,14 @@ class artdir extends controller
                 $cat = $this->getParam('cat');
                 echo $cat;
                 break;
+                
+            case 'viewartist' :
+                $id = $this->getParam('id');
+                $artist = $this->objDbArtdir->getArtistById($id);
+                $artistdata = $this->objUi->formatArtist($artist);
+                $this->setVarByRef('artistdata', $artistdata);
+                return 'artist_tpl.php';
+                break;
 
                 
             default:
@@ -278,7 +287,7 @@ class artdir extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'search', 'showsignin', NULL);
+        $allowedActions = array('', 'search', 'showsignin', 'viewartist',NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
