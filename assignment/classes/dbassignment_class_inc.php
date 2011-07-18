@@ -154,7 +154,7 @@ class dbassignment extends dbtable {
                 ));
         if ($emailAlert == '1') {
             $title = "'" . $name . "' " . $this->objLanguage->languageText('mod_assignment_emailsubject', 'assignment', " assignment  has been created in '") . $this->objContext->getTitle($context) . "'";
-            $link = new link($this->uri(array("action" => "view", "id" => $id)));
+            $link = new link($this->uri(array("action" => "joincontext", 'contextcode'=>$this->objContext->getContextCode(),'contextmodule'=>'assignment','contextaction'=>'view','contextdata'=>$id),'context'));
 
             $message = $this->objLanguage->languageText('mod_assignment_emailbody', 'assignment', "To view the assignment, click on this link") . ' ' .
                     $link->href;

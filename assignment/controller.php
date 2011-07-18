@@ -237,6 +237,11 @@ class assignment extends controller {
     }
 
     private function __add() {
+   
+        $workgroupsinassignment = array();
+        $learningoutcomesinassignment = array();
+        $this->setVarByRef('workgroupsinassignment', $workgroupsinassignment);
+        $this->setVarByRef('learningoutcomesinassignment', $learningoutcomesinassignment);
         $this->setVar('mode', 'add');
 
         return 'addedit_assignment_tpl.php';
