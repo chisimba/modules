@@ -514,7 +514,7 @@ class artdirui extends object
         $str .= "<hr />";
         
         // grab any images associated with the profile
-        
+        $str .= $this->imggalJs();
         // get any linked videos
         
         
@@ -525,6 +525,28 @@ class artdirui extends object
         $retlink = new link ($this->uri(array(''), 'artdir'));
         $retlink->link = $this->objLanguage->languageText("mod_artdir_return", "artdir");
         return $retlink->show();
+    }
+    
+    public function imggalJs() {
+        $js = NULL;
+        $js .= '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>';
+        $js .= $this->getJavascriptFile('jquery.exposure.js?v=0.9', 'artdir');
+        $js .= $this->getJavascriptFile('imggal.js', 'artdir');
+        $this->appendArrayVar('headerParams', $js);
+        $html = NULL;
+        $html = '<div class="panel">	
+				<div id="slideshow"></div>
+				<div class="clear"></div>
+				<ul id="images">
+					<li><a href="http://placekitten.com/150/79"><img src="http://placekitten.com/150/79" title="Kitten 1" /></a></li>
+					<li><a href="http://placekitten.com/150/79"><img src="http://placekitten.com/150/79" title="Kitten 1" /></a></li>
+				</ul>
+				<div class="clear"></div>
+			</div>			
+			<div id="exposure"></div>			
+			<div class="clear"></div>';
+			
+	    return $html;
     }
     
 }
