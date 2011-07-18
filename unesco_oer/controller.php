@@ -358,20 +358,7 @@ class unesco_oer extends controller {
 
 
 
-        $AuthFilter = $this->getParam('AuthorFilter');
-        $ThemeFilter = $this->getParam('ThemeFilter');
-        $LangFilter = $this->getParam('LanguageFilter');
-
-        $sort = $this->getParam('SortFilter');
-        $NumFilter = $this->getParam('NumFilter');
-        $PageNum = $this->getParam('PageNum');
-        $TotalPages = $this->getParam('TotalPages');
-        $adaptationstring = $this->getParam('adaptationstring');
-        $Model = $this->getParam('Model');
-        $Handbook = $this->getParam('Handbook');
-        $Guide = $this->getParam('Guide');
-        $Manual = $this->getParam('Manual');
-        $Besoractile = $this->getParam('Besoractile');
+       
 
         $latShort = round($lat, 3);
         $lngshort = round($lng, 3);

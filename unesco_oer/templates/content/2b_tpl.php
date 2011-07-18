@@ -661,7 +661,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                         <body onload="initialize()">
                                             <div id="map_canvas" style="width:100%; height:20%"></div>
                                             <?php
-                                            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2b_tpl.php',  "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
+                                            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2b_tpl.php', 'MapEntries' => $MapEntries)));
 
                                             echo $form->show();
                                           

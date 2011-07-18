@@ -163,11 +163,6 @@ class productutil extends object {
            
     
             $content.= "
-                 
-
-              
-                 
-
 
  
 
@@ -184,13 +179,7 @@ class productutil extends object {
              $('$divheading').slideToggle();
             
     });
-            
-            
-            
-            
-            
-            
-            
+
             
            ";
             
@@ -206,13 +195,6 @@ class productutil extends object {
 
                             </script>
                                         ';
-
-
-
-
-
-
-
 
 
 
@@ -283,14 +265,6 @@ class productutil extends object {
             $form->addToForm($button->show()); //TODO use text link instead of button
 
 
-
-
-
-
-
-
-
-
             $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
             $abLink->cssClass = "listingLanguageLinkAndIcon";
             $abLink->link = $product['title'];
@@ -330,27 +304,12 @@ class productutil extends object {
                     
                 <a href='javascript:void(0)'   id='$linkheading'>Bookmark
               
-                
-                        
-
-                            
-                  
-                    
-                
-
-        
+     
 
       
                    </div>
                  
-                   
-                
-        
-                
-
-
-
-
+      
               
               <div class='productlistViewLeftFloat'>
                         <img src='skins/unesco_oer/images/small-icon-make-adaptation.png' alt='Make Adaptation' width='18' height='18'class='imgFloatRight'>
@@ -778,19 +737,7 @@ class productutil extends object {
         return $content;
     }
 
-    public function BrowseAdaptation($lat, $lng) {
-
-
-        $buildstring = ' where loclat = ' . "'$lat'" . ' and loclong = ' . "'$lng'";
-
-
-
-
-
-
-        return $buildstring;
-    }
-
+  
     /**
      * This function Builds the String to Send to the DBhandler and return the total number of entries according to the selected Filter
      * @param <type>$AuthFilter,$ThemeFilter,$LangFilter,$page,$sort,$TotalPages,$adaptationstring,$Model,$Handbook,$Guide,$Manual,$Besoractile
@@ -840,6 +787,7 @@ public function populatebookmark($product) {
             $divheading = '.' . $temp . 'Div';
             $linkheading = '.' . $temp . 'Link';
             $titleheading = '.' . $temp . 'Title';
+              $btnheading = '#' . $temp . 'btn';
             $content.= "
                   $('$divheading').hide();
 
@@ -850,6 +798,13 @@ public function populatebookmark($product) {
  
 
                   $('$linkheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                   $('$titleheading ').slideToggle(); 
+
+                  });
+            
+            $('$btnheading').click(function(){
 
                   $('$divheading').slideToggle();
                    $('$titleheading ').slideToggle(); 
@@ -866,22 +821,13 @@ public function populatebookmark($product) {
                                         ';
 
 
-
-
-
-
-
-
-
-
-
      //  foreach ($data as $products) {
        //  for ($i = $start; $i < ($end); $i++) { 
             $temp = str_replace (" ", "", $product['title']);
             $divheading = $temp. 'Div';
             $linkheading = $temp . 'Link';
             $titleheading = $temp . 'Title';
-
+            $btnheading =  $temp . 'btn';
 
        
 
@@ -897,14 +843,30 @@ public function populatebookmark($product) {
             //TODO make parameter pagename dynamic
           
 
-            $button = new button('submitComment', "submit bookmark");
+            $button = new button('submitComment', "Save bookmark");
+            $button->cssId = $btnheading;
             $time = time();
               $userid = $this->objUser->userId();
             //  $userid = objdbuserextra->
 
             $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            $button->onclick = "javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname')";
           
+            $bookmarks = $this->objbookmarkmanager->getBookmarkbyID($product['id'],$userid);
+            $bookmarkid = $bookmarks[0]['id'];
+            
+            if ($bookmarks[0]['product_id'] != $parentid){
+               $button->onclick = "javascript:bookmarksave('$time','$parentid','$userid','$textname','$commentboxname') ;";
+               $textinput->value = $product['title'];
+            } else {
+                
+                 $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
+                   $textinput->value = $bookmarks[0]['label'];
+                   $commentText->value = $bookmarks[0]['description'];
+                
+                
+            }
+
+ 
     
 
 
@@ -935,20 +897,7 @@ public function populatebookmark($product) {
            
                     
                 <a href='javascript:void(0)'   class='$linkheading'> <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='Email' width='19' height='15'></a>
-              
-                
-                        
-
-                            
-                  
-                    
-                
-
-        
-
-      
-            
-                           
+   
                 
                 ";
 

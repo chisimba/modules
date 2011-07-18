@@ -54,6 +54,13 @@ class bookmarkmanager extends dbtable {
 
         return $this->getArray($sql);
     }
+    
+     public function getBookmarkbyID($prodid,$userid) {
+
+        $sql = "select * from $this->_tableName where product_id = '$prodid' and user_id = '$userid'";
+
+        return $this->getArray($sql);
+    }
 
     public function deleteBookmark($userids) {
 
@@ -72,7 +79,22 @@ class bookmarkmanager extends dbtable {
 
     public function populateListView($products) {
 
+       
+                            $myTable = $this->newObject('htmltable', 'htmlelements');
+                            $myTable->width = '100%';
+                            $myTable->border = '0';
+                            $myTable->cellspacing = '0';
+                            $myTable->cellpadding = '0';
 
+                            $myTable->startHeaderRow();
+                            //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
+                            $myTable->addHeaderCell('Title', null, null, left, "userheader", null);
+                            $myTable->addHeaderCell('Description', null, null, left, "userheader", null);       
+                            $myTable->addHeaderCell('Edit', null, null, left, "userheader", null);
+                            $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
+                            $myTable->endHeaderRow();
+//                            
+                 
 
 
 
@@ -96,14 +118,15 @@ class bookmarkmanager extends dbtable {
 
         ;
 
-
+        
 
         foreach ($products as $product) {
             if ($product['deleted'] == 0) {
 
                 $divheading = '.' . $product['id'] . 'Div';
-                $linkheading = '.' . $product['id'] . 'Link';
-                $titleheading = '.' . $product['id'] . 'Title';
+                $linkheading = '#' . $product['id'] . 'Link';
+                $titleheading = '#' . $product['id'] . 'Title';
+                $btnheading = '#' . $product['id'] . 'btn';
 
                 $content.= "
                   $('$divheading').hide();
@@ -117,9 +140,18 @@ class bookmarkmanager extends dbtable {
                   $('$linkheading').click(function(){
 
                   $('$divheading').slideToggle();
-                   $('$titleheading ').slideToggle(); 
+                   $('$titleheading').slideToggle(); 
 
                   });
+                
+                
+                  $('$btnheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                   $('$titleheading').slideToggle(); 
+
+                  });
+                
                 
                 
                ";
@@ -135,6 +167,8 @@ class bookmarkmanager extends dbtable {
                                         ';
 
         $display = new form("displaytext", $this->uri(array('action' => 'deleteBookmarks')));
+        
+        
 
 
         foreach ($products as $product) {
@@ -145,25 +179,36 @@ class bookmarkmanager extends dbtable {
                 $divheading = $product['id'] . 'Div';
                 $linkheading = $product['id'] . 'Link';
                 $titleheading = $product['id'] . 'Title';
+                $btnheading = $product['id'] . 'btn';
 
                 $checkbox = new checkbox('selectedusers[]', $product['id']);
                 $checkbox->value = $product['id'];
                 $checkbox->cssId = 'user_' . $product['id'];
 
+                $editLink = new link("javascript:void(0)");
+                $editLink->cssId = $linkheading;
+                $editLink->link = "edit";
+                
                 $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['product_id'])));
                 $abLink->cssClass = "listingLanguageLinkAndIcon";
                 $abLink->link = $product['label'];
 
 
-
-                $display->addToForm($checkbox);
-                $display->addToForm($abLink);
-                $display->addToForm("<br>");
-
-
+//
+             //   $display->addToForm($checkbox);
+//                $display->addToForm($abLink);
+//                $display->addToForm("<br>");
 
 
+                 $myTable->startRow();
+                 $myTable->addCell($abLink->show(), null, null, null, "user", null, null);
+                 $myTable->addCell($product['description'], null, null, null, "user", null, null);
+                 $myTable->addCell($editLink->show(), null, null, null, "user", null, null);
+                 $myTable->addCell($checkbox->show(), null, null, null, "user", null, null);
+                 
 
+                
+            
 
                 $bookmarkid = $product['id'];
                 $textname = $product['id'] . "text";
@@ -181,7 +226,7 @@ class bookmarkmanager extends dbtable {
                 $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
 
                 $button = new button('submitComment', "Save Bookmark");
-                $button->cssId = 'btn';
+                $button->cssId =  $btnheading;
                 $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
 
 
@@ -196,10 +241,10 @@ class bookmarkmanager extends dbtable {
 
 
 
-                $display->addToForm("<br><br>
-            <div class='productsListView'>
-                   <h2>" . "</h2><br>
-                <a href='javascript:void(0)'   class='$linkheading'>Edit</a> 
+                $display->addToForm("
+            <div>
+                  
+               
                    <div class='$divheading'> " . $form->show() . "
 
                                    
@@ -215,11 +260,18 @@ class bookmarkmanager extends dbtable {
      ");
             }
         }
-        $content .= $display->show();
+      //  $content .= $display->show();
+        
+        
+        
+        
+        
+        
+    $display->addToForm(" <br><div id='$titleheading'>"); 
+    $display->addToForm($myTable->show());
+     $display->addToForm(" </div>")   ; 
 
-
-
-
+     echo $display->show();
 
 
 
@@ -279,16 +331,7 @@ class bookmarkmanager extends dbtable {
 
                      });
 
-                            </script>
-            
-
-
-";
-
-
-
-
-
+                            </script>";
 
 
             $parentid = $product['id'];
@@ -296,7 +339,7 @@ class bookmarkmanager extends dbtable {
             $commentboxname = $product['id'] . "comment";
             $buttonname = $product['id'];
             $textinput = new textinput($textname);
-            $textinput->value = $product['title'];
+          
 
             $commentText = new textarea($commentboxname);
             $commentText->setCssClass("commentTextBox");
@@ -313,20 +356,26 @@ class bookmarkmanager extends dbtable {
             $time = time();
             //  $userid = objdbuserextra->
             $userid = $this->objUser->userId();
-
+              
 
 
             $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            $bookmarks = $this->getBookmarkbyID($product['id'],$userid);
+            $bookmarkid = $bookmarks[0]['id'];
+            
+            if ($bookmarks[0]['product_id'] != $parentid){
+               $button->onclick = "javascript:bookmarksave('$time','$parentid','$userid','$textname','$commentboxname') ;";
+               $textinput->value = $product['title'];
+            } else {
+                
+                 $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
+                   $textinput->value = $bookmarks[0]['label'];
+                   $commentText->value = $bookmarks[0]['description'];
+                
+                
+            }
 
-
-            $button->onclick = "javascript:bookmarksave('$time','$parentid','$userid','$textname','$commentboxname') ;";
-
-
-
-
-
-
-
+ 
 
             //javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname'); 
 

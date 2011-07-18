@@ -180,7 +180,7 @@ function bookmarksave(time,parentid,userid,textname,commentboxname){
   
     var Title = document.getElementById(temptext).value;
     var Description = document.getElementById(tempcomment).value;
-    
+
     
     if ((Title == "") || (Description =="")){
         alert("Please fill in the required fields")
@@ -225,6 +225,7 @@ function bookmarkupdate(time,textname,commentboxname,bookmarkid){
   
     var Title = document.getElementById(temptext).value;
     var Description = document.getElementById(tempcomment).value;
+
     
     
     if ((Title == "") || (Description =="")){

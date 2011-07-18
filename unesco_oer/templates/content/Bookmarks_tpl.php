@@ -236,13 +236,27 @@ if ($finalstring == null)
                         <div class="greyDivider"></div>
                         <br>
                        	<div class="groupSubLinksList">
-                           <img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
-                           <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Add Bookmark</a></div>
+                               <?php
+                               
+                                 
+                            $addlink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
+                            $addlink->cssId = "addbookmark";
+                            $addlink->cssClass = "linksTextNextToSubIcons";
+                            $addlink->link = "Add Bookmark";
+                            
+                            
+
+                            
+                            echo $addlink->show();
+                            
+                               
+                      echo '     <img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
+                        
                         </div>
                       
-                        <div class="groupSubLinksList">
+                        <div class="groupSubLinksList">';
                       
-                            <?php
+                         
                             
                             
                             $booklink = new link("#");
@@ -287,6 +301,9 @@ if ($finalstring == null)
                                             echo $this->objbookmarkmanager->populateListView($bookmark);
                                             
                                         
+                                            
+                                            
+                                            
                     ?>
                                            
                                    
