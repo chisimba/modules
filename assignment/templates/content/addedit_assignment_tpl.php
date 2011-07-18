@@ -120,6 +120,7 @@ $objGoals = $this->getObject('dbContext_learneroutcomes', 'context');
 $goals = $objGoals->getContextOutcomes($this->objContext->getContextCode());
 $objDbWorkgroup = $this->getObject('dbworkgroup', 'workgroup');
 $groups = $objDbWorkgroup->getAll($this->contextCode);
+//var_dump($groups);
 
 // Heading
 if ($mode == 'edit') {
@@ -724,8 +725,8 @@ jQuery(document).ready(function() {
                    jQuery("#selectgoals").hide();
                    }
 
-                    jQuery("input[@name=\'groups_radio\']").change(function(){
-                     var radiobuttonvalue = jQuery("input[@name=\'groups_radio\']:checked").val();
+                    jQuery("input[name=\'groups_radio\']").change(function(){
+                     var radiobuttonvalue = jQuery("input[name=\'groups_radio\']:checked").val();
                      if(jQuery.browser.msie){
                        if(radiobuttonvalue == 1)
                        radiobuttonvalue=0;
@@ -745,8 +746,8 @@ jQuery(document).ready(function() {
  });
 
 
-                    jQuery("input[@name=\'goals_radio\']").change(function(){
-                   var radiobuttonvalue = jQuery("input[@name=\'goals_radio\']:checked").val();
+                    jQuery("input[name=\'goals_radio\']").change(function(){
+                   var radiobuttonvalue = jQuery("input[name=\'goals_radio\']:checked").val();
 
            if(jQuery.browser.msie){
                        if(radiobuttonvalue == 1)
