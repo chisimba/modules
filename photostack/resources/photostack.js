@@ -154,10 +154,7 @@
 				$ps_albums.children('div').bind('click',function(){
 					var $elem = $(this);
 					var divid = $elem.attr('id');
-					//alert(divid);
-					//var album_name 	= $ps_albums.children('div').children('img').attr('alt');
                     var album_name = divid;
-                    console.debug(album_name);
                    
 
 					var $loading 	= $('<div />',{className:'loading'});
