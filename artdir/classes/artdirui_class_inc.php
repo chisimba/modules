@@ -538,8 +538,8 @@ class artdirui extends object
 				<div id="slideshow"></div>
 				<div class="clear"></div>
 				<ul id="images">
-					<li><a href="http://placekitten.com/150/79"><img src="http://placekitten.com/150/79" title="Kitten 1" /></a></li>
-					<li><a href="http://placekitten.com/150/79"><img src="http://placekitten.com/150/79" title="Kitten 1" /></a></li>
+					<li><a href="http://placekitten.com/300/300"><img src="http://placekitten.com/150/79" title="Kitten 1" /></a></li>
+					<li><a href="http://placekitten.com/300/300"><img src="http://placekitten.com/150/79" title="Kitten 1" /></a></li>
 				</ul>
 				<div class="clear"></div>
 			</div>			
