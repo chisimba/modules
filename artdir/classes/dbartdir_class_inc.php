@@ -250,6 +250,11 @@ class dbartdir extends dbTable
         }
     }
     
+    public function getAllLinks($artistid) {
+        $this->_changeTable('tbl_artdir_links');
+        return $this->getAll("WHERE artistid = '$artistid'");
+    }
+    
     /**
      * Method to grab a cat name by the id
      *

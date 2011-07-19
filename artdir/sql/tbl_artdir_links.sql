@@ -28,7 +28,8 @@ $fields = array(
 		'length' => 255,
 		),
 	'link' => array(
-		'type' => 'clob',
+		'type' => 'text',
+		'length' => 255,
 		),
 	);
 

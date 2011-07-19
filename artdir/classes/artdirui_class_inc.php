@@ -536,8 +536,8 @@ class artdirui extends object
         
         // grab any images associated with the profile
         $str .= $this->imggalJs();
-        // get any linked videos
-        
+        // get any links
+        $str .= $this->artistLinks($artist['id']);
         
         return $str;
     }
@@ -719,5 +719,21 @@ class artdirui extends object
 	    return $html;
     }
     
+    public function artistLinks($artistid) {
+        $links = $this->objDbArtdir->getAllLinks($artistid);
+        if(!empty($links)) {
+            $html = '<div class="artistlinks">
+                         <ul>';
+            foreach($links as $l) {
+                $html .=         '<li><a href="'.$l['link'].'" target="_blank">'.$l['linkname'].'</a></li>';
+            }
+            $html .=    '</ul>
+                 </div>';
+            return $html;
+        }
+        else {
+            return $this->objLanguage->languageText("mod_artdir_nolinks", "artdir");
+        }
+    }
 }
 ?>
