@@ -84,40 +84,40 @@ class content extends object
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
-        $newDropHeading = new htmlHeading();
-        $newDropHeading->str = 'Create new content: ';
-        //$html .= $newDropHeading->show();
-
-        $dropdown = new dropdown('new_dropdown');
-        $dropdown->addOption('none', 'nothing selected');
-        foreach ($this->_content_types as $key => $value) {
-            $dropdown->addOption(implode ( '__' , array($this->_path,$key) ), $value);
-        }
-        $dropdown->setSelected('none');
-
-        //$html .= $dropdown->show();
-        $table->startRow();
-        $table->addCell($newDropHeading->show() . $dropdown->show());
-        
-
-        $editDropHeading = new htmlHeading();
-        $editDropHeading->str = 'Edit existing content: ';
-        //$html .= $editDropHeading->show();
-
-        //TODO Add method to Display existing contents
-        if (!empty($this->_contents)){
-            $dropdown = new dropdown('edit_dropdown');
-            $dropdown->addOption('none', 'nothing selected');
-            foreach ($this->_contents as $content) {
-                $dropdown->addOption($content->getFullPath(), $content->getTitle());
-            }
-            $dropdown->setSelected('none');
-
-            //$html .= $dropdown->show();
-
-            $table->addCell($editDropHeading->show() . $dropdown->show());
-        }
-        $table->endRow();
+//        $newDropHeading = new htmlHeading();
+//        $newDropHeading->str = 'Create new content: ';
+//        //$html .= $newDropHeading->show();
+//
+//        $dropdown = new dropdown('new_dropdown');
+//        $dropdown->addOption('none', 'nothing selected');
+//        foreach ($this->_content_types as $key => $value) {
+//            $dropdown->addOption(implode ( '__' , array($this->_path,$key) ), $value);
+//        }
+//        $dropdown->setSelected('none');
+//
+//        //$html .= $dropdown->show();
+//        $table->startRow();
+//        $table->addCell($newDropHeading->show() . $dropdown->show());
+//
+//
+//        $editDropHeading = new htmlHeading();
+//        $editDropHeading->str = 'Edit existing content: ';
+//        //$html .= $editDropHeading->show();
+//
+//        //TODO Add method to Display existing contents
+//        if (!empty($this->_contents)){
+//            $dropdown = new dropdown('edit_dropdown');
+//            $dropdown->addOption('none', 'nothing selected');
+//            foreach ($this->_contents as $content) {
+//                $dropdown->addOption($content->getFullPath(), $content->getTitle());
+//            }
+//            $dropdown->setSelected('none');
+//
+//            //$html .= $dropdown->show();
+//
+//            $table->addCell($editDropHeading->show() . $dropdown->show());
+//        }
+//        $table->endRow();
 
         //$html .= "<div class='root' ></div>";
 
@@ -125,16 +125,16 @@ class content extends object
         $heading->str = 'Create and Edit contents of product:';
         $heading->type = 1;
 
-        $fieldset = $this->newObject('fieldset','htmlelements');
-        $fieldset->setLegend('Options:');
-        //$fieldset->addContent($html);
-        $fieldset->addContent($table->show());
+//        $fieldset = $this->newObject('fieldset','htmlelements');
+//        $fieldset->setLegend('Options:');
+//        //$fieldset->addContent($html);
+//        $fieldset->addContent($table->show());
 
         $buttonSubmit = new button('done', 'Done');
         $actionURI = $this->uri(array('action' => 'ViewProduct', 'id' => $this->getPath()));
         $buttonSubmit->setOnClick('javascript: window.location=\'' . $actionURI . '\'');
 
-        return '<div id="productmetaheading">'.$heading->show(). '</div>' . $fieldset->show() . "<div class='root' ></div>" . $buttonSubmit->show();
+        return '<div id="productmetaheading">'.$heading->show(). '</div>' . "<div class='root' ></div>" . $buttonSubmit->show();
         //return $html;
     }
 
@@ -304,6 +304,61 @@ class content extends object
 
     function hasContents(){
         return !empty($this->_contents);
+    }
+
+    function getContentTree($editable = FALSE) {
+
+        $output = '';
+
+        $output .= '<script src="core_modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>';
+
+        $objSkin = $this->getObject('skin', 'skin');
+        $this->loadClass('treemenu', 'tree');
+        $this->loadClass('treenode', 'tree');
+        $this->loadClass('dhtml', 'tree');
+
+        $icon = 'folder.gif';
+        $expandedIcon = 'folder-expanded.gif';
+
+
+//Create a new tree
+        $menu = new treemenu();
+        
+//Add nodes to the tree
+        $menu->addItem($this->getTreeNodes($editable));
+
+// Create the presentation class
+
+        $treeMenu = &new dhtml($menu, array('images' => $objSkin->getSkinURL() . 'treeimages/imagesAlt2', 'defaultClass' => 'treeMenuDefault'));
+
+        $output .= $treeMenu->getMenu();
+
+        return $output;
+    }
+
+    function getTreeNodes($editable = FALSE) {
+
+        $node = new treenode(array('text' => $this->getTitle(), 'link' => "#", 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'expanded' => FALSE), array('onclick' => "javascript: edit('{$this->getFullPath()}');", 'onexpand' => "alert('Expanded')"));
+
+        foreach ($this->_contents as $content){
+            $node->addItem($content->getTreeNodes($editable));
+        }
+
+        if ($editable){
+            foreach ($this->_content_types as $key => $value) {
+                $node->addItem(new treenode(array(
+                                                'text' => 'new '. $value,
+                                                'link' => "#", 'icon' => $icon,
+                                                'expandedIcon' => $expandedIcon,
+                                                'expanded' => FALSE),
+                                            array(
+                                                'onclick' => "javascript: newSection('".implode ( '__' , array($this->getFullPath(),$key) )."');",
+                                                'onexpand' => "alert('Expanded')")
+                                            ));
+            }
+        }
+
+        return $node;
     }
 }
 

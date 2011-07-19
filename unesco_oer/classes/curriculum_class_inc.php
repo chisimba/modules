@@ -150,6 +150,7 @@ class curriculum extends content {
     public function init() {
         $this->setType('curriculum');
         $this->objDbCurricula = $this->getObject('dbcurricula');
+        $this->_content_types = array('calendar' => 'calendar');
     }
 
     public function handleUpload() {

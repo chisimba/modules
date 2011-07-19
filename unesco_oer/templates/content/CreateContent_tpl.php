@@ -15,11 +15,16 @@
  */
 
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
-echo '<div class=leftColumnDiv style="border: 1px #004e89 solid;" >'. '<h1>This is just a filler</h1> ' . '</div>';
+echo '<div class=leftColumnDiv style="border: 1px #004e89 solid;" >';
+echo'<h1>This is just a filler</h1> ';
+echo $content->getContentTree(TRUE);
+echo '</div>';
+
+
+
 echo '<div class=rightWideColumnDiv style="border: 1px #004e89 solid;">'. $content->showInput($this->getParam('prevAction')) . "</div>";
 
 ?>
-
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript" >
     $(document).ready(
@@ -62,5 +67,15 @@ echo '<div class=rightWideColumnDiv style="border: 1px #004e89 solid;">'. $conte
         );
         
         });
+
+function edit(section_id){
+    //$('.root').hide();
+    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=edit&path=' + section_id);
+    //$('.root').slideToggle();
+}
+
+function newSection(path){
+    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&path=' + path);
+}
 
 </script>
