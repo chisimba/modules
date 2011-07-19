@@ -61,31 +61,26 @@ class alertutils extends object {
         $this->objGroups = $this->getObject('groupadminmodel','groupadmin');
         $this->objManageGroups = $this->getObject('managegroups', 'contextgroups');
     }
-    function sendEmailAlert($contextcode,$title) {
-
-        $students = $this->objManageGroups->contextUsers('Students', $this->contextCode, array( 'tbl_users.userId','email', 'firstName', 'surname'));
-        $subject=$this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_SUB', 'contextcontent');
-        $subject=str_replace("{course}", $title, $subject);
+    function sendEmailAlert($contextcode, $title) {
+        $students = $this->objManageGroups->contextUsers('Students', $this->contextCode, array( 'tbl_users.userid','emailaddress', 'firstname', 'surname'));
+        $subject = $this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_SUB', 'contextcontent');
+        $subject = str_replace("{course}", $title, $subject);
         $objMailer = $this->getObject('email', 'mail');
-        foreach($students as $student) {
-            
-            $body=$this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_BDY', 'contextcontent');
-            $linkUrl = $this->uri(array('action'=>'joincontext','contextcode'=>$contextcode,'passthroughlogin'=>'true'));
-
-            $linkUrl=str_replace("amp;", "", $linkUrl);
-            $body=str_replace("{link}", $linkUrl, $body);
-
-            $body=str_replace("{firstname}", $student['firstName'], $body);
-            $body=str_replace("{lastname}", $student['surname'], $body);
-            $body=str_replace("{course}", "'".$title."'", $body);
-            $body=str_replace("{instructor}",$this->objUser->getTitle().'. '.$this->objUser->fullname().',', $body);
-            $objMailer->setValue('to',array($student['emailaddress']));
+        foreach ($students as $student) {
+            $body = $this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_BDY', 'contextcontent');
+            $linkUrl = $this->uri(array('action'=>'joincontext', 'contextcode'=>$contextcode, 'passthroughlogin'=>'true'));
+            $linkUrl = str_replace('&amp;', '&', $linkUrl);
+            $body = str_replace("{link}", $linkUrl, $body);
+            $body = str_replace("{firstname}", $student['firstname'], $body);
+            $body = str_replace("{lastname}", $student['surname'], $body);
+            $body = str_replace("{course}", "'".$title."'", $body);
+            $body = str_replace("{instructor}", $this->objUser->getTitle().'. '.$this->objUser->fullname().',', $body);
+            $objMailer->setValue('to', array($student['emailaddress']));
             $objMailer->setValue('from', $this->objUser->email());
-            $objMailer->setValue('fromName', $this->objUser->fullnames);
+            $objMailer->setValue('fromName', $this->objUser->fullname());
             $objMailer->setValue('subject', $subject);
             $objMailer->setValue('body', strip_tags($body));
             $objMailer->setValue('AltBody', strip_tags($body));
-
             $objMailer->send();
         }
     }

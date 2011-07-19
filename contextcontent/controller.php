@@ -416,12 +416,12 @@ class contextcontent extends controller {
                     'author' => $this->objUser->fullname(),
                     'description' => $message));
             }
-            //send alerts
+            //send alerts [ JC OK
             $contextinfo = $this->objContext->getContext($this->contextCode);
             $alerts = explode("|", $contextinfo['alerts']);
-            $index;
+            //--$index;
             foreach ($alerts as $alert) {
-                if ($alert == 'e') {
+                if ($alert == '1') {
                     $this->objAlertUtils->sendEmailAlert($this->contextCode, $this->objContext->getTitle($this->contextCode));
                 }
             }
@@ -741,12 +741,12 @@ class contextcontent extends controller {
                 'author' => $this->objUser->fullname(),
                 'description' => $message));
         }
-        //send alerts
+        //send alerts [ JOC OK
         $contextinfo = $this->objContext->getContext($this->contextCode);
         $alerts = explode("|", $contextinfo['alerts']);
-        $index;
+        //--$index;
         foreach ($alerts as $alert) {
-            if ($alert == 'e') {
+            if ($alert == '1') {
                 $this->objAlertUtils->sendEmailAlert($this->contextCode, $this->objContext->getTitle($this->contextCode));
             }
         }
@@ -782,12 +782,12 @@ class contextcontent extends controller {
                 'author' => $this->objUser->fullname(),
                 'description' => $message));
         }
-        //send alerts
+        //send alerts [ JOC OK
         $contextinfo = $this->objContext->getContext($this->contextCode);
         $alerts = explode("|", $contextinfo['alerts']);
-        $index;
+        //--$index;
         foreach ($alerts as $alert) {
-            if ($alert == 'e') {
+            if ($alert == '1') {
                 $this->objAlertUtils->sendEmailAlert($this->contextCode, $this->objContext->getTitle($this->contextCode));
             }
         }
