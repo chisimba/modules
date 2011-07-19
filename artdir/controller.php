@@ -271,6 +271,78 @@ class artdir extends controller
                 $this->setVarByRef('artistdata', $artistdata);
                 return 'artist_tpl.php';
                 break;
+                
+            case 'editartist' :
+                $artistid = $this->getParam('id');
+                $this->setVarByRef('artistid', $artistid);
+                return 'editartist_tpl.php';
+                break;
+                
+            case 'artistedit': 
+                $id = $this->getParam('id');
+                $userid = $this->objUser->userId();
+                $cat = $this->getParam('cat');
+                $actname = $this->getParam('actname');
+                $desc = $this->getParam('desc');
+                $contactperson = $this->getParam('contactperson');
+                $contactnum = $this->getParam('contactnum');
+                $altnum = $this->getParam('altnum');
+                $email = $this->getParam('email');
+                $website = $this->getParam('website');
+                $bio = $this->getParam('bio');
+                $thumb = $this->getParam('thumb');
+                // update the db
+                if($thumb != "") {
+                    $updatearr = array('id' => $id, 'userid' => $userid, 'catid' => $cat, 'actname' => $actname, 'description' => $desc, 
+                                   'contactperson' => $contactperson,
+                                   'contactnum' => $contactnum, 'altnum' => $altnum, 'email' => $email, 'website' => $website, 'bio' => $bio,
+                                   'thumbnail' => $thumb);
+                }
+                else {
+                    $updatearr = array('id' => $id, 'userid' => $userid, 'catid' => $cat, 'actname' => $actname, 'description' => $desc, 
+                                   'contactperson' => $contactperson,
+                                   'contactnum' => $contactnum, 'altnum' => $altnum, 'email' => $email, 'website' => $website, 'bio' => $bio);
+                }
+                
+                $this->objDbArtdir->updateArtist($updatearr);
+                $this->nextAction('');
+                break;
+                
+            case 'newartist': 
+                $id = $this->getParam('id');
+                $userid = $this->objUser->userId();
+                $cat = $this->getParam('cat');
+                $actname = $this->getParam('actname');
+                $desc = $this->getParam('desc');
+                $contactperson = $this->getParam('contactperson');
+                $contactnum = $this->getParam('contactnum');
+                $altnum = $this->getParam('altnum');
+                $email = $this->getParam('email');
+                $website = $this->getParam('website');
+                $bio = $this->getParam('bio');
+                $thumb = $this->getParam('thumb');
+                // update the db
+                if($thumb != "") {
+                    $insertarr = array('id' => $id, 'userid' => $userid, 'catid' => $cat, 'actname' => $actname, 'description' => $desc, 
+                                   'contactperson' => $contactperson,
+                                   'contactnum' => $contactnum, 'altnum' => $altnum, 'email' => $email, 'website' => $website, 'bio' => $bio,
+                                   'thumbnail' => $thumb);
+                }
+                else {
+                    $insertarr = array('id' => $id, 'userid' => $userid, 'catid' => $cat, 'actname' => $actname, 'description' => $desc, 
+                                   'contactperson' => $contactperson,
+                                   'contactnum' => $contactnum, 'altnum' => $altnum, 'email' => $email, 'website' => $website, 'bio' => $bio);
+                }
+                
+                $this->objDbArtdir->addArtist($insertarr);
+                $this->nextAction('');
+                break;
+                
+            case 'deleteartist' :
+                $artistid = $this->getParam('id');
+                $this->objDbArtdir->removeArtist($artistid);
+                $this->nextAction('');
+                break;
 
                 
             default:

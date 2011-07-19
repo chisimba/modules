@@ -443,6 +443,27 @@ class artdirui extends object
     }
     
     public function formatArtist($artist) {
+        if($this->objUser->inAdminGroup($this->objUser->userId()) || $this->objUser->userId() == $artist['userid']) {
+            // get the edit and delete icon for this artist
+            $this->objIcon = &$this->getObject('geticon', 'htmlelements');
+            $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+                'action' => 'editartist',
+                'id' => $artist['id'],
+                'module' => 'artdir'
+            )));
+            $delIcon = $this->objIcon->getDeleteIconWithConfirm($artist['id'], array(
+                'module' => 'artdir',
+                'action' => 'deleteartist',
+                'id' => $artist['id']
+            ) , 'artdir');
+            $ed = $edIcon;
+            $del = $delIcon;
+        }
+        else {
+            $ed = NULL;
+            $del = NULL;
+        }
+        
         $this->objWashout = $this->getObject("washout", "utilities");
         $this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
@@ -503,7 +524,7 @@ class artdirui extends object
         // 1 row, 2 cells
         $ctable->startRow();
         // artist pic
-        $ctable->addCell('<img src="'.$this->objFile->getFilePath($artist['thumbnail']).'" width="229" height="180" />');
+        $ctable->addCell($ed.$del.'<br /><img src="'.$this->objFile->getFilePath($artist['thumbnail']).'" width="229" height="180" />');
         // artis details table
         $ctable->addCell($dtable->show());
         $ctable->endRow();
@@ -519,6 +540,156 @@ class artdirui extends object
         
         
         return $str;
+    }
+    
+    public function artistEditor($artistid, $edit = FALSE) {
+        // get the artist info
+        $artist = $this->objDbArtdir->getArtistById($artistid);
+        $this->loadClass('href', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        
+        $artform = new form('artistedit', $this->uri(array(
+                'action' => 'artistedit', 'id' => $artist['id']
+            )));
+        
+        $artadd = $this->newObject('htmltable', 'htmlelements');
+        $artadd->cellpadding = 3;
+        
+        $artadd->startRow();
+        $cats = $this->objDbArtdir->getParentCats();
+        $catdrop = new dropdown('cat');
+        $topcats = $this->objDbArtdir->getParentCats();
+        foreach($topcats as $t) {
+            $catdrop->addOption($t['id'], "<em>".$t['cat_name']."</em>");
+            $subcats = $this->objDbArtdir->getChildCats($t['id']);
+            foreach($subcats as $s) {
+                $catdrop->addOption($s['id'], "  -".$s['cat_name']);
+            }
+        }
+        $catdrop->setSelected($artist['catid']);
+        
+        $clabel = new label($this->objLanguage->languageText('mod_artdir_catname', 'artdir') . ':', 'input_cat');
+        $artadd->addCell($clabel->show());
+        $artadd->addCell($catdrop->show());
+        $artadd->endRow();
+        
+        // act name field
+        $artadd->startRow();
+        $actnamelabel = new label($this->objLanguage->languageText('mod_artdir_actname', 'artdir') . ':', 'input_actname');
+        $actname = new textinput('actname');
+        if($edit == TRUE) {
+            $actname->setValue($artist['actname']);
+        }
+        $artadd->addCell($actnamelabel->show());
+        $artadd->addCell($actname->show());
+        $artadd->endRow();
+        
+        // description field
+        $artadd->startRow();
+        $desclabel = new label($this->objLanguage->languageText('mod_artdir_descrip', 'artdir') . ':', 'input_desc');
+        $desc = new textarea('desc');
+        if($edit == TRUE) {
+            $desc->setValue($artist['description']);
+        }
+        $artadd->addCell($desclabel->show());
+        $artadd->addCell($desc->show());
+        $artadd->endRow();
+        
+        // contactperson field
+        $artadd->startRow();
+        $cplabel = new label($this->objLanguage->languageText('mod_artdir_contactp', 'artdir') . ':', 'input_contactperson');
+        $cp = new textinput('contactperson');
+        if($edit == TRUE) {
+            $cp->setValue($artist['contactperson']);
+        }
+        $artadd->addCell($cplabel->show());
+        $artadd->addCell($cp->show());
+        $artadd->endRow();
+        
+        // contactnum field
+        $artadd->startRow();
+        $cnlabel = new label($this->objLanguage->languageText('mod_artdir_contactnum', 'artdir') . ':', 'input_contactnum');
+        $cn = new textinput('contactnum');
+        if($edit == TRUE) {
+            $cn->setValue($artist['contactnum']);
+        }
+        $artadd->addCell($cnlabel->show());
+        $artadd->addCell($cn->show());
+        $artadd->endRow();
+        
+        // altnum field
+        $artadd->startRow();
+        $anlabel = new label($this->objLanguage->languageText('mod_artdir_altnum', 'artdir') . ':', 'input_altnum');
+        $an = new textinput('altnum');
+        if($edit == TRUE) {
+            $an->setValue($artist['altnum']);
+        }
+        $artadd->addCell($anlabel->show());
+        $artadd->addCell($an->show());
+        $artadd->endRow();
+        
+        // email field
+        $artadd->startRow();
+        $emaillabel = new label($this->objLanguage->languageText('mod_artdir_email', 'artdir') . ':', 'input_email');
+        $email = new textinput('email');
+        if($edit == TRUE) {
+            $email->setValue($artist['email']);
+        }
+        $artadd->addCell($emaillabel->show());
+        $artadd->addCell($email->show());
+        $artadd->endRow();
+        
+        // website field
+        $artadd->startRow();
+        $weblabel = new label($this->objLanguage->languageText('mod_artdir_website', 'artdir') . ':', 'input_website');
+        $web = new textinput('website');
+        if($edit == TRUE) {
+            $web->setValue($artist['website']);
+        }
+        $artadd->addCell($weblabel->show());
+        $artadd->addCell($web->show());
+        $artadd->endRow();
+        
+        //bio
+        $artadd->startRow();
+        $biolabel = new label($this->objLanguage->languageText('mod_artdir_bio', 'artdir') . ':', 'input_bio');
+        $bio = $this->newObject('htmlarea', 'htmlelements');
+        $bio->setName('bio');
+        $bio->height = 200;
+        $bio->width = '100%';
+        $bio->setBasicToolBar();
+        if ($edit = TRUE) {
+            $bio->setcontent((stripslashes(($artist['bio']))));
+        }
+        $artadd->addCell($biolabel->show());
+        $artadd->addCell($bio->show());
+        $artadd->endRow();
+        
+        // image
+        $objSelectFile = $this->newObject('selectfile', 'filemanager');
+        $objSelectFile->name = 'thumb';
+        $objSelectFile->restrictFileList = array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF');
+        $tlabel = new label($this->objLanguage->languageText('mod_artdir_thumbnail', 'artdir') . ':', 'input_thumb');
+        $artadd->startRow();
+        $artadd->addCell($tlabel->show());
+        $artadd->addCell($objSelectFile->show());
+        $artadd->endRow();
+        
+        
+        $afieldset = $this->getObject('fieldset', 'htmlelements');
+        $afieldset->setLegend($this->objLanguage->languageText('mod_artdir_artistdetails', 'artdir'));
+        
+        $afieldset->addContent($artadd->show());
+        $artform->addToForm($afieldset->show());
+        
+        $this->objCButton = new button($this->objLanguage->languageText('word_update', 'system'));
+        $this->objCButton->setIconClass("save");
+        $this->objCButton->setValue($this->objLanguage->languageText('word_update', 'system'));
+        $this->objCButton->setToSubmit();
+        $artform->addToForm($this->objCButton->show());
+        $artform = $artform->show();
+        return $artform;
     }
     
     public function returnlink() {
@@ -538,7 +709,6 @@ class artdirui extends object
 				<div id="slideshow"></div>
 				<div class="clear"></div>
 				<ul id="images">
-					<li><a href="http://placekitten.com/300/300"><img src="http://placekitten.com/150/79" title="Kitten 1" /></a></li>
 					<li><a href="http://placekitten.com/300/300"><img src="http://placekitten.com/150/79" title="Kitten 1" /></a></li>
 				</ul>
 				<div class="clear"></div>

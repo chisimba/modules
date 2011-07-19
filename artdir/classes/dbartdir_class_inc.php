@@ -123,16 +123,16 @@ class dbartdir extends dbTable
      * @param  integer $userid
      * @return array
      */
-    public function getCatsTree($userid)
+    public function getCatsTree()
     {
-        $parents = $this->getParentCats($userid);
+        $parents = $this->getParentCats();
         $tree = new stdClass();
         if (empty($parents)) {
             $tree = NULL;
         } else {
             foreach($parents as $p) {
                 $parent = $p;
-                $child = $this->getChildCats($userid, $p['id']);
+                $child = $this->getChildCats($p['id']);
                 if (is_null($p['cat_name'])) {
                     $p['cat_name'] = 0;
                 }
@@ -290,6 +290,22 @@ class dbartdir extends dbTable
         $this->_changeTable('tbl_artdir_artists');
         $artist = $this->getAll("WHERE id = '$id'");
         return $artist[0];
+    }
+    
+    public function updateArtist($updatearr) {
+        $this->_changeTable('tbl_artdir_artists');
+        return $this->update('id', $updatearr['id'], $updatearr, 'tbl_artdir_artists');
+    }
+    
+    public function addArtist($artistarr) {
+        $this->_changeTable('tbl_artdir_artists');
+        return $this->insert($artistarr);
+    }
+    
+    public function removeArtist($artistid) {
+        $this->_changeTable('tbl_artdir_artists');
+        $this->delete('id', $artistid, 'tbl_artdir_artists');
+        return;
     }
     
     /**
