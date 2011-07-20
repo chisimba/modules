@@ -317,19 +317,32 @@ class content extends object
         $this->loadClass('treenode', 'tree');
         $this->loadClass('dhtml', 'tree');
 
-        $icon = 'folder.gif';
-        $expandedIcon = 'folder-expanded.gif';
-
 
 //Create a new tree
         $menu = new treemenu();
         
 //Add nodes to the tree
-        $menu->addItem($this->getTreeNodes($editable));
+        foreach ($this->_contents as $content){
+            $menu->addItem($content->getTreeNodes($editable));
+        }
+
+        if ($editable){
+            foreach ($this->_content_types as $key => $value) {
+                $menu->addItem(new treenode(array(
+                                                'text' => $value,
+                                                'link' => "#", 'icon' => 'icon-new-product.png',
+                                                'expandedIcon' => $expandedIcon,
+                                                'expanded' => FALSE),
+                                            array(
+                                                'onclick' => "javascript: newSection('".implode ( '__' , array($this->getFullPath(),$key) )."');",
+                                                'onexpand' => "alert('Expanded')")
+                                            ));
+            }
+        }
 
 // Create the presentation class
 
-        $treeMenu = &new dhtml($menu, array('images' => $objSkin->getSkinURL() . 'treeimages/imagesAlt2', 'defaultClass' => 'treeMenuDefault'));
+        $treeMenu = &new dhtml($menu, array('images' => $objSkin->getSkinURL() . 'images/tree', 'defaultClass' => 'treeMenuDefault'));
 
         $output .= $treeMenu->getMenu();
 
@@ -338,7 +351,18 @@ class content extends object
 
     function getTreeNodes($editable = FALSE) {
 
-        $node = new treenode(array('text' => $this->getTitle(), 'link' => "#", 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'expanded' => FALSE), array('onclick' => "javascript: edit('{$this->getFullPath()}');", 'onexpand' => "alert('Expanded')"));
+        $icon = 'icon-product-closed-folder.png';
+        $expandedIcon = 'icon-product-opened-folder.png';
+
+        $node = new treenode(array(
+                                'text' => $this->getTitle(),
+                                'link' => "#", 'icon' => $icon,
+                                'expandedIcon' => $expandedIcon,
+                                'expanded' => FALSE),
+                            array(
+                                'onclick' => "javascript: edit('{$this->getFullPath()}');",
+                                'onexpand' => ""
+                            ));
 
         foreach ($this->_contents as $content){
             $node->addItem($content->getTreeNodes($editable));
@@ -347,8 +371,8 @@ class content extends object
         if ($editable){
             foreach ($this->_content_types as $key => $value) {
                 $node->addItem(new treenode(array(
-                                                'text' => 'new '. $value,
-                                                'link' => "#", 'icon' => $icon,
+                                                'text' => $value,
+                                                'link' => "#", 'icon' => 'icon-new-product.png',
                                                 'expandedIcon' => $expandedIcon,
                                                 'expanded' => FALSE),
                                             array(

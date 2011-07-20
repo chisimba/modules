@@ -1965,7 +1965,7 @@ class unesco_oer extends controller {
         $path = $this->getParam('path');
         $option = $this->getParam('option');
         $content = $this->getObject('content');
-        $product = $this->getObject('product');
+        $product = $this->getObject('product'); 
 
         if ($path) {
             $pathArray = $content->getPathArray($path);

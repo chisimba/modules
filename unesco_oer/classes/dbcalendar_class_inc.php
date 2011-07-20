@@ -17,56 +17,45 @@
 
 
 /**
- * Description of dbcurricula_class_inc
+ * Description of dbcalendar_class_inc
  *
  * @author manie
  */
-class dbcurricula extends dbtable
+class dbcalendar extends dbtable
 {
-
     function init() {
-        parent::init("tbl_unesco_oer_curriculum");
+        parent::init('tbl_unesco_oer_calendar');
     }
 
-    function getCurricula($filter = NULL) {
+    function getCalendars($filter = NULL) {
         return $this->getAll($filter);
     }
 
-    function addCurriculum($product_id, $title, $forward, $background, $description) {
-        $data = array(
-            'product_id' => $product_id,
+    function addCalendar($title, $curriculum_id){
+        $data = array (
             'title' => $title,
-            'forward'=> $forward,
-            'background'=> $background,
-            'introductory_description'=> $description
+            'curriculum_id' => $curriculum_id
         );
 
-        return $this->insert($data);
+        return $this-> insert($data);
     }
 
-    function updateCurriculum($id, $product_id, $title, $forward, $background, $description){
-         $data = array(
-            'product_id' => $product_id,
+    function updateCalendar($id, $title, $curriculum_id){
+        $data = array (
             'title' => $title,
-            'forward'=> $forward,
-            'background'=> $background,
-            'introductory_description'=> $description
+            'curriculum_id' => $curriculum_id
         );
 
         return $this->update('id', $id, $data);
     }
 
-    function getCurriculaByProductID($id) {
-        $where = "where product_id='$id'";
-        return $this->getCurricula($where);
-    }
-
-    function getCurriculumByID($id){
+    function getCalendarByID($id){
         return $this->getRow('id', $id);
     }
 
-
+    function getCalendarsByCurriculumID($id) {
+        $where = "where curriculum_id='$id'";
+        return $this->getCalendars($where);
+    }
 }
-
-
 ?>

@@ -142,7 +142,7 @@ class curriculum extends content {
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
 
-        $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->_path);
+        $form_data->addToForm($table->show() . $buttonSubmit->show());
 
         return $form_data->show();
     }
@@ -180,13 +180,14 @@ class curriculum extends content {
                     );
         }
 
-        
-
         return TRUE;
     }
 
-    public function loadContent($containerID = NULL) {
-        $curriculaData = $this->objDbCurricula->getCurriculaByProductID($containerID);
+    public function loadContent($containerPath = NULL) {
+        $pathArray = $this->getPathArray($containerPath);
+        $curriculaData = $this->objDbCurricula->getCurriculaByProductID(
+                                                $pathArray[count($pathArray)-1]
+                                                );
         $curriculaArray = array();
 
         foreach ($curriculaData as $curriculumData){
@@ -198,7 +199,7 @@ class curriculum extends content {
         return $curriculaArray;
     }
 
-    public function loadCurriculum($id){
+    public function loadCurriculum($id, $containerPath = NULL){
         $dataArray = NULL;
         if (is_array($id)){
             $dataArray = $id;
@@ -214,6 +215,17 @@ class curriculum extends content {
         $this->_path = $dataArray['product_id'];
 
         //TODO add code for this curriculum's contents
+
+        $this->_contents = array();
+
+        foreach ($this->_content_types as $class => $description) {
+            $tempContent = $this->newObject($class);
+            $tempArray = $tempContent->loadContent($this->getID());
+            $this->_contents = array_merge(
+                    $this->_contents,
+                    $tempArray
+                    );
+        }
     }
 
 }
