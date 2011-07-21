@@ -5,12 +5,14 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('dbcomments', 'unesco_oer');
+$this->loadClass('treemenu', 'tree');
+$this->loadClass('treenode', 'tree');
 $product = $this->getObject('product', 'unesco_oer');
 $product->loadProduct($productID);
 
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
-       
+
 //load java script
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('ratingsys.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
@@ -22,13 +24,13 @@ $this->appendArrayVar('headerParams', $js);
     $abLink->cssClass = "blueText noUnderline";
     echo $abLink->show();
     ?>
-<!--    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> -->
+    <!--    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> -->
     |
     <a href="#" class="blueText noUnderline">
-        <!--                        Model Curriculum for Journalism Education-->
-        <?php
-        echo $product->getTitle();
-        ?>
+    <!--                        Model Curriculum for Journalism Education-->
+    <?php
+    echo $product->getTitle();
+    ?>
     </a>
 </div>
 
@@ -83,9 +85,9 @@ $this->appendArrayVar('headerParams', $js);
                         <!--</a>--></div>
                 </div>
             </div>
-<?php
-echo $product->getDescription();
-?>
+            <?php
+            echo $product->getDescription();
+            ?>
             <!--                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue aliquam orci, a vehicula quam scelerisque in. Donec sed quam enim, sit amet tincidunt magna. Quisque vel pharetra justo. Nulla facilisi. Cras mauris ipsum, varius quis suscipit vitae, sagittis nec nisl. Phasellus auctor venenatis vulputate. Nunc volutpat risus eget ante mollis et semper nisi porttitor. Nulla vitae mi nisi, vel rhoncus eros. Vivamus rutrum quam ut tortor egestas volutpat.
             <br><br>
             Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue. Nunc congue, nisl a aliquet lacinia, ipsum enim feugiat purus, a lobortis orci nisl bibendum nunc.
@@ -97,24 +99,24 @@ echo $product->getDescription();
             <!--<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">-->
             <!--<div class="listingAdaptationLinkDivWide">-->
             <!--    <a href="#" class="adaptationLinks">Make a new adaptation using this UNESCO Product</a>-->
-<?php
-$adaptationDivStart = '<div class="listingAdaptationLinkDivWide">';
-$adaptationDivEnd = '</div>';
-$adaptationImg = '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">';
+            <?php
+            $adaptationDivStart = '<div class="listingAdaptationLinkDivWide">';
+            $adaptationDivEnd = '</div>';
+            $adaptationImg = '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">';
 
-if ($this->objUser->isLoggedIn()) {
-    $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
-    $adaptLink = new link($uri);
-    $adaptLink->cssClass = "adaptationLinks";
-    $linkText = 'Make a new adaptation using this UNESCO Product';
-    $adaptLink->link = $linkText;
+            if ($this->objUser->isLoggedIn()) {
+                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
+                $adaptLink = new link($uri);
+                $adaptLink->cssClass = "adaptationLinks";
+                $linkText = 'Make a new adaptation using this UNESCO Product';
+                $adaptLink->link = $linkText;
 
-    echo $adaptationImg;
-    echo $adaptationDivStart;
-    echo $adaptLink->show();
-    echo $adaptationDivEnd;
-}
-?>
+                echo $adaptationImg;
+                echo $adaptationDivStart;
+                echo $adaptLink->show();
+                echo $adaptationDivEnd;
+            }
+            ?>
             <!--</div>-->
             <br><br>
             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
@@ -148,7 +150,19 @@ if ($this->objUser->isLoggedIn()) {
                                                 </ul>
                                             </li>
                                         </ul>-->
-                <ul class="ulPlusPublish">
+
+
+                <?php
+            
+           
+              $content = $product->getContent();
+              echo  $content->getContentTree(FALSE);
+           
+                ?>
+                <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+               
+
+<!--                <ul class="ulPlusPublish">
                     <li class="grey"><a href="">Folder 1</a></li>
                 </ul>
                 <ul class="ulMinusPublish">
@@ -156,7 +170,7 @@ if ($this->objUser->isLoggedIn()) {
                         <ul class="ulDocument">
                             <li class="grey"><a href="">Section 1</a></li>
                             <li class="grey"><a href="">Section 2</a></li>
-                            <li class="grey"><a href="">Section 3</a></li>
+                            <li class="grey"><a href="">Sectiongsgerg 3</a></li>
                             <ul class="ulMinusPublish">
                                 <li class="grey"><a href="">Sub-folder 1</a>
                                     <ul class="ulDocument">
@@ -168,16 +182,16 @@ if ($this->objUser->isLoggedIn()) {
                             </ul>
                         </ul>
                     </li>
-                </ul>
+                </ul>-->
             </div>
 
-        </div>
+            </div>
 
-    </div>
+            </div>
 
-    <div class="innerRightContent">
-        <div class="twentyPixelPaddingLeft">
-            <div class="printEmailDownloadIcons">
+            <div class="innerRightContent">
+                <div class="twentyPixelPaddingLeft">
+                    <div class="printEmailDownloadIcons">
 <?php
 if ($this->objUser->isLoggedIn()) {
     $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
@@ -204,90 +218,89 @@ if ($this->objUser->isLoggedIn()) {
 }
 
 $products = $this->objDbProducts->getProductByID($productID);
-echo  $this->objProductUtil->populatebookmark($products);
-
+echo $this->objProductUtil->populatebookmark($products);
 ?>
-                                
+
 <!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Email" width="19" height="15"></a>-->
 
 <!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" alt="Download" width="19" height="15"></a>-->
 
-            </div>
-            <br><br>
-            <span class="greyText fontBold">Author(s):</span> 
-            <?php
-            echo $product->getAuthors();
-            ?>
-            <br><br><br>
-            <span class="greyText fontBold">UNESCO contacts:</span>
-            <!--                    Harra Padhy | Abel Caine | Igor Nuk-->
-            <?php
-            echo $product->getContacts();
-            ?>
-            <br><br><br>
-            <span class="greyText fontBold">Published by:</span> 
-            <!--                    UNESCO-->
-            <?php
-            echo $product->getPublisher();
-            ?>
-            <br><br><br>
-            <span class="greyText fontBold">Category:</span> 
-            <!--                    <a href="#" class="greyTextLink">Journalism Education</a>-->
-            <?php
-            $themes = $product->getThemeNames();
-            foreach ($themes as $theme) {
-                $themeTag = "<a href='#' class='greyTextLink'>$theme</a>";
-                echo $themeTag . " ";
-            }
-            ?>
-            <br><br><br>
-            <span class="greyText fontBold">Keywords:</span> 
-            <!--                    <a href="#" class="greyTextLink">Journalism</a> | <a href="#" class="greyTextLink">Education</a>-->
-            <?php
-            $keywords = $product->getKeyWords();
-            $keywordsSize = count($keywords);
-            for ($index = 0; $index < $keywordsSize; $index++) {
-                $keywordText = $keywords[$index]['keyword'];
-                $keywordTag = "<a href='#' class='greyTextLink'>$keywordText</a>";
-                echo $keywordTag;
-                if ($index < $keywordsSize - 1)
-                    echo " | ";
-            }
-            ?>
-            <br><br><br>
-            <span class="greyText fontBold">See language versions of this product:</span>
-            <ul>
-            <?php
-            $language = $product->getLanguageName();
-            $languageTag = "<li><a href='#' class='liStyleLink'>$language</a></li>";
-            echo $languageTag;
-            ?>
-                <!--                    	<li><a href="#" class="liStyleLink">English</a></li>
-                                        <li><a href="#" class="liStyleLink">Français</a></li>
-                                        <li><a href="#" class="liStyleLink">Español</a></li>
-                                        <li><a href="#" class="liStyleLink">Русский</a></li>
-                
-                                        <li><a href="#" class="liStyleLink">لعربية</a></li>
-                                        <li><a href="#" class="liStyleLink">中文</a></li>-->
-            </ul>
-            <span class="greyText fontBold">Related news:</span>
-            <br><br>
-            Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
-            <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related news</a></div>
-            <span class="greyText fontBold">Related events:</span>
-            <br><br>
-            Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
-            <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related events</a></div>
+                    </div>
+                    <br><br>
+                    <span class="greyText fontBold">Author(s):</span> 
+<?php
+echo $product->getAuthors();
+?>
+                    <br><br><br>
+                    <span class="greyText fontBold">UNESCO contacts:</span>
+                    <!--                    Harra Padhy | Abel Caine | Igor Nuk-->
+                    <?php
+                    echo $product->getContacts();
+                    ?>
+                    <br><br><br>
+                    <span class="greyText fontBold">Published by:</span> 
+                    <!--                    UNESCO-->
+                    <?php
+                    echo $product->getPublisher();
+                    ?>
+                    <br><br><br>
+                    <span class="greyText fontBold">Category:</span> 
+                    <!--                    <a href="#" class="greyTextLink">Journalism Education</a>-->
+                    <?php
+                    $themes = $product->getThemeNames();
+                    foreach ($themes as $theme) {
+                        $themeTag = "<a href='#' class='greyTextLink'>$theme</a>";
+                        echo $themeTag . " ";
+                    }
+                    ?>
+                    <br><br><br>
+                    <span class="greyText fontBold">Keywords:</span> 
+                    <!--                    <a href="#" class="greyTextLink">Journalism</a> | <a href="#" class="greyTextLink">Education</a>-->
+                    <?php
+                    $keywords = $product->getKeyWords();
+                    $keywordsSize = count($keywords);
+                    for ($index = 0; $index < $keywordsSize; $index++) {
+                        $keywordText = $keywords[$index]['keyword'];
+                        $keywordTag = "<a href='#' class='greyTextLink'>$keywordText</a>";
+                        echo $keywordTag;
+                        if ($index < $keywordsSize - 1)
+                            echo " | ";
+                    }
+                    ?>
+                    <br><br><br>
+                    <span class="greyText fontBold">See language versions of this product:</span>
+                    <ul>
+                    <?php
+                    $language = $product->getLanguageName();
+                    $languageTag = "<li><a href='#' class='liStyleLink'>$language</a></li>";
+                    echo $languageTag;
+                    ?>
+                        <!--                    	<li><a href="#" class="liStyleLink">English</a></li>
+                                                <li><a href="#" class="liStyleLink">Français</a></li>
+                                                <li><a href="#" class="liStyleLink">Español</a></li>
+                                                <li><a href="#" class="liStyleLink">Русский</a></li>
+                        
+                                                <li><a href="#" class="liStyleLink">لعربية</a></li>
+                                                <li><a href="#" class="liStyleLink">中文</a></li>-->
+                    </ul>
+                    <span class="greyText fontBold">Related news:</span>
+                    <br><br>
+                    Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
+                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related news</a></div>
+                    <span class="greyText fontBold">Related events:</span>
+                    <br><br>
+                    Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
+                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related events</a></div>
 <?php
 if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
     ?>
-                <span class="greyText fontBold">User comment:</span>
-                <br><br>
+                        <span class="greyText fontBold">User comment:</span>
+                        <br><br>
 
-                <div class="listCommunityRelatedInfoDiv">
-                    <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
-                    <div class="communityRelatedInfoText">
-                        <a href="#" class="greyTextLink">
+                        <div class="listCommunityRelatedInfoDiv">
+                            <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
+                            <div class="communityRelatedInfoText">
+                                <a href="#" class="greyTextLink">
 
     <?php
     $Comment = $this->getobject('commentmanager', 'unesco_oer');
@@ -296,52 +309,52 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
     ?>
 
 
-                        </a>
-                    </div>
-                </div>
-                <div class="listCommunityRelatedInfoDiv">
-                    <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
-                    <div class="communityRelatedInfoText">
-                        <a href="#" class="greyTextLink">
-                            <?php
-                            $Comment = $this->getobject('commentmanager', 'unesco_oer');
-                            $comments = $Comment->recentcomment($productID);
-                            echo $comments[1];
-                            ?>
-                        </a>
-                    </div>
-                </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="listCommunityRelatedInfoDiv">
+                            <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
+                            <div class="communityRelatedInfoText">
+                                <a href="#" class="greyTextLink">
     <?php
-    if (($this->objDbComments->getTotalcomments($productID) > 2)) {
-        ?>
+    $Comment = $this->getobject('commentmanager', 'unesco_oer');
+    $comments = $Comment->recentcomment($productID);
+    echo $comments[1];
+    ?>
+                                </a>
+                            </div>
+                        </div>
+                                <?php
+                                if (($this->objDbComments->getTotalcomments($productID) > 2)) {
+                                    ?>
 
-                    <script src="http://code.jquery.com/jquery-latest.js"></script>
-                    <script>
-                        $(document).ready(function(){
+                            <script src="http://code.jquery.com/jquery-latest.js"></script>
+                            <script>
+                                $(document).ready(function(){
 
-         
-                            $(".slidingDiv").hide();
+                 
+                                    $(".slidingDiv").hide();
 
-                            $(".greyTextLink").show();
+                                    $(".greyTextLink").show();
 
-         
+                 
 
-                            $('.greyTextLink').click(function(){
+                                    $('.greyTextLink').click(function(){
 
-                                $(".slidingDiv").slideToggle();
+                                        $(".slidingDiv").slideToggle();
 
-                            });
-
-
-                        });
-
-                    </script>
+                                    });
 
 
+                                });
 
-                    <a href="javascript:void(0)" class="greyTextLink">Show all comments</a>
+                            </script>
 
-                    <div class="slidingDiv">
+
+
+                            <a href="javascript:void(0)" class="greyTextLink">Show all comments</a>
+
+                            <div class="slidingDiv">
 
 
         <?php
@@ -373,62 +386,62 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
 
 
 
-                        <a href="javascript:void(0)" class="greyTextLink">hide comments</a></div>
+                                <a href="javascript:void(0)" class="greyTextLink">hide comments</a></div>
 
 
-                    <?php } ?>
+    <?php } ?>
 
-                    <?php
-                } else if (($this->objDbComments->getTotalcomments($productID) == 1)) {
+    <?php
+} else if (($this->objDbComments->getTotalcomments($productID) == 1)) {
 
 
-                    echo '
+    echo '
                         <span class="greyText fontBold"><div id="usercomments"><h1>User comments:</h1></div></span>
                     <br><br>
                     <div class="commentsDiv">
                         <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
                         <div class="communityRelatedInfoText">';
 
-                    $Comment = $this->getobject('commentmanager', 'unesco_oer');
-                    $comments = $Comment->recentcomment($productID);
-                    echo $comments[1];
+    $Comment = $this->getobject('commentmanager', 'unesco_oer');
+    $comments = $Comment->recentcomment($productID);
+    echo $comments[1];
 
-                    echo'  </div>
+    echo'  </div>
                                   </div>';
-                }
+}
 
-                $Comment = $this->getobject('commentmanager', 'unesco_oer');
-                echo $Comment->commentbox($productID);
-                ?>
-            <!--                <div class="commentSubmit">
-                                   <div class="submiText"><a href="" class="searchGoLink">SUBMIT</a></div> 
-                                   <a href=""><img src="skins/unesco_oer/images/button-search.png" alt="Submit" width="17" height="17" class="submitCommentImage"></a>
-                                </div>-->
+$Comment = $this->getobject('commentmanager', 'unesco_oer');
+echo $Comment->commentbox($productID);
+?>
+                    <!--                <div class="commentSubmit">
+                                           <div class="submiText"><a href="" class="searchGoLink">SUBMIT</a></div> 
+                                           <a href=""><img src="skins/unesco_oer/images/button-search.png" alt="Submit" width="17" height="17" class="submitCommentImage"></a>
+                                        </div>-->
 
-        </div>
-    </div>
-
-
-</div>
-
-<script type="text/javascript">
-
-    jQuery(document).ready(function(){
-
-    jQuery("a[id=deleteProduct]").click(function(){
-
-    var r=confirm( "Are you sure you want to delete this product?");
-    if(r== true){
-    window.location=this.href;
-    }
-    return false;
-    }
+                    </div>
+                    </div>
 
 
-    );
+                    </div>
 
-    }
+                    <script type="text/javascript">
+
+                        jQuery(document).ready(function(){
+
+                            jQuery("a[id=deleteProduct]").click(function(){
+
+                                var r=confirm( "Are you sure you want to delete this product?");
+                                if(r== true){
+                                    window.location=this.href;
+                                }
+                                return false;
+                            }
 
 
-    );
-</script>
+                        );
+
+                        }
+
+
+                    );
+                    </script>

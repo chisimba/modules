@@ -16,7 +16,7 @@
 
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
 echo '<div class=leftColumnDiv style="border: 1px #004e89 solid;" >';
-echo'<h1>This is just a filler</h1> ';
+
 echo $content->getContentTree(TRUE);
 echo '</div>';
 
