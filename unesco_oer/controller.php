@@ -1924,7 +1924,7 @@ class unesco_oer extends controller {
             case "createcontent":
 //test if all fields are valid
                 if ($product->handleUpload()) {
-                    $this->nextAction('saveContent', array('path' => $product->getIdentifier(), 'nextAction' => $this->getParam('nextAction')));
+                    $this->nextAction('saveContent', array('productID' => $product->getIdentifier(), 'nextAction' => $this->getParam('nextAction')));
                 } else {
                     return $defaultTemplate;
                 }
@@ -1962,39 +1962,44 @@ class unesco_oer extends controller {
     }
 
     function __saveContent() {
-        $path = $this->getParam('path');
+        $productID = $this->getParam('productID');
+        $pair = $this->getParam('pair');
         $option = $this->getParam('option');
-        $content = $this->getObject('content');
-        $product = $this->getObject('product'); 
-
-        if ($path) {
-            $pathArray = $content->getPathArray($path);
-            $product->loadProduct($pathArray[0]);
-            $content = $product->getContent();
-            $this->setVarByRef('content', $content);
+        $contentManager = $this->getObject('contentmanager');
+        $product = $this->newObject('product');
+        
+        if ($productID) {
+            $product->loadProduct($productID);
+            $contentManager = $product->getContentManager();
         }
 
+        $this->setVarByRef('contentManager', $contentManager);
+        
+
         switch ($option) {
-            case 'new':
-                $newContent = $content->generateNewContent($path);
-                echo $newContent->showInput();
+            case 'new': 
+                $newContent = $contentManager->generateNewContent($pair);
+                echo $newContent->showInput($productID);
                 die();
                 break;
 
             case 'save':
-                $newContent = $content->generateNewContent($path);
+                $newContent = $contentManager->generateNewContent($pair);
                 $newContent->handleUpload();
-                $content->loadContent();
+                $contentManager->addNewContent($newContent);
                 return "CreateContent_tpl.php";
                 break;
 
             case 'edit':
-                echo $content->showInputByContentPath($path);
+                $pairArray = $contentManager->getPairArray($pair);
+                $existingContent = $contentManager->getContentByContentID($pairArray[1]);
+                echo $existingContent->showInput($productID);
                 die;
                 break;
 
             case 'saveedit':
-                $existingContent = $content->getContentByContentPath($path);
+                $pairArray = $contentManager->getPairArray($pair);
+                $existingContent = $contentManager->getContentByContentID($pairArray[1]); 
                 $existingContent->handleUpload();
                 break;
 

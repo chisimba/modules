@@ -14,12 +14,10 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-$this->loadClass('dropdown', 'htmlelements');
-
 /**
- * A container class that describes product content in general. It contains the
- * basic features expected for the creation of content and must be extended for
- * use with products.
+ * A abstract container class that describes product content in general. It
+ * contains the basic features expected for the creation of content and must be
+ * extended for use with products.
  *
  * @author Hermanus Brummer
  * @package unesco_oer
@@ -47,13 +45,12 @@ class content extends object
      */
     protected  $_id;
 
-    /**The path to the location of this content, constructed using the id's of
-     * contents containing this content. This path together with this content's
-     * id is unique. The top most id is the product id.
+    /**The parent ID containing this content This id together with this content's
+     * id is unique.
      *
      * @var string
      */
-    protected  $_path;
+    protected  $_parentID;
 
     /**A human readable name for this content
      *
@@ -75,67 +72,11 @@ class content extends object
      * @access   public
      * @abstract Override in subclasses.
      * @param    void
-     * @return   void
+     * @return   string
      */
-    public function showInput($prevAction = NULL)
+    public function showInput($productID, $prevAction = NULL)
     {
-        $html = '';
-
-        $table = $this->newObject('htmltable', 'htmlelements');
-        $table->cssClass = "moduleHeader";
-
-//        $newDropHeading = new htmlHeading();
-//        $newDropHeading->str = 'Create new content: ';
-//        //$html .= $newDropHeading->show();
-//
-//        $dropdown = new dropdown('new_dropdown');
-//        $dropdown->addOption('none', 'nothing selected');
-//        foreach ($this->_content_types as $key => $value) {
-//            $dropdown->addOption(implode ( '__' , array($this->_path,$key) ), $value);
-//        }
-//        $dropdown->setSelected('none');
-//
-//        //$html .= $dropdown->show();
-//        $table->startRow();
-//        $table->addCell($newDropHeading->show() . $dropdown->show());
-//
-//
-//        $editDropHeading = new htmlHeading();
-//        $editDropHeading->str = 'Edit existing content: ';
-//        //$html .= $editDropHeading->show();
-//
-//        //TODO Add method to Display existing contents
-//        if (!empty($this->_contents)){
-//            $dropdown = new dropdown('edit_dropdown');
-//            $dropdown->addOption('none', 'nothing selected');
-//            foreach ($this->_contents as $content) {
-//                $dropdown->addOption($content->getFullPath(), $content->getTitle());
-//            }
-//            $dropdown->setSelected('none');
-//
-//            //$html .= $dropdown->show();
-//
-//            $table->addCell($editDropHeading->show() . $dropdown->show());
-//        }
-//        $table->endRow();
-
-        //$html .= "<div class='root' ></div>";
-
-        $heading = new htmlHeading();
-        $heading->str = 'Create and Edit contents of product:';
-        $heading->type = 1;
-
-//        $fieldset = $this->newObject('fieldset','htmlelements');
-//        $fieldset->setLegend('Options:');
-//        //$fieldset->addContent($html);
-//        $fieldset->addContent($table->show());
-
-        $buttonSubmit = new button('done', 'Done');
-        $actionURI = $this->uri(array('action' => 'ViewProduct', 'id' => $this->getPath()));
-        $buttonSubmit->setOnClick('javascript: window.location=\'' . $actionURI . '\'');
-
-        return '<div id="productmetaheading">'.$heading->show(). '</div>' . "<div class='root' ></div>" . $buttonSubmit->show();
-        //return $html;
+        return "showInput has not been defined for {$this->getType()}!";
     }
 
     /**This returns the input for a given content ID
@@ -143,27 +84,10 @@ class content extends object
      * @param string $id
      * @return string
      */
-    public function showInputByContentID($id) //TODO implement this as a recursive algorithm
+    public function showInputByContentID($id)
     {
-        return $this->_contents[$id]->showInput();
-    }
-
-    //
-    public function showInputByContentPath($path, $level = 0)
-    {
-        $tempContent = $this->getContentByContentPath($path);
+        $tempContent = $this->getContentByContentID($id);
         return $tempContent->showInput();
-    }
-
-    public function generateNewContent($contentPath)
-    {
-        $contentPathArray = $this->getPathArray($contentPath);
-        $contentType = array_pop($contentPathArray);
-        $newContent = $this->newObject($contentType);
-        
-        $newContentPath = implode('__', $contentPathArray); //TODO Extract this implode to a human readable function
-        $newContent->setPath($newContentPath);
-        return $newContent;
     }
 
     ////////// Getters //////////
@@ -178,23 +102,24 @@ class content extends object
         return $this->_content_type;
     }
 
-    public function getPathArray($path)
+    public function getPairArray()
     {
-        if (!empty($path)){
-            return explode("__", $path);
-        }else{
-            return explode("__", $this->getPath());
-        }
+        return array($this->getParentID(), $this->getID());
     }
 
-    public function getFullPath()
+    public function getPairString()
     {
-        return $this->getPath() . '__' . $this->getID();
+        return $this->getParentID() . '__' . $this->getID();
     }
 
-    public function getPath()
+    public function getParentID()
     {
-        return $this->_path;
+        return $this->_parentID;
+    }
+
+    public function getParent() // TODO write this function so that it returns an instance of the parent!
+    {
+        return $this->_parentID;
     }
 
     public function getID()
@@ -229,11 +154,15 @@ class content extends object
         $this->_content_types = $types;
     }
 
-    public function setPath($path)
+    public function setParentID($id)
     {
-        $this->_path = $path;
+        $this->_parentID = $id;
     }
 
+    /**This is a function to initialize the object and should be overiddent by all
+     * inheriting classes.
+     *
+     */
     public function init() {
         $this->setType(NULL);
     }
@@ -241,115 +170,99 @@ class content extends object
     /**This is an abstract function intended for use with classes that extend this
      * content class
      *
-     *
+     * @access   public
+     * @abstract Override in subclasses.
+     * @param    void
+     * @return   boolean
      */
     public function handleUpload() {
         return FALSE;
     }
 
-    /**This function must be overridden by inhereting classes. It recieves the ID
-     * of the container containing the contents and returns all instances of said
-     * contents that have the ID as its container.
+    /**This function returns all instances of contents that have the ID of this
+     * content as its parent.
      *
      * @param string $containerID
      * @return content[]
      */
-    function loadContent($containerID = NULL) {
-
-        if (empty($containerID)){
-            $id = $this->getID();
-            if (empty($id)) {
-                $containerID = $this->getPath();
-            } else {
-                $containerID = $id;
+    public function getContents() {
+        if (empty($this->_contents)){ 
+            $this->_contents = array();
+            foreach ($this->_content_types as $class => $description) {
+                $tempContent = $this->newObject($class);
+                $tempArray = $tempContent->getContentsByParentID($this->getID());
+                $this->_contents = array_merge(
+                        $this->_contents,
+                        $tempArray
+                        );
             }
-        }
-
-        $this->_contents = array();
-
-        foreach ($this->_content_types as $class => $description) {
-            $tempContent = $this->getObject($class);
-            $tempArray = $tempContent->loadContent($containerID);
-            $this->_contents = array_merge(
-                    $this->_contents,
-                    $tempArray
-                    );
         }
 
         return $this->_contents;
     }
 
-    function getContentByContentPath($path, $level = 0) //TODO think about moving some functionality to a protected method so users can't insert the level
-    {
-        $pathArray = $this->getPathArray($path);
+    /**This function returns all instances of contents that have the given ID as
+     * its Parent. All contents returned being of the same type as this content
+     *
+     * @access   public
+     * @abstract Override in subclasses.
+     * @param string $parentID
+     * @return   array
+     */
+    public function getContentsByParentID($parentID) {
+        return array();
+    }
 
-        if (($level == 0) && (strcmp($pathArray[$level], $this->getPath()) == 0)) {
-            foreach ($this->_contents as $content) {
-                $output = $content->getContentByContentPath($path, $level+1);
-                if (!empty($output)) return $output;
+    /**This function should be overwritten by inheriting classes. It recieves the
+     * unique id of the content or an array containing the data of the content. It
+     * then loads the content using the given information.
+     *
+     * It returns FALSE if load is unsuccessful, TRUE otherwise.
+     *
+     * @access   public
+     * @abstract Override in subclasses.
+     * @param mixed $id
+     * @return boolean
+     */
+    public function load($id) {
+        return FALSE;
+    }
+
+    /**This function recursively searches through the loaded contents
+     *
+     * @param <type> $id
+     * @return content
+     */
+    function getContentByContentID($id)
+    {
+        if (strcmp($id, $this->getID()) == 0)
+        {
+            return $this;
+        }
+
+        foreach ($this->_contents as $content)
+        {
+            if (strcmp($id, $content->getID()) == 0)
+            {
+                return $content;
             }
-            //If loop completes, then the content was not found
-            return FALSE;
-        } else {
-            if (strcmp($pathArray[$level], $this->getID()) == 0){
-                return $this;
-            }else{
-                foreach ($this->_contents as $content) {
-                    $output = $content->getContentByContentPath($path, $level+1);
-                    if (!empty($output)) return $output;
-                }
+            else
+            {
+                $result = $content->getContentByContentID($id);
+                if ($result != FALSE) return $result;
             }
         }
+
+        return FALSE;
     }
 
     function hasContents(){
         return !empty($this->_contents);
     }
 
-    function getContentTree($editable = FALSE) {
-
-        $output = '';
-
-        $output .= '<script src="core_modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>';
-
-        $objSkin = $this->getObject('skin', 'skin');
-        $this->loadClass('treemenu', 'tree');
-        $this->loadClass('treenode', 'tree');
-        $this->loadClass('dhtml', 'tree');
-
-
-//Create a new tree
-        $menu = new treemenu();
-        
-//Add nodes to the tree
-        foreach ($this->_contents as $content){
-            $menu->addItem($content->getTreeNodes($editable));
-        }
-
-        if ($editable){
-            foreach ($this->_content_types as $key => $value) {
-                $menu->addItem(new treenode(array(
-                                                'text' => $value,
-                                                'link' => "#", 'icon' => 'icon-new-product.png',
-                                                'expandedIcon' => $expandedIcon,
-                                                'expanded' => FALSE),
-                                            array(
-                                                'onclick' => "javascript: newSection('".implode ( '__' , array($this->getFullPath(),$key) )."');",
-                                                'onexpand' => "alert('Expanded')")
-                                            ));
-            }
-        }
-
-// Create the presentation class
-
-        $treeMenu = &new dhtml($menu, array('images' => $objSkin->getSkinURL() . 'images/tree', 'defaultClass' => 'treeMenuDefault'));
-
-        $output .= $treeMenu->getMenu();
-
-        return $output;
-    }
-
     function getTreeNodes($editable = FALSE) {
+
+        $this->loadClass('treenode', 'tree');
 
         $icon = 'icon-product-closed-folder.png';
         $expandedIcon = 'icon-product-opened-folder.png';
@@ -360,7 +273,7 @@ class content extends object
                                 'expandedIcon' => $expandedIcon,
                                 'expanded' => FALSE),
                             array(
-                                'onclick' => "javascript: edit('{$this->getFullPath()}');",
+                                'onclick' => "javascript: edit('{$this->getPairString()}');",
                                 'onexpand' => ""
                             ));
 
@@ -369,20 +282,32 @@ class content extends object
         }
 
         if ($editable){
-            foreach ($this->_content_types as $key => $value) {
+            foreach ($this->_content_types as $class => $description) {
                 $node->addItem(new treenode(array(
-                                                'text' => $value,
+                                                'text' => $description,
                                                 'link' => "#", 'icon' => 'icon-new-product.png',
                                                 'expandedIcon' => $expandedIcon,
                                                 'expanded' => FALSE),
                                             array(
-                                                'onclick' => "javascript: newSection('".implode ( '__' , array($this->getFullPath(),$key) )."');",
+                                                'onclick' => "javascript: newSection('".implode ( '__' , array($this->getID(),$class) )."');",
                                                 'onexpand' => "alert('Expanded')")
                                             ));
             }
         }
 
         return $node;
+    }
+
+    function addNewContent($newContent){
+        if (strcmp($newContent->getParentID(), $this->getID()) == 0){ //TODO add check for type validity
+            $this->_contents[] = $newContent;
+            return TRUE;
+        } else {
+            foreach ($this->_contents as $content) {
+                $result = $content->addNewContent($newContent);
+                if ($result) return $result;
+            }
+        }
     }
 }
 

@@ -33,20 +33,21 @@ class curriculum extends content {
     private $_introductory_description;
 
 
-    public function showInput($prevAction = NULL) {
+    public function showInput($productID, $prevAction = NULL) {
 
-        $path = $option = '';
+        $pair = $option = '';
         if ($this->getID()) {
-            $path = $this->getFullPath();
+            $pair = $this->getPairString();
             $option = 'saveedit';
         }else{
-            $path = $this->getPath().'__'.$this->getType();
+            $pair = $this->getParentID().'__'.$this->getType();
             $option = 'save';
         }
 
         $uri = $this->uri(array(
             'action' => "saveContent",
-            'path' => $path,
+            'productID' => $productID,
+            'pair' => $pair,
             'option' => $option,
             'nextAction' => $prevAction));
         $form_data = new form('add_products_ui', $uri);
@@ -159,11 +160,9 @@ class curriculum extends content {
         $this->_introductory_description = $this->getParam('introductory_description');
         $this->_title = $this->getParam('title');
 
-        $pathArray = $this->getPathArray();
-
         if (empty($this->_id)) {
             $this->_id =  $this->objDbCurricula->addCurriculum(
-                    $pathArray[0], // This is the ID of the product this curruculum is contained in.
+                    $this->getParentID(), // This is the ID of the product this curruculum is contained in.
                     $this->_title,
                     $this->_forward,
                     $this->_background,
@@ -172,7 +171,7 @@ class curriculum extends content {
         }else{
             $this->objDbCurricula->updateCurriculum(
                     $this->_id,
-                    $pathArray[0], // This is the ID of the product this curruculum is contained in.
+                    $this->getParentID(), // This is the ID of the product this curruculum is contained in.
                     $this->_title,
                     $this->_forward,
                     $this->_background,
@@ -183,24 +182,23 @@ class curriculum extends content {
         return TRUE;
     }
 
-    public function loadContent($containerPath = NULL) {
-        $pathArray = $this->getPathArray($containerPath);
+    public function getContentsByParentID($parentID) {
         $curriculaData = $this->objDbCurricula->getCurriculaByProductID(
-                                                $pathArray[count($pathArray)-1]
+                                                $parentID
                                                 );
         $curriculaArray = array();
 
         foreach ($curriculaData as $curriculumData){
             $tempCurriculum = $this->newObject('curriculum');
-            $tempCurriculum->loadCurriculum($curriculumData);
+            $tempCurriculum->load($curriculumData);
             array_push($curriculaArray, $tempCurriculum);
         }
 
         return $curriculaArray;
     }
 
-    public function loadCurriculum($id, $containerPath = NULL){
-        $dataArray = NULL;
+    public function load($id) {
+         $dataArray = NULL;
         if (is_array($id)){
             $dataArray = $id;
         }else{
@@ -212,21 +210,12 @@ class curriculum extends content {
         $this->_introductory_description = $dataArray['introductory_description'];
         $this->_id = $dataArray['id'];
         $this->_title = $dataArray['title'];
-        $this->_path = $dataArray['product_id'];
+        $this->_parentID = $dataArray['product_id'];
 
         //TODO add code for this curriculum's contents
-
-        $this->_contents = array();
-
-        foreach ($this->_content_types as $class => $description) {
-            $tempContent = $this->newObject($class);
-            $tempArray = $tempContent->loadContent($this->getID());
-            $this->_contents = array_merge(
-                    $this->_contents,
-                    $tempArray
-                    );
-        }
+        $this->getContents();
     }
+
 
 }
 ?>

@@ -34,19 +34,20 @@ class calendar extends content
         $this->_content_types = array('year' => 'year');
     }
 
-    public function showInput($prevAction = NULL) {
-        $path = $option = '';
+    public function showInput($productID, $prevAction = NULL) {
+        $pair = $option = '';
         if ($this->getID()) {
-            $path = $this->getFullPath();
+            $pair = $this->getPairString();
             $option = 'saveedit';
         }else{
-            $path = $this->getPath().'__'.$this->getType();
+            $pair = $this->getParentID().'__'.$this->getType();
             $option = 'save';
         }
 
         $uri = $this->uri(array(
             'action' => "saveContent",
-            'path' => $path,
+            'productID' => $productID,
+            'pair' => $pair,
             'option' => $option,
             'nextAction' => $prevAction));
         $form_data = new form('add_products_ui', $uri);
@@ -72,7 +73,7 @@ class calendar extends content
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
 
-        $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->_path);
+        $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->getParentID());
 
         return $form_data->show();
     }
@@ -80,38 +81,35 @@ class calendar extends content
     public function  handleUpload() {
         $this->_title = $this->getParam('title');
 
-        $pathArray = $this->getPathArray();
-
         if (empty($this->_id)) {
             $this->_id =  $this->objDbCalendar->addCalendar(
                     $this->_title, // This is the ID of the product this curruculum is contained in.
-                    $pathArray[count($pathArray)-1]
+                    $this->getParentID()
                     );
         }else{
-            $this->objDbCurricula->updateCalendar(
+            $this->objDbCalendar->updateCalendar(
                     $this->_id,
                     $this->_title, // This is the ID of the product this curruculum is contained in.
-                    $pathArray[0]
+                    $this->getParentID()
                     );
         }
 
         return TRUE;
     }
 
-    public function loadContent($containerID = NULL) {
-        
-        $calendarsData = $this->objDbCalendar->getCalendarsByCurriculumID($containerID);
+    public function  getContentsByParentID($parentID) {
+        $calendarsData = $this->objDbCalendar->getCalendarsByCurriculumID($parentID);
         $calendarsArray = array();
         foreach ($calendarsData as $calendarData){
             $tempCalendar = $this->newObject('calendar');
-            $tempCalendar->loadCalendar($calendarData);
+            $tempCalendar->load($calendarData);
             array_push($calendarsArray, $tempCalendar);
         }
 
         return $calendarsArray;
     }
 
-    public function loadCalendar($id){
+    public function load($id){
         $dataArray = NULL;
         if (is_array($id)){
             $dataArray = $id;
@@ -122,7 +120,7 @@ class calendar extends content
 
         $this->_id = $dataArray['id'];
         $this->_title = $dataArray['title'];
-        $this->_path = $dataArray['curriculum_id'];
+        $this->_parentID = $dataArray['curriculum_id'];
 
         //TODO add code for this calendar's contents
     }

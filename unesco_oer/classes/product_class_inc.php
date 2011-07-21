@@ -226,11 +226,11 @@ class product extends object
 
     //////////   Content   //////////
 
-    /**Variable for containing content of the product
+    /**Variable for containing and managing content of the product
      *
      * @var <type>
      */
-    private $_content;
+    private $_contentManager;
 
     //////////   Display objects   //////////
 
@@ -265,7 +265,7 @@ class product extends object
         $this->objDbProductStatus = $this->getObject('dbproductstatus');
         $this->validationArray = array();
 
-        $this->setContent(NULL);
+        $this->setContentManager($this->newObject('contentmanager'));
     }
 
     ////////////////   METHODS   ////////////////
@@ -388,7 +388,7 @@ class product extends object
         $this->loadKeyWords($product['id']);
         $this->setDeletionStatus($product['deleted']);
 
-        $this->getContent();
+        $this->getContentManager();
 
         if ($this->isAdaptation())
         {
@@ -1004,7 +1004,7 @@ class product extends object
 
         $hiddenInput = new hiddeninput('add_product_submit');
 
-        $content = $this->getContent();
+        $content = $this->getContentManager();
         $submitOption = ($content->hasContents()) ? "'upload'" : "'createContent'"; //NOTE here we add support to create new content
 //        $submitOption = ($this->getContent()) ? "'upload'" : "'upload'";
         //$submitOption = 'upload';
@@ -1311,9 +1311,9 @@ class product extends object
        $this->_provenance = $provenance;
    }
 
-   function setContent($content)
+   function setContentManager($content)
    {
-       $this->_content = $content;
+       $this->_contentManager = $content;
    }
 
    private function setDeletionStatus($delete)
@@ -1485,19 +1485,19 @@ class product extends object
        return $this->_provenance;
    }
 
-   function getContent()
+   function getContentManager()
    {
-       if (empty($this->_content)){
-           $this->_content = $this->newObject('content');
-           $this->_content->setPath($this->getIdentifier());
-           $this->_content->setValidTypes( //TODO this line should be inside a database or some managing class
+       if (!$this->_contentManager->hasContents()){
+           $this->_contentManager = $this->newObject('contentmanager');
+           $this->_contentManager->setProductID($this->getIdentifier());
+           $this->_contentManager->setValidTypes( //TODO this line should be inside a database or some managing class
                             array(
                                 'curriculum' => $this->getContentTypeDescription()
                             )
                     );
-           $this->_content->loadContent();
+           $this->_contentManager->getAllContents();
        }
-       return $this->_content;
+       return $this->_contentManager;
    }
 
    function getParentID()

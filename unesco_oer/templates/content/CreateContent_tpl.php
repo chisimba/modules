@@ -17,12 +17,14 @@
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
 echo '<div class=leftColumnDiv style="border: 1px #004e89 solid;" >';
 
-echo $content->getContentTree(TRUE);
+echo $contentManager->getContentTree(TRUE);
 echo '</div>';
 
 
 
-echo '<div class=rightWideColumnDiv style="border: 1px #004e89 solid;">'. $content->showInput($this->getParam('prevAction')) . "</div>";
+echo '<div class=rightWideColumnDiv style="border: 1px #004e89 solid;">';
+echo $contentManager->showInput($this->getParam('prevAction'));
+echo "</div>";
 
 ?>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
@@ -70,12 +72,12 @@ echo '<div class=rightWideColumnDiv style="border: 1px #004e89 solid;">'. $conte
 
 function edit(section_id){
     //$('.root').hide();
-    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=edit&path=' + section_id);
+    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=edit&pair=' + section_id + '&productID=' + $('.product_id').attr('id'));
     //$('.root').slideToggle();
 }
 
 function newSection(path){
-    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&path=' + path);
+    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&pair=' + path + '&productID=' + $('.product_id').attr('id'));
 }
 
 </script>
