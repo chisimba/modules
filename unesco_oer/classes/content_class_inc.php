@@ -32,6 +32,7 @@ class content extends object
      * @var string
      */
     protected $_content_type;
+  
 
     /**Further types of content that can be contained within this content,
      *
@@ -239,7 +240,7 @@ class content extends object
         {
             return $this;
         }
-
+        
         foreach ($this->_contents as $content)
         {
             if (strcmp($id, $content->getID()) == 0)
@@ -260,22 +261,34 @@ class content extends object
         return !empty($this->_contents);
     }
 
-    function getTreeNodes($editable = FALSE) {
+    function getTreeNodes($editable = FALSE, $productID = NULL) {
 
         $this->loadClass('treenode', 'tree');
 
         $icon = 'icon-product-closed-folder.png';
         $expandedIcon = 'icon-product-opened-folder.png';
 
-        $node = new treenode(array(
-                                'text' => $this->getTitle(),
-                                'link' => "#", 'icon' => $icon,
-                                'expandedIcon' => $expandedIcon,
-                                'expanded' => FALSE),
-                            array(
-                                'onclick' => "javascript: edit('{$this->getPairString()}');",
-                                'onexpand' => ""
-                            ));
+        // Makes tree a link if not editing when adding product metadata
+        if ($editable){
+                        $node = new treenode(array(
+                                                        'text' => $this->getTitle(),
+                                                        'link' => "#", 'icon' => $icon,
+                                                        'expandedIcon' => $expandedIcon,
+                                                        'expanded' => FALSE),
+                                                    array(
+                                                        'onclick' => "javascript: edit('{$this->getPairString()}');",
+                                                        'onexpand' => ""
+                                                    ));
+                      }
+                      else{
+                            $node = new treenode(array(
+                                                        'text' => $this->getTitle(),
+                                                        'link' => $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID())), 'icon' => $icon,
+                                                        'expandedIcon' => $expandedIcon,
+                                                        'expanded' => FALSE)
+                                                     );
+                       
+                      }
 
         foreach ($this->_contents as $content){
             $node->addItem($content->getTreeNodes($editable));

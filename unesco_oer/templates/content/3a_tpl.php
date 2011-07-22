@@ -20,7 +20,7 @@ $this->appendArrayVar('headerParams', $js);
 <div class="breadCrumb">
     <?php
     $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
-    $abLink->link = 'UNESCO OER Products';
+    $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_products', 'unesco_oer');
     $abLink->cssClass = "blueText noUnderline";
     echo $abLink->show();
     ?>
@@ -108,7 +108,7 @@ $this->appendArrayVar('headerParams', $js);
                 $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
                 $adaptLink = new link($uri);
                 $adaptLink->cssClass = "adaptationLinks";
-                $linkText = 'Make a new adaptation using this UNESCO Product';
+                $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
                 $adaptLink->link = $linkText;
 
                 echo $adaptationImg;
@@ -120,14 +120,27 @@ $this->appendArrayVar('headerParams', $js);
             <!--</div>-->
             <br><br>
             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-            <div class="listingAdaptationLinkDivWide"><a href="#" class="adaptationLinks">See existing adaptations of this UNESCO Product (15)</a></div>
+            <div class="listingAdaptationLinkDivWide"><a href="#" class="adaptationLinks">
+                <?php
+                 echo  $this->objLanguage->languageText('mod_unesco_oer_products_see_existing', 'unesco_oer');
+                ?>
+
+                
+                </a></div>
 
 
             <div class="sectionsHead">
                 <h3 class="floaLeft greyText">Sections:</h3>
                 <div class="addNewMode">
                     <img src="skins/unesco_oer/images/icon-product-add-node.png" alt="New mode" width="18" height="18"class="smallLisitngIcons">
-                    <div class="addNewModeDiv"><a href="#" class="addNewModeLink">add new mode</a></div>
+                    <div class="addNewModeDiv"><a href="#" class="addNewModeLink">
+                        <?php
+                          echo  $this->objLanguage->languageText('mod_unesco_oer_products_new_node', 'unesco_oer');
+                        
+                        ?>
+                     
+                        
+                        </a></div>
                 </div>
             </div>
 
@@ -155,7 +168,7 @@ $this->appendArrayVar('headerParams', $js);
                 <?php
             
            
-              $content = $product->getContent();
+              $content = $product->getContentManager();
               echo  $content->getContentTree(FALSE);
            
                 ?>
@@ -196,14 +209,14 @@ $this->appendArrayVar('headerParams', $js);
 if ($this->objUser->isLoggedIn()) {
     $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
     $editLink = new link($uri);
-    $editLink->title = "Edit Metadata";
+    $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_edit_metadata', 'unesco_oer');;
     $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';
     $editLink->link = $linkText;
     echo $editLink->show();
 
     $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID, 'prevAction' => 'home'));
     $deleteLink = new link($uri);
-    $deleteLink->title = "Delete Product";
+    $deleteLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_delete', 'unesco_oer');;
     $deleteLink->cssId = "deleteProduct";
     $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
     $deleteLink->link = $linkText;
@@ -211,7 +224,7 @@ if ($this->objUser->isLoggedIn()) {
 
     $uri = $this->uri(array('action' => "createFeaturedProduct", 'id' => $productID));
     $editLink = new link($uri);
-    $editLink->title = "Make Featured Product";
+    $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_make_featured', 'unesco_oer');;
     $linkText = '<img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15">';
     $editLink->link = $linkText;
     echo $editLink->show();
@@ -227,24 +240,41 @@ echo $this->objProductUtil->populatebookmark($products);
 
                     </div>
                     <br><br>
-                    <span class="greyText fontBold">Author(s):</span> 
+                    <span class="greyText fontBold">
+                        <?php
+                        echo $this->objLanguage->languageText('mod_unesco_oer_products_author', 'unesco_oer')
+                        ?>
+                        </span> 
 <?php
 echo $product->getAuthors();
 ?>
                     <br><br><br>
-                    <span class="greyText fontBold">UNESCO contacts:</span>
+                    <span class="greyText fontBold">
+                        
+                         <?php
+                        echo $this->objLanguage->languageText('mod_unesco_oer_products_contacts', 'unesco_oer')
+                        ?>
+                    </span>
                     <!--                    Harra Padhy | Abel Caine | Igor Nuk-->
                     <?php
                     echo $product->getContacts();
                     ?>
                     <br><br><br>
-                    <span class="greyText fontBold">Published by:</span> 
+                    <span class="greyText fontBold">
+                         <?php
+                        echo $this->objLanguage->languageText('mod_unesco_oer_products_published', 'unesco_oer')
+                        ?>
+                    </span> 
                     <!--                    UNESCO-->
                     <?php
                     echo $product->getPublisher();
                     ?>
                     <br><br><br>
-                    <span class="greyText fontBold">Category:</span> 
+                    <span class="greyText fontBold">
+                         <?php
+                        echo $this->objLanguage->languageText('mod_unesco_oer_products_category', 'unesco_oer')
+                        ?>
+                    </span> 
                     <!--                    <a href="#" class="greyTextLink">Journalism Education</a>-->
                     <?php
                     $themes = $product->getThemeNames();
@@ -254,7 +284,11 @@ echo $product->getAuthors();
                     }
                     ?>
                     <br><br><br>
-                    <span class="greyText fontBold">Keywords:</span> 
+                    <span class="greyText fontBold">
+                         <?php
+                        echo $this->objLanguage->languageText('mod_unesco_oer_products_keywords', 'unesco_oer')
+                        ?>
+                    </span> 
                     <!--                    <a href="#" class="greyTextLink">Journalism</a> | <a href="#" class="greyTextLink">Education</a>-->
                     <?php
                     $keywords = $product->getKeyWords();
@@ -268,7 +302,11 @@ echo $product->getAuthors();
                     }
                     ?>
                     <br><br><br>
-                    <span class="greyText fontBold">See language versions of this product:</span>
+                    <span class="greyText fontBold">
+                        <?php
+                        echo $this->objLanguage->languageText('mod_unesco_oer_products_language_versions', 'unesco_oer')
+                        ?>
+                    </span>
                     <ul>
                     <?php
                     $language = $product->getLanguageName();
@@ -366,27 +404,25 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
         for ($i = 0; $i < $totalcomments - 2; $i++) {
 
 
-            $content .= '        <div class="listCommunityRelatedInfoDiv">
-                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
-                        <div class="communityRelatedInfoText">
+                          $content .= '        <div class="listCommunityRelatedInfoDiv">
+                                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
+                                          <div class="communityRelatedInfoText">
                         	<a href="#" class="greyTextLink">' . $comments[$i]['product_comment'] .
-                    ' </a>
-                        </div>
-                    </div>';
-        }
+                                          ' </a>
+                                             </div>
+                                        </div>';
+                                          }
 
         echo $content
         ?> 
 
-
-
-
-
-
-
-
-
-                                <a href="javascript:void(0)" class="greyTextLink">hide comments</a></div>
+                                <a href="javascript:void(0)" class="greyTextLink">
+                                
+                                <?php
+                                echo $this->objLanguage->languageText('mod_unesco_oer_comments_hide', 'unesco_oer');
+                                
+                                ?>
+                                </a></div>
 
 
     <?php } ?>

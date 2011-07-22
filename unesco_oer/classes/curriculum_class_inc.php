@@ -74,7 +74,7 @@ class curriculum extends content {
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
-        $fieldName = 'title';
+        $fieldName = 'Title';
         $textinput = new textinput($fieldName);
         $textinput->setValue($this->_title);
 
@@ -87,11 +87,13 @@ class curriculum extends content {
         $table->addCell($textinput->show());
         $table->endRow();
 
-        $fieldName = 'forward';
+        $fieldName = 'Forward';
         $editor = $this->newObject('htmlarea', 'htmlelements');
+      
         $editor->name = $fieldName;
         $editor->height = '150px';
-        //$editor->width = '70%';
+       // $editor->width = '70%';
+        
         $editor->setBasicToolBar();
         $editor->setContent($this->_forward);
 
@@ -144,6 +146,84 @@ class curriculum extends content {
         $buttonSubmit->setToSubmit();
 
         $form_data->addToForm($table->show() . $buttonSubmit->show());
+
+        return $form_data->show();
+    }
+    
+     public function showCurric($prevAction = NULL) {
+
+     
+        $form_data = new form('add_products_ui', $uri);
+
+//        $html .= '  <h4 class="greyText fontBold labelSpacing">Foreward</h4>
+//                    <h4 class="greyText fontBold labelSpacing">
+//                        <span class="wideDivider">
+//                            <textarea name="textarea3" class="wideInputTextAreaField"></textarea>
+//                        </span>
+//                    </h4>
+//                    <h4 class="greyText fontBold labelSpacing">Background</h4>
+//                    <h4 class="greyText fontBold labelSpacing">
+//                        <span class="wideDivider">
+//                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
+//                        </span>
+//                    </h4>
+//                    <h4 class="greyText fontBold labelSpacing">Introductory Description</h4>
+//                    <h4 class="greyText fontBold labelSpacing">
+//                        <span class="wideDivider">
+//                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
+//                        </span>
+//                    </h4>';
+
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cssClass = "moduleHeader";
+
+       
+
+        $fieldName = ' <h3 class="greyText"> Forward : </h3>';
+      
+      
+      
+       
+       // $editor->width = '70%';
+        
+      
+
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($this->_forward);
+        $table->endRow();
+
+        $fieldName = ' <h3 class="greyText"> Background : </h3>';
+      
+
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($this->_background);
+        $table->endRow();
+
+        $fieldName = ' <h3 class="greyText"> Introductory Description : </h3>';
+     
+
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($this->_introductory_description);
+        $table->endRow();
+
+       
+
+        $form_data->addToForm($table->show());
 
         return $form_data->show();
     }

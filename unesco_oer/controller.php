@@ -303,6 +303,26 @@ class unesco_oer extends controller {
             return "3a_tpl.php";
         }
     }
+    
+     public function __ViewProductSection() {
+
+        $id = $this->getParam('productID');
+        $path = $this->getParam('path');
+
+        $this->setVarByRef('productID', $id);
+          $this->setVarByRef('path', $path);
+
+      
+           if ($this->objDbProducts->isAdaptation($id)) {
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            return "5b_tpl.php";
+        } else {
+            $this->setLayoutTemplate('maincontent_layout_tpl.php');
+            return "3c_tpl.php";
+        }
+    
+        
+    }
 
     public function __viewAllMostAdaptedProducts() {
 
@@ -1897,7 +1917,7 @@ class unesco_oer extends controller {
 
     public function __saveProductMetaData() {
         $defaultTemplate = "ProductMetaData_tpl.php";
-        echo "gdsgdf";
+      
         $product = $this->getObject('product');
 
 //test for edit

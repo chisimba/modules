@@ -17,8 +17,8 @@
 
  $product = $this->getObject('product'); 
  $product->loadProduct($productID);
- $content = $product->getContent();
- $existingContent = $content->getContentByContentPath($path);
+ $content = $product->getContentManager();
+ $existingContent = $content->getContentByContentID($path);
  
 
 ?>
@@ -137,7 +137,7 @@
            
               <?php
             
-              $content = $product->getContent();
+              $content = $product->getContentManager();
               echo  $content->getContentTree(FALSE);
            
               ?>
