@@ -18,7 +18,7 @@
  $product = $this->getObject('product'); 
  $product->loadProduct($productID);
  $content = $product->getContentManager();
- $existingContent = $content->getContentByContentID($path);
+$existingContent = $content->getContentByContentID($path);
  
 
 ?>
@@ -125,6 +125,7 @@
                 <div class="contentDivThreeWider">
                  <?php
                 echo  $existingContent->showCurric();
+                  //  echo  $existingContent->showReadOnlyInput();
                  
                  ?>
                     

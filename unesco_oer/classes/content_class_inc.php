@@ -291,7 +291,7 @@ class content extends object
                       }
 
         foreach ($this->_contents as $content){ 
-            $node->addItem($content->getTreeNodes($editable));
+            $node->addItem($content->getTreeNodes($editable, $productID));
         }
 
         if ($editable){

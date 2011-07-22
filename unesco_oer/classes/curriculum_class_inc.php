@@ -74,7 +74,7 @@ class curriculum extends content {
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
-        $fieldName = 'Title';
+        $fieldName = 'title';
         $textinput = new textinput($fieldName);
         $textinput->setValue($this->_title);
 
@@ -87,7 +87,7 @@ class curriculum extends content {
         $table->addCell($textinput->show());
         $table->endRow();
 
-        $fieldName = 'Forward';
+        $fieldName = 'forward';
         $editor = $this->newObject('htmlarea', 'htmlelements');
       
         $editor->name = $fieldName;

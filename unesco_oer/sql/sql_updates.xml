@@ -60,7 +60,7 @@
     </update>
     <update>
         <table>tbl_unesco_oer_modules</table>
-        <version>0.058</version>
+        <version>0.059</version>
         <description>Added a title field</description>
         <data>
             <add>

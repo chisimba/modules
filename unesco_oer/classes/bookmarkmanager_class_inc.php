@@ -88,10 +88,10 @@ class bookmarkmanager extends dbtable {
 
                             $myTable->startHeaderRow();
                             //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
-                            $myTable->addHeaderCell('Title', null, null, left, "userheader", null);
-                            $myTable->addHeaderCell('Description', null, null, left, "userheader", null);       
-                            $myTable->addHeaderCell('Edit', null, null, left, "userheader", null);
-                            $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
+                            $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'), null, null, left, "userheader", null);
+                            $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_institution_description', 'unesco_oer'), null, null, left, "userheader", null);       
+                            $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer'), null, null, left, "userheader", null);
+                            $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'), null, null, left, "userheader", null);
                             $myTable->endHeaderRow();
 //                            
                  
