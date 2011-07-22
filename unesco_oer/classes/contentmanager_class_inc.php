@@ -14,7 +14,10 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
+/**
+ * the exception handler
+ */
+require_once 'classes/core/customexception_class_inc.php';
 
 /**
  * Description of contentmanager_class_inc
@@ -139,7 +142,7 @@ class contentmanager extends object
         return FALSE;
     }
 
-    function getContentTree($editable = FALSE) {
+    function getContentTree($editable = FALSE) { 
 
         $output = '';
 

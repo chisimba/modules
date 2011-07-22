@@ -183,7 +183,7 @@ class content extends object
     /**This function returns all instances of contents that have the ID of this
      * content as its parent.
      *
-     * @param string $containerID
+     * @param string $containerID 
      * @return content[]
      */
     public function getContents() {
@@ -290,7 +290,7 @@ class content extends object
                        
                       }
 
-        foreach ($this->_contents as $content){
+        foreach ($this->_contents as $content){ 
             $node->addItem($content->getTreeNodes($editable));
         }
 

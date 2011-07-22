@@ -15,23 +15,21 @@
  */
 
 
-
 require_once 'content_class_inc.php';
 
 /**
- * Description of calendar_class_inc
+ * Description of year_class_inc
  *
  * @author manie
  */
-class calendar extends content
-{
+class year extends content {
 
-    private $objDbCalendar;
+    private $objDbYears;
 
     public function init() {
-        $this->setType('calendar');
-        $this->objDbCalendar = $this->getObject('dbcalendar');
-        $this->_content_types = array('year' => 'year');
+        $this->setType('year');
+        $this->objDbYears = $this->newObject('dbyears','unesco_oer');
+        $this->_content_types = array('module'=>'module');
     }
 
     public function showInput($productID, $prevAction = NULL) {
@@ -55,7 +53,7 @@ class calendar extends content
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
-        $fieldName = 'title';
+        $fieldName = 'year';
         $textinput = new textinput($fieldName);
         $textinput->setValue($this->_title);
 
@@ -73,21 +71,21 @@ class calendar extends content
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
 
-        $form_data->addToForm($table->show() . $buttonSubmit->show());
+        $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->getParentID());
 
         return $form_data->show();
     }
 
-    public function  handleUpload() {
-        $this->_title = $this->getParam('title');
+    public function handleUpload() {
+        $this->_title = $this->getParam('year');
 
         if (empty($this->_id)) {
-            $this->_id =  $this->objDbCalendar->addCalendar(
+            $this->_id =  $this->objDbYears->addYear(
                     $this->_title, // This is the ID of the product this curruculum is contained in.
                     $this->getParentID()
                     );
         }else{
-            $this->objDbCalendar->updateCalendar(
+            $this->objDbYears->updateYear(
                     $this->_id,
                     $this->_title, // This is the ID of the product this curruculum is contained in.
                     $this->getParentID()
@@ -97,33 +95,35 @@ class calendar extends content
         return TRUE;
     }
 
-    public function  getContentsByParentID($parentID) {
-        $calendarsData = $this->objDbCalendar->getCalendarsByCurriculumID($parentID);
-        $calendarsArray = array();
-        foreach ($calendarsData as $calendarData){
-            $tempCalendar = $this->newObject('calendar');
-            $tempCalendar->load($calendarData);
-            array_push($calendarsArray, $tempCalendar);
+    public function getContentsByParentID($parentID) {
+        $yearsData = $this->objDbYears->getYearsByCalendarID($parentID);
+        $yearsArray = array();
+        foreach ($yearsData as $yearData){
+            $tempYear = $this->newObject('year');
+            $tempYear->load($yearData);
+            array_push($yearsArray, $tempYear);
         }
 
-        return $calendarsArray;
+        return $yearsArray;
     }
 
-    public function load($id){
+    public function load($id) {
         $dataArray = NULL;
         if (is_array($id)){
             $dataArray = $id;
         }else{
-            $dataArray = $this->objDbCalendar->getCurriculumByID($id);
+            $dataArray = $this->objDbYears->getYearByID($id);
         }
 
 
         $this->_id = $dataArray['id'];
-        $this->_title = $dataArray['title'];
-        $this->_parentID = $dataArray['curriculum_id'];
+        $this->_title = $dataArray['year'];
+        $this->_parentID = $dataArray['calendar_id'];
 
-        //TODO add code for this calendar's contents
+        //TODO add code for this years's contents
         $this->getContents();
+
+        
     }
 }
 ?>

@@ -1994,7 +1994,6 @@ class unesco_oer extends controller {
         }
 
         $this->setVarByRef('contentManager', $contentManager);
-        
 
         switch ($option) {
             case 'new': 

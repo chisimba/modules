@@ -46,6 +46,31 @@
             <remove>calendar</remove>
         </data>
     </update>
+    <update>
+        <table>tbl_unesco_oer_years</table>
+        <version>0.057</version>
+        <description>Rename curriculum_id to calendar_id</description>
+        <data>
+            <rename>
+                <curriculum_id>
+                    <name>calendar_id</name>
+                </curriculum_id>
+            </rename>
+        </data>
+    </update>
+    <update>
+        <table>tbl_unesco_oer_modules</table>
+        <version>0.058</version>
+        <description>Added a title field</description>
+        <data>
+            <add>
+                <name>title</name>
+                <type>text</type>
+                <length>255</length>
+                <default>NULL</default>
+            </add>
+        </data>
+    </update>
 </updates>
 
 

@@ -1,5 +1,5 @@
 <?php
-/*
+/* 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -14,15 +14,37 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-//define table
-$tablename = 'tbl_unesco_oer_years';
-$options = array('comment'=>'Table to store the years of a Curriculum','collate'=>'utf8_general_ci','character_set'=>'utf8');
 
-//define fields
-$fields = array(
-		'id' => array('type' => 'text','length' => 32,'not null'),
-                'calendar_id' => array('type' => 'text','length' => 32),
-                'year' => array('type' =>'text', 'length' => 255)
-);
 
+/**
+ * Description of dbmodules_class_inc
+ *
+ * @author manie
+ */
+class dbmodules extends dbtable {
+    function init() {
+        parent::init('tbl_unesco_oer_modules');
+    }
+
+    function getModules($filter = NULL) {
+        return $this->getAll($filter);
+    }
+
+    function addModule($data){
+        return $this-> insert($data);
+    }
+
+    function updateModule($id, $data){
+        return $this->update('id', $id, $data);
+    }
+
+    function getModuleByID($id){
+        return $this->getRow('id', $id);
+    }
+
+    function getModulesByYearID($id) {;
+        $where = "where year_id='$id'";
+        return $this->getModules($where);
+    }
+}
 ?>
