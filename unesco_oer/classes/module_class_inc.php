@@ -264,7 +264,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['audience']);
         $table->endRow();
               $editor = $this->newObject('htmlarea', 'htmlelements');
        
@@ -277,7 +277,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['entry_requirements']);
         $table->endRow();
         
         
@@ -290,7 +290,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['outcomes']);
         $table->endRow();
         
           $fieldName = 'Delivery Mode';
@@ -302,7 +302,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['mode']);
         $table->endRow();
         
         $fieldName = 'Number of Hours';
@@ -314,7 +314,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['no_of_hours']);
         $table->endRow();
         
          $fieldName = "Description";
@@ -325,7 +325,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['description']);
         $table->endRow();
         
          $fieldName = 'Assesment';
@@ -337,7 +337,7 @@ class module extends content {
         $table->endRow();
         
          $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['assesment']);
         $table->endRow();
         
          $fieldName = 'Scheduele of Activities';
@@ -348,7 +348,7 @@ class module extends content {
         $table->endRow();
         
          $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['schedule_of_classes']);
         $table->endRow();
         
          $fieldName = 'Associated Material';
@@ -359,7 +359,7 @@ class module extends content {
         $table->endRow();
         
          $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['associated_material']);
         $table->endRow();
         
          $fieldName = 'Comments history';
@@ -370,7 +370,7 @@ class module extends content {
         $table->endRow();
         
          $table->startRow();
-        $table->addCell();
+        $table->addCell($this->_metaDataArray['comments_history']);
         $table->endRow();
         
         
