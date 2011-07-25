@@ -154,8 +154,8 @@ class dbassignment extends dbtable {
                 ));
         if ($emailAlert == '1') {
             $title = "'" . $name . "' " . $this->objLanguage->languageText('mod_assignment_emailsubject', 'assignment', " assignment  has been created in '") . $this->objContext->getTitle($context) . "'";
-            $link = new link($this->uri(array("action" => "joincontext", 'contextcode'=>$this->objContext->getContextCode(),'contextmodule'=>'assignment','contextaction'=>'view','contextdata'=>$id),'context'));
-
+            $contextredirecturi = html_entity_decode($this->uri(array('action'=>'view', 'id'=>$id), 'assignment'));
+            $link = new link($this->uri(array('action'=>'joincontext', 'contextcode'=>$this->objContext->getContextCode(), 'contextredirecturi'=> $contextredirecturi), 'context'));
             $message = $this->objLanguage->languageText('mod_assignment_emailbody', 'assignment', "To view the assignment, click on this link") . ' ' .
                     $link->href;
             $this->sendEmail($title, $message, $this->getContextRecipients($context));
@@ -174,7 +174,7 @@ class dbassignment extends dbtable {
      * @param <type> $desciption
      * @param <type> $opening_date
      * @param <type> $closing_date
-     * @param <type> $id 
+     * @param <type> $id
      */
     private function addReminderToCalendar(
     $name, $desciption, $opening_date, $closing_date, $id
