@@ -278,6 +278,30 @@ class artdir extends controller
                 return 'editartist_tpl.php';
                 break;
                 
+            case 'imgup' :
+                $artistid = $this->getParam('id');
+                $catid = $this->getParam('catid');
+                $userid = $this->objUser->userId();
+                
+                $pic1 = $this->getParam('pic1', NULL);
+                $pic2 = $this->getParam('pic2', NULL);
+                $pic3 = $this->getParam('pic3', NULL);
+                // insert the pics to the table refs
+                if($pic1 != NULL) {
+                    $insarr1 = array('userid' => $userid, 'artistid' => $artistid, 'catid' => $catid, 'picid' => $pic1);
+                    $this->objDbArtdir->insertPic($insarr1);
+                }
+                if($pic2 != NULL) {
+                    $insarr3 = array('userid' => $userid, 'artistid' => $artistid, 'catid' => $catid, 'picid' => $pic2);
+                    $this->objDbArtdir->insertPic($insarr3);
+                }
+                if($pic3 != NULL) {
+                    $insarr3 = array('userid' => $userid, 'artistid' => $artistid, 'catid' => $catid, 'picid' => $pic3);
+                    $this->objDbArtdir->insertPic($insarr3);
+                }
+                $this->nextAction('');
+                break;
+                
             case 'artistedit': 
                 $id = $this->getParam('id');
                 $userid = $this->objUser->userId();

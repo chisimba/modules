@@ -514,12 +514,7 @@ class artdirui extends object
         $dtable->addCell($weblabel->show());
         $dtable->addCell($this->objWashout->parseText($artist['website']));
         $dtable->endRow();
-        // links
-        $dtable->startRow();
-        $linkslabel = new label($this->objLanguage->languageText('mod_artdir_links', 'artdir'));
-        $dtable->addCell($linkslabel->show());
-        $dtable->addCell("");
-        $dtable->endRow();
+        
         
         // 1 row, 2 cells
         $ctable->startRow();
@@ -535,8 +530,12 @@ class artdirui extends object
         $str .= "<hr />";
         
         // grab any images associated with the profile
+        $picslabel = new label($this->objLanguage->languageText('mod_artdir_pics', 'artdir'));
+        $str .= $picslabel->show()."<br />";
         $str .= $this->imggalJs();
         // get any links
+        $linkslabel = new label($this->objLanguage->languageText('mod_artdir_links', 'artdir'));
+        $str .= $linkslabel->show();
         $str .= $this->artistLinks($artist['id']);
         
         return $str;
@@ -545,6 +544,7 @@ class artdirui extends object
     public function artistEditor($artistid, $edit = FALSE) {
         // get the artist info
         $artist = $this->objDbArtdir->getArtistById($artistid);
+        // var_dump($artist);
         $this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
@@ -692,6 +692,64 @@ class artdirui extends object
         return $artform;
     }
     
+    public function imageUpload($artistid) {
+        $artist1 = $this->objDbArtdir->getArtistById($artistid);
+        //var_dump($artist1);
+        //$artist1 = NULL;
+        $this->loadClass('href', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        
+        $picform = new form('imgup', $this->uri(array(
+                'action' => 'imgup', 'id' => $artist1['id'], 'catid' => $artist1['catid'],
+            )));
+        
+        $picadd = $this->newObject('htmltable', 'htmlelements');
+        $picadd->cellpadding = 3;
+        
+        $objSelectFile1 = $this->newObject('selectfile', 'filemanager');
+        $objSelectFile1->name = 'pic1';
+        $objSelectFile1->restrictFileList = array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF');
+        
+        $objSelectFile2 = $this->newObject('selectfile', 'filemanager');
+        $objSelectFile2->name = 'pic2';
+        $objSelectFile2->restrictFileList = array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF');
+        
+        $objSelectFile3 = $this->newObject('selectfile', 'filemanager');
+        $objSelectFile3->name = 'pic3';
+        $objSelectFile3->restrictFileList = array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF');
+        
+        $p1label = new label($this->objLanguage->languageText('mod_artdir_pic', 'artdir') . ':', 'input_pic1');
+        $picadd->startRow();
+        $picadd->addCell($p1label->show());
+        $picadd->addCell($objSelectFile1->show());
+        $picadd->endRow();
+        //pic 2
+        $picadd->startRow();
+        $picadd->addCell($p1label->show());
+        $picadd->addCell($objSelectFile2->show());
+        $picadd->endRow();
+        //pic 3
+        $picadd->startRow();
+        $picadd->addCell($p1label->show());
+        $picadd->addCell($objSelectFile3->show());
+        $picadd->endRow();
+        
+        $imgfieldset = $this->newObject('fieldset', 'htmlelements');
+        $imgfieldset->setLegend($this->objLanguage->languageText('mod_artdir_images', 'artdir'));
+        
+        $imgfieldset->addContent($picadd->show());
+        $picform->addToForm($imgfieldset->show());
+        
+        $this->objUButton = new button($this->objLanguage->languageText('word_update', 'system'));
+        $this->objUButton->setIconClass("save");
+        $this->objUButton->setValue($this->objLanguage->languageText('word_update', 'system'));
+        $this->objUButton->setToSubmit();
+        $picform->addToForm($this->objUButton->show());
+        $picform = $picform->show();
+        return $picform;
+    }
+    
     public function returnlink() {
         $retlink = new link ($this->uri(array(''), 'artdir'));
         $retlink->link = $this->objLanguage->languageText("mod_artdir_return", "artdir");
@@ -734,6 +792,23 @@ class artdirui extends object
         else {
             return $this->objLanguage->languageText("mod_artdir_nolinks", "artdir");
         }
+    }
+    
+    /**
+     * Main container function (tabber) box to do the layout for the main template
+     *
+     * Chisimba tabber interface is used to create tabs that are dynamically switchable.
+     *
+     * @return string
+     */
+    public function profileContainer($artistid) {
+        $tabs = $this->getObject('tabber', 'htmlelements');
+
+        $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_artdir_profile", "artdir"), 'content' => $this->artistEditor($artistid), 'onclick' => ''));
+        //$tabs->addTab(array('name' => $this->objLanguage->languageText("mod_artdir_images", "artdir"), 'content' => $this->imageUpload($artistid), 'onclick' => ''));
+        // $tabs->addTab(array('name' => $this->objLanguage->languageText("mod_artdir_links", "artdir"), 'content' => $this->getRecentContent(), 'onclick' => ''));
+        
+        return $tabs->show();
     }
 }
 ?>

@@ -313,6 +313,11 @@ class dbartdir extends dbTable
         return;
     }
     
+    public function insertPic($insarr) {
+        $this->_changeTable('tbl_artdir_images');
+        return $this->insert($insarr);
+    }
+    
     /**
      * Method to dynamically switch tables
      *

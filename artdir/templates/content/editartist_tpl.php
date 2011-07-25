@@ -22,6 +22,7 @@ if ($leftCol == NULL || $rightSideColumn == NULL) {
 
 //get the category manager
 $middleColumn = $objUi->artistEditor($artistid, TRUE);
+$middleColumn .= $objUi->imageUpload($artistid);
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($rightSideColumn);
