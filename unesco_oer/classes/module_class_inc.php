@@ -87,7 +87,7 @@ class module extends content {
        // $editor->width = '70%';
         
         $editor->setBasicToolBar();
-        $editor->setContent($this->_forward);
+        $editor->setContent($this->_metaDataArray['entry_requirements']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -105,7 +105,7 @@ class module extends content {
        // $editor->width = '70%';
         
         $editor->setBasicToolBar();
-        $editor->setContent($this->_forward);
+        $editor->setContent($this->_metaDataArray['outcomes']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -118,7 +118,7 @@ class module extends content {
         
           $fieldName = 'Delivery Mode';
         $textinput = new textinput('mode');
-        $textinput->setValue($this->_metaDataArray['audience']);
+        $textinput->setValue($this->_metaDataArray['mode']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -131,7 +131,7 @@ class module extends content {
         
         $fieldName = 'Number of Hours';
         $textinput = new textinput('no_of_hours');
-        $textinput->setValue($this->_metaDataArray['audience']);
+        $textinput->setValue($this->_metaDataArray['no_of_hours']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -148,7 +148,7 @@ class module extends content {
        // $editor->width = '70%';
         
         $editor->setBasicToolBar();
-        $editor->setContent($this->_forward);
+        $editor->setContent($this->_metaDataArray['description']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -161,7 +161,7 @@ class module extends content {
         
          $fieldName = 'Assesment';
         $textinput = new textinput('assesment');
-        $textinput->setValue($this->_metaDataArray['audience']);
+        $textinput->setValue($this->_metaDataArray['assesment']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -174,7 +174,7 @@ class module extends content {
         
          $fieldName = 'Scheduele of Activities';
         $textinput = new textinput('scheduele_of_classes');
-        $textinput->setValue($this->_metaDataArray['audience']);
+        $textinput->setValue($this->_metaDataArray['schedule_of_classes']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -187,7 +187,7 @@ class module extends content {
         
          $fieldName = 'Associated Material';
         $textinput = new textinput('associated_material');
-        $textinput->setValue($this->_metaDataArray['audience']);
+        $textinput->setValue($this->_metaDataArray['associated_material']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -200,7 +200,7 @@ class module extends content {
         
          $fieldName = 'Comments history';
         $textinput = new textinput('comments_history');
-        $textinput->setValue($this->_metaDataArray['audience']);
+        $textinput->setValue($this->_metaDataArray['comments_history']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
