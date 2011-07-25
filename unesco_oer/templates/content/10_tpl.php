@@ -32,21 +32,21 @@
                     </div>
                     <div class="profileBookmarkGroupsMessengerDiv">
 
-                        <a href="#"><img src="images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a><div class="numberNextToUserIcons"></div>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-messenger.png" alt="My Messages" width="20" height="20" class="userIcons" title="My Messages"></a><div class="numberNextToUserIcons"></div>
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
+<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
+<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
+<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a><div class="numberNextToUserIcons"></div>
+<!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
+                        <a href="#"><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messages" width="20" height="20" class="userIcons" title="My Messages"></a><div class="numberNextToUserIcons"></div>
 
                     </div>
                 </div>
                 <div class="logoutSearchDivRight">
                 	<div class="searctInputTextDiv">
-                    	<div class="searchGoButton"><a href=""><img src="images/button-search.png" width="17" height="17" class="searchGoImage"></a>
+                    	<div class="searchGoButton"><a href=""><img src="skins/unesco_oer/images/button-search.png" width="17" height="17" class="searchGoImage"></a>
                         <a href="" class="searchGoLink">GO</a></div>
                         <div class="searchInputBoxDiv">
                         	<input type="text" name="" id="" class="searchInput" value="Type search term here...">
@@ -56,7 +56,7 @@
                             </select>
                         </div>
                         <div class="textNextToRightFloatedImage">Search</div>
-                        <img src="images/icon-search.png" alt="Search" class="imgFloatLeft">
+                        <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">
                     </div>
                     <div class="facebookShareDiv">
 
@@ -174,14 +174,42 @@
                     <div class="viewGrid">
                     	<div class="viewAsDiv">View as: </div>
                         <a href="#" class="gridListViewLinks"><img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>
-                        <a href="#" class="gridListViewLinks"><img src="images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>
+                        <a href="#" class="gridListViewLinks"><img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>
                     </div>
 
                 </div>
-                <div class="gridViewGroupBackgroundColor">
+
+                <?php
+                $objTable = $this->getObject('htmltable', 'htmlelements');
+                $objTable->cssClass = "gridListingTable";
+                $objTable->width = NULL;
+
+                $groups = $this->objDbGroups->getAllGroups();
+                $newRow = true;
+                $count = 0;
+                foreach ($groups as $group) {
+                    $count++;
+                    if ($newRow) {
+                        $objTable->startRow();
+                        $objTable->addCell($this->objGroupUtil->populategridview($group));
+                        $newRow = false;
+                    } else {
+                        //$objTable->addCell($this->objGroupUtil->populategridview($group));
+                    }
+                    if ($count == 3) {
+                        $newRow = true;
+                        $objTable->endRow();
+                        $count = 0;
+                    }
+                }
+                echo $objTable->show();
+                ?>
+<!--                <div class="gridViewGroupBackgroundColor">
                 	<div class="paddingGroubGridListingTable">
                     	<table class="groupListingTable" cellspacing="0" cellpadding="0">
                 	<tr>
+
+
                     	<td>
                         	<div class="whiteBackgroundBox">
                             <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
@@ -250,7 +278,7 @@
 
                         </td>
                     </tr>
-                </table>
+                </table>-->
 
 
                     </div>

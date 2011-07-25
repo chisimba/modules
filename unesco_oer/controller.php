@@ -32,6 +32,7 @@ class unesco_oer extends controller {
     public $objjavafilt;
     public $objThumbUploader;
     public $objConfig;
+    public $objGroupUtil;
     /**
      * @var object $objLanguage Language Object
      */
@@ -85,6 +86,7 @@ class unesco_oer extends controller {
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
         $this->ObjDbUserGroups = $this->getObject('dbusergroups');
+        $this->objGroupUtil = $this->getObject('grouputil');
 
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
