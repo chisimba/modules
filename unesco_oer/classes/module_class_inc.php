@@ -445,5 +445,9 @@ class module extends content {
         //TODO add code for this modules's contents
         //$this->getContents();
     }
+    
+    public function getViewLink($productID) {
+        return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID(), 'displaytype' => $this->showReadOnlyInput()));
+    }
 }
 ?>

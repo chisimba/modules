@@ -283,7 +283,8 @@ class content extends object
                       else{
                             $node = new treenode(array(
                                                         'text' => $this->getTitle(),
-                                                        'link' => $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID())), 'icon' => $icon,
+                                                        'link' => $this->getViewLink($productID), 
+                                                        'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
                                                         'expanded' => FALSE)
                                                      );
@@ -321,6 +322,10 @@ class content extends object
                 if ($result) return $result;
             }
         }
+    }
+    
+    function getViewLink($productID = NULL){
+        return FALSE;
     }
 }
 

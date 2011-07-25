@@ -125,7 +125,8 @@ $existingContent = $content->getContentByContentID($path);
                 <div class="contentDivThreeWider">
                  <?php
               //  echo  $existingContent->showCurric();
-                    echo  $existingContent->showReadOnlyInput();
+                  //  echo  $existingContent->showReadOnlyInput();
+                  echo $displaytype
                  
                  ?>
                     

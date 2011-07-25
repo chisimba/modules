@@ -295,6 +295,10 @@ class curriculum extends content {
         //TODO add code for this curriculum's contents
         $this->getContents();
     }
+    
+    public function getViewLink($productID) {
+        return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID(), 'displaytype' => $this->showCurric()));
+    }
 
 
 }

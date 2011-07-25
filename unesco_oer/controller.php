@@ -310,9 +310,11 @@ class unesco_oer extends controller {
 
         $id = $this->getParam('productID');
         $path = $this->getParam('path');
+        $display = $this->getParam('displaytype');
 
         $this->setVarByRef('productID', $id);
           $this->setVarByRef('path', $path);
+          $this->setVarByRef('displaytype',$display);
 
       
            if ($this->objDbProducts->isAdaptation($id)) {
