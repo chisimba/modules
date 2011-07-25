@@ -21,6 +21,14 @@ class dbgroups extends dbtable {
         parent::init("tbl_unesco_oer_groups");
     }
 
+
+        function getgroups($start, $end)
+    {
+        $sql = "select * from tbl_unesco_oer_groups limit $start,$end";
+
+        return $this->getArray($sql);
+    }
+
     function getAllGroups() {
         $sql = "select * from tbl_unesco_oer_groups";
         return $this->getArray($sql);

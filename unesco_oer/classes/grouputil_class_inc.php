@@ -20,25 +20,87 @@ $this->loadClass('link', 'htmlelements');
 class grouputil extends object {
 
 
-  public function populategridview($group){
-      $content.=' <img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
-                            <div class="groupGridViewHeading greenText">
-                            '.$group['name'] .'
-                          </div>
-                            <div class="groupMemberAndJoinLinkDiv">
-                            	<span class="greenText">Members :</span>
 
-                                <br><br>
+  public function groupPerPage(){
+      $dropdown=new dropdown('group_per_page');
+      for($i=1;$i<16;$i++){
+          $dropdown->addOption($i);
+          }
+    $content.=' <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
+                <div class="blueBackground">
+                	<select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                    	<option value="">'.$dropdown.'</option>
+                    </select>
+                </div>';
+
+
+    return $content;
+
+  }
+
+
+  public function populategridview($group){
+//      $objTable = $this->getObject('htmltable', 'htmlelements');
+//      $objTable->cssClass = "gridListingTable";
+//      $objTable->width = NULL;
+//
+//      $groups = $this->objDbGroups->getAllGroups();
+//      $newRow = true;
+//      $count = 0;
+//      foreach ($groups as $group) {
+//          $count++;
+//          if ($newRow) {
+//          $objTable->startRow();
+//          $objTable->addCell($this->objGroupUtil->populategridview($group));
+//          $newRow = false;
+//          } else {
+//              $objTable->addCell($this->objGroupUtil->populategridview($group));
+//              }
+//              if ($count == 3) {
+//                  $newRow = true;
+//                        $objTable->endRow();
+//                        $count = 0;
+//                    }
+//                }
+
+
+
+
+
+
+
+      $content.='<div class="whiteBackgroundBox">
+          <img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                            <div class="groupGridViewHeading greenText">
+                            '.$group['name'] .' </div>
+                            <div class="groupMemberAndJoinLinkDiv">
+                            	<span class="greenText">Members :</span><br><br>
                                 <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
                				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">Join</a></div>
+                            </div>
                             </div>
 
                             ';
       return $content;
   }
 
-  public function populateListView(){
 
+
+
+  public function populateListView($group){
+        $content.='<div class="whiteBackgroundBox">
+          <img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                            <div class="groupGridViewHeading greenText">
+                            '.$group['name'] .' </div>
+                            <div class="groupMemberAndJoinLinkDiv">
+                            	<span class="greenText">Members :</span><br><br>
+                                <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
+               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">Join</a></div>
+                            </div>
+                            </div>
+
+                            ';
+      return $content;
   }
 
 

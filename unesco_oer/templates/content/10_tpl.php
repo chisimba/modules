@@ -147,12 +147,15 @@
                         </a></div>
                 </div>
                 <br><br>
+
+
+
                 <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
 
 
                 <div class="blueBackground">
                 	<select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                    	<option value="">15</option>
+                    	<option value=""> 15</option>
                     </select>
                 </div>
 
@@ -173,7 +176,10 @@
                     </div>
                     <div class="viewGrid">
                     	<div class="viewAsDiv">View as: </div>
+        
                         <a href="#" class="gridListViewLinks"><img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>
+                        
+             
                         <a href="#" class="gridListViewLinks"><img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>
                     </div>
 
@@ -194,7 +200,7 @@
                         $objTable->addCell($this->objGroupUtil->populategridview($group));
                         $newRow = false;
                     } else {
-                        //$objTable->addCell($this->objGroupUtil->populategridview($group));
+                        $objTable->addCell($this->objGroupUtil->populategridview($group));
                     }
                     if ($count == 3) {
                         $newRow = true;
@@ -204,7 +210,7 @@
                 }
                 echo $objTable->show();
                 ?>
-<!--                <div class="gridViewGroupBackgroundColor">
+              <!-- <div class="gridViewGroupBackgroundColor">
                 	<div class="paddingGroubGridListingTable">
                     	<table class="groupListingTable" cellspacing="0" cellpadding="0">
                 	<tr>
@@ -278,11 +284,11 @@
 
                         </td>
                     </tr>
-                </table>-->
+                </table>
 
 
                     </div>
-                </div>
+                </div>-->
             </div>
             <!-- Right column DIv -->
             <div class="rightColumnDiv">
