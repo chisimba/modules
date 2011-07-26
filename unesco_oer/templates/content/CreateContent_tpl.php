@@ -27,46 +27,19 @@ echo $contentManager->showInput($this->getParam('prevAction'));
 echo "</div>";
 
 ?>
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" >
+<html>
+    <head>
+ <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
+  <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
+<script  >
     $(document).ready(
         function()
         {
-        $('select[name=new_dropdown]').change(
-        function()
-            {
-                //$('.' + $('select[name=root_dropdown]').val()).slideToggle();
-                switch ($(this).val())
-                {
-                    case 'none':
-                        $('.root').html('');
-                        break;
-                    case 'new':
-                        $('.root').show();
-                        break;
-                    default:
-                        $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&path=' + $(this).val());
-                        $('.root').show();
-                        break;
-                }
-            }
-        );
-
-        $('select[name=edit_dropdown]').change(
-        function()
-            {
-                switch ($(this).val()) {
-                case 'none':
-                    $('.root').html('');
-                    break;
-                default:
-                    $('.root').load('index.php?module=unesco_oer&action=saveContent&option=edit&path=' + $(this).val());
-                    $('.root').show();
-                    break;
-                }
-
-            }
-        );
+            
+            $("#form_Form").validate();
+            
+        
+     
         
         });
 
@@ -80,4 +53,13 @@ function newSection(path){
     $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&pair=' + path + '&productID=' + $('.product_id').attr('id'));
 }
 
+
+
+
+
+
+
 </script>
+    </head>
+    
+    </html>

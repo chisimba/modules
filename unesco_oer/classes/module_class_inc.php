@@ -48,13 +48,14 @@ class module extends content {
             'pair' => $pair,
             'option' => $option,
             'nextAction' => $prevAction));
-        $form_data = new form('add_products_ui', $uri);
+        $form_data = new form('Form', $uri);
 
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
         $fieldName = 'title';
         $textinput = new textinput($fieldName);
+        $textinput->name = "title";
         $textinput->setValue($this->_title);
 
         $table->startRow();
@@ -218,9 +219,22 @@ class module extends content {
          $buttonSubmit = new button('upload', 'upload');
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
-        $buttonSubmit->setToSubmit();
+   //     $buttonSubmit->setToSubmit();
 
         $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->getParentID());
+        $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> ');
+        
+
+      
+        
+        
+        
+        
+        
+        
+        
+        
+     
 
         return $form_data->show();
     }
