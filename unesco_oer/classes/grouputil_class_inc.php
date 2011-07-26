@@ -19,6 +19,11 @@ $this->loadClass('link', 'htmlelements');
 
 class grouputil extends object {
 
+    public function init(){
+         $this->ObjDbUserGroups= $this->getObject("dbusergroups", "unesco_oer");
+
+    }
+
 
 
   public function groupPerPage(){
@@ -40,28 +45,9 @@ class grouputil extends object {
 
 
   public function populategridview($group){
-//      $objTable = $this->getObject('htmltable', 'htmlelements');
-//      $objTable->cssClass = "gridListingTable";
-//      $objTable->width = NULL;
-//
-//      $groups = $this->objDbGroups->getAllGroups();
-//      $newRow = true;
-//      $count = 0;
-//      foreach ($groups as $group) {
-//          $count++;
-//          if ($newRow) {
-//          $objTable->startRow();
-//          $objTable->addCell($this->objGroupUtil->populategridview($group));
-//          $newRow = false;
-//          } else {
-//              $objTable->addCell($this->objGroupUtil->populategridview($group));
-//              }
-//              if ($count == 3) {
-//                  $newRow = true;
-//                        $objTable->endRow();
-//                        $count = 0;
-//                    }
-//                }
+
+      $thumbLink= new link($this->uri(array("action" => '11a','id'=>$group['id'])));
+      $thumbLink->link='<img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
 
 
 
@@ -70,11 +56,11 @@ class grouputil extends object {
 
 
       $content.='<div class="whiteBackgroundBox">
-          <img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+         '.$thumbLink->show().'
                             <div class="groupGridViewHeading greenText">
                             '.$group['name'] .' </div>
                             <div class="groupMemberAndJoinLinkDiv">
-                            	<span class="greenText">Members :</span><br><br>
+                            	<span class="greenText">Members :</span>'. $this->ObjDbUserGroups->groupMembers($group['id']) .'<br><br>
                                 <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
                				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">Join</a></div>
                             </div>
