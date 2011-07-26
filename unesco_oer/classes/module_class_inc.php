@@ -48,7 +48,7 @@ class module extends content {
             'pair' => $pair,
             'option' => $option,
             'nextAction' => $prevAction));
-        $form_data = new form('Form', $uri);
+        $form_data = new form('add', $uri);
 
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
@@ -56,6 +56,7 @@ class module extends content {
         $fieldName = 'title';
         $textinput = new textinput($fieldName);
         $textinput->name = "title";
+        $textinput->cssClass = "required";
         $textinput->setValue($this->_title);
 
         $table->startRow();
@@ -219,10 +220,12 @@ class module extends content {
          $buttonSubmit = new button('upload', 'upload');
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
-   //     $buttonSubmit->setToSubmit();
-
+        $buttonSubmit->setToSubmit();
+    
+  
         $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->getParentID());
-        $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> ');
+        $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> 
+            ');
         
 
       
@@ -236,7 +239,7 @@ class module extends content {
         
      
 
-        return $form_data->show();
+        return  $form_data->show();
     }
     
     public function showReadOnlyInput($productID, $prevAction = NULL) {

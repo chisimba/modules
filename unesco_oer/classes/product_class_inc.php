@@ -530,6 +530,7 @@ class product extends object
 
         //field for the title
         $fieldName = 'title';
+       
         $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
         $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
         $this->_objAddDataUtil->addTextInputToTable(
@@ -710,6 +711,7 @@ class product extends object
             'productID' => $this->_identifier,
             'nextAction' => $nextAction));
         $form_data = new form('add_products_ui', $uri);//////created here in order to include select boxes for keywords//////
+    
 
         // Create the selectbox object
         $objSelectBox = $this->newObject('selectbox','htmlelements');

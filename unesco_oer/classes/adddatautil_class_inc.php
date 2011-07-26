@@ -58,6 +58,7 @@ class adddatautil extends object {
         $textinput = new textinput($name);
         $textinput->size = $size;
         $textinput->setValue($value);
+     
         $table->addCell($textinput->show());
     }
 
