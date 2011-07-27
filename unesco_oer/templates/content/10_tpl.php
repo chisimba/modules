@@ -105,7 +105,7 @@ $this->loadClass('textinput', 'htmlelements');
                                         }
                 ?>
           	<div class="logoAndHeading">
-            	<img src="images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
+            	<img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
                  <div class="logoText">
                 <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
                 </div>
@@ -122,7 +122,7 @@ $this->loadClass('textinput', 'htmlelements');
                     <a href="" class="languagesLinks">中文</a>
 
                     </div>
-                    <img src="images/icon-languages.png" class="languagesMainIcon">
+                    <img src="skins/unesco_oer/images/icon-languages.png" class="languagesMainIcon">
     			</div>
         		<div class="mainNavigation">
                     <ul id="sddm">
@@ -165,16 +165,20 @@ $this->loadClass('textinput', 'htmlelements');
                 </div>
                 <br><br>
 
+<?php
+echo $this->objGroupUtil->groupPerPage();
+ //$this->objGroupUtil->populateListView();
+?>
 
 
-                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
+<!--                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
 
 
                 <div class="blueBackground">
                 	<select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
                     	<option value=""> 15</option>
                     </select>
-                </div>
+                </div>-->
 
             </div>
         	<!-- Center column DIv -->
@@ -198,29 +202,21 @@ $this->loadClass('textinput', 'htmlelements');
 
 
                             <?php
-                               $abLink = new link($this->uri(array("action" => '')));
+                               $abLink = new link($this->uri(array("action" => 'groupGrid')));
                                $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
+                              // $abLink->cssClass = 'test';
                                echo $abLink->show();
 
+
                             ?>
+                        <script>
+                            $('.test').click(function(){alert('dsfsdfsd');})
+                        </script>
                              <div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>
+                              
 
                                <?php
-//                                            $objTable = $this->getObject('htmltable', 'htmlelements');
-//                                            $objTable->cssClass = "gridListingTable";
-//                                            $objTable->width = NULL;
-//                                            $groups = $this->objDbGroups->getAllGroups();
-//                                            foreach ($groups as $group) {
-//                                                $objTable->startRow();
-//                                                $objTable->addCell($this->objGroupUtil->populategridview($group));
-//                                                $objTable->endRow();
-//                                            }
-//                                            echo $objTable->show();
-                               ?>
-                               
-
-                               <?php
-                               $abLink = new link($this->uri(array("action" =>'')));
+                               $abLink = new link($this->uri(array("action" =>'groupList')));
                                $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                                echo $abLink->show();
 
@@ -243,10 +239,10 @@ $this->loadClass('textinput', 'htmlelements');
                     $count++;
                     if ($newRow) {
                         $objTable->startRow();
-                        $objTable->addCell($this->objGroupUtil->populategridview($group));
+                        $objTable->addCell($this->objGroupUtil->content($group));
                         $newRow = false;
                    } else {
-                        $objTable->addCell($this->objGroupUtil->populategridview($group));
+                        $objTable->addCell($this->objGroupUtil->content($group));
                     }
                     if ($count == 3) {
                        $newRow = true;

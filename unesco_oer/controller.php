@@ -1916,6 +1916,16 @@ class unesco_oer extends controller {
         return 'groupProductForm_tpl.php';
     }
 
+    public function __groupGrid(){
+         return'groupGridView_tpl.php';
+    }
+
+    public function __groupList(){
+        return 'groupListView_tpl.php';
+
+
+    }
+
     /*     * This function handles the uploading of product metadata
      *
      * @return string
