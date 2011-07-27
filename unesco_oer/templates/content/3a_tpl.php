@@ -26,7 +26,7 @@ $this->appendArrayVar('headerParams', $js);
     ?>
     <!--    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> -->
     |
-    <a href="#" class="blueText noUnderline">
+    <a >
     <!--                        Model Curriculum for Journalism Education-->
     <?php
     echo $product->getTitle();

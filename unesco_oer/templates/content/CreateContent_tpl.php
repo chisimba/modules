@@ -57,8 +57,10 @@ function newSection(path){
 
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
 echo '<div id="sections">
+    
 <fieldset>
 <legend>Sections</legend>
+
 <div class=leftColumnDiv style="border: 1px #004e89 solid;" >';
 
 echo $contentManager->getContentTree(TRUE);
@@ -95,7 +97,7 @@ echo '</div>';
 //       echo $form_data->show();
 
 
-echo '<div class=rightsection ">';
+echo '<div class=centerColumnDiv style="border: 1px #004e89 solid;">';
 echo $contentManager->showInput($this->getParam('prevAction'));
 echo "</div></fieldset></div>";
 

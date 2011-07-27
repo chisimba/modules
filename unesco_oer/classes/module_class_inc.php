@@ -30,6 +30,7 @@ class module extends content {
         $this->setType('module');
         $this->objDbModules = $this->newObject('dbmodules','unesco_oer');
         $this->_content_types = NULL;
+        $this->loadClass('dropdown', 'htmlelements');
     }
 
     public function showInput($productID, $prevAction = NULL) {
@@ -209,10 +210,24 @@ class module extends content {
         $table->addCell($fieldName);
         $table->endRow();
         
-         $table->startRow();
+        $table->startRow();
         $table->addCell($textinput->show());
         $table->endRow();
         
+        $dropdown = new dropdown('status');
+        $dropdown->addOption('Disabled');
+         $dropdown->addOption('Draft');
+         $dropdown->addOption('Published');
+         
+         
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell("status");
+        $table->endRow();
+         
+        $table->startRow();
+        $table->addCell($dropdown->show());
+        $table->endRow();
         
         
         
@@ -252,13 +267,7 @@ class module extends content {
       
         
      $content .= $form_data->show();   
-        
-        
-        
-        
-        
-        
-     
+    
 
         return  $content;
     }

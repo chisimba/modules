@@ -139,6 +139,24 @@ class curriculum extends content {
         $table->startRow();
         $table->addCell($editor->showFCKEditor());
         $table->endRow();
+        
+         $dropdown = new dropdown('status');
+        $dropdown->addOption('Disabled');
+         $dropdown->addOption('Draft');
+         $dropdown->addOption('Published');
+         
+         
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell("status");
+        $table->endRow();
+         
+        $table->startRow();
+        $table->addCell($dropdown->show());
+        $table->endRow();
+        
+        
+        
 
         $buttonSubmit = new button('upload', 'upload');
         //$action = "";
