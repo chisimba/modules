@@ -581,7 +581,18 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
                                             <?php
 
-                                              $coords = $this->objDbGroups->getAllgroups();
+                                              //$coords = $this->objDbGroups->getAllgroups();
+                                            $objDbGroups = $this->getObject('dbgroups','unesco_oer');
+                                            $array_of_AdaptedProduct_COordinates=array();
+                                            $adaptedproduct;//Todo get an array of adapted product in the page
+                                            foreach($adaptedProduct as $product){
+                                                $productid; //TODO get product id of each adapted product
+                                               array_push($array_of_AdaptedProduct_COordinates,$objDbGroups->getAdaptedProductLat($productid));
+                                            }
+
+
+                                               $coords=$this->$array_of_AdaptedProduct_COordinates;
+
 
                                             foreach ($coords as $coord) {
                                                 ?>

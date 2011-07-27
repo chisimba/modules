@@ -228,7 +228,21 @@ echo $this->objGroupUtil->groupPerPage();
                 </div>
 
                 <?php
-                $this->objGroupUtil->populateListView();
+                $objTable = $this->getObject('htmltable', 'htmlelements');
+                $objTable->cssClass = "gridListingTable";
+                $objTable->width = NULL;
+
+                $groups = $this->objDbGroups->getAllGroups();
+
+                foreach ($groups as $group) {
+                        $objTable->startRow();
+                        $objTable->addCell($this->objGroupUtil->content($group));
+                        $objTable->addCell(
+          );
+                        $objTable->endRow();
+
+                }
+                echo $objTable->show();
 
                 ?>
               <!-- <div class="gridViewGroupBackgroundColor">
