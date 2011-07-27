@@ -420,16 +420,6 @@ function Search($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapst
                                     $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_date', 'unesco_oer'));
                                     $filterSearch->addoption($this->objLanguage->languageText('mod_unesco_oer_search_creator', 'unesco_oer'));
 
-
-
-
-
-
-
-
-
-
-
                                     $form->addToForm($textinput->show());
                                     $form->addtoform($filterSearch->show());
                                     $form->addToForm($button->show());

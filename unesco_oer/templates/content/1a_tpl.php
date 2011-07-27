@@ -22,8 +22,12 @@ $this->appendArrayVar('headerParams', $js);
 	
 
 <div class="mainWrapper">
+    
+   
 
     <div class="mainContentHolder">
+        
+        
         <div class="subNavigation"></div>
         <!-- Left Colum -->
 
@@ -73,18 +77,15 @@ $this->appendArrayVar('headerParams', $js);
 <!-- Center column DIv -->
 <div class="centerColumnDiv">
     <div class="GridListViewDiv">
-
-
-
-
-
-
         <div class="sortBy">
-
+            
                                                                                                                                                                                                                                             <!--                                                <select name="" class="contentDropDown">
                                                                                                                                                                                                                                                  <option value="">Date Added</option>
                                                                                                                                                                                                                                              </select>-->
             <?php
+            
+         
+            
             $sort = $this->getobject('filterdisplay', 'unesco_oer');
             echo $sort->SortDisp('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
             ?>

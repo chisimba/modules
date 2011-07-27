@@ -264,6 +264,7 @@ class product extends object
         $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
         $this->objDbProductStatus = $this->getObject('dbproductstatus');
         $this->validationArray = array();
+          $this->objCC = $this->getObject('displaylicense', 'creativecommons');
 
         $this->setContentManager($this->newObject('contentmanager'));
     }
@@ -790,14 +791,31 @@ class product extends object
         //field for rights
         $fieldName = 'rights';
         $title = $this->objLanguage->languageText('mod_unesco_oer_rights', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
+        /*$this->_objAddDataUtil->addTextInputToTable(
                                                     $title,
                                                     4,
                                                     $fieldName,
                                                     '90%',
-                                                    $this->getRights(),
+                                                     $this->objCC->show("copyright"),
+                                           
+                                                        
                                                     $table
                                                     );
+        
+        
+        */
+        
+        $table->startRow();
+        $table->addCell($this->objCC->show("copyright"));
+        $table->endRow();
+        
+        
+         $iconList = $this->objCC->show($cclic);
+         
+         
+         
+         
+         
 
         //field for rights holder
         $fieldName = 'rights_holder';

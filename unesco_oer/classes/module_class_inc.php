@@ -224,8 +224,8 @@ class module extends content {
     
   
         $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->getParentID());
-        $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> 
-            ');
+       // $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> 
+          //  ');
         
 
       

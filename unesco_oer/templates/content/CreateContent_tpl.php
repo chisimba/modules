@@ -56,35 +56,47 @@ function newSection(path){
  */
 
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
-echo '<div class=leftColumnDiv style="border: 1px #004e89 solid;" >';
+echo '<div id="sections">
+<fieldset>
+<legend>Sections</legend>
+<div class=leftColumnDiv style="border: 1px #004e89 solid;" >';
 
 echo $contentManager->getContentTree(TRUE);
 echo '</div>';
- $uri = $this->uri(array(
-            'action' => "saveContent",
-            'productID' => $productID,
-            'pair' => $pair,
-            'option' => $option,
-            'nextAction' => $prevAction));
-        $form_data = new form('add', $uri);
-        
-        
-         $fieldName = 'title';
-        $textinput = new textinput($fieldName);
-        $textinput->name = "title";
-        $textinput->cssClass = "required";
-        $textinput->setValue($this->_title);
-        
-        $form_data->addToForm($textinput->show());
-         $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> 
-            ');
-        
-        
-       echo $form_data->show();
+// $uri = $this->uri(array(
+//            'action' => "saveContent",
+//            'productID' => $productID,
+//            'pair' => $pair,
+//            'option' => $option,
+//            'nextAction' => $prevAction));
+//        $form_data = new form('add', $uri);
+//        
+//        
+//         $fieldName = 'title';
+//        $textinput = new textinput($fieldName);
+//        $textinput->name = "title";
+//        $textinput->cssClass = "required";
+//        $textinput->setValue($this->_title);
+//        
+//        
+//         $fieldName = 'label';
+//        $textinput2 = new textinput($fieldName);
+//        $textinput2->name = "label";
+//        $textinput2->cssClass = "required";
+//        $textinput2->setValue($this->_title);
+//        
+//        $form_data->addToForm($textinput->show());
+//           $form_data->addToForm($textinput2->show());
+//      
+//         $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> 
+//            ');
+//        
+//        
+//       echo $form_data->show();
 
 
-echo '<div class=rightWideColumnDiv style="border: 1px #004e89 solid;">';
+echo '<div class=rightsection ">';
 echo $contentManager->showInput($this->getParam('prevAction'));
-echo "</div>";
+echo "</div></fieldset></div>";
 
 ?>

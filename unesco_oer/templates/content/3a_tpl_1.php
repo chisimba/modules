@@ -117,7 +117,10 @@ if ($this->objUser->isLoggedIn()) {
                         <h3 class="floaLeft greyText">Sections:</h3>
                         <div class="addNewMode">
                             <img src="skins/unesco_oer/images/icon-product-add-node.png" alt="New mode" width="18" height="18"class="smallLisitngIcons">
-                            <div class="addNewModeDiv"><a href="#" class="addNewModeLink">add new mode</a></div>
+                            <div class="addNewModeDiv"><a href="#" class="addNewModeLink">
+                                
+                                
+                                dh</a></div>
                         </div>
                     </div>
 

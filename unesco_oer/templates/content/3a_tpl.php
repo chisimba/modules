@@ -135,8 +135,13 @@ $this->appendArrayVar('headerParams', $js);
                     <img src="skins/unesco_oer/images/icon-product-add-node.png" alt="New mode" width="18" height="18"class="smallLisitngIcons">
                     <div class="addNewModeDiv"><a href="#" class="addNewModeLink">
                         <?php
-                          echo  $this->objLanguage->languageText('mod_unesco_oer_products_new_node', 'unesco_oer');
                         
+                         $abLink = new link($this->uri(array("action" => 'saveContent', 'productID' => $productID)));
+                         $abLink->link =   $this->objLanguage->languageText('mod_unesco_oer_products_new_node', 'unesco_oer');
+                        
+                            $abLink->cssClass = "blueText noUnderline";
+                     echo $abLink->show();
+                         
                         ?>
                      
                         

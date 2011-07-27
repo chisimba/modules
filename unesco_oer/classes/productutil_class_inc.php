@@ -36,6 +36,35 @@ class productutil extends object {
      * @param <type> $product
      * @return <type> $content
      */
+    
+    public function navigation($product){
+    $content = '    
+        <div class="breadCrumb">';
+    
+    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
+    $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_products', 'unesco_oer');
+    $abLink->cssClass = "blueText noUnderline";
+    $content.= $abLink->show();
+    
+    
+    
+     $content.= '  <a href="#" class="blueText noUnderline">';
+    
+  
+    $content.= '| Filter';
+    $content.='
+                  </a>
+                      </div>       ';
+
+       
+        
+        return $content;
+        
+        
+        
+    }
+    
+    
     public function populateGridView($product) {
 
            

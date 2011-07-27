@@ -37,12 +37,6 @@ $this->objDbresourcetypes = $this->getobject('dbresourcetypes', 'unesco_oer');
         
         
         
-        
-        
-        
-        
-        
-        
     }
 
 
@@ -300,12 +294,6 @@ if (($LangFilter == Null or $LangFilter == 'All'))
         
         
         $prodnumber =  count($result);
-        
-        
-        
-        
-        
-        
         
 
 $content = ' </div>
@@ -685,7 +673,7 @@ switch ($pagelayout) {
                     $count = 0;
                 }
             }
-
+       echo $this->objProductUtil->navigation();
             echo $objTable->show();
 
 
