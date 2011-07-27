@@ -247,6 +247,20 @@ class dbgroups extends dbtable {
         return $GroupName[0]['name'];
    
     }
+    
+    function getGroupDescription($groupid){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
+        $GroupDescription = $this->getArray($sql);
+        return $GroupDescription[0]['description'];
+        
+    }
+    function getGroupCountry($groupid){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
+        $GroupCountry = $this->getArray($sql);
+        return $GroupCountry[0]['country'];
+
+    }
+
 
     function getGroupID($groupname){
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name='$groupname'";

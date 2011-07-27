@@ -1909,6 +1909,8 @@ class unesco_oer extends controller {
         }
     }
 
+   
+
     function __groupProductForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupProductForm_tpl.php';

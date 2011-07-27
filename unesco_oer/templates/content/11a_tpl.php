@@ -1,3 +1,10 @@
+<?php
+$this->loadClass('link', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('checkbox', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -126,12 +133,14 @@
 
         <div class="mainContentHolder">
             <div class="subNavigation"></div>
-        	<!-- Left column DIv -->
+<!--        	 Left column DIv -->
             <div class="groupWideLeftColumn">
 
             	<div class="tenPixelLeftPadding tenPixelBottomPadding">
                 	<a href="#" class="groupsBreadCrumbColor">Groups</a> |
-                <span class="groupsBreadCrumbColor noUnderline">Department of Media Studies, University of Namibia, Namibia</span>
+                <span class="groupsBreadCrumbColor noUnderline">
+                    <?php echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objDbGroups->getGroupCountry($this->getParam('id'));?>
+                    </span>
                 </div>
             	<div class="tenPixelPaddingLeft">
                 <div class="topGroupDiv">
@@ -140,8 +149,10 @@
 
                      <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
                       <div class="textNextToGroupIcon">
-                      	<h2 class="greenText">Polytechnic of Namibia, journalism department</h2>
-                       	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet elit vitae neque consequat congue sed ac nunc. Phasellus mattis rhoncus commodo. Fusce non metus ut nunc dapibus cursus et sit amet diam. Nunc non nibh sit amet leo bibendum sagittis. Vestibulum posuere tincidunt tincidunt. Aenean euismod vulputate volutpat.
+                      	<h2 class="greenText">
+                            <?php echo $this->objDbGroups->getGroupName($this->getParam('id'));?>
+                            </h2><?php echo $this->objDbGroups->getGroupDescription($this->getParam('id'));?>
+                       
                        </div>
                       </div>
                       <div class="memberList rightAlign">
@@ -161,7 +172,7 @@
                 </div>
                 <div class="innerMenuTabsDiv">
                 <ul id="innerMenuTabs">
-                     <li class="onState"><a href="#">MEMBERS (5)</a></li>
+                     <li class="onState"><a href="#">MEMBERS (<?php echo $this->ObjDbUserGroups->groupMembers($this->getParam('id'));?>)</a></li>
                      <li><a href="#">ADAPTATIONS (2)</a></li>
                      <li><a href="#">DISCUSSIONS (1)</a></li>
                      <li><a href="#">INSTITUTIONS (1)</a></li>

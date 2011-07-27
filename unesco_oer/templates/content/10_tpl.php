@@ -40,9 +40,20 @@ $this->loadClass('textinput', 'htmlelements');
 
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
 <!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
+                              <?php
+                            $abLink = new link($this->uri(array("action" => 'Bookmarks')));
+                            $abLink->link = '<a href="#"><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>';
+                            echo $abLink->show();
+                            ?>
+                        
 <!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
-                        <a href="#"><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
+                        <a href="#">
+                            <?php
+                            $abLink = new link($this->uri(array("action" => 'controlpanel')));
+                            $abLink->link = '<img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>';
+                            echo $abLink->show();
+                            ?>
+                            
 <!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
                         <a href="#"><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a><div class="numberNextToUserIcons"></div>
 <!--                        <div class="spacingBetweenUserIcons">&nbsp;</div>-->
@@ -182,11 +193,40 @@ $this->loadClass('textinput', 'htmlelements');
                     </div>
                     <div class="viewGrid">
                     	<div class="viewAsDiv">View as: </div>
-        
-                        <a href="#" class="gridListViewLinks"><img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>
-                        
+
+
+
+
+                            <?php
+                               $abLink = new link($this->uri(array("action" => '')));
+                               $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
+                               echo $abLink->show();
+
+                            ?>
+                             <div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>
+
+                               <?php
+//                                            $objTable = $this->getObject('htmltable', 'htmlelements');
+//                                            $objTable->cssClass = "gridListingTable";
+//                                            $objTable->width = NULL;
+//                                            $groups = $this->objDbGroups->getAllGroups();
+//                                            foreach ($groups as $group) {
+//                                                $objTable->startRow();
+//                                                $objTable->addCell($this->objGroupUtil->populategridview($group));
+//                                                $objTable->endRow();
+//                                            }
+//                                            echo $objTable->show();
+                               ?>
+                               
+
+                               <?php
+                               $abLink = new link($this->uri(array("action" =>'')));
+                               $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
+                               echo $abLink->show();
+
+                            ?>
              
-                        <a href="#" class="gridListViewLinks"><img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight"></a><div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>
+                        <div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>
                     </div>
 
                 </div>
@@ -205,11 +245,11 @@ $this->loadClass('textinput', 'htmlelements');
                         $objTable->startRow();
                         $objTable->addCell($this->objGroupUtil->populategridview($group));
                         $newRow = false;
-                    } else {
+                   } else {
                         $objTable->addCell($this->objGroupUtil->populategridview($group));
                     }
                     if ($count == 3) {
-                        $newRow = true;
+                       $newRow = true;
                         $objTable->endRow();
                         $count = 0;
                     }

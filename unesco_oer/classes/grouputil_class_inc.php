@@ -49,6 +49,10 @@ class grouputil extends object {
       $thumbLink= new link($this->uri(array("action" => '11a','id'=>$group['id'])));
       $thumbLink->link='<img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
 
+      //$joinLink;
+       //$objUser = $this->getObject('user', 'security');
+        //$imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
+
 
 
 
@@ -73,8 +77,8 @@ class grouputil extends object {
 
 
 
-  public function populateListView($group){
-        $content.='<div class="whiteBackgroundBox">
+  public function populateListView(){
+      $content.='<div class="whiteBackgroundBox">
           <img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
                             <div class="groupGridViewHeading greenText">
                             '.$group['name'] .' </div>
@@ -86,7 +90,7 @@ class grouputil extends object {
                             </div>
 
                             ';
-      return $content;
+    
   }
 
 
