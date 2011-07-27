@@ -1,4 +1,24 @@
-<?php
+
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
+  <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
+<script>
+   
+
+
+ $(document).ready(
+        function()
+        {
+            
+            $("#form_add_products_ui").validate();
+       
+       
+        });
+
+
+
+
+</script><?php
 /* 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

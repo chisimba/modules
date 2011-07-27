@@ -23,6 +23,7 @@ class filterdisplay extends object {
         $this->loadClass('form', 'htmlelements');
         $this->objDbproductthemes = $this->getobject('dbproductthemes', 'unesco_oer');
         $this->objDbproductlanguages = $this->getobject('dbproductlanguages', 'unesco_oer');
+         $this->objProductUtil = $this->getObject('productutil','unesco_oer');
      
 
         $this->Filterinfo['ThemeFilter'] = $this->getParam('ThemeFilter');
@@ -47,9 +48,10 @@ class filterdisplay extends object {
 
         $form = new form('temporary', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => $page, "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries)));
 
-
+      
             $form->addToForm(' 
-                <div class="leftColumnDiv">
+                <div class="leftColumnDiv">');
+            $form->addToForm(' <div id="filternumDiv">
                     <div class="moduleHeader">');
                            
                            $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer'));
@@ -60,13 +62,14 @@ class filterdisplay extends object {
 
 
 
-    $form->addToForm(' <div id="filternumDiv">');
+  
      $form->addToForm('
                          
                         
                         <div class="blueNumberBackground">
                         <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                        <div class="numberOffilteredProducts"> ');
+                        <div class="numberOffilteredProducts"> 
+                        ');
 
                              $TotalRecords = $this->objDbProducts->getTotalEntries($adaptationstring);
                            $form ->addToForm($TotalRecords);
@@ -75,9 +78,10 @@ class filterdisplay extends object {
                         </div>
                         </div>
                         
+                        
                         <div class="moduleSubHeader">Product matches filter criteria</div>
                         <div class="moduleHeader"><img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">
-                        
+                     
 
                                 ');
 

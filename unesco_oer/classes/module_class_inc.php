@@ -222,15 +222,36 @@ class module extends content {
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
     
-  
+       
         $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->getParentID());
-       // $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> 
-          //  ');
+        $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> 
+            ');
         
+ $content = ' <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
+  <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
+<script  >
+   
 
+
+ $(document).ready(
+        function()
+        {
+            
+            $("#form_add").validate();
+            alert("test);
+        
+       
+        });
+
+
+
+
+</script>';
+ 
+ 
       
         
-        
+     $content .= $form_data->show();   
         
         
         
@@ -239,7 +260,7 @@ class module extends content {
         
      
 
-        return  $form_data->show();
+        return  $content;
     }
     
     public function showReadOnlyInput($productID, $prevAction = NULL) {

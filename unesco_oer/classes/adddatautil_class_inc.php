@@ -58,7 +58,7 @@ class adddatautil extends object {
         $textinput = new textinput($name);
         $textinput->size = $size;
         $textinput->setValue($value);
-     
+        $textinput->cssClass = 'required';
         $table->addCell($textinput->show());
     }
 

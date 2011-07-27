@@ -46,11 +46,7 @@ class productutil extends object {
     $abLink->cssClass = "blueText noUnderline";
     $content.= $abLink->show();
     
-    
-    
-     $content.= '  <a href="#" class="blueText noUnderline">';
-    
-  
+   
     $content.= '| Filter';
     $content.='
                   </a>

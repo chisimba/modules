@@ -27,6 +27,7 @@ $this->objDbresourcetypes = $this->getobject('dbresourcetypes', 'unesco_oer');
 $this->objDbProducts = $this->getobject('dbproducts', 'unesco_oer');
 $this->objDbresourcetypes = $this->getobject('dbresourcetypes', 'unesco_oer');
  $this->_institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
+   $this->objLanguage = $this->getObject("language", "language");
       
         $this->objDbAvailableProductLanguages = $this->getObject("dbavailableproductlanguages", "unesco_oer");
         $this->objUser = $this->getObject("user", "security");
@@ -59,23 +60,6 @@ $Besoractile = $this->getParam('bestprac');
 $Guide = $this->GetParam('guide');
 $NumFilter = $this->getParam('numperpage');
 $pagelayout = $this->getParam('adaptation');
-
-
-
-
-
-
-
-    
-
-    
-    
-
-
-
-
-
-
 
 
 
@@ -157,17 +141,6 @@ switch ($pagelayout) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
         
         
 
@@ -216,11 +189,6 @@ if (!($ThemeFilter == Null or $ThemeFilter == 'All')) {
         $TempTheme[$i] = $Theme['product_id'];
     }
 }
-
-
-
-
-
 
 
 
@@ -295,8 +263,11 @@ if (($LangFilter == Null or $LangFilter == 'All'))
         
         $prodnumber =  count($result);
         
-
-$content = ' </div>
+$content =   $this->objProductUtil->navigation();
+$content .= ' <div class="moduleHeader">';
+ 
+$content.=  $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer');
+   $content .= '                     </div>
                         <div class="blueNumberBackground">
                         <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
                         <div class="numberOffilteredProducts"> '.
@@ -631,8 +602,6 @@ switch ($pagelayout) {
 
     case "1a" : {
 
-            //Creates chisimba table
-            $objTable = $this->getObject('htmltable', 'htmlelements');
 //              //Creates chisimba table
             $objTable = $this->getObject('htmltable', 'htmlelements');
             $objTable->cssClass = "gridListingTable";
@@ -673,7 +642,7 @@ switch ($pagelayout) {
                     $count = 0;
                 }
             }
-       echo $this->objProductUtil->navigation();
+    
             echo $objTable->show();
 
 
