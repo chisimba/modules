@@ -49,7 +49,7 @@ class module extends content {
             'pair' => $pair,
             'option' => $option,
             'nextAction' => $prevAction));
-        $form_data = new form('add', $uri);
+        $form_data = new form('add_products_ui', $uri);
 
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";

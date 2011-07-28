@@ -31,7 +31,7 @@ function newSection(path){
 
 
 $('#upload').live('click', function() {
-  $("#form_add").validate();
+  $("#form_add_products_ui").validate();
 });
 
 

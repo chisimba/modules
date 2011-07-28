@@ -57,6 +57,7 @@ class calendar extends content
 
         $fieldName = 'title';
         $textinput = new textinput($fieldName);
+         $textinput->cssClass = "required";
         $textinput->setValue($this->_title);
 
         $table->startRow();
@@ -69,6 +70,7 @@ class calendar extends content
         $table->endRow();
 
          $buttonSubmit = new button('upload', 'upload');
+          $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();

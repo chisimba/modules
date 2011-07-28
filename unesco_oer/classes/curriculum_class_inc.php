@@ -76,6 +76,7 @@ class curriculum extends content {
 
         $fieldName = 'title';
         $textinput = new textinput($fieldName);
+         $textinput->cssClass = "required";
         $textinput->setValue($this->_title);
 
         $table->startRow();
@@ -159,6 +160,7 @@ class curriculum extends content {
         
 
         $buttonSubmit = new button('upload', 'upload');
+           $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();

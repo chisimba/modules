@@ -55,6 +55,7 @@ class year extends content {
 
         $fieldName = 'year';
         $textinput = new textinput($fieldName);
+         $textinput->cssClass = "required";
         $textinput->setValue($this->_title);
 
         $table->startRow();
@@ -67,6 +68,7 @@ class year extends content {
         $table->endRow();
 
          $buttonSubmit = new button('upload', 'upload');
+          $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
