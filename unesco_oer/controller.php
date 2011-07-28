@@ -1945,7 +1945,7 @@ class unesco_oer extends controller {
 
         switch (strtolower($this->getParam('add_product_submit'))) {
             case "cancel":
-                $this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
+                $this->nextAction('home', array('id' => $this->getParam('productID')));
                 break;
 
             case "upload":
