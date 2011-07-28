@@ -115,7 +115,6 @@ $page =$this->getParam('page');
                                     <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
                                     <h1>
                                     <?php
-                                    if (strcmp($page,'2a_tpl.php') == 0)
                                         switch ($page) {
                                             case '2a_tpl.php':
                                                 echo 'PRODUCT ADAPTATIONS';
