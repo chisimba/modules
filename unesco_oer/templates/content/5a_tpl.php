@@ -177,7 +177,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     
                <?php
             
-              $content = $product->getContent();
+              $content = $product->getContentManager();
               echo  $content->getContentTree(FALSE);
            
                ?>                   
