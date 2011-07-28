@@ -97,12 +97,12 @@ class featuredproductutil extends object
     public function displayFeaturedAdaptedProduct($featuredAdaptedProduct)
     {
         
-        if ( !$featuredAdaptedProduct->isDeleted()){
+        if ( !$featuredAdaptedProduct->isDeleted() && !empty($featuredAdaptedProduct)){
         
         $content = '';
 
         $content .= '<div class="rightColumnContentPadding">
-                                        <img src="' . $featuredAdaptedProduct->getThumbnailPath() . '" alt=' . $featuredAdaptedProduct->getTitle() . ' width="45" height="49" class="smallAdaptationImageGrid">
+                                        <img src="' . $featuredAdaptedProduct->getThumbnailPath() . '" alt="' . $featuredAdaptedProduct->getTitle() . '" width="45" height="49" class="smallAdaptationImageGrid">
                                         <div class="featuredAdaptationRightContentDiv">
                                             <span class="greyListingHeading">' . $featuredAdaptedProduct->getTitle() . '</span>
                                             <br><br>
@@ -115,13 +115,13 @@ class featuredproductutil extends object
         //If the adaptation was created by a group
         if ($objInstitutionManager->getInstitution($featuredAdaptedProduct->getInstitutionID())) {
                        $content .= '<div class="adaptedByDiv">Managed by:</div>
-                                        <img src="' . $objInstitutionManager->getInstitutionThumbnail() . '" alt= ' . $objInstitutionManager->getInstitutionName() . ' width="45" height="49" class="smallAdaptationImageGrid">
+                                        <img src="' . $objInstitutionManager->getInstitutionThumbnail() . '" alt= "' . $objInstitutionManager->getInstitutionName() . '" width="45" height="49" class="smallAdaptationImageGrid">
                                         <span class="greyListingHeading">' . $objInstitutionManager->getInstitutionName() . '</span>
                                     </div>
                                 </div>';
         }else{  //If the adaptation was created by an institution
             $content .= '<div class="featuredAdaptedBy">Adapted By</div>
-                                        <img src="' . $featuredAdaptedProduct['institution_thumbnail'] . '" alt= ' . $featuredAdaptedProduct['creator'] . ' width="45" height="49" class="smallAdaptationImageGrid">
+                                        <img src="' . $featuredAdaptedProduct['institution_thumbnail'] . '" alt= "' . $featuredAdaptedProduct['creator'] . '" width="45" height="49" class="smallAdaptationImageGrid">
                                         <span class="greyListingHeading">Polyt Namibia</span>
                                     </div>
                                 </div>';
