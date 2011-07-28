@@ -988,6 +988,8 @@ class product extends object
             $objDbUserGroups = $this->getObject('dbusergroups', 'unesco_oer');
             $arrayUserGroups = $objDbUserGroups->getUserGroups($this->_user->PKId());
 
+            if (empty($arrayUserGroups))                return 'You are not permitted to perform this operation! You must belong to a group';
+
             $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
 
             $groups = array();
@@ -1018,22 +1020,27 @@ class product extends object
                                                         FALSE
                                                         );
 
-//            //field for institution
-//            $fieldName = 'institution';
-//            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
-//            //$title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
-//            $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
-//            $institutions = $objInstitutionManager->getAllInstitutions();
-//            $this->_objAddDataUtil->addDropDownToTable(
-//                                                        $title,
-//                                                        4,
-//                                                        $fieldName,
-//                                                        $institutions,
-//                                                        $this->getInstitutionID(),
-//                                                        'name',
-//                                                        $table,
-//                                                        'id'
-//                                                        );
+
+
+            //field for institution
+            $fieldName = 'institution';
+            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
+            //$title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+            $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+            $institutions = $objInstitutionManager->getAllInstitutions("where LinkedInstitution='{$groups[0]["linkedinstitution"]}'");
+            var_dump($groups[0]["linkedinstitution"]);
+            if (!empty($institutions)){
+                $this->_objAddDataUtil->addDropDownToTable(
+                                                            $title,
+                                                            4,
+                                                            $fieldName,
+                                                            $institutions,
+                                                            $this->getInstitutionID(),
+                                                            'name',
+                                                            $table,
+                                                            'id'
+                                                            );
+            }
 
 
             $fieldset = $this->newObject('fieldset','htmlelements');

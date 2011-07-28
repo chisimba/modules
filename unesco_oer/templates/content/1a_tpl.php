@@ -134,7 +134,7 @@ $this->appendArrayVar('headerParams', $js);
             $divOpen = '<div class="gridListPipe">|</div>
                                             <div class="gridListDivView">';
             $divClose = '</div>';
-            if ($this->objUser->isLoggedIn()) {
+            if ($this->objUser->isLoggedIn() && $this->objUser->isAdmin()) {
                 $abLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
                 $abLink->link = '<img src="skins/unesco_oer/images/icon-new-product.png" alt="New Product" width="20" height="20" class="imgFloatRight">';
 

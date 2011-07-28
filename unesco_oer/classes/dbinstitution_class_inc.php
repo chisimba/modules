@@ -28,9 +28,10 @@ class dbinstitution extends dbtable {
      * Returns an array with all institution objects
      * @return <Array<Institution>>
      */
-    function getAllInstitutions() {
-        $sql = "SELECT * FROM tbl_unesco_oer_institutions";
-        return $this->getArray($sql);
+    function getAllInstitutions($filter = NULL) {
+        //$sql = "SELECT * FROM tbl_unesco_oer_institutions";
+        return $this->getAll($filter);
+        //return $this->getArray($sql);
     }
 
     function getInstitutionById($id) {
