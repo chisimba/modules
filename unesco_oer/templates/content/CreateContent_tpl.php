@@ -60,6 +60,42 @@ $('#upload').live('click', function() {
  */
 
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
+
+?>
+    
+      <div class="test">
+              
+    <?php
+    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
+    $abLink->link = 'UNESCO OER Products';
+    $abLink->cssClass = "blueText noUnderline";
+    echo $abLink->show();
+    ?>
+    <!--    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> -->
+    |
+    <a href="#" class="blueText noUnderline">
+    <!--                        Model Curriculum for Journalism Education-->
+    <?php
+
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+   // $abLink->link = ;
+    $abLink->cssClass = "blueText noUnderline";
+    
+
+      echo $abLink->show();
+    ?>
+     | <a class="blueText noUnderline">
+       Section View
+     </a>
+    </a>
+</div> 
+    
+    
+    
+    
+    
+    <?php
+
 echo '<div id="sections">
     
 <fieldset>
@@ -67,38 +103,11 @@ echo '<div id="sections">
 
 <div class=leftColumnDiv style="border: 1px #004e89 solid;" >';
 
+
+
 echo $contentManager->getContentTree(TRUE);
 echo '</div>';
- $uri = $this->uri(array(
-            'action' => "saveContent",
-            'productID' => $productID,
-            'pair' => $pair,
-            'option' => $option,
-            'nextAction' => $prevAction));
-$form_data = new form('add', $uri);
 
-
-$fieldName = 'title';
-$textinput = new textinput($fieldName);
-$textinput->name = "title";
-$textinput->cssClass = "required";
-$textinput->setValue($this->_title);
-
-
-$fieldName = 'label';
-$textinput2 = new textinput($fieldName);
-$textinput2->name = "label";
-$textinput2->cssClass = "required";
-$textinput2->setValue($this->_title);
-
-$form_data->addToForm($textinput->show());
-$form_data->addToForm($textinput2->show());
-
-$form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> 
-            ');
-
-
-//echo $form_data->show();
 
 
 echo '<div class=centerColumnDiv style="border: 1px #004e89 solid;">';

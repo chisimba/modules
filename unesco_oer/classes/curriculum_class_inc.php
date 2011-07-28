@@ -96,6 +96,7 @@ class curriculum extends content {
        // $editor->width = '70%';
         
         $editor->setBasicToolBar();
+        $editor->cssclass = 'required';
         $editor->setContent($this->_forward);
 
         $table->startRow();

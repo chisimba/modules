@@ -39,9 +39,17 @@ $existingContent = $content->getContentByContentID($path);
     <a href="#" class="blueText noUnderline">
     <!--                        Model Curriculum for Journalism Education-->
     <?php
+    
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+    $abLink->link = $product->getTitle();
+    $abLink->cssClass = "blueText noUnderline";
+    
 
-   echo $product->getTitle();
+   echo $abLink->show();
     ?>
+     | <a class="blueText noUnderline">
+       Section View
+     </a>
     </a>
 </div>
                 </div>
@@ -97,16 +105,21 @@ $existingContent = $content->getContentByContentID($path);
             <div class="LeftWiderColumnDiv">
               
                 <div class="pageBreadCrumb">
+                 
+                    
                     <a href="#" class="greyText Underline">Barchelor</a> | 
                     <a href="#" class="greyText Underline">Year 1</a> | 
                     <a href="#" class="greyText Underline">Term 1</a> | 
                     <span class="greyText">Foundation of Journalism Writing</span>
+                   
+                    
                     <br><br>
                 </div>
                 
                 <div class="headingHolder">
                 	<div class="heading2"><h2 class="greyText">
-                                <?php
+                               
+                             <?php
                                 
                                 echo $existingContent->getTitle();
                           
@@ -123,19 +136,21 @@ $existingContent = $content->getContentByContentID($path);
                 </div>
                 
                 <div class="contentDivThreeWider">
+                  
+                        </legend
                  <?php
               //  echo  $existingContent->showCurric();
-                  //  echo  $existingContent->showReadOnlyInput();
+             //  echo  $existingContent->showReadOnlyInput();
                   echo $displaytype
                  
                  ?>
-                    
-                    
                 </div>  
             </div>
             
             
             <div class="rightColumnDivWide rightColumnPadding">
+                <fieldset>
+                    
            
               <?php
             
@@ -144,7 +159,7 @@ $existingContent = $content->getContentByContentID($path);
            
               ?>
                 
-                
+                </fieldset> 
                 
             </div>
             
