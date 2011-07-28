@@ -71,18 +71,18 @@ class adddatautil extends object {
         $table->endRow();
     }
 
-    function addDropDownToTable($title, $titleType, $name, $inputArray, $initValue, $field, $table, $value = null, $onChange = '') {
+    function addDropDownToTable($title, $titleType, $name, $inputArray, $initValue, $field, $table, $value = null, $onChange = '', $hasNULL = TRUE) {
         $table->startRow();
         $this->addTitleToRow($title, $titleType, $table);
         $table->endRow();
         $table->startRow();
-        $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value, $onChange);
+        $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value, $onChange,  $hasNULL);
         $table->endRow();
     }
 
-    function addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value = null, $onChange = ""){
+    function addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value = null, $onChange = "", $hasNULL = TRUE){
         $dropdown = new dropdown($name);
-        $dropdown->addOption(NULL, 'none');
+        if ($hasNULL) $dropdown->addOption(NULL, 'none');
         foreach ($inputArray as $input) {
             $dropdown->addOption($input['id'], $input[$field]);
         }
