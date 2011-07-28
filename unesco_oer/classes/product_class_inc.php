@@ -216,6 +216,12 @@ class product extends object
      */
     private $_institution;
 
+    /**Currently logged in user
+     *
+     * @var <type>
+     */
+    private $_user;
+
     //////////   Required database objects   //////////
 
     /**Database for accessing products
@@ -264,9 +270,10 @@ class product extends object
         $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
         $this->objDbProductStatus = $this->getObject('dbproductstatus');
         $this->validationArray = array();
-          $this->objCC = $this->getObject('displaylicense', 'creativecommons');
+        $this->objCC = $this->getObject('displaylicense', 'creativecommons'); //TODO use this licence stuff
 
         $this->setContentManager($this->newObject('contentmanager'));
+        $this->_user = $this->getObject('user', 'security');
     }
 
     ////////////////   METHODS   ////////////////
@@ -310,7 +317,11 @@ class product extends object
         else
         {
             $tempData['date'] = $this->getDate();
-            if ($this->isAdaptation())  $this->_identifier = $this->_objDbProducts->addProduct($tempData, $this->getAdaptationMetaDataArray());
+            if ($this->isAdaptation()) {
+                $parentArray = $this->_objDbProducts->getProductByID($this->_parentid);
+                $tempData['thumbnail'] = $parentArray['thumbnail'];
+                $this->_identifier = $this->_objDbProducts->addProduct($tempData, $this->getAdaptationMetaDataArray());
+            }
             else  $this->_identifier = $this->_objDbProducts->addProduct($tempData);
             //$this->_identifier = $this->_objDbProducts->getLastInsertId();
         }
@@ -436,6 +447,7 @@ class product extends object
         $this->setKeyWords($this->getParam('keywords'));
         $this->setRelation($this->getParam('relation'), $this->getParam('relation_type'));
         $this->setDeletionStatus(0);
+        $this->setParentID($this->getParam('parentID'));
 
         $themesSelected = array();
         $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
@@ -710,6 +722,7 @@ class product extends object
         $uri = $this->uri(array(
             'action' => "saveProductMetaData",
             'productID' => $this->_identifier,
+            'parentID' => $this->_parentid,
             'nextAction' => $nextAction));
         $form_data = new form('add_products_ui', $uri);//////created here in order to include select boxes for keywords//////
     
@@ -972,15 +985,26 @@ class product extends object
             $table->addCell($objCountries->countryAlpha($this->getCountryCode()));
             $table->endRow();
 
+            $objDbUserGroups = $this->getObject('dbusergroups', 'unesco_oer');
+            $arrayUserGroups = $objDbUserGroups->getUserGroups($this->_user->PKId());
+
+            $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
+
+            $groups = array();
+            foreach ($arrayUserGroups as $userGroupRow) {
+                $groupArray = $objDbGroups->getGroupInfo($userGroupRow['groupid']);
+                array_push($groups, $groupArray[0]);
+            }
+
             //field for groups
             $fieldName = 'group';
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_group', 'unesco_oer');
             //$title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
             //TODO get this information from  the groups data base
-            $groups = array(
-                            array('id' => '1', 'name' => 'Polytechnic of Namibia, journalism department'),
-                            array('id' => '2', 'name' => 'Wits University, journalism department')
-                );
+//            $groups = array(
+//                            array('id' => '1', 'name' => 'Polytechnic of Namibia, journalism department'),
+//                            array('id' => '2', 'name' => 'Wits University, journalism department')
+//                );
             $this->_objAddDataUtil->addDropDownToTable(
                                                         $title,
                                                         4,
@@ -989,25 +1013,27 @@ class product extends object
                                                         $this->getGroupID(),
                                                         'name',
                                                         $table,
-                                                        'id'
+                                                        'id',
+                                                        '',
+                                                        FALSE
                                                         );
 
-            //field for institution
-            $fieldName = 'institution';
-            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
-            //$title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
-            $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
-            $institutions = $objInstitutionManager->getAllInstitutions();
-            $this->_objAddDataUtil->addDropDownToTable(
-                                                        $title,
-                                                        4,
-                                                        $fieldName,
-                                                        $institutions,
-                                                        $this->getInstitutionID(),
-                                                        'name',
-                                                        $table,
-                                                        'id'
-                                                        );
+//            //field for institution
+//            $fieldName = 'institution';
+//            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
+//            //$title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+//            $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+//            $institutions = $objInstitutionManager->getAllInstitutions();
+//            $this->_objAddDataUtil->addDropDownToTable(
+//                                                        $title,
+//                                                        4,
+//                                                        $fieldName,
+//                                                        $institutions,
+//                                                        $this->getInstitutionID(),
+//                                                        'name',
+//                                                        $table,
+//                                                        'id'
+//                                                        );
 
 
             $fieldset = $this->newObject('fieldset','htmlelements');
@@ -1025,7 +1051,7 @@ class product extends object
         $hiddenInput = new hiddeninput('add_product_submit');
 
         $content = $this->getContentManager();
-        $submitOption = ($content->hasContents()) ? "'upload'" : "'createContent'"; //NOTE here we add support to create new content
+        $submitOption = ($content->hasContents() && !empty($this->_identifier)) ? "'upload'" : "'createContent'"; //NOTE here we add support to create new content
 //        $submitOption = ($this->getContent()) ? "'upload'" : "'upload'";
         //$submitOption = 'upload';
         // setup button for submission
@@ -1611,7 +1637,7 @@ class product extends object
        $this->setIdentifier(NULL);
 
        $tempProduct = clone $this;
-       $tempProduct->saveProduct();
+       //$tempProduct->saveProduct();
 
        $this->setParentID($tempParentID);
        $this->setIdentifier($tempId);
