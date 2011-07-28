@@ -71,6 +71,7 @@ class module extends content {
 
         $fieldName = 'audience';
         $textinput = new textinput($fieldName);
+           $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['audience']);
 
         $table->startRow();
@@ -87,6 +88,7 @@ class module extends content {
         $fieldName = "Entry Requirements";
         $editor->name = 'entry_requirements';
         $editor->height = '150px';
+         $editor->cssClass = "required";
        // $editor->width = '70%';
         
         $editor->setBasicToolBar();
@@ -121,6 +123,7 @@ class module extends content {
         
           $fieldName = 'Delivery Mode';
         $textinput = new textinput('mode');
+         $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['mode']);
 
         $table->startRow();
@@ -134,6 +137,7 @@ class module extends content {
         
         $fieldName = 'Number of Hours';
         $textinput = new textinput('no_of_hours');
+         $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['no_of_hours']);
 
         $table->startRow();
@@ -164,6 +168,7 @@ class module extends content {
         
          $fieldName = 'Assesment';
         $textinput = new textinput('assesment');
+         $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['assesment']);
 
         $table->startRow();
@@ -177,6 +182,7 @@ class module extends content {
         
          $fieldName = 'Scheduele of Activities';
         $textinput = new textinput('scheduele_of_classes');
+         $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['schedule_of_classes']);
 
         $table->startRow();
@@ -190,6 +196,7 @@ class module extends content {
         
          $fieldName = 'Associated Material';
         $textinput = new textinput('associated_material');
+         $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['associated_material']);
 
         $table->startRow();
@@ -203,6 +210,7 @@ class module extends content {
         
          $fieldName = 'Comments history';
         $textinput = new textinput('comments_history');
+         $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['comments_history']);
 
         $table->startRow();
@@ -215,6 +223,8 @@ class module extends content {
         $table->endRow();
         
         $dropdown = new dropdown('status');
+         $dropdown->cssClass = "required";
+         $dropdown->addOption(null);
         $dropdown->addOption('Disabled');
          $dropdown->addOption('Draft');
          $dropdown->addOption('Published');
@@ -233,41 +243,41 @@ class module extends content {
         
 
          $buttonSubmit = new button('upload', 'upload');
+         $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
     
        
         $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->getParentID());
-        $form_data->addToForm('<div class="form-row"><input class="submit" type="submit" value="Submit"></div> 
-            ');
-        
- $content = ' <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
-  <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
-<script  >
-   
-
-
- $(document).ready(
-        function()
-        {
-            
-            $("#form_add").validate();
-            alert("test);
-        
        
-        });
-
-
-
-
-</script>';
+        
+// $content = ' <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
+//  <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
+//<script  >
+//   
+//
+//
+// $(document).ready(
+//        function()
+//        {
+//            
+//            $("#form_add").validate();
+//            alert("test);
+//        
+//       
+//        });
+//
+//
+//
+//
+//</script>';
  
  
       
-        
+     $content = '<body>';
      $content .= $form_data->show();   
-    
+     $content .= '</body>';
 
         return  $content;
     }
