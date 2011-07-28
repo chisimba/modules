@@ -4,7 +4,8 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $origional = "parent_id is null and deleted = 0";
-$adaptation = "parent_id is not null and deleted = 0"
+$adaptation = "parent_id is not null and deleted = 0";
+$page =$this->getParam('page');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -128,7 +129,7 @@ $adaptation = "parent_id is not null and deleted = 0"
                             </div>
                             <div class="mainNavigation">
                                 <ul id="sddm">
-                                    <li class="onStateProducts">
+                                    <li <?php if (empty($page) || (strcmp($page,'1a_tpl.php') == 0)) echo 'class="onStateProducts"'; ?> >
                             <?php
                             $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
                             $abLink->link = 'UNESCO OER PRODUCTS';
@@ -146,7 +147,7 @@ $adaptation = "parent_id is not null and deleted = 0"
 
 
 
-                        <li>
+                        <li <?php if (strcmp($page,'2a_tpl.php') == 0) echo 'class="onStateProducts"'; ?> >
                             <?php
                             $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '2a_tpl.php')));
                             $abLink->link = 'Product Adaptations';
