@@ -113,7 +113,21 @@ $page =$this->getParam('page');
                                 <img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
                                 <div class="logoText">
                                     <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
-                                    <h1>UNESCO OER PRODUCTS</h1>
+                                    <h1>
+                                    <?php
+                                    if (strcmp($page,'2a_tpl.php') == 0)
+                                        switch ($page) {
+                                            case '2a_tpl.php':
+                                                echo 'PRODUCT ADAPTATIONS';
+                                                break;
+
+
+                                            default:
+                                                echo 'UNESCO OER PRODUCTS';
+                                                break;
+                                        }
+                                    ?>
+                                    </h1>
                                 </div>
                             </div>
                             <div class="languagesDiv">
