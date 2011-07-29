@@ -53,7 +53,7 @@ class calendar extends content
         $form_data = new form('add_products_ui', $uri);
 
         $table = $this->newObject('htmltable', 'htmlelements');
-        $table->cssClass = "greytext";
+        $table->cssClass = "greytexttable";
 
         $fieldName = 'title';
         $textinput = new textinput($fieldName);

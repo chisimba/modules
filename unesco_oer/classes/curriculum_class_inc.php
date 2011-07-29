@@ -72,7 +72,7 @@ class curriculum extends content {
 //                    </h4>';
 
         $table = $this->newObject('htmltable', 'htmlelements');
-        $table->cssClass = "moduleHeader";
+        $table->cssClass = "greytexttable";
 
         $fieldName = 'title';
         $textinput = new textinput($fieldName);
@@ -174,7 +174,7 @@ class curriculum extends content {
      public function showCurric($prevAction = NULL) {
 
      
-        $form_data = new form('add_products_ui', $uri);
+  
 
 //        $html .= '  <h4 class="greyText fontBold labelSpacing">Foreward</h4>
 //                    <h4 class="greyText fontBold labelSpacing">
@@ -193,60 +193,16 @@ class curriculum extends content {
 //                        <span class="wideDivider">
 //                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
 //                        </span>
-//                    </h4>';
 
-        $table = $this->newObject('htmltable', 'htmlelements');
-        $table->cssClass = "moduleHeader";
 
        
 
-        $fieldName = ' <h3 class="greyText"> Forward : </h3>';
-      
-      
-      
-       
-       // $editor->width = '70%';
-        
-      
-
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_forward);
-        $table->endRow();
-
-        $fieldName = ' <h3 class="greyText"> Background : </h3>';
-      
-
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_background);
-        $table->endRow();
-
-        $fieldName = ' <h3 class="greyText"> Introductory Description : </h3>';
+        $content = ' <h3 class="greyText"> Forward : </h3>'. $this->_forward . '<br>' ;
+        $content .= ' <h3 class="greyText"> Background : </h3>'. $this->_background . '<br>' ;
+      $content .= ' <h3 class="greyText"> Introductory Description : </h3>'. $this->_introductory_description. '<br>' ;
      
 
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_introductory_description);
-        $table->endRow();
-
-       
-
-        $form_data->addToForm($table->show());
-
-        return $form_data->show();
+        return $content;
     }
 
     public function init() {

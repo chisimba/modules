@@ -52,7 +52,7 @@ class module extends content {
         $form_data = new form('add_products_ui', $uri);
 
         $table = $this->newObject('htmltable', 'htmlelements');
-        $table->cssClass = "greytext";
+        $table->cssClass = "greytexttable";
 
         $fieldName = 'title';
         $textinput = new textinput($fieldName);
@@ -243,7 +243,7 @@ class module extends content {
         
         
 
-         $buttonSubmit = new button('upload', 'upload');
+         $buttonSubmit = new button('Save', 'Save');
          $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
