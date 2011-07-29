@@ -62,6 +62,7 @@ class contentmanager extends object
         $table->cssClass = "moduleHeader";
 
         $heading = new htmlHeading();
+        $heading->cssClass = "greytext";
         $heading->str = 'Create and Edit contents of product:';
         $heading->type = 1;
 

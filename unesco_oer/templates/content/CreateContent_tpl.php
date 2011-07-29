@@ -62,7 +62,8 @@ $('#upload').live('click', function() {
 $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
 ?>
-    
+    <div class ="productsBackgroundColor ">
+        <div class="greyText">
       <div class="test">
               
     <?php
@@ -99,7 +100,7 @@ $this->setLayoutTemplate('maincontent_layout_tpl.php');
 echo '<div id="sections">
     
 <fieldset>
-<legend>Sections</legend>
+<legend> Edit Sections</legend>
 
 <div class=leftColumnDiv style="border: 1px #004e89 solid;" >';
 
@@ -112,6 +113,6 @@ echo '</div>';
 
 echo '<div class=centerColumnDiv style="border: 1px #004e89 solid;">';
 echo $contentManager->showInput($this->getParam('prevAction'));
-echo "</div></fieldset></div>";
+echo "</div></fieldset></div></div></div>";
 
 ?>

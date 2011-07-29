@@ -52,7 +52,7 @@ class module extends content {
         $form_data = new form('add_products_ui', $uri);
 
         $table = $this->newObject('htmltable', 'htmlelements');
-        $table->cssClass = "moduleHeader";
+        $table->cssClass = "greytext";
 
         $fieldName = 'title';
         $textinput = new textinput($fieldName);
@@ -122,6 +122,7 @@ class module extends content {
         $table->endRow();
         
           $fieldName = 'Delivery Mode';
+         
         $textinput = new textinput('mode');
          $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['mode']);
@@ -298,150 +299,34 @@ class module extends content {
             'pair' => $pair,
             'option' => $option,
             'nextAction' => $prevAction));
-        $form_data = new form('add_products_ui', $uri);
-
-        $table = $this->newObject('htmltable', 'htmlelements');
-        $table->cssClass = "moduleHeader";
-
-       
-
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell('Section Title');
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_title);
-        $table->endRow();
-
-
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell('Level');
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_metaDataArray['audience']);
-        $table->endRow();
-              $editor = $this->newObject('htmlarea', 'htmlelements');
-       
-        $fieldName = "Entry Requirements";
-       
-
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_metaDataArray['entry_requirements']);
-        $table->endRow();
         
-        
-         $fieldName = "Outcomes/Objectives";
-     
-
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_metaDataArray['outcomes']);
-        $table->endRow();
-        
-          $fieldName = 'Delivery Mode';
+        $content = "";
+        $content .= '  <div class="contentDivThreeWider">';
+    
+    
       
+        $content.= '<h3 class="greyText">  Level  </h3><br> '.  $this->_metaDataArray['audience'] . '  <br><br>';
+        
+         $content.= '<h3 class="greyText"> Entry Requirments </h3><br>'. $this->_metaDataArray['entry_requirements']. '<br><br> ';
+         
+          $content.= '<h3 class="greyText">Outcomes/Objectives </h3><br> '.  $this->_metaDataArray['outcomes']. '<br><br>';
+          $content.= '<h3 class="greyText">Delivery Mode </h3><br> '. $this->_metaDataArray['mode']. '<br><br>';
+          $content.= '<h3 class="greyText">Number of Hours </h3><br> '.  $this->_metaDataArray['no_of_hours']. '<br><br>';
+          $content.= '<h3 class="greyText">Description</h3><br> '. $this->_metaDataArray['description']. '<br><br>';
+          $content.= '<h3 class="greyText">Assesment</h3><br> '.  $this->_metaDataArray['assesment']. '<br><br>';
+           $content.= '<h3 class="greyText">Scheduele of Activities</h3><br> '.  $this->_metaDataArray['schedule_of_classes']. '<br><br>';
+            $content.= '<h3 class="greyText">Associated Material</h3><br> '.  $this->_metaDataArray['associated_material']. '<br><br>';
+             $content.= '<h3 class="greyText">Comments history</h3><br> '.  $this->_metaDataArray['comments_history']. '<br><br>';
 
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_metaDataArray['mode']);
-        $table->endRow();
-        
-        $fieldName = 'Number of Hours';
-     
-
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_metaDataArray['no_of_hours']);
-        $table->endRow();
-        
-         $fieldName = "Description";
-     
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($this->_metaDataArray['description']);
-        $table->endRow();
-        
-         $fieldName = 'Assesment';
-      
-
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-        
-         $table->startRow();
-        $table->addCell($this->_metaDataArray['assesment']);
-        $table->endRow();
-        
-         $fieldName = 'Scheduele of Activities';
-       
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-        
-         $table->startRow();
-        $table->addCell($this->_metaDataArray['schedule_of_classes']);
-        $table->endRow();
-        
-         $fieldName = 'Associated Material';
-      
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-        
-         $table->startRow();
-        $table->addCell($this->_metaDataArray['associated_material']);
-        $table->endRow();
-        
-         $fieldName = 'Comments history';
-       
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-        
-         $table->startRow();
-        $table->addCell($this->_metaDataArray['comments_history']);
-        $table->endRow();
-        
-        
-        
-        
-
-       
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
       
 
-        $form_data->addToForm($table->show());
-
-        return $form_data->show();
+   
+        $content .= ' </div>';
+        
+        
+        return $content;
     }
 
     public function handleUpload() {

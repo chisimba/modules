@@ -51,7 +51,7 @@ class year extends content {
         $form_data = new form('add_products_ui', $uri);
 
         $table = $this->newObject('htmltable', 'htmlelements');
-        $table->cssClass = "moduleHeader";
+        $table->cssClass = "greytext";
 
         $fieldName = 'year';
         $textinput = new textinput($fieldName);
