@@ -1027,8 +1027,7 @@ class product extends object
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
             //$title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
             $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
-            $institutions = $objInstitutionManager->getAllInstitutions("where LinkedInstitution='{$groups[0]["linkedinstitution"]}'");
-            var_dump($groups[0]["linkedinstitution"]);
+            $institutions = $objInstitutionManager->getAllInstitutions("where name='{$groups[0]["linkedinstitution"]}'");
             if (!empty($institutions)){
                 $this->_objAddDataUtil->addDropDownToTable(
                                                             $title,
@@ -1577,16 +1576,10 @@ class product extends object
    //TODO return group name in text with this
    function getGroupName()
    {
-       switch ($this->getGroupID()) {
-           case 1: return 'Polytechnic of Namibia, journalism department';
-               break;
+       $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
+       $info = $objDbGroups->getGroupInfo($this->getGroupID());
+       return $info[0]['name'];
 
-           case 2: return 'Wits University, journalism department';
-               break;
-
-           default: return 'none';
-               break;
-       }
    }
 
    function getGroupID()
