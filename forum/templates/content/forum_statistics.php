@@ -6,7 +6,7 @@ ob_start();
 $this->loadClass('htmlheading','htmlelements');
 $this->loadClass('link', 'htmlelements');
 
-$icon =& $this->getObject('geticon', 'htmlelements');
+$icon = $this->getObject('geticon', 'htmlelements');
 
 // Generation of User Stats
 /*
@@ -19,7 +19,7 @@ $icon =& $this->getObject('geticon', 'htmlelements');
 */
 $userStats = array();
 
-$objManageGroups=& $this->getObject('managegroups', 'contextgroups');
+$objManageGroups = $this->getObject('managegroups', 'contextgroups');
 
 function createUserInArray(&$array, $userId, $name, $role)
 {
@@ -42,31 +42,38 @@ function createUserInArray(&$array, $userId, $name, $role)
     $array[$userId]['wordcountmin'] = 0;
 }
 
+
 foreach ($posterStats as $posterStat)
 {
     createUserInArray($userStats, $posterStat['userid'], $posterStat['firstname'].' '.$posterStat['surname'], 'unknown');
 }
 
-// Fis
-$guests = $objManageGroups->contextUsers('Guests', $contextCode);
-foreach ($guests as $guest)
+$lecturers = $objManageGroups->contextUsers('Lecturers', $contextCode);
+
+/*
+echo '<pre>';
+var_dump($lecturers[0]);
+echo '</pre>';
+*/
+
+foreach ($lecturers as $lecturer)
 {
-    createUserInArray($userStats, $guest['userid'], $guest['fullname'], 'guest');
+    createUserInArray($userStats, $lecturer['userid'], $lecturer['firstname'].' '.$lecturer['surname'], 'lecturer');
 }
 
 $students = $objManageGroups->contextUsers('Students', $contextCode);
 foreach ($students as $student)
 {
-    createUserInArray($userStats, $student['userid'], $student['fullname'], 'student');
+    createUserInArray($userStats, $student['userid'], $student['firstname'].' '.$student['surname'], 'student');
 }
 
-$lecturers = $objManageGroups->contextUsers('Lecturers', $contextCode);
-foreach ($lecturers as $lecturer)
+$guests = $objManageGroups->contextUsers('Guests', $contextCode);
+foreach ($guests as $guest)
 {
-    createUserInArray($userStats, $lecturer['userid'], $lecturer['fullname'], 'lecturer');
+    createUserInArray($userStats, $guest['userid'], $guest['firstname'].' '.$guest['surname'], 'guest');
 }
 
-// Done adding users to list
+// Done adding users to list [[ JOC OK
 
 foreach ($posterStats as $posterStat)
 {
@@ -83,19 +90,23 @@ foreach ($posterTangents as $posterTangent)
     $userStats[$posterTangent['userid']]['tangents'] = $posterTangent['tangents'];
 }
 
+// [[ JOC Rating of User Posts
+// [[ JOC This statistic shows the ratings that users received for their posts.
 foreach ($userRatesOther as $userRates)
 {
     $userStats[$userRates['userid']]['otherpostsrated'] = $userRates['postsrated'];
     $userStats[$userRates['userid']]['otherpostssumrated'] = $userRates['totalvalue'];
-    $userStats[$userRates['userid']]['otherpostsmaxrated'] = $userRates['maxvalue'];
+    $userStats[$userRates['userid']]['otherpostsmaxrated'] = $userRates['highvalue'];
     $userStats[$userRates['userid']]['otherpostsminrated'] = $userRates['minvalue'];
 }
 
+// [[ JOC User Rating the Posts of others
+// [[ JOC This statistic shows the ratings that users gave to posts.
 foreach ($userRatesSelf as $userRates)
 {
     $userStats[$userRates['userid']]['selfpostsrated'] = $userRates['postsrated'];
     $userStats[$userRates['userid']]['selfpostssumrated'] = $userRates['totalvalue'];
-    $userStats[$userRates['userid']]['selfpostsmaxrated'] = $userRates['maxvalue'];
+    $userStats[$userRates['userid']]['selfpostsmaxrated'] = $userRates['highvalue'];
     $userStats[$userRates['userid']]['selfpostsminrated'] = $userRates['minvalue'];
 }
 
@@ -103,7 +114,7 @@ foreach ($userWordCount as $userWords)
 {
     $userStats[$userWords['userid']]['wordcountposts'] = $userWords['postscounted'];
     $userStats[$userWords['userid']]['wordcountsum'] = $userWords['totalwords'];
-    $userStats[$userWords['userid']]['wordcountmax'] = $userWords['maxvalue'];
+    $userStats[$userWords['userid']]['wordcountmax'] = $userWords['highvalue'];
     $userStats[$userWords['userid']]['wordcountmin'] = $userWords['minvalue'];
 }
 
@@ -154,7 +165,7 @@ $table->addCell($this->objLanguage->languageText('mod_forum_ratingposts', 'forum
 $results = ($forumDetails['ratingsenabled'] == 'Y') ? $this->objLanguage->languageText('word_yes') : $this->objLanguage->languageText('word_no');
 $table->addCell($results);
 
-$table->addCell(ucwords($this->objLanguage->code2Txt('mod_forum_studentsstarttopics', 'forum')), NULL, NULL, 'right');
+$table->addCell(ucwords($this->objLanguage->code2Txt('mod_forum_studentsstartTopics', 'forum')), NULL, NULL, 'right');
 $results = ($forumDetails['studentstarttopic'] == 'Y') ? $this->objLanguage->languageText('word_yes') : $this->objLanguage->languageText('word_no');
 $table->addCell($results);
 
@@ -273,20 +284,20 @@ foreach ($userStats as $userStat)
         $icon->title = $userStat['role'];
         $icon->alt = $userStat['role'];
     }
-    
+
     $table->addCell($icon->show());
     $table->addCell($userStat['name'], '30%');
     $table->addCell($userStat['topics']);
     $table->addCell($userStat['tangents']);
     $table->addCell($userStat['posts']);
-    
+
     if ($userStat['posts'] == 0 || $forumSummaryStats['posts'] == 0) {
         $results = 0;
     } else {
         $results = ($userStat['posts'] / $forumSummaryStats['posts']) * 100;
         $results = round($results, 2);
     }
-    
+
     $table->addCell($results.'%');
     $table->endRow();
 }
@@ -318,14 +329,14 @@ foreach ($userStats as $userStat)
         $icon->title = $userStat['role'];
         $icon->alt = $userStat['role'];
     }
-    
+
     $table->startRow();
-    
+
     $table->addCell($icon->show());
     $table->addCell($userStat['name'], '30%');
     $table->addCell($userStat['wordcountmin']);
     $table->addCell($userStat['wordcountmax']);
-    
+
     if ($userStat['wordcountsum'] == 0 || $userStat['wordcountposts'] == 0) {
         $result = 0;
     } else {
@@ -341,6 +352,8 @@ echo '<p>'.$this->objLanguage->languageText('mod_forum_languagestatisticsinfor',
 echo $table->show();
 
 // User Ratings Received
+// [[ JOC Rating of User Posts
+
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = 5;
 
@@ -364,15 +377,15 @@ foreach ($userStats as $userStat)
         $icon->title = $userStat['role'];
         $icon->alt = $userStat['role'];
     }
-    
+
     $table->startRow();
-    
+
     $table->addCell($icon->show());
     $table->addCell($userStat['name'], '30%');
     $table->addCell($userStat['selfpostsrated']);
     $table->addCell($userStat['selfpostsminrated']);
     $table->addCell($userStat['selfpostsmaxrated']);
-    
+
     if ($userStat['selfpostssumrated'] == 0 || $userStat['selfpostsrated'] == 0) {
         $result = 0;
     } else {
@@ -387,6 +400,8 @@ echo '<p>'.$this->objLanguage->languageText('mod_forum_ratingofpostsreceivedinfo
 echo $table->show();
 
 // User Ratings
+// [[ JOC User Rating the Posts of others
+
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->cellpadding = 5;
 
@@ -410,15 +425,15 @@ foreach ($userStats as $userStat)
         $icon->title = $userStat['role'];
         $icon->alt = $userStat['role'];
     }
-    
+
     $table->startRow();
-    
+
     $table->addCell($icon->show());
     $table->addCell($userStat['name'], '30%');
     $table->addCell($userStat['otherpostsrated']);
     $table->addCell($userStat['otherpostsminrated']);
     $table->addCell($userStat['otherpostsmaxrated']);
-    
+
     if ($userStat['otherpostssumrated'] == 0 || $userStat['otherpostsrated'] == 0) {
         $result = 0;
     } else {
