@@ -212,6 +212,7 @@ $tableC->startRow();
 $label = new label ($this->objLanguage->languageText('phrase_emailaddress', 'system'), 'input_useradmin_email');
 $tableC->addCell($label->show());
 $tableC->addCell($email->show());
+
 $tableC->endRow();
 
 //Cell number or Mobile Number
@@ -285,7 +286,6 @@ $tableC->addCell($textinput->show());
 $tableC->endRow();
 
 
-$tableC = $this->newObject('htmltable', 'htmlelements');
 //Organisation
 $textinput = new textinput('organisation');
 $textinput->size =75;
