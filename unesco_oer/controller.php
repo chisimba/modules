@@ -378,50 +378,20 @@ class unesco_oer extends controller {
 
         $lat = $this->getParam('lat');
         $lng = $this->getparam('Lng');
-        $page = $this->getParam('page');
-
+    
 
 
        
+       $ProdId = $this->objDbGroups->getidbylocation($lat, $lng);
+       $products = $this->objDbGroups->getGroupProductadaptation($ProdId[0]['id']);
+       $temp = TRUE;
 
-        $latShort = round($lat, 3);
-        $lngshort = round($lng, 3);
-        $ProdId = $this->objProductUtil->BrowseAdaptation($latShort, $lngshort);
-        $string = $this->objDbProducts->getAdaptedProducts($ProdId);
+       $this->setVarByRef("finalstring", $products);    
+       $this->setVarByRef('browsecheck', $temp);
 
+       $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
-        $temporary = $string[0]['name'];
-        $Buildstring = 'creator = ' . "'$temporary'" . ' and relation is not null';
-
-
-
-
-
-
-
-        $this->setVarByRef("AuthFilter", $AuthFilter);
-        $this->setVarByRef("temp", $ProdId);
-        $this->setVarByRef("ThemeFilter", $ThemeFilter);
-        $this->setVarByRef("LangFilter", $LangFilter);
-        $this->setVarByRef("SortFilter", $sort);
-        $this->setVarByRef("NumFilter", $NumFilter);
-        $this->setVarByRef("PageNum", $PageNum);
-        $this->setVarByRef("TotalPages", $TotalPages);
-        $this->setVarByRef("Model", $Model);
-        $this->setVarByRef("Guide", $Guide);
-        $this->setVarByRef("Handbook", $Handbook);
-        $this->setVarByRef("Manual", $Manual);
-        $this->setVarByRef("Besoractile", $Besoractile);
-        $this->setVarByRef("adaptationstring", $adaptationstring);
-
-
-
-        $this->setVarByRef("finalstring", $Buildstring);
-        $this->setVarByRef("TotalEntries", $Buildstring);
-        $this->setVarByRef("MapEntries", $Buildstring);
-
-
-        return "$page";
+        return "2a_tpl.php";
     }
 
     public function __FilterAdaptations() {

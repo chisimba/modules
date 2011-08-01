@@ -28,6 +28,12 @@ class dbgroups extends dbtable {
 
         return $this->getArray($sql);
     }
+    
+     function getidbylocation($loclat,$loclong){
+         $sql = "select * from tbl_unesco_oer_groups where loclat = $loclat and loclong = $loclong";
+         
+           return $this->getArray($sql);
+    }
 
     function getAllGroups() {
         $sql = "select * from tbl_unesco_oer_groups";
@@ -342,9 +348,11 @@ class dbgroups extends dbtable {
      }
 
     function getGroupProductadaptation($groupid){
-        $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE  group_id= '$groupid'";
+        $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE  group_id = '$groupid'";
         return $this->getArray($sql);
     }
+    
+   
 
    
 

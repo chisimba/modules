@@ -123,18 +123,29 @@ if ($adaptationstring == null)
                 <div id='filterDiv' title = "2a" >
                             <?php
                                 $objTable = $this->getObject('htmltable', 'htmlelements');
-
-                                $products = $this->objDbProducts->getFilteredProducts($finalstring);
-                                echo $finalstring;
+                         if ($browsecheck){
+                             
+                               $products = $finalstring;
+                         }
+                         else
+                              $products = $this->objDbProducts->getFilteredProducts($finalstring);
+                        
+                              
                                 $newRow = true;
                                 $count = 0;
+                                
+                         
 
                                 foreach ($products as $product) {
                                     $count++;                       //populates table
                                     //Check if the creator is a group or an institution
 
                                     $objProduct = $this->getObject('product');
-                                    $objProduct->loadProduct($product);
+                                    if ($browsecheck) {
+                                        $objProduct->loadProduct($product['product_id']);
+                                    }
+                                    else
+                                        $objProduct->loadProduct($product);
                                     
 //                                    if ($this->objDbGroups->isGroup($product['creator'])) {
 //                                        $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
@@ -179,8 +190,11 @@ if ($adaptationstring == null)
                             ?>
 </div>
                  <?php
+                 
+            
+                        
         
-       $products = $this->objDbProducts->getFilteredProducts($finalstring);
+      
        $bookmark = $this->objbookmarkmanager->populateGridView($products);
        echo $bookmark;
     
@@ -468,7 +482,7 @@ if ($adaptationstring == null)
                                         <body onload="initialize()">
                                             <div id="map_canvas" style="width:100%; height:20%"></div>
 <?php
-                                                $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php', "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'ThemeFilter' => $ThemeFilter, 'AuthorFilter' => $AuthFilter, 'LanguageFilter' => $LangFilter, 'SortFilter' => $SortFilter, 'Guide' => $Guide, 'Manual' => $Manual, 'Handbook' => $Handbook, 'Model' => $Model, 'Besoractile' => $Besoractile, 'MapEntries' => $MapEntries)));
+                                                $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php',  'MapEntries' => $MapEntries)));
 
                                                 echo $form->show();
                                                 

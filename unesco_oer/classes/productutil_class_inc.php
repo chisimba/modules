@@ -208,15 +208,11 @@ class productutil extends object {
             
            ";
             
-            
-            
-            
+          
         }
 
         $content .= '        
-
-
-                                    });
+            });
 
                             </script>
                                         ';
