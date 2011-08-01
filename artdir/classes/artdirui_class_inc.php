@@ -532,7 +532,7 @@ class artdirui extends object
         // grab any images associated with the profile
         $picslabel = new label($this->objLanguage->languageText('mod_artdir_pics', 'artdir'));
         $str .= $picslabel->show()."<br />";
-        $str .= $this->imggalJs();
+        $str .= $this->artistgal($artist['id']); //imggalJs($artist['id']);
         // get any links
         $linkslabel = new label($this->objLanguage->languageText('mod_artdir_links', 'artdir'));
         $str .= $linkslabel->show();
@@ -541,18 +541,24 @@ class artdirui extends object
         return $str;
     }
     
-    public function artistEditor($artistid, $edit = FALSE) {
-        // get the artist info
-        $artist = $this->objDbArtdir->getArtistById($artistid);
+    public function artistEditor($artistid = NULL, $edit = FALSE) {
         // var_dump($artist);
         $this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
-        
-        $artform = new form('artistedit', $this->uri(array(
+        if($artistid != NULL) {
+            // get the artist info
+            $artist = $this->objDbArtdir->getArtistById($artistid);
+            $artform = new form('artistedit', $this->uri(array(
                 'action' => 'artistedit', 'id' => $artist['id']
             )));
-        
+        }
+        else {
+            $artform = new form('artistadd', $this->uri(array(
+                'action' => 'newartist',
+            )));
+            $artist = array();
+        }
         $artadd = $this->newObject('htmltable', 'htmlelements');
         $artadd->cellpadding = 3;
         
@@ -692,6 +698,128 @@ class artdirui extends object
         return $artform;
     }
     
+    public function artistAddForm() {
+        // var_dump($artist);
+        $this->loadClass('href', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $artform = new form('artistadd', $this->uri(array(
+            'action' => 'newartist',
+        )));
+        $artadd = $this->newObject('htmltable', 'htmlelements');
+        $artadd->cellpadding = 3;
+        
+        $artadd->startRow();
+        $cats = $this->objDbArtdir->getParentCats();
+        $catdrop = new dropdown('cat');
+        $topcats = $this->objDbArtdir->getParentCats();
+        foreach($topcats as $t) {
+            $catdrop->addOption($t['id'], "<em>".$t['cat_name']."</em>");
+            $subcats = $this->objDbArtdir->getChildCats($t['id']);
+            foreach($subcats as $s) {
+                $catdrop->addOption($s['id'], "  -".$s['cat_name']);
+            }
+        }
+        
+        $clabel = new label($this->objLanguage->languageText('mod_artdir_catname', 'artdir') . ':', 'input_cat');
+        $artadd->addCell($clabel->show());
+        $artadd->addCell($catdrop->show());
+        $artadd->endRow();
+        
+        // act name field
+        $artadd->startRow();
+        $actnamelabel = new label($this->objLanguage->languageText('mod_artdir_actname', 'artdir') . ':', 'input_actname');
+        $actname = new textinput('actname');
+        $artadd->addCell($actnamelabel->show());
+        $artadd->addCell($actname->show());
+        $artadd->endRow();
+        
+        // description field
+        $artadd->startRow();
+        $desclabel = new label($this->objLanguage->languageText('mod_artdir_descrip', 'artdir') . ':', 'input_desc');
+        $desc = new textarea('desc');
+        $artadd->addCell($desclabel->show());
+        $artadd->addCell($desc->show());
+        $artadd->endRow();
+        
+        // contactperson field
+        $artadd->startRow();
+        $cplabel = new label($this->objLanguage->languageText('mod_artdir_contactp', 'artdir') . ':', 'input_contactperson');
+        $cp = new textinput('contactperson');
+        $artadd->addCell($cplabel->show());
+        $artadd->addCell($cp->show());
+        $artadd->endRow();
+        
+        // contactnum field
+        $artadd->startRow();
+        $cnlabel = new label($this->objLanguage->languageText('mod_artdir_contactnum', 'artdir') . ':', 'input_contactnum');
+        $cn = new textinput('contactnum');
+        $artadd->addCell($cnlabel->show());
+        $artadd->addCell($cn->show());
+        $artadd->endRow();
+        
+        // altnum field
+        $artadd->startRow();
+        $anlabel = new label($this->objLanguage->languageText('mod_artdir_altnum', 'artdir') . ':', 'input_altnum');
+        $an = new textinput('altnum');
+        $artadd->addCell($anlabel->show());
+        $artadd->addCell($an->show());
+        $artadd->endRow();
+        
+        // email field
+        $artadd->startRow();
+        $emaillabel = new label($this->objLanguage->languageText('mod_artdir_email', 'artdir') . ':', 'input_email');
+        $email = new textinput('email');
+        $artadd->addCell($emaillabel->show());
+        $artadd->addCell($email->show());
+        $artadd->endRow();
+        
+        // website field
+        $artadd->startRow();
+        $weblabel = new label($this->objLanguage->languageText('mod_artdir_website', 'artdir') . ':', 'input_website');
+        $web = new textinput('website');
+        $artadd->addCell($weblabel->show());
+        $artadd->addCell($web->show());
+        $artadd->endRow();
+        
+        //bio
+        $artadd->startRow();
+        $biolabel = new label($this->objLanguage->languageText('mod_artdir_bio', 'artdir') . ':', 'input_bio');
+        $bio = $this->newObject('htmlarea', 'htmlelements');
+        $bio->setName('bio');
+        $bio->height = 200;
+        $bio->width = '100%';
+        $bio->setBasicToolBar();
+        $artadd->addCell($biolabel->show());
+        $artadd->addCell($bio->show());
+        $artadd->endRow();
+        
+        // image
+        $objSelectFile = $this->newObject('selectfile', 'filemanager');
+        $objSelectFile->name = 'thumb';
+        $objSelectFile->restrictFileList = array('png', 'jpg', 'gif', 'PNG', 'JPG', 'GIF');
+        $tlabel = new label($this->objLanguage->languageText('mod_artdir_thumbnail', 'artdir') . ':', 'input_thumb');
+        $artadd->startRow();
+        $artadd->addCell($tlabel->show());
+        $artadd->addCell($objSelectFile->show());
+        $artadd->endRow();
+        
+        
+        $afieldset = $this->getObject('fieldset', 'htmlelements');
+        $afieldset->setLegend($this->objLanguage->languageText('mod_artdir_artistdetails', 'artdir'));
+        
+        $afieldset->addContent($artadd->show());
+        $artform->addToForm($afieldset->show());
+        
+        $this->objCButton = new button($this->objLanguage->languageText('word_add', 'system'));
+        $this->objCButton->setIconClass("save");
+        $this->objCButton->setValue($this->objLanguage->languageText('word_add', 'system'));
+        $this->objCButton->setToSubmit();
+        $artform->addToForm($this->objCButton->show());
+        $artform = $artform->show();
+        return $artform;
+    }
+    
     public function imageUpload($artistid) {
         $artist1 = $this->objDbArtdir->getArtistById($artistid);
         //var_dump($artist1);
@@ -756,19 +884,110 @@ class artdirui extends object
         return $retlink->show();
     }
     
-    public function imggalJs() {
+    public function formatArtistRecords($recs) {
+        if(empty($recs)) {
+            return $this->objLanguage->languageText("mod_artdir_noactsfound");
+        }
+        $str = NULL;
+        
+        foreach($recs as $rec) {
+            $objFB = $this->newObject('featurebox', 'navigation');
+            $this->objWashout = $this->getObject("washout", "utilities");
+            $this->loadClass('href', 'htmlelements');
+            $this->loadClass('label', 'htmlelements');
+        
+            $artist = $rec;
+        
+            // details table inside a container table
+            $ctable = $this->newObject('htmltable', 'htmlelements');
+            $ctable->cellpadding = 3;
+        
+            // details table
+            $dtable = $this->newObject('htmltable', 'htmlelements');
+            $dtable->cellpadding = 3;
+            // build the artist details now
+            $dtable->startRow();
+            // categories
+            $catlabel = new label($this->objLanguage->languageText('mod_artdir_category', 'artdir'));
+            $dtable->addCell($catlabel->show());
+            $dtable->addCell($this->objDbArtdir->getCatById($artist['catid']));
+            $dtable->endRow();
+            // contact person
+            $dtable->startRow();
+            $conlabel = new label($this->objLanguage->languageText('mod_artdir_contactp', 'artdir'));
+            $dtable->addCell($conlabel->show());
+            $dtable->addCell($artist['contactperson']);
+            $dtable->endRow();
+            // telephone
+            $dtable->startRow();
+            $contlabel = new label($this->objLanguage->languageText('mod_artdir_contactnum', 'artdir'));
+            $dtable->addCell($contlabel->show());
+            $dtable->addCell($artist['contactnum']);
+            $dtable->endRow();
+            // telephone 2
+            $dtable->startRow();
+            $altlabel = new label($this->objLanguage->languageText('mod_artdir_altnum', 'artdir'));
+            $dtable->addCell($altlabel->show());
+            $dtable->addCell($artist['altnum']);
+            $dtable->endRow();
+            // email
+            $dtable->startRow();
+            $emaillabel = new label($this->objLanguage->languageText('mod_artdir_email', 'artdir'));
+            $dtable->addCell($emaillabel->show());
+            $dtable->addCell($this->objWashout->parseText($artist['email']));
+            $dtable->endRow();
+            // website
+            $dtable->startRow();
+            $weblabel = new label($this->objLanguage->languageText('mod_artdir_website', 'artdir'));
+            $dtable->addCell($weblabel->show());
+            $dtable->addCell($this->objWashout->parseText($artist['website']));
+            $dtable->endRow();
+        
+            // 1 row, 2 cells
+            $ctable->startRow();
+            // artist pic
+            $prflink = new link ($this->uri(array('action' => 'viewartist', 'id' => $rec['id']), 'artdir'));
+            $prflink->link = '<img src="'.$this->objFile->getFilePath($artist['thumbnail']).'" width="229" height="180" />';
+            $prflink = $prflink->show();
+            $ctable->addCell($prflink);
+            // artis details table
+            $ctable->addCell($dtable->show());
+            $ctable->endRow();
+        
+            $str .= $objFB->show($rec['actname'], $ctable->show());
+        
+        }
+        
+        return $str;
+    }
+    
+    public function artistgal($artistid) {
+        $artistpics = $this->objDbArtdir->getArtistPics($artistid);
+        $html = NULL;
+        foreach($artistpics as $pic) {
+            // Build the alertbox thingy
+            $abox = $this->newObject('alertbox', 'htmlelements');
+            $html .= $abox->show('<img src="'.$this->objFile->getFilePath($pic['picid']).'" width="150" height="79" title="'.$pic['id'].'" />', $this->uri(array('action' => 'viewpic', 'picid' => $pic['picid'])));
+        }
+        return $html."<br />";
+    }
+    
+    public function imggalJs($artistid) {
+        $artistpics = $this->objDbArtdir->getArtistPics($artistid);
         $js = NULL;
         $js .= '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>';
         $js .= $this->getJavascriptFile('jquery.exposure.js?v=0.9', 'artdir');
         $js .= $this->getJavascriptFile('imggal.js', 'artdir');
         $this->appendArrayVar('headerParams', $js);
         $html = NULL;
-        $html = '<div class="panel">	
+        $html .= '<div class="panel">	
 				<div id="slideshow"></div>
 				<div class="clear"></div>
-				<ul id="images">
-					<li><a href="http://placekitten.com/300/300"><img src="http://placekitten.com/150/79" title="Kitten 1" /></a></li>
-				</ul>
+				<ul id="images">';
+	    foreach($artistpics as $pic) {
+		    $html .= '<li><a href="'.$this->objFile->getFilePath($pic['picid']).'"><img src="'.$this->objFile->getFilePath($pic['picid']).'" width="150" height="79" title="'.$pic['id'].'" /></a></li>';
+		}
+		$html .='</ul>
 				<div class="clear"></div>
 			</div>			
 			<div id="exposure"></div>			

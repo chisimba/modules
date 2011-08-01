@@ -89,6 +89,7 @@ class artdir extends controller
             $this->objCats          = $this->getObject('artdircategories');
             $this->objDbArtdir      = $this->getObject('dbartdir');
             $this->objUi            = $this->getObject('artdirui');
+            $this->objFile          = $this->getObject('dbfile', 'filemanager');
         }
         catch ( customException $e ) {
             customException::cleanUp ();
@@ -256,12 +257,22 @@ class artdir extends controller
                 
             case 'search' :
                 $term = $this->getParam('search');
-                echo $term;
+                $recs = $this->objDbArtdir->artistSearch($term);
+                $this->setVarByRef('recs', $recs);
+                return 'catlisting_tpl.php';
                 break;
                 
             case 'viewbycat' :
                 $cat = $this->getParam('cat');
-                echo $cat;
+                $recs = $this->objDbArtdir->getArtistsByCat($cat);
+                $this->setVarByRef('recs', $recs);
+                return 'catlisting_tpl.php';
+                break;
+                
+            case 'viewpic' :
+                $picid = $this->getParam('picid');
+                //echo $picid;
+                echo '<img src="'.$this->objFile->getFilePath($picid).'" />';
                 break;
                 
             case 'viewartist' :
@@ -383,7 +394,7 @@ class artdir extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'search', 'showsignin', 'viewartist',NULL);
+        $allowedActions = array('', 'search', 'showsignin', 'viewartist', 'viewpic', 'viewbycat', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;

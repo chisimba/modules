@@ -297,6 +297,18 @@ class dbartdir extends dbTable
         return $artist[0];
     }
     
+    public function getArtistsByCat($catid) {
+        $this->_changeTable('tbl_artdir_artists');
+        $recs = $this->getAll("WHERE catid = '$catid'");
+        return $recs;
+    }
+    
+    public function artistSearch($term) {
+        $this->_changeTable('tbl_artdir_artists');
+        $recs = $this->getAll("WHERE actname LIKE '%%$term%%' OR description LIKE '%%$term%%' OR contactperson LIKE '%%$term%%' OR contactnum LIKE '%%$term%%' OR altnum LIKE '%%$term%%' OR email LIKE '%%$term%%' OR website LIKE '%%$term%%' OR bio LIKE '%%$term%%'");
+        return $recs;
+    }
+    
     public function updateArtist($updatearr) {
         $this->_changeTable('tbl_artdir_artists');
         return $this->update('id', $updatearr['id'], $updatearr, 'tbl_artdir_artists');
@@ -316,6 +328,11 @@ class dbartdir extends dbTable
     public function insertPic($insarr) {
         $this->_changeTable('tbl_artdir_images');
         return $this->insert($insarr);
+    }
+    
+    public function getArtistPics($artistid) {
+        $this->_changeTable('tbl_artdir_images');
+        return $this->getAll("WHERE artistid = '$artistid'");
     }
     
     /**
