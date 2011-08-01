@@ -100,7 +100,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($editor->show());
+        $table->addCell($editor->showFCKEditor());
         $table->endRow();
         
         
@@ -118,7 +118,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($editor->show());
+        $table->addCell($editor->showFCKEditor());
         $table->endRow();
         
           $fieldName = 'Delivery Mode';
@@ -164,7 +164,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($editor->show());
+        $table->addCell($editor->showFCKEditor());
         $table->endRow();
         
          $fieldName = 'Assesment';
