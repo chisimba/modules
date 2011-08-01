@@ -6,6 +6,8 @@ $this->loadClass('checkbox', 'htmlelements');
 $origional = "parent_id is null and deleted = 0";
 $adaptation = "parent_id is not null and deleted = 0";
 $page =$this->getParam('page');
+
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -170,7 +172,8 @@ $page =$this->getParam('page');
 
                         </li>
                         <li class="mainNavPipe">&nbsp;</li>
-                        <li> <?php
+                        <li <?php //if (strcmp($this->getParam('action'),'10') == 0) //echo 'class="onStateProducts"'; ?> >
+                        <?php
                             $abLink = new link($this->uri(array("action" => '10')));
                             $abLink->link = 'GROUPS';
                             echo $abLink->show();

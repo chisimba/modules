@@ -379,6 +379,15 @@ class dbgroups extends dbtable {
        return $this->getGroupLongitude($groupid);
    }
 
+   function storegroupinstitution($groupid,$institutionid){
+       $data = array(
+            'group_id' => $groupid,
+           'institution_id' => $institutionid
+        );
+        $this->insert($data);
+
+   }
+
 
 
 
