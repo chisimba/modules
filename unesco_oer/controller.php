@@ -2010,6 +2010,7 @@ class unesco_oer extends controller {
         }
 
         $this->setVarByRef('contentManager', $contentManager);
+        $this->setVarByRef('product', $product);
 
         switch ($option) {
             case 'new': 

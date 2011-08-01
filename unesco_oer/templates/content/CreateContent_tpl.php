@@ -79,7 +79,7 @@ $this->setLayoutTemplate('maincontent_layout_tpl.php');
     <?php
 
     $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
-   // $abLink->link = ;
+    $abLink->link = $product->getTitle();
     $abLink->cssClass = "blueText noUnderline";
     
 
