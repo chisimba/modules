@@ -170,7 +170,7 @@ $page =$this->getParam('page');
 
                         </li>
                         <li class="mainNavPipe">&nbsp;</li>
-                        <li <?php
+                        <li> <?php
                             $abLink = new link($this->uri(array("action" => '10')));
                             $abLink->link = 'GROUPS';
                             echo $abLink->show();
