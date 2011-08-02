@@ -62,7 +62,7 @@ function ajaxFunction23(id){
 
               
 
-    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&models=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  ;
+    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&models=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation ;
      
     ajaxRequest.open("GET", "index.php?module=unesco_oer&action=JavaFilternum&" + queryString, true);
     ajaxRequest.send(null);
@@ -94,7 +94,7 @@ function ajaxFunction23(id){
 
 
 
-function ajaxFunction(id){
+function ajaxFunction(products){
     var ajaxRequest;
 
     try{
@@ -139,7 +139,7 @@ function ajaxFunction(id){
 
               
 
-    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation ;
+    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac  + "&sort=" + sort +"&adaptation=" + adaptation +"&products=" + products  ;
      
     ajaxRequest.open("GET", "index.php?module=unesco_oer&action=JavaFilter&" + queryString, true);
     ajaxRequest.send(null);

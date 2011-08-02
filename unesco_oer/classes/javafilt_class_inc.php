@@ -279,7 +279,8 @@ class javafilt extends object {
         $NumFilter = $this->getParam('numperpage');
 
         $pagelayout = $this->getParam('adaptation');
-
+        $prod = $this->getParam('products');
+        var_dump($prod);
 
         if ($PageNum == "undefined") {
             $PageNum = 1;
