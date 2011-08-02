@@ -397,10 +397,9 @@ class unesco_oer extends controller {
     public function __FilterAdaptations() {
 
         $parentid = $this->getParam('parentid');
-        $adaptationstring = 'relation = ' . "'$parentid'";
+    
 
-//        $TotalEntries = $this->objProductUtil->FilterTotalProducts($AuthFilter, $ThemeFilter, $LangFilter, $page, $sort, $TotalPages, $adaptationstring, $Model, $Handbook, $Guide, $Manual, $Besoractile);
-//        $Buildstring = $this->objProductUtil->FilterAllProducts($NumFilter, $PageNum, $TotalEntries);
+
 
 
         $this->setVarByRef("finalstring", $Buildstring);
