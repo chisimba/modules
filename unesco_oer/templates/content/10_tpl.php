@@ -59,21 +59,24 @@ echo $this->objGroupUtil->groupPerPage();
 
                             <?php
                                $abLink = new link($this->uri(array("action" => 'groupGrid')));
-                               $abLink2 = new link($this->uri(array("action" => 'groupGrid')));
-                               $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
-                               $abLink2->link='<div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>';
+                               $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png"alt="Grid" width="19" height="15" class="imgFloatRight" >';
+                               $ablLink2 = new link($this->uri(array("action" => 'groupGrid')));
+                               $ablLink2->link='<div class="gridListDivView"><a href="" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>';
+
                                echo $abLink->show();
-                               echo $abLink2->show();
+                               echo $ablLink2->show();
 
 
                             ?>
-                    
+                        <script>
+                            $('.test').click(function(){alert('dsfsdfsd');})
+                        </script>
 <!--                             <div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>-->
-                              
+
 
                                <?php
                                $abLink = new link($this->uri(array("action" =>'groupList')));
-                                $abLink2 = new link($this->uri(array("action" =>'groupList')));
+                               $abLink2 = new link($this->uri(array("action" =>'groupList')));
                                 $abLink2->link='<div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>';
                                $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
                                echo $abLink->show();
