@@ -32,9 +32,15 @@ class grouputil extends object {
 
   public function groupPerPage(){
       $dropdown=new dropdown('group_per_page');
-      for($i=1;$i<16;$i++){
-          $dropdown->addOption($i);
-          }
+      $groups=$this->objDbGroups->getAllGroups();
+
+      if(count($groups)>=9){
+          for($i=1;$i<10;$i++){
+          $dropdown->addOption($i);}
+     }else{
+         for($i=1;$i<=count($groups);$i++){
+            $dropdown->addOption($i);}
+      }
     $content.=' <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
                 <div class="blueBackground">
                 	
@@ -50,10 +56,10 @@ class grouputil extends object {
 
 
 
-
   public function content($group){
 
       $thumbLink= new link($this->uri(array("action" => '11a','id'=>$group['id'])));
+  
       $thumbLink->link='<img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
       //$joinLink;
        //$objUser = $this->getObject('user', 'security');

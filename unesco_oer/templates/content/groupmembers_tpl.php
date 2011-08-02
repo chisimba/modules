@@ -174,20 +174,12 @@ $this->loadClass('textinput', 'htmlelements');
                 <ul id="innerMenuTabs">
                      <li class="onState"><a href="#">
                              <?php
-                             $memberLink=new link($this->uri(array("action" =>'groupMembersForm','id'=>$this->getParam('id'))));
-                             $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
-                             $memberLink->link="Members(".$No_Of_Members.")";
-                             echo $memberLink->show();
+                             $memberLink=new link($this->uri(array("action" =>'groupmember')));
                              ?>
 
-                            </a></li>
-                     <li><a href="#">
-                             <?php
-                             $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'))));
-                             $No_Of_adaptation="";
-                             $groupadaptationLink->link=" ADAPTATIONS(".$No_Of_adaptation.")";
-                             echo $groupadaptationLink->show();
-                             ?></a></li>
+
+                             MEMBERS(<?php echo $this->ObjDbUserGroups->groupMembers($this->getParam('id'));?>)</a></li>
+                     <li><a href="#">ADAPTATIONS (2)</a></li>
                      <li><a href="#">DISCUSSIONS (1)</a></li>
                      <li><a href="#">INSTITUTIONS (1)</a></li>
 

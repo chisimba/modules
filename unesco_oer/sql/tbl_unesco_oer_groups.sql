@@ -20,6 +20,7 @@ $fields = array(
                 'loclat' =>array('type' =>'text','length'=>255),
                 'loclong' =>array('type' =>'text','length'=>255),
                 'country' =>array('type' =>'text','length'=>255),
+--                'groupadministrator'=>array('type' =>'text','length'=>255),
                 'thumbnail' =>array('type' => 'text', 'length' =>255)
                         
 		

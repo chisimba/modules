@@ -33,6 +33,7 @@ class unesco_oer extends controller {
     public $objThumbUploader;
     public $objConfig;
     public $objGroupUtil;
+    public $objDbgroupInstitutions;
     /**
      * @var object $objLanguage Language Object
      */
@@ -87,6 +88,7 @@ class unesco_oer extends controller {
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
         $this->ObjDbUserGroups = $this->getObject('dbusergroups');
         $this->objGroupUtil = $this->getObject('grouputil');
+        $this->objDbgroupInstitutions=$this->getObject('dbgroupinstitutions');
 
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
@@ -1786,6 +1788,11 @@ class unesco_oer extends controller {
         return 'groupEditingForm_tpl.php';
     }
 
+
+    function __groupMembersForm(){
+        return 'groupmembers_tpl.php';
+    }
+
     function __editGroup() {
         $id = $this->getParam('id');
         $name = $this->getParam('group_name');
@@ -1835,7 +1842,8 @@ class unesco_oer extends controller {
             return 'groupEditingForm_tpl.php';
         } else {
             $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
-            return $this->__groupListingForm();
+             $this->objDbgroupInstitutions->add_group_institutions($id,$institutionid);// Todo store institutions Id not name
+             return $this->__groupListingForm();
             }
     }
 
