@@ -1586,6 +1586,7 @@ class unesco_oer extends controller {
 // Process Update Results
         if ($update) {
             $this->objUseExtra->updateUserInfo($this->getParam('id'), $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
+
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "UserListingForm_tpl.php";
         } else {
@@ -1702,11 +1703,9 @@ class unesco_oer extends controller {
     }
 
     function __joinGroup() {
-        if (!$this->objUser->isAdmin()) {
-            $currLoggedInID = $this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId());
-        } else {
+
             $currLoggedInID = $this->objUser->userId();
-        }
+        
         $this->ObjDbUserGroups->joingroup($currLoggedInID, $this->getParam('id'));
         return $this->__groupListingFormMain();
     }
@@ -1791,14 +1790,14 @@ class unesco_oer extends controller {
     function __editGroup() {
         $id = $this->getParam('id');
         $name = $this->getParam('group_name');
+        $website = $this->getParam('group_website');
         $email = $this->getParam('register_email');
-//$confirmemail=$this->getParam('register_confirmemail');
         $address = $this->getParam('group_address');
         $city = $this->getParam('group_city');
         $state = $this->getParam('group_state');
         $country = $this->getParam('country');
         $postalcode = $this->getParam('group_postalcode');
-        $website = $this->getParam('group_website');
+      
         $institution = $this->getParam('group_institutionlink');
         $description = $this->getParam('description');
         $loclat = $this->getParam('group_loclat');
@@ -1810,7 +1809,6 @@ class unesco_oer extends controller {
 
         $checkFields = array(
             $name,
-            //$confirmemail,
             $address,
             $city,
             $state,
@@ -1827,10 +1825,7 @@ class unesco_oer extends controller {
             $problems[] = 'missingfields';
         }
 
-//
-//        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
-//            $problems[] = 'emailtaken';
-//        }
+
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
@@ -1841,13 +1836,8 @@ class unesco_oer extends controller {
             return 'groupEditingForm_tpl.php';
         } else {
             $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
-//            $this->setLayoutTemplate('maincontent_layout_tpl.php');
-//            return 'groupListingForm_tpl.php';
             return $this->__groupListingForm();
-        }
-//        $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description);
-//        $this->setLayoutTemplate('maincontent_layout_tpl.php');
-//        return 'groupListingForm_tpl.php';
+            }
     }
 
     function __deleteGroup() {

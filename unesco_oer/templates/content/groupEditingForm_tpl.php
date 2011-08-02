@@ -114,7 +114,7 @@ if ($mode == 'addfixup') {
         $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message3', 'unesco_oer');
         }
 }
-if (isset($userstring) && $mode == 'add')
+if (isset($userstring[2]) && $mode == 'add')
 {
    $editor->value = $userstring[2];
 }
@@ -151,9 +151,9 @@ $email->value = $group[0]['email'];
 if ($mode == 'addfixup') {
     $email->value = $this->getParam('register_email');
    }
-if (isset($userstring[9]) && $mode == 'add')
+if (isset($userstring[3]) && $mode == 'add')
 {
-    $email->value = $userstring[9];
+    $email->value = $userstring[3];
     
 }
 
@@ -172,9 +172,9 @@ if ($mode == 'addfixup') {
         $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message4', 'unesco_oer');
     }
 }
-if (isset($userstring[3]) && $mode == 'add')
+if (isset($userstring[4]) && $mode == 'add')
 {
-    $address->value = $userstring[3];
+    $address->value = $userstring[4];
 }
 
 $table->startRow();
@@ -193,9 +193,9 @@ if ($mode == 'addfixup') {
         $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message5', 'unesco_oer');
     }
 }
-if (isset($userstring[4]) && $mode == 'add')
+if (isset($userstring[5]) && $mode == 'add')
 {
-    $city->value = $userstring[4];
+    $city->value = $userstring[5];
 }
 
 $table->startRow();
@@ -214,9 +214,9 @@ if ($mode == 'addfixup') {
         $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message6', 'unesco_oer');
     }
 }
-if (isset($userstring[5]) && $mode == 'add')
+if (isset($userstring[6]) && $mode == 'add')
 {
-    $state->value = $userstring[5];
+    $state->value = $userstring[6];
 }
 
 $table->startRow();
@@ -235,9 +235,9 @@ if ($mode == 'addfixup') {
         $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message7', 'unesco_oer');
         }
 }
-if (isset($userstring[6]) && $mode == 'add')
+if (isset($userstring[7]) && $mode == 'add')
 {
-    $code->value = $userstring[6];
+    $code->value = $userstring[7];
 }
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_postalcode', 'unesco_oer'));
@@ -262,9 +262,9 @@ if ($mode == 'addfixup') {
         $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message8', 'unesco_oer');
     }
 }
-if (isset($userstring[7]) && $mode == 'add')
+if (isset($userstring[8]) && $mode == 'add')
 {
-    $latitude->value = $userstring[7];
+    $latitude->value = $userstring[8];
 }
 
 $table->startRow();
@@ -282,9 +282,9 @@ if ($mode == 'addfixup') {
         $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message9', 'unesco_oer');
     }
 }
-if (isset($userstring[8]) && $mode == 'add')
+if (isset($userstring[9]) && $mode == 'add')
 {
-    $longitude->value = $userstring[8];
+    $longitude->value = $userstring[9];
 }
 
 $table->startRow();

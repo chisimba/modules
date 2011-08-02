@@ -52,135 +52,158 @@ class dbgroups extends dbtable {
 
     function editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail) {
         if ($name != '') {
-            return $this->update(
-                    'id',
-                    $id,
-                    $data = array(
+             $data = array(
                 'id' => $id,
-                'name' => $name)
-            );
+                'name' => $name);
+                $this->update('id',
+                    $id,$data);
+            
         }
 
         if ($email != '') {
-            return $this->update(
+         $data = array(
+             'id' => $id,
+             'email' => $email);
+            $this->update(
                     'id',
                     $id,
+                    $data
+            );
+        }
+
+                if ($website != '') {
+
+      
                     $data = array(
                 'id' => $id,
-                'email' => $email)
+                'website' => $website);
+                    $this->update(
+                    'id',
+                    $id,
+                    $data
             );
         }
 
 
         if ($address != '') {
-            return $this->update(
-                    'id',
-                    $id,
+          
                     $data = array(
                 'id' => $id,
-                'address' => $address)
+                'address' => $address);
+                    $this->update(
+                    'id',
+                    $id,
+                    $data
             );
         }
 
         if ($city != '') {
-            return $this->update(
-                    'id',
-                    $id,
+        
                     $data = array(
                 'id' => $id,
-                'city' => $city)
+                'city' => $city);
+            $this->update(
+                    'id',
+                    $id,
+                    $data
             );
         }
 
         if ($state != '') {
-            return $this->update(
-                    'id',
-                    $id,
+     
                     $data = array(
                 'id' => $id,
-                'state' => $state)
+                'state' => $state);
+            $this->update(
+                    'id',
+                    $id,
+                    $data
             );
         }
 
         if ($country != '') {
-            return $this->update(
-                    'id',
-                    $id,
+         
                     $data = array(
                 'id' => $id,
-                'country' => $country)
+                'country' => $country);
+                     $this->update(
+                    'id',
+                    $id,
+                    $data
             );
         }
 
 
         if ($postalcode != '') {
-            return $this->update(
-                    'id',
-                    $id,
+           
                     $data = array(
                 'id' => $id,
-                'postalcode' => $postalcode)
+                'postalcode' => $postalcode);
+                    $this->update(
+                    'id',
+                    $id,
+                    $data
             );
         }
 
-        if ($website != '') {
-            return $this->update(
-                    'id',
-                    $id,
-                    $data = array(
-                'id' => $id,
-                'website' => $website)
-            );
-        }
+
 
         if ($institution != '') {
-            return $this->update(
-                    'id',
-                    $id,
+     
                     $data = array(
                 'id' => $id,
-                'LinkedInstitution' => $institution)
-            );
+                'linkedInstitution' => $institution);
+            $this->update(
+                    'id',
+                    $id,
+                    $data);
         }
 
         if ($loclat != '') {
-            return $this->update(
-                    'id',
-                    $id,
+ 
                     $data = array(
                 'id' => $id,
-                'loclat' => $loclat)
+                'loclat' => $loclat);
+            $this->update(
+                    'id',
+                    $id,
+                    $data
             );
         }
 
         if ($loclong != '') {
-            return $this->update(
+                         $data = array(
+                'id' => $id,
+                'loclong' => $loclong);
+            $this->update(
                     'id',
                     $id,
-                    $data = array(
-                'id' => $id,
-                'loclong' => $loclong)
+                    $data
             );
         }
 
         if ($description != '') {
-            return $this->update(
-                    'id',
-                    $id,
+       
                     $data = array(
                 'id' => $id,
-                'description' => $description)
+                'description' => $description);
+             $this->update(
+                    'id',
+                    $id,
+                    $data
             );
+            }
             if ($thumbnail != '') {
-                return $this->update(
+                 $data = array(
+                    'id' => $id,
+                    'thumbnail' => $thumbnail);
+                 $this->update(
                         'id',
                         $id,
-                        $data = array(
-                    'id' => $id,
-                    'thumbnail' => $thumbnail)
+                        $data
                 );
             }
-        }
+        
     }
 
 //

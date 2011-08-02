@@ -203,8 +203,10 @@ echo $this->objGroupUtil->groupPerPage();
 
                             <?php
                                $abLink = new link($this->uri(array("action" => 'groupGrid')));
+                               $abLink2 = new link($this->uri(array("action" => 'groupGrid')));
+                                $abLink->link='<div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>';
                                $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
-                              // $abLink->cssClass = 'test';
+                              echo $abLink2->show();
                                echo $abLink->show();
 
 
@@ -212,17 +214,20 @@ echo $this->objGroupUtil->groupPerPage();
                         <script>
                             $('.test').click(function(){alert('dsfsdfsd');})
                         </script>
-                             <div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>
+<!--                             <div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>-->
 
 
                                <?php
                                $abLink = new link($this->uri(array("action" =>'groupList')));
-                               $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
-                               echo $abLink->show();
+                                $abLink2 = new link($this->uri(array("action" =>'groupList')));
+                                $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
+                                $abLink2->link='<div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>';
+                                echo $abLink->show();
+                                echo $abLink2->show();
 
                             ?>
 
-                        <div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>
+<!--                        <div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>-->
                     </div>
 
                 </div>
@@ -416,4 +421,42 @@ echo $this->objGroupUtil->groupPerPage();
     </div>
 </body>
 </html>
+
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=join]").click(function(){
+
+        var r=confirm( "Are you sure you want to join this group?");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+);
+
+}
+);
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=memberofgroup]").click(function(){
+
+        var r=confirm( "Your are a member of this group\n you can not join again!!!");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+
+
+);
+}
+);
+
+
+</script>
 

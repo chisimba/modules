@@ -22,6 +22,9 @@ class grouputil extends object {
     public function init(){
          $this->ObjDbUserGroups= $this->getObject("dbusergroups", "unesco_oer");
          $this->objDbGroups= $this->getObject("dbgroups", "unesco_oer");
+         $this->objUser=$this->getObject('user', 'security');
+         $this->objUseExtra = $this->getObject("dbuserextra","unesco_oer");
+
 
     }
 
@@ -47,6 +50,7 @@ class grouputil extends object {
 
 
 
+
   public function content($group){
 
       $thumbLink= new link($this->uri(array("action" => '11a','id'=>$group['id'])));
@@ -54,7 +58,12 @@ class grouputil extends object {
       //$joinLink;
        //$objUser = $this->getObject('user', 'security');
         //$imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
-
+     
+  
+              $joinGroupLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'])));
+              $joinGroupLink->link='Join';
+              $joinGroupLink->cssClass = 'joingroup';
+            
 
 
       $content.='
@@ -65,7 +74,9 @@ class grouputil extends object {
                             <div class="groupMemberAndJoinLinkDiv">
                             	<span class="greenText">Members :</span>'. $this->ObjDbUserGroups->groupMembers($group['id']) .'<br><br>
                                 <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
-               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">Join</a></div>
+               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">
+
+'.$joinGroupLink->show().'</a></div>
                             </div>
                             </div>
 
@@ -126,3 +137,43 @@ class grouputil extends object {
 }
 
 ?>
+
+
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=joingroup]").click(function(){
+
+        var r=confirm( "Are you sure you want to join this group?");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+);
+
+}
+);
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=memberofgroup]").click(function(){
+
+        var r=confirm( "Your are a member of this group\n you can not join again!!!");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+
+
+);
+}
+);
+
+
+</script>
+
