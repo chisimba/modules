@@ -43,7 +43,12 @@ if ($adaptationstring == null)
  <?php
         $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
        
-        $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
+       
+                          
+                        
+        
+      
+          $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
        echo $button->show();
 
         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
