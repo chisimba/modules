@@ -348,24 +348,6 @@ echo $this->objGroupUtil->groupPerPage();
                                         </body>
                                     </html>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                 </div>
                             </div>
                         </div>
