@@ -37,8 +37,21 @@
                 </div>
                 <div class="innerMenuTabsDiv">
                 <ul id="innerMenuTabs">
-                     <li><a href="#">MEMBERS (5)</a></li>
-                     <li class="onState"><a href="#">ADAPTATIONS (2)</a></li>
+                     <li><a href="#">
+                             <?php
+                             $memberLink=new link($this->uri(array("action" =>'groupMembersForm','id'=>$this->getParam('id'))));
+                             $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
+                             $memberLink->link="Members(".$No_Of_Members.")";
+                             echo $memberLink->show();
+                             ?>       </a></li>
+                     <li class="onState"><a href="#">
+                             <?php
+                             $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'))));
+                             $No_Of_adaptation=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
+                             $groupadaptationLink->link=" ADAPTATIONS(".$No_Of_adaptation.")";
+                             echo $groupadaptationLink->show();
+                             ?>
+                         </a></li>
                      <li><a href="#">DISCUSSIONS (1)</a></li>
                      <li><a href="#">INSTITUTIONS (1)</a></li>
 
