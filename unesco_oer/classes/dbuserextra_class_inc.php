@@ -212,6 +212,20 @@ class dbuserextra extends dbtable{
     }
 
 
+    function getUserfirstname($userid){
+        $sql="Select * From tbl_users WHERE userid='$userid'";
+        $array=$this->getArray($sql);
+        return $array[0]['firstname'];
+
+    }
+
+    function getUserSurname($userid){
+        $sql="Select * From tbl_users WHERE userid='$userid'";
+        $array=$this->getArray($sql);
+        return $array[0]['surname'];
+        
+    }
+
 
 
 

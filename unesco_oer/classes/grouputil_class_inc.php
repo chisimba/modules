@@ -85,6 +85,7 @@ class grouputil extends object {
 '.$joinGroupLink->show().'</a></div>
                             </div>
                             </div>
+                            
 
                             ';
       return $content;
@@ -134,6 +135,43 @@ class grouputil extends object {
         echo $objTable->show();
     
   }
+
+  //return group members
+
+public function groupMembers($groupid){
+    //$NoofMembers=count($this->ObjDbUserGroups->getGroupUser($groupid));
+    $arrays=$this->ObjDbUserGroups->getGroupUser($groupid);
+    foreach( $arrays as $array){
+        $firstname=$this->objUseExtra->getUserSurname($array['id']);
+        $surname=$this->objUseExtra->getUserfirstname($array['id']);
+        $content.='         <div class="memberList">
+                            <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
+                            <div class="memberIconText">'.$firstname." ".$surname.' (<span class="greenText fontBold">Group Administrator</span>)</div>
+
+                        </div>';
+         echo $content;
+         }
+}
+
+public function groupAdaptation($groupid){
+    $arrays=$this->objDbGroups->getGroupProductadaptation($groupid);
+    foreach($arrays as $array){
+        $productID=$array['product_id'];
+        $Thumbnail=$this->objDbGroups->getAdaptedProductThumbnail($productID);
+        $Title=$this->objDbGroups->getAdaptedProductTitle($productID);
+
+
+    $content.='              <div class="discussionList">
+                            <img src='.$Thumbnail.' alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                            <div class="textNextToGroupIcon">
+                             <h2>'.$Title.'</h2>
+                             Institution : <a href="#" class="greyTextLink"></a><br>
+                             Adapted in : <a href="#" class="bookmarkLinks"></a>
+                            </div>
+                        </div>';
+    echo $content;
+        }
+}
 
 
 

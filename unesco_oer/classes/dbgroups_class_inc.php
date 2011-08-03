@@ -370,14 +370,24 @@ class dbgroups extends dbtable {
          return $this->getArray($sql);
      }
 
+//To get the adaptation of group by groupid
+
     function getGroupProductadaptation($groupid){
         $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE  group_id = '$groupid'";
         return $this->getArray($sql);
     }
-    
-   
-
-   
+// To get adapted group adapted product thumbnail
+    function getAdaptedProductThumbnail($productid){
+        $sql="SELECT * FROM tbl_unesco_oer_products WHERE id= '$productid' AND parent_id='$productid'";
+        $array=$this->getArray($sql);
+        return $array[0]['thumbnail'];
+    }
+  //To get group adapted product title
+    function getAdaptedProductTitle($productid){
+        $sql="SELECT * FROM tbl_unesco_oer_products WHERE id= '$productid' AND parent_id='$productid'";
+        $array=$this->getArray($sql);
+        return $array[0]['title'];
+    }
 
    function getGroupUsers($groupname){
         $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE groupmembership = '$groupname'";
@@ -410,6 +420,8 @@ class dbgroups extends dbtable {
         $this->insert($data);
 
    }
+
+
 
 
 

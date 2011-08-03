@@ -175,6 +175,8 @@ $this->loadClass('textinput', 'htmlelements');
                      <li class="onState"><a href="#">
                              <?php
                              $memberLink=new link($this->uri(array("action" =>'groupmember')));
+                             $this->ObjDbUserGroups->groupMembers($group['id']);
+
                              ?>
 
 
@@ -188,7 +190,12 @@ $this->loadClass('textinput', 'htmlelements');
                 <div class="tenPixelPaddingLeft">
                 <div class="topGroupDiv">
                 	<div class="paddingContentTopLeftRightBottom">
-                        <div class="memberList">
+
+                            <?php
+                            $this->objGroupUtil->groupMembers($this->getParam('id'));
+
+                            ?>
+<!--                        <div class="memberList">
                             <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
                             <div class="memberIconText">Ignor Inuk (<span class="greenText fontBold">Group Administrator</span>)</div>
 
@@ -214,7 +221,7 @@ $this->loadClass('textinput', 'htmlelements');
                             <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
                             <div class="memberIconText">Davide Stroni</div>
 
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <br><br><br>
