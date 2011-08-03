@@ -69,7 +69,12 @@ $this->loadClass('textinput', 'htmlelements');
                 </div>
                 <div class="tenPixelPaddingLeft">
                 <div class="topGroupDiv">
-                	<div class="paddingContentTopLeftRightBottom">
+                            <?php
+                            $this->objGroupUtil->groupMembers($this->getParam('id'));
+
+                            ?>
+
+<!--                	<div class="paddingContentTopLeftRightBottom">
                         <div class="memberList">
                             <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
                             <div class="memberIconText">Ignor Inuk (<span class="greenText fontBold">Group Administrator</span>)</div>
@@ -97,7 +102,7 @@ $this->loadClass('textinput', 'htmlelements');
                             <div class="memberIconText">Davide Stroni</div>
 
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <br><br><br>
                 </div>
