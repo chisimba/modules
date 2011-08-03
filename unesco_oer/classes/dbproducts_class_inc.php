@@ -40,6 +40,12 @@ class dbproducts extends dbtable
 
         return $this->getArray($sql);
     }
+    function getadapted($id)
+    {
+        $sql = "select * from $this->_tableName where parent_id = '$id'";
+
+        return $this->getArray($sql);
+    }
 
     function getTotalEntries($filter)
     {
@@ -134,6 +140,13 @@ class dbproducts extends dbtable
 
     function getAdaptationDataByProductID($id) {
         $sql = "select * from $this->adaptationTable where product_id = '$id'";
+
+        $data = $this->getArray($sql);
+        return $data[0];
+    }
+    
+     function getgroupbyadap($id) {
+        $sql = "select * from $this->adaptationTable where id = '$id'";
 
         $data = $this->getArray($sql);
         return $data[0];

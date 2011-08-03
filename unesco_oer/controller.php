@@ -258,6 +258,8 @@ class unesco_oer extends controller {
     }
 
     public function __11a() {
+        
+          $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "11a_tpl.php";
     }
 
@@ -404,9 +406,8 @@ class unesco_oer extends controller {
 
 
 
-        $this->setVarByRef("finalstring", $Buildstring);
-        $this->setVarByRef("TotalEntries", $TotalEntries);
-        $this->setVarByRef("adaptationstring", $adaptationstring);
+        $this->setVarByRef("productID", $parentid);
+       
 
    $this->setLayoutTemplate('maincontent_layout_tpl.php');
 

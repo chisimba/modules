@@ -277,6 +277,7 @@ class dbgroups extends dbtable {
    
     }
     
+    
     function getGroupDescription($groupid){
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
         $GroupDescription = $this->getArray($sql);

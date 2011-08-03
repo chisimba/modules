@@ -1,4 +1,22 @@
- 
+<?php
+$this->loadClass('commentmanager', 'unesco_oer');
+$this->loadClass('textarea', 'htmlelements');
+$this->loadClass('link', 'htmlelements');
+$this->loadClass('form', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('dbcomments', 'unesco_oer');
+$this->loadClass('treemenu', 'tree');
+$this->loadClass('treenode', 'tree');
+$product = $this->getObject('product', 'unesco_oer');
+$product->loadProduct($productID);
+
+$js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
+$this->appendArrayVar('headerParams', $js);
+
+//load java script
+$js = '<script language="JavaScript" src="' . $this->getResourceUri('ratingsys.js') . '" type="text/javascript"></script>';
+$this->appendArrayVar('headerParams', $js);
+?> 
 
 
 
@@ -17,7 +35,16 @@
             <div class="productsBackgroundColor">
             <div class="TopImageAndHeading tenPixelTopPadding">
               <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49" class="leftTopImage">
-              <h2 class="blueText">Model Curriculum for Journalism Education</h2>
+              <h2 class="blueText">
+                  
+                  
+                           <?php
+                echo $product->getTitle();
+             
+                
+                
+                ?>
+              </h2>
         	</div>
           <div class="wideLeftFloatDiv">
         	<!-- Left Colum -->
@@ -81,16 +108,34 @@
               selected adaptations</a></div>
             <table class="threeAListingTable" cellspacing="0" cellpadding="0">
                	  <tr>
-                    	<td>
+                      <?php
+                         
+                         $products = $this->objDbProducts->getadapted($productID);
+                foreach ($products as $product){
+                    
+                    $groupid = $this->objDbProducts->getAdaptationDataByProductID($product['id']);
+                    $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
+                 
+                 
+                  echo '<td>
+                            
                             <div class="adaptedByDiv3a">Adapted by:</div>
                             <div class="gridSmallImageAdaptation">
                             	<img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                <span class="greyListingHeading">Polytechnic of Namibia</span>
+                                <span class="greyListingHeading">
+                            
+                                    
+                                    
+                                </span>
                   			</div>
-                            <div class="gridAdaptationLinksDiv">
-                            	<a href="#" class="productAdaptationGridViewLinks">School</a> | 
-                                <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br> 
-                                <a href="#" class="productAdaptationGridViewLinks">English</a>
+                            <div class="gridAdaptationLinksDiv">' .
+                    
+                         $grouptitle
+                       .'
+                    
+                    
+                    
+                            	
                             </div>
                             <div class="">
                             	<div class="product3aViewDiv">
@@ -120,280 +165,18 @@
                                 
                             </div>
                 </td>
-                        <td>
-                            <div class="adaptedByDiv3a">Adapted by:</div>
-                            <div class="gridSmallImageAdaptation">
-                            	<img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                <span class="greyListingHeading">Polytechnic of Namibia</span>
-           			    </div>
-                            <div class="gridAdaptationLinksDiv">
-                            	<a href="#" class="productAdaptationGridViewLinks">School</a> | 
-                                <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br> 
-                                <a href="#" class="productAdaptationGridViewLinks">English</a>
-                        </div>
-                            <div class="">
-                            	<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                        <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
-                                    </div>
-                              	</div>
-                                
-                          		<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                    	<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">bookmark</a>
-                                 	</div>
-                                </div>
-                                 <div class="product3aViewDiv">
-                                    <div class="imgFloatRight"><input type="checkbox"></div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">Compare</a>
-                                 	</div>
-                                </div>
-                                
-                                
-                          </div>
-                        </td>
-                        <td>
-                            <div class="adaptedByDiv3a">Adapted by:</div>
-                            <div class="gridSmallImageAdaptation">
-                            	<img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                <span class="greyListingHeading">Polytechnic of Namibia</span>
-           			    </div>
-                            <div class="gridAdaptationLinksDiv">
-                            	<a href="#" class="productAdaptationGridViewLinks">School</a> | 
-                                <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br> 
-                                <a href="#" class="productAdaptationGridViewLinks">English</a>
-                        </div>
-                            <div class="">
-                            	<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                        <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
-                                    </div>
-                              	</div>
-                                
-                          		<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                    	<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">bookmark</a>
-                                 	</div>
-                                </div>
-                                 <div class="product3aViewDiv">
-                                    <div class="imgFloatRight"><input type="checkbox"></div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">Compare</a>
-                                 	</div>
-                                </div>
-                                
-                                
-                          </div>
-                        </td>
-                        <td>
-                          <div class="adaptedByDiv3a">Adapted by:</div>
-                          <div class="gridSmallImageAdaptation">
-                            	<img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                <span class="greyListingHeading">Polytechnic of Namibia</span>
-               			  </div>
-                          <div class="gridAdaptationLinksDiv">
-                            	<a href="#" class="productAdaptationGridViewLinks">School</a> | 
-                                <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br> 
-                                <a href="#" class="productAdaptationGridViewLinks">English</a>
-                          </div>
-                          <div class="">
-                            	<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                        <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
-                                    </div>
-                              	</div>
-                                
-                          		<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                    	<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">bookmark</a>
-                                 	</div>
-                                </div>
-                                 <div class="product3aViewDiv">
-                                    <div class="imgFloatRight"><input type="checkbox"></div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">Compare</a>
-                                 	</div>
-                                </div>
-                                
-                                
-                          </div>
-                        </td>
-                </tr>
-                    <tr>
-                    	<td>
-                            <div class="adaptedByDiv3a">Adapted by:</div>
-                            <div class="gridSmallImageAdaptation">
-                            	<img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                <span class="greyListingHeading">Polytechnic of Namibia</span>
-           			    </div>
-                            <div class="gridAdaptationLinksDiv">
-                            	<a href="#" class="productAdaptationGridViewLinks">School</a> | 
-                                <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br> 
-                                <a href="#" class="productAdaptationGridViewLinks">English</a>
-                        </div>
-                            <div class="">
-                            	<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                        <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
-                                    </div>
-                              	</div>
-                                
-                          		<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                    	<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">bookmark</a>
-                                 	</div>
-                                </div>
-                                 <div class="product3aViewDiv">
-                                    <div class="imgFloatRight"><input type="checkbox"></div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">Compare</a>
-                                 	</div>
-                                </div>
-                                
-                                
-                          </div>
-                        </td>
-                        <td>
-                            <div class="adaptedByDiv3a">Adapted by:</div>
-                            <div class="gridSmallImageAdaptation">
-                            	<img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                <span class="greyListingHeading">Polytechnic of Namibia</span>
-           			    </div>
-                            <div class="gridAdaptationLinksDiv">
-                            	<a href="#" class="productAdaptationGridViewLinks">School</a> | 
-                                <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br> 
-                                <a href="#" class="productAdaptationGridViewLinks">English</a>
-                        </div>
-                            <div class="">
-                            	<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                        <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
-                                    </div>
-                              	</div>
-                                
-                          		<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                    	<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">bookmark</a>
-                                 	</div>
-                                </div>
-                                 <div class="product3aViewDiv">
-                                    <div class="imgFloatRight"><input type="checkbox"></div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">Compare</a>
-                                 	</div>
-                                </div>
-                                
-                                
-                          </div>
-                        </td>
-                        <td>
-                            <div class="adaptedByDiv3a">Adapted by:</div>
-                            <div class="gridSmallImageAdaptation">
-                            	<img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                <span class="greyListingHeading">Polytechnic of Namibia</span>
-           			    </div>
-                            <div class="gridAdaptationLinksDiv">
-                            	<a href="#" class="productAdaptationGridViewLinks">School</a> | 
-                                <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br> 
-                                <a href="#" class="productAdaptationGridViewLinks">English</a>
-                        </div>
-                            <div class="">
-                            	<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                        <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
-                                    </div>
-                              	</div>
-                                
-                          		<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                    	<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">bookmark</a>
-                                 	</div>
-                                </div>
-                                 <div class="product3aViewDiv">
-                                    <div class="imgFloatRight"><input type="checkbox"></div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">Compare</a>
-                                 	</div>
-                                </div>
-                                
-                                
-                          </div>
-                        </td>
-                        <td>
-                          <div class="adaptedByDiv3a">Adapted by:</div>
-                          <div class="gridSmallImageAdaptation">
-                            	<img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
-                                <span class="greyListingHeading">Polytechnic of Namibia</span>
-               			  </div>
-                          <div class="gridAdaptationLinksDiv">
-                            	<a href="#" class="productAdaptationGridViewLinks">School</a> | 
-                                <a href="#" class="productAdaptationGridViewLinks">Namibia</a> <br> 
-                                <a href="#" class="productAdaptationGridViewLinks">English</a>
-                          </div>
-                          <div class="">
-                            	<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                        <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
-                                    </div>
-                              	</div>
-                                
-                          		<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                    	<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">bookmark</a>
-                                 	</div>
-                                </div>
-                                 <div class="product3aViewDiv">
-                                    <div class="imgFloatRight"><input type="checkbox"></div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">Compare</a>
-                                 	</div>
-                                </div>
-                                
-                                
-                          </div>
-                        </td>
+                
+                ';
+                    
+                }
+                
+                      
+                    	
+                ?>
+                            
+                            
+                            
+                            
+                      
                     </tr>
               </table>

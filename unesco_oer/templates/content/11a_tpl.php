@@ -7,7 +7,7 @@ $this->loadClass('textinput', 'htmlelements');
 ?>
 <?php $this->setLayoutTemplate('maincontent_layout_tpl.php'); ?>
             <div class="subNavigation"></div>
-<!--        	 Left column DIv -->
+        	 Left column DIv 
             <div class="groupWideLeftColumn">
 
             	<div class="tenPixelLeftPadding tenPixelBottomPadding">
@@ -109,7 +109,7 @@ $this->loadClass('textinput', 'htmlelements');
 
             </div>
 
-            <!-- Right column DIv -->
+             Right column DIv 
             <div class="rightColumnDiv">
             	<div class="rightColumnDiv">
 
