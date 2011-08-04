@@ -305,7 +305,7 @@ class dbgroups extends dbtable {
      }
 
      function getThumbnail($groupid){
-         $sql="select * from tnl_unesco_oer_groups where id='$groupid'";
+         $sql="select * from tbl_unesco_oer_groups where id='$groupid'";
          $thumbnail=$this->getArray($sql);
          return $thumbnail[0]['thumbnail'];
       

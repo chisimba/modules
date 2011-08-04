@@ -177,6 +177,18 @@ class unesco_oer extends controller {
     public function __3a() {
         return "3a_tpl.php";
     }
+    
+     public function __CompareProducts() {
+
+        $users = $this->getParam("selectedusers");
+       
+
+         $this->setVarByRef('selectedusers', $users);
+
+
+        return "6a_tpl.php";
+    }
+
 
     public function __Bookmarks() {
         return "Bookmarks_tpl.php";

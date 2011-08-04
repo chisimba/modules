@@ -19,10 +19,7 @@ $this->appendArrayVar('headerParams', $js);
 ?> 
 
 
-
-
-
-
+  
 
 
 <div class="mainContentHolder">
@@ -34,15 +31,12 @@ $this->appendArrayVar('headerParams', $js);
             </div>
             <div class="productsBackgroundColor">
             <div class="TopImageAndHeading tenPixelTopPadding">
-              <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49" class="leftTopImage">
+              <img src=' <?php     echo $product->getThumbnailPath(); ?>' width="45" height="49" class="leftTopImage">
               <h2 class="blueText">
-                  
                   
                            <?php
                 echo $product->getTitle();
              
-                
-                
                 ?>
               </h2>
         	</div>
@@ -103,25 +97,41 @@ $this->appendArrayVar('headerParams', $js);
         	<!-- Center column DIv -->
             <div class="rightWideColumnDiv">
             <div class=""><input type="checkbox"> Toggle
-              <a href="#"><img src="skins/unesco_oer/images/icon-compare-adaptations.png" class="toogleImagePadding"></a> 
-              <a href="#" class="pinkTextLink">Compare
-              selected adaptations</a></div>
+             <img src="skins/unesco_oer/images/icon-compare-adaptations.png" class="toogleImagePadding">
+<!--              <a href="#" class="pinkTextLink">Compare
+              selected adaptations</a></div>-->
+  <?php
+            $abLink = new link('#');
+             $abLink->cssClass = 'pinkTextLink';
+             $abLink->cssId = 'compareproduct';
+             $abLink->link = 'Compare';
+             echo $abLink->show();
+            
+            
+            ?>
+            </div>
             <table class="threeAListingTable" cellspacing="0" cellpadding="0">
                	  <tr>
                       <?php
-                         
+                           $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
                          $products = $this->objDbProducts->getadapted($productID);
                 foreach ($products as $product){
                     
                     $groupid = $this->objDbProducts->getAdaptationDataByProductID($product['id']);
                     $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
+                   $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
+                   
+                $checkbox = new checkbox('selectedusers[]', $product['id']);
+                $checkbox->value = $product['id'];
+                $checkbox->cssId = 'user_' . $product['id'];
+               
+           
                  
-                 
-                  echo '<td>
+                  $form->addToForm('<td>
                             
                             <div class="adaptedByDiv3a">Adapted by:</div>
                             <div class="gridSmallImageAdaptation">
-                            	<img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                            	<img src="' . $thumbnail .'" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
                                 <span class="greyListingHeading">
                             
                                     
@@ -156,7 +166,14 @@ $this->appendArrayVar('headerParams', $js);
                                  	</div>
                                 </div>
                                  <div class="product3aViewDiv">
-                                    <div class="imgFloatRight"><input type="checkbox"></div>
+                                    <div class="imgFloatRight">');
+                          
+                          
+                          $form->addToForm($checkbox->show());
+                  
+                            $form->addToForm('
+                                    
+                    
                                    <div class="listingAdaptationLinkDiv">
                                     <a href="#" class="bookmarkLinks">Compare</a>
                                  	</div>
@@ -166,11 +183,11 @@ $this->appendArrayVar('headerParams', $js);
                             </div>
                 </td>
                 
-                ';
+                ');
                     
                 }
                 
-                      
+                echo $form->show();      
                     	
                 ?>
                             
@@ -180,3 +197,15 @@ $this->appendArrayVar('headerParams', $js);
                       
                     </tr>
               </table>
+                
+                <script src="http://code.jquery.com/jquery-latest.js"></script>
+     <script>
+               $(document).ready($('#compareproduct').click(function(){
+                     document.forms['compareprods'].submit();
+                  
+                 
+                  
+
+                  }));
+
+</script>

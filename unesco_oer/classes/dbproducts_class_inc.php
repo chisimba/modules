@@ -145,12 +145,7 @@ class dbproducts extends dbtable
         return $data[0];
     }
     
-     function getgroupbyadap($id) {
-        $sql = "select * from $this->adaptationTable where id = '$id'";
-
-        $data = $this->getArray($sql);
-        return $data[0];
-    }
+   
     
     /*
      * function takes a creator name and if it has an adaptation
