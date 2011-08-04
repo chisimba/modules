@@ -15,7 +15,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-echo "dddddddddddddddddddddddd";
+
  var_dump($selectedusers);
 
 ?>
@@ -112,6 +112,12 @@ echo "dddddddddddddddddddddddd";
                             </li>
                         </ul>
                                 </div>
+                                
+                                <?php
+                                foreach ($selectedusers as $selecteduser){
+                                    
+                                    
+                                    echo '   
                                 <div class="toogle">
                                 <div class="collapseIcon"><input type="checkbox"></div> <div class="collapseText">Toggle</div> 
                                 <img src="images/icon-product-closed-folder.png" width="18" height="18" class="collapseIcon"> 
@@ -170,137 +176,23 @@ echo "dddddddddddddddddddddddd";
                             </li>
                         </ul>
                             </div>
-                            <div class="toogle">
-                                <div class="collapseIcon"><input type="checkbox"></div> <div class="collapseText">Toggle</div> 
-                                <img src="images/icon-product-closed-folder.png" width="18" height="18" class="collapseIcon"> 
-                                <div class="collapseText"><a href="" class="greyTextLink">Collapse all</a></div>
-                                <img src="images/icon-product-opened-folder.png" width="18" height="18" class="collapseIcon"> 
-                                <div class="collapseText"><a href="" class="greyTextLink">Expand all</a></div>
-                            </div>
-						</div>
-                        <div class="spaceNextToToggleBoxes"></div>
-                        <div class="toggleBoxAdaptation">
-							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
-                                <h4><a href="#" class="adaptationListingLink">Model Curricula for Journalism</a></h4>
-                                <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                          ';
+                                    
+                                    
+                                }
                                 
                                 
-                                <div class="treeFrame">
-                            	<ul class="ulMinusPublish">
-                            <li><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulPlusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <ul class="ulMinusPublish">
-                                        <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                                        	<ul class="ulDocument">
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </ul>
-                            </li>
-                        </ul>
-                            </div>
-                            <div class="toogle">
-                                <div class="collapseIcon"><input type="checkbox"></div> <div class="collapseText">Toggle</div> 
-                                <img src="images/icon-product-closed-folder.png" width="18" height="18" class="collapseIcon"> 
-                                <div class="collapseText"><a href="" class="greyTextLink">Collapse all</a></div>
-                                <img src="images/icon-product-opened-folder.png" width="18" height="18" class="collapseIcon"> 
-                                <div class="collapseText"><a href="" class="greyTextLink">Expand all</a></div>
-                            </div>
-						</div>
-                        <div class="spaceNextToToggleBoxes"></div>
-                        <div class="toggleBoxAdaptation">
-							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
-                                <h4><a href="#" class="adaptationListingLink">Model Curricula for Journalism</a></h4>
-                                <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                
+                                ?>
                                 
                                 
-                                <div class="treeFrame">
-                            	<ul class="ulMinusPublish">
-                            <li><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulPlusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <ul class="ulMinusPublish">
-                                        <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                                        	<ul class="ulDocument">
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </ul>
-                            </li>
-                        </ul>
-                            </div>
-                            <div class="toogle">
-                                <div class="collapseIcon"><input type="checkbox"></div> <div class="collapseText">Toggle</div> 
-                                <img src="images/icon-product-closed-folder.png" width="18" height="18" class="collapseIcon"> 
-                                <div class="collapseText"><a href="" class="greyTextLink">Collapse all</a></div>
-                                <img src="images/icon-product-opened-folder.png" width="18" height="18" class="collapseIcon"> 
-                                <div class="collapseText"><a href="" class="greyTextLink">Expand all</a></div>
-                            </div>
-						</div>
-            
-            </div>
-            
+                                
+                             
             
           </div>
          </div>
-        <!-- Footer-->
+      
         
-        </div>
-    </div>
+       
 </body>
 </html>

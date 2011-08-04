@@ -180,9 +180,8 @@ class unesco_oer extends controller {
     
      public function __CompareProducts() {
 
-        $users = $this->getParam("selectedusers");
-       
-
+         $users = $this->getParam("selectedusers");
+         $this->setLayoutTemplate('maincontent_layout_tpl.php');
          $this->setVarByRef('selectedusers', $users);
 
 

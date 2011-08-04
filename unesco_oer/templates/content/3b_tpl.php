@@ -125,8 +125,6 @@ $this->appendArrayVar('headerParams', $js);
                 $checkbox->value = $product['id'];
                 $checkbox->cssId = 'user_' . $product['id'];
                
-           
-                 
                   $form->addToForm('<td>
                             
                             <div class="adaptedByDiv3a">Adapted by:</div>
