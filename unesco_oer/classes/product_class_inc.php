@@ -345,6 +345,14 @@ class product extends object
                                         );
             $this->setThumbnailPath($results['path']);
         }
+
+        return $this->_identifier;
+    }
+
+    function createBlankProduct() { //TODO complete this train of thought
+        $this->deleteProduct();
+        $id = $this->saveProduct();
+        return $id;
     }
 
     /**This is an internal function for saving adaptation specific metadata
@@ -494,16 +502,52 @@ class product extends object
         $fileInfoArray = array();
 
         if (!$this->objThumbUploader->isFileValid($fileInfoArray) && !$this->isAdaptation())
-        //if (FALSE)
-            {
-                $valid = FALSE;
-                $this->addValidationMessage('thumbnail', $valid, 'A thumbnail is required');
+        {
+            switch ($fileInfoArray['reason']) {
+                case 'nouploadedfileprovided':
+                    if (!$this->getThumbnailPath()) {
+                        $valid = FALSE;
+                        $this->addValidationMessage('thumbnail', $valid, 'A thumbnail is required');
+                    }
+                    break;
+                case 'bannedfile':
+                    $valid = FALSE;
+                    $this->addValidationMessage('thumbnail', $valid, 'Invalid file type submitted!');
+                    break;
+                case 'doesnotmeetextension':
+                    $valid = FALSE;
+                    $this->addValidationMessage('thumbnail', $valid, 'Invalid file type submitted!');
+                    break;
+                case 'partialuploaded':
+                    $valid = FALSE;
+                    $this->addValidationMessage('thumbnail', $valid, 'Thumbnail upload failed, please try again.');
+                    break;
+
+                default:
+                    break;
             }
+        } elseif ($this->objThumbUploader->isFileValid($fileInfoArray) && !$this->isAdaptation()) {
+            $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
+            $results = FALSE;
+            if (!$this->isDeleted() && !$this->isAdaptation()){
+                $results = $this->uploadThumbNail($path);
+            }
+
+            if ($results)
+            {
+                $this->_objDbProducts->updateProduct(
+                                                $this->getIdentifier(),
+                                                array( 'thumbnail' => 'usrfiles/'.$results['path'])
+                                            );
+                $this->setThumbnailPath($results['path']);
+            }
+        }
 
         return $valid;
     }
 
     //TODO add language elements where required
+    //TODO move this to the Template
     /**This function returns a display for entering product metadata
      *
      * @return string
@@ -569,11 +613,27 @@ class product extends object
 
         //field for the thumbnail
         if(!$this->isAdaptation()){
+            $tableThumb = $this->newObject('htmltable', 'htmlelements');
+            $tableThumb->cssClass = "moduleHeader";
+            $tableThumb->startRow();
+            $tableThumb->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . '<font color="#FF2222">* '. $this->validationArray['thumbnail']['message']. '</font>');
+            $tableThumb->addCell('Preview');
+            $tableThumb->endRow();
+            $tableThumb->startRow();
+            $tableThumb->addCell($this->objThumbUploader->show());
+            if ($this->getThumbnailPath()) {
+                $tableThumb->addCell("<img width='79' height='101' style='border:1px solid black;' src='{$this->getThumbnailPath()}'>");
+            } else {
+                $tableThumb->addCell("<img width='79' height='101' src='skins/_common/icons/imagepreview.gif'>");
+            }
+            $tableThumb->endRow();
+            
+            $fieldset = $this->newObject('fieldset','htmlelements');
+            $fieldset->setLegend('Product Thumbnail');
+            $fieldset->addContent($tableThumb->show());
+
             $table->startRow();
-            $table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . '<font color="#FF2222">* '. $this->validationArray['thumbnail']['message']. '</font>');
-            $table->endRow();
-            $table->startRow();
-            $table->addCell($this->objThumbUploader->show());
+            $table->addCell($fieldset->show());
             $table->endRow();
         }
 
@@ -1002,7 +1062,7 @@ class product extends object
             $fieldName = 'group';
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_group', 'unesco_oer');
             //$title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
-            //TODO get this information from  the groups data base
+            //TODO Update group and institution retrievel when deals has fixed his code
 //            $groups = array(
 //                            array('id' => '1', 'name' => 'Polytechnic of Namibia, journalism department'),
 //                            array('id' => '2', 'name' => 'Wits University, journalism department')
@@ -1080,7 +1140,6 @@ class product extends object
 
         return $form_data->show();
 
-        //TODO Date published ??
         //TODO Related Languages ??
     }
 
@@ -1573,7 +1632,6 @@ class product extends object
        return "";
    }
 
-   //TODO return group name in text with this
    function getGroupName()
    {
        $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
@@ -1587,8 +1645,7 @@ class product extends object
        return $this->_group;
    }
 
-   //TODO return institution name in text with this
-   function getInstitutionName()
+    function getInstitutionName()
    {
         $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
         $institution = $objInstitutionManager->getInstitution($this->getInstitutionID());

@@ -94,6 +94,17 @@ class thumbnailuploader extends object{
             return FALSE;
         }
 
+        //get Restricted files list
+        $restrictions = $this->getParam('restrictions__' . $this->_uploadInput->name);
+
+        if ($restrictions == '') {
+            $restrictions = NULL;
+        } else {
+            $restrictions = explode('___', $restrictions);
+        }
+
+        $objFileParts = $this->getObject('fileparts', 'files');
+
         $fileInfoArray = array();
 
         // Check that file is not forbidden
@@ -116,9 +127,9 @@ class thumbnailuploader extends object{
             }
             
             //TODO add check for file exstension
-//        else if (is_array($ext) && !in_array($objFileParts->getExtension($file['name']), $ext)) {
-//            $fileInfoArray  = array ('success'=>FALSE, 'reason'=>'doesnotmeetextension', 'name'=>$file['name'], 'size'=>$file['size'], 'mimetype'=>$file['type'], 'errorcode'=>$file['error']);
-//        }
+        else if (is_array($restrictions) && !in_array($objFileParts->getExtension($file['name']), $restrictions)) {
+            $fileInfoArray  = array ('success'=>FALSE, 'reason'=>'doesnotmeetextension', 'name'=>$file['name'], 'size'=>$file['size'], 'mimetype'=>$file['type'], 'errorcode'=>$file['error']);
+        }
 
 //            $fileInfoArray  = array ('success'=>FALSE, 'errorCode'=>$file['error']);
         if (empty($fileInfoArray))

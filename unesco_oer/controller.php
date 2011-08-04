@@ -1925,6 +1925,10 @@ class unesco_oer extends controller {
                     return $defaultTemplate;
                 }
                 break;
+            case "newproduct":
+                $product->createBlankProduct();
+                return $defaultTemplate;
+                break;
             case "createcontent":
 //test if all fields are valid
                 if ($product->handleUpload()) {
@@ -1935,6 +1939,7 @@ class unesco_oer extends controller {
                 break;
 
             default:
+                //echo 'invalid action!'; die();
                 return $defaultTemplate;
                 break;
         }
