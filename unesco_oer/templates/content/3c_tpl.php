@@ -18,7 +18,7 @@
  $product = $this->getObject('product'); 
  $product->loadProduct($productID);
  $content = $product->getContentManager();
-$existingContent = $content->getContentByContentID($path);
+ $existingContent = $content->getContentByContentID($path);
  
 
 ?>

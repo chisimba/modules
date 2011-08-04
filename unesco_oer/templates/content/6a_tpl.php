@@ -16,7 +16,9 @@
  */
 
 
- var_dump($selectedusers);
+ var_dump($selectedproducts);
+ 
+ 
 
 ?>
 
@@ -114,9 +116,13 @@
                                 </div>
                                 
                                 <?php
-                                foreach ($selectedusers as $selecteduser){
-                                    
-                                    
+                              $product = $this->getObject('product', 'unesco_oer');
+                                foreach ($selectedproducts as $selectedproduct){
+                                  
+                                    $product->loadProduct($selectedproduct);
+                                    $content = $product->getContentManager();
+                                      
+           
                                     echo '   
                                 <div class="toogle">
                                 <div class="collapseIcon"><input type="checkbox"></div> <div class="collapseText">Toggle</div> 
@@ -136,53 +142,18 @@
                                 
                                 
                                 <div class="treeFrame">
-                            	<ul class="ulMinusPublish">
-                            <li><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulPlusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <ul class="ulMinusPublish">
-                                        <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                                        	<ul class="ulDocument">
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </ul>
-                            </li>
-                        </ul>
+                            	<ul class="ulMinusPublish"> '. $content->getContentTree(FALSE). '
+                      
+                        </ul> 
                             </div>
-                          ';
+                                       ';
                                     
-                                    
+                                 echo   $product->getTitle();
+                                 echo 'tree should be here';
                                 }
                                 
                                 
-                                
+                           
                                 ?>
                                 
                                 

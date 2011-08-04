@@ -182,7 +182,7 @@ class unesco_oer extends controller {
 
          $users = $this->getParam("selectedusers");
          $this->setLayoutTemplate('maincontent_layout_tpl.php');
-         $this->setVarByRef('selectedusers', $users);
+         $this->setVarByRef('selectedproducts', $users);
 
 
         return "6a_tpl.php";
