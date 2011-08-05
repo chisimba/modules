@@ -218,15 +218,26 @@ class curriculum extends content {
         $this->_title = $this->getParam('title');
 
         if (empty($this->_id)) {
-            $this->_id =  $this->objDbCurricula->addCurriculum(
+            $this->saveNew();
+        }else{
+            $this->updateExisting();
+        }
+
+        return TRUE;
+    }
+
+    protected function saveNew() {
+        $this->_id =  $this->objDbCurricula->addCurriculum(
                     $this->getParentID(), // This is the ID of the product this curruculum is contained in.
                     $this->_title,
                     $this->_forward,
                     $this->_background,
                     $this->_introductory_description
                     );
-        }else{
-            $this->objDbCurricula->updateCurriculum(
+    }
+
+    protected function updateExisting() {
+        $this->objDbCurricula->updateCurriculum(
                     $this->_id,
                     $this->getParentID(), // This is the ID of the product this curruculum is contained in.
                     $this->_title,
@@ -234,9 +245,6 @@ class curriculum extends content {
                     $this->_background,
                     $this->_introductory_description
                     );
-        }
-
-        return TRUE;
     }
 
     public function getContentsByParentID($parentID) {

@@ -82,20 +82,29 @@ class year extends content {
         $this->_title = $this->getParam('year');
 
         if (empty($this->_id)) {
-            $this->_id =  $this->objDbYears->addYear(
-                    $this->_title, // This is the ID of the product this curruculum is contained in.
-                    $this->getParentID()
-                    );
+            $this->saveNew();
         }else{
-            $this->objDbYears->updateYear(
-                    $this->_id,
-                    $this->_title, // This is the ID of the product this curruculum is contained in.
-                    $this->getParentID()
-                    );
+            $this->updateExisting();
         }
 
         return TRUE;
     }
+
+    protected function saveNew() {
+        $this->_id =  $this->objDbYears->addYear(
+                    $this->_title, // This is the ID of the product this curruculum is contained in.
+                    $this->getParentID()
+                    );
+    }
+
+    protected function updateExisting() {
+        $this->objDbYears->updateYear(
+                    $this->_id,
+                    $this->_title, // This is the ID of the product this curruculum is contained in.
+                    $this->getParentID()
+                    );
+    }
+
 
     public function getContentsByParentID($parentID) {
         $yearsData = $this->objDbYears->getYearsByCalendarID($parentID);

@@ -327,6 +327,24 @@ class content extends object
     function getViewLink($productID = NULL){
         return FALSE;
     }
+
+    function copyContentsToParent($newParentID){
+        $this->_id = NULL;
+        $this->_parentID = $newParentID;
+        $this->saveNew();
+
+        foreach ($this->_contents as $content) {
+            $content->copyContentsToParent($this->getID());
+        }
+
+        return $this;
+    }
+
+    protected function saveNew(){
+    }
+
+    protected function updateExisting(){
+    }
 }
 
 ?>

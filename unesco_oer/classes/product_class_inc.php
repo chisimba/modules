@@ -346,13 +346,19 @@ class product extends object
             $this->setThumbnailPath($results['path']);
         }
 
+        if ($this->isAdaptation() && (strcmp($this->_contentManager->getProductID(), $this->getParentID()) != 0 )) {
+            $validTypes = array(//TODO this line should be inside a database or some managing class
+                                'curriculum' => $this->getContentTypeDescription()
+                            );
+
+            $this->_contentManager = $this->_contentManager->copyContentsToProduct($this->getParentID(), $this->_identifier, $validTypes);
+        }
+
         return $this->_identifier;
     }
 
     function createBlankProduct() { //TODO complete this train of thought
-        $this->deleteProduct();
-        $id = $this->saveProduct();
-        return $id;
+        return $this->deleteProduct();
     }
 
     /**This is an internal function for saving adaptation specific metadata
@@ -1600,13 +1606,18 @@ class product extends object
    {
        if (!$this->_contentManager->hasContents()){
            $this->_contentManager = $this->newObject('contentmanager');
-           $this->_contentManager->setProductID($this->getIdentifier());
-           $this->_contentManager->setValidTypes( //TODO this line should be inside a database or some managing class
-                            array(
+//           $this->_contentManager->setProductID($this->getIdentifier());
+//           $this->_contentManager->setValidTypes( //TODO this line should be inside a database or some managing class
+//                            array(
+//                                'curriculum' => $this->getContentTypeDescription()
+//                            )
+//                    );
+//           $this->_contentManager->getAllContents();
+           $validTypes = array(//TODO this line should be inside a database or some managing class
                                 'curriculum' => $this->getContentTypeDescription()
-                            )
-                    );
-           $this->_contentManager->getAllContents();
+                            );
+
+           $this->_contentManager->loadContents($this->getIdentifier(), $validTypes);
        }
        return $this->_contentManager;
    }
@@ -1682,7 +1693,7 @@ class product extends object
    function deleteProduct()
    {
        $this->setDeletionStatus(1);
-       $this->saveProduct();
+       return $this->saveProduct();
    }
 
    function makeAdaptation()

@@ -225,5 +225,25 @@ class contentmanager extends object
             }
         }
     }
+
+    function copyContentsToProduct($copyFromID, $copyToID, $validTypes) {
+        $newContentManager = $this->newObject('contentmanager', 'unesco_oer');
+        $newContentManager->loadContents($copyToID, $validTypes);
+
+        $existingContentManager = $this->newObject('contentmanager', 'unesco_oer');
+        $existingContentManager->loadContents($copyFromID, $validTypes);
+
+        foreach ($existingContentManager->getAllContents() as $content) {
+            $newContentManager->addNewContent($content->copyContentsToParent($copyToID));
+        }
+
+        return $newContentManager;
+    }
+
+    function loadContents($productID, $validTypes) {
+        $this->setProductID($productID);
+        $this->setValidTypes($validTypes);
+        return $this->getAllContents();
+    }
 }
 ?>

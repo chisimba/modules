@@ -84,19 +84,27 @@ class calendar extends content
         $this->_title = $this->getParam('title');
 
         if (empty($this->_id)) {
-            $this->_id =  $this->objDbCalendar->addCalendar(
+            $this->saveNew();
+        }else{
+            $this->updateExisting();
+        }
+
+        return TRUE;
+    }
+
+    protected function saveNew() {
+        $this->_id =  $this->objDbCalendar->addCalendar(
                     $this->_title, // This is the ID of the product this curruculum is contained in.
                     $this->getParentID()
                     );
-        }else{
-            $this->objDbCalendar->updateCalendar(
+    }
+
+    protected function updateExisting() {
+        $this->objDbCalendar->updateCalendar(
                     $this->_id,
                     $this->_title, // This is the ID of the product this curruculum is contained in.
                     $this->getParentID()
                     );
-        }
-
-        return TRUE;
     }
 
     public function  getContentsByParentID($parentID) {

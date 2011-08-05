@@ -357,6 +357,12 @@ class module extends content {
         return TRUE;
     }
 
+    protected function saveNew() {
+        unset ($this->_metaDataArray['id']);
+        $this->_metaDataArray['year_id'] = $this->getParentID();
+        $this->_id =  $this->objDbModules->addModule($data);
+    }
+
     public function getContentsByParentID($parentID) {
         $modulesData = $this->objDbModules->getModulesByYearID($parentID);
         $modulesArray = array();

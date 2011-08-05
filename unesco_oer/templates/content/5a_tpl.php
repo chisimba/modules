@@ -128,10 +128,29 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                     </div>
                     <div class="sectionsHead">
                         <h3 class="floaLeft greyText">Sections:</h3>
-                        <div class="addNewMode">
+<!--                        <div class="addNewMode">
                             <img src="skins/unesco_oer/images/icon-product-add-node.png" alt="New mode" width="18" height="18"class="smallLisitngIcons">
                             <div class="addNewModeDiv"><a href="#" class="addNewModeLink">add new mode</a></div>
-                        </div>
+                        </div>-->
+                <div class="addNewMode">
+                    <?php if ($this->objUser->isLoggedIn()) { ?>
+                    <img src="skins/unesco_oer/images/icon-product-add-node.png" alt="New mode" width="18" height="18"class="smallLisitngIcons">
+                    <div class="addNewModeDiv"><a href="#" class="addNewModeLink">
+                        <?php
+
+                            $abLink = new link($this->uri(array("action" => 'saveContent', 'productID' => $productID)));
+                            $abLink->link =   $this->objLanguage->languageText('mod_unesco_oer_products_new_node', 'unesco_oer');
+
+                            $abLink->cssClass = "blueText noUnderline";
+                            echo $abLink->show();
+
+
+                        ?>
+
+
+                        </a></div>
+                     <?php } ?>
+                </div>
                     </div>
             
                     <div class="unOrderedListDiv">

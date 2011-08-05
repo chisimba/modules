@@ -68,8 +68,14 @@ $this->setLayoutTemplate('maincontent_layout_tpl.php');
               
     <?php
     $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
-    $abLink->link = 'UNESCO OER Products';
-    $abLink->cssClass = "blueText noUnderline";
+    if (!$product->isAdaptation()){
+        $abLink->link = 'UNESCO OER Products';
+        $abLink->cssClass = "blueText noUnderline";
+    } else {
+        $abLink->link = 'Product adaptation';
+        $abLink->cssClass = "orangeListingHeading";
+    }
+    
     echo $abLink->show();
     ?>
     <!--    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> -->
@@ -78,10 +84,14 @@ $this->setLayoutTemplate('maincontent_layout_tpl.php');
     <!--                        Model Curriculum for Journalism Education-->
     <?php
 
-    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product->getIdentifier())));
     $abLink->link = $product->getTitle();
-    $abLink->cssClass = "blueText noUnderline";
-    
+
+    if (!$product->isAdaptation()){
+        $abLink->cssClass = "blueText noUnderline";
+    } else {
+        $abLink->cssClass = "orangeListingHeading";
+    }
 
       echo $abLink->show();
     ?>
