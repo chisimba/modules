@@ -539,7 +539,7 @@ class product extends object
                                                 $this->getIdentifier(),
                                                 array( 'thumbnail' => 'usrfiles/'.$results['path'])
                                             );
-                $this->setThumbnailPath($results['path']);
+                $this->setThumbnailPath('usrfiles/'.$results['path']);
             }
         }
 
@@ -1188,7 +1188,7 @@ class product extends object
 
    function uploadThumbNail($path)
    {
-       $result = FALSE;
+       $results = FALSE;
        try {
             $results = $this->objThumbUploader->uploadThumbnail($path, $this->getThumbnailPath());
         } catch (customException $e) {
