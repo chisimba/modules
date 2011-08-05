@@ -61,14 +61,14 @@
     </update>
     <update>
         <table>tbl_unesco_oer_years</table>
-        <version>0.060</version>
-        <description>Rename curriculum_id to calendar_id</description>
+        <version>0.061</version>
+        <description>Add calendar_id field to tbl_unesco_oer_years</description>
         <data>
-            <rename>
-                <curriculum_id>
-                    <name>calendar_id</name>
-                </curriculum_id>
-            </rename>
+            <add>
+                <name>calendar_id</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
         </data>
     </update>
 </updates>
