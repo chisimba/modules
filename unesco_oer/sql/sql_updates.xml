@@ -48,7 +48,7 @@
     </update>
     <update>
         <table>tbl_unesco_oer_years</table>
-        <version>0.057</version>
+        <version>0.060</version>
         <description>Rename curriculum_id to calendar_id</description>
         <data>
             <rename>
