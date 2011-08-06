@@ -87,6 +87,7 @@ class contextcontent extends controller {
 
             // Store Context Code
             $this->contextCode = $this->objContext->getContextCode();
+            
 
 
             $this->objLanguage = $this->getObject('language', 'language');
@@ -379,6 +380,7 @@ class contextcontent extends controller {
      */
     protected function addScormChapter() {
         $this->setVar('mode', 'add');
+        $this->setVar('contextCodeMessage',"");
 
         $this->setLayoutTemplate('layout_firstpage_tpl.php');
 
