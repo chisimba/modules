@@ -276,18 +276,35 @@ class dbartdir extends dbTable
         }
     }
     
+    public function checkforProfile($userid) {
+        $this->_changeTable('tbl_artdir_artists');
+        $profile = $this->getAll("WHERE userid = '$userid'");
+        if(empty($profile)) {
+            return FALSE;
+        }
+        else {
+            return TRUE;
+        }
+    }
+    
     public function getRandArtists($onum = 3) {
         $this->_changeTable('tbl_artdir_artists');
         $people = $this->getAll();
+        
         if(!empty($people)) {
             $count = count($people);
-            if($count = $onum) {
-                return $people;
+            if($count >= $onum) {
+                $ret = array_rand($people, $onum);
+                $back = array($people[$ret[0]], $people[$ret[1]], $people[$ret[2]]);
+                return $back;
             }
             else {
-                $people = array_rand($people, $onum);
+                $ret = array_rand($people, $onum);
+                $back = array($people[$ret[0]], $people[$ret[1]], $people[$ret[2]]);
+                return $back;
             }
         }
+        
         return $people;
     }
     

@@ -195,7 +195,11 @@ class artdirui extends object
      */
     public function rightBlocks()
     {
-        $rightCol = '<div id="categoryfeatureboxhead"><img src="'.$this->objConfig->getskinRoot().'artdir/images/categories.png" alt="search directory"" /></div>';
+        $rightCol = NULL;
+        if($this->objUser->isLoggedIn()) {
+            $rightCol .= $this->menu();
+        }
+        $rightCol .= '<div id="categoryfeatureboxhead"><img src="'.$this->objConfig->getskinRoot().'artdir/images/categories.png" alt="search directory"" /></div>';
         // Get top level cats then get sub cats
         $parentcats = $this->objDbArtdir->getParentCats();
         foreach($parentcats as $p) {
@@ -213,6 +217,19 @@ class artdirui extends object
         }
         
         return $rightCol;
+    }
+    
+    private function menu() {
+        $feat = $this->newObject('featurebox', 'navigation');
+        $links = NULL;
+        // check that a user has a profile, if not, give option to create one. Admin always can add new artists.
+        if(!$this->objDbArtdir->checkforProfile($this->objUser->userId()) || $this->objUser->inAdminGroup($this->objUser->userId())) {
+            $addprflink = new link ($this->uri(array('action'=>'artdiradmin', 'mode' => 'addartist')));
+            $addprflink->link = $this->objLanguage->languageText("mod_artdir_addprofile", "artdir");
+            $links .= $addprflink->show();
+        }
+        
+        return $feat->show($this->objLanguage->languageText("mod_artdir_usermenu", "artdir"), $links);
     }
     
     public function slider() {
@@ -418,7 +435,7 @@ class artdirui extends object
         $fart = NULL;
         $fart .= '<div class="artistwindow">';
         $artist = $this->objDbArtdir->getRandArtists();
-        // make a function here to get an image that has been uploaded. Replace the kittehz
+        
         $count = 0;
         foreach($artist as $a) {
             if($count == 0) {
@@ -427,7 +444,7 @@ class artdirui extends object
             elseif($count == 1) {
                 $artistcontainer = 'artistmiddle';
             }
-            else {
+            elseif($count == 2) {
                 $artistcontainer = 'artistright';
             }
             $artist = '<div id="'.$artistcontainer.'">'.'<img src="'.$this->objFile->getFilePath($a['thumbnail']).'" width="229" height="180" />'.
@@ -886,7 +903,7 @@ class artdirui extends object
     
     public function formatArtistRecords($recs) {
         if(empty($recs)) {
-            return $this->objLanguage->languageText("mod_artdir_noactsfound");
+            return $this->objLanguage->languageText("mod_artdir_noactsfound", "artdir");
         }
         $str = NULL;
         
