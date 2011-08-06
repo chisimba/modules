@@ -119,7 +119,6 @@ if (isset($currentChapter)) {
 
             $left .= '</div>';
         }
-
     if ($this->isValid('addpage')) {
         $addLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$currentChapter, 'id'=>$currentPage),'contextcontent'));
         $addLink->link = 'Add a Page';

@@ -40,7 +40,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
-
 /**
  * scorm controller
  *
@@ -55,40 +54,44 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za
  */
 class scorm extends controller {
+
     public $objLanguage;
     public $objUser;
     public $objReadXml;
     public $objFolders;
     public $objTreeNode;
     public $objTreeMenu;
+
     /**
      * Constructor
      */
     public function init() {
-    
+
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
         // Load Scorm Classes
-        $this->objReadXml =& $this->getObject('readxml_scorm', 'scorm');
-        $this->objFiles = $this->getObject('dbfile','filemanager');
-        $this->objFolders = $this->getObject('dbfolder','filemanager');
-        $this->objTreeMenu =& $this->getObject('treemenu', 'tree');
-        $this->objTreeNode =& $this->loadClass('treenode', 'tree');
+        $this->objReadXml = & $this->getObject('readxml_scorm', 'scorm');
+        $this->objFiles = $this->getObject('dbfile', 'filemanager');
+        $this->objFolders = $this->getObject('dbfolder', 'filemanager');
+        $this->objTreeMenu = & $this->getObject('treemenu', 'tree');
+        $this->objTreeNode = & $this->loadClass('treenode', 'tree');
         //remove this objContext
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objContextChapter = $this->getObject('db_contextcontent_contextchapter', 'contextcontent');
         // Store Context Code
         $this->contextCode = $this->objContext->getContextCode();
-        $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer','contextcontent');
+        
+        $this->objContextActivityStreamer = $this->getObject('db_contextcontent_activitystreamer', 'contextcontent');
         //Store user Id
         $this->userId = $this->objUser->userId();
-        $this->objContentOrder = $this->getObject('db_contextcontent_order','contextcontent');
+        $this->objContentOrder = $this->getObject('db_contextcontent_order', 'contextcontent');
 
-        $this->objContextChapters = $this->getObject('db_contextcontent_contextchapter','contextcontent');
+        $this->objContextChapters = $this->getObject('db_contextcontent_contextchapter', 'contextcontent');
+        /*
         $this->appendArrayVar('headerParams', $extbase);
         $this->appendArrayVar('headerParams', $extalljs);
         $this->appendArrayVar('headerParams', $extallcss);
-
+         */
     }
 
     /**
@@ -96,8 +99,8 @@ class scorm extends controller {
      * @param string $action
      */
     public function dispatch($action) {
-    //check if in context, if not, give in
-        if(!$this->objContext->isInContext()) {
+        //check if in context, if not, give in
+        if (!$this->objContext->isInContext()) {
             return "notincontext_tpl.php";
         }
 
@@ -105,62 +108,71 @@ class scorm extends controller {
         //$this->setLayoutTemplate('scorm_layout.php');me
 
         /*
-        * Convert the action into a method (alternative to
-        * using case selections)
-        */
+         * Convert the action into a method (alternative to
+         * using case selections)
+         */
         $method = $this->getMethod($action);
         /*
-        * Return the template determined by the method resulting
-        * from action
-        */
+         * Return the template determined by the method resulting
+         * from action
+         */
         return $this->$method();
     }
+
     /**
      * Method to turn off login requirement for certain actions
      */
     public function requiresLogin($action) {
-        $requiresLogin = array ('viewscorm', 'getNext', 'getPrev','checkfolder');
-        if (in_array ( $action, $requiresLogin )) {
+        $requiresLogin = array('viewscorm', 'getNext', 'getPrev', 'checkfolder');
+        if (in_array($action, $requiresLogin)) {
             return FALSE;
-        } else if(empty($this->userId)){         
+        } else if (empty($this->userId)) {
             return FALSE;
         } else {
             return TRUE;
         }
-    }    
+    }
+
     private function __viewscorm() {
         $folderId = $this->getParam('folderId', NULL);
-        if($folderId == null) {
-            return $this->nextAction('home',NULL,'contextcontent');
+        $mode = $this->getParam('mode');
+        if ($folderId == null) {
+            return $this->nextAction('home', NULL, 'contextcontent');
         }
+        $chapterId = $this->getParam('chapterid', $this->objContextChapter->getChapterId($this->contextCode));
 
-        $chapterId = $this->getParam('chapterid',$this->objContextChapter->getChapterId($this->contextCode ));
-
-        if(!empty($this->userId)){
-         //Log in activity streamer
-         $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapterId, $this->contextCode);
-         if ($ischapterlogged==FALSE) {
-            $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, $chapterId, $this->contextCode);
-         }
+        if (!empty($this->userId)) {
+            //Log in activity streamer
+            $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->userId, $chapterId, $this->contextCode);
+            if ($ischapterlogged == FALSE) {
+                //($userId, $sessionid, $contextItemId, $contextCode, $modulecode, $datecreated=Null, $pageorchapter=NULL, $description=NULL, $sessionstarttime=NULL, $sessionendtime=NULL)
+                $ischapterlogged = $this->objContextActivityStreamer->addRecord($this->userId, Null, $chapterId, $this->contextCode, "scorm", Null, "chapter");
+            }
         }
-        $this->setVarByRef('folderId',$folderId);
-        if($this->getParam('mode') == 'page') {
-            $this->setVarByRef('lft',$this->getParam('lft'));
-            $this->setVarByRef('rght',$this->getParam('rght'));
-            $this->setVarByRef('mode',$this->getParam('mode'));
+        $this->setVarByRef('folderId', $folderId);
+        if ($mode == 'page') {
+            $this->setVarByRef('lft', $this->getParam('lft'));
+            $this->setVarByRef('rght', $this->getParam('rght'));
+            $this->setVarByRef('mode', $this->getParam('mode'));
             $this->setVarByRef('currentChapter', $chapterId);
-            $this->setVarByRef('id',$this->getParam('id'));
+            $this->setVarByRef('id', $this->getParam('id'));
             $this->setLayoutTemplate('layout_chapter_tpl.php');
         }
-        if($this->getParam('mode') == 'chapter') {
-        // $link = new link ($this->uri(array('action'=>'viewscorm','mode'=>'chapter', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
+        if ($mode == 'chapter') {
+            // $link = new link ($this->uri(array('action'=>'viewscorm','mode'=>'chapter', 'folderId'=>$chapter['introduction'], 'chapterid'=>$chapter['chapterid']), $module = 'scorm'));
             $this->setVarByRef('chapterid', $chapterId);
-           // $this->setLayoutTemplate('layout_firstpage_tpl.php');
+            // $this->setLayoutTemplate('layout_firstpage_tpl.php');
         }
         $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
         $this->setVarByRef('chapters', $chapters);
+        $this->setVarByRef('mode', $mode);
+        $contextCodeMessage = Null;
+        $this->setVarByRef('contextCodeMessage', $contextCodeMessage);
+        $this->setVarByRef('id', $folderId);
+        $this->setVarByRef('chapterId', $chapterId);
         return 'handle_scorm_tpl.php';
     }
+
     //Ajax function to get the next page
     private function __getNext() {
         //$this->requiresLogin('getNext');
@@ -169,16 +181,16 @@ class scorm extends controller {
 
         $page = $this->getParam('page');
         $folderpath = $this->getParam('folderpath');
-        if(!empty($folderpath)) {
-            $myResult = $this->objReadXml->xmlNextPage($page,$folderpath);
+        if (!empty($folderpath)) {
+            $myResult = $this->objReadXml->xmlNextPage($page, $folderpath);
         }
         if (!empty($myResult)) {
             echo $myResult;
         } else {
             echo 'omega';
         }
-
     }
+
     //Ajax function to get the next page
     private function __getPrev() {
         //$this->requiresLogin('getPrev');
@@ -187,15 +199,14 @@ class scorm extends controller {
 
         $page = $this->getParam('page');
         $folderpath = $this->getParam('folderpath');
-        if(!empty($folderpath)) {
-            $myResult = $this->objReadXml->xmlPrevPage($page,$folderpath);
+        if (!empty($folderpath)) {
+            $myResult = $this->objReadXml->xmlPrevPage($page, $folderpath);
         }
         if (!empty($myResult)) {
             echo $myResult;
         } else {
             echo 'alpha';
         }
-
     }
 
     /**
@@ -210,7 +221,7 @@ class scorm extends controller {
      */
     private function getMethod(& $action) {
         if ($this->validAction($action)) {
-            return '__'.$action;
+            return '__' . $action;
         } else {
             return '__viewscorm';
         }
@@ -229,12 +240,13 @@ class scorm extends controller {
      *
      */
     private function validAction(& $action) {
-        if (method_exists($this, '__'.$action)) {
+        if (method_exists($this, '__' . $action)) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
+
     /**
      * Ajax function to detect whether a context code has been taken already or not
      * By Paul Mungai
@@ -244,7 +256,7 @@ class scorm extends controller {
         $this->setLayoutTemplate(NULL);
         $code = $this->getParam('code');
 
-        switch(strtolower($code)) {
+        switch (strtolower($code)) {
             case NULL:
                 break;
             case 'root':
@@ -254,7 +266,7 @@ class scorm extends controller {
                 $filename = 'imsmanifest.xml';
                 $folderPath = $this->objFolders->getFolder($code);
                 $verifyFolder = $this->objFiles->getFileFolder($filename, $folderPath['folderpath']);
-                if ($verifyFolder[0]['filename']=='imsmanifest.xml') {
+                if ($verifyFolder[0]['filename'] == 'imsmanifest.xml') {
                     echo 'ok';
                 } else {
                     echo 'notok';
@@ -262,6 +274,6 @@ class scorm extends controller {
         }
     }
 
-
 }
+
 ?>

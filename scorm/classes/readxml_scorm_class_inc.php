@@ -381,9 +381,9 @@ class readxml_scorm extends object {
         $nod = $books->item(0);
         $NodList=$nod->childNodes;
         $treeTxt = "";//var to content temp
-        if($arrId==null) {
+        //if($arrId==null) {
             $arrId = 0;
-        }
+        //}
         foreach( $books as $book ) {
             $nodes = $book->getElementsByTagName( "item" );
             //Display root node

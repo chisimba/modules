@@ -1,19 +1,20 @@
 <?php
+
 // Load classes.
-$this->loadClass("form","htmlelements");
+$this->loadClass("form", "htmlelements");
 $this->loadClass("htmltable", 'htmlelements');
 $this->loadClass("iframe", 'htmlelements');
 //Paul M. To do -- Correct form action
-$form = new form("default", 
-    $this->uri(array(
-    'module'=>'contextcontent','action' =>'movetochapter'
-)));
+$form = new form("default",
+                $this->uri(array(
+                    'module' => 'contextcontent', 'action' => 'movetochapter'
+                )));
 
 //Array to contain language items for JS
 $arrLang = array();
-$arrLang['previous'] = $this->objLanguage->languageText('mod_scorm_previous','scorm');
-$arrLang['next'] = $this->objLanguage->languageText('mod_scorm_next','scorm');
-$arrLang['home'] = $this->objLanguage->languageText('mod_scorm_home','scorm');
+$arrLang['previous'] = $this->objLanguage->languageText('mod_scorm_previous', 'scorm');
+$arrLang['next'] = $this->objLanguage->languageText('mod_scorm_next', 'scorm');
+$arrLang['home'] = $this->objLanguage->languageText('mod_scorm_home', 'scorm');
 //AJAX to check if selected folder contains scorm
 $this->appendArrayVar('headerParams', "<style type='text/css'>
   div.small-box {
@@ -137,10 +138,10 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
             jQuery('#span_nextb').addClass('error');
             jQuery('#span_nextb').removeClass('success');			
         }else{
-            jQuery('#span_next').html('<a href=\''+nextPage+'\' target = \'content\' id = \'next\'>".$arrLang['next']."</a>');
+            jQuery('#span_next').html('<a href=\''+nextPage+'\' target = \'content\' id = \'next\'>" . $arrLang['next'] . "</a>');
             jQuery('#span_next').addClass('success');
             jQuery('#span_next').removeClass('error');
-            jQuery('#span_nextb').html('<a href=\''+nextPage+'\' target = \'content\' id = \'next\'>".$arrLang['next']."</a>');
+            jQuery('#span_nextb').html('<a href=\''+nextPage+'\' target = \'content\' id = \'next\'>" . $arrLang['next'] . "</a>');
             jQuery('#span_nextb').addClass('success');
             jQuery('#span_nextb').removeClass('error');
 
@@ -171,10 +172,10 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
            jQuery('#span_prevb').addClass('error');
            jQuery('#span_prevb').removeClass('success');			
        }else{
-           jQuery('#span_prev').html('<a href=\''+prevPage+'\' target = \'content\' id = \'next\'>".$arrLang['previous']."</a>');
+           jQuery('#span_prev').html('<a href=\''+prevPage+'\' target = \'content\' id = \'next\'>" . $arrLang['previous'] . "</a>');
            jQuery('#span_prev').addClass('success');
            jQuery('#span_prev').removeClass('error');
-           jQuery('#span_prevb').html('<a href=\''+prevPage+'\' target = \'content\' id = \'next\'>".$arrLang['previous']."</a>');
+           jQuery('#span_prevb').html('<a href=\''+prevPage+'\' target = \'content\' id = \'next\'>" . $arrLang['previous'] . "</a>');
            jQuery('#span_prevb').addClass('success');
            jQuery('#span_prevb').removeClass('error');
 
@@ -194,24 +195,24 @@ $this->appendArrayVar('headerParams', "<style type='text/css'>
     </script>");
 
 
-if($mode == 'page') {
+if ($mode == 'page') {
 
-    $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$currentChapter),'contextcontent'));
-    $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent');
+    $addLink = new link($this->uri(array('action' => 'addpage', 'id' => $id, 'context' => $this->contextCode, 'chapter' => $currentChapter), 'contextcontent'));
+    $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages', 'contextcontent');
 
-    $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$currentChapter),'contextcontent'));
-    $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
+    $addScormLink = new link($this->uri(array('action' => 'addscormpage', 'id' => $id, 'context' => $this->contextCode, 'chapter' => $currentChapter), 'contextcontent'));
+    $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages', 'contextcontent');
 
 
-    $editLink = new link ($this->uri(array('action'=>'editpage', 'id'=>$id, 'context'=>$this->contextCode),'contextcontent'));
-    $editLink->link = $this->objLanguage->languageText('mod_contextcontent_editcontextpages','contextcontent');
+    $editLink = new link($this->uri(array('action' => 'editpage', 'id' => $id, 'context' => $this->contextCode), 'contextcontent'));
+    $editLink->link = $this->objLanguage->languageText('mod_contextcontent_editcontextpages', 'contextcontent');
 
     if (($rght - $lft - 1) == 0) {
-        $deleteLink = new link ($this->uri(array('action'=>'deletepage', 'id'=>$id, 'context'=>$this->contextCode),'contextcontent'));
+        $deleteLink = new link($this->uri(array('action' => 'deletepage', 'id' => $id, 'context' => $this->contextCode), 'contextcontent'));
     } else {
-        $deleteLink = new link ("javascript:alert('".$this->objLanguage->languageText('mod_contextcontent_pagecannotbedeleteduntil','contextcontent').".');");
+        $deleteLink = new link("javascript:alert('" . $this->objLanguage->languageText('mod_contextcontent_pagecannotbedeleteduntil', 'contextcontent') . ".');");
     }
-    $deleteLink->link = $this->objLanguage->languageText('mod_contextcontent_delcontextpages','contextcontent');
+    $deleteLink->link = $this->objLanguage->languageText('mod_contextcontent_delcontextpages', 'contextcontent');
 
     $list = array();
 
@@ -235,35 +236,34 @@ if($mode == 'page') {
         $divider = '';
 
         foreach ($list as $item) {
-            $middle .= $divider.$item;
+            $middle .= $divider . $item;
             $divider = ' / ';
         }
     }
-    if(!empty($this->userId)){
-     if ($this->isValid('movepageup')) {
+    if (!empty($this->userId)) {
+        if ($this->isValid('movepageup')) {
 
-        $middle .= '<br />';
+            $middle .= '<br></br>';
 
-        if ($isFirstPageOnLevel) {
-            $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_contextcontent_isfirstpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent').'</span>';
-        } else {
-            $link = new link($this->uri(array('action'=>'movepageup', 'id'=>$id),'contextcontent'));
-            $link->link = $this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent');
-            $middle .= $link->show();
+            if ($isFirstPageOnLevel) {
+                $middle .= '<span style="color:grey;" title="' . $this->objLanguage->languageText('mod_contextcontent_isfirstpageonlevel', 'contextcontent') . '">' . $this->objLanguage->languageText('mod_contextcontent_movepageup', 'contextcontent') . '</span>';
+            } else {
+                $link = new link($this->uri(array('action' => 'movepageup', 'id' => $id), 'contextcontent'));
+                $link->link = $this->objLanguage->languageText('mod_contextcontent_movepageup', 'contextcontent');
+                $middle .= $link->show();
+            }
+
+            $middle .= ' / ';
+
+            if ($isLastPageOnLevel) {
+                $middle .= '<span style="color:grey;" title="' . $this->objLanguage->languageText('mod_contextcontent_islastpageonlevel', 'contextcontent') . '">' . $this->objLanguage->languageText('mod_contextcontent_movepagedown', 'contextcontent') . '</span>';
+            } else {
+                $link = new link($this->uri(array('action' => 'movepagedown', 'id' => $id), 'contextcontent'));
+                $link->link = $this->objLanguage->languageText('mod_contextcontent_movepagedown', 'contextcontent');
+                $middle .= $link->show();
+            }
         }
-
-        $middle .= ' / ';
-
-        if ($isLastPageOnLevel) {
-            $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_contextcontent_islastpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent').'</span>';
-        } else {
-            $link = new link($this->uri(array('action'=>'movepagedown', 'id'=>$id),'contextcontent'));
-            $link->link = $this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent');
-            $middle .= $link->show();
-        }
-     }
     }
-
 }
 
 //Get The API
@@ -279,39 +279,39 @@ $navigators = $this->objReadXml->readManifest($filePath);
 $firstPage = $this->objReadXml->xmlFirstPage($filePath);
 //$navigators = $this->objReadXml->treeMenuXML($filePath);
 $objTable = new htmltable();
-$objTable->width='950px';
-$objTable->height='100%';
-$objTable->attributes=" align='center' border='0'";
-$objTable->cellspacing='5';
-$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
+$objTable->width = '950px';
+$objTable->height = '100%';
+$objTable->attributes = " align='center' border='0'";
+$objTable->cellspacing = '5';
+$row = array("<b>" . $objLanguage->code2Txt("word_name") . ":</b>");
 //$objIframe = new iframe();
 //iframe to hold the API
-$apiIFrame = '<iframe src="'.$getApi.'" name="API" height=0 width=10 frameborder=0 scrolling=no></iframe>';
+$apiIFrame = '<iframe src="' . $getApi . '" name="API" height=0 width=10 frameborder=0 scrolling=no></iframe>';
 //iframe to hold the content
-$content = '<iframe id="IFRAME_content" src="'.$firstPage.'" name="content" height=450 width=650 frameborder=0 scrolling=yes></iframe>';
-$testNavs = "<div id='divNavs' align = 'center'><span id='span_home'> <a href = '".$firstPage."' target = 'content' id = 'home'> Home</a></span>"." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span id='span_prev'>&nbsp</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id='span_next'>&nbsp</next> </div>";
-$testNavsB = "<div id='divNavsb' align = 'center'><span id='span_homeb'> <a href = '".$firstPage."' target = 'content' id = 'home'> Home</a></span>"." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span id='span_prevb'>&nbsp</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id='span_nextb'>&nbsp</next> </div>";
+$content = '<iframe id="IFRAME_content" src="' . $firstPage . '" name="content" height=450 width=650 frameborder=0 scrolling=yes></iframe>';
+$testNavs = "<div id='divNavs' align = 'center'><span id='span_home'> <a href = '" . $firstPage . "' target = 'content' id = 'home'> Home</a></span>" . " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span id='span_prev'>&nbsp</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id='span_next'>&nbsp</next> </div>";
+$testNavsB = "<div id='divNavsb' align = 'center'><span id='span_homeb'> <a href = '" . $firstPage . "' target = 'content' id = 'home'> Home</a></span>" . " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span id='span_prevb'>&nbsp</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id='span_nextb'>&nbsp</next> </div>";
 
+$objTable->startRow();
+$objTable->addCell("&nbsp;");
+$objTable->addCell("&nbsp;");
+$objTable->addCell("&nbsp;");
+$objTable->endRow();
 
 // Spacer
 $objTable->startRow();
-
-
-
 $objTable->addCell($apiIFrame);
-$objTable->addCell('<div id="div_navigators" class="small-box">'.$navigators."</div>");
-$objTable->addCell('<div class="big-box">'.$testNavs."<br /><div id='divContent' align = 'center'>".$content."</div><br />".$testNavsB).'</div>';
+$objTable->addCell('<div id="div_navigators" class="small-box">' . $navigators . "</div>");
+$objTable->addCell('<div class="big-box"><br></br>' . $testNavs . "<div id='divContent' align = 'center'>" . $content . "</div>" . $testNavsB. '</div>');
 //$objTable->addCell('<div class="big-box">'.'test'."<br /><div id='divContent' align = 'center'>".$content."</div><br />").'</div>';
 $objTable->startRow();
 $objTable->addCell("&nbsp;");
 $objTable->addCell("&nbsp;");
-$objTable->addCell(' <span id="contextcodemessage">'.$contextCodeMessage.'</span>');
+$objTable->addCell(' <span id="contextcodemessage">' . $contextCodeMessage . '</span>');
 
 $objTable->endRow();
 
-$objTable->endRow();
-
-if($mode == 'page') {
+if ($mode == 'page') {
     $objTable->startRow();
     $objTable->addCell($prevPage, '33%', 'top');
     $objTable->addCell($middle, '33%', 'top', 'center');
@@ -319,29 +319,28 @@ if($mode == 'page') {
     $objTable->endRow();
 }
 
-if(!empty($this->userId)){
- if (count($chapters) > 1 && $this->isValid('movetochapter')) {
-   
-    $this->loadClass('dropdown', 'htmlelements');
-    $this->loadClass('hiddeninput', 'htmlelements');
-    $this->loadClass('button', 'htmlelements');
-    $this->loadClass('label', 'htmlelements');
-     $hiddenInput = new hiddeninput('id', $id);
+if (!empty($this->userId)) {
+    if (count($chapters) > 1 && $this->isValid('movetochapter')) {
 
-    $dropdown = new dropdown('chapter');
-    foreach ($chapters as $chapterItem)
-    {
-        $dropdown->addOption($chapterItem['chapterid'], $chapterItem['chaptertitle']);
+        $this->loadClass('dropdown', 'htmlelements');
+        $this->loadClass('hiddeninput', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $hiddenInput = new hiddeninput('id', $id);
+
+        $dropdown = new dropdown('chapter');
+        foreach ($chapters as $chapterItem) {
+            $dropdown->addOption($chapterItem['chapterid'], $chapterItem['chaptertitle']);
+        }
+        $dropdown->setSelected($chapterId);
+
+        $label = new label($this->objLanguage->languageText('mod_contextcontent_movepagetoanotherchapter', 'contextcontent') . ': ', 'input_chapter');
+
+        $button = new button('movepage', $this->objLanguage->languageText('mod_contextcontent_move', 'contextcontent'));
+        $button->setToSubmit();
+
+        $form->addToForm('<br></br>'.$hiddenInput->show() . $label->show() . $dropdown->show() . ' ' . $button->show());
     }
-    $dropdown->setSelected($page['chapterid']);
-
-    $label = new label ($this->objLanguage->languageText('mod_contextcontent_movepagetoanotherchapter','contextcontent').': ', 'input_chapter');
-
-    $button = new button ('movepage', $this->objLanguage->languageText('mod_contextcontent_move','contextcontent'));
-    $button->setToSubmit();
-
-    $form->addToForm($hiddenInput->show().$label->show().$dropdown->show().' '.$button->show()); 
- }
 }
 $objWashout = $this->getObject('washout', 'utilities');
 $form->addToForm($objWashout->parseText($objTable->show()));
