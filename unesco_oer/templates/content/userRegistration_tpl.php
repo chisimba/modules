@@ -57,9 +57,9 @@ $str = str_replace('[[SITENAME]]', $this->objConfig->getSitename(), $str);
 
 //echo '<p>'.$str.'<br />';
 //echo $this->objLanguage->languageText('mod_userregistration_pleaseenterdetails', 'userregistration', 'Please enter your details, email address and desired user name in the form below.').'</p>';
+$uri=$this->uri(array('action'=>'saveNewUser'));
+$form = new form ('register', $uri); //register
 
-$form = new form ('register', $this->uri(array('action'=>'saveNewUser'))); //register
-//$form = new form ('register'); //register
 
 $messages = array();
 
@@ -341,22 +341,63 @@ $textinput->size =70;
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_website_link', 'unesco_oer'));
 $table->addCell($textinput->show());
+$table->addCell();
 $table->endRow();
+
+
+
+$groups = $this->objDbGroups->getAllGroups();
+$objSelectBox = $this->newObject('selectbox','htmlelements');
+$objSelectBox->create( $form, 'leftList[]', 'Available Groups', 'rightList[]', 'Chosen Groups' );
+$objSelectBox->insertLeftOptions(
+                        $groups,
+                        'id',
+                        'name' );
+
+$tblLeft = $this->newObject( 'htmltable','htmlelements');
+$objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
+//Construct tables for right selectboxes
+$tblRight = $this->newObject( 'htmltable', 'htmlelements');
+$objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
+//Construct tables for selectboxes and headings
+$tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
+$tblSelectBox->width = '90%';
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
+$tblSelectBox->endRow();
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
+    $tblSelectBox->addCell( $tblRight->show(), '100pt' );
+$tblSelectBox->endRow();
+//THEIR BUTTON
+
+$table->startRow();
+
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer'));
+//$table->addCell(implode( ' / ', $arrFormButtons));
+$table->addCell($tblSelectBox->show());
+$table->addCell();
+$table->endRow();
+
+
+
+
 
 // Check that the group database is not empty and display group list dropdown
-$groups = $this->objDbGroups->getAllGroups();
-$dd = new dropdown('groupmembership');
-$dd->addOption('None');
-if (count($groups) > 0) {
-  foreach ($groups as $group) {
-      $dd->addOption($group['name']);
-      }
-
-}
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer'));
-$table->addCell($dd->show());
-$table->endRow();
+//$groups = $this->objDbGroups->getAllGroups();
+//$dd = new dropdown('groupmembership');
+//$dd->addOption('None');
+//if (count($groups) > 0) {
+//  foreach ($groups as $group) {
+//      $dd->addOption($group['name']);
+//      }
+//
+//}
+//$table->startRow();
+//$table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer'));
+//$table->addCell($dd->show());
+//$table->endRow();
 
 
 
@@ -444,20 +485,31 @@ $fieldset->contents = stripslashes($this->objLanguage->languageText('mod_securit
 
 $form->addToForm($fieldset->show());
 
+
+
+
+
 $Cancelbutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
-$Cancelbutton->setToSubmit();
+//$Cancelbutton->setToSubmit();
+//$Cancelbutton->setOnClick("javascript: SubmitProduct()");
 $CancelLink = new link($this->uri(array('action' => "userListingForm",)));
 $CancelLink->link =$Cancelbutton->show();
 
 $button = new button ('submitform',$this->objLanguage->languageText(' mod_unesco_oer_group_save_button', 'unesco_oer'));
-$button->setToSubmit();
+//$button->setToSubmit();
+$action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
+$button->setOnClick('javascript: ' . $action);
+
+
 //$SaveLink = new link($this->uri(array('action' => "saveNewUser",)));
 //$SaveLink->link =$button->show();
 
+//$arrFormButtons = $objSelectBox->getFormButtons();
+//$form->addToForm( implode( ' / ', $arrFormButtons ) );
 
-
+ $form->extra = 'enctype="multipart/form-data"';
 $form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
-//$form->addToForm('<p align="right">'.$button.$CancelLink->show().'</p>');
+
 if ($mode == 'addfixup') {
 
     foreach ($problems as $problem)
@@ -489,3 +541,11 @@ echo $form->show();
 echo '</div>';
 
 ?>
+<script type="text/javascript">
+function SubmitProduct()
+{
+    var objForm = document.forms['register'];
+    //objForm.elements[element].value = value;
+    objForm.submit();
+}
+</script>

@@ -345,24 +345,71 @@ $tableC->endRow();
 
 
 
+$groups = $this->objDbGroups->getAllGroups();
+$availablegroups=array();
+$user_current_membership=$this->ObjDbUserGroups->getUserGroups($this->getParam('id'));
+foreach ($groups as $group) {
+    foreach ($user_current_membership as $membership) {
+        if (strcmp($group['id'], $membership['groupid']) != 0){
+                 array_push($availablegroups, $group);
+                        }
+        else{ /// work with the addmin now
+            
+        }
+    }
+}
+$objSelectBox = $this->newObject('selectbox','htmlelements');
+$objSelectBox->create( $form, 'leftList[]', 'Available Groups', 'rightList[]', 'Chosen Groups' );
+$objSelectBox->insertLeftOptions(
+                        $availablegroups,
+                        'id',
+                        'name' );
+
+$tblLeft = $this->newObject( 'htmltable','htmlelements');
+$objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
+//Construct tables for right selectboxes
+$tblRight = $this->newObject( 'htmltable', 'htmlelements');
+$objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
+//Construct tables for selectboxes and headings
+$tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
+$tblSelectBox->width = '90%';
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
+$tblSelectBox->endRow();
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
+    $tblSelectBox->addCell( $tblRight->show(), '100pt' );
+$tblSelectBox->endRow();
+
+$tableC->startRow();
+$tableC->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer'));
+$tableC->addCell($tblSelectBox->show());
+$tableC->endRow();
+
+
+
+
+
+
 
 //***** this must change/
 //dispay user belonging group first  and allow a dropdown of other group
-$groups = $this->objDbGroups->getAllGroups();
-$dd=new dropdown('groupmembership');
-if(count($groups)>0){
-    $i=1;
-    foreach ($groups as $group) {
-          $dd->addOption($i,$group['name']);
-        $i=$i+1;
-        }
-}
-else{
-    $dd->addOption('1', 'None');}
-
-$tableC->startRow();
-$tableC->addCell('Group Membership');
-$tableC->addCell($dd->show());
+//$groups = $this->objDbGroups->getAllGroups();
+//$dd=new dropdown('groupmembership');
+//if(count($groups)>0){
+//    $i=1;
+//    foreach ($groups as $group) {
+//          $dd->addOption($i,$group['name']);
+//        $i=$i+1;
+//        }
+//}
+//else{
+//    $dd->addOption('1', 'None');}
+//
+//$tableC->startRow();
+//$tableC->addCell('Group Membership');
+//$tableC->addCell($dd->show());
 
 
 // Sex

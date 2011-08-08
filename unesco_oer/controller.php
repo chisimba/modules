@@ -1315,6 +1315,7 @@ class unesco_oer extends controller {
         $GroupMembership = $this->getParam('groupmembership');
         $country = $this->getParam('country');
         $typeOfOccupation = $this->getParam('type_of_occupation');
+        $rightData = $this->getParam( 'rightList' );
         $accountstatus = 1; // Default Status Active
 // Create an array of fields that cannot be empty
 //        $checkFields = array(
@@ -1428,11 +1429,14 @@ class unesco_oer extends controller {
 //            return 'userRegistration_tpl.php';
         } else {
 // Else add to database
+
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = NULL, 'useradmin', $accountstatus);
 //add to table userextra
             $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink);
-            $this->ObjDbUserGroups->joingroup($id, $this->objDbGroups->getGroupID($GroupMembership));
+            foreach( $rightData as $right){
+                $this->ObjDbUserGroups->joingroup($id,$right);
+            }
 
 
 
