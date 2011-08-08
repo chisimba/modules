@@ -31,6 +31,24 @@ $header = new htmlheading();
 $header->type = 1;
 $header->cssClass = "manageusers";
 $header->str = "Users";
+
+?>
+<div style="clear:both;"></div> 
+<div class="breadCrumb module"> 
+    <div id='breadcrumb'>
+        <ul><li class="first">Home</li>
+            <li><a href='?module=unesco_oer&action=controlpanel' alt='Adminstrative Tools' title='Adminstrative Tools'>Adminstrative Tools</a></li>
+           <li>Users</li>
+            <!--<li><a href='/newsroom/2430/newsitems.html' alt='Click here to view NewsItems' title='Click here to view NewsItems'>NewsItems</a></li>
+            <li><a href='#' alt='Click here to view 2011-07' title='Click here to view 2011-07'>2011-07</a></li>
+            <li>witsjunction</li>
+           -->
+        </ul>
+    </div>
+   
+</div>
+
+<?php
 echo '<div id="userheading">';
 echo $header->show();
 
