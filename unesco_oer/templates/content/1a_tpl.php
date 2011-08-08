@@ -18,6 +18,9 @@ $this->appendArrayVar('headerParams', $js);
 
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.bubblepopup.v2.3.1.min.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
+
+$js = '<script language="JavaScript" src="' . $this->getResourceUri('addProduct.js') . '" type="text/javascript"></script>';
+$this->appendArrayVar('headerParams', $js);
 ?>
 	
 
@@ -141,7 +144,7 @@ $this->appendArrayVar('headerParams', $js);
                 $abLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
                 $abLink->link = '<img src="skins/unesco_oer/images/icon-new-product.png" alt="New Product" width="20" height="20" class="imgFloatRight">';
 
-                $newProductLink = new link($this->uri(array("action" => "saveProductMetaData", 'prevAction' => 'home', 'add_product_submit' => 'newproduct')));
+                $newProductLink = new link($this->uri(array("action" => "newProduct", 'prevAction' => 'home', 'add_product_submit' => 'newproduct')));
                 $newProductLink->link = "New product";
 
                 echo $divOpen;

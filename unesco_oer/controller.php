@@ -1917,6 +1917,18 @@ class unesco_oer extends controller {
      * @return string
      */
 
+    public function __newProduct() {
+        $product = $this->newObject('product', 'unesco_oer');
+        $product->createBlankProduct();
+
+        $params = array (
+            'productID' => $product->getIdentifier(),
+            'prevAction' => $this->getParam('prevAction')
+        );
+
+        $this->nextAction('saveProductMetaData', $params);
+    }
+
     public function __saveProductMetaData() {
         $defaultTemplate = "ProductMetaData_tpl.php";
       
@@ -1942,10 +1954,6 @@ class unesco_oer extends controller {
                 } else {
                     return $defaultTemplate;
                 }
-                break;
-            case "newproduct":
-                $product->createBlankProduct();
-                return $defaultTemplate;
                 break;
             case "createcontent":
 //test if all fields are valid

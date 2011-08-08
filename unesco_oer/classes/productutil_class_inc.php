@@ -125,17 +125,24 @@ class productutil extends object {
                                     <br>
                                 <div class="listingLanguageLinkAndIcon">
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                    <div class="listingLanuagesDropdownDiv">
-                                        <select name="" class="listingsLanguageDropDown">';
+                                    <div class="listingLanuagesDropdownDiv">';
+//                                        <select name="" class="listingsLanguageDropDown">';
 
         $index = 0;
+
+        $dropdown = new dropdown($product['id']."_dropdown");
 
         $translations = $objProduct->getTranslationsList();
         foreach ($translations as $translation) {
             $prodLanguage = $this->objDbproductlanguages->getLanguageNameByID($translation['language']);
-            $selected = ($product['id'] == $translation['id']) ? 'selected' : '';
-            $content .= '<option '. $selected .' value="'. $translation['id'].'">' . $prodLanguage . '</option>';
+//            $selected = ($product['id'] == $translation['id']) ? 'selected' : '';
+//            $content .= '<option '. $selected .' value="'. $translation['id'].'">' . $prodLanguage . '</option>';
+            $dropdown->addOption($translation['id'], $prodLanguage);
         }
+        $dropdown->cssClass = "listingsLanguageDropDown";
+        $dropdown->setSelected($product['id']);
+        $dropdown->addOnchange("javascript: viewProduct('{$dropdown->cssId}');");
+        $content .= $dropdown->show();
 //         $prodLanguages = $this->objDbproductlanguages->getLanguageNameByID($product['language']);
 //         $content .= '<option value="">' . $prodLanguages . '</option>';
 
@@ -154,7 +161,7 @@ class productutil extends object {
         
 
         $content .='
-                                        </select>
+                                        <!--</select> -->
                                     </div>
                                 </div>
                                 <br>
