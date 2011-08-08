@@ -149,9 +149,8 @@ echo '<div id="formresults"></div>';
 
 
 
-
-$form = new form ('updatedetails', $this->uri(array('action'=>'updateuserdetails','id'=>$this->getParam('id'),'userid'=>$this->getParam('userid'))));
-
+$uri=$this->uri(array('action'=>'updateuserdetails','id'=>$this->getParam('id'),'userid'=>$this->getParam('userid')));
+$form = new form ('updatedetails',$uri);
 echo '<div style="width:70%; float:left; padding:5px; boorder:1px solid red;">';
 //echo '<h3>'.$this->objLanguage->languageText('phrase_userinformation', 'userdetails').':</h3>';
 
@@ -344,16 +343,28 @@ $tableC->addCell($textinput->show());
 $tableC->endRow();
 
 
+$user_current_membership=$this->ObjDbUserGroups->getUserGroups($this->getParam('id'));
+
+$textinput = new textinput('userGROUPMEMBERSHIP');
+$tableC->startRow();
+$tableC->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer'));
+foreach($user_current_membership as $member){
+    $tableC->addCell($this->objDbGroups->getGroupName($member['groupid']));
+    }
+
+$tableC->endRow();
+
+
+
 
 $groups = $this->objDbGroups->getAllGroups();
 $availablegroups=array();
-$user_current_membership=$this->ObjDbUserGroups->getUserGroups($this->getParam('id'));
 foreach ($groups as $group) {
     foreach ($user_current_membership as $membership) {
         if (strcmp($group['id'], $membership['groupid']) != 0){
                  array_push($availablegroups, $group);
                         }
-        else{ /// work with the addmin now
+        else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
             
         }
     }
@@ -492,9 +503,12 @@ $form->addToForm('<br />');
 //$form->addToForm($table->show());
 
 $button = new button ('submitform', $this->objLanguage->languageText('mod_userdetails_updatedetails'));
-$button->setToSubmit();
+//$button->setToSubmit();
+$action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
+$button->setOnClick('javascript: ' . $action);
 // $button->setOnClick('validateForm()');
 
+$form->extra = 'enctype="multipart/form-data"';
 $form->addToForm('<p>'.$button->show().'</p>');
 
 $form->addRule('useradmin_firstname',$this->objLanguage->languageText('mod_userdetails_enterfirstname', 'userdetails'),'required');
@@ -512,3 +526,11 @@ $returnlink->link = 'Return to Home Page';
 echo '<br clear="left" />'.$returnlink->show();
 ?>
 
+<script type="text/javascript">
+function SubmitProduct()
+{
+    var objForm = document.forms['updatedetails'];
+    //objForm.elements[element].value = value;
+    objForm.submit();
+}
+</script>

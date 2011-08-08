@@ -1544,6 +1544,7 @@ class unesco_oer extends controller {
         $DescriptionText = $this->getParam('description');
         $WebsiteLink = $this->getParam('websitelink');
         $GroupMembership = $this->getParam('groupmembership');
+        $rightList=$this->getParam('rightList');
 
         $userDetails = array(
             'password' => $password,
@@ -1603,7 +1604,9 @@ class unesco_oer extends controller {
 // Process Update Results
         if ($update) {
             $this->objUseExtra->updateUserInfo($this->getParam('id'), $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
-
+           foreach($rightList as $list){
+               $this->ObjDbUserGroups->joingroup($this->getParam('id'),$list);
+            }
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "UserListingForm_tpl.php";
         } else {

@@ -495,7 +495,7 @@ $Cancelbutton = new button ('submitform',$this->objLanguage->languageText('mod_u
 $CancelLink = new link($this->uri(array('action' => "userListingForm",)));
 $CancelLink->link =$Cancelbutton->show();
 
-$button = new button ('submitform',$this->objLanguage->languageText(' mod_unesco_oer_group_save_button', 'unesco_oer'));
+$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
 //$button->setToSubmit();
 $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
 $button->setOnClick('javascript: ' . $action);
