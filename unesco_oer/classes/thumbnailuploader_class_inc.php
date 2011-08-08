@@ -57,9 +57,12 @@ class thumbnailuploader extends object{
                     return FALSE;
                 }
             }
+            if (empty ($this->results['success'])) { //Unique error that occurrs when the same file is uploaded twice.
+                return FALSE;
+            }
         }
 
-        if (!empty($prevPath)) {
+        if (!empty($prevPath)  && is_file($prevPath)) {
             $objDelete = $this->getObject('del','files');
             $objDelete->fullFilePath = $prevPath;
             if (!$objDelete->delete()) {

@@ -544,7 +544,7 @@ class product extends object
             if (!$this->isDeleted() && !$this->isAdaptation()){
                 $results = $this->uploadThumbNail($path);
             }
-
+            
             if ($results)
             {
                 $this->_objDbProducts->updateProduct(
