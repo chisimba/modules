@@ -83,6 +83,19 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_unesco_oer_modules</table>
+        <version>0.064</version>
+        <description>Added a title field</description>
+        <data>
+            <add>
+                <name>title</name>
+                <type>text</type>
+                <length>255</length>
+                <default>NULL</default>
+            </add>
+        </data>
+    </update>
 </updates>
 
 

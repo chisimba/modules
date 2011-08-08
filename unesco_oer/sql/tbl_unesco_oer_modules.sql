@@ -22,6 +22,7 @@ $options = array('comment'=>'Table to store the modules of a year','collate'=>'u
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
                 'year_id' => array('type' => 'text','length' => 32),
+                'title' => array('type' => 'text', 'length' => 255),
                 'content' => array('type' =>'text'),
                 'audience' => array('type' => 'text', 'length' => 255), //_level
                 'entry_requirements' => array('type' =>'text'),
