@@ -17,8 +17,6 @@
 /* This is a Edit theme  UI
  *
  */
-
-
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -48,7 +46,6 @@ $BackToControlPanelLink->link = $controlPannel->show();
 
 echo $addLanguageLink->show() . '&nbsp;' . $BackToControlPanelLink->show();
 echo '</div>';
-
 
 $table = $this->newObject('htmltable', 'htmlelements');
 

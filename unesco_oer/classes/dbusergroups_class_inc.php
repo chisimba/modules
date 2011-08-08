@@ -15,88 +15,67 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+class dbusergroups extends dbtable {
 
-
-class dbusergroups extends dbtable{
-
-      function init() {
-         parent::init("tbl_unesco_oer_user_groups");
-
+    function init() {
+        parent::init("tbl_unesco_oer_user_groups");
     }
 
-   
-   function joingroup($id,$groupid) {
+    function joingroup($id, $groupid) {
         $data = array(
             'id' => $id,
             'groupid' => $groupid
         );
         $this->insert($data);
     }
+
 //to get all users in  a particular group
-    function getGroupUser($groupid){
-        $sql="SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid'";
+    function getGroupUser($groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid'";
         return $this->getArray($sql);
     }
 
     //To get the number of group users
-    function groupMembers($groupid){
-        $sql="SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid'";
-        $array=$this->getArray($sql);
+    function groupMembers($groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid'";
+        $array = $this->getArray($sql);
         return count($array);
     }
 
     // get a user list of groups that he belong
-    function getUserGroups($id){
-        $sql="SELECT * FROM tbl_unesco_oer_user_groups WHERE id='$id'";
+    function getUserGroups($id) {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE id='$id'";
         return $this->getArray($sql);
     }
 
-
     // when a user what to leave a particular group
-    function leavegroup($id,$groupid){
-        $sql="DELETE * FROM tbl_unesco_oer_usergroups WHERE id='$id' AND groupid='$groupid'";
+    function leavegroup($id, $groupid) {
+        $sql = "DELETE * FROM tbl_unesco_oer_usergroups WHERE id='$id' AND groupid='$groupid'";
     }
 
     //TO get user that who don't belong to any group
-    function getNonGroupUsers(){
-        $sql="SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='NULL'";
+    function getNonGroupUsers() {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='NULL'";
         return $this->getArray($sql);
-
     }
 
     //Check that a user belongs to a  group
 
-    function ismemberOfgroup($id,$groupid){
-        $sql="SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid' AND id='$id'";
-        $array=$this->getArray($sql);
-        if(count($array)>0){
+    function ismemberOfgroup($id, $groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid' AND id='$id'";
+        $array = $this->getArray($sql);
+        if (count($array) > 0) {
             return 1; //TRUE
-        }else{
+        } else {
             return 0;
         }
-
     }
 
-
-
-
-  
-
-
-
-
-
-
-   
-
-
-
 }
-
 ?>
 
 
-    
-    
-   
+
+
+
 
