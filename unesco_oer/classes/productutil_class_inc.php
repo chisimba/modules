@@ -64,7 +64,8 @@ class productutil extends object {
     public function populateGridView($product) {
 
            
-        
+        $objProduct = $this->newObject('product', 'unesco_oer');
+        $objProduct->loadProduct($product);
      
         $uri = $this->uri(array("action" => 'ViewProduct', "id" => $product['id']));
         $abLink = new link($uri);
@@ -128,8 +129,15 @@ class productutil extends object {
                                         <select name="" class="listingsLanguageDropDown">';
 
         $index = 0;
-         $prodLanguages = $this->objDbproductlanguages->getLanguageNameByID($product['language']);
-         $content .= '<option value="">' . $prodLanguages . '</option>';
+
+        $translations = $objProduct->getTranslationsList();
+        foreach ($translations as $translation) {
+            $prodLanguage = $this->objDbproductlanguages->getLanguageNameByID($translation['language']);
+            $selected = ($product['id'] == $translation['id']) ? 'selected' : '';
+            $content .= '<option '. $selected .' value="'. $translation['id'].'">' . $prodLanguage . '</option>';
+        }
+//         $prodLanguages = $this->objDbproductlanguages->getLanguageNameByID($product['language']);
+//         $content .= '<option value="">' . $prodLanguages . '</option>';
 
 //        foreach ($product as $languages) {
 ////Check if languages is empty

@@ -13,6 +13,7 @@ $fields = array(
                 'resource_type' =>array('type' =>'text','length'=>32),
                 'date' => array('type' => 'timestamp'),
                 'language'=>array('type' => 'text','length' => 32),
+                'translation_of'=>array('type' => 'text','length' => 32),
                 'description'=>array('type'=>'text'),
                 'abstract'=>array('type'=>'text'),
                 'table_of_contents'=>array('type'=>'text'),

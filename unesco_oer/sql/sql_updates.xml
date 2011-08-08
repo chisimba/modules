@@ -71,6 +71,18 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_unesco_oer_products</table>
+        <version>0.062</version>
+        <description>Add translation_of field to tbl_unesco_oer_products</description>
+        <data>
+            <add>
+                <name>translation_of</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+    </update>
 </updates>
 
 

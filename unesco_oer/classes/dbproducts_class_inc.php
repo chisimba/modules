@@ -175,6 +175,32 @@ class dbproducts extends dbtable
             return TRUE;
         }
     }
+
+    /**This function returns an array of OER's that are not translations of other
+     * originals.
+     *
+     * @return array
+     */
+    function getTranslatableOriginals() {
+        $filter = 'WHERE parent_id IS NULL AND translation_of IS NULL AND deleted=0';
+        return $this->getAll($filter);
+    }
+
+    function getAllTranslationsByID($productID){
+
+        $product = $this->getRow('id', $productID);
+        $translationID = NULL;
+
+        if (empty ($product['translation_of'])) {
+            $translationID = $productID;
+        } else {
+            $translationID = $product['translation_of'];
+        }
+
+        $translationsOfProduct = $this->getAll("WHERE translation_of='$translationID'");
+        $translatedProduct = $this->getAll("WHERE id='$translationID'");
+        return array_merge($translatedProduct, $translationsOfProduct);
+    }
     
 }
 ?>

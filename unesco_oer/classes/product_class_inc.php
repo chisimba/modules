@@ -68,6 +68,11 @@ class product extends object
      */
     private $_language;
 
+    /**Translation ID
+     *
+     */
+    private $_translationOf;
+
     /**Authors
      *
      * @var <type>
@@ -290,15 +295,14 @@ class product extends object
         $tempData['alternative_title'] = $this->getAlternativeTitle();
         $tempData['resource_type'] = $this->getContentType();
         $tempData['language'] = $this->getLanguageID();
+        $tempData['translation_of'] = $this->getTranslationID();
         $tempData['description'] = $this->getDescription();
         $tempData['abstract'] = $this->getAbstract();
-        //TODO $tempData['table of contents']
         $tempData['creator'] = $this->getAuthors();
         $tempData['contacts'] = $this->getContacts();
         $tempData['publisher'] = $this->getPublisher();
         //TODO $tempData['related_language']
         $tempData['other_contributors'] = $this->getOtherContributers();
-        //TODO format ??
         $tempData['coverage'] = $this->getCoverage();
         $tempData['rights'] = $this->getRights();
         $tempData['rights_holder'] = $this->getRightsHolder();
@@ -396,6 +400,7 @@ class product extends object
         $this->setAlternativeTitle($product['alternative_title']);
         $this->setContentType($product['resource_type']);
         $this->setLanguage($product['language']);
+        $this->setTranslationID($product['translation_of']);
         $this->setAuthors($product['creator']);
         $this->setPublisher($product['publisher']);
         $this->setDescription($product['description']);
@@ -446,6 +451,7 @@ class product extends object
         $this->setAlternativeTitle($this->getParam('alternative_title'));
         $this->setContentType($this->getParam('resource_type'));
         $this->setLanguage($this->getParam('language'));
+        $this->setTranslationID($this->getParam('translation_of'));
         $this->setAuthors($this->getParam('creator'));
         $this->setPublisher($this->getParam('publisher'));
         $this->setDescription($this->getParam('description'));
@@ -622,7 +628,7 @@ class product extends object
             $tableThumb = $this->newObject('htmltable', 'htmlelements');
             $tableThumb->cssClass = "moduleHeader";
             $tableThumb->startRow();
-            $tableThumb->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer') . '<font color="#FF2222">* '. $this->validationArray['thumbnail']['message']. '</font>');
+            $tableThumb->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
             $tableThumb->addCell('Preview');
             $tableThumb->endRow();
             $tableThumb->startRow();
@@ -635,7 +641,7 @@ class product extends object
             $tableThumb->endRow();
             
             $fieldset = $this->newObject('fieldset','htmlelements');
-            $fieldset->setLegend('Product Thumbnail');
+            $fieldset->setLegend('Product Thumbnail' . '<font color="#FF2222">* '. $this->validationArray['thumbnail']['message']. '</font>');
             $fieldset->addContent($tableThumb->show());
 
             $table->startRow();
@@ -739,7 +745,7 @@ class product extends object
 
          //field for the language
         $fieldName = 'language';
-        $title = $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_languages', 'unesco_oer');
         $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
         $productLanguages = $this->objDbProductLanguages->getProductLanguages();
         $this->_objAddDataUtil->addDropDownToTable(
@@ -749,6 +755,22 @@ class product extends object
                                                     $productLanguages,
                                                     $this->getLanguageID(),
                                                     'code',
+                                                    $table,
+                                                    'id'
+                                                    );
+
+        //field for the language
+        $fieldName = 'translation_of';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_translation', 'unesco_oer');
+//        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        $translatableProducts = $this->_objDbProducts->getTranslatableOriginals();
+        $this->_objAddDataUtil->addDropDownToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    $translatableProducts,
+                                                    $this->getTranslationID(),
+                                                    'title',
                                                     $table,
                                                     'id'
                                                     );
@@ -1067,12 +1089,8 @@ class product extends object
             //field for groups
             $fieldName = 'group';
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_group', 'unesco_oer');
-            //$title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
+            $title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
             //TODO Update group and institution retrievel when deals has fixed his code
-//            $groups = array(
-//                            array('id' => '1', 'name' => 'Polytechnic of Namibia, journalism department'),
-//                            array('id' => '2', 'name' => 'Wits University, journalism department')
-//                );
             $this->_objAddDataUtil->addDropDownToTable(
                                                         $title,
                                                         4,
@@ -1081,9 +1099,7 @@ class product extends object
                                                         $this->getGroupID(),
                                                         'name',
                                                         $table,
-                                                        'id',
-                                                        '',
-                                                        FALSE
+                                                        'id'
                                                         );
 
 
@@ -1278,6 +1294,19 @@ class product extends object
         }
     }
 
+    function setTranslationID($translationID)
+    {
+        $this->_translationOf = $translationID;
+//        if (empty($language))
+//        {
+//            $this->addValidationMessage('language', FALSE, 'Product must have a language');
+//        }
+//        else
+//        {
+//            $this->addValidationMessage('language', TRUE, NULL);
+//        }
+    }
+
     function setAuthors($creator)
     {
         $this->_creator = $creator;
@@ -1456,6 +1485,14 @@ class product extends object
    private function setGroupID($groupID)
    {
        $this->_group = $groupID;
+       if (empty($groupID))
+        {
+            $this->addValidationMessage('group', FALSE, 'Product must have a group associated with it');
+        }
+        else
+        {
+            $this->addValidationMessage('group', TRUE, NULL);
+        }
    }
 
    private function setInstitutionID($institutionID)
@@ -1503,6 +1540,17 @@ class product extends object
     function getLanguageName()
     {
         return $this->objDbProductLanguages->getLanguageNameByID( $this->getLanguageID() );
+    }
+
+    public function getTranslationID()
+    {
+        return $this->_translationOf;
+    }
+
+    public function getTranslationsList()
+    {
+        $translations = $this->_objDbProducts->getAllTranslationsByID($this->_identifier);
+        return $translations;
     }
 
     function getAuthors()

@@ -50,7 +50,7 @@ class thumbnailuploader extends object{
             //TODO return proper error page
             throw new customException('Upload failed: FATAL <br />');
         } else {
-            if (!$this->results['success']) { // upload was unsuccessful
+            if (!$this->results['success'] && !empty ($this->results['success'])) { // upload was unsuccessful
                 if ($this->results['reason'] != 'nouploadedfileprovided') {
                     throw new customException('Upload failed: ' . $this->results['reason']); //TODO return proper error page containing error
                 } else {
