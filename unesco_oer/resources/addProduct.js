@@ -94,7 +94,6 @@ window.onload = function() {
 function viewProduct(selectName) {
     
     var objDrop = document.getElementById(selectName);
-    alert(objDrop);
     var id = objDrop.options[objDrop.selectedIndex].value;
     
     document.location.href='/unesco_oer/index.php?action=ViewProduct&id=' + id;
