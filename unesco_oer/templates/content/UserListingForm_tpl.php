@@ -107,7 +107,7 @@ $myTable->addHeaderCell('Edit', null, null, left, "userheader", null);
 $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 $myTable->endHeaderRow();
 
-
+$page=1;
 $start=0;
 $end=10;
 
@@ -119,8 +119,8 @@ if (strcmp($mode, 'addfixup') == 0) {
     //echo 'deals';
 
 } else {
-    //$users = $this->objUseExtra->getAllUser();
-    $users = $this->objUseExtra->getUser(0,10);
+    $users = $this->objUseExtra->getAllUser();
+
   
 }
 
