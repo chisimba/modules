@@ -1463,10 +1463,16 @@ class unesco_oer extends controller {
         }
     }
 
-    function __userPagination(){
-        $start;
-        $end;
-    }
+    function __userPagination($page,$start,$end){
+        $user=$this->objUseExtra->getUser($start,$end);
+         $page;
+         $this->setVar('user', $user);
+         $mode = 'addfixup';
+                $this->setVar('mode', $mode);
+                $this->setLayoutTemplate('maincontent_layout_tpl.php');
+                return 'UserListingForm_tpl.php';
+        $this->__userPagination($page+1, $end, $end+10);
+        }
 
     function __RegistrationForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');

@@ -107,11 +107,13 @@ $myTable->addHeaderCell('Edit', null, null, left, "userheader", null);
 $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 $myTable->endHeaderRow();
 
- $searchUser=$user;
+
+$start=0;
+$end=10;
+
+
 //get user from the database
 $users ;
-
-//echo $mode;
 if (strcmp($mode, 'addfixup') == 0) {
       $users =$user;
     //echo 'deals';
