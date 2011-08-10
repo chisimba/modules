@@ -243,7 +243,7 @@ class artdirui extends object
                              <a href="#"><img src="'.$path.'homepage_image_mc.jpg" alt="" /></a>
                              <a href="#"><img src="'.$path.'homepage_image_music.jpg" alt="" /></a>
                              <a href="#"><img src="'.$path.'homepage_image_theatre.jpg" alt="" /></a>
-                             
+                             <a href="#"><img src="'.$path.'homepage_image_theatre.jpg" alt="" /></a>
                          </div>
                      </div>
                      <div class="paging">
