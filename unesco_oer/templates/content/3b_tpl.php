@@ -85,6 +85,24 @@ $this->appendArrayVar('headerParams', $js);
             
             ?>
             </div>
+                    <div class="sortBy">
+<?php
+                           $search = $this->getobject('filterdisplay', 'unesco_oer');
+                          echo $search->SortDisp('2b_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+
+                    ?>
+
+
+
+                                                <!--                            Sort By:
+                                                                            <select name="" class="contentDropDown">
+                                                                                <option value="">Date Added</option>
+                                                                            </select>
+                                                                            <select name="" class="contentDropDown">
+                                                                                <option value="">DESC</option>
+                                                                            </select>-->
+                                            </div>
+                <div  id='filterDiv' title = "2b">
             <table class="threeAListingTable" cellspacing="0" cellpadding="0">
                	  <tr>
                       <?php
@@ -168,6 +186,7 @@ $this->appendArrayVar('headerParams', $js);
                       
                     </tr>
               </table>
+                </div>
                 
                 <script src="http://code.jquery.com/jquery-latest.js"></script>
      <script>
