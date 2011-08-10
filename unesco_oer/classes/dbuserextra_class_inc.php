@@ -26,6 +26,7 @@ class dbuserextra extends dbtable{
          parent::init("tbl_unesco_oer_userextra");
          $this->objAdmin=$this->getObject('useradmin_model2','security');
          $this->objUser=$this->getObject('user','security');
+         $this->ObjDbUserGroups = $this->getObject('dbusergroups','unesco_oer');
 
     }
 
@@ -48,6 +49,34 @@ class dbuserextra extends dbtable{
          //   'groupmembership' => $GroupMembership//
         );
         $this->insert($data);
+    }
+
+    //check that a field exist in database user extra if not add the user info
+    function editCheck($id,$userid){
+        $sql=" SELECT* FROM tbl_unesco_oer_userextra WHERE id='$id' AND userid='$userid'";
+        $array=$this->getArray($sql);
+        if(count($array)==0){
+            $data = array(
+                'id' => $id,
+                'userid' => $userid,
+                     'birthday' => "",
+            'address' => "",
+            'city' => "",
+            'state' => "",
+            'postaladdress' => "",
+            'organisation' => "",
+            'jobtittle' => "",
+            'typeoccapation' => "",
+            'workingphone' => "",
+            'description' => "",
+            'websitelink' => ""
+         //   'groupmembership' => $GroupMembership//
+        );
+        $this->insert($data);
+        $this->ObjDbUserGroups->joingroup($userid,"");
+
+        }
+
     }
 
     function updateUserInfo($id,$userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink) {

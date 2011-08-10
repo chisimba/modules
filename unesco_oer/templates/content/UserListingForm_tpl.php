@@ -107,33 +107,20 @@ $myTable->addHeaderCell('Edit', null, null, left, "userheader", null);
 $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 $myTable->endHeaderRow();
 
+ $searchUser=$user;
  
 //get user from the database
 $users = "";
 $mode = $this->getParam('mode');
 if (strcmp($mode, 'addfixup') == 0) {
-    $users = $user;
+    $users =$this->$user;
+
 } else {
-    if (strcmp($this->getParam('mode'), 'groupuser') == 0) {
-        //$groupname = $this->objDbGroups->getGroupName($this->getParam('id'));
-        //$userIds = $this->objUseExtra->getAlluserGroup($groupname);
-        $users = array();
-        $groupusers=$this->ObjDbUserGroups->getGroupUser($this->getParam('id'));
-
-        foreach($groupusers as $groupuser){
-            $currUserid=$groupuser['id'];
-            $currUser=$this->objUseExtra->getUserbyId($currUserid);
-            $users[] = $currUser[0];
-        }
-
-    } else {
-        $users = $this->objUseExtra->getAllUser();
-//        print_r($users);
-//        die();
-    }
+    $users = $this->objUseExtra->getAllUser();
+  
 }
 
-
+$this->objUseExtra->editCheck($this->objUser->PKID(),$this->objUser->userId());
 if (count($users) > 0) {
     foreach ($users as $user) {
         $myTable->startRow();
@@ -144,6 +131,7 @@ if (count($users) > 0) {
         $myTable->addCell($user['emailaddress'], null, null, null, "user", null, null);
 
         $objIcon->setIcon('edit');
+     
         $editLink = new link($this->uri(array('action' => "editUserDetailsForm", 'id' => $user['id'], 'userid' => $user['userid'], 'username' => $user['username'])));
         $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());

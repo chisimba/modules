@@ -1495,7 +1495,7 @@ class unesco_oer extends controller {
                 if (count($this->objUseExtra->searchUserByName($this->getParam('search'))) > 0) {
                     $user = $this->objUseExtra->searchUserByName($this->getParam('search')); //search user by name
                     $this->setVar('user', $user);
-                    $this->setvar('mode', 'addfixup');
+                    $this->setVarByRef('mode', 'addfixup');
                     $this->setLayoutTemplate('maincontent_layout_tpl.php');
                     return 'UserListingForm_tpl.php';
                 }
@@ -1873,27 +1873,27 @@ class unesco_oer extends controller {
         return 'groupListingForm_tpl.php';
     }
 
-    function __searchGroup() {
-        if ($this->getParam('search') == '') {
-            return $this->__groupListingForm();
-        } else {
-            if (count($this->objDbGroups->searchGroupByName($this->getParam('search'))) > 0) {
-                $group = $this->objDbGroups->searchGroupByName($this->getParam('search'));
-                $this->setVar('group', $group);
-                $mode = 'addfixup';
-                $this->setVarByRef('mode', $mode);
-                $this->setLayoutTemplate('maincontent_layout_tpl.php');
-                return 'groupListingForm_tpl.php';
-            } else {
-                $nogroupfound = "No group found";    // this must be some be a script
-                $this->setVar('nogroupfound', $nogroupfound);
-                $mode = 'addfixup';
-                $this->setVarByRef('mode', $mode);
-                $this->setLayoutTemplate('maincontent_layout_tpl.php');
-                return 'groupListingForm_tpl.php';
-            }
-        }
-    }
+//    function __searchGroup() {
+//        if ($this->getParam('search') == '') {
+//            return $this->__groupListingForm();
+//        } else {
+//            if (count($this->objDbGroups->searchGroupByName($this->getParam('search'))) > 0) {
+//                $group = $this->objDbGroups->searchGroupByName($this->getParam('search'));
+//                $this->setVar('group', $group);
+//                $mode = 'addfixup';
+//                $this->setVarByRef('mode', $mode);
+//                $this->setLayoutTemplate('maincontent_layout_tpl.php');
+//                return 'groupListingForm_tpl.php';
+//            } else {
+//                $nogroupfound = "No group found";    // this must be some be a script
+//                $this->setVar('nogroupfound', $nogroupfound);
+//                $mode = 'addfixup';
+//                $this->setVarByRef('mode', $mode);
+//                $this->setLayoutTemplate('maincontent_layout_tpl.php');
+//                return 'groupListingForm_tpl.php';
+//            }
+//        }
+//    }
 
    
 

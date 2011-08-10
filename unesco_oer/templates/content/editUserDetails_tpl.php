@@ -360,14 +360,18 @@ $tableC->endRow();
 $groups = $this->objDbGroups->getAllGroups();
 $availablegroups=array();
 foreach ($groups as $group) {
-    foreach ($user_current_membership as $membership) {
-        if (strcmp($group['id'], $membership['groupid']) != 0){
-                 array_push($availablegroups, $group);
-                        }
+    if(count($user_current_membership)!=0){
+        foreach ($user_current_membership as $membership) {
+            if (strcmp($group['id'], $membership['groupid']) != 0){
+                array_push($availablegroups, $group);
+                }
+                }
+                }
         else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
+            array_push($availablegroups, $group);
             
         }
-    }
+    
 }
 $objSelectBox = $this->newObject('selectbox','htmlelements');
 $objSelectBox->create( $form, 'leftList[]', 'Available Groups', 'rightList[]', 'Chosen Groups' );
