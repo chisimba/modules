@@ -201,11 +201,131 @@
 
                 </div>
                 <div class="spaceBetweenRightBorderedDivs">
-                	<div class="featuredHeader pinkText">BROWSER ADAPTATION BY MAP</div>
+                	<div class="featuredHeader pinkText"> Browse Adaptation By Map
+                 
+                        </div>
+                    
+                    
                 </div>
                 <div class="rightColumnBorderedDiv">
                 	<div class="rightColumnContentPadding">
 
+                                            <script type="text/javascript"
+                                                    src="http://maps.google.com/maps/api/js?sensor=true">
+                                            </script>
+ <script type="text/javascript">
+
+                                                var marker = new Array();
+
+
+                                                function initialize() {
+
+                                                    myLatlng = [
+
+                                            <?php
+
+                                              $coords = $this->objDbGroups->getAllgroups();
+//                                            $objDbGroups = $this->getObject('dbgroups','unesco_oer');
+//                                            $array_of_AdaptedProduct_COordinates=array();
+//                                            $adaptedproduct;//Todo get an array of adapted product in the page
+//                                            foreach($adaptedProduct as $product){
+//                                                $productid; //TODO get product id of each adapted product
+//                                               array_push($array_of_AdaptedProduct_COordinates,$objDbGroups->getAdaptedProductLat($productid));
+//                                            }
+//
+//
+//                                               $coords=$this->$array_of_AdaptedProduct_COordinates;
+
+
+                                            foreach ($coords as $coord) {
+                                                ?>
+
+                                                            new google.maps.LatLng(<?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>),
+
+
+                                            <?php } ?>
+
+                                                    ];
+
+
+                                                    title = [
+
+                                            <?php
+
+                                            $title = $this->objDbGroups->getAllgroups();
+
+                                            foreach ($title as $titles) {
+                                                ?>
+                                                      "<?php           echo $titles['name']            ?>",
+
+
+
+                                            <?php } ?>
+
+                                                    ];
+
+
+
+
+
+                                                    var myOptions = {
+                                                        zoom: 0,
+                                                        center: myLatlng[0],
+                                                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                                                    }
+                                                    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+                                                    var oldAction = document.forms["maps"].action;
+
+                                                    for(i=0;i<myLatlng.length;i++)
+                                                    {
+                                                        marker[i] = new google.maps.Marker(
+                                                        { position: myLatlng[i],
+                                                            title: title[i]
+
+                                                        } );
+
+                                                        var pos = marker[i].getPosition();
+
+
+
+
+
+                                                        google.maps.event.addListener(marker[i], 'click',
+                                                        (function(pos)
+                                                        { return function()
+                                                            {
+                                                                //alert(i);
+                                                                document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
+                                                                document.forms["maps"].submit();
+                                                            };
+                                                        }
+                                                    )(pos)
+                                                    );
+
+                                                        marker[i].setMap(map);
+
+                                                    }
+
+
+                                                }
+
+                                            </script>
+                                       
+                                        <body onload="initialize()">
+                                            <div id="map_canvas" style="width:100%; height:20%"></div>
+                                            <?php
+                                            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2b_tpl.php', 'MapEntries' => $MapEntries)));
+
+                                            echo $form->show();
+                                          
+                                            ?>
+                                        </body>
+                                
+
+                            
+                    
+                        
 
 
                      </div>

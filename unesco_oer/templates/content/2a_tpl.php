@@ -27,8 +27,18 @@ if ($adaptationstring == null)
                 
 
 <?php
+                             if ($browsecheck){
+                                  
+                                  $adaptationstring = $finalstring;
+                              }
                            $filtering = $this->getobject('filterdisplay', 'unesco_oer');
                            echo $filtering->SideFilter('2a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+                           
+                           if ($browsecheck){
+                                  
+                                  $adaptationstring = "parent_id is not null and deleted = 0";
+                              }
+                           
 ?>
                 
                 

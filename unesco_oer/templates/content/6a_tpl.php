@@ -120,6 +120,7 @@
                                 foreach ($selectedproducts as $selectedproduct){
                                   
                                     $product->loadProduct($selectedproduct);
+                                  
                                     $content = $product->getContentManager();
                                       
            

@@ -42,58 +42,33 @@ $this->appendArrayVar('headerParams', $js);
         	</div>
           <div class="wideLeftFloatDiv">
         	<!-- Left Colum -->
-        	<div class="leftColumnDiv">
-            	<div class="moduleHeader blueText">FILTER PRODUCTS</div>
-                <div class="blueNumberBackground">
-                	<div class="iconOnBlueBackground"><img src="skins/unesco_oer/skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
-                    <div class="numberOffilteredProducts">56</div>
-                </div>
-<div class="moduleSubHeader">Product matches filter criteria</div>
-                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesskins/unesco_oer/skins/unesco_oer/images">Type of product</div>
-                <div class="blueBackground blueBackgroundCheckBoxText">
-                	<input type="checkbox"> Model<br>
-                    <input type="checkbox"> Guide<br>
-                    <input type="checkbox"> Handbook<br>
-                    <input type="checkbox"> Manual<br>
-                    <input type="checkbox"> Bestoractile<br>
-                </div>
-                <br>
-                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-theme.png" alt="Theme" class="modulesskins/unesco_oer/images">Theme</div>
-                <div class="blueBackground">
-                	<select name="theme" id="theme" class="leftColumnSelectDropdown">
-                    	<option value="">All</option>
-                    </select>
-                </div>
-                <br>
-                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-languages.png" alt="Language" class="modulesskins/unesco_oer/images">Language</div>
-                <div class="blueBackground">
-                	<select name="language" id="language" class="leftColumnSelectDropdown">
-                    	<option value="">All</option>
-                    </select>
-                </div>
-                <br>
-                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesskins/unesco_oer/images">Author</div>
-                <div class="blueBackground">
-                	<select name="author" id="author" class="leftColumnSelectDropdown">
-                    	<option value="">All</option>
-                    </select>
-                </div>
-                <br>
-                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesskins/unesco_oer/images">Items per page</div>
-                <div class="blueBackground">
-                	<select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                    	<option value="">All</option>
-                    </select>
-                </div>
-                <br><br>
+        	    
+
+        <?php
+        $filtering = $this->getobject('filterdisplay', 'unesco_oer');
+        $products = $this->objDbProducts->getadapted($productID);
+        echo $filtering->SideFilter('3b_tpl.php', $SortFilter, $TotalPages, $products, $browsemapstring, $NumFilter, $PageNum);
+        
+        
+        ?>
                 <div class="blueBackground rightAlign">
-                	<img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                    <a href="#" class="resetLink">RESET</a> 
-                </div>
+        <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
+        <a href="#" class="resetLink"> 
+            <?php
+            $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+
+            $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
+            echo $button->show();
+
+            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
+            $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer');
+            echo $abLink->show();
+            ?>
+
+        </a>
+    </div>
+          </div>  
             </div>
-                
-                
-                
         	<!-- Center column DIv -->
             <div class="rightWideColumnDiv">
             <div class=""><input type="checkbox"> Toggle

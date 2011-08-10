@@ -20,8 +20,18 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                 <div class="subNavigation"></div>
                                 <!-- Left Colum -->
                               <?php
+                           
+                             if ($browsecheck){
+                                  
+                                  $adaptationstring = $finalstring;
+                              }
                            $filtering = $this->getobject('filterdisplay', 'unesco_oer');
                            echo $filtering->SideFilter('2b_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+                           
+                           if ($browsecheck){
+                                  
+                                  $adaptationstring = "parent_id is not null and deleted = 0";
+                              }
 ?>
 
                                 
@@ -364,31 +374,23 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                                 <div class="featuredHeader">FEATURED ADAPTATION</div>
                                                 <div class="rightColumnBorderedDiv">
                                                     
-                        <?php
-                                            $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
-                                       
-                                            foreach ($featuredProducts as $featuredProduct) {
-                                                //Check if it's an adapted product
-                                                $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
+                        <?php    $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
+                                foreach ($featuredProducts as $featuredProduct) {
 
-                                                //If the product is an adaptation
-                                               
-                                            }
+                                    //Check if it's an adapted product
+                                    $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
 
-                                           if ($this->objDbGroups->isGroup($featuredAdaptedProduct['creator'])) {
-                                                    $thumbnail = $this->objDbGroups->getGroupThumbnail($featuredAdaptedProduct['creator']); 
-                                                    $featuredAdaptedProduct['group_thumbnail'] = $thumbnail['thumbnail'];
-                                                    $featuredAdaptedProduct['institution_thumbnail'] = NULL;
-                                                } else {
-                                                    $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($featuredAdaptedProduct['creator']);
-                                                    $featuredAdaptedProduct['group_thumbnail'] = NULL;
-                                                    $featuredAdaptedProduct['institution_thumbnail'] = $thumbnail['thumbnail'];
-                                                }
-                                                //Get the number of adaptations
-                                           
-                                                $featuredAdaptedProduct['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($featuredAdaptedProduct['id']);
+                                    //If the product is an adaptation
+                                    if ($product['parent_id'] != NULL) {
+                                        $featuredAdaptedProduct = $product;
+                                    }
 
-                                       //     echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($featuredAdaptedProduct);     
+                                }
+
+                                $objProduct = $this->getObject('product');
+                                $objProduct->loadProduct($featuredAdaptedProduct['id']);
+
+                                echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);   
                         ?>
                                         <div class="spaceBetweenRightBorderedDivs">
                                             <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>

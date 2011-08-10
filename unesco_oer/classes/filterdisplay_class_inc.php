@@ -71,7 +71,13 @@ class filterdisplay extends object {
                         <div class="numberOffilteredProducts"> 
                         ');
 
-                             $TotalRecords = $this->objDbProducts->getTotalEntries($adaptationstring);
+     
+                   if (is_string($adaptationstring)){
+                       $TotalRecords = $this->objDbProducts->getTotalEntries($adaptationstring);
+                       
+                   } else
+                       $TotalRecords = count($adaptationstring);
+                             
                            $form ->addToForm($TotalRecords);
                          $form->addToForm('</div>
                         </div>
