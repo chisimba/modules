@@ -709,26 +709,19 @@ class javafilt extends object {
                //     $products = $this->objDbProducts->getFilteredProducts($TotalEntries);
 
 
-                    foreach ($products as $product) {
-                        if ($product['parent_id'] != '') {
-                            $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
+                    for ($i = $start; $i < ($end); $i++) {
+                                    $count++;                       //populates table
+                                    //Check if the creator is a group or an institution
 
-                            //Get The adapters details
-                            if ($this->objDbGroups->isGroup($product['creator'])) {
-                                $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
-                                $product['group_thumbnail'] = $thumbnail['thumbnail'];
-                                $product['institution_thumbnail'] = NULL;
-                                $product['country'] = 'Not Available';
-                                $product['type'] = 'Not Available';
-                            } else {
-                                $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
-                                $product['group_thumbnail'] = NULL;
-                                $product['country'] = 'Not Available';
-                                $product['type'] = 'Not Available';
-                                $product['institution_thumbnail'] = $thumbnail['thumbnail'];
-                            }
-                            echo $this->objProductUtil->populateAdaptedListView($product);
-                        }
+                                    $objProduct = $this->getObject('product');
+                                    if ($browsecheck == '1') {
+                                        $objProduct->loadProduct($products[$i]['id']);
+                                    }
+                                    else
+                                        $objProduct->loadProduct($products[$i]);
+                                                    
+                            echo $this->objProductUtil->populateAdaptedListView($objProduct);
+                        
                     }
 
 
