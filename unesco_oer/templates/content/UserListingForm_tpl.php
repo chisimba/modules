@@ -117,7 +117,8 @@ if (strcmp($mode, 'addfixup') == 0) {
     //echo 'deals';
 
 } else {
-    $users = $this->objUseExtra->getAllUser();
+    //$users = $this->objUseExtra->getAllUser();
+    $users = $this->objUseExtra->getUser(0,10);
   
 }
 

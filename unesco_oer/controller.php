@@ -1463,6 +1463,11 @@ class unesco_oer extends controller {
         }
     }
 
+    function __userPagination(){
+        $start;
+        $end;
+    }
+
     function __RegistrationForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'RegistrationForm_tpl.php';

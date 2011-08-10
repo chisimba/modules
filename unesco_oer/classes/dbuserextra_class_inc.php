@@ -255,6 +255,11 @@ class dbuserextra extends dbtable{
         
     }
 
+    function getUser($start,$end){
+        $sql = "select * from tbl_users limit $start,$end";
+        return $this->getArray($sql);
+    }
+
 
 
 
