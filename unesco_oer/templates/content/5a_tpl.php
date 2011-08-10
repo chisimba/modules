@@ -242,7 +242,10 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         ?>
                     </div>
                     <br><br>
-                    
+                    <?php
+                    $institutionID = $product->getInstitutionID();
+                    if (!empty ($institutionID)) {
+                    ?>
                     <div class="adaptedByDivIcon">
                     	<img src="skins/unesco_oer/images/icon-adapted-by.png" class="adadtedByInnerIcon">
                         <div class="paddingAdaptedImageHeading pinkText">Adapted By</div> 
@@ -253,7 +256,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         <img width="45" height="50" src="
                         <?php
                         $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
-                        $objInstitutionManager->getInstitution($product->getInstitutionID());
+                        $objInstitutionManager->getInstitution($institutionID);
                         echo $objInstitutionManager->getInstitutionThumbnail();
                         ?>
                              " alt="Adaptation placeholder" class="smallAdaptationImageGrid">
@@ -278,8 +281,9 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                             echo $objInstitutionManager->getInstitutionCountry();
                             ?>
                             </a>
+
                             <br><br><br>
-                            <span class="greyText fontBold">Adopted in:</span> English | <a href="#" class="greyTextLink">German</a>
+                            <span class="greyText fontBold">Adapted in:</span> English | <a href="#" class="greyTextLink">German</a>
                             <br><br>
                         </div>
                         
@@ -290,6 +294,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         </div>
                         </div>
                     </div>
+                    <?php } ?>
                     <div class="managedByDivWidth">
                     	<img src="skins/unesco_oer/images/icon-managed-by.png" width="24" height="24" class="floaLeft">
                         <div class="managedByTextPadding">

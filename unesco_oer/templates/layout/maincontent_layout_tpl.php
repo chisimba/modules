@@ -120,6 +120,7 @@ $group=$this->getParam('group');
                                     <?php
                                         switch ($page) {
                                             case '2a_tpl.php':
+                                            case '2b_tpl.php':
                                                 echo 'PRODUCT ADAPTATIONS';
                                                 break;
                                             case'10a_tpl.php':
@@ -166,7 +167,20 @@ $group=$this->getParam('group');
 
 
 
-                        <li <?php if (strcmp($page,'2a_tpl.php') == 0) echo 'class="onStateProducts"'; ?> >
+                        <li
+                            <?php
+//                                if (strcmp($page,'2a_tpl.php') == 0) echo 'class="onStateProducts"';
+                                switch ($page) {
+                                    case '2a_tpl.php':
+                                    case '2b_tpl.php':
+                                        echo 'class="onStateProducts"';
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            ?>
+                        >
                             <?php
                             $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '2a_tpl.php')));
                             $abLink->link = 'Product Adaptations';
