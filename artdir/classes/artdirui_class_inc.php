@@ -219,6 +219,18 @@ class artdirui extends object
         return $rightCol;
     }
     
+    public function aboutUs() {
+        $html = '<p>PANSA is a national network of
+individuals, NGOs, service providers
+and mainstream institutions that are
+engaged in the practice or support
+of the performing arts (performing arts
+in all forms - dance, music, theatre,
+opera, musical theatre).</p>';
+        
+        return $html;
+    }
+    
     private function menu() {
         $feat = $this->newObject('featurebox', 'navigation');
         $links = NULL;

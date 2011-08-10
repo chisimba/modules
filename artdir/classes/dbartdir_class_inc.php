@@ -314,6 +314,12 @@ class dbartdir extends dbTable
         return $artist[0];
     }
     
+    public function getAllArtists() {
+        $this->_changeTable('tbl_artdir_artists');
+        $artists = $this->getAll();
+        return $artists;
+    }
+    
     public function getArtistsByCat($catid) {
         $this->_changeTable('tbl_artdir_artists');
         $recs = $this->getAll("WHERE catid = '$catid'");

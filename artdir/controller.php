@@ -111,6 +111,10 @@ class artdir extends controller
                 return 'default_tpl.php';
                 break;
                 
+            case 'aboutus' :
+                return 'aboutus_tpl.php';
+                break;
+            
             case 'genfoaf' :
                 $userid = $this->getParam('userid'); //$this->objUser->userId();
                 $this->setVarByRef('userid', $userid);
@@ -269,6 +273,12 @@ class artdir extends controller
                 return 'catlisting_tpl.php';
                 break;
                 
+            case 'browse' :
+                $recs = $this->objDbArtdir->getAllArtists();
+                $this->setVarByRef('recs', $recs);
+                return 'catlisting_tpl.php';
+                break;
+                
             case 'viewpic' :
                 $picid = $this->getParam('picid');
                 //echo $picid;
@@ -394,7 +404,7 @@ class artdir extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'search', 'showsignin', 'viewartist', 'viewpic', 'viewbycat', NULL);
+        $allowedActions = array('', 'search', 'showsignin', 'viewartist', 'viewpic', 'viewbycat', 'aboutus', 'browse', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
