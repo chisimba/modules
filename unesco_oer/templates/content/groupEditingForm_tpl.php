@@ -1,4 +1,19 @@
 
+<div style="clear:both;"></div>
+<div class="breadCrumb module">
+    <div id='breadcrumb'>
+        <ul><li class="first">Home</li>
+            <li><a href='?module=unesco_oer&action=controlpanel' alt='Adminstrative Tools' title='Adminstrative Tools'>Adminstrative Tools</a></li>
+            <li><a href='?module=unesco_oer&action=groupListingForm' alt='Users' title='Users'>Product groups</a></li>
+           <li>Edit Group</li>
+            <!--<li><a href='/newsroom/2430/newsitems.html' alt='Click here to view NewsItems' title='Click here to view NewsItems'>NewsItems</a></li>
+            <li><a href='#' alt='Click here to view 2011-07' title='Click here to view 2011-07'>2011-07</a></li>
+            <li>witsjunction</li>
+           -->
+        </ul>
+    </div>
+
+</div>
 <?php
 /*
  * This program is free software; you can redistribute it and/or modify

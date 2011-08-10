@@ -29,15 +29,18 @@ $this->loadClass('textinput', 'htmlelements');
                 </div>
                 <br><br>
 
-<?php
-echo $this->objGroupUtil->groupPerPage();
- //$this->objGroupUtil->populateListView();
-?>
+//<?php
+//echo $this->objGroupUtil->groupPerPage();
+// //$this->objGroupUtil->populateListView();
+//?>
 
 
             </div>
         	<!-- Center column DIv -->
             <div class="centerColumnDiv">
+
+
+
 
             	<div class="GridListViewDiv">
                 	<div class="sortBy">

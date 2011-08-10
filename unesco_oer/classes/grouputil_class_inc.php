@@ -24,6 +24,8 @@ class grouputil extends object {
          $this->objDbGroups= $this->getObject("dbgroups", "unesco_oer");
          $this->objUser=$this->getObject('user', 'security');
          $this->objUseExtra = $this->getObject("dbuserextra","unesco_oer");
+         $this->objLanguagecode=$this->getObject('languagecode', 'language');
+
 
 
     }
@@ -78,11 +80,19 @@ class grouputil extends object {
                             <div class="groupGridViewHeading greenText">
                             '.$group['name'] .' </div>
                             <div class="groupMemberAndJoinLinkDiv">
-                            	<span class="greenText">Members :</span>'. $this->ObjDbUserGroups->groupMembers($group['id']) .'<br><br>
-                                <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
-               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">
+                            	   <span class="greenText">Members :</span>'. $this->ObjDbUserGroups->groupMembers($group['id']) .'<br><br>
+                             <!--    <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
+               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">-->
 
-'.$joinGroupLink->show().'</a></div>
+   <br/>
+               <a class="greyListingHeading">'.$this->objLanguagecode->getName($group['country']).'</a> |
+                             <a class="greyListingHeading">'.$group['city'].'</a> |
+                                           <a class="greyListingHeading">'.$group['state'].'</a> |
+                                                         <a class="greyListingHeading">'.$group['email'].'</a>
+                                                             <br/>
+           </div>
+'.//$joinGroupLink->show().'</a></div>
+              '</a></div>
                             </div>
                             </div>
                             

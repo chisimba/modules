@@ -34,6 +34,7 @@ class unesco_oer extends controller {
     public $objConfig;
     public $objGroupUtil;
     public $objDbgroupInstitutions;
+ 
     /**
      * @var object $objLanguage Language Object
      */
@@ -89,6 +90,7 @@ class unesco_oer extends controller {
         $this->ObjDbUserGroups = $this->getObject('dbusergroups');
         $this->objGroupUtil = $this->getObject('grouputil');
         $this->objDbgroupInstitutions=$this->getObject('dbgroupinstitutions');
+     
 
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');

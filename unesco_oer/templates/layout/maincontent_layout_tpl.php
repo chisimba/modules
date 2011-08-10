@@ -6,6 +6,7 @@ $this->loadClass('checkbox', 'htmlelements');
 $origional = "parent_id is null and deleted = 0";
 $adaptation = "parent_id is not null and deleted = 0";
 $page =$this->getParam('page');
+$group=$this->getParam('group');
 
 
 ?>
@@ -121,6 +122,9 @@ $page =$this->getParam('page');
                                             case '2a_tpl.php':
                                                 echo 'PRODUCT ADAPTATIONS';
                                                 break;
+                                            case'10a_tpl.php':
+                                                echo 'GROUPS';
+                                                break;
 
 
                                             default:
@@ -172,9 +176,9 @@ $page =$this->getParam('page');
 
                         </li>
                         <li class="mainNavPipe">&nbsp;</li>
-                        <li <?php //if (strcmp($this->getParam('action'),'10') == 0) //echo 'class="onStateProducts"'; ?> >
+                        <li <?php if (strcmp($page,'10a_tpl.php') == 0 ) echo 'class="onStateProducts"'; ?> >
                         <?php
-                            $abLink = new link($this->uri(array("action" => '10')));
+                            $abLink = new link($this->uri(array("action" => '10',"page"=>'10a_tpl.php')));
                             $abLink->link = 'GROUPS';
                             echo $abLink->show();
                             ?>
