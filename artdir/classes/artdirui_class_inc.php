@@ -541,7 +541,7 @@ opera, musical theatre).</p>';
         $dtable->startRow();
         $weblabel = new label($this->objLanguage->languageText('mod_artdir_website', 'artdir'));
         $dtable->addCell($weblabel->show());
-        $dtable->addCell($this->objWashout->parseText($artist['website']));
+        $dtable->addCell('<a href="'.$artist['website'].'" title="'.$artist['website'].'" target="_blank">'.$artist['website'].'</a>'); // $this->objWashout->parseText($artist['website']));
         $dtable->endRow();
         
         
