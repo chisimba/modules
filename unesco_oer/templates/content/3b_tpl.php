@@ -141,9 +141,7 @@ $this->appendArrayVar('headerParams', $js);
                          $grouptitle
                        .'
                     
-                    
-                    
-                            	
+             	
                             </div>
                             <div class="">
                             	<div class="product3aViewDiv">

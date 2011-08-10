@@ -14,168 +14,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>UNESCO</title>
-        <link href="style.css" rel="stylesheet" type="text/css">
-        <!--[if IE]>
-            <style type="text/css" media="screen">
-            body {
-    	behavior: url(csshover.htc);
-            }
-            </style>
-        <![endif]-->
-    </head>
-
-    <body>
-        <div class="blueHorizontalStrip"></div>
-        <div class="mainWrapper">
-            <div class="topContent">
-                  <?php
-                if ($this->objUser->isLoggedIn()) {
-                ?>
-                <div class="logOutSearchDiv">
-                    <div class="logoutSearchDivLeft">
-                        <div class="nameDiv"><?php echo "Hello"." ".$this->objUser->fullname(); ?></div>
-                        <div class="logoutDiv">
-                            <div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
-                            <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
-                        </div>
-                        <div class="profileBookmarkGroupsMessengerDiv">
-                            <table class="profileBookmarkGroupsMessengerTable" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My profile"></td>
-                                    <td><a href="#" class="prifileLinks">
-                                                                                    <?php
-                                            $abLink = new link($this->uri(array("action" => "editUserDetailsForm",'id'=>$this->objUseExtra->getUserbyUserIdbyUserID($this->objUser->userId()),'userid'=>$this->objUser->userId())));
-                                            $abLink->link = 'My Profile';
-                                            echo $abLink->show();
-                                            ?> </a></td>
-                                    <td><img src="skins/unesco_oer/images/icon-my-bookmarks.png" alt="Bookmarks"></td>
-                                    <td><a href="#" class="prifileLinks">My Bookmarks</a></td>
-                                    <td><img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools"></td>
-                                    <td><a href="#" class="prifileLinks">
-                                            <?php
-                                            $abLink = new link($this->uri(array("action" => "controlpanel")));
-                                            $abLink->link = 'Administration Tools';
-                                            echo $abLink->show();
-                                            ?>
-                                        </a></td>
-                                </tr>
-                                <tr>
-                                    <td><img src="skins/unesco_oer/images/icon-my-groups.png" alt="My Groups"></td>
-                                    <td><a href="#" class="prifileLinks">My Groups</a></td>
-                                    <td><img src="skins/unesco_oer/images/icon-my-messenger.png" alt="My Messenger"></td>
-                                    <td><a href="#" class="prifileLinks">My Messenger</a></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="logoutSearchDivRight">
-                        <div class="searctInputTextDiv">
-                            <div class="searchGoButton"><a href="">
-
-<!--                                    <img src="skins/unesco_oer/images/button-search.png" class="searchGoImage" alt="Search"></a>-->
-                                <a href="" class="searchGoLink"></a></div>
-                            <div class="searchInputBoxDiv">
-<?php
-    $Search = $this->getobject('filterdisplay', 'unesco_oer');
-    echo $Search->Search('2b_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
-?>
-
-
-                               
-<!--
-<!--                                <input type="text" name="" class="searchInput" value="Type search term here...">
-                                <select name="" class="searchDropDown">
-                                    <option value="">All</option>
-                                </select>-->
-                            </div>
-                            <div class="textNextToRightFloatedImage">Search</div>
-<!--                            <img src="skins/unesco_oer/images/icon-search.png" alt="Search" class="imgFloatLeft">-->
-                        </div>
-                        <div class="facebookShareDiv">
-
-
-                            <!-- AddThis Button BEGIN -->
-                            <div class="shareDiv">
-<!--                                <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=jabulane"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=jabulane"></script>-->
-
-                                <!-- AddThis Button END -->
-                            </div>
-
-                            <div class="likeDiv">
-<!--                                <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fexample.com%2Fpage%2Fto%2Flike&amp;layout=button_count&amp;show_faces=true&amp;width=50&amp;action=like&amp;font=tahoma&amp;colorscheme=light&amp;"></iframe>-->
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-                <?php
-                                        } else {
-                ?>
-                                            <div id="loginDiv">
-                                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
-                                            </div>
-                <?php
-                                        }
-                ?>
-                <div class="logoAndHeading">
-                    <img src="skins/unesco_oer/images/logo-unesco.gif" class="imgFloatRight" alt="logo">
-                    <div class="logoText">
-                        <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
-                        <h1>UNESCO OER PRODUCTS</h1>
-                    </div>
-                </div>
-                <div class="languagesDiv">
-                    <a href="" class="languagesLinks">English</a> |
-                    <a href="" class="languagesLinks">Français</a> |
-                    <a href="" class="languagesLinks">Español</a> |
-                    <a href="" class="languagesLinks">Русский</a> |
-                    <a href="" class="languagesLinks">لعربية</a> |
-                    <a href="" class="languagesLinks">中文</a>
-                </div>
-                <div class="mainNavigation">
-                    <div class="navitem">
-                        <div class="navitemInner">
-                            <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
-                                            $abLink->link = 'UNESCO OER PRODUCTS';
-                                            echo $abLink->show();
-                            ?>
-
-                                        </div>
-                                    </div>
-                                    <div class="mainNavPipe">&nbsp;</div>
-                                    <div class="navitemOnstate">
-                                        <div class="navitemInnerOnstate">
-                            <?php
-                                            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2a_tpl.php')));
-                                            $abLink->link = 'PRODUCT ADAPTATIONS';
-                                            echo $abLink->show();
-                            ?>
-
-                                        </div>
-                                    </div>
-                                    <div class="mainNavPipe"></div>
-                                    <div class="navitem">
-                                        <div class="navitemInner"><a href="#">REPORTING</a></div>
-                                    </div>
-                                    <div class="mainNavPipe"></div>
-                                    <div class="navitem">
-                                        <div class="navitemInner"><a href="#">ABOUT</a></div>
-                                    </div>
-                                    <div class="mainNavPipe"></div>
-                                    <div class="navitem">
-                                        <div class="navitemInner"><a href="#">CONTACT</a></div>
-                                    </div>
-                                </div>
-                            </div>
+  
 
                             <div class="mainContentHolder">
                                 <div class="subNavigation"></div>
@@ -195,8 +34,18 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                         <a href="#" class="resetLink"> 
  <?php
         $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+        
+         if ($browsecheck){
+           if ($i == null){
+               $i = 1;
+           }
+    
+           $button->onclick = "javascript:ajaxFunction23('$adaptationstring',$browsecheck,'$ProdID');ajaxFunction($i,$browsecheck,'$ProdID')";
+          
+       }
+       else  $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
        
-        $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
+      
        echo $button->show();
 
         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
@@ -284,33 +133,24 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                             $newRow = true;
                                             $count = 0;
 
-                                            $products = $this->objDbProducts->getFilteredProducts($finalstring);
+                                            if ($browsecheck){
+                             
+                                                              $products = $finalstring;
+                                                             }
+                                                   else
+                                                        $products = $this->objDbProducts->getFilteredProducts($finalstring);
 
 
                                             foreach ($products as $product) {
-                                                     
-                                                if ($product['relation'] != '') {
-                                                 
-                                                    $product['noOfAdaptations'] = $this->objDbProducts->getNoOfAdaptations($product['id']);
-
-                                                    //Get The adapters details
-                                                    if ($this->objDbGroups->isGroup($product['creator'])) {
-                                                   
-                                                        $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
-                                                        $product['group_thumbnail'] = $thumbnail['thumbnail'];
-                                                        $product['institution_thumbnail'] = NULL;
-                                                        $product['country'] = 'Not Available';
-                                                        $product['type'] = 'Not Available';
-                                                    } else {   
-                                                  
-                                                        $thumbnail = $this->objDbInstitution->getInstitutionThumbnail($product['creator']);
-                                                        $product['group_thumbnail'] = NULL;
-                                                        $product['country'] = 'Not Available';
-                                                        $product['type'] = 'Not Available';
-                                                        $product['institution_thumbnail'] = $thumbnail['thumbnail'];
-                                                    }  
-                                                    echo $this->objProductUtil->populateAdaptedListView($product);
-                                                }     
+                                                       $objProduct = $this->getObject('product');
+                                    if ($browsecheck) {
+                                        $objProduct->loadProduct($product['product_id']);
+                                    }
+                                    else
+                                        $objProduct->loadProduct($product);
+                                                    
+                                                    echo $this->objProductUtil->populateAdaptedListView($objProduct);
+                                                    
                                             }
                             ?>
                            </div>
@@ -532,9 +372,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                                 $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
 
                                                 //If the product is an adaptation
-                                                if ($product['relation'] != NULL) {
-                                                    $featuredAdaptedProduct = $product;
-                                                }
+                                               
                                             }
 
                                            if ($this->objDbGroups->isGroup($featuredAdaptedProduct['creator'])) {
@@ -690,71 +528,6 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
             </div>
         </div>
         <!-- Footer-->
-        <div class="footerDiv">
-            <div class="footerLinksLists">
-                <div class="footerLinksHeadings">Links Set One</div>
-                <a href="" class="footerLink">Link 1</a><br>
-                <a href="" class="footerLink">Link 2</a><br>
-                <a href="" class="footerLink">Link 3</a>
-            </div>
-            <div class="footerLinksLists">
-                <div class="footerLinksHeadings">Links Set Two</div>
-                <a href="" class="footerLink">Link 4</a><br>
-                <a href="" class="footerLink">Link 5</a><br>
-                <a href="" class="footerLink">Link 6</a>
-            </div>
-            <div class="footerLinksLists">
-                <div class="footerLinksHeadings">Links Set Three</div>
-                <a href="" class="footerLink">Link 7</a><br>
-                <a href="" class="footerLink">Link 8</a><br>
-                <a href="" class="footerLink">Link 9</a>
-            </div>
-            <div class="footerLinksLists">
-                <div class="footerLinksHeadings">Links Set Four</div>
-                <a href="" class="footerLink">Link 10</a><br>
-                <a href="" class="footerLink">Link 11</a><br>
-                <a href="" class="footerLink">Link 12</a>
-            </div>
-            <div class="footerBottomText">
-                <img src="skins/unesco_oer/images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
-                <a href="" class="footerLink">UNESCO</a> |
-                <a href="" class="footerLink">Communication and Information</a> |
-                <a href="" class="footerLink">About OER Platform</a> |
-                <a href="" class="footerLink">F.A.Q.</a> |
-                <a href="" class="footerLink">Glossary</a> |
-                <a href="" class="footerLink">Terms of use</a> |
-                <a href="" class="footerLink">Contact</a> |
-                <a href="" class="footerLink">Sitemap</a> | &copy; UNESCO 1995-2011
-            </div>
-        </div>
-    </div>
-</body>
+    
 </html>
 
-<script>
-
-    function sendThemeFilterform()
-    {
-    document.forms["ThemeFilter"].submit();
-    }
-
-    function sendLanguageFilterform()
-    {
-    document.forms["LanguageFilter"].submit();
-
-    }function sendAuthorFilterform()
-    {
-    document.forms["AuthorFilter"].submit();
-    }
-
-    function sendSortFilterform()
-    {
-    document.forms["SortFilter"].submit();
-    }
-
-    function sendNumFilterform()
-    {
-    document.forms["NumFilter"].submit();
-    }
-
-</script>

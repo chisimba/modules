@@ -393,20 +393,23 @@ class unesco_oer extends controller {
 
         $lat = $this->getParam('lat');
         $lng = $this->getparam('Lng');
+        $page = $this->getParam('page');
     
 
 
        
        $ProdId = $this->objDbGroups->getidbylocation($lat, $lng);
        $products = $this->objDbGroups->getGroupProductadaptation($ProdId[0]['id']);
+   //   echo $ProdId[0]['id'];
        $temp = TRUE;
 
        $this->setVarByRef("finalstring", $products);    
        $this->setVarByRef('browsecheck', $temp);
+       $this->setVarByRef('ProdID', $ProdId[0]['id']);
 
        $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
-        return "2a_tpl.php";
+        return $page;
     }
 
     public function __FilterAdaptations() {

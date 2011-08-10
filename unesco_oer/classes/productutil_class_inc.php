@@ -508,24 +508,23 @@ class productutil extends object {
     public function populateAdaptedListView($adaptedProduct) {
         $this->loadClass('link', 'htmlelements');
         $content = '';
-        $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
+        $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $adaptedProduct->getIdentifier())));
         $abLink->cssClass = "listingLanguageLinkAndIcon";
-        $abLink->link = $adaptedProduct['title'];
-
-        $parentid = $adaptedProduct['id'];
+        $abLink->link = $adaptedProduct->getTitle(); 
+        $parentid = $adaptedProduct->getParentID();
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
         $CommentLink->cssClass = 'adaptationLinks';
-        $CommentLink->link = $adaptedProduct['noOfAdaptations'] . ' Adaptations';
+        $CommentLink->link = $adaptedProduct->getNoOfAdaptations()  . ' Adaptations';
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
           } */
 
 //This some how forces the page to display the 0
-        if ($product['noOfAdaptations'] == 0) {
-            $product['noOfAdaptations'] = 0;
-        }
+//        if ($adaptedProduct->getNoOfAdaptations()  == 0) {
+//            $adaptedProduct->getNoOfAdaptations()  = 0;
+//        }
 
         /*
          * TODO Ntsako add code to check if the product was adapted by an institution or a group
@@ -538,18 +537,18 @@ class productutil extends object {
                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                             <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">See all adaptations (' . $CommentLink->show() . ')</a></div>
                         </div>';
-        if ($adaptedProduct['group_thumbnail'] != NULL) {
+        if ($adaptedProduct->getThumbnailPath() != NULL) {
             $content .= '<div class="productAdaptationListViewMiddleColumn">
                                 <img src="images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
                                 <span class="greenText">Managed by</span>
                             </div>
                             <div class="productAdaptationListViewRightColumn">
-                                <h2 class="greenText">' . $adaptedProduct['creator'] . '</h2>
+                                <h2 class="greenText">' . $adaptedProduct->getGroupName() . '</h2>
                                 <br>
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                     <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a> | <a href="#" class="bookmarkLinks"></a>
+                                        <a href="#" class="bookmarkLinks">' .$adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
                                     </div>
                                 </div>
 
@@ -566,9 +565,9 @@ class productutil extends object {
                         </div>
                         ';
         } else {
-            $this->_institutionGUI->getInstitution($adaptedProduct['creator']);
+            $this->_institutionGUI->getInstitution($adaptedProduct->getGroupName());
             $name = $this->_institutionGUI->showInstitutionName();
-            $creator = $adaptedProduct['creator'];
+            $creator = $adaptedProduct->getGroupName();
 
             $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $creator)));
             $institutionLink->cssClass = 'darkGreyColour';
@@ -584,7 +583,7 @@ class productutil extends object {
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
                                 <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">' . $adaptedProduct['language'] . '</a> | <a href="#" class="bookmarkLinks"></a>
+                                    <a href="#" class="bookmarkLinks">' .$adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
                                 </div>
                             </div>
 

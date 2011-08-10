@@ -48,6 +48,8 @@ class javafilt extends object {
         $Guide = $this->GetParam('guide');
         $NumFilter = $this->getParam('numperpage');
         $pagelayout = $this->getParam('adaptation');
+        $prod = $this->getParam('ProdID');
+        $browsecheck = $this->getParam('browsecheck');
 
 
 
@@ -129,8 +131,17 @@ class javafilt extends object {
 
 
 
+  if ($browsecheck == '1'){
+                        
+                            $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
+                             
+                         }
+                         else
+                             $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
 
-        $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+      
+        
+        
         $tempadap = array(); //convert to 1d array
         $i = 0;
         foreach ($adaptations as $adap) {
@@ -222,7 +233,14 @@ class javafilt extends object {
                 if (($AuthFilter == Null or $AuthFilter == 'All')) {
 
 
-                    $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
+                    if ($browsecheck == '1'){
+                             
+                        
+                                 $temp = $this->objDbGroups->getGroupProductadaptation($prod);
+                             
+                         }
+                         else
+                             $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
 
 
 
@@ -279,8 +297,10 @@ class javafilt extends object {
         $NumFilter = $this->getParam('numperpage');
 
         $pagelayout = $this->getParam('adaptation');
-        $prod = $this->getParam('products');
-        var_dump($prod);
+        $prod = $this->getParam('ProdID');
+        $browsecheck = $this->getParam('browsecheck');
+        
+      echo $PageNum;
 
         if ($PageNum == "undefined") {
             $PageNum = 1;
@@ -310,35 +330,29 @@ class javafilt extends object {
                 }
         }
 
+                if ($browsecheck == '1'){
+                        
+                            $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
+                             
+                         }
+                         else
+                             $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
 
 
 
 
-
-
-
-
-
-
-
-        if ($browsemapstring != null)
-            $buildstring = $browsemapstring;
-        else
-            $buildstring = $adaptationstring;
-
-
-
-
-
-
-
-        $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+       // $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
         $tempadap = array(); //convert to 1d array
         $i = 0;
         foreach ($adaptations as $adap) {
-
-            $tempadap[$i] = $adap['id'];
+            if ($browsecheck == '1'){
+                   $tempadap[$i] = $adap['product_id'];
+          
+            }
+            else 
+                   $tempadap[$i] = $adap['id'];
             $i++;
+          
         }
 
 
@@ -425,12 +439,28 @@ class javafilt extends object {
                 if (($AuthFilter == Null or $AuthFilter == 'All')) {
 
 
-                    $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
+              
+                if ($browsecheck == '1'){
+                             
+                        
+                                 $temp = $this->objDbGroups->getGroupProductadaptation($prod);
+                             
+                         }
+                         else
+                             $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
+                
+                    
+                    
+                    
                     $result = array(); //convert to 1d array
                     $i = 0;
                     foreach ($temp as $temps) {
-
-                        $result[$i] = $temps['id'];
+                             if ($browsecheck == '1'){
+                                 
+                                 $result[$i] = $temps['product_id']; 
+                             }
+                             else  $result[$i] = $temps['id'];
+                       
                         $i++;
                     }
                 };
@@ -595,8 +625,8 @@ class javafilt extends object {
                                     //Check if the creator is a group or an institution
 
                                     $objProduct = $this->getObject('product');
-                                    if ($browsecheck) {
-                                        $objProduct->loadProduct($products[$i]['product_id']);
+                                    if ($browsecheck == '1') {
+                                        $objProduct->loadProduct($products[$i]['id']);
                                     }
                                     else
                                         $objProduct->loadProduct($products[$i]);
@@ -729,7 +759,7 @@ class javafilt extends object {
             for ($i = 1; $i <= $TotalPages; $i++) {
 
                 $abLink = new link("javascript:void(0);");
-                $abLink->extra = "onclick = javascript:ajaxFunction($i)";
+                $abLink->extra = "onclick = javascript:ajaxFunction($i,$browsecheck,'$prod')";
 
 
 
