@@ -142,14 +142,18 @@ class javafilt extends object {
       
         
         
-        $tempadap = array(); //convert to 1d array
+          $tempadap = array(); //convert to 1d array
         $i = 0;
         foreach ($adaptations as $adap) {
-
-            $tempadap[$i] = $adap['id'];
+            if ($browsecheck == '1'){
+                   $tempadap[$i] = $adap['product_id'];
+          
+            }
+            else 
+                   $tempadap[$i] = $adap['id'];
             $i++;
+          
         }
-
 
 
 
@@ -245,15 +249,19 @@ class javafilt extends object {
 
 
 
-
-                    $result = array(); //convert to 1d array
+  $result = array(); //convert to 1d array
                     $i = 0;
                     foreach ($temp as $temps) {
-
-                        $result[$i] = $temps['id'];
+                             if ($browsecheck == '1'){
+                                 
+                                 $result[$i] = $temps['product_id']; 
+                             }
+                             else  $result[$i] = $temps['id'];
+                       
                         $i++;
                     }
                 };
+
 
 
 
@@ -300,7 +308,7 @@ class javafilt extends object {
         $prod = $this->getParam('ProdID');
         $browsecheck = $this->getParam('browsecheck');
         
-      echo $PageNum;
+  
 
         if ($PageNum == "undefined") {
             $PageNum = 1;
