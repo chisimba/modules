@@ -33,7 +33,7 @@
                             $link = new link($this->uri(array("action" => 'userListingForm')));
                             $usersTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_users_title', 'unesco_oer');
                             $link->link = '<img src="skins/unesco_oer/images/users.png" alt="Institutions" >
-                            <br/>  
+                            <br/> 
                             <br/>  ' . $usersTitle;
                             echo '&nbsp;' . $link->show();}
                             ?>
@@ -64,16 +64,20 @@
 
                     <td width="269">
                         <div id="controlPanelCell">
+
                             <?php
                              if($this->objUser->isAdmin()){
                             $link = new link($this->uri(array("action" => 'groupListingForm')));
-                            $groupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_groups_title', 'unesco_oer');
-                            $link->link = ' <img src="skins/unesco_oer/images/institutions.png" alt="Institutions" >
-                            <br/>
+                            $groupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_product_groups_title', 'unesco_oer');
+                            
+                            $link->link = '<img src="skins/unesco_oer/images/institutions.png" alt="Product groups" height = "55" width = "55">
+                            <br/> <br/>
                             <br/> ' . $groupsTitle;
                             echo '&nbsp;' . $link->show();}
                              ?>
+
                              </div>
+                        
                          </td>
                     
                 </tr>
@@ -87,8 +91,8 @@
                             $link = new link($this->uri(array("action" => 'viewInstitutions')));
                             $institutionsTitle = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
 
-                            $link->link = ' <img src="skins/unesco_oer/images/institutions.png" alt="Institutions" >
-                            <br/>  
+                            $link->link = ' <img src="skins/unesco_oer/images/institutions.png" alt="Institutions" height = "55" width = "55">
+                            <br/> 
                             <br/> ' . $institutionsTitle;
                             echo '&nbsp;' . $link->show();}
                             ?> 

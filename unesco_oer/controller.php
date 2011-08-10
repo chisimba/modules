@@ -1488,14 +1488,14 @@ class unesco_oer extends controller {
                 $user = $this->objUseExtra->searchUserByUsername($this->getParam('search')); //search user by username
                 $this->setVar('user', $user);
                 $mode = 'addfixup';
-                $this->setVarByRef('mode', $mode);
+                $this->setVar('mode', $mode);
                 $this->setLayoutTemplate('maincontent_layout_tpl.php');
                 return 'UserListingForm_tpl.php';
             } else {
                 if (count($this->objUseExtra->searchUserByName($this->getParam('search'))) > 0) {
                     $user = $this->objUseExtra->searchUserByName($this->getParam('search')); //search user by name
                     $this->setVar('user', $user);
-                    $this->setVarByRef('mode', 'addfixup');
+                    $this->setVar('mode', 'addfixup');
                     $this->setLayoutTemplate('maincontent_layout_tpl.php');
                     return 'UserListingForm_tpl.php';
                 }
@@ -1505,7 +1505,7 @@ class unesco_oer extends controller {
             $useruserfound = "No user found";
             $this->setVar('nouserfound', $useruserfound);
             $mode = 'addfixup';
-            $this->setVarByRef('mode', $mode);
+            $this->setVar('mode', $mode);
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return 'UserListingForm_tpl.php';
         }

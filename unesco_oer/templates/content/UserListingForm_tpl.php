@@ -108,12 +108,13 @@ $myTable->addHeaderCell('Delete', null, null, left, "userheader", null);
 $myTable->endHeaderRow();
 
  $searchUser=$user;
- 
 //get user from the database
-$users = "";
-$mode = $this->getParam('mode');
+$users ;
+
+//echo $mode;
 if (strcmp($mode, 'addfixup') == 0) {
-    $users =$this->$user;
+      $users =$user;
+    //echo 'deals';
 
 } else {
     $users = $this->objUseExtra->getAllUser();
