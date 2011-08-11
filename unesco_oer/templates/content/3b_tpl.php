@@ -85,11 +85,10 @@ $this->appendArrayVar('headerParams', $js);
             
             
             ?>
-            </div>
                     <div class="sortBy">
 <?php
-                           $search = $this->getobject('filterdisplay', 'unesco_oer');
-                          echo $search->SortDisp('2b_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+                          $search = $this->getobject('filterdisplay', 'unesco_oer');
+                         echo $search->SortDisp('3b_tpl.php', $SortFilter, $TotalPages,  $NumFilter, $PageNum);
 
                     ?>
 
@@ -102,15 +101,17 @@ $this->appendArrayVar('headerParams', $js);
                                                                             <select name="" class="contentDropDown">
                                                                                 <option value="">DESC</option>
                                                                             </select>-->
+                    </div>
+
                                             </div>
-                <div  id='filterDiv' title = "3b">
+                <div  id='filterDiv' title = "3b" ALIGN="left">
            
                       <?php
                       
                       
                            $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
                            
-                           $form->addtoform(' <table class="threeAListingTable" cellspacing="0" cellpadding="0">
+                           $form->addtoform(' <table class="threeAListingTable" cellspacing="0" cellpadding="0" ALIGN="LEFT">
                	  <tr> ');
                          $products = $this->objDbProducts->getadapted($productID);
                 foreach ($products as $product){
@@ -119,11 +120,11 @@ $this->appendArrayVar('headerParams', $js);
                     $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
                    $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
                    
-                $checkbox = new checkbox('selectedusers[]', $product['id']);
-                $checkbox->value = $product['id'];
-                $checkbox->cssId = 'user_' . $product['id'];
+                    $checkbox = new checkbox('selectedusers[]', $product['id']);
+                    $checkbox->value = $product['id'];
+                    $checkbox->cssId = 'user_' . $product['id'];
                
-                  $form->addToForm('<td>
+                       $form->addToForm('<td>
                             
                             <div class="adaptedByDiv3a">Adapted by:</div>
                             <div class="gridSmallImageAdaptation">
@@ -163,9 +164,9 @@ $this->appendArrayVar('headerParams', $js);
                                     <div class="imgFloatRight">');
                           
                           
-                          $form->addToForm($checkbox->show());
+                             $form->addToForm($checkbox->show());
                   
-                            $form->addToForm('
+                             $form->addToForm('
                                     
                     
                                    <div class="listingAdaptationLinkDiv">
