@@ -56,8 +56,9 @@ $this->appendArrayVar('headerParams', $js);
         <a href="#" class="resetLink"> 
             <?php
             $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+            $i = 1;
 
-            $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
+            $button->onclick = "javascript:ajaxFunction23('$adaptationstring','$productID');ajaxFunction($i,'$productID')";
             echo $button->show();
 
             $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
@@ -102,11 +103,15 @@ $this->appendArrayVar('headerParams', $js);
                                                                                 <option value="">DESC</option>
                                                                             </select>-->
                                             </div>
-                <div  id='filterDiv' title = "2b">
-            <table class="threeAListingTable" cellspacing="0" cellpadding="0">
-               	  <tr>
+                <div  id='filterDiv' title = "3b">
+           
                       <?php
+                      
+                      
                            $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
+                           
+                           $form->addtoform(' <table class="threeAListingTable" cellspacing="0" cellpadding="0">
+               	  <tr> ');
                          $products = $this->objDbProducts->getadapted($productID);
                 foreach ($products as $product){
                     

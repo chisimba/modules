@@ -61,7 +61,7 @@ if ($adaptationstring == null)
                $i = 1;
            }
     
-           $button->onclick = "javascript:ajaxFunction23('$adaptationstring',$browsecheck,'$ProdID');ajaxFunction($i,$browsecheck,'$ProdID')";
+           $button->onclick = "javascript:ajaxFunction23('$adaptationstring','$ProdID',$browsecheck);ajaxFunction($i,'$ProdID',$browsecheck)";
           
        }
        else  $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";

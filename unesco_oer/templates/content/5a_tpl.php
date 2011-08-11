@@ -18,7 +18,7 @@
                     <?php
                         echo $product->getGroupName();
                     ?>
-                    </a> |
+                    </a> 
                     <span class="greyText">
 <!--                        GIE English-->
                     <?php

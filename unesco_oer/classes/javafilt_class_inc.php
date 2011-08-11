@@ -136,8 +136,10 @@ class javafilt extends object {
                             $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
                              
                          }
-                         else
-                             $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+                         else if ($pagelayout == '3b')
+                              $adaptations = $this->objDbProducts->getadapted($prod);
+                                  else
+                                       $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
 
       
         
@@ -237,15 +239,15 @@ class javafilt extends object {
                 if (($AuthFilter == Null or $AuthFilter == 'All')) {
 
 
-                    if ($browsecheck == '1'){
-                             
+                if ($browsecheck == '1'){
                         
-                                 $temp = $this->objDbGroups->getGroupProductadaptation($prod);
+                            $temp = $this->objDbGroups->getGroupProductadaptation($prod);
                              
                          }
-                         else
-                             $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
-
+                         else if ($pagelayout == '3b')
+                              $temp = $this->objDbProducts->getadapted($prod);
+                                  else
+                                       $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
 
 
 
@@ -336,6 +338,7 @@ class javafilt extends object {
                     $view = "list";
                     break;
                 }
+                
         }
 
                 if ($browsecheck == '1'){
@@ -343,8 +346,10 @@ class javafilt extends object {
                             $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
                              
                          }
-                         else
-                             $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+                         else if ($pagelayout == '3b')
+                              $adaptations = $this->objDbProducts->getadapted($prod);
+                                  else
+                                       $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
 
 
 
@@ -447,15 +452,15 @@ class javafilt extends object {
                 if (($AuthFilter == Null or $AuthFilter == 'All')) {
 
 
-              
-                if ($browsecheck == '1'){
-                             
+              if ($browsecheck == '1'){
                         
-                                 $temp = $this->objDbGroups->getGroupProductadaptation($prod);
+                            $temp= $this->objDbGroups->getGroupProductadaptation($prod);
                              
                          }
-                         else
-                             $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
+                         else if ($pagelayout == '3b')
+                              $temp = $this->objDbProducts->getadapted($prod);
+                                  else
+                                       $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
                 
                     
                     
@@ -740,6 +745,93 @@ class javafilt extends object {
 
                     break;
                 }
+               
+                
+                    case "3b" : {
+                        
+                      $form2 = new form("test", $this->uri(array('action' => 'test')));
+                        echo $form2->show();
+                      
+                 $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
+                            
+                     $form->addtoform(' <table class="threeAListingTable" cellspacing="0" cellpadding="0">
+               	  <tr> ');
+                    for ($i = $start; $i < ($end); $i++) {
+                    
+                    $groupid = $this->objDbProducts->getAdaptationDataByProductID($products[$i]['id']);
+                    $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
+                   $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
+                   
+                $checkbox = new checkbox('selectedusers[]', $products[$i]['id']);
+                $checkbox->value = $products[$i]['id'];
+                $checkbox->cssId = 'user_' . $products[$i]['id'];
+               
+                  $form->addToForm('<td>
+                            
+                            <div class="adaptedByDiv3a">Adapted by:</div>
+                            <div class="gridSmallImageAdaptation">
+                            	<img src="' . $thumbnail .'" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                                <span class="greyListingHeading">
+                            
+                                    
+                                    
+                                </span>
+                  			</div>
+                            <div class="gridAdaptationLinksDiv">' .
+                    
+                         $grouptitle
+                       .'
+                    
+             	
+                            </div>
+                            <div class="">
+                            	<div class="product3aViewDiv">
+                                    <div class="imgFloatRight">
+                                      <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
+                                    </div>
+                                    <div class="listingAdaptationLinkDiv">
+                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
+                                    </div>
+                           	  </div>
+                                
+                       		  <div class="product3aViewDiv">
+                                    <div class="imgFloatRight">
+                                    	<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18">
+                                </div>
+                                    <div class="listingAdaptationLinkDiv">
+                                    <a href="#" class="bookmarkLinks">bookmark</a>
+                                 	</div>
+                                </div>
+                                 <div class="product3aViewDiv">
+                                    <div class="imgFloatRight">');
+                          
+                          
+                          $form->addToForm($checkbox->show());
+                  
+                            $form->addToForm('
+                                    
+                    
+                                   <div class="listingAdaptationLinkDiv">
+                                    <a href="#" class="bookmarkLinks">Compare</a>
+                                 	</div>
+                                </div>
+                                
+                                
+                            </div>
+                </td>
+                
+                ');
+                    
+                }
+                
+                echo $form->show();      
+                    
+                    break;
+                
+                    }
+                    
+                
+                
         }
 
 
@@ -760,7 +852,7 @@ class javafilt extends object {
             for ($i = 1; $i <= $TotalPages; $i++) {
 
                 $abLink = new link("javascript:void(0);");
-                $abLink->extra = "onclick = javascript:ajaxFunction($i,$browsecheck,'$prod')";
+                $abLink->extra = "onclick = javascript:ajaxFunction($i,'$prod',$browsecheck)";
 
 
 

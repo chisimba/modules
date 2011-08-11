@@ -14,7 +14,7 @@
  */
 
 
-function ajaxFunction23(id,browsecheck,ProdID){
+function ajaxFunction23(id,ProdID,browsecheck){
     
     var ajaxRequest;
 
@@ -94,7 +94,7 @@ function ajaxFunction23(id,browsecheck,ProdID){
 
 
 
-function ajaxFunction(id,browsecheck,ProdID){
+function ajaxFunction(id,ProdID,browsecheck){
     var ajaxRequest;
 
     try{
