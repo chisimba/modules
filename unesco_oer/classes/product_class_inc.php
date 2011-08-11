@@ -1693,10 +1693,16 @@ class product extends object
 
    function getGroupName()
    {
+       $info = $this->getGroupInfo();
+       return $info['name'];
+
+   }
+
+   function getGroupInfo()
+   {
        $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
        $info = $objDbGroups->getGroupInfo($this->getGroupID());
-       return $info[0]['name'];
-
+       return $info[0];
    }
 
    function getGroupID()

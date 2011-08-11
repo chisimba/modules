@@ -111,18 +111,21 @@ class featuredproductutil extends object
                                             <a href="#" class="adaptationLinks">See UNSECO orginals</a>
                                         </div>';
 
-        $objInstitutionManager = $this->getObject('institutionmanager');
-        //If the adaptation was created by a group
-        if ($objInstitutionManager->getInstitution($featuredAdaptedProduct->getInstitutionID())) {
+        
+        //If the adaptation was created by an institution
+        if ($featuredAdaptedProduct->getInstitutionID()) {
+            $objInstitutionManager = $this->getObject('institutionmanager');
+            $objInstitutionManager->getInstitution($featuredAdaptedProduct->getInstitutionID());
                        $content .= '<div class="adaptedByDiv">Managed by:</div>
                                         <img src="' . $objInstitutionManager->getInstitutionThumbnail() . '" alt= "' . $objInstitutionManager->getInstitutionName() . '" width="45" height="49" class="smallAdaptationImageGrid">
                                         <span class="greyListingHeading">' . $objInstitutionManager->getInstitutionName() . '</span>
                                     </div>
                                 </div>';
-        }else{  //If the adaptation was created by an institution
-            $content .= '<div class="featuredAdaptedBy">Adapted By</div>
-                                        <img src="' . $featuredAdaptedProduct['institution_thumbnail'] . '" alt= "' . $featuredAdaptedProduct['creator'] . '" width="45" height="49" class="smallAdaptationImageGrid">
-                                        <span class="greyListingHeading">Polyt Namibia</span>
+        }else{  //If the adaptation was created by a group
+            $groupInfo = $featuredAdaptedProduct->getGroupInfo();
+            $content .= '<div class="adaptedByDiv">Adapted by:</div>
+                                        <img src="' . $groupInfo['thumbnail'] . '" alt= "' . $groupInfo['name'] . '" width="45" height="49" class="smallAdaptationImageGrid">
+                                        <span class="greyListingHeading">'. $groupInfo['name'] .'</span>
                                     </div>
                                 </div>';
         }
