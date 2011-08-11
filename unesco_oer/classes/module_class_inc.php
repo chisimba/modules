@@ -181,7 +181,7 @@ class module extends content {
         $table->addCell($textinput->show());
         $table->endRow();
         
-         $fieldName = 'Scheduele of Activities';
+         $fieldName = 'Schedule of Activities';
         $textinput = new textinput('scheduele_of_classes');
          $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['schedule_of_classes']);

@@ -620,8 +620,13 @@ class productutil extends object {
         $CommentLink->cssClass = 'adaptationLinks';
         $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
         $thumbnailPath = '';
-        if (file_exists($product['institution_thumbnail']) && is_file($product['institution_thumbnail'])) {
-            $thumbnailPath = $product['institution_thumbnail'];
+//        if (file_exists($product['institution_thumbnail']) && is_file($product['institution_thumbnail'])) {
+//            $thumbnailPath = $product['institution_thumbnail'];
+//        } else {
+//            $thumbnailPath = 'skins/unesco_oer/images/most-product-cover-placeholder.jpg';
+//        }
+        if (is_file($product['thumbnail'])) {
+            $thumbnailPath = $product['thumbnail'];
         } else {
             $thumbnailPath = 'skins/unesco_oer/images/most-product-cover-placeholder.jpg';
         }
@@ -654,14 +659,14 @@ class productutil extends object {
 //Check if the creator is a group or an institution
             $isGroupCreator = $objDbGroups->isGroup($product['creator']);
 
-            if ($isGroupCreator == true) {
-                $thumbnail = $objDbGroups->getGroupThumbnail($product['creator']);
-            } else {
-                $this->_institution = $this->_institutionGUI->getInstitution($product['creator']);
-                //$thumbnail = $objDbInstitution->getInstitutionThumbnail();
-            }
+//            if ($isGroupCreator == true) {
+//                $thumbnail = $objDbGroups->getGroupThumbnail($product['creator']);
+//            } else {
+//                $this->_institution = $this->_institutionGUI->getInstitution($product['creator']);
+//                //$thumbnail = $objDbInstitution->getInstitutionThumbnail();
+//            }
 
-            $product['institution_thumbnail'] = $thumbnail['thumbnail'];
+//            $product['institution_thumbnail'] = $thumbnail['thumbnail'];
 //$product['institution'] = $this->objInstitution->getInstitution();
             $content .= $this->populateMostAdapted($product);
         }
