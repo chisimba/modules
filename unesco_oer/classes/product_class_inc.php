@@ -1632,6 +1632,9 @@ class product extends object
 
    function getThumbnailPath()
    {
+       if ($this->isAdaptation()){
+           
+       }
        return $this->_thumbnail;
    }
 
