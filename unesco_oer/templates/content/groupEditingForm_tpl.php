@@ -61,7 +61,8 @@ $header->type = 1;
 $header->str = $group[0]['name'].":"."Profile";  //objLang
 echo $header->show();
 
-$form = new form ('editer', $this->uri(array('action'=>'editGroup','id'=>$this->getParam('id'))));
+$uri=$this->uri(array('action'=>'editGroup','id'=>$this->getParam('id')));
+$form = new form ('editer',$uri);
 $form->extra = 'enctype="multipart/form-data"';
 $messages = array();
 
@@ -323,26 +324,92 @@ $fieldset->contents = $table->show();
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
-$table = $this->newObject('htmltable', 'htmlelements');
-// Linked institution
-// first the belonging instituion
-// then the list of all the insstritution the thedatabase
-$Institutions=$this->objDbInstitution->getAllInstitutions();
-$dd=new dropdown('group_institutionlink');
-$dd->addOption($linkedInstitution);
-if(count($Institutions)>0){
-     foreach ($Institutions as $Institution) {
-        $dd->addOption($Institution['name']);
-       }
-    }else{
-         $dd->addOption('None');// obj lang
 
-    }
+
+
+
+
+
+$table = $this->newObject('htmltable', 'htmlelements');
+$groups =$this->objDbInstitution->getAllInstitutions();
+$availablegroups=array();
+foreach ($groups as $group) {
+    if(count($user_current_membership)!=0){
+        foreach ($user_current_membership as $membership) {
+            if (strcmp($group['id'], $membership['groupid']) != 0){
+                array_push($availablegroups, $group);
+                }
+                }
+                }
+        else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
+            array_push($availablegroups, $group);
+            
+        }
+    
+}
+$objSelectBox = $this->newObject('selectbox','htmlelements');
+$objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
+$objSelectBox->insertLeftOptions(
+                        $availablegroups,
+                        'id',
+                        'name' );
+
+$tblLeft = $this->newObject( 'htmltable','htmlelements');
+$objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
+//Construct tables for right selectboxes
+$tblRight = $this->newObject( 'htmltable', 'htmlelements');
+$objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
+//Construct tables for selectboxes and headings
+$tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
+$tblSelectBox->width = '90%';
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
+$tblSelectBox->endRow();
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
+    $tblSelectBox->addCell( $tblRight->show(), '100pt' );
+$tblSelectBox->endRow();
 
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
-$table->addCell($dd->show());
+$table->addCell($tblSelectBox->show());
 $table->endRow();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//$table = $this->newObject('htmltable', 'htmlelements');
+//// Linked institution
+//// first the belonging instituion
+//// then the list of all the insstritution the thedatabase
+//$Institutions=$this->objDbInstitution->getAllInstitutions();
+//$dd=new dropdown('group_institutionlink');
+//$dd->addOption($linkedInstitution);
+//if(count($Institutions)>0){
+//     foreach ($Institutions as $Institution) {
+//        $dd->addOption($Institution['name']);
+//       }
+//    }else{
+//         $dd->addOption('None');// obj lang
+//
+//    }
+//
+//$table->startRow();
+//$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
+//$table->addCell($dd->show());
+//$table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset4', 'unesco_oer');
@@ -390,3 +457,11 @@ echo $form->show();
 
 ?>
 
+<script type="text/javascript">
+function SubmitProduct()
+{
+    var objForm = document.forms['editer'];
+    //objForm.elements[element].value = value;
+    objForm.submit();
+}
+</script>

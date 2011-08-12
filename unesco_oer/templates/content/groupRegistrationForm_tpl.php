@@ -57,8 +57,8 @@ echo '<div style="padding:10px;">'.$header->show();
 
 echo '<span class="required_field"> (*) '."All field are required to be filled in Order to register into Unesco_OER".'</span>';
 
-
-$form = new form ('register', $this->uri(array('action'=>'saveNewGroup')));
+$uri=$this->uri(array('action'=>'saveNewGroup'));
+$form = new form ('register', $uri);
 $form->extra = 'enctype="multipart/form-data"';
 
 $messages = array();
@@ -314,22 +314,66 @@ $fieldset->contents = $table->show();
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
-//Register Institutions
+
+
+//$groups = $this->objDbGroups->getAllGroups();
 $table = $this->newObject('htmltable', 'htmlelements');
 $Institutions = $this->objDbInstitution->getAllInstitutions();
-$dd=new dropdown('group_institutionlink');
-$dd->addOption("None");
-if(count($Institutions)>0){
-       foreach ($Institutions as $Institution) {
-        $dd->addOption($Institution['name']);
-       
-        }
-}
+$objSelectBox = $this->newObject('selectbox','htmlelements');
+$objSelectBox->create( $form, 'leftList[]', 'Available Institutions', 'rightList[]', 'Chosen Institutions' );
+$objSelectBox->insertLeftOptions(
+                        $Institutions,
+                        'id',
+                        'name' );
+
+$tblLeft = $this->newObject( 'htmltable','htmlelements');
+$objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
+//Construct tables for right selectboxes
+$tblRight = $this->newObject( 'htmltable', 'htmlelements');
+$objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
+//Construct tables for selectboxes and headings
+$tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
+$tblSelectBox->width = '90%';
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
+$tblSelectBox->endRow();
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
+    $tblSelectBox->addCell( $tblRight->show(), '100pt' );
+$tblSelectBox->endRow();
+//THEIR BUTTON
 
 $table->startRow();
+
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
-$table->addCell($dd->show());
+//$table->addCell(implode( ' / ', $arrFormButtons));
+$table->addCell($tblSelectBox->show());
+$table->addCell();
 $table->endRow();
+
+
+
+
+
+
+
+//Register Institutions
+//$table = $this->newObject('htmltable', 'htmlelements');
+//$Institutions = $this->objDbInstitution->getAllInstitutions();
+//$dd=new dropdown('group_institutionlink');
+//$dd->addOption("None");
+//if(count($Institutions)>0){
+//       foreach ($Institutions as $Institution) {
+//        $dd->addOption($Institution['name']);
+//
+//        }
+//}
+//
+//$table->startRow();
+//$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
+//$table->addCell($dd->show());
+//$table->endRow();
 
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
@@ -377,3 +421,11 @@ echo $form->show();
 echo '</div>';
 
 ?>
+<script type="text/javascript">
+function SubmitProduct()
+{
+    var objForm = document.forms['register'];
+    //objForm.elements[element].value = value;
+    objForm.submit();
+}
+</script>

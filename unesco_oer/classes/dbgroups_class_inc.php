@@ -413,6 +413,12 @@ class dbgroups extends dbtable {
        return $this->getGroupLongitude($groupid);
    }
 
+
+   function  getLastEntryID() {
+       $sql="SELECT LAST(id) FROM tbl_unesco_oer_groups";
+       return $sql;
+    }
+
    function storegroupinstitution($groupid,$institutionid){
        $data = array(
             'group_id' => $groupid,

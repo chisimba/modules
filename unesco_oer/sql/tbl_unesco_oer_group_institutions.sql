@@ -22,8 +22,8 @@ $options = array('comment'=>'Table to store a group linked institution','collate
 
 //define fields
 $fields = array(
-                'id' => array('type' => 'text','length' => 32,'not null'),
-		'group_id' => array('type' => 'text','length' => 32),
+                 'id' => array('type' => 'text','length' => 32,'not null'),
+                 'group_id' => array('type' => 'text','length' => 32),
                 'institution_id' => array('type' => 'text','length' => 32)
                           
  		);
