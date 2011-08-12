@@ -414,10 +414,14 @@ class dbgroups extends dbtable {
    }
 
 
-   function  getLastEntryID() {
-       $sql="SELECT LAST(id) FROM tbl_unesco_oer_groups";
-       return $sql;
+  function  getLastInsertId() {
+        $array=$this->getLastEntry(Null, $orderField='id');
+        return $array[0]['id'];
     }
+       
+    
+     
+    
 
    function storegroupinstitution($groupid,$institutionid){
        $data = array(

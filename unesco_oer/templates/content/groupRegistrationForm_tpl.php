@@ -59,7 +59,10 @@ echo '<span class="required_field"> (*) '."All field are required to be filled i
 
 $uri=$this->uri(array('action'=>'saveNewGroup'));
 $form = new form ('register', $uri);
-$form->extra = 'enctype="multipart/form-data"';
+
+
+
+
 
 $messages = array();
 
@@ -390,6 +393,7 @@ $Cancelbutton->setToSubmit();
 $CancelLink = new link($this->uri(array('action' => "groupListingForm")));
 $CancelLink->link =$Cancelbutton->show();
 
+$form->extra = 'enctype="multipart/form-data"';
 $form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
 
 if ($mode == 'addfixup') {

@@ -1811,12 +1811,11 @@ class unesco_oer extends controller {
             return 'groupRegistrationForm_tpl.php';
         } else {
             $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
-            $id=$this->objDbGroups->getLastEntryID();
+            $id=$this->objDbGroups->getLastInsertId();
             //echo $id;
             foreach($rightList as $array){
                 $this->objDbgroupInstitutions->add_group_institutions($id,$array);
-                
-            }
+                   }
 //            $this->setLayoutTemplate('maincontent_layout_tpl.php');
 //            return 'groupListingForm_tpl.php';
             return $this->__groupListingForm();
@@ -1831,6 +1830,10 @@ class unesco_oer extends controller {
 
     function __groupMembersForm(){
         return 'groupmembers_tpl.php';
+    }
+
+    function __test(){
+        return "test_tpl.php";
     }
 
     function __editGroup() {
@@ -1848,6 +1851,7 @@ class unesco_oer extends controller {
         $description = $this->getParam('description');
         $loclat = $this->getParam('group_loclat');
         $loclong = $this->getParam('group_loclong');
+        $rightList=$this->getParam('rightList');
 
         $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
         $results = $this->objThumbUploader->uploadThumbnail($path);
@@ -1882,7 +1886,11 @@ class unesco_oer extends controller {
             return 'groupEditingForm_tpl.php';
         } else {
             $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
-             $this->objDbgroupInstitutions->add_group_institutions($id,$institutionid);// Todo store institutions Id not name
+             foreach($rightList as $array){
+                    $this->objDbgroupInstitutions->add_group_institutions($id,$array);
+                   }
+
+           // $this->objDbgroupInstitutions->add_group_institutions($id,$institutionid);// Todo store institutions Id not name
              return $this->__groupListingForm();
             }
     }

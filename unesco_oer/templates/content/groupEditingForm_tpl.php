@@ -63,7 +63,7 @@ echo $header->show();
 
 $uri=$this->uri(array('action'=>'editGroup','id'=>$this->getParam('id')));
 $form = new form ('editer',$uri);
-$form->extra = 'enctype="multipart/form-data"';
+//$form->extra = 'enctype="multipart/form-data"';
 $messages = array();
 
 
@@ -425,6 +425,7 @@ $Cancelbutton->setToSubmit();
 $CancelLink = new link($this->uri(array('action' => "groupListingForm")));
 $CancelLink->link =$Cancelbutton->show();
 
+$form->extra = 'enctype="multipart/form-data"';
 $form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
 
 
