@@ -358,9 +358,11 @@ class module extends content {
     }
 
     protected function saveNew() {
+        $this->_metaDataArray['parentid'] = $this->_metaDataArray['id'];
         unset ($this->_metaDataArray['id']);
+        unset ($this->_metaDataArray['puid']);
         $this->_metaDataArray['year_id'] = $this->getParentID();
-        $this->_id =  $this->objDbModules->addModule($data);
+        $this->_id =  $this->objDbModules->addModule($this->_metaDataArray);
     }
 
     public function getContentsByParentID($parentID) {

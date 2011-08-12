@@ -120,8 +120,13 @@
                                 foreach ($selectedproducts as $selectedproduct){
                                   
                                     $product->loadProduct($selectedproduct);
+                                    
                                   
                                     $content = $product->getContentManager();
+                                    
+                                    $contentHTML = $content->getContentTree(FALSE);
+                                    
+                               
                                       
            
                                     echo '   
@@ -143,14 +148,13 @@
                                 
                                 
                                 <div class="treeFrame">
-                            	<ul class="ulMinusPublish"> '. $content->getContentTree(FALSE). '
+                            	<ul class="ulMinusPublish">'. $contentHTML . '
                       
                         </ul> 
                             </div>
                                        ';
                                     
-                                 echo   $product->getTitle();
-                                 echo 'tree should be here';
+                              
                                 }
                                 
                                 

@@ -143,7 +143,7 @@ class contentmanager extends object
         return FALSE;
     }
 
-    function getContentTree($editable = FALSE) { 
+    function getContentTree($editable = FALSE, $highlighted = FALSE) { 
 
         $output = '';
 
@@ -160,7 +160,7 @@ class contentmanager extends object
 
 //Add nodes to the tree
         foreach ($this->_contents as $content){
-            $menu->addItem($content->getTreeNodes($editable, $this->getProductID()));
+            $menu->addItem($content->getTreeNodes($editable, $this->getProductID(), $highlighted));
         }
 
         if ($editable){

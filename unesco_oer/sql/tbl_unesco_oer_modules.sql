@@ -33,7 +33,9 @@ $fields = array(
                 'associated_material' => array('type' => 'text'),
                 'assesment' => array('type' => 'text'),
                 'comments_history' => array('type' => 'text'),
-                'schedule_of_classes' => array('type' => 'text')
+                'schedule_of_classes' => array('type' => 'text'),
+                'parentid' => array('type' => 'text','length' => 32,'null')
+ 
  		);
 
 ?>
