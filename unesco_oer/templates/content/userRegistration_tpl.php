@@ -265,7 +265,7 @@ $textinput = new textinput('Address');
 $textinput->size =70;
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_users_address', 'unesco_oer'));
-$table->addCell($textinput->show());
+$table->addCell($textinput->show().$required);
 $table->endRow();
 
 $textinput = new textinput('city');

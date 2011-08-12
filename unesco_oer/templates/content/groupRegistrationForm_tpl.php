@@ -55,6 +55,7 @@ $header->type = 1;
 $header->str = $this->objLanguage->languageText('mod_unesco_oer_group_heading', 'unesco_oer');
 echo '<div style="padding:10px;">'.$header->show();
 
+$required = '<span class="required_field"> * ';
 echo '<span class="required_field"> (*) '."All field are required to be filled in Order to register into Unesco_OER".'</span>';
 
 $uri=$this->uri(array('action'=>'saveNewGroup'));
@@ -89,7 +90,7 @@ if (isset($userstring[0]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_name', 'unesco_oer')); 
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_name', 'unesco_oer').$required );
 $table->addCell($name->show());
 $table->endRow();
 
@@ -109,7 +110,7 @@ if (isset($userstring[1]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_website', 'unesco_oer')); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_website', 'unesco_oer').$required); // obj lang
 $table->addCell($website->show());
 $table->endRow();
 
@@ -133,12 +134,12 @@ if (isset($userstring) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description', 'unesco_oer'));
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description', 'unesco_oer').$required);
 $table->addCell($editor->show());
 $table->endRow();
 //field for the thumbnail
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer').$required);
 $table->addCell($this->objThumbUploader->show());
 $table->endRow();
 
@@ -163,7 +164,7 @@ if (isset($userstring[9]) && $mode == 'add')
     $email->value = $userstring[9];
    }
 
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_email', 'unesco_oer'));
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_email', 'unesco_oer').$required);
 $table->addCell($email->show()); //$table->addCell($email->show(), '30%');
 $table->endRow();
 
@@ -183,7 +184,7 @@ if (isset($userstring[3]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_address', 'unesco_oer')); 
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_address', 'unesco_oer').$required);
 $table->addCell($address->show());
 $table->endRow();
 
@@ -203,7 +204,7 @@ if (isset($userstring[4]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_city', 'unesco_oer'));
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_city', 'unesco_oer').$required);
 $table->addCell($city->show());
 $table->endRow();
 
@@ -223,7 +224,7 @@ if (isset($userstring[5]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_state', 'unesco_oer')); 
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_state', 'unesco_oer').$required);
 $table->addCell($state->show());
 $table->endRow();
 
@@ -242,7 +243,7 @@ if (isset($userstring[6]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_postalcode', 'unesco_oer'));
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_postalcode', 'unesco_oer').$required);
 $table->addCell($code->show());
 $table->endRow();
 
@@ -274,7 +275,7 @@ if (isset($userstring[7]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_longitude', 'unesco_oer')); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_longitude', 'unesco_oer').$required); // obj lang
 $table->addCell($longitude->show());
 $table->endRow();
 
@@ -295,14 +296,14 @@ if (isset($userstring[8]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_latitude', 'unesco_oer')); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_latitude', 'unesco_oer').$required); // obj lang
 $table->addCell($latitude->show());
 $table->endRow();
 
 ////COUNTRY
 $table->startRow();
     $objCountries=&$this->getObject('languagecode','language');
-    $table->addCell($this->objLanguage->languageText('word_country', 'system'));
+    $table->addCell($this->objLanguage->languageText('word_country', 'system').$required);
     if ($mode == 'addfixup') {
         $table->addCell($objCountries->countryAlpha($this->getParam('country')));
     } else {
