@@ -122,7 +122,7 @@
                              <?php
                                 
                                 echo $existingContent->getTitle();
-                          
+                          echo " test 1";
                                 ?>
                                 
                                </h2></div>
@@ -137,11 +137,12 @@
                 
                 <div class="contentDivThreeWider">
                   
-                        </legend
+<!--                        </legend-->
                  <?php
               //  echo  $existingContent->showCurric();
-             //  echo  $existingContent->showReadOnlyInput();
-                  echo $displaytype
+                  
+              echo  $existingContent->showReadOnlyInput(); echo 'dsfsdf'
+                //  echo $displaytype
                  
                  ?>
                 </div>  

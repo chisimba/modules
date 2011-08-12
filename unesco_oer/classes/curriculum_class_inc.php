@@ -171,7 +171,8 @@ class curriculum extends content {
         return $form_data->show();
     }
     
-     public function showCurric($prevAction = NULL) {
+     public function showReadOnlyInput() {
+         
 
      
   
@@ -282,7 +283,7 @@ class curriculum extends content {
     }
     
     public function getViewLink($productID) {
-        return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID(), 'displaytype' => $this->showCurric()));
+        return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID()));
     }
 
 

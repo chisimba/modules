@@ -283,22 +283,8 @@ class module extends content {
         return  $content;
     }
     
-    public function showReadOnlyInput($productID, $prevAction = NULL) {
-        $pair = $option = '';
-        if ($this->getID()) {
-            $pair = $this->getPairString();
-            $option = 'saveedit';
-        }else{
-            $pair = $this->getParentID().'__'.$this->getType();
-            $option = 'save';
-        }
-
-        $uri = $this->uri(array(
-            'action' => "saveContent",
-            'productID' => $productID,
-            'pair' => $pair,
-            'option' => $option,
-            'nextAction' => $prevAction));
+    public function showReadOnlyInput() {
+    
         
         $content = "";
         $content .= '  <div class="contentDivThreeWider">';
@@ -397,7 +383,7 @@ class module extends content {
     }
     
     public function getViewLink($productID) {
-        return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID(), 'displaytype' => $this->showReadOnlyInput()));
+        return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID()));
     }
 }
 ?>

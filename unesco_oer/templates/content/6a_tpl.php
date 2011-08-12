@@ -124,7 +124,7 @@
                                   
                                     $content = $product->getContentManager();
                                     
-                                    $contentHTML = $content->getContentTree(FALSE);
+                                    $contentHTML = $content->getContentTree(FALSE,TRUE);
                                     
                                
                                       

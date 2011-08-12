@@ -346,6 +346,10 @@ class content extends object
 
     protected function updateExisting(){
     }
+    
+    public function showReadOnlyInput(){
+        return "Nothing to show!";
+    }
 }
 
 ?>
