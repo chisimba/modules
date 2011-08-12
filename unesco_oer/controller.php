@@ -34,7 +34,6 @@ class unesco_oer extends controller {
     public $objConfig;
     public $objGroupUtil;
     public $objDbgroupInstitutions;
- 
     /**
      * @var object $objLanguage Language Object
      */
@@ -89,8 +88,8 @@ class unesco_oer extends controller {
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
         $this->ObjDbUserGroups = $this->getObject('dbusergroups');
         $this->objGroupUtil = $this->getObject('grouputil');
-        $this->objDbgroupInstitutions=$this->getObject('dbgroupinstitutions');
-     
+        $this->objDbgroupInstitutions = $this->getObject('dbgroupinstitutions');
+
 
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
@@ -179,17 +178,16 @@ class unesco_oer extends controller {
     public function __3a() {
         return "3a_tpl.php";
     }
-    
-     public function __CompareProducts() {
 
-         $users = $this->getParam("selectedusers");
-         $this->setLayoutTemplate('maincontent_layout_tpl.php');
-         $this->setVarByRef('selectedproducts', $users);
+    public function __CompareProducts() {
+
+        $users = $this->getParam("selectedusers");
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $this->setVarByRef('selectedproducts', $users);
 
 
         return "6a_tpl.php";
     }
-
 
     public function __Bookmarks() {
         return "Bookmarks_tpl.php";
@@ -271,8 +269,8 @@ class unesco_oer extends controller {
     }
 
     public function __11a() {
-        
-          $this->setLayoutTemplate('maincontent_layout_tpl.php');
+
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return "11a_tpl.php";
     }
 
@@ -322,27 +320,25 @@ class unesco_oer extends controller {
             return "3a_tpl.php";
         }
     }
-    
-     public function __ViewProductSection() {
+
+    public function __ViewProductSection() {
 
         $id = $this->getParam('productID');
         $path = $this->getParam('path');
         $display = $this->getParam('displaytype');
 
         $this->setVarByRef('productID', $id);
-          $this->setVarByRef('path', $path);
-          $this->setVarByRef('displaytype',$display);
+        $this->setVarByRef('path', $path);
+        $this->setVarByRef('displaytype', $display);
 
-      
-           if ($this->objDbProducts->isAdaptation($id)) {
+
+        if ($this->objDbProducts->isAdaptation($id)) {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "5b_tpl.php";
         } else {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "3c_tpl.php";
         }
-    
-        
     }
 
     public function __viewAllMostAdaptedProducts() {
@@ -396,20 +392,20 @@ class unesco_oer extends controller {
         $lat = $this->getParam('lat');
         $lng = $this->getparam('Lng');
         $page = $this->getParam('page');
-    
 
 
-       
-       $ProdId = $this->objDbGroups->getidbylocation($lat, $lng);
-       $products = $this->objDbGroups->getGroupProductadaptation($ProdId[0]['id']);
-   //   echo $ProdId[0]['id'];
-       $temp = TRUE;
 
-       $this->setVarByRef("finalstring", $products);    
-       $this->setVarByRef('browsecheck', $temp);
-       $this->setVarByRef('ProdID', $ProdId[0]['id']);
 
-       $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $ProdId = $this->objDbGroups->getidbylocation($lat, $lng);
+        $products = $this->objDbGroups->getGroupProductadaptation($ProdId[0]['id']);
+        //   echo $ProdId[0]['id'];
+        $temp = TRUE;
+
+        $this->setVarByRef("finalstring", $products);
+        $this->setVarByRef('browsecheck', $temp);
+        $this->setVarByRef('ProdID', $ProdId[0]['id']);
+
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
         return $page;
     }
@@ -417,15 +413,15 @@ class unesco_oer extends controller {
     public function __FilterAdaptations() {
 
         $parentid = $this->getParam('parentid');
-    
+
 
 
 
 
         $this->setVarByRef("productID", $parentid);
-       
 
-   $this->setLayoutTemplate('maincontent_layout_tpl.php');
+
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
 
         return "3b_tpl.php";
@@ -731,6 +727,7 @@ class unesco_oer extends controller {
 
         return $this->__viewProductThemes();
     }
+
     /*
      * Method to retrieve entries from user on the createThemeUI_tpl.php page
      * and add it to the tbl_unesco_oer_product_themes table
@@ -1159,8 +1156,8 @@ class unesco_oer extends controller {
         $prevThumbnail = $this->getParam('thumbnail');
 
 
-//Check if the thumbnail has been set
-        if (empty($prevThumbnail)) {
+
+        if ($prevThumbnail == 'usrfiles/') {
             $path = 'unesco_oer/institutions/' . $name . '/thumbnail/';
             try {
                 $results = $this->uploadFile($path);
@@ -1170,16 +1167,38 @@ class unesco_oer extends controller {
             }
             $thumbnail = 'usrfiles/' . $results['path'];
         } else {
-            $thumbnail = $prevThumbnail;
-//Validate the thumbnail
-            $fileInfoArray = array();
-            if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
-                $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
-                $validate['thumbnail'] = "Please provide a valid thumbnail";
+            echo " old == $prevThumbnail<br/>";
+            // First Check if user has uploaded
+            $fileInputName = "fileupload";
+            if (array_key_exists($fileInputName, $_FILES)) {
+                $file = $_FILES[$fileInputName];
+            }
+            $newFileName = $file['name'];
+            if (empty($newFileName)) {
+                $thumbnail = $prevThumbnail;
+            } else {
+                $path = 'unesco_oer/institutions/' . $name . '/thumbnail/';
+                try {
+                    $results = $this->uploadFile($path);
+                } catch (customException $e) {
+                    echo customException::cleanUp();
+                    exit();
+                }
+                $thumbnail = 'usrfiles/' . $results['path'];
             }
         }
 
-//        $prevThumbnail = $thumbnail;
+        /* else {
+          $thumbnail = $prevThumbnail;
+          //Validate the thumbnail
+          $fileInfoArray = array();
+          if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
+          $validate['valid'] = $this->objThumbUploader->isFileValid($fileInfoArray);
+          $validate['thumbnail'] = "Please provide a valid thumbnail";
+          }
+          }
+         */
+
         $formAction = 'editInstitutionSubmit';
         $formError = false;
         $this->setVarByRef('formError', $formError);
@@ -1320,7 +1339,7 @@ class unesco_oer extends controller {
         $GroupMembership = $this->getParam('groupmembership');
         $country = $this->getParam('country');
         $typeOfOccupation = $this->getParam('type_of_occupation');
-        $rightData = $this->getParam( 'rightList' );
+        $rightData = $this->getParam('rightList');
         $accountstatus = 1; // Default Status Active
 // Create an array of fields that cannot be empty
 //        $checkFields = array(
@@ -1439,8 +1458,8 @@ class unesco_oer extends controller {
 //add to table userextra
             $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink);
-            foreach( $rightData as $right){
-                $this->ObjDbUserGroups->joingroup($id,$right);
+            foreach ($rightData as $right) {
+                $this->ObjDbUserGroups->joingroup($id, $right);
             }
 
 
@@ -1468,14 +1487,14 @@ class unesco_oer extends controller {
         }
     }
 
-    function __userPagination($page,$start,$end){
-        $user=$this->objUseExtra->getUser($start,$end);
-        $this->setVar('page',$page);
+    function __userPagination($page, $start, $end) {
+        $user = $this->objUseExtra->getUser($start, $end);
+        $this->setVar('page', $page);
         $this->setVar('user', $user);
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'UserListingForm_tpl.php';
-        $this->__userPagination($page+1, $end, $end+10);
-        }
+        $this->__userPagination($page + 1, $end, $end + 10);
+    }
 
     function __RegistrationForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -1558,7 +1577,7 @@ class unesco_oer extends controller {
         $DescriptionText = $this->getParam('description');
         $WebsiteLink = $this->getParam('websitelink');
         $GroupMembership = $this->getParam('groupmembership');
-        $rightList=$this->getParam('rightList');
+        $rightList = $this->getParam('rightList');
 
         $userDetails = array(
             'password' => $password,
@@ -1618,8 +1637,8 @@ class unesco_oer extends controller {
 // Process Update Results
         if ($update) {
             $this->objUseExtra->updateUserInfo($this->getParam('id'), $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
-           foreach($rightList as $list){
-               $this->ObjDbUserGroups->joingroup($this->getParam('id'),$list);
+            foreach ($rightList as $list) {
+                $this->ObjDbUserGroups->joingroup($this->getParam('id'), $list);
             }
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "UserListingForm_tpl.php";
@@ -1738,17 +1757,11 @@ class unesco_oer extends controller {
 
     function __joinGroup() {
 
-            $currLoggedInID = $this->objUser->userId();
-        
+        $currLoggedInID = $this->objUser->userId();
+
         $this->ObjDbUserGroups->joingroup($currLoggedInID, $this->getParam('id'));
         return $this->__groupListingFormMain();
     }
-
-    
-
-
-
- 
 
     /*
      *
@@ -1827,8 +1840,7 @@ class unesco_oer extends controller {
         return 'groupEditingForm_tpl.php';
     }
 
-
-    function __groupMembersForm(){
+    function __groupMembersForm() {
         return 'groupmembers_tpl.php';
     }
 
@@ -1846,7 +1858,7 @@ class unesco_oer extends controller {
         $state = $this->getParam('group_state');
         $country = $this->getParam('country');
         $postalcode = $this->getParam('group_postalcode');
-      
+
         $institution = $this->getParam('group_institutionlink');
         $description = $this->getParam('description');
         $loclat = $this->getParam('group_loclat');
@@ -1886,13 +1898,9 @@ class unesco_oer extends controller {
             return 'groupEditingForm_tpl.php';
         } else {
             $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
-             foreach($rightList as $array){
-                    $this->objDbgroupInstitutions->add_group_institutions($id,$array);
-                   }
-
-           // $this->objDbgroupInstitutions->add_group_institutions($id,$institutionid);// Todo store institutions Id not name
-             return $this->__groupListingForm();
-            }
+            $this->objDbgroupInstitutions->add_group_institutions($id, $institutionid); // Todo store institutions Id not name
+            return $this->__groupListingForm();
+        }
     }
 
     function __deleteGroup() {
@@ -1924,21 +1932,19 @@ class unesco_oer extends controller {
 //        }
 //    }
 
-   
+
 
     function __groupProductForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         return 'groupProductForm_tpl.php';
     }
 
-    public function __groupGrid(){
-         return'groupGridView_tpl.php';
+    public function __groupGrid() {
+        return'groupGridView_tpl.php';
     }
 
-    public function __groupList(){
+    public function __groupList() {
         return 'groupListView_tpl.php';
-
-
     }
 
     /*     * This function handles the uploading of product metadata
@@ -1950,7 +1956,7 @@ class unesco_oer extends controller {
         $product = $this->newObject('product', 'unesco_oer');
         $product->createBlankProduct();
 
-        $params = array (
+        $params = array(
             'productID' => $product->getIdentifier(),
             'prevAction' => $this->getParam('prevAction')
         );
@@ -1960,7 +1966,7 @@ class unesco_oer extends controller {
 
     public function __saveProductMetaData() {
         $defaultTemplate = "ProductMetaData_tpl.php";
-      
+
         $product = $this->getObject('product');
 
 //test for edit
@@ -2031,7 +2037,7 @@ class unesco_oer extends controller {
         $option = $this->getParam('option');
         $contentManager = $this->getObject('contentmanager');
         $product = $this->newObject('product');
-        
+
         if ($productID) {
             $product->loadProduct($productID);
             $contentManager = $product->getContentManager();
@@ -2041,7 +2047,7 @@ class unesco_oer extends controller {
         $this->setVarByRef('product', $product);
 
         switch ($option) {
-            case 'new': 
+            case 'new':
                 $newContent = $contentManager->generateNewContent($pair);
                 echo $newContent->showInput($productID);
                 die();
@@ -2063,7 +2069,7 @@ class unesco_oer extends controller {
 
             case 'saveedit':
                 $pairArray = $contentManager->getPairArray($pair);
-                $existingContent = $contentManager->getContentByContentID($pairArray[1]); 
+                $existingContent = $contentManager->getContentByContentID($pairArray[1]);
                 $existingContent->handleUpload();
                 break;
 
@@ -2179,4 +2185,5 @@ class unesco_oer extends controller {
     }
 
 }
+
 ?>

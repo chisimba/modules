@@ -112,7 +112,7 @@ echo '<div id="sections">
 <fieldset>
 <legend> Edit Sections</legend>
 
-<div class=leftColumnDiv style="border: 1px #004e89 solid;" >';
+<div class="leftColumnDiv" >';
 
 
 
@@ -121,7 +121,7 @@ echo '</div>';
 
 
 
-echo '<div class=centerColumnDiv style="border: 1px #004e89 solid;">';
+echo '<div class="centerColumnDiv"">';
 echo $contentManager->showInput($this->getParam('prevAction'));
 echo "</div></fieldset></div></div></div>";
 

@@ -7,10 +7,9 @@
     </head>
     <body>
         <?php
-
         //Display errors
-error_reporting(E_ALL);
-ini_set('display_errors', 'Off');
+        error_reporting(E_ALL);
+        ini_set('display_errors', 'Off');
 
         $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
         $institutionmanager = $this->getObject('institutionmanager', 'unesco_oer');
@@ -53,7 +52,7 @@ ini_set('display_errors', 'Off');
                     $tableErrors->endRow();
                 }
             }
-            
+
             $formErrorHeading = $title = $this->objLanguage->languageText('mod_unesco_oer_institution_form_error', 'unesco_oer');
             $fieldsetErrors->setLegend($formErrorHeading);
             $fieldsetErrors->addContent($tableErrors->show());
@@ -89,12 +88,29 @@ ini_set('display_errors', 'Off');
         //Check if an institution is being edited
         if (isset($institutionId)) {
             $header->str = $this->objLanguage->
-                            languageText('mod_unesco_oer_institution_Update_heading', 'unesco_oer');
+                    languageText('mod_unesco_oer_institution_Update_heading', 'unesco_oer');
         } else {
             $header->str = $this->objLanguage->
-                            languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
+                    languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
         }
         $header->type = 2;
+        ?>
+        <div style="clear:both;"></div> 
+        <div class="breadCrumb module"> 
+            <div id='breadcrumb'>
+                <ul><li class="first">Home</li>
+                    <?php
+                    $adminTools = $this->objLanguage->languageText('mod_unesco_oer_administrative_tools', 'unesco_oer');
+                    $insLabel = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
+                    echo "<li><a href='?module=unesco_oer&action=controlpanel' alt='$adminTools' title='$adminTools'>$adminTools</a></li>";
+                    echo "<li class='last'>$insLabel</li>";
+                    ?>
+                </ul>
+            </div>
+
+        </div>
+
+        <?php
         echo '<div id="institutionheading">';
         echo $header->show();
         echo '<br>';
@@ -302,7 +318,7 @@ ini_set('display_errors', 'Off');
         $buttonCancel = new button('submit', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer'));
         $buttonCancel->setToSubmit();
-        $CancelLink = new link($this->uri(array('action' => "viewInstitutions" )));
+        $CancelLink = new link($this->uri(array('action' => "viewInstitutions")));
         $CancelLink->link = $buttonCancel->show();
 
 

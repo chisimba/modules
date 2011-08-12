@@ -25,31 +25,46 @@
     $this->loadClass('link', 'htmlelements');
     $objIcon = $this->newObject('geticon', 'htmlelements');
 
+ ?>
+    <div style="clear:both;"></div> 
+    <div class="breadCrumb module"> 
+        <div id='breadcrumb'>
+            <ul><li class="first">Home</li>
+                <?php
+                $adminTools=$this->objLanguage->languageText('mod_unesco_oer_administrative_tools', 'unesco_oer');
+                $insLabel=$this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
+              echo "<li><a href='?module=unesco_oer&action=controlpanel' alt='$adminTools' title='$adminTools'>$adminTools</a></li>";
+               echo "<li class='last'>$insLabel</li>";
+               ?>
+            </ul>
+        </div>
 
+    </div>
+
+    <?php
 // setup and show heading
     $header = new htmlheading();
     $header->type = 1;
     $header->str = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
     echo '<div id="institutionheading">';
     echo $header->show() . '<br><br />';
-
-
+   
     $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 
-$buttonInstCaption = $this->objLanguage->languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
-$buttonInstitution = new button('Add Language Button', $buttonInstCaption);
-$buttonInstitution->setToSubmit();
-$addInstitutionLink = new link($this->uri(array('action' => 'institutionEditor')));
-$addInstitutionLink->link = $buttonInstitution->show();
+    $buttonInstCaption = $this->objLanguage->languageText('mod_unesco_oer_add_data_newInstitution', 'unesco_oer');
+    $buttonInstitution = new button('Add Language Button', $buttonInstCaption);
+    $buttonInstitution->setToSubmit();
+    $addInstitutionLink = new link($this->uri(array('action' => 'institutionEditor')));
+    $addInstitutionLink->link = $buttonInstitution->show();
 
-$buttonBackCaption = $this->objLanguage->languageText('mod_unesco_oer_group_back_button', 'unesco_oer');
-$controlPannel = new button('backButton', $buttonBackCaption);
-$controlPannel->setToSubmit();
-$BackToControlPanelLink = new link($this->uri(array('action' => "controlpanel")));
-$BackToControlPanelLink->link = $controlPannel->show();
+    $buttonBackCaption = $this->objLanguage->languageText('mod_unesco_oer_group_back_button', 'unesco_oer');
+    $controlPannel = new button('backButton', $buttonBackCaption);
+    $controlPannel->setToSubmit();
+    $BackToControlPanelLink = new link($this->uri(array('action' => "controlpanel")));
+    $BackToControlPanelLink->link = $controlPannel->show();
 
-echo $addInstitutionLink->show() . '&nbsp;' . $BackToControlPanelLink->show();
-echo '</div>';
+    echo $addInstitutionLink->show() . '&nbsp;' . $BackToControlPanelLink->show();
+    echo '</div>';
 //$institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 //$institutionGUI->showAllInstitutions();
 // retrieve data from tbl_unesco_oer_feturedproducts
@@ -101,20 +116,20 @@ echo '</div>';
 
     jQuery(document).ready(function(){
 
-    jQuery("a[class=deleteinstitution]").click(function(){
+        jQuery("a[class=deleteinstitution]").click(function(){
 
-    var r=confirm( "Are you sure you want to delete this institution?");
-    if(r== true){
-    window.location=this.href;
-    }
-    return false;
-    }
-
-
-    );
-
-    }
+            var r=confirm( "Are you sure you want to delete this institution?");
+            if(r== true){
+                window.location=this.href;
+            }
+            return false;
+        }
 
 
     );
+
+    }
+
+
+);
 </script>
