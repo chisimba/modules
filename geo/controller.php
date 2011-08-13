@@ -126,6 +126,27 @@ class geo extends controller
                 header('Content-type: application/json');
                 echo $res;
                 break;
+                
+            case 'getradiuskm' :
+                $lon   = $this->getParam('lon', NULL);
+                $lat   = $this->getParam('lat', NULL);
+                $radius = $this->getParam('radius');
+                
+                $res = $this->objMongo->getRadiusKm($lon, $lat, $radius);
+                header('Cache-Control: no-cache, must-revalidate');
+                header('Content-type: application/json');
+                echo $res;
+                break;
+            
+            case 'getradiusmi' :
+                $lon   = $this->getParam('lon', NULL);
+                $lat   = $this->getParam('lat', NULL);
+                $radius = $this->getParam('radius');
+                
+                $res = $this->objMongo->getRadiusMiles($lon, $lat, $radius);
+                header('Cache-Control: no-cache, must-revalidate');
+                header('Content-type: application/json');
+                echo $res;
                 break;
                 
             default:
@@ -142,7 +163,7 @@ class geo extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', NULL);
+        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
