@@ -147,6 +147,41 @@ class geomongo extends object
         
         return $ret;
     }
+    
+    public function getRadiusMiles($lon, $lat, $radius = 3) {
+        $radiusOfEarth = 3956; //avg radius of earth in miles
+        $cursor = $this->collection->find(
+            array('loc' =>
+                array('$within' =>
+                    array('$centerSphere' =>
+                        array(
+                            array(floatval($lon), floatval($lat)), $radius/$radiusOfEarth
+                        )
+                    )
+                )
+            )
+        );
+        $resultset = $this->jsonCursor($cursor);
+        return json_encode($resultset);
+    }
+    
+    public function getRadiusKm($lon, $lat, $radius = 5) {
+        $radiusOfEarth = 6378.1; //avg radius of earth in km
+        $cursor = $this->collection->find(
+            array('loc' =>
+                array('$within' =>
+                    array('$centerSphere' =>
+                        array(
+                            array(floatval($lon), floatval($lat)), $radius/$radiusOfEarth
+                        )
+                    )
+                )
+            )
+        );
+        
+        $resultset = $this->jsonCursor($cursor);
+        return json_encode($resultset);
+    }
 
     /**
      * Inserts data into the collection.
