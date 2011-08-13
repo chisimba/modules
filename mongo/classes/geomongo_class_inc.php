@@ -128,6 +128,12 @@ class geomongo extends object
         return json_encode($resultset);
     }
     
+    public function getByPlacename($placename, $limit = NULL) {
+        $cursor = $this->collection->find(Array('name' => array('$regex' => $placename)))->limit($limit);
+        $resultset = $this->jsonCursor($cursor);
+        return json_encode($resultset);
+    }
+    
     private function jsonCursor($cursor) {
         $ret = new StdClass();
         $resultno = 1;
