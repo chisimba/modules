@@ -134,6 +134,12 @@ class geomongo extends object
         return json_encode($resultset);
     }
     
+    public function getAllByCountryCode($cc, $limit = NULL) {
+        $cursor = $this->collection->find(Array('countrycode' => array('$regex' => $cc)))->limit($limit);
+        $resultset = $this->jsonCursor($cursor);
+        return json_encode($resultset);
+    }
+    
     private function jsonCursor($cursor) {
         $ret = new StdClass();
         $resultno = 1;
