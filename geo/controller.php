@@ -149,6 +149,14 @@ class geo extends controller
                 echo $res;
                 break;
                 
+            case 'getbycountrycode' : 
+                $cc = $this->getParam('cc');
+                $res = $this->objMongo->getAllByCountryCode($cc);
+                header('Cache-Control: no-cache, must-revalidate');
+                header('Content-type: application/json');
+                echo $res;
+                break;
+                
             default:
                 $this->nextAction('');
                 break;
@@ -163,7 +171,7 @@ class geo extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', NULL);
+        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
