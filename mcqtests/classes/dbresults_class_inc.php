@@ -45,6 +45,33 @@ class dbresults extends dbtable {
     }
 
     /**
+     * Method to clean up results for export
+     * fixes a UWC-specific problem 
+     * @access public
+     * @param string $data The data
+     * @return array $data2 The result.
+     */
+    public function cleanUp($data){
+        $this->objUser=$this->getObject('user','security');
+        $this->objSysCfg=$this->getObject('dbsysconfig','sysconfig');
+        $doCleanUp=$this->objSysCfg->getValue('DO_CLEANUP','mcqtests');
+        // Do no changes to the data unless the config param is set.
+        if ($doCleanUp!=1){
+            return $data;
+        }
+        foreach ($data as $line){
+            if ($line['studentid']>19000000){
+                $username=$this->objUser->userName($line['studentid']);
+                if (is_numeric($username)){
+                    $line['studentid']=$username;
+                }
+            }
+            $data2[]=$line;
+        }
+        return $data2;
+    }
+
+    /**
      * Method to get a students result for a completed test.
      *
      * @access public
@@ -74,7 +101,7 @@ class dbresults extends dbtable {
         $sql.= " WHERE testid='$testId'";
         $data = $this->getArray($sql);
         if (!empty($data)) {
-            return $data;
+            return $this->cleanUp($data);
         }
         return FALSE;
     }
