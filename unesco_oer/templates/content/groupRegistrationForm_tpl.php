@@ -214,9 +214,9 @@ $state->size = 80;
 if ($mode == 'addfixup') {
     $state->value = $this->getParam('group_state');
 
-    if ($this->getParam('group_state') == '') {
-        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message6', 'unesco_oer');
-    }
+//    if ($this->getParam('group_state') == '') {
+//        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message6', 'unesco_oer');
+//    }
 }
 if (isset($userstring[5]) && $mode == 'add')
 {
@@ -224,7 +224,7 @@ if (isset($userstring[5]) && $mode == 'add')
 }
 
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_state', 'unesco_oer').$required);
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_state', 'unesco_oer'));
 $table->addCell($state->show());
 $table->endRow();
 

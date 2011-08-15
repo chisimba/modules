@@ -1699,6 +1699,8 @@ class unesco_oer extends controller {
                 return 'No password was entered';
             case 'norepeatpasswordentered':
                 return 'No Repeat password was entered';
+            case 'novalidThumbnail' :
+                return 'Thumbnail is invalid';
 //            case 'noAddress'    :
 //                return 'No address entered';
 //            case 'noCity':
@@ -1795,7 +1797,6 @@ class unesco_oer extends controller {
             //$confirmemail,
             $address,
             $city,
-            $state,
             $postalcode,
             $website,
             $description,
@@ -1817,6 +1818,12 @@ class unesco_oer extends controller {
             $problems[] = 'emailnotvalid';
         }
 
+         $fileInfoArray=array();
+        if (!$this->objThumbUploader->isFileValid($fileInfoArray)){
+            $problems[]='novalidThumbnail';
+        
+                   }
+
         if (count($problems) > 0) {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->setVar('mode', 'addfixup');
@@ -1834,6 +1841,9 @@ class unesco_oer extends controller {
             return $this->__groupListingForm();
         }
     }
+
+
+
 
     function __groupEditingForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -1935,9 +1945,22 @@ class unesco_oer extends controller {
 
 
     function __groupProductForm() {
+        $page = $this->getParam('page');
+         $id = $this->getParam('id');
+        $products = $this->objDbGroups->getGroupProductadaptation($id);
+        //   echo $ProdId[0]['id'];
+        $temp = TRUE;
+
+        $this->setVarByRef("finalstring", $products);
+        $this->setVarByRef('browsecheck', $temp);
+        $this->setVarByRef('ProdID', $ProdId[0]['id']);
+
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
-        return 'groupProductForm_tpl.php';
+
+        return $page;
     }
+ 
+    
 
     public function __groupGrid() {
         return'groupGridView_tpl.php';

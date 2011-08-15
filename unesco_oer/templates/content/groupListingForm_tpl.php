@@ -130,7 +130,7 @@ if (count($groups) > 0) {
         $myTable->addCell($editLink->show());
         
         $objIcon->setIcon('view');
-        $editLink =new link($this->uri(array('action' =>"groupProductForm",'id' =>$group['id'])));
+        $editLink =new link($this->uri(array('action' =>"groupProductForm",'id' =>$group['id'],'page'=>'2a_tpl.php')));
         $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());
         $myTable->endRow();
