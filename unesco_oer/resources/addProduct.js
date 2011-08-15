@@ -51,6 +51,12 @@ function toggleRelationDropDown(nameOfDropDown1, nameOfDropDown2)
 
 }
 
+function toggleInstitutionDropDown(value,dropdowndiv, productID)
+{
+    //alert($('#' + dropdowndiv).html());
+    $('#' + dropdowndiv).load('index.php?module=unesco_oer&action=saveProductMetaData&add_product_submit=getinstitutions&productID='+ productID +'&group_id=' + value);
+}
+
 
 function SubmitProduct(element, value)
 {

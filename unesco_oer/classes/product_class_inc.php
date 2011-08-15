@@ -1085,7 +1085,7 @@ class product extends object
                 $groupArray = $objDbGroups->getGroupInfo($userGroupRow['groupid']);
                 array_push($groups, $groupArray[0]);
             }
-
+            
             //field for groups
             $fieldName = 'group';
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_group', 'unesco_oer');
@@ -1099,29 +1099,22 @@ class product extends object
                                                         $this->getGroupID(),
                                                         'name',
                                                         $table,
-                                                        'id'
+                                                        'id',
+                                                        "javascript: toggleInstitutionDropDown(this.value, 'institution_div', '{$this->getIdentifier()}');"
                                                         );
 
-
+            
 
             //field for institution
-            $fieldName = 'institution';
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
-            //$title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
-            $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
-            $institutions = $objInstitutionManager->getAllInstitutions("where name='{$groups[0]["linkedinstitution"]}'");
-            if (!empty($institutions)){
-                $this->_objAddDataUtil->addDropDownToTable(
-                                                            $title,
-                                                            4,
-                                                            $fieldName,
-                                                            $institutions,
-                                                            $this->getInstitutionID(),
-                                                            'name',
-                                                            $table,
-                                                            'id'
-                                                            );
-            }
+            $table->startRow();
+            $table->addCell($title);
+            $table->endRow();
+            $dropdown = $this->makeInstitutionDropDown();
+            $institutionDiv = "<div id='institution_div'>{$dropdown->show()}<div>";
+            $table->startRow();
+            $table->addCell($institutionDiv);
+            $table->endRow();
 
 
             $fieldset = $this->newObject('fieldset','htmlelements');
@@ -1139,9 +1132,9 @@ class product extends object
         $hiddenInput = new hiddeninput('add_product_submit');
 
         $content = $this->getContentManager();
-        $submitOption = ($content->hasContents() && !empty($this->_identifier)) ? "'upload'" : "'createContent'"; //NOTE here we add support to create new content
+        //$submitOption = ($content->hasContents() && !empty($this->_identifier)) ? "'upload'" : "'createContent'"; //NOTE here we add support to create new content
 //        $submitOption = ($this->getContent()) ? "'upload'" : "'upload'";
-        //$submitOption = 'upload';
+        $submitOption = "'upload'";
         // setup button for submission
         $buttonSubmit = new button('upload', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
@@ -1729,6 +1722,40 @@ class product extends object
    function getInstitutionID()
    {
        return $this->_institution;
+   }
+
+   function makeInstitutionDropDown($group_id = NULL)
+   {
+        if (empty($group_id)) $group_id = $this->getGroupID ();
+        $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
+        $idArray = $objDbGroups->getInstitutions($group_id);
+
+        $objDbInstitution = $this->getObject('dbinstitution', 'unesco_oer');
+
+        $arrayInstitutions = array();
+        foreach ($idArray as $id) {
+            $Instition2Darray = $objDbInstitution->getInstitutionById($id);
+            array_push($arrayInstitutions, $Instition2Darray[0]);
+        }
+
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->cssClass = "moduleHeader";
+
+       //field for institution
+        $fieldName = 'institution';
+        $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
+        //$title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        //$institutions = $objInstitutionManager->getAllInstitutions("where name='{$groups[0]["linkedinstitution"]}'");
+        return $this->_objAddDataUtil->addDropDownToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    $arrayInstitutions,
+                                                    $this->getInstitutionID(),
+                                                    'name',
+                                                    $table,
+                                                    'id'
+                                                    );
    }
 
    function getNoOfAdaptations()

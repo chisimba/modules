@@ -153,7 +153,7 @@ echo $abLink->show();
                     $abLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
                     $abLink->link = '<img src="skins/unesco_oer/images/icon-new-product.png" alt="New Product" width="20" height="20" class="imgFloatRight">';
 
-                    $newProductLink = new link($this->uri(array("action" => "newProduct", 'prevAction' => 'home', 'add_product_submit' => 'newproduct')));
+                    $newProductLink = new link($this->uri(array("action" => "newProduct", 'prevAction' => 'ViewProduct', 'add_product_submit' => 'newproduct')));
                     $newProductLink->link = "New product";
 
                     echo $divOpen;

@@ -76,15 +76,16 @@ class adddatautil extends object {
         $this->addTitleToRow($title, $titleType, $table);
         $table->endRow();
         $table->startRow();
-        $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value, $onChange);
+        $dropdown = $this->addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value, $onChange);
         $table->endRow();
+        return $dropdown;
     }
 
     function addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value = null, $onChange = ""){
         $dropdown = new dropdown($name);
         $dropdown->addOption(NULL, NULL);
         foreach ($inputArray as $input) {
-            $dropdown->addOption($input['id'], $input[$field]);
+            $dropdown->addOption($input[$value], $input[$field]);
         }
         
         if (strlen($initValue) > 0){
@@ -96,7 +97,7 @@ class adddatautil extends object {
         $dropdown->addOnchange($onChange);
 
         $table->addCell($dropdown->show());
-        return ;
+        return $dropdown;
     }
 
 }

@@ -2005,7 +2005,8 @@ class unesco_oer extends controller {
 
         switch (strtolower($this->getParam('add_product_submit'))) {
             case "cancel":
-                $this->nextAction('home', array('id' => $this->getParam('productID')));
+                if ($product->isDeleted) $this->nextAction('home', array('id' => $this->getParam('productID')));
+                else                    $this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
                 break;
 
             case "upload":
@@ -2025,7 +2026,11 @@ class unesco_oer extends controller {
                     return $defaultTemplate;
                 }
                 break;
-
+            case "getinstitutions":
+                $dropdown = $product->makeInstitutionDropDown($this->getParam('group_id'));
+                echo $dropdown->show();
+                die();
+                break;
             default:
                 //echo 'invalid action!'; die();
                 return $defaultTemplate;
