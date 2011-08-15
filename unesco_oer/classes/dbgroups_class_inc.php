@@ -423,7 +423,18 @@ class dbgroups extends dbtable {
         $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
         return $this->getArray($sql);
     }
-       
+
+  function getInstitutions($id){
+      $arrayInstitutions=array();
+       $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
+       $institutions=$this->getArray($sql);
+       foreach($institutions as $institution){
+           echo $institution[0]['institution_id'];
+           array_push($array,$institution[0]['institution_id']);
+       }
+       return  $arrayInstitutions;
+  }
+
     
      
     

@@ -13,6 +13,7 @@
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
+echo $this->objDbGroups-> getInstitutions(gen9Srv0Nme2_99281_1313392080);
+echo 'deals';
 
 ?>
