@@ -47,6 +47,8 @@ class dbusergroups extends dbtable {
         $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE id='$id'";
         return $this->getArray($sql);
     }
+    
+
 
     // when a user what to leave a particular group
     function leavegroup($id, $groupid) {

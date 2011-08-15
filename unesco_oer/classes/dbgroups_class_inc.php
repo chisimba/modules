@@ -418,6 +418,11 @@ class dbgroups extends dbtable {
         $array=$this->getLastEntry(Null, $orderField='id');
         return $array[0]['id'];
     }
+    
+    function getGroupInstitutions($id) {
+        $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
+        return $this->getArray($sql);
+    }
        
     
      

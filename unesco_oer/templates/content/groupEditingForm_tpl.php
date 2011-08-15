@@ -331,12 +331,15 @@ $form->addToForm('<br />');
 
 
 $table = $this->newObject('htmltable', 'htmlelements');
+
+$user_current_membership=$this->objDbGroups->getGroupInstitutions($this->getParam('id'));
+
 $groups =$this->objDbInstitution->getAllInstitutions();
 $availablegroups=array();
 foreach ($groups as $group) {
     if(count($user_current_membership)!=0){
         foreach ($user_current_membership as $membership) {
-            if (strcmp($group['id'], $membership['groupid']) != 0){
+            if (strcmp($group['id'], $membership['institution_id']) != 0){
                 array_push($availablegroups, $group);
                 }
                 }
@@ -417,8 +420,13 @@ $fieldset->contents = $table->show();
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
-$button = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_update_details_button', 'unesco_oer') );
-$button->setToSubmit();
+//$button = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_update_details_button', 'unesco_oer') );
+//$button->setToSubmit();
+
+$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
+//$button->setToSubmit();
+$action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
+$button->setOnClick('javascript: ' . $action);
 
 $Cancelbutton = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 $Cancelbutton->setToSubmit();
