@@ -40,6 +40,7 @@ echo $this->objGroupUtil->groupPerPage();
         	<!-- Center column DIv -->
             <div class="centerColumnDiv">
 
+
             	<div class="GridListViewDiv">
                 	<div class="sortBy">
                     Sort By:
@@ -58,33 +59,55 @@ echo $this->objGroupUtil->groupPerPage();
 
 
 
+
+
+
+
+
+
+
+
+
+                                <div class="gridListDivView">
+
+                        <?php
+                            $abLink = new link($this->uri(array("action" => 'groupGrid',"page"=>'10a_tpl.php')));
+                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
+                            echo $abLink->show();
+                        ?>
+
+<?php
+                            $abLink = new link($this->uri(array("action" => 'groupGrid',"page"=>'10a_tpl.php')));
+                            $abLink->link = 'GRID';
+                            echo $abLink->show();
+?>
+                                </div>
+
+                                <div class="gridListPipe">|</div>
+
                             <?php
-                               $abLink = new link($this->uri(array("action" => 'groupGrid')));
-                               $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png"alt="Grid" width="19" height="15" class="imgFloatRight" >';
-                               $ablLink2 = new link($this->uri(array("action" => 'groupGrid')));
-                               $ablLink2->link='<div class="gridListDivView"><a href="" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>';
-
-                               echo $abLink->show();
-                               echo $ablLink2->show();
-
-
+                            $abLink = new link($this->uri(array("action" =>'groupList',"page"=>'10a_tpl.php')));
+                            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
+                            echo $abLink->show();
                             ?>
-                        <script>
-                            $('.test').click(function(){alert('dsfsdfsd');})
-                        </script>
-<!--                             <div class="gridListDivView"><a href="#" class="gridListViewLinks">GRID</a></div> <div class="gridListPipe">|</div>-->
+
+                            <div class="gridListDivView">
+
+                                <?php
+                                $abLink =  new link($this->uri(array("action" =>'groupList',"page"=>'10a_tpl.php')));
+                                $abLink->link = 'LIST';
+                                echo $abLink->show();
+                                ?>
+
+                            </div>
 
 
-                               <?php
-                               $abLink3 = new link($this->uri(array("action" =>'groupList')));
-                               $abLink4 = new link($this->uri(array("action" =>'groupList')));
-                                $abLink4->link='<div class="gridListDivView"><a href="" class="gridListViewLinks">LIST</a></div>';
-                               $abLink3->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
-                               echo $abLink3->show();
-                               echo $abLink4->show();
 
-                            ?>
-             
+
+
+
+
+
 <!--                        <div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>-->
                     </div>
 

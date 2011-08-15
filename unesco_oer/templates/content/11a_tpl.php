@@ -48,7 +48,7 @@ $this->loadClass('textinput', 'htmlelements');
                 <ul id="innerMenuTabs">
                      <li class="onState"><a href="#">
                              <?php
-                             $memberLink=new link($this->uri(array("action" =>'groupMembersForm','id'=>$this->getParam('id'))));
+                             $memberLink=new link($this->uri(array("action" =>'groupMembersForm','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
                              $memberLink->link="Members(".$No_Of_Members.")";
                              echo $memberLink->show();
@@ -57,7 +57,7 @@ $this->loadClass('textinput', 'htmlelements');
                             </a></li>
                      <li><a href="#">
                              <?php
-                             $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'))));
+                             $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_adaptation=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
                              $groupadaptationLink->link=" ADAPTATIONS(".$No_Of_adaptation.")";
                              echo $groupadaptationLink->show();
