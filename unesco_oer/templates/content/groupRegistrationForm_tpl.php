@@ -386,8 +386,13 @@ $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
-$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button','unesco_oer'));
-$button->setToSubmit();
+//$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button','unesco_oer'));
+//$button->setToSubmit();
+
+$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
+//$button->setToSubmit();
+$action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
+$button->setOnClick('javascript: ' . $action);
 
 $Cancelbutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 $Cancelbutton->setToSubmit();
