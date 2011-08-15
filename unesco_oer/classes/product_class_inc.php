@@ -1626,7 +1626,9 @@ class product extends object
    function getThumbnailPath()
    {
        if ($this->isAdaptation()){
-           
+           $parent = $this->newObject('product', 'unesco_oer');
+           $parent->loadProduct($this->getParentID());
+           return $parent->getThumbnailPath();
        }
        return $this->_thumbnail;
    }
