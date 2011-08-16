@@ -62,8 +62,10 @@ class dbresults extends dbtable {
         foreach ($data as $line){
             if ($line['studentid']>19000000){
                 $username=$this->objUser->userName($line['studentid']);
+                $fullname=$this->objUser->fullname($line['studentid']);
                 if (is_numeric($username)){
                     $line['studentid']=$username;
+                    $line['fullname']=$fullname;
                 }
             }
             $data2[]=$line;

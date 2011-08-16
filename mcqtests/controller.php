@@ -968,7 +968,10 @@ class mcqtests extends controller {
                         foreach ($usersResultList as $user) {
                             $userAnswerList = $this->dbMarked->getAnswersForOutput($testId, $user['studentid']);
                             $line = $userAnswerList[0]['studentid'] . ",";
-                            $line.= $this->objUser->fullname($userAnswerList[0]['studentid']) . ",";
+                            if (!(isset($userAnswerList[0]['fullname']))){
+                                $userAnserList[0]['fullname'] = $this->objUser->fullname($userAnswerList[0]['studentid']);
+                            }
+                            $line.= ($userAnswerList[0]['fullname']) . ",";
                             $line.= $userAnswerList[0]['starttime'] . ",";
                             $line.= $userAnswerList[0]['endtime'] . ",";
                             if (isset($userAnswerList) && !empty($userAnswerList)) {
@@ -994,7 +997,10 @@ class mcqtests extends controller {
                         fwrite($outputFile, '"Student Number","Student name","Score","Percentage"' . "\n");
                         foreach ($usersResultList as $user) {
                             $line = $user['studentid'] . ",";
-                            $line.= $this->objUser->fullname($user['studentid']) . ",";
+                            if (!(isset($user['fullname']))){
+                                $user['fullname'] = $this->objUser->fullname($user['studentid']);
+                            }
+                            $line.= ($user['fullname']) . ",";
                             @ $line.= $user['mark'] . ",";
                             $line.= ( round(($user['mark'] / $testData[0]['totalmark']), 4) * 100) . "%,";
                             fwrite($outputFile, $line . "\n");
