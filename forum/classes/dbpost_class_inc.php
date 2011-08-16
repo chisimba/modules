@@ -493,10 +493,26 @@ class dbPost extends dbTable
 
                 foreach ($attachments AS $attachment)
                 {
+                    $files = $this->objPostAttachments->downloadAttachment($attachment['id']);
+                    if (count($files) > 0) {
+                        $this->objFiles = $this->getObject('dbfile', 'filemanager');
+                        //$this->objFiles->getFullFilePath($files[0]['id']);
+                        $attachment_path = $this->objFiles->getFilePath($files[0]['id']);
+                        $downloadlink = new link($attachment_path);
+                        $downloadlink->link = $attachment['filename'];
+                        //$downloadlink->target = '_blank';
+                        $return .= $this->objFileIcons->getFileIcon($attachment['filename']).' '.$downloadlink->show().'<br />';
+                        //header('Content-Disposition: attachment; filename="' . $files[0]['filename'] . '"');
+                        //readfile($location);
+                        //--header('Location:'.$location); // Todo - Force Download
+                    }
+
+                    /*
                     $downloadlink = new link($this->uri(array('action'=>'downloadattachment', 'id'=>$attachment['id'], 'topic'=> $post['topic_id'], 'type'=>$this->forumtype)));
                     $downloadlink->link = $attachment['filename'];
                     //$downloadlink->target = '_blank';
                     $return .= $this->objFileIcons->getFileIcon($attachment['filename']).' '.$downloadlink->show().'<br />';
+                    */
                 }
 
                 //$return .= '</ul>';
@@ -1183,7 +1199,7 @@ class dbPost extends dbTable
 
                 $addTable->addCell($submitButton->show().' / '.$cancelButton->show());
             } else {
-                
+
 
                 $addTable->addCell($submitButton->show());
             }
@@ -1195,7 +1211,7 @@ class dbPost extends dbTable
 
             // IE is not getting values from hidden textinputs...hence we pass them via session vars
             $this->setSession('temporaryId',$temporaryId);
-          
+
             return $this->showTangentJavaScript($defaultTitle).$postReplyForm->show();
         }
     }
