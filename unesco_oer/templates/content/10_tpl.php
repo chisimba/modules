@@ -1,3 +1,12 @@
+<?php
+$this->loadClass('link', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('checkbox', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+ $this->objLanguagecode=$this->getObject('languagecode', 'language');
+?>
+
 <?php $this->setLayoutTemplate('maincontent_layout_tpl.php'); ?>
         
         	<div class="subNavigation"></div>

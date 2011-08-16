@@ -1,3 +1,12 @@
+<?php
+$this->loadClass('link', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('checkbox', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+ $this->objLanguagecode=$this->getObject('languagecode', 'language');
+?>
+
 <?php $this->setLayoutTemplate('maincontent_layout_tpl.php'); ?>
             <div class="subNavigation"></div>
         	<!-- Left column DIv -->
@@ -5,18 +14,19 @@
 
             	<div class="tenPixelLeftPadding tenPixelBottomPadding">
                 	<a href="#" class="groupsBreadCrumbColor">Groups</a> |
-                <span class="groupsBreadCrumbColor noUnderline">Department of Media Studies, University of Namibia, Namibia</span>
+                <span class="groupsBreadCrumbColor noUnderline"> <?php echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')));?></span>
                 </div>
             	<div class="tenPixelPaddingLeft">
                 <div class="topGroupDiv">
                 	<div class="paddingContentTopLeftRightBottom">
                      <div class="memberList">
+                          <?php echo $this->objGroupUtil->topcontent($this->getParam('id'))?>
 
-                     <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+<!--                     <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
                       <div class="textNextToGroupIcon">
                       	<h2 class="greenText">Polytechnic of Namibia, journalism department</h2>
                        	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet elit vitae neque consequat congue sed ac nunc. Phasellus mattis rhoncus commodo. Fusce non metus ut nunc dapibus cursus et sit amet diam. Nunc non nibh sit amet leo bibendum sagittis. Vestibulum posuere tincidunt tincidunt. Aenean euismod vulputate volutpat.
-                       </div>
+                       </div>-->
                       </div>
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
@@ -54,14 +64,14 @@
                          </a></li>
                      <li><a href="#">DISCUSSIONS (1)</a></li>
                      <li><a href="#">
-                                <?php
-                             $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
-                             $No_Of_adaptation=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
-                             $groupadaptationLink->link=" ADAPTATIONS(".$No_Of_adaptation.")";
-                             echo $groupadaptationLink->show();
+                              <?php
+                             $InstitutionLink=new link($this->uri(array("action" =>'11d','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_instutions=$this->objDbGroups->getNoOfInstitutions($this->getParam('id'));
+                             $InstitutionLink->link="INSTITUTIONS(".$No_Of_instutions.")";
+                             echo $InstitutionLink->show();
                              ?>
 
-                             INSTITUTIONS (1)</a></li>
+                             </a></li>
 
                 </ul>
                 </div>

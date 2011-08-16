@@ -67,7 +67,7 @@
 
                             <?php
                              if($this->objUser->isAdmin()){
-                            $link = new link($this->uri(array("action" => 'groupListingForm')));
+                            $link = new link($this->uri(array("action" => 'groupListingForm',"page"=>'10a_tpl.php')));
                             $groupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_product_groups_title', 'unesco_oer');
                             
                             $link->link = '<img src="skins/unesco_oer/images/institutions.png" alt="Product groups" height = "55" width = "55">

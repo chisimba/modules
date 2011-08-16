@@ -4,6 +4,7 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
+ $this->objLanguagecode=$this->getObject('languagecode', 'language');
 ?>
 <?php $this->setLayoutTemplate('maincontent_layout_tpl.php'); ?>
             <div class="subNavigation"></div>
@@ -20,14 +21,15 @@ $this->loadClass('textinput', 'htmlelements');
                 <div class="topGroupDiv">
                 	<div class="paddingContentTopLeftRightBottom">
                      <div class="memberList">
+                          <?php echo $this->objGroupUtil->topcontent($this->getParam('id'))?>
 
-                     <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+<!--                     <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
                       <div class="textNextToGroupIcon">
                       	<h2 class="greenText">
-                            <?php echo $this->objDbGroups->getGroupName($this->getParam('id'));?>
-                            </h2><?php echo $this->objDbGroups->getGroupDescription($this->getParam('id'));?>
+                            <?php// echo $this->objDbGroups->getGroupName($this->getParam('id'));?>
+                            </h2><?php// echo $this->objDbGroups->getGroupDescription($this->getParam('id'));?>
                        
-                       </div>
+                       </div>-->
                       </div>
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">

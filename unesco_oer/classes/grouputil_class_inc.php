@@ -60,7 +60,7 @@ class grouputil extends object {
 
   public function content($group){
 
-      $thumbLink= new link($this->uri(array("action" => '11a','id'=>$group['id'])));
+      $thumbLink= new link($this->uri(array("action" => '11a','id'=>$group['id'],"page"=>'10a_tpl.php')));
   
       $thumbLink->link='<img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
       //$joinLink;
@@ -68,7 +68,7 @@ class grouputil extends object {
         //$imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
      
   
-              $joinGroupLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'])));
+              $joinGroupLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'],"page"=>'10a_tpl.php')));
               $joinGroupLink->link='Join';
               $joinGroupLink->cssClass = 'joingroup';
             
@@ -164,31 +164,29 @@ public function groupMembers($groupid){
 }
 
 public function groupAdaptation($groupid){
-    $arrays=$this->objDbGroups->getGroupProductadaptation($groupid);
-    foreach($arrays as $array){
-        $productID=$array['product_id'];
+    $array=$this->objDbGroups->getGroupProductadaptation($groupid);
+   
+        $productID=$array[0]['product_id'];
         $Thumbnail=$this->objDbGroups->getAdaptedProductThumbnail($productID);
         $Title=$this->objDbGroups->getAdaptedProductTitle($productID);
 
 
     $content.='              <div class="discussionList">
-                            <img src='.$Thumbnail.' alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                            <img src="'.$Thumbnail.' "alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
                             <div class="textNextToGroupIcon">
                              <h2>'.$Title.'</h2>
                              Institution : <a href="#" class="greyTextLink"></a><br>
                              Adapted in : <a href="#" class="bookmarkLinks"></a>
                             </div>
                         </div>';
-    echo $content;
-        }
+    return $content;
+        
 }
 
-public function groupInstitution($group){
+public function groupInstitution($groupid){
 
      $content.='
-         <div class="tenPixelPaddingLeft">
-                <div class="topGroupDiv">
-                	<div class="paddingContentTopLeftRightBottom">
+    
                         <div class="discussionList">'.$group['thumbnails'].' alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
                             <div class="textNextToGroupIcon">
                                 <h2>
@@ -196,22 +194,31 @@ public function groupInstitution($group){
 
                                 <a href="#" class="bookmarkLinks">English</a> | <a href="#" class="bookmarkLinks">German</a>
                             </div>
-                        </div>
-
-                    </div>
-                </div>
-                <br><br><br>
+                  
                 ';
 
+return $content;
+}
+
+
+public function topcontent($groupid){
+    $content.='
+     <img src="'.$this->objDbGroups->getThumbnail($groupid).'" alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
+        <div class="textNextToGroupIcon">
+        <h2 class="greenText">'.$this->objDbGroups->getGroupName($groupid).'</h2>
+            '.$this->objDbGroups->getGroupDescription($groupid).'
+                       </div>
+        ';
+return $content;
 
 }
 
 
 
-
-
-
 }
+
+
+
 
 ?>
 
