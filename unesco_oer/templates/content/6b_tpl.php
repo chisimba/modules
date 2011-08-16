@@ -4,7 +4,8 @@ var_dump($productid);
 
 $selectedproducts = explode(',',$productid);
 
-var_dump($selectedproducts);
+//var_dump($selectedproducts);
+echo $moduleid;
 
 //$product = $this->getObject('product', 'unesco_oer');
 //
@@ -98,6 +99,11 @@ var_dump($selectedproducts);
                                                 <?php
                                                 
                                                 
+                                                
+                                                
+                                                
+                                                
+                                                
                                         $product = $this->getObject('product', 'unesco_oer');
                                          $product->loadProduct($selectedproducts[0]);
                                          $origionalproduct = $product->getParentID();
@@ -105,7 +111,7 @@ var_dump($selectedproducts);
                                                 
                                      echo    $content = '<div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
-                                <h4><a href="#" onclick= javascript:moduleselect() class="adaptationListingLink">' .  $product->getTitle().'
+                                <h4><a href="#" onclick= javascript:moduleselect('. "'$origionalproduct'".','. "'$moduleid'".') class="adaptationListingLink">' .  $product->getTitle().'
                    
                                   </a></h4>
                                 <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
@@ -132,20 +138,22 @@ var_dump($selectedproducts);
 //                                       
 //                                                     }
 //                                                echo $content;
-//                                                
+//                                                 
                                    $content = '';           
 //                                                
                               $product = $this->getObject('product', 'unesco_oer');
                                 foreach ($selectedproducts as $selectedproduct){                    
                                   
                                     $product->loadProduct($selectedproduct);
+                            //         $content = $product->getContentManager();
+                                 //  $existingContent = $content->getparent($moduleID);
                                     
                                   
                                    $content .= '<div class="slideBoxAdaptation">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
-                            <h4 class="blueText">' .$product->getTitle() . '
-                            
-                               </h4>
+                            <h4><a href="#" onclick= javascript:moduleselect('. "'$origionalproduct'".','. "'$existingContent'".') class="adaptationListingLink">' .  $product->getTitle().'
+                   
+                                  </a></h4>
                             <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation using this product</a></div>						</div> ' ;
                                                     }
@@ -191,102 +199,48 @@ var_dump($selectedproducts);
                     
                     
                     <div class ="Root">
-                
-                <div class="headingHolder">
-                	<div class="heading2"><h2>Communication Ethics</h2></div>
-                    <div class="icons2">
-                    	<a href="#"><img src="images/icon-edit-section.png" alt="Edit" width="18" height="18"></a>
-                        <a href="#"><img src="images/icon-add-to-adaptation.png" width="18" height="18" alt="Add to adaptation"></a>
-                        <a href="#"><img src="images/icon-content-top-print.png" width="19" height="15" alt="Print"></a>
+            <?php
+                        $product = $this->getObject('product'); 
+            $product->loadProduct($origionalproduct);
+            $content = $product->getContentManager();
+            $existingContent = $content->getContentByContentID($moduleid);
+                 echo  $existingContent->showReadOnlyInput();
+                        
+                        
+                        
+             ?>           
+                        
+                        
+                        
+                        
+                        
+                        
                     </div>
+                        
                 </div>
-                
-                <div class="contentDivThreeWider">
-                 <h3>Course Description:</h3>
-                    <br>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mauris risus
-                    <br><br>
-                    <h3>Course Learning outcome:</h3>
-                    <br>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc mauris risus
-                    Phasellus nec eleifend magna. Morbi vel nibh quis massa venenatis fermentum in at massa. Fusce dignissim eros a libero faucibus sed luctus enim mollis.
-                    <br><br>
-                    <h3>Course Content:</h3>
-					<ul>
-						<li class="numbers">Political Systems
-							<ul>
-								<li>Types of political systems</li>
-								<li>TLorem ipsum dolo</li>
-							</ul>
-						</li>
-						<li class="numbers">Nunc mauris risus</li>
-						<li class="numbers">Fusce dignissim</li>
-						<li class="numbers">Lorem ipsum dolor
-							<ul>
-								<li>Types of Lorem ipsum dolor systems</li>
-								<li>TLorem ipsum dolo</li>
-							</ul>
-						</li>
-						<li class="numbers">Nunc mauris risus</li>
-						<li class="numbers">Fusce dignissim</li>
-						<li class="numbers">Lorem ipsum dolor
-							<ul>
-								<li>Types of Lorem ipsum dolor systems</li>
-								<li>TLorem ipsum dolo</li>
-							</ul>
-						</li>
-						
-					</ul>
-                </div>
-            </div>
-                </div>
+           
+           <div class="tree">
             
             <div class="rightColumnDivWide rightColumnPadding">
-              <div class="frame">
-                <ul class="ulMinusPublish">
-                            <li><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulPlusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <ul class="ulMinusPublish">
-                                        <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                                        	<ul class="ulDocument">
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </ul>
-                            </li>
-                        </ul>
-                        
-              </div>
+               <?php
+                $product = $this->getObject('product'); 
+                  $product->loadProduct($origionalproduct);
+                 $content = $product->getContentManager();
+                  echo  $content->getContentTree(FALSE,FALSE);
+                 
+               
+               
+               
+               ?>
+               
+               
+               
+          
+                
+             
             </div>
             
-            
+           </div>
             
          </div>
         <!-- Footer-->
@@ -300,10 +254,10 @@ var_dump($selectedproducts);
 <script  >
    
 
-function moduleselect(){
+function moduleselect(origionalprod,moduleid){
     //$('.root').hide();
     
-    $('.Root').load('index.php?module=unesco_oer&action=loadmodule$id= ' ))
+    $('.Root').load('index.php?module=unesco_oer&action=loadmodule&id=' + origionalprod + '&moduleid=' + moduleid)
     
 
   

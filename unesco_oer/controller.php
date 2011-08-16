@@ -199,6 +199,18 @@ class unesco_oer extends controller {
 
         return "6b_tpl.php";
     }
+    
+     public function __loadmodule() {
+         $productID = $this->getParam('id');
+         $moduleID = $this->getParam('moduleid');
+         $product = $this->getObject('product'); 
+            $product->loadProduct($productID);
+            $content = $product->getContentManager();
+            $existingContent = $content->getContentByContentID($moduleID);
+         echo  $existingContent->showReadOnlyInput();
+        
+    
+    }
 
     public function __Bookmarks() {
         return "Bookmarks_tpl.php";

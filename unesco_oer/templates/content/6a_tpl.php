@@ -85,11 +85,12 @@
                                 
                                 $product->loadProduct($selectedproducts[0]);
                                 $temp = $product->getParentID();
-                                //echo $temp;
+                       
                                 $product->LoadProduct($temp);
                                         $content = $product->getContentManager();
-                                        
-                                echo     $content->getContentTree(FALSE,FALSE);
+                                   
+                                  
+                                echo     $content->getContentTree(FALSE,TRUE,False,$selectedproducts);
                                 
                                 
                                 ?>
@@ -108,7 +109,7 @@
                                   
                                     $content = $product->getContentManager();
                                     
-                                    $contentHTML = $content->getContentTree(FALSE,TRUE,$selectedproducts);
+                                    $contentHTML = $content->getContentTree(FALSE,TRUE, TRUE,$selectedproducts);
                                     
                                
                                       

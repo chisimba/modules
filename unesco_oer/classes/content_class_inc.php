@@ -263,7 +263,7 @@ class content extends object
         return !empty($this->_contents);
     }
 
-    function getTreeNodes($editable = FALSE, $selectedID = NULL, $highlighted = FALSE, $productID = NULL) {
+    function getTreeNodes($editable = FALSE, $selectedID = NULL, $highlighted = FALSE, $origional = FALSE, $productID = NULL) {
 
         $this->loadClass('treenode', 'tree');
         
@@ -273,7 +273,7 @@ class content extends object
         $expandedIcon = 'icon-product-opened-folder.png';
         
         $hiddenInput = new hiddeninput($this->getID()."[]");
-        if ($highlighted){
+        if ($origional){
         $hiddenInput->extra = "id='{$this->getID()}' class='$this->_originalID'";
             
         }
@@ -308,7 +308,7 @@ class content extends object
                       }
 
         foreach ($this->_contents as $content){ 
-            $node->addItem($content->getTreeNodes($editable, $selectedID,$highlighted,$productID));
+            $node->addItem($content->getTreeNodes($editable, $selectedID,$highlighted,$origional,$productID));
         }
 
         if ($editable){
