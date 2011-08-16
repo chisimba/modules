@@ -160,7 +160,7 @@ class contentmanager extends object
 
 //Add nodes to the tree
         foreach ($this->_contents as $content){
-            $menu->addItem($content->getTreeNodes($editable, $productIDS, $highlighted));
+            $menu->addItem($content->getTreeNodes($editable, $productIDS, $highlighted, $this->getProductID()));
         }
 
         if ($editable){

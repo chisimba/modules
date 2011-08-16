@@ -177,7 +177,7 @@ $this->appendArrayVar('headerParams', $js);
             
            
               $content = $product->getContentManager();
-              echo  $content->getContentTree(FALSE,TRUE);
+              echo  $content->getContentTree(FALSE,FALSE);
            
                 ?>
                 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>

@@ -105,7 +105,7 @@ var_dump($selectedproducts);
                                                 
                                      echo    $content = '<div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
-                                <h4><a href="#" class="adaptationListingLink">' .  $product->getTitle().'
+                                <h4><a href="#" onclick= javascript:moduleselect() class="adaptationListingLink">' .  $product->getTitle().'
                    
                                   </a></h4>
                                 <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
@@ -188,6 +188,9 @@ var_dump($selectedproducts);
                 <div class="pageBreadCrumb">
                     
                 </div>
+                    
+                    
+                    <div class ="Root">
                 
                 <div class="headingHolder">
                 	<div class="heading2"><h2>Communication Ethics</h2></div>
@@ -236,7 +239,7 @@ var_dump($selectedproducts);
 					</ul>
                 </div>
             </div>
-            
+                </div>
             
             <div class="rightColumnDivWide rightColumnPadding">
               <div class="frame">
@@ -291,3 +294,24 @@ var_dump($selectedproducts);
     </div>
 </body>
 </html>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
+  <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
+<script  >
+   
+
+function moduleselect(){
+    //$('.root').hide();
+    
+    $('.Root').load('index.php?module=unesco_oer&action=loadmodule$id= ' ))
+    
+
+  
+        
+       
+       
+        
+        
+       
+}
+</script>

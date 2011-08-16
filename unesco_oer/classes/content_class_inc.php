@@ -263,11 +263,11 @@ class content extends object
         return !empty($this->_contents);
     }
 
-    function getTreeNodes($editable = FALSE, $productID = NULL, $highlighted = FALSE) {
+    function getTreeNodes($editable = FALSE, $selectedID = NULL, $highlighted = FALSE, $productID = NULL) {
 
         $this->loadClass('treenode', 'tree');
         
-        $test = implode(',',$productID);
+        $test = implode(',',$selectedID);
 
         $icon = 'icon-product-closed-folder.png';
         $expandedIcon = 'icon-product-opened-folder.png';
@@ -296,18 +296,19 @@ class content extends object
                             $node = new treenode(array(
                                                         'text' => $this->getTitle() . $hiddenInput->show(),
                                                    //     'cssClass' => ($highlighted ? 'HL' : ''),                                                       
-                                                        'link' => 'javascript:void()', 
+                                                         'link' => ($highlighted ? "javascript:void()" : $this->getViewLink($productID)),
                                                         'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
                                                         'expanded' => FALSE),
-                                                    array(
-                                                        'onclick' => "javascript: highlight('{$this->getID()}','$test' );",
+                                                    array( 
+                                                        'onclick' => ($highlighted ? "javascript: highlight('{$this->getID()}','$test' );" : ''),
+                                                        
                                                     ));
                        
                       }
 
         foreach ($this->_contents as $content){ 
-            $node->addItem($content->getTreeNodes($editable, $productID,$highlighted));
+            $node->addItem($content->getTreeNodes($editable, $selectedID,$highlighted,$productID));
         }
 
         if ($editable){
