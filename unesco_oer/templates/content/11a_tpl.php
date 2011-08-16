@@ -63,7 +63,14 @@ $this->loadClass('textinput', 'htmlelements');
                              echo $groupadaptationLink->show();
                              ?></a></li>
                      <li><a href="#">DISCUSSIONS (1)</a></li>
-                     <li><a href="#">INSTITUTIONS (1)</a></li>
+                     <li><a href="#">
+                              <?php
+                             $InstitutionLink=new link($this->uri(array("action" =>'11d','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_instutions=$this->objDbGroups->getNoOfInstitutions($this->getParam('id'));
+                             $InstitutionLink->link="INSTITUTIONS(".$No_Of_instutions.")";
+                             echo $InstitutionLink->show();
+                             ?>
+                             </a></li>
 
                 </ul>
                 </div>

@@ -435,6 +435,13 @@ class dbgroups extends dbtable {
        return  $arrayInstitutions;
   }
 
+  function getNoOfInstitutions($id){
+      $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
+      $institutions=$this->getArray($sql);
+      return count($institutions);
+  }
+
+
     
      
     

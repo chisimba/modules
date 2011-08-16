@@ -46,14 +46,22 @@
                              ?>       </a></li>
                      <li class="onState"><a href="#">
                              <?php
-                             $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'))));
+                             $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_adaptation=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
                              $groupadaptationLink->link=" ADAPTATIONS(".$No_Of_adaptation.")";
                              echo $groupadaptationLink->show();
                              ?>
                          </a></li>
                      <li><a href="#">DISCUSSIONS (1)</a></li>
-                     <li><a href="#">INSTITUTIONS (1)</a></li>
+                     <li><a href="#">
+                                <?php
+                             $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_adaptation=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
+                             $groupadaptationLink->link=" ADAPTATIONS(".$No_Of_adaptation.")";
+                             echo $groupadaptationLink->show();
+                             ?>
+
+                             INSTITUTIONS (1)</a></li>
 
                 </ul>
                 </div>

@@ -183,6 +183,29 @@ public function groupAdaptation($groupid){
         }
 }
 
+public function groupInstitution($group){
+
+     $content.='
+         <div class="tenPixelPaddingLeft">
+                <div class="topGroupDiv">
+                	<div class="paddingContentTopLeftRightBottom">
+                        <div class="discussionList">'.$group['thumbnails'].' alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
+                            <div class="textNextToGroupIcon">
+                                <h2>
+                                '.$group['name'].'Politechnic of Namibia</h2>
+
+                                <a href="#" class="bookmarkLinks">English</a> | <a href="#" class="bookmarkLinks">German</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br><br><br>
+                ';
+
+
+}
+
 
 
 

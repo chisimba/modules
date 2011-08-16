@@ -100,69 +100,69 @@ echo $this->objGroupUtil->groupPerPage();
                 </div>
 
 
-                   <?php
-    $this->loadClass('htmlheading', 'htmlelements');
-    $this->loadClass('link', 'htmlelements');
-    $objIcon = $this->newObject('geticon', 'htmlelements');
-    $this->objLanguagecode=$this->getObject('languagecode', 'language');
-    $objTable = $this->getObject('htmltable', 'htmlelements');
-    $objTable->width = '90%';
-     $objTable->border = '0';
-    $objTable->cellspacing = '0';
-     $objTable->cellpadding = '0';
-
-    echo '<div id="institutionheading">';
-            '<br><br />';
-
-    echo '</div>';
-
-
-
-    $Institution = $this->objDbGroups->getAllGroups();
-    if (count($Institution) > 0) {
-        $newRow = true;
-        $count = 0;
-      
-        foreach ($Institution as $Institutions) {
-            $count=$count+1;
-            $institutionLink = new link($this->uri(array("action" => '11a','id' =>$Institutions['id'])));
-           // $institutionLink->cssClass = 'darkGreyColour';
-            $institutionLink->link = '<img align="top"  width="50" height="50" src="' .$Institutions['thumbnail']. '" />';
-            $content.='
-            <div id="institutions"> ' . $institutionLink->show(). '
-          ' .$Institutions['name'] . ' |' .$Institutions['email'] . '          <a class="greyListingHeading">' . $Institutions['website'] . '</a> |
-          <a class="greyListingHeading">' . $this->objLanguagecode->getName($Institutions['country']). '</a> |
-          <a class="greyListingHeading">' . $Institutions['city'] . '</a>
-
-<br/>
-           </div> ';
-            if ($newRow) {
-                $objTable->startRow();
-                $objTable->addCell($content);
-                 $newRow = false;
-                   } else {
-                        $objTable->addCell($content);
-                    }
-                    if ($count ==2 ) {
-                       $newRow = true;
-                        $objTable->endRow();
-                        $count = 0;
-                    }
-
-        }
-    }
-
-
-   $fieldset1 = $this->newObject('fieldset', 'htmlelements');
-    $institutionsFsLegend = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
-    $fieldset1->setLegend();
-    $fieldset1->addContent($objTable->show());
-    echo $fieldset1->show();
-
-    $aabLink =  new link($this->uri(array("action" =>'groupList',"page"=>'10a_tpl.php')));
-    $aabLink->link = 'LIST';
-    echo $aabLink->show();
-
+                   //<?php
+//    $this->loadClass('htmlheading', 'htmlelements');
+//    $this->loadClass('link', 'htmlelements');
+//    $objIcon = $this->newObject('geticon', 'htmlelements');
+//    $this->objLanguagecode=$this->getObject('languagecode', 'language');
+//    $objTable = $this->getObject('htmltable', 'htmlelements');
+////    $objTable->width = '90%';
+////     $objTable->border = '0';
+////    $objTable->cellspacing = '0';
+////     $objTable->cellpadding = '0';
+//
+//    echo '<div id="institutionheading">';
+//            '<br><br />';
+//
+//    echo '</div>';
+//
+//
+//
+//    $Institution = $this->objDbGroups->getAllGroups();
+//    if (count($Institution) > 0) {
+//        $newRow = true;
+//        $count = 0;
+//
+//        foreach ($Institution as $Institutions) {
+//            $count=$count+1;
+//            $institutionLink = new link($this->uri(array("action" => '11a','id' =>$Institutions['id'])));
+//            $institutionLink->cssClass = 'darkGreyColour';
+//            $institutionLink->link = '<img align="top"  width="25" height="25" src="' .$Institutions['thumbnail']. '" />';
+//            $content.='
+//            <div id="institutions"> ' . $institutionLink->show(). '
+//          ' .$Institutions['name'] . ' |' .$Institutions['email'] . '          <a class="greyListingHeading">' . $Institutions['website'] . '</a> |
+//          <a class="greyListingHeading">' . $this->objLanguagecode->getName($Institutions['country']). '</a> |
+//          <a class="greyListingHeading">' . $Institutions['city'] . '</a>
+//
+//<br/>
+//           </div> ';
+//            if ($newRow) {
+//                $objTable->startRow();
+//                $objTable->addCell($content);
+//                 $newRow = false;
+//                   } else {
+//                        $objTable->addCell($content);
+//                    }
+//                    if ($count ==2 ) {
+//                       $newRow = true;
+//                        $objTable->endRow();
+//                        $count = 0;
+//                    }
+//
+//        }
+//    }
+//
+//
+//   $fieldset1 = $this->newObject('fieldset', 'htmlelements');
+//    $institutionsFsLegend = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
+//    $fieldset1->setLegend();
+//    $fieldset1->addContent($objTable->show());
+//    echo $fieldset1->show();
+//
+//    $aabLink =  new link($this->uri(array("action" =>'groupList',"page"=>'10a_tpl.php')));
+//    $aabLink->link = 'LIST';
+//    echo $aabLink->show();
+//
 
 
     ?>
@@ -175,29 +175,29 @@ echo $this->objGroupUtil->groupPerPage();
 
 
                 <?php
-//                $objTable = $this->getObject('htmltable', 'htmlelements');
-//                $objTable->cssClass = "gridListingTable";
-//                $objTable->width = NULL;
-//
-//                $groups = $this->objDbGroups->getAllGroups();
-//                $newRow = true;
-//                $count = 0;
-//                foreach ($groups as $group) {
-//                    $count++;
-//                    if ($newRow) {
-//                        $objTable->startRow();
-//                        $objTable->addCell($this->objGroupUtil->content($group));
-//                        $newRow = false;
-//                   } else {
-//                        $objTable->addCell($this->objGroupUtil->content($group));
-//                    }
-//                    if ($count == 3) {
-//                       $newRow = true;
-//                        $objTable->endRow();
-//                        $count = 0;
-//                    }
-//                }
-//                echo $objTable->show();
+                $objTable = $this->getObject('htmltable', 'htmlelements');
+                $objTable->cssClass = "gridListingTable";
+                $objTable->width = NULL;
+
+                $groups = $this->objDbGroups->getAllGroups();
+                $newRow = true;
+                $count = 0;
+                foreach ($groups as $group) {
+                    $count++;
+                    if ($newRow) {
+                        $objTable->startRow();
+                        $objTable->addCell($this->objGroupUtil->content($group));
+                        $newRow = false;
+                   } else {
+                        $objTable->addCell($this->objGroupUtil->content($group));
+                    }
+                    if ($count == 3) {
+                       $newRow = true;
+                        $objTable->endRow();
+                        $count = 0;
+                    }
+                }
+                echo $objTable->show();
                 ?>
 
             </div>
