@@ -299,7 +299,7 @@ class content extends object
                                                         'expandedIcon' => $expandedIcon,
                                                         'expanded' => FALSE),
                                                     array(
-                                                        'onclick' => "javascript: highlight('{$this->getID()}');",
+                                                        'onclick' => "javascript: highlight('{$this->getID()}','$productID' );",
                                                     ));
                        
                       }

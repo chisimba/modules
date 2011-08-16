@@ -188,6 +188,17 @@ class unesco_oer extends controller {
 
         return "6a_tpl.php";
     }
+    
+      public function __CompareSelected() {
+
+        $moduleid = $this->getParam("id");
+         $productid = $this->getParam("productid");
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $this->setVarByRef('moduleid', $moduleid);
+         $this->setVarByRef('productid', $productid);
+
+        return "6b_tpl.php";
+    }
 
     public function __Bookmarks() {
         return "Bookmarks_tpl.php";

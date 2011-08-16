@@ -153,7 +153,7 @@
          </div>
       <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
               <script>
-                  function highlight(id)
+                  function highlight(id,productid)
                   {
 //                      $('#' + id).parent().css('background-color', 'red');  
                         //$('#' + id).parent().toggleClass('highlight');
@@ -162,7 +162,8 @@
                         $('.highlight').toggleClass('highlight');
                         $('.' + hiddenclass).parent().toggleClass('highlight');
                         
-                        $('#compare').attr('href',hiddenclass);
+                        var link = '/unesco_oer/index.php?module=unesco_oer&action=CompareSelected&id=' + hiddenclass + '&productid=' + productid;
+                        $('#compare').attr('href',link);
                   }
                   
                   
