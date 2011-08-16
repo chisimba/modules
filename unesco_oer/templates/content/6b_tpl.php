@@ -74,7 +74,13 @@ $product->loadProduct($productid);
            <div class="greyHorizontalLine"></div>
             <div class="slide fiftenPixelPaddingLeft">
 						<div class="Arrows"><a href="#"><img src="images/large-icon-backwards.png" width="36" height="36"></a></div>
-		  				<div class="slideBoxProduct">
+		  				
+                                                
+                                                
+                                                
+<!--                                                
+                                                
+                                                <div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
                                 <h4 class="blueText">Model Curricula for Journalism</h4>
                                 <img src="images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
@@ -82,8 +88,48 @@ $product->loadProduct($productid);
                             	<a href="#" class="productsLink">Full view of product</a>
                             	</div>
 						</div>
-						
-						
+						-->
+                                                
+                                                
+                                                <?php
+                                                
+                                            echo    $content = '<div class="slideBoxAdaptation">
+							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
+                                <h4><a href="#" class="adaptationListingLink">' .  $product->getTitle().'
+                   
+                                  </a></h4>
+                                <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+						</div> ';
+                                                
+                                                
+                                                
+                                                
+                                                $content= '';
+                                                
+                                                 $products = $this->objDbProducts->getadapted($productid);
+                                                     foreach ($products as $product){
+                                                         
+                                                        $content .= '<div class="slideBoxProduct">
+							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
+                             <h4 class="blueText">' .$product['title'] . '
+                             
+                                </h4>
+                             <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation using this product</a></div>
+						</div> ' ;
+                                                         
+                                       
+                                                     }
+                                                echo $content;
+                                                
+                                                
+                                                ?>
+                                                
+                                                
+                                                
+                                                
+<!--						
 						<div class="slideBoxAdaptation">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
                                 <h4><a href="#" class="adaptationListingLink">Model Curricula for Journalism</a></h4>
@@ -97,12 +143,12 @@ $product->loadProduct($productid);
                              <h4 class="blueText">Model Curricula for Journalism</h4>
                              <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation using this product</a></div>
-						</div>
+						</div>-->
                         
-                        <div class="slideBoxProduct">
+<!--                        <div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
                           <h4 class="blueText">Model Curricula for Journalism</h4><br>
-						</div>
+						</div>-->
 												
 			    <div class="Arrows rightArrowPadding"><a href="#"><img src="images/large-icon-forwards.png" width="36" height="36"></a></div>
 				  </div>
