@@ -59,7 +59,10 @@
                     <div class="compareToolsTextDiv">
                     <div class="leftFloat">Select/unselect item(s) from the list below or use the search to find section (courses):</div>
                     <div class="compareSearchBoxHolder"><input type="text" value="Ethics" class="compareSearchBox"></div>
-                    <a href="#"><img src="images/icon-search.png" width="18" height="18"></a>                   
+                    <a href="#"><img src="images/icon-search.png" width="18" height="18"></a>   
+                    
+                    
+                      <a id="compare" href="#"  >     <img src="images/icon-search.png" width="18" height="18"></a>   
             	</div>
             </div>
             
@@ -74,50 +77,31 @@
                             	</div>
                             
                                 <div class="treeFrame">
-                                  <ul class="ulMinusPublish">
-                            <li><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="ulPlusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                        </ul>
-                        <ul class="ulMinusPublish">
-                            <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                            	<ul class="ulDocument">
-                                	<li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                    <ul class="ulMinusPublish">
-                                        <li class="grey"><a href="">Foundation of Journalism: Writing</a>
-                                        	<ul class="ulDocument">
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                                <li class="grey"><a href="">Foundation of Journalism: Writing</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </ul>
-                            </li>
-                        </ul>
+                              
+                                      <?php
+                                
+                                $product = $this->getObject('product', 'unesco_oer');
+                                 
+                                
+                                $product->loadProduct($selectedproducts[0]);
+                                $temp = $product->getParentID();
+                                //echo $temp;
+                                $product->LoadProduct($temp);
+                                        $content = $product->getContentManager();
+                                        
+                                echo     $content->getContentTree(FALSE,FALSE);
+                                
+                                
+                                ?>
+                                    
+                                    
+                                    
                                 </div>
                                 
                                 <?php
-                              $product = $this->getObject('product', 'unesco_oer');
+                                $product = $this->getObject('product', 'unesco_oer');
                                 foreach ($selectedproducts as $selectedproduct){
+//                                    $product = $this->newObject('product', 'unesco_oer');
                                   
                                     $product->loadProduct($selectedproduct);
                                     
@@ -167,8 +151,39 @@
             
           </div>
          </div>
-      
-        
+      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
+              <script>
+                  function highlight(id)
+                  {
+//                      $('#' + id).parent().css('background-color', 'red');  
+                        //$('#' + id).parent().toggleClass('highlight');
+                        
+                        var hiddenclass = $('#' + id).attr('class');
+                        $('.highlight').toggleClass('highlight');
+                        $('.' + hiddenclass).parent().toggleClass('highlight');
+                        
+                        $('#compare').attr('href',hiddenclass);
+                  }
+                  
+                  
+                  function compare(){
+                      
+                     //var ourArray = new Array();
+                      $('.highlight').each(function() {
+                            $(this).each(function(){ alert($(this).attr('tag'));});
+                        });
+
+                      //alert(ourArray[0]);
+                      
+                      
+                      
+                  }
+                  
+                  
+              </script>
+      <style>
+      .highlight { background:yellow; }
+      </style>
        
 </body>
 </html>

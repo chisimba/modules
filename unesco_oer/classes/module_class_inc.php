@@ -375,6 +375,7 @@ class module extends content {
         $this->_id = $dataArray['id'];
         $this->_title = $dataArray['title'];
         $this->_parentID = $dataArray['year_id'];
+        $this->_originalID = $dataArray['parentid'];
 
         $this->_metaDataArray = $dataArray;
 

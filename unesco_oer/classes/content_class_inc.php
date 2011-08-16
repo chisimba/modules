@@ -65,9 +65,11 @@ class content extends object
      * @var array 
      */
     protected  $_contents;
+    
+    
+    protected $_originalID;
 
-
-    /**
+        /**
      * * Method to display input
      *
      * @access   public
@@ -267,6 +269,14 @@ class content extends object
 
         $icon = 'icon-product-closed-folder.png';
         $expandedIcon = 'icon-product-opened-folder.png';
+        
+        $hiddenInput = new hiddeninput($this->getID()."[]");
+        if ($highlighted){
+        $hiddenInput->extra = "id='{$this->getID()}' class='$this->_originalID'";
+            
+        }
+        else
+        $hiddenInput->extra = "id='{$this->getID()}' class='{$this->getID()}'";
 
         // Makes tree a link if not editing when adding product metadata
         if ($editable){
@@ -282,13 +292,15 @@ class content extends object
                       }
                       else{
                             $node = new treenode(array(
-                                                        'text' => $this->getTitle(),
-                                                        'cssClass' => ($highlighted ? 'HL' : ''),
-                                                        'link' => $this->getViewLink($productID), 
+                                                        'text' => $this->getTitle() . $hiddenInput->show(),
+                                                   //     'cssClass' => ($highlighted ? 'HL' : ''),                                                       
+                                                        'link' => 'javascript:void()', 
                                                         'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
-                                                        'expanded' => FALSE)
-                                                     );
+                                                        'expanded' => FALSE),
+                                                    array(
+                                                        'onclick' => "javascript: highlight('{$this->getID()}');",
+                                                    ));
                        
                       }
 
@@ -300,6 +312,7 @@ class content extends object
             foreach ($this->_content_types as $class => $description) {
                 $node->addItem(new treenode(array(
                                                 'text' => $description,
+                                                 
                                                 'link' => "#", 'icon' => 'icon-new-product.png',
                                                 'expandedIcon' => $expandedIcon,
                                                 'expanded' => FALSE),

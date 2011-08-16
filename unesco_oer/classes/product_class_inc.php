@@ -1650,7 +1650,7 @@ class product extends object
 
    function getContentManager()
    {
-       if (!$this->_contentManager->hasContents()){
+       //if (!$this->_contentManager->hasContents()){
            $this->_contentManager = $this->newObject('contentmanager');
 //           $this->_contentManager->setProductID($this->getIdentifier());
 //           $this->_contentManager->setValidTypes( //TODO this line should be inside a database or some managing class
@@ -1664,7 +1664,7 @@ class product extends object
                             );
 
            $this->_contentManager->loadContents($this->getIdentifier(), $validTypes);
-       }
+      // }
        return $this->_contentManager;
    }
 
