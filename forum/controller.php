@@ -196,7 +196,9 @@ class forum extends controller {
             case 'singlethreadview':
             case 'flatview':
             case 'viewtranslation':
+            /*
             case 'downloadattachment':
+            */
             case 'searchforum':
             case 'viewtopicmindmap':
             case 'generatetopicmindmap':
@@ -312,8 +314,10 @@ class forum extends controller {
             case 'changetopicstatus':
                 return $this->changeTopicStatus();
 
+            /*
             case 'downloadattachment':
                 return $this->downloadAttachment($this->getParam('id'), $this->getParam('topic'));
+            */
 
             case 'savepostratings':
                 return $this->savePostRatings();
