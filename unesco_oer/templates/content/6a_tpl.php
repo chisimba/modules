@@ -108,7 +108,7 @@
                                   
                                     $content = $product->getContentManager();
                                     
-                                    $contentHTML = $content->getContentTree(FALSE,TRUE);
+                                    $contentHTML = $content->getContentTree(FALSE,TRUE,$selectedproducts);
                                     
                                
                                       

@@ -266,6 +266,8 @@ class content extends object
     function getTreeNodes($editable = FALSE, $productID = NULL, $highlighted = FALSE) {
 
         $this->loadClass('treenode', 'tree');
+        
+        $test = implode(',',$productID);
 
         $icon = 'icon-product-closed-folder.png';
         $expandedIcon = 'icon-product-opened-folder.png';
@@ -299,7 +301,7 @@ class content extends object
                                                         'expandedIcon' => $expandedIcon,
                                                         'expanded' => FALSE),
                                                     array(
-                                                        'onclick' => "javascript: highlight('{$this->getID()}','$productID' );",
+                                                        'onclick' => "javascript: highlight('{$this->getID()}','$test' );",
                                                     ));
                        
                       }

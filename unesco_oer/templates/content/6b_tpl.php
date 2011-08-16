@@ -2,17 +2,21 @@
 
 var_dump($productid);
 
-$product = $this->getObject('product', 'unesco_oer');
+$selectedproducts = explode(',',$productid);
 
-$product->loadProduct($productid);
+var_dump($selectedproducts);
 
-if ($product->getParentID() != NUll){
-    $productid = $product->getParentID();
-    
-}
-
-$product->loadProduct($productid);
-
+//$product = $this->getObject('product', 'unesco_oer');
+//
+//$product->loadProduct($productid);
+//
+//if ($product->getParentID() != NUll){
+//    $productid = $product->getParentID();
+//    
+//}
+//
+//$product->loadProduct($productid);
+//
 
 ?>
 
@@ -49,8 +53,8 @@ $product->loadProduct($productid);
             <div class="rightTopContentAndLinks">
                    	  <h2 class="blueText">
                               <?php
-                              echo $product->getTitle();
-                              echo $product->getParentID();
+                           //   echo $product->getTitle();
+                         //     echo $product->getParentID();
                               
                               ?>
                               
@@ -93,7 +97,13 @@ $product->loadProduct($productid);
                                                 
                                                 <?php
                                                 
-                                            echo    $content = '<div class="slideBoxAdaptation">
+                                                
+                                        $product = $this->getObject('product', 'unesco_oer');
+                                         $product->loadProduct($selectedproducts[0]);
+                                         $origionalproduct = $product->getParentID();
+                                         $product->LoadProduct($origionalproduct);
+                                                
+                                     echo    $content = '<div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
                                 <h4><a href="#" class="adaptationListingLink">' .  $product->getTitle().'
                    
@@ -102,27 +112,44 @@ $product->loadProduct($productid);
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
 						</div> ';
                                                 
-                                                
-                                                
-                                                
-                                                $content= '';
-                                                
-                                                 $products = $this->objDbProducts->getadapted($productid);
-                                                     foreach ($products as $product){
-                                                         
-                                                        $content .= '<div class="slideBoxProduct">
+//                                                
+//                                                
+//                                                
+//                                                $content= '';
+//                                                
+//                                                 $products = $this->objDbProducts->getadapted($productid);
+//                                                     foreach ($products as $product){
+//                                                         
+//                                                        $content .= '<div class="slideBoxAdaptation">
+//							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
+//                             <h4 class="blueText">' .$product['title'] . '
+//                             
+//                                </h4>
+//                             <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+//                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation using this product</a></div>
+//						</div> ' ;
+//                                                         
+//                                       
+//                                                     }
+//                                                echo $content;
+//                                                
+                                   $content = '';           
+//                                                
+                              $product = $this->getObject('product', 'unesco_oer');
+                                foreach ($selectedproducts as $selectedproduct){                    
+                                  
+                                    $product->loadProduct($selectedproduct);
+                                    
+                                  
+                                   $content .= '<div class="slideBoxAdaptation">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
-                             <h4 class="blueText">' .$product['title'] . '
-                             
-                                </h4>
-                             <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation using this product</a></div>
-						</div> ' ;
-                                                         
-                                       
-                                                     }
-                                                echo $content;
-                                                
+                            <h4 class="blueText">' .$product->getTitle() . '
+                            
+                               </h4>
+                            <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                               <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation using this product</a></div>						</div> ' ;
+                                                    }
+                                               echo $content;      
                                                 
                                                 ?>
                                                 
