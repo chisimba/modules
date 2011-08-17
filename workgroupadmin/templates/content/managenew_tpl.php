@@ -30,8 +30,8 @@ $objSelectBox->objLeftList->extra = ' multiple="1" size="10" style="width:20em;"
 $objSelectBox->objRightList->extra = ' multiple="1" size="10" style="width:20em;" ';
 
 // Populate the selectboxes
-$objSelectBox->insertLeftOptions( $users, 'userid', 'fullname' );
-$objSelectBox->insertRightOptions( $members, 'userid', 'fullname' );
+$objSelectBox->insertLeftOptions( $users, 'userid', 'display' );
+$objSelectBox->insertRightOptions( $members, 'userid', 'display' );
 
 // Insert the selectbox into the form object.
 $objForm->addToForm( $objSelectBox->show() );

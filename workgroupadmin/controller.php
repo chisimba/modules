@@ -122,6 +122,9 @@ class workgroupadmin extends controller
 				$workgroup = $workgroups[0];
 				$this->setVarByRef("workgroup", $workgroup);
 				$members = $this->objDbWorkgroupUsers->listAll($workgroup['id']);
+                                foreach ($members as &$line){
+                                    $line['display']=$line['fullname'].' ('.$line['userid'].')';
+                                }
 				$this->setVarByRef("members", $members);
                 //if ($isAlumni) {
                 //    $objUsers = $this->getObject('dbusers','workgroup');
@@ -164,7 +167,10 @@ class workgroupadmin extends controller
                         $users[$_user['fullname']] = $_user;
                     }
                 }
-			    ksort($users);
+                ksort($users);
+                foreach ($users as &$line){
+                    $line['display']=$line['fullname'].' ('.$line['userid'].')';
+                }
                 $this->setVarByRef("users", $users);
                 //}
 				$this->setVar('pageSuppressXML',true);
