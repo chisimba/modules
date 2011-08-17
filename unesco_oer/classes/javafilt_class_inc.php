@@ -28,6 +28,8 @@ class javafilt extends object {
         $this->objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
         $this->objDbInstitution = $this->getObject('dbinstitution', 'unesco_oer');
     }
+    
+   
 
     public function displayprods() {
 

@@ -87,7 +87,7 @@
                                 $temp = $product->getParentID();
                        
                                 $product->LoadProduct($temp);
-                                        $content = $product->getContentManager();
+                                 $content = $product->getContentManager();
                                    
                                   
                                 echo     $content->getContentTree(FALSE,TRUE,False,$selectedproducts);
@@ -105,8 +105,7 @@
 //                                    $product = $this->newObject('product', 'unesco_oer');
                                   
                                     $product->loadProduct($selectedproduct);
-                                    
-                                  
+                      
                                     $content = $product->getContentManager();
                                     
                                     $contentHTML = $content->getContentTree(FALSE,TRUE, TRUE,$selectedproducts);
@@ -163,7 +162,7 @@
                         $('.highlight').toggleClass('highlight');
                         $('.' + hiddenclass).parent().toggleClass('highlight');
                         
-                        var link = '/unesco_oer/index.php?module=unesco_oer&action=CompareSelected&id=' + hiddenclass + '&productid=' + productid;
+                        var link = '/unesco_oer/index.php?module=unesco_oer&action=CompareSelected&id=' + id + '&productid=' + productid;
                         $('#compare').attr('href',link);
                   }
                   

@@ -41,10 +41,25 @@ class dbmodules extends dbtable {
     function getModuleByID($id){
         return $this->getRow('id', $id);
     }
-
+    
+    
     function getModulesByYearID($id) {;
         $where = "where year_id='$id'";
         return $this->getModules($where);
+    }
+    
+     function getmoduleparent($id)
+    {
+        $sql = "select * from tbl_unesco_oer_modules where id = '$id'";
+
+        return $this->getArray($sql);
+    }
+    
+    function getmodulebyparent($id)
+    {
+        $sql = "select * from tbl_unesco_oer_modules where parentid = '$id'";
+
+        return $this->getArray($sql);
     }
 }
 ?>

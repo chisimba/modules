@@ -31,6 +31,7 @@ class curriculum extends content {
     private $_forward;
     private $_background;
     private $_introductory_description;
+    
 
 
     public function showInput($productID, $prevAction = NULL) {
@@ -217,6 +218,7 @@ class curriculum extends content {
         $this->_forward = $this->getParam('forward');
         $this->_introductory_description = $this->getParam('introductory_description');
         $this->_title = $this->getParam('title');
+    
 
         if (empty($this->_id)) {
             $this->saveNew();
@@ -233,7 +235,9 @@ class curriculum extends content {
                     $this->_title,
                     $this->_forward,
                     $this->_background,
-                    $this->_introductory_description
+                    $this->_introductory_description,
+                    $this->_id
+       
                     );
     }
 
@@ -276,7 +280,8 @@ class curriculum extends content {
         $this->_introductory_description = $dataArray['introductory_description'];
         $this->_id = $dataArray['id'];
         $this->_title = $dataArray['title'];
-        $this->_parentID = $dataArray['product_id'];
+        $this->_parentID = $dataArray['id'];
+         $this->_originalID = $dataArray['parentid'];
 
         //TODO add code for this curriculum's contents
         $this->getContents();

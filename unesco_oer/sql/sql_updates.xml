@@ -110,6 +110,19 @@
             </add>
         </data>
     </update>
+     <update>
+        <table>tbl_unesco_oer_curriculum</table>
+        <version>0.072</version>
+        <description>Added a parentid field</description>
+        <data>
+            <add>
+                <name>parentid</name>
+                <type>text</type>
+                <length>32</length>
+                <default>NULL</default>
+            </add>
+        </data>
+    </update>
 </updates>
 
 

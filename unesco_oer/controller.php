@@ -34,6 +34,7 @@ class unesco_oer extends controller {
     public $objConfig;
     public $objGroupUtil;
     public $objDbgroupInstitutions;
+      public $objDbmodules;
     /**
      * @var object $objLanguage Language Object
      */
@@ -89,6 +90,7 @@ class unesco_oer extends controller {
         $this->ObjDbUserGroups = $this->getObject('dbusergroups');
         $this->objGroupUtil = $this->getObject('grouputil');
         $this->objDbgroupInstitutions = $this->getObject('dbgroupinstitutions');
+        $this->objDbmodules = $this->getObject('dbmodules');
 
 
 //$this->objUtils = $this->getObject('utilities');
@@ -201,15 +203,84 @@ class unesco_oer extends controller {
     }
     
      public function __loadmodule() {
+        
          $productID = $this->getParam('id');
          $moduleID = $this->getParam('moduleid');
          $product = $this->getObject('product'); 
             $product->loadProduct($productID);
             $content = $product->getContentManager();
-            $existingContent = $content->getContentByContentID($moduleID);
-         echo  $existingContent->showReadOnlyInput();
+            
+      
+            $temp = $this->objDbmodules->getmoduleparent($moduleID);
+           $parentid =  $temp[0]['parentid'];
+           
+        if  ($parentid != 'NULL'){                                              //check if origional product was selected         
+           
+                $modules = $this->objDbmodules->getmodulebyparent($parentid);
+                
+              
+           }else{
+                
+               $modules = $this->objDbmodules->getmodulebyparent($moduleID);
+                
+           } 
+               
+            
+        $check = FAlSE;
+       
+            
+        foreach ( $modules as $module){  // run through modules till matching module and product are selected
+           
+            $existingContent = $content->getContentByContentID($module['id']);
+                
+        if   ($existingContent != FALSE){
+            
+            $check = TRUE;
+            $existingContent = $content->getContentByContentID($module['id']);
+             echo  $existingContent->showReadOnlyInput();
+            
+                 }  
+
+       } 
+     
+            if   ($check == FALSE){
+                 if  ($parentid != 'NULL') // check if origional product was selected
+                 {
+                     $existingContent = $content->getContentByContentID($temp[0]['parentid']);
+                 } else 
+                 {
+                      $existingContent = $content->getContentByContentID($moduleID);
+                 }
+            echo  $existingContent->showReadOnlyInput();
+                
+                
+            }
+    
+            
+         //   var_dump($modules);
+       //  echo  $existingContent->showReadOnlyInput();
         
     
+    }
+    
+     public function __loadtree() {
+       
+         $productID = $this->getParam('id');
+         $moduleID = $this->getParam('moduleid');
+        
+        
+             $product = $this->getObject('product'); 
+         $product->loadProduct('gen14Srv26Nme38_53459_1312523588');
+         $content = $product->getContentManager(); 
+      
+        $test=  $content->getContentTree(FALSE,FALSE);
+        echo $test . "efwtwergtw";
+      
+       
+         
+         
+         
+        
     }
 
     public function __Bookmarks() {

@@ -346,7 +346,7 @@ class content extends object
     }
 
     function copyContentsToParent($newParentID){
-        $this->_id = NULL;
+        //$this->_id = NULL;
         $this->_parentID = $newParentID;
         $this->saveNew();
 
