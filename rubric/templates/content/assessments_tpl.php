@@ -65,8 +65,9 @@
 
 			$tblclass->startRow();
 	  $oddOrEven = ($oddOrEven=="even")? "odd":"even";
-   $studUsedId = $this->objUser->getUserId($assessment['studentno']);
-   if(!empty($studUsedId)){
+   //$studUsedId = $this->objUser->getUserId($assessment['studentno']);
+    /*
+      if(!empty($studUsedId)){
 			 $option = "<a href=\"" .
 			 $this->uri(array(
 			  	'module'=>'rubric',
@@ -75,14 +76,17 @@
 		  		'id'=>$assessment['id']
 				))."\">".$studUsedId."</a>";
 			}	else {
-			 $option = "<a href=\"" .
-			 $this->uri(array(
-			  	'module'=>'rubric',
-				  'action'=>'viewassessment',
-  				'tableId'=>$tableId,
-		  		'id'=>$assessment['id']
-				))."\">".$assessment['studentno']."</a>";
+    */
+    $option = "<a href=\"" .
+        $this->uri(array(
+            'module'=>'rubric',
+            'action'=>'viewassessment',
+            'tableId'=>$tableId,
+            'id'=>$assessment['id']
+    ))."\">".$assessment['studentno']."</a>";
+    /*
 			}
+    */
    $tblclass->addCell($option, "null", "top", "left", $oddOrEven, null);
 
 			if ($showStudentNames == "yes"){

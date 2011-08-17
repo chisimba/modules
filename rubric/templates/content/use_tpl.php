@@ -61,14 +61,18 @@
 	$students = array();
 	if (!empty($students_)) {
 	    foreach ($students_ as $student_) {
-	        $students[] = array(
+	        $students[$student_['surname'].$student_['firstname'].$student_['username']] = array(
     	    'display'=>
         	    /*$student_['title']
-        	    .'&nbsp;'.*/$student_['firstname']
-                .'&nbsp;'.$student_['surname'],
+        	    .'&nbsp;'.*/$student_['surname']
+                .',&nbsp;'.$student_['firstname']
+                .'&nbsp;('.$student_['username'].')',
             'username'=>$student_['username']
             );
 	    }
+	}
+	if (!empty($students)) {
+	    ksort($students);
 	}
 	$dropdown = new dropdown("studentNo");
 	$dropdown->addFromDB($students, 'display', /*'userId'*/'username', $studentNo);
