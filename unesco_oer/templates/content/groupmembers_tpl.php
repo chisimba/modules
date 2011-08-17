@@ -11,7 +11,12 @@ $this->loadClass('textinput', 'htmlelements');
             <div class="groupWideLeftColumn">
 
             	<div class="tenPixelLeftPadding tenPixelBottomPadding">
-                	<a href="#" class="groupsBreadCrumbColor">Groups</a> |
+                	<a href="#" class="groupsBreadCrumbColor">
+                                                                                     <?php
+                             $GroupLink=new link($this->uri(array("action" =>'10',"page"=>'10a_tpl.php')));
+                             $GroupLink->link="Groups";
+                             echo $GroupLink->show();
+                             ?></a> |
                 <span class="groupsBreadCrumbColor noUnderline">
                     <?php echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objDbGroups->getGroupCountry($this->getParam('id'));?>
                     </span>
