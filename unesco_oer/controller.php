@@ -1935,7 +1935,10 @@ class unesco_oer extends controller {
             return 'groupEditingForm_tpl.php';
         } else {
             $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
-            $this->objDbgroupInstitutions->add_group_institutions($id, $institutionid); // Todo store institutions Id not name
+            foreach($rightList as $array){
+                $this->objDbgroupInstitutions->add_group_institutions($id,$array);
+                   }
+            //$this->objDbgroupInstitutions->add_group_institutions($id, $institutionid); // Todo store institutions Id not name
             return $this->__groupListingForm();
         }
     }

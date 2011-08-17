@@ -342,12 +342,13 @@ foreach ($groups as $group) {
             if (strcmp($group['id'], $membership['institution_id']) != 0){
                 array_push($availablegroups, $group);
                 }
+//                        else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
+//            array_push($availablegroups, $group);
+
+        
                 }
                 }
-        else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
-            array_push($availablegroups, $group);
-            
-        }
+
     
 }
 $objSelectBox = $this->newObject('selectbox','htmlelements');

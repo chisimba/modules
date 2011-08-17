@@ -377,6 +377,7 @@ class dbgroups extends dbtable {
         $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE group_id = '$groupid'";
         return $this->getArray($sql);
     }
+
 // To get adapted group adapted product thumbnail
     function getAdaptedProductThumbnail($productid){
         $sql="SELECT * FROM tbl_unesco_oer_products WHERE id='$productid'";
@@ -434,6 +435,18 @@ class dbgroups extends dbtable {
        }
        return  $arrayInstitutions;
   }
+function getInstitutionThumbnail($institutionid){
+    $sql="SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$institutionid'";
+    $institutionarray=$this->getArray($sql);
+    return $institutionarray[0]['thumbnail'];
+    }
+
+ function getInstitutionName($institutionid){
+     $sql="SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$institutionid'";
+     $institutionarray=$this->getArray($sql);
+     return $institutionarray[0]['name'];
+    }
+
 
   function getNoOfInstitutions($id){
       $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";

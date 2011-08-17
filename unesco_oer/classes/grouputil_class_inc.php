@@ -164,9 +164,12 @@ public function groupMembers($groupid){
 }
 
 public function groupAdaptation($groupid){
-    $array=$this->objDbGroups->getGroupProductadaptation($groupid);
-   
-        $productID=$array[0]['product_id'];
+
+    $content='';
+    $arrays=$this->objDbGroups->getGroupProductadaptation($groupid);
+    if(count($arrays)>0){
+        foreach($arrays as $array){
+        $productID=$array['product_id'];
         $Thumbnail=$this->objDbGroups->getAdaptedProductThumbnail($productID);
         $Title=$this->objDbGroups->getAdaptedProductTitle($productID);
 
@@ -179,29 +182,37 @@ public function groupAdaptation($groupid){
                              Adapted in : <a href="#" class="bookmarkLinks"></a>
                             </div>
                         </div>';
-    return $content;
+    }
+    echo $content;
+    }
         
 }
 
 public function groupInstitution($groupid){
+   $content='';
+   $arrayInstitutionId=$this->objDbGroups->getInstitutions($groupid);
+      foreach($arrayInstitutionId as $institutionid){
+        $institutionThumbnail=$this->objDbGroups->getInstitutionThumbnail($institutionid);
+        $institutionname=$this->objDbGroups->getInstitutionName($institutionid);
 
-     $content.='
-    
-                        <div class="discussionList">'.$group['thumbnails'].' alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
+     $content.='  <div class="discussionList"><img src="'.$institutionThumbnail.' "alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
                             <div class="textNextToGroupIcon">
                                 <h2>
-                                '.$group['name'].'Politechnic of Namibia</h2>
+                                '.$institutionname.'</h2>
 
                                 <a href="#" class="bookmarkLinks">English</a> | <a href="#" class="bookmarkLinks">German</a>
                             </div>
+                             </div>
                   
-                ';
+                ';}
+     echo $content;
 
-return $content;
+
 }
 
 
 public function topcontent($groupid){
+    
     $content.='
      <img src="'.$this->objDbGroups->getThumbnail($groupid).'" alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
         <div class="textNextToGroupIcon">
