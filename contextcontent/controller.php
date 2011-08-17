@@ -163,6 +163,10 @@ class contextcontent extends controller {
 
             case 'notincontext':
                 return 'notincontext_tpl.php';
+            case 'exportcontent':
+                $this->ex1=$this->getObject('contextexport');
+                $this->ex1->pagecrawl($this->contextCode);
+                die;
             case 'switchcontext':
                 die('Switch Context'); // Fix Up
             case 'addpage':
