@@ -149,18 +149,20 @@ class grouputil extends object {
   //return group members
 
 public function groupMembers($groupid){
-    //$NoofMembers=count($this->ObjDbUserGroups->getGroupUser($groupid));
+
     $arrays=$this->ObjDbUserGroups->getGroupUser($groupid);
+    //(<span class="greenText fontBold">Group Administrator</span>)
     foreach( $arrays as $array){
-        $firstname=$this->objUseExtra->getUserSurname($array['id']);
-        $surname=$this->objUseExtra->getUserfirstname($array['id']);
+        $firstname=$this->objUseExtra->getUserSurnameByID($array['id']);
+        $surname=$this->objUseExtra->getUserfirstnameByID($array['id']);
         $content.='         <div class="memberList">
                             <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
-                            <div class="memberIconText">'.$firstname." ".$surname.' (<span class="greenText fontBold">Group Administrator</span>)</div>
+                            <div class="memberIconText">'.$firstname." "." "." ".$surname.' </div>
 
                         </div>';
-         echo $content;
+         
          }
+         echo $content;
 }
 
 public function groupAdaptation($groupid){

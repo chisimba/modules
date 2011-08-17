@@ -13,7 +13,11 @@ $this->loadClass('textinput', 'htmlelements');
             <div class="groupWideLeftColumn">
 
             	<div class="tenPixelLeftPadding tenPixelBottomPadding">
-                	<a href="#" class="groupsBreadCrumbColor">Groups</a> |
+                	<a href="#" class="groupsBreadCrumbColor">                                                         <?php
+                             $GroupLink=new link($this->uri(array("action" =>'10',"page"=>'10a_tpl.php')));
+                             $GroupLink->link="Groups";
+                             echo $GroupLink->show();
+                             ?></a> |
                 <span class="groupsBreadCrumbColor noUnderline"> <?php echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')));?></span>
                 </div>
             	<div class="tenPixelPaddingLeft">
@@ -62,7 +66,13 @@ $this->loadClass('textinput', 'htmlelements');
                              echo $groupadaptationLink->show();
                              ?>
                          </a></li>
-                     <li><a href="#">DISCUSSIONS (1)</a></li>
+                     <li><a href="#">
+                                                                            <?php
+                             $discussionLink=new link($this->uri(array("action" =>'11b','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_discussion=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
+                             $discussionLink->link=" DISCUSSIONS(1)";// DISCUSSIONS(".$No_Of_discussion.")";
+                             echo $discussionLink->show();
+                             ?></a></li>
                      <li><a href="#">
                               <?php
                              $InstitutionLink=new link($this->uri(array("action" =>'11d','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));

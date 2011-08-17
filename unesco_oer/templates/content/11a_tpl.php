@@ -8,11 +8,15 @@ $this->loadClass('textinput', 'htmlelements');
 ?>
 <?php $this->setLayoutTemplate('maincontent_layout_tpl.php'); ?>
             <div class="subNavigation"></div>
-        	 Left column DIv 
+        
             <div class="groupWideLeftColumn">
 
             	<div class="tenPixelLeftPadding tenPixelBottomPadding">
-                	<a href="#" class="groupsBreadCrumbColor">Groups</a> |
+                	<a href="#" class="groupsBreadCrumbColor">                                                         <?php
+                             $GroupLink=new link($this->uri(array("action" =>'10',"page"=>'10a_tpl.php')));
+                             $GroupLink->link="Groups";
+                             echo $GroupLink->show();
+                             ?></a> |
                 <span class="groupsBreadCrumbColor noUnderline">
                     <?php echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objDbGroups->getGroupCountry($this->getParam('id'));?>
                     </span>
@@ -64,7 +68,13 @@ $this->loadClass('textinput', 'htmlelements');
                              $groupadaptationLink->link=" ADAPTATIONS(".$No_Of_adaptation.")";
                              echo $groupadaptationLink->show();
                              ?></a></li>
-                     <li><a href="#">DISCUSSIONS (1)</a></li>
+                     <li><a href="#">
+                                                          <?php
+                             $discussionLink=new link($this->uri(array("action" =>'11b','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_discussion=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
+                             $discussionLink->link=" DISCUSSIONS(".$No_Of_discussion.")";
+                             echo $discussionLink->show();
+                             ?></a></li>
                      <li><a href="#">
                               <?php
                              $InstitutionLink=new link($this->uri(array("action" =>'11d','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
@@ -118,7 +128,6 @@ $this->loadClass('textinput', 'htmlelements');
 
             </div>
 
-             Right column DIv 
             <div class="rightColumnDiv">
             	<div class="rightColumnDiv">
 

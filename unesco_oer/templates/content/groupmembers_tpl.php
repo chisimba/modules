@@ -60,8 +60,20 @@ $this->loadClass('textinput', 'htmlelements');
                              $groupadaptationLink->link=" ADAPTATIONS(".$No_Of_adaptation.")";
                              echo $groupadaptationLink->show();
                              ?>          </a></li>
-                     <li><a href="#">DISCUSSIONS (1)</a></li>
-                     <li><a href="#">INSTITUTIONS (1)</a></li>
+                     <li><a href="#">
+                                                                            <?php
+                             $discussionLink=new link($this->uri(array("action" =>'11b','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_discussion=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
+                             $discussionLink->link=" DISCUSSIONS(1)";// DISCUSSIONS(".$No_Of_discussion.")";
+                             echo $discussionLink->show();
+                             ?></a></li>
+                     <li><a href="#">
+                             <?php
+                             $InstitutionLink=new link($this->uri(array("action" =>'11d','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_instutions=$this->objDbGroups->getNoOfInstitutions($this->getParam('id'));
+                             $InstitutionLink->link="INSTITUTIONS(".$No_Of_instutions.")";
+                             echo $InstitutionLink->show();
+                             ?></a></li>
 
                 </ul>
                 </div>
