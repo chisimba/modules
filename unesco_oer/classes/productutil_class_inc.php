@@ -484,10 +484,11 @@ class productutil extends object {
                 </div>
                 ';
         } else {
+            $groupInfo = $adaptedProduct->getGroupInfo();
             $content .='
                 <div class="adaptedByDiv greenColor">Managed by:</div>
                 <div class="gridSmallImageAdaptation">
-                    <img src="' . NULL . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                    <img src="' . $groupInfo['thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
                     <span class="greyListingHeading">' . $adaptedProduct->getGroupName(). '</span>
                 </div>
                 <div class="gridAdaptationLinksDiv">

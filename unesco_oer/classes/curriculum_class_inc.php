@@ -82,7 +82,7 @@ class curriculum extends content {
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell('Title');
         $table->endRow();
 
         $table->startRow();
@@ -102,7 +102,7 @@ class curriculum extends content {
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell('Forward');
         $table->endRow();
 
         $table->startRow();
@@ -119,7 +119,7 @@ class curriculum extends content {
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell('Background');
         $table->endRow();
 
         $table->startRow();
@@ -136,7 +136,7 @@ class curriculum extends content {
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell('Introductory Description');
         $table->endRow();
 
         $table->startRow();
@@ -151,7 +151,7 @@ class curriculum extends content {
          
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell("status");
+        $table->addCell("Status");
         $table->endRow();
          
         $table->startRow();
@@ -161,8 +161,8 @@ class curriculum extends content {
         
         
 
-        $buttonSubmit = new button('upload', 'upload');
-           $buttonSubmit->cssId = "upload";
+        $buttonSubmit = new button('Save', 'upload');
+        $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();

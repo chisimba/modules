@@ -309,7 +309,6 @@ class content extends object
 
         foreach ($this->_contents as $content){ 
             $node->addItem($content->getTreeNodes($editable, $selectedID,$highlighted,$origional,$productID));
-            echo $content->getTitle();
         }
 
         if ($editable){
