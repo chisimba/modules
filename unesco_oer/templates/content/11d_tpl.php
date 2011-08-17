@@ -124,7 +124,8 @@ $this->loadClass('textinput', 'htmlelements');
 
             <!-- Right column DIv -->
           
-            	
+
+                                <div class="rightColumnDiv">
              
                                 <div class="rightColumnDiv">
                                     <div class="featuredHeader" >FEATURED ADAPTATION</div>
