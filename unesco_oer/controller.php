@@ -225,10 +225,7 @@ class unesco_oer extends controller {
                 
            } 
                
-            
-        $check = FAlSE;
-       
-            
+        $check = FAlSE;     
         foreach ( $modules as $module){  // run through modules till matching module and product are selected
            
             $existingContent = $content->getContentByContentID($module['id']);
@@ -265,19 +262,23 @@ class unesco_oer extends controller {
     
      public function __loadtree() {
        
+         //return 'test_tree_tpl.php';
+       $js = '<script language="JavaScript" src="' . $this->getResourceUri('TreeMenu.js','tree') . '" type="text/javascript"></script>';
+       echo $js;
          $productID = $this->getParam('id');
-         $moduleID = $this->getParam('moduleid');
         
+         echo $productID;
         
-             $product = $this->getObject('product'); 
-         $product->loadProduct('gen14Srv26Nme38_53459_1312523588');
+         $product = $this->newObject('product'); 
+         $product->loadProduct($productID);
          $content = $product->getContentManager(); 
       
-        $test=  $content->getContentTree(FALSE,FALSE);
-        echo $test . "efwtwergtw";
-      
-       
+        $test=  $content->getProductID();
+        echo $test; echo '<br />';
+        echo $content->getContentTree(FALSE,FALSE);
          
+        
+        die();
          
          
         

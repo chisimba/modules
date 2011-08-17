@@ -344,6 +344,7 @@ class module extends content {
     }
 
     protected function saveNew() {
+        $this->_id = NULL;
         $this->_metaDataArray['parentid'] = $this->_metaDataArray['id'];
         unset ($this->_metaDataArray['id']);
         unset ($this->_metaDataArray['puid']);

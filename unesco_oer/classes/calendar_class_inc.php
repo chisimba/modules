@@ -93,6 +93,7 @@ class calendar extends content
     }
 
     protected function saveNew() {
+        
         $this->_id =  $this->objDbCalendar->addCalendar(
                     $this->_title, // This is the ID of the product this curruculum is contained in.
                     $this->getParentID()

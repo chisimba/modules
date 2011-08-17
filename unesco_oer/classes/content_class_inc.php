@@ -309,6 +309,7 @@ class content extends object
 
         foreach ($this->_contents as $content){ 
             $node->addItem($content->getTreeNodes($editable, $selectedID,$highlighted,$origional,$productID));
+            echo $content->getTitle();
         }
 
         if ($editable){
@@ -346,7 +347,8 @@ class content extends object
     }
 
     function copyContentsToParent($newParentID){
-        //$this->_id = NULL;
+        $this->tempID = $this->_id;
+        $this->_id = NULL;
         $this->_parentID = $newParentID;
         $this->saveNew();
 

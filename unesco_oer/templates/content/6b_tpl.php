@@ -223,7 +223,7 @@ $product->LoadProduct($origionalproduct);
                     $content = $product->getContentManager();
                     echo $content->getContentTree(FALSE, FALSE);
                     
-              
+                echo $origionalproduct;
                     ?>
 
 
@@ -245,7 +245,7 @@ $product->LoadProduct($origionalproduct);
     function moduleselect(origionalprod,moduleid){
         //$('.root').hide();
     
-        $('.Root').load('index.php?module=unesco_oer&action=loadmodule&id=' + origionalprod + '&moduleid=' + moduleid);
+       $('.Root').load('index.php?module=unesco_oer&action=loadmodule&id=' + origionalprod + '&moduleid=' + moduleid);
        $('#tree').load('index.php?module=unesco_oer&action=loadtree&id=' + origionalprod + '&moduleid=' + moduleid);
 
   

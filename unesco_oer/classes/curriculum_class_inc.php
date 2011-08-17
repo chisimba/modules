@@ -236,7 +236,7 @@ class curriculum extends content {
                     $this->_forward,
                     $this->_background,
                     $this->_introductory_description,
-                    $this->_id
+                    $this->tempID
        
                     );
     }
@@ -280,7 +280,7 @@ class curriculum extends content {
         $this->_introductory_description = $dataArray['introductory_description'];
         $this->_id = $dataArray['id'];
         $this->_title = $dataArray['title'];
-        $this->_parentID = $dataArray['id'];
+        $this->_parentID = $dataArray['product_id'];
          $this->_originalID = $dataArray['parentid'];
 
         //TODO add code for this curriculum's contents
