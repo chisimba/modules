@@ -20,12 +20,14 @@
                     echo $abLink->show() . " | ";
                     ?>
 <!--                	<a href="#" class="orangeListingHeading">Product adaptation</a> | -->
-                    <a href="#" class="greyTextTwelveSize">
-<!--                        Politechnic of Namibia-->
+<!--                    <a href="#" class="greyTextTwelveSize">Politechnic of Namibia</a>-->
                     <?php
-                        echo $product->getGroupName() . " | ";
-                    ?>
-                    </a> 
+                        $groupInfo = $product->getGroupInfo();
+                        $groupLink= new link($this->uri(array("action" => '11a','id'=>$groupInfo['id'],"page"=>'10a_tpl.php')));
+                        $groupLink->link = $groupInfo['name'];
+                        $groupLink->cssClass = "greyTextTwelveSize";
+                        echo $groupLink->show();
+                    ?> |
                     <span class="greyText">
 <!--                        GIE English-->
                     <?php
@@ -327,17 +329,13 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         	<span class="greenColor">Managed By<br><br>
 <!--                            Polithecnich of Namibia journalism department-->
                             <?php
-                            $groupInfo = $product->getGroupInfo();
                             echo $groupInfo['name'];
                             ?>
                             </span>
                             <br /><br />
 <!--                            <a href="#" class="greenTextLink">View group</a>-->
                             <?php
-                            $groupLink= new link($this->uri(array("action" => '11a','id'=>$groupInfo['id'],"page"=>'10a_tpl.php')));
-                            $groupLink->link = "View group";
-                            $groupLink->cssClass = "greenTextLink";
-                            echo $groupLink->show();
+                            
                             ?>
                         </div> 
                     </div>
