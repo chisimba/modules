@@ -71,7 +71,7 @@ class dbWorkgroupUsers extends dbTable
     */
 	function listAll($workgroupId)
 	{
-		$sql = "SELECT {$this->_tableName}.userid, tbl_users.firstname, tbl_users.surname FROM $this->_tableName, tbl_users
+		$sql = "SELECT {$this->_tableName}.userid, tbl_users.username, tbl_users.firstname, tbl_users.surname FROM $this->_tableName, tbl_users
 		WHERE {$this->_tableName}.userid=tbl_users.userid
         AND {$this->_tableName}.workgroupid='" . $workgroupId . "'
 		ORDER BY tbl_users.surname, tbl_users.firstname ASC";
