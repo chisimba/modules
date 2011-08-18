@@ -116,16 +116,23 @@ class workgroupadmin extends controller
 				$this->objDbWorkgroupUsers->deleteAll($id);
 				break;
 			case "manage":
+    			//ob_start();
                 // Edit the workgroup.
 				$id = $this->getParam('workgroupId',NULL);
 				$workgroups = $this->objDbWorkgroup->listSingle($id);
 				$workgroup = $workgroups[0];
 				$this->setVarByRef("workgroup", $workgroup);
 				$members = $this->objDbWorkgroupUsers->listAll($workgroup['id']);
-                                foreach ($members as &$line){
-                                    $line['display']=$line['fullname'].' ('.$line['userid'].')';
-                                }
+			    //echo "PRE:\n";
+			    //var_dump($members);
+                foreach ($members as $key=>$member){
+                    $members[$key]['display']=$member['fullname'].' ('.$member['username'].')';
+                }
+			    //echo "POST:\n";
+			    //var_dump($members);
 				$this->setVarByRef("members", $members);
+                //echo "CONTROLLER::_templateRefs:\n";
+                //var_dump($this->objEngine->_templateRefs['members']);
                 //if ($isAlumni) {
                 //    $objUsers = $this->getObject('dbusers','workgroup');
                 //    $users = $objUsers->listAll();
@@ -164,16 +171,23 @@ class workgroupadmin extends controller
 
                         }
 //                        $users[$_user['surname'].$_user['firstname']] = $_user;
-                        $users[$_user['fullname']] = $_user;
+                        $users[$_user['fullname'].$_user['username']] = $_user;
                     }
                 }
+			    //echo "\n\nUSERS:\n";
+			    //var_dump($users);
                 ksort($users);
-                foreach ($users as &$line){
-                    $line['display']=$line['fullname'].' ('.$line['userid'].')';
+			    //var_dump($users);
+                foreach ($users as $key=>$user){
+                    $users[$key]['display']=$user['fullname'].' ('.$user['username'].')';
                 }
+			    //var_dump($users);
                 $this->setVarByRef("users", $users);
                 //}
 				$this->setVar('pageSuppressXML',true);
+			    //$dump = ob_get_contents();
+			    //ob_end_clean();
+			    //$this->setVar('dump', $dump);
 				return "managenew_tpl.php";
             case "processform":
                 if( $this->getParam( 'button' ) == 'save' ) {

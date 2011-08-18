@@ -1,4 +1,10 @@
 <?php
+    //echo '<pre>';
+    //echo $dump;
+    //echo "TEMPLATE:\n";
+    //var_dump($members);
+    //echo '</pre>';
+
     $pageTitle = $this->newObject('htmlheading','htmlelements');
     $pageTitle->type=1;
     $pageTitle->align='left';
