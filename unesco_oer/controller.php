@@ -35,6 +35,7 @@ class unesco_oer extends controller {
     public $objGroupUtil;
     public $objDbgroupInstitutions;
       public $objDbmodules;
+        public $objDbcurricula;
     /**
      * @var object $objLanguage Language Object
      */
@@ -91,6 +92,7 @@ class unesco_oer extends controller {
         $this->objGroupUtil = $this->getObject('grouputil');
         $this->objDbgroupInstitutions = $this->getObject('dbgroupinstitutions');
         $this->objDbmodules = $this->getObject('dbmodules');
+         $this->objDbcurricula = $this->getObject('dbcurricula');
 
 
 //$this->objUtils = $this->getObject('utilities');
@@ -206,24 +208,48 @@ class unesco_oer extends controller {
         
          $productID = $this->getParam('id');
          $moduleID = $this->getParam('moduleid');
-         $product = $this->getObject('product'); 
+
+      
+         $product = $this->getObject('product');
+
+      
             $product->loadProduct($productID);
             $content = $product->getContentManager();
             
       
             $temp = $this->objDbmodules->getmoduleparent($moduleID);
            $parentid =  $temp[0]['parentid'];
-           
-        if  ($parentid != 'NULL'){                                              //check if origional product was selected         
-           
+
+        if  ($parentid != 'NULL'){                                              //check if origional product was selected
+
                 $modules = $this->objDbmodules->getmodulebyparent($parentid);
-                
-              
+
+
            }else{
-                
+
                $modules = $this->objDbmodules->getmodulebyparent($moduleID);
-                
+
            } 
+
+           if ($parentid == ''){
+
+             $temp = $this->objDbcurricula->getCurriculaparent($moduleID);
+           $parentid =  $temp[0]['parentid'];
+
+        if  ($parentid != 'NULL'){                                              //check if origional product was selected
+
+                $modules = $this->objDbcurricula->getCurriculabyparent($parentid);
+
+
+           }else{
+
+               $modules = $this->objDbcurricula->getCurriculabyparent($moduleID);
+
+           }
+
+           }
+     
+
                
         $check = FAlSE;     
         foreach ( $modules as $module){  // run through modules till matching module and product are selected
@@ -248,11 +274,14 @@ class unesco_oer extends controller {
                  {
                       $existingContent = $content->getContentByContentID($moduleID);
                  }
-            echo  $existingContent->showReadOnlyInput();
+           echo  $existingContent->showReadOnlyInput();
                 
                 
             }
-    
+
+
+
+
             
          //   var_dump($modules);
        //  echo  $existingContent->showReadOnlyInput();
