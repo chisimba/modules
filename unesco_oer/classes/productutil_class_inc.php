@@ -485,15 +485,22 @@ class productutil extends object {
                 ';
         } else {
             $groupInfo = $adaptedProduct->getGroupInfo();
+            $objCountry = $this->getObject('languagecode', 'language');
+            $country = $objCountry->getName($groupInfo['country']);
+
+            $groupLink= new link($this->uri(array("action" => '11a','id'=>$groupInfo['id'],"page"=>'10a_tpl.php')));
+            $groupLink->cssClass = 'darkGreyColour';
+            $groupLink->link = $groupInfo['name'];
+
             $content .='
                 <div class="adaptedByDiv greenColor">Managed by:</div>
                 <div class="gridSmallImageAdaptation">
                     <img src="' . $groupInfo['thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
-                    <span class="greyListingHeading">' . $adaptedProduct->getGroupName(). '</span>
+                    <span class="greyListingHeading">' . $groupLink->show() . '</span>
                 </div>
                 <div class="gridAdaptationLinksDiv">
-                    <a href="#" class="productAdaptationGridViewLinks">' . 'type' . '</a> |
-                    <a href="#" class="productAdaptationGridViewLinks">' . 'country' . '</a> <br>
+<!--                    <a href="#" class="productAdaptationGridViewLinks">' . 'type' . '</a> | -->
+                    <a href="#" class="productAdaptationGridViewLinks">' . $country . '</a> | <!--<br>-->
                     <a href="#" class="productAdaptationGridViewLinks">' . $adaptedProduct->getLanguageName() . '</a>
                 </div>
                 ';

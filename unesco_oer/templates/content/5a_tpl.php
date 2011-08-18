@@ -12,11 +12,18 @@
     $this->appendArrayVar('headerParams', $js);
 ?>
             	<div class="breadCrumb">
-                	<a href="#" class="orangeListingHeading">Product adaptation</a> | 
+                    <?php
+                    $adaptation = "parent_id is not null and deleted = 0";
+                    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '2a_tpl.php')));
+                    $abLink->cssClass = "orangeListingHeading";
+                    $abLink->link = 'Product Adaptations';
+                    echo $abLink->show() . " | ";
+                    ?>
+<!--                	<a href="#" class="orangeListingHeading">Product adaptation</a> | -->
                     <a href="#" class="greyTextTwelveSize">
 <!--                        Politechnic of Namibia-->
                     <?php
-                        echo $product->getGroupName();
+                        echo $product->getGroupName() . " | ";
                     ?>
                     </a> 
                     <span class="greyText">
@@ -283,14 +290,33 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                             </a>
 
                             <br><br><br>
-                            <span class="greyText fontBold">Adapted in:</span> English | <a href="#" class="greyTextLink">German</a>
+                            <span class="greyText fontBold">Adapted in:</span> 
+<!--                            English | <a href="#" class="greyTextLink">German</a>-->
+                            <?php
+                            $translations = $product->getTranslationsList();
+                            foreach ($translations as $translation) {
+                                $prodLanguage = $this->objDbProductLanguages->getLanguageNameByID($translation['language']);
+                                if ($product->getIdentifier() == $translation['id']){
+                                    echo " $prodLanguage ";
+                                } else {
+                                    echo " <a href='{$this->uri(array('action'=>'ViewProduct', 'id'=>$translation['id']))}' class='greyTextLink'>$prodLanguage</a> ";
+                                }
+                            }
+                            ?>
                             <br><br>
                         </div>
                         
                         <div class="textFloatLeftDivInnerSmallColumn">
                         <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv">
-                        <a href="#" class="bookmarkLinks">Full information on this institution</a>
+<!--                        <a href="#" class="bookmarkLinks">Full information on this institution</a>-->
+                        <?php
+                        $uri = $this->uri(array('action' => '4', 'institutionId' =>$institutionID));
+                        $InstitutionLink =  new link($uri);
+                        $InstitutionLink->cssClass = 'bookmarkLinks';
+                        $InstitutionLink->link = 'Full information on this institution';
+                        echo $InstitutionLink->show();
+                        ?>
                         </div>
                         </div>
                     </div>
@@ -301,11 +327,18 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                         	<span class="greenColor">Managed By<br><br>
 <!--                            Polithecnich of Namibia journalism department-->
                             <?php
-                            echo $product->getGroupName();
+                            $groupInfo = $product->getGroupInfo();
+                            echo $groupInfo['name'];
                             ?>
                             </span>
                             <br /><br />
-                            <a href="#" class="greenTextLink">View group</a>
+<!--                            <a href="#" class="greenTextLink">View group</a>-->
+                            <?php
+                            $groupLink= new link($this->uri(array("action" => '11a','id'=>$groupInfo['id'],"page"=>'10a_tpl.php')));
+                            $groupLink->link = "View group";
+                            $groupLink->cssClass = "greenTextLink";
+                            echo $groupLink->show();
+                            ?>
                         </div> 
                     </div>
                     
