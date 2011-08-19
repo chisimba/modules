@@ -102,9 +102,8 @@ class productutil extends object {
          $bookLink->cssId = $product['id'];
         $linkText = '<div class="imageTopFlag"></div>';
         $bookLink->link = $linkText;
-        
 
-        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid , 'prevAction' => 'ViewProduct'));
+        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid , 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
         $adaptLink = new link($uri);
         $adaptLink->cssClass = "adaptationLinks";
         $linkText = '<div class="imageBotomFlag"></div>';
@@ -440,7 +439,10 @@ class productutil extends object {
         $linkText = '<div class="imageTopFlag"></div>';
         $bookLink->link = $linkText;
 
-        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $adaptedProduct->getIdentifier() , 'prevAction' => 'ViewProduct'));
+        $defaultParamStr = 'module=unesco_oer&action=FilterProducts&adaptationstring=parent_id+is+not+null+and+deleted+%3D+0&page=2a_tpl.php';
+        $condition = array('action' => 'JavaFilter');
+
+        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $adaptedProduct->getIdentifier() , 'nextAction' => 'ViewProduct' , 'cancelAction' => 'FilterProducts', 'cancelParams'=> $this->getCurrentParameterString($condition,$defaultParamStr)));
         $adaptLink = new link($uri);
         $adaptLink->cssClass = "adaptationLinks";
         $linkText = '<div class="imageBotomFlag"></div>';
@@ -973,8 +975,31 @@ public function populatebookmark($product) {
 
 
 
+function getCurrentParameterString($condtion = NULL, $default = NULL){
+    $parameterList = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '?')+1);
+    $parameterList = str_replace('&', '__', $parameterList);
+    if ($condtion != NULL) {
+        $parameterArray = $this->createParameterArray($parameterList);
+        foreach ($condtion as $key => $value) {
+            if ($parameterArray[$key] == $value)                return str_replace('&', '__', $default);
+        }
+    }
+    return $parameterList;
+}
 
+function createParameterArray($parameterString){
+    if (empty ($parameterString)) return NULL;
+    $tempArray = explode('__', $parameterString);
+    $parameterArray = array();
+    foreach ($tempArray as $paramPairString) {
+        $paramPairArray = explode('=', $paramPairString);
 
+        $parameterArray[urldecode($paramPairArray[0])] = urldecode($paramPairArray[1]);
+    }
+//    unset($parameterArray['action']);
+//    unset($parameterArray['module']);
+    return $parameterArray;
+}
 
 
 }

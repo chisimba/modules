@@ -2126,7 +2126,8 @@ class unesco_oer extends controller {
 
         $params = array(
             'productID' => $product->getIdentifier(),
-            'prevAction' => $this->getParam('prevAction')
+            'nextAction' => $this->getParam('nextAction'),
+            'cancelAction'=> $this->getParam('cancelAction')
         );
 
         $this->nextAction('saveProductMetaData', $params);
@@ -2146,8 +2147,7 @@ class unesco_oer extends controller {
 
         switch (strtolower($this->getParam('add_product_submit'))) {
             case "cancel":
-                if ($product->isDeleted) $this->nextAction('home', array('id' => $this->getParam('productID')));
-                else                    $this->nextAction($this->getParam('nextAction'), array('id' => $this->getParam('productID')));
+                $this->nextAction($this->getParam('cancelAction'), $this->objProductUtil->createParameterArray($this->getParam('cancelParams')));
                 break;
 
             case "upload":

@@ -564,7 +564,7 @@ class product extends object
      *
      * @return string
      */
-    function showMetaDataInput($nextAction = NULL)
+    function showMetaDataInput($nextAction = NULL, $cancelAction = NULL, $cancelParams = NULL)
     {
         $output = '';
 
@@ -811,7 +811,9 @@ class product extends object
             'action' => "saveProductMetaData",
             'productID' => $this->_identifier,
             'parentID' => $this->_parentid,
-            'nextAction' => $nextAction));
+            'nextAction' => $nextAction,
+            'cancelAction' => $cancelAction,
+            'cancelParams' => $cancelParams));
         $form_data = new form('add_products_ui', $uri);//////created here in order to include select boxes for keywords//////
     
 

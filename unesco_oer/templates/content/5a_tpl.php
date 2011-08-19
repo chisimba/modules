@@ -115,7 +115,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
             $adaptationLinkDiv = '<div class="textNextToTheListingIconDiv wideTextNextTiListingIconDiv">';
 
             if ($this->objUser->isLoggedIn()) {
-                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
+                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'nextAction' => 'ViewProduct' , 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$productID"));
                 $adaptLink = new link($uri);
                 $adaptLink->cssClass = "adaptationLinks";
                 $linkText = 'Make a new adaptation using this UNESCO Product';
@@ -218,7 +218,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                 	<div class="printEmailDownloadIcons">
                             <?php
                             if ($this->objUser->isLoggedIn()) {
-                                $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'prevAction' => 'ViewProduct'));
+                                $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction'=>'ViewProduct', 'cancelParams'=>"id=$productID" ));
                                 $editLink = new link($uri);
                                 $editLink->title = "Edit Metadata";
                                 $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';

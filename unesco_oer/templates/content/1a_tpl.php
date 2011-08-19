@@ -150,10 +150,12 @@ echo $abLink->show();
                                             <div class="gridListDivView">';
                 $divClose = '</div>';
                 if ($this->objUser->isLoggedIn() && $this->objUser->isAdmin()) {
-                    $abLink = new link($this->uri(array("action" => "createProduct", 'prevAction' => 'home')));
+
+                    $uri = $this->uri(array("action" => "newProduct", 'nextAction' => 'ViewProduct', 'cancelAction'=>'home', 'add_product_submit' => 'newproduct'));
+                    $abLink = new link($uri);
                     $abLink->link = '<img src="skins/unesco_oer/images/icon-new-product.png" alt="New Product" width="20" height="20" class="imgFloatRight">';
 
-                    $newProductLink = new link($this->uri(array("action" => "newProduct", 'prevAction' => 'ViewProduct', 'add_product_submit' => 'newproduct')));
+                    $newProductLink = new link($uri);
                     $newProductLink->link = "New product";
 
                     echo $divOpen;
