@@ -142,9 +142,10 @@ $table->endRow();
 
 
 $content.='
-          <img src="' . $group[0]['thumbnail'] . '" alt="Featured" width="30" height="30"><br>
+          <img src="' . $group[0]['thumbnail'] . '" alt"="Featured" width="30" height="30"><br>
 
                   ';
+
 $table->startRow();
 $table->addCell($content);
 //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
@@ -227,7 +228,7 @@ if ($mode == 'addfixup') {
     $state->value = $this->getParam('group_state');
 
     if ($this->getParam('group_state') == '') {
-        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message6', 'unesco_oer');
+        //$messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message6', 'unesco_oer');
     }
 }
 if (isset($userstring[6]) && $mode == 'add')

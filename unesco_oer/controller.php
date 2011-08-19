@@ -2002,16 +2002,20 @@ class unesco_oer extends controller {
         $loclat = $this->getParam('group_loclat');
         $loclong = $this->getParam('group_loclong');
         $rightList=$this->getParam('rightList');
+        $prevousPath=$this->objDbGroups->getThumbnail($id);
 
         $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
         $results = $this->objThumbUploader->uploadThumbnail($path);
-        $thumbnail = 'usrfiles/' . $results['path'];
+        if($results!=''){
+            $thumbnail = 'usrfiles/' . $results['path'];
+        }
+        //$thumbnail = 'usrfiles/' . $results['path'];
 
         $checkFields = array(
             $name,
             $address,
             $city,
-            $state,
+            //$state,
             $postalcode,
             $website,
             $description,
@@ -2029,6 +2033,11 @@ class unesco_oer extends controller {
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
+        $fileInfoArray=array();
+        if(strcmp($thumbnail,$prevousPath)!=0){
+        if (!$this->objThumbUploader->isFileValid($fileInfoArray)){
+            $problems[]='novalidThumbnail';}
+                           }
         if (count($problems) > 0) {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->setVar('mode', 'addfixup');
