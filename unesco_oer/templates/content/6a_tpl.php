@@ -16,9 +16,15 @@
  */
 
 
- var_dump($selectedproducts);
- 
- 
+ //var_dump($selectedproducts);
+ $this->loadClass('link', 'htmlelements');
+    $product = $this->getObject('product', 'unesco_oer');
+                                 
+                                
+                                $product->loadProduct($selectedproducts[0]);
+                                $temp = $product->getParentID();
+                       
+                                $product->LoadProduct($temp);
 
 ?>
 
@@ -29,17 +35,53 @@
 	
         <div class="mainContentHolder">
         	<div class="subNavigation"></div>
+                 <div class="breadCrumb tenPixelLeftPadding">
+                <a href="#" class="productBreadCrumbColor">
+                <?php
+    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
+    $abLink->link = 'UNESCO OER Products';
+    $abLink->cssClass = "blueText noUnderline";
+    echo $abLink->show();
+    ?>
+                
+                
+                
+                </a> | 
+                <a href="#" class="productBreadCrumbColor">
+                <?php
+    
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+    $abLink->link = $product->getTitle();
+    $abLink->cssClass = "blueText noUnderline";
+    
+
+   echo $abLink->show();
+    ?>
+                
+              </a> |
+                Compare
+            </div>
+                
             <div class="wideTopContentHolderDiv">
             	
                 <div class="topHeadingDiv">
                 <div class="productsBackgroundColor twelvePixelLeftPadding tenPixelTopPadding">
-                	<div class="leftTopImage"><img src="images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49" ></div>
-            <div class="rightTopContentAndLinks">
-                   	  <h2 class="blueText">Model Curriculum for Journalism Education</h2>
+                     <?php
+                    
+                  
+                                echo ' <div class="leftTopImage"><img src="'. $product->getThumbnailPath() .' " width="45" height="49" ></div> ';
+                               echo '   <div class="rightTopContentAndLinks">
+                   	  <h2 class="blueText">'.$product->getTitle().' </h2>';
+                    
+                    
+                    
+                    ?>
+                	
+           
                       	
                       <div class="listTopLinks">
                         <div class="productLinksViewDiv">
-                            <img src="images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
+                            <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
                             <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
                         </div>
               </div>
@@ -59,19 +101,25 @@
                     <div class="compareToolsTextDiv">
                     <div class="leftFloat">Select/unselect item(s) from the list below or use the search to find section (courses):</div>
                     <div class="compareSearchBoxHolder"><input type="text" value="Ethics" class="compareSearchBox"></div>
-                    <a href="#"><img src="images/icon-search.png" width="18" height="18"></a>   
+                    <a href="#"><img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>   
                     
                     
-                      <a id="compare" href="#"  >     <img src="images/icon-search.png" width="18" height="18"></a>   
+                      <a id="compare" href="#"  >     <img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>   
             	</div>
             </div>
             
             <div class="slide">
             
             	<div class="toggleBoxProduct">
-								<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
-                                <h4 class="blueText">Model Curricula for Journalism</h4>
-                                <img src="images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
+                    <?php
+                
+                                echo ' <div class="leftTopImage"><img src="'. $product->getThumbnailPath() .' " width="27" height="29" ></div> ';
+                               echo '  <h4 class="blueText">'.$product->getTitle().'</h4>';
+                    
+                    ?>
+                               
+                              
+                                <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv">
                             	<a href="#" class="productsLink">Full view of product</a>
                             	</div>
@@ -80,13 +128,7 @@
                               
                                       <?php
                                 
-                                $product = $this->getObject('product', 'unesco_oer');
-                                 
-                                
-                                $product->loadProduct($selectedproducts[0]);
-                                $temp = $product->getParentID();
-                       
-                                $product->LoadProduct($temp);
+                               
                                  $content = $product->getContentManager();
                                    
                                   
@@ -116,18 +158,18 @@
                                     echo '   
                                 <div class="toogle">
                                 <div class="collapseIcon"><input type="checkbox"></div> <div class="collapseText">Toggle</div> 
-                                <img src="images/icon-product-closed-folder.png" width="18" height="18" class="collapseIcon"> 
+                                <img src="skins/unesco_oer/images/icon-product-closed-folder.png" width="18" height="18" class="collapseIcon"> 
                                 <div class="collapseText"><a href="" class="greyTextLink">Collapse all</a></div>
-                                <img src="images/icon-product-opened-folder.png" width="18" height="18" class="collapseIcon"> 
+                                <img src="skins/unesco_oer/images/icon-product-opened-folder.png" width="18" height="18" class="collapseIcon"> 
                                 <div class="collapseText"><a href="" class="greyTextLink">Expand all</a></div>
                             </div>
 						</div>
                         
                         <div class="spaceNextToToggleBoxes"></div>
                         <div class="toggleBoxAdaptation">
-							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
-                                <h4><a href="#" class="adaptationListingLink">Model Curricula for Journalism</a></h4>
-                                <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
+                                <h4><a href="#" class="adaptationListingLink">'.$product->getTitle().'</a></h4>
+                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                                 
                                 

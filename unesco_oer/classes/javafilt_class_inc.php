@@ -751,15 +751,27 @@ class javafilt extends object {
                 
                     case "3b" : {
                         
-                      $form2 = new form("test", $this->uri(array('action' => 'test')));
-                        echo $form2->show();
+                     
+                 
                       
                  $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
                             
-                     $form->addtoform(' <table class="threeAListingTable" cellspacing="0" cellpadding="0">
-               	  <tr> ');
+                        $objTable = $this->getObject('htmltable', 'htmlelements');
+                            $objTable->cssClass = "threeAListingTable";
+                            $objTable->width = NULL;
+                         
+                            $newRow = true;
+                            $count = 0;
+                            
                     for ($i = $start; $i < ($end); $i++) {
+                    $count++;
                     
+                    
+                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $product['id'], 'prevAction' => 'ViewProduct'));
+                $adaptLink = new link($uri);
+                $adaptLink->cssClass = "adaptationLinks";
+                $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
+                $adaptLink->link = $linkText; 
                     $groupid = $this->objDbProducts->getAdaptationDataByProductID($products[$i]['id']);
                     $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
                    $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
@@ -768,10 +780,10 @@ class javafilt extends object {
                 $checkbox->value = $products[$i]['id'];
                 $checkbox->cssId = 'user_' . $products[$i]['id'];
                
-                  $form->addToForm('<td>
+                      $content = '
                             
                             <div class="adaptedByDiv3a">Adapted by:</div>
-                            <div class="gridSmallImageAdaptation">
+                            <div class="gridSmallImageAdaptation" >
                             	<img src="' . $thumbnail .'" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
                                 <span class="greyListingHeading">
                             
@@ -792,7 +804,15 @@ class javafilt extends object {
                                       <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
                                     </div>
                                     <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
+                                        <a href="#" class="adaptationLinks">';
+                       
+                       if ($this->objUser->isLoggedIn()) {
+                           $content .=  $adaptLink->show();
+                                   
+                           };
+                       
+                       
+                       $content.= '</a>
                                     </div>
                            	  </div>
                                 
@@ -805,28 +825,54 @@ class javafilt extends object {
                                  	</div>
                                 </div>
                                  <div class="product3aViewDiv">
-                                    <div class="imgFloatRight">');
+                                    <div class="imgFloatRight">'.
                           
-                          
-                          $form->addToForm($checkbox->show());
+                         
+                         $checkbox->show().'
                   
-                            $form->addToForm('
+                          
                                     
                     
                                    <div class="listingAdaptationLinkDiv">
                                     <a href="#" class="bookmarkLinks">Compare</a>
                                  	</div>
-                                </div>
+                              
                                 
                                 
-                            </div>
-                </td>
+                          
+               
                 
-                ');
+                ';
+                      
+                     if ($newRow) {
+            $objTable->startRow();
+            $objTable->addCell($content);
+            $newRow = false;
+        } else {
+            $objTable->addCell($content);
+        }
+                
+
+    if ($count == 3) {
+        $newRow = true;
+        $objTable->endRow();
+        $count = 0;
+    }
+                
+               
+               } 
+                
+         $form->addToForm($objTable->show());
+        echo $form->show();      
+                  
+                      
+                      
+                      
+                      
                     
-                }
                 
-                echo $form->show();      
+                
+                
                     
                     break;
                 

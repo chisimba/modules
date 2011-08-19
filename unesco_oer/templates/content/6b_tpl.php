@@ -1,13 +1,12 @@
 <?php
 
- $js = '<script language="JavaScript" src="' . $this->getResourceUri('TreeMenu.js','tree') . '" type="text/javascript"></script>';
-       echo $js;
-var_dump($productid);
+
+//var_dump($productid);
 
 $selectedproducts = explode(',', $productid);
 
 //var_dump($selectedproducts);
-echo $moduleid . "moduleidddddddddddddd";
+ //echo $moduleid;
 
 //$product = $this->getObject('product', 'unesco_oer');
 //
@@ -47,21 +46,47 @@ $product->LoadProduct($origionalproduct);
 
     </head>
 
-
     <body>
 
         <div class="mainContentHolder">
             <div class="subNavigation"></div>
+              <div class="breadCrumb tenPixelLeftPadding">
+                <a href="#" class="productBreadCrumbColor">
+                <?php
+    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
+    $abLink->link = 'UNESCO OER Products';
+    $abLink->cssClass = "blueText noUnderline";
+    echo $abLink->show();
+    ?>
+                
+                
+                
+                </a> | 
+                <a href="#" class="productBreadCrumbColor">
+                <?php
+    
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+    $abLink->link = $product->getTitle();
+    $abLink->cssClass = "blueText noUnderline";
+    
+
+   echo $abLink->show();
+    ?>
+                
+              </a> |
+                Compare Selected
+            </div>
+                
             <div class="wideTopContentHolderDiv">
 
                 <div class="topHeadingDiv">
                     <div class="productsBackgroundColor twelvePixelLeftPadding tenPixelTopPadding">
-                        <div class="leftTopImage"><img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49" ></div>
+                        <div class="leftTopImage"><img src="<?php echo $product->getThumbnailPath()?>" width="45" height="49" ></div>
                         <div class="rightTopContentAndLinks">
                             <h2 class="blueText">
 <?php
    echo $product->getTitle();
-    echo $product->getParentID();
+  
 ?>
 
                             </h2>

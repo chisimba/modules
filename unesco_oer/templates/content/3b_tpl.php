@@ -25,8 +25,29 @@ $this->appendArrayVar('headerParams', $js);
 <div class="mainContentHolder">
         	<div class="subNavigation"></div>
             <div class="breadCrumb tenPixelLeftPadding">
-                <a href="#" class="productBreadCrumbColor">UNESCO OER Products</a> | 
-                <a href="#" class="productBreadCrumbColor">Model Curriculum for Journalism Education</a> |
+                <a href="#" class="productBreadCrumbColor">
+                <?php
+    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
+    $abLink->link = 'UNESCO OER Products';
+    $abLink->cssClass = "blueText noUnderline";
+    echo $abLink->show();
+    ?>
+                
+                
+                
+                </a> | 
+                <a href="#" class="productBreadCrumbColor">
+                <?php
+    
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+    $abLink->link = $product->getTitle();
+    $abLink->cssClass = "blueText noUnderline";
+    
+
+   echo $abLink->show();
+    ?>
+                
+              </a> |
                 Adaptations
             </div>
             <div class="productsBackgroundColor">
@@ -111,24 +132,51 @@ $this->appendArrayVar('headerParams', $js);
                       
                            $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
                            
-                           $form->addtoform(' <table class="threeAListingTable" cellspacing="0" cellpadding="0" ALIGN="LEFT">
-               	  <tr> ');
+                           $objTable = $this->getObject('htmltable', 'htmlelements');
+                            $objTable->cssClass = "threeAListingTable";
+                            $objTable->width = NULL;
+                         
+                            $newRow = true;
+                            $count = 0;
+
+//                           
+//                           $form->addtoform(' <table class="threeAListingTable" cellspacing="0" cellpadding="0" ALIGN="LEFT">
+//               	  <tr> ');
                          $products = $this->objDbProducts->getadapted($productID);
                 foreach ($products as $product){
+                       $count++;
+                       
+                
+                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $product['id'], 'prevAction' => 'ViewProduct'));
+                $adaptLink = new link($uri);
+                $adaptLink->cssClass = "adaptationLinks";
+                $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
+                $adaptLink->link = $linkText; 
+                
+               
+    
+                       
+                       
+                       
                     
                     $groupid = $this->objDbProducts->getAdaptationDataByProductID($product['id']);
                     $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
                    $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
                    
+                    
+                 $abLink= new link($this->uri(array("action" => '11a','id'=>$groupid['group_id'],"page"=>'10a_tpl.php')));
+                 $abLink->link =  "<img src='" . $thumbnail . "'>";
+                 $abLink->cssClass = "smallAdaptationImageGrid";
+                   
                     $checkbox = new checkbox('selectedusers[]', $product['id']);
                     $checkbox->value = $product['id'];
                     $checkbox->cssId = 'user_' . $product['id'];
                
-                       $form->addToForm('<td>
+                       $content = '
                             
                             <div class="adaptedByDiv3a">Adapted by:</div>
-                            <div class="gridSmallImageAdaptation">
-                            	<img src="' . $thumbnail .'" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                            <div class="gridSmallImageAdaptation" >
+                            	' . $abLink->show() .' 
                                 <span class="greyListingHeading">
                             
                                     
@@ -148,7 +196,15 @@ $this->appendArrayVar('headerParams', $js);
                                       <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
                                     </div>
                                     <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">Make a new adaptation using this adaptation</a>
+                                        <a href="#" class="adaptationLinks">';
+                       
+                       if ($this->objUser->isLoggedIn()) {
+                           $content .=  $adaptLink->show();
+                                   
+                           };
+                       
+                       
+                       $content.= '</a>
                                     </div>
                            	  </div>
                                 
@@ -161,28 +217,41 @@ $this->appendArrayVar('headerParams', $js);
                                  	</div>
                                 </div>
                                  <div class="product3aViewDiv">
-                                    <div class="imgFloatRight">');
+                                    <div class="imgFloatRight">'.
                           
-                          
-                             $form->addToForm($checkbox->show());
+                         
+                         $checkbox->show().'
                   
-                             $form->addToForm('
-                                    
-                    
                                    <div class="listingAdaptationLinkDiv">
                                     <a href="#" class="bookmarkLinks">Compare</a>
-                                 	</div>
-                                </div>
-                                
-                                
-                            </div>
-                </td>
-                
-                ');
+                                 	</div>';
                     
-                }
                 
-                echo $form->show();      
+          if ($newRow) {
+            $objTable->startRow();
+            $objTable->addCell($content);
+            $newRow = false;
+        } else {
+            $objTable->addCell($content);
+        }
+                
+
+    if ($count == 3) {
+        $newRow = true;
+        $objTable->endRow();
+        $count = 0;
+    }
+                
+               
+               } 
+                
+          $form->addToForm($objTable->show());
+        echo $form->show();      
+                
+                
+                
+                
+                
                     	
                 ?>
                             
@@ -190,8 +259,7 @@ $this->appendArrayVar('headerParams', $js);
                             
                             
                       
-                    </tr>
-              </table>
+                
                 </div>
                 
                 <script src="http://code.jquery.com/jquery-latest.js"></script>
