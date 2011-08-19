@@ -18,6 +18,7 @@
 
  //var_dump($selectedproducts);
  $this->loadClass('link', 'htmlelements');
+     $this->loadClass('textinput', 'htmlelements');
     $product = $this->getObject('product', 'unesco_oer');
                                  
                                 
@@ -97,14 +98,32 @@
           <div class="CompareWideListDiv">
             	
             <div class="compareTools">
+               <div class="compareTools">
                 <div class="compareToolsHeading">Compare Tools</div>
-                    <div class="compareToolsTextDiv">
-                    <div class="leftFloat">Select/unselect item(s) from the list below or use the search to find section (courses):</div>
-                    <div class="compareSearchBoxHolder"><input type="text" value="Ethics" class="compareSearchBox"></div>
-                    <a href="#"><img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>   
-                    
-                    
-                      <a id="compare" href="#"  >     <img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>   
+                      <img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                        <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">Add to adaptation</a></div>
+                        
+                      <a href="#"><img src="images/icon-find-related.png" alt="Find Related" width="18" height="18"class="smallLisitngIcons"></a>
+                        <div class="textNextToTheListingIconDiv"><a href="#" class="greySmallLink">Find related</a></div>
+                        
+                      <img src="skins/unesco_oer/images/icon-compare-adaptations-off.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                      <div class="textNextToTheListingIconDiv"><a href="#" id="compare" class="adaptationLinks">Compare Selected</a></div>
+                        
+                        <img src="skins/unesco_oer/images/icon-clear-selection-off.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                      <div class="textNextToTheListingIconDiv"><span class="nonActiveLinks">Clear selection</span></div>
+                        
+                      <div class="compareSearchBoxHolder">
+                          <?php
+                           $textinput = new textinput('SearchInput');
+                             $textinput->cssClass = "compareSearchBox";
+                             $textinput->cssId = 'search';
+                          
+                          ?>
+                          
+                          
+                         </div><?php echo $textinput->show()?>
+                      <a href="#" id="searchlink" onclick= javascript:test()><img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>                   
+           	  </div>
             	</div>
             </div>
             
@@ -209,12 +228,17 @@
                   }
                   
                   
-                  function compare(){
+                  function test(value){
                       
                      //var ourArray = new Array();
-                      $('.highlight').each(function() {
-                            $(this).each(function(){ alert($(this).attr('tag'));});
-                        });
+                    var temp = $('#search').attr('value');
+                   
+                  
+                    $().parent().toggleClass('highlight');
+                     
+                        
+                        
+                      
 
                       //alert(ourArray[0]);
                       

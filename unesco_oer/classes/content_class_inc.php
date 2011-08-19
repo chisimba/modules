@@ -275,10 +275,12 @@ class content extends object
         $hiddenInput = new hiddeninput($this->getID()."[]");
         if ($origional){
         $hiddenInput->extra = "id='{$this->getID()}' class='$this->_originalID'";
-            
+        $hiddenInput->value =  $this->getTitle() ;          
         }
-        else
+        else{
         $hiddenInput->extra = "id='{$this->getID()}' class='{$this->getID()}'";
+         $hiddenInput->value =  $this->getTitle() ;    
+        }
 
         // Makes tree a link if not editing when adding product metadata
         if ($editable){

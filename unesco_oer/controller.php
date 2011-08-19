@@ -267,14 +267,14 @@ class unesco_oer extends controller {
      
             if   ($check == FALSE){
               
-                 if  ($parentid != NULL) // check if origional product was selected
+                 if  ($parentid != 'NULL') // check if origional product was selected
                  {
                      $existingContent = $content->getContentByContentID($temp[0]['parentid']);
                  } else 
                  {
                       $existingContent = $content->getContentByContentID($moduleID);
                  }
-           echo  $existingContent->showReadOnlyInput();
+          echo  $existingContent->showReadOnlyInput();
                 
         
             }

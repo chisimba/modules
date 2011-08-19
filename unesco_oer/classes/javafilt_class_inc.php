@@ -776,6 +776,10 @@ class javafilt extends object {
                     $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
                    $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
                    
+                       $abLink= new link($this->uri(array("action" => '11a','id'=>$groupid['group_id'],"page"=>'10a_tpl.php')));
+                 $abLink->link =  "<img src='" . $thumbnail . "'>";
+                 $abLink->cssClass = "smallAdaptationImageGrid";
+                   
                 $checkbox = new checkbox('selectedusers[]', $products[$i]['id']);
                 $checkbox->value = $products[$i]['id'];
                 $checkbox->cssId = 'user_' . $products[$i]['id'];
@@ -784,7 +788,7 @@ class javafilt extends object {
                             
                             <div class="adaptedByDiv3a">Adapted by:</div>
                             <div class="gridSmallImageAdaptation" >
-                            	<img src="' . $thumbnail .'" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                            	<img src="' . $abLink->show() .'" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
                                 <span class="greyListingHeading">
                             
                                     
