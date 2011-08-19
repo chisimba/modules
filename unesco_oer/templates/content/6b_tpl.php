@@ -1,4 +1,7 @@
 <?php
+
+ $js = '<script language="JavaScript" src="' . $this->getResourceUri('TreeMenu.js','tree') . '" type="text/javascript"></script>';
+       echo $js;
 var_dump($productid);
 
 $selectedproducts = explode(',', $productid);
@@ -106,7 +109,7 @@ $product->LoadProduct($origionalproduct);
 
                 echo $content = '<div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
-                                <h4><a href="#" onclick= javascript:moduleselect(' . "'$origionalproduct'" . ',' . "'$moduleid'" . ') class="adaptationListingLink">' . $product->getTitle() . '
+                                <h4><a href="#" id="treelink" onclick= javascript:moduleselect(' . "'$origionalproduct'" . ',' . "'$moduleid'" . ') class="adaptationListingLink">' . $product->getTitle() . '
                    
                                   </a></h4>
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
@@ -146,7 +149,7 @@ $product->LoadProduct($origionalproduct);
 
                     $content .= '<div class="slideBoxAdaptation">
 							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
-                            <h4><a href="#" onclick= javascript:moduleselect(' . "'$selectedproduct'" . ',' . "'$moduleid'" . ') class="adaptationListingLink">' . $product->getTitle() . ' 
+                            <h4><a href="#"  id="treelink" onclick= javascript:moduleselect(' . "'$selectedproduct'" . ',' . "'$moduleid'" . ') class="adaptationListingLink">' . $product->getTitle() . ' 
                    
                                   </a></h4>
                             <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
@@ -214,16 +217,16 @@ $product->LoadProduct($origionalproduct);
            
 
                 <div class="rightColumnDivWide rightColumnPadding">
-                  
+               
                      <div id="tree">
                          
                     <?php
                     $product = $this->getObject('product');
                     $product->loadProduct($origionalproduct);
                     $content = $product->getContentManager();
-                    echo $content->getContentTree(FALSE, FALSE);
+              //      echo $content->getContentTree(FALSE, FALSE);
                     
-                echo $origionalproduct;
+            //    echo $origionalproduct;
                     ?>
 
 
@@ -234,8 +237,7 @@ $product->LoadProduct($origionalproduct);
         <!-- Footer-->
 
     </div>
-</body>
-</html>
+
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
 <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
@@ -244,9 +246,15 @@ $product->LoadProduct($origionalproduct);
 
     function moduleselect(origionalprod,moduleid){
         //$('.root').hide();
-    
+     
+           
        $('.Root').load('index.php?module=unesco_oer&action=loadmodule&id=' + origionalprod + '&moduleid=' + moduleid);
-       $('#tree').load('index.php?module=unesco_oer&action=loadtree&id=' + origionalprod + '&moduleid=' + moduleid);
+        
+         
+           $('#tree').load('index.php?module=unesco_oer&action=loadtree&id=' + origionalprod + '&moduleid=' + moduleid);
+     
+           
+      
 
   
         

@@ -211,8 +211,6 @@ class unesco_oer extends controller {
 
       
          $product = $this->getObject('product');
-
-      
             $product->loadProduct($productID);
             $content = $product->getContentManager();
             
@@ -232,24 +230,25 @@ class unesco_oer extends controller {
            } 
 
            if ($parentid == ''){
+                     $temp = $this->objDbcurricula->getCurriculaparent($moduleID);
+                      $parentid =  $temp[0]['parentid'];
+                     
+                            if  ($parentid != NULL){                                              //check if origional product was selected
+      
+                                   $modules = $this->objDbcurricula->getCurriculabyparent($parentid);
 
-             $temp = $this->objDbcurricula->getCurriculaparent($moduleID);
-           $parentid =  $temp[0]['parentid'];
-
-        if  ($parentid != 'NULL'){                                              //check if origional product was selected
-
-                $modules = $this->objDbcurricula->getCurriculabyparent($parentid);
-
-
-           }else{
-
-               $modules = $this->objDbcurricula->getCurriculabyparent($moduleID);
-
+    
+                                  
+                                                    }else{
+                                                         
+                                                           $modules = $this->objDbcurricula->getCurriculabyparent($moduleID);
+                                                       
            }
 
+        
            }
      
-
+                           // var_dump($modules);
                
         $check = FAlSE;     
         foreach ( $modules as $module){  // run through modules till matching module and product are selected
@@ -267,7 +266,8 @@ class unesco_oer extends controller {
        } 
      
             if   ($check == FALSE){
-                 if  ($parentid != 'NULL') // check if origional product was selected
+              
+                 if  ($parentid != NULL) // check if origional product was selected
                  {
                      $existingContent = $content->getContentByContentID($temp[0]['parentid']);
                  } else 
@@ -276,7 +276,7 @@ class unesco_oer extends controller {
                  }
            echo  $existingContent->showReadOnlyInput();
                 
-                
+        
             }
 
 
@@ -292,8 +292,7 @@ class unesco_oer extends controller {
      public function __loadtree() {
        
          //return 'test_tree_tpl.php';
-       $js = '<script language="JavaScript" src="' . $this->getResourceUri('TreeMenu.js','tree') . '" type="text/javascript"></script>';
-       echo $js;
+      
          $productID = $this->getParam('id');
         
          echo $productID;
