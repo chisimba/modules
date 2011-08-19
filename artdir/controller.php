@@ -388,6 +388,42 @@ class artdir extends controller
                 $this->objDbArtdir->removeArtist($artistid);
                 $this->nextAction('');
                 break;
+                
+            case 'bookingform' :
+                $id = $this->getParam('id');
+                $bookform = $this->objUi->bookingForm($id);
+                $this->setVarByRef('bookform', $bookform);
+                return 'bookartist_tpl.php';
+                break;
+                
+            case 'bookartist' :
+                $id = $this->getParam('id');
+                $yourname = $this->getParam('yourname');
+                $youremail = $this->getParam('youremail');
+                $yournum = $this->getParam('yournum');
+                $request = $this->getParam('request');
+                $artist = $this->objDbArtdir->getArtistById($id);
+                $artistmail = $artist[0]['email'];
+                
+                //thump together an email string (this must be html email as the post is html
+                $objMailer = $this->getObject('email', 'mail');
+                //munge together the bodyText...
+                $bodyText = $this->objLanguage->languageText("mod_artdir_sender", "artdir") . ", " . $yourname . ", " . $this->objLanguage->languageText("mod_artdir_hassentrequest", "artdir") . ": ";
+                $bodyText.= "<br /><br />";
+                if (!empty($request)) {
+                    $bodyText.= $request . "<br /><br />";
+                }
+                $bodyText.= "<br /><br />";
+                $objMailer->setValue('IsHTML', TRUE);
+                $objMailer->setValue('to', $artistmail);
+                $objMailer->setValue('cc', 'pscott209@gmail.com');
+                $objMailer->setValue('from', 'noreply@artistdirectory.co.za');
+                $objMailer->setValue('fromName', $this->objLanguage->languageText("mod_artdir_emailfromname", "artdir"));
+                $objMailer->setValue('subject', $this->objLanguage->languageText("mod_artdir_bookingrequest", "artdir"));
+                $objMailer->setValue('body', $bodyText);
+                $objMailer->send(TRUE);
+                $this->nextAction('');
+                break;
 
                 
             default:

@@ -543,7 +543,11 @@ opera, musical theatre).</p>';
         $dtable->addCell($weblabel->show());
         $dtable->addCell('<a href="'.$artist['website'].'" title="'.$artist['website'].'" target="_blank">'.$artist['website'].'</a>'); // $this->objWashout->parseText($artist['website']));
         $dtable->endRow();
-        
+        // book this artist
+        $dtable->startRow();
+        $abox = $this->newObject('alertbox', 'htmlelements');
+        $dtable->addCell($abox->show($this->objLanguage->languageText("mod_artdir_bookartist", "artdir"), $this->uri(array('action' => 'bookingform', 'id' => $artist['id']))));
+        $dtable->endRow();
         
         // 1 row, 2 cells
         $ctable->startRow();
@@ -725,6 +729,63 @@ opera, musical theatre).</p>';
         $artform->addToForm($this->objCButton->show());
         $artform = $artform->show();
         return $artform;
+    }
+    
+    public function bookingForm($id) {
+        $this->loadClass('href', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $bookform = new form('bookartist', $this->uri(array(
+            'action' => 'bookartist', 'artistid' => $id,
+        )));
+        $book = $this->newObject('htmltable', 'htmlelements');
+        $book->cellpadding = 3;
+        
+        // your name
+        $book->startRow();
+        $yournamelabel = new label($this->objLanguage->languageText('mod_artdir_yourname', 'artdir') . ':', 'input_yourname');
+        $yourname = new textinput('yourname');
+        $book->addCell($yournamelabel->show());
+        $book->addCell($yourname->show());
+        $book->endRow();
+        
+        // your email
+        $book->startRow();
+        $youremaillabel = new label($this->objLanguage->languageText('mod_artdir_youremail', 'artdir') . ':', 'input_youremail');
+        $youremail = new textinput('youremail');
+        $book->addCell($youremaillabel->show());
+        $book->addCell($youremail->show());
+        $book->endRow();
+        
+        // contact
+        $book->startRow();
+        $yournumlabel = new label($this->objLanguage->languageText('mod_artdir_yournum', 'artdir') . ':', 'input_yournum');
+        $yournum = new textinput('yournum');
+        $book->addCell($yournumlabel->show());
+        $book->addCell($yournum->show());
+        $book->endRow();
+        
+        // booking request
+        $book->startRow();
+        $reqlabel = new label($this->objLanguage->languageText('mod_artdir_bookingdetails', 'artdir') . ':', 'input_request');
+        $req = new textarea('request');
+        $book->addCell($reqlabel->show());
+        $book->addCell($req->show());
+        $book->endRow();
+        
+        $bfieldset = $this->getObject('fieldset', 'htmlelements');
+        $bfieldset->setLegend($this->objLanguage->languageText('mod_artdir_bookartist', 'artdir'));
+        
+        $bfieldset->addContent($book->show());
+        $bookform->addToForm($bfieldset->show());
+        
+        $this->objBButton = new button($this->objLanguage->languageText('word_sendrequest', 'artdir'));
+        $this->objBButton->setIconClass("save");
+        $this->objBButton->setValue($this->objLanguage->languageText('word_sendrequest', 'artdir'));
+        $this->objBButton->setToSubmit();
+        $bookform->addToForm($this->objBButton->show());
+        $bookform = $bookform->show();
+        return $bookform;
     }
     
     public function artistAddForm() {
