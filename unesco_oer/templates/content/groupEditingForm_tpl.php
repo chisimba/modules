@@ -333,7 +333,9 @@ $form->addToForm('<br />');
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
+
 $user_current_membership=$this->objDbGroups->getGroupInstitutions($this->getParam('id'));
+
 
 $groups =$this->objDbInstitution->getAllInstitutions();
 $availablegroups=array();
@@ -352,12 +354,23 @@ foreach ($groups as $group) {
 
     
 }
+
+$currentMembership=array();
+foreach($user_current_membership as $current){
+    array_push($currentMembership,$current['institution_id']);
+}
+
 $objSelectBox = $this->newObject('selectbox','htmlelements');
 $objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
 $objSelectBox->insertLeftOptions(
                         $availablegroups,
                         'id',
                         'name' );
+$objSelectBox->insertRightOptions(
+                               $currentMembership,
+                               'id',
+                               'name');
+//TODO MAKE SURE NOT TO DUPLICATE ROWS
 
 $tblLeft = $this->newObject( 'htmltable','htmlelements');
 $objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
