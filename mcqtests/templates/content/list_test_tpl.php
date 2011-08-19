@@ -85,9 +85,12 @@ if (!empty($data)) {
             'id' => $test['id'],
             'studentId' => $line['studentid']
         )));
-        //$objLink->link = $this->objUser->fullname($line['studentid']);
-        // full name is now sent in the array
-        $objLink->link = $line['fullname'];
+        if (!isset($line['fullname'])){
+            $objLink->link = $this->objUser->fullname($line['studentid']);
+        } else {
+            // full name is now sent in the array
+            $objLink->link = $line['fullname'];
+        }
         $studentLink = $objLink->show();
         $row = array();
         $row[] = $studentLink;
