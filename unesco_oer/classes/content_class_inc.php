@@ -71,6 +71,10 @@ class content extends object
 
     protected $_deleted;
 
+    public $expandedIcon;
+
+    public $icon;
+
     /**
      * * Method to display input
      *
@@ -272,7 +276,10 @@ class content extends object
         $test = implode(',',$selectedID);
 
         $icon = 'icon-product-closed-folder.png';
+        if (!empty ($this->icon)) $icon = $this->icon;
         $expandedIcon = 'icon-product-opened-folder.png';
+        if (!empty ($this->expandedIcon)) $icon = $this->icon;
+        if (!$this->hasContents()) $icon = $expandedIcon;
         
         $hiddenInput = new hiddeninput($this->getID()."[]");
         if ($origional){
@@ -290,7 +297,7 @@ class content extends object
                                                         'text' => $this->getTitle(),
                                                         'link' => "#", 'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
-                                                        'expanded' => FALSE),
+                                                        'expanded' => $this->hasContents()),
                                                     array(
                                                         'onclick' => "javascript: edit('{$this->getPairString()}');",
                                                         'onexpand' => ""
@@ -303,7 +310,7 @@ class content extends object
                                                          'link' => ($highlighted ? "javascript:void()" : $this->getViewLink($productID)),
                                                         'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
-                                                        'expanded' => FALSE),
+                                                        'expanded' => $this->hasContents()),
                                                     array( 
                                                         'onclick' => ($highlighted ? "javascript: highlight('{$this->getID()}','$test' );" : ''),
                                                         
@@ -320,9 +327,9 @@ class content extends object
         if ($editable){
             foreach ($this->_content_types as $class => $description) {
                 $node->addItem(new treenode(array(
-                                                'text' => $description,
-                                                 
-                                                'link' => "#", 'icon' => 'icon-new-product.png',
+                                                'text' => "[Create New $description]",
+                                                'link' => "#",
+                                                'icon' => 'icon-add-to-adaptation.png',
                                                 'expandedIcon' => $expandedIcon,
                                                 'expanded' => FALSE),
                                             array(

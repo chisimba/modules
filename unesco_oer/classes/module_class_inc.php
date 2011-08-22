@@ -209,7 +209,7 @@ class module extends content {
         $table->addCell($textinput->show());
         $table->endRow();
         
-         $fieldName = 'Comments history';
+         $fieldName = 'Comments History';
         $textinput = new textinput('comments_history');
          $textinput->cssClass = "required";
         $textinput->setValue($this->_metaDataArray['comments_history']);
@@ -233,7 +233,7 @@ class module extends content {
          
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell("status");
+        $table->addCell("Status");
         $table->endRow();
          
         $table->startRow();
@@ -243,14 +243,26 @@ class module extends content {
         
         
 
-         $buttonSubmit = new button('Save', 'Save');
-         $buttonSubmit->cssId = "upload";
+         $buttonSubmit = new button('upload', 'Save');
+        $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
     
        
-        $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->getParentID());
+        $form_data->addToForm($table->show() . $buttonSubmit->show());
+
+        if (strcmp($option, 'saveedit') == 0){
+            $buttonDelete = new button('btn_delete', 'Delete');
+             $uri2 = $this->uri(array(
+                'action' => "saveContent",
+                'productID' => $productID,
+                'pair' => $pair,
+                'option' => 'delete',
+                'nextAction' => $prevAction));
+            $buttonDelete->setOnClick('javascript: window.location=\'' . $uri2 . '\'');
+            $form_data->addToForm($buttonDelete->show());
+        }
        
         
 // $content = ' <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
@@ -377,6 +389,7 @@ class module extends content {
         $this->_title = $dataArray['title'];
         $this->_parentID = $dataArray['year_id'];
         $this->_originalID = $dataArray['parentid'];
+        $this->_deleted = $dataArray['deleted'];
 
         $this->_metaDataArray = $dataArray;
 
@@ -386,6 +399,12 @@ class module extends content {
     
     public function getViewLink($productID) {
         return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID()));
+    }
+
+    public function delete() {
+        $success = $this->objDbModules->update('id',  $this->_id, array('deleted'=>'1'));
+        $this->_deleted = $success ? '1' : $this->_deleted;
+        return $success;
     }
 }
 ?>

@@ -162,6 +162,19 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_unesco_oer_modules</table>
+        <version>0.074</version>
+        <description>Added a delete status field</description>
+        <data>
+            <add>
+                <name>deleted</name>
+                <type>integer</type>
+                <length>1</length>
+                <default>0</default>
+            </add>
+        </data>
+    </update>
 </updates>
 
 

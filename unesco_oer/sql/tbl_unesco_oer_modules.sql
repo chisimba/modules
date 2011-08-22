@@ -34,8 +34,8 @@ $fields = array(
                 'assesment' => array('type' => 'text'),
                 'comments_history' => array('type' => 'text'),
                 'schedule_of_classes' => array('type' => 'text'),
-                'parentid' => array('type' => 'text','length' => 32,'null')
- 
+                'parentid' => array('type' => 'text','length' => 32,'null'),
+                'deleted' => array('type' => 'integer','length' => 1,'default' => '0')
  		);
 
 ?>

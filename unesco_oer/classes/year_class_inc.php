@@ -60,20 +60,32 @@ class year extends content {
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell(Year);
         $table->endRow();
 
         $table->startRow();
         $table->addCell($textinput->show());
         $table->endRow();
 
-         $buttonSubmit = new button('upload', 'upload');
-          $buttonSubmit->cssId = "upload";
+         $buttonSubmit = new button('upload', 'Save');
+        $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
 
-        $form_data->addToForm($table->show() . $buttonSubmit->show() . '......' . $this->getParentID());
+        $form_data->addToForm($table->show() . $buttonSubmit->show());
+
+        if (strcmp($option, 'saveedit') == 0){
+            $buttonDelete = new button('btn_delete', 'Delete');
+             $uri2 = $this->uri(array(
+                'action' => "saveContent",
+                'productID' => $productID,
+                'pair' => $pair,
+                'option' => 'delete',
+                'nextAction' => $prevAction));
+            $buttonDelete->setOnClick('javascript: window.location=\'' . $uri2 . '\'');
+            $form_data->addToForm($buttonDelete->show());
+        }
 
         return $form_data->show();
     }
@@ -130,11 +142,16 @@ class year extends content {
         $this->_id = $dataArray['id'];
         $this->_title = $dataArray['year'];
         $this->_parentID = $dataArray['calendar_id'];
+        $this->_deleted = $dataArray['deleted'];
 
         //TODO add code for this years's contents
-        $this->getContents();
+        $this->getContents();   
+    }
 
-        
+    public function delete() {
+        $success = $this->objDbYears->update('id',  $this->_id, array('deleted'=>'1'));
+        $this->_deleted = $success ? '1' : $this->_deleted;
+        return $success;
     }
 }
 ?>

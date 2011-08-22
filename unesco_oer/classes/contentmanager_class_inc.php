@@ -170,13 +170,12 @@ class contentmanager extends object
         if ($editable){
             foreach ($this->_content_types as $key => $value) {
                 $menu->addItem(new treenode(array(
-                                                'text' => $value,
-                                                'link' => "#", 'icon' => 'icon-new-product.png',
+                                                'text' => "[Create New $value]",
+                                                'link' => "#", 'icon' => 'icon-add-to-adaptation.png',
                                                 'expandedIcon' => $expandedIcon,
-                                                'expanded' => FALSE),
+                                                'expanded' => TRUE),
                                             array(
-                                                'onclick' => "javascript: newSection('".implode ( '__' , array($this->getProductID(),$key) )."');",
-                                                'onexpand' => "alert('Expanded')")
+                                                'onclick' => "javascript: newSection('".implode ( '__' , array($this->getProductID(),$key) )."');")
                                             ));
             }
         }
