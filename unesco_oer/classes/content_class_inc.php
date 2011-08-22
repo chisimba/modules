@@ -69,7 +69,9 @@ class content extends object
     
     protected $_originalID;
 
-        /**
+    protected $_deleted;
+
+    /**
      * * Method to display input
      *
      * @access   public
@@ -309,8 +311,10 @@ class content extends object
                        
                       }
 
-        foreach ($this->_contents as $content){ 
-            $node->addItem($content->getTreeNodes($editable, $selectedID,$highlighted,$origional,$productID));
+        foreach ($this->_contents as $content){
+            if (!$content->isDeleted()){
+                $node->addItem($content->getTreeNodes($editable, $selectedID,$highlighted,$origional,$productID));
+            }
         }
 
         if ($editable){
@@ -368,6 +372,14 @@ class content extends object
     
     public function showReadOnlyInput(){
         return "Nothing to show!";
+    }
+
+    public function delete(){
+        return FALSE;
+    }
+
+    public function isDeleted() {
+        return ($this->_deleted != 0);
     }
 }
 

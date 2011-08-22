@@ -2246,6 +2246,12 @@ class unesco_oer extends controller {
                 $existingContent->handleUpload();
                 break;
 
+            case 'delete':
+                $pairArray = $contentManager->getPairArray($pair);
+                $existingContent = $contentManager->getContentByContentID($pairArray[1]);
+                $existingContent->delete();
+                break;
+
             default:
                 break;
         }

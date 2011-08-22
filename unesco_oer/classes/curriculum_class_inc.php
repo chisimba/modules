@@ -161,13 +161,25 @@ class curriculum extends content {
         
         
 
-        $buttonSubmit = new button('Save', 'upload');
+        $buttonSubmit = new button('upload', 'Save');
         $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
 
         $form_data->addToForm($table->show() . $buttonSubmit->show());
+
+        if (strcmp($option, 'saveedit') == 0){
+            $buttonDelete = new button('btn_delete', 'Delete');
+             $uri2 = $this->uri(array(
+                'action' => "saveContent",
+                'productID' => $productID,
+                'pair' => $pair,
+                'option' => 'delete',
+                'nextAction' => $prevAction));
+            $buttonDelete->setOnClick('javascript: window.location=\'' . $uri2 . '\'');
+            $form_data->addToForm($buttonDelete->show());
+        }
 
         return $form_data->show();
     }
@@ -281,9 +293,9 @@ class curriculum extends content {
         $this->_id = $dataArray['id'];
         $this->_title = $dataArray['title'];
         $this->_parentID = $dataArray['product_id'];
-         $this->_originalID = $dataArray['parentid'];
+        $this->_originalID = $dataArray['parentid'];
+        $this->_deleted = $dataArray['deleted'];
 
-        //TODO add code for this curriculum's contents
         $this->getContents();
     }
     
@@ -291,7 +303,11 @@ class curriculum extends content {
         return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID()));
     }
 
-
+    public function delete() {
+        $success = $this->objDbCurricula->update('id',  $this->_id, array('deleted'=>'1'));
+        $this->_deleted = $success ? '1' : $this->_deleted;
+        return $success;
+    }
 }
 ?>
 

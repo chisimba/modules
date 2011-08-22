@@ -123,6 +123,45 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_unesco_oer_calendar</table>
+        <version>0.073</version>
+        <description>Added a delete status field</description>
+        <data>
+            <add>
+                <name>deleted</name>
+                <type>integer</type>
+                <length>1</length>
+                <default>0</default>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_unesco_oer_curriculum</table>
+        <version>0.073</version>
+        <description>Added a delete status field</description>
+        <data>
+            <add>
+                <name>deleted</name>
+                <type>integer</type>
+                <length>1</length>
+                <default>0</default>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_unesco_oer_years</table>
+        <version>0.073</version>
+        <description>Added a delete status field</description>
+        <data>
+            <add>
+                <name>deleted</name>
+                <type>integer</type>
+                <length>1</length>
+                <default>0</default>
+            </add>
+        </data>
+    </update>
 </updates>
 
 

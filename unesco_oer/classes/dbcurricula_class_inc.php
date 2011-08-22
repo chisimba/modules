@@ -68,7 +68,7 @@ class dbcurricula extends dbtable
 
      function getCurriculaparent($id)
     {
-        $sql = "select * from tbl_unesco_oer_curriculum where id = '$id'";
+        $sql = "select * from $this->_tableName where id = '$id'";
 
         return $this->getArray($sql);
     }

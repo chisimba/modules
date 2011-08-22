@@ -24,7 +24,8 @@ $options = array('comment'=>'Table to store Curricula','collate'=>'utf8_general_
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
                 'curriculum_id' => array('type' => 'text','length' => 32),
-                'title'=>array('type' =>'text')
+                'title'=>array('type' =>'text'),
+                  'deleted' => array('type' => 'integer','length' => 1,'default' => '0')
  		);
 
 ?>

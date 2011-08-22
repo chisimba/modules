@@ -22,7 +22,8 @@ $options = array('comment'=>'Table to store the years of a Curriculum','collate'
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
                 'calendar_id' => array('type' => 'text','length' => 32),
-                'year' => array('type' =>'text', 'length' => 255)
+                'year' => array('type' =>'text', 'length' => 255),
+                  'deleted' => array('type' => 'integer','length' => 1,'default' => '0')
 );
 
 ?>
