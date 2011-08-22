@@ -303,10 +303,12 @@ class unesco_oer extends controller {
       
      //   $test=  $content->getProductID();
      //   echo $test; echo '<br />';
-        echo $content->getContentTree(FALSE,FALSE);
+         $test = '<script src="/unesco_oer/core_modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>';
+         $test .= $content->getContentTree(FALSE,FALSE);
          
+        echo $test;
         
-        die();
+      
          
          
         
