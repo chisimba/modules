@@ -440,7 +440,7 @@ class artdir extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'search', 'showsignin', 'viewartist', 'viewpic', 'viewbycat', 'aboutus', 'browse', NULL);
+        $allowedActions = array('', 'search', 'showsignin', 'viewartist', 'viewpic', 'viewbycat', 'aboutus', 'browse', 'bookingform', 'bookartist', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
