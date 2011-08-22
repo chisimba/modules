@@ -252,7 +252,9 @@ $product->LoadProduct($origionalproduct);
               //      echo $content->getContentTree(FALSE, FALSE);
                     
             //    echo $origionalproduct;
+       
                     ?>
+                         
 
 
                 </div>
@@ -274,13 +276,10 @@ $product->LoadProduct($origionalproduct);
      
            
        $('.Root').load('index.php?module=unesco_oer&action=loadmodule&id=' + origionalprod + '&moduleid=' + moduleid);
-        
-         
-           $('#tree').load('index.php?module=unesco_oer&action=loadtree&id=' + origionalprod + '&moduleid=' + moduleid);
+  
+        $('#tree').load('index.php?module=unesco_oer&action=loadtree&id=' + origionalprod + '&moduleid=' + moduleid);
      
-           
-      
-
+      //$.getScript('core_modules/tree/resources/TreeMenu.js');
   
         
        

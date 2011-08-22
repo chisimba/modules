@@ -228,7 +228,7 @@
                   }
                   
                   
-                  function test(value){
+                  function test(){
                       
                      //var ourArray = new Array();
                     var temp = $('#search').attr('value');
@@ -237,7 +237,7 @@
                     $().parent().toggleClass('highlight');
                      
                         
-                        
+                       
                       
 
                       //alert(ourArray[0]);

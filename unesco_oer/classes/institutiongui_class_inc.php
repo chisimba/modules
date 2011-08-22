@@ -154,16 +154,3 @@ class institutiongui extends object {
 }
 ?>
 
-<script type="text/javascript">
-    jQuery(document).ready(function(){
-
-    jQuery("a[class=deleteInstitution]").click(function(){
-
-    var r=confirm("Are you sure you want to delete this institution?");
-    if(r== true){
-    window.location=this.href;
-    }
-    return false;
-    }
-    }
-</script>

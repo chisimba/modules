@@ -295,14 +295,14 @@ class unesco_oer extends controller {
       
          $productID = $this->getParam('id');
         
-         echo $productID;
+        
         
          $product = $this->newObject('product'); 
          $product->loadProduct($productID);
          $content = $product->getContentManager(); 
       
-        $test=  $content->getProductID();
-        echo $test; echo '<br />';
+     //   $test=  $content->getProductID();
+     //   echo $test; echo '<br />';
         echo $content->getContentTree(FALSE,FALSE);
          
         

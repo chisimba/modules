@@ -146,9 +146,12 @@ class contentmanager extends object
     function getContentTree($editable = FALSE,  $highlighted = FALSE, $origional = FALSE,$productIDS = NULL) { 
 
         $output = '';
-
+        
+        $js = '<script language="JavaScript" src="' . $this->getResourceUri('TreeMenu.js','tree') . '" type="text/javascript"></script>';
+        
+      //  echo $this->appendArrayVar('headerParams', $js);
         $output .= '<script src="core_modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>';
-
+        //$output .= $this->appendArrayVar('headerParams', $js);
         $objSkin = $this->getObject('skin', 'skin');
         $this->loadClass('treemenu', 'tree');
         $this->loadClass('treenode', 'tree');
