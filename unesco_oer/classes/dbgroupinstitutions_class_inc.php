@@ -34,8 +34,16 @@ class dbgroupinstitutions extends dbtable{
     }
 //To get all group linked institutions
     function getLinkedInstitutions($groupid){
-        $sql="SELECT * FROM tbl_unesco_oer_group_institutions WHERE groupid='$groupid'";
+        $sql="SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$groupid'";
         return $this->getArray($sql);
+    }
+
+    function check_availableGroupInstitution($groupid,$institutionid){
+        $sql="SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$groupid' and institution_id='$institutionid'";
+        $array=$this->getArray($sql);
+        if(count($array)>0){
+            return TRUE;
+        }
     }
 
 
