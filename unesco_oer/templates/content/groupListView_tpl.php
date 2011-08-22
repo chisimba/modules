@@ -9,6 +9,27 @@ $this->loadClass('textinput', 'htmlelements');
 
 <?php $this->setLayoutTemplate('maincontent_layout_tpl.php'); ?>
 
+
+<div style="clear:both;"></div>
+<div class="breadCrumb module">
+    <div id='breadcrumb'>
+        <ul><li class="first">Home</li>
+            <li><a href='?module=unesco_oer&action=10' alt='Groups' title='Groups'>Groups</a></li>
+            <li><a href='?module=unesco_oer&action=groupList' alt='groupview' title='groupListView'>Groups List</a></li>
+<!--           <li>Edit Group</li>-->
+            <!--<li><a href='/newsroom/2430/newsitems.html' alt='Click here to view NewsItems' title='Click here to view NewsItems'>NewsItems</a></li>
+            <li><a href='#' alt='Click here to view 2011-07' title='Click here to view 2011-07'>2011-07</a></li>
+            <li>witsjunction</li>
+           -->
+        </ul>
+    </div>
+
+</div>
+
+
+
+
+
         	<div class="subNavigation"></div>
         	<!-- Left Colum -->
         	<div class="leftColumnDiv">

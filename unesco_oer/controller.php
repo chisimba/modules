@@ -1617,6 +1617,13 @@ class unesco_oer extends controller {
     }
 
     function __userPagination($page, $start, $end) {
+        $allUser=$this->objUseExtra->getAllUser();
+        $itemPerPage=10;
+        $NumberOfPages=count($allUser)/$itemPerPage;
+
+
+
+
         $user = $this->objUseExtra->getUser($start, $end);
         $this->setVar('page', $page);
         $this->setVar('user', $user);
@@ -1961,10 +1968,14 @@ class unesco_oer extends controller {
         } else {
             $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
             $id=$this->objDbGroups->getLastInsertId();
-            //echo $id;
+
+            if(count($rightList)==0){
+                     $this->objDbgroupInstitutions->add_group_institutions($id,$array);
+            }else{
+            
             foreach($rightList as $array){
                 $this->objDbgroupInstitutions->add_group_institutions($id,$array);
-                   }
+                   }}
 //            $this->setLayoutTemplate('maincontent_layout_tpl.php');
 //            return 'groupListingForm_tpl.php';
             return $this->__groupListingForm();
@@ -2051,6 +2062,7 @@ class unesco_oer extends controller {
             foreach($rightList as $array){
                 $this->objDbgroupInstitutions->add_group_institutions($id,$array);
                    }
+
             //$this->objDbgroupInstitutions->add_group_institutions($id, $institutionid); // Todo store institutions Id not name
             return $this->__groupListingForm();
         }

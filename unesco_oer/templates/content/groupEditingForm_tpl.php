@@ -354,11 +354,14 @@ foreach ($groups as $group) {
 
     
 }
-
+$Current_Institution_linked=$this->objDbGroups->getInstitutions($this->getParam('id'));
 $currentMembership=array();
-foreach($user_current_membership as $current){
-    array_push($currentMembership,$current['institution_id']);
+foreach($Current_Institution_linked as $institutionID){
+    $institutionArray= $this->objDbGroups->getInstitution($institutionID) ;
+    array_push($currentMembership,$institutionArray);
 }
+$currentMembership=$currentMembership[0];
+
 
 $objSelectBox = $this->newObject('selectbox','htmlelements');
 $objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
