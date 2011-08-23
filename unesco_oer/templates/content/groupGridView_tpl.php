@@ -170,6 +170,13 @@ echo $this->objGroupUtil->groupPerPage();
 
 
 
+                       <div class="gridViewGroupBackgroundColor">
+                    <div class="paddingGroubGridListingTable">
+                        <table class="groupListingTable" cellspacing="0" cellpadding="0">
+                            <td>
+
+
+
 
 
 
@@ -204,6 +211,11 @@ echo $this->objGroupUtil->groupPerPage();
                 echo $fieldset1->show();
                // echo $objTable->show();
                 ?>
+
+                                             </td>
+                            </table>
+                      </div>
+                       </div>
 
             </div>
             <!-- Right column DIv -->
