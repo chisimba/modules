@@ -293,15 +293,16 @@ class content extends object
         
         
         
-         if ($compare){
-            $link = $this->uri(array('action' => 'CompareSelected', 'productid' => $test, 'id' => $this->getID()));
-        }
+         
         
-        else if ($highlighted){
+       if ($highlighted){
           $link =  "javascript:void()";
         } else 
           $link = $this->getViewLink($productID); 
         
+        if ($compare){
+            $link = $this->uri(array('action' => 'CompareSelected', 'productid' => $test, 'id' => $this->getID()));
+        }
        
 
         // Makes tree a link if not editing when adding product metadata

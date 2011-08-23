@@ -151,7 +151,7 @@
                                  $content = $product->getContentManager();
                                    
                                   
-                                echo     $content->getContentTree(FALSE,TRUE,False,$selectedproducts);
+                                echo     $content->getContentTree(FALSE,TRUE,False,FALSE,$selectedproducts);
                                 
                                 
                                 ?>
