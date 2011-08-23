@@ -169,7 +169,7 @@
                       
                                     $content = $product->getContentManager();
                                     
-                                    $contentHTML = $content->getContentTree(FALSE,TRUE, TRUE,$selectedproducts);
+                                    $contentHTML = $content->getContentTree(FALSE,TRUE, TRUE,FALSE,$selectedproducts);
                                     
                                
                                       

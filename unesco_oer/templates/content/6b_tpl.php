@@ -134,7 +134,7 @@ $product->LoadProduct($origionalproduct);
 
                 echo $content = '<div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
-                                <h4><a href="#" id="treelink" onclick= javascript:moduleselect(' . "'$origionalproduct'" . ',' . "'$moduleid'" . ') class="adaptationListingLink">' . $product->getTitle() . '
+                                <h4><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id='.$moduleid.'&productid='.$productid.'&chosenid='.$origionalproduct.'" id="treelink"  class="adaptationListingLink">' . $product->getTitle() . '
                    
                                   </a></h4>
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
@@ -174,7 +174,7 @@ $product->LoadProduct($origionalproduct);
 
                     $content .= '<div class="slideBoxAdaptation">
 							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
-                            <h4><a href="#"  id="treelink" onclick= javascript:moduleselect(' . "'$selectedproduct'" . ',' . "'$moduleid'" . ') class="adaptationListingLink">' . $product->getTitle() . ' 
+                            <h4><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id='. $moduleid .'&productid='.$productid.'&chosenid='.$selectedproduct.'" id="treelink"  class="adaptationListingLink">' . $product->getTitle() . ' 
                    
                                   </a></h4>
                             <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
@@ -221,13 +221,80 @@ $product->LoadProduct($origionalproduct);
 
 
                 <div class ="Root">
+                    
+                    
 <?php
-//            
-//                        $product = $this->getObject('product'); 
-//            $product->loadProduct($origionalproduct);
+
+//            $product = $this->getObject('product');
+//            $product->loadProduct($selectedproduct);
 //            $content = $product->getContentManager();
-//            $existingContent = $content->getContentByContentID($moduleid);
-//                 echo  $existingContent->showReadOnlyInput();
+//            
+//                       $temp = $this->objDbmodules->getmoduleparent($moduleid);
+//           $parentid =  $temp[0]['parentid'];
+//
+//        if  ($parentid != 'NULL'){                                              //check if origional product was selected
+//
+//                $modules = $this->objDbmodules->getmodulebyparent($parentid);
+//
+//
+//           }else{
+//
+//               $modules = $this->objDbmodules->getmodulebyparent($moduleid);
+//
+//           } 
+//
+//           if ($parentid == ''){
+//                     $temp = $this->objDbcurricula->getCurriculaparent($moduleid);
+//                      $parentid =  $temp[0]['parentid'];
+//                     
+//                            if  ($parentid != NULL){                                              //check if origional product was selected
+//      
+//                                   $modules = $this->objDbcurricula->getCurriculabyparent($parentid);
+//
+//    
+//                                  
+//                                                    }else{
+//                                                         
+//                                                           $modules = $this->objDbcurricula->getCurriculabyparent($moduleid);
+//                                                       
+//           }
+//
+//        
+//           }
+//     
+//                           // var_dump($modules);
+//               
+//        $check = FAlSE;     
+//        foreach ( $modules as $module){  // run through modules till matching module and product are selected
+//           
+//            $existingContent = $content->getContentByContentID($module['id']);
+//                
+//        if   ($existingContent != FALSE){
+//            
+//            $check = TRUE;
+//            $existingContent = $content->getContentByContentID($module['id']);
+//             echo  $existingContent->showReadOnlyInput();
+//            
+//                 }  
+//
+//       } 
+//     
+//            if   ($check == FALSE){
+//              
+//                 if  ($parentid != 'NULL') // check if origional product was selected
+//                 {
+//                     $existingContent = $content->getContentByContentID($temp[0]['parentid']);
+//                 } else 
+//                 {
+//                      $existingContent = $content->getContentByContentID($moduleid);
+//                 }
+//          echo  $existingContent->showReadOnlyInput();
+//                
+//        
+//            }
+//
+//
+
 ?>           
 
 
@@ -249,7 +316,7 @@ $product->LoadProduct($origionalproduct);
                     $product = $this->getObject('product');
                     $product->loadProduct($origionalproduct);
                     $content = $product->getContentManager();
-              //      echo $content->getContentTree(FALSE, FALSE);
+                 //   echo $content->getContentTree(FALSE, FALSE);
                     
             //    echo $origionalproduct;
        
@@ -266,7 +333,7 @@ $product->LoadProduct($origionalproduct);
     </div>
 
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
+<!--<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
 <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
 <script  >
    
@@ -288,4 +355,4 @@ $product->LoadProduct($origionalproduct);
         
        
     }
-</script>
+</script>-->

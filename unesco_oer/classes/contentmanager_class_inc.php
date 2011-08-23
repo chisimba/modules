@@ -143,7 +143,7 @@ class contentmanager extends object
         return FALSE;
     }
 
-    function getContentTree($editable = FALSE,  $highlighted = FALSE, $origional = FALSE,$productIDS = NULL) { 
+    function getContentTree($editable = FALSE,  $highlighted = FALSE, $origional = FALSE, $compare = FALSE, $productIDS = NULL) { 
 
         $output = '';
         
@@ -164,7 +164,7 @@ class contentmanager extends object
 //Add nodes to the tree
         foreach ($this->_contents as $content){
             if (!$content->isDeleted()){
-                $menu->addItem($content->getTreeNodes($editable, $productIDS, $highlighted,$origional, $this->getProductID()));
+                $menu->addItem($content->getTreeNodes($editable,  $highlighted,$origional,$compare,$productIDS,$this->getProductID()));
             }
         }
         if ($editable){

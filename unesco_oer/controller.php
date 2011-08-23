@@ -196,12 +196,27 @@ class unesco_oer extends controller {
       public function __CompareSelected() {
 
         $moduleid = $this->getParam("id");
+        $chosenid = $this->getParam("chosenid");
          $productid = $this->getParam("productid");
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $this->setVarByRef('moduleid', $moduleid);
          $this->setVarByRef('productid', $productid);
+         $this->setVar('chosenid', $chosenid);
 
         return "6b_tpl.php";
+    }
+    
+     public function __Comparechosen() {
+
+        $moduleid = $this->getParam("id");
+        $chosenid = $this->getParam("chosenid");
+         $productid = $this->getParam("productid");
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        $this->setVarByRef('moduleid', $moduleid);
+         $this->setVarByRef('productid', $productid);
+         $this->setVar('chosenid', $chosenid);
+
+        return "6b2_tpl.php";
     }
     
      public function __loadmodule() {
@@ -412,7 +427,7 @@ class unesco_oer extends controller {
     }
 
     public function __JavaFilter() {
-
+ 
         $temp = $this->objjavafilt->replaceprods();
         echo $temp;
     }

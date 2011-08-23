@@ -269,7 +269,7 @@ class content extends object
         return !empty($this->_contents);
     }
 
-    function getTreeNodes($editable = FALSE, $selectedID = NULL, $highlighted = FALSE, $origional = FALSE, $productID = NULL) {
+    function getTreeNodes($editable = FALSE,  $highlighted = FALSE, $origional = FALSE, $compare = FALSE,$selectedID = NULL, $productID = NULL) {
 
         $this->loadClass('treenode', 'tree');
         
@@ -290,6 +290,17 @@ class content extends object
         $hiddenInput->extra = "id='{$this->getID()}' class='{$this->getID()}'";
          $hiddenInput->value =  $this->getTitle() ;    
         }
+        
+         if ($compare){
+            $link = $this->uri(array('action' => 'CompareSelected', 'productid' => $test, 'id' => $this->getID()));
+        }
+        
+        else if ($highlighted){
+          $link =  "javascript:void()";
+        } else 
+          $link = $this->getViewLink($productID); 
+        
+       
 
         // Makes tree a link if not editing when adding product metadata
         if ($editable){
@@ -307,7 +318,7 @@ class content extends object
                             $node = new treenode(array(
                                                         'text' => $this->getTitle() . $hiddenInput->show(),
                                                    //     'cssClass' => ($highlighted ? 'HL' : ''),                                                       
-                                                         'link' => ($highlighted ? "javascript:void()" : $this->getViewLink($productID)),
+                                                         'link' => $link,
                                                         'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
                                                         'expanded' => $this->hasContents()),
@@ -320,7 +331,7 @@ class content extends object
 
         foreach ($this->_contents as $content){
             if (!$content->isDeleted()){
-                $node->addItem($content->getTreeNodes($editable, $selectedID,$highlighted,$origional,$productID));
+                $node->addItem($content->getTreeNodes($editable, $highlighted,$origional,$compare,$selectedID,$productID));
             }
         }
 
