@@ -221,7 +221,7 @@ class dbgroups extends dbtable {
     // PBROBLEM PROBLEM PROBLEM   #############################################
     // Does a User need necessarily to know the Latitude and Longitude of the group Location?
     //
-    function saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail) {
+    function saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description,$admin, $thumbnail) {
         $data = array(
             'name' => $name,
             'email' => $email,
@@ -235,6 +235,7 @@ class dbgroups extends dbtable {
             'loclat' => $loclat,
             'loclong' => $loclong,
             'description' => $description,
+             'admin'=>$admin,
             'thumbnail' => $thumbnail
         );
         $this->insert($data);

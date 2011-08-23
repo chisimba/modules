@@ -1911,9 +1911,9 @@ class unesco_oer extends controller {
     function __joinGroup() {
 
         $currLoggedInID = $this->objUser->userId();
-
-        $this->ObjDbUserGroups->joingroup($currLoggedInID, $this->getParam('id'));
-        return $this->__groupListingFormMain();
+        $id=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
+        $this->ObjDbUserGroups->joingroup($id, $this->getParam('id'));
+        return $this->__10();
     }
 
     /*
@@ -1937,6 +1937,9 @@ class unesco_oer extends controller {
         $description = $this->getParam('description');
         $loclat = $this->getParam('group_loclat');
         $loclong = $this->getParam('group_loclong');
+        $currLoggedInID = $this->objUser->userId();
+        $adminid=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
+        $admin=$adminid;
         $rightList=$this->getParam('rightList');
 
         $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
@@ -1981,7 +1984,7 @@ class unesco_oer extends controller {
             $this->setVarByRef('problems', $problems);
             return 'groupRegistrationForm_tpl.php';
         } else {
-            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
+            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description,$admin, $thumbnail);
             $id=$this->objDbGroups->getLastInsertId();
 
             if(count($rightList)==0){

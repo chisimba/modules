@@ -66,38 +66,62 @@ class grouputil extends object {
       //$joinLink;
        //$objUser = $this->getObject('user', 'security');
         //$imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
+
      
   
+//              $joinGroupLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'],"page"=>'10a_tpl.php')));
+//              $joinGroupLink->link='Join';
+                $currLoggedInID = $this->objUser->userId();
+        $idUser=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
+              if($this->ObjDbUserGroups->ismemberOfgroup($idUser, $group['id'])){
+
+              $joinGroupLink = new link($this->uri(array('action' =>"10")));
+              $joinGroupLink->link='Join';
+                  $joinGroupLink->cssClass ='memberofgroup';
+              }else{
+
               $joinGroupLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'],"page"=>'10a_tpl.php')));
               $joinGroupLink->link='Join';
-              $joinGroupLink->cssClass = 'joingroup';
+              $joinGroupLink->cssClass = 'joingroup';}
+
             
-
-
-      $content.='
-          <div class="whiteBackgroundBox">
-         '.$thumbLink->show().'
+$content.='                        	<div class="whiteBackgroundBox">
+                            '.$thumbLink->show().'
                             <div class="groupGridViewHeading greenText">
-                            '.$group['name'] .' </div>
+                             '.$group['name'] .'
+                            </div>
                             <div class="groupMemberAndJoinLinkDiv">
-                            	   <span class="greenText">Members :</span>'. $this->ObjDbUserGroups->groupMembers($group['id']) .'<br><br>
-                             <!--    <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
-               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">-->
-
-   <br/>
-               <a class="greyListingHeading">'.$this->objLanguagecode->getName($group['country']).'</a> |
-                             <a class="greyListingHeading">'.$group['city'].'</a> |
-                                           <a class="greyListingHeading">'.$group['state'].'</a> |
-                                                         <a class="greyListingHeading">'.$group['email'].'</a>
-                                                             <br/>
-           </div>
-'.//$joinGroupLink->show().'</a></div>
-              '</a></div>
+                            	<span class="greenText">Members :</span>'.$this->ObjDbUserGroups->groupMembers($group['id']).'<br><br>
+                                <a href="#"><img src=""skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
+               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">'.$joinGroupLink->show().'</a></div>
                             </div>
-                            </div>
-                            
 
-                            ';
+                            </div>';
+
+//      $content.='
+//          <div class="whiteBackgroundBox">
+//         '.$thumbLink->show().'
+//                            <div class="groupGridViewHeading greenText">
+//                            '.$group['name'] .' </div>
+//                            <div class="groupMemberAndJoinLinkDiv">
+//                            	   <span class="greenText">Members :</span>'. $this->ObjDbUserGroups->groupMembers($group['id']) .'<br><br>
+//                             <!--    <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
+//               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">-->
+//
+//   <br/>
+//               <a class="greyListingHeading">'.$this->objLanguagecode->getName($group['country']).'</a> |
+//                             <a class="greyListingHeading">'.$group['city'].'</a> |
+//                                           <a class="greyListingHeading">'.$group['state'].'</a> |
+//                                                         <a class="greyListingHeading">'.$group['email'].'</a>
+//                                                             <br/>
+//           </div>
+//'.//$joinGroupLink->show().'</a></div>
+//              '</a></div>
+//                            </div>
+//                            </div>
+//
+//
+//                            ';
       return $content;
   }
 

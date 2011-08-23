@@ -143,6 +143,10 @@ echo $this->objGroupUtil->groupPerPage();
                     </div>
 
                 </div>
+                <div class="gridViewGroupBackgroundColor">
+                    <div class="paddingGroubGridListingTable">
+                        <table class="groupListingTable" cellspacing="0" cellpadding="0">
+                            <td>
 
                 <?php
                 $objTable = $this->getObject('htmltable', 'htmlelements');
@@ -167,14 +171,18 @@ echo $this->objGroupUtil->groupPerPage();
                         $count = 0;
                     }
                 }
+                echo $objTable->show();
                 
-                
-                $fieldset1 = $this->newObject('fieldset', 'htmlelements');
-                $fieldset1->setLegend();
-                $fieldset1->addContent($objTable->show());
-                echo $fieldset1->show();
+//                $fieldset1 = $this->newObject('fieldset', 'htmlelements');
+//                $fieldset1->setLegend();
+//                $fieldset1->addContent($objTable->show());
+//                echo $fieldset1->show();
                // echo $objTable->show();
                 ?>
+                                  </td>
+                            </table>
+                      </div>
+                       </div>
               <!-- <div class="gridViewGroupBackgroundColor">
                 	<div class="paddingGroubGridListingTable">
                     	<table class="groupListingTable" cellspacing="0" cellpadding="0">

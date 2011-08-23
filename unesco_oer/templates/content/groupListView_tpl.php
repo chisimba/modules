@@ -138,7 +138,10 @@ $this->loadClass('textinput', 'htmlelements');
 
 
 
-
+                <div class="gridViewGroupBackgroundColor">
+                    <div class="paddingGroubGridListingTable">
+                        <table class="groupListingTable" cellspacing="0" cellpadding="0">
+                            <td>
 
 
 
@@ -185,11 +188,12 @@ $this->loadClass('textinput', 'htmlelements');
            </div> ';
         }
     }
-    $fieldset1 = $this->newObject('fieldset', 'htmlelements');
-    $institutionsFsLegend = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
-    $fieldset1->setLegend();
-    $fieldset1->addContent($content);
-    echo $fieldset1->show();
+    echo $content;
+//    $fieldset1 = $this->newObject('fieldset', 'htmlelements');
+//    $institutionsFsLegend = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
+//    $fieldset1->setLegend();
+//    $fieldset1->addContent($content);
+//    echo $fieldset1->show();
     
     $aabLink =  new link($this->uri(array("action" =>'groupList',"page"=>'10a_tpl.php')));
     $aabLink->link = 'LIST';
@@ -198,6 +202,12 @@ $this->loadClass('textinput', 'htmlelements');
 
 
     ?>
+
+
+                                             </td>
+                            </table>
+                      </div>
+                       </div>
 </div>
 <script type="text/javascript">
 
