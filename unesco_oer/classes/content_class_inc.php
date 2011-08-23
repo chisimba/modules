@@ -291,6 +291,8 @@ class content extends object
          $hiddenInput->value =  $this->getTitle() ;    
         }
         
+        
+        
          if ($compare){
             $link = $this->uri(array('action' => 'CompareSelected', 'productid' => $test, 'id' => $this->getID()));
         }

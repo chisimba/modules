@@ -232,9 +232,12 @@
                       
                      //var ourArray = new Array();
                     var temp = $('#search').attr('value');
+                     $('.highlight').toggleClass('highlight');
+                  $('input[value~="' +temp +'"]').parent().toggleClass('highlight');
+                  
                    
                   
-                    $().parent().toggleClass('highlight');
+                   
                      
                         
                        

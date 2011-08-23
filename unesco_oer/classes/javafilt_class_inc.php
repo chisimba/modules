@@ -767,7 +767,7 @@ class javafilt extends object {
                     $count++;
                     
                     
-                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $product['id'], 'prevAction' => 'ViewProduct'));
+              $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$productID"));
                 $adaptLink = new link($uri);
                 $adaptLink->cssClass = "adaptationLinks";
                 $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
@@ -788,7 +788,7 @@ class javafilt extends object {
                             
                             <div class="adaptedByDiv3a">Adapted by:</div>
                             <div class="gridSmallImageAdaptation" >
-                            	<img src="' . $abLink->show() .'" alt="Adaptation placeholder" class="smallAdaptationImageGrid">
+                            	<img src="' . $abLink->show() .'
                                 <span class="greyListingHeading">
                             
                                     
