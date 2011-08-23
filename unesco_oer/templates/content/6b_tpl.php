@@ -65,7 +65,7 @@ $product->LoadProduct($origionalproduct);
                 <a href="#" class="productBreadCrumbColor">
                 <?php
     
-    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $origionalproduct)));
     $abLink->link = $product->getTitle();
     $abLink->cssClass = "blueText noUnderline";
     
@@ -94,7 +94,17 @@ $product->LoadProduct($origionalproduct);
                             <div class="listTopLinks">
                                 <div class="productLinksViewDiv">
                                     <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
+                                    
+             <?php        
+             
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $origionalproduct)));
+    $abLink->link = 'View Full Product';
+    $abLink->cssClass = "textNextToTheListingIconDiv";
+    
+
+   echo $abLink->show();
+                                 
+              ?>
                                 </div>
                             </div>
 
@@ -131,6 +141,17 @@ $product->LoadProduct($origionalproduct);
                 $product->loadProduct($selectedproducts[0]);
                 $origionalproduct = $product->getParentID();
                 $product->LoadProduct($origionalproduct);
+                
+                 if ($this->objUser->isLoggedIn()) {
+                                               $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $origionalproduct , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$origionalproduct"));
+                                               $adaptLink = new link($uri);
+                                               $adaptLink->cssClass = "adaptationLinks";
+                                               $linkText = 'Make Adaptation';
+                                               $adaptLink->link = $linkText;
+                               
+                                     }
+
+  
 
                 echo $content = '<div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
@@ -138,7 +159,7 @@ $product->LoadProduct($origionalproduct);
                    
                                   </a></h4>
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                <div class="textNextToTheListingIconDiv">'. $adaptLink->show() .'</div>
 						</div> ';
 
 //                                                
@@ -170,6 +191,17 @@ $product->LoadProduct($origionalproduct);
                     $product->loadProduct($selectedproduct);
                     //         $content = $product->getContentManager();
                     //  $existingContent = $content->getparent($moduleID);
+                    
+                     if ($this->objUser->isLoggedIn()) {
+                                               $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $selectedproduct , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$selectedproduct"));
+                                               $adaptLink = new link($uri);
+                                               $adaptLink->cssClass = "adaptationLinks";
+                                               $linkText = 'Make Adaptation';
+                                               $adaptLink->link = $linkText;
+                               
+                                     }
+
+   
 
 
                     $content .= '<div class="slideBoxAdaptation">
@@ -178,7 +210,7 @@ $product->LoadProduct($origionalproduct);
                    
                                   </a></h4>
                             <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                               <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation using this product</a></div>						</div> ';
+                               <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>						</div> ';
                 }
                 echo $content;
                 ?>

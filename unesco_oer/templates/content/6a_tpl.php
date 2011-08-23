@@ -51,7 +51,7 @@
                 <a href="#" class="productBreadCrumbColor">
                 <?php
     
-    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $temp)));
     $abLink->link = $product->getTitle();
     $abLink->cssClass = "blueText noUnderline";
     
@@ -83,7 +83,17 @@
                       <div class="listTopLinks">
                         <div class="productLinksViewDiv">
                             <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                            <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
+       <?php                     
+                            
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $temp)));
+    $abLink->link = 'View Full Product';
+    $abLink->cssClass = "textNextToTheListingIconDiv";
+    
+
+   echo $abLink->show();
+   
+   ?>
+                         
                         </div>
               </div>
                         
@@ -98,19 +108,21 @@
           <div class="CompareWideListDiv">
             	
             <div class="compareTools">
-               <div class="compareTools">
+            
                 <div class="compareToolsHeading">Compare Tools</div>
-                      <img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                 <div class="compareToolsTextDiv">
+                
+<!--                      <img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">Add to adaptation</a></div>
                         
                       <a href="#"><img src="images/icon-find-related.png" alt="Find Related" width="18" height="18"class="smallLisitngIcons"></a>
                         <div class="textNextToTheListingIconDiv"><a href="#" class="greySmallLink">Find related</a></div>
-                        
+                        -->
                       <img src="skins/unesco_oer/images/icon-compare-adaptations-off.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                      <div class="textNextToTheListingIconDiv"><a href="#" id="compare" class="adaptationLinks">Compare Selected</a></div>
+                      <div class="textNextToTheListingIconDiv"><a href="#"  id="compare" class="adaptationLinks">Compare Selected</a></div>
                         
                         <img src="skins/unesco_oer/images/icon-clear-selection-off.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                      <div class="textNextToTheListingIconDiv"><span class="nonActiveLinks">Clear selection</span></div>
+                      <div class="textNextToTheListingIconDiv"><a href="#" id ="clearselection" onclick =javascript:Clear()   class="adaptationLinks">Clear selection</a></div>
                         
                       <div class="compareSearchBoxHolder">
                           <?php
@@ -136,12 +148,25 @@
                                echo '  <h4 class="blueText">'.$product->getTitle().'</h4>';
                     
                     ?>
+                      <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
+              
+                               <?php
+    
+       if ($this->objUser->isLoggedIn()) {
+                                               $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $selectedproduct , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$selectedproduct"));
+                                               $adaptLink = new link($uri);
+                                               $adaptLink->cssClass = "adaptationLinks";
+                                               $linkText = 'Make Adaptation';
+                                               $adaptLink->link = $linkText;
                                
+                                     }
+
+   echo $adaptLink->show();
+    ?>     
                               
-                                <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv">
-                            	<a href="#" class="productsLink">Full view of product</a>
-                            	</div>
+                              
+                             
+                
                             
                                 <div class="treeFrame">
                               
@@ -171,16 +196,18 @@
                                     
                                     $contentHTML = $content->getContentTree(FALSE,TRUE, TRUE,FALSE,$selectedproducts);
                                     
+                                     if ($this->objUser->isLoggedIn()) {
+                                               $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $selectedproduct , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$selectedproduct"));
+                                               $adaptLink = new link($uri);
+                                               $adaptLink->cssClass = "adaptationLinks";
+                                               $linkText = 'Make Adaptation';
+                                               $adaptLink->link = $linkText;
                                
-                                      
+                                     }
            
                                     echo '   
                                 <div class="toogle">
-                                <div class="collapseIcon"><input type="checkbox"></div> <div class="collapseText">Toggle</div> 
-                                <img src="skins/unesco_oer/images/icon-product-closed-folder.png" width="18" height="18" class="collapseIcon"> 
-                                <div class="collapseText"><a href="" class="greyTextLink">Collapse all</a></div>
-                                <img src="skins/unesco_oer/images/icon-product-opened-folder.png" width="18" height="18" class="collapseIcon"> 
-                                <div class="collapseText"><a href="" class="greyTextLink">Expand all</a></div>
+                                
                             </div>
 						</div>
                         
@@ -189,7 +216,7 @@
 							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
                                 <h4><a href="#" class="adaptationListingLink">'.$product->getTitle().'</a></h4>
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                <div class="textNextToTheListingIconDiv">'. $adaptLink->show() .'</div>
                                 
                                 
                                 <div class="treeFrame">
@@ -235,18 +262,13 @@
                      $('.highlight').toggleClass('highlight');
                   $('input[value~="' +temp +'"]').parent().toggleClass('highlight');
                   
-                   
+       
+                  }
                   
-                   
-                     
-                        
-                       
-                      
-
-                      //alert(ourArray[0]);
-                      
-                      
-                      
+                  function Clear(){
+              
+                     $('.highlight').toggleClass('highlight');
+       
                   }
                   
                   
