@@ -301,7 +301,7 @@ class content extends object
           $link = $this->getViewLink($productID); 
         
         if ($compare){
-            $link = $this->uri(array('action' => 'CompareSelected', 'productid' => $test, 'id' => $this->getID()));
+            $link = $this->getCompareLink($test,$this->getID());
         }
        
 
@@ -369,6 +369,10 @@ class content extends object
     }
     
     function getViewLink($productID = NULL){
+        return FALSE;
+    }
+    
+     function getCompareLink($productID = NULL){
         return FALSE;
     }
 

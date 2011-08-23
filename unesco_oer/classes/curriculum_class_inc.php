@@ -302,6 +302,10 @@ class curriculum extends content {
     public function getViewLink($productID) {
         return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID()));
     }
+    
+    public function getCompareLink($test,$id) {
+        return $this->uri(array('action' => 'CompareSelected', 'productid' => $test, 'id' => $id));
+    }
 
     public function delete() {
         $success = $this->objDbCurricula->update('id',  $this->_id, array('deleted'=>'1'));

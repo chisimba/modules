@@ -21,7 +21,6 @@ $selectedproducts = explode(',', $productid);
 //
 
 $product = $this->getObject('product', 'unesco_oer');
-
 $product->LoadProduct($chosenid);
 ?>
 
@@ -156,9 +155,6 @@ $product->LoadProduct($chosenid);
                                 <div class="textNextToTheListingIconDiv">'. $adaptLink->show() .'</div>
 						</div> ';
 
-//                                                
-//                                                
-//                                                
 //                                                $content= '';
 //                                                
 //                                                 $products = $this->objDbProducts->getadapted($productid);
