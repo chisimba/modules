@@ -228,7 +228,7 @@ corporate entertainment, or just throwing someone the birthday party of a
 lifetime: South Africa has the talent you need. We\'\re providing the
 catalyst.</p>';
         
-        return $html;
+        return stripslashes($html);
     }
     
     private function menu() {
