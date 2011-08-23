@@ -220,13 +220,13 @@ class artdirui extends object
     }
     
     public function aboutUs() {
-        $html = '<p>PANSA is a national network of
-individuals, NGOs, service providers
-and mainstream institutions that are
-engaged in the practice or support
-of the performing arts (performing arts
-in all forms - dance, music, theatre,
-opera, musical theatre).</p>';
+        $html = '<p>Looking for an artist for an event? Want to find everything from poets to
+pianists, hip hop to hard rock? The Artist Directory is a pilot project by
+PANSA and the City of Cape Town to bring South Africa\'\s artists to you: the
+people that want to book them. Whether you\'\re an event planner, looking for
+corporate entertainment, or just throwing someone the birthday party of a
+lifetime: South Africa has the talent you need. We\'\re providing the
+catalyst.</p>';
         
         return $html;
     }
