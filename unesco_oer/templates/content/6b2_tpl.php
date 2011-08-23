@@ -313,9 +313,15 @@ $product->LoadProduct($chosenid);
                  {
                       $existingContent = $content->getContentByContentID($moduleid);
                  }
-           echo '<div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </div><br>';      
-          echo  $existingContent->showReadOnlyInput();
-                
+                 
+                 if ($existingContent != FALSE){
+                     
+                     echo '<div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </div><br>';      
+                     echo  $existingContent->showReadOnlyInput();
+          
+                 }
+                 else 
+                     echo '<div class="heading2"><h2 class="greyText">Module/Curriculum Not Available </div><br>'; 
         
             }
 
