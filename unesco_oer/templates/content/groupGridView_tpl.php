@@ -195,8 +195,8 @@ echo $this->objGroupUtil->groupPerPage();
 
                <?php
                 $objTable = $this->getObject('htmltable', 'htmlelements');
-                $objTable->cssClass = "gridListingTable";
-                $objTable->width = NULL;
+                //$objTable->cssClass = "gridListingTable";
+                //$objTable->width = NULL;
 
                 $groups = $this->objDbGroups->getAllGroups();
                 $newRow = true;
