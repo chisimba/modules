@@ -184,7 +184,9 @@
                 <name>admin</name>
                 <type>text</type>
                 <length>32</length>
-                               
+                 <name>created_on</name>
+                <type>timestamp</type>
+                <length>32</length>
             </add>
         </data>
     </update>
