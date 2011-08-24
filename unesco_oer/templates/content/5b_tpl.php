@@ -27,11 +27,31 @@ $product = $this->getObject('product');
             <div class="wideTopContentHolderDiv">
             	
                 <div class="topHeadingDiv">
-                <div class="breadCrumb tenPixelLeftPadding">
-                	<a href="#" class="orangeListingHeading">Product adaptation</a> | 
-                    <a href="#" class="greyTextTwelveSize">Politechnic of Namibia</a> |
-                    <span class="greyText">GIE English</span>
-                </div>
+              <div class="breadCrumb">
+    <?php
+    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
+    $abLink->link = 'UNESCO OER Products';
+    $abLink->cssClass = "blueText noUnderline";
+    echo $abLink->show();
+    ?>
+    <!--    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> -->
+    |
+    <a href="#" class="blueText noUnderline">
+    <!--                        Model Curriculum for Journalism Education-->
+    <?php
+    
+    $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+    $abLink->link = $product->getTitle();
+    $abLink->cssClass = "blueText noUnderline";
+    
+
+   echo $abLink->show();
+    ?>
+     | <a class="blueText noUnderline">
+       Section View
+     </a>
+    </a>
+</div>
                 
                 </div>
             </div>
@@ -103,9 +123,8 @@ $product = $this->getObject('product');
                                      $institutionID = $product->getInstitutionID();
                                      $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
                                      $objInstitutionManager->getInstitution($institutionID);
-                                       echo $objInstitutionManager->getInstitutionName();
-                                    
-                                    
+                                      echo $objInstitutionManager->getInstitutionName();
+                                 
                                     ?>
                              
                                     
@@ -129,7 +148,10 @@ $product = $this->getObject('product');
                 </div>
                 
                 <div class="headingHolder">
-                	<div class="heading2"><h2 class="greyText">Foundations of Journalism: Writing</h2></div>
+                    <?php
+                    echo '<div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </div> <br>';   
+                    
+                    ?>
                     <div class="icons2">
                     	<a href="#"><img src="skins/unesco_oer/images/icon-edit-section.png" alt="Edit" width="18" height="18"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-delete.png" width="18" height="18" alt="Delete"></a>
@@ -143,7 +165,7 @@ $product = $this->getObject('product');
                <?php
           
                   
-              echo  $existingContent->showReadOnlyInput(); echo 'dsfsdf'
+              echo  $existingContent->showReadOnlyInput(); 
         
                  
                  ?>
