@@ -205,11 +205,11 @@ echo $this->objGroupUtil->groupPerPage();
                     }
                 }
 
-                $fieldset1 = $this->newObject('fieldset', 'htmlelements');
-                $fieldset1->setLegend();
-                $fieldset1->addContent($objTable->show());
-                echo $fieldset1->show();
-               // echo $objTable->show();
+//                $fieldset1 = $this->newObject('fieldset', 'htmlelements');
+//                $fieldset1->setLegend();
+//                $fieldset1->addContent($objTable->show());
+//                echo $fieldset1->show();
+               echo $objTable->show();
                 ?>
 
                                              </td>
