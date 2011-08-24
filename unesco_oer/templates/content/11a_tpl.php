@@ -109,11 +109,12 @@ $this->loadClass('textinput', 'htmlelements');
                 </div>
                 <div class="tenPixelPaddingLeft">
                 <div class="topGroupDiv">
-                    <div class="paddingContentTopLeftRightBottom">
+             
                             <?php
                             $this->objGroupUtil->groupMembers($this->getParam('id'));
 
                             ?>
+                    <div class="paddingContentTopLeftRightBottom"></div>
 
 <!--                	<div class="paddingContentTopLeftRightBottom">
                         <div class="memberList">
@@ -144,7 +145,7 @@ $this->loadClass('textinput', 'htmlelements');
 
                         </div>
                     </div>-->
- </div>
+
                 </div>
                 <br><br><br>
                 </div>
