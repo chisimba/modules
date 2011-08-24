@@ -100,7 +100,7 @@ echo $this->objGroupUtil->groupPerPage();
                 </div>
 
 
-                   //<?php
+                   <?php
 //    $this->loadClass('htmlheading', 'htmlelements');
 //    $this->loadClass('link', 'htmlelements');
 //    $objIcon = $this->newObject('geticon', 'htmlelements');
