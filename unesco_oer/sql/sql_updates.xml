@@ -175,6 +175,24 @@
             </add>
         </data>
     </update>
+        <update>
+        <table>tbl_unesco_oer_groups</table>
+        <version>0.074</version>
+        <description>Added an admin  field</description>
+        <data>
+            <add>
+                <name>admin</name>
+                <type>text</type>
+                <length>32</length>
+                 <name>created_on</name>
+                <type>timestamp</type>
+                <length>32</length>
+     
+            </add>
+        </data>
+    </update>
 </updates>
+
+
 
 
