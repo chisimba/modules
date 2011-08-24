@@ -156,15 +156,13 @@ $this->loadClass('textinput', 'htmlelements');
     $header->type = 1;
     $header->str = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
     echo '<div id="institutionheading">';
-    //echo $header->show() .
+  
             '<br><br />';
 
-    //$institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
+  
 
     echo '</div>';
-//$institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
-//$institutionGUI->showAllInstitutions();
-// retrieve data from tbl_unesco_oer_feturedproducts
+
     $content = '';
     $Institution = $this->objDbGroups->getAllGroups();
     if (count($Institution) > 0) {
@@ -174,7 +172,7 @@ $this->loadClass('textinput', 'htmlelements');
 
             $institutionLink = new link($this->uri(array("action" => '11a','id' =>$Institutions['id'])));
             $institutionLink->cssClass = 'darkGreyColour';
-            $institutionLink->link = '<img align="top"  width="79" height="79" src="' .$Institutions['thumbnail']. '" />';
+            $institutionLink->link = '<img align="top"  width="45" height="49" src="' .$Institutions['thumbnail']. '" />';
            $content.='
             <div id="institutions"> ' . $institutionLink->show() . '&nbsp;&nbsp;' .$Institutions['description'] . '<br/>
           ' .$Institutions['name'] . ' |
