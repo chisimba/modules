@@ -195,11 +195,11 @@ $group = $this->getParam('group');
             </ul>
         </div>
     </div>
-    <div class="mainContentHolder">
+<!--    <div class="mainContentHolder">-->
         <?php
         echo $this->getContent();
         ?>
-    </div>
+<!--    </div>-->
     <!-- Footer-->
     <!-- Start of Footer -->
     <div class="footerDiv">

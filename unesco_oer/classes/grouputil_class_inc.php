@@ -250,6 +250,13 @@ return $content;
 
 }
 
+public function getThumbnail($groupid){
+    
+    return $this->objDbgroups->getThumbnail($groupid);
+    
+    
+}
+
 
 
 }
