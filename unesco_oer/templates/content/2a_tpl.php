@@ -24,7 +24,7 @@ if ($adaptationstring == null)
             <div class="mainContentHolder">
                 <div class="subNavigation"></div>
                 <!-- Left Colum -->
-                
+                  <div class="leftColumnDiv">
 
 <?php
                              if ($browsecheck){
@@ -45,7 +45,7 @@ if ($adaptationstring == null)
                 
                 
                             
-                             </div>
+                           
                     <br><br>
                     <div class="blueBackground rightAlign">
                         <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
@@ -76,6 +76,7 @@ if ($adaptationstring == null)
       
         </a>
                     </div>
+                    </div>
                     <div class="filterheader">
 
 
@@ -88,8 +89,8 @@ if ($adaptationstring == null)
                     </div>
                             
                             
-
-                    </div>
+                
+                
                     <!-- Center column DIv -->
                     <div class="centerColumnDiv">
                         <div class="GridListViewDiv">

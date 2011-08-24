@@ -24,6 +24,7 @@ $this->appendArrayVar('headerParams', $js);
 
 <div class="mainContentHolder">
         	<div class="subNavigation"></div>
+               
             <div class="breadCrumb tenPixelLeftPadding">
                 <a href="#" class="productBreadCrumbColor">
                 <?php
@@ -63,7 +64,7 @@ $this->appendArrayVar('headerParams', $js);
         	</div>
           <div class="wideLeftFloatDiv">
         	<!-- Left Colum -->
-        	    
+        	 <div class="leftColumnDiv">    
 
         <?php
         $filtering = $this->getobject('filterdisplay', 'unesco_oer');
@@ -90,7 +91,7 @@ $this->appendArrayVar('headerParams', $js);
         </a>
     </div>
           </div>  
-            </div>
+            
         	<!-- Center column DIv -->
             <div class="rightWideColumnDiv">
             <div class=""><input type="checkbox"> Toggle

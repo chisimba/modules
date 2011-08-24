@@ -17,6 +17,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
                         <div class="mainContentHolder">
                             <div class="subNavigation"></div>
+                             <div class="leftColumnDiv">
                             <!-- Left Colum -->
                          <?php
                          
@@ -27,7 +28,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
 
                             
-                             </div>
+                           
                     <br><br>
                     <div class="blueBackground rightAlign">
                         <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
@@ -46,6 +47,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
       
         </a>
                     </div>
+                    
                     <div class="filterheader">
 
 

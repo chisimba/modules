@@ -19,6 +19,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                             <div class="mainContentHolder">
                                 <div class="subNavigation"></div>
                                 <!-- Left Colum -->
+                                 <div class="leftColumnDiv">
                               <?php
                            
                              if ($browsecheck){
@@ -37,7 +38,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                 
                                 
                             
-                             </div>
+                            
                     <br><br>
                     <div class="blueBackground rightAlign">
                         <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
