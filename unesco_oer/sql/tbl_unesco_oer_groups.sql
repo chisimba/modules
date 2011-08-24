@@ -20,8 +20,8 @@ $fields = array(
                 'loclat' =>array('type' =>'text','length'=>255),
                 'loclong' =>array('type' =>'text','length'=>255),
                 'country' =>array('type' =>'text','length'=>255),
-               'admin'=>array('type'=>'text','length'=>32),
-                'date_added'=> array('type' => 'timestamp'),
+                'admin'=>array('type'=>'text','length'=>32),
+                'created_on'=> array('type' => 'timestamp'),
                 'thumbnail' =>array('type' => 'text', 'length' =>255)
                         
 		
