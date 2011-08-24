@@ -34,8 +34,10 @@ class unesco_oer extends controller {
     public $objConfig;
     public $objGroupUtil;
     public $objDbgroupInstitutions;
-      public $objDbmodules;
-        public $objDbcurricula;
+    public $objDbmodules;
+    public $objDbcurricula;
+    public $objPagination;
+
     /**
      * @var object $objLanguage Language Object
      */
@@ -93,6 +95,7 @@ class unesco_oer extends controller {
         $this->objDbgroupInstitutions = $this->getObject('dbgroupinstitutions');
         $this->objDbmodules = $this->getObject('dbmodules');
          $this->objDbcurricula = $this->getObject('dbcurricula');
+         $this->$objPagination=$this->getObject('pagination');
 
 
 //$this->objUtils = $this->getObject('utilities');

@@ -35,7 +35,7 @@ $this->loadClass('textinput', 'htmlelements');
                 <div class="linkTextNextToCreateGroupIcons"><a href="#" class="greenTextBoldLink">
 
                             <?php
-                            $link = new link($this->uri(array("action" => 'groupRegistationForm')));
+                            $link = new link($this->uri(array("action" => 'groupRegistationForm',"page"=>'10a_tpl.php')));
                             $link->link = '<img src="skins/unesco_oer/images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
                             Create Group';
                             echo '&nbsp;' . $link->show();
