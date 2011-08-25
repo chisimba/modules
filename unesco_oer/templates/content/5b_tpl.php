@@ -78,7 +78,10 @@ $product = $this->getObject('product');
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
                             </div>
                     	</div>
-                        
+                           <?php
+                    $institutionID = $product->getInstitutionID();
+                    if (!empty ($institutionID)) {
+                    ?>
                         <div class="middleAdaptedByIcon">
                         	<img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
                         	<span class="pinkText">Adapted By</span>
@@ -88,9 +91,11 @@ $product = $this->getObject('product');
                         <div class="productAdaptationViewLeftColumnTop">
                             <div class="leftTopImage">
                                                 <?php
-                $thumbnailPath = $groupInfo['thumbnail'];
-                $imageTag = "<img src='$thumbnailPath' alt='Placeholder' width='45' height='49'<br>";
-                echo $imageTag;
+                             $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+                             $objInstitutionManager->getInstitution($institutionID);
+                             $thumbnailPath = $objInstitutionManager->getInstitutionThumbnail();
+                             $imageTag = "<img src='$thumbnailPath' alt='Placeholder' width='45' height='49'<br>";
+                              echo $imageTag;
                 ?>
                             
                                 
@@ -98,8 +103,8 @@ $product = $this->getObject('product');
                             <div class="leftFloatDiv">
                                 <h3 class="darkGreyColour"> 
                                     <?php
-                                    
-                                  echo  $groupInfo['name'];
+                                      echo $objInstitutionManager->getInstitutionName();
+                                
                                     
                                     ?>
                                     
@@ -109,7 +114,9 @@ $product = $this->getObject('product');
                             </div>
                     	</div>
                         
-                        
+                        <?php
+                    } else {
+                        ?>
                         <div class="middleAdaptedByIcon">
                         	<img src="skins/unesco_oer/images/icon-managed-by.png" alt="Adapted by" width="24" height="24"><br>
                         	<span class="greenText">Managed By</span>
@@ -120,10 +127,8 @@ $product = $this->getObject('product');
                                 <h3 class="greenText">
                                     <?php
                                     
-                                     $institutionID = $product->getInstitutionID();
-                                     $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
-                                     $objInstitutionManager->getInstitution($institutionID);
-                                      echo $objInstitutionManager->getInstitutionName();
+                                   echo  $groupInfo['name'];
+                                  
                                  
                                     ?>
                              
@@ -132,6 +137,10 @@ $product = $this->getObject('product');
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="greenTextLink">View group</a></div>
                             </div>
                     	</div>
+                            
+                            <?php
+                    }
+                            ?>
                     </div>
                     </div>
             
@@ -149,6 +158,7 @@ $product = $this->getObject('product');
                 
                 <div class="headingHolder">
                     <?php
+                    
                     echo '<div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </div> <br>';   
                     
                     ?>

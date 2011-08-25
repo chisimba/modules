@@ -21,6 +21,7 @@ class featuredproductutil extends object
     public function init()
     {
         $this->objDbProducts = $this->getObject("dbproducts", "unesco_oer");
+          $this->loadClass('link', 'htmlelements');
 
     }
 
@@ -35,13 +36,24 @@ class featuredproductutil extends object
         $origprouct = $this->objDbProducts->getProductByID($product['id']);  
         
         if ( $origprouct['deleted'] == '0'){
+            
+        $adaplink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $product['id'])));
+        $adaplink->cssClass = 'adaptationLinks';
+         $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($product['id']);
+        $adaplink->link = $NOofAdaptation . ' Adaptations';
         
         $content = '';
         $content.='
             <img src="' . $product['thumbnail'] . '" alt="Featured" width="136" height="176"><br>
-                <div class="greyListingHeading">"' . $product['title'] . '"</div>
+                <div class="greyListingHeading">' . $product['title'] . '</div>
                     <br>
                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                     <div class="listingAdaptationLinkDiv">
+
+                    <a href="#" class="adaptationLinks">
+                    '. $adaplink->show().'
+                     </a>
+                </div>
                     ';
         }
         
@@ -97,6 +109,10 @@ class featuredproductutil extends object
     public function displayFeaturedAdaptedProduct($featuredAdaptedProduct)
     {
         
+        $adaplink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $featuredAdaptedProduct->getparentID())));
+        $adaplink->cssClass = 'adaptationLinks';
+        $adaplink->link =  ' See All Adaptations (' . $featuredAdaptedProduct->getNoOfAdaptations() .')';
+        
         if ( !$featuredAdaptedProduct->isDeleted() && !empty($featuredAdaptedProduct)){
         
         $content = '';
@@ -106,7 +122,7 @@ class featuredproductutil extends object
                                         <div class="featuredAdaptationRightContentDiv">
                                             <span class="greyListingHeading">' . $featuredAdaptedProduct->getTitle() . '</span>
                                             <br><br>
-                                            <a href="#" class="adaptationLinks">See all adaptations (' . $featuredAdaptedProduct->getNoOfAdaptations(). ')</a>
+                                           '. $adaplink->show() .'
                                             <br>
                                             <a href="#" class="adaptationLinks">See UNSECO orginals</a>
                                         </div>';

@@ -214,18 +214,19 @@ $this->appendArrayVar('headerParams', $js);
                 <?php
                 $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
                 $featuredProduct = $this->objDbProducts->getProductByID($featuredProductID);
+                
                 echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct);
                 ?>
-                <div class="listingAdaptationLinkDiv">
+<!--                <div class="listingAdaptationLinkDiv">
 
                     <a href="#" class="adaptationLinks">
                         <?php
                         //The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
-                        $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id']);
-                        echo"See all adaptations ($NOofAdaptation)"; // This must be a link;
+                     //   $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id']);
+                     //   echo"See all adaptations ($NOofAdaptation)"; // This must be a link;
                         ?>
                     </a>
-                </div>
+                </div>-->
             </div>
         </div>
 

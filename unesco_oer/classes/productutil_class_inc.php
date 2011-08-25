@@ -208,16 +208,14 @@ class productutil extends object {
                   $('$linkheading').click(function(){
 
                   $('$divheading').slideToggle();
-              
-                  
-              
+       
 
                   });
             
             $('$buttonidheading').click(function () {
              $('$divheading').slideToggle();
             
-    });
+                                });
 
             
            ";
@@ -228,7 +226,7 @@ class productutil extends object {
         $content .= '        
             });
 
-                            </script>
+                     </script>
                                         ';
 
 

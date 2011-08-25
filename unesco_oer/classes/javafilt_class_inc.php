@@ -219,7 +219,7 @@ class javafilt extends object {
 
         if ($total >= 2) {
             $result = call_user_func_array("array_intersect", $filter_empty_arrays);
-        } else if ($total = 1) {
+        } else if ($total == 1) {
             $temp = $filter_empty_arrays;
 
 
@@ -274,7 +274,7 @@ class javafilt extends object {
 
         $prodnumber = count($result);
 
-        $content = $this->objProductUtil->navigation();
+     //   $content = $this->objProductUtil->navigation();
         $content .= ' <div class="moduleHeader">';
 
         $content.= $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer');
@@ -431,7 +431,7 @@ class javafilt extends object {
 
         if ($total >= 2) {
             $result = call_user_func_array("array_intersect", $filter_empty_arrays);
-        } else if ($total = 1) {
+        } else if ($total == 1) {
             $temp = $filter_empty_arrays;
 
 

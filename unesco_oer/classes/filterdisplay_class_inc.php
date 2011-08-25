@@ -41,12 +41,15 @@ class filterdisplay extends object {
     function SideFilter($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum) {
         $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
         $form = new form('temporary', $this->uri(array('action' => "FilterProducts", "adaptationstring" => $adaptationstring, "page" => $page, "TotalPages" => $TotalPages, "NumFilter" => $NumFilter, "PageNum" => $i, 'SortFilter' => $SortFilter, 'MapEntries' => $MapEntries)));
-        $form->addToForm('<div class="moduleHeader blueText">');
+        $form->addToForm('<div id="filternumDiv">
+            <div class="moduleHeader blueText">
+                            ');
         $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer'));
         $form->addToForm('</div>'); //close module header div
 
 
-        $form->addToForm('<div class="blueNumberBackground">
+        $form->addToForm('
+                        <div class="blueNumberBackground">
                         <div class="iconOnBlueBackground"><img src="skins/unesco_oer/images/icon-filter.png" alt="filter"></div>
                         <div class="numberOffilteredProducts"> 
                         ');
@@ -59,7 +62,8 @@ class filterdisplay extends object {
         }
         $form->addToForm($TotalRecords);
         $form->addToForm('</div> '); //number if filter products div
-        $form->addToForm(' </div>'); //blue number bg
+        $form->addToForm(' </div>');//blue number bg
+         $form->addToForm(' </div>');
 
 
 
