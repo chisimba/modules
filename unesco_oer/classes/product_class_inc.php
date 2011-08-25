@@ -726,18 +726,24 @@ class product extends object
 
         $tableTheme->startRow();
         $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
-        foreach ($umbrellaThemes as $umbrellaTheme) {
-            $this->_objAddDataUtil->addTitleToRow($umbrellaTheme['theme'], 4 , $tableTheme);
-        }
-        $tableTheme->endRow();
+        $themeCount = count();
+        for ($index = 0; $index < count($umbrellaThemes); $index++) {
+            for ($index1 = 0; $index1 < 3; $index1++) {
+                if (!empty ($umbrellaThemes[$index + $index1]))
+                    $this->_objAddDataUtil->addTitleToRow($umbrellaThemes[$index + $index1]['theme'], 4 , $tableTheme);
+            }
+            $tableTheme->endRow();
 
-        $tableTheme->startRow();
-        $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
-        foreach ($umbrellaThemes as $umbrellaTheme) {
-            $themes = $this->objDbProductThemes->getThemesByUmbrellaID($umbrellaTheme['id']);
-            $this->_objAddDataUtil->addDropDownToRow($umbrellaTheme['id'], $themes, $this->_unescothemes[$umbrellaTheme['id']], 'theme', $tableTheme, 'id');
+            $tableTheme->startRow();
+            for ($index1 = 0; $index1 < 3; $index1++) {
+                if (!empty ($umbrellaThemes[$index + $index1])) {
+                    $themes = $this->objDbProductThemes->getThemesByUmbrellaID($umbrellaThemes[$index + $index1]['id']);
+                    $this->_objAddDataUtil->addDropDownToRow($umbrellaTheme['id'], $themes, $this->_unescothemes[$umbrellaThemes[$index + $index1]['id']], 'theme', $tableTheme, 'id');
+                }
+            }
+            $tableTheme->endRow();
+            $index += 2;
         }
-        $tableTheme->endRow();
 
         $themefieldset = $this->newObject('fieldset','htmlelements');
         $themefieldset->setLegend('Themes'.'<font color="#FF2222">* '. $this->validationArray['theme']['message']. '</font>');
@@ -1092,7 +1098,6 @@ class product extends object
             $fieldName = 'group';
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_group', 'unesco_oer');
             $title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
-            //TODO Update group and institution retrievel when deals has fixed his code
             $this->_objAddDataUtil->addDropDownToTable(
                                                         $title,
                                                         4,
@@ -1156,8 +1161,6 @@ class product extends object
         $form_data->addToForm($output .'<br />' . $buttonSubmit->show() . $buttonCancel->show() . $hiddenInput->show());
 
         return $form_data->show();
-
-        //TODO Related Languages ??
     }
 
     //////// operations for external tables //////

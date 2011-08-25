@@ -206,3 +206,4 @@ $product = $this->getObject('product');
             
             </div>
       </div>
+    </div>

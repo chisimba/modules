@@ -100,7 +100,7 @@ $group = $this->getParam('group');
             </tr>
             <tr>
                 <td align="left">
-                    <img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo"></img>
+                    <img src="skins/unesco_oer/images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
                 </td>
                 <td align="left">
                     <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
