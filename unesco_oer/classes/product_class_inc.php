@@ -738,7 +738,7 @@ class product extends object
             for ($index1 = 0; $index1 < 3; $index1++) {
                 if (!empty ($umbrellaThemes[$index + $index1])) {
                     $themes = $this->objDbProductThemes->getThemesByUmbrellaID($umbrellaThemes[$index + $index1]['id']);
-                    $this->_objAddDataUtil->addDropDownToRow($umbrellaTheme['id'], $themes, $this->_unescothemes[$umbrellaThemes[$index + $index1]['id']], 'theme', $tableTheme, 'id');
+                    $this->_objAddDataUtil->addDropDownToRow($umbrellaThemes[$index + $index1]['id'], $themes, $this->_unescothemes[$umbrellaThemes[$index + $index1]['id']], 'theme', $tableTheme, 'id');
                 }
             }
             $tableTheme->endRow();
