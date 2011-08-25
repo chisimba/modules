@@ -346,7 +346,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                         echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct);
                                 ?>
 
-                                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
+<!--                                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">
                                         <?php
 //                                        $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
 //                                        $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProductID);
@@ -354,7 +354,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                         $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id']);
                                         echo"See all adaptations ($NOofAdaptation)"; // This must be a link;
                                         ?>
-                                    </a></div>
+                                    </a></div>-->
                             </div>
                         </div>
                         <div class="spaceBetweenRightBorderedDivs">
