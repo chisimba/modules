@@ -278,7 +278,7 @@ class content extends object
         $icon = 'icon-product-closed-folder.png';
         if (!empty ($this->icon)) $icon = $this->icon;
         $expandedIcon = 'icon-product-opened-folder.png';
-        if (!empty ($this->expandedIcon)) $icon = $this->icon;
+        if (!empty ($this->expandedIcon)) $expandedIcon = $this->expandedIcon;
         if (!$this->hasContents()) $icon = $expandedIcon;
         
         $hiddenInput = new hiddeninput($this->getID()."[]");

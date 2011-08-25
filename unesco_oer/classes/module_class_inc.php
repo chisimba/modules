@@ -31,6 +31,8 @@ class module extends content {
         $this->objDbModules = $this->newObject('dbmodules','unesco_oer');
         $this->_content_types = NULL;
         $this->loadClass('dropdown', 'htmlelements');
+        $this->icon = 'module.png';
+        $this->expandedIcon = $this->icon;
     }
 
     public function showInput($productID, $prevAction = NULL) {

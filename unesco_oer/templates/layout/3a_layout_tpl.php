@@ -87,17 +87,16 @@ $this->loadClass('link', 'htmlelements');
                         </div>
                         <div class="facebookShareDiv">
 
-                            <!-- AddThis Button BEGIN -->
-                            <div class="shareDiv">
-                                <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=jabulane"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=jabulane"></script>
-
-                                <!-- AddThis Button END -->
-                            </div>
-
-                            <div class="likeDiv">
-                                <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fexample.com%2Fpage%2Fto%2Flike&amp;layout=button_count&amp;show_faces=true&amp;width=50&amp;action=like&amp;font=tahoma&amp;colorscheme=light&amp;"></iframe>
-
-                            </div>
+                             <script type="text/javascript">
+                                    var addthis_config = {"data_track_clickback":true};
+                                </script>
+                                <!-- AddThis Button BEGIN -->
+                                <div class="shareDiv">
+                                    <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;pubid=xa-4e09cecf254052c9">
+                                        <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Share">
+                                    </a>
+                                    <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e09cecf254052c9"></script>
+                                </div>
 
 
                         </div>

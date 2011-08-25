@@ -154,7 +154,19 @@ $product = $this->getObject('product');
                     ?>
                     <div class="icons2">
                     	<a href="#"><img src="skins/unesco_oer/images/icon-edit-section.png" alt="Edit" width="18" height="18"></a>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-delete.png" width="18" height="18" alt="Delete"></a>
+<!--                        <a href="#"><img src="skins/unesco_oer/images/icon-delete.png" width="18" height="18" alt="Delete"></a>-->
+                        <?php
+                        $deleteContentLink = new link('deleteContent');
+                        $deleteContentLink->link = '<img src="skins/unesco_oer/images/icon-delete.png" width="18" height="18" alt="Delete">';
+                        $deleteContentLink->href = $this->uri(array(
+                                                    'action'=>'deleteContent',
+                                                    'productID'=>$product->getIdentifier(),
+                                                    'contentID'=>$existingContent->getID(),
+                                                    'nextAction'=>'viewProduct',
+                                                    'params'=>"id={$product->getIdentifier()}" ));
+
+                        echo $deleteContentLink->show();
+                        ?>
                         <a href="#"><img src="skins/unesco_oer/images/icon-add-to-adaptation.png" width="18" height="18" alt="Add to adaptation"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15" align="Print"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-download.png" alt="download" width="18" height="18"></a> 

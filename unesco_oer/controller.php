@@ -2296,6 +2296,26 @@ class unesco_oer extends controller {
         return "CreateContent_tpl.php";
     }
 
+    public function __deleteContent() {
+        $productID = $this->getParam('productID');
+        $contentID = $this->getParam('contentID');
+        $contentManager = $this->getObject('contentmanager');
+        $product = $this->newObject('product');
+
+        if ($productID) {
+            $product->loadProduct($productID);
+            $contentManager = $product->getContentManager();
+        }
+
+        $existingContent = $contentManager->getContentByContentID($contentID);
+        $existingContent->delete();
+
+        $action = $this->getParam('nextAction');
+        $params = $this->objProductUtil->createParameterArray($this->getParam('params'));
+
+        $this->nextAction($action, $params);
+    }
+
 //Function to display the institution editor page
     public function __institutionEditor() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
