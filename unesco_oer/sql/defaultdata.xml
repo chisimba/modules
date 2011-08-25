@@ -113,4 +113,22 @@
         <type>School</type>
     </tbl_unesco_oer_institution_types>
 
+    <!-- regions for adaptations-->
+    <tbl_unesco_oer_regions>
+        <id>region_1</id>
+        <region>Africa</region>
+    </tbl_unesco_oer_regions>
+    <tbl_unesco_oer_regions>
+        <id>region_2</id>
+        <region>Arab States</region>
+    </tbl_unesco_oer_regions>
+    <tbl_unesco_oer_regions>
+        <id>region_3</id>
+        <region>Asia and the Pacific</region>
+    </tbl_unesco_oer_regions>
+    <tbl_unesco_oer_regions>
+        <id>region_4</id>
+        <region>Europe and North America</region>
+    </tbl_unesco_oer_regions>
+
 </defaultdata>

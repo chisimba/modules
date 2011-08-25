@@ -84,7 +84,7 @@ class adddatautil extends object {
     function addDropDownToRow($name, $inputArray, $initValue, $field, $table, $value = null, $onChange = ""){
         $dropdown = new dropdown($name);
         $dropdown->addOption(NULL, NULL);
-        $dropdown->extras = array('width'=>'80%');
+        $dropdown->cssClass = 'dataSelect';
         foreach ($inputArray as $input) {
             $dropdown->addOption($input[$value], $input[$field]);
         }
