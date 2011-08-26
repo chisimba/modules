@@ -1796,9 +1796,15 @@ class product extends object
        return !empty($temp);
    }
 
+   function hasAdaptation() {
+       return ($this->_objDbProducts->getNoOfAdaptations($this->getIdentifier()) != 0);
+   }
+
    function deleteProduct()
    {
-       $this->setDeletionStatus(1);
+       if (!$this->hasAdaptation()){
+            $this->setDeletionStatus(1);
+       }
        return $this->saveProduct();
    }
 

@@ -230,6 +230,11 @@ if ($this->objUser->isLoggedIn()) {
     $deleteLink->link = $linkText;
     echo $deleteLink->show();
 
+    $hiddenInput = new hiddeninput('hasAdaptations');
+    $hiddenInput->value = $product->hasAdaptation();
+    $hiddenInput->extra = "id='hasAdaptations'";
+    echo $hiddenInput->show();
+
     $uri = $this->uri(array('action' => "createFeaturedProduct", 'id' => $productID));
     $editLink = new link($uri);
     $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_make_featured', 'unesco_oer');;
@@ -478,21 +483,21 @@ echo $Comment->commentbox($productID);
                     <script type="text/javascript">
 
                         jQuery(document).ready(function(){
-
+//
                             jQuery("a[id=deleteProduct]").click(function(){
-
-                                var r=confirm( "Are you sure you want to delete this product?");
-                                if(r== true){
-                                    window.location=this.href;
+                                if(jQuery("#hasAdaptations").val()==true){
+                                    alert('This product has adaptations, you may not delete it.');
+                                } else {
+                                    var r=confirm( "Are you sure you want to delete this product?");
+                                    if(r== true){
+                                        window.location=this.href;
+                                    }
                                 }
-                                return false;
-                            }
+                                    return false;
+                                }
 
-
-                        );
-
+                            );
                         }
-
-
+//
                     );
                     </script>

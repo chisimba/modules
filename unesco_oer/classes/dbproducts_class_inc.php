@@ -105,7 +105,7 @@ class dbproducts extends dbtable
     //TODO Ntsako check the hierichal storage of data to make this more efficient
     function getNoOfAdaptations($parentId)
     {
-        $sql = "SELECT * FROM $this->_tableName WHERE parent_id = '$parentId'";
+        $sql = "SELECT * FROM $this->_tableName WHERE parent_id = '$parentId' AND deleted=0";
         $child = $this->getArray($sql);
 
         return count($child);
