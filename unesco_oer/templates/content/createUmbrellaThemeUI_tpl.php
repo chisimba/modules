@@ -31,7 +31,7 @@ $header->type = 2;
 if (isset($themeId)) {
     $formData = $this->objDbProductThemes->getUmbrellaThemeByID($themeId);
     $formAction = "editUmbrellaThemeSubmit";
-    $header->str = $this->objLanguage->languageText('mod_unesco_oer_Edit_theme_heading', 'unesco_oer');
+    $header->str = $this->objLanguage->languageText('mod_unesco_oer_edit_theme_heading', 'unesco_oer');
 } else {
     $header->str = $this->objLanguage->languageText('mod_unesco_oer_theme_heading', 'unesco_oer');
     $formData = array();
