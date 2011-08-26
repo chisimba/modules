@@ -125,7 +125,7 @@ $this->appendArrayVar('headerParams', $js);
                                                                             </select>-->
                     </div>
 
-                                            </div>
+                                          
                 <div  id='filterDiv' title = "3b" ALIGN="left">
            
                       <?php
@@ -166,7 +166,7 @@ $this->appendArrayVar('headerParams', $js);
                    
                     
                  $abLink= new link($this->uri(array("action" => '11a','id'=>$groupid['group_id'],"page"=>'10a_tpl.php')));
-                 $abLink->link =  "<img src='" . $thumbnail . "'>";
+                 $abLink->link =  "<img src='" . $thumbnail . "' width='45' height='49' >";
                  $abLink->cssClass = "smallAdaptationImageGrid";
                    
                     $checkbox = new checkbox('selectedusers[]', $product['id']);
@@ -258,8 +258,9 @@ $this->appendArrayVar('headerParams', $js);
                             
                             
                             
-                            
-                      
+                </div>   
+            
+</div>
                 
                 </div>
                 

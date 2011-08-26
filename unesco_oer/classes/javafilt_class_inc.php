@@ -28,8 +28,6 @@ class javafilt extends object {
         $this->objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
         $this->objDbInstitution = $this->getObject('dbinstitution', 'unesco_oer');
     }
-    
-   
 
     public function displayprods() {
 
@@ -133,30 +131,26 @@ class javafilt extends object {
 
 
 
-  if ($browsecheck == '1'){
-                        
-                            $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
-                             
-                         }
-                         else if ($pagelayout == '3b')
-                              $adaptations = $this->objDbProducts->getadapted($prod);
-                                  else
-                                       $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+        if ($browsecheck == '1') {
 
-      
-        
-        
-          $tempadap = array(); //convert to 1d array
+            $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
+        } else if ($pagelayout == '3b')
+            $adaptations = $this->objDbProducts->getadapted($prod);
+        else
+            $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+
+
+
+
+        $tempadap = array(); //convert to 1d array
         $i = 0;
         foreach ($adaptations as $adap) {
-            if ($browsecheck == '1'){
-                   $tempadap[$i] = $adap['product_id'];
-          
+            if ($browsecheck == '1') {
+                $tempadap[$i] = $adap['product_id'];
             }
-            else 
-                   $tempadap[$i] = $adap['id'];
+            else
+                $tempadap[$i] = $adap['id'];
             $i++;
-          
         }
 
 
@@ -231,7 +225,7 @@ class javafilt extends object {
 //
 //                $i++;
 //            }
-                $result = null;
+            $result = null;
             //convert to 1d array
         }
 
@@ -241,27 +235,26 @@ class javafilt extends object {
                 if (($AuthFilter == Null or $AuthFilter == 'All')) {
 
 
-                if ($browsecheck == '1'){
-                        
-                            $temp = $this->objDbGroups->getGroupProductadaptation($prod);
-                             
-                         }
-                         else if ($pagelayout == '3b')
-                              $temp = $this->objDbProducts->getadapted($prod);
-                                  else
-                                       $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
+                    if ($browsecheck == '1') {
+
+                        $temp = $this->objDbGroups->getGroupProductadaptation($prod);
+                    } else if ($pagelayout == '3b')
+                        $temp = $this->objDbProducts->getadapted($prod);
+                    else
+                        $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
 
 
 
-  $result = array(); //convert to 1d array
+                    $result = array(); //convert to 1d array
                     $i = 0;
                     foreach ($temp as $temps) {
-                             if ($browsecheck == '1'){
-                                 
-                                 $result[$i] = $temps['product_id']; 
-                             }
-                             else  $result[$i] = $temps['id'];
-                       
+                        if ($browsecheck == '1') {
+
+                            $result[$i] = $temps['product_id'];
+                        }
+                        else
+                            $result[$i] = $temps['id'];
+
                         $i++;
                     }
                 };
@@ -274,7 +267,7 @@ class javafilt extends object {
 
         $prodnumber = count($result);
 
-     //   $content = $this->objProductUtil->navigation();
+        //   $content = $this->objProductUtil->navigation();
         $content .= ' <div class="moduleHeader">';
 
         $content.= $this->objLanguage->languageText('mod_unesco_oer_product_description', 'unesco_oer');
@@ -311,8 +304,8 @@ class javafilt extends object {
         $pagelayout = $this->getParam('adaptation');
         $prod = $this->getParam('ProdID');
         $browsecheck = $this->getParam('browsecheck');
-        
-  
+
+
 
         if ($PageNum == "undefined") {
             $PageNum = 1;
@@ -340,34 +333,29 @@ class javafilt extends object {
                     $view = "list";
                     break;
                 }
-                
         }
 
-                if ($browsecheck == '1'){
-                        
-                            $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
-                             
-                         }
-                         else if ($pagelayout == '3b')
-                              $adaptations = $this->objDbProducts->getadapted($prod);
-                                  else
-                                       $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+        if ($browsecheck == '1') {
+
+            $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
+        } else if ($pagelayout == '3b')
+            $adaptations = $this->objDbProducts->getadapted($prod);
+        else
+            $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
 
 
 
 
-       // $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+        // $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
         $tempadap = array(); //convert to 1d array
         $i = 0;
         foreach ($adaptations as $adap) {
-            if ($browsecheck == '1'){
-                   $tempadap[$i] = $adap['product_id'];
-          
+            if ($browsecheck == '1') {
+                $tempadap[$i] = $adap['product_id'];
             }
-            else 
-                   $tempadap[$i] = $adap['id'];
+            else
+                $tempadap[$i] = $adap['id'];
             $i++;
-          
         }
 
 
@@ -445,38 +433,37 @@ class javafilt extends object {
 //            }
 //                 var_dump($temp);  
 //               echo $i . "    tttttttttttt";
-               $result = null;
+            $result = null;
             //convert to 1d array
         }
-       
-   
+
+
         if (($LangFilter == Null or $LangFilter == 'All'))
             if (($ThemeFilter == Null or $ThemeFilter == 'All'))
                 if (($AuthFilter == Null or $AuthFilter == 'All')) {
 
 
-              if ($browsecheck == '1'){
-                        
-                            $temp= $this->objDbGroups->getGroupProductadaptation($prod);
-                             
-                         }
-                         else if ($pagelayout == '3b')
-                              $temp = $this->objDbProducts->getadapted($prod);
-                                  else
-                                       $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
-                
-                    
-                    
-                    
+                    if ($browsecheck == '1') {
+
+                        $temp = $this->objDbGroups->getGroupProductadaptation($prod);
+                    } else if ($pagelayout == '3b')
+                        $temp = $this->objDbProducts->getadapted($prod);
+                    else
+                        $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
+
+
+
+
                     $result = array(); //convert to 1d array
                     $i = 0;
                     foreach ($temp as $temps) {
-                             if ($browsecheck == '1'){
-                                 
-                                 $result[$i] = $temps['product_id']; 
-                             }
-                             else  $result[$i] = $temps['id'];
-                       
+                        if ($browsecheck == '1') {
+
+                            $result[$i] = $temps['product_id'];
+                        }
+                        else
+                            $result[$i] = $temps['id'];
+
                         $i++;
                     }
                 };
@@ -631,22 +618,22 @@ class javafilt extends object {
 
 
 
-                 //   $product = $this->objDbProducts->getFilteredProducts($TotalEntries);
+                    //   $product = $this->objDbProducts->getFilteredProducts($TotalEntries);
 
                     $newRow = true;
                     $count = 0;
 
-                                for ($i = $start; $i < ($end); $i++) {
-                                    $count++;                       //populates table
-                                    //Check if the creator is a group or an institution
+                    for ($i = $start; $i < ($end); $i++) {
+                        $count++;                       //populates table
+                        //Check if the creator is a group or an institution
 
-                                    $objProduct = $this->getObject('product');
-                                    if ($browsecheck == '1') {
-                                        $objProduct->loadProduct($products[$i]['id']);
-                                    }
-                                    else
-                                        $objProduct->loadProduct($products[$i]);
-                                    
+                        $objProduct = $this->getObject('product');
+                        if ($browsecheck == '1') {
+                            $objProduct->loadProduct($products[$i]['id']);
+                        }
+                        else
+                            $objProduct->loadProduct($products[$i]);
+
 //                                    if ($this->objDbGroups->isGroup($product['creator'])) {
 //                                        $thumbnail = $this->objDbGroups->getGroupThumbnail($product['creator']);
 //                                        $product['group_thumbnail'] = $thumbnail['thumbnail'];
@@ -669,24 +656,24 @@ class javafilt extends object {
 //                                        $product['institution_thumbnail'] = $thumbnail['thumbnail'];
 //                                    }
 
-                                    if ($newRow) {
-                                        $objTable->startRow();
-                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($objProduct));
-                                        $newRow = false;
-                                    } else {
-                                        $objTable->addCell($this->objProductUtil->populateAdaptedGridView($objProduct));
-                                    }
+                        if ($newRow) {
+                            $objTable->startRow();
+                            $objTable->addCell($this->objProductUtil->populateAdaptedGridView($objProduct));
+                            $newRow = false;
+                        } else {
+                            $objTable->addCell($this->objProductUtil->populateAdaptedGridView($objProduct));
+                        }
 
 
-                                    //Display 3 products per row
-                                    if ($count == 3) {
-                                        $newRow = true;
-                                        $count = 0;
-                                        $objTable->endRow();
-                                    }
-                                }
+                        //Display 3 products per row
+                        if ($count == 3) {
+                            $newRow = true;
+                            $count = 0;
+                            $objTable->endRow();
+                        }
+                    }
 
-                               echo $objTable->show();
+                    echo $objTable->show();
 
 
 
@@ -722,22 +709,21 @@ class javafilt extends object {
                     $newRow = true;
                     $count = 0;
 
-               //     $products = $this->objDbProducts->getFilteredProducts($TotalEntries);
+                    //     $products = $this->objDbProducts->getFilteredProducts($TotalEntries);
 
 
                     for ($i = $start; $i < ($end); $i++) {
-                                    $count++;                       //populates table
-                                    //Check if the creator is a group or an institution
+                        $count++;                       //populates table
+                        //Check if the creator is a group or an institution
 
-                                    $objProduct = $this->getObject('product');
-                                    if ($browsecheck == '1') {
-                                        $objProduct->loadProduct($products[$i]['id']);
-                                    }
-                                    else
-                                        $objProduct->loadProduct($products[$i]);
-                                                    
-                            echo $this->objProductUtil->populateAdaptedListView($objProduct);
-                        
+                        $objProduct = $this->getObject('product');
+                        if ($browsecheck == '1') {
+                            $objProduct->loadProduct($products[$i]['id']);
+                        }
+                        else
+                            $objProduct->loadProduct($products[$i]);
+
+                        echo $this->objProductUtil->populateAdaptedListView($objProduct);
                     }
 
 
@@ -748,48 +734,48 @@ class javafilt extends object {
 
                     break;
                 }
-               
-                
-                    case "3b" : {
-                        
-                     
-                 
-                      
-                 $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
-                            
-                        $objTable = $this->getObject('htmltable', 'htmlelements');
-                            $objTable->cssClass = "threeAListingTable";
-                            $objTable->width = NULL;
-                         
-                            $newRow = true;
-                            $count = 0;
-                            
+
+
+            case "3b" : {
+
+
+
+
+                    $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
+
+                    $objTable = $this->getObject('htmltable', 'htmlelements');
+                    $objTable->cssClass = "threeAListingTable";
+                    $objTable->width = NULL;
+
+                    $newRow = true;
+                    $count = 0;
+
                     for ($i = $start; $i < ($end); $i++) {
-                    $count++;
-                    
-                    
-              $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$productID"));
-                $adaptLink = new link($uri);
-                $adaptLink->cssClass = "adaptationLinks";
-                $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
-                $adaptLink->link = $linkText; 
-                    $groupid = $this->objDbProducts->getAdaptationDataByProductID($products[$i]['id']);
-                    $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
-                   $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
-                   
-                       $abLink= new link($this->uri(array("action" => '11a','id'=>$groupid['group_id'],"page"=>'10a_tpl.php')));
-                 $abLink->link =  "<img src='" . $thumbnail . "'>";
-                 $abLink->cssClass = "smallAdaptationImageGrid";
-                   
-                $checkbox = new checkbox('selectedusers[]', $products[$i]['id']);
-                $checkbox->value = $products[$i]['id'];
-                $checkbox->cssId = 'user_' . $products[$i]['id'];
-               
-                      $content = '
+                        $count++;
+
+
+                        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$productID"));
+                        $adaptLink = new link($uri);
+                        $adaptLink->cssClass = "adaptationLinks";
+                        $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
+                        $adaptLink->link = $linkText;
+                        $groupid = $this->objDbProducts->getAdaptationDataByProductID($products[$i]['id']);
+                        $grouptitle = $this->objDbGroups->getGroupName($groupid['group_id']);
+                        $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
+
+                        $abLink = new link($this->uri(array("action" => '11a', 'id' => $groupid['group_id'], "page" => '10a_tpl.php')));
+                        $abLink->link = "<img src='" . $thumbnail . "'  width='45' height='49' >";
+                        $abLink->cssClass = "smallAdaptationImageGrid";
+
+                        $checkbox = new checkbox('selectedusers[]', $products[$i]['id']);
+                        $checkbox->value = $products[$i]['id'];
+                        $checkbox->cssId = 'user_' . $products[$i]['id'];
+
+                        $content = '
                             
                             <div class="adaptedByDiv3a">Adapted by:</div>
                             <div class="gridSmallImageAdaptation" >
-                            	<img src="' . $abLink->show() .'
+                            	' . $abLink->show() . '
                                 <span class="greyListingHeading">
                             
                                     
@@ -797,9 +783,8 @@ class javafilt extends object {
                                 </span>
                   			</div>
                             <div class="gridAdaptationLinksDiv">' .
-                    
-                         $grouptitle
-                       .'
+                                $grouptitle
+                                . '
                     
              	
                             </div>
@@ -810,14 +795,13 @@ class javafilt extends object {
                                     </div>
                                     <div class="listingAdaptationLinkDiv">
                                         <a href="#" class="adaptationLinks">';
-                       
-                       if ($this->objUser->isLoggedIn()) {
-                           $content .=  $adaptLink->show();
-                                   
-                           };
-                       
-                       
-                       $content.= '</a>
+
+                        if ($this->objUser->isLoggedIn()) {
+                            $content .= $adaptLink->show();
+                        };
+
+
+                        $content.= '</a>
                                     </div>
                            	  </div>
                                 
@@ -830,10 +814,8 @@ class javafilt extends object {
                                  	</div>
                                 </div>
                                  <div class="product3aViewDiv">
-                                    <div class="imgFloatRight">'.
-                          
-                         
-                         $checkbox->show().'
+                                    <div class="imgFloatRight">' .
+                                $checkbox->show() . '
                   
                           
                                     
@@ -848,43 +830,37 @@ class javafilt extends object {
                
                 
                 ';
-                      
-                     if ($newRow) {
-            $objTable->startRow();
-            $objTable->addCell($content);
-            $newRow = false;
-        } else {
-            $objTable->addCell($content);
-        }
-                
 
-    if ($count == 3) {
-        $newRow = true;
-        $objTable->endRow();
-        $count = 0;
-    }
-                
-               
-               } 
-                
-         $form->addToForm($objTable->show());
-        echo $form->show();      
-                  
-                      
-                      
-                      
-                      
-                    
-                
-                
-                
-                    
-                    break;
-                
+                        if ($newRow) {
+                            $objTable->startRow();
+                            $objTable->addCell($content);
+                            $newRow = false;
+                        } else {
+                            $objTable->addCell($content);
+                        }
+
+
+                        if ($count == 3) {
+                            $newRow = true;
+                            $objTable->endRow();
+                            $count = 0;
+                        }
                     }
-                    
-                
-                
+
+                    $form->addToForm($objTable->show());
+                    echo $form->show();
+
+
+
+
+
+
+
+
+
+
+                    break;
+                }
         }
 
 
