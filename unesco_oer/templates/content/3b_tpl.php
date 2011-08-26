@@ -62,6 +62,7 @@ $this->appendArrayVar('headerParams', $js);
                 ?>
               </h2>
         	</div>
+            </div>
           <div class="wideLeftFloatDiv">
         	<!-- Left Colum -->
         	 <div class="leftColumnDiv">    
@@ -90,7 +91,8 @@ $this->appendArrayVar('headerParams', $js);
 
         </a>
     </div>
-          </div>  
+          
+                 </div>
             
         	<!-- Center column DIv -->
             <div class="rightWideColumnDiv">
@@ -107,6 +109,9 @@ $this->appendArrayVar('headerParams', $js);
             
             
             ?>
+
+            
+        
                     <div class="sortBy">
 <?php
                           $search = $this->getobject('filterdisplay', 'unesco_oer');
@@ -122,9 +127,11 @@ $this->appendArrayVar('headerParams', $js);
                                                                             </select>
                                                                             <select name="" class="contentDropDown">
                                                                                 <option value="">DESC</option>
-                                                                            </select>-->
+                                                                           </select>-->
                     </div>
-
+</div>
+                
+  <div class="centerColumnDiv">
                                           
                 <div  id='filterDiv' title = "3b" ALIGN="left">
            
@@ -258,12 +265,11 @@ $this->appendArrayVar('headerParams', $js);
                             
                             
                             
-                </div>   
-            
-</div>
+                </div>  
                 
-                </div>
-                
+  </div>
+            </div>
+ 
                 <script src="http://code.jquery.com/jquery-latest.js"></script>
      <script>
                $(document).ready($('#compareproduct').click(function(){
