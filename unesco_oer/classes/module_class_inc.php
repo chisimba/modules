@@ -265,34 +265,16 @@ class module extends content {
             $buttonDelete->setOnClick('javascript: window.location=\'' . $uri2 . '\'');
             $form_data->addToForm($buttonDelete->show());
         }
-       
-        
-// $content = ' <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
-//  <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
-//<script  >
-//   
-//
-//
-// $(document).ready(
-//        function()
-//        {
-//            
-//            $("#form_add").validate();
-//            alert("test);
-//        
-//       
-//        });
-//
-//
-//
-//
-//</script>';
- 
+
+        $buttonCancel = new button('cancel','Cancel');
+        $action = "$('.root').html('');";
+        $buttonCancel->setOnClick('javascript: ' . $action);
+        $form_data->addToForm($buttonCancel->show());
  
       
-     $content = '<body>';
-     $content .= $form_data->show();   
-     $content .= '</body>';
+        $content = '<body>';
+        $content .= $form_data->show();
+        $content .= '</body>';
 
         return  $content;
     }

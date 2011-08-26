@@ -87,6 +87,11 @@ class year extends content {
             $form_data->addToForm($buttonDelete->show());
         }
 
+        $buttonCancel = new button('cancel','Cancel');
+        $action = "$('.root').html('');";
+        $buttonCancel->setOnClick('javascript: ' . $action);
+        $form_data->addToForm($buttonCancel->show());
+
         return $form_data->show();
     }
 
