@@ -190,7 +190,7 @@ $this->appendArrayVar('headerParams', $js);
         echo $bookmark;
         ?>
 
-        >
+        
 
         <!-- Pagination-->
         <div class="paginationDiv">

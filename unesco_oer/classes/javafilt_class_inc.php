@@ -220,18 +220,18 @@ class javafilt extends object {
         if ($total >= 2) {
             $result = call_user_func_array("array_intersect", $filter_empty_arrays);
         } else if ($total == 1) {
-            $temp = $filter_empty_arrays;
-
-
-            $result = array(); //convert to 1d array
-            $i = 0;
-            foreach ($temp as $results) {
-
-                $result = $results;
-
-                $i++;
-            }
-
+//            $temp = $filter_empty_arrays;
+//
+//
+//            $result = array(); //convert to 1d array
+//            $i = 0;
+//            foreach ($temp as $results) {
+//
+//                $result = $results;
+//
+//                $i++;
+//            }
+                $result = null;
             //convert to 1d array
         }
 
@@ -432,23 +432,24 @@ class javafilt extends object {
         if ($total >= 2) {
             $result = call_user_func_array("array_intersect", $filter_empty_arrays);
         } else if ($total == 1) {
-            $temp = $filter_empty_arrays;
-
-
-            $result = array(); //convert to 1d array
-            $i = 0;
-            foreach ($temp as $results) {
-
-                $result = $results;
-
-                $i++;
-            }
-
-            //   echo $i . "    tttttttttttt";
+//            $temp = $filter_empty_arrays;
+//     
+//   
+//            $result = array(); //convert to 1d array
+//            $i = 0;
+//            foreach ($temp as $results) {
+//
+//                $result = $results;
+//
+//                $i++;
+//            }
+//                 var_dump($temp);  
+//               echo $i . "    tttttttttttt";
+               $result = null;
             //convert to 1d array
         }
-        //var_dump($result);  
-
+       
+   
         if (($LangFilter == Null or $LangFilter == 'All'))
             if (($ThemeFilter == Null or $ThemeFilter == 'All'))
                 if (($AuthFilter == Null or $AuthFilter == 'All')) {

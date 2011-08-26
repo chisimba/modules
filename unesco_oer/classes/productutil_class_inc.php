@@ -278,11 +278,7 @@ class productutil extends object {
             
            $button->onclick = "  javascript:bookmarksave('$time','$parentid','$userid','$textname','$commentboxname')  "; 
                                                              
-                  
-              
-
-                
-                   
+                 
                     
       
                //javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname'); 
@@ -331,19 +327,13 @@ class productutil extends object {
                     <div class='productlistViewLeftFloat'>
                         <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='Bookmark' width='18' height='18'class='imgFloatRight'>
                         <div class='listingAdaptationLinkDiv'>
-                        
-
+                
             </div>
                     
                 <a href='javascript:void(0)'   id='$linkheading'>Bookmark
-              
-     
-
-      
+             
                    </div>
-                 
-      
-              
+             
               <div class='productlistViewLeftFloat'>
                         <img src='skins/unesco_oer/images/small-icon-make-adaptation.png' alt='Make Adaptation' width='18' height='18'class='imgFloatRight'>
                         <div class='listingAdaptationLinkDiv'><a href='#' class='adaptationLinks'>make adaptation</a></div>
@@ -352,10 +342,7 @@ class productutil extends object {
                       <img src='skins/unesco_oer/images/icon-languages.png' alt='Languages search' width='24' height='24'class='imgFloatRight'>
                         <div class='listingAdaptationLinkDiv'>
                         	<select name='' class='listingsLanguageDropDown'>
-                
-                
-                
-                
+       
                 ";
 
             $index = 0;
@@ -378,16 +365,10 @@ class productutil extends object {
         
                     </div> <br><br><br><br>
        
-       
-                    
    <div id='$divheading'  style= 'display:none' > 
-                
- 
-              
-             
+      
                 " . $form->show().  "
-                                            
-                  
+          
                 </div>
                 
              </div>
