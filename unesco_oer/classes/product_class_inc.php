@@ -34,6 +34,7 @@ class product extends object
     public $objDbRelationTypes;
     public $objDbProductKeywords;
     public $objDbProductStatus;
+    public $objDbRegions;
 
 
     //TODO move catorgorized parameters into structs. eg. <creationStruct>
@@ -276,6 +277,7 @@ class product extends object
         $this->objDbProductStatus = $this->getObject('dbproductstatus');
         $this->validationArray = array();
         $this->objCC = $this->getObject('displaylicense', 'creativecommons'); //TODO use this licence stuff
+        $this->objDbRegions = $this->getObject('dbregions');
 
         $this->setContentManager($this->newObject('contentmanager'));
         $this->_user = $this->getObject('user', 'security');
@@ -1060,14 +1062,17 @@ class product extends object
             //Field for Region
             $fieldName = 'region';
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_region', 'unesco_oer');
-            $this->_objAddDataUtil->addTextInputToTable(
-                                                        $title,
-                                                        4,
-                                                        $fieldName,
-                                                        '90%',
-                                                        $this->getRegion(),
-                                                        $table
-                                                        );
+            $regions = $this->objDbRegions->getAll();
+            $this->_objAddDataUtil->addDropDownToTable(
+                                                    $title,
+                                                    4,
+                                                    $fieldName,
+                                                    $regions,
+                                                    $this->getRegion(),
+                                                    'region',
+                                                    $table,
+                                                    'id'
+                                                    );
 
             //field for country
             $fieldName = 'country';
@@ -1084,7 +1089,12 @@ class product extends object
             $objDbUserGroups = $this->getObject('dbusergroups', 'unesco_oer');
             $arrayUserGroups = $objDbUserGroups->getUserGroups($this->_user->PKId());
 
-            if (empty($arrayUserGroups))                return 'You are not permitted to perform this operation! You must belong to a group';
+            if (empty($arrayUserGroups)) {
+                $fieldset = $this->newObject('fieldset','htmlelements');
+                $fieldset->setLegend('ERROR');
+                $fieldset->addContent('You are not permitted to perform this operation! You must belong to a group');
+                return $fieldset->show();
+            }
 
             $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
 
@@ -1681,6 +1691,11 @@ class product extends object
    function getRegion()
    {
        return $this->_region;
+   }
+
+   function getRegionName() {
+       $regionArray = $this->objDbRegions->getRegionByID($this->_region);
+       return $regionArray['region'];
    }
 
    function getCountryCode()
