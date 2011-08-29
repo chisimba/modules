@@ -145,6 +145,23 @@ $fs->setLegend($this->objLanguage->languageText('mod_unesco_oer_group_users', 'u
 $fs->addContent($myTable->show());
 echo $fs->show();
 
+
+
+require_once 'Pager/Pager.php';
+/* We will bypass the database connection code ... */
+$sqlQuery = "SOME SQL QUERY";
+$result = mysql_query($sqlQuery);
+$totalRows = 10;
+
+$pager_options = array(
+'mode'       => 'Sliding',
+'perPage'    => 10,
+'delta'      => 4,
+'totalItems' => $totalRows,
+);
+$pager = Pager::factory($pager_options);
+echo $pager->links;
+
 ?>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
@@ -188,3 +205,4 @@ $('button[name=searchButton]').click(
     }
 );
 </script>
+

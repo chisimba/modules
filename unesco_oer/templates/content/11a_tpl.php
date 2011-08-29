@@ -39,7 +39,9 @@ $this->loadClass('textinput', 'htmlelements');
                              echo $GroupLink->show();
                              ?></a> |
                 <span class="groupsBreadCrumbColor noUnderline">
-                    <?php echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objDbGroups->getGroupCountry($this->getParam('id'));?>
+                    <?php 
+
+                    echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objDbGroups->getGroupCountry($this->getParam('id'));?>
                     </span>
                 </div>
             	<div class="tenPixelPaddingLeft">

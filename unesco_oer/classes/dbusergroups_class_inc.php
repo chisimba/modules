@@ -51,8 +51,9 @@ class dbusergroups extends dbtable {
 
 
     // when a user what to leave a particular group
-    function leavegroup($id, $groupid) {
-        $sql = "DELETE * FROM tbl_unesco_oer_usergroups WHERE id='$id' AND groupid='$groupid'";
+    function leavegroup($id,$groupid) {
+        $sql = "DELETE  FROM  tbl_unesco_oer_user_groups WHERE id='$id' AND groupid='$groupid'";
+        return $this->getArray($sql);
     }
 
     //TO get user that who don't belong to any group
@@ -60,6 +61,8 @@ class dbusergroups extends dbtable {
         $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='NULL'";
         return $this->getArray($sql);
     }
+
+ 
 
     //Check that a user belongs to a  group
 

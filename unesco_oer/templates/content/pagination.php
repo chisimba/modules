@@ -1,16 +1,10 @@
 <?php
-
-
-
-	/*		Place code to connect to your DB here.
-
-
+	/*
+		Place code to connect to your DB here.
 	*/
-
-mysql_connect("$localhost", "root", "jcse")or die("cannot connect to server");
 	include('config.php');	// include your code to connect to DB.
 
-	$tbl_name="tbl_unesco_oer_userextra";		//your table name
+	$tbl_name="";		//your table name
 	// How many adjacent pages should be shown on each side?
 	$adjacents = 3;
 
@@ -23,8 +17,8 @@ mysql_connect("$localhost", "root", "jcse")or die("cannot connect to server");
 	$total_pages = $total_pages[num];
 
 	/* Setup vars for query. */
-	$targetpage = "pagination.php"; 	//your file name  (the name of this file)
-	$limit = 15; 								//how many items to show per page
+	$targetpage = "filename.php"; 	//your file name  (the name of this file)
+	$limit = 2; 								//how many items to show per page
 	$page = $_GET['page'];
 	if($page)
 		$start = ($page - 1) * $limit; 			//first item to display on this page
@@ -32,7 +26,7 @@ mysql_connect("$localhost", "root", "jcse")or die("cannot connect to server");
 		$start = 0;								//if no page var is given, set start to 0
 
 	/* Get data. */
-	$sql = "SELECT id FROM $tbl_name LIMIT $start, $limit";
+	$sql = "SELECT column_name FROM $tbl_name LIMIT $start, $limit";
 	$result = mysql_query($sql);
 
 	/* Setup page vars for display. */
@@ -135,6 +129,3 @@ mysql_connect("$localhost", "root", "jcse")or die("cannot connect to server");
 	?>
 
 <?=$pagination?>
-}
-
-?>

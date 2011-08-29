@@ -37,8 +37,14 @@ $this->loadClass('textinput', 'htmlelements');
                         <div class="greyDivider"></div>
                         <br>
                        	<div class="groupSubLinksList">
-                           <img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
-                           <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Leave group</a></div>
+                            <?php
+                            $currLoggedInID = $this->objUser->userId();
+                            $id=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
+                            $groupid=$this->getParam('id');
+                            echo $this->objGroupUtil->leaveGroup($id,$groupid);
+                            ?>
+<!--                           <img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
+                           <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Leave group</a></div>-->
                         </div>
                         <div class="groupSubLinksList">
 

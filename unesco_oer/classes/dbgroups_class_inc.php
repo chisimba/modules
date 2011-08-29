@@ -22,10 +22,9 @@ class dbgroups extends dbtable {
     }
 
 
-        function getgroups($start, $end)
+        function getgroups($start, $limit)
     {
-        $sql = "select * from tbl_unesco_oer_groups limit $start,$end";
-
+        $sql = "select * from tbl_unesco_oer_groups limit $start,$limit";
         return $this->getArray($sql);
     }
     
@@ -460,6 +459,14 @@ function getInstitutionThumbnail($institutionid){
       $institutions=$this->getArray($sql);
       return count($institutions);
   }
+
+  function getGroupOwnerID($groupid){
+      $sql="SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
+      $OwnerID=$this->getArray($sql);
+      return $OwnerID[0]['admin'];
+  }
+
+
 
 
     

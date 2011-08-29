@@ -238,11 +238,13 @@ public function groupInstitution($groupid){
 
 
 public function topcontent($groupid){
+    $Link=new link($this->uri(array("action" =>'8a','id'=>$groupid,"page"=>'10a_tpl.php')));
+    $Link->link=$this->objDbGroups->getGroupName($groupid);
     
     $content.='
      <img src="'.$this->objDbGroups->getThumbnail($groupid).'" alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
         <div class="textNextToGroupIcon">
-        <h2 class="greenText">'.$this->objDbGroups->getGroupName($groupid).'</h2>
+        <h2 class="greenText">'.$Link->show().'</h2>
             '.$this->objDbGroups->getGroupDescription($groupid).'
                        </div>
         ';
@@ -255,6 +257,49 @@ public function getThumbnail($groupid){
     return $this->objDbgroups->getThumbnail($groupid);
     
     
+}
+
+
+public function leaveGroup($id,$groupid){
+  
+    if($this->ObjDbUserGroups->ismemberOfgroup($id, $groupid)){
+        $LeavegroupLink = new link($this->uri(array('action' =>"leaveGroup",'id'=>$id,'groupid'=>$groupid,"page"=>'10a_tpl.php')));
+        $LeavegroupLink->link='Leave group';
+        $LeavegroupLink->cssClass ='leavegroup';
+       }else{
+           $LeavegroupLink = new link($this->uri(array('action' =>"8a","page"=>'10a_tpl.php')));
+           $LeavegroupLink->link='Leave group';
+           $LeavegroupLink->cssClass ='cantleavegroup';}
+
+
+    $content.='<img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
+                           <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink"> '.$LeavegroupLink->show().'</a></div>';
+    return $content;
+}
+
+public function groupOwner($groupid){
+    $ownerId=$this->objDbgroups->getGroupOwnerID($groupid);
+    $owner_Details=$this->objDbgroups->getUserbyId($ownerId);
+    $owner_surname=$owner_Details[0]['surname '];
+    $owner_name=$owner_Details[0]['firstname'];
+    $ownerExtraInfo=$this->objUseExtra->getUserDetails($ownerId);
+    $Owner_thumbnail=$ownerExtraInfo[0]['e'];
+    $groupMembers=$this->ObjDbUserGroups->groupMembers($groupid);
+
+
+
+
+
+
+    $content.='
+        <img src='.$Owner_thumbnail.' width="79" height="101">
+                            <br>
+                            <span class="greenText fontBold">Owner:</span> <br>'. $owner_name.''.'&nbsp;'.''.$owner_surname.'<br><br>
+                            <span class="greenText fontBold">Administrators: <br></span>2<br><br>
+
+                            <span class="greenText fontBold">Group members: <br></span>'. $groupMembers.'
+                         </div>';
+    return $content;
 }
 
 
@@ -290,7 +335,7 @@ jQuery(document).ready(function(){
 
     jQuery("a[class=memberofgroup]").click(function(){
 
-        var r=confirm( "Your are a member of this group\n you can not join again!!!");
+        var r=confirm( "Your are a member of this group\n you can not join again....!!!");
         if(r== true){
             window.location=this.href;
         }
@@ -299,6 +344,37 @@ jQuery(document).ready(function(){
 
 
 );
+}
+);
+
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=leavegroup]").click(function(){
+
+        var r=confirm( "Are you sure you want to leave the group?");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+);
+
+}
+);
+
+jQuery(document).ready(function(){
+
+    jQuery("a[class=cantleavegroup]").click(function(){
+
+        var r=confirm( "You are not a member of this group\n Action Leave group failed....!!!!");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+);
+
 }
 );
 

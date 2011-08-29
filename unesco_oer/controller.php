@@ -139,6 +139,10 @@ class unesco_oer extends controller {
         }
     }
 
+    function __pagination(){
+        return "pagination.php";
+    }
+
     /**
      *
      * Method to check if a given action is a valid method
@@ -1933,6 +1937,17 @@ class unesco_oer extends controller {
         $id=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
         $this->ObjDbUserGroups->joingroup($id, $this->getParam('id'));
         return $this->__10();
+    }
+
+    function __leaveGroup(){
+        $id=$this->getParam("id");
+        $groupid=$this->getParam("groupid");
+        echo $groupid;
+       // $currLoggedInID = $this->objUser->userId();
+        //$id=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
+        $this->ObjDbUserGroups->leaveGroup($id,$groupid);
+        return $this->__8a();
+
     }
 
     /*

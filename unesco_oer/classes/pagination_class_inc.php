@@ -8,7 +8,7 @@
 class pagination extends object {
 
     public function init() {
-        parent::init();
+//        parent::init();
     }
 
 
@@ -16,7 +16,7 @@ class pagination extends object {
 
 
 
-    function getPaginationString($page = 1, $totalitems, $limit = 15, $adjacents = 3, $targetpage = "/", $pagestring = "?page=")
+  public   function getPaginationString($page = 1, $totalitems, $limit = 15, $adjacents = 3, $targetpage = "/", $pagestring = "?page=")
 {
 	//defaults
 	if(!$adjacents) $adjacents = 1;

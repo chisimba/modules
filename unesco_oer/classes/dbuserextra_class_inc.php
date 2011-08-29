@@ -273,6 +273,12 @@ class dbuserextra extends dbtable{
         return $this->getArray($sql);
     }
 
+    function getUserDetails($id){
+          $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE id='$id'";
+         return $this->getArray($sql);
+
+    }
+
 
 
 
