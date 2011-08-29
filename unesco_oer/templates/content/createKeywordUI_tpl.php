@@ -14,6 +14,14 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+$this->setLayoutTemplate('maincontent_layout_tpl.php');
+
+$keywordID = $this->getParam('keywordId');
+$uri = $this->uri(array('action'=>'createKeywordSubmit'));
+if (!empty($keywordID)){
+    $uri = $this->uri(array('action'=>'editKeywordSubmit', 'id'=>$keywordID));
+}
+
 // set up html elements
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable','htmlelements');
@@ -26,14 +34,17 @@ $utility = new adddatautil();
 $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_unesco_oer_keyword_heading', 'unesco_oer');
 $header->type = 2;
+echo '<div id="institutionheading">';
 echo $header->show();
+echo '</div>';
 
 // setup table and table headings with input options
 $table = $this->newObject('htmltable', 'htmlelements');
 
 //theme description input options
 $title = $this->objLanguage->languageText('mod_unesco_oer_keyword_description', 'unesco_oer');
-$utility->addTextInputToTable($title, 4, 'newKeyword', 60, '', $table);
+$keywordInfo = $this->objDbProductKeywords->getProductKeywordByID($keywordID);
+$utility->addTextInputToTable($title, 4, 'newKeyword', 60, $keywordInfo['keyword'], $table);
 
 $button = new button('submitProductType', "Submit Keyword");
 $button->setToSubmit();
@@ -41,9 +52,15 @@ $table->startRow();
 $table->addCell($button->show());
 $table->endRow();
 
+$keywordFieldset = $this->newObject('fieldset', 'htmlelements');
+$createKeywordLegend = $this->objLanguage->languageText('mod_unesco_oer_add_data_newKeywordBtn', 'unesco_oer');
+$keywordFieldset->setLegend($createKeywordLegend);
+$keywordFieldset->addContent($table->show());
+
 //createform, add fields to it and display
-$form_data = new form('createTheme_ui',$this->uri(array('action'=>'createKeywordSubmit')));
-$form_data->addToForm($table->show());
+$form_data = new form('createTheme_ui',$uri);
+$form_data->addToForm($keywordFieldset->show());
+$form_data->addRule('newKeyword', 'Please enter a keyword', 'required');
 echo $form_data->show();
 
 ?>

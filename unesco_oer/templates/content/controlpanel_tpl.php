@@ -131,6 +131,21 @@
 
                         </div>
                     </td>
+                    <td width="269">
+                        <div id="controlPanelCell">
+
+                            <?php
+                            $link = new link($this->uri(array("action" => 'viewKeywords')));
+                            $keywords = $this->objLanguage->languageText('mod_unesco_oer_control_panel_product_keywords_title', 'unesco_oer');
+
+                            $link->link = '<img src="skins/unesco_oer/images/keyword.png" alt = "Languages" height = "55" width = "55">
+                            <br/>
+                            <br/> ' . $keywords;
+                            echo '&nbsp;' . $link->show();
+                            ?>
+
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td width="269">

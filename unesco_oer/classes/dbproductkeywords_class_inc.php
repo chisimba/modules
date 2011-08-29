@@ -77,5 +77,14 @@ class dbproductkeywords extends dbtable
         //$this->_execute($sql);
         $this->delete('product_id', $productID, $this->product_keyword_jxn);
     }
+
+    function deleteKeyword($id) {
+        $this->delete('id', $id);
+        $this->delete('keyword_id', $id, $this->product_keyword_jxn);
+    }
+
+    function updateKeyword($id, $newKeyword){
+        $this->update('id', $id, array('keyword' => $newKeyword));
+    }
 }
 ?>

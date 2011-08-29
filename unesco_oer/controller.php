@@ -960,7 +960,23 @@ class unesco_oer extends controller {
     public function __createKeywordSubmit() {
         $keyword = $this->getParam('newKeyword');
         $this->objDbProductKeywords->addKeyword($keyword);
-        return $this->__addData();
+        return $this->__viewKeywords();
+    }
+
+    public function __editKeywordSubmit() {
+        $keyword = $this->getParam('newKeyword');
+        $this->objDbProductKeywords->updateKeyword($this->getParam('id'), $keyword);
+        return $this->__viewKeywords();
+    }
+
+    public function __viewKeywords() {
+        $this->setLayoutTemplate('maincontent_layout_tpl.php');
+        return 'viewKeywords_tpl.php';
+    }
+
+    public function __deleteKeyword() {
+        $this->objDbProductKeywords->deleteKeyword($this->getParam('keywordId'));
+        return $this->__viewKeywords();
     }
 
     /*
