@@ -578,7 +578,7 @@ class product extends object
 
         // setup and show heading
         $header = new htmlHeading();
-        if ($this->isDeleted()){
+        if ($this->isDeleted() || empty ($this->_identifier)){
             $header->str = $this->objLanguage->
                     languageText('mod_unesco_oer_product_upload_heading', 'unesco_oer');
         }else{
