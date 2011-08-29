@@ -70,10 +70,27 @@ class contentmanager extends object
         $actionURI = $this->uri(array('action' => 'ViewProduct', 'id' => $this->getProductID()));
         $buttonSubmit->setOnClick('javascript: window.location=\'' . $actionURI . '\'');
 
+        $instructions = "
+                <ul>
+                    <li>
+                        Use tree on the left to navigate existing conents
+                    </li>
+                    <li>
+                        Click on content in order to edit it.
+                    </li>
+                    <li>
+                        Click on the 'Create new ...' options to create new contents.
+                    </li>
+                    <li>
+                        All contents have the option to delete when being edited.
+                    </li>
+                </ul>
+            ";
+
         $output = '<div id="productmetaheading">';
         $output .= $heading->show();
         $output .= '</div>';
-        $output .= "<div class='root' ></div>";
+        $output .= "<div class='root' >$instructions</div>";
         $output .= $buttonSubmit->show();
         $output .= "<div class='product_id' id='{$this->getProductID()}'></div>";
 
