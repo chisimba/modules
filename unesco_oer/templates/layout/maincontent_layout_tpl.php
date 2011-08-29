@@ -41,7 +41,7 @@ $group = $this->getParam('group');
 
                                 <a href="?module=userdetails"><img src="skins/unesco_oer/images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
                                 <?php
-                                $booklink = new link($this->uri(array("action" => "Bookmarks")));
+                                $booklink = new link($this->uri(array("action" => "Bookmarks"),"unesco_oer"));
                                 $img2 = '<img src= "skins/unesco_oer/images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks">';
                                 $booklink->link = $img2;
                                 echo $booklink->show();
@@ -50,7 +50,7 @@ $group = $this->getParam('group');
 
 
 
-                                $abLink = new link($this->uri(array("action" => "controlpanel")));
+                                $abLink = new link($this->uri(array("action" => "controlpanel"),"unesco_oer"));
                                 $img = '<img src="skins/unesco_oer/images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools">';
                                 $abLink->link = $img;
 
@@ -147,7 +147,7 @@ $group = $this->getParam('group');
                 <li <?php if (empty($page) || (strcmp($page, '1a_tpl.php') == 0))
                             echo 'class="onStateProducts"'; ?> >
                         <?php
-                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
+                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php'),"unesco_oer"));
                         $abLink->link = 'UNESCO OER PRODUCTS';
                         echo $abLink->show();
                         ?>
@@ -170,7 +170,7 @@ $group = $this->getParam('group');
                 ?>
                     >
                         <?php
-                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '2a_tpl.php')));
+                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '2a_tpl.php'),"unesco_oer"));
                         $abLink->link = 'Product Adaptations';
                         echo $abLink->show();
                         ?>
