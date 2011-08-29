@@ -21,17 +21,15 @@ class dbgroups extends dbtable {
         parent::init("tbl_unesco_oer_groups");
     }
 
-
-        function getgroups($start, $limit)
-    {
+    function getgroups($start, $limit) {
         $sql = "select * from tbl_unesco_oer_groups limit $start,$limit";
         return $this->getArray($sql);
     }
-    
-     function getidbylocation($loclat,$loclong){
-         $sql = "select * from tbl_unesco_oer_groups where loclat = $loclat and loclong = $loclong";
-         
-           return $this->getArray($sql);
+
+    function getidbylocation($loclat, $loclong) {
+        $sql = "select * from tbl_unesco_oer_groups where loclat = $loclat and loclong = $loclong";
+
+        return $this->getArray($sql);
     }
 
     function getAllGroups() {
@@ -49,160 +47,140 @@ class dbgroups extends dbtable {
         $this->getArray($sql);
     }
 
+    function getGroupForumId($groupid) {
+        $sql =
+                "select id from tbl_forum where forum_context = '$groupid'";
+        $result = $this->getArray($sql);
+        return $result['id'];
+    }
+
     function editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail) {
         if ($name != '') {
-             $data = array(
+            $data = array(
                 'id' => $id,
                 'name' => $name);
-                $this->update('id',
-                    $id,$data);
-            
+            $this->update('id', $id, $data);
         }
 
         if ($email != '') {
-         $data = array(
-             'id' => $id,
-             'email' => $email);
+            $data = array(
+                'id' => $id,
+                'email' => $email);
             $this->update(
-                    'id',
-                    $id,
-                    $data
+                    'id', $id, $data
             );
         }
 
-                if ($website != '') {
+        if ($website != '') {
 
-      
-                    $data = array(
+
+            $data = array(
                 'id' => $id,
                 'website' => $website);
-                    $this->update(
-                    'id',
-                    $id,
-                    $data
+            $this->update(
+                    'id', $id, $data
             );
         }
 
 
         if ($address != '') {
-          
-                    $data = array(
+
+            $data = array(
                 'id' => $id,
                 'address' => $address);
-                    $this->update(
-                    'id',
-                    $id,
-                    $data
+            $this->update(
+                    'id', $id, $data
             );
         }
 
         if ($city != '') {
-        
-                    $data = array(
+
+            $data = array(
                 'id' => $id,
                 'city' => $city);
             $this->update(
-                    'id',
-                    $id,
-                    $data
+                    'id', $id, $data
             );
         }
 
         if ($state != '') {
-     
-                    $data = array(
+
+            $data = array(
                 'id' => $id,
                 'state' => $state);
             $this->update(
-                    'id',
-                    $id,
-                    $data
+                    'id', $id, $data
             );
         }
 
         if ($country != '') {
-         
-                    $data = array(
+
+            $data = array(
                 'id' => $id,
                 'country' => $country);
-                     $this->update(
-                    'id',
-                    $id,
-                    $data
+            $this->update(
+                    'id', $id, $data
             );
         }
 
 
         if ($postalcode != '') {
-           
-                    $data = array(
+
+            $data = array(
                 'id' => $id,
                 'postalcode' => $postalcode);
-                    $this->update(
-                    'id',
-                    $id,
-                    $data
+            $this->update(
+                    'id', $id, $data
             );
         }
 
 
 
         if ($institution != '') {
-     
-                    $data = array(
+
+            $data = array(
                 'id' => $id,
                 'linkedInstitution' => $institution);
             $this->update(
-                    'id',
-                    $id,
-                    $data);
+                    'id', $id, $data);
         }
 
         if ($loclat != '') {
- 
-                    $data = array(
+
+            $data = array(
                 'id' => $id,
                 'loclat' => $loclat);
             $this->update(
-                    'id',
-                    $id,
-                    $data
+                    'id', $id, $data
             );
         }
 
         if ($loclong != '') {
-                         $data = array(
+            $data = array(
                 'id' => $id,
                 'loclong' => $loclong);
             $this->update(
-                    'id',
-                    $id,
-                    $data
+                    'id', $id, $data
             );
         }
 
         if ($description != '') {
-       
-                    $data = array(
+
+            $data = array(
                 'id' => $id,
                 'description' => $description);
-             $this->update(
-                    'id',
-                    $id,
-                    $data
+            $this->update(
+                    'id', $id, $data
             );
-            }
-            if ($thumbnail != '') {
-                 $data = array(
-                    'id' => $id,
-                    'thumbnail' => $thumbnail);
-                 $this->update(
-                        'id',
-                        $id,
-                        $data
-                );
-            }
-        
+        }
+        if ($thumbnail != '') {
+            $data = array(
+                'id' => $id,
+                'thumbnail' => $thumbnail);
+            $this->update(
+                    'id', $id, $data
+            );
+        }
     }
 
 //
@@ -220,7 +198,7 @@ class dbgroups extends dbtable {
     // PBROBLEM PROBLEM PROBLEM   #############################################
     // Does a User need necessarily to know the Latitude and Longitude of the group Location?
     //
-    function saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description,$admin, $thumbnail) {
+    function saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail) {
         $data = array(
             'name' => $name,
             'email' => $email,
@@ -234,7 +212,7 @@ class dbgroups extends dbtable {
             'loclat' => $loclat,
             'loclong' => $loclong,
             'description' => $description,
-             'admin'=>$admin,
+            'admin' => $admin,
             'thumbnail' => $thumbnail
         );
         $this->insert($data);
@@ -274,44 +252,37 @@ class dbgroups extends dbtable {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$GroupID'";
         $GroupName = $this->getArray($sql);
         return $GroupName[0]['name'];
-   
     }
-    
-    
-    function getGroupDescription($groupid){
+
+    function getGroupDescription($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
         $GroupDescription = $this->getArray($sql);
         return $GroupDescription[0]['description'];
-        
     }
-    function getGroupCountry($groupid){
+
+    function getGroupCountry($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
         $GroupCountry = $this->getArray($sql);
         return $GroupCountry[0]['country'];
-
     }
 
-
-    function getGroupID($groupname){
+    function getGroupID($groupname) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name='$groupname'";
         $groupID = $this->getArray($sql);
         return $groupID[0]['id'];
     }
 
-    function getLinkedInstitution($groupid){
+    function getLinkedInstitution($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
         $linkedInstitution = $this->getArray($sql);
         return $linkedInstitution[0]['linkedinstitution'];
-     }
+    }
 
-     function getThumbnail($groupid){
-         $sql="select * from tbl_unesco_oer_groups where id='$groupid'";
-         $thumbnail=$this->getArray($sql);
-         return $thumbnail[0]['thumbnail'];
-      
-     }
-
-
+    function getThumbnail($groupid) {
+        $sql = "select * from tbl_unesco_oer_groups where id='$groupid'";
+        $thumbnail = $this->getArray($sql);
+        return $thumbnail[0]['thumbnail'];
+    }
 
     /*
      * This function convert the latitude and longitude and map it on a map
@@ -337,9 +308,11 @@ class dbgroups extends dbtable {
 
     function MapHandler($im, $lat, $long) {
         if (empty($long)
-            )$long = 28.0316;
+        )
+            $long = 28.0316;
         if (empty($lat)
-            )$lat = -26.19284;
+        )
+            $lat = -26.19284;
         $red = imagecolorallocate($im, 255, 0, 0);
         $scale_x = imagesx($im);
         $scale_y = imagesy($im);
@@ -366,128 +339,110 @@ class dbgroups extends dbtable {
         }
     }
 
-    function searchGroupByName($groupname){
-         $sql="SELECT * FROM tbl_unesco_oer_groups WHERE name = '$groupname'";
-         return $this->getArray($sql);
-     }
+    function searchGroupByName($groupname) {
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE name = '$groupname'";
+        return $this->getArray($sql);
+    }
 
 //To get the adaptation of group by groupid
 
-    function getGroupProductadaptation($groupid){
-        $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE group_id = '$groupid'";
+    function getGroupProductadaptation($groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE group_id = '$groupid'";
         return $this->getArray($sql);
     }
 
 // To get adapted group adapted product thumbnail
-    function getAdaptedProductThumbnail($productid){
-        $sql="SELECT * FROM tbl_unesco_oer_products WHERE id='$productid'";
-        $array=$this->getArray($sql);
+    function getAdaptedProductThumbnail($productid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_products WHERE id='$productid'";
+        $array = $this->getArray($sql);
         return $array[0]['thumbnail'];
     }
-  //To get group adapted product title
-    function getAdaptedProductTitle($productid){
-        $sql="SELECT * FROM tbl_unesco_oer_products WHERE id='$productid'";
-        $array=$this->getArray($sql);
+
+    //To get group adapted product title
+    function getAdaptedProductTitle($productid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_products WHERE id='$productid'";
+        $array = $this->getArray($sql);
         return $array[0]['title'];
     }
 
-   function getGroupUsers($groupname){
-        $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE groupmembership = '$groupname'";
+    function getGroupUsers($groupname) {
+        $sql = "SELECT * FROM tbl_unesco_oer_userextra WHERE groupmembership = '$groupname'";
         return $this->getArray($sql);
-   }
+    }
 
+    //To get adapted product co ordinates
+    function getAdaptedProductLat($productid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE product_id='$productid'";
+        $array = $this->getArray($sql);
+        $groupid = $array[0]['group_id'];
+        return $this->getGroupLatitude($groupid);
+    }
 
+    function getAdaptedProductLon($productid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE product_id='$productid'";
+        $array = $this->getArray($sql);
+        $groupid = $array[0]['group_id'];
+        return $this->getGroupLongitude($groupid);
+    }
 
-
-   //To get adapted product co ordinates
-   function getAdaptedProductLat($productid){
-       $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE product_id='$productid'";
-       $array=$this->getArray($sql);
-       $groupid=$array[0]['group_id'];
-       return $this->getGroupLatitude($groupid);
-   }
-
-   function getAdaptedProductLon($productid){
-       $sql="SELECT * FROM tbl_unesco_oer_product_adaptation_data  WHERE product_id='$productid'";
-       $array=$this->getArray($sql);
-       $groupid=$array[0]['group_id'];
-       return $this->getGroupLongitude($groupid);
-   }
-
-
-  function  getLastInsertId() {
-        $array=$this->getLastEntry(Null, $orderField='id');
+    function getLastInsertId() {
+        $array = $this->getLastEntry(Null, $orderField = 'id');
         return $array[0]['id'];
     }
-    
+
     function getGroupInstitutions($id) {
         $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
         return $this->getArray($sql);
     }
 
-  function getInstitutions($id){
-      $arrayInstitutions=array();
-       $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
-       $institutions=$this->getArray($sql);
-       foreach($institutions as $institution){
-          
-           array_push($arrayInstitutions,$institution['institution_id']);
-       }
-       return  $arrayInstitutions;
-  }
+    function getInstitutions($id) {
+        $arrayInstitutions = array();
+        $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
+        $institutions = $this->getArray($sql);
+        foreach ($institutions as $institution) {
 
-function getInstitution($id)  {
-     $sql="SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$id'";
-     return $this->getArray($sql);
-
-}
-function getInstitutionThumbnail($institutionid){
-    $sql="SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$institutionid'";
-    $institutionarray=$this->getArray($sql);
-    return $institutionarray[0]['thumbnail'];
+            array_push($arrayInstitutions, $institution['institution_id']);
+        }
+        return $arrayInstitutions;
     }
 
- function getInstitutionName($institutionid){
-     $sql="SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$institutionid'";
-     $institutionarray=$this->getArray($sql);
-     return $institutionarray[0]['name'];
+    function getInstitution($id) {
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$id'";
+        return $this->getArray($sql);
     }
 
+    function getInstitutionThumbnail($institutionid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$institutionid'";
+        $institutionarray = $this->getArray($sql);
+        return $institutionarray[0]['thumbnail'];
+    }
 
-  function getNoOfInstitutions($id){
-      $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
-      $institutions=$this->getArray($sql);
-      return count($institutions);
-  }
+    function getInstitutionName($institutionid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$institutionid'";
+        $institutionarray = $this->getArray($sql);
+        return $institutionarray[0]['name'];
+    }
 
-  function getGroupOwnerID($groupid){
-      $sql="SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
-      $OwnerID=$this->getArray($sql);
-      return $OwnerID[0]['admin'];
-  }
+    function getNoOfInstitutions($id) {
+        $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
+        $institutions = $this->getArray($sql);
+        return count($institutions);
+    }
 
+    function getGroupOwnerID($groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
+        $OwnerID = $this->getArray($sql);
+        return $OwnerID[0]['admin'];
+    }
 
-
-
-    
-     
-    
-
-   function storegroupinstitution($groupid,$institutionid){
-       $data = array(
+    function storegroupinstitution($groupid, $institutionid) {
+        $data = array(
             'group_id' => $groupid,
-           'institution_id' => $institutionid
+            'institution_id' => $institutionid
         );
         $this->insert($data);
-
-   }
-
-
-
-
-
-
-        
     }
+
+}
 ?>
 

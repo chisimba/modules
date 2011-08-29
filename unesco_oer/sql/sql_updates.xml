@@ -177,7 +177,7 @@
     </update>
         <update>
         <table>tbl_unesco_oer_groups</table>
-        <version>0.075</version>
+        <version>0.103</version>
         <description>Added an admin  field</description>
         <data>
             <add>

@@ -37,6 +37,7 @@ class unesco_oer extends controller {
     public $objDbmodules;
     public $objDbcurricula;
     public $objPagination;
+    public $groupmanager;
 
     /**
      * @var object $objLanguage Language Object
@@ -98,7 +99,12 @@ class unesco_oer extends controller {
         $this->objDbmodules = $this->getObject('dbmodules');
         $this->objDbcurricula = $this->getObject('dbcurricula');
         $this->objPagination = $this->getObject('pagination');
-
+        $this->groupmanager = $this->getObject('groupmanager');
+        $this->objForum = & $this->getObject('dbforum', 'forum');
+              // Load Forum Subscription classes
+        $this->objForumSubscriptions = & $this->getObject('dbforumsubscriptions','forum');
+        $this->objTopicSubscriptions = & $this->getObject('dbtopicsubscriptions','forum');
+          $this->objDiscussionType = $this->getObject('dbdiscussiontypes', 'forum');
 
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
@@ -141,7 +147,7 @@ class unesco_oer extends controller {
         }
     }
 
-    function __pagination(){
+    function __pagination() {
         return "pagination.php";
     }
 
@@ -592,7 +598,7 @@ class unesco_oer extends controller {
         if ($action == null) {
             return FALSE;
         }
-        $required = array('filterproducts', 'viewproduct','login');
+        $required = array('filterproducts', 'viewproduct', 'login');
 
         if (in_array($action, $required)) {
             return FALSE;
@@ -1916,15 +1922,14 @@ class unesco_oer extends controller {
         return $this->__10();
     }
 
-    function __leaveGroup(){
-        $id=$this->getParam("id");
-        $groupid=$this->getParam("groupid");
+    function __leaveGroup() {
+        $id = $this->getParam("id");
+        $groupid = $this->getParam("groupid");
         echo $groupid;
-       // $currLoggedInID = $this->objUser->userId();
+        // $currLoggedInID = $this->objUser->userId();
         //$id=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
-        $this->ObjDbUserGroups->leaveGroup($id,$groupid);
+        $this->ObjDbUserGroups->leaveGroup($id, $groupid);
         return $this->__8a();
-
     }
 
     /*
@@ -1937,7 +1942,7 @@ class unesco_oer extends controller {
         }
         $name = $this->getParam('group_name');
         $email = $this->getParam('register_email');
-//$confirmemail=$this->getParam('register_confirmemail');
+
         $address = $this->getParam('group_address');
         $city = $this->getParam('group_city');
         $state = $this->getParam('group_state');
@@ -1976,9 +1981,6 @@ class unesco_oer extends controller {
         }
 
 
-//        if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
-//            $problems[] = 'emailtaken';
-//        }
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
@@ -2005,8 +2007,10 @@ class unesco_oer extends controller {
                     $this->objDbgroupInstitutions->add_group_institutions($id, $array);
                 }
             }
-//            $this->setLayoutTemplate('maincontent_layout_tpl.php');
-//            return 'groupListingForm_tpl.php';
+
+            //create group forum
+            $this->groupmanager->saveForum($id, $name, $description);
+
             return $this->__groupListingForm();
         }
     }
@@ -2421,10 +2425,44 @@ class unesco_oer extends controller {
         return $this->__viewProductTypes();
     }
 
-    
-    function __login(){
-       return "login_tpl.php";
+    function __login() {
+        return "login_tpl.php";
     }
+
+    /**
+     * Post a new message. This shows the form to do that.
+     *
+     * @param string $id - Record ID of the Forum message will be posted in
+     * @return string Template - forum_newtopic.php
+     */
+    public function __newTopicForm() {
+        $groupid = $this->getParam("groupid");
+        $forumid= $this->getParam("forumid");
+        $forum = $this->objForum->getForum($forumid);
+        
+        $discussionTypes = $this->objDiscussionType->getDiscussionTypes();
+        $this->setVarByRef('forumid', $id);
+        $this->setVarByRef('forum', $forum);
+        $this->setVarByRef('discussionTypes', $discussionTypes);
+
+        // Check if form is a result of server-side validation or not'
+        if ($this->getParam('message') == 'missing') {
+            $details = $this->getSession($this->getParam('tempid'));
+            $this->setVarByRef('details', $details);
+            $temporaryId = $details['temporaryId'];
+            $this->setVar('mode', 'fix');
+        } else {
+            $temporaryId = $this->objUser->userId() . '_' . mktime();
+            $this->setVar('mode', 'new');
+        }
+        $this->setVarByRef('temporaryId', $temporaryId);
+        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($id, $this->objUser->userId());
+        $this->setVarByRef('numTopicSubscriptions', $numTopicSubscriptions);
+        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($id, $this->objUser->userId());
+        $this->setVarByRef('forumSubscription', $forumSubscription);
+        return "forum_newtopic.php";
+    }
+
 }
 
 ?>
