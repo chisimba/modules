@@ -18,7 +18,38 @@
 
 
 
-</script><?php
+</script>
+  <?php
+        $homelink = new link('home');
+        $homelink->href = $this->uri(array("action"=>"home"));
+        $homelink->link = 'Home';
+
+        $productNavCap = 'New Product';
+        if ($product->isAdaptation()) {
+            $homelink->href = "?module=unesco_oer&action=FilterProducts&adaptationstring=parent_id+is+not+null+and+deleted+%3D+0&page=2a_tpl.php";
+            $homelink->link = 'Product Adaptations';
+            $productID = $product->getIdentifier();
+            if (empty ($productID)) {
+                $productNavCap = 'New Adaptation';
+            } else {
+                $productNavCap = 'Edit Adaptation';
+            }
+
+        } else {
+            if (!$product->isDeleted()) $productNavCap = 'Edit Product';
+        }
+  ?>
+<div style="clear:both;"></div>
+<div class="breadCrumb module">
+    <div id='breadcrumb'>
+        <ul>
+            <li><?php echo $homelink->show(); ?></li>
+            <li><?php echo $productNavCap; ?></li>
+        </ul>
+    </div>
+
+</div>
+<?php
 /* 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

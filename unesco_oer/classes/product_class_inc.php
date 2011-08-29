@@ -578,8 +578,13 @@ class product extends object
 
         // setup and show heading
         $header = new htmlHeading();
-        $header->str = $this->objLanguage->
-                languageText('mod_unesco_oer_product_upload_heading', 'unesco_oer');
+        if ($this->isDeleted()){
+            $header->str = $this->objLanguage->
+                    languageText('mod_unesco_oer_product_upload_heading', 'unesco_oer');
+        }else{
+            $header->str = $this->objLanguage->
+                    languageText('mod_unesco_oer_product_upload_edit_heading', 'unesco_oer');
+        }
         $header->type = 1;
         echo '<div id="productmetaheading">';
         echo $header->show();

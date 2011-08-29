@@ -12,28 +12,36 @@
     $this->appendArrayVar('headerParams', $js);
 ?>
             	<div class="breadCrumb">
+                    <ul>
+                        <li>
                     <?php
                     $adaptation = "parent_id is not null and deleted = 0";
                     $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '2a_tpl.php')));
                     $abLink->cssClass = "orangeListingHeading";
                     $abLink->link = 'Product Adaptations';
-                    echo $abLink->show() . " | ";
+                    echo $abLink->show();
                     ?>
+                        </li>
 <!--                	<a href="#" class="orangeListingHeading">Product adaptation</a> | -->
 <!--                    <a href="#" class="greyTextTwelveSize">Politechnic of Namibia</a>-->
+                        <li>
                     <?php
                         $groupInfo = $product->getGroupInfo();
                         $groupLink= new link($this->uri(array("action" => '11a','id'=>$groupInfo['id'],"page"=>'10a_tpl.php')));
                         $groupLink->link = $groupInfo['name'];
                         $groupLink->cssClass = "greyTextTwelveSize";
                         echo $groupLink->show();
-                    ?> |
+                    ?>
+                        </li>
+                        <li>
                     <span class="greyText">
 <!--                        GIE English-->
                     <?php
                         echo $product->getTitle();
                     ?>
                     </span>
+                        </li>
+                    </ul>
                 </div>
                 <div class="adaptationsBackgroundColor">
                 <div class="innerLeftContent">

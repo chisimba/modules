@@ -18,6 +18,8 @@ $js = '<script language="JavaScript" src="' . $this->getResourceUri('ratingsys.j
 $this->appendArrayVar('headerParams', $js);
 ?>
 <div class="breadCrumb">
+    <ul>
+        <li>
     <?php
     $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
     $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_products', 'unesco_oer');
@@ -25,13 +27,16 @@ $this->appendArrayVar('headerParams', $js);
     echo $abLink->show();
     ?>
     <!--    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> -->
-    |
-    <a >
+        </li>
+        <li>
+<!--    <a >-->
     <!--                        Model Curriculum for Journalism Education-->
     <?php
     echo $product->getTitle();
     ?>
-    </a>
+        </li>
+<!--    </a>-->
+    </ul>
 </div>
 
 <div class="productsBackgroundColor">
