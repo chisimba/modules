@@ -42,10 +42,12 @@ class unesco_oer extends controller {
      * @var object $objLanguage Language Object
      */
     public $objLanguage;
+
     /**
      * @var object $objUserAdmin User Administration \ Object
      */
     public $objUserAdmin;
+
     /**
      * @var object $objUser User Object Object
      */
@@ -95,7 +97,7 @@ class unesco_oer extends controller {
         $this->objDbgroupInstitutions = $this->getObject('dbgroupinstitutions');
         $this->objDbmodules = $this->getObject('dbmodules');
         $this->objDbcurricula = $this->getObject('dbcurricula');
-        $this->objPagination= $this->getObject('pagination');
+        $this->objPagination = $this->getObject('pagination');
 
 
 //$this->objUtils = $this->getObject('utilities');
@@ -199,141 +201,116 @@ class unesco_oer extends controller {
 
         return "6a_tpl.php";
     }
-    
-      public function __CompareSelected() {
+
+    public function __CompareSelected() {
 
         $moduleid = $this->getParam("id");
         $chosenid = $this->getParam("chosenid");
-         $productid = $this->getParam("productid");
+        $productid = $this->getParam("productid");
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $this->setVarByRef('moduleid', $moduleid);
-         $this->setVarByRef('productid', $productid);
-         $this->setVar('chosenid', $chosenid);
+        $this->setVarByRef('productid', $productid);
+        $this->setVar('chosenid', $chosenid);
 
         return "6b_tpl.php";
     }
-    
-     public function __Comparechosen() {
+
+    public function __Comparechosen() {
 
         $moduleid = $this->getParam("id");
         $chosenid = $this->getParam("chosenid");
-         $productid = $this->getParam("productid");
+        $productid = $this->getParam("productid");
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
         $this->setVarByRef('moduleid', $moduleid);
-         $this->setVarByRef('productid', $productid);
-         $this->setVar('chosenid', $chosenid);
+        $this->setVarByRef('productid', $productid);
+        $this->setVar('chosenid', $chosenid);
 
         return "6b2_tpl.php";
     }
-    
-     public function __loadmodule() {
-        
-         $productID = $this->getParam('id');
-         $moduleID = $this->getParam('moduleid');
 
-      
-         $product = $this->getObject('product');
-            $product->loadProduct($productID);
-            $content = $product->getContentManager();
-            
-      
-            $temp = $this->objDbmodules->getmoduleparent($moduleID);
-           $parentid =  $temp[0]['parentid'];
+    public function __loadmodule() {
 
-        if  ($parentid != 'NULL'){                                              //check if origional product was selected
-
-                $modules = $this->objDbmodules->getmodulebyparent($parentid);
+        $productID = $this->getParam('id');
+        $moduleID = $this->getParam('moduleid');
 
 
-           }else{
+        $product = $this->getObject('product');
+        $product->loadProduct($productID);
+        $content = $product->getContentManager();
 
-               $modules = $this->objDbmodules->getmodulebyparent($moduleID);
 
-           } 
+        $temp = $this->objDbmodules->getmoduleparent($moduleID);
+        $parentid = $temp[0]['parentid'];
 
-           if ($parentid == ''){
-                     $temp = $this->objDbcurricula->getCurriculaparent($moduleID);
-                      $parentid =  $temp[0]['parentid'];
-                     
-                            if  ($parentid != NULL){                                              //check if origional product was selected
-      
-                                   $modules = $this->objDbcurricula->getCurriculabyparent($parentid);
+        if ($parentid != 'NULL') {                                              //check if origional product was selected
+            $modules = $this->objDbmodules->getmodulebyparent($parentid);
+        } else {
 
-    
-                                  
-                                                    }else{
-                                                         
-                                                           $modules = $this->objDbcurricula->getCurriculabyparent($moduleID);
-                                                       
-           }
+            $modules = $this->objDbmodules->getmodulebyparent($moduleID);
+        }
 
-        
-           }
-     
-                           // var_dump($modules);
-               
-        $check = FAlSE;     
-        foreach ( $modules as $module){  // run through modules till matching module and product are selected
-           
-            $existingContent = $content->getContentByContentID($module['id']);
-                
-        if   ($existingContent != FALSE){
-            
-            $check = TRUE;
-            $existingContent = $content->getContentByContentID($module['id']);
-             echo  $existingContent->showReadOnlyInput();
-            
-                 }  
+        if ($parentid == '') {
+            $temp = $this->objDbcurricula->getCurriculaparent($moduleID);
+            $parentid = $temp[0]['parentid'];
 
-       } 
-     
-            if   ($check == FALSE){
-              
-                 if  ($parentid != 'NULL') // check if origional product was selected
-                 {
-                     $existingContent = $content->getContentByContentID($temp[0]['parentid']);
-                 } else 
-                 {
-                      $existingContent = $content->getContentByContentID($moduleID);
-                 }
-          echo  $existingContent->showReadOnlyInput();
-                
-        
+            if ($parentid != NULL) {                                              //check if origional product was selected
+                $modules = $this->objDbcurricula->getCurriculabyparent($parentid);
+            } else {
+
+                $modules = $this->objDbcurricula->getCurriculabyparent($moduleID);
             }
+        }
+
+        // var_dump($modules);
+
+        $check = FAlSE;
+        foreach ($modules as $module) {  // run through modules till matching module and product are selected
+            $existingContent = $content->getContentByContentID($module['id']);
+
+            if ($existingContent != FALSE) {
+
+                $check = TRUE;
+                $existingContent = $content->getContentByContentID($module['id']);
+                echo $existingContent->showReadOnlyInput();
+            }
+        }
+
+        if ($check == FALSE) {
+
+            if ($parentid != 'NULL') { // check if origional product was selected
+                $existingContent = $content->getContentByContentID($temp[0]['parentid']);
+            } else {
+                $existingContent = $content->getContentByContentID($moduleID);
+            }
+            echo $existingContent->showReadOnlyInput();
+        }
 
 
 
 
-            
-         //   var_dump($modules);
-       //  echo  $existingContent->showReadOnlyInput();
-        
-    
+
+        //   var_dump($modules);
+        //  echo  $existingContent->showReadOnlyInput();
     }
-    
-     public function __loadtree() {
-       
-         //return 'test_tree_tpl.php';
-      
-         $productID = $this->getParam('id');
-        
-        
-        
-         $product = $this->newObject('product'); 
-         $product->loadProduct($productID);
-         $content = $product->getContentManager(); 
-      
-     //   $test=  $content->getProductID();
-     //   echo $test; echo '<br />';
-         $test = '<script src="/unesco_oer/core_modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>';
-         $test .= $content->getContentTree(FALSE,FALSE);
-         
+
+    public function __loadtree() {
+
+        //return 'test_tree_tpl.php';
+
+        $productID = $this->getParam('id');
+
+
+
+        $product = $this->newObject('product');
+        $product->loadProduct($productID);
+        $content = $product->getContentManager();
+
+        //   $test=  $content->getProductID();
+        //   echo $test; echo '<br />';
+        $test = '<script src="/unesco_oer/core_modules/tree/resources/TreeMenu.js" language="JavaScript" type="text/javascript"></script>';
+        $test .= $content->getContentTree(FALSE, FALSE);
+
         echo $test;
-        
-      
-         
-         
-        
     }
 
     public function __Bookmarks() {
@@ -429,12 +406,12 @@ class unesco_oer extends controller {
         return "11c_tpl.php";
     }
 
-    public function  __11d(){
+    public function __11d() {
         return"11d_tpl.php";
     }
 
     public function __JavaFilter() {
- 
+
         $temp = $this->objjavafilt->replaceprods();
         echo $temp;
     }
@@ -615,7 +592,7 @@ class unesco_oer extends controller {
         if ($action == null) {
             return FALSE;
         }
-        $required = array('filterproducts', 'viewproduct');
+        $required = array('filterproducts', 'viewproduct','login');
 
         if (in_array($action, $required)) {
             return FALSE;
@@ -1655,9 +1632,9 @@ class unesco_oer extends controller {
     }
 
     function __userPagination($page, $start, $end) {
-        $allUser=$this->objUseExtra->getAllUser();
-        $itemPerPage=10;
-        $NumberOfPages=count($allUser)/$itemPerPage;
+        $allUser = $this->objUseExtra->getAllUser();
+        $itemPerPage = 10;
+        $NumberOfPages = count($allUser) / $itemPerPage;
 
 
 
@@ -1934,7 +1911,7 @@ class unesco_oer extends controller {
     function __joinGroup() {
 
         $currLoggedInID = $this->objUser->userId();
-        $id=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
+        $id = $this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
         $this->ObjDbUserGroups->joingroup($id, $this->getParam('id'));
         return $this->__10();
     }
@@ -1972,9 +1949,9 @@ class unesco_oer extends controller {
         $loclat = $this->getParam('group_loclat');
         $loclong = $this->getParam('group_loclong');
         $currLoggedInID = $this->objUser->userId();
-        $adminid=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
-        $admin=$adminid;
-        $rightList=$this->getParam('rightList');
+        $adminid = $this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
+        $admin = $adminid;
+        $rightList = $this->getParam('rightList');
 
         $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
         $results = $this->objThumbUploader->uploadThumbnail($path);
@@ -2006,11 +1983,10 @@ class unesco_oer extends controller {
             $problems[] = 'emailnotvalid';
         }
 
-         $fileInfoArray=array();
-        if (!$this->objThumbUploader->isFileValid($fileInfoArray)){
-            $problems[]='novalidThumbnail';
-        
-                   }
+        $fileInfoArray = array();
+        if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
+            $problems[] = 'novalidThumbnail';
+        }
 
         if (count($problems) > 0) {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -2018,24 +1994,22 @@ class unesco_oer extends controller {
             $this->setVarByRef('problems', $problems);
             return 'groupRegistrationForm_tpl.php';
         } else {
-            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description,$admin, $thumbnail);
-            $id=$this->objDbGroups->getLastInsertId();
+            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail);
+            $id = $this->objDbGroups->getLastInsertId();
 
-            if(count($rightList)==0){
-                     $this->objDbgroupInstitutions->add_group_institutions($id,$array);
-            }else{
-            
-            foreach($rightList as $array){
-                $this->objDbgroupInstitutions->add_group_institutions($id,$array);
-                   }}
+            if (count($rightList) == 0) {
+                $this->objDbgroupInstitutions->add_group_institutions($id, $array);
+            } else {
+
+                foreach ($rightList as $array) {
+                    $this->objDbgroupInstitutions->add_group_institutions($id, $array);
+                }
+            }
 //            $this->setLayoutTemplate('maincontent_layout_tpl.php');
 //            return 'groupListingForm_tpl.php';
             return $this->__groupListingForm();
         }
     }
-
-
-
 
     function __groupEditingForm() {
         $this->setLayoutTemplate('maincontent_layout_tpl.php');
@@ -2046,7 +2020,7 @@ class unesco_oer extends controller {
         return 'groupmembers_tpl.php';
     }
 
-    function __test(){
+    function __test() {
         return "test_tpl.php";
     }
 
@@ -2065,13 +2039,13 @@ class unesco_oer extends controller {
         $description = $this->getParam('description');
         $loclat = $this->getParam('group_loclat');
         $loclong = $this->getParam('group_loclong');
-        $rightList=$this->getParam('rightList');
+        $rightList = $this->getParam('rightList');
 
-        $prevousPath=$this->objDbGroups->getThumbnail($id);
+        $prevousPath = $this->objDbGroups->getThumbnail($id);
 
         $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
         $results = $this->objThumbUploader->uploadThumbnail($path);
-        if($results!=''){
+        if ($results != '') {
             $thumbnail = 'usrfiles/' . $results['path'];
         }
         //$thumbnail = 'usrfiles/' . $results['path'];
@@ -2098,12 +2072,14 @@ class unesco_oer extends controller {
         if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             $problems[] = 'emailnotvalid';
         }
-        $fileInfoArray=array();
-         if($results!=''){
-        if(strcmp($thumbnail,$prevousPath)!=0){
-        if (!$this->objThumbUploader->isFileValid($fileInfoArray)){
-            $problems[]='novalidThumbnail';}}
-                           }
+        $fileInfoArray = array();
+        if ($results != '') {
+            if (strcmp($thumbnail, $prevousPath) != 0) {
+                if (!$this->objThumbUploader->isFileValid($fileInfoArray)) {
+                    $problems[] = 'novalidThumbnail';
+                }
+            }
+        }
         if (count($problems) > 0) {
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             $this->setVar('mode', 'addfixup');
@@ -2111,10 +2087,11 @@ class unesco_oer extends controller {
             return 'groupEditingForm_tpl.php';
         } else {
             $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
-            foreach($rightList as $array){
-                if($this->objDbgroupInstitutions ->check_availableGroupInstitution($id,$array)!=TRUE){
-                $this->objDbgroupInstitutions->add_group_institutions($id,$array);
-                   }}
+            foreach ($rightList as $array) {
+                if ($this->objDbgroupInstitutions->check_availableGroupInstitution($id, $array) != TRUE) {
+                    $this->objDbgroupInstitutions->add_group_institutions($id, $array);
+                }
+            }
 
             //$this->objDbgroupInstitutions->add_group_institutions($id, $institutionid); // Todo store institutions Id not name
             return $this->__groupListingForm();
@@ -2154,7 +2131,7 @@ class unesco_oer extends controller {
 
     function __groupProductForm() {
         $page = $this->getParam('page');
-         $id = $this->getParam('id');
+        $id = $this->getParam('id');
         $products = $this->objDbGroups->getGroupProductadaptation($id);
         //   echo $ProdId[0]['id'];
         $temp = TRUE;
@@ -2167,16 +2144,10 @@ class unesco_oer extends controller {
 
         return $page;
     }
- 
-    
 
     public function __groupGrid() {
         return'groupGridView_tpl.php';
     }
-
-
-
-    
 
     public function __groupList() {
         return 'groupListView_tpl.php';
@@ -2194,7 +2165,7 @@ class unesco_oer extends controller {
         $params = array(
             'productID' => $product->getIdentifier(),
             'nextAction' => $this->getParam('nextAction'),
-            'cancelAction'=> $this->getParam('cancelAction')
+            'cancelAction' => $this->getParam('cancelAction')
         );
 
         $this->nextAction('saveProductMetaData', $params);
@@ -2450,6 +2421,10 @@ class unesco_oer extends controller {
         return $this->__viewProductTypes();
     }
 
+    
+    function __login(){
+       return "login_tpl.php";
+    }
 }
 
 ?>

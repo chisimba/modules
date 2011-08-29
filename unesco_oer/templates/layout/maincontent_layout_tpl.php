@@ -31,7 +31,7 @@ $group = $this->getParam('group');
                                 if ($this->objUser->isLoggedIn()) {
                                     echo '<div class="textNextToRightFloatedImage"><a href="?module=security&action=logoff" class="prifileLinks">Log out</a></div>';
                                 } else {
-                                    echo '<div class="textNextToRightFloatedImage"><a href="?module=security&action=login" class="prifileLinks">Log in</a></div>';
+                                    echo '<div class="textNextToRightFloatedImage"><a href="?module=unesco_oer&action=login" class="prifileLinks">Log in</a></div>';
                                 }
                                 ?>
                                 <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">
