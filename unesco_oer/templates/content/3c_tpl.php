@@ -1,3 +1,5 @@
+
+
 <?php
 
 /*
@@ -106,12 +108,17 @@
               
                 <div class="pageBreadCrumb">
                  
-                    
-                    <a href="#" class="greyText Underline">Barchelor</a> | 
-                    <a href="#" class="greyText Underline">Year 1</a> | 
-                    <a href="#" class="greyText Underline">Term 1</a> | 
-                    <span class="greyText">Foundation of Journalism Writing</span>
-                   
+                  <?php
+                 $navigation = '';
+                 $treelevel = $existingContent->getParentList();
+                 foreach($treelevel as $currentlevel){
+                     $navigation .= $currentlevel . " | ";
+        
+                 }
+                 $rest = substr($navigation, 0, -3);
+                 echo $rest;
+        
+                 ?>
                     
                     <br><br>
                 </div>
@@ -151,6 +158,7 @@
                   
 
                  <?php
+               
         
               echo  $existingContent->showReadOnlyInput(); 
          

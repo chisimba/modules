@@ -74,6 +74,8 @@ class content extends object
     public $expandedIcon;
 
     public $icon;
+    
+    protected $parentobject;
 
     /**
      * * Method to display input
@@ -206,7 +208,11 @@ class content extends object
                         );
             }
         }
-
+        
+        foreach ($this->_contents as $content) {
+            $content->setParentObject($this);
+        }
+        
         return $this->_contents;
     }
 
@@ -233,7 +239,7 @@ class content extends object
      * @param mixed $id
      * @return boolean
      */
-    public function load($id) {
+    public function load($id,&$parentobject) {
         return FALSE;
     }
 
@@ -405,6 +411,19 @@ class content extends object
 
     public function isDeleted() {
         return ($this->_deleted != 0);
+    }
+    
+    public function getParentList(){
+        if (empty($this->parentobject)) {
+            return array($this->getTitle());
+        }
+        $tempArray = $this->parentobject->getParentList();
+        $tempArray[] = $this->getTitle();
+        return $tempArray;
+    }
+    
+    public function setParentObject(&$parentobject){
+        $this->parentobject =  $parentobject;
     }
 }
 

@@ -195,16 +195,16 @@ $group = $this->getParam('group');
             </ul>
         </div>
     </div>
-<!--    <div class="mainContentHolder">-->
+<!--   <div class="mainContentHolder">-->
         <?php
         echo $this->getContent();
         ?>
-<!--    </div>-->
+<!--   </div>-->
     <!-- Footer-->
     <!-- Start of Footer -->
     <div class="footerDiv">
 
-        <h3>United Nations Educational, Scientific and Cultural ORganization</h3><br />
+        <h3>United Nations Educational, Scientific and Cultural Organization</h3><br />
         UNESCO Headquarters is established in Paris. Offices are located in two places in the same area:
 
         7, place de Fontenoy 75352 Paris 07 SP France

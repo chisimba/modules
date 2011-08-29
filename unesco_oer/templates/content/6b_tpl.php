@@ -22,7 +22,44 @@ $product->loadProduct($selectedproducts[0]);
 $origionalproduct = $product->getParentID();
 $product->LoadProduct($origionalproduct);
 ?>
-
+<script type="text/javascript" src="packages/unesco_oer/resources/mootools.js"></script> 
+<script type="text/javascript" src="packages/unesco_oer/resources/qscroller.js"></script> 
+<!--
+<script type="text/javascript" src="packages/unesco_oer/resources/js.js"></script> -->
+<script type="text/javascript"> 
+<!--
+window.addEvent('domready', function() {
+var opt = {
+    slides: 'qslide2',
+	duration: 1500,
+    buttons: {next:'go-next',prev:'go-prev',textNext:'go-nextText',textPrev:'go-prevText'},
+    transition: Fx.Transitions.Quint.easeOut
+  }
+  var scroller = new QScroller('qscroller2',opt);
+  scroller.load();
+});
+ 
+ 
+ 
+function toggle() {
+	var ele = document.getElementById("toggleText");
+	var text = document.getElementById("displayText");
+	var theLinkDiv = document.getElementById("newDiv");
+	if(ele.style.display == "block") {
+    	ele.style.display = "none";
+		text.innerHTML = "Model Curricula for Journalism Education";
+		 document.image1.src="images/maximise.png"
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Model Curricula for Journalism Education";
+		document.image1.src="images/minimise.png"
+	}
+} 
+ 
+ 
+//-->
+</script> 
 
 
 
@@ -109,6 +146,112 @@ echo $abLink->show();
             </div>
 
             <!-- Left Wide column DIv -->
+             <div class="slide fiftenPixelPaddingLeft"> 
+            	<div class="Arrows"> 
+                <span  id="go-prev"> 
+                <span class="nextPrevText cursor">PREVIOUS</span> 
+                <img src="images/button-previous.png" width="17" height="17" class="cursor prevButton"> 
+                </span> 
+                </div> 
+                <div id="qscroller2" class="qscroller"></div> 
+                <div class="hide"> 
+                <div class="qslide2"> 
+                <div class="slideTableContent"> 
+                	<table class="slideTable" cellspacing="0" cellpadding="0"> 
+                    	<tr> 
+                        	
+                       
+                       <?php
+                       
+                       
+                       
+     
+       $product = $this->getObject('product', 'unesco_oer');
+                $product->loadProduct($selectedproducts[0]);
+                $origionalproduct = $product->getParentID();
+                $product->LoadProduct($origionalproduct);
+
+                if ($this->objUser->isLoggedIn()) {
+                    $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $origionalproduct, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$origionalproduct"));
+                    $adaptLink = new link($uri);
+                    $adaptLink->cssClass = "adaptationLinks";
+                    $linkText = '';
+                    $adaptLink->link = $linkText;
+                }
+         echo '<td> 
+                               
+                                <div class="imageTopFlag"></div> 
+                                <img src=' . $product->getThumbnailPath() . ' alt="Grid placeholder" width="79" height="101"> 
+                                <div class="imageBotomFlag cursor">' . $adaptLink->show() . '</div> 
+                                <br> 
+                                <div class="orangeListingHeading center"><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id=' . $moduleid . '&productid=' . $productid . '&chosenid=' . $origionalproduct . '" id="treelink"  class="orangeListingHeading">' . $product->getTitle() . '
+                   
+                                  </a></Div>
+                     
+                            	</td> ';      
+         
+         
+ 
+                foreach ($selectedproducts as $selectedproduct) {
+
+                    $product->loadProduct($selectedproduct);
+                    //         $content = $product->getContentManager();
+                    //  $existingContent = $content->getparent($moduleID);
+
+                    if ($this->objUser->isLoggedIn()) {
+                        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $selectedproduct, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$selectedproduct"));
+                        $adaptLink = new link($uri);
+                        $adaptLink->cssClass = "adaptationLinks";
+                        $linkText = '';
+                        $adaptLink->link = $linkText;
+                    }
+
+
+
+                            echo '<td> 
+                               
+                                <div class="imageTopFlag"></div> 
+                                <img src=' . $product->getThumbnailPath() . ' alt="Grid placeholder" width="79" height="101"> 
+                                <div class="imageBotomFlag cursor">' . $adaptLink->show() . '</div> 
+                                <br> 
+                                  <div class="orangeListingHeading center"><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id=' . $moduleid . '&productid=' . $productid . '&chosenid=' . $selectedproduct . '" id="treelink"  class="orangeListingHeading">' . $product->getTitle() . '
+                   
+                                  </a></div>
+                     
+                            	</td> ';      
+                }
+                
+     
+     ?>          
+                                
+                             
+                              
+                      </tr> 
+                    </table> 
+                </div> 
+                </div> 
+                
+                
+    
+                    
+               
+                
+                
+                
+</div> 
+            	<div class="Arrows rightArrowPadding"> 
+                <div class="rightArrowFloatRight"> 
+                <span  id="go-next"> 
+                <img src="images/button-next.png" class="cursor nextButton"> 
+                <span href="#"  class="nextPrevText cursor">NEXT</span> 
+                </span> 
+                </div> 
+                </div> 
+            </div> 
+            
+            
+            
+            
             <div class="greyHorizontalLine"></div>
             <div class="slide fiftenPixelPaddingLeft">
                 <div class="Arrows"><a href="#"><img src="skins/unesco_oer/images/large-icon-backwards.png" width="36" height="36"></a></div>
