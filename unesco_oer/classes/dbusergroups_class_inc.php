@@ -81,7 +81,7 @@ class dbusergroups extends dbtable {
     }
 
     function check_availableUserGroup($userId, $groupid) {
-        $sql = "SELECT * FROM tbl_unesco_oer_user_groups' WHERE id='$userId' and groupid='$groupid'";
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE id='$userId' and groupid='$groupid'";
         $array = $this->getArray($sql);
         if (count($array) > 0) {
             return TRUE;
