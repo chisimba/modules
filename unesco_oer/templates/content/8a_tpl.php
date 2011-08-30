@@ -13,7 +13,12 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 <div class="subNavigation"></div>
 <div class="breadCrumb tenPixelLeftPadding">
     <a href="#" class="groupsBreadCrumbColor">Groups</a> |
-    <span class="groupsBreadCrumbColor noUnderline">Department of Media Studies, University of Namibia, Namibia</span>
+    <span class="groupsBreadCrumbColor noUnderline"><?php
+//  / $groupname=$this->objDbGroups->getGroupName($groupid);
+//   $group_Country=$this->objDbGroups->getGroupCountry($groupid);/
+   echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')));
+   
+    ?>   </span>
 
 </div>
 <div class="greenBackgroundColor">
@@ -21,7 +26,10 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
         <!-- Left Colum -->
         <div class="groupsleftColumnDiv  tenPixelTopPadding">
             <div class="tenPixelPaddingLeft tenPixelPaddingRight">
-                <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" class="smallAdaptationImageGrid"><h5 class="greenText">Department of Media Studies, University of Namibia, Namibia</h5>
+                <img src="<?php echo $this->objDbGroups->getThumbnail($this->getParam('id'))?>" alt="Adaptation placeholder" class="smallAdaptationImageGrid"><h5 class="greenText">
+                    <?php
+                    echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')));
+                    ?>D</h5>
                 <div class="groupSubLinks">
 
                     <div class="greyDivider"></div>
@@ -48,7 +56,7 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
                     </div>
                     <div class="groupSubLinksList">
 
-                        <img src="images/icon-group-discussion.png" alt="Group discussion" width="18" height="18" class="smallLisitngIcons">
+                        <img src="skins/unesco_oer/images/icon-group-discussion.png" alt="Group discussion" width="18" height="18" class="smallLisitngIcons">
                         <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Group discussion</a></div>
                     </div>
                     <div class="groupSubLinksList">
@@ -101,7 +109,8 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
                 <br><br>
                 <span class="greenText fontBold">Administrators: <br></span>2<br><br>
 
-                <span class="greenText fontBold">Group members: <br></span><?php echo $this->ObjDbUserGroups->groupMembers($this->getParam('id'));
+                <span class="greenText fontBold">Group members: <br></span>
+                <?php echo $this->ObjDbUserGroups->groupMembers($this->getParam('id'));
                 ?>
             </div>
 <?php
@@ -109,7 +118,9 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
 ?>
             <div class="groupDescription">
                 <div class="tenPixelPaddingLeft">
-                    <h2 class="greenText">Department of Media Studies, University of Namibia, Namibia</h2><br>
+                    <h2 class="greenText"><?php
+                    echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')))
+                    ?></h2><br>
                     <span class="greenText fontBold">Description</span>
                     <li class="noPaddingList">Advertising</li>
 
@@ -117,16 +128,26 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
                     <li class="noPaddingList">Photjournalism</li>
                     <li class="noPaddingList">Print writing and Design</li>
                     <br>
-                    <span class="greenText fontBold">Brief description: </span>Nam vestibulum vehicula tincidunt. Sed non velit risus, in tristique elit. In et magna dolor. Nulla condimentum gravida blandit. Aliquam id turpis vitae justo molestie pharetra quis non libero. Maecenas auctor, ligula at malesuada gravida, tortor turpis porttitor lacus, sit amet aliquet lectus turpis in sapien.Phasellus pulvinar, lacus et imperdiet sagittis, quam turpis egestas nulla, sit amet commodo felis est id mauris. Phasellus sit amet venenatis est. Phasellus in quam eget quam tristique tristique. Praesent est ligula, elementum nec lobortis id.
+                    <span class="greenText fontBold">Brief description: </span>
+                    <?php
+                     echo $this->objDbGroups->getGroupDescription($this->getParam('id'));
+                    ?>
+                    
                     <br><br>
                     <span class="greenText fontBold">Interest: </span>
 
                     <br><br>
-                    <span class="greenText fontBold">Website: </span>www.unam.na
+                    <span class="greenText fontBold">Website: </span>
+                    <?php
+                    echo $this->objDbGroups->getWebsite($this->getParam('id'));
+                    ?>
                     <br><br>
                     <span class="greenText fontBold">Region: </span>Africa
                     <br><br>
-                    <span class="greenText fontBold">Country: </span>Namibia
+                    <span class="greenText fontBold">Country: </span>
+                    <?php
+                    echo $this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')))
+                    ?>
                     <br><br>
                     <span class="greenText fontBold">School database revcord URL: </span>http://www.unesco-ci.org
                 </div>

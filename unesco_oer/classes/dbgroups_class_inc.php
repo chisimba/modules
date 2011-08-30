@@ -430,9 +430,9 @@ class dbgroups extends dbtable {
     }
 
     function getGroupOwnerID($groupid) {
-      $sql = "select * from tbl_unesco_oer_groups where id='$groupid'";
-      $thumbnail = $this->getArray($sql);
-        return $thumbnail[0]['admin'];
+      $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id = '$groupid'";
+      $owner= $this->getArray($sql);
+      return $owner[0]['admin'];
 
     }
 
@@ -442,6 +442,13 @@ class dbgroups extends dbtable {
             'institution_id' => $institutionid
         );
         $this->insert($data);
+    }
+
+    function getWebsite($groupid){
+        $sql = "SELECT * FROM tbl_unesco_oer_groups where id = '$groupid'";
+        $website = $this->getArray($sql);
+        return $website[0]['website'];
+
     }
 
 
