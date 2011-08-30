@@ -77,26 +77,43 @@ class grouputil extends object {
 
               $joinGroupLink = new link($this->uri(array('action' =>"10")));
               $joinGroupLink->link='Join';
-                  $joinGroupLink->cssClass ='memberofgroup';
+              $joinGroupLink->cssId ='memberofgroup';
               }else{
 
               $joinGroupLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'],"page"=>'10a_tpl.php')));
               $joinGroupLink->link='Join';
-              $joinGroupLink->cssClass = 'joingroup';}
+              $joinGroupLink->cssId = 'joingroup';}
+
+              $joinGroupLink->cssClass='greenTextBoldLink';
+
+
+
+
 
             
-$content.='                        	<div class="whiteBackgroundBox">
+$content.='     
+
+
+
+
+
+<div class="whiteBackgroundBox">
                             '.$thumbLink->show().'
                             <div class="groupGridViewHeading greenText">
                              '.$group['name'] .'
                             </div>
                             <div class="groupMemberAndJoinLinkDiv">
                             	<span class="greenText">Members :</span>'.$this->ObjDbUserGroups->groupMembers($group['id']).'<br><br>
-                                <a href="#"><img src=""skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
-               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">'.$joinGroupLink->show().'</a></div>
+                                <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
+               				 	<div class="linkTextNextToJoinGroupIcons">'.$joinGroupLink->show().'</div>
                             </div>
 
-                            </div>';
+                            </div>
+
+
+
+
+                          ';
 
 //      $content.='
 //          <div class="whiteBackgroundBox">
@@ -241,6 +258,7 @@ public function topcontent($groupid){
     $Link=new link($this->uri(array("action" =>'8a','id'=>$groupid,"page"=>'10a_tpl.php')));
     $Link->link=$this->objDbGroups->getGroupName($groupid);
     
+    
     $content.='
      <img src="'.$this->objDbGroups->getThumbnail($groupid).'" alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
         <div class="textNextToGroupIcon">
@@ -265,25 +283,30 @@ public function leaveGroup($id,$groupid){
     if($this->ObjDbUserGroups->ismemberOfgroup($id, $groupid)){
         $LeavegroupLink = new link($this->uri(array('action' =>"leaveGroup",'id'=>$id,'groupid'=>$groupid,"page"=>'10a_tpl.php')));
         $LeavegroupLink->link='Leave group';
-        $LeavegroupLink->cssClass ='leavegroup';
+        $LeavegroupLink->cssId ='leavegroup';
        }else{
            $LeavegroupLink = new link($this->uri(array('action' =>"8a","page"=>'10a_tpl.php')));
            $LeavegroupLink->link='Leave group';
-           $LeavegroupLink->cssClass ='cantleavegroup';}
+           $LeavegroupLink->cssId ='cantleavegroup';
 
+           }
 
+           $LeavegroupLink->cssClass = "greenTextBoldLink";
     $content.='<img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
-                           <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink"> '.$LeavegroupLink->show().'</a></div>';
+                           <div class="linksTextNextToSubIcons">'.$LeavegroupLink->show().'</div>';
     return $content;
 }
 
 public function groupOwner($groupid){
+    
     $ownerId=$this->objDbgroups->getGroupOwnerID($groupid);
-    $owner_Details=$this->objDbgroups->getUserbyId($ownerId);
-    $owner_surname=$owner_Details[0]['surname '];
-    $owner_name=$owner_Details[0]['firstname'];
-    $ownerExtraInfo=$this->objUseExtra->getUserDetails($ownerId);
-    $Owner_thumbnail=$ownerExtraInfo[0]['e'];
+//    echo $ownerId;
+//    die();
+    $owner_Details=$this->objUseExtra->getUserbyId($ownerId);
+    $owner_surname=$owner_Details['surname '];
+    $owner_name=$owner_Details['firstname'];
+    $ownerExtraInfo=$this->objUseExtra->getUserExtraByID($ownerId);
+    $Owner_thumbnail=$ownerExtraInfo;
     $groupMembers=$this->ObjDbUserGroups->groupMembers($groupid);
 
 
@@ -292,6 +315,7 @@ public function groupOwner($groupid){
 
 
     $content.='
+         <div class="groupOwnerImage">
         <img src='.$Owner_thumbnail.' width="79" height="101">
                             <br>
                             <span class="greenText fontBold">Owner:</span> <br>'. $owner_name.''.'&nbsp;'.''.$owner_surname.'<br><br>
@@ -318,7 +342,7 @@ public function groupOwner($groupid){
 
 jQuery(document).ready(function(){
 
-    jQuery("a[class=joingroup]").click(function(){
+    jQuery("a[id=joingroup]").click(function(){
 
         var r=confirm( "Are you sure you want to join this group?");
         if(r== true){
@@ -333,7 +357,7 @@ jQuery(document).ready(function(){
 
 jQuery(document).ready(function(){
 
-    jQuery("a[class=memberofgroup]").click(function(){
+    jQuery("a[id=memberofgroup]").click(function(){
 
         var r=confirm( "Your are a member of this group\n you can not join again....!!!");
         if(r== true){
@@ -350,7 +374,7 @@ jQuery(document).ready(function(){
 
 jQuery(document).ready(function(){
 
-    jQuery("a[class=leavegroup]").click(function(){
+    jQuery("a[id=leavegroup]").click(function(){
 
         var r=confirm( "Are you sure you want to leave the group?");
         if(r== true){
@@ -365,7 +389,7 @@ jQuery(document).ready(function(){
 
 jQuery(document).ready(function(){
 
-    jQuery("a[class=cantleavegroup]").click(function(){
+    jQuery("a[id=cantleavegroup]").click(function(){
 
         var r=confirm( "You are not a member of this group\n Action Leave group failed....!!!!");
         if(r== true){

@@ -6,8 +6,8 @@
 
 <p>My first paragraph .</p>
 <?php
-echo "deals";
-echo $this->objPagination->getPaginationString($page = 1,$totalitems=10, $limit = 15, $adjacents = 3, $targetpage = "test_tpl.php", $pagestring = "?page=");
+
+echo $this->objDbgroups->getGroupCountry("gen9Srv0Nme2_97577_1314687313");
     ?>
 
 </body>

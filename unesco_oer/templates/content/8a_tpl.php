@@ -90,11 +90,23 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
             <div class="groupOwnerImage">
                 <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
                 <br>
-                <span class="greenText fontBold">Owner:</span> <br>Igor Nuk<br><br>
+                <span class="greenText fontBold">Owner:</span> <br>
+                <?php
+                 //$owner=$this->objDbgroups->getGroupOwnerID($this->getParam('id'));
+                
+                 //$owner=$this->objUseExtragetUserbyId($ownerId);
+
+                
+                ?>
+                <br><br>
                 <span class="greenText fontBold">Administrators: <br></span>2<br><br>
 
-                <span class="greenText fontBold">Group members: <br></span>16
+                <span class="greenText fontBold">Group members: <br></span><?php echo $this->ObjDbUserGroups->groupMembers($this->getParam('id'));
+                ?>
             </div>
+<?php
+ //$this->objGroupUtil->groupOwner( $this->getParam('id'));
+?>
             <div class="groupDescription">
                 <div class="tenPixelPaddingLeft">
                     <h2 class="greenText">Department of Media Studies, University of Namibia, Namibia</h2><br>

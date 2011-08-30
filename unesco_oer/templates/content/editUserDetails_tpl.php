@@ -360,15 +360,26 @@ $tableC->endRow();
 
 
 $user_current_membership=$this->ObjDbUserGroups->getUserGroups($this->getParam('id'));
+//
+//$textinput = new textinput('userGROUPMEMBERSHIP');
+//$tableC->startRow();
+//$tableC->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer'));
+//foreach($user_current_membership as $member){
+//    $tableC->addCell($this->objDbGroups->getGroupName($member['groupid']));
+//    }
+//
+//$tableC->endRow();
 
-$textinput = new textinput('userGROUPMEMBERSHIP');
-$tableC->startRow();
-$tableC->addCell($this->objLanguage->languageText('mod_unesco_oer_users_group_membership', 'unesco_oer'));
-foreach($user_current_membership as $member){
-    $tableC->addCell($this->objDbGroups->getGroupName($member['groupid']));
-    }
+$currentMembership=array();
 
-$tableC->endRow();
+
+//$Current_membership_linked=$this->ObjDbUserGroups->getUserGroups($this->getParam('id'));
+//$currentMembership=array();
+//foreach($Current_membership_linked as $groupID){
+//    $institutionArray= $this->objDbGroups->getInstitution($groupID) ;
+//    array_push($currentMembership,$institutionArray);
+//}
+//$currentMembership=$currentMembership[0];
 
 
 
@@ -381,12 +392,15 @@ foreach ($groups as $group) {
             if (strcmp($group['id'], $membership['groupid']) != 0){
                 array_push($availablegroups, $group);
                 }
+                else{
+                    array_push($currentMembership, $group);
                 }
                 }
-        else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
-            array_push($availablegroups, $group);
+                }
+//        else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
+//            array_push($availablegroups, $group);
             
-        }
+        //}
     
 }
 $objSelectBox = $this->newObject('selectbox','htmlelements');
@@ -395,6 +409,11 @@ $objSelectBox->insertLeftOptions(
                         $availablegroups,
                         'id',
                         'name' );
+
+$objSelectBox->insertRightOptions(
+                               $currentMembership,
+                               'id',
+                               'name');
 
 $tblLeft = $this->newObject( 'htmltable','htmlelements');
 $objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);

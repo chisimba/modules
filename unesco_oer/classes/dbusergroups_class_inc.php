@@ -29,6 +29,14 @@ class dbusergroups extends dbtable {
         $this->insert($data);
     }
 
+    function adduser($id) {
+        $data = array(
+            'id' => $id,
+            'groupid' => ''
+        );
+        $this->insert($data);
+    }
+
 //to get all users in  a particular group
     function getGroupUser($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid'";
@@ -47,11 +55,9 @@ class dbusergroups extends dbtable {
         $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE id='$id'";
         return $this->getArray($sql);
     }
-    
-
 
     // when a user what to leave a particular group
-    function leavegroup($id,$groupid) {
+    function leavegroup($id, $groupid) {
         $sql = "DELETE  FROM  tbl_unesco_oer_user_groups WHERE id='$id' AND groupid='$groupid'";
         return $this->getArray($sql);
     }
@@ -61,8 +67,6 @@ class dbusergroups extends dbtable {
         $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='NULL'";
         return $this->getArray($sql);
     }
-
- 
 
     //Check that a user belongs to a  group
 
@@ -76,7 +80,13 @@ class dbusergroups extends dbtable {
         }
     }
 
-    
+    function check_availableUserGroup($userId, $groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups' WHERE id='$userId' and groupid='$groupid'";
+        $array = $this->getArray($sql);
+        if (count($array) > 0) {
+            return TRUE;
+        }
+    }
 
 }
 ?>

@@ -38,17 +38,14 @@ class unesco_oer extends controller {
     public $objDbcurricula;
     public $objPagination;
     public $groupmanager;
-
     /**
      * @var object $objLanguage Language Object
      */
     public $objLanguage;
-
     /**
      * @var object $objUserAdmin User Administration \ Object
      */
     public $objUserAdmin;
-
     /**
      * @var object $objUser User Object Object
      */
@@ -101,10 +98,10 @@ class unesco_oer extends controller {
         $this->objPagination = $this->getObject('pagination');
         $this->groupmanager = $this->getObject('groupmanager');
         $this->objForum = & $this->getObject('dbforum', 'forum');
-              // Load Forum Subscription classes
-        $this->objForumSubscriptions = & $this->getObject('dbforumsubscriptions','forum');
-        $this->objTopicSubscriptions = & $this->getObject('dbtopicsubscriptions','forum');
-          $this->objDiscussionType = $this->getObject('dbdiscussiontypes', 'forum');
+        // Load Forum Subscription classes
+        $this->objForumSubscriptions = & $this->getObject('dbforumsubscriptions', 'forum');
+        $this->objTopicSubscriptions = & $this->getObject('dbtopicsubscriptions', 'forum');
+        $this->objDiscussionType = $this->getObject('dbdiscussiontypes', 'forum');
 
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
@@ -1607,6 +1604,7 @@ class unesco_oer extends controller {
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = NULL, 'useradmin', $accountstatus);
 //add to table userextra
             $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
+            $this->ObjDbUserGroups->adduser($id);
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink);
             foreach ($rightData as $right) {
                 $this->ObjDbUserGroups->joingroup($id, $right);
@@ -1706,6 +1704,7 @@ class unesco_oer extends controller {
         $this->user = $this->objUserAdmin->getUserDetails($this->getParam('id'));
         $this->setVarByRef('user', $this->user);
         $userId = $this->getParam('userid');
+        $id = $this->getParam('id');
 
         if (!$_POST) {
             return $this->nextAction(NULL);
@@ -1795,7 +1794,9 @@ class unesco_oer extends controller {
         if ($update) {
             $this->objUseExtra->updateUserInfo($this->getParam('id'), $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership);
             foreach ($rightList as $list) {
-                $this->ObjDbUserGroups->joingroup($this->getParam('id'), $list);
+                if ($this->ObjDbUserGroups->check_availableUserGroup($id, $list) != TRUE) {
+                    $this->ObjDbUserGroups->joingroup($this->getParam('id'), $list);
+                }
             }
             $this->setLayoutTemplate('maincontent_layout_tpl.php');
             return "UserListingForm_tpl.php";
@@ -2437,9 +2438,9 @@ class unesco_oer extends controller {
      */
     public function __newTopicForm() {
         $groupid = $this->getParam("groupid");
-        $forumid= $this->getParam("forumid");
+        $forumid = $this->getParam("forumid");
         $forum = $this->objForum->getForum($forumid);
-        
+
         $discussionTypes = $this->objDiscussionType->getDiscussionTypes();
         $this->setVarByRef('forumid', $id);
         $this->setVarByRef('forum', $forum);
