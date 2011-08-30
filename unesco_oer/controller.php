@@ -1999,15 +1999,11 @@ class unesco_oer extends controller {
         } else {
             $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail);
             $id = $this->objDbGroups->getLastInsertId();
-
-            if (count($rightList) == 0) {
-                $this->objDbgroupInstitutions->add_group_institutions($id, $array);
-            } else {
-
-                foreach ($rightList as $array) {
+            $this->objDbgroupInstitutions->add_group($id);
+            foreach ($rightList as $array) {
                     $this->objDbgroupInstitutions->add_group_institutions($id, $array);
                 }
-            }
+          
 
             //create group forum
             $this->groupmanager->saveForum($id, $name, $description);

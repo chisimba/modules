@@ -29,6 +29,14 @@ class dbgroupinstitutions extends dbtable {
         $this->insert($data);
     }
 
+    function add_group($groupid) {
+        $data = array(
+            'group_id' => $groupid,
+            'institution_id' => ''
+        );
+        $this->insert($data);
+    }
+
 //To get all group linked institutions
     function getLinkedInstitutions($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$groupid'";

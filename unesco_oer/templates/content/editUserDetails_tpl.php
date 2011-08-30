@@ -356,12 +356,6 @@ $tableC->endRow();
 $user_current_membership = $this->ObjDbUserGroups->getUserGroups($this->getParam('id'));
 $currentMembership = array();
 $availablegroups = array();
-echo count($availablegroups);
-echo count($currentMembership );
-echo count($user_current_membership);
-
-
-
 $groups = $this->objDbGroups->getAllGroups();
 foreach ($groups as $group) {
     if (count($user_current_membership) > 0) {

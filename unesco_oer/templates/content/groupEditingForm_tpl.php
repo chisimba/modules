@@ -334,33 +334,63 @@ $form->addToForm('<br />');
 $table = $this->newObject('htmltable', 'htmlelements');
 
 
-$user_current_membership=$this->objDbGroups->getGroupInstitutions($this->getParam('id'));
-
-
-$groups =$this->objDbInstitution->getAllInstitutions();
-$availablegroups=array();
+$user_current_membership = $this->objDbGroups->getGroupInstitutions($this->getParam('id'));
+$currentMembership = array();
+$availablegroups = array();
+$groups = $this->objDbInstitution->getAllInstitutions();
 foreach ($groups as $group) {
-    if(count($user_current_membership)!=0){
+    if (count($user_current_membership) > 0) {
         foreach ($user_current_membership as $membership) {
-            if (strcmp($group['id'], $membership['institution_id']) != 0){
+            if($membership['institution_id'] !=NULL){
+            if (strcmp($group['id'], $membership['institution_id']) == 0 ) {
+                array_push($currentMembership, $group);
+            }else {
                 array_push($availablegroups, $group);
-                }
-//                        else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
-//            array_push($availablegroups, $group);
-
-        
-                }
-                }
-
-    
+            }}
+        }
+    } else { /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
+        array_push($availablegroups, $group);
+    }
 }
-$Current_Institution_linked=$this->objDbGroups->getInstitutions($this->getParam('id'));
-$currentMembership=array();
-foreach($Current_Institution_linked as $institutionID){
-    $institutionArray= $this->objDbGroups->getInstitution($institutionID) ;
-    array_push($currentMembership,$institutionArray);
-}
-$currentMembership=$currentMembership[0];
+
+
+
+
+
+
+//$user_current_membership=$this->objDbGroups->getGroupInstitutions($this->getParam('id'));
+//
+//
+//$groups =$this->objDbInstitution->getAllInstitutions();
+//$availablegroups=array();
+//foreach ($groups as $group) {
+//    if(count($user_current_membership)!=0){
+//        foreach ($user_current_membership as $membership) {
+//            if (strcmp($group['id'], $membership['institution_id']) != 0){
+//                array_push($availablegroups, $group);
+//                }
+////                        else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
+////            array_push($availablegroups, $group);
+//
+//
+//                }
+//                }
+//
+//
+//}
+//
+//
+//
+//
+//
+//
+//$Current_Institution_linked=$this->objDbGroups->getInstitutions($this->getParam('id'));
+//$currentMembership=array();
+//foreach($Current_Institution_linked as $institutionID){
+//    $institutionArray= $this->objDbGroups->getInstitution($institutionID) ;
+//    array_push($currentMembership,$institutionArray);
+//}
+//$currentMembership=$currentMembership[0];
 
 
 $objSelectBox = $this->newObject('selectbox','htmlelements');
