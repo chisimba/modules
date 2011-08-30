@@ -22,12 +22,12 @@ $product->loadProduct($selectedproducts[0]);
 $origionalproduct = $product->getParentID();
 $product->LoadProduct($origionalproduct);
 ?>
-<script type="text/javascript" src="packages/unesco_oer/resources/mootools.js"></script> 
+<!--<script type="text/javascript" src="packages/unesco_oer/resources/mootools.js"></script> 
 <script type="text/javascript" src="packages/unesco_oer/resources/qscroller.js"></script> 
-<!--
-<script type="text/javascript" src="packages/unesco_oer/resources/js.js"></script> -->
+
+<script type="text/javascript" src="packages/unesco_oer/resources/js.js"></script> 
 <script type="text/javascript"> 
-<!--
+
 window.addEvent('domready', function() {
 var opt = {
     slides: 'qslide2',
@@ -58,8 +58,8 @@ function toggle() {
 } 
  
  
-//-->
-</script> 
+//
+</script> -->
 
 
 
@@ -144,29 +144,33 @@ echo $abLink->show();
                     </div>
                 </div>
             </div>
+             
 
             <!-- Left Wide column DIv -->
-             <div class="slide fiftenPixelPaddingLeft"> 
+<!--             <div class="slide fiftenPixelPaddingLeft"> 
             	<div class="Arrows"> 
                 <span  id="go-prev"> 
                 <span class="nextPrevText cursor">PREVIOUS</span> 
-                <img src="images/button-previous.png" width="17" height="17" class="cursor prevButton"> 
+                <img src="skins/unesco_oer/images/button-previous.png" width="17" height="17" class="cursor prevButton"> 
                 </span> 
                 </div> 
                 <div id="qscroller2" class="qscroller"></div> 
                 <div class="hide"> 
+                     <?php
+                    $totalprod = count($selectedproducts);
+                    $slides = ceil($totalprod/5);
+                  
+                    $k =0;
+                   for ($i = 1; $i <= $slides; $i++) {
+   
+                       echo '     
                 <div class="qslide2"> 
                 <div class="slideTableContent"> 
                 	<table class="slideTable" cellspacing="0" cellpadding="0"> 
-                    	<tr> 
-                        	
+                    	<tr>  ' ;   
                        
-                       <?php
-                       
-                       
-                       
-     
-       $product = $this->getObject('product', 'unesco_oer');
+                    
+                          $product = $this->getObject('product', 'unesco_oer');
                 $product->loadProduct($selectedproducts[0]);
                 $origionalproduct = $product->getParentID();
                 $product->LoadProduct($origionalproduct);
@@ -180,7 +184,7 @@ echo $abLink->show();
                 }
          echo '<td> 
                                
-                                <div class="imageTopFlag"></div> 
+                                
                                 <img src=' . $product->getThumbnailPath() . ' alt="Grid placeholder" width="79" height="101"> 
                                 <div class="imageBotomFlag cursor">' . $adaptLink->show() . '</div> 
                                 <br> 
@@ -190,16 +194,16 @@ echo $abLink->show();
                      
                             	</td> ';      
          
-         
- 
-                foreach ($selectedproducts as $selectedproduct) {
-
-                    $product->loadProduct($selectedproduct);
+                      
+                          
+                 for ($k ; $k <= (($i*6)-2); $k++){
+        
+                    $product->loadProduct($selectedproducts[$k]);
                     //         $content = $product->getContentManager();
                     //  $existingContent = $content->getparent($moduleID);
 
                     if ($this->objUser->isLoggedIn()) {
-                        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $selectedproduct, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$selectedproduct"));
+                        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $selectedproducts[$k], 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id= $selectedproducts[$k]"));
                         $adaptLink = new link($uri);
                         $adaptLink->cssClass = "adaptationLinks";
                         $linkText = '';
@@ -207,30 +211,43 @@ echo $abLink->show();
                     }
 
 
-
+                        if ($selectedproducts[$k] != NULL){
                             echo '<td> 
                                
-                                <div class="imageTopFlag"></div> 
+                              
                                 <img src=' . $product->getThumbnailPath() . ' alt="Grid placeholder" width="79" height="101"> 
                                 <div class="imageBotomFlag cursor">' . $adaptLink->show() . '</div> 
                                 <br> 
-                                  <div class="orangeListingHeading center"><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id=' . $moduleid . '&productid=' . $productid . '&chosenid=' . $selectedproduct . '" id="treelink"  class="orangeListingHeading">' . $product->getTitle() . '
+                                  <div class="orangeListingHeading center"><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id=' . $moduleid . '&productid=' . $productid . '&chosenid=' . $selectedproducts[$k] . '" id="treelink"  class="orangeListingHeading">' . $product->getTitle() . '
                    
                                   </a></div>
                      
-                            	</td> ';      
+                            	</td> '; 
+                        }
                 }
+                       
+                       
+                       
+                       
+                      echo '   </tr> 
+                    </table> 
+                </div> 
+                </div> 
+                ' ;
+                       
+                       }
+
+                 
+                       
+     
+    
                 
      
      ?>          
                                 
                              
                               
-                      </tr> 
-                    </table> 
-                </div> 
-                </div> 
-                
+                   
                 
     
                     
@@ -242,7 +259,7 @@ echo $abLink->show();
             	<div class="Arrows rightArrowPadding"> 
                 <div class="rightArrowFloatRight"> 
                 <span  id="go-next"> 
-                <img src="images/button-next.png" class="cursor nextButton"> 
+                <img src="skins/unesco_oer/images/button-next.png" class="cursor nextButton"> 
                 <span href="#"  class="nextPrevText cursor">NEXT</span> 
                 </span> 
                 </div> 
@@ -250,17 +267,17 @@ echo $abLink->show();
             </div> 
             
             
-            
+            -->
             
             <div class="greyHorizontalLine"></div>
             <div class="slide fiftenPixelPaddingLeft">
-                <div class="Arrows"><a href="#"><img src="skins/unesco_oer/images/large-icon-backwards.png" width="36" height="36"></a></div>
+<!--                <div class="Arrows"><a href="#"><img src="skins/unesco_oer/images/large-icon-backwards.png" width="36" height="36"></a></div>-->
 
 
 
 
-                <!--                                                
                                                                 
+<!--                                                                
                                                                 <div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
                                                 <h4 class="blueText">Model Curricula for Journalism</h4>
@@ -268,8 +285,8 @@ echo $abLink->show();
                                                 <div class="textNextToTheListingIconDiv">
                             	<a href="#" class="productsLink">Full view of product</a>
                             	</div>
-						</div>
-						-->
+						</div>-->
+						
 
 
                 <?php
@@ -352,7 +369,7 @@ echo $abLink->show();
 
 
 
-                <!--						
+<!--                						
 						<div class="slideBoxAdaptation">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
                                                 <h4><a href="#" class="adaptationListingLink">Model Curricula for Journalism</a></h4>
@@ -366,20 +383,20 @@ echo $abLink->show();
                                              <h4 class="blueText">Model Curricula for Journalism</h4>
                                              <img src="images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                                 <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation using this product</a></div>
-						</div>-->
+						</div>
 
-                <!--                        <div class="slideBoxProduct">
+                                        <div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="images/compare-selected-placeholder.jpg" width="27" height="29" ></div>
                                           <h4 class="blueText">Model Curricula for Journalism</h4><br>
 						</div>-->
 
-                <div class="Arrows rightArrowPadding"><a href="#"><img src="skins/unesco_oer/images/large-icon-forwards.png" width="36" height="36"></a></div>
+<!--                <div class="Arrows rightArrowPadding"><a href="#"><img src="skins/unesco_oer/images/large-icon-forwards.png" width="36" height="36"></a></div>-->
             </div>
 
 
+<!--
 
-
-            <div class="LeftWiderColumnDiv">
+-->            <div class="LeftWiderColumnDiv">
 
                 <div class="pageBreadCrumb">
 
@@ -390,7 +407,7 @@ echo $abLink->show();
 
 
 <?php
-$product = $this->getObject('product');
+
 $product->loadProduct($origionalproduct);
 $content = $product->getContentManager();
 
@@ -433,7 +450,7 @@ foreach ($modules as $module) {  // run through modules till matching module and
 
 if ($check == FALSE) {
 
-    if ($parentid != 'NULL') { // check if origional product was selected
+    if ($parentid != null) { // check if origional product was selected
         $existingContent = $content->getContentByContentID($temp[0]['parentid']);
     } else {
         $existingContent = $content->getContentByContentID($moduleid);
@@ -448,10 +465,6 @@ if ($check == FALSE) {
                      echo '<div class="heading2"><h2 class="greyText">Module/Curriculum Not Available </div><br>'; 
 }
 ?>           
-
-
-
-
 
 
                 </div>
