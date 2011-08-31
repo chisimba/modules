@@ -114,7 +114,20 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_website',
 $table->addCell($website->show());
 $table->endRow();
 
+//field for the thumbnail
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer').$required);
+$table->addCell($this->objThumbUploader->show());
+$table->endRow();
 
+$fieldset = $this->newObject('fieldset', 'htmlelements');
+$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset1', 'unesco_oer');
+$fieldset->contents = $table->show();
+$form->addToForm($fieldset->show());
+$form->addToForm('<br />');
+
+
+$table = $this->newObject('htmltable', 'htmlelements');
 //Descriprion line one
 $description_one = new textinput('description_one');
 $description_one ->size = 80;
@@ -155,13 +168,6 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_descripti
 $table->addCell($description_four->show());
 $table->endRow();
 
-
-
-
-
-
-
-
 //Brief description registration
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
@@ -185,16 +191,11 @@ $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description', 'unesco_oer').$required);
 $table->addCell($editor->show());
 $table->endRow();
-//field for the thumbnail
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer').$required);
-$table->addCell($this->objThumbUploader->show());
-$table->endRow();
+
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset1', 'unesco_oer');
+$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset5', 'unesco_oer');
 $fieldset->contents = $table->show();
-
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 

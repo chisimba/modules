@@ -117,7 +117,26 @@ $table->addCell($website->show());
 $table->endRow();
 
 
+$content.='
+          <img src="' . $group[0]['thumbnail'] . '" alt"="Featured" width="30" height="30"><br>
+
+                  ';
+
+$table->startRow();
+$table->addCell($content);
+//$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
+$table->addCell("Change Avatar".'&nbsp;'.$this->objThumbUploader->show());
+$table->endRow();
+
+$fieldset = $this->newObject('fieldset', 'htmlelements');
+$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset1', 'unesco_oer');
+$fieldset->contents = $table->show();
+$form->addToForm($fieldset->show());
+$form->addToForm('<br />');
+
+
 //Descriprion line one
+$table = $this->newObject('htmltable', 'htmlelements');
 $description_one = new textinput('description_one');
 $description_one ->size = 80;
 if ($mode == 'addfixup') {
@@ -156,11 +175,6 @@ $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_four','unesco_oer')); // obj lang
 $table->addCell($description_four->show());
 $table->endRow();
-
-
-
-
-
 //group desctription
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';
@@ -184,25 +198,13 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_descripti
 $table->addCell($editor->show());
 $table->endRow();
 
-
-
-$content.='
-          <img src="' . $group[0]['thumbnail'] . '" alt"="Featured" width="30" height="30"><br>
-
-                  ';
-
-$table->startRow();
-$table->addCell($content);
-//$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer'));
-$table->addCell("Change Avatar".'&nbsp;'.$this->objThumbUploader->show());
-$table->endRow();
-
 $fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset1', 'unesco_oer');
+$fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset5', 'unesco_oer');
 $fieldset->contents = $table->show();
-
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
+
+
 
 //group contact details
 $table = $this->newObject('htmltable', 'htmlelements');
