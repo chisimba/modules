@@ -7,7 +7,7 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('filterdisplay', 'unesco_oer');
-$this->setLayoutTemplate('maincontent_layout_tpl.php');
+
 if ($adaptationstring == null)
     $adaptationstring = "relation is not null";
 $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');

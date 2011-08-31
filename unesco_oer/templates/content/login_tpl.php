@@ -1,6 +1,4 @@
-<?php
-$this->setLayoutTemplate('maincontent_layout_tpl.php');
-?>
+
 <div class="mainContentHolder">
 
     <div class="subNavigation">

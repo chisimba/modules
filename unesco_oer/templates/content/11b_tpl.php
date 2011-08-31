@@ -8,10 +8,6 @@ $this->loadClass('textinput', 'htmlelements');
 ?>
 
 
-<?php $this->setLayoutTemplate('maincontent_layout_tpl.php'); ?>
-
-
-
 <div style="clear:both;"></div>
 <div class="breadCrumb module">
     <div id='breadcrumb'>

@@ -64,7 +64,7 @@
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-$this->setLayoutTemplate('maincontent_layout_tpl.php');
+
 echo $product->showMetaDataInput($this->getParam('nextAction'),$this->getParam('cancelAction'), $this->getParam('cancelParams'));
 //var_dump($product->dummyValue);
 

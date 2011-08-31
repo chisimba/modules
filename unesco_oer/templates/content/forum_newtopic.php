@@ -2,7 +2,6 @@
 
 //Sending display to 1 column layout
 ob_start();
- $this->setLayoutTemplate('maincontent_layout_tpl.php');
 
 $js = '<script type="text/javascript">
       function SubmitForm()

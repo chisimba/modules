@@ -7,7 +7,6 @@ $this->loadClass('textinput', 'htmlelements');
  $this->objLanguagecode=$this->getObject('languagecode', 'language');
 ?>
 
-<?php $this->setLayoutTemplate('maincontent_layout_tpl.php'); ?>
 
 
 <div style="clear:both;"></div>

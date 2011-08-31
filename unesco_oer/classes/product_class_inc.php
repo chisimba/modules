@@ -1,5 +1,6 @@
 <?php
-/* 
+
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -14,16 +15,13 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-
 /**
  * Description of product_class_inc
  *
  * @author manie
  */
+class product extends object {
 
-class product extends object
-{
     ///these objects may change after refinement
     public $dummyValue;
     public $objLanguage;
@@ -35,234 +33,219 @@ class product extends object
     public $objDbProductKeywords;
     public $objDbProductStatus;
     public $objDbRegions;
-
-
     //TODO move catorgorized parameters into structs. eg. <creationStruct>
     //////////   Creation / description parameters   //////////
 
-    /**Title
+    /*     * Title
      *
      * @var <type>
      */
     private $_title;
 
-    /**Alternative Title
+    /*     * Alternative Title
      *
      * @var <type>
      */
     private $_alternativetitle;
 
-    /**Content Type
+    /*     * Content Type
      *
      * @var <type>
      */
     private $_resourcetype;
 
-    /**Date of Creation
+    /*     * Date of Creation
      *
      * @var <type>
      */
     private $_date;
 
-    /**Language
+    /*     * Language
      *
      */
     private $_language;
 
-    /**Translation ID
+    /*     * Translation ID
      *
      */
     private $_translationOf;
 
-    /**Authors
+    /*     * Authors
      *
      * @var <type>
      */
     private $_creator;
 
-    /**Publisher
+    /*     * Publisher
      *
      * @var <type>
      */
     private $_publisher;
 
-    /**Description
+    /*     * Description
      *
      * @var <type>
      */
     private $_description;
 
-    /**Description Abstract
+    /*     * Description Abstract
      *
      * @var <type>
      */
     private $_abstract;
-
 //    /**Description Table of Contents
 //     *
 //     * @var <type>
 //     */
 //    private $_tableOfContents;
 
-    /**Other Contributors
+    /*     * Other Contributors
      *
      * @var <type> 
      */
     private $_othercontributors;
-
     //////////   non-categorized parameters   //////////
-
     //TODO Try to Categorize these parameters
 
-    /**UNESCO contacts
+    /*     * UNESCO contacts
      *
      * @var <type>
      */
     private $_unescocontacts;
 
-    /**UNESCO Themes
+    /*     * UNESCO Themes
      *
      * @var <type>
      */
     private $_unescothemes;
 
-    /**coverage
+    /*     * coverage
      *
      * @var <type>
      */
     private $_coverage;
 
-    /**status
+    /*     * status
      *
      * @var <type>
      */
     private $_status;
-
     //////////   Identification parameters   //////////
 
-    /**Identifier
+    /*     * Identifier
      *
      * @var <type>
      */
     private $_identifier;
 
-    /**Parent ID
+    /*     * Parent ID
      *
      * @var <type>
      */
     private $_parentid;
 
-    /**Relation
+    /*     * Relation
      *
      * @var <type>
      */
     private $_relation;
 
-    /**Relation type;
+    /*     * Relation type;
      *
      * @var <type>
      */
     private $_relationtype;
 
-    /**keywords
+    /*     * keywords
      *
      * @var <type>
      */
     private $_keywords = array();
 
-    /**Thumbnail
+    /*     * Thumbnail
      *
      * @var <type>
      */
     private $_thumbnail;
-
     //////////   Product Rights and Legal Parameters   //////////
 
-    /**Rights
+    /*     * Rights
      *
      * @var <type>
      */
     private $_rights;
 
-    /**Rights Holder
+    /*     * Rights Holder
      *
      * @var <type>
      */
     private $_rightsholder;
 
-    /**Provenance
+    /*     * Provenance
      *
      * @var <type>
      */
     private $_provenance;
-
     ////////// Adaptation Specific Parameters /////////
 
-    /**Region
+    /*     * Region
      *
      * @var <type>
      */
     private $_region;
 
-    /**Country
+    /*     * Country
      *
      * @var <type>
      */
     private $_country;
 
-    /**Group
+    /*     * Group
      *
      * @var <type>
      */
     private $_group;
 
-    /**Institution
+    /*     * Institution
      *
      * @var <type>
      */
     private $_institution;
 
-    /**Currently logged in user
+    /*     * Currently logged in user
      *
      * @var <type>
      */
     private $_user;
-
     //////////   Required database objects   //////////
 
-    /**Database for accessing products
+    /*     * Database for accessing products
      *
      * @var <type>
      */
     private $_objDbProducts;
-
     //////////   Content   //////////
 
-    /**Variable for containing and managing content of the product
+    /*     * Variable for containing and managing content of the product
      *
      * @var <type>
      */
     private $_contentManager;
-
     //////////   Display objects   //////////
 
-    /**Object that contains some simple display operations
+    /*     * Object that contains some simple display operations
      *
      * @var <type>
      */
     private $_objAddDataUtil;
-
     //////////   Validation objects   //////////
-   
+
     var $validationArray;
-
     private $_deletionstatus;
-
 
     //////////   Constructor   //////////
 
-    public function  init()
-    {
+    public function init() {
         parent::init();
         $this->dummyValue = "I am a product";
         $this->_objDbProducts = $this->getObject('dbproducts');
@@ -285,11 +268,10 @@ class product extends object
 
     ////////////////   METHODS   ////////////////
 
-    /**This function stores product data in the data base whether the product
+    /*     * This function stores product data in the data base whether the product
      * already exists or not.
      */
-    function saveProduct()
-    {
+    function saveProduct() {
         $tempData = array();
 
         $tempData['parent_id'] = $this->getParentID();
@@ -314,21 +296,22 @@ class product extends object
         $tempData['status'] = $this->getStatus();
         $tempData['deleted'] = $this->isDeleted();
         $tempData['thumbnail'] = $this->getThumbnailPath();
-        
-        if ($this->getIdentifier())
-        {
-            if ($this->isAdaptation()) $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData, $this->getAdaptationMetaDataArray());
-            else $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData);
+
+        if ($this->getIdentifier()) {
+            if ($this->isAdaptation())
+                $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData, $this->getAdaptationMetaDataArray());
+            else
+                $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData);
         }
-        else
-        {
+        else {
             $tempData['date'] = $this->getDate();
             if ($this->isAdaptation()) {
                 $parentArray = $this->_objDbProducts->getProductByID($this->_parentid);
                 $tempData['thumbnail'] = $parentArray['thumbnail'];
                 $this->_identifier = $this->_objDbProducts->addProduct($tempData, $this->getAdaptationMetaDataArray());
             }
-            else  $this->_identifier = $this->_objDbProducts->addProduct($tempData);
+            else
+                $this->_identifier = $this->_objDbProducts->addProduct($tempData);
             //$this->_identifier = $this->_objDbProducts->getLastInsertId();
         }
 
@@ -339,23 +322,21 @@ class product extends object
 
         $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
         $results = FALSE;
-        if (!$this->isDeleted() && !$this->isAdaptation()){
+        if (!$this->isDeleted() && !$this->isAdaptation()) {
             $results = $this->uploadThumbNail($path);
         }
 
-        if ($results)
-        {
+        if ($results) {
             $this->_objDbProducts->updateProduct(
-                                            $this->getIdentifier(),
-                                            array( 'thumbnail' => 'usrfiles/'.$results['path'])
-                                        );
+                    $this->getIdentifier(), array('thumbnail' => 'usrfiles/' . $results['path'])
+            );
             $this->setThumbnailPath($results['path']);
         }
 
         if ($this->isAdaptation() && (strcmp($this->_contentManager->getProductID(), $this->getParentID()) != 0 )) {
             $validTypes = array(//TODO this line should be inside a database or some managing class
-                                'curriculum' => $this->getContentTypeDescription()
-                            );
+                'curriculum' => $this->getContentTypeDescription()
+            );
 
             $this->_contentManager = $this->_contentManager->copyContentsToProduct($this->getParentID(), $this->_identifier, $validTypes);
         }
@@ -367,12 +348,12 @@ class product extends object
         return $this->deleteProduct();
     }
 
-    /**This is an internal function for saving adaptation specific metadata
+    /*     * This is an internal function for saving adaptation specific metadata
      *
      * @return <type>
      */
-    private function getAdaptationMetaDataArray()
-    {
+
+    private function getAdaptationMetaDataArray() {
         $tempData = array();
 
         $tempData['region'] = $this->getRegion();
@@ -383,16 +364,16 @@ class product extends object
         return $tempData;
     }
 
-    /**This function retrieves product information, given the products identifier
+    /*     * This function retrieves product information, given the products identifier
      * (ID)
      * @param <type> $id
      */
-    function loadProduct($id)
-    {
+
+    function loadProduct($id) {
         $product = NULL;
-        if (is_array($id)){
+        if (is_array($id)) {
             $product = $id;
-        }else{
+        } else {
             $product = $this->_objDbProducts->getProductByID($id);
         }
 
@@ -423,18 +404,17 @@ class product extends object
 
         $this->getContentManager();
 
-        if ($this->isAdaptation())
-        {
+        if ($this->isAdaptation()) {
             $this->loadAdaptationData($this->getIdentifier());
         }
     }
 
-    /**This is a private function to load data for an adaptation
+    /*     * This is a private function to load data for an adaptation
      *
      * @param <type> $id
      */
-    private function loadAdaptationData($id)
-    {
+
+    private function loadAdaptationData($id) {
         $data = $this->_objDbProducts->getAdaptationDataByProductID($id);
 
         $this->setRegion($data['region']);
@@ -443,12 +423,12 @@ class product extends object
         $this->setInstitutionID($data['institution_id']);
     }
 
-    /**This function upadates relevant fields of the product provided you use
+    /*     * This function upadates relevant fields of the product provided you use
      * showMetaDataInput as your input means and saves theme.
      *
      */
-    function handleUpload()
-    {
+
+    function handleUpload() {
         $this->setTitle($this->getParam('title'));
         $this->setAlternativeTitle($this->getParam('alternative_title'));
         $this->setContentType($this->getParam('resource_type'));
@@ -463,7 +443,8 @@ class product extends object
         $this->setStatus($this->getParam('status'));
         $this->setRights($this->getParam('rights'));
         $this->setRightsHolder($this->getParam('rights_holder'));
-        $this->setProvenance($this->getParam('provenance'));;
+        $this->setProvenance($this->getParam('provenance'));
+        ;
         $this->setCoverage($this->getParam('coverage'));
         $this->setStatus($this->getParam('status'));
         $this->setKeyWords($this->getParam('keywords'));
@@ -479,44 +460,40 @@ class product extends object
 
         $this->setThemes($themesSelected);
 
-        if ($this->isAdaptation()) $this->handleAdaptationUpload();
+        if ($this->isAdaptation())
+            $this->handleAdaptationUpload();
 
-        if ($this->validateMetaData()){
+        if ($this->validateMetaData()) {
             $this->saveProduct();
             return TRUE;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
 
-    private function handleAdaptationUpload()
-    {
+    private function handleAdaptationUpload() {
         $this->setRegion($this->getParam('region'));
         $this->setCountryCode($this->getParam('country'));
         $this->setGroupID($this->getParam('group'));
         $this->setInstitutionID($this->getParam('institution'));
     }
 
-    /**This function validates the input on product meta data input page
+    /*     * This function validates the input on product meta data input page
      *
      */
-    function validateMetaData()
-    {
+
+    function validateMetaData() {
         $valid = TRUE;
 
         foreach ($this->validationArray as $validation) {
-            if (!$validation['valid'])
-            {
+            if (!$validation['valid']) {
                 $valid = FALSE;
             }
         }
 
         $fileInfoArray = array();
 
-        if (!$this->objThumbUploader->isFileValid($fileInfoArray) && !$this->isAdaptation())
-        {
+        if (!$this->objThumbUploader->isFileValid($fileInfoArray) && !$this->isAdaptation()) {
             switch ($fileInfoArray['reason']) {
                 case 'nouploadedfileprovided':
                     if (!$this->getThumbnailPath()) {
@@ -543,17 +520,15 @@ class product extends object
         } elseif ($this->objThumbUploader->isFileValid($fileInfoArray) && !$this->isAdaptation()) {
             $path = 'unesco_oer/products/' . $this->_identifier . '/thumbnail/';
             $results = FALSE;
-            if (!$this->isDeleted() && !$this->isAdaptation()){
+            if (!$this->isDeleted() && !$this->isAdaptation()) {
                 $results = $this->uploadThumbNail($path);
             }
-            
-            if ($results)
-            {
+
+            if ($results) {
                 $this->_objDbProducts->updateProduct(
-                                                $this->getIdentifier(),
-                                                array( 'thumbnail' => 'usrfiles/'.$results['path'])
-                                            );
-                $this->setThumbnailPath('usrfiles/'.$results['path']);
+                        $this->getIdentifier(), array('thumbnail' => 'usrfiles/' . $results['path'])
+                );
+                $this->setThumbnailPath('usrfiles/' . $results['path']);
             }
         }
 
@@ -562,36 +537,36 @@ class product extends object
 
     //TODO add language elements where required
     //TODO move this to the Template
-    /**This function returns a display for entering product metadata
+    /*     * This function returns a display for entering product metadata
      *
      * @return string
      */
-    function showMetaDataInput($nextAction = NULL, $cancelAction = NULL, $cancelParams = NULL)
-    {
+    function showMetaDataInput($nextAction = NULL, $cancelAction = NULL, $cancelParams = NULL) {
         $output = '';
 
         // set up html elements
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
-        $this->loadClass('adddatautil','unesco_oer');
+        $this->loadClass('adddatautil', 'unesco_oer');
         $this->loadClass('hiddeninput', 'htmlelements');
 
         // setup and show heading
         $header = new htmlHeading();
-        if ($this->isDeleted() || empty ($this->_identifier)){
+        if ($this->isDeleted() || empty($this->_identifier)) {
             $header->str = $this->objLanguage->
                     languageText('mod_unesco_oer_product_upload_heading', 'unesco_oer');
-        }else{
+        } else {
             $header->str = $this->objLanguage->
                     languageText('mod_unesco_oer_product_upload_edit_heading', 'unesco_oer');
         }
         $header->type = 1;
         echo '<div id="productmetaheading">';
         echo $header->show();
-        if ($this->isAdaptation()) echo '<font face="Arial" color="#FF2222">This is an ADAPTATION</font><br>';
+        if ($this->isAdaptation())
+            echo '<font face="Arial" color="#FF2222">This is an ADAPTATION</font><br>';
         echo '<font face="Arial" color="#FF2222">(*) indicates fields that are required. </font>';
         echo '</div>';
-        
+
 
         /*                                              */
         /*      Identification fields, eg. title        */
@@ -603,35 +578,24 @@ class product extends object
 
 
 //        $table->startRow();
-
         //field for the title
         $fieldName = 'title';
-       
+
         $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
-        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->getTitle(),
-                                                    $table
-                                                    );
+                $title, 4, $fieldName, '90%', $this->getTitle(), $table
+        );
 
         //field for alternative title
         $fieldName = 'alternative_title';
         $title = $this->objLanguage->languageText('mod_unesco_oer_title_alternative', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->getAlternativeTitle(),
-                                                    $table
-                                                    );
+                $title, 4, $fieldName, '90%', $this->getAlternativeTitle(), $table
+        );
 
         //field for the thumbnail
-        if(!$this->isAdaptation()){
+        if (!$this->isAdaptation()) {
             $tableThumb = $this->newObject('htmltable', 'htmlelements');
             $tableThumb->cssClass = "moduleHeader";
             $tableThumb->startRow();
@@ -646,9 +610,9 @@ class product extends object
                 $tableThumb->addCell("<img width='79' height='101' src='skins/_common/icons/imagepreview.gif'>");
             }
             $tableThumb->endRow();
-            
-            $fieldset = $this->newObject('fieldset','htmlelements');
-            $fieldset->setLegend('Product Thumbnail' . '<font color="#FF2222">* '. $this->validationArray['thumbnail']['message']. '</font>');
+
+            $fieldset = $this->newObject('fieldset', 'htmlelements');
+            $fieldset->setLegend('Product Thumbnail' . '<font color="#FF2222">* ' . $this->validationArray['thumbnail']['message'] . '</font>');
             $fieldset->addContent($tableThumb->show());
 
             $table->startRow();
@@ -657,7 +621,7 @@ class product extends object
         }
 
 //        $table->endRow();
-        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->setLegend('Identity Information');
         $fieldset->addContent($table->show());
         $output .= $fieldset->show();
@@ -672,46 +636,31 @@ class product extends object
         // setup table and table headings with input fields
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
-        
+
         //Field for Authors
         $fieldName = 'creator';
         $title = $this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer');
-        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->getAuthors(),
-                                                    $table
-                                                    );
+                $title, 4, $fieldName, '90%', $this->getAuthors(), $table
+        );
 
         //Field for other contributors
         $fieldName = 'other_contributors';
         $title = $this->objLanguage->languageText('mod_unesco_oer_other_contributors', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->getOtherContributers(),
-                                                    $table
-                                                    );
+                $title, 4, $fieldName, '90%', $this->getOtherContributers(), $table
+        );
 
         //field for publisher
         $fieldName = 'publisher';
         $title = $this->objLanguage->languageText('mod_unesco_oer_publisher', 'unesco_oer');
-        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->getPublisher(),
-                                                    $table
-                                                    );
-        
-        $fieldset = $this->newObject('fieldset','htmlelements');
+                $title, 4, $fieldName, '90%', $this->getPublisher(), $table
+        );
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->setLegend('Creators Information');
         $fieldset->addContent($table->show());
         $output .= $fieldset->show();
@@ -736,14 +685,14 @@ class product extends object
         $themeCount = count();
         for ($index = 0; $index < count($umbrellaThemes); $index++) {
             for ($index1 = 0; $index1 < 3; $index1++) {
-                if (!empty ($umbrellaThemes[$index + $index1]))
-                    $this->_objAddDataUtil->addTitleToRow($umbrellaThemes[$index + $index1]['theme'], 4 , $tableTheme);
+                if (!empty($umbrellaThemes[$index + $index1]))
+                    $this->_objAddDataUtil->addTitleToRow($umbrellaThemes[$index + $index1]['theme'], 4, $tableTheme);
             }
             $tableTheme->endRow();
 
             $tableTheme->startRow();
             for ($index1 = 0; $index1 < 3; $index1++) {
-                if (!empty ($umbrellaThemes[$index + $index1])) {
+                if (!empty($umbrellaThemes[$index + $index1])) {
                     $themes = $this->objDbProductThemes->getThemesByUmbrellaID($umbrellaThemes[$index + $index1]['id']);
                     $this->_objAddDataUtil->addDropDownToRow($umbrellaThemes[$index + $index1]['id'], $themes, $this->_unescothemes[$umbrellaThemes[$index + $index1]['id']], 'theme', $tableTheme, 'id');
                 }
@@ -752,25 +701,18 @@ class product extends object
             $index += 2;
         }
 
-        $themefieldset = $this->newObject('fieldset','htmlelements');
-        $themefieldset->setLegend('Themes'.'<font color="#FF2222">* '. $this->validationArray['theme']['message']. '</font>');
+        $themefieldset = $this->newObject('fieldset', 'htmlelements');
+        $themefieldset->setLegend('Themes' . '<font color="#FF2222">* ' . $this->validationArray['theme']['message'] . '</font>');
         $themefieldset->addContent($tableTheme->show());
 
-         //field for the language
+        //field for the language
         $fieldName = 'language';
         $title = $this->objLanguage->languageText('mod_unesco_oer_languages', 'unesco_oer');
-        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $productLanguages = $this->objDbProductLanguages->getProductLanguages();
         $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $productLanguages,
-                                                    $this->getLanguageID(),
-                                                    'code',
-                                                    $table,
-                                                    'id'
-                                                    );
+                $title, 4, $fieldName, $productLanguages, $this->getLanguageID(), 'code', $table, 'id'
+        );
 
         //field for the language
         $fieldName = 'translation_of';
@@ -778,17 +720,10 @@ class product extends object
 //        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
         $translatableProducts = $this->_objDbProducts->getTranslatableOriginals();
         $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $translatableProducts,
-                                                    $this->getTranslationID(),
-                                                    'title',
-                                                    $table,
-                                                    'id'
-                                                    );
+                $title, 4, $fieldName, $translatableProducts, $this->getTranslationID(), 'title', $table, 'id'
+        );
 
-         //field for the description
+        //field for the description
         $fieldName = 'description';
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = $fieldName;
@@ -827,66 +762,54 @@ class product extends object
             'nextAction' => $nextAction,
             'cancelAction' => $cancelAction,
             'cancelParams' => $cancelParams));
-        $form_data = new form('add_products_ui', $uri);//////created here in order to include select boxes for keywords//////
-    
-
+        $form_data = new form('add_products_ui', $uri); //////created here in order to include select boxes for keywords//////
         // Create the selectbox object
-        $objSelectBox = $this->newObject('selectbox','htmlelements');
+        $objSelectBox = $this->newObject('selectbox', 'htmlelements');
         // Initialise the selectbox.
-        $objSelectBox->create( $form_data, 'leftList[]', 'Available keywords', $fieldName.'[]', 'Chosen keywords' );
+        $objSelectBox->create($form_data, 'leftList[]', 'Available keywords', $fieldName . '[]', 'Chosen keywords');
         //// Populate the selectboxes
         $productKeywords = $this->objDbProductKeywords->getProductKeywords();
         $diff = array_udiff(
-		$productKeywords,
-                $this->getKeyWords(),
-		create_function(
-			'$a,$b',
-                        'if ($a['.'"puid"'.'] == $b['.'"puid"'.']) return 0;
-                         elseif (($a['.'"puid"'.'] > $b['.'"puid"'.'])) return 1;
+                $productKeywords, $this->getKeyWords(), create_function(
+                        '$a,$b', 'if ($a[' . '"puid"' . '] == $b[' . '"puid"' . ']) return 0;
+                         elseif (($a[' . '"puid"' . '] > $b[' . '"puid"' . '])) return 1;
                          else return -1;'
- 		)
+                )
         );
-        $objSelectBox->insertLeftOptions( $diff, 'id', 'keyword');
-        $objSelectBox->insertRightOptions( $this->getKeyWords(), 'id', 'keyword');
+        $objSelectBox->insertLeftOptions($diff, 'id', 'keyword');
+        $objSelectBox->insertRightOptions($this->getKeyWords(), 'id', 'keyword');
         //Construct tables for left selectboxes
-        $tblLeft = $this->newObject( 'htmltable','htmlelements');
-        $objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
+        $tblLeft = $this->newObject('htmltable', 'htmlelements');
+        $objSelectBox->selectBoxTable($tblLeft, $objSelectBox->objLeftList);
         //Construct tables for right selectboxes
-        $tblRight = $this->newObject( 'htmltable', 'htmlelements');
-        $objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
+        $tblRight = $this->newObject('htmltable', 'htmlelements');
+        $objSelectBox->selectBoxTable($tblRight, $objSelectBox->objRightList);
         //Construct tables for selectboxes and headings
-        $tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
+        $tblSelectBox = $this->newObject('htmltable', 'htmlelements');
         $tblSelectBox->width = '90%';
         $tblSelectBox->startRow();
-            $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
-            $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
+        $tblSelectBox->addCell($objSelectBox->arrHeaders['hdrLeft'], '100pt');
+        $tblSelectBox->addCell($objSelectBox->arrHeaders['hdrRight'], '100pt');
         $tblSelectBox->endRow();
         $tblSelectBox->startRow();
-            $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
-            $tblSelectBox->addCell( $tblRight->show(), '100pt' );
+        $tblSelectBox->addCell($tblLeft->show(), '100pt');
+        $tblSelectBox->addCell($tblRight->show(), '100pt');
         $tblSelectBox->endRow();
-    
-        $keywordfieldset = $this->newObject('fieldset','htmlelements');
-        $keywordfieldset->setLegend('Keywords'.'<font color="#FF2222">* '. $this->validationArray['keyword']['message']. '</font>');
-        $keywordfieldset->addContent($tblSelectBox->show() );
-        
+
+        $keywordfieldset = $this->newObject('fieldset', 'htmlelements');
+        $keywordfieldset->setLegend('Keywords' . '<font color="#FF2222">* ' . $this->validationArray['keyword']['message'] . '</font>');
+        $keywordfieldset->addContent($tblSelectBox->show());
+
         //field for resource type
         $fieldName = 'resource_type';
         $title = $this->objLanguage->languageText('mod_unesco_oer_resource', 'unesco_oer');
-        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $resourceTypes = $this->objDbResourceTypes->getResourceTypes();
         $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $resourceTypes,
-                                                    $this->getContentType(),
-                                                    'description',
-                                                    $table,
-                                                    'id'
-                                                    );
+                $title, 4, $fieldName, $resourceTypes, $this->getContentType(), 'description', $table, 'id'
+        );
 
-        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->setLegend('Description Information');
         $fieldset->addContent($themefieldset->show());
         $fieldset->addContent($keywordfieldset->show());
@@ -907,56 +830,46 @@ class product extends object
         //field for rights
         $fieldName = 'rights';
         $title = $this->objLanguage->languageText('mod_unesco_oer_rights', 'unesco_oer');
-        /*$this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                     $this->objCC->show("copyright"),
-                                           
-                                                        
-                                                    $table
-                                                    );
-        
-        
-        */
-        
+        /* $this->_objAddDataUtil->addTextInputToTable(
+          $title,
+          4,
+          $fieldName,
+          '90%',
+          $this->objCC->show("copyright"),
+
+
+          $table
+          );
+
+
+         */
+
         $table->startRow();
         $table->addCell($this->objCC->show("copyright"));
         $table->endRow();
-        
-        
-         $iconList = $this->objCC->show($cclic);
-         
-         
-         
-         
-         
+
+
+        $iconList = $this->objCC->show($cclic);
+
+
+
+
+
 
         //field for rights holder
         $fieldName = 'rights_holder';
         $title = $this->objLanguage->languageText('mod_unesco_oer_rights_holder', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->getRightsHolder(),
-                                                    $table
-                                                    );
+                $title, 4, $fieldName, '90%', $this->getRightsHolder(), $table
+        );
         //field for provenance
         $fieldName = 'provenance';
         $title = $this->objLanguage->languageText('mod_unesco_oer_provenance', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->getProvenance(),
-                                                    $table
-                                                    );
+                $title, 4, $fieldName, '90%', $this->getProvenance(), $table
+        );
 
-        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->setLegend('Legal Information');
         $fieldset->addContent($table->show());
         $output .= $fieldset->show();
@@ -976,77 +889,45 @@ class product extends object
         $fieldName = 'contacts';
         $title = $this->objLanguage->languageText('mod_unesco_oer_contacts', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->getContacts(),
-                                                    $table
-                                                    );
+                $title, 4, $fieldName, '90%', $this->getContacts(), $table
+        );
 
         //field for relation types
         $fieldName = 'relation_type';
         $title = $this->objLanguage->languageText('mod_unesco_oer_relation_type', 'unesco_oer');
-        $title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
+        $title .= '<font color="#FF2222"> ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $relationTypes = $this->objDbRelationTypes->getRelationTypes();
         $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $relationTypes,
-                                                    $this->getRelationType(),
-                                                    'description',
-                                                    $table,
-                                                    'id',
-                                                    "javascript: toggleRelationDropDown('input_relation_type', 'input_relation');"
-                                                    );
+                $title, 4, $fieldName, $relationTypes, $this->getRelationType(), 'description', $table, 'id', "javascript: toggleRelationDropDown('input_relation_type', 'input_relation');"
+        );
 
         //field for relations
         $fieldName = 'relation';
         $title = $this->objLanguage->languageText('mod_unesco_oer_relation', 'unesco_oer');
-        $title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
+        $title .= '<font color="#FF2222"> ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $products = $this->_objDbProducts->getAll();
         $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $products,
-                                                    $this->_relation,
-                                                    'title',
-                                                    $table,
-                                                    'id'
-                                                    );
+                $title, 4, $fieldName, $products, $this->_relation, 'title', $table, 'id'
+        );
 
         //field for coverage
         $fieldName = 'coverage';
         $title = $this->objLanguage->languageText('mod_unesco_oer_coverage', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    '90%',
-                                                    $this->getCoverage(),
-                                                    $table
-                                                    );
+                $title, 4, $fieldName, '90%', $this->getCoverage(), $table
+        );
 
         //field for status
         $fieldName = 'status';
         $title = $this->objLanguage->languageText('mod_unesco_oer_status', 'unesco_oer');
-        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
+        $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $statuses = $this->objDbProductStatus->getAllStatuses();
         $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $statuses,
-                                                    $this->getStatus(),
-                                                    'status',
-                                                    $table,
-                                                    'id'
-                                                    );
+                $title, 4, $fieldName, $statuses, $this->getStatus(), 'status', $table, 'id'
+        );
 
 
-        $fieldset = $this->newObject('fieldset','htmlelements');
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->setLegend('Misc. Information');
         $fieldset->addContent($table->show());
         $output .= $fieldset->show();
@@ -1058,8 +939,7 @@ class product extends object
         /*         Adaptation Fields                    */
         /*                                              */
 
-        if ($this->isAdaptation())
-        {
+        if ($this->isAdaptation()) {
             // setup table and table headings with input fields
             $table = $this->newObject('htmltable', 'htmlelements');
             $table->cssClass = "moduleHeader";
@@ -1069,15 +949,8 @@ class product extends object
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_region', 'unesco_oer');
             $regions = $this->objDbRegions->getAll();
             $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $regions,
-                                                    $this->getRegion(),
-                                                    'region',
-                                                    $table,
-                                                    'id'
-                                                    );
+                    $title, 4, $fieldName, $regions, $this->getRegion(), 'region', $table, 'id'
+            );
 
             //field for country
             $fieldName = 'country';
@@ -1095,7 +968,7 @@ class product extends object
             $arrayUserGroups = $objDbUserGroups->getUserGroups($this->_user->PKId());
 
             if (empty($arrayUserGroups)) {
-                $fieldset = $this->newObject('fieldset','htmlelements');
+                $fieldset = $this->newObject('fieldset', 'htmlelements');
                 $fieldset->setLegend('ERROR');
                 $fieldset->addContent('You are not permitted to perform this operation! You must belong to a group');
                 return $fieldset->show();
@@ -1108,24 +981,16 @@ class product extends object
                 $groupArray = $objDbGroups->getGroupInfo($userGroupRow['groupid']);
                 array_push($groups, $groupArray[0]);
             }
-            
+
             //field for groups
             $fieldName = 'group';
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_group', 'unesco_oer');
-            $title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
+            $title .= '<font color="#FF2222"> ' . $this->validationArray[$fieldName]['message'] . '</font>';
             $this->_objAddDataUtil->addDropDownToTable(
-                                                        $title,
-                                                        4,
-                                                        $fieldName,
-                                                        $groups,
-                                                        $this->getGroupID(),
-                                                        'name',
-                                                        $table,
-                                                        'id',
-                                                        "javascript: toggleInstitutionDropDown(this.value, 'institution_div', '{$this->getIdentifier()}');"
-                                                        );
+                    $title, 4, $fieldName, $groups, $this->getGroupID(), 'name', $table, 'id', "javascript: toggleInstitutionDropDown(this.value, 'institution_div', '{$this->getIdentifier()}');"
+            );
 
-            
+
 
             //field for institution
             $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
@@ -1139,7 +1004,7 @@ class product extends object
             $table->endRow();
 
 
-            $fieldset = $this->newObject('fieldset','htmlelements');
+            $fieldset = $this->newObject('fieldset', 'htmlelements');
             $fieldset->setLegend('Adaptation information');
             $fieldset->addContent($table->show());
             $output .= $fieldset->show();
@@ -1149,7 +1014,7 @@ class product extends object
         /*                                              */
 
         //load required javascript file
-        $this->appendArrayVar( 'headerParams', $this->getJavascriptFile('addProduct.js','unesco_oer') );
+        $this->appendArrayVar('headerParams', $this->getJavascriptFile('addProduct.js', 'unesco_oer'));
 
         $hiddenInput = new hiddeninput('add_product_submit');
 
@@ -1160,7 +1025,7 @@ class product extends object
         // setup button for submission
         $buttonSubmit = new button('upload', $this->objLanguage->
                                 languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
-        $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )."SubmitProduct('add_product_submit', $submitOption);";
+        $action = $objSelectBox->selectAllOptions($objSelectBox->objRightList) . "SubmitProduct('add_product_submit', $submitOption);";
         $buttonSubmit->setOnClick('javascript: ' . $action);
 
         // setup button for cancellation
@@ -1168,27 +1033,25 @@ class product extends object
                                 languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer'));
         $buttonCancel->setOnClick("javascript: SubmitProduct('add_product_submit', 'cancel')");
 
-        
+
 
         //createform, add fields to it and display
-        
+
         $form_data->extra = 'enctype="multipart/form-data"';
-        $form_data->addToForm($output .'<br />' . $buttonSubmit->show() . $buttonCancel->show() . $hiddenInput->show());
+        $form_data->addToForm($output . '<br />' . $buttonSubmit->show() . $buttonCancel->show() . $hiddenInput->show());
 
         return $form_data->show();
     }
 
     //////// operations for external tables //////
-
     //TODO move some of these functions into the db classes they belong
 
-   /**This function adds keyword relationships for the current product
-    *
-    * @param <type> $keyWords
-    */
-   function saveKeyWords($keyWords)
-   {
-       if($keyWords != NULL && !is_array($keyWords)){
+    /*     * This function adds keyword relationships for the current product
+     *
+     * @param <type> $keyWords
+     */
+    function saveKeyWords($keyWords) {
+        if ($keyWords != NULL && !is_array($keyWords)) {
             $keyWords = array($keyWords);
         }
 
@@ -1196,35 +1059,34 @@ class product extends object
         $this->objDbProductKeywords->deleteProductKeywordJxnByProductID($this->_identifier);
 
         foreach ($keyWords as $keyWord) {
-            if ($keyWord != NULL){
+            if ($keyWord != NULL) {
                 $this->objDbProductKeywords->addProductKeywordJxn($this->_identifier, $keyWord['id']);
             }
         }
-   }
+    }
 
-   /**This function adds theme relationships for the current product
-    *
-    * @param <type> $themeIDarray
-    */
-   function saveThemes($themeIDarray)
-    {
-        if($themeIDarray != NULL && !is_array($themeIDarray)){
+    /*     * This function adds theme relationships for the current product
+     *
+     * @param <type> $themeIDarray
+     */
+
+    function saveThemes($themeIDarray) {
+        if ($themeIDarray != NULL && !is_array($themeIDarray)) {
             $themeIDarray = array($themeIDarray);
         }
-        
+
         $this->objDbProductThemes->deleteProductThemesJxnByProductID($this->_identifier);
 
         foreach ($themeIDarray as $themeID) {
-            if ($themeID != NULL){
+            if ($themeID != NULL) {
                 $this->objDbProductThemes->addProductThemeJxn($this->_identifier, $themeID);
             }
         }
     }
 
-   function uploadThumbNail($path)
-   {
-       $results = FALSE;
-       try {
+    function uploadThumbNail($path) {
+        $results = FALSE;
+        try {
             $results = $this->objThumbUploader->uploadThumbnail($path, $this->getThumbnailPath());
         } catch (customException $e) {
             echo customException::cleanUp();
@@ -1232,83 +1094,64 @@ class product extends object
         }
 
         return $results;
-   }
+    }
 
-   private function loadThemes($id)
-    {
+    private function loadThemes($id) {
         $themeIDarray = array();
         foreach ($this->objDbProductThemes->getThemesByProductID($id) as $theme) {
             $themeIDarray[$theme['umbrella_theme_id']] = $theme['id'];
         }
 
         return $this->setThemes($themeIDarray);
-
     }
 
-    private function loadKeyWords($id)
-    {
+    private function loadKeyWords($id) {
         $this->_keywords = $this->objDbProductKeywords->getKeywordsByProductID($id);
     }
 
     ////////////////   SETTERS   ////////////////
 
-    private function addValidationMessage($field, $valid, $message)
-    {
+    private function addValidationMessage($field, $valid, $message) {
         $this->validationArray[$field]['valid'] = $valid;
         $this->validationArray[$field]['message'] = $message;
     }
 
-    function setTitle($title)
-    {
+    function setTitle($title) {
         $this->_title = $title;
-        if (empty($title))
-        {
+        if (empty($title)) {
             $this->addValidationMessage('title', FALSE, 'Product must have a Title');
-        }
-        else
-        {
+        } else {
             $this->addValidationMessage('title', TRUE, NULL);
         }
-
     }
 
-    function setAlternativeTitle($alternativeTitle)
-    {
+    function setAlternativeTitle($alternativeTitle) {
         $this->_alternativetitle = $alternativeTitle;
     }
 
-    function setContentType($resourceType)
-    {
+    function setContentType($resourceType) {
         $this->_resourcetype = $resourceType;
-        if (empty($resourceType))
-        {
+        if (empty($resourceType)) {
             $this->addValidationMessage('resource_type', FALSE, 'Product must have content');
-        }
-        else
-        {
+        } else {
             $this->addValidationMessage('resource_type', TRUE, NULL);
         }
     }
 
-    private function setDate($date){
+    private function setDate($date) {
         $this->_date = $date;
     }
 
-    function setLanguage($language)
-    {
+    function setLanguage($language) {
         $this->_language = $language;
-        if (empty($language))
-        {
+        if (empty($language)) {
             $this->addValidationMessage('language', FALSE, 'Product must have a language');
-        }
-        else
-        {
+        } else {
             $this->addValidationMessage('language', TRUE, NULL);
         }
     }
 
-    function setTranslationID($translationID)
-    {
+    function setTranslationID($translationID) {
         $this->_translationOf = $translationID;
 //        if (empty($language))
 //        {
@@ -1320,292 +1163,228 @@ class product extends object
 //        }
     }
 
-    function setAuthors($creator)
-    {
+    function setAuthors($creator) {
         $this->_creator = $creator;
-        if (empty($creator))
-        {
+        if (empty($creator)) {
             $this->addValidationMessage('creator', FALSE, 'Product must have an Author');
-        }
-        else
-        {
+        } else {
             $this->addValidationMessage('creator', TRUE, NULL);
         }
     }
 
-    function setPublisher($publisher)
-    {
+    function setPublisher($publisher) {
         $this->_publisher = $publisher;
-        if (empty($publisher))
-        {
+        if (empty($publisher)) {
             $this->addValidationMessage('publisher', FALSE, 'Product must have an Publisher');
-        }
-        else
-        {
+        } else {
             $this->addValidationMessage('publisher', TRUE, NULL);
         }
     }
 
-    function setDescription($description)
-    {
+    function setDescription($description) {
         $this->_description = $description;
     }
 
-    function setAbstract($abstract)
-    {
+    function setAbstract($abstract) {
         $this->_abstract = $abstract;
     }
 
-    function setOtherContributers($contributors)
-    {
+    function setOtherContributers($contributors) {
         $this->_othercontributors = $contributors;
     }
 
-    function setContacts($contacts)
-    {
+    function setContacts($contacts) {
         $this->_unescocontacts = $contacts;
     }
 
-    function setThemes($themeIDarray)
-    {
+    function setThemes($themeIDarray) {
         $this->_unescothemes = $themeIDarray;
 
-        $flag  = FALSE;
-        foreach ($themeIDarray as $theme)
-        {
-            if (!empty($theme))
-            {
+        $flag = FALSE;
+        foreach ($themeIDarray as $theme) {
+            if (!empty($theme)) {
                 $flag = TRUE;
             }
         }
-        if ($flag)
-        {
+        if ($flag) {
             $this->addValidationMessage('theme', TRUE, NULL);
-        }
-        else
-        {
+        } else {
             $this->addValidationMessage('theme', FALSE, 'Product must have at least one Theme');
         }
     }
 
-   function setCoverage($coverage)
-   {
-       $this->_coverage = $coverage;
-   }
+    function setCoverage($coverage) {
+        $this->_coverage = $coverage;
+    }
 
-   function setStatus($status)
-   {
-       $this->_status = $status;
+    function setStatus($status) {
+        $this->_status = $status;
 
-       if (empty($status))
-        {
+        if (empty($status)) {
             $this->addValidationMessage('status', FALSE, 'Product must have a status');
-        }
-        else
-        {
+        } else {
             $this->addValidationMessage('status', TRUE, NULL);
         }
-   }
+    }
 
-   private function setIdentifier($id)
-   {
-       $this->_identifier = $id;
-   }
+    private function setIdentifier($id) {
+        $this->_identifier = $id;
+    }
 
-   function setRelation($relation, $relationType)
-   {
-       $this->_relation = $relation;
-       $this->_relationtype = $relationType;
+    function setRelation($relation, $relationType) {
+        $this->_relation = $relation;
+        $this->_relationtype = $relationType;
 
-       if (empty($relation) && !empty($relationType))
-       {
-           $this->addValidationMessage('relation', FALSE, 'Given a relation type, a relation must be selected');
-       }
-       elseif (!empty($relation) && empty($relationType))
-       {
-           $this->addValidationMessage('relation_type', FALSE, 'Given a relation, a relation type must be selected');
-       }
-       else
-       {
-           $this->addValidationMessage('relation', TRUE, NULL);
-           $this->addValidationMessage('relation_type', TRUE, NULL);
-       }
-   }
-
-   function setKeyWords($keyWords) 
-   {
-       $this->_keywords = array();
-
-       foreach ($keyWords as $keyword) {
-           array_push($this->_keywords, $this->objDbProductKeywords->getProductKeywordByID($keyword));
-       }
-
-        if (empty($keyWords))
-        {
-            $this->addValidationMessage('keyword', FALSE, 'Product must have at least one Keyword');
+        if (empty($relation) && !empty($relationType)) {
+            $this->addValidationMessage('relation', FALSE, 'Given a relation type, a relation must be selected');
+        } elseif (!empty($relation) && empty($relationType)) {
+            $this->addValidationMessage('relation_type', FALSE, 'Given a relation, a relation type must be selected');
+        } else {
+            $this->addValidationMessage('relation', TRUE, NULL);
+            $this->addValidationMessage('relation_type', TRUE, NULL);
         }
-        else
-        {
+    }
+
+    function setKeyWords($keyWords) {
+        $this->_keywords = array();
+
+        foreach ($keyWords as $keyword) {
+            array_push($this->_keywords, $this->objDbProductKeywords->getProductKeywordByID($keyword));
+        }
+
+        if (empty($keyWords)) {
+            $this->addValidationMessage('keyword', FALSE, 'Product must have at least one Keyword');
+        } else {
             $this->addValidationMessage('keyword', TRUE, NULL);
         }
-   }
+    }
 
-   function setThumbnailPath($path)
-   {
-       $this->_thumbnail = $path;
-   }
-   
-   function setRights($rights)
-   {
-       $this->_rights = $rights;
-   }
+    function setThumbnailPath($path) {
+        $this->_thumbnail = $path;
+    }
 
-   function setRightsHolder($rightsholder)
-   {
-       $this->_rightsholder = $rightsholder;
-   }
+    function setRights($rights) {
+        $this->_rights = $rights;
+    }
 
-   function setProvenance($provenance)
-   {
-       $this->_provenance = $provenance;
-   }
+    function setRightsHolder($rightsholder) {
+        $this->_rightsholder = $rightsholder;
+    }
 
-   function setContentManager($content)
-   {
-       $this->_contentManager = $content;
-   }
+    function setProvenance($provenance) {
+        $this->_provenance = $provenance;
+    }
 
-   private function setDeletionStatus($delete)
-   {
-       $this->_deletionstatus = $delete;
-   }
+    function setContentManager($content) {
+        $this->_contentManager = $content;
+    }
 
-   private function setParentID($id)
-   {
-       $this->_parentid = $id;
-   }
+    private function setDeletionStatus($delete) {
+        $this->_deletionstatus = $delete;
+    }
 
-   private function setRegion($region)
-   {
-       $this->_region = $region;
-   }
+    private function setParentID($id) {
+        $this->_parentid = $id;
+    }
 
-   private function setCountryCode($countryCode)
-   {
-       $this->_country = $countryCode;
-   }
+    private function setRegion($region) {
+        $this->_region = $region;
+    }
 
-   private function setGroupID($groupID)
-   {
-       $this->_group = $groupID;
-       if (empty($groupID))
-        {
+    private function setCountryCode($countryCode) {
+        $this->_country = $countryCode;
+    }
+
+    private function setGroupID($groupID) {
+        $this->_group = $groupID;
+        if (empty($groupID)) {
             $this->addValidationMessage('group', FALSE, 'Product must have a group associated with it');
-        }
-        else
-        {
+        } else {
             $this->addValidationMessage('group', TRUE, NULL);
         }
-   }
+    }
 
-   private function setInstitutionID($institutionID)
-   {
-       $this->_institution = $institutionID;
-   }
+    private function setInstitutionID($institutionID) {
+        $this->_institution = $institutionID;
+    }
 
-   ////////////////   GETTERS   ////////////////
+    ////////////////   GETTERS   ////////////////
 
-    function getTitle()
-    {
+    function getTitle() {
         return $this->_title;
     }
 
-    function getAlternativeTitle()
-    {
+    function getAlternativeTitle() {
         return $this->_alternativetitle;
     }
 
-    function getContentType()
-    {
+    function getContentType() {
         return $this->_resourcetype;
     }
 
-    function getContentTypeDescription()
-    {
+    function getContentTypeDescription() {
         return $this->objDbResourceTypes->getResourceTypeDescription(
-                $this->getContentType()
-                );
+                        $this->getContentType()
+        );
     }
 
-    function getProductDate(){
+    function getProductDate() {
         return $this->_date;
     }
 
-    private function getDate(){
+    private function getDate() {
         return $this->_objDbProducts->now();
     }
 
-    private function getLanguageID()
-    {
+    private function getLanguageID() {
         return $this->_language;
     }
 
-    function getLanguageName()
-    {
-        return $this->objDbProductLanguages->getLanguageNameByID( $this->getLanguageID() );
+    function getLanguageName() {
+        return $this->objDbProductLanguages->getLanguageNameByID($this->getLanguageID());
     }
 
-    public function getTranslationID()
-    {
+    public function getTranslationID() {
         return $this->_translationOf;
     }
 
-    public function getTranslationsList()
-    {
+    public function getTranslationsList() {
         $translations = $this->_objDbProducts->getAllTranslationsByID($this->_identifier);
         return $translations;
     }
 
-    function getAuthors()
-    {
+    function getAuthors() {
         return $this->_creator;
     }
 
-    function getPublisher()
-    {
+    function getPublisher() {
         return $this->_publisher;
     }
 
-    function getDescription()
-    {
+    function getDescription() {
         return $this->_description;
     }
 
-    function getAbstract()
-    {
+    function getAbstract() {
         return $this->_abstract;
     }
 
-    function getOtherContributers()
-    {
+    function getOtherContributers() {
         return $this->_othercontributors;
     }
 
-    function getContacts()
-    {
+    function getContacts() {
         return $this->_unescocontacts;
     }
 
-    function getThemes()
-    {
+    function getThemes() {
         return $this->_unescothemes;
     }
 
-    function getThemeNames()
-    {
+    function getThemeNames() {
         $themeNameArray = array();
 
-        foreach ($this->getThemes() as $themeID) {            
+        foreach ($this->getThemes() as $themeID) {
             $theme = $this->objDbProductThemes->getThemeByID($themeID);
             array_push($themeNameArray, $theme['theme']);
         }
@@ -1613,65 +1392,54 @@ class product extends object
         return $themeNameArray;
     }
 
-   function getCoverage()
-   {
-       return $this->_coverage;
-   }
+    function getCoverage() {
+        return $this->_coverage;
+    }
 
-   function getStatus()
-   {
-       return $this->_status;
-   }
+    function getStatus() {
+        return $this->_status;
+    }
 
-   function getIdentifier()
-   {
-       return $this->_identifier;
-   }
+    function getIdentifier() {
+        return $this->_identifier;
+    }
 
-   function getRelation()
-   {
-       return $this->_relation;
-   }
+    function getRelation() {
+        return $this->_relation;
+    }
 
-   function getRelationType()
-   {
-       return $this->_relationtype;
-   }
+    function getRelationType() {
+        return $this->_relationtype;
+    }
 
-   function getKeyWords()
-   {
+    function getKeyWords() {
         return $this->_keywords;
-   }
+    }
 
-   function getThumbnailPath()
-   {
-       if ($this->isAdaptation()){
-           $parent = $this->newObject('product', 'unesco_oer');
-           $parent->loadProduct($this->getParentID());
-           return $parent->getThumbnailPath();
-       }
-       return $this->_thumbnail;
-   }
+    function getThumbnailPath() {
+        if ($this->isAdaptation()) {
+            $parent = $this->newObject('product', 'unesco_oer');
+            $parent->loadProduct($this->getParentID());
+            return $parent->getThumbnailPath();
+        }
+        return $this->_thumbnail;
+    }
 
-   function getRights()
-   {
-       return $this->_rights;
-   }
+    function getRights() {
+        return $this->_rights;
+    }
 
-   function getRightsHolder()
-   {
-       return $this->_rightsholder;
-   }
+    function getRightsHolder() {
+        return $this->_rightsholder;
+    }
 
-   function getProvenance()
-   {
-       return $this->_provenance;
-   }
+    function getProvenance() {
+        return $this->_provenance;
+    }
 
-   function getContentManager()
-   {
-       //if (!$this->_contentManager->hasContents()){
-           $this->_contentManager = $this->newObject('contentmanager');
+    function getContentManager() {
+        //if (!$this->_contentManager->hasContents()){
+        $this->_contentManager = $this->newObject('contentmanager');
 //           $this->_contentManager->setProductID($this->getIdentifier());
 //           $this->_contentManager->setValidTypes( //TODO this line should be inside a database or some managing class
 //                            array(
@@ -1679,81 +1447,70 @@ class product extends object
 //                            )
 //                    );
 //           $this->_contentManager->getAllContents();
-           $validTypes = array(//TODO this line should be inside a database or some managing class
-                                'curriculum' => $this->getContentTypeDescription()
-                            );
+        $validTypes = array(//TODO this line should be inside a database or some managing class
+            'curriculum' => $this->getContentTypeDescription()
+        );
 
-           $this->_contentManager->loadContents($this->getIdentifier(), $validTypes);
-      // }
-       return $this->_contentManager;
-   }
+        $this->_contentManager->loadContents($this->getIdentifier(), $validTypes);
+        // }
+        return $this->_contentManager;
+    }
 
-   function getParentID()
-   {
-       return $this->_parentid;
-   }
+    function getParentID() {
+        return $this->_parentid;
+    }
 
-   function getRegion()
-   {
-       return $this->_region;
-   }
+    function getRegion() {
+        return $this->_region;
+    }
 
-   function getRegionName() {
-       $regionArray = $this->objDbRegions->getRegionByID($this->_region);
-       return $regionArray['region'];
-   }
+    function getRegionName() {
+        $regionArray = $this->objDbRegions->getRegionByID($this->_region);
+        return $regionArray['region'];
+    }
 
-   function getCountryCode()
-   {
-       return $this->_country;
-   }
+    function getCountryCode() {
+        return $this->_country;
+    }
 
-   //TODO return country name in text with this
-   function getCountryName()
-   {
-       return "";
-   }
+    //TODO return country name in text with this
+    function getCountryName() {
+        return "";
+    }
 
-   function getGroupName()
-   {
-       $info = $this->getGroupInfo();
-       return $info['name'];
+    function getGroupName() {
+        $info = $this->getGroupInfo();
+        return $info['name'];
+    }
 
-   }
+    function getGroupInfo() {
+        $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
+        $info = $objDbGroups->getGroupInfo($this->getGroupID());
+        return $info[0];
+    }
 
-   function getGroupInfo()
-   {
-       $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
-       $info = $objDbGroups->getGroupInfo($this->getGroupID());
-       return $info[0];
-   }
+    function getGroupID() {
+        return $this->_group;
+    }
 
-   function getGroupID()
-   {
-       return $this->_group;
-   }
-
-    function getInstitutionName()
-   {
+    function getInstitutionName() {
         $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
         $institution = $objInstitutionManager->getInstitution($this->getInstitutionID());
         return $institution->getName();
-   }
+    }
 
-   function getInstitution()
-   {
+    function getInstitution() {
         $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
         return $objInstitutionManager->getInstitution($this->getInstitutionID());
-   }
+    }
 
-   function getInstitutionID()
-   {
-       return $this->_institution;
-   }
+    function getInstitutionID() {
+        return $this->_institution;
+    }
 
-   function makeInstitutionDropDown($group_id = NULL)
-   {
-        if (empty($group_id)) $group_id = $this->getGroupID ();
+    function makeInstitutionDropDown($group_id = NULL) {
+        if (empty($group_id))
+            $group_id = $this->getGroupID();
         $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
         $idArray = $objDbGroups->getInstitutions($group_id);
 
@@ -1768,67 +1525,56 @@ class product extends object
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
-       //field for institution
+        //field for institution
         $fieldName = 'institution';
         $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_institution', 'unesco_oer');
         //$title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';
         //$institutions = $objInstitutionManager->getAllInstitutions("where name='{$groups[0]["linkedinstitution"]}'");
         return $this->_objAddDataUtil->addDropDownToTable(
-                                                    $title,
-                                                    4,
-                                                    $fieldName,
-                                                    $arrayInstitutions,
-                                                    $this->getInstitutionID(),
-                                                    'name',
-                                                    $table,
-                                                    'id'
-                                                    );
-   }
+                        $title, 4, $fieldName, $arrayInstitutions, $this->getInstitutionID(), 'name', $table, 'id'
+        );
+    }
 
-   function getNoOfAdaptations()
-   {
-       return $this->_objDbProducts->getNoOfAdaptations($this->getIdentifier());
-   }
+    function getNoOfAdaptations() {
+        return $this->_objDbProducts->getNoOfAdaptations($this->getIdentifier());
+    }
 
-   function isDeleted()
-   {
-       return $this->_deletionstatus;
-   }
+    function isDeleted() {
+        return $this->_deletionstatus;
+    }
 
-   function isAdaptation()
-   {
-       $temp = $this->getParentID();
-       return !empty($temp);
-   }
+    function isAdaptation() {
+        $temp = $this->getParentID();
+        return!empty($temp);
+    }
 
-   function hasAdaptation() {
-       return ($this->_objDbProducts->getNoOfAdaptations($this->getIdentifier()) != 0);
-   }
+    function hasAdaptation() {
+        return ($this->_objDbProducts->getNoOfAdaptations($this->getIdentifier()) != 0);
+    }
 
-   function deleteProduct()
-   {
-       if (!$this->hasAdaptation()){
+    function deleteProduct() {
+        if (!$this->hasAdaptation()) {
             $this->setDeletionStatus(1);
-       }
-       return $this->saveProduct();
-   }
+        }
+        return $this->saveProduct();
+    }
 
-   function makeAdaptation()
-   {
-       $tempId = $this->getIdentifier();
-       $tempParentID = $this->getParentID();
+    function makeAdaptation() {
+        $tempId = $this->getIdentifier();
+        $tempParentID = $this->getParentID();
 
-       $this->setParentID($this->getIdentifier());
-       $this->setIdentifier(NULL);
+        $this->setParentID($this->getIdentifier());
+        $this->setIdentifier(NULL);
 
-       $tempProduct = clone $this;
-       //$tempProduct->saveProduct();
+        $tempProduct = clone $this;
+        //$tempProduct->saveProduct();
 
-       $this->setParentID($tempParentID);
-       $this->setIdentifier($tempId);
+        $this->setParentID($tempParentID);
+        $this->setIdentifier($tempId);
 
-       return $tempProduct;
-   }
+        return $tempProduct;
+    }
+
 }
 
 ?>

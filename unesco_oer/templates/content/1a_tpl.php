@@ -10,7 +10,6 @@ if ($finalstring == null) {
     $finalstring = 'parent_id is null and deleted = 0';
     $TotalEntries = 'parent_id is null and deleted = 0';
 }
-$this->setLayoutTemplate('maincontent_layout_tpl.php');
 
 
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';

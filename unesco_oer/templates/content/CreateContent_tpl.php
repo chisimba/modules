@@ -52,8 +52,6 @@ $('#upload').live('click', function() {
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-$this->setLayoutTemplate('maincontent_layout_tpl.php');
-
 ?>
     <div class ="productsBackgroundColor ">
         <div class="greyText">
