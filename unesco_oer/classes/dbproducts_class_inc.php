@@ -42,7 +42,7 @@ class dbproducts extends dbtable
     }
     function getadapted($id)
     {
-        $sql = "select * from $this->_tableName where parent_id = '$id'";
+        $sql = "select * from $this->_tableName where parent_id = '$id' and deleted = 0";
 
         return $this->getArray($sql);
     }

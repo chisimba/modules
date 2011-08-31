@@ -127,7 +127,11 @@ $this->appendArrayVar('headerParams', $js);
             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
             <div class="listingAdaptationLinkDivWide"><a href="#" class="adaptationLinks">
                 <?php
-                 echo  $this->objLanguage->languageText('mod_unesco_oer_products_see_existing', 'unesco_oer');
+                
+                                $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $productID)));
+                                $CommentLink->cssClass = 'adaptationLinks';
+                                $CommentLink->link = ' See existing Adaptaions ('. $this->objDbProducts->getNoOfAdaptations($productID) . ')';
+                                echo $CommentLink->show();
                 ?>
 
                 
@@ -243,7 +247,7 @@ if ($this->objUser->isLoggedIn()) {
     $uri = $this->uri(array('action' => "createFeaturedProduct", 'id' => $productID));
     $editLink = new link($uri);
     $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_make_featured', 'unesco_oer');;
-    $linkText = '<img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15">';
+    $linkText = '<img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Print" width="19" height="15">';
     $editLink->link = $linkText;
     echo $editLink->show();
 }
@@ -252,7 +256,8 @@ $products = $this->objDbProducts->getProductByID($productID);
 echo $this->objProductUtil->populatebookmark($products);
 ?>
 
-<!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Email" width="19" height="15"></a>-->
+<!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Email" width="19" height="15"></a>-->
+              <A HREF="javascript:window.print()"><img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Email" width="19" height="15"></A>
 
 <!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" alt="Download" width="19" height="15"></a>-->
 

@@ -86,16 +86,44 @@
                         
                       <div class="listTopLinks">
                         <div class="productLinksViewDiv">
-                            <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                            <div class="textNextToTheListingIconDiv wideradaptationLink">
-                            	<a href="#" class="adaptationLinks">Make new adaptation using this UNESCO product</a>
-                            </div>
-                        </div>
                         
+                            <div class="textNextToTheListingIconDiv wideradaptationLink">
+                                <?php
+                                
+                                  if ($this->objUser->isLoggedIn()) {
+                                      
+                                  $adaptationImg = '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight"> <div class="textNextToTheListingIconDiv wideradaptationLink">'; 
+                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$productID"));
+                $adaptLink = new link($uri);
+                $adaptLink->cssClass = "adaptationLinks";
+                $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
+                $adaptLink->link = $linkText;
+
+                echo $adaptationImg;
+            
+                echo $adaptLink->show();
+                echo '</div>
+                     </div>
+                     </div>';
+                                  }
+                      ?>      
+                         
                         
                         <div class="productLinksViewDiv">
                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                            <div class="textNextToTheListingIconDiv wideradaptationLink"><a href="#" class="adaptationLinks">See existing adaptations of this UNESCO product</a></div>
+                            <div class="textNextToTheListingIconDiv wideradaptationLink">
+                                
+                                
+                                   <?php
+
+                                $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $productID)));
+                                $CommentLink->cssClass = 'adaptationLinks';
+                                $CommentLink->link = ' See existing Adaptaions ('. $this->objDbProducts->getNoOfAdaptations($productID) . ')';
+                                echo $CommentLink->show();
+                                
+                                
+                                ?>
+                            </div>
                         </div>
                         
                       </div>
@@ -134,23 +162,44 @@
                                 
                                </h2></div>
                     <div class="icons2">
-                    	<a href="#"><img src="skins/unesco_oer/images/icon-edit-section.png" alt="Edit" width="18" height="18"></a>
+<!--                    	<a href="#"><img src="skins/unesco_oer/images/icon-edit-section.png" alt="Edit" width="18" height="18"></a>-->
 <!--                        <a href="#"><img src="skins/unesco_oer/images/icon-delete.png" width="18" height="18" alt="Delete"></a>-->
-                        <?php
-                        $deleteContentLink = new link('deleteContent');
-                        $deleteContentLink->link = '<img src="skins/unesco_oer/images/icon-delete.png" width="18" height="18" alt="Delete">';
-                        $deleteContentLink->href = $this->uri(array(
-                                                    'action'=>'deleteContent',
-                                                    'productID'=>$product->getIdentifier(),
-                                                    'contentID'=>$existingContent->getID(),
-                                                    'nextAction'=>'viewProduct',
-                                                    'params'=>"id={$product->getIdentifier()}" ));
+                   
+                      
+                      <?php
+if ($this->objUser->isLoggedIn()) {
+    $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction'=>'ViewProduct', 'cancelParams'=>"id=$productID" ));
+    $editLink = new link($uri);
+    $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_edit_metadata', 'unesco_oer');;
+    $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';
+    $editLink->link = $linkText;
+    echo $editLink->show();
 
-                        echo $deleteContentLink->show();
-                        ?>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-add-to-adaptation.png" width="18" height="18" alt="Add to adaptation"></a>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15" align="Print"></a>
-                        <a href="#"><img src="skins/unesco_oer/images/icon-download.png" alt="download" width="18" height="18"></a> 
+    $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID, 'prevAction' => 'home'));
+    $deleteLink = new link($uri);
+    $deleteLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_delete', 'unesco_oer');;
+    $deleteLink->cssId = "deleteProduct";
+    $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
+    $deleteLink->link = $linkText;
+    echo $deleteLink->show();
+
+    $hiddenInput = new hiddeninput('hasAdaptations');
+    $hiddenInput->value = $product->hasAdaptation();
+    $hiddenInput->extra = "id='hasAdaptations'";
+    echo $hiddenInput->show();
+
+    $uri = $this->uri(array('action' => "createFeaturedProduct", 'id' => $productID));
+    $editLink = new link($uri);
+    $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_make_featured', 'unesco_oer');;
+    $linkText = '<img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Print" width="19" height="15">';
+    $editLink->link = $linkText;
+    echo $editLink->show();
+}
+
+//$products = $this->objDbProducts->getProductByID($productID);
+//echo $this->objProductUtil->populatebookmark($products);
+?>
+
                     </div>
                 </div>
                 
@@ -186,3 +235,24 @@
             
             </div>
       </div>
+         <script type="text/javascript">
+
+                        jQuery(document).ready(function(){
+//
+                            jQuery("a[id=deleteProduct]").click(function(){
+                                if(jQuery("#hasAdaptations").val()==true){
+                                    alert('This product has adaptations, you may not delete it.');
+                                } else {
+                                    var r=confirm( "Are you sure you want to delete this product?");
+                                    if(r== true){
+                                        window.location=this.href;
+                                    }
+                                }
+                                    return false;
+                                }
+
+                            );
+                        }
+//
+                    );
+                    </script>
