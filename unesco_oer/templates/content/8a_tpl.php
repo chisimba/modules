@@ -57,7 +57,7 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
                     <div class="groupSubLinksList">
 
                         <img src="skins/unesco_oer/images/icon-group-discussion.png" alt="Group discussion" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Group discussion</a></div>
+                        <div class="linksTextNextToSubIcons"><a href="?module=forum" class="greenTextBoldLink">Group discussion</a></div>
                     </div>
                     <div class="groupSubLinksList">
                         <img src="skins/unesco_oer/images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
