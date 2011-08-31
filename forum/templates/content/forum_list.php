@@ -43,7 +43,7 @@ $tblclass->attributes=" align='center'";
 $tblclass->cellspacing='0';
 $tblclass->cellpadding='5';
 $tblclass->border='0';
-$tblclass->width='99%';
+$tblclass->width='100%';
 
 $tblclass->startHeaderRow();
 $tblclass->addHeaderCell('&nbsp;', 10, 'center');
