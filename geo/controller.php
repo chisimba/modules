@@ -73,6 +73,7 @@ class geo extends controller
             $this->objSysConfig     = $this->getObject ( 'dbsysconfig', 'sysconfig' );
             $this->objUser          = $this->getObject('user', 'security');
             $this->objMongo         = $this->getObject('geomongo', 'mongo');
+            $this->objOps           = $this->getObject('geoops');
         }
         catch ( customException $e ) {
             customException::cleanUp ();
@@ -94,8 +95,22 @@ class geo extends controller
                 echo "nothing to do";
                 break;
                 
-            case 'getdata' :
-            
+            case 'getwikipedia' :
+                $lon          = $this->getParam('lon', NULL);
+                $lat          = $this->getParam('lat', NULL);
+                $radius       = $this->getParam('radius', 1500);
+                $objWikipedia = $this->objOps->getWikipedia($lon, $lat, $radius);
+                // parse wikipedia data
+                $this->objMongo->mongoWikipedia($objWikipedia);
+                break;
+                
+            case 'getflickr' :
+                $lon          = $this->getParam('lon', NULL);
+                $lat          = $this->getParam('lat', NULL);
+                $radius       = $this->getParam('radius', 1.5);
+                $objFlickr    = $this->objOps->getFlickr($lon, $lat, $radius);
+                // parse Flickr data
+                $this->objMongo->mongoFlickr($objFlickr);
                 break;
             
             case 'getbylonlat' :
@@ -171,7 +186,7 @@ class geo extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', NULL);
+        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', 'getwikipedia', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
