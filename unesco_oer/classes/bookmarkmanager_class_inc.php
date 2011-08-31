@@ -373,6 +373,16 @@ class bookmarkmanager extends dbtable {
 
             //javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname'); 
 
+               $thumbnail = '<img src="' . $product['thumbnail'] . '" width="79" height="101" >';
+               $producttitle = $product['title'];
+
+            $content .= "<div id='$divid' style= 'display:none'>
+                   
+                     <div class='bookthumb'> ". $thumbnail ."<br/> ". $producttitle . "
+    
+                            </div>";
+            
+            
 
             $form = new form('3a_comments_ui');
             $form->addToForm("Label * <br>");
@@ -383,16 +393,8 @@ class bookmarkmanager extends dbtable {
             $form->addToForm($button->show());
             $form->addToForm($cancelbtn->show());
             
-               $thumbnail = '<img src="' . $product['thumbnail'] . '" width="79" height="101">';
-               $producttitle = $product['title'];
-
-            $content .= "<div id='$divid' style= 'display:none'>
-                   
-                     <div class='bookthumb'> ". $thumbnail ." <br/> ". $producttitle . "
-    
-                            </div>".
-               
-                $form->show() ." 
+        
+              $content .=   $form->show() ." 
                                 </div>      
             ";
         }

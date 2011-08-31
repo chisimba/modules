@@ -306,7 +306,7 @@ $product->LoadProduct($chosenid);
      
             if   ($check == FALSE){
               
-                 if  ($parentid != null) // check if origional product was selected
+                 if  ($parentid != 'NULL') // check if origional product was selected
                  {
                      $existingContent = $content->getContentByContentID($temp[0]['parentid']);
                  } else 

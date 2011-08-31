@@ -598,6 +598,8 @@ class productutil extends object {
      */
     public function populateMostAdapted($product) {
         
+        
+        
          $origprouct = $this->objDbProducts->getProductByID($product['id']);  
         
         if ( $origprouct['deleted'] == '0'){
@@ -607,7 +609,7 @@ class productutil extends object {
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
         $CommentLink->cssClass = 'adaptationLinks';
-        $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+        $CommentLink->link = $this->objDbProducts->getNoOfAdaptations($product['id']) . ' Adaptations';
         $thumbnailPath = '';
 //        if (file_exists($product['institution_thumbnail']) && is_file($product['institution_thumbnail'])) {
 //            $thumbnailPath = $product['institution_thumbnail'];
