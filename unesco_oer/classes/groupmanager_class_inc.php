@@ -35,6 +35,9 @@ class groupmanager extends object {
         $forum = $this->objForum->insertSingle($forum_context, $forum_workgroup, $forum_name, $forum_description, $defaultForum, $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation);
     }
 
+
+
+
   
 }
 

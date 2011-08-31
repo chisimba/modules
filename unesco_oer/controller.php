@@ -1917,6 +1917,11 @@ class unesco_oer extends controller {
         $adminid = $this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
         $admin = $adminid;
         $rightList = $this->getParam('rightList');
+        $description_one=$this->getParam('description_one');
+        $description_two=$this->getParam('description_two');
+        $description_three=$this->getParam('description_three');
+        $description_four=$this->getParam('description_four');
+
 
         $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
         $results = $this->objThumbUploader->uploadThumbnail($path);
@@ -1925,6 +1930,7 @@ class unesco_oer extends controller {
         $checkFields = array(
             $name,
             //$confirmemail,
+            $description_one,
             $address,
             $city,
             $postalcode,
@@ -1956,7 +1962,7 @@ class unesco_oer extends controller {
             $this->setVarByRef('problems', $problems);
             return 'groupRegistrationForm_tpl.php';
         } else {
-            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail);
+            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail,$description_one,$description_two,$description_three,$description_four);
             $id = $this->objDbGroups->getLastInsertId();
             $this->objDbgroupInstitutions->add_group($id);
             foreach ($rightList as $array) {
@@ -1975,6 +1981,9 @@ class unesco_oer extends controller {
         
         return 'groupEditingForm_tpl.php';
     }
+
+
+
 
     function __groupMembersForm() {
         return 'groupmembers_tpl.php';
@@ -2000,6 +2009,11 @@ class unesco_oer extends controller {
         $loclat = $this->getParam('group_loclat');
         $loclong = $this->getParam('group_loclong');
         $rightList = $this->getParam('rightList');
+        $description_one=$this->getParam('description_one');
+        $description_two=$this->getParam('description_two');
+        $description_three=$this->getParam('description_three');
+        $description_four=$this->getParam('description_four');
+
 
         $prevousPath = $this->objDbGroups->getThumbnail($id);
 
@@ -2014,6 +2028,7 @@ class unesco_oer extends controller {
             $name,
             $address,
             $city,
+              $description_one,
             //$state,
             $postalcode,
             $website,
@@ -2046,7 +2061,7 @@ class unesco_oer extends controller {
             $this->setVarByRef('problems', $problems);
             return 'groupEditingForm_tpl.php';
         } else {
-            $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail);
+            $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail,$description_one,$description_two,$description_three,$description_four);
             foreach ($rightList as $array) {
                 if ($this->objDbgroupInstitutions->check_availableGroupInstitution($id, $array) != TRUE) {
                     $this->objDbgroupInstitutions->add_group_institutions($id, $array);
@@ -2419,6 +2434,9 @@ class unesco_oer extends controller {
         return "forum_newtopic.php";
     }
 
+
 }
+
+
 
 ?>

@@ -24,7 +24,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
         <!-- Left Colum -->
         <div class="groupsleftColumnDiv  tenPixelTopPadding">
             <div class="tenPixelPaddingLeft tenPixelPaddingRight">
-                <img width="78" height="78"  src="<?php echo $this->objDbGroups->getThumbnail($this->getParam('id'))?>" alt="Adaptation placeholder" class="smallAdaptationImageGrid"><h5 class="greenText">
+                <img src="<?php echo $this->objDbGroups->getThumbnail($this->getParam('id'))?>" alt="Adaptation placeholder" width="40" height="40" class="smallAdaptationImageGrid"><h5 class="greenText">
                     <?php
                     echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')));
                     ?>D</h5>
@@ -93,26 +93,20 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
         </div>
 
         <div class="groupsRightColumn tenPixelTopPadding">
-            <div class="groupOwnerImage">
+<!--           <div class="groupOwnerImage">
                 <img src="skins/unesco_oer/images/product-grid-product-cover-placeholder.jpg" width="79" height="101">
                 <br>
                 <span class="greenText fontBold">Owner:</span> <br>
-                <?php
-                 //$owner=$this->objDbgroups->getGroupOwnerID($this->getParam('id'));
-                
-                 //$owner=$this->objUseExtragetUserbyId($ownerId);
-
-                
-                ?>
+              
                 <br><br>
                 <span class="greenText fontBold">Administrators: <br></span>2<br><br>
 
                 <span class="greenText fontBold">Group members: <br></span>
-                <?php echo $this->ObjDbUserGroups->groupMembers($this->getParam('id'));
-                ?>
-            </div>
+             </div>-->
 <?php
- //$this->objGroupUtil->groupOwner( $this->getParam('id'));
+//echo $this->objDbGroups->getGroupName($this->getParam('id'));
+//echo $this->objDbGroups->getGroupOwner($this->getParam('id'));
+echo $this->objGroupUtil->groupOwner($this->getParam('id'));
 ?>
             <div class="groupDescription">
                 <div class="tenPixelPaddingLeft">
@@ -120,11 +114,15 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
                     echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')))
                     ?></h2><br>
                     <span class="greenText fontBold">Description</span>
-                    <li class="noPaddingList">Advertising</li>
 
+                    <?php
+                    echo  $this->objGroupUtil->groupDescription($this->getParam('id'));
+
+                    ?>
+<!--                    <li class="noPaddingList">Advertising</li>
                     <li class="noPaddingList">Online Journalism</li>
                     <li class="noPaddingList">Photjournalism</li>
-                    <li class="noPaddingList">Print writing and Design</li>
+                    <li class="noPaddingList">Print writing and Design</li>-->
                     <br>
                     <span class="greenText fontBold">Brief description: </span>
                     <?php

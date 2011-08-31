@@ -299,31 +299,47 @@ public function leaveGroup($id,$groupid){
 
 public function groupOwner($groupid){
     
-    $ownerId=$this->objDbgroups->getGroupOwnerID($groupid);
-//    echo $ownerId;
-//    die();
+    $ownerId=$this->objDbGroups->getGroupOwner($groupid);
     $owner_Details=$this->objUseExtra->getUserbyId($ownerId);
-    $owner_surname=$owner_Details['surname '];
-    $owner_name=$owner_Details['firstname'];
+    $owner_surname=$owner_Details[0]['surname'];
+    $owner_name=$owner_Details[0]['firstname'];
     $ownerExtraInfo=$this->objUseExtra->getUserExtraByID($ownerId);
-    $Owner_thumbnail=$ownerExtraInfo;
+    $group_thumbnail=$this->objDbGroups->getThumbnail($groupid);
     $groupMembers=$this->ObjDbUserGroups->groupMembers($groupid);
-
-
 
 
 
 
     $content.='
          <div class="groupOwnerImage">
-        <img src='.$Owner_thumbnail.' width="79" height="101">
-                            <br>
-                            <span class="greenText fontBold">Owner:</span> <br>'. $owner_name.''.'&nbsp;'.''.$owner_surname.'<br><br>
+        <img src='.$group_thumbnail.' width="79" height="101">
+                            <br><span class="greenText fontBold">Owner:</span> <br>
+                            '. $owner_name.''.'&nbsp;'.''.$owner_surname.'
+                                <br><br>
                             <span class="greenText fontBold">Administrators: <br></span>2<br><br>
 
                             <span class="greenText fontBold">Group members: <br></span>'. $groupMembers.'
                          </div>';
     return $content;
+}
+
+
+public function groupDescription($groupid){
+    $content='';
+
+   $content.='<li class="noPaddingList">'.$this->objDbGroups->getDescription_Line_one($groupid).'</li>';
+    if($this->objDbGroups->getDescription_Line_two($groupid)!=''){
+        $content.=' <li class="noPaddingList">'.$this->objDbGroups->getDescription_Line_one($groupid).'</li>';
+    }
+    if($this->objDbGroups->getDescription_Line_three($groupid)!=''){
+        $content.=' <li class="noPaddingList">'.$this->objDbGroups->getDescription_Line_one($groupid).'</li>';
+    }
+    if($this->objDbGroups->getDescription_Line_four($groupid)!=''){
+        $content.=' <li class="noPaddingList">'.$this->objDbGroups->getDescription_Line_one($groupid).'</li>';
+    }
+
+    return $content;
+
 }
 
 

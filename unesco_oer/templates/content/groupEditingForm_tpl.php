@@ -116,6 +116,51 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_website',
 $table->addCell($website->show());
 $table->endRow();
 
+
+//Descriprion line one
+$description_one = new textinput('description_one');
+$description_one ->size = 80;
+if ($mode == 'addfixup') {
+    $description_one->value = $this->getParam('description_one');
+
+    if ($this->getParam('description_one') == '') {
+        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_description_line', 'unesco_oer');
+    }
+}
+if (isset($userstring[1]) && $mode == 'add')
+{
+    $description_one->value = $userstring[1];
+}
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_one','unesco_oer').$required); // obj lang
+$table->addCell($description_one ->show());
+$table->endRow();
+//Descriprion line two
+$description_two = new textinput('description_two');
+$description_two->size = 80;
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_two','unesco_oer')); // obj lang
+$table->addCell($description_two->show());
+$table->endRow();
+//Descriprion line three
+$description_three = new textinput('description_three');
+$description_three->size = 80;
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_three','unesco_oer')); // obj lang
+$table->addCell($description_three->show());
+$table->endRow();
+//Descriprion line four
+$description_four= new textinput('description_four');
+$description_four->size = 80;
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_four','unesco_oer')); // obj lang
+$table->addCell($description_four->show());
+$table->endRow();
+
+
+
+
+
 //group desctription
 $editor = $this->newObject('htmlarea', 'htmlelements');
 $editor->name = 'description';

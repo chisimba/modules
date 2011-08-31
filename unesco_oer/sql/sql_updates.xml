@@ -184,9 +184,48 @@
                 <name>admin</name>
                 <type>text</type>
                 <length>32</length>
-             
-              
+                        
             </add>
+        </data>
+    </update>
+
+        <update>
+        <table>tbl_unesco_oer_userextra</table>
+        <version>0.104</version>
+        <description> added thumbnail field</description>
+        <data>
+            <add>
+                <name>thumbnail</name>
+                <type>text</type>
+                <length>255</length>
+             </add>
+        </data>
+    </update>
+        <update>
+        <table>tbl_unesco_oer_groups</table>
+        <version>0.106</version>
+        <description>descption lines field</description>
+        <data>
+            <add>
+                <name>description_one</name>
+                <type>text</type>
+                <length>255</length>
+                  </add>
+                <add>
+                 <name>description_two</name>
+                <type>text</type>
+                <length>255</length>
+                      </add>
+                       <add>
+                 <name>description_three</name>
+                <type>text</type>
+                <length>255</length>
+                      </add>
+                        <add>
+                 <name>description_four</name>
+                <type>text</type>
+                <length>255</length>
+             </add>
         </data>
     </update>
 </updates>

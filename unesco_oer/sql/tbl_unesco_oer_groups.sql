@@ -22,6 +22,10 @@ $fields = array(
                 'country' =>array('type' =>'text','length'=>255),
                 'admin'=>array('type'=>'text','length'=>32),
                 'created_on'=> array('type' => 'timestamp'),
+                'description_one'=>array('type'=>'text','length'=>255),
+                'description_two'=>array('type'=>'text','length'=>255),
+                'description_three'=>array('type'=>'text','length'=>255),
+                'description_four'=>array('type'=>'text','length'=>255),
                 'thumbnail' =>array('type' => 'text', 'length' =>255)
                         
 		

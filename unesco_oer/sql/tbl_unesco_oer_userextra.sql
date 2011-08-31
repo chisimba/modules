@@ -18,7 +18,7 @@ $fields = array(
                 'typeoccapation' => array('type' => 'text','length' => 255),
                 'workingphone' =>array('type' =>'text','length'=>255),
                 'description' =>array('type' =>'text','length'=>255),
-               'groupadmin'=>array('type'=>'text','length'=>32),
+                'thumbnail'=>array('type'=>'text','length'=>255),
                 'websitelink' => array('type' => 'text','length' => 255)
 
             
