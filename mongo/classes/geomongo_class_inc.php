@@ -140,20 +140,6 @@ class geomongo extends object
         return json_encode($resultset);
     }
     
-    private function jsonCursor($cursor) {
-        $ret = new StdClass();
-        $resultno = 1;
-        foreach ($cursor as $obj) {
-            $ret->$resultno = array('location' => $obj['loc'], 'elevation' => $obj['elevation'][0], 'name' => $obj['name'][0], 
-                                    'countrycode' => $obj['countrycode'][0], 'longitude' => $obj['longitude'][0], 'latitude' => $obj['latitude'][0],
-                                    'timezone' => $obj['timezone'][0], 'alternatenames' => $obj['alternatenames'][0], 'asciiname' => $obj['asciiname'][0],
-                                    'population' => $obj['population'][0]); 
-            $resultno++;
-        }
-        
-        return $ret;
-    }
-    
     public function getRadiusMiles($lon, $lat, $radius = 3) {
         $radiusOfEarth = 3956; //avg radius of earth in miles
         $cursor = $this->collection->find(
@@ -187,6 +173,43 @@ class geomongo extends object
         
         $resultset = $this->jsonCursor($cursor);
         return json_encode($resultset);
+    }
+    
+    public function mongoWikipedia($objWikipedia) {
+        $wikipedia = new stdClass();
+        $result = 0;
+        foreach($objWikipedia->articles as $art) {
+            $id = $result;
+            $lon = $art->lng;
+            $lat = $art->lat;
+            $type = $art->type;
+            $title = $art->title;
+            $url = $art->url;
+            $distance = $art->distance;
+            $data = array('id' => $id, 'lon' => $lon, 'lat' => $lat, 'type' => $type, 'title' => $title, 'url' => $url, 'distance' => $distance);
+            $wikipedia->$id = $data;
+            $result++;
+        }
+        
+        var_dump(json_encode($wikipedia));
+    }
+    
+    public function mongoFlickr($objFlickr) {
+        var_dump($objFlickr);
+    }
+    
+    private function jsonCursor($cursor) {
+        $ret = new StdClass();
+        $resultno = 1;
+        foreach ($cursor as $obj) {
+            $ret->$resultno = array('location' => $obj['loc'], 'elevation' => $obj['elevation'][0], 'name' => $obj['name'][0], 
+                                    'countrycode' => $obj['countrycode'][0], 'longitude' => $obj['longitude'][0], 'latitude' => $obj['latitude'][0],
+                                    'timezone' => $obj['timezone'][0], 'alternatenames' => $obj['alternatenames'][0], 'asciiname' => $obj['asciiname'][0],
+                                    'population' => $obj['population'][0]); 
+            $resultno++;
+        }
+        
+        return $ret;
     }
 
     /**
