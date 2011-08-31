@@ -4,7 +4,7 @@
     <div class="pageBreadCrumb"></div>
     <fieldset>
         <legend><?php $fieldSetHeading = $this->objLanguage->languageText('mod_unesco_oer_control_panel_fieldset', 'unesco_oer');
-        echo $fieldSetHeading; ?></legend>
+echo $fieldSetHeading; ?></legend>
         <br><br>
         <center>
             <table width="80%"  cellpadding="0" cellspacing="0" class="groupListingTable">
@@ -17,7 +17,7 @@
                             $productsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_products_title', 'unesco_oer');
                             $abLink->link = '<img src="skins/unesco_oer/images/products.png" alt="Adaptation placeholder" >
                             <br/>  
-                            <br/>  ' .  $productsTitle  ;
+                            <br/>  ' . $productsTitle;
                             echo '&nbsp;' . $abLink->show();
                             ?> 
 
@@ -28,14 +28,15 @@
                         <div id="controlPanelCell">
 
                             <?php
-                              if($this->objUser->isAdmin()){
+                            if ($this->objUser->isAdmin()) {
 
-                            $link = new link($this->uri(array("action" => 'userListingForm')));
-                            $usersTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_users_title', 'unesco_oer');
-                            $link->link = '<img src="skins/unesco_oer/images/users.png" alt="Institutions" >
+                                $link = new link($this->uri(array("action" => 'userListingForm')));
+                                $usersTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_users_title', 'unesco_oer');
+                                $link->link = '<img src="skins/unesco_oer/images/users.png" alt="Institutions" >
                             <br/> 
                             <br/>  ' . $usersTitle;
-                            echo '&nbsp;' . $link->show();}
+                                echo '&nbsp;' . $link->show();
+                            }
                             ?>
 
                         </div>
@@ -45,41 +46,44 @@
                     <td width="269">
                         <div id="controlPanelCell">
                             <?php
-                            if($this->objUser->isAdmin()){
+                            if ($this->objUser->isAdmin()) {
                                 ?>
-                            <img src="skins/unesco_oer/images/users.png" alt="Groups" >
-                            <br/>
-                            <br/>
-                            <a href="?module=groupadmin" class="prifileLinks">
+                                <img src="skins/unesco_oer/images/users.png" alt="Groups" >
+                                <br/>
+                                <br/>
+                                <a href="?module=groupadmin" class="prifileLinks">
+                                    <?php
+                                    $groupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_groups_title', 'unesco_oer');
+                                    echo $groupsTitle;
+                                    ?>
+                                </a>
                                 <?php
-                                $groupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_groups_title', 'unesco_oer');
-                                echo $groupsTitle;
-                                ?>
-                            </a>
-                            <?php
-                            }else{}
+                            } else {
+                                
+                            }
                             ?>
-                           
-                      </div>
+
+                        </div>
 
                     <td width="269">
                         <div id="controlPanelCell">
 
                             <?php
-                             if($this->objUser->isAdmin()){
-                            $link = new link($this->uri(array("action" => 'groupListingForm',"page"=>'10a_tpl.php')));
-                            $groupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_product_groups_title', 'unesco_oer');
-                            
-                            $link->link = '<img src="skins/unesco_oer/images/institutions.png" alt="Product groups" height = "55" width = "55">
+                            if ($this->objUser->isAdmin()) {
+                                $link = new link($this->uri(array("action" => 'groupListingForm', "page" => '10a_tpl.php')));
+                                $groupsTitle = $this->objLanguage->languageText('mod_unesco_oer_control_panel_product_groups_title', 'unesco_oer');
+
+                                $link->link = '<img src="skins/unesco_oer/images/institutions.png" alt="Product groups" height = "55" width = "55">
                             <br/> <br/>
                             <br/> ' . $groupsTitle;
-                            echo '&nbsp;' . $link->show();}
-                             ?>
+                                echo '&nbsp;' . $link->show();
+                            }
+                            ?>
 
-                             </div>
-                        
-                         </td>
-                    
+                        </div>
+
+                    </td>
+
                 </tr>
                 <tr>
                     <td>
@@ -87,14 +91,15 @@
                         <div id="controlPanelCell">
 
                             <?php
-                             if($this->objUser->isAdmin()){
-                            $link = new link($this->uri(array("action" => 'viewInstitutions')));
-                            $institutionsTitle = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
+                            if ($this->objUser->isAdmin()) {
+                                $link = new link($this->uri(array("action" => 'viewInstitutions')));
+                                $institutionsTitle = $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer');
 
-                            $link->link = ' <img src="skins/unesco_oer/images/institutions.png" alt="Institutions" height = "55" width = "55">
+                                $link->link = ' <img src="skins/unesco_oer/images/institutions.png" alt="Institutions" height = "55" width = "55">
                             <br/> 
                             <br/> ' . $institutionsTitle;
-                            echo '&nbsp;' . $link->show();}
+                                echo '&nbsp;' . $link->show();
+                            }
                             ?> 
 
                         </div>
@@ -107,7 +112,7 @@
                             <?php
                             $link = new link($this->uri(array("action" => 'viewProductThemes')));
                             $themesTitle = $this->objLanguage->languageText('mod_unesco_oer_product_themes', 'unesco_oer');
-                            
+
                             $link->link = '<img src="skins/unesco_oer/images/product_theme.png" alt = "Themes" height = "55" width = "55">
                             <br/>
                             <br/> ' . $themesTitle;
@@ -122,7 +127,7 @@
                             <?php
                             $link = new link($this->uri(array("action" => 'viewLanguages')));
                             $languagesTitle = $this->objLanguage->languageText('mod_unesco_oer_languages', 'unesco_oer');
-                            
+
                             $link->link = '<img src="skins/unesco_oer/images/large-icon-languages.png" alt = "Languages" height = "55" width = "55">
                             <br/>
                             <br/> ' . $languagesTitle;
@@ -157,6 +162,20 @@
                             $link->link = '<img src="skins/unesco_oer/images/product-type.png" alt = "Product Type" height = "55" width = "55">
                             <br/>
                             <br/> ' . $productTypes;
+                            echo '&nbsp;' . $link->show();
+                            ?>
+                        </div>
+                    </td>
+
+                    <td width="269">
+                        <div id="controlPanelCell">
+                            <?php
+                            $link = new link($this->uri(array(),"modulecatalogue"));
+                            
+
+                            $link->link = '<img src="skins/unesco_oer/images/advancedsettings.png" alt = "Product Type" height = "55" width = "55">
+                            <br/>
+                            <br/> Module Catalogue';
                             echo '&nbsp;' . $link->show();
                             ?>
                         </div>

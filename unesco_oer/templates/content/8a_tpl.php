@@ -26,7 +26,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
         <!-- Left Colum -->
         <div class="groupsleftColumnDiv  tenPixelTopPadding">
             <div class="tenPixelPaddingLeft tenPixelPaddingRight">
-                <img src="<?php echo $this->objDbGroups->getThumbnail($this->getParam('id'))?>" alt="Adaptation placeholder" class="smallAdaptationImageGrid"><h5 class="greenText">
+                <img width="78" height="78"  src="<?php echo $this->objDbGroups->getThumbnail($this->getParam('id'))?>" alt="Adaptation placeholder" class="smallAdaptationImageGrid"><h5 class="greenText">
                     <?php
                     echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')));
                     ?>D</h5>
@@ -75,7 +75,7 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
                     <div class="groupSubLinksList">
 
                         <img src="skins/unesco_oer/images/icon-group-calendar.png" alt="Group Calendar" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Group calendar</a></div>
+                        <div class="linksTextNextToSubIcons"><a href="?module=calendar" class="greenTextBoldLink">Group calendar</a></div>
                     </div>
                     <div class="groupSubLinksList">
                         <img src="skins/unesco_oer/images/icon-group-files.png" alt="Group Files" width="18" height="18" class="smallLisitngIcons">
