@@ -97,11 +97,11 @@ $('#upload').live('click', function() {
     
     
     <?php
-
+$output = "Create and Edit Sections:";
 echo '<div id="sections">
     
 <fieldset>
-<legend> Edit Sections</legend>
+<legend>'.$output.'</legend>
 
 <div class="leftColumnDiv" >';
 

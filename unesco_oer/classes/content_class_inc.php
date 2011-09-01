@@ -87,7 +87,9 @@ class content extends object
      */
     public function showInput($productID, $prevAction = NULL)
     {
-        return "showInput has not been defined for {$this->getType()}!";
+        $objLanguage = $this->getObject('language', 'language');
+        $message = $objLanguage->languageText('mod_unesco_oer_content_error1', 'unesco_oer');
+        return  "$message {$this->getType()}";
     }
 
     /**This returns the input for a given content ID
@@ -402,7 +404,9 @@ class content extends object
     }
     
     public function showReadOnlyInput(){
-        return "Nothing to show!";
+        $objLanguage = $this->getObject('language', 'language');
+        $message = $objLanguage->languageText('mod_unesco_oer_content_error2', 'unesco_oer');
+        return  "$message";
     }
 
     public function delete(){

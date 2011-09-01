@@ -59,15 +59,13 @@ class contentmanager extends object {
      */
 
     public function showInput($prevAction = NULL) {
+        $objLanguage = $this->getObject('language', 'language');
+
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
 
-        $heading = new htmlHeading();
-        $heading->cssClass = "greytext";
-        $heading->str = 'Create and Edit contents of product:';
-        $heading->type = 1;
-
-        $buttonSubmit = new button('done', 'Done');
+        $buttonSubmitCaption = $objLanguage->languageText('mod_unesco_oer_done','unesco_oer');
+        $buttonSubmit = new button('done', $buttonSubmitCaption);
         $actionURI = $this->uri(array('action' => 'ViewProduct', 'id' => $this->getProductID()));
         $buttonSubmit->setOnClick('javascript: window.location=\'' . $actionURI . '\'');
 
@@ -88,10 +86,8 @@ class contentmanager extends object {
                 </ul>
             ";
 
-        $output = '<div id="productmetaheading">';
-        $output .= $heading->show();
-        $output .= '</div>';
-        $output .= "<div class='root' >$instructions</div>";
+
+        $output = "<div class='root' >$instructions</div>";
         $output .= $buttonSubmit->show();
         $output .= "<div class='product_id' id='{$this->getProductID()}'></div>";
 

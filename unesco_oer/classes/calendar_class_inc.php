@@ -35,6 +35,7 @@ class calendar extends content
     }
 
     public function showInput($productID, $prevAction = NULL) {
+        $objLanguage = $this->getObject('language','language');
         $pair = $option = '';
         if ($this->getID()) {
             $pair = $this->getPairString();
@@ -57,28 +58,27 @@ class calendar extends content
 
         $fieldName = 'title';
         $textinput = new textinput($fieldName);
-         $textinput->cssClass = "required";
+        $textinput->cssClass = "required";
         $textinput->setValue($this->_title);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell('Title');
+        $table->addCell($objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
         $table->addCell($textinput->show());
         $table->endRow();
 
-         $buttonSubmit = new button('upload', 'Save');
+        $buttonSubmitCaption = $objLanguage->languageText('mod_unesco_oer_save', 'unesco_oer');
+        $buttonSubmit = new button('upload', $buttonSubmitCaption);
         $buttonSubmit->cssId = "upload";
-        //$action = "";
-        //$buttonSubmit->setOnClick('javascript: ' . $action);
         $buttonSubmit->setToSubmit();
 
         $form_data->addToForm($table->show() . $buttonSubmit->show());
 
         if (strcmp($option, 'saveedit') == 0){
-            $buttonDelete = new button('btn_delete', 'Delete');
+            $buttonDeleteCaption = $objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer');
+            $buttonDelete = new button('btn_delete', $buttonDeleteCaption);
              $uri2 = $this->uri(array(
                 'action' => "saveContent",
                 'productID' => $productID,
@@ -89,7 +89,8 @@ class calendar extends content
             $form_data->addToForm($buttonDelete->show());
         }
 
-        $buttonCancel = new button('cancel','Cancel');
+        $buttonCancelCaption = $objLanguage->languageText('mod_unesco_oer_product_cancel_button', 'unesco_oer');
+        $buttonCancel = new button('cancel',$buttonCancelCaption);
         $action = "$('.root').html('');";
         $buttonCancel->setOnClick('javascript: ' . $action);
         $form_data->addToForm($buttonCancel->show());
