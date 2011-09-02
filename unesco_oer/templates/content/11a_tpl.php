@@ -60,7 +60,7 @@ $this->loadClass('textinput', 'htmlelements');
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
                             <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
-                                    Link to institution</a></div>
+                                    </a></div>
                         </div>
                           <div id="showhide">
                               <ul>
