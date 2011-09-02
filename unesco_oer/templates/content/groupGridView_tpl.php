@@ -186,11 +186,11 @@ echo $this->objGroupUtil->groupPerPage();
 
 
 
-<!--
+
                     <div class="gridViewGroupBackgroundColor">
                     <div class="paddingGroubGridListingTable">
                         <table class="groupListingTable" cellspacing="0" cellpadding="0">
-                            <td>-->
+                            <td>
 
                <?php
                 $objTable = $this->getObject('htmltable', 'htmlelements');
@@ -222,10 +222,10 @@ echo $this->objGroupUtil->groupPerPage();
                echo $objTable->show();
                 ?>
 
-<!--                                             </td>
+                                             </td>
                            </table>
                       </div>
-                       </div>-->
+                       </div>
 
             </div>
 <!--             Right column DIv -->

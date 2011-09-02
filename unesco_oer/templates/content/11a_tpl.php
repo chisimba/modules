@@ -59,12 +59,46 @@ $this->loadClass('textinput', 'htmlelements');
                       </div>
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Link to institution</a></div>
-
+                            <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
+                                    Link to institution</a></div>
                         </div>
+                          <div id="showhide">
+                              <ul>
+                                <li>
+                                    Use tree on the left to navigate existing conents
+                                </li>
+                                <li>
+                                    Click on content in order to edit it.
+                                </li>
+                                <li>
+                                    Click on the 'Create new ...' options to create new contents.
+                                </li>
+                                <li>
+                                    All contents have the option to delete when being edited.
+                                </li>
+                            </ul>
+                          </div>
                         <div class="saveCancelButtonHolder">
                             <div class="buttonSubmit"><a href=""><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18"></a></div>
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Join Group</a>
+                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">
+                                    <?php
+                                    $currLoggedInID = $this->objUser->userId();
+                                    $idUser = $this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
+                                    if ($this->ObjDbUserGroups->ismemberOfgroup($idUser, $this->getParam('id'))) {
+
+                                        $joinGroupLink = new link($this->uri(array('action' => "11a")));
+                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->cssId = 'memberofgroup';
+                                    } else {
+
+                                        $joinGroupLink = new link($this->uri(array('action' => "joingroup",'join'=>'join', 'id' => $this->getParam('id'), "page" => '10a_tpl.php')));
+                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->cssId = 'joingroup';
+                                    }
+                                    $joinGroupLink->cssClass = 'greenTextBoldLink';
+                                    echo $joinGroupLink->show();
+                                    ?>
+                                </a>
                             <span class="greenText">|&nbsp;</span></div>
                         </div>
                       </div>
@@ -328,9 +362,49 @@ $this->loadClass('textinput', 'htmlelements');
                             </div>
                         </div>
                     </div>
-   
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+    jQuery("a[id=joingroup]").click(function(){
+
+        var r=confirm( "Are you sure you want to join this group?");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+);
+
+}
+);
+
+jQuery(document).ready(function(){
+
+    jQuery("a[id=memberofgroup]").click(function(){
+
+        var r=confirm( "Your are a member of this group\n you can not join again....!!!");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
 
 
+);
+}
+);
+
+$(document).ready(function(){
+                              $('#instLink').click(function(){
+                                $('#showhide').slideToggle();
+                                $('.greenTextBoldLink').atrib('class','greyText');
+
+                  });
 
 
+});
 
+                     </script>

@@ -198,62 +198,24 @@ $this->loadClass('textinput', 'htmlelements');
 
  $start=1;
  $limit=2;
+ $Totalgroups = $this->objDbGroups->getAllGroups();
 $groups=$this->objDbGroups->getgroups($start, $limit);
-
 $objTable = $this->getObject('htmltable', 'htmlelements');
 $objTable->cssClass = "darkGreyColour";
 foreach ($groups as $group) {
+
     $objTable->startRow();
-    $objTable->addCell($this->objGroupUtil->content($group['id']));
+    $objTable->addCell($this->objGroupUtil->content($group));
     $objTable->endRow();
     }
     echo $objTable->show();
     $start=$limit;
     $limit=$limit*2;
-$groups=$this->objDbGroups->getgroups($start, $limit);
-
-
-
-
-
-
-//     $content = '';
-//    $Institution = $this->objDbGroups->getgroups($start, $limit);
-//    if (count($Institution) > 0) {
-//        foreach ($Institution as $Institutions) {
-//            //$institutionGUI->getInstitution($Institutions['id']);
-//
-//            $this->objGroupUtil->content($group);
-//
-//
-//            $institutionLink = new link($this->uri(array("action" => '11a','id' =>$Institutions['id'])));
-//            $institutionLink->cssClass = 'darkGreyColour';
-//            $institutionLink->link = '<img align="top"  width="45" height="49" src="' .$Institutions['thumbnail']. '" />';
-//           $content.='
-//            <div id="institutions"> ' . $institutionLink->show() . '&nbsp;&nbsp;' .$Institutions['description'] . '<br/>
-//
-//
-//
-//
-//
-//
-//<br/>
-//           </div> ';
-//        }
-//    }
-   // echo $content;
-    $start=$limit;
-    $limit=$start+$start;
-
-
- 
-
- $groups = $this->objDbGroups->getAllGroups();
- $totalgroup=count($groups);
-
- echo $this->objPagination->getPaginationString(1,$totalgroup,5,3,"?module=unesco_oer&action=groupList&page=10a_tpl.php");
-
-
+ $totalgroup=count($Totalgroups);
+ echo $this->objPagination->getPaginationString(1,$totalgroup,2,2,"?module=unesco_oer&action=groupList&page=10a_tpl.php");
+ $groups=$this->objDbGroups->getgroups($start, $limit);
+ $start=$limit;
+ $limit=$start+$start;
 
 
 

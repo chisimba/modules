@@ -1875,11 +1875,14 @@ class unesco_oer extends controller {
     }
 
     function __joinGroup() {
-
         $currLoggedInID = $this->objUser->userId();
         $id = $this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
         $this->ObjDbUserGroups->joingroup($id, $this->getParam('id'));
+//        if (strcmp($this->getParam('join'),'join')==0){
+//            return $this->__11a();
+//        }else{
         return $this->__10();
+   // }
     }
 
     function __leaveGroup() {
