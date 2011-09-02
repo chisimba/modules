@@ -331,7 +331,7 @@ class content extends object
                       }
                       else{
                             $node = new treenode(array(
-                                                        'text' => $this->getTitle() . $hiddenInput->show(),
+                                                        'text' => $title . $hiddenInput->show(),
                                                    //     'cssClass' => ($highlighted ? 'HL' : ''),                                                       
                                                          'link' => $link,
                                                         'icon' => $icon,
