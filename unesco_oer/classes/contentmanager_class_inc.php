@@ -178,8 +178,12 @@ class contentmanager extends object {
         }
         if ($editable) {
             foreach ($this->_content_types as $key => $value) {
+                $option = "[New $value]";
+                if (strlen($option) > 15) {
+                    $option = substr($option, 0, 12) . '...';
+                }
                 $menu->addItem(new treenode(array(
-                            'text' => "[Create New $value]",
+                            'text' => $option,
                             'link' => "#", 'icon' => 'icon-add-to-adaptation.png',
                             'expandedIcon' => $expandedIcon,
                             'expanded' => TRUE),

@@ -311,12 +311,16 @@ class content extends object
         if ($compare){
             $link = $this->getCompareLink($test,$this->getID());
         }
-       
+
+        $title = $this->getTitle();
+        if (strlen($title) > 15) {
+            $title = substr($title, 0, 12) . '...';
+        }
 
         // Makes tree a link if not editing when adding product metadata
         if ($editable){
                         $node = new treenode(array(
-                                                        'text' => $this->getTitle(),
+                                                        'text' => $title,
                                                         'link' => "#", 'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
                                                         'expanded' => $this->hasContents()),
@@ -348,8 +352,13 @@ class content extends object
 
         if ($editable){
             foreach ($this->_content_types as $class => $description) {
+                $option = "[New $description]";
+                if (strlen($option) > 15) {
+                    $option = substr($option, 0, 12) . '...';
+                }
+
                 $node->addItem(new treenode(array(
-                                                'text' => "[Create New $description]",
+                                                'text' => $option,
                                                 'link' => "#",
                                                 'icon' => 'icon-add-to-adaptation.png',
                                                 'expandedIcon' => $expandedIcon,
