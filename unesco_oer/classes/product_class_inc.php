@@ -1494,9 +1494,14 @@ class product extends object {
     }
 
     function getInstitutionName() {
-        $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
-        $institution = $objInstitutionManager->getInstitution($this->getInstitutionID());
-        return $institution->getName();
+        $institutionID = $this->getInstitutionID();
+        if (!empty ($institutionID)){
+            $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+            $institution = $objInstitutionManager->getInstitution($institutionID);
+            return $institution->getName();
+        } else {
+            return 'No Institution Linked';
+        }
     }
 
     function getInstitution() {
