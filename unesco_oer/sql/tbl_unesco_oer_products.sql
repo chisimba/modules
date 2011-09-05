@@ -20,7 +20,6 @@ $fields = array(
                 'creator' => array('type' => 'text','length' => 32),
                 'contacts'=>array('type'=>'text'),  //unesco contacts
                 'publisher' =>array('type' =>'text','length'=>255),
-                'related_language' => array ('type' => 'text'), //consider using key to relate all translations
                 'other_contributors' => array ('type' => 'text'),
                 'format'=> array('type' => 'text','length' => 32),
                 'coverage' => array('type' => 'text', 'length'=>255),
