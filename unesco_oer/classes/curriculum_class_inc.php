@@ -89,6 +89,9 @@ class curriculum extends content {
         $table->addCell($textinput->show());
         $table->endRow();
 
+        
+        
+        
         $fieldName = 'forward';
         $editor = $this->newObject('htmlarea', 'htmlelements');
       
