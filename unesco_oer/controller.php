@@ -1916,9 +1916,7 @@ class unesco_oer extends controller {
         $description = $this->getParam('description');
         $loclat = $this->getParam('group_loclat');
         $loclong = $this->getParam('group_loclong');
-        $currLoggedInID = $this->objUser->userId();
-        $adminid = $this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
-        $admin = $adminid;
+        $admin = $this->objUser->userId();
         $rightList = $this->getParam('rightList');
         $description_one=$this->getParam('description_one');
         $description_two=$this->getParam('description_two');

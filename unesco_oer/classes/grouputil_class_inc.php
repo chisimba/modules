@@ -213,16 +213,32 @@ public function groupAdaptation($groupid){
     if(count($arrays)>0){
         foreach($arrays as $array){
         $productID=$array['product_id'];
-        $Thumbnail=$this->objDbGroups->getAdaptedProductThumbnail($productID);
+
+        $product = $this->newObject('product', 'unesco_oer');
+        $product->loadProduct($productID);
+        $language = $product->getLanguageName();
+        $institution=$product->getInstitutionName();
+        $institutionId=$product->getInstitutionID();
+        //$Thumbnail=$this->objDbGroups->getAdaptedProductThumbnail($productID);
+        $Thumbnail =  $product->getThumbnailPath();
+
+        $Link=new link($this->uri(array("action" =>'ViewProduct','id'=>$productID,"page"=>'10a_tpl.php')));
+        $Link->link= '<img src="'.$Thumbnail.' "alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
+
         $Title=$this->objDbGroups->getAdaptedProductTitle($productID);
+        $TittleLink=new link($this->uri(array("action" =>'ViewProduct','id'=>$productID,"page"=>'10a_tpl.php')));
+        $TittleLink->link=$Title;
+
+        $InstitutionLink=new link($this->uri(array("action" =>'4','institutionId'=>$institutionId,"page"=>'10a_tpl.php')));
+        $InstitutionLink->link=$institution;
 
 
     $content.='              <div class="discussionList">
-                            <img src="'.$Thumbnail.' "alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                            '.$Link->show().'
                             <div class="textNextToGroupIcon">
-                             <h2>'.$Title.'</h2>
-                             Institution : <a href="#" class="greyTextLink"></a><br>
-                             Adapted in : <a href="#" class="bookmarkLinks"></a>
+                             <h2>'.$TittleLink->show().'</h2>
+                             Institution : <a href="#" class="greyTextLink">'.$InstitutionLink->show().'</a><br>
+                             Adapted in : <a href="#" class="bookmarkLinks">'. $language.'</a>
                             </div>
                         </div>';
     }
