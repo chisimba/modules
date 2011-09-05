@@ -185,7 +185,7 @@ $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." Submi
 $button->setOnClick('javascript: ' . $action);
 
 
-$Cancelbutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
+$Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 
 $form->extra = 'enctype="multipart/form-data"';
 $form->addToForm('<p align="right">'.$button->show().$Cancelbutton->show().'</p>');
@@ -557,12 +557,14 @@ $(document).ready(function(){
 
 });
 
-$('button[name=submitform]').click(
+$('button[name=cancelform]').click(
     function() {
 //        window.location ='index.php?module=unesco_oer&action=11a&id=_13858_1315227715&page=10a_tpl.php';
     $('#showhide').slideToggle();
     }
 );
+
+
 
 
 
