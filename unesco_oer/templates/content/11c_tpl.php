@@ -52,12 +52,194 @@ $this->loadClass('textinput', 'htmlelements');
                       </div>
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Link to institution</a></div>
+                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Link to institution</a>
+                                                      <div id="showhide" style="display: none;">
+<!--                              <ul>
+                                <li>
+                                    Use tree on the left to navigate existing conents
+                                </li>
+                                <li>
+                                    Click on content in order to edit it.
+                                </li>
+                                <li>
+                                    Click on the 'Create new ...' options to create new contents.
+                                </li>
+                                <li>
+                                    All contents have the option to delete when being edited.
+                                </li>
+                            </ul>-->
+
+
+<?php
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+
+
+$this->loadClass('form', 'htmlelements');
+$this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('htmltable','htmlelements');
+$this->loadClass('textinput','htmlelements');
+$this->loadClass('label', 'htmlelements');
+$this->loadClass('fieldset','htmlelements');
+
+// setup and show heading
+$header = new htmlheading();
+$header->type = 1;
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_group_link_institution', 'unesco_oer');
+echo '<div style="padding:10px;">'.$header->show();
+$uri=$this->uri(array('action'=>'saveNewGroup'));
+$form = new form ('register', $uri);
+$table = $this->newObject('htmltable', 'htmlelements');
+$table->width = '100%';
+$table->border = '0';
+$tableable->cellspacing = '0';
+$table->cellpadding = '2';
+
+$table = $this->newObject('htmltable', 'htmlelements');
+
+$user_current_membership = $this->objDbGroups->getGroupInstitutions($this->getParam('id'));
+$currentMembership = array();
+$availablegroups = array();
+$groups = $this->objDbInstitution->getAllInstitutions();
+foreach ($groups as $group) {
+    if (count($user_current_membership) > 0) {
+        foreach ($user_current_membership as $membership) {
+            if($membership['institution_id'] !=NULL){
+            if (strcmp($group['id'], $membership['institution_id']) == 0 ) {
+                array_push($currentMembership, $group);
+            }else {
+                array_push($availablegroups, $group);
+            }}
+        }
+    } else {
+        array_push($availablegroups, $group);
+    }
+}
+
+$objSelectBox = $this->newObject('selectbox','htmlelements');
+$objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
+$objSelectBox->insertLeftOptions(
+                        $availablegroups,
+                        'id',
+                        'name' );
+$objSelectBox->insertRightOptions(
+                               $currentMembership,
+                               'id',
+                               'name');
+
+$tblLeft = $this->newObject( 'htmltable','htmlelements');
+$objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
+//Construct tables for right selectboxes
+$tblRight = $this->newObject( 'htmltable', 'htmlelements');
+$objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
+//Construct tables for selectboxes and headings
+$tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
+$tblSelectBox->width = '90%';
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
+$tblSelectBox->endRow();
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
+    $tblSelectBox->addCell( $tblRight->show(), '100pt' );
+$tblSelectBox->endRow();
+
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
+$table->addCell($tblSelectBox->show());
+$table->endRow();
+
+
+$fieldset = $this->newObject('fieldset', 'htmlelements');
+$fieldset->legend = $this->objLanguage->languageText('mod_unesco_oer_group_fieldset4', 'unesco_oer');
+$fieldset->contents = $table->show();
+
+$form->addToForm($fieldset->show());
+$form->addToForm('<br />');
+
+$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
+$action = $objSelectBox->selectAllOptions($objSelectBox->objRightList )." SubmitProduct();";
+$button->setOnClick('javascript: ' . $action);
+
+$Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
+
+$form->extra = 'enctype="multipart/form-data"';
+$form->addToForm('<p align="right">'.$button->show().$Cancelbutton->show().'</p>');
+
+if ($mode == 'addfixup') {
+
+    foreach ($problems as $problem)
+    {
+        $messages[] = $this->__explainProblemsInfo($problem);
+    }
+
+}
+
+
+if ($mode == 'addfixup' && count($messages) > 0) {
+    echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_userdetails_infonotsavedduetoerrors', 'userdetails').'</span>';
+
+    echo '<ul>';
+        foreach ($messages as $message)
+        {
+            if ($message != '') {
+                echo '<li class="error">'.$message.'</li>';
+            }
+        }
+
+    echo '</ul></li></ul>';
+}
+
+echo $form->show();
+
+echo '</div>';
+
+?>
+<script type="text/javascript">
+function SubmitProduct()
+{
+    var objForm = document.forms['register'];
+    //objForm.elements[element].value = value;
+    objForm.submit();
+}
+</script>
+                            </div>
 
                         </div>
                         <div class="saveCancelButtonHolder">
-                            <div class="buttonSubmit"><a href=""><img src="images/icon-join-group.png" alt="Join Group" width="18" height="18"></a></div>
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Join Group</a>
+                            <div class="buttonSubmit"><a href=""><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18"></a></div>
+                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">
+                                              <?php
+                                    $userId = $this->objUser->userId();
+                                 
+                                    if ($this->ObjDbUserGroups->ismemberOfgroup($userId , $this->getParam('id'))) {
+
+                                        $joinGroupLink = new link($this->uri(array('action' => "11a")));
+                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->cssId = 'memberofgroup';
+                                    } else {
+
+                                        $joinGroupLink = new link($this->uri(array('action' => "joingroup",'join'=>'join', 'id' => $this->getParam('id'), "page" => '10a_tpl.php')));
+                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->cssId = 'joingroup';
+                                    }
+                                    $joinGroupLink->cssClass = 'greenTextBoldLink';
+                                    echo $joinGroupLink->show();
+                                    ?>
+                                </a>
                             <span class="greenText">|&nbsp;</span></div>
                         </div>
                       </div>

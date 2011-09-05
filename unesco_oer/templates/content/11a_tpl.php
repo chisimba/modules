@@ -180,10 +180,8 @@ $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
 $button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
-//$button->setToSubmit();
-$action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
+$action = $objSelectBox->selectAllOptions($objSelectBox->objRightList )." SubmitProduct();";
 $button->setOnClick('javascript: ' . $action);
-
 
 $Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 
@@ -232,9 +230,9 @@ function SubmitProduct()
                             <div class="buttonSubmit"><a href=""><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18"></a></div>
                             <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">
                                     <?php
-                                    $currLoggedInID = $this->objUser->userId();
-                                    $idUser = $this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
-                                    if ($this->ObjDbUserGroups->ismemberOfgroup($idUser, $this->getParam('id'))) {
+                                    $userId = $this->objUser->userId();
+                                 
+                                    if ($this->ObjDbUserGroups->ismemberOfgroup($userId , $this->getParam('id'))) {
 
                                         $joinGroupLink = new link($this->uri(array('action' => "11a")));
                                         $joinGroupLink->link = 'Join Group';
@@ -516,11 +514,12 @@ function SubmitProduct()
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
 
+
 jQuery(document).ready(function(){
 
     jQuery("a[id=joingroup]").click(function(){
 
-        var r=confirm( "Are you sure you want to join this group?");
+        var r=confirm( "Are you sure you want to join this group?\nClick Ok a request will be sent to the group admin");
         if(r== true){
             window.location=this.href;
         }
