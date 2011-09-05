@@ -79,7 +79,7 @@
                             <a id="_5" title="" onmouseover="rating(this)" onmouseout="off(this)" onclick="rateIt(this)"></a>
                             </div>';
                             //TODO prev action parameter must point to the correct page.
-                            $form = new form('addProductRating_ui',$this->uri(array('action'=>'submitProductRating', 'productID' => $productID, 'rateSubmit' => '', 'prevAction' => 'home')));
+                            $form = new form('addProductRating_ui',$this->uri(array('action'=>'submitProductRating', 'id' => $productID, 'rateSubmit' => '', 'prevAction' => 'ViewProduct')));
                             $form->addToForm($content);
                             echo $form->show();
                         }
@@ -343,12 +343,16 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 <!--                            Polithecnich of Namibia journalism department-->
                             <?php
                             echo $groupInfo['name'];
+
+
                             ?>
                             </span>
                             <br /><br />
 <!--                            <a href="#" class="greenTextLink">View group</a>-->
                             <?php
-                            
+                                $groupLink->link = 'View group';
+                                $groupLink->cssClass = "greenTextLink";
+                                echo $groupLink->show();
                             ?>
                         </div> 
                     </div>
