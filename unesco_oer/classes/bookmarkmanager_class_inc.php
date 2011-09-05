@@ -98,6 +98,8 @@ class bookmarkmanager extends dbtable {
     }
 
     public function deleteBookmark($userids) {
+        
+        var_dump($userids);
 
         foreach ($userids as $userid) {
 
@@ -139,7 +141,7 @@ class bookmarkmanager extends dbtable {
                            $(document).ready(function(){' . " $('#deletebookmark').click(function(){
                  if (confirm('Are you sure you want to delete')) {
     
-                  document.forms['displaytext'].submit();
+                  document.forms['displaytexts'].submit();
                   }
 
                   });"
@@ -195,7 +197,7 @@ class bookmarkmanager extends dbtable {
                             </script>
                                         ';
 
-        $display = new form("displaytext", $this->uri(array('action' => 'deleteBookmarks')));
+        $display = new form("displaytexts", $this->uri(array('action' => 'deleteBookmark')));
         
         
 
@@ -210,9 +212,9 @@ class bookmarkmanager extends dbtable {
                 $titleheading = $product['id'] . 'Title';
                 $btnheading = $product['id'] . 'btn';
 
-                $checkbox = new checkbox('selectedusers[]', $product['id']);
-                $checkbox->value = $product['id'];
-                $checkbox->cssId = 'user_' . $product['id'];
+                    $checkbox = new checkbox('selectedusers[]', $product['id']);
+                    $checkbox->value = $product['id'];
+                    $checkbox->cssId = 'user_' . $product['id'];
 
                 $editLink = new link("javascript:void(0)");
                 $editLink->cssId = $linkheading;
@@ -259,13 +261,13 @@ class bookmarkmanager extends dbtable {
                 $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
 
 
-                $form = new form('3a_comments_ui', $uri);
-                $form->addToForm("Label * <br>");
-                $form->addToForm($textinput);
-                $form->addToForm("<br>Bookmark Description *<br> ");
-                $form->addToForm($commentText);
-                $form->addToForm("<br><br>");
-                $form->addToForm($button->show()); //TODO use text link instead of button
+              $content2 ='';
+              $content2 .= "Label * <br>";
+                $content2 .=  $textinput->show();
+               $content2 .=   "<br>Bookmark Description *<br> ";
+               $content2 .=  $commentText->show();
+            $content2 .=   "<br><br>";
+             $content2 .= $button->show(); //TODO use text link instead of button
 
 
 
@@ -274,7 +276,7 @@ class bookmarkmanager extends dbtable {
             <div>
                   
                
-                   <div class='$divheading'> " . $form->show() . "
+                   <div class='$divheading'> " . $content2. "
 
                                    
                           

@@ -28,12 +28,10 @@ if ($finalstring == null)
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-  
-            
-            
+   
             
 
-                        <div class="mainContentHolder">
+                 
                             <div class="subNavigation"></div>
                             <!-- Left Colum -->
                             
@@ -130,7 +128,6 @@ if ($finalstring == null)
                             </div>
                         </div>
                         </div>
-                           
        
 </html>
 

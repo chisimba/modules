@@ -320,13 +320,14 @@ class unesco_oer extends controller {
         return "bookmarkpop_tpl.php";
     }
 
-    public function __deleteBookmarks() {
+    public function __deleteBookmark() {
 
-        $users = $this->getParam("selectedusers");
+        $id = $this->getParam("selectedusers");
         $userid = $this->objUser->userId();
-        $bookmark = $this->objbookmarkmanager->deleteBookmark($users);
+     
+        $bookmark = $this->objbookmarkmanager->deleteBookmark($id);
 
-
+  
 
 
         return "Bookmarks_tpl.php";
