@@ -297,6 +297,14 @@ class product extends object {
         $tempData['deleted'] = $this->isDeleted();
         $tempData['thumbnail'] = $this->getThumbnailPath();
 
+        $keywords = array();
+
+        foreach ($this->getKeyWords() as $keyword) {
+            $keywords[] = $keyword['keyword'];
+        }
+
+        $tempData['lucene_tags'] = $keywords;
+
         if ($this->getIdentifier()) {
             if ($this->isAdaptation())
                 $this->_objDbProducts->updateProduct($this->getIdentifier(), $tempData, $this->getAdaptationMetaDataArray());

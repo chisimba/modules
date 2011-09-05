@@ -28,10 +28,13 @@ class dbproducts extends dbtable
 
     private $adaptationTable;
 
+    private $objUser;
+
     function init()
     {
         parent::init("tbl_unesco_oer_products");
         $this->adaptationTable = "tbl_unesco_oer_product_adaptation_data";
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     function getProductTitle($title)
@@ -78,6 +81,8 @@ class dbproducts extends dbtable
 
     function addProduct($productArray, $adaptationData = NULL)
     {
+        $tags = $productArray['lucene_tags'];
+        unset($productArray['lucene_tags']);
         $id = $this->insert($productArray);
 
         if (is_array($adaptationData))
@@ -86,11 +91,60 @@ class dbproducts extends dbtable
             $this->insert($adaptationData, $this->adaptationTable);
         }
 
-        return $id;
+        $result = $id;
+
+        if ($result != FALSE) {
+            $this->addLuceneIndex($id,$productArray, $tags);
+        }
+
+        return $result;
+    }
+
+    function addLuceneIndex($id, $productArray, $tags = array()) {
+
+            //$this->objKeywords->addStoryKeywords($id, $keyTags);
+
+            //$objTags = $this->getObject('dbnewstags');
+            //$objTags->addStoryTags($id, $tags);
+
+            // Call Object
+            $objIndexData = $this->getObject('indexdata', 'search');
+
+            // Prep Data
+            $docId = 'unesco_oer_products_'.$id;
+            $docDate = $productArray['date'];
+            $url = $this->uri(array('action'=>'ViewProduct', 'id'=>$id), 'unesco_oer');
+            $title = stripslashes($productArray['title']);
+
+            // Remember to add all info you want to be indexed to this field
+            $contents = stripslashes($productArray['title']).' '. stripcslashes($productArray['description']).' '.stripslashes($productArray['abstract']);
+
+            // A short overview that gets returned with the search results
+            $objTrim = $this->getObject('trimstr', 'strings');
+            $teaser = $objTrim->strTrim(strip_tags(stripslashes($productArray['description'])), 300);
+
+            $module = 'unesco_oer';
+
+            $additionalSearchIndex = array(
+                    'alternativetitle' => $productArray['alternative_title'],
+                    'resourcetype' => $productArray['resource_type']
+                );
+
+            $userId = $this->objUser->userId();
+
+//            if (is_array($tags)) $tags = 'array';
+//            else $tags = 'noarray';
+
+            // Add to Index
+            $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents,
+            $teaser, $module, $userId, $tags, NULL, NULL, NULL, NULL, NULL, NULL, $additionalSearchIndex);
     }
 
     function updateProduct($productID, $productArray, $adaptationData = NULL)
     {
+        $tags = $productArray['lucene_tags'];
+        unset($productArray['lucene_tags']);
+
         $product = $this->getProductByID($productID);
 
         $this->update('puid', $product['puid'], $productArray   );
@@ -100,6 +154,8 @@ class dbproducts extends dbtable
             $data = $this->getAdaptationDataByProductID($productID);
             $this->update('puid', $data['puid'], $adaptationData, $this->adaptationTable);
         }
+
+        $this->addLuceneIndex($productID, $productArray, $tags);
     }
 
     //TODO Ntsako check the hierichal storage of data to make this more efficient
