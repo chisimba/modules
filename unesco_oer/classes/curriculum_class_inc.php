@@ -106,7 +106,7 @@ class curriculum extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($editor->showFCKEditor());
+        $table->addCell($editor->show());
         $table->endRow();
 
         $fieldName = 'background';
@@ -123,7 +123,7 @@ class curriculum extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($editor->showFCKEditor());
+        $table->addCell($editor->show());
         $table->endRow();
 
         $fieldName = 'introductory_description';
@@ -140,7 +140,7 @@ class curriculum extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($editor->showFCKEditor());
+        $table->addCell($editor->show());
         $table->endRow();
         
          $dropdown = new dropdown('status');
