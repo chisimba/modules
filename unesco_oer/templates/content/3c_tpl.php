@@ -194,6 +194,11 @@ if ($this->objUser->isLoggedIn()) {
     $linkText = '<img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Print" width="19" height="15">';
     $editLink->link = $linkText;
     echo $editLink->show();
+    
+    
+    
+    
+    
 }
 
 //$products = $this->objDbProducts->getProductByID($productID);
@@ -210,6 +215,19 @@ if ($this->objUser->isLoggedIn()) {
                
         
               echo  $existingContent->showReadOnlyInput(); 
+              
+              
+              $createPdf = False;
+             $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
+        //Write pdf
+        $objPdf->initWrite();
+        $text = '<html> <h1> gggggggggggggggg </h1><br> gegerge</html>\r\n';
+      
+        $objPdf->partWrite($text);
+        $objPdf->show();
+          
+      
+                
          
                  
                  ?>

@@ -132,6 +132,9 @@ $this->appendArrayVar('headerParams', $js);
                                 $CommentLink->cssClass = 'adaptationLinks';
                                 $CommentLink->link = ' See existing Adaptaions ('. $this->objDbProducts->getNoOfAdaptations($productID) . ')';
                                 echo $CommentLink->show();
+                                
+                                   
+                
                 ?>
 
                 
@@ -250,6 +253,7 @@ if ($this->objUser->isLoggedIn()) {
     $linkText = '<img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Print" width="19" height="15">';
     $editLink->link = $linkText;
     echo $editLink->show();
+    
 }
 
 $products = $this->objDbProducts->getProductByID($productID);

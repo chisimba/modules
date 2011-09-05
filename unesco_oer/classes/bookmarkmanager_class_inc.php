@@ -46,6 +46,41 @@ class bookmarkmanager extends dbtable {
                 //   'created_on' => $time
         );
         $this->insert($data);
+        
+        
+             $objIndexData = $this->getObject('indexdata', 'search');
+
+            // Prep Data
+            $docId = 'unesco_oer_products_'.$parentid;
+        
+            $url = $this->uri(array('action'=>'Bookmarks', 'id'=>$id), 'unesco_oer');
+            $title = stripslashes($label);
+
+            // Remember to add all info you want to be indexed to this field
+            $contents = stripslashes($description);
+
+            // A short overview that gets returned with the search results
+            $objTrim = $this->getObject('trimstr', 'strings');
+            $teaser = $objTrim->strTrim(strip_tags(stripslashes($description)), 300);
+
+            $module = 'unesco_oer';
+
+         
+
+            $userId = $this->objUser->userId();
+
+//            if (is_array($tags)) $tags = 'array';
+//            else $tags = 'noarray';
+
+            // Add to Index
+            $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents,
+            $teaser, $module, $userId, $tags, NULL, NULL, NULL, NULL, NULL, NULL,NULL);
+        
+        
+        
+ 
+        
+        
     }
 
     public function getBookmark($userid) {
