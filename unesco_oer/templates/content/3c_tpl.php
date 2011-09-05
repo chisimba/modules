@@ -217,15 +217,7 @@ if ($this->objUser->isLoggedIn()) {
               echo  $existingContent->showReadOnlyInput(); 
               
               
-              $createPdf = False;
-             $objPdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
-        //Write pdf
-        $objPdf->initWrite();
-        $text = '<html> <h1> gggggggggggggggg </h1><br> gegerge</html>\r\n';
-      
-        $objPdf->partWrite($text);
-        $objPdf->show();
-          
+         
       
                 
          

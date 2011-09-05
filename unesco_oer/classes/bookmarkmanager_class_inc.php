@@ -99,7 +99,7 @@ class bookmarkmanager extends dbtable {
 
     public function deleteBookmark($userids) {
         
-        var_dump($userids);
+        
 
         foreach ($userids as $userid) {
 
