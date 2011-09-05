@@ -21,10 +21,19 @@ class dbusergroups extends dbtable {
         parent::init("tbl_unesco_oer_user_groups");
     }
 
-    function joingroup($id, $groupid) {
+    function joingroup($userid,$groupid) {
         $data = array(
-            'id' => $id,
-            'groupid' => $groupid
+            'userid' => $userid,
+            'groupid' => $groupid,
+            'approved'=>N    //byDefault
+        );
+        $this->insert($data);
+    }
+    function autoInsert_Joingroup_admin($userid,$groupid) {
+        $data = array(
+            'userid' => $userid,
+            'groupid' => $groupid,
+            'approved'=>Y   //byDefault
         );
         $this->insert($data);
     }
@@ -70,8 +79,8 @@ class dbusergroups extends dbtable {
 
     //Check that a user belongs to a  group
 
-    function ismemberOfgroup($id, $groupid) {
-        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid' AND id='$id'";
+    function ismemberOfgroup($userid, $groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE groupid='$groupid' AND userid='$userid'";
         $array = $this->getArray($sql);
         if (count($array) > 0) {
             return 1; //TRUE

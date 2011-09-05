@@ -6,7 +6,10 @@ $options = array('comment'=>'Table to store a user and his/her belonging groups'
 
 //define fields
 $fields = array(
-		'id'=> array('type' => 'text', 'length' => 32),
-                'groupid'=> array('type' => 'text', 'length' => 32)
+                'id'=> array('type' => 'text','length' => 32,'not null'),
+		'userid'=> array('type' => 'text', 'length' => 32),
+                'groupid'=> array('type' => 'text', 'length' => 32),
+                'approved'=> array('type' => 'text', 'length' => 32)
+
                 );
 ?>

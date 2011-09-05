@@ -63,39 +63,22 @@ class grouputil extends object {
       $thumbLink= new link($this->uri(array("action" => '11a','id'=>$group['id'],"page"=>'10a_tpl.php')));
   
       $thumbLink->link='<img src="'.$group['thumbnail'] .'" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
-      //$joinLink;
-       //$objUser = $this->getObject('user', 'security');
-        //$imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
-
-     
-  
-//              $joinGroupLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'],"page"=>'10a_tpl.php')));
-//              $joinGroupLink->link='Join';
-                $currLoggedInID = $this->objUser->userId();
-        $idUser=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
-              if($this->ObjDbUserGroups->ismemberOfgroup($idUser, $group['id'])){
+     $userid = $this->objUser->userId();
+        if($this->ObjDbUserGroups->ismemberOfgroup($userid,$group['id'])){
 
               $joinGroupLink = new link($this->uri(array('action' =>"10")));
               $joinGroupLink->link='Join';
               $joinGroupLink->cssId ='memberofgroup';
               }else{
 
-              $joinGroupLink = new link($this->uri(array('action' =>"joingroup", 'id' => $group['id'],"page"=>'10a_tpl.php')));
+              $joinGroupLink = new link($this->uri(array('action' =>"joingroup", 'groupid' => $group['id'],'userid'=> $this->objUser->userId(),"page"=>'10a_tpl.php')));
               $joinGroupLink->link='Join';
               $joinGroupLink->cssId = 'joingroup';}
 
               $joinGroupLink->cssClass='greenTextBoldLink';
 
-
-
-
-
             
 $content.='     
-
-
-
-
 
 <div class="whiteBackgroundBox">
                             '.$thumbLink->show().'
@@ -108,37 +91,8 @@ $content.='
                				 	<div class="linkTextNextToJoinGroupIcons">'.$joinGroupLink->show().'</div>
                             </div>
 
-                            </div>
+                            </div>';
 
-
-
-
-                          ';
-
-//      $content.='
-//          <div class="whiteBackgroundBox">
-//         '.$thumbLink->show().'
-//                            <div class="groupGridViewHeading greenText">
-//                            '.$group['name'] .' </div>
-//                            <div class="groupMemberAndJoinLinkDiv">
-//                            	   <span class="greenText">Members :</span>'. $this->ObjDbUserGroups->groupMembers($group['id']) .'<br><br>
-//                             <!--    <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
-//               				 	<div class="linkTextNextToJoinGroupIcons"><a href="#" class="greenTextBoldLink">-->
-//
-//   <br/>
-//               <a class="greyListingHeading">'.$this->objLanguagecode->getName($group['country']).'</a> |
-//                             <a class="greyListingHeading">'.$group['city'].'</a> |
-//                                           <a class="greyListingHeading">'.$group['state'].'</a> |
-//                                                         <a class="greyListingHeading">'.$group['email'].'</a>
-//                                                             <br/>
-//           </div>
-//'.//$joinGroupLink->show().'</a></div>
-//              '</a></div>
-//                            </div>
-//                            </div>
-//
-//
-//                            ';
       return $content;
   }
 
@@ -191,18 +145,29 @@ $content.='
 
 public function groupMembers($groupid){
 
-    $arrays=$this->ObjDbUserGroups->getGroupUser($groupid);
-    //(<span class="greenText fontBold">Group Administrator</span>)
-    foreach( $arrays as $array){
-        $firstname=$this->objUseExtra->getUserSurnameByID($array['id']);
-        $surname=$this->objUseExtra->getUserfirstnameByID($array['id']);
-        $content.='         <div class="memberList">
-                            <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
-                            <div class="memberIconText">'.$firstname." "." "." ".$surname.' </div>
+    $groupOwnerId = $this->objDbGroups->getGroupOwner($groupid);
 
-                        </div>';
-         
-         }
+    $arrays = $this->ObjDbUserGroups->getGroupUser($groupid);
+        //(<span class="greenText fontBold">Group Administrator</span>)
+        foreach ($arrays as $array) {
+            if (strcmp($groupOwnerId,$array[0]['userid'])) {
+                $firstname = $this->objUseExtra->getUserfirstname($groupOwnerId);
+                 $surname = $this->objUseExtra->getUserSurname($groupOwnerId);
+
+                $content.=' 
+                    <div class="memberList">
+                    <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
+                    <div class="memberIconText">' . $firstname . " " . " " . " " . $surname . '(<span class="greenText fontBold">Group Administrator</span>) </div>
+                     </div>';
+            } else {
+                $firstname = $this->objUseExtra->getUserSurnameByID($array[0]['id']);
+                $surname = $this->objUseExtra->getUserfirstnameByID($array[0]['id']);
+                $content.='<div class="memberList">
+                            <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
+                            <div class="memberIconText">' . $firstname . " " . " " . " " . $surname . ' </div>
+                           </div>';
+            }
+        }
          echo $content;
 }
 
@@ -219,8 +184,7 @@ public function groupAdaptation($groupid){
         $language = $product->getLanguageName();
         $institution=$product->getInstitutionName();
         $institutionId=$product->getInstitutionID();
-        //$Thumbnail=$this->objDbGroups->getAdaptedProductThumbnail($productID);
-        $Thumbnail =  $product->getThumbnailPath();
+           $Thumbnail =  $product->getThumbnailPath();
 
         $Link=new link($this->uri(array("action" =>'ViewProduct','id'=>$productID,"page"=>'10a_tpl.php')));
         $Link->link= '<img src="'.$Thumbnail.' "alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
@@ -316,7 +280,7 @@ public function leaveGroup($id,$groupid){
 public function groupOwner($groupid){
     
     $ownerId=$this->objDbGroups->getGroupOwner($groupid);
-    $owner_Details=$this->objUseExtra->getUserbyId($ownerId);
+    $owner_Details=$this->objUseExtra->getUserbyUserID($ownerId);
     $owner_surname=$owner_Details[0]['surname'];
     $owner_name=$owner_Details[0]['firstname'];
     $ownerExtraInfo=$this->objUseExtra->getUserExtraByID($ownerId);
@@ -376,7 +340,7 @@ jQuery(document).ready(function(){
 
     jQuery("a[id=joingroup]").click(function(){
 
-        var r=confirm( "Are you sure you want to join this group?");
+        var r=confirm( "Are you sure you want to join this group?\nClick Ok a request will be sent to the group admin");
         if(r== true){
             window.location=this.href;
         }

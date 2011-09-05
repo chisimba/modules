@@ -180,6 +180,11 @@ class dbuserextra extends dbtable {
         $sql = "SELECT * from tbl_users WHERE id='$id'";
         return $this->getArray($sql);
     }
+    function getUserbyUserID($userid)
+     {
+        $sql = "SELECT * from tbl_users WHERE userid='$userid'";
+        return $this->getArray($sql);
+    }
 
     function getAllUser() {
         $sql = "select * from tbl_users";
@@ -224,13 +229,13 @@ class dbuserextra extends dbtable {
     }
 
     function getUserfirstname($userid) {
-        $sql = "Select * From tbl_users WHERE userid='$userid'";
+        $sql = "SELECT * FROM tbl_users WHERE userid='$userid'";
         $array = $this->getArray($sql);
         return $array[0]['firstname'];
     }
 
     function getUserSurname($userid) {
-        $sql = "Select * From tbl_users WHERE userid='$userid'";
+        $sql = "SELECT * FROM tbl_users WHERE userid='$userid'";
         $array = $this->getArray($sql);
         return $array[0]['surname'];
     }
@@ -256,6 +261,8 @@ class dbuserextra extends dbtable {
         $sql = "SELECT * FROM tbl_unesco_oer_userextra WHERE id='$id'";
         return $this->getArray($sql);
     }
+
+
 
 //     function hasGroup($id){
 //         $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE id='$id'";

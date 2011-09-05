@@ -1876,14 +1876,11 @@ class unesco_oer extends controller {
     }
 
     function __joinGroup() {
-        $currLoggedInID = $this->objUser->userId();
-        $id = $this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
-        $this->ObjDbUserGroups->joingroup($id, $this->getParam('id'));
-//        if (strcmp($this->getParam('join'),'join')==0){
-//            return $this->__11a();
-//        }else{
+        $groupid=$this->getParam("groupid");
+        $userid=$this->getParam("userid");
+        $this->ObjDbUserGroups->joingroup($userid,$groupid);
         return $this->__10();
-   // }
+
     }
 
     function __leaveGroup() {
@@ -1966,8 +1963,10 @@ class unesco_oer extends controller {
         } else {
             $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail,$description_one,$description_two,$description_three,$description_four);
             $id = $this->objDbGroups->getLastInsertId();
+            $userid=$this->objUser->userId();
+            $this->ObjDbUserGroups->autoInsert_Joingroup_admin($userid,$id);
             $this->objDbgroupInstitutions->add_group($id);
-            foreach ($rightList as $array) {
+           foreach ($rightList as $array) {
                 $this->objDbgroupInstitutions->add_group_institutions($id, $array);
             }
 

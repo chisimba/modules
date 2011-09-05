@@ -139,6 +139,7 @@ $form->addToForm('<br />');
 $table = $this->newObject('htmltable', 'htmlelements');
 $description_one = new textinput('description_one');
 $description_one ->size = 80;
+$description_one->value = $group[0]['description_one'];
 if ($mode == 'addfixup') {
     $description_one->value = $this->getParam('description_one');
 
@@ -157,6 +158,7 @@ $table->endRow();
 //Descriprion line two
 $description_two = new textinput('description_two');
 $description_two->size = 80;
+$description_two->value = $group[0]['description_two'];
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_two','unesco_oer')); // obj lang
 $table->addCell($description_two->show());
@@ -164,6 +166,7 @@ $table->endRow();
 //Descriprion line three
 $description_three = new textinput('description_three');
 $description_three->size = 80;
+$description_three->value = $group[0]['description_three'];
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_three','unesco_oer')); // obj lang
 $table->addCell($description_three->show());
@@ -171,6 +174,7 @@ $table->endRow();
 //Descriprion line four
 $description_four= new textinput('description_four');
 $description_four->size = 80;
+$description_four->value = $group[0]['description_four'];
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_four','unesco_oer')); // obj lang
 $table->addCell($description_four->show());
@@ -400,46 +404,6 @@ foreach ($groups as $group) {
     }
 }
 
-
-
-
-
-
-//$user_current_membership=$this->objDbGroups->getGroupInstitutions($this->getParam('id'));
-//
-//
-//$groups =$this->objDbInstitution->getAllInstitutions();
-//$availablegroups=array();
-//foreach ($groups as $group) {
-//    if(count($user_current_membership)!=0){
-//        foreach ($user_current_membership as $membership) {
-//            if (strcmp($group['id'], $membership['institution_id']) != 0){
-//                array_push($availablegroups, $group);
-//                }
-////                        else{ /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
-////            array_push($availablegroups, $group);
-//
-//
-//                }
-//                }
-//
-//
-//}
-//
-//
-//
-//
-//
-//
-//$Current_Institution_linked=$this->objDbGroups->getInstitutions($this->getParam('id'));
-//$currentMembership=array();
-//foreach($Current_Institution_linked as $institutionID){
-//    $institutionArray= $this->objDbGroups->getInstitution($institutionID) ;
-//    array_push($currentMembership,$institutionArray);
-//}
-//$currentMembership=$currentMembership[0];
-
-
 $objSelectBox = $this->newObject('selectbox','htmlelements');
 $objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
 $objSelectBox->insertLeftOptions(
@@ -450,7 +414,6 @@ $objSelectBox->insertRightOptions(
                                $currentMembership,
                                'id',
                                'name');
-//TODO MAKE SURE NOT TO DUPLICATE ROWS
 
 $tblLeft = $this->newObject( 'htmltable','htmlelements');
 $objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);

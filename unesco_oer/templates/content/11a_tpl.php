@@ -62,7 +62,7 @@ $this->loadClass('textinput', 'htmlelements');
                             <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
                                     Link to institution</a></div>
                         </div>
-                          <div id="showhide">
+                          <div id="showhide" style="display: none;">
 <!--                              <ul>
                                 <li>
                                     Use tree on the left to navigate existing conents
@@ -107,7 +107,7 @@ $this->loadClass('fieldset','htmlelements');
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
-$header->str = $this->objLanguage->languageText('mod_unesco_oer_group_heading', 'unesco_oer');
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_group_link_institution', 'unesco_oer');
 echo '<div style="padding:10px;">'.$header->show();
 $uri=$this->uri(array('action'=>'saveNewGroup'));
 $form = new form ('register', $uri);
@@ -117,15 +117,37 @@ $table->border = '0';
 $tableable->cellspacing = '0';
 $table->cellpadding = '2';
 
-//$groups = $this->objDbGroups->getAllGroups();
 $table = $this->newObject('htmltable', 'htmlelements');
-$Institutions = $this->objDbInstitution->getAllInstitutions();
+
+$user_current_membership = $this->objDbGroups->getGroupInstitutions($this->getParam('id'));
+$currentMembership = array();
+$availablegroups = array();
+$groups = $this->objDbInstitution->getAllInstitutions();
+foreach ($groups as $group) {
+    if (count($user_current_membership) > 0) {
+        foreach ($user_current_membership as $membership) {
+            if($membership['institution_id'] !=NULL){
+            if (strcmp($group['id'], $membership['institution_id']) == 0 ) {
+                array_push($currentMembership, $group);
+            }else {
+                array_push($availablegroups, $group);
+            }}
+        }
+    } else {
+        array_push($availablegroups, $group);
+    }
+}
+
 $objSelectBox = $this->newObject('selectbox','htmlelements');
-$objSelectBox->create( $form, 'leftList[]', 'Available Institutions', 'rightList[]', 'Chosen Institutions' );
+$objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
 $objSelectBox->insertLeftOptions(
-                        $Institutions,
+                        $availablegroups,
                         'id',
                         'name' );
+$objSelectBox->insertRightOptions(
+                               $currentMembership,
+                               'id',
+                               'name');
 
 $tblLeft = $this->newObject( 'htmltable','htmlelements');
 $objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
@@ -143,14 +165,10 @@ $tblSelectBox->startRow();
     $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
     $tblSelectBox->addCell( $tblRight->show(), '100pt' );
 $tblSelectBox->endRow();
-//THEIR BUTTON
 
 $table->startRow();
-
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
-//$table->addCell(implode( ' / ', $arrFormButtons));
 $table->addCell($tblSelectBox->show());
-$table->addCell();
 $table->endRow();
 
 
@@ -160,21 +178,17 @@ $fieldset->contents = $table->show();
 
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
-//$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button','unesco_oer'));
-//$button->setToSubmit();
 
 $button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
 //$button->setToSubmit();
 $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
 $button->setOnClick('javascript: ' . $action);
 
+
 $Cancelbutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
-$Cancelbutton->setToSubmit();
-$CancelLink = new link($this->uri(array('action' => "groupListingForm")));
-$CancelLink->link =$Cancelbutton->show();
 
 $form->extra = 'enctype="multipart/form-data"';
-$form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
+$form->addToForm('<p align="right">'.$button->show().$Cancelbutton->show().'</p>');
 
 if ($mode == 'addfixup') {
 
@@ -542,5 +556,15 @@ $(document).ready(function(){
 
 
 });
+
+$('button[name=submitform]').click(
+    function() {
+//        window.location ='index.php?module=unesco_oer&action=11a&id=_13858_1315227715&page=10a_tpl.php';
+    $('#showhide').slideToggle();
+    }
+);
+
+
+
 
                      </script>

@@ -228,6 +228,28 @@
              </add>
         </data>
     </update>
+        <update>
+        <table>tbl_unesco_oer_user_groups</table>
+        <version>0.110</version>
+        <description>Added new field on tbl_unesco_oer_user_groups</description>
+        <data>
+            <add>
+                <name>id</name>
+                <type>text</type>
+                <length>32</length>
+                  </add>
+                <add>
+                 <name>userid</name>
+                <type>text</type>
+                <length>32</length>
+                      </add>
+                       <add>
+                 <name>approved</name>
+                <type>text</type>
+                <length>32</length>
+                      </add>
+               </data>
+    </update>
 </updates>
 
 
