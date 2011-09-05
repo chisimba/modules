@@ -54,7 +54,7 @@ if ($finalstring == null)
                                <?php
                                
                                  
-                            $addlink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
+                            $addlink = new link($this->uri(array("action" => 'FilterProducts', "page" => '1a_tpl.php')));
                             $addlink->cssId = "addbookmark";
                             $addlink->cssClass = "linksTextNextToSubIcons";
                             $addlink->link = "Add Bookmark";
