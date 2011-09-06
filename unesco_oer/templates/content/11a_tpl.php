@@ -39,15 +39,16 @@ $this->loadClass('textinput', 'htmlelements');
                              ?></a> |
                 <span class="groupsBreadCrumbColor noUnderline">
                     <?php 
-
-                    echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objDbGroups->getGroupCountry($this->getParam('id'));?>
+                     echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objDbGroups->getGroupCountry($this->getParam('id'));
+                     ?>
                     </span>
                 </div>
             	<div class="tenPixelPaddingLeft">
                 <div class="topGroupDiv">
                 	<div class="paddingContentTopLeftRightBottom">
                      <div class="memberList">
-                          <?php echo $this->objGroupUtil->topcontent($this->getParam('id'))?>
+                          <?php echo $this->objGroupUtil->topcontent($this->getParam('id'));
+                                  ?>
 
 <!--                     <img src="skins/unesco_oer/images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
                       <div class="textNextToGroupIcon">

@@ -27,7 +27,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                 <img src="<?php echo $this->objDbGroups->getThumbnail($this->getParam('id'))?>" alt="Adaptation placeholder" width="40" height="40" class="smallAdaptationImageGrid"><h5 class="greenText">
                     <?php
                     echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " .$this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')));
-                    ?>D</h5>
+                    ?></h5>
                 <div class="groupSubLinks">
 
                     <div class="greyDivider"></div>

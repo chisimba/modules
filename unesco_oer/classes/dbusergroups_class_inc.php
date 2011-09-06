@@ -29,6 +29,21 @@ class dbusergroups extends dbtable {
         );
         $this->insert($data);
     }
+
+
+    function approveMember($userid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE userid='$userid'";
+        $array = $this->getArray($sql);
+        $id = $array[0]['id'];
+        $data = array(
+            'id' => $id,
+            'userid' => $userid,
+            'groupid' => $groupid,
+            'approved' => Y    //approve to be yes
+        );
+        $this->update('id', $id, $data);
+    }
+    
     function autoInsert_Joingroup_admin($userid,$groupid) {
         $data = array(
             'userid' => $userid,
@@ -44,6 +59,17 @@ class dbusergroups extends dbtable {
             'groupid' => ''
         );
         $this->insert($data);
+    }
+
+    function notApproved($userid){
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE userid='$userid'";
+        $array=$this->getArray($sql);
+        if(strcmp($array[0]['approved'],'N' )){
+            return TRUE;
+            }else{
+                return FALSE;
+            }
+
     }
 
 //to get all users in  a particular group
