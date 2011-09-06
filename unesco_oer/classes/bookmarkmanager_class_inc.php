@@ -52,7 +52,7 @@ class bookmarkmanager extends dbtable {
 
             // Prep Data
             $docId = 'unesco_oer_products_'.$parentid;
-        
+        echo $docID;
             $url = $this->uri(array('action'=>'Bookmarks', 'id'=>$id), 'unesco_oer');
             $title = stripslashes($label);
 
@@ -96,14 +96,29 @@ class bookmarkmanager extends dbtable {
 
         return $this->getArray($sql);
     }
+    
+     public function getBookmarkbyorigionalID($prodid,$userid) {
 
-    public function deleteBookmark($userids) {
+        $sql = "select * from $this->_tableName where id = '$prodid' and user_id = '$userid'";
+
+        return $this->getArray($sql);
+    }
+
+    public function deleteBookmark($ids,$userid) {
+        
+          
+             $objIndexData = $this->getObject('indexdata', 'search');
+  
+            // Prep Data
+           
         
         
 
-        foreach ($userids as $userid) {
-
-            $this->update("id", "$userid", $data = array('deleted' => 1));
+        foreach ($ids as $id) {
+            $product = $this->getBookmarkbyorigionalID($id, $userid);
+            $docId = 'unesco_oer_products_'.$product[0]["product_id"];
+            $objIndexData->removeIndex($docId);
+            $this->update("id", "$id", $data = array('deleted' => 1));
         }
     }
 
@@ -111,7 +126,7 @@ class bookmarkmanager extends dbtable {
 
 
 
-        $this->update("id", "$bookmarkid", $data = array('label' => $label, 'description' => $description,));
+        $this->update("id", "$bookmarkid", $data = array('label' => $label, 'description' => $description, 'deleted' => 0));
     }
 
     public function populateListView($products) {
@@ -213,12 +228,12 @@ class bookmarkmanager extends dbtable {
                 $btnheading = $product['id'] . 'btn';
 
                     $checkbox = new checkbox('selectedusers[]', $product['id']);
-                    $checkbox->value = $product['id'];
+                    $checkbox->value = $product['id'] ;
                     $checkbox->cssId = 'user_' . $product['id'];
 
                 $editLink = new link("javascript:void(0)");
                 $editLink->cssId = $linkheading;
-                $editLink->link =  $this->objLanguage->languageText('mod_unesco_oer_bookmark_delete', 'unesco_oer');
+                $editLink->link =  $this->objLanguage->languageText('mod_unesco_oer_bookmark_edit', 'unesco_oer');
                 
                 $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['product_id'])));
                 $abLink->cssClass = "listingLanguageLinkAndIcon";
@@ -256,7 +271,7 @@ class bookmarkmanager extends dbtable {
                 //TODO make parameter pagename dynamic
                 $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
 
-                $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_save', 'unesco_oer'));
+                $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_add', 'unesco_oer'));
                 $button->cssId =  $btnheading;
                 $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
 
@@ -380,7 +395,7 @@ class bookmarkmanager extends dbtable {
 
             $cancelbtn = new button('Cancel', $this->objLanguage->languageText('mod_unesco_oer_bookmark_cancel', 'unesco_oer'));
             $cancelbtn->cssId = $cancelbtnid;
-            $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_save', 'unesco_oer'));
+            $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_add', 'unesco_oer'));
             $button->cssId = $buttonid;
 
 

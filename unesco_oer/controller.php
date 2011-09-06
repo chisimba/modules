@@ -325,7 +325,7 @@ class unesco_oer extends controller {
         $id = $this->getParam("selectedusers");
         $userid = $this->objUser->userId();
      
-        $bookmark = $this->objbookmarkmanager->deleteBookmark($id);
+        $bookmark = $this->objbookmarkmanager->deleteBookmark($id,$userid);
 
   
 

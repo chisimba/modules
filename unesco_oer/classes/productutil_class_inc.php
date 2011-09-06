@@ -919,11 +919,6 @@ public function populatebookmark($product) {
             }
 
  
-    
-
-
-
-
           
             $form = new form('3a_comments_ui', $uri);
             $form->addToForm("Label * <br>");

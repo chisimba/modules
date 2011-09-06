@@ -77,7 +77,7 @@ if ($finalstring == null)
                             $booklink = new link("#");
                             $booklink->cssId = "deletebookmark";
                             $booklink->cssClass = "linksTextNextToSubIcons";
-                            $booklink->link = $this->objLanguage->languageText('mod_unesco_oer_bookmark_edit', 'unesco_oer');
+                            $booklink->link = $this->objLanguage->languageText('mod_unesco_oer_bookmark_delete', 'unesco_oer');
                             
                             
 
