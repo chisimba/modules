@@ -109,7 +109,7 @@ $product->LoadProduct($chosenid);
             <!-- Left Wide column DIv -->
             <div class="greyHorizontalLine"></div>
             <div class="slide fiftenPixelPaddingLeft">
-                <div class="Arrows"><a href="#"><img src="skins/unesco_oer/images/large-icon-backwards.png" width="36" height="36"></a></div>
+             
 
 
 
@@ -230,7 +230,7 @@ $product->LoadProduct($chosenid);
                                           <h4 class="blueText">Model Curricula for Journalism</h4><br>
 						</div>-->
 
-                <div class="Arrows rightArrowPadding"><a href="#"><img src="skins/unesco_oer/images/large-icon-forwards.png" width="36" height="36"></a></div>
+             
             </div>
 
 

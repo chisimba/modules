@@ -57,7 +57,7 @@ if ($finalstring == null)
                             $addlink = new link($this->uri(array("action" => 'FilterProducts', "page" => '1a_tpl.php')));
                             $addlink->cssId = "addbookmark";
                             $addlink->cssClass = "linksTextNextToSubIcons";
-                            $addlink->link = "Add Bookmark";
+                            $addlink->link = $this->objLanguage->languageText('mod_unesco_oer_bookmark_add', 'unesco_oer');
                             
                             
 
@@ -77,7 +77,7 @@ if ($finalstring == null)
                             $booklink = new link("#");
                             $booklink->cssId = "deletebookmark";
                             $booklink->cssClass = "linksTextNextToSubIcons";
-                            $booklink->link = "Delete Bookmark";
+                            $booklink->link = $this->objLanguage->languageText('mod_unesco_oer_bookmark_edit', 'unesco_oer');
                             
                             
 

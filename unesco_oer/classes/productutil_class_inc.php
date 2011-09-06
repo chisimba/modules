@@ -819,6 +819,8 @@ public function populatebookmark($product) {
             $linkheading = '.' . $temp . 'Link';
             $titleheading = '.' . $temp . 'Title';
               $btnheading = '#' . $temp . 'btn';
+              $cancelbtnheading = '#' . $product['id'] . "cancelbtn";
+            $cancelbtnid = $product['id'] . "cancelbtn";
             $content.= "
                   $('$divheading').hide();
 
@@ -840,7 +842,21 @@ public function populatebookmark($product) {
                   $('$divheading').slideToggle();
                    $('$titleheading ').slideToggle(); 
 
-                  });";
+                  });
+            
+               $('$cancelbtnheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                  $('$titleheading ').slideToggle();
+                   
+                 
+
+                  });"
+            
+            
+            
+            
+            ;
         
 
         $content .= '        
@@ -876,6 +892,11 @@ public function populatebookmark($product) {
 
             $button = new button('submitComment', "Save bookmark");
             $button->cssId = $btnheading;
+            
+            $cancelbtn = new button('Cancel', "Cancel");
+            $cancelbtn->cssId = $cancelbtnid;
+            
+            
             $time = time();
               $userid = $this->objUser->userId();
             //  $userid = objdbuserextra->
@@ -912,7 +933,7 @@ public function populatebookmark($product) {
             $form->addToForm("<br><br>");
 
             $form->addToForm($button->show()); //TODO use text link instead of button
-
+              $form->addToForm($cancelbtn->show());
 
 
 

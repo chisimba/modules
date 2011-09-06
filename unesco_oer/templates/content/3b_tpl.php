@@ -151,34 +151,40 @@ $this->appendArrayVar('headerParams', $js);
 //                           $form->addtoform(' <table class="threeAListingTable" cellspacing="0" cellpadding="0" ALIGN="LEFT">
 //               	  <tr> ');
                          $products = $this->objDbProducts->getadapted($productID);
-                foreach ($products as $product){
-                       $count++;
+              
+                         
+            foreach ($products as $product){
                        
-                
-              $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$productID"));
+                       
+                $count++;
+                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$productID"));
                 $adaptLink = new link($uri);
                 $adaptLink->cssClass = "adaptationLinks";
                 $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
                 $adaptLink->link = $linkText; 
                 
                
-    
-                       
-                       
-                       
-                    
-                    $groupid = $this->objDbProducts->getAdaptationDataByProductID($product['id']);
-                    $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
-                   $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
+
+                $groupid = $this->objDbProducts->getAdaptationDataByProductID($product['id']);
+                $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
+                $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
                    
                     
                  $abLink= new link($this->uri(array("action" => '11a','id'=>$groupid['group_id'],"page"=>'10a_tpl.php')));
                  $abLink->link =  "<img src='" . $thumbnail . "' width='45' height='49' >";
                  $abLink->cssClass = "smallAdaptationImageGrid";
                    
-                    $checkbox = new checkbox('selectedusers[]', $product['id']);
-                    $checkbox->value = $product['id'];
-                    $checkbox->cssId = 'user_' . $product['id'];
+                 $checkbox = new checkbox('selectedusers[]', $product['id']);
+                 $checkbox->value = $product['id'];
+                 $checkbox->cssId = 'user_' . $product['id'];
+                 
+                   $bookLink = new link('#');
+                   $bookLink->cssClass = "bookmarkLinks";
+                   $bookLink->cssId = $product['id'];
+                   $linkText = '<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"> Bookmark';
+                   $bookLink->link = $linkText;
+                   
+               
                
                        $content = '
                             
@@ -186,9 +192,7 @@ $this->appendArrayVar('headerParams', $js);
                             <div class="gridSmallImageAdaptation" >
                             	' . $abLink->show() .' 
                                 <span class="greyListingHeading">
-                            
-                                    
-                                    
+                   
                                 </span>
                   			</div>
                             <div class="gridAdaptationLinksDiv">' .
@@ -196,7 +200,6 @@ $this->appendArrayVar('headerParams', $js);
                          $grouptitle
                        .'
                     
-             	
                             </div>
                             <div class="">
                             	<div class="product3aViewDiv">
@@ -218,16 +221,14 @@ $this->appendArrayVar('headerParams', $js);
                                 
                        		  <div class="product3aViewDiv">
                                     <div class="imgFloatRight">
-                                    	<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18">
+                                   '. $bookLink->show().'
                                 </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                    <a href="#" class="bookmarkLinks">bookmark</a>
-                                 	</div>
+                                    
+                                  
                                 </div>
                                  <div class="product3aViewDiv">
                                     <div class="imgFloatRight">'.
-                          
-                         
+                 
                          $checkbox->show().'
                   
                                    <div class="listingAdaptationLinkDiv">
@@ -257,13 +258,22 @@ $this->appendArrayVar('headerParams', $js);
         echo $form->show();      
                 
                 
-                
+      
                 
                 
                     	
                 ?>
                             
-                            
+                  
+                        
+                        
+                    </div>
+        <div id ="bookmarks">
+                        <?php
+                          $bookmark = $this->objbookmarkmanager->populateGridView($products);
+        echo $bookmark;   
+                        
+                        ?>
                             
                 </div>  
                 

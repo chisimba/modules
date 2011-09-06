@@ -218,7 +218,7 @@ class bookmarkmanager extends dbtable {
 
                 $editLink = new link("javascript:void(0)");
                 $editLink->cssId = $linkheading;
-                $editLink->link = "edit";
+                $editLink->link =  $this->objLanguage->languageText('mod_unesco_oer_bookmark_delete', 'unesco_oer');
                 
                 $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['product_id'])));
                 $abLink->cssClass = "listingLanguageLinkAndIcon";
@@ -256,7 +256,7 @@ class bookmarkmanager extends dbtable {
                 //TODO make parameter pagename dynamic
                 $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
 
-                $button = new button('submitComment', "Save Bookmark");
+                $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_save', 'unesco_oer'));
                 $button->cssId =  $btnheading;
                 $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
 
@@ -378,9 +378,9 @@ class bookmarkmanager extends dbtable {
             //TODO make parameter pagename dynamic
             $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
 
-            $cancelbtn = new button('Cancel', "Cancel");
+            $cancelbtn = new button('Cancel', $this->objLanguage->languageText('mod_unesco_oer_bookmark_cancel', 'unesco_oer'));
             $cancelbtn->cssId = $cancelbtnid;
-            $button = new button('submitComment', "Save Bookmark");
+            $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_save', 'unesco_oer'));
             $button->cssId = $buttonid;
 
 
