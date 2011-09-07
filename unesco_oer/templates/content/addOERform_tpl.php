@@ -51,6 +51,7 @@ $objIcon = $this->newObject('geticon','htmlelements');
 //Get Group details
 $group=$this->objDbGroups->getGroupInfo($this->getParam('id'));
 $linkedInstitution=$this->objDbGroups->getLinkedInstitution($this->getParam('id'));
+$required = '<span class="required_field"> * ';
 
 
 

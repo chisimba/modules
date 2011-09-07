@@ -36,8 +36,50 @@ class groupmanager extends object {
     }
 
 
-    public function AddOerResource($groupid){
+        /**
+     * Method to check that all required fields are entered
+     * @param array $checkFields List of fields to check
+     * @return boolean Whether all fields are entered or not
+     */
+    function checkFields($checkFields) {
+        $allFieldsOk = TRUE;
+        $this->messages = array();
+        foreach ($checkFields as $field) {
+            if ($field == '') {
+                $allFieldsOk = FALSE;
+            }
+        }
+        return $allFieldsOk;
+    }
 
+
+    public function AddOerResource() {
+        $groupid = $this->getParam('groupid');
+        $resource_name = $this->getParam('resource_name');
+        $resource_type = $this->getParam('resource_type');
+        $author = $this->getParam('resource_author');
+        $publisher = $this->getParam('resource_publisher');
+        $file = $this->getParam('group_name');
+
+        $checkFields = array(
+            $resource_name,
+            $resource_type,
+            $author,
+            $publisher,
+            $file
+        );
+
+        $problems = array();
+        if (!$this->__checkFields($checkFields)) {
+            $problems[] = 'missingfields';
+        }
+        if (count($problems) > 0) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            return 'addOERform_tpl.php';
+        } else {
+            $OERresource = $this->objDbOERresource->addGroupOerResource($groupid, $resource_name, $resource_type, $author, $publisher, $file);
+        }
     }
 
 
