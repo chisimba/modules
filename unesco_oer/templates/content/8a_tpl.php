@@ -85,7 +85,16 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
                         <a href="#" class="greenTextBoldLink">Manage OER Resources</a><br>
                     </div>
                     <div class="groupSubLinksList">
-                        <a href="#" class="greenTextBoldLink">Add OER Resources</a>
+                        <a href="#" class="greenTextBoldLink">
+                                                   
+                        <?php
+                        $groupid= $this->objDbGroups->getGroupForumId($groupid);
+                        $addDiscussionLink = new link($this->uri(array("action"=>"newTopicForm", "groupid" => $groupid, "forumid" => $forumid)));
+                        $addDiscussionLink->link='add a discussion';
+                        $addDiscussionLink->cssClass='greenTextBoldLink';
+                        echo $addDiscussionLink->show();
+                       ?>
+                            Add OER Resources</a>
                     </div>
                 </div>
             </div>

@@ -97,7 +97,7 @@
         </data>
     </update>
     
-     <update>
+    <update>
         <table>tbl_unesco_oer_modules</table>
         <version>0.069</version>
         <description>Added a parentid field</description>
@@ -110,7 +110,7 @@
             </add>
         </data>
     </update>
-     <update>
+    <update>
         <table>tbl_unesco_oer_curriculum</table>
         <version>0.072</version>
         <description>Added a parentid field</description>
@@ -175,7 +175,7 @@
             </add>
         </data>
     </update>
-        <update>
+    <update>
         <table>tbl_unesco_oer_groups</table>
         <version>0.103</version>
         <description>Added an admin  field</description>
@@ -189,7 +189,7 @@
         </data>
     </update>
 
-        <update>
+    <update>
         <table>tbl_unesco_oer_userextra</table>
         <version>0.104</version>
         <description> added thumbnail field</description>
@@ -198,10 +198,10 @@
                 <name>thumbnail</name>
                 <type>text</type>
                 <length>255</length>
-             </add>
+            </add>
         </data>
     </update>
-        <update>
+    <update>
         <table>tbl_unesco_oer_groups</table>
         <version>0.106</version>
         <description>descption lines field</description>
@@ -210,25 +210,25 @@
                 <name>description_one</name>
                 <type>text</type>
                 <length>255</length>
-                  </add>
-                <add>
-                 <name>description_two</name>
+            </add>
+            <add>
+                <name>description_two</name>
                 <type>text</type>
                 <length>255</length>
-                      </add>
-                       <add>
-                 <name>description_three</name>
+            </add>
+            <add>
+                <name>description_three</name>
                 <type>text</type>
                 <length>255</length>
-                      </add>
-                        <add>
-                 <name>description_four</name>
+            </add>
+            <add>
+                <name>description_four</name>
                 <type>text</type>
                 <length>255</length>
-             </add>
+            </add>
         </data>
     </update>
-        <update>
+    <update>
         <table>tbl_unesco_oer_user_groups</table>
         <version>0.123</version>
         <description>new field on tbl_unesco_oer_user_groups</description>
@@ -237,18 +237,30 @@
                 <name>id</name>
                 <type>text</type>
                 <length>32</length>
-                  </add>
-                  <add>
-                      <name>userid</name>
-                      <type>text</type>
-                      <length>32</length>
-                      </add>
-                       <add>
-                 <name>approved</name>
+            </add>
+            <add>
+                <name>userid</name>
                 <type>text</type>
                 <length>32</length>
-                      </add>
-               </data>
+            </add>
+            <add>
+                <name>approved</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_unesco_oer_group_resources</table>
+        <version>0.125</version>
+        <description>new field on tbl_unesco_oer_group_resources</description>
+        <data>
+            <add>
+                <name>groupid</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
     </update>
 </updates>
 

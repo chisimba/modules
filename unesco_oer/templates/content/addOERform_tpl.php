@@ -75,11 +75,6 @@ $table->cellpadding = '2';
 
 
 
-
-
-
-
-$table = $this->newObject('htmltable', 'htmlelements');
 //Resource name
 $resource_name = new textinput('resource_name');
 $resource_name ->size = 80;
@@ -160,6 +155,36 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_a
 $table->addCell($resource_publisher->show());
 $table->endRow();
 
+$fileUploader = $this->getObject('fileuploader', 'files');
+$fileUploader->allowedCategories = array('documents', 'images');
+$fileUploader->savePath = '/uploader/'; // This will then be saved in usrfiles/uploader
+$fileUploader->overwriteExistingFile = TRUE;
+$results = $fileUploader->uploadFile('fileupload1');
+
+
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer').$required);
+$table->addCell($this->objThumbUploader->show());
+$table->endRow();
+
+$fieldset = $this->newObject('fieldset', 'htmlelements');
+$fieldset->legend = $this->objLanguage->languageText('mod_unesco_oer_group_fieldset_oer', 'unesco_oer');
+$fieldset->contents = $table->show();
+//File uploader
+
+
+$Savebutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
+$Savebutton->setToSubmit();
+$SavebuttonLink = new link($this->uri(array('action' => "groupListingForm")));
+$SavebuttonLink->link=$Savebutton->show();
+
+$Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
+
+$form->addToForm($fieldset->show());
+$form->extra = 'enctype="multipart/form-data"';
+$form->addToForm('<p align="right">'.$SavebuttonLink->show().$Cancelbutton->show().'</p>');
+
+
 
 echo $form->show();
 
@@ -173,4 +198,11 @@ function SubmitProduct()
     //objForm.elements[element].value = value;
     objForm.submit();
 }
+
+$('button[name=cancelform]').click(
+    function() {
+        window.location ='index.php?module=unesco_oer&action=11a&id=_13858_1315227715&page=10a_tpl.php';
+   // $('#showhide').slideToggle();
+    }
+);
 </script>

@@ -294,8 +294,10 @@ function SubmitProduct()
                 <div class="topGroupDiv">
                 	<div class="paddingContentTopLeftRightBottom">
                         <div class="discussionList">
-                            <h3 class="fontBold">What are the implications of using the section name foundation?</h3>
-                            Posts: 12<br>
+                            <h3 class="fontBold">
+                           <div class="textNextToRightFloatedImage"><a href="?module=forum&id=<?php $this->getParam('id') ?>&type=context&action=flatview" class="prifileLinks">Discussion</a></div>
+<!--                                What are the implications of using the section name foundation?</h3>
+                            Posts: 12<br>-->
 
                             Last posted: 12 May 2010
                         </div>

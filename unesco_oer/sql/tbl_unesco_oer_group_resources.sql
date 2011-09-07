@@ -7,6 +7,7 @@ $options = array('comment'=>'Table to store group_resources','collate'=>'utf8_ge
 //define fields
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
+                'groupid'=>array('type' => 'text','length' => 32),
                 'resource_name' =>array('type' =>'text','length'=>255),
                 'resource_type'=>array('type'=>'text','length'=>255),
                 'author'=>array('type'=>'text','length'=>255),

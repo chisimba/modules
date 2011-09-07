@@ -1875,6 +1875,10 @@ class unesco_oer extends controller {
         return 'groupListingFormMain_tpl.php';
     }
 
+    public function __addOERform(){
+        return "addOERform_tpl.php";
+    }
+    
     function __joinGroup() {
         $groupid=$this->getParam("groupid");
         $userid=$this->getParam("userid");
