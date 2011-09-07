@@ -250,25 +250,7 @@
             </add>
         </data>
     </update>
-    <update>
-        <table>tbl_unesco_oer_group_resources</table>
-        <version>0.126</version>
-        <description>new field on tbl_unesco_oer_group_resources</description>
-        <data>
-            <add>
-                <name>groupid</name>
-                <type>text</type>
-                <length>32</length>
-            </add>
 
-            <add>
-                <name>file</name>
-                <type>text</type>
-                <length>255</length>
-            </add>
-
-        </data>
-    </update>
 </updates>
 
 

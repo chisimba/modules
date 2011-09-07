@@ -230,7 +230,15 @@ echo $this->objGroupUtil->groupOwner($this->getParam('id'));
                     </div>
                     <div class="showAlldiscussions">
                         <a href="" class="greyTextBoldLink">All OER resources</a> |
-                        <a href="" class="greyTextBoldLink">add resource</a>
+
+                        <?php
+                        $groupId =$this->getParam('id');
+                        $addresourceLink = new link($this->uri(array("action"=>"addOERform", "groupid" => $groupId)));
+                         $addresourceLink->link='add resource';
+                        $addresourceLink->cssClass='greenTextBoldLink';
+                        echo  $addresourceLink->show();
+                       ?>
+<!--                        <a href="" class="greyTextBoldLink">add resource</a>-->
                     </div>
                 </div>
 
