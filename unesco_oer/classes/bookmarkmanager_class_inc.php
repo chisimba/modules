@@ -52,8 +52,8 @@ class bookmarkmanager extends dbtable {
 
             // Prep Data
             $docId = 'unesco_oer_products_'.$parentid;
-        echo $docID;
-            $url = $this->uri(array('action'=>'Bookmarks', 'id'=>$id), 'unesco_oer');
+    
+            $url = $this->uri(array('action'=>'ViewProduct', 'id'=>$parentid), 'unesco_oer');
             $title = stripslashes($label);
 
             // Remember to add all info you want to be indexed to this field
@@ -122,7 +122,11 @@ class bookmarkmanager extends dbtable {
         }
     }
 
-    public function updateBookmark($label, $description, $bookmarkid, $time) {
+    public function updateBookmark($label, $description, $bookmarkid, $time,$productID) {
+        
+        
+        
+        
 
 
 
@@ -257,6 +261,7 @@ class bookmarkmanager extends dbtable {
             
 
                 $bookmarkid = $product['id'];
+                $productID = $product['product_id'];
                 $textname = $product['id'] . "text";
                 $commentboxname = $product['id'] . "comment";
 
@@ -273,7 +278,7 @@ class bookmarkmanager extends dbtable {
 
                 $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_add', 'unesco_oer'));
                 $button->cssId =  $btnheading;
-                $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
+                $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid','$productID')  ";
 
 
               $content2 ='';

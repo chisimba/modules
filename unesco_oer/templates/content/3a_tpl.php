@@ -82,7 +82,12 @@ $this->appendArrayVar('headerParams', $js);
                     <div class="textNextToTheListingIconDiv"><!--<a href="#" class="bookmarkLinks">-->
                         <div class ="bookmarkLinks">
                             <?php
-                            echo $this->objDbComments->getTotalcomments($productID) . " Comments";
+                            
+                            $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID)));                          
+                            $addlink->cssClass = "greyTextLink";
+                            $addlink->link = $this->objDbComments->getTotalcomments($productID) . " Comments";         
+                            echo $addlink->show();
+                       
                             ?>
                         </div>
 
@@ -400,7 +405,7 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
                                 if (($this->objDbComments->getTotalcomments($productID) > 2)) {
                                     ?>
 
-                            <script src="http://code.jquery.com/jquery-latest.js"></script>
+<!--                            <script src="http://code.jquery.com/jquery-latest.js"></script>
                             <script>
                                 $(document).ready(function(){
 
@@ -420,12 +425,18 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
 
                                 });
 
-                            </script>
+                            </script>-->
 
 
 
-                            <a href="javascript:void(0)" class="greyTextLink">Show all comments</a>
-
+                          <?php
+                               
+                                 
+                            $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID)));                          
+                            $addlink->cssClass = "greyTextLink";
+                            $addlink->link = 'Show Comments';                
+                            echo $addlink->show();
+?>
                             <div class="slidingDiv">
 
 
@@ -447,13 +458,13 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
                                         </div>';
                                           }
 
-        echo $content
+      //  echo $content
         ?> 
 
-                                <a href="javascript:void(0)" class="greyTextLink">
+<!--                                <a href="javascript:void(0)" class="greyTextLink">-->
                                 
                                 <?php
-                                echo $this->objLanguage->languageText('mod_unesco_oer_comments_hide', 'unesco_oer');
+//                                echo $this->objLanguage->languageText('mod_unesco_oer_comments_hide', 'unesco_oer');
                                 
                                 ?>
                                 </a></div>

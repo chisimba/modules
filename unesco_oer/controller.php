@@ -1179,6 +1179,23 @@ class unesco_oer extends controller {
         $this->setVar('productID', $id);
         return 'createComment_tpl.php';
     }
+    
+    public function __commentmanager(){
+        
+    
+        return 'comments_tpl.php';
+        
+    }
+     public function __savecomment(){
+        $productID = $this->getParam('productid');
+        $userid = $this->getParam('user_id');
+        $comment = $this->getParam('commentbox');
+        
+        $this->objDbComments->addComment($productID,$userid,$comment);
+    
+        return 'comments_tpl.php';
+        
+    }
 
     /*
      * Method to display page with entry options for rating

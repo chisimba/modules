@@ -134,6 +134,204 @@ class commentmanager extends object {
 
 
     }
+    
+    
+     public function populateListView($products) {
+
+       
+                            $myTable = $this->newObject('htmltable', 'htmlelements');
+                            $myTable->width = '100%';
+                            $myTable->border = '0';
+                            $myTable->cellspacing = '0';
+                            $myTable->cellpadding = '0';
+
+                            $myTable->startHeaderRow();
+                            //$str, $width=null, $valign="top", $align='left', $class=null, $attrib=Null)
+                            $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_search_title', 'unesco_oer'), null, null, left, "userheader", null);
+                            $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_institution_description', 'unesco_oer'), null, null, left, "userheader", null);       
+                            $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer'), null, null, left, "userheader", null);
+                            $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'), null, null, left, "userheader", null);
+                            $myTable->endHeaderRow();
+//                            
+                 
+
+
+
+        $content = '    
+                           <script src="http://code.jquery.com/jquery-latest.js"></script>
+                            <script>
+                           $(document).ready(function(){' . " $('#deletebookmark').click(function(){
+                 if (confirm('Are you sure you want to delete')) {
+    
+                  document.forms['displaytexts'].submit();
+                  }
+
+                  });"
+
+
+        ;
+
+        
+
+        foreach ($products as $product) {
+            if ($product['deleted'] == 0) {
+
+                $divheading = '.' . $product['id'] . 'Div';
+                $linkheading = '#' . $product['id'] . 'Link';
+                $titleheading = '#' . $product['id'] . 'Title';
+                $btnheading = '#' . $product['id'] . 'btn';
+
+                $content.= "
+                  $('$divheading').hide();
+
+                  $('$linkheading').show();
+                 
+
+
+ 
+
+                  $('$linkheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                   $('$titleheading').slideToggle(); 
+
+                  });
+                
+                
+                  $('$btnheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                   $('$titleheading').slideToggle(); 
+
+                  });
+                
+                
+                
+               ";
+            }
+        }
+
+        $content .= '        
+
+
+                                    });
+
+                            </script>
+                                        ';
+
+        $display = new form("displaytexts", $this->uri(array('action' => 'deleteBookmark')));
+        
+        
+
+
+        foreach ($products as $product) {
+
+            if ($product['deleted'] == 0) {
+
+
+                $divheading = $product['id'] . 'Div';
+                $linkheading = $product['id'] . 'Link';
+                $titleheading = $product['id'] . 'Title';
+                $btnheading = $product['id'] . 'btn';
+
+                    $checkbox = new checkbox('selectedusers[]', $product['id']);
+                    $checkbox->value = $product['id'] ;
+                    $checkbox->cssId = 'user_' . $product['id'];
+
+                $editLink = new link("javascript:void(0)");
+                $editLink->cssId = $linkheading;
+                $editLink->link =  $this->objLanguage->languageText('mod_unesco_oer_bookmark_edit', 'unesco_oer');
+                
+                $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['product_id'])));
+                $abLink->cssClass = "listingLanguageLinkAndIcon";
+                $abLink->link = $product['label'];
+
+
+//
+             //   $display->addToForm($checkbox);
+//                $display->addToForm($abLink);
+//                $display->addToForm("<br>");
+
+
+                 $myTable->startRow();
+                 $myTable->addCell($abLink->show(), null, null, null, "user", null, null);
+                 $myTable->addCell($product['description'], null, null, null, "user", null, null);
+                 $myTable->addCell($editLink->show(), null, null, null, "user", null, null);
+                 $myTable->addCell($checkbox->show(), null, null, null, "user", null, null);
+                 
+
+                
+            
+
+                $bookmarkid = $product['id'];
+                $productID = $product['product_id'];
+                $textname = $product['id'] . "text";
+                $commentboxname = $product['id'] . "comment";
+
+                $textinput = new textinput($textname);
+                $textinput->value = $product['label'];
+
+                $commentText = new textarea($commentboxname);
+                $commentText->setCssClass("commentTextBox");
+                $commentText->value = $product['description'];
+
+
+                //TODO make parameter pagename dynamic
+                $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
+
+                $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_add', 'unesco_oer'));
+                $button->cssId =  $btnheading;
+                $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid','$productID')  ";
+
+
+              $content2 ='';
+              $content2 .= "Label * <br>";
+                $content2 .=  $textinput->show();
+               $content2 .=   "<br>Bookmark Description *<br> ";
+               $content2 .=  $commentText->show();
+            $content2 .=   "<br><br>";
+             $content2 .= $button->show(); //TODO use text link instead of button
+
+
+
+
+                $display->addToForm("
+            <div>
+                  
+               
+                   <div class='$divheading'> " . $content2. "
+
+                                   
+                          
+                      </div>  
+              
+                
+            </div>
+                
+                
+                
+                         
+     ");
+            }
+        }
+      //  $content .= $display->show();
+        
+        
+        
+        
+        
+        
+    $display->addToForm(" <br><div id='$titleheading'>"); 
+    $display->addToForm($myTable->show());
+     $display->addToForm(" </div>")   ; 
+
+     echo $display->show();
+
+
+
+
+        return $content;
+    }
 
 
 }

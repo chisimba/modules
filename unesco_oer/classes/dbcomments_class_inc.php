@@ -46,6 +46,14 @@ class dbcomments extends dbtable {
 
 
     }
+    
+     function getCommentarray($productID){
+
+        $sql = "SELECT * from tbl_unesco_oer_comments where product_id = '$productID'";
+        return $this->getArray($sql);
+
+
+    }
 
     function getTotalcomments($productID)
     {

@@ -50,7 +50,7 @@
    echo $abLink->show();
     ?>
      | <a class="blueText noUnderline">
-       Section View
+       Comments
      </a>
     </a>
 </div>
