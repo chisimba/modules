@@ -125,7 +125,7 @@ echo $fieldSetHeading; ?></legend>
                         <div id="controlPanelCell">
 
                             <?php
-                            $link = new link($this->uri(array("action" => 'viewLanguages')));
+                            $link = new link($this->uri(array("action" => 'home'),'langadmin'));
                             $languagesTitle = $this->objLanguage->languageText('mod_unesco_oer_languages', 'unesco_oer');
 
                             $link->link = '<img src="skins/unesco_oer/images/large-icon-languages.png" alt = "Languages" height = "55" width = "55">
