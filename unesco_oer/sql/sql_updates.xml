@@ -230,8 +230,8 @@
     </update>
         <update>
         <table>tbl_unesco_oer_user_groups</table>
-        <version>0.111</version>
-        <description>Added new field on tbl_unesco_oer_user_groups</description>
+        <version>0.123</version>
+        <description>new field on tbl_unesco_oer_user_groups</description>
         <data>
             <add>
                 <name>id</name>
