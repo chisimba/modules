@@ -89,12 +89,12 @@ echo $this->objGroupUtil->leaveGroup($id, $groupid);
                                                    
                         <?php
                         $groupid= $this->objDbGroups->getGroupForumId($groupid);
-                        $addDiscussionLink = new link($this->uri(array("action"=>"newTopicForm", "groupid" => $groupid, "forumid" => $forumid)));
-                        $addDiscussionLink->link='add a discussion';
+                        $addDiscussionLink = new link($this->uri(array("action"=>"addOERform", "groupid" => $groupId)));
+                        $addDiscussionLink->link='Add OER Resources';
                         $addDiscussionLink->cssClass='greenTextBoldLink';
                         echo $addDiscussionLink->show();
                        ?>
-                            Add OER Resources</a>
+                           </a>
                     </div>
                 </div>
             </div>
@@ -197,7 +197,7 @@ echo $this->objGroupUtil->groupOwner($this->getParam('id'));
                        
                         <?php
                         $forumId = $this->objDbGroups->getGroupForumId($groupid);
-                        $addDiscussionLink = new link($this->uri(array("action"=>"newTopicForm", "groupid" => $groupid, "forumid" => $forumid)));
+                        $addDiscussionLink = new link($this->uri(array("action"=>"newTopicForm","groupid" => $groupid, "forumid" => $forumid)));
                         $addDiscussionLink->link='add a discussion';
                         $addDiscussionLink->cssClass='greenTextBoldLink';
                         echo $addDiscussionLink->show();
@@ -235,7 +235,7 @@ echo $this->objGroupUtil->groupOwner($this->getParam('id'));
                         $groupId =$this->getParam('id');
                         $addresourceLink = new link($this->uri(array("action"=>"addOERform", "groupid" => $groupId)));
                          $addresourceLink->link='add resource';
-                        $addresourceLink->cssClass='greenTextBoldLink';
+                        $addresourceLink->cssClass='greyTextBoldLink';
                         echo  $addresourceLink->show();
                        ?>
 <!--                        <a href="" class="greyTextBoldLink">add resource</a>-->

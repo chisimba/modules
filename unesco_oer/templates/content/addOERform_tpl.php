@@ -59,7 +59,7 @@ $required = '<span class="required_field"> * ';
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
-$header->str = $group[0]['name'].":"."Profile";  //objLang
+$header->str =$this->objDbGroups->getGroupName($this->getParam('id')).":"."add resource";  //objLang
 echo $header->show();
 
 $uri=$this->uri(array('action'=>'editGroup','id'=>$this->getParam('id')));
@@ -74,7 +74,7 @@ $table->border = '0';
 $tableable->cellspacing = '0';
 $table->cellpadding = '2';
 
-
+$groupid=$this->getParam('id');
 
 //Resource name
 $resource_name = new textinput('resource_name');

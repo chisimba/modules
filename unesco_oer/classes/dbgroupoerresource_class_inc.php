@@ -15,18 +15,17 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class dbgroupoerresources extends dbtable {
+class dbgroupoerresource extends dbtable {
 
     function init() {
         parent::init("tbl_unesco_oer_group_resources");
     }
 
-    function addGroupOerResource($groupid, $resource_name, $resource_type, $author, $publisher, $file) {
+    function addGroupOerResource($groupid,$resource_name, $resource_type, $author, $publisher, $file) {
         $data = array(
             'groupid' => $groupid,
             'resource_name' => $resource_name,
-            'address' => $resource_name,
-            'resource_type' => $city,
+            'resource_type' =>$resource_type,
             'author' => $author,
             'publisher' => $publisher,
             'file' => $file
