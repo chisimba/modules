@@ -261,11 +261,11 @@
                 <length>32</length>
             </add>
 
-                        <add>
+            <add>
                 <name>file</name>
                 <type>text</type>
                 <length>255</length>
-                  </add>
+            </add>
 
         </data>
     </update>

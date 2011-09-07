@@ -78,7 +78,7 @@ class groupmanager extends object {
             $this->setVarByRef('problems', $problems);
             return 'addOERform_tpl.php';
         } else {
-            $OERresource = $this->objDbOERresource->addGroupOerResource($groupid, $resource_name, $resource_type, $author, $publisher, $file);
+            $OERresource = $this->objDbOERresources->addGroupOerResource($groupid, $resource_name, $resource_type, $author, $publisher, $file);
         }
     }
 
