@@ -36,6 +36,11 @@ class groupmanager extends object {
     }
 
 
+    public function AddOerResource($groupid){
+
+    }
+
+
 
 
   

@@ -11,6 +11,7 @@ $fields = array(
                 'resource_name' =>array('type' =>'text','length'=>255),
                 'resource_type'=>array('type'=>'text','length'=>255),
                 'author'=>array('type'=>'text','length'=>255),
+                'file'=>array('type'=>'text','length'=>255),
                 'publisher'=>array('type'=>'text','length'=>255)
 
 		);
