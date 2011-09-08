@@ -89,9 +89,11 @@
                         <img src="skins/unesco_oer/images/icon-comment-post.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">
                                 <?php
-
-                              echo  $this->objDbComments->getTotalcomments($productID) . " Comments";
-
+   
+                            $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID)));                          
+                            $addlink->cssClass = "greyTextLink";
+                            $addlink->link = $this->objDbComments->getTotalcomments($productID) . " Comments";         
+                            echo $addlink->show();
 
                                 ?>
 
@@ -407,7 +409,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                           
                        
                ?>
-                         <script src="http://code.jquery.com/jquery-latest.js"></script>
+<!--                         <script src="http://code.jquery.com/jquery-latest.js"></script>
                             <script>
                            $(document).ready(function(){
 
@@ -428,10 +430,17 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 });
 
                             </script>
+-->
 
 
+<!--                           <a href="javascript:void(0)" class="greyTextLink">Show all comments</a>-->
+<?php
+                            $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID)));                          
+                            $addlink->cssClass = "greyTextLink";
+                            $addlink->link = 'Show Comments';                
+                            echo $addlink->show();
+?>
 
-                           <a href="javascript:void(0)" class="greyTextLink">Show all comments</a>
 
                             <div class="slidingDiv">
 
@@ -466,7 +475,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
                         }
 
-                    echo $content
+               //     echo $content
 
                                 ?> 
     
@@ -478,7 +487,8 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
     
     
     
-    <a href="javascript:void(0)" class="greyTextLink">hide comments</a></div>
+<!--    <a href="javascript:void(0)" class="greyTextLink">hide comments</a></div>-->
+                            </div>
                             
 <?php }?>
 

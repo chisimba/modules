@@ -59,7 +59,7 @@ $this->loadClass('textinput', 'htmlelements');
    echo $abLink->show();
     ?>
      | <a class="blueText noUnderline">
-       Section View
+       Comments
      </a>
     </a>
 </div>
@@ -218,7 +218,7 @@ $this->loadClass('textinput', 'htmlelements');
                     
                               echo '<div class = "blueListingHeading"> '.                
                               $comment['user_id'] . '<span class = "greyListingHeading">  - ' . $comment['created_on'] . '<br><br></div></span>';                             
-                              echo $comment['product_comment'] . '<br><br>';
+                              echo $comment['product_comment'] . '<br>';
                               echo '<div class="greyDivider" > </div>';
                               
                           }
@@ -234,7 +234,7 @@ $this->loadClass('textinput', 'htmlelements');
            $editor->setBasicToolBar();
         
 
-            $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_add', 'unesco_oer'));
+            $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_add_data_newcommentBtn', 'unesco_oer'));
             $button->setToSubmit();
 
             $userid = $this->objUser->userId();
@@ -243,7 +243,7 @@ $this->loadClass('textinput', 'htmlelements');
         
             $form->addToForm("<br>Add your Comment <br><br> ");
             $form->addToForm($editor->show());
-            $form->addToForm("<br><br>");
+            $form->addToForm("<br>");
             $form->addToForm($button->show());
             echo $form->show();
             
