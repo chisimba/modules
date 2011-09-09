@@ -390,7 +390,7 @@ class module extends content {
     }
 
     public function delete() {
-        $success = $this->objDbModules->update('id', $this->_id, array('deleted' => '1'));
+        $success = $this->objDbModules->updateModule($this->_id, array('deleted' => '1'));
         $this->_deleted = $success ? '1' : $this->_deleted;
         return $success;
     }

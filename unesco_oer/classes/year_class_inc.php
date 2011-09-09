@@ -156,6 +156,7 @@ class year extends content {
     public function delete() {
         $success = $this->objDbYears->update('id',  $this->_id, array('deleted'=>'1'));
         $this->_deleted = $success ? '1' : $this->_deleted;
+        if ($success) $this->deleteAllContents ();
         return $success;
     }
 }

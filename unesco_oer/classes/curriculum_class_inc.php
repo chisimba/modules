@@ -262,13 +262,17 @@ class curriculum extends content {
     }
 
     protected function updateExisting() {
+        $data = array(
+            'product_id' => $this->getParentID(), // This is the ID of the product this curruculum is contained in.
+            'title' => $this->_title,
+            'forward'=> $this->_forward,
+            'background'=> $this->_background,
+            'introductory_description'=> $this->_introductory_description
+        );
+
         $this->objDbCurricula->updateCurriculum(
                     $this->_id,
-                    $this->getParentID(), // This is the ID of the product this curruculum is contained in.
-                    $this->_title,
-                    $this->_forward,
-                    $this->_background,
-                    $this->_introductory_description
+                    $data
                     );
     }
 
@@ -316,8 +320,12 @@ class curriculum extends content {
     }
 
     public function delete() {
-        $success = $this->objDbCurricula->update('id',  $this->_id, array('deleted'=>'1'));
+        $success = $this->objDbCurricula->updateCurriculum($this->_id, array('deleted'=>'1'));
         $this->_deleted = $success ? '1' : $this->_deleted;
+        if ($success) {
+            $this->deleteAllContents();
+        }
+
         return $success;
     }
 }

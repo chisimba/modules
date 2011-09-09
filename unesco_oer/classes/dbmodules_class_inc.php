@@ -109,10 +109,17 @@ class dbmodules extends dbtable {
 
     function updateModule($id, $data){
         $objModule = $data['object'];
-        unset ($data['object']);
-        
+        if (!empty ($objModule)) unset ($data['object']);
 
-        $this->addLuceneIndex($id, $data, $objModule);
+        $del = $data['deleted'];
+        if (empty($del) || $del == 0) {
+            $this->addLuceneIndex($id, $data, $objModule);
+        } else {
+            $objIndexData = $this->getObject('indexdata', 'search');
+            $docId = "unesco_oer_module_$id";
+            $objIndexData->removeIndex($docId);
+        }
+
 
         return $this->update('id', $id, $data);
     }

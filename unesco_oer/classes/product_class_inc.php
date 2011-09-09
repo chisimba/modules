@@ -1569,6 +1569,9 @@ class product extends object {
         if (!$this->hasAdaptation()) {
             $this->setDeletionStatus(1);
         }
+
+        $this->_contentManager->deleteAllContents();
+
         return $this->saveProduct();
     }
 

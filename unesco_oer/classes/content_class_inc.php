@@ -422,6 +422,13 @@ class content extends object
         return FALSE;
     }
 
+    function deleteAllContents() {
+        $contents = $this->getContents();
+        foreach ($contents as $content) {
+            $content->delete();
+        }
+    }
+
     public function isDeleted() {
         return ($this->_deleted != 0);
     }

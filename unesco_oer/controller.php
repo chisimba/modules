@@ -2459,6 +2459,27 @@ class unesco_oer extends controller {
         return "forum_newtopic.php";
     }
 
+
+    /**
+     *
+     *
+     */
+    function __searchSite() {
+        $query = $this->getParam('q');
+
+
+        $objLucene = $this->newObject('searchresults');
+        $searchResults = $objLucene->show($query);
+        // echo $searchResults; die();
+        $searchResults = str_replace('&', '&amp;', $searchResults);
+        $searchResults = str_replace(urlencode('[HIGHLIGHT]'), urlencode($query), $searchResults);
+
+        $this->setVarByRef('searchResults', $searchResults);
+        $this->setVarByRef('searchQuery', $query);
+
+
+        return 'searchresults.php';
+    }
 //    public function __testPDF(){
 //        $pdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
 //        $instructions = "

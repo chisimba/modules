@@ -154,8 +154,13 @@ class dbproducts extends dbtable
             $data = $this->getAdaptationDataByProductID($productID);
             $this->update('puid', $data['puid'], $adaptationData, $this->adaptationTable);
         }
-
-        $this->addLuceneIndex($productID, $productArray, $tags);
+        if ($productArray['deleted'] == 0){
+            $this->addLuceneIndex($productID, $productArray, $tags);
+        } else {
+            $objIndexData = $this->getObject('indexdata', 'search');
+            $docId = "unesco_oer_products_$productID";
+            $objIndexData->removeIndex($docId);
+        }
     }
 
     //TODO Ntsako check the hierichal storage of data to make this more efficient

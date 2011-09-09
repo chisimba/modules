@@ -134,6 +134,13 @@ class contentmanager extends object {
         return $this->_contents;
     }
 
+    function deleteAllContents() {
+        $contents = $this->getAllContents();
+        foreach ($contents as $content) {
+            $content->delete();
+        }
+    }
+
     /*     * This function recursively searches through the loaded contents
      *
      * @param <type> $id

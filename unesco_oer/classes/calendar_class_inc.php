@@ -158,6 +158,7 @@ class calendar extends content
     public function delete() {
         $success = $this->objDbCalendar->update('id',  $this->_id, array('deleted'=>'1'));
         $this->_deleted = $success ? '1' : $this->_deleted;
+        if ($success) $this->deleteAllContents ();
         return $success;
     }
 }

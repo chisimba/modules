@@ -79,16 +79,15 @@ class dbcurricula extends dbtable
             $teaser, $module, $userId);
     }
 
-    function updateCurriculum($id, $product_id, $title, $forward, $background, $description){
-         $data = array(
-            'product_id' => $product_id,
-            'title' => $title,
-            'forward'=> $forward,
-            'background'=> $background,
-            'introductory_description'=> $description
-        );
-
-        $this->addLuceneIndex($id, $data);
+    function updateCurriculum($id, $data){
+        $del = $data['deleted'];
+        if (empty($del) || $del == 0) {
+            $this->addLuceneIndex($id, $data);
+        } else {
+            $objIndexData = $this->getObject('indexdata', 'search');
+            $docId = "unesco_oer_curriculum_$id";
+            $objIndexData->removeIndex($docId);
+        }
 
         return $this->update('id', $id, $data);
     }
