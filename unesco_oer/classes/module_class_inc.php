@@ -106,6 +106,7 @@ class module extends content {
         $table->addCell($editor->show());
         $table->endRow();
 
+        $editor = $this->newObject('htmlarea', 'htmlelements');
 
         $fieldName = "Outcomes/Objectives";
         $editor->name = 'outcomes';
@@ -184,10 +185,15 @@ class module extends content {
         $table->addCell($textinput->show());
         $table->endRow();
 
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+
         $fieldName = 'Schedule of Activities';
-        $textinput = new textinput('scheduele_of_classes');
-        $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray['schedule_of_classes']);
+        $editor->name = 'outcomes';
+        $editor->height = '150px';
+        // $editor->width = '70%';
+
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_metaDataArray['schedule_of_classes']);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
@@ -195,7 +201,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($textinput->show());
+        $table->addCell($editor->show());
         $table->endRow();
 
         $fieldName = 'Associated Material';

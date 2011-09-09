@@ -323,7 +323,8 @@ class content extends object
                                                         'text' => $title,
                                                         'link' => "#", 'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
-                                                        'expanded' => $this->hasContents()),
+                                                        //'expanded' => $this->hasContents()),
+                                                        'expanded' => TRUE),
                                                     array(
                                                         'onclick' => "javascript: edit('{$this->getPairString()}');",
                                                         'onexpand' => ""
@@ -361,8 +362,8 @@ class content extends object
                                                 'text' => $option,
                                                 'link' => "#",
                                                 'icon' => 'icon-add-to-adaptation.png',
-                                                'expandedIcon' => $expandedIcon,
-                                                'expanded' => FALSE),
+                                                'expandedIcon' => 'icon-add-to-adaptation.png',
+                                                'expanded' => TRUE),
                                             array(
                                                 'onclick' => "javascript: newSection('".implode ( '__' , array($this->getID(),$class) )."');",
                                                 'onexpand' => "alert('Expanded')")
