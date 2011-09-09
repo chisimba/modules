@@ -68,8 +68,11 @@ class dbresults extends dbtable {
                     $line['fullname']=$fullname;
                 }
             }
-            $data2[]=$line;
+            //added for sorting
+            $key=$this->objUser->getSurname($line['studentid']).$line['studentid'];
+            $data2[$key]=$line;
         }
+        ksort($data2);
         return $data2;
     }
 
