@@ -23,9 +23,11 @@
  */
 class dbcurricula extends dbtable
 {
+    private $objUser;
 
     function init() {
         parent::init("tbl_unesco_oer_curriculum");
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     function getCurricula($filter = NULL) {
@@ -42,7 +44,39 @@ class dbcurricula extends dbtable
             'parentid' => $parentid
         );
 
-        return $this->insert($data);
+        $id = $this->insert($data);
+
+        if ($id != FALSE) {
+            $this->addLuceneIndex($id, $data);
+        }
+
+        return $id;
+    }
+
+    function addLuceneIndex($id, $curriculumArray) {
+            // Call Object
+            $objIndexData = $this->getObject('indexdata', 'search');
+
+            // Prep Data
+            $docId = 'unesco_oer_curriculum_'.$id;
+            $docDate = $this->now();
+            $url = $this->uri(array('action' => 'ViewProductSection', 'productID' => $curriculumArray['product_id'], 'path' => $id) ,'unesco_oer');
+            $title = stripslashes($curriculumArray['title']);
+
+            // Remember to add all info you want to be indexed to this field
+            $contents = stripslashes($curriculumArray['title']).' '. stripcslashes($curriculumArray['forward']).' '.stripslashes($curriculumArray['background']).' '.stripslashes($curriculumArray['introductory_description']);
+
+            // A short overview that gets returned with the search results
+            $objTrim = $this->getObject('trimstr', 'strings');
+            $teaser = $objTrim->strTrim(strip_tags(stripslashes($curriculumArray['introductory_description'])), 300);
+
+            $module = 'unesco_oer';
+
+            $userId = $this->objUser->userId();
+
+            // Add to Index
+            $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents,
+            $teaser, $module, $userId);
     }
 
     function updateCurriculum($id, $product_id, $title, $forward, $background, $description){
@@ -53,6 +87,8 @@ class dbcurricula extends dbtable
             'background'=> $background,
             'introductory_description'=> $description
         );
+
+        $this->addLuceneIndex($id, $data);
 
         return $this->update('id', $id, $data);
     }

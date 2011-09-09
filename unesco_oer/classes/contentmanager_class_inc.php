@@ -98,7 +98,12 @@ class contentmanager extends object {
         $parentID_class_array = $this->getPairArray($parentID_class_pair);
         $contentType = array_pop($parentID_class_array);
         $newContent = $this->newObject($contentType);
-        $newContent->setParentID(array_pop($parentID_class_array));
+        $parentID = array_pop($parentID_class_array);
+        $newContent->setParentID($parentID);
+
+        $parent = $this->getContentByContentID($parentID);
+        $newContent->setParentObject($parent);
+
         return $newContent;
     }
 

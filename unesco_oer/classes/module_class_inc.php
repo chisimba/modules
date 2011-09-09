@@ -327,6 +327,7 @@ class module extends content {
             'schedule_of_classes' => $this->getParam('scheduele_of_classes'),
             'associated_material' => $this->getParam('associated_material'),
             'comments_history' => $this->getParam('comments_history'),
+            'object' => $this
         );
 
         if (empty($this->_id)) {

@@ -434,6 +434,15 @@ class content extends object
         $tempArray[] = $this->getTitle();
         return $tempArray;
     }
+
+    public function getParentObjectList(){
+        if (empty($this->parentobject)) {
+            return array();
+        }
+        $tempArray = $this->parentobject->getParentObjectList();
+        $tempArray[] = $this->parentobject;
+        return $tempArray;
+    }
     
     public function setParentObject(&$parentobject){
         $this->parentobject =  $parentobject;
