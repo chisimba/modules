@@ -250,7 +250,7 @@
                         $('.highlight').toggleClass('highlight');
                         $('.' + hiddenclass).parent().toggleClass('highlight');
                         
-                        var link = '/unesco_oer/index.php?module=unesco_oer&action=CompareSelected&id=' + id + '&productid=' + productid;
+                        var link = 'index.php?module=unesco_oer&action=CompareSelected&id=' + id + '&productid=' + productid;
                         $('#compare').attr('href',link);
                   }
                   

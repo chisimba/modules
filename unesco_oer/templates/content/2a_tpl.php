@@ -19,6 +19,7 @@ if ($adaptationstring == null)
 
 
 ?>
+<html>
         <div class="mainWrapper">
 
             <div class="mainContentHolder">

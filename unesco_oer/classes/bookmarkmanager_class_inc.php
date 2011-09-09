@@ -51,7 +51,7 @@ class bookmarkmanager extends dbtable {
              $objIndexData = $this->getObject('indexdata', 'search');
 
             // Prep Data
-            $docId = 'unesco_oer_products_'.$parentid;
+            $docId = 'unesco_oer_bookmarks_'.$parentid;
     
             $url = $this->uri(array('action'=>'ViewProduct', 'id'=>$parentid), 'unesco_oer');
             $title = stripslashes($label);
@@ -116,7 +116,7 @@ class bookmarkmanager extends dbtable {
 
         foreach ($ids as $id) {
             $product = $this->getBookmarkbyorigionalID($id, $userid);
-            $docId = 'unesco_oer_products_'.$product[0]["product_id"];
+            $docId = 'unesco_oer_bookmarks_'.$product[0]["product_id"];
             $objIndexData->removeIndex($docId);
             $this->update("id", "$id", $data = array('deleted' => 1));
         }
