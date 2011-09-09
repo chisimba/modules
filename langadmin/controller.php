@@ -7,6 +7,7 @@ class langadmin extends controller {
         $this->objLangAdmin = $this->getObject("langutil");
         $this->objDbLangText = $this->getObject("dblangaugetext");
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $objMkDir = $this->getObject('mkdir', 'files');
     }
 
     /**
@@ -128,7 +129,158 @@ class langadmin extends controller {
         return $this->nextAction("home");
     }
 
-   
+    function __exportLangItems() {
+        $langid = $this->getParam("langid");
+        $_SESSION['language'] = $langid;
+        $objMkDir = $this->getObject('mkdir', 'files');
+        $destinationDir = $this->objConfig->getcontentBasePath() . '/langadmin/' . $langid;
+        $objMkDir->mkdirs($destinationDir);
+        @chmod($destinationDir, 0777);
+        $langFile = $destinationDir . '/' . $langid . '_language_items.txt';
+        $fh = fopen($langFile, 'w') or die("can't open file");
+        $this->objLangText = $this->getObject("dblangaugetext");
+        $texts = $this->objLangText->getLanguageTextItems();
+
+        foreach ($texts as $text) {
+            $line = "";
+
+            $code = $text['code'];
+            $line.=$code . "|";
+            $line.=$text['description'] . '|';
+
+            $arrName = explode("_", $code);
+            $module = $arrName[1];
+            if ($module == 'unesco') {
+                $module = $module . "_" . $arrName[2];
+            }
+            $line.=$this->objLanguage->languageText($code, $module);
+            $line.="\n";
+            fwrite($fh, $line);
+        }
+
+
+        fclose($fh);
+
+        $file = $langFile;
+
+        header("Content-Disposition: attachment; filename=" . $langid . " _language_items.txt");
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header("Content-Description: File Transfer");
+        header("Content-Length: " . filesize($file));
+        flush(); // this doesn't really matter.
+
+        $fp = fopen($file, "r");
+        while (!feof($fp)) {
+            echo fread($fp, 65536);
+            flush(); // this is essential for large downloads
+        }
+        fclose($fp);
+    }
+
+    /**
+     * Used to push through upload results for AJAX
+     */
+    function __ajaxuploadresults() {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+
+        $id = $this->getParam('id');
+        $this->setVarByRef('id', $id);
+
+        $fileid = $this->getParam('fileid');
+        $this->setVarByRef('fileid', $fileid);
+
+        $filename = $this->getParam('filename');
+        $this->setVarByRef('filename', $filename);
+
+        return 'ajaxuploadresults_tpl.php';
+    }
+
+    function __uploadFile() {
+        $langid = $this->getParam("langid");
+        $this->setVarByRef('langid', $langid);
+        return "upload_tpl.php";
+    }
+
+    /**
+     * Used to do the actual upload
+     *
+     */
+    function __doajaxupload() {
+
+        $langid = $this->getParam("langid");
+        $_SESSION['language'] = $langid;
+        $objMkDir = $this->getObject('mkdir', 'files');
+        $destinationDir = $this->objConfig->getcontentBasePath() . '/langadmin/';
+        $objMkDir->mkdirs($destinationDir);
+        @chmod($destinationDir, 0777);
+        $langFile = $destinationDir . '/' . $langid . '_language_items.txt';
+        $dir = $destinationDir;
+
+        $generatedid = $this->getParam('id');
+        $filename = $this->getParam('filename');
+
+        $objUpload = $this->newObject('upload', 'files');
+        $objUpload->permittedTypes = array(
+            'txt'
+        );
+        $objUpload->overWrite = TRUE;
+        $objUpload->uploadFolder = $destinationDir . '/';
+
+        $result = $objUpload->doUpload(TRUE, $docname);
+
+        if ($result['success'] == FALSE) {
+
+            $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
+
+            return $this->nextAction('erroriframe', array('message' => 'Unsupported file extension.Only use txt', 'file' => $filename, 'id' => $generatedid));
+        } else {
+
+            $filename = $result['filename'];
+            $file = fopen($destinationDir . '/' . $filename, "r") or exit("Unable to open file!");
+            //Output a line of the file until the end is reached
+            while (!feof($file)) {
+                
+                $line = fgets($file);
+                if (empty($line)) {
+                    continue;
+                }
+                $parts = explode("|", $line);
+
+                $stringArray = array($langid => $parts[2]);
+                $arrName = explode("_", $parts[0]);
+                $module = $arrName[1];
+                $module = $arrName[1];
+                if ($module == 'unesco') {
+                    $module = $module . "_" . $arrName[2];
+                }
+                $this->objLanguage->addLangItem($parts[0], $module, $stringArray);
+            }
+        }
+        fclose($file);
+        return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename));
+    }
+
+    /**
+     * Used to show upload errors
+     *
+     */
+    function __erroriframe() {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+
+        $id = $this->getParam('id');
+        $this->setVarByRef('id', $id);
+
+        $message = $this->getParam('message');
+        $this->setVarByRef('message', $message);
+
+        return 'erroriframe_tpl.php';
+    }
 
 }
 

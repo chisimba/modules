@@ -21,9 +21,10 @@ echo $addbutton->show();
 
 $table = $this->getObject('htmltable', 'htmlelements');
 $table->startHeaderRow();
-$table->addHeaderCell($this->objLanguage->languageText('mod_langadmin_addlanguage', 'langid'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_langadmin_addlanguage', 'langname'));
-
+$table->addHeaderCell($this->objLanguage->languageText('mod_langadmin_langid', 'langadmin'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_langadmin_langname', 'langadmin'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_langadmin_export', 'langadmin'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_langadmin_import', 'langadmin'));
 $table->endHeaderRow();
 
 $langs = $this->objLanguage->getLangs();
@@ -32,10 +33,14 @@ foreach ($langs as $id => $name) {
 
     $table->startRow();
     $table->addCell($id);
-    $link = new link($this->uri(array("action" => "viewLangItems")));
-    $link->link = $name;
+    $table->addCell($name);
+    $link = new link($this->uri(array("action" => "exportLangItems","langid"=>$id)));
+    $link->link = $this->objLanguage->languageText('mod_langadmin_export', 'langadmin');
     $table->addCell($link->show());
-
+    $link = new link($this->uri(array("action" => "uploadFile","langid"=>$id)));
+    $link->link = $this->objLanguage->languageText('mod_langadmin_import', 'langadmin');
+    $table->addCell($link->show());
+    
     $table->endRow();
 }
 ?>
