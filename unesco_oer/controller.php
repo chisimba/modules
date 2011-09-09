@@ -2421,7 +2421,9 @@ class unesco_oer extends controller {
 
     function __changelang() {
         $langid = $this->getParam("langid");
-        $this->objConfig->setdefaultLanguageAbbrev($langid);
+        //$this->objConfig->setdefaultLanguageAbbrev($langid);
+        $this->setSession("language",$langid);
+        $_SESSION['language'] =$langid;
         return $this->nextAction("home");
     }
 
