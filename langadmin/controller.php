@@ -145,8 +145,8 @@ class langadmin extends controller {
             $line = "";
 
             $code = $text['code'];
-            $line.=$code . "|";
-            $line.=$text['description'] . '|';
+            $line.=$code . "~";
+            $line.=$text['description'] . '~';
 
             $arrName = explode("_", $code);
             $module = $arrName[1];
@@ -248,7 +248,7 @@ class langadmin extends controller {
                 if (empty($line)) {
                     continue;
                 }
-                $parts = explode("|", $line);
+                $parts = explode("~", $line);
 
                 $stringArray = array($langid => $parts[2]);
                 $arrName = explode("_", $parts[0]);
