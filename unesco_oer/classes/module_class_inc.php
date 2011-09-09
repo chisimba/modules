@@ -106,7 +106,7 @@ class module extends content {
         $table->addCell($editor->show());
         $table->endRow();
 
-        $editor = $this->newObject('htmlarea', 'htmlelements');
+        //$editor = $this->newObject('htmlarea', 'htmlelements');
 
         $fieldName = "Outcomes/Objectives";
         $editor->name = 'outcomes';
@@ -185,10 +185,10 @@ class module extends content {
         $table->addCell($textinput->show());
         $table->endRow();
 
-        $editor = $this->newObject('htmlarea', 'htmlelements');
+        //$editor = $this->newObject('htmlarea', 'htmlelements');
 
         $fieldName = 'Schedule of Activities';
-        $editor->name = 'outcomes';
+        $editor->name = 'schedule_of_classes';
         $editor->height = '150px';
         // $editor->width = '70%';
 
