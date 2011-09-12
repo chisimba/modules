@@ -50,40 +50,43 @@
 
             <script type="text/javascript" src="packages/unesco_oer/resources/js/json/json2.js"></script>
             <script type="text/javascript" src="packages/unesco_oer/resources/js/swfobject.js"></script>
+            <?php
+                $resource = $this->getResourceUri('open-flash-chart.swf','unesco_oer');
+            ?>
             <script type="text/javascript">
 
             swfobject.embedSWF(
-                "packages/unesco_oer/resources/open-flash-chart.swf", "pie_chart",
+                "<?php echo $resource ?>", "pie_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_pie"} );
 
             swfobject.embedSWF(
-                "packages/unesco_oer/resources/open-flash-chart.swf", "bar_chart",
+                "<?php echo $resource ?>", "bar_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar"} );
 
             swfobject.embedSWF(
-                "packages/unesco_oer/resources/open-flash-chart.swf", "bar1_chart",
+                "<?php echo $resource ?>", "bar1_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar1"} );
 
             swfobject.embedSWF(
-                "packages/unesco_oer/resources/open-flash-chart.swf", "bar2_chart",
+                "<?php echo $resource ?>", "bar2_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar2"} );
 
             swfobject.embedSWF(
-                "packages/unesco_oer/resources/open-flash-chart.swf", "bar3_chart",
+                "<?php echo $resource ?>", "bar3_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar3"} );
 
              swfobject.embedSWF(
-                "packages/unesco_oer/resources/open-flash-chart.swf", "bar4_chart",
+                "<?php echo $resource ?>", "bar4_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar4"} );
 
              swfobject.embedSWF(
-                "packages/unesco_oer/resources/open-flash-chart.swf", "bar5_chart",
+                "<?php echo $resource ?>", "bar5_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar5"} );
 
