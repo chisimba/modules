@@ -65,10 +65,10 @@ class dbresults extends dbtable {
                 $username=$this->objUser->userName($line['studentid']);
                 $fullname=$this->objUser->fullname($line['studentid']);
                 if (is_numeric($username)){
-                    $line['studentid']=$username;
-                    $line['fullname']=$fullname;
                     $line['surname']=$this->objUser->getSurname($line['studentid']).$line['studentid'];
                     $line['firstname']=$this->objUser->getFirstname($line['studentid']).$line['studentid'];
+                    $line['studentid']=$username;
+                    $line['fullname']=$fullname;
                 }
             }
             //added for sorting

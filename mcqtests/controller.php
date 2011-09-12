@@ -968,10 +968,11 @@ class mcqtests extends controller {
                         foreach ($usersResultList as $user) {
                             $userAnswerList = $this->dbMarked->getAnswersForOutput($testId, $user['studentid']);
                             $line = $userAnswerList[0]['studentid'] . ",";
-                            if (!(isset($userAnswerList[0]['fullname']))){
-                                $userAnserList[0]['fullname'] = $this->objUser->fullname($userAnswerList[0]['studentid']);
-                                $userAnserList[0]['firstname'] = $this->objUser->getFirstname($userAnswerList[0]['studentid']);
-                                $userAnserList[0]['surname'] = $this->objUser->getSurname($userAnswerList[0]['studentid']);
+                            if (!(isset($userAnswerList[0]['surname']))){
+                                $userAnswerList[0]['surname'] = $this->objUser->getSurname($userAnswerList[0]['studentid']);
+                            }
+                            if (!(isset($userAnswerList[0]['firstname']))){
+                                $userAnswerList[0]['firstname'] = $this->objUser->getFirstname($userAnswerList[0]['studentid']);
                             }
                             //$line.= ($userAnswerList[0]['fullname']) . ",";
                             $line.= ($userAnswerList[0]['surname']) . ",";
@@ -998,7 +999,7 @@ class mcqtests extends controller {
                     $usersResultList = $this->dbResults->getResults($testId,1);
                     if (isset($usersResultList) && !empty($usersResultList)) {
                         $outputFile = fopen($file, 'wb');
-                        fwrite($outputFile, '"Student Number","Student name","Score","Percentage"' . "\n");
+                        fwrite($outputFile, '"Student Number","Surname","First Name","Score","Percentage"' . "\n");
                         foreach ($usersResultList as $user) {
                             $line = $user['studentid'] . ",";
                             if (!(isset($user['fullname']))){
