@@ -1,5 +1,5 @@
 <?php
-include '/var/www/html/unesco_oer/packages/unesco_oer/resources/php-ofc-library/open-flash-chart.php';
+include 'packages/unesco_oer/resources/php-ofc-library/open-flash-chart.php';
 if (!$GLOBALS['kewl_entry_point_run'])
     die("you cannot view directly");
 

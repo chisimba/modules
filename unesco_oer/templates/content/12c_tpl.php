@@ -51,7 +51,9 @@
             <script type="text/javascript" src="packages/unesco_oer/resources/js/json/json2.js"></script>
             <script type="text/javascript" src="packages/unesco_oer/resources/js/swfobject.js"></script>
             <?php
-                $resource = $this->getResourceUri('open-flash-chart.swf','unesco_oer');
+            
+                $resource = $this->getResourceUri('open-flash-chart.swf');
+              
             ?>
             <script type="text/javascript">
 
