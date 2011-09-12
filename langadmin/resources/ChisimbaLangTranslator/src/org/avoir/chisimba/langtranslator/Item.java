@@ -12,12 +12,22 @@ public class Item {
 
     private String code;
     private String description;
+    private String englishTranslation;
     private String translation;
 
-    public Item(String code, String description, String translation) {
+    public Item(String code, String description,String englishTranslation, String translation) {
         this.code = code;
         this.description = description;
         this.translation = translation;
+        this.englishTranslation=englishTranslation;
+    }
+
+    public String getEnglishTranslation() {
+        return englishTranslation;
+    }
+
+    public void setEnglishTranslation(String englishTranslation) {
+        this.englishTranslation = englishTranslation;
     }
 
     public String getCode() {
@@ -45,7 +55,7 @@ public class Item {
     }
 
     public String getLine(){
-        return code+"~"+description+"~"+translation;
+        return code+"~"+description+"~"+ englishTranslation+"~"+translation;
     }
     
     @Override

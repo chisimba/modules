@@ -19,7 +19,7 @@ public class ChisimbaLangTranslator {
     public static void main(String[] args) {
         Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
         MainFrame mainFrame=new MainFrame();
-        mainFrame.setSize((ss.height/4)*3,(ss.height /2));
+        mainFrame.setSize((ss.height/8)*7,(ss.height /2));
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
     }

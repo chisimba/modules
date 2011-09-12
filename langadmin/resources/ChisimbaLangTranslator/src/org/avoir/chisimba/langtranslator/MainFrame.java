@@ -139,7 +139,7 @@ public class MainFrame extends javax.swing.JFrame {
                 Item item = (Item) model.get(i);
                 CharSequence charSequence = val;
                 if (item.getCode().contains(charSequence)) {
-                    System.out.println("Found at " + i);
+
                     list.ensureIndexIsVisible(i);
                     list.setSelectedIndex(i);
 
@@ -154,6 +154,7 @@ public class MainFrame extends javax.swing.JFrame {
         langItemField.setText(item.getCode());
         descField.setText(item.getDescription());
         translationField.setText(item.getTranslation());
+        englishTranslationField.setText(item.getEnglishTranslation());
     }
 
     private class SaveTask extends TimerTask {
@@ -185,10 +186,13 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         langItemField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        descField = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         translationField = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        descField = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        englishTranslationField = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         nextButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
@@ -258,35 +262,53 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
         langItemPanel.add(jLabel2, gridBagConstraints);
 
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(100, 210));
+        jLabel3.setText("Translation:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
+        langItemPanel.add(jLabel3, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
+        langItemPanel.add(translationField, gridBagConstraints);
 
         descField.setColumns(20);
         descField.setEditable(false);
+        descField.setLineWrap(true);
         descField.setRows(5);
-        descField.setWrapStyleWord(true);
-        descField.setPreferredSize(new java.awt.Dimension(260, 200));
         jScrollPane1.setViewportView(descField);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 1, 5, 0);
         langItemPanel.add(jScrollPane1, gridBagConstraints);
 
-        jLabel3.setText("Translation:");
+        jLabel4.setText("English Translation:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
-        langItemPanel.add(jLabel3, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
+        langItemPanel.add(jLabel4, gridBagConstraints);
+
+        englishTranslationField.setColumns(20);
+        englishTranslationField.setEditable(false);
+        englishTranslationField.setLineWrap(true);
+        englishTranslationField.setRows(5);
+        jScrollPane2.setViewportView(englishTranslationField);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
-        langItemPanel.add(translationField, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        langItemPanel.add(jScrollPane2, gridBagConstraints);
 
         jPanel2.add(langItemPanel, java.awt.BorderLayout.CENTER);
 
@@ -386,9 +408,9 @@ private void langItemFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
                     String[] parts = strLine.split("~");
                     if (parts != null) {
-                        if (parts.length == 3) {
+                        if (parts.length > 3) {
                             try {
-                                Item item = new Item(parts[0], parts[1], parts[2]);
+                                Item item = new Item(parts[0], parts[1], parts[2],parts[3]);
                                 model.addElement(item);
 
                             } catch (Exception ex) {
@@ -479,6 +501,7 @@ private void langItemFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JButton closeButton;
     private javax.swing.JMenuItem closeMenuItem;
     private javax.swing.JTextArea descField;
+    private javax.swing.JTextArea englishTranslationField;
     private javax.swing.JButton exportButton;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
@@ -487,9 +510,11 @@ private void langItemFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField langItemField;
     private javax.swing.JPanel langItemPanel;
     private javax.swing.JPanel mainPanel;
