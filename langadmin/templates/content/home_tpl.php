@@ -17,7 +17,10 @@ $addbutton = new button('addNewLangButton', $this->objLanguage->languageText('mo
 $uri = $this->uri(array('action' => 'showNewLangTemplate'));
 $addbutton->setOnClick('javascript: window.location=\'' . $uri . '\'');
 
-echo $addbutton->show();
+
+echo $addbutton->show().'<br/>';
+$objConfig=$this->getObject("altconfig","config");
+echo '<a href="'.$objConfig->getsiteRoot().'/packages/langadmin/resources/ChisimbaLangTranslator/dist/ChisimbaLangTranslator.jar">Download Translation Client</a>';
 
 $table = $this->getObject('htmltable', 'htmlelements');
 $table->startHeaderRow();
