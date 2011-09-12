@@ -186,6 +186,8 @@
                                 </div>
                                 
                                 <?php
+                                
+                                
                                 $product = $this->getObject('product', 'unesco_oer');
                                 foreach ($selectedproducts as $selectedproduct){
 //                                    $product = $this->newObject('product', 'unesco_oer');

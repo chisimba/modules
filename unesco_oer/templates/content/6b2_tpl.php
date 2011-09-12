@@ -144,13 +144,15 @@ $product->LoadProduct($chosenid);
                     $linkText = 'Make Adaptation';
                     $adaptLink->link = $linkText;
                 }
+                  $uri = $this->uri(array('action' => 'Comparechosen', 'id' => $moduleid, 'productid' => $productid, 'chosenid' => $origionalproduct));
+                    $compLink = new link($uri);
+                    $compLink->cssClass = "adaptationListingLink";
+                    $compLink->link = $product->getTitle();
 
 
                 echo $content = '<div '. $class .'>
 							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
-                                <h4><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id='.$moduleid.'&productid='.$productid.'&chosenid='.$origionalproduct.'" id="treelink"  class="adaptationListingLink">' . $product->getTitle() . '
-                   
-                                  </a></h4>
+                                <h4> '. $compLink->show() .'</h4>
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv">'. $adaptLink->show() .'</div>
 						</div> ';
@@ -193,13 +195,16 @@ $product->LoadProduct($chosenid);
                         $linkText = 'Make Adaptation';
                         $adaptLink->link = $linkText;
                     }
+                    
+                    $uri = $this->uri(array('action' => 'Comparechosen', 'id' => $moduleid, 'productid' => $productid, 'chosenid' => $selectedproduct));
+                    $compLink = new link($uri);
+                    $compLink->cssClass = "adaptationListingLink";
+                    $compLink->link = $product->getTitle();
 
 
                     $content .= '<div '. $class .'>
 							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
-                            <h4><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id='. $moduleid .'&productid='.$productid.'&chosenid='.$selectedproduct.'" id="treelink"  class="adaptationListingLink">' . $product->getTitle() . ' 
-                   
-                                  </a></h4>
+                            <h4> ' .$compLink->show() .'</h4>
                             <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>						</div> ';
                 }
@@ -256,7 +261,7 @@ $product->LoadProduct($chosenid);
             $temp = $this->objDbmodules->getmoduleparent($moduleid);
            $parentid =  $temp[0]['parentid'];
 
-        if  ($parentid != 'NULL'){                                              //check if origional product was selected
+        if  (!(($parentid == null) or ($parentid == 'NULL'))){                                              //check if origional product was selected
 
                 $modules = $this->objDbmodules->getmodulebyparent($parentid);
 
@@ -306,7 +311,7 @@ $product->LoadProduct($chosenid);
      
             if   ($check == FALSE){
               
-                 if  ($parentid != 'NULL') // check if origional product was selected
+                 if  (!(($parentid == null) or ($parentid == 'NULL')))// check if origional product was selected
                  {
                      $existingContent = $content->getContentByContentID($temp[0]['parentid']);
                  } else 
