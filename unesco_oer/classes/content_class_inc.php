@@ -353,7 +353,9 @@ class content extends object
 
         if ($editable){
             foreach ($this->_content_types as $class => $description) {
-                $option = "[New $description]";
+                $objLanguage = $this->getObject('language', 'language');
+                $newCaption = $objLanguage->languageText('mod_unesco_oer_content_new','unesco_oer');
+                $option = "[$newCaption $description]";
                 if (strlen($option) > 15) {
                     $option = substr($option, 0, 12) . '...';
                 }

@@ -35,7 +35,7 @@ class curriculum extends content {
 
 
     public function showInput($productID, $prevAction = NULL) {
-
+        $objLanguage = $this->getObject('language','language');
         $pair = $option = '';
         if ($this->getID()) {
             $pair = $this->getPairString();
@@ -53,25 +53,6 @@ class curriculum extends content {
             'nextAction' => $prevAction));
         $form_data = new form('add_products_ui', $uri);
 
-//        $html .= '  <h4 class="greyText fontBold labelSpacing">Foreward</h4>
-//                    <h4 class="greyText fontBold labelSpacing">
-//                        <span class="wideDivider">
-//                            <textarea name="textarea3" class="wideInputTextAreaField"></textarea>
-//                        </span>
-//                    </h4>
-//                    <h4 class="greyText fontBold labelSpacing">Background</h4>
-//                    <h4 class="greyText fontBold labelSpacing">
-//                        <span class="wideDivider">
-//                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
-//                        </span>
-//                    </h4>
-//                    <h4 class="greyText fontBold labelSpacing">Introductory Description</h4>
-//                    <h4 class="greyText fontBold labelSpacing">
-//                        <span class="wideDivider">
-//                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
-//                        </span>
-//                    </h4>';
-
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "greytexttable";
 
@@ -81,8 +62,7 @@ class curriculum extends content {
         $textinput->setValue($this->_title);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell('Title');
+        $table->addCell($objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
@@ -104,8 +84,7 @@ class curriculum extends content {
         $editor->setContent($this->_forward);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell('Forward');
+        $table->addCell($objLanguage->languageText('mod_unesco_oer_curriculum_forward', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
@@ -121,8 +100,7 @@ class curriculum extends content {
         $editor->setContent($this->_background);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell('Background');
+        $table->addCell($objLanguage->languageText('mod_unesco_oer_curriculum_background', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
@@ -138,23 +116,21 @@ class curriculum extends content {
         $editor->setContent($this->_introductory_description);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell('Introductory Description');
+        $table->addCell($objLanguage->languageText('mod_unesco_oer_curriculum_description', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
         $table->addCell($editor->show());
         $table->endRow();
         
-         $dropdown = new dropdown('status');
-        $dropdown->addOption('Disabled');
-         $dropdown->addOption('Draft');
-         $dropdown->addOption('Published');
+        $dropdown = new dropdown('status');
+        $dropdown->addOption($objLanguage->languageText('mod_unesco_oer_status_disabled', 'unesco_oer'));
+        $dropdown->addOption($objLanguage->languageText('mod_unesco_oer_status_draft', 'unesco_oer'));
+        $dropdown->addOption($objLanguage->languageText('mod_unesco_oer_status_published', 'unesco_oer'));
          
          
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell("Status");
+        $table->addCell($objLanguage->languageText('mod_unesco_oer_status', 'unesco_oer'));
         $table->endRow();
          
         $table->startRow();
@@ -164,7 +140,7 @@ class curriculum extends content {
         
         
 
-        $buttonSubmit = new button('upload', 'Save');
+        $buttonSubmit = new button('upload', $objLanguage->languageText('mod_unesco_oer_product_upload_button', 'unesco_oer'));
         $buttonSubmit->cssId = "upload";
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
@@ -173,7 +149,7 @@ class curriculum extends content {
         $form_data->addToForm($table->show() . $buttonSubmit->show());
 
         if (strcmp($option, 'saveedit') == 0){
-            $buttonDelete = new button('btn_delete', 'Delete');
+            $buttonDelete = new button('btn_delete', $objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'));
              $uri2 = $this->uri(array(
                 'action' => "saveContent",
                 'productID' => $productID,
@@ -193,36 +169,14 @@ class curriculum extends content {
     }
     
      public function showReadOnlyInput() {
-         
+        $objLanguage = $this->getObject('language','language');
+        $forwardHeading =$objLanguage->languageText('mod_unesco_oer_curriculum_forward', 'unesco_oer');
+        $backgroundHeading =$objLanguage->languageText('mod_unesco_oer_curriculum_background', 'unesco_oer');
+        $descriptionHeading =$objLanguage->languageText('mod_unesco_oer_curriculum_description', 'unesco_oer');
 
-     
-  
-
-//        $html .= '  <h4 class="greyText fontBold labelSpacing">Foreward</h4>
-//                    <h4 class="greyText fontBold labelSpacing">
-//                        <span class="wideDivider">
-//                            <textarea name="textarea3" class="wideInputTextAreaField"></textarea>
-//                        </span>
-//                    </h4>
-//                    <h4 class="greyText fontBold labelSpacing">Background</h4>
-//                    <h4 class="greyText fontBold labelSpacing">
-//                        <span class="wideDivider">
-//                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
-//                        </span>
-//                    </h4>
-//                    <h4 class="greyText fontBold labelSpacing">Introductory Description</h4>
-//                    <h4 class="greyText fontBold labelSpacing">
-//                        <span class="wideDivider">
-//                            <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
-//                        </span>
-
-
-       
-
-        $content = ' <h3 class="greyText"> Forward : </h3>'. $this->_forward . '<br>' ;
-        $content .= ' <h3 class="greyText"> Background : </h3>'. $this->_background . '<br>' ;
-      $content .= ' <h3 class="greyText"> Introductory Description : </h3>'. $this->_introductory_description. '<br>' ;
-     
+        $content = " <h3 class='greyText'> $forwardHeading : </h3>$this->_forward<br>" ;
+        $content .= " <h3 class='greyText'> $backgroundHeading : </h3>$this->_background<br>" ;
+        $content .= " <h3 class='greyText'> $descriptionHeading : </h3>$this->_introductory_description<br>" ;
 
         return $content;
     }
@@ -257,7 +211,6 @@ class curriculum extends content {
                     $this->_background,
                     $this->_introductory_description,
                     $this->tempID
-       
                     );
     }
 
@@ -329,23 +282,5 @@ class curriculum extends content {
         return $success;
     }
 }
-?>
 
-<!--<h4 class="greyText fontBold labelSpacing">Foreward</h4>
-<h4 class="greyText fontBold labelSpacing">
-    <span class="wideDivider">
-        <textarea name="textarea3" class="wideInputTextAreaField"></textarea>
-    </span>
-</h4>
-<h4 class="greyText fontBold labelSpacing">Background</h4>
-<h4 class="greyText fontBold labelSpacing">
-    <span class="wideDivider">
-        <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
-    </span>
-</h4>
-<h4 class="greyText fontBold labelSpacing">Introductory Description</h4>
-<h4 class="greyText fontBold labelSpacing">
-    <span class="wideDivider">
-        <textarea name="textarea4" class="wideInputTextAreaField"></textarea>
-    </span>
-</h4>-->
+?>

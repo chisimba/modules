@@ -72,16 +72,16 @@ class contentmanager extends object {
         $instructions = "
                 <ul>
                     <li>
-                        Use tree on the left to navigate existing conents
+                        {$objLanguage->languageText('mod_unesco_oer_content_instruction_1','unesco_oer')}
                     </li>
                     <li>
-                        Click on content in order to edit it.
+                        {$objLanguage->languageText('mod_unesco_oer_content_instruction_2','unesco_oer')}
                     </li>
                     <li>
-                        Click on the 'Create new ...' options to create new contents.
+                        {$objLanguage->languageText('mod_unesco_oer_content_instruction_3','unesco_oer')}
                     </li>
                     <li>
-                        All contents have the option to delete when being edited.
+                        {$objLanguage->languageText('mod_unesco_oer_content_instruction_4','unesco_oer')}
                     </li>
                 </ul>
             ";
@@ -190,7 +190,9 @@ class contentmanager extends object {
         }
         if ($editable) {
             foreach ($this->_content_types as $key => $value) {
-                $option = "[New $value]";
+                $objLanguage = $this->getObject('language', 'language');
+                $newCaption = $objLanguage->languageText('mod_unesco_oer_content_new','unesco_oer');
+                $option = "[$newCaption $value]";
                 if (strlen($option) > 15) {
                     $option = substr($option, 0, 12) . '...';
                 }

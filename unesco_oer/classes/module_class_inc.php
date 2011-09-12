@@ -26,6 +26,7 @@ class module extends content {
 
     private $objDbModules;
     private $_metaDataArray;
+    private $objLanguage;
 
     public function init() {
         $this->setType('module');
@@ -34,6 +35,7 @@ class module extends content {
         $this->loadClass('dropdown', 'htmlelements');
         $this->icon = 'module.png';
         $this->expandedIcon = $this->icon;
+        $this->objLanguage = $this->getObject('language','language');
     }
 
     public function showInput($productID, $prevAction = NULL) {
@@ -64,8 +66,7 @@ class module extends content {
         $textinput->setValue($this->_title);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell('Section Title');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_title', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
@@ -78,8 +79,7 @@ class module extends content {
         $textinput->setValue($this->_metaDataArray['audience']);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell('Level');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_level', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
@@ -88,18 +88,17 @@ class module extends content {
 
         $editor = $this->newObject('htmlarea', 'htmlelements');
 
-        $fieldName = "Entry Requirements";
-        $editor->name = 'entry_requirements';
+        $fieldName = "entry_requirements";
+        $editor->name = $fieldName;
         $editor->height = '150px';
         $editor->cssClass = "required";
         // $editor->width = '70%';
 
         $editor->setBasicToolBar();
-        $editor->setContent($this->_metaDataArray['entry_requirements']);
+        $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_requirements', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
@@ -108,32 +107,29 @@ class module extends content {
 
         //$editor = $this->newObject('htmlarea', 'htmlelements');
 
-        $fieldName = "Outcomes/Objectives";
-        $editor->name = 'outcomes';
+        $fieldName = 'outcomes';
+        $editor->name = $fieldName;
         $editor->height = '150px';
         // $editor->width = '70%';
 
         $editor->setBasicToolBar();
-        $editor->setContent($this->_metaDataArray['outcomes']);
+        $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_outcomes', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
         $table->addCell($editor->show());
         $table->endRow();
 
-        $fieldName = 'Delivery Mode';
-
-        $textinput = new textinput('mode');
+        $fieldName = 'mode';
+        $textinput = new textinput($fieldName);
         $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray['mode']);
+        $textinput->setValue($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_mode', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
@@ -146,7 +142,7 @@ class module extends content {
         $textinput->setValue($this->_metaDataArray['no_of_hours']);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_no_of_hours', 'unesco_oer'));
         $table->addCell($fieldName);
         $table->endRow();
 
@@ -351,6 +347,7 @@ class module extends content {
         unset($this->_metaDataArray['id']);
         unset($this->_metaDataArray['puid']);
         $this->_metaDataArray['year_id'] = $this->getParentID();
+            $this->_metaDataArray['object'] = $this;
         $this->_id = $this->objDbModules->addModule($this->_metaDataArray);
     }
 

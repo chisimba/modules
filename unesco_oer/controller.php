@@ -2264,7 +2264,7 @@ class unesco_oer extends controller {
         $this->setVarByRef('product', $product);
 
         switch ($option) {
-            case 'new':
+            case 'new': 
                 $newContent = $contentManager->generateNewContent($pair);
                 echo $newContent->showInput($productID);
                 die();

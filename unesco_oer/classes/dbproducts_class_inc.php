@@ -87,7 +87,7 @@ class dbproducts extends dbtable
         $id = $this->insert($productArray);
 
         if (is_array($adaptationData))
-        {
+        { 
             $adaptationData['product_id'] = $id;
             $this->insert($adaptationData, $this->adaptationTable);
         }
@@ -97,7 +97,6 @@ class dbproducts extends dbtable
         if ($result != FALSE) {
             $this->addLuceneIndex($id,$productArray, $tags);
         }
-
         return $result;
     }
 

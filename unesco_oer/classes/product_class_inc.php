@@ -324,7 +324,7 @@ class product extends object {
         }
 
         //NOTE: themes are saved after an ID has been created
-        $this->saveThemes($this->getThemes());
+        $this->saveThemes($this->getThemes()); 
         //NOTE: keywords are saved after an ID has been created
         $this->saveKeyWords($this->getKeyWords());
 
