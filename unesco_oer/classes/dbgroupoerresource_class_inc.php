@@ -33,6 +33,12 @@ class dbgroupoerresource extends dbtable {
         $this->insert($data);
     }
 
+    function deleteGroupResource($id,$groupid){
+        $sql = "DELETE FROM tbl_unesco_oer_group_resources WHERE id='$id' AND groupid=$groupid";
+        $this->getArray($sql);
+    }
+
+
 }
 
 ?>

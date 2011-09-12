@@ -1897,6 +1897,11 @@ class unesco_oer extends controller {
         return "addOERform_tpl.php";
     }
 
+
+    public function __manageOERresource(){
+        return "manageOERresources_tpl.php";
+    }
+
     function __joinGroup() {
         $groupid = $this->getParam("groupid");
         $userid = $this->getParam("userid");
@@ -2145,6 +2150,12 @@ class unesco_oer extends controller {
 
     public function __groupList() {
         return 'groupListView_tpl.php';
+    }
+
+    public function __addOER(){
+        $this->groupmanager->AddOerResource();
+        return ;
+
     }
 
     /*     * This function handles the uploading of product metadata

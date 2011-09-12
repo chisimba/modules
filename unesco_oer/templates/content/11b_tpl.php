@@ -52,13 +52,14 @@ $this->loadClass('textinput', 'htmlelements');
                       </div>
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Link to institution
-                                </a></div>
+
+                                     <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
+                                    Link to institution
+                                </a>
+                           </div>
+                          <div id="showhide" style="display: none;">
 
 
-
-
-                              <div id="showhide" style="display: none;">
 <!--                              <ul>
                                 <li>
                                     Use tree on the left to navigate existing conents
@@ -221,11 +222,10 @@ function SubmitProduct()
     objForm.submit();
 }
 </script>
-          
-
-                        </div>
+ </div>
+                                 </div>
                         <div class="saveCancelButtonHolder">
-                            <div class="buttonSubmit"><a href=""><img src="images/icon-join-group.png" alt="Join Group" width="18" height="18"></a></div>
+                            <div class="buttonSubmit"><a href=""><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18"></a></div>
                             <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">
                                                                         <?php
                                     $userId = $this->objUser->userId();

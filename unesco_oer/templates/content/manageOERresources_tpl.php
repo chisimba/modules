@@ -55,7 +55,7 @@ echo $header->show();
 
 $button = new button('Add Button', $this->objLanguage->languageText('mod_unesco_oer_group_heading', 'unesco_oer'));
 $button->setToSubmit();
-$addGroupLink =new link($this->uri(array('action' =>"groupRegistationForm")));
+$addGroupLink =new link($this->uri(array('action' =>"addOERform")));
 $addGroupLink->link = $button->show();
 //echo $addGroupLink->show();
 
@@ -66,9 +66,7 @@ $BackToControlPannelLink->link = $controlPannel->show();
 
 //button search user
 $buttonGO = new button('searchButton',$this->objLanguage->languageText('mod_unesco_oer_group_go_button', 'unesco_oer') );
-//$buttonGO->setOnClick("javascript: searchThis()");
 $buttonGO->show();
-//text input search user
 $search = new textinput('search','',"",20);
 
 
@@ -82,8 +80,9 @@ $myTable->cellspacing = '0';
 $myTable->cellpadding = '0';
 
 $myTable->startHeaderRow();
-$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_name', 'unesco_oer'),null,null,left,"userheader",null);
-$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_email', 'unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_name','unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_type','unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_author','unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_users', 'unesco_oer'),null,null,left,"userheader",null);
@@ -105,7 +104,7 @@ if (count($groups) > 0) {
         $myTable->startRow();
         $myTable->addCell($group['name'],null, null, null, "user", null, null);
         $myTable->addCell($group['email'], null, null, null, "user", null, null);
-    
+
         $objIcon->setIcon('edit');
         $editLink =new link($this->uri(array('action' =>"groupEditingForm",'id' =>$group['id'])));
         $editLink->link = $objIcon->show();
@@ -128,7 +127,7 @@ if (count($groups) > 0) {
         $editLink =new link($this->uri(array('action' =>"userListingForm",'id' =>$group['id'],'mode'=>$mode)));
         $editLink->link = $objIcon->show();
         $myTable->addCell($editLink->show());
-        
+
         $objIcon->setIcon('view');
         $editLink =new link($this->uri(array('action' =>"groupProductForm",'id' =>$group['id'],'page'=>'2a_tpl.php')));
         $editLink->link = $objIcon->show();

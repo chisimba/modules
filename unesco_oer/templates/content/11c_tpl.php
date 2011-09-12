@@ -52,23 +52,12 @@ $this->loadClass('textinput', 'htmlelements');
                       </div>
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Link to institution</a>
-                                                      <div id="showhide" style="display: none;">
-<!--                              <ul>
-                                <li>
-                                    Use tree on the left to navigate existing conents
-                                </li>
-                                <li>
-                                    Click on content in order to edit it.
-                                </li>
-                                <li>
-                                    Click on the 'Create new ...' options to create new contents.
-                                </li>
-                                <li>
-                                    All contents have the option to delete when being edited.
-                                </li>
-                            </ul>-->
-
+ <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
+                                    Link to institution</a>
+                                </div>
+                        </div>
+                        
+         <div id="showhide" style="display: none;">
 
 <?php
 /*
@@ -178,33 +167,7 @@ $Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_u
 
 $form->extra = 'enctype="multipart/form-data"';
 $form->addToForm('<p align="right">'.$button->show().$Cancelbutton->show().'</p>');
-
-if ($mode == 'addfixup') {
-
-    foreach ($problems as $problem)
-    {
-        $messages[] = $this->__explainProblemsInfo($problem);
-    }
-
-}
-
-
-if ($mode == 'addfixup' && count($messages) > 0) {
-    echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_userdetails_infonotsavedduetoerrors', 'userdetails').'</span>';
-
-    echo '<ul>';
-        foreach ($messages as $message)
-        {
-            if ($message != '') {
-                echo '<li class="error">'.$message.'</li>';
-            }
-        }
-
-    echo '</ul></li></ul>';
-}
-
 echo $form->show();
-
 echo '</div>';
 
 ?>
@@ -216,7 +179,6 @@ function SubmitProduct()
     objForm.submit();
 }
 </script>
-                            </div>
 
                         </div>
                         <div class="saveCancelButtonHolder">
@@ -495,33 +457,71 @@ function SubmitProduct()
 
 ?>
                                         </body>
-                                    </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                  </html>
                                 </div>
                             </div>
                         </div>
                     </div>
   
 
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
 
+
+jQuery(document).ready(function(){
+
+    jQuery("a[id=joingroup]").click(function(){
+
+        var r=confirm( "Are you sure you want to join this group?\nClick Ok a request will be sent to the group admin");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+);
+
+}
+);
+
+jQuery(document).ready(function(){
+
+    jQuery("a[id=memberofgroup]").click(function(){
+
+        var r=confirm( "Your are a member of this group\n you can not join again....!!!");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+
+
+);
+}
+);
+
+$(document).ready(function(){
+                              $('#instLink').click(function(){
+                                $('#showhide').slideToggle();
+                                $('.greenTextBoldLink').atrib('class','greyText');
+
+                  });
+
+
+});
+
+$('button[name=cancelform]').click(
+    function() {
+//        window.location ='index.php?module=unesco_oer&action=11a&id=_13858_1315227715&page=10a_tpl.php';
+    $('#showhide').slideToggle();
+    }
+);
+
+
+
+
+
+
+                     </script>
 
 
 

@@ -51,12 +51,32 @@ $this->loadClass('textinput', 'htmlelements');
                       </div>
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Link to institution</a></div>
+                <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
+                                    Link to institution</a></div>
 
                         </div>
                         <div class="saveCancelButtonHolder">
-                            <div class="buttonSubmit"><a href=""><img src="images/icon-join-group.png" alt="Join Group" height="18" width="18"></a></div>
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Join Group</a>
+                            <div class="buttonSubmit"><a href=""><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" height="18" width="18"></a></div>
+                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">
+                                                                        <?php
+                                    $userId = $this->objUser->userId();
+
+                                    if ($this->ObjDbUserGroups->ismemberOfgroup($userId , $this->getParam('id'))) {
+
+                                        $joinGroupLink = new link($this->uri(array('action' => "11a")));
+                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->cssId = 'memberofgroup';
+                                    } else {
+
+                                        $joinGroupLink = new link($this->uri(array('action' => "joingroup",'join'=>'join', 'id' => $this->getParam('id'), "page" => '10a_tpl.php')));
+                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->cssId = 'joingroup';
+                                    }
+                                    $joinGroupLink->cssClass = 'greenTextBoldLink';
+                                    echo $joinGroupLink->show();
+                                    ?>
+
+                                  </a>
                             <span class="greenText">|&nbsp;</span></div>
                         </div>
                       </div>

@@ -176,7 +176,7 @@ $fieldset->contents = $table->show();
 
 $Savebutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
 $Savebutton->setToSubmit();
-$SavebuttonLink = new link($this->uri(array('action' => "groupListingForm")));
+$SavebuttonLink = new link($this->uri(array('action' => "addOER")));
 $SavebuttonLink->link=$Savebutton->show();
 
 $Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));

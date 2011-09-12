@@ -189,30 +189,6 @@ $Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_u
 $form->extra = 'enctype="multipart/form-data"';
 $form->addToForm('<p align="right">'.$button->show().$Cancelbutton->show().'</p>');
 
-if ($mode == 'addfixup') {
-
-    foreach ($problems as $problem)
-    {
-        $messages[] = $this->__explainProblemsInfo($problem);
-    }
-
-}
-
-
-if ($mode == 'addfixup' && count($messages) > 0) {
-    echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_userdetails_infonotsavedduetoerrors', 'userdetails').'</span>';
-
-    echo '<ul>';
-        foreach ($messages as $message)
-        {
-            if ($message != '') {
-                echo '<li class="error">'.$message.'</li>';
-            }
-        }
-
-    echo '</ul></li></ul>';
-}
-
 echo $form->show();
 
 echo '</div>';
@@ -487,27 +463,8 @@ function SubmitProduct()
 
 ?>
                                         </body>
-                                    </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                </div>
+                                 </html>
+                              </div>
                             </div>
                         </div>
                     </div>
@@ -563,10 +520,4 @@ $('button[name=cancelform]').click(
     $('#showhide').slideToggle();
     }
 );
-
-
-
-
-
-
-                     </script>
+</script>

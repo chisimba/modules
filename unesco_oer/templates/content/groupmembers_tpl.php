@@ -28,6 +28,7 @@ $this->loadClass('textinput', 'htmlelements');
 
             	<div class="tenPixelLeftPadding tenPixelBottomPadding">
                 	<a href="#" class="groupsBreadCrumbColor">
+
                                                                                      <?php
                              $GroupLink=new link($this->uri(array("action" =>'10',"page"=>'10a_tpl.php')));
                              $GroupLink->link="Groups";
@@ -52,9 +53,10 @@ $this->loadClass('textinput', 'htmlelements');
                       </div>
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Link to institution</a></div>
+ <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
+                                    Link to institution</a></div>
                         </div>
-                                                 
+                                                
                           <div id="showhide" style="display: none;">
 <!--                              <ul>
                                 <li>
@@ -180,33 +182,7 @@ $Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_u
 
 $form->extra = 'enctype="multipart/form-data"';
 $form->addToForm('<p align="right">'.$button->show().$Cancelbutton->show().'</p>');
-
-if ($mode == 'addfixup') {
-
-    foreach ($problems as $problem)
-    {
-        $messages[] = $this->__explainProblemsInfo($problem);
-    }
-
-}
-
-
-if ($mode == 'addfixup' && count($messages) > 0) {
-    echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_userdetails_infonotsavedduetoerrors', 'userdetails').'</span>';
-
-    echo '<ul>';
-        foreach ($messages as $message)
-        {
-            if ($message != '') {
-                echo '<li class="error">'.$message.'</li>';
-            }
-        }
-
-    echo '</ul></li></ul>';
-}
-
 echo $form->show();
-
 echo '</div>';
 
 ?>
@@ -218,9 +194,28 @@ function SubmitProduct()
     objForm.submit();
 }
 </script>
+                             </div>
                         <div class="saveCancelButtonHolder">
                             <div class="buttonSubmit"><a href=""><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18"></a></div>
-                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">Join Group</a>
+                            <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">
+                                                                        <?php
+                                    $userId = $this->objUser->userId();
+
+                                    if ($this->ObjDbUserGroups->ismemberOfgroup($userId , $this->getParam('id'))) {
+
+                                        $joinGroupLink = new link($this->uri(array('action' => "11a")));
+                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->cssId = 'memberofgroup';
+                                    } else {
+
+                                        $joinGroupLink = new link($this->uri(array('action' => "joingroup",'join'=>'join', 'id' => $this->getParam('id'), "page" => '10a_tpl.php')));
+                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->cssId = 'joingroup';
+                                    }
+                                    $joinGroupLink->cssClass = 'greenTextBoldLink';
+                                    echo $joinGroupLink->show();
+                                    ?>
+                                   </a>
                             <span class="greenText">|&nbsp;</span></div>
                         </div>
                       </div>
@@ -444,49 +439,18 @@ function SubmitProduct()
                                                 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php',  'MapEntries' => $MapEntries)));
 
                                                 echo $form->show();
-
-
-
-
-
                                                 echo $temp;
-
-
-
 
 ?>
                                         </body>
                                     </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                </div>
+                            </div>
                             </div>
                         </div>
                     </div>
     
-            
-
-            
-
-
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+       
+ <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
 
 
@@ -538,12 +502,7 @@ $('button[name=cancelform]').click(
     }
 );
 
-
-
-
-
-
-                     </script>
+ </script>
 
 
 
