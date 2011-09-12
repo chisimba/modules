@@ -83,10 +83,9 @@ $myTable->startHeaderRow();
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_name','unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_type','unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_author','unesco_oer'),null,null,left,"userheader",null);
+ $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_puublisher','unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'),null,null,left,"userheader",null);
-$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_users', 'unesco_oer'),null,null,left,"userheader",null);
-$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_legend_oerprosucts', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
 //$groups = $this->objDbGroups->getAllGroups();

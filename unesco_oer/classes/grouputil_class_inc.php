@@ -306,7 +306,7 @@ public function groupOwner($groupid){
 
     $content.='
          <div class="groupOwnerImage">
-        <img src='.$group_thumbnail.' width="79" height="101">
+        <img src="'.$group_thumbnail.'" width="79" height="101">
                             <br><span class="greenText fontBold">Owner:</span> <br>
                             '. $owner_name.''.'&nbsp;'.''.$owner_surname.'
                                 <br><br>
@@ -333,6 +333,24 @@ public function groupDescription($groupid){
     }
 
     return $content;
+
+}
+
+function latestDiscussion($groupid){
+    
+    $content;
+    $content.='
+        <div class="discusionPostDiv">
+        <img src="skins/unesco_oer/images/user.jpg" width="40" height="40" class="discussionImage">
+        <a href="" class="greenTextBoldLink">Discussion post title</a>
+        <br>
+        Posts: 3
+       </div>';
+
+}
+
+
+function discussion($groupid){
 
 }
 

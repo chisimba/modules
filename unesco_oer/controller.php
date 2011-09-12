@@ -39,19 +39,16 @@ class unesco_oer extends controller {
     public $objPagination;
     public $groupmanager;
     public $objDbOERresources;
-     public $objDbreporting;
+    public $objDbreporting;
     public $objchartgenerator;
-
     /**
      * @var object $objLanguage Language Object
      */
     public $objLanguage;
-
     /**
      * @var object $objUserAdmin User Administration \ Object
      */
     public $objUserAdmin;
-
     /**
      * @var object $objUser User Object Object
      */
@@ -109,7 +106,7 @@ class unesco_oer extends controller {
         $this->objTopicSubscriptions = & $this->getObject('dbtopicsubscriptions', 'forum');
         $this->objDiscussionType = $this->getObject('dbdiscussiontypes', 'forum');
         $this->objDbOERresources = $this->getObject('dbgroupoerresource');
-          $this->objDbreporting= $this->getObject('dbreporting');
+        $this->objDbreporting = $this->getObject('dbreporting');
         $this->objchartgenerator = $this->getObject('chartgenerator');
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
@@ -1900,8 +1897,7 @@ class unesco_oer extends controller {
         return "addOERform_tpl.php";
     }
 
-
-    public function __manageOERresource(){
+    public function __manageOERresource() {
         return "manageOERresources_tpl.php";
     }
 
@@ -1990,8 +1986,8 @@ class unesco_oer extends controller {
             $this->setVarByRef('problems', $problems);
             return 'groupRegistrationForm_tpl.php';
         } else {
-            $id= $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
-           // $id = $this->objDbGroups->getLastInsertId();
+            $id = $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
+            // $id = $this->objDbGroups->getLastInsertId();
             $userid = $this->objUser->userId();
             $this->ObjDbUserGroups->autoInsert_Joingroup_admin($userid, $id);
             $this->objDbgroupInstitutions->add_group($id);
@@ -2094,8 +2090,11 @@ class unesco_oer extends controller {
                     $this->objDbgroupInstitutions->add_group_institutions($id, $array);
                 }
             }
+            //check if the group has a forum
+            if (!$this->objDbGroups->forumExist($id)) {
+                $this->groupmanager->saveForum($id, $name, $description);
+            }
 
-            //$this->objDbgroupInstitutions->add_group_institutions($id, $institutionid); // Todo store institutions Id not name
             return $this->__groupListingForm();
         }
     }
@@ -2155,10 +2154,9 @@ class unesco_oer extends controller {
         return 'groupListView_tpl.php';
     }
 
-    public function __addOER(){
+    public function __addOER() {
         $this->groupmanager->AddOerResource();
-        return ;
-
+        return;
     }
 
     /*     * This function handles the uploading of product metadata
@@ -2436,8 +2434,8 @@ class unesco_oer extends controller {
     function __changelang() {
         $langid = $this->getParam("langid");
         //$this->objConfig->setdefaultLanguageAbbrev($langid);
-        $this->setSession("language",$langid);
-        $_SESSION['language'] =$langid;
+        $this->setSession("language", $langid);
+        $_SESSION['language'] = $langid;
         return $this->nextAction("home");
     }
 
@@ -2475,7 +2473,6 @@ class unesco_oer extends controller {
         return "forum_newtopic.php";
     }
 
-
     /**
      *
      *
@@ -2496,6 +2493,7 @@ class unesco_oer extends controller {
 
         return 'searchresults.php';
     }
+
 //    public function __testPDF(){
 //        $pdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
 //        $instructions = "

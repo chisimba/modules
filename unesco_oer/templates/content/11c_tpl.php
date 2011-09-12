@@ -5,6 +5,12 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
  $this->objLanguagecode=$this->getObject('languagecode', 'language');
+ $this->objTopic = & $this->getObject('dbtopic', 'forum');
+$forum = $this->objDbGroups->getForum($this->getParam('id'));
+$limit =  " limit 30";
+$order = 'date';
+$topics = $this->objTopic->showTopicsInForum($forum['id'], $this->objUser->userId(), $forum['archivedate'], $order, 'asc', NULL, $limit);
+$topicsNum = count($topics);
 ?>
 
 
@@ -232,7 +238,7 @@ function SubmitProduct()
                                                                             <?php
                              $discussionLink=new link($this->uri(array("action" =>'11b','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_discussion=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
-                             $discussionLink->link=" DISCUSSIONS(1)";// DISCUSSIONS(".$No_Of_discussion.")";
+                             $discussionLink->link=" DISCUSSIONS($topicsNum)";// DISCUSSIONS(".$No_Of_discussion.")";
                              echo $discussionLink->show();
                              ?></a></li>
                      <li><a href="#">

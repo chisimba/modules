@@ -144,7 +144,7 @@ if ($mode == 'addfixup') {
     $resource_publisher->value = $this->getParam('resource_publisher');
 
     if ($this->getParam('resource_author') == '') {
-        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_resorce_author_message', 'unesco_oer');
+        $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_resorce_publisher_message', 'unesco_oer');
     }
 }
 if (isset($userstring[1]) && $mode == 'add')
@@ -152,7 +152,7 @@ if (isset($userstring[1]) && $mode == 'add')
    $resource_publisher->value = $userstring[1];
 }
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_author','unesco_oer').$required); // obj lang
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_puublisher','unesco_oer').$required); // obj lang
 $table->addCell($resource_publisher->show());
 $table->endRow();
 

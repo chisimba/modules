@@ -58,7 +58,7 @@ echo '<div style="padding:10px;">'.$header->show();
 $required = '<span class="required_field"> * ';
 echo '<span class="required_field"> (*) '."All field are required to be filled in Order to register into Unesco_OER".'</span>';
 
-$uri=$this->uri(array('action'=>'saveNewGroup'));
+$uri=$this->uri(array('action'=>'saveNewGroup',"page"=>"10a_tpl.php"));
 $form = new form ('register', $uri);
 
 

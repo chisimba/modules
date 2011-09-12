@@ -301,6 +301,9 @@ $topicsNum = count($topics);
                                                     Posts: 12<br>-->
 
                         <?php
+   
+
+
                         foreach ($topics as $topic) {
 
                             $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => 'context'),'forum'));

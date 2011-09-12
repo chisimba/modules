@@ -52,41 +52,38 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
     <br><br>
 
     <?php
-    echo $this->objGroupUtil->groupPerPage();
-    //$this->objGroupUtil->populateListView();
+                echo $this->objGroupUtil->groupPerPage();
+                //$this->objGroupUtil->populateListView();
     ?>
 
 
-<!--                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
+            <!--                <div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
 
 
-                <div class="blueBackground">
-                        <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
-                        <option value=""> 15</option>
-                    </select>
-                </div>-->
+                            <div class="blueBackground">
+                                    <select name="items_per_page" id="items_per_page" class="leftColumnSelectDropdown">
+                                    <option value=""> 15</option>
+                                </select>
+                            </div>-->
 
-</div>
-<!-- Center column DIv -->
-<div class="centerColumnDiv">
-
-
-    <div class="GridListViewDiv">
-        <div class="sortBy">
-            Sort By:
-            <select name="" class="contentDropDown">
-                <option value="">Date Added</option>
-            </select>
-            <select name="" class="contentDropDown">
-                <option value="">DESC</option>
-
-            </select>
-        </div>
-        <div class="viewGrid">
-            <div class="viewAsDiv">View as: </div>
+            </div>
+            <!-- Center column DIv -->
+            <div class="centerColumnDiv">
 
 
+                <div class="GridListViewDiv">
+                    <div class="sortBy">
+                        Sort By:
+                        <select name="" class="contentDropDown">
+                            <option value="">Date Added</option>
+                        </select>
+                        <select name="" class="contentDropDown">
+                            <option value="">DESC</option>
 
+                        </select>
+                    </div>
+                    <div class="viewGrid">
+                        <div class="viewAsDiv">View as: </div>
 
 
 
@@ -98,7 +95,10 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 
 
 
-            <div class="gridListDivView">
+
+
+
+                        <div class="gridListDivView">
 
                 <?php
                 $abLink = new link($this->uri(array("action" => 'groupGrid', "page" => '10a_tpl.php')));
@@ -116,12 +116,12 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
             <div class="gridListPipe">|</div>
 
             <?php
-            $abLink = new link($this->uri(array("action" => 'groupList', "page" => '10a_tpl.php')));
-            $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
-            echo $abLink->show();
+                $abLink = new link($this->uri(array("action" => 'groupList', "page" => '10a_tpl.php')));
+                $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
+                echo $abLink->show();
             ?>
 
-            <div class="gridListDivView">
+                <div class="gridListDivView">
 
                 <?php
                 $abLink = new link($this->uri(array("action" => 'groupList', "page" => '10a_tpl.php')));
@@ -268,30 +268,30 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
         <div class="featuredHeader pinkText">FEATURED ADAPTATION</div>
         <div class="rightColumnBorderedDiv">
             <?php
-            $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
-            foreach ($featuredProducts as $featuredProduct) {
+                    $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
+                    foreach ($featuredProducts as $featuredProduct) {
 
-                //Check if it's an adapted product
-                $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
+                        //Check if it's an adapted product
+                        $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
 
-                //If the product is an adaptation
-                if ($product['parent_id'] != NULL) {
-                    $featuredAdaptedProduct = $product;
-                }
-            }
+                        //If the product is an adaptation
+                        if ($product['parent_id'] != NULL) {
+                            $featuredAdaptedProduct = $product;
+                        }
+                    }
 
-            $objProduct = $this->getObject('product');
-            $objProduct->loadProduct($featuredAdaptedProduct['id']);
+                    $objProduct = $this->getObject('product');
+                    $objProduct->loadProduct($featuredAdaptedProduct['id']);
 
-            echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
+                    echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
             ?>
-            <div class="spaceBetweenRightBorderedDivs">
-                <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
-            </div>
-            <div class="rightColumnBorderedDiv">
-                <div class="rightColumnContentPadding">
+                    <div class="spaceBetweenRightBorderedDivs">
+                        <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
+                    </div>
+                    <div class="rightColumnBorderedDiv">
+                        <div class="rightColumnContentPadding">
 
-<?php ?>
+                    <?php ?>
 
                     <!DOCTYPE html>
                     <html>
@@ -315,96 +315,96 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                                     myLatlng = [
 
 <?php
-$coords = $this->objDbGroups->getAllgroups();
+                    $coords = $this->objDbGroups->getAllgroups();
 
-foreach ($coords as $coord) {
-    ?>
+                    foreach ($coords as $coord) {
+?>
 
-    new google.maps.LatLng(<?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>),
+                    new google.maps.LatLng(<?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>),
 
 
 <?php } ?>
 
-];
+        ];
 
 
 
-title = [
+        title = [
 
 <?php
-$title = $this->objDbGroups->getAllgroups();
+                    $title = $this->objDbGroups->getAllgroups();
 
-foreach ($title as $titles) {
-    ?>
-                                            "<?php echo $titles['name'] ?>",
+                    foreach ($title as $titles) {
+?>
+                    "<?php echo $titles['name'] ?>",
 
 
 
 <?php } ?>
 
-];
+        ];
 
 
 
 
 
-var myOptions = {
-zoom: 0,
-center: myLatlng[0],
-mapTypeId: google.maps.MapTypeId.ROADMAP
-}
-var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        var myOptions = {
+            zoom: 0,
+            center: myLatlng[0],
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-var oldAction = document.forms["maps"].action;
+        var oldAction = document.forms["maps"].action;
 
-for(i=0;i<myLatlng.length;i++)
-{
-marker[i] = new google.maps.Marker(
-{ position: myLatlng[i],
-title: title[i]
+        for(i=0;i<myLatlng.length;i++)
+        {
+            marker[i] = new google.maps.Marker(
+            { position: myLatlng[i],
+                title: title[i]
 
-} );
+            } );
 
-var pos = marker[i].getPosition();
-
-
+            var pos = marker[i].getPosition();
 
 
 
-google.maps.event.addListener(marker[i], 'click',
-(function(pos)
-{ return function()
-{
-//alert(i);
-document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
-document.forms["maps"].submit();
-};
-}
-)(pos)
-);
-
-marker[i].setMap(map);
-
-}
 
 
-}
+            google.maps.event.addListener(marker[i], 'click',
+            (function(pos)
+            { return function()
+                {
+                    //alert(i);
+                    document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
+                    document.forms["maps"].submit();
+                };
+            }
+        )(pos)
+        );
+
+            marker[i].setMap(map);
+
+        }
+
+
+    }
 
                             </script>
                         </head>
                         <body onload="initialize()">
                             <div id="map_canvas" style="width:100%; height:20%"></div>
-<?php
-$form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
+                            <?php
+                            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
 
-echo $form->show();
-
-
+                            echo $form->show();
 
 
 
-echo $temp;
-?>
+
+
+                            echo $temp;
+                            ?>
                         </body>
                     </html>
 

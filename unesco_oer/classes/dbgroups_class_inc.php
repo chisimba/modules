@@ -529,9 +529,20 @@ class dbgroups extends dbtable {
     function getForum($groupid) {
         $sql =
                 "select * from tbl_forum where forum_workgroup = '$groupid'";
-      
+
         $array = $this->getArray($sql);
         return $array[0];
+    }
+
+    //boolean check if a group has a forum
+    function forumExist($groupid) {
+        $sql = "select * from tbl_forum where forum_workgroup = '$groupid'";
+        $array = $this->getArray($sql);
+        if (empty($array)) {
+            return TRUE;
+        } else {
+            return False;
+        }
     }
 
 }
