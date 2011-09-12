@@ -53,37 +53,37 @@
             <script type="text/javascript">
 
             swfobject.embedSWF(
-                "open-flash-chart.swf", "pie_chart",
+                "packages/unesco_oer/resources/open-flash-chart.swf", "pie_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_pie"} );
 
             swfobject.embedSWF(
-                "open-flash-chart.swf", "bar_chart",
+                "packages/unesco_oer/resources/open-flash-chart.swf", "bar_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar"} );
 
             swfobject.embedSWF(
-                "open-flash-chart.swf", "bar1_chart",
+                "packages/unesco_oer/resources/open-flash-chart.swf", "bar1_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar1"} );
 
             swfobject.embedSWF(
-                "open-flash-chart.swf", "bar2_chart",
+                "packages/unesco_oer/resources/open-flash-chart.swf", "bar2_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar2"} );
 
             swfobject.embedSWF(
-                "open-flash-chart.swf", "bar3_chart",
+                "packages/unesco_oer/resources/open-flash-chart.swf", "bar3_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar3"} );
 
              swfobject.embedSWF(
-                "open-flash-chart.swf", "bar4_chart",
+                "packages/unesco_oer/resources/open-flash-chart.swf", "bar4_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar4"} );
 
              swfobject.embedSWF(
-                "open-flash-chart.swf", "bar5_chart",
+                "packages/unesco_oer/resources/open-flash-chart.swf", "bar5_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar5"} );
 

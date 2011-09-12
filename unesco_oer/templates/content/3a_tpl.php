@@ -371,7 +371,7 @@ echo $product->getAuthors();
 <?php
 if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
     ?>
-                        <span class="greyText fontBold">User comment:</span>
+                        <span class="greyText fontBold"> <?php   echo $this->objLanguage->languageText('mod_unesco_oer_user_comment', 'unesco_oer') ?>     </span>
                         <br><br>
 
                         <div class="listCommunityRelatedInfoDiv">
@@ -434,7 +434,7 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
                                  
                             $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID)));                          
                             $addlink->cssClass = "greyTextLink";
-                            $addlink->link = 'Show Comments';                
+                            $addlink->link = $this->objLanguage->languageText('mod_unesco_oer_show_comment', 'unesco_oer')  ;                
                             echo $addlink->show();
 ?>
                             <div class="slidingDiv">
@@ -505,7 +505,7 @@ echo $Comment->commentbox($productID);
 
                     
                     <div class="rightColumnDiv">
-                            <div class="featuredHeader blueText">FEATURED UNESCO PRODUCTS</div>
+                            <div class="featuredHeader blueText"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
                             <div class="rightColumnBorderedDiv">
                                 <div class="rightColumnContentPadding">
                                     <div class="rightColumnContentPadding">
@@ -531,7 +531,7 @@ echo $Comment->commentbox($productID);
                         </div>
                     </div>
                     <div class="spaceBetweenRightBorderedDivs">
-                        <div class="featuredHeader innerPadding blueText">MOST...</div>
+                        <div class="featuredHeader innerPadding blueText"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_most', 'unesco_oer') ?></div>
                     </div>
                     <!--tabs -->
                     <!--                	<div class="tabsOffState">ADAPTED</div>
@@ -548,9 +548,9 @@ echo $Comment->commentbox($productID);
                                         $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $displayAllMostAdaptedProducts);
                                         $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
                                         $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
-                                        $objTabs->addTab('Adapted', $mostAdapted);
-                                        $objTabs->addTab('Rated', $mostRated);
-                                        $objTabs->addTab('Commented', $mostCommented);
+                                         $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_adapted', 'unesco_oer'), $mostAdapted);
+                                        $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_rated', 'unesco_oer'), $mostRated);
+                                        $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_Comments', 'unesco_oer'), $mostCommented);
                                         echo $objTabs->show();
                         ?>
 

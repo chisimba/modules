@@ -376,7 +376,7 @@ if ($adaptationstring == null)
                             <!-- Right column DIv -->
                             <div class="rightColumnDiv">
                                 <div class="rightColumnDiv">
-                                    <div class="featuredHeader" >FEATURED ADAPTATION</div>
+                                    <div class="featuredHeader" ><?php   echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
                                     <div class="rightColumnBorderedDiv">
 <?php
                              
@@ -399,7 +399,7 @@ if ($adaptationstring == null)
                                 echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
 ?>
                                 <div class="spaceBetweenRightBorderedDivs">
-                                    <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
+                                    <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
                                 </div>
                                 <div class="rightColumnBorderedDiv">
                                     <div class="rightColumnContentPadding">
