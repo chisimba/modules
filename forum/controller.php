@@ -26,6 +26,7 @@ class forum extends controller {
      *
      */
     protected $forumtype;
+
     /**
      *
      * @var string the alue of the context (e.g. the coursecode)
@@ -34,6 +35,7 @@ class forum extends controller {
      *
      */
     protected $contextCode;
+
     /**
      *
      * @var string the value of the workgroup if in a workgroup
@@ -43,6 +45,7 @@ class forum extends controller {
      *
      */
     protected $workgroupId;
+
     /**
      *
      * @var string The workgroup description if in a workgroup
@@ -65,7 +68,7 @@ class forum extends controller {
         //Log this module call
         $this->objLog->log();
 
-        $this->objAltConfig=$this->getObject("altconfig","config");
+        $this->objAltConfig = $this->getObject("altconfig", "config");
         // General Classes
         $this->objUser = & $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
@@ -121,8 +124,8 @@ class forum extends controller {
 
         // Workgroup Classes
         $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
-        $this->usingWorkGroupsFlag=$this->objModuleCatalogue->checkIfRegistered('workgroup');
-        if ($this->usingWorkGroupsFlag){
+        $this->usingWorkGroupsFlag = $this->objModuleCatalogue->checkIfRegistered('workgroups');
+        if ($this->usingWorkGroupsFlag) {
             $this->objWorkGroup = & $this->getObject('dbworkgroup', 'workgroup');
             $this->objWorkGroupUser = & $this->getObject('dbworkgroupusers', 'workgroup');
         }
@@ -166,6 +169,7 @@ class forum extends controller {
             $this->eventsEnabled = FALSE;
         }
         $this->objManageGroups = $this->getObject('managegroups', 'contextgroups');
+        $this->ignoreGroupMembership = $this->objSysConfig->getValue('IGNORE_GROUP_MEMBERSHIP', 'forum');
     }
 
     /**
@@ -423,16 +427,17 @@ class forum extends controller {
 
         $this->objMenuTools->addToBreadCrumbs(array($forum['forum_name']));
 
-        // Check if type is being passed for workgroup, else redirect to get the type
-        if ($forum['forum_workgroup'] != NULL && $this->getParam('type') != 'workgroup') {
-            return $this->nextAction('workgroup');
-        }
+        if ($this->ignoreGroupMembership == 'false') {
+            // Check if type is being passed for workgroup, else redirect to get the type
+            if ($forum['forum_workgroup'] != NULL && $this->getParam('type') != 'workgroup') {
+                return $this->nextAction('workgroup');
+            }
 
-        // Check if user has access to workgroup forum
-        if ($this->usingWorkGroupsFlag && ($forum['forum_workgroup'] != NULL) && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
-            return $this->nextAction('noaccess', array('id' => $forum['forum_workgroup']));
+            // Check if user has access to workgroup forum
+            if ($this->usingWorkGroupsFlag && ($forum['forum_workgroup'] != NULL) && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup']) || $this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
+                return $this->nextAction('noaccess', array('id' => $forum['forum_workgroup']));
+            }
         }
-
         // Check if the forum exists, if not, go to the Forum Home Page
         if ($forum == '') {
             return $this->forumHome();
@@ -596,11 +601,8 @@ class forum extends controller {
             $post_tangent_parent = 0;
         }
         $topic_id = $this->objTopic->insertSingle(
-                        $forum_id,
-                        $type_id,
-                        $tangentParent, // tangent parent
-                        $this->userId,
-                        $post_title
+                $forum_id, $type_id, $tangentParent, // tangent parent
+                $this->userId, $post_title
         );
 
         $this->objForum->updateLastTopic($forum_id, $topic_id);
@@ -1710,7 +1712,7 @@ class forum extends controller {
         // Get the Workgroup
         $this->workgroupId = $this->objWorkGroup->getWorkgroupId();
         $this->workgroupDescription = $this->objWorkGroup->getDescription($this->workgroupId);
-        if ($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $this->workgroupId)||$this->objUser->isContextLecturer($this->userId, $this->contextCode)) {
+        if ($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $this->workgroupId) || $this->objUser->isContextLecturer($this->userId, $this->contextCode)) {
             $this->forumtype = 'workgroup';
         } else {
             $this->forumtype = 'context';
@@ -1740,7 +1742,7 @@ class forum extends controller {
      * @param array $forum Array containing details of the forum
      */
     public function checkWorkgroupAccessOrRedirect($forum) {
-        if ($this->usingWorkGroupsFlag && ($forum['forum_workgroup'] != NULL) && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup'])||$this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
+        if ($this->usingWorkGroupsFlag && ($forum['forum_workgroup'] != NULL) && !($this->objWorkGroupUser->memberOfWorkGroup($this->userId, $forum['forum_workgroup']) || $this->objUser->isContextLecturer($this->userId, $this->contextCode))) {
             return $this->nextAction('noaccess', array('id' => $forum['forum_workgroup']));
         } else {
             $this->forumtype = 'workgroup';
@@ -1977,7 +1979,6 @@ class forum extends controller {
             default:
                 $forum = '';
                 break;
-
         }
         if ($forum != '' && $forum != FALSE) {
             $this->contextObject->joinContext($forum);
@@ -2084,17 +2085,17 @@ class forum extends controller {
         }
     }
 
-    function sendEmailAlert($subject,$message, $linkUrl) {
+    function sendEmailAlert($subject, $message, $linkUrl) {
         $recipients = $this->objManageGroups->contextUsers('Students', $this->contextCode, array('tbl_users.userId', 'email', 'firstName', 'surname'));
         $objMailer = $this->getObject('email', 'mail');
-        $message=html_entity_decode($message);
-        $message=trim($message, "\x00..\x1F");
-        $message=strip_tags($message);
-        $list=array();
-        foreach($recipients as $recipient) {
-            $list[]=$recipient['emailaddress'];
+        $message = html_entity_decode($message);
+        $message = trim($message, "\x00..\x1F");
+        $message = strip_tags($message);
+        $list = array();
+        foreach ($recipients as $recipient) {
+            $list[] = $recipient['emailaddress'];
         }
-        $objMailer->setValue('to',$list);
+        $objMailer->setValue('to', $list);
         $objMailer->setValue('from', "");
         $objMailer->setValue('fromName', $this->objAltConfig->getSiteName());
         $objMailer->setValue('subject', $title);
@@ -2110,8 +2111,8 @@ class forum extends controller {
 
             $linkUrl = str_replace("amp;", "", $linkUrl);
             $objMailer->setValue('to', array($member['emailaddress']));
-            $objMailer->setValue('from',"");
-            $objMailer->setValue('fromName',  $this->objAltConfig->getSiteName());
+            $objMailer->setValue('from', "");
+            $objMailer->setValue('fromName', $this->objAltConfig->getSiteName());
             $objMailer->setValue('subject', $subject);
             $objMailer->setValue('body', strip_tags($body));
             $objMailer->setValue('AltBody', strip_tags($body));
@@ -2121,4 +2122,5 @@ class forum extends controller {
     }
 
 }
+
 ?>
