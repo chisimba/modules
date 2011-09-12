@@ -47,7 +47,7 @@
                 <div class="tenPixelPaddingLeft">
                 <div class="topReportingDiv">
                 	<div class="paddingContentTopLeftRightBottom">
-                                   
+
             <script type="text/javascript" src="packages/unesco_oer/resources/js/json/json2.js"></script>
             <script type="text/javascript" src="packages/unesco_oer/resources/js/swfobject.js"></script>
             <script type="text/javascript">
@@ -93,7 +93,7 @@
                     $ProdOriginals = intval($this->objDbreporting->getProdOriginal());
                     $ProdAdaptations = intval($this->objDbreporting->getProdAdapted());
                     $chart = $this->objchartgenerator->drawPieChart($ProdOriginals, $ProdAdaptations);
-                    echo "return JSON.stringify($chart);";                
+                    echo "return JSON.stringify($chart);";
                     ?>
                 }
 
@@ -173,11 +173,11 @@
                <div id="bar4_chart"></div>
 
 
-                          
 
-       
 
-          
+
+
+
                     </div>
 
                 </div>

@@ -41,7 +41,7 @@ class dbreporting extends dbtable
   function getProdOriginal(){
 
         $sql = 'SELECT COUNT(id) AS Product_Count FROM tbl_unesco_oer_products
-                WHERE parent_id IS NULL';
+                WHERE parent_id IS NULL AND deleted = 0';
         $ProdOriginalArray = $this->getArray($sql);
         $Count = $ProdOriginalArray[0]["product_count"];
 
@@ -55,7 +55,7 @@ class dbreporting extends dbtable
    function getProdAdapted(){
 
        $sql = 'SELECT COUNT(id) AS Product_Count FROM tbl_unesco_oer_products
-               WHERE parent_id IS NOT NULL';
+               WHERE parent_id IS NOT NULL AND deleted = 0';
        $ProdAdaptedArray = $this->getArray($sql);
        $Count = $ProdAdaptedArray[0]["product_count"];
 
@@ -69,7 +69,7 @@ class dbreporting extends dbtable
    function getNoLanguagesOriginals(){
 
        $sql = 'SELECT COUNT( DISTINCT language) AS Language_Count FROM
-               tbl_unesco_oer_products WHERE parent_id IS NULL';
+               tbl_unesco_oer_products WHERE parent_id IS NULL AND deleted = 0';
        $NoLangOri = $this->getArray($sql);
        $Count = $NoLangOri[0]["language_count"];
 
@@ -83,7 +83,7 @@ class dbreporting extends dbtable
    function getNoLanguagesAdaptations(){
 
        $sql = 'SELECT COUNT( DISTINCT language) AS Language_Count FROM
-               tbl_unesco_oer_products WHERE parent_id IS NOT NULL';
+               tbl_unesco_oer_products WHERE parent_id IS NOT NULL AND deleted = 0';
        $NoLangApt = $this->getArray($sql);
        $Count = $NoLangApt[0]["language_count"];
 
@@ -96,7 +96,7 @@ class dbreporting extends dbtable
                Count(tbl_unesco_oer_product_languages.name) AS count
                FROM tbl_unesco_oer_products JOIN tbl_unesco_oer_product_languages
                ON tbl_unesco_oer_products.language = tbl_unesco_oer_product_languages.id
-               WHERE tbl_unesco_oer_products.parent_id IS NULL
+               WHERE tbl_unesco_oer_products.parent_id IS NULL AND deleted = 0
                GROUP BY tbl_unesco_oer_product_languages.name
                ORDER BY count DESC';
        $LanguageOriginal = $this->getArray($sql);
@@ -111,7 +111,7 @@ class dbreporting extends dbtable
                Count(tbl_unesco_oer_product_languages.name) AS count
                FROM tbl_unesco_oer_products JOIN tbl_unesco_oer_product_languages
                ON tbl_unesco_oer_products.language = tbl_unesco_oer_product_languages.id
-               WHERE tbl_unesco_oer_products.parent_id IS NOT NULL
+               WHERE tbl_unesco_oer_products.parent_id IS NOT NULL AND deleted = 0
                GROUP BY tbl_unesco_oer_product_languages.name
                ORDER BY count DESC';
        $LanguageOriginal = $this->getArray($sql);
@@ -140,7 +140,7 @@ class dbreporting extends dbtable
                FROM tbl_unesco_oer_products
                JOIN tbl_unesco_oer_resource_types
                ON tbl_unesco_oer_products.resource_type =  tbl_unesco_oer_resource_types.id
-               WHERE tbl_unesco_oer_products.parent_id IS NULL
+               WHERE tbl_unesco_oer_products.parent_id IS NULL AND deleted = 0
                GROUP BY tbl_unesco_oer_resource_types.description
                ORDER BY Count DESC';
        $Type = $this->getArray($sql);
@@ -156,7 +156,7 @@ class dbreporting extends dbtable
                FROM tbl_unesco_oer_products
                JOIN tbl_unesco_oer_resource_types
                ON tbl_unesco_oer_products.resource_type =  tbl_unesco_oer_resource_types.id
-               WHERE tbl_unesco_oer_products.parent_id IS NOT NULL
+               WHERE tbl_unesco_oer_products.parent_id IS NOT NULL AND deleted = 0
                GROUP BY tbl_unesco_oer_resource_types.description
                ORDER BY Count DESC';
        $Type = $this->getArray($sql);
@@ -208,7 +208,7 @@ class dbreporting extends dbtable
        $sql = 'SELECT EXTRACT(MONTH FROM tbl_unesco_oer_products.date) AS Month,
                COUNT(EXTRACT(MONTH FROM tbl_unesco_oer_products.date)) AS Count
                FROM tbl_unesco_oer_products
-               WHERE tbl_unesco_oer_products.parent_id IS NULL
+               WHERE tbl_unesco_oer_products.parent_id IS NULL AND deleted = 0
                GROUP BY Month
                ORDER BY Count DESC';
        $evol = $this->getArray($sql);
@@ -220,7 +220,7 @@ class dbreporting extends dbtable
        $sql = 'SELECT EXTRACT(MONTH FROM tbl_unesco_oer_products.date) AS Month,
                COUNT(EXTRACT(MONTH FROM tbl_unesco_oer_products.date)) AS Count
                FROM tbl_unesco_oer_products
-               WHERE tbl_unesco_oer_products.parent_id IS NOT NULL
+               WHERE tbl_unesco_oer_products.parent_id IS NOT NULL AND deleted = 0
                GROUP BY Month
                ORDER BY Count DESC';
        $evol = $this->getArray($sql);
