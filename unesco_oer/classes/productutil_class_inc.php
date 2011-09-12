@@ -79,7 +79,7 @@ class productutil extends object {
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
         $CommentLink->cssClass = 'adaptationLinks';
-        $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+        $CommentLink->link = $product['noOfAdaptations'] . ' ' .  $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
 
         $key = array_search('language0', $product);
         $endKey = count($product);
@@ -302,7 +302,7 @@ class productutil extends object {
 
             $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
             $CommentLink->cssClass = 'adaptationLinks';
-            $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+            $CommentLink->link = $product['noOfAdaptations'] .' ' .  $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
 
             /* if ($product['new'] == 'true') {
               $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -504,7 +504,7 @@ class productutil extends object {
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
         $CommentLink->cssClass = 'adaptationLinks';
-        $CommentLink->link = $adaptedProduct->getNoOfAdaptations()  . ' Adaptations';
+        $CommentLink->link = $adaptedProduct->getNoOfAdaptations()  . ' ' . $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -524,7 +524,7 @@ class productutil extends object {
                         <div class="productAdaptationListViewLeftColumn">
                             <h2><a href="#" class="adaptationListingLink">' . $abLink->show() . ' </a></h2><br>
                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">See all adaptations (' . $CommentLink->show() . ')</a></div>
+                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">' .$this->objLanguage->languageText('mod_unesco_oer_see_all_adaptations', 'unesco_oer').'(' . $CommentLink->show() . ')</a></div>
                         </div>';
         if ($adaptedProduct->getThumbnailPath() != NULL) {
             $content .= '<div class="productAdaptationListViewMiddleColumn">
@@ -609,7 +609,7 @@ class productutil extends object {
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
         $CommentLink->cssClass = 'adaptationLinks';
-        $CommentLink->link = $this->objDbProducts->getNoOfAdaptations($product['id']) . ' Adaptations';
+        $CommentLink->link = $this->objDbProducts->getNoOfAdaptations($product['id']) .' ' .  $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
         $thumbnailPath = '';
 //        if (file_exists($product['institution_thumbnail']) && is_file($product['institution_thumbnail'])) {
 //            $thumbnailPath = $product['institution_thumbnail'];
@@ -694,7 +694,7 @@ class productutil extends object {
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
         $CommentLink->cssClass = 'adaptationLinks';
-        $CommentLink->link = $product['noOfAdaptations'] . ' Adaptations';
+        $CommentLink->link = $product['noOfAdaptations'] .' ' .  $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
 
         $content .= '   <div class="leftImageTabsList"><img src="' . $product['thumbnail'] . '" alt="placeholder" width="45" height="49"></div>
                                         <div class="rightTextTabsList">

@@ -27,7 +27,7 @@ $this->appendArrayVar('headerParams', $js);
         <div style="clear:both;"></div> 
         <div class="breadCrumb module"> 
             <div id='breadcrumb'>
-                <ul><li class="first">Home</li>
+                <ul><li class="first"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_add_data_homeBtn', 'unesco_oer') ?></li>
 
                 </ul>
             </div>
@@ -113,7 +113,7 @@ $this->appendArrayVar('headerParams', $js);
 
                     <?php
                     $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php')));
-                    $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_list', 'unesco_oer');
+                    $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_List', 'unesco_oer');
                     echo $abLink->show();
                     ?>
                 </div>
@@ -207,7 +207,7 @@ $this->appendArrayVar('headerParams', $js);
     <!-- Right column DIv -->
 
     <div class="rightColumnDiv">
-        <div class="featuredHeader">FEATURED UNESCO PRODUCTS</div>
+        <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
         <div class="rightColumnBorderedDiv">
             <div class="rightColumnContentPadding">
                 <?php
@@ -231,7 +231,7 @@ $this->appendArrayVar('headerParams', $js);
 
 
         <div class="spaceBetweenRightBorderedDivs">
-            <div class="featuredHeader innerPadding">MOST...</div>
+            <div class="featuredHeader innerPadding"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_most', 'unesco_oer') ?></div>
         </div>
 
         <div class="rightColumnContentPadding">
@@ -242,9 +242,9 @@ $this->appendArrayVar('headerParams', $js);
             $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $displayAllMostAdaptedProducts);
             $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
             $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
-            $objTabs->addTab('Adapted', $mostAdapted);
-            $objTabs->addTab('Rated', $mostRated);
-            $objTabs->addTab('Comments', $mostCommented);
+            $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_adapted', 'unesco_oer'), $mostAdapted);
+            $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_rated', 'unesco_oer'), $mostRated);
+            $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_Comments', 'unesco_oer'), $mostCommented);
             echo $objTabs->show()
             ?>
         </div>

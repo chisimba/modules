@@ -408,7 +408,7 @@ if ($adaptationstring == null)
                             ?>
 
                                         <!DOCTYPE html>
-                                        <html>
+                                
                                             <head>
                                                 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
                                                 <style type="text/css">
@@ -517,7 +517,7 @@ if ($adaptationstring == null)
                                                 
                                                 
                                                 
-                                                echo $temp;
+                                     
                                                 
                                                 
                                                 

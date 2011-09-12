@@ -330,7 +330,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                 <!-- Right column DIv -->
                                 <div class="rightColumnDiv">
                                     <div class="rightColumnDiv">
-                                        <div class="featuredHeader">FEATURED UNESCO PRODUCTS</div>
+                                        <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
                                         <div class="rightColumnBorderedDiv">
                                             <div class="rightColumnContentPadding">
                                 <?php
@@ -358,7 +358,7 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                             </div>
                         </div>
                         <div class="spaceBetweenRightBorderedDivs">
-                            <div class="featuredHeader innerPadding">MOST...</div>
+                            <div class="featuredHeader innerPadding"> <?php   echo $this->objLanguage->languageText('mod_unesco_oer_most', 'unesco_oer') ?></div>
                         </div>
                         <!-- tabs
                         <div class="tabsOnState">ADOPTED</div>
@@ -376,9 +376,9 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                         $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution);
                                         $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
                                         $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
-                                        $objTabs->addTab('Adapted', $mostAdapted);
-                                        $objTabs->addTab('Rated', $mostRated);
-                                        $objTabs->addTab('Commented', $mostCommented);
+                                        $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_adapted', 'unesco_oer'), $mostAdapted);
+                                        $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_rated', 'unesco_oer'), $mostRated);
+                                        $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_Comments', 'unesco_oer'), $mostCommented);
                                         echo $objTabs->show();
                                 ?>
 

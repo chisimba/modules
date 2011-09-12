@@ -21,6 +21,7 @@ class featuredproductutil extends object
     public function init()
     {
         $this->objDbProducts = $this->getObject("dbproducts", "unesco_oer");
+        $this->objLanguage = $this->getObject("language", "language");
           $this->loadClass('link', 'htmlelements');
 
     }
@@ -40,7 +41,7 @@ class featuredproductutil extends object
         $adaplink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $product['id'])));
         $adaplink->cssClass = 'adaptationLinks';
          $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($product['id']);
-        $adaplink->link = $NOofAdaptation . ' Adaptations';
+        $adaplink->link = $NOofAdaptation . ' ' . $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
         
         $content = '';
         $content.='
@@ -62,7 +63,7 @@ class featuredproductutil extends object
               $content = '';
         $content.='
             <img src= skins/unesco_oer/images/icon-nofeature.png  alt="Featured" width="136" height="176"><br>
-                <div class="greyListingHeading">"' . "No Featured Product Selected" . '"</div>
+                <div class="greyListingHeading">"' .$this->objLanguage->languageText('mod_unesco_oer_no_featured', 'unesco_oer') . '"</div>
                     <br>
                     <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
                     ';
@@ -95,7 +96,7 @@ class featuredproductutil extends object
         $content.='
             <img src="' . "skins/unesco_oer/images/icon-nofeature.png" . '" alt="Featured" width="45" height="49"class="smallAdaptationImageGrid">
                                 <div class="featuredAdaptationRightContentDiv">
-                                    <span class="greyListingHeading">"' . "No Featured Product Selected" . '</span>
+                                    <span class="greyListingHeading">"' . $this->objLanguage->languageText('mod_unesco_oer_no_featured', 'unesco_oer') . '</span>
                                     <br><br>
             ';
             
@@ -111,7 +112,7 @@ class featuredproductutil extends object
         
         $adaplink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $featuredAdaptedProduct->getparentID())));
         $adaplink->cssClass = 'adaptationLinks';
-        $adaplink->link =  ' See All Adaptations (' . $featuredAdaptedProduct->getNoOfAdaptations() .')';
+        $adaplink->link =  $this->objLanguage->languageText('mod_unesco_oer_see_all_adaptations', 'unesco_oer') .' (' . $featuredAdaptedProduct->getNoOfAdaptations() .')';
         
         if ( !$featuredAdaptedProduct->isDeleted() && !empty($featuredAdaptedProduct)){
         
@@ -154,7 +155,7 @@ class featuredproductutil extends object
             $content .= '<div class="rightColumnContentPadding">
                                         <img src="' ."skins/unesco_oer/images/icon-nofeature.png"  . '" alt=' . "No Featured Product Selected" . ' width="45" height="49"class="smallAdaptationImageGrid">
                                         <div class="featuredAdaptationRightContentDiv">
-                                            <span class="greyListingHeading">' . "No Featured Adaptation Selected"  . '</span>
+                                            <span class="greyListingHeading">' . $this->objLanguage->languageText('mod_unesco_oer_no_featured', 'unesco_oer')  . '</span>
                                             <br><br>
                                            
                                             <br>
