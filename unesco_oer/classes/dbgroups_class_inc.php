@@ -54,7 +54,7 @@ class dbgroups extends dbtable {
         return $result['id'];
     }
 
-    function editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail,$description_one,$description_two,$description_three,$description_four) {
+    function editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four) {
         if ($name != '') {
             $data = array(
                 'id' => $id,
@@ -183,7 +183,7 @@ class dbgroups extends dbtable {
         }
 
 
-                if ($description_one != '') {
+        if ($description_one != '') {
             $data = array(
                 'id' => $id,
                 'description_one' => $description_one);
@@ -194,7 +194,7 @@ class dbgroups extends dbtable {
 
 
 
-                if ($description_two != '') {
+        if ($description_two != '') {
             $data = array(
                 'id' => $id,
                 'description_two' => $description_two);
@@ -205,7 +205,7 @@ class dbgroups extends dbtable {
 
 
 
-                if ($description_three != '') {
+        if ($description_three != '') {
             $data = array(
                 'id' => $id,
                 'description_three' => $description_three);
@@ -215,7 +215,7 @@ class dbgroups extends dbtable {
         }
 
 
-                if ($description_four != '') {
+        if ($description_four != '') {
             $data = array(
                 'id' => $id,
                 'description_four' => $description_four);
@@ -240,7 +240,7 @@ class dbgroups extends dbtable {
     // PBROBLEM PROBLEM PROBLEM   #############################################
     // Does a User need necessarily to know the Latitude and Longitude of the group Location?
     //
-    function saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail,$description_one,$description_two,$description_three,$description_four) {
+    function saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four) {
         $data = array(
             'name' => $name,
             'email' => $email,
@@ -256,13 +256,12 @@ class dbgroups extends dbtable {
             'description' => $description,
             'admin' => $admin,
             'thumbnail' => $thumbnail,
-            'description_one'=>$description_one,
-            'description_two'=>$description_two,
-            'description_three'=>$description_three,
-            'description_four'=>$description_four
-
+            'description_one' => $description_one,
+            'description_two' => $description_two,
+            'description_three' => $description_three,
+            'description_four' => $description_four
         );
-        $this->insert($data);
+        return $this->insert($data);
     }
 
     /*
@@ -476,10 +475,9 @@ class dbgroups extends dbtable {
         return count($institutions);
     }
 
-
-    function getGroupOwner($groupid){
-        $sql="SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
-        $array=$this->getArray($sql);
+    function getGroupOwner($groupid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id='$groupid'";
+        $array = $this->getArray($sql);
         return $array[0]['admin'];
     }
 
@@ -498,49 +496,43 @@ class dbgroups extends dbtable {
         $this->insert($data);
     }
 
-    function getWebsite($groupid){
+    function getWebsite($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups where id = '$groupid'";
         $website = $this->getArray($sql);
         return $website[0]['website'];
-
     }
 
-    function getDescription_Line_one($groupid){
+    function getDescription_Line_one($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups where id = '$groupid'";
         $array = $this->getArray($sql);
         return $array[0]['description_one'];
-
     }
 
-
-    function getDescription_Line_two($groupid){
+    function getDescription_Line_two($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups where id = '$groupid'";
         $array = $this->getArray($sql);
         return $array[0]['description_two'];
-
     }
 
-
-    function getDescription_Line_three($groupid){
+    function getDescription_Line_three($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups where id = '$groupid'";
         $array = $this->getArray($sql);
         return $array[0]['description_three'];
-
     }
 
-
-    function getDescription_Line_four($groupid){
+    function getDescription_Line_four($groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_groups where id = '$groupid'";
         $array = $this->getArray($sql);
         return $array[0]['description_four'];
-
     }
 
-  
-
-
-
-
+    function getForum($groupid) {
+        $sql =
+                "select * from tbl_forum where forum_workgroup = '$groupid'";
+      
+        $array = $this->getArray($sql);
+        return $array[0];
+    }
 
 }
 ?>

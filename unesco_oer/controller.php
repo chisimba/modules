@@ -1987,8 +1987,8 @@ class unesco_oer extends controller {
             $this->setVarByRef('problems', $problems);
             return 'groupRegistrationForm_tpl.php';
         } else {
-            $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
-            $id = $this->objDbGroups->getLastInsertId();
+            $id= $this->objDbGroups->saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
+           // $id = $this->objDbGroups->getLastInsertId();
             $userid = $this->objUser->userId();
             $this->ObjDbUserGroups->autoInsert_Joingroup_admin($userid, $id);
             $this->objDbgroupInstitutions->add_group($id);

@@ -19,8 +19,8 @@ class groupmanager extends object {
     }
 
     public function saveForum($id, $groupName, $groupDesc) {
-        $forum_context = $id;
-        $forum_workgroup = '';
+        $forum_context = 'root';
+        $forum_workgroup = $id;
         $forum_name = $groupName;
         $forum_description = $groupDesc;
         $defaultForum = 'N';
@@ -81,7 +81,6 @@ class groupmanager extends object {
             $OERresource = $this->objDbOERresources->addGroupOerResource($groupid, $resource_name, $resource_type, $author, $publisher, $file);
         }
     }
-
 
 
 
