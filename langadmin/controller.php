@@ -153,6 +153,12 @@ class langadmin extends controller {
             if ($module == 'unesco') {
                 $module = $module . "_" . $arrName[2];
             }
+            //get the english translation first
+            $_SESSION['language'] = 'en';
+            $engTranslation = $this->objLanguage->languageText($code, $module);
+            $line.=$engTranslation.'~';
+
+            $_SESSION['language'] = $langid;
             $line.=$this->objLanguage->languageText($code, $module);
             $line.="\n";
             fwrite($fh, $line);
@@ -243,19 +249,19 @@ class langadmin extends controller {
             $file = fopen($destinationDir . '/' . $filename, "r") or exit("Unable to open file!");
             //Output a line of the file until the end is reached
             while (!feof($file)) {
-                
+
                 $line = fgets($file);
                 if (empty($line)) {
                     continue;
                 }
                 $parts = explode("~", $line);
 
-                $stringArray = array($langid => $parts[2]);
+                $stringArray = array($langid => $parts[3]);
                 $arrName = explode("_", $parts[0]);
                 $module = $arrName[1];
                 $module = $arrName[1];
                 if ($module == 'unesco') {
-                    $module = $module . "_" . $arrName[2];
+                    $module = $module . "_" . $arrName[3];
                 }
                 $this->objLanguage->addLangItem($parts[0], $module, $stringArray);
             }

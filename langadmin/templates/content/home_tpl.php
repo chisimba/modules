@@ -9,6 +9,7 @@ $this->loadClass('link', 'htmlelements');
 $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_langadmin_title', 'langadmin');
 $header->type = 2;
+echo '<div id="langcontrols">';
 echo $header->show();
 
 
@@ -18,9 +19,10 @@ $uri = $this->uri(array('action' => 'showNewLangTemplate'));
 $addbutton->setOnClick('javascript: window.location=\'' . $uri . '\'');
 
 
-echo $addbutton->show().'<br/>';
+echo $addbutton->show();
 $objConfig=$this->getObject("altconfig","config");
-echo '<a href="'.$objConfig->getsiteRoot().'/packages/langadmin/resources/ChisimbaLangTranslator/dist/ChisimbaLangTranslator.jar">Download Translation Client</a>';
+echo '&nbsp;|&nbsp;<a href="'.$objConfig->getsiteRoot().'/packages/langadmin/resources/ChisimbaLangTranslator/dist/ChisimbaLangTranslator.jar">'.$this->objLanguage->languageText('mod_langadmin_downloadclient', 'langadmin').'</a>';
+echo '</div>';
 
 $table = $this->getObject('htmltable', 'htmlelements');
 $table->startHeaderRow();
