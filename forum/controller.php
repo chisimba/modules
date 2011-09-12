@@ -448,6 +448,7 @@ class forum extends controller {
 
         // Get Order and Sorting Values
         $order = $this->getParam('order', $this->getSession('sortorder', 'date'));
+       
         $direction = $this->getParam('direction', $this->getSession('sortdirection', 'asc'));
 
 
@@ -480,7 +481,6 @@ class forum extends controller {
 
         $paging = $this->objTopic->prepareTopicPagingLinks($id, $page, $limitPerPage);
         $this->setVarByRef('paging', $paging);
-
 
         $allTopics = $this->objTopic->showTopicsInForum($id, $this->userId, $forum['archivedate'], $order, $direction, NULL, $limit);
         $topicsNum = count($allTopics);
