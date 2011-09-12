@@ -39,6 +39,8 @@ class unesco_oer extends controller {
     public $objPagination;
     public $groupmanager;
     public $objDbOERresources;
+     public $objDbreporting;
+    public $objchartgenerator;
 
     /**
      * @var object $objLanguage Language Object
@@ -107,7 +109,8 @@ class unesco_oer extends controller {
         $this->objTopicSubscriptions = & $this->getObject('dbtopicsubscriptions', 'forum');
         $this->objDiscussionType = $this->getObject('dbdiscussiontypes', 'forum');
         $this->objDbOERresources = $this->getObject('dbgroupoerresource');
-
+          $this->objDbreporting= $this->getObject('dbreporting');
+        $this->objchartgenerator = $this->getObject('chartgenerator');
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
 //$this->objGoogleMap = new googlemapapi();

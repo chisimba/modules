@@ -1,127 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>UNESCO</title>
-<link href="style.css" rel="stylesheet" type="text/css">
-<!--[if IE]>
-    <style type="text/css" media="screen">
-    body {
-    	behavior: url(csshover.htc);
-    }
-    </style>
-<![endif]-->
-</head>
-
-<body>
-	<div class="blueHorizontalStrip"></div>
-    <div class="mainWrapper">
-    	<div class="topContent">
-               <?php
-                if ($this->objUser->isLoggedIn()) {
-                ?>
-
-        	<div class="logOutSearchDiv">
-            	<div class="logoutSearchDivLeft">
-                	<div class="nameDiv"><?php echo $this->objUser->fullname(); ?></div>
-                    <div class="logoutDiv">
-                    	<div class="textNextToRightFloatedImage"><a href="#" class="prifileLinks">Log out</a></div>
-                        <img src="images/icon-logout.png" alt="logout" class="imgFloatLeft">
-                    </div>
-                    <div class="profileBookmarkGroupsMessengerDiv">
-
-                        <a href="#"><img src="images/icon-my-profile.png" alt="My Profile" width="20" height="20" class="userIcons" title="My Profile"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-bookmarks.png" alt="My Bookmarks" width="20" height="20" class="userIcons" title="My Bookmarks"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-administration-tools.png" alt="Administration Tools" width="20" height="20" class="userIcons" title="Administration Tools"></a>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-groups.png" alt="My Groups" width="20" height="20" class="userIcons" title="My Groups"></a><div class="numberNextToUserIcons"></div>
-                        <div class="spacingBetweenUserIcons">&nbsp;</div>
-                        <a href="#"><img src="images/icon-my-messenger.png" alt="My Messages" width="20" height="20" class="userIcons" title="My Messages"></a><div class="numberNextToUserIcons"></div>
-
-                    </div>
-                </div>
-                <div class="logoutSearchDivRight">
-                	<div class="searctInputTextDiv">
-                    	<div class="searchGoButton"><a href=""><img src="images/button-search.png" width="17" height="17" class="searchGoImage"></a>
-                        <a href="" class="searchGoLink">GO</a></div>
-                        <div class="searchInputBoxDiv">
-                        	<input type="text" name="" id="" class="searchInput" value="Type search term here...">
-
-                            <select name="" id="" class="searchDropDown">
-                            	<option value="">All</option>
-                            </select>
-                        </div>
-                        <div class="textNextToRightFloatedImage">Search</div>
-                        <img src="images/icon-search.png" alt="Search" class="imgFloatLeft">
-                    </div>
-                    <div class="facebookShareDiv">
-
-
-                         <!-- AddThis Button BEGIN -->
-                        <div class="shareDiv">
-                        <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;username=jabulane"><img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share"></a><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=jabulane"></script>
-
-                        <!-- AddThis Button END -->
-                        </div>
-
-                        <div class="likeDiv">
-                        <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fexample.com%2Fpage%2Fto%2Flike&amp;layout=button_count&amp;show_faces=true&amp;width=50&amp;action=like&amp;font=tahoma&amp;colorscheme=light&amp;"></iframe>
-
-                        </div>
-
-
-
-                    </div>
-                </div>
-            </div>
-                            <?php
-                                        } else {
-                ?>
-                                            <div id="loginDiv">
-                                                <img src="skins/unesco_oer/images/icon-logout.png" alt="logout" class="imgFloatLeft">  <a href="?module=security&action=login" >Log in</a>
-                                            </div>
-                <?php
-                                        }
-                ?>
-          	<div class="logoAndHeading">
-            	<img src="images/logo-unesco.gif" class="logoFloatLeft" alt="logo">
-                 <div class="logoText">
-                <span class="greyTitleText">Unesco&rsquo;s Open Educational Resources Platform</span><br>
-                </div>
-
-          	</div>
-            <div class="languagesDiv">
-                    <div class="languages">
-                	<a href="" class="languagesLinksActive">English</a> |
-                    <a href="" class="languagesLinks">Français</a> |
-                    <a href="" class="languagesLinks">Español</a> |
-                    <a href="" class="languagesLinks">Русский</a> |
-                    <a href="" class="languagesLinks">لعربية</a> |
-                    <a href="" class="languagesLinks">中文</a>
-
-                    </div>
-                    <img src="images/icon-languages.png" class="languagesMainIcon">
-    			</div>
-                <div class="mainNavigation">
-                    <ul id="sddm">
-                         <li><a href="#">UNESCO OER PRODUCTS</a></li>
-                         <li class="mainNavPipe">&nbsp;</li>
-                         <li><a href="#">PRODUCT ADAPTATIONS</a></li>
-
-						 <li class="mainNavPipe">&nbsp;</li>
-                         <li><a href="#">GROUPS</a></li>
-						 <li class="mainNavPipe">&nbsp;</li>
-                         <li class="onStateReporting"><a href="#">REPORTING</a></li>
-						 <li class="mainNavPipe">&nbsp;</li>
-                         <li><a href="#">ABOUT</a></li>
-						 <li class="mainNavPipe">&nbsp;</li>
-
-                         <li><a href="#">CONTACT</a></li>
-                    </ul>
-				</div>
-        </div>
 
         <div class="mainContentHolder">
         	<div class="subNavigation"></div>
@@ -144,8 +24,22 @@
                 </div>
                 <div class="innerMenuTabsDiv">
                 <ul id="innerMenuTabsReporting">
-                     <li><a href="#">GENERAL</a></li>
-                     <li><a href="#">ADAPTATIONS BY MULTIPLE CRITERIA</a></li>
+                     <li>
+                       <?php
+                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '12a_tpl.php')));
+                        $abLink->link = 'GENERAL';
+                        echo $abLink->show();
+                       ?>
+                     </li>
+
+                     <li>
+                      <?php
+                        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '12b_tpl.php')));
+                        $abLink->link = 'ADAPTATIONS BY MULTIPLE CRITERIA';
+                        echo $abLink->show();
+                       ?>
+
+                     </li>
 
                      <li class="onState"><a href="#">CHARTS</a></li>
                 </ul>
@@ -153,18 +47,137 @@
                 <div class="tenPixelPaddingLeft">
                 <div class="topReportingDiv">
                 	<div class="paddingContentTopLeftRightBottom">
-                        <div class="colorBox1"></div> #058dc7<br><br>
+                                   
+            <script type="text/javascript" src="packages/unesco_oer/resources/js/json/json2.js"></script>
+            <script type="text/javascript" src="packages/unesco_oer/resources/js/swfobject.js"></script>
+            <script type="text/javascript">
 
-                        <div class="colorBox2"></div> #50b432<br><br>
-                        <div class="colorBox3"></div> #ed561b<br><br>
-                        <div class="colorBox4"></div> #edef00<br><br>
-                        <div class="colorBox5"></div> #24cbe5<br><br>
-                        <div class="colorBox6"></div> #64e572<br><br>
+            swfobject.embedSWF(
+                "open-flash-chart.swf", "pie_chart",
+                "300", "300", "9.0.0", "expressInstall.swf",
+                {"get-data":"get_pie"} );
 
-                        <div class="colorBox7"></div> #ff9655<br><br>
-                        <div class="colorBox8"></div> #fff263<br><br>
-                        <div class="colorBox9"></div> #6af9c4<br><br>
-                        <div class="colorBox10"></div> #b2deff<br><br>
+            swfobject.embedSWF(
+                "open-flash-chart.swf", "bar_chart",
+                "300", "300", "9.0.0", "expressInstall.swf",
+                {"get-data":"get_bar"} );
+
+            swfobject.embedSWF(
+                "open-flash-chart.swf", "bar1_chart",
+                "300", "300", "9.0.0", "expressInstall.swf",
+                {"get-data":"get_bar1"} );
+
+            swfobject.embedSWF(
+                "open-flash-chart.swf", "bar2_chart",
+                "300", "300", "9.0.0", "expressInstall.swf",
+                {"get-data":"get_bar2"} );
+
+            swfobject.embedSWF(
+                "open-flash-chart.swf", "bar3_chart",
+                "300", "300", "9.0.0", "expressInstall.swf",
+                {"get-data":"get_bar3"} );
+
+             swfobject.embedSWF(
+                "open-flash-chart.swf", "bar4_chart",
+                "300", "300", "9.0.0", "expressInstall.swf",
+                {"get-data":"get_bar4"} );
+
+             swfobject.embedSWF(
+                "open-flash-chart.swf", "bar5_chart",
+                "300", "300", "9.0.0", "expressInstall.swf",
+                {"get-data":"get_bar5"} );
+
+            function get_pie()
+                {
+                   <?php
+                    $ProdOriginals = intval($this->objDbreporting->getProdOriginal());
+                    $ProdAdaptations = intval($this->objDbreporting->getProdAdapted());
+                    $chart = $this->objchartgenerator->drawPieChart($ProdOriginals, $ProdAdaptations);
+                    echo "return JSON.stringify($chart);";                
+                    ?>
+                }
+
+            function get_bar()
+                {
+                   <?php
+                    $data = $this->objDbreporting->getLanguageBreakdownAdaptations();
+                    $title = "Language Breakdown By Adaptations";
+                    $filter = "language";
+                    $chart = $this->objchartgenerator->drawVerticleBarChart($title, $data,$filter);
+                    echo "return JSON.stringify($chart);";
+                    ?>
+                }
+
+            function get_bar1()
+                {
+                   <?php
+                    $data = $this->objDbreporting->getLanguageBreakdownOriginals();
+                    $title = "Language Breakdown By Originals";
+                    $filter = "language";
+                    $chart = $this->objchartgenerator->drawVerticleBarChart($title, $data,$filter);
+                    echo "return JSON.stringify($chart);";
+                    ?>
+                }
+
+            function get_bar2()
+                {
+                   <?php
+                    $data = $this->objDbreporting->getBreakdownTypeAdaptation();
+                    $title = "Breakdown By Type - Adaptations";
+                    $filter = "description";
+                    $chart = $this->objchartgenerator->drawVerticleBarChart($title, $data,$filter);
+                    echo "return JSON.stringify($chart);";
+                    ?>
+                }
+
+            function get_bar3()
+                {
+                   <?php
+                    $data = $this->objDbreporting->getBreakdownTypeOriginal();
+                    $title = "Breakdown By Type - Originals";
+                    $filter = "description";
+                    $chart = $this->objchartgenerator->drawVerticleBarChart($title, $data,$filter);
+                    echo "return JSON.stringify($chart);";
+                    ?>
+                }
+
+            function get_bar4()
+                {
+                   <?php
+                    $data = $this->objDbreporting->getBreakdownCountryAdaptations();
+                    $title = "Breakdown By Country - Adaptations";
+                    $filter = "country";
+                    $chart = $this->objchartgenerator->drawHorizontalBarChart($title, $data,$filter);
+                    echo "return JSON.stringify($chart);";
+                    ?>
+                }
+             function get_bar5()
+                {
+                   <?php
+                    $data = $this->objDbreporting->getRegionBreakdownAdaptation();
+                    $title = "Breakdown By Region - Adaptations";
+                    $filter = "region";
+                    $chart = $this->objchartgenerator->drawHorizontalBarChart1($title, $data,$filter);
+                    echo "return JSON.stringify($chart);";
+                    ?>
+                }
+
+            </script>
+
+               <div id="pie_chart"></div>
+               <div id="bar_chart"></div>
+               <div id="bar1_chart"></div>
+               <div id="bar2_chart"></div>
+               <div id="bar3_chart"></div>
+               <div id="bar5_chart"></div>
+               <div id="bar4_chart"></div>
+
+
+                          
+
+       
+
+          
                     </div>
 
                 </div>
@@ -211,47 +224,6 @@
         </div>
         <!-- Footer-->
 
-        <div class="footerDiv">
-        	<div class="footerLinksLists">
-            	<div class="footerLinksHeadings">Links Set One</div>
-                <a href="" class="footerLink">Link 1</a><br>
-                <a href="" class="footerLink">Link 2</a><br>
-                <a href="" class="footerLink">Link 3</a>
-            </div>
 
-            <div class="footerLinksLists">
-            	<div class="footerLinksHeadings">Links Set Two</div>
-                <a href="" class="footerLink">Link 4</a><br>
-                <a href="" class="footerLink">Link 5</a><br>
-                <a href="" class="footerLink">Link 6</a>
-            </div>
-            <div class="footerLinksLists">
-
-            	<div class="footerLinksHeadings">Links Set Three</div>
-                <a href="" class="footerLink">Link 7</a><br>
-                <a href="" class="footerLink">Link 8</a><br>
-                <a href="" class="footerLink">Link 9</a>
-            </div>
-            <div class="footerLinksLists">
-            	<div class="footerLinksHeadings">Links Set Four</div>
-
-                <a href="" class="footerLink">Link 10</a><br>
-                <a href="" class="footerLink">Link 11</a><br>
-                <a href="" class="footerLink">Link 12</a>
-            </div>
-            <div class="footerBottomText">
-            	<img src="images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
-                <a href="" class="footerLink">UNESCO</a> |
-                <a href="" class="footerLink">Communication and Information</a> |
-                <a href="" class="footerLink">About OER Platform</a> |
-                <a href="" class="footerLink">F.A.Q.</a> |
-                <a href="" class="footerLink">Glossary</a> |
-                <a href="" class="footerLink">Terms of use</a> |
-                <a href="" class="footerLink">Contact</a> |
-                <a href="" class="footerLink">Sitemap</a>
-
-            </div>
-        </div>
-    </div>
 </body>
 </html>
