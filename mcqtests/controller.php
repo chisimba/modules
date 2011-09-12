@@ -961,17 +961,21 @@ class mcqtests extends controller {
                 }
                 $file = $fileLocation . '/' . $testId . '.csv';
                 if ($exportType == 'answers') {
-                    $usersResultList = $this->dbResults->getResults($testId);
+                    $usersResultList = $this->dbResults->getResults($testId,1);
                     if (isset($usersResultList) && !empty($usersResultList)) {
                         $outputFile = fopen($file, 'wb');
-                        fwrite($outputFile, '"Student Number","Student name","Start time","End time","Answers selected"' . "\n");
+                        fwrite($outputFile, '"Student Number","Student Surname","First Name","Start time","End time","Answers selected"' . "\n");
                         foreach ($usersResultList as $user) {
                             $userAnswerList = $this->dbMarked->getAnswersForOutput($testId, $user['studentid']);
                             $line = $userAnswerList[0]['studentid'] . ",";
                             if (!(isset($userAnswerList[0]['fullname']))){
                                 $userAnserList[0]['fullname'] = $this->objUser->fullname($userAnswerList[0]['studentid']);
+                                $userAnserList[0]['firstname'] = $this->objUser->getFirstname($userAnswerList[0]['studentid']);
+                                $userAnserList[0]['surname'] = $this->objUser->getSurname($userAnswerList[0]['studentid']);
                             }
-                            $line.= ($userAnswerList[0]['fullname']) . ",";
+                            //$line.= ($userAnswerList[0]['fullname']) . ",";
+                            $line.= ($userAnswerList[0]['surname']) . ",";
+                            $line.= ($userAnswerList[0]['firstname']) . ",";
                             $line.= $userAnswerList[0]['starttime'] . ",";
                             $line.= $userAnswerList[0]['endtime'] . ",";
                             if (isset($userAnswerList) && !empty($userAnswerList)) {
@@ -991,7 +995,7 @@ class mcqtests extends controller {
                         return $this->nextAction('');
                     }
                 } else {
-                    $usersResultList = $this->dbResults->getResults($testId);
+                    $usersResultList = $this->dbResults->getResults($testId,1);
                     if (isset($usersResultList) && !empty($usersResultList)) {
                         $outputFile = fopen($file, 'wb');
                         fwrite($outputFile, '"Student Number","Student name","Score","Percentage"' . "\n");
@@ -999,8 +1003,12 @@ class mcqtests extends controller {
                             $line = $user['studentid'] . ",";
                             if (!(isset($user['fullname']))){
                                 $user['fullname'] = $this->objUser->fullname($user['studentid']);
+                                $user['surname'] = $this->objUser->getSurname($user['studentid']);
+                                $user['firstname'] = $this->objUser->getFirstname($user['studentid']);
                             }
-                            $line.= ($user['fullname']) . ",";
+                            //$line.= ($user['fullname']) . ",";
+                            $line.= ($user['surname']) . ",";
+                            $line.= ($user['firstname']) . ",";
                             @ $line.= $user['mark'] . ",";
                             $line.= ( round(($user['mark'] / $testData[0]['totalmark']), 4) * 100) . "%,";
                             fwrite($outputFile, $line . "\n");

@@ -49,14 +49,15 @@ class dbresults extends dbtable {
      * fixes a UWC-specific problem 
      * @access public
      * @param string $data The data
+     * @param string $flag Alter userId or not
      * @return array $data2 The result.
      */
-    public function cleanUp($data){
+    public function cleanUp($data,$flag){
         $this->objUser=$this->getObject('user','security');
         $this->objSysCfg=$this->getObject('dbsysconfig','sysconfig');
         $doCleanUp=$this->objSysCfg->getValue('DO_CLEANUP','mcqtests');
         // Do no changes to the data unless the config param is set.
-        if ($doCleanUp!=1){
+        if (($doCleanUp!=1)||($flag==0)){
             return $data;
         }
         foreach ($data as $line){
@@ -66,6 +67,8 @@ class dbresults extends dbtable {
                 if (is_numeric($username)){
                     $line['studentid']=$username;
                     $line['fullname']=$fullname;
+                    $line['surname']=$this->objUser->getSurname($line['studentid']).$line['studentid'];
+                    $line['firstname']=$this->objUser->getFirstname($line['studentid']).$line['studentid'];
                 }
             }
             //added for sorting
@@ -101,12 +104,12 @@ class dbresults extends dbtable {
      * @param string $testId The id of the test.
      * @return array $data The results.
      */
-    public function getResults($testId) {
+    public function getResults($testId,$flag=0) {
         $sql = 'SELECT * FROM '.$this->table;
         $sql.= " WHERE testid='$testId'";
         $data = $this->getArray($sql);
         if (!empty($data)) {
-            return $this->cleanUp($data);
+            return $this->cleanUp($data,$flag);
         }
         return FALSE;
     }
