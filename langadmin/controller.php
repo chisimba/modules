@@ -261,13 +261,15 @@ class langadmin extends controller {
                 $module = $arrName[1];
                 $module = $arrName[1];
                 if ($module == 'unesco') {
-                    $module = $module . "_" . $arrName[3];
+                    $module = $module . "_" . $arrName[2];
                 }
+              
                 $this->objLanguage->addLangItem($parts[0], $module, $stringArray);
             }
         }
         fclose($file);
-        return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 'filename' => $filename));
+        return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 
+            'filename' =>$$filename) );
     }
 
     /**
