@@ -168,18 +168,17 @@ class dbassignmentsubmit extends dbtable {
      * @return <type>
      */
     private function addStudentAssignmentUpload($assignmentId, $userId, $fileId) {
-
-       
         $submitid= $this->insert(array(
             'assignmentid' => $assignmentId,
             'userid' => $userId,
             'studentfileid' => $fileId,
             'datesubmitted' => date('Y-m-d H:i:s', time())
         ));
-         $assignment = $this->getAssignment($assignmentId);
+        $assignment = $this->getAssignment($assignmentId);
         if ($assignment[0]['email_alert_onsubmit'] == '1') {
             $this->prepareToSendEmail($submitid,$assignment[0]['userid']);
         }
+        return $submitid;
     }
 
     private function prepareToSendEmail($submitId,$instructorid) {
@@ -267,14 +266,14 @@ class dbassignmentsubmit extends dbtable {
      */
     private function addStudentAssignmentOnline($assignmentId, $userId, $text) {
         $assignment = $this->getAssignment($assignmentId);
-     
+
         $submitid= $this->insert(array(
             'assignmentid' => $assignmentId,
             'userid' => $userId,
             'online' => $text,
             'datesubmitted' => date('Y-m-d H:i:s', time())
         ));
-        
+
         if ($assignment[0]['email_alert_onsubmit'] == '1') {
             $this->prepareToSendEmail($submitid,$assignment[0]['userid']);
         }
