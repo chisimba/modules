@@ -202,7 +202,7 @@ echo $this->objGroupUtil->groupOwner($this->getParam('id'));
 
 <?php
             $forumId = $this->objDbGroups->getGroupForumId($groupid);
-            $addDiscussionLink = new link($this->uri(array("action" => "newTopicForm", "groupid" => $groupid, "forumid" => $forumid)));
+            $addDiscussionLink = new link($this->uri(array("action" => "newTopicForm", "groupid" => $groupid, "forumid" => $forumid,"page"=>"10a_tpl.php")));
             $addDiscussionLink->link = 'add a discussion';
             $addDiscussionLink->cssClass = 'greenTextBoldLink';
             echo $addDiscussionLink->show();
@@ -238,7 +238,7 @@ echo $this->objGroupUtil->groupOwner($this->getParam('id'));
 
 <?php
             $groupId = $this->getParam('id');
-            $addresourceLink = new link($this->uri(array("action" => "addOERform", "groupid" => $groupId)));
+            $addresourceLink = new link($this->uri(array("action" => "addOERform", "groupid" => $groupId,"page"=>"10a_tpl.php")));
             $addresourceLink->link = 'add resource';
             $addresourceLink->cssClass = 'greyTextBoldLink';
             echo $addresourceLink->show();
