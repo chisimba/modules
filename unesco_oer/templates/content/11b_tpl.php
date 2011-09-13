@@ -289,7 +289,7 @@ $topicsNum = count($topics);
 
         </ul>
     </div>
-<!--    <div class="tenPixelPaddingLeft">
+    <div class="tenPixelPaddingLeft">
         <div class="topGroupDiv">
             <div class="paddingContentTopLeftRightBottom">
                 <div class="discussionList">
@@ -297,27 +297,15 @@ $topicsNum = count($topics);
                         <div class="textNextToRightFloatedImage"><a href="?module=forum&id=<?php
                   //  echo $forum['id'];
                     ?>&type=context&action=forum" class="prifileLinks">Discussion</a></div>
-                                                        What are the implications of using the section name foundation?</h3>
-                                                    Posts: 12<br>
+                                                       
 
-                        <?php
-//                        echo$this->objGroupUtil->discussion($topics);
-//
-//
-//                        foreach ($topics as $topic) {
-//
-//                            $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => 'context'),'forum'));
-//                            $link->link = stripslashes($topic['post_title']);
-//                            echo $link->show().'<br/>';
-//                        }
-                        ?>
                 </div>
 
 
             </div>
         </div>
         <br><br><br>
-    </div>-->
+    </div>
 
     <?php
     echo$this->objGroupUtil->discussion($topics,$forum['id']);
