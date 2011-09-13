@@ -137,9 +137,8 @@ public class MainFrame extends javax.swing.JFrame {
         if (val.length() > 3) {
             for (int i = 0; i < size; i++) {
                 Item item = (Item) model.get(i);
-                CharSequence charSequence = val;
-                if (item.getCode().contains(charSequence)) {
-
+                CharSequence charSequence = val.toLowerCase();
+                if (item.getEnglishTranslation().toLowerCase().contains(charSequence)) {
                     list.ensureIndexIsVisible(i);
                     list.setSelectedIndex(i);
 
@@ -348,6 +347,11 @@ public class MainFrame extends javax.swing.JFrame {
         southPanel.add(exportButton);
 
         closeButton.setText("Close");
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeButtonActionPerformed(evt);
+            }
+        });
         southPanel.add(closeButton);
 
         getContentPane().add(southPanel, java.awt.BorderLayout.PAGE_END);
@@ -375,6 +379,11 @@ public class MainFrame extends javax.swing.JFrame {
         helpMenu.setText("Help");
 
         aboutMenuItem.setText("About");
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(aboutMenuItem);
 
         menuBar.add(helpMenu);
@@ -447,6 +456,7 @@ private void langItemFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
         writeToFile(filename);
+        JOptionPane.showMessageDialog(null, "Saved!");
     }//GEN-LAST:event_exportButtonActionPerformed
 
     private void closeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMenuItemActionPerformed
@@ -458,6 +468,15 @@ private void langItemFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         writeToFile(filename);
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
+
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
+       JOptionPane.showMessageDialog(null, "Version 0.002");
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
+
+    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+        writeToFile(filename);
+        System.exit(0);
+    }//GEN-LAST:event_closeButtonActionPerformed
 
     /**
      * @param args the command line arguments
