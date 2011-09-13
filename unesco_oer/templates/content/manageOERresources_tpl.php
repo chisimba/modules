@@ -83,8 +83,7 @@ $myTable->startHeaderRow();
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_name','unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_type','unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_author','unesco_oer'),null,null,left,"userheader",null);
- $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_puublisher','unesco_oer'),null,null,left,"userheader",null);
-$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_edit', 'unesco_oer'),null,null,left,"userheader",null);
+$myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_puublisher','unesco_oer'),null,null,left,"userheader",null);
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
@@ -103,11 +102,8 @@ if (count($groups) > 0) {
         $myTable->startRow();
         $myTable->addCell($group['name'],null, null, null, "user", null, null);
         $myTable->addCell($group['email'], null, null, null, "user", null, null);
-
-        $objIcon->setIcon('edit');
-        $editLink =new link($this->uri(array('action' =>"groupEditingForm",'id' =>$group['id'])));
-        $editLink->link = $objIcon->show();
-        $myTable->addCell($editLink->show());
+        $myTable->addCell($group['email'], null, null, null, "user", null, null);
+        $myTable->addCell($group['email'], null, null, null, "user", null, null);
 
         $objIcon->setIcon('delete');
         if ($grouphasanadaptationcannotbedeleted) { #############  NEED CONDITION  ########
@@ -121,16 +117,6 @@ if (count($groups) > 0) {
             $myTable->addCell($deleteLink->show());
         }
 
-        $objIcon->setIcon('view');
-        $mode='groupuser';
-        $editLink =new link($this->uri(array('action' =>"userListingForm",'id' =>$group['id'],'mode'=>$mode)));
-        $editLink->link = $objIcon->show();
-        $myTable->addCell($editLink->show());
-
-        $objIcon->setIcon('view');
-        $editLink =new link($this->uri(array('action' =>"groupProductForm",'id' =>$group['id'],'page'=>'2a_tpl.php')));
-        $editLink->link = $objIcon->show();
-        $myTable->addCell($editLink->show());
         $myTable->endRow();
 
     }

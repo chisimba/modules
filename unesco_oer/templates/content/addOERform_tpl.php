@@ -156,22 +156,18 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_p
 $table->addCell($resource_publisher->show());
 $table->endRow();
 
-$fileUploader = $this->getObject('fileuploader', 'files');
-$fileUploader->allowedCategories = array('documents', 'images');
-$fileUploader->savePath = '/uploader/'; // This will then be saved in usrfiles/uploader
-$fileUploader->overwriteExistingFile = TRUE;
-$results = $fileUploader->uploadFile('fileupload1');
-
-
+$FileUploadButton = new button ('fileupload',$this->objLanguage->languageText('mod_unesco_oer_group_file_upload_button', 'unesco_oer'));
 $table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_thumbnail', 'unesco_oer').$required);
-$table->addCell($this->objThumbUploader->show());
+$table->addCell($FileUploadButton->show().$required);
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend = $this->objLanguage->languageText('mod_unesco_oer_group_fieldset_oer', 'unesco_oer');
 $fieldset->contents = $table->show();
 //File uploader
+
+
+
 
 
 $Savebutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
@@ -206,4 +202,12 @@ $('button[name=cancelform]').click(
    // $('#showhide').slideToggle();
     }
 );
+
+$('button[name=fileupload]').click(
+    function() {
+        window.location ='index.php?module=filemanager&page=10a_tpl.php';
+    }
+);
+
+
 </script>
