@@ -297,7 +297,7 @@ $topicsNum = count($topics);
                         <div class="textNextToRightFloatedImage"><a href="?module=forum&id=<?php
                   //  echo $forum['id'];
                     ?>&type=context&action=forum" class="prifileLinks">Discussion</a></div>
-                                                       
+                                            
 
                 </div>
 
