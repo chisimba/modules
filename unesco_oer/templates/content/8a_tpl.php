@@ -82,13 +82,13 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
 
                     <div class="groupSubLinksList">
                         <a href="#" class="greenTextBoldLink">
-                       <?php
-        $groupid = $this->objDbGroups->getGroupForumId($groupid);
-        $addDiscussionLink = new link($this->uri(array("action" => "manageOERresource", "groupid" => $groupId,"page"=>"10a_tpl.php")));
-        $addDiscussionLink->link = 'Manage OER Resources';
-        $addDiscussionLink->cssClass = 'greenTextBoldLink';
-        echo $addDiscussionLink->show();
-?>
+                            <?php
+                            $groupid = $this->objDbGroups->getGroupForumId($groupid);
+                            $addDiscussionLink = new link($this->uri(array("action" => "manageOERresource", "groupid" => $groupId, "page" => "10a_tpl.php")));
+                            $addDiscussionLink->link = 'Manage OER Resources';
+                            $addDiscussionLink->cssClass = 'greenTextBoldLink';
+                            echo $addDiscussionLink->show();
+                            ?>
 
                         </a><br>
                     </div>
