@@ -574,7 +574,7 @@ class unesco_oer extends controller {
            
             return FALSE;
         }
-        $notrequired = array('filterproducts', 'viewproduct', 'login','changelang','home');
+        $notrequired = array('filterproducts', 'viewproduct', 'login','changelang','home','ViewProductSection');
 
         if (in_array($action, $notrequired)) {
             return FALSE;
