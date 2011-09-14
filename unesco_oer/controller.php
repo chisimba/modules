@@ -46,10 +46,12 @@ class unesco_oer extends controller {
      * @var object $objLanguage Language Object
      */
     public $objLanguage;
+
     /**
      * @var object $objUserAdmin User Administration \ Object
      */
     public $objUserAdmin;
+
     /**
      * @var object $objUser User Object Object
      */
@@ -102,7 +104,7 @@ class unesco_oer extends controller {
         $this->objPagination = $this->getObject('pagination');
         $this->groupmanager = $this->getObject('groupmanager');
         $this->objForum = & $this->getObject('dbforum', 'forum');
-      
+
         // Load Forum Subscription classes
         $this->objForumSubscriptions = & $this->getObject('dbforumsubscriptions', 'forum');
         $this->objTopicSubscriptions = & $this->getObject('dbtopicsubscriptions', 'forum');
@@ -2266,7 +2268,7 @@ class unesco_oer extends controller {
         $this->setVarByRef('product', $product);
 
         switch ($option) {
-            case 'new': 
+            case 'new':
                 $newContent = $contentManager->generateNewContent($pair);
                 echo $newContent->showInput($productID);
                 die();
@@ -2436,7 +2438,7 @@ class unesco_oer extends controller {
     function __changelang() {
         $langid = $this->getParam("langid");
         //$this->objConfig->setdefaultLanguageAbbrev($langid);
-        $this->setSession("language", $langid);
+        setcookie("language", $langid);
         $_SESSION['language'] = $langid;
         return $this->nextAction("home");
     }
