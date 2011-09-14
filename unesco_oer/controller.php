@@ -571,11 +571,12 @@ class unesco_oer extends controller {
     public function requiresLogin($action) {
 
         if ($action == null) {
+           
             return FALSE;
         }
-        $required = array('filterproducts', 'viewproduct', 'login');
+        $notrequired = array('filterproducts', 'viewproduct', 'login','changelang','home');
 
-        if (in_array($action, $required)) {
+        if (in_array($action, $notrequired)) {
             return FALSE;
         } else {
             return TRUE;
