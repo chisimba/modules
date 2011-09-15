@@ -237,7 +237,7 @@ class assignment extends controller {
     }
 
     private function __add() {
-   
+
         $workgroupsinassignment = array();
         $learningoutcomesinassignment = array();
         $this->setVarByRef('workgroupsinassignment', $workgroupsinassignment);
@@ -358,9 +358,17 @@ class assignment extends controller {
         $learningoutcomesinassignment = $this->objAssignmentLearningOutcomes->getGoalsFormatted($id);
         $groups = $this->objAssignmentGroups->getGroupsFormatted($id);
 
+        if ($this->isValid('markassignments')) {
+            $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignment['id']);
+        } else {
+            $submissions = $this->objAssignmentSubmit->getStudentAssignment($this->objUser->userId(), $assignment['id']);
+        }
+
         $this->setVarByRef('assignment', $assignment);
         $this->setVarByRef('goals', $learningoutcomesinassignment);
         $this->setVarByRef('groups', $groups);
+        $this->setVarByRef('submissions', $submissions);
+
         return 'viewassignment_tpl.php';
     }
 
@@ -720,7 +728,7 @@ class assignment extends controller {
         $file = fopen($exportfile, "a");
         $objDateTime = $this->getObject('dateandtime', 'utilities');
         $objWashout = $this->getObject('washout', 'utilities');
-        $type = $submission['online'] == 0 ? "Online" : "Upload";
+        $type = $assignment['format'] == 0 ? "Online" : "Upload"; // JOC
         $name = $assignment['name'];
         $desc = strip_tags($assignment['description']);
         $percOfYear = $assignment['percentage'] . '%';
@@ -773,12 +781,41 @@ class assignment extends controller {
      * this downloads all student submissions as a zip file
      */
     function __downloadall() {
-
         $assignmentId = $this->getParam("id");
         $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignmentId);
-
-        $zipname = $this->objAssignmentFunctions->createZipFromSubmissions($submissions, $assignmentId);
-
+        if (empty($submissions)) {
+            trigger_error('There are no submissions!');
+            return $this->nextAction(NULL, array());
+        }
+        //$zipname =
+        $zipFN = $this->objAssignmentFunctions->createZipFromSubmissions($submissions, $assignmentId);
+        if (FALSE === $zipFN) {
+            trigger_error('No ZIP filename!');
+            return $this->nextAction(NULL, array());
+        }
+        else {
+            if (!file_exists($zipFN)) {
+                trigger_error('ZIP file does not exist!');
+                return $this->nextAction(NULL, array());
+            }
+            else {
+                $output_compression = ini_get('zlib.output_compression');
+                if ('On' == $output_compression || (bool)$output_compression) {
+                    ini_set('zlib.output_compression', 'Off');
+                }
+                header("Pragma: public");
+                header("Expires: 0");
+                header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+                header("Cache-Control: private", false);
+                header("Content-Type: application/zip");
+                header("Content-Disposition: attachment; filename=" . basename($zipFN) . ";");
+                header("Content-Transfer-Encoding: binary");
+                header("Content-Length: " . filesize($zipFN));
+                readfile($zipFN);
+                exit(0);
+            }
+        }
+        /*
         if (file_exists($zipname)) {
 // Set Mimetype
             header('Content-type: application/zip');
@@ -788,6 +825,7 @@ class assignment extends controller {
             readfile($zipname);
             exit;
         }
+        */
     }
     /* ------------- END: Set of methods to replace case selection ------------ */
 }

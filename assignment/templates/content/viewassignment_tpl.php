@@ -144,7 +144,7 @@ echo '<hr />' . $htmlHeader->show();
 
 // If Lecturer, show list of assignments
 if ($this->isValid('markassignments')) {
-    $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignment['id']);
+    //$submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignment['id']);
     $table = $this->newObject('htmltable', 'htmlelements');
     $table->startHeaderRow();
     $table->addHeaderCell(ucfirst($this->objLanguage->code2Txt('mod_assignment_studname', 'assignment', NULL, '[-readonly-] name')));
@@ -185,7 +185,7 @@ if ($this->isValid('markassignments')) {
 } else {
     // Show Student Views
 
-    $submissions = $this->objAssignmentSubmit->getStudentAssignment($this->objUser->userId(), $assignment['id']);
+    //$submissions = $this->objAssignmentSubmit->getStudentAssignment($this->objUser->userId(), $assignment['id']);
 
 //    if (count($submissions) == 0) {
 
@@ -339,15 +339,21 @@ $backLink = new link($this->uri(array()));
 $backLink->link = $this->objLanguage->languageText('mod_assignment_backtolist', 'assignment', 'Back to List of Assignments');
 $links .= $backLink->show();
 
-if ($this->isValid('edit')) {
-    $exportLink = new link($this->uri(array("action" => "exporttospreadsheet", "assignmentid" => $assignment['id'])));
-    $exportLink->link = $this->objLanguage->languageText('mod_assignment_exporttospreadsheet', 'assignment');
-    $links .= '<br />'.$exportLink->show();
-    if ($assignment['format'] == '1') {
+if ($this->isValid('markassignments')) { //'edit'
+    // [[ JOC OK
+    if (!empty($submissions)) {
+        $exportLink = new link($this->uri(array("action" => "exporttospreadsheet", "assignmentid" => $assignment['id'])));
+        $exportLink->link = $this->objLanguage->languageText('mod_assignment_exporttospreadsheet', 'assignment');
+        $links .= '<br />'.$exportLink->show();
+    }
+    // ]] JOC OK
+    // [[ JOC OK
+    if ($assignment['format'] == '1' && !empty($submissions)) {
         $downloadalllink = new link($this->uri(array("action" => "downloadall", 'id' => $assignment['id'])));
         $downloadalllink->link = $this->objLanguage->languageText('mod_assignment_downloadall', 'assignment');
         $links .= '<br />'.$downloadalllink->show();
     }
+    // ]] JOC OK
 }
 echo $links;
 ?>
