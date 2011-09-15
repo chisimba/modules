@@ -790,7 +790,7 @@ class assignment extends controller {
         //$zipname =
         $zipFN = $this->objAssignmentFunctions->createZipFromSubmissions($submissions, $assignmentId);
         if (FALSE === $zipFN) {
-            trigger_error('No ZIP filename!');
+            //trigger_error('No ZIP filename!');
             return $this->nextAction(NULL, array());
         }
         else {

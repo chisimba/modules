@@ -704,19 +704,24 @@ class functions_assignment extends object {
         $contentBasePath = $objConfig->getcontentBasePath();
         //--$dirPath = $contentBasePath . 'assignment/submissions/' . $assignmentId;
         //--$mkdir->mkdirs($dirPath);
-        $zip_name = $contentBasePath . 'assignment/submissions/' . $assignmentId . '.zip';
-        if(file_exists($zip_name)){
-            unlink($zip_name);
+        $zipFN = $contentBasePath . 'assignment/submissions/' . $assignmentId . '.zip';
+        if(file_exists($zipFN)){
+            unlink($zipFN);
         }
         $files = array();
         foreach ($submissions as $submission) {
             $submissionId = $submission['id'];
+            $userId = $submission['userid'];
             $fileId = $submission['studentfileid'];
             $file = $objFile->getFile($fileId);
             $filePath = $contentBasePath . 'assignment/submissions/' . $submissionId . '/' . $file['filename'];
             if (file_exists($filePath)) {
                 //copy($filePath, $dirPath . '/' . $file['filename']);
-                $files[] = $filePath;
+                $files[] =
+                    array(
+                    'fn' => $filePath,
+                    'local_fn' => $userId.'_'.basename($filePath)
+                    );
             }
         }
         if (empty($files)) {
@@ -724,11 +729,29 @@ class functions_assignment extends object {
             return FALSE;
         }
         else {
-            $fn = $objWzip->packFilesZip($zip_name, $files, TRUE, FALSE);
-            return $fn;
+            // Create the zip file.
+            if (!extension_loaded('zip')) {
+                throw new customException($this->objLanguage->languageText("mod_utilities_nozipext", "utilities"));
+            }
+            $zip = new ZipArchive();
+            if ($zip->open($zipFN, ZIPARCHIVE::CREATE) !== TRUE) {
+                log_debug("Assignment::Zip Error: cannot open [$zipFN]\n");
+                throw new customException($this->objLanguage->languageText("mod_utilities_nozipcreate", "utilities"));
+            } else {
+                foreach ($files as $f) {
+                    $FN = $f['fn'];
+                    $localFN = $f['local_fn'];
+                    $zip->addFile($FN, $localFN);
+                }
+                $zip->close();
+                //return $zipFN;
+            }
+            return $zipFN;
+            //$fn = $objWzip->packFilesZip($zipFN, $files, TRUE, FALSE);
+            //return $fn;
         }
         //trigger_error('$dirPath:'.$dirPath);
-        //trigger_error('$zip_name:'.$zip_name);
+        //trigger_error('$zipFN:'.$zipFN);
         //$objCreateZipFile->zipDirectory($dirPath, ''); //$zip_name
         //file_put_contents($zip_name, $objCreateZipFile->getZippedfile());
         //$objCreateZipFile->forceDownload($zip_name);
