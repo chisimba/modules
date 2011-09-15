@@ -191,36 +191,37 @@ $this->appendArrayVar('headerParams', $js);
 
 
                 <?php
-            
            
               $content = $product->getContentManager();
               echo  $content->getContentTree(FALSE,FALSE);
            
                 ?>
+<!--                <div class="ellipsis" style="width: 100px; border: 1px solid black;">Lorem ipsum dolor sit amet, consectetur adipisicing elit</div>
+                <div class="ellipsis multiline" style="width: 120px; height: 40px; border: 1px solid black; margin-bottom: 100px">Lorem ipsum dolor sit amet, consectetur adipisicing elit</div>-->
                 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
                
 
 <!--                <ul class="ulPlusPublish">
                     <li class="grey"><a href="">Folder 1</a></li>
-                </ul>
-                <ul class="ulMinusPublish">
-                    <li class="grey"><a href="">Folder 2</a>
-                        <ul class="ulDocument">
-                            <li class="grey"><a href="">Section 1</a></li>
-                            <li class="grey"><a href="">Section 2</a></li>
-                            <li class="grey"><a href="">Sectiongsgerg 3</a></li>
-                            <ul class="ulMinusPublish">
-                                <li class="grey"><a href="">Sub-folder 1</a>
+                </ul>-->
+<!--                <ul class="overflow2">
+                    <li><a href=""><span>Folder 2</span></a>
+                        <ul class="overflow2">
+                            <li><a href=""><span>Section 1</span></a></li>
+                            <li><a href=""><span>Section 2</span></a></li>-->
+<!--                            <li><a href=""><span>Sectiongsgerg 3</span></a></li>-->
+<!--                            <ul class="overflow2" >
+                                <li class="grey"><a href=""><span>Sub-folder 1</span></a>
                                     <ul class="ulDocument">
                                         <li class="grey"><a href="">Section 4</a></li>
                                         <li class="grey"><a href="">Section 5</a></li>
                                         <li class="grey"><a href="">Section 6</a></li>
                                     </ul>
                                 </li>
-                            </ul>
-                        </ul>
+                            </ul>-->
+<!--                        </ul>-->
                     </li>
-                </ul>-->
+                </ul>
             </div>
 
             </div>
@@ -467,7 +468,8 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
 //                                echo $this->objLanguage->languageText('mod_unesco_oer_comments_hide', 'unesco_oer');
                                 
                                 ?>
-                                </a></div>
+<!--                                </a>-->
+                            </div>
 
 
     <?php } ?>
@@ -595,12 +597,22 @@ echo $Comment->commentbox($productID);
                     <br>
                 </div>
     </div>
+<?php
+$js = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ellipsis.js') . '" type="text/javascript"></script>';
+echo $js;
+?>
                     <script type="text/javascript">
 
-                        jQuery(document).ready(function(){
+                        $(document).ready(function(){
 //
-                            jQuery("a[id=deleteProduct]").click(function(){
-                                if(jQuery("#hasAdaptations").val()==true){
+//                            $(".treeMenuDefault").each(function(){$('span').ellipsis();});
+//                        $(".treeMenuDefault > nobr").each(function(){
+//                            alert($(this).html());
+//                            $(this).children('span').each(function(){alert($(this).html());});
+//                        });
+
+                            $("a[id=deleteProduct]").click(function(){
+                                if($("#hasAdaptations").val()==true){
                                     alert('This product has adaptations, you may not delete it.');
                                 } else {
                                     var r=confirm( "Are you sure you want to delete this product?");
@@ -612,7 +624,49 @@ echo $Comment->commentbox($productID);
                                 }
 
                             );
+                                
+                         
                         }
-//
-                    );
+                    );                    
+                    
                     </script>
+
+<!--<style type="text/css">
+    ul.overflow2{width:50px; overflow:hidden;}
+    ul.overflow2 a {display:block; text-decoration:none; color:#000; width:400px; height:19px; overflow:auto;}
+    ul.overflow2 a span {padding:0 5px; float:left; height:19px;}
+    ul.overflow2 a b {float:left; width:200px; height:19px; margin-top:-19px; background:url(skins/unesco_oer/images/icon-product-opened-folder.png) no-repeat right top;}
+    ul.overflow2 a:hover {background:#eee; cursor:pointer;}
+    ul.overflow2 a:hover b {display:none;}
+    ul.overflow2 a:hover span {display:block; position:absolute; width:auto; height:19px;}
+
+    .unOrderedListDiv {
+        float:left;
+        padding-top:10px;
+        width:130px;
+        text-align:left;
+/*        overflow: hidden;*/
+    }
+/*    .unOrderedListDiv a { text-decoration:none; width:400px; height:19px;}*/
+/*    .unOrderedListDiv a span {padding:0 5px; float:left; height:19px;}*/
+/*    .unOrderedListDiv a b {float:left; width:200px; height:19px; margin-top:-19px; background:url(skins/unesco_oer/images/icon-product-opened-folder.png) no-repeat right top;}*/
+/*    .unOrderedListDiv a:hover {background:#eee; cursor:pointer;}*/
+/*    .unOrderedListDiv a:hover b {display:none;}*/
+/*    .unOrderedListDiv .treeMenuDefault nobr:hover a span {position:absolute; width:auto; height:auto; overflow: auto}*/
+.treeMenuDefault span:hover {position:absolute; width:auto; height:auto; overflow: none; background: none}
+/*.treeMenuDefault span {background:url(skins/unesco_oer/images/icon-product-opened-folder.png) no-repeat 130% 50%;}*/
+.treeMenuDefault .treeTrunc {
+    background-image:url(skins/unesco_oer/images/icon-product-opened-folder.png);
+    background-repeat:no-repeat;
+    width:10px;
+    height:10px;
+    position:relative;
+    top:9px;
+    margin-top:-30px;
+    z-index:999;
+    overflow:auto;
+    left:90%;
+}
+.treediv {width: 80%; overflow: hidden;}
+/*.unOrderedListDiv .treeMenuDefault span b {background:url(skins/unesco_oer/images/icon-product-opened-folder.png) no-repeat right top;}*/
+</style>-->

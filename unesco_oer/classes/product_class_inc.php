@@ -502,24 +502,27 @@ class product extends object {
         $fileInfoArray = array();
 
         if (!$this->objThumbUploader->isFileValid($fileInfoArray) && !$this->isAdaptation()) {
+            $errorMessage1 = $this->objLanguage->languageText('mod_unesco_oer_thumbnail_error1','unesco_oer');
+            $errorMessage2 = $this->objLanguage->languageText('mod_unesco_oer_thumbnail_error2','unesco_oer');
+            $errorMessage3 = $this->objLanguage->languageText('mod_unesco_oer_thumbnail_error3','unesco_oer');
             switch ($fileInfoArray['reason']) {
                 case 'nouploadedfileprovided':
                     if (!$this->getThumbnailPath()) {
                         $valid = FALSE;
-                        $this->addValidationMessage('thumbnail', $valid, 'A thumbnail is required');
+                        $this->addValidationMessage('thumbnail', $valid, $errorMessage1);
                     }
                     break;
                 case 'bannedfile':
                     $valid = FALSE;
-                    $this->addValidationMessage('thumbnail', $valid, 'Invalid file type submitted!');
+                    $this->addValidationMessage('thumbnail', $valid, $errorMessage2);
                     break;
                 case 'doesnotmeetextension':
                     $valid = FALSE;
-                    $this->addValidationMessage('thumbnail', $valid, 'Invalid file type submitted!');
+                    $this->addValidationMessage('thumbnail', $valid, $errorMessage2);
                     break;
                 case 'partialuploaded':
                     $valid = FALSE;
-                    $this->addValidationMessage('thumbnail', $valid, 'Thumbnail upload failed, please try again.');
+                    $this->addValidationMessage('thumbnail', $valid, $errorMessage3);
                     break;
 
                 default:

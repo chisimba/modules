@@ -136,45 +136,42 @@ class module extends content {
         $table->addCell($textinput->show());
         $table->endRow();
 
-        $fieldName = 'Number of Hours';
-        $textinput = new textinput('no_of_hours');
+        $fieldName = 'no_of_hours';
+        $textinput = new textinput($fieldName);
         $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray['no_of_hours']);
+        $textinput->setValue($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_no_of_hours', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_no_of_hours', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
         $table->addCell($textinput->show());
         $table->endRow();
 
-        $fieldName = "Description";
+        $fieldName = "description";
         $editor->name = $fieldName;
         $editor->height = '150px';
         // $editor->width = '70%';
 
         $editor->setBasicToolBar();
-        $editor->setContent($this->_metaDataArray['description']);
+        $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
         $table->addCell($editor->show());
         $table->endRow();
 
-        $fieldName = 'Assesment';
-        $textinput = new textinput('assesment');
+        $fieldName = 'assesment';
+        $textinput = new textinput($fieldName);
         $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray['assesment']);
+        $textinput->setValue($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_assessment', 'unesco_oer'));
         $table->endRow();
 
         $table->startRow();
@@ -183,16 +180,16 @@ class module extends content {
 
         //$editor = $this->newObject('htmlarea', 'htmlelements');
 
-        $fieldName = 'Schedule of Activities';
-        $editor->name = 'schedule_of_classes';
+        $fieldName = 'schedule_of_classes';
+        $editor->name = $fieldName;
         $editor->height = '150px';
         // $editor->width = '70%';
 
         $editor->setBasicToolBar();
-        $editor->setContent($this->_metaDataArray['schedule_of_classes']);
+        $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_schedule_of_classes', 'unesco_oer'));
         $table->addCell($fieldName);
         $table->endRow();
 

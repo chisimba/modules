@@ -213,7 +213,7 @@ class contentmanager extends object {
 
         $output .= $treeMenu->getMenu();
 
-        return $output;
+        return "<div class='treediv'>$output</div>";
     }
 
     function setProductID($id) {

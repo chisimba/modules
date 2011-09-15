@@ -332,6 +332,7 @@ class content extends object
                       }
                       else{
                             $node = new treenode(array(
+//                                                        'text' => $title . $hiddenInput->show()."<div class='treetrunc'></div>",
                                                         'text' => $title . $hiddenInput->show(),
                                                    //     'cssClass' => ($highlighted ? 'HL' : ''),                                                       
                                                          'link' => $link,
