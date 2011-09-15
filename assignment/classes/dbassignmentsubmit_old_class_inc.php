@@ -22,7 +22,7 @@
  * @package   assignment2
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: dbassignment_class_inc.php 11337 2008-11-05 17:38:03Z davidwaf $
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  */
 

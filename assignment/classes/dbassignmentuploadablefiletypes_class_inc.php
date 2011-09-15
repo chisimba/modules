@@ -21,7 +21,7 @@
  * @package   assignment
  * @copyright 2010 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: dbassignment_class_inc.php 19012 2010-09-15 10:18:54Z joconnor $
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
