@@ -782,13 +782,16 @@ class assignment extends controller {
      */
     function __downloadall() {
         $assignmentId = $this->getParam("id");
+        $assignment = $this->objAssignment->getAssignment($assignmentId);
+        $assignmentName = $assignment['name'];
         $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignmentId);
         if (empty($submissions)) {
             trigger_error('There are no submissions!');
             return $this->nextAction(NULL, array());
         }
         //$zipname =
-        $zipFN = $this->objAssignmentFunctions->createZipFromSubmissions($submissions, $assignmentId);
+        //==preg_replace('/[^[:alnum:]_\s]/', '_', '\temp0_ \/:*?"<>|');
+        $zipFN = $this->objAssignmentFunctions->createZipFromSubmissions($assignmentName, $submissions);
         if (FALSE === $zipFN) {
             //trigger_error('No ZIP filename!');
             return $this->nextAction(NULL, array());
@@ -808,7 +811,7 @@ class assignment extends controller {
                 header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
                 header("Cache-Control: private", false);
                 header("Content-Type: application/zip");
-                header("Content-Disposition: attachment; filename=" . basename($zipFN) . ";");
+                header("Content-Disposition: attachment; filename=\"" . basename($zipFN) . "\";");
                 header("Content-Transfer-Encoding: binary");
                 header("Content-Length: " . filesize($zipFN));
                 readfile($zipFN);

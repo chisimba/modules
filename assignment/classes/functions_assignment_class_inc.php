@@ -685,12 +685,13 @@ class functions_assignment extends object {
     }
 
     /**
-     * creates a zip file from the submissions
-     * @param <type> $submissions
-     * @param <type> $assignmentId
-     * @return string
+     * Creates a zip file from the submissions.
+     *
+     * @param string $assignmentName Name of assignment
+     * @param array $submissions Student submissions
+     * @return string|bool Zip filename or FALSE on error
      */
-    function createZipFromSubmissions($submissions, $assignmentId) {
+    function createZipFromSubmissions($assignmentName, $submissions) {
         $objConfig = $this->getObject('altconfig', 'config');
         $mkdir = $this->getObject('mkdir', 'files');
         $objFile = $this->getObject('dbfile', 'filemanager');
@@ -704,7 +705,7 @@ class functions_assignment extends object {
         $contentBasePath = $objConfig->getcontentBasePath();
         //--$dirPath = $contentBasePath . 'assignment/submissions/' . $assignmentId;
         //--$mkdir->mkdirs($dirPath);
-        $zipFN = $contentBasePath . 'assignment/submissions/' . $assignmentId . '.zip';
+        $zipFN = $contentBasePath . 'assignment/submissions/' . preg_replace('/[^[:alnum:]_\s]/', '_', $assignmentName) . '.zip'; //$assignmentId
         if(file_exists($zipFN)){
             unlink($zipFN);
         }
