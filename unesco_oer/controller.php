@@ -1902,6 +1902,8 @@ class unesco_oer extends controller {
         return "addOERform_tpl.php";
     }
 
+
+
     public function __manageOERresource() {
         return "manageOERresources_tpl.php";
     }

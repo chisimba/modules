@@ -25,6 +25,8 @@ class grouputil extends object {
         $this->objUseExtra = $this->getObject("dbuserextra", "unesco_oer");
         $this->objLanguagecode = $this->getObject('languagecode', 'language');
         $this->objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
+        $this->objPost = $this->getObject('dbpost','forum');
+       $this->objDateTime =  $this->getObject('dateandtime', 'utilities');
     }
 
     public function groupPerPage() {
@@ -334,7 +336,9 @@ class grouputil extends object {
             $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => 'context'), 'forum'));
             $link->link = stripslashes($topic['post_title']);
             $link->show();
-            $datefield=$this->objTranslatedDate->getDifference($topic['lastdate']);
+            //$datefield=$this->objTranslatedDate->getDifference($topic['lastdate']);
+           $post=$this->objPost->getLastPost($forumId);
+           $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']).' - '.$this->objDateTime->formatTime($post['datelastupdated']);
 
 
             $content.='
@@ -343,8 +347,8 @@ class grouputil extends object {
                 	<div class="paddingContentTopLeftRightBottom">
                         <div class="discussionList">
                          <h3 class="fontBold">' . $link->show() . '</h3>
-                             <div class="textNextToRightFloatedImage"><a href="?module=forum&id=' . $forumId . '
-                              &type=context&action=forum" class="prifileLinks">Discussion</a></div>
+                             <div class="textNextToRightFloatedImage">
+                              </div>
                             Posts:12<br>
                             Last posted: '.$datefield.'
                         </div>

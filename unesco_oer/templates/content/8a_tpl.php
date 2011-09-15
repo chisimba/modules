@@ -198,7 +198,12 @@ echo $this->objGroupUtil->groupOwner($this->getParam('id'));
                     </div>
 
                     <div class="showAlldiscussions">
-                        <a href="" class="greenTextBoldLink">All discussions</a> |
+
+                        <a href="?module=forum&action=forum&id=
+                    <?php
+                    $groupid = $this->getParam('id');
+                    echo $this->objDbGroups->getGroup_pkid_in_forum($groupid);
+                    ?>&page=10a_tpl.php   " class="greenTextBoldLink">All discussions</a> |
 
 <?php
             $forumId = $this->objDbGroups->getGroupForumId($groupid);

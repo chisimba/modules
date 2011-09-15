@@ -81,6 +81,7 @@ class groupmanager extends object {
             $OERresource = $this->objDbOERresources->addGroupOerResource($groupid, $resource_name, $resource_type, $author, $publisher, $file);
         }
     }
+   
 
 
 

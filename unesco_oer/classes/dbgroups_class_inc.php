@@ -545,6 +545,13 @@ class dbgroups extends dbtable {
         }
     }
 
+
+    function getGroup_Pkid_in_forum($groupid){
+        $sql="select * from tbl_forum where forum_workgroup = '$groupid'";
+        $array = $this->getArray($sql);
+        return $array[0]['id'];
+    }
+
 }
 ?>
 
