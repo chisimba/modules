@@ -306,11 +306,10 @@ echo $abLink->show();
                      $uri = $this->uri(array('action' => 'Comparechosen', 'id' => $moduleid, 'productid' => $productid, 'chosenid' => $origionalproduct));
                     $compLink = new link($uri);
                     $compLink->cssClass = "adaptationListingLink";
-                    $compLink->link = $product->getTitle();
-
+                    $compLink->link = 'UNESCO';
 
                 echo $content = '<div class="slideBoxProduct">
-							<div class="leftTopImage"><img src="' . $product->getThumbnailPath() . '" width="27" height="29" ></div>
+							<div class="leftTopImage"><img src="' . "skins/unesco_oer/images/unesco-logo-2.jpg" . '" width="39" height="29" ></div>
                                 <h4>'.$compLink->show() .'</h4>
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>
@@ -353,17 +352,18 @@ echo $abLink->show();
                         $linkText = 'Make Adaptation';
                         $adaptLink->link = $linkText;
                     }
-                    
+
+                    $groupInfo = $product->getGroupInfo();
+                    $creatorName = $groupInfo['name'];
+                    $creatorThumb = $groupInfo['thumbnail'];
+
                      $uri = $this->uri(array('action' => 'Comparechosen', 'id' => $moduleid, 'productid' => $productid, 'chosenid' =>$selectedproduct));
                     $compLink = new link($uri);
                     $compLink->cssClass = "adaptationListingLink";
-                    $compLink->link = $product->getTitle();
-
-
-
+                    $compLink->link = $creatorName;
 
                     $content .= '<div class="slideBoxAdaptation">
-							<div class="leftTopImage"><img src="' . $product->getThumbnailPath() . '" width="27" height="29" ></div>
+							<div class="leftTopImage"><img src="' . $creatorThumb . '" width="27" height="29" ></div>
                             <h4>'. $compLink->show().'</h4>
                             <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>						</div> ';

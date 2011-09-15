@@ -68,11 +68,11 @@
                 <div class="topHeadingDiv">
                 <div class="productsBackgroundColor twelvePixelLeftPadding tenPixelTopPadding">
                      <?php
-                    
                   
-                                echo ' <div class="leftTopImage"><img src="'. $product->getThumbnailPath() .' " width="45" height="49" ></div> ';
-                               echo '   <div class="rightTopContentAndLinks">
-                   	  <h2 class="blueText">'.$product->getTitle().' </h2>';
+                        echo ' <div class="leftTopImage"><img src="'. $product->getThumbnailPath() .' " width="45" height="49" ></div> ';  
+                        echo '   <div class="rightTopContentAndLinks">
+                                    <h2 class="blueText">'.$product->getTitle().' </h2>
+                                </div>';
                     
                     
                     
@@ -144,8 +144,10 @@
             	<div class="toggleBoxProduct">
                     <?php
                 
-                                echo ' <div class="leftTopImage"><img src="'. $product->getThumbnailPath() .' " width="27" height="29" ></div> ';
-                               echo '  <h4 class="blueText">'.$product->getTitle().'</h4>';
+//                                echo ' <div class="leftTopImage"><img src="'. $product->getThumbnailPath() .' " width="27" height="29" ></div> ';
+                                echo ' <div class="leftTopImage"><img src="'. "skins/unesco_oer/images/unesco-logo-2.jpg" .' " width="45" height="49" ></div> ';
+//                               echo '  <h4 class="blueText">'.$product->getTitle().'</h4>';
+                                echo '  <h4 class="blueText">UNESCO</h4>';
                     
                     ?>
                       <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
@@ -197,6 +199,18 @@
                                     $content = $product->getContentManager();
                                     
                                     $contentHTML = $content->getContentTree(FALSE,TRUE, TRUE,FALSE,$selectedproducts);
+
+//                                    $creatorName = 'Error has occurred!';
+//                                    $creatorThumb = '';
+//                                    if ($product->hasInstitutionLink()){
+//                                        $institution = $product->getInstitution();
+//                                        $creatorName = $institution->getName();
+//                                        $creatorThumb = $institution->getThumbnail();
+//                                    } else {
+                                        $groupInfo = $product->getGroupInfo();
+                                        $creatorName = $groupInfo['name'];
+                                        $creatorThumb = $groupInfo['thumbnail'];
+//                                    }
                                     
                                      if ($this->objUser->isLoggedIn()) {
                                                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $selectedproduct , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$selectedproduct"));
@@ -215,8 +229,8 @@
                         
                         <div class="spaceNextToToggleBoxes"></div>
                         <div class="toggleBoxAdaptation">
-							<div class="leftTopImage"><img src="'. $product->getThumbnailPath() .'" width="27" height="29" ></div>
-                                <h4><a href="#" class="adaptationListingLink">'.$product->getTitle().'</a></h4>
+							<div class="leftTopImage"><img src="'. $creatorThumb .'" width="27" height="29" ></div>
+                                <h4><a href="#" class="adaptationListingLink">'.$creatorName.'</a></h4>
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv">'. $adaptLink->show() .'</div>
                                 
@@ -275,8 +289,8 @@
                   
                   
               </script>
-      <style>
-      .highlight { background:yellow; }
+      <style type="text/css">
+        .highlight { background:yellow; }
       </style>
        
 </body>

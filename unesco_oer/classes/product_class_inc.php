@@ -1505,10 +1505,7 @@ class product extends object {
     }
 
     function getInstitutionName() {
-        $institutionID = $this->getInstitutionID();
-        if (!empty ($institutionID)){
-            $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
-            $institution = $objInstitutionManager->getInstitution($institutionID);
+        if ($institution = $this->getInstitution()){
             return $institution->getName();
         } else {
             return 'No Institution Linked';
@@ -1516,12 +1513,21 @@ class product extends object {
     }
 
     function getInstitution() {
-        $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
-        return $objInstitutionManager->getInstitution($this->getInstitutionID());
+        if ($this->hasInstitutionLink()){
+            $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+            return $objInstitutionManager->getInstitution($this->getInstitutionID());
+        } else {
+            return NULL;
+        }
     }
 
     function getInstitutionID() {
         return $this->_institution;
+    }
+
+    function hasInstitutionLink(){
+        $institutionID = $this->getInstitutionID();
+        return !empty($institutionID);
     }
 
     function makeInstitutionDropDown($group_id = NULL) {

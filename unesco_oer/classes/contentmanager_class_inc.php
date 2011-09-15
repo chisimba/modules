@@ -193,9 +193,9 @@ class contentmanager extends object {
                 $objLanguage = $this->getObject('language', 'language');
                 $newCaption = $objLanguage->languageText('mod_unesco_oer_content_new','unesco_oer');
                 $option = "[$newCaption $value]";
-                if (strlen($option) > 15) {
-                    $option = substr($option, 0, 12) . '...';
-                }
+//                if (strlen($option) > 15) {
+//                    $option = substr($option, 0, 12) . '...';
+//                }
                 $menu->addItem(new treenode(array(
                             'text' => $option,
                             'link' => "#", 'icon' => 'icon-add-to-adaptation.png',

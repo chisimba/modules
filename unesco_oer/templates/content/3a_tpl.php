@@ -604,13 +604,6 @@ echo $js;
                     <script type="text/javascript">
 
                         $(document).ready(function(){
-//
-//                            $(".treeMenuDefault").each(function(){$('span').ellipsis();});
-//                        $(".treeMenuDefault > nobr").each(function(){
-//                            alert($(this).html());
-//                            $(this).children('span').each(function(){alert($(this).html());});
-//                        });
-
                             $("a[id=deleteProduct]").click(function(){
                                 if($("#hasAdaptations").val()==true){
                                     alert('This product has adaptations, you may not delete it.');
@@ -630,43 +623,3 @@ echo $js;
                     );                    
                     
                     </script>
-
-<!--<style type="text/css">
-    ul.overflow2{width:50px; overflow:hidden;}
-    ul.overflow2 a {display:block; text-decoration:none; color:#000; width:400px; height:19px; overflow:auto;}
-    ul.overflow2 a span {padding:0 5px; float:left; height:19px;}
-    ul.overflow2 a b {float:left; width:200px; height:19px; margin-top:-19px; background:url(skins/unesco_oer/images/icon-product-opened-folder.png) no-repeat right top;}
-    ul.overflow2 a:hover {background:#eee; cursor:pointer;}
-    ul.overflow2 a:hover b {display:none;}
-    ul.overflow2 a:hover span {display:block; position:absolute; width:auto; height:19px;}
-
-    .unOrderedListDiv {
-        float:left;
-        padding-top:10px;
-        width:130px;
-        text-align:left;
-/*        overflow: hidden;*/
-    }
-/*    .unOrderedListDiv a { text-decoration:none; width:400px; height:19px;}*/
-/*    .unOrderedListDiv a span {padding:0 5px; float:left; height:19px;}*/
-/*    .unOrderedListDiv a b {float:left; width:200px; height:19px; margin-top:-19px; background:url(skins/unesco_oer/images/icon-product-opened-folder.png) no-repeat right top;}*/
-/*    .unOrderedListDiv a:hover {background:#eee; cursor:pointer;}*/
-/*    .unOrderedListDiv a:hover b {display:none;}*/
-/*    .unOrderedListDiv .treeMenuDefault nobr:hover a span {position:absolute; width:auto; height:auto; overflow: auto}*/
-.treeMenuDefault span:hover {position:absolute; width:auto; height:auto; overflow: none; background: none}
-/*.treeMenuDefault span {background:url(skins/unesco_oer/images/icon-product-opened-folder.png) no-repeat 130% 50%;}*/
-.treeMenuDefault .treeTrunc {
-    background-image:url(skins/unesco_oer/images/icon-product-opened-folder.png);
-    background-repeat:no-repeat;
-    width:10px;
-    height:10px;
-    position:relative;
-    top:9px;
-    margin-top:-30px;
-    z-index:999;
-    overflow:auto;
-    left:90%;
-}
-.treediv {width: 80%; overflow: hidden;}
-/*.unOrderedListDiv .treeMenuDefault span b {background:url(skins/unesco_oer/images/icon-product-opened-folder.png) no-repeat right top;}*/
-</style>-->

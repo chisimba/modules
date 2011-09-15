@@ -313,9 +313,9 @@ class content extends object
         }
 
         $title = $this->getTitle();
-        if (strlen($title) > 15) {
-            $title = substr($title, 0, 12) . '...';
-        }
+//        if (strlen($title) > 15) {
+//            $title = substr($title, 0, 12) . '...';
+//        }
 
         // Makes tree a link if not editing when adding product metadata
         if ($editable){
