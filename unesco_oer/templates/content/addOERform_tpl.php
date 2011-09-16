@@ -59,7 +59,8 @@ $required = '<span class="required_field"> * ';
 // setup and show heading
 $header = new htmlheading();
 $header->type = 1;
-$header->str =$this->objDbGroups->getGroupName($this->getParam('id')).":"."add resource";  //objLang
+$header->str =$this->objDbGroups->getGroupName($this->getParam('groupid')).":"."add resource";
+
 echo $header->show();
 
 $uri=$this->uri(array('action'=>'editGroup','id'=>$this->getParam('id')));
@@ -172,7 +173,7 @@ $fieldset->contents = $table->show();
 
 $Savebutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
 $Savebutton->setToSubmit();
-$SavebuttonLink = new link($this->uri(array('action' => "addOER")));
+$SavebuttonLink = new link($this->uri(array('action' => "sav","groupid"=>$this->getParam('groupid'))));
 $SavebuttonLink->link=$Savebutton->show();
 
 $Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));

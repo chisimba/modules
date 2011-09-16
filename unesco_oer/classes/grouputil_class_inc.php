@@ -217,7 +217,9 @@ class grouputil extends object {
     public function groupInstitution($groupid) {
         $content = '';
         $arrayInstitutionId = $this->objDbGroups->getInstitutions($groupid);
+
         foreach ($arrayInstitutionId as $institutionid) {
+            //if(strcmp($institutionid,"Null")!=0){
             $institutionThumbnail = $this->objDbGroups->getInstitutionThumbnail($institutionid);
             $institutionname = $this->objDbGroups->getInstitutionName($institutionid);
 
@@ -225,12 +227,11 @@ class grouputil extends object {
                             <div class="textNextToGroupIcon">
                                 <h2>
                                 ' . $institutionname . '</h2>
-
-                                <a href="#" class="bookmarkLinks">English</a> | <a href="#" class="bookmarkLinks">German</a>
+                                   <a href="#" class="bookmarkLinks">English</a> | <a href="#" class="bookmarkLinks">German</a>
                             </div>
                              </div>
-                  
-                ';
+                   ';
+        //}
         }
         echo $content;
     }

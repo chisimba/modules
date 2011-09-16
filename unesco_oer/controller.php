@@ -1902,9 +1902,18 @@ class unesco_oer extends controller {
         return "addOERform_tpl.php";
     }
 
+    function __saveOER(){
+       $this->groupmanager->AddOerResource();
+       }
+
 
 
     public function __manageOERresource() {
+        return "manageOERresources_tpl.php";
+    }
+
+    public function __deleteOERresource(){
+        $groupid = $this->getParam("groupid");
         return "manageOERresources_tpl.php";
     }
 
@@ -2093,7 +2102,7 @@ class unesco_oer extends controller {
         } else {
             $this->objDbGroups->editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four);
             foreach ($rightList as $array) {
-                if ($this->objDbgroupInstitutions->check_availableGroupInstitution($id, $array) != TRUE) {
+                if ($this->objDbgroupInstitutions->check_availableGroupInstitution($id,$array) != TRUE) {
                     $this->objDbgroupInstitutions->add_group_institutions($id, $array);
                 }
             }

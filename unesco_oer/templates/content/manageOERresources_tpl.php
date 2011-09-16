@@ -30,7 +30,7 @@ $this->loadClass('textinput', 'htmlelements');
 $header = new htmlheading();
 $header->type = 1;
 $header->cssClass="manageusers";
-$header->str = "Unesco_OER GROUPS:";
+$header->str = "Unesco_OER GROUPS :";
 ?>
 <div style="clear:both;"></div>
 <div class="breadCrumb module">
@@ -53,7 +53,7 @@ echo $header->show();
 
 
 
-$button = new button('Add Button', $this->objLanguage->languageText('mod_unesco_oer_group_heading', 'unesco_oer'));
+$button = new button('Add Button', $this->objLanguage->languageText('mod_unesco_oer_add_resource_heading', 'unesco_oer'));
 $button->setToSubmit();
 $addGroupLink =new link($this->uri(array('action' =>"addOERform")));
 $addGroupLink->link = $button->show();
@@ -87,36 +87,29 @@ $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_r
 $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer'),null,null,left,"userheader",null);
 $myTable->endHeaderRow();
 
-//$groups = $this->objDbGroups->getAllGroups();
-//get user from the database
-$groups = "";
-//$mode=$this->getParam('mode');
 if (strcmp($mode, 'addfixup') == 0){
-    $groups=$group;
+    $resources=$this->objDbOERresources->getResource($groupid);
 }else{
-    $groups = $this->objDbGroups->getAllGroups();
+    $groupid=$this->getParam('groupid');
+    $resources=$this->objDbOERresources->getResource($groupid);
+
 }
 
-if (count($groups) > 0) {
-    foreach ($groups as $group) {
+
+if (count($resources) > 0) {
+    foreach ($resources as $resource) {
         $myTable->startRow();
-        $myTable->addCell($group['name'],null, null, null, "user", null, null);
-        $myTable->addCell($group['email'], null, null, null, "user", null, null);
-        $myTable->addCell($group['email'], null, null, null, "user", null, null);
-        $myTable->addCell($group['email'], null, null, null, "user", null, null);
-
+        //Add items in a table
+        $myTable->addCell($resource['resource_name'], null, null, null, "user", null, null);
+        $myTable->addCell($resource['resource_type'], null, null, null, "user", null, null);
+        $myTable->addCell($resource['author'], null, null, null, "user", null, null);
+        $myTable->addCell($resource['publisher'], null, null, null, "user", null, null);
         $objIcon->setIcon('delete');
-        if ($grouphasanadaptationcannotbedeleted) { #############  NEED CONDITION  ########
-            $deleteLink->link = $objIcon->show();
-            $deleteLink->cssClass = 'deletegroupadaptation';
-            $myTable->addCell($deleteLink->show());
-        } else {
-            $deleteLink = new link($this->uri(array('action' => "deleteGroup", 'id' => $group['id'])));
-            $deleteLink->link = $objIcon->show();
-            $deleteLink->cssClass = 'deleteuser';
-            $myTable->addCell($deleteLink->show());
-        }
-
+        $deleteLink = new link($this->uri(array('action' =>"deleteOERresource", 'id' => $group['id'])));
+        $deleteLink->link = $objIcon->show();
+        $deleteLink->cssClass = 'deleteresource';
+        $myTable->addCell($deleteLink->show());
+        //close row
         $myTable->endRow();
 
     }
@@ -125,7 +118,7 @@ if (count($groups) > 0) {
 echo $nogroupfound; // this must be a script
 
 $fs = new fieldset();
-$fs->setLegend($this->objLanguage->languageText('mod_unesco_oer_group_users', 'unesco_oer'));
+$fs->setLegend($this->objLanguage->languageText('mod_unesco_oer_group_resources', 'unesco_oer'));
 $fs->addContent($myTable->show());
 echo $fs->show();
 
@@ -138,9 +131,9 @@ echo $fs->show();
 
 jQuery(document).ready(function(){
 
-    jQuery("a[class=deleteuser]").click(function(){
+    jQuery("a[class=deleteresource]").click(function(){
 
-        var r=confirm( "Are you sure you want to delete this group?");
+        var r=confirm( "Are you sure you want to delete this resource?");
         if(r== true){
             window.location=this.href;
         }

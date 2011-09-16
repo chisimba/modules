@@ -443,7 +443,7 @@ class dbgroups extends dbtable {
 
     function getInstitutions($id) {
         $arrayInstitutions = array();
-        $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
+        $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id' AND institution_id IS NOT NULL";
         $institutions = $this->getArray($sql);
         foreach ($institutions as $institution) {
 
@@ -470,8 +470,8 @@ class dbgroups extends dbtable {
     }
 
     function getNoOfInstitutions($id) {
-        $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id'";
-        $institutions = $this->getArray($sql);
+        $sql = "SELECT * FROM tbl_unesco_oer_group_institutions WHERE group_id='$id' AND institution_id IS NOT NULL";
+         $institutions = $this->getArray($sql);
         return count($institutions);
     }
 
