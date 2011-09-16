@@ -691,7 +691,8 @@ class functions_assignment extends object {
      * @param array $submissions Student submissions
      * @return string|bool Zip filename or FALSE on error
      */
-    function createZipFromSubmissions($assignmentName, $submissions) {
+    /*
+    function createZipFromSubmissions_deprecated($assignmentName, $submissions) {
         $objConfig = $this->getObject('altconfig', 'config');
         $mkdir = $this->getObject('mkdir', 'files');
         $objFile = $this->getObject('dbfile', 'filemanager');
@@ -760,6 +761,7 @@ class functions_assignment extends object {
         //$zip->close();
         //return; //$zip_name;
     }
+    */
 
 }
 

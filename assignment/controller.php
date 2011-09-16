@@ -781,6 +781,12 @@ class assignment extends controller {
      * this downloads all student submissions as a zip file
      */
     function __downloadall() {
+        //$objConfig = $this->getObject('altconfig', 'config');
+        $objFilename = $this->newObject('filename', 'files');
+        $objMkdir = $this->newObject('mkdir', 'files');
+        $objDBFile = $this->newObject('dbfile', 'filemanager');
+        $objWzip = $this->newObject('wzip', 'utilities');
+
         $assignmentId = $this->getParam("id");
         $assignment = $this->objAssignment->getAssignment($assignmentId);
         $assignmentName = $assignment['name'];
@@ -789,35 +795,92 @@ class assignment extends controller {
             trigger_error('There are no submissions!');
             return $this->nextAction(NULL, array());
         }
-        //$zipname =
+        //--$dirPath = $contentBasePath . 'assignment/submissions/' . $assignmentId;
+        $contentBasePath = $this->objConfig->getcontentBasePath();
+        //$contentPath = $this->objConfig->getcontentPath();
+        $zipPath = 'assignment/submissions/';
+        $zipFullPath = $contentBasePath . $zipPath;
         //==preg_replace('/[^[:alnum:]_\s]/', '_', '\temp0_ \/:*?"<>|');
-        $zipFN = $this->objAssignmentFunctions->createZipFromSubmissions($assignmentName, $submissions);
-        if (FALSE === $zipFN) {
+        $zipBaseName = $objFilename->makeFileName($this->context.' ('.$this->contextCode.')_'.$assignmentName.' ('.$assignmentId.').zip'); //preg_replace('/[^[:alnum:]_\s]/', '_', $assignmentName) . '.zip'; //$assignmentId //$contentBasePath . 'assignment/submissions/'
+        $zipFN = $zipFullPath . $zipBaseName;
+        //==$zipURI = $this->objConfig->getsiteRoot() . rawurlencode($contentPath . $zipPath . $zipBaseName);
+        $objMkdir->mkdirs($zipFullPath);
+        if(file_exists($zipFN)){
+            unlink($zipFN);
+        }
+        $files = array();
+        foreach ($submissions as $submission) {
+            $submissionId = $submission['id'];
+            $userId = $submission['userid'];
+            $fileId = $submission['studentfileid'];
+            $file = $objDBFile->getFile($fileId);
+            $filePath = $contentBasePath . 'assignment/submissions/' . $submissionId . '/' . $file['filename'];
+            if (file_exists($filePath)) {
+                //copy($filePath, $dirPath . '/' . $file['filename']);
+                $files[] =
+                    array(
+                    'fn' => $filePath,
+                    'local_fn' => $userId.'_'.basename($filePath)
+                    );
+            }
+        }
+        if (empty($files)) {
+            trigger_error('There are no submission files!');
+            return $this->nextAction(NULL, array());
+            //return FALSE;
+        }
+        else {
+            // Create the zip file.
+            if (!extension_loaded('zip')) {
+                throw new customException($this->objLanguage->languageText("mod_utilities_nozipext", "utilities"));
+            }
+            $zip = new ZipArchive();
+            if ($zip->open($zipFN, ZIPARCHIVE::CREATE) !== TRUE) {
+                log_debug("Assignment::Zip Error: cannot open [$zipFN]\n");
+                throw new customException($this->objLanguage->languageText("mod_utilities_nozipcreate", "utilities"));
+            } else {
+                foreach ($files as $f) {
+                    $FN = $f['fn'];
+                    $localFN = $f['local_fn'];
+                    $zip->addFile($FN, $localFN);
+                }
+                $zip->close();
+                //--return $zipFN;
+            }
+            //return $zipFN;
+            //$fn = $objWzip->packFilesZip($zipFN, $files, TRUE, FALSE);
+            //return $fn;
+        }
+        //$zipFN = $this->objAssignmentFunctions->createZipFromSubmissions($assignmentName, $submissions);
+        //if (FALSE === $zipFN) {
             //trigger_error('No ZIP filename!');
+            //return $this->nextAction(NULL, array());
+        //}
+        //else {
+        if (!file_exists($zipFN)) {
+            trigger_error('ZIP file does not exist!');
             return $this->nextAction(NULL, array());
         }
         else {
-            if (!file_exists($zipFN)) {
-                trigger_error('ZIP file does not exist!');
-                return $this->nextAction(NULL, array());
+            //header('Location: '.$zipURI);
+            //return NULL;
+            $output_compression = ini_get('zlib.output_compression');
+            if ('On' == $output_compression || (bool)$output_compression) {
+                ini_set('zlib.output_compression', 'Off');
             }
-            else {
-                $output_compression = ini_get('zlib.output_compression');
-                if ('On' == $output_compression || (bool)$output_compression) {
-                    ini_set('zlib.output_compression', 'Off');
-                }
-                header("Pragma: public");
-                header("Expires: 0");
-                header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-                header("Cache-Control: private", false);
-                header("Content-Type: application/zip");
-                header("Content-Disposition: attachment; filename=\"" . basename($zipFN) . "\";");
-                header("Content-Transfer-Encoding: binary");
-                header("Content-Length: " . filesize($zipFN));
-                readfile($zipFN);
-                exit(0);
-            }
+            header("Pragma: public");
+            header("Expires: 0");
+            header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+            header("Cache-Control: private", false);
+            header("Content-Type: application/zip");
+            header("Content-Disposition: attachment; filename=\"" . $zipBaseName . "\";");
+            header("Content-Transfer-Encoding: binary");
+            header("Content-Length: " . filesize($zipFN));
+            readfile($zipFN);
+            return NULL;
+            //exit(0);
         }
+        //}
         /*
         if (file_exists($zipname)) {
 // Set Mimetype
