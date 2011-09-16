@@ -228,7 +228,7 @@ if ($this->objUser->isLoggedIn()) {
             
             
             <div class="rightColumnDivWide rightColumnPadding">
-                <fieldset>
+<!--                <fieldset style="width: 100%">-->
                     
            
               <?php
@@ -238,7 +238,7 @@ if ($this->objUser->isLoggedIn()) {
            
               ?>
                 
-                </fieldset> 
+<!--                </fieldset> -->
                 
             </div>
             
