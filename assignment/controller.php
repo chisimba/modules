@@ -812,6 +812,7 @@ class assignment extends controller {
         foreach ($submissions as $submission) {
             $submissionId = $submission['id'];
             $userId = $submission['userid'];
+            $userName = $submission['username'];
             $fileId = $submission['studentfileid'];
             $file = $objDBFile->getFile($fileId);
             $filePath = $contentBasePath . 'assignment/submissions/' . $submissionId . '/' . $file['filename'];
@@ -820,7 +821,7 @@ class assignment extends controller {
                 $files[] =
                     array(
                     'fn' => $filePath,
-                    'local_fn' => $userId.'_'.basename($filePath)
+                    'local_fn' => $objFilename->makeFileName($userName).'_'.basename($filePath)
                     );
             }
         }

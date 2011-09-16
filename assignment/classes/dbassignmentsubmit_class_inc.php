@@ -74,7 +74,7 @@ class dbassignmentsubmit extends dbtable {
      * @return <type>
      */
     public function getStudentSubmissions($assignmentId, $orderBy = 'firstname, datesubmitted') {
-        $sql = ' SELECT tbl_assignment_submit.*, firstName, surname, staffnumber FROM tbl_assignment_submit
+        $sql = ' SELECT tbl_assignment_submit.*, tbl_users.username, firstName, surname, staffnumber FROM tbl_assignment_submit
         INNER JOIN tbl_users ON tbl_assignment_submit.userid = tbl_users.userid  WHERE assignmentid=\'' . $assignmentId . '\' ORDER BY ' . $orderBy;
 
         return $this->getArray($sql);
