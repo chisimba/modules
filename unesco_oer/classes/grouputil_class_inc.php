@@ -317,17 +317,38 @@ class grouputil extends object {
         return $content;
     }
 
-    function latestDiscussion($groupid) {
+    function latestDiscussion($topics) {
 
         $content;
-        $content.='
+       
 
-        <div class="discusionPostDiv">
-        <img src="skins/unesco_oer/images/user.jpg" width="40" height="40" class="discussionImage">
-        <a href="" class="greenTextBoldLink">Discussion post title</a>
-        <br>
-        Posts: 3
-       </div>';
+        foreach ($topics as $topic) {
+            $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => 'context'), 'forum'));
+            $link->link = stripslashes($topic['post_title']);
+            $link->cssClass = "greenTextBoldLink";
+    
+
+
+            $reply='<div class="discusionReplyDiv">
+                     <img src="skins/unesco_oer/images/user.jpg" width="40" height="40" class="discussionImage">
+                      <a href="" class="greenTextBoldLink">Re:'.$topic['post_title'].'</a>
+                      <br>
+                      Posts: 1
+                      </div>';
+
+            //make an if statement to showe a reply
+
+        $content.='
+            <div class="discusionPostDiv">
+            <img src="skins/unesco_oer/images/user.jpg" width="40" height="40" class="discussionImage">
+            <a href="" class="greenTextBoldLink">'.$link->show().'</a>
+            <br>
+            Posts: 3
+            '.$reply.'
+              </div>';
+        }
+        return $content;
+        
     }
 
     function discussion($topics, $forumId) {
@@ -338,22 +359,20 @@ class grouputil extends object {
             $link->link = stripslashes($topic['post_title']);
             $link->show();
             //$datefield=$this->objTranslatedDate->getDifference($topic['lastdate']);
-           $post=$this->objPost->getLastPost($forumId);
-           $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']).' - '.$this->objDateTime->formatTime($post['datelastupdated']);
-
+            $post = $this->objPost->getLastPost($forumId);
+            $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' - ' . $this->objDateTime->formatTime($post['datelastupdated']);
 
             $content.='
                 <div class="tenPixelPaddingLeft">
                 <div class="topGroupDiv">
-                	<div class="paddingContentTopLeftRightBottom">
-                        <div class="discussionList">
-                         <h3 class="fontBold">' . $link->show() . '</h3>
-                             <div class="textNextToRightFloatedImage">
-                              </div>
-                            Posts:12<br>
-                            Last posted: '.$datefield.'
-                        </div>
-
+                <div class="paddingContentTopLeftRightBottom">
+                <div class="discussionList">
+                <h3 class="fontBold">' . $link->show() . '</h3>
+                <div class="textNextToRightFloatedImage">
+                </div>
+                Posts:12<br>
+                Last posted: ' . $datefield . '
+                </div>
 
                     </div>
                 </div>

@@ -5,6 +5,13 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->objLanguagecode = $this->getObject('languagecode', 'language');
+$this->objTopic = & $this->getObject('dbtopic', 'forum');
+$forum = $this->objDbGroups->getForum($this->getParam('id'));
+$limit =  " limit 30";
+$order = 'date';
+$topics = $this->objTopic->showTopicsInForum($forum['id'], $this->objUser->userId(), $forum['archivedate'], $order, 'asc', NULL, $limit);
+$topicsNum = count($topics);
+
 ?>
 
 
@@ -150,13 +157,19 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                             <br><br>
                             <span class="greenText fontBold">School database revcord URL: </span>http://www.unesco-ci.org
                         </div>
-
                     </div>
 
-                    <div class="discussionListingDiv">
+                   <div class="discussionListingDiv">
                         <div class="discussionListHeadingDiv">Latest discussion</div>
+
                         <div class="discussionListDiv">
-                            <div class="discusionPostDiv">
+
+
+
+            <?php
+              echo $this->objGroupUtil->latestDiscussion($topics);
+            ?>
+<!--                            <div class="discusionPostDiv">
                                 <img src="skins/unesco_oer/images/user.jpg" width="40" height="40" class="discussionImage">
                                 <a href="" class="greenTextBoldLink">Discussion post title</a>
                                 <br>
@@ -184,7 +197,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
 
                                 <br>
                                 Posts: 23
-                            </div>
+                            </div>-->
 
                             <div class="showAlldiscussions">
 
