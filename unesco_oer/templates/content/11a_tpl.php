@@ -41,6 +41,7 @@ $topicsNum = count($topics);
                 	<a href="#" class="groupsBreadCrumbColor">                                                         <?php
                              $GroupLink=new link($this->uri(array("action" =>'10',"page"=>'10a_tpl.php')));
                              $GroupLink->link="Groups";
+                             $GroupLink->cssClass="greenTextBoldLink";
                              echo $GroupLink->show();
                              ?></a> |
                 <span class="groupsBreadCrumbColor noUnderline">

@@ -551,6 +551,15 @@ class dbgroups extends dbtable {
         $array = $this->getArray($sql);
         return $array[0]['id'];
     }
+    function  getNumberPost($topicid){
+        $sql="select * from tbl_forum_topic where id ='$topicid'";
+        $array = $this->getArray($sql);
+        return $array[0]['replies'];
+    }
+
+
+
+
 
 }
 ?>

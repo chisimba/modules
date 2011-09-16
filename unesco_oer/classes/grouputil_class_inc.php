@@ -239,6 +239,7 @@ class grouputil extends object {
     public function topcontent($groupid) {
         $Link = new link($this->uri(array("action" => '8a', 'id' => $groupid, "page" => '10a_tpl.php')));
         $Link->link = $this->objDbGroups->getGroupName($groupid);
+        $Link->cssClass="greenTextBoldLink";
 
 
         $content.='
@@ -323,18 +324,25 @@ class grouputil extends object {
        
 
         foreach ($topics as $topic) {
-            $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => 'context'), 'forum'));
+            $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => 'context',"page" => "10a_tpl.php"), 'forum'));
             $link->link = stripslashes($topic['post_title']);
             $link->cssClass = "greenTextBoldLink";
-    
-
-
-            $reply='<div class="discusionReplyDiv">
+       
+            $numberReply=$this->objDbGroups->getNumberPost($topic['topic_id']);
+          
+            if($numberReply!=0){
+               $reply='<div class="discusionReplyDiv">
                      <img src="skins/unesco_oer/images/user.jpg" width="40" height="40" class="discussionImage">
-                      <a href="" class="greenTextBoldLink">Re:'.$topic['post_title'].'</a>
+                      <a href="" class="greenTextBoldLink">Re:'.$link->show().'</a>
                       <br>
-                      Posts: 1
+                      Posts: '.$numberReply.'
                       </div>';
+               }else{
+                    $reply='';
+
+               }
+
+            
 
             //make an if statement to showe a reply
 
@@ -355,7 +363,7 @@ class grouputil extends object {
         $content;
 
         foreach ($topics as $topic) {
-            $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => 'context'), 'forum'));
+            $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => 'context',"page" =>"10a_tpl.php"), 'forum'));
             $link->link = stripslashes($topic['post_title']);
             $link->show();
             //$datefield=$this->objTranslatedDate->getDifference($topic['lastdate']);
@@ -382,6 +390,45 @@ class grouputil extends object {
         }
         return $content;
     }
+
+
+
+    function OerResource($groupid){
+        $content = '';
+        $arrays = $this->objDbGroups->getGroupProductadaptation($groupid);
+        if (count($arrays) > 0) {
+            foreach ($arrays as $array) {
+                $productID = $array['product_id'];
+
+                $product = $this->newObject('product', 'unesco_oer');
+                $product->loadProduct($productID);
+                $language = $product->getLanguageName();
+                $institution = $product->getInstitutionName();
+                $institutionId = $product->getInstitutionID();
+                $Thumbnail = $product->getThumbnailPath();
+
+                $Link = new link($this->uri(array("action" => 'ViewProduct', 'id' => $productID, "page" => '10a_tpl.php')));
+                $Link->link = '<img src="' . $Thumbnail. ' "alt="Adaptation placeholder" width="45" height="49" class="resourcesImage">';
+
+                $Title = $this->objDbGroups->getAdaptedProductTitle($productID);
+                $TittleLink = new link($this->uri(array("action" => 'ViewProduct', 'id' => $productID, "page" => '10a_tpl.php')));
+                $TittleLink->link = $Title;
+
+
+                $content.='<div class="resourcesPostDiv">
+                           '.$Link->show().'
+                           <h2>'.$TittleLink->show().'</h2>
+                           <br>
+                           Adapted in : <a href="" class="greyTextLink">'.$language.'</a>
+                          </div>';
+
+
+            }
+            echo $content;
+        }
+    }
+
+
 
 }
 ?>

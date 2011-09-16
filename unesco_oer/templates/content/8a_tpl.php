@@ -225,7 +225,11 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                 <div class="resourcesListingDiv">
                     <div class="resourcesListHeadingDiv">OER Resources</div>
                     <div class="resourcesListDiv">
-                        <div class="resourcesPostDiv">
+                        <?php
+                            $groupid = $this->getParam('id');
+                           echo  $this->objGroupUtil->OerResource($groupid);
+                        ?>
+<!--                        <div class="resourcesPostDiv">
                             <img src="skins/unesco_oer/images/adapted-product-grid-group-logo-placeholder.jpg" width="45" height="49" class="resourcesImage">
                             <h2>Model Cirrcula for Journalism Education</h2>
 
@@ -239,7 +243,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                             <br>
 
                             Adapted in : <a href="" class="greyTextLink">English</a>
-                        </div>
+                        </div>-->
                         <div class="showAlldiscussions">
                             <a href="" class="greyTextBoldLink">All OER resources</a> |
 
