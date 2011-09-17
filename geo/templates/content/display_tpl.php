@@ -15,7 +15,7 @@ if(!empty($message))
 {
 	echo $message;
 }
-$leftCol .= $objSideBar->show();
+// $leftCol .= $objSideBar->show();
 $this->objOps->makeMapMarkers($choices, $lat, $lon);
 
 $middleColumn .= $this->objOps->makeGMap($lat, $lon);

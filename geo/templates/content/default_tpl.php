@@ -14,7 +14,7 @@ if(!empty($message))
 {
 	echo $message;
 }
-$leftCol .= $objSideBar->show();
+//$leftCol .= $objSideBar->show();
 
 $middleColumn .= $this->objOps->getHTML5Loc();
 
