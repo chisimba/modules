@@ -92,8 +92,19 @@ class geo extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
             case NULL:
-                echo "nothing to do";
+                return 'default_tpl.php';
                 break;
+                
+            case 'setloc':
+            	$lat = $this->getParam('lat');
+            	$lon = $this->getParam('lon');
+            	$limit = 10;
+            	$choices = json_decode($this->objMongo->getByLonLat(floatval($lon), floatval($lat), $limit));
+            	$this->setVarByRef('choices', $choices);
+            	$this->setVarByRef('lat', $lat);
+            	$this->setVarByRef('lon', $lon);
+            	return 'display_tpl.php';
+            	break;
                 
             case 'getwikipedia' :
                 $lon          = $this->getParam('lon', NULL);
@@ -186,7 +197,7 @@ class geo extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', 'getwikipedia', NULL);
+        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', 'getwikipedia', 'setloc', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
