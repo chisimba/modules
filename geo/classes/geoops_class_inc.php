@@ -270,7 +270,7 @@ class geoops extends object
                 continue;
             }
             else {
-                $body .= '<marker lat="'.$data->latitude.'" lng="'.$data->longitude.'" info="'.htmlentities($data->name).'" />';
+                $body .= '<marker lat="'.$data->latitude.'" lng="'.$data->longitude.'" info="'.htmlspecialchars($data->name).'" />';
             }
         }
         $body .= '<marker lat="'.$lat.'" lng="'.$lon.'" info="'.htmlentities("You are here!").'" />';
