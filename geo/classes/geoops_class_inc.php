@@ -293,6 +293,7 @@ class geoops extends object
     
     public function makeGMap($lat, $lon) {
     	$gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
+    	$uri = $this->uri('');
         //$css = '<link href="http://www.google.com/apis/maps/base.css" rel="stylesheet" type="text/css"></link>';
         $css = '<style type="text/css">  
             html, body {
@@ -313,42 +314,13 @@ class geoops extends object
         return marker;
       }
 
-    function refresh(){
-          var map = new GMap2(document.getElementById(\"map\"));
-        map.addControl(new GSmallMapControl());
-        map.addControl(new GMapTypeControl());
-        map.setCenter(new GLatLng(-30, 25), 6);
-
-          GDownloadUrl(\"http://pansamaps.chisimba.com/index.php?module=pansamaps&action=getmapdata\", function(data, responseCode) {
-          // To ensure against HTTP errors that result in null or bad data,
-          // always check status code is equal to 200 before processing the data
-          if(responseCode == 200) {
-            var xml = GXml.parse(data);
-            var markers = xml.documentElement.getElementsByTagName(\"marker\");
-            for (var i = 0; i < markers.length; i++) {
-              var info = markers[i].getAttribute(\"info\");
-              var point = new GLatLng(parseFloat(markers[i].getAttribute(\"lat\")), parseFloat(markers[i].getAttribute(\"lng\")));
-              var marker = createMarker(point, info)
-              map.addOverlay(marker);
-            }
-            
-          } else if(responseCode == -1) {
-            alert(\"Data request timed out. Please try later.\");
-          } else { 
-            alert(\"Request resulted in error. Check XML file is retrievable.\");
-          }
-        });
-          window.setTimeout(\"refresh()\", 30000);
-
-    }
-
     function load() {
       if (GBrowserIsCompatible()) {
         var map = new GMap2(document.getElementById(\"map\"));
         map.addControl(new GSmallMapControl());
         map.addControl(new GMapTypeControl());
         map.setCenter(new GLatLng($lat, $lon), 14);
-        GDownloadUrl(\"http://127.0.0.1/chisimba/packages/geo/markers.xml\", function(data, responseCode) {
+        GDownloadUrl(\"packages/geo/markers.xml\", function(data, responseCode) {
           // To ensure against HTTP errors that result in null or bad data,
           // always check status code is equal to 200 before processing the data
           if(responseCode == 200) {
@@ -367,9 +339,6 @@ class geoops extends object
             alert(\"Request resulted in error. Check XML file is retrievable.\");
           }
         });
-
-        // window.setTimeout(\"refresh()\", 30000);
-
       }
     }
 
