@@ -276,7 +276,8 @@ class geoops extends object
         $body .= '<marker lat="'.$lat.'" lng="'.$lon.'" info="'.htmlentities("You are here!").'" />';
         $tail = "</markers>";
         $data = $head.$body.$tail;
-        $path = $this->objConfig->getModulePath()."geo/markers.xml";
+        $filename = microtime(TRUE)."markers.xml";
+        $path = $this->objConfig->getModulePath()."geo/".$filename;
         if(!file_exists($path)) {
             touch($path);
             chmod($path, 0777);
@@ -288,10 +289,10 @@ class geoops extends object
         }
         file_put_contents($path, $data);
         
-        return $data;
+        return $filename;
     }
     
-    public function makeGMap($lat, $lon) {
+    public function makeGMap($lat, $lon, $path) {
     	$gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
     	$uri = $this->uri('');
         //$css = '<link href="http://www.google.com/apis/maps/base.css" rel="stylesheet" type="text/css"></link>';
@@ -320,7 +321,7 @@ class geoops extends object
         map.addControl(new GSmallMapControl());
         map.addControl(new GMapTypeControl());
         map.setCenter(new GLatLng($lat, $lon), 14);
-        GDownloadUrl(\"packages/geo/markers.xml\", function(data, responseCode) {
+        GDownloadUrl(\"packages/geo/$path\", function(data, responseCode) {
           // To ensure against HTTP errors that result in null or bad data,
           // always check status code is equal to 200 before processing the data
           if(responseCode == 200) {

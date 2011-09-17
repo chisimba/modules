@@ -16,9 +16,9 @@ if(!empty($message))
 	echo $message;
 }
 // $leftCol .= $objSideBar->show();
-$this->objOps->makeMapMarkers($choices, $lat, $lon);
+$path = $this->objOps->makeMapMarkers($choices, $lat, $lon);
 
-$middleColumn .= $this->objOps->makeGMap($lat, $lon);
+$middleColumn .= $this->objOps->makeGMap($lat, $lon, $path);
 $radius = 5;
 
 //$objWikipedia = $this->objOps->getWikipedia($lon, $lat, $radius);
