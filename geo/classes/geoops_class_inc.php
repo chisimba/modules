@@ -300,7 +300,7 @@ class geoops extends object
             }
         </style>';
         $this->appendArrayVar('headerParams', $css);
-        $google = "<script src=\"http://maps.google.com/maps?file=api&amp;v=3&sensor=false.x&amp;key=$gmapsapikey\"
+        $google = "<script src=\"http://maps.google.com/maps?file=api&amp;v=3&sensor=true.x&amp;key=$gmapsapikey\"
             type=\"text/javascript\"></script>
     <script type=\"text/javascript\">
     //<![CDATA[
