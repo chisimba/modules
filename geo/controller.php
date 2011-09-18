@@ -220,7 +220,7 @@ class geo extends controller
                 	$lat = 0;
                 	$lon = 0;
                 }
-                $zoom = 5;
+                $zoom = 2;
                 $this->setVarByRef('zoom', $zoom);
                 $this->setVarByRef('choices', $choices);
             	$this->setVarByRef('lat', $lat);
