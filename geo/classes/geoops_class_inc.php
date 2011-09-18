@@ -317,9 +317,10 @@ class geoops extends object
     function load() {
       if (GBrowserIsCompatible()) {
         var map = new GMap2(document.getElementById(\"map\"));
-        map.addControl(new GSmallMapControl());
+        map.addControl(new GLargeMapControl3D());
         map.addControl(new GMapTypeControl());
         map.setCenter(new GLatLng($lat, $lon), $zoom);
+        map.setUIToDefault();
         GDownloadUrl(\"packages/geo/$path\", function(data, responseCode) {
           // To ensure against HTTP errors that result in null or bad data,
           // always check status code is equal to 200 before processing the data
