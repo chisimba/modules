@@ -74,6 +74,7 @@ class geo extends controller
             $this->objUser          = $this->getObject('user', 'security');
             $this->objMongo         = $this->getObject('geomongo', 'mongo');
             $this->objOps           = $this->getObject('geoops');
+            $this->objCookie        = $this->getObject('cookie', 'utilities');
         }
         catch ( customException $e ) {
             customException::cleanUp ();
@@ -92,17 +93,38 @@ class geo extends controller
         $action = $this->getParam ( 'action' );
         switch ($action) {
             case NULL:
-                return 'default_tpl.php';
+            	$currLocation = NULL;
+                if($this->objCookie->exists('geo_location') ) {
+                    $currLocation = $this->objCookie->get('geo_location');
+                }
+                if($currLocation == NULL) {
+                    return 'default_tpl.php';
+                }
+                else {
+                	$latlon = explode("|", $currLocation);
+                	$lat = $latlon[0];
+                	$lon = $latlon[1];
+                	$this->nextAction('setloc', array('lat' => $lat, 'lon' => $lon));
+                }
                 break;
                 
             case 'setloc':
             	$lat = $this->getParam('lat');
             	$lon = $this->getParam('lon');
+            	// remember this...
+            	if($this->objCookie->exists('geo_location') ) {
+                    $this->objCookie->cookiedelete('geo_location');
+                    $this->objCookie->set( 'geo_location', $lat."|".$lon, time()+60*60*24*30);
+                }
+                else {
+                    $this->objCookie->set( 'geo_location', $lat."|".$lon, time()+60*60*24*30);
+                }
             	$limit = 10;
             	$choices = json_decode($this->objMongo->getByLonLat(floatval($lon), floatval($lat), $limit));
             	$this->setVarByRef('choices', $choices);
             	$this->setVarByRef('lat', $lat);
             	$this->setVarByRef('lon', $lon);
+            	
             	return 'display_tpl.php';
             	break;
                 
@@ -183,6 +205,29 @@ class geo extends controller
                 echo $res;
                 break;
                 
+            case 'placesearch' :
+            	$placename = ucwords($this->getParam('placename'));
+            	$limit = $this->getParam('limit', 10);
+                $res = $this->objMongo->getByPlacename($placename, $limit);
+                $choices = json_decode($res);
+                if($this->objCookie->exists('geo_location') ) {
+                    $currLocation = $this->objCookie->get('geo_location');
+                    $latlon = explode("|", $currLocation);
+                    $lat = $latlon[0];
+                    $lon = $latlon[1];
+                }
+                else {
+                	$lat = 0;
+                	$lon = 0;
+                }
+                $zoom = 5;
+                $this->setVarByRef('zoom', $zoom);
+                $this->setVarByRef('choices', $choices);
+            	$this->setVarByRef('lat', $lat);
+            	$this->setVarByRef('lon', $lon);
+            	return 'display_tpl.php';
+                break;
+                
             default:
                 $this->nextAction('');
                 break;
@@ -197,7 +242,7 @@ class geo extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', 'getwikipedia', 'setloc', NULL);
+        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', 'getwikipedia', 'setloc', 'placesearch', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;

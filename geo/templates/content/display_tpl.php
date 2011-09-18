@@ -15,16 +15,26 @@ if(!empty($message))
 {
 	echo $message;
 }
+if(!isset($zoom)) {
+	$zoom = 14;
+}
 // $leftCol .= $objSideBar->show();
 $path = $this->objOps->makeMapMarkers($choices, $lat, $lon);
 
-$middleColumn .= $this->objOps->makeGMap($lat, $lon, $path);
+$middleColumn .= $this->objOps->makeGMap($lat, $lon, $path, $zoom);
 $radius = 5;
+
+$middleColumn .= $this->objOps->placeSearchForm();
 
 //$objWikipedia = $this->objOps->getWikipedia($lon, $lat, $radius);
 // parse wikipedia data
-//$this->objMongo->mongoWikipedia($objWikipedia);
+//$wik = $this->objMongo->mongoWikipedia($objWikipedia);
+//var_dump($wik);
 
+//$objFlickr    = $this->objOps->getFlickr($lon, $lat, $radius);
+// parse Flickr data
+//$this->objMongo->mongoFlickr($objFlickr);
+                
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
 //$cssLayout->setRightColumnContent($rightSideColumn);

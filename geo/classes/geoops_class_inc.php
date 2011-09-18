@@ -85,6 +85,8 @@ class geoops extends object
 		$this->objProxy        = $this->getObject('proxyparser', 'utilities');
 		$this->objLanguage     = $this->getObject ( 'language', 'language' );
 		$this->objConfig       = $this->getObject('altconfig', 'config');
+		$this->loadClass('form', 'htmlelements');
+		$objSelectFile         = $this->newObject('selectfile', 'filemanager');
 	}
 
 	public function getWikipedia($lon, $lat, $radius=1500) {
@@ -127,8 +129,6 @@ class geoops extends object
 
 	public function picUploadForm() {
 		$ret = NULL;
-		$this->loadClass('form', 'htmlelements');
-		$objSelectFile = $this->newObject('selectfile', 'filemanager');
 		$objSelectFile->restrictFileList = array('jpg', 'jpeg', 'png', 'gif');
 		$objSelectFile->name = 'pic';
 		$form = new form ('uploadpic', $this->uri(array('action'=>'uploadpic'), 'events'));
@@ -141,13 +141,12 @@ class geoops extends object
 	}
 
 	public function geoLocationForm($editparams = NULL, $eventform = FALSE) {
-		$this->loadClass('form', 'htmlelements');
 		$this->objModules = $this->getObject('modules', 'modulecatalogue');
 		$ret = NULL;
 		$lat = 0;
 		$lon = 0;
 		$zoom = 2;
-		$currLocation = $this->objCookie->get('events_latlon');
+		$currLocation = $this->objCookie->get('geo_latlon');
 		$currloc = explode("|", $currLocation);
 		if(!empty($currloc) && isset($currloc[0]) && isset($currloc[1])) {
 			$lat = $currloc[0];
@@ -292,7 +291,7 @@ class geoops extends object
         return $filename;
     }
     
-    public function makeGMap($lat, $lon, $path) {
+    public function makeGMap($lat, $lon, $path, $zoom = 14) {
     	$gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
     	$uri = $this->uri('');
         //$css = '<link href="http://www.google.com/apis/maps/base.css" rel="stylesheet" type="text/css"></link>';
@@ -320,7 +319,7 @@ class geoops extends object
         var map = new GMap2(document.getElementById(\"map\"));
         map.addControl(new GSmallMapControl());
         map.addControl(new GMapTypeControl());
-        map.setCenter(new GLatLng($lat, $lon), 14);
+        map.setCenter(new GLatLng($lat, $lon), $zoom);
         GDownloadUrl(\"packages/geo/$path\", function(data, responseCode) {
           // To ensure against HTTP errors that result in null or bad data,
           // always check status code is equal to 200 before processing the data
@@ -352,6 +351,36 @@ class geoops extends object
         
         $gtags = '<div id="map" style="width: 768px; height: 768px"></div>';
         return $gtags;
+    }
+    
+    public function placeSearchForm() {
+    	$sform = new form ('placesearch', $this->uri(array('action'=>'placesearch')));
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $pstable = $this->newObject('htmltable', 'htmlelements');
+		$pstable->cellpadding = 3;
+		$pstable->startRow();
+		$pstable->startRow();
+		$llabel = new label($this->objLanguage->languageText("mod_geo_limit", "geo") . ':', 'input_limit');
+		$limit = new textinput('limit', NULL, NULL, '10%');
+		$limit->setValue(10);
+		$slabel = new label($this->objLanguage->languageText("mod_geo_placename", "geo") . ':', 'input_place');
+		$place = new textinput('placename', NULL, NULL, '50%');
+		$pstable->addCell($slabel->show());
+		$pstable->addCell($place->show());
+		$pstable->addCell($llabel->show());
+		$pstable->addCell($limit->show());
+		$pstable->endRow();
+		
+		
+		
+		$fieldset = $this->newObject('fieldset', 'htmlelements');
+		$fieldset->legend = $this->objLanguage->languageText("mod_geo_placesearch", "geo");
+		$fieldset->contents = $pstable->show();
+		$button = new button ('submitform', $this->objLanguage->languageText("mod_geo_searchplaces", "geo"));
+		$button->setToSubmit();
+		$sform->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
+		return $sform->show();
     }
 }
 ?>
