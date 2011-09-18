@@ -87,6 +87,7 @@ class geoops extends object
 		$this->objConfig       = $this->getObject('altconfig', 'config');
 		$this->loadClass('form', 'htmlelements');
 		$objSelectFile         = $this->newObject('selectfile', 'filemanager');
+		$this->objUser         = $this->getObject('user', 'security');
 	}
 
 	public function getWikipedia($lon, $lat, $radius=1500) {
@@ -373,8 +374,6 @@ class geoops extends object
 		$pstable->addCell($limit->show());
 		$pstable->endRow();
 		
-		
-		
 		$fieldset = $this->newObject('fieldset', 'htmlelements');
 		$fieldset->legend = $this->objLanguage->languageText("mod_geo_placesearch", "geo");
 		$fieldset->contents = $pstable->show();
@@ -382,6 +381,73 @@ class geoops extends object
 		$button->setToSubmit();
 		$sform->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
 		return $sform->show();
+    }
+    
+    /**
+     * Welcome block
+     *
+     * Block to display welcome messages when logged in, or a sign in link if not
+     *
+     * @return string
+     */
+    public function showWelcomeBox() {
+        $objFeaturebox = $this->getObject('featurebox', 'navigation');
+        $linklist = NULL;
+        if($this->objUser->isLoggedIn() == FALSE) {
+            $signinlink = $this->newObject('alertbox', 'htmlelements');
+            $signuplink = $this->newObject('alertbox', 'htmlelements');
+            $registerlink = $this->newObject('alertbox', 'htmlelements');
+            // Make sure to show the sign up link only if registrations are allowed!
+            if(strtolower($this->objConfig->getallowSelfRegister()) == 'true') {
+                $signuplink = $signuplink->show($this->objLanguage->languageText("mod_geo_signup", "geo"), $this->uri(array('action' => 'showregister'), 'userregistration'));
+            }
+            else {
+                $signuplink = NULL;
+            }
+            $signinlink = $signinlink->show($this->objLanguage->languageText("mod_geo_signin", "geo"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_geo_toaddplaces", "geo").", ";
+            $linklist .= $signinlink;
+            $linklist .= $this->objLanguage->languageText("mod_geo_orifyoudonthaveacc", "geo").", ".$signuplink;
+        }
+        else {
+            //user is logged in
+            $invitelink = $this->newObject('alertbox', 'htmlelements');
+            $invitelink = $invitelink->show($this->objLanguage->languageText("mod_geo_invitefriends", "geo"), $this->uri(array('action' => 'invitefriend')));
+
+            $linklist .= $invitelink;
+        }
+        // location link is always visible
+        $changeloclink = $this->newObject('link', 'htmlelements');
+        $changeloclink->href = $this->uri(array('action' => 'changelocation'));
+        $changeloclink->link = $this->objLanguage->languageText("mod_geo_changeloc", "geo");
+
+        $linklist .= "<br /><ul><li>".$changeloclink->show()."</li></ul>";
+        return $objFeaturebox->show($this->objLanguage->languageText("mod_geo_welcome", "geo"),$linklist);
+    }
+
+    /**
+     * Sign in block
+     *
+     * Used in conjunction with the welcome block as a alertbox link. The sign in simply displays the block to sign in to Chisimba
+     *
+     * @return string
+     */
+    public function showSignInBox() {
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_geo_signin", "geo"), $objBlocks->showBlock('login', 'security', 'none'));
+    }
+
+    /**
+     * Sign up block
+     *
+     * Method to generate a sign up (register) block for the module. It uses a linked alertbox to format the response
+     *
+     * @return string
+     */
+    public function showSignUpBox() {
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        return $objFeatureBox->show($this->objLanguage->languageText("mod_geo_signup", "geo"), $objBlocks->showBlock('register', 'security', 'none'));
     }
 }
 ?>

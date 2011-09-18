@@ -1,8 +1,9 @@
 <?php
+header ( "Content-Type: text/html;charset=utf-8" );
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('usermenu', 'toolbar');
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
-$this->objOps           = $this->getObject('geoops');
+$this->objOps = $this->getObject('geoops');
 
 // Set columns to 3
 $cssLayout->setNumColumns(3);
@@ -18,7 +19,7 @@ if(!empty($message))
 if(!isset($zoom)) {
 	$zoom = 14;
 }
-// $leftCol .= $objSideBar->show();
+$leftCol .= $this->objOps->showWelcomeBox();
 $path = $this->objOps->makeMapMarkers($choices, $lat, $lon);
 
 $middleColumn .= $this->objOps->makeGMap($lat, $lon, $path, $zoom);
