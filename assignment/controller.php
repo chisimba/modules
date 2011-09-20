@@ -797,13 +797,18 @@ class assignment extends controller {
         }
         //--$dirPath = $contentBasePath . 'assignment/submissions/' . $assignmentId;
         $contentBasePath = $this->objConfig->getcontentBasePath();
-        //$contentPath = $this->objConfig->getcontentPath();
-        $zipPath = 'assignment/submissions/';
-        $zipFullPath = $contentBasePath . $zipPath;
+        //$contentPath = ;
+        //$zipPath = ;
+        $zipFullPath = $contentBasePath . 'assignment'.DIRECTORY_SEPARATOR.'submissions'.DIRECTORY_SEPARATOR;
+        //$sysTemp = sys_get_temp_dir();
+        //if ($sysTemp[strlen($sysTemp)-1] != DIRECTORY_SEPARATOR) {
+        //    $sysTemp .= DIRECTORY_SEPARATOR;
+        //}
+        //$zipFullPath = $sysTemp.'chisimba'.DIRECTORY_SEPARATOR.$this->objConfig->serverName().DIRECTORY_SEPARATOR.'assignment'.DIRECTORY_SEPARATOR.'submissions'.DIRECTORY_SEPARATOR;
         //==preg_replace('/[^[:alnum:]_\s]/', '_', '\temp0_ \/:*?"<>|');
         $zipBaseName = $objFilename->makeFileName($this->context.' ('.$this->contextCode.')_'.$assignmentName.' ('.$assignmentId.').zip'); //preg_replace('/[^[:alnum:]_\s]/', '_', $assignmentName) . '.zip'; //$assignmentId //$contentBasePath . 'assignment/submissions/'
         $zipFN = $zipFullPath . $zipBaseName;
-        //==$zipURI = $this->objConfig->getsiteRoot() . rawurlencode($contentPath . $zipPath . $zipBaseName);
+        //$zipURI = $this->objConfig->getsiteRoot() . $this->objConfig->getcontentPath() . $zipRelPath . rawurlencode($zipBaseName);
         $objMkdir->mkdirs($zipFullPath);
         if(file_exists($zipFN)){
             unlink($zipFN);
@@ -878,6 +883,7 @@ class assignment extends controller {
             header("Content-Transfer-Encoding: binary");
             header("Content-Length: " . filesize($zipFN));
             readfile($zipFN);
+            unlink($zipFN);
             return NULL;
             //exit(0);
         }
