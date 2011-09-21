@@ -409,7 +409,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                           
                        
                ?>
-<!--                         <script src="http://code.jquery.com/jquery-latest.js"></script>
+<!--                         <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
                             <script>
                            $(document).ready(function(){
 

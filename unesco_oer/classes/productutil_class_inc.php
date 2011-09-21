@@ -183,7 +183,7 @@ class productutil extends object {
     public function populateListView($start,$end,$products) {
 
         $content = '     
-                                      <script src="http://code.jquery.com/jquery-latest.js"></script>
+                                      <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
                             <script>
                            $(document).ready(function(){';
 
@@ -803,7 +803,7 @@ class productutil extends object {
 public function populatebookmark($product) {
 
         $content = '     
-                                      <script src="http://code.jquery.com/jquery-latest.js"></script>
+                                      <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
                             <script>
                            $(document).ready(function(){';
 

@@ -196,9 +196,7 @@ $this->appendArrayVar('headerParams', $js);
               echo  $content->getContentTree(FALSE,FALSE);
            
                 ?>
-<!--                <div class="ellipsis" style="width: 100px; border: 1px solid black;">Lorem ipsum dolor sit amet, consectetur adipisicing elit</div>
-                <div class="ellipsis multiline" style="width: 120px; height: 40px; border: 1px solid black; margin-bottom: 100px">Lorem ipsum dolor sit amet, consectetur adipisicing elit</div>-->
-                <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+                <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
                
 
 <!--                <ul class="ulPlusPublish">
@@ -406,7 +404,7 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
                                 if (($this->objDbComments->getTotalcomments($productID) > 2)) {
                                     ?>
 
-<!--                            <script src="http://code.jquery.com/jquery-latest.js"></script>
+<!--                            <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
                             <script>
                                 $(document).ready(function(){
 

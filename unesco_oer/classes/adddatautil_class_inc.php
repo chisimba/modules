@@ -71,6 +71,11 @@ class adddatautil extends object {
         $table->endRow();
     }
 
+    function  addContentAsRowToTable($content,$table){
+        $table->startRow();
+        $table->addCell($content);
+        $table->endRow();
+    }
     function addDropDownToTable($title, $titleType, $name, $inputArray, $initValue, $field, $table, $value = null, $onChange = '') {
         $table->startRow();
         $this->addTitleToRow($title, $titleType, $table);

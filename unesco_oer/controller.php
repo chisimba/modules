@@ -2194,6 +2194,9 @@ class unesco_oer extends controller {
     }
 
     public function __saveProductMetaData() {
+         $license = $this->getParam('creativecommons');
+
+        
         $defaultTemplate = "ProductMetaData_tpl.php";
 
         $product = $this->getObject('product');
@@ -2270,6 +2273,7 @@ class unesco_oer extends controller {
         $option = $this->getParam('option');
         $contentManager = $this->getObject('contentmanager');
         $product = $this->newObject('product');
+     
 
         if ($productID) {
             $product->loadProduct($productID);

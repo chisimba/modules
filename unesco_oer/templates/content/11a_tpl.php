@@ -476,7 +476,7 @@ function SubmitProduct()
                         </div>
                     </div>
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
 <script type="text/javascript">
 
 

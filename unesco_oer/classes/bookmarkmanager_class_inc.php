@@ -155,7 +155,7 @@ class bookmarkmanager extends dbtable {
 
 
         $content = '    
-                           <script src="http://code.jquery.com/jquery-latest.js"></script>
+                           <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
                             <script>
                            $(document).ready(function(){' . " $('#deletebookmark').click(function(){
                  if (confirm('Are you sure you want to delete')) {
@@ -332,7 +332,7 @@ class bookmarkmanager extends dbtable {
 
     public function populateGridView($products) {
 
-        $content = "<script src='http://code.jquery.com/jquery-latest.js'></script>";
+        $content = "<script src='packages/unesco_oer/resources/js/jquery-1.6.2.min.js'></script>";
 
         foreach ($products as $product) {
 

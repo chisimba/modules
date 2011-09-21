@@ -324,7 +324,7 @@ class product extends object {
         }
 
         //NOTE: themes are saved after an ID has been created
-        $this->saveThemes($this->getThemes()); 
+        $this->saveThemes($this->getThemes());
         //NOTE: keywords are saved after an ID has been created
         $this->saveKeyWords($this->getKeyWords());
 
@@ -502,9 +502,9 @@ class product extends object {
         $fileInfoArray = array();
 
         if (!$this->objThumbUploader->isFileValid($fileInfoArray) && !$this->isAdaptation()) {
-            $errorMessage1 = $this->objLanguage->languageText('mod_unesco_oer_thumbnail_error1','unesco_oer');
-            $errorMessage2 = $this->objLanguage->languageText('mod_unesco_oer_thumbnail_error2','unesco_oer');
-            $errorMessage3 = $this->objLanguage->languageText('mod_unesco_oer_thumbnail_error3','unesco_oer');
+            $errorMessage1 = $this->objLanguage->languageText('mod_unesco_oer_thumbnail_error1', 'unesco_oer');
+            $errorMessage2 = $this->objLanguage->languageText('mod_unesco_oer_thumbnail_error2', 'unesco_oer');
+            $errorMessage3 = $this->objLanguage->languageText('mod_unesco_oer_thumbnail_error3', 'unesco_oer');
             switch ($fileInfoArray['reason']) {
                 case 'nouploadedfileprovided':
                     if (!$this->getThumbnailPath()) {
@@ -862,16 +862,12 @@ class product extends object {
 
         $iconList = $this->objCC->show($cclic);
 
-
-
-
-
-
+        $objLicenseChooser = $this->newObject('licensechooser', 'creativecommons');
+        $objLicenseChooser->icontype = 'small';
         //field for rights holder
         $fieldName = 'rights_holder';
         $title = $this->objLanguage->languageText('mod_unesco_oer_rights_holder', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
-                $title, 4, $fieldName, '90%', $this->getRightsHolder(), $table
+        $this->_objAddDataUtil->addContentAsRowToTable( $objLicenseChooser->show(), $table
         );
         //field for provenance
         $fieldName = 'provenance';
@@ -1505,7 +1501,7 @@ class product extends object {
     }
 
     function getInstitutionName() {
-        if ($institution = $this->getInstitution()){
+        if ($institution = $this->getInstitution()) {
             return $institution->getName();
         } else {
             return 'No Institution Linked';
@@ -1513,7 +1509,7 @@ class product extends object {
     }
 
     function getInstitution() {
-        if ($this->hasInstitutionLink()){
+        if ($this->hasInstitutionLink()) {
             $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
             return $objInstitutionManager->getInstitution($this->getInstitutionID());
         } else {
@@ -1525,9 +1521,9 @@ class product extends object {
         return $this->_institution;
     }
 
-    function hasInstitutionLink(){
+    function hasInstitutionLink() {
         $institutionID = $this->getInstitutionID();
-        return !empty($institutionID);
+        return!empty($institutionID);
     }
 
     function makeInstitutionDropDown($group_id = NULL) {
