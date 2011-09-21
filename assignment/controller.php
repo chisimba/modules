@@ -821,33 +821,43 @@ class assignment extends controller {
             $fileId = $submission['studentfileid'];
             $file = $objDBFile->getFile($fileId);
             $filePath = $contentBasePath . 'assignment/submissions/' . $submissionId . '/' . $file['filename'];
+            if (!file_exists($filePath)) {
+                //path
+                $filePath = $contentBasePath . $file['path'];
+                //trigger_error("Redirected:$filePath");
+            }
             if (file_exists($filePath)) {
                 //copy($filePath, $dirPath . '/' . $file['filename']);
                 $files[] =
                     array(
-                    'fn' => $filePath,
-                    'local_fn' => $objFilename->makeFileName($userName).'_'.basename($filePath)
+                        $filePath,
+                        $objFilename->makeFileName($userName.'_'.basename($filePath))
                     );
             }
         }
         if (empty($files)) {
-            trigger_error('There are no submission files!');
+            trigger_error('There are no submission files available!');
+            log_debug("There are no submission files available!\n");
+            throw new customException('There are no submission files available!');
             return $this->nextAction(NULL, array());
             //return FALSE;
         }
         else {
             // Create the zip file.
             if (!extension_loaded('zip')) {
+                trigger_error('The ZIP extension is not loaded!');
+                log_debug("The ZIP extension is not loaded!\n");
                 throw new customException($this->objLanguage->languageText("mod_utilities_nozipext", "utilities"));
             }
             $zip = new ZipArchive();
             if ($zip->open($zipFN, ZIPARCHIVE::CREATE) !== TRUE) {
-                log_debug("Assignment::Zip Error: cannot open [$zipFN]\n");
+                trigger_error("Cannot open [$zipFN]!");
+                log_debug("Cannot open [$zipFN]!\n");
                 throw new customException($this->objLanguage->languageText("mod_utilities_nozipcreate", "utilities"));
             } else {
                 foreach ($files as $f) {
-                    $FN = $f['fn'];
-                    $localFN = $f['local_fn'];
+                    $FN = $f[0];
+                    $localFN = $f[1];
                     $zip->addFile($FN, $localFN);
                 }
                 $zip->close();
@@ -865,7 +875,9 @@ class assignment extends controller {
         //else {
         if (!file_exists($zipFN)) {
             trigger_error('ZIP file does not exist!');
-            return $this->nextAction(NULL, array());
+            log_debug("ZIP file does not exist!\n");
+            throw new customException('ZIP file does not exist');
+            //return $this->nextAction(NULL, array());
         }
         else {
             //header('Location: '.$zipURI);
