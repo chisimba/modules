@@ -228,6 +228,25 @@ class geo extends controller
             	return 'display_tpl.php';
                 break;
                 
+            case 'showsignin' :
+                echo $this->objOps->showSignInBox();
+                break;
+
+            case 'showsignup' :
+                echo $this->objOps->showSignUpBox();
+                break;
+
+            case 'invitefriend' :
+                echo $this->objOps->showInviteForm();
+                break;
+
+            case 'changelocation' :
+                if($this->objCookie->exists('geo_location') ) {
+                    $this->objCookie->cookiedelete('geo_location');
+                }
+                $this->nextAction('');
+                break;
+                
             default:
                 $this->nextAction('');
                 break;
@@ -242,7 +261,8 @@ class geo extends controller
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='') {
-        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', 'getwikipedia', 'setloc', 'placesearch', NULL);
+        $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', 
+                                'getwikipedia', 'setloc', 'placesearch', 'changelocation', 'showsignin', 'showsignup', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
