@@ -502,9 +502,9 @@ class productutil extends object {
         $abLink->link = $adaptedProduct->getTitle(); 
         $parentid = $adaptedProduct->getParentID();
 
-        $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $parentid)));
+        $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $adaptedProduct->getIdentifier())));
         $CommentLink->cssClass = 'adaptationLinks';
-        $CommentLink->link = $adaptedProduct->getNoOfAdaptations()  . ' ' . $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
+        $CommentLink->link =  $adaptedProduct->getNoOfAdaptations()  . ' ' . $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -522,9 +522,9 @@ class productutil extends object {
         $content.='
                     <div class="adaptationListView">
                         <div class="productAdaptationListViewLeftColumn">
-                            <h2><a href="#" class="adaptationListingLink">' . $abLink->show() . ' </a></h2><br>
+                            <h2><a href="#" class="adaptationListingLink">' . $abLink->show() . ' </a></h2><br><br>
                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                            <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">' .$this->objLanguage->languageText('mod_unesco_oer_see_all_adaptations', 'unesco_oer').'(' . $CommentLink->show() . ')</a></div>
+                           <div class="listingAdaptationLinkDiv">  ' . $CommentLink->show() . ' </div>
                         </div>';
         if ($adaptedProduct->getThumbnailPath() != NULL) {
             $content .= '<div class="productAdaptationListViewMiddleColumn">
@@ -803,11 +803,9 @@ class productutil extends object {
 public function populatebookmark($product) {
 
         $content = '     
-                                      <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
+                           <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
                             <script>
                            $(document).ready(function(){';
-
-
 
      //   foreach ($data as $products) {
         
@@ -825,11 +823,7 @@ public function populatebookmark($product) {
                   $('$divheading').hide();
 
                   $('$linkheading').show();
-                 
-
-
- 
-
+           
                   $('$linkheading').click(function(){
 
                   $('$divheading').slideToggle();
@@ -852,15 +846,11 @@ public function populatebookmark($product) {
                  
 
                   });"
-            
-            
-            
-            
+
             ;
         
 
         $content .= '        
-
 
                                     });
 
@@ -959,11 +949,8 @@ public function populatebookmark($product) {
                 
              
                 " . $form->show() . "
-                                            
-                  
+     
                 </div>
-                
-            
 
         ";
         

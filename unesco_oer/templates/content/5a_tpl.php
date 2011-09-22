@@ -142,7 +142,21 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
     <div class="listingAdaptationsLinkAndIcon ExtraWidthDiv">
         <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-        <div class="textNextToTheListingIconDiv wideTextNextTiListingIconDiv"><a href="#" class="adaptationLinks">See existing adaptations of this UNESCO Product (15)</a></div>
+        <div class="textNextToTheListingIconDiv wideTextNextTiListingIconDiv"><a href="#" class="adaptationLinks">
+               <?php
+                
+                                $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $productID)));
+                                $CommentLink->cssClass = 'adaptationLinks';
+                                $CommentLink->link = ' See existing Adaptaions ('. $this->objDbProducts->getNoOfAdaptations($productID) . ')';
+                                echo $CommentLink->show();
+                                
+                                   
+                
+                ?>
+            
+            
+            
+            </a></div>
      </div>
                     </div>
                     <div class="sectionsHead">
@@ -701,7 +715,6 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
             </div>
         </div>
-                </div>
 <script type="text/javascript">
 
     jQuery(document).ready(function(){

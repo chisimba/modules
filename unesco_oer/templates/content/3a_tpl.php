@@ -135,7 +135,7 @@ $this->appendArrayVar('headerParams', $js);
                 
                                 $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $productID)));
                                 $CommentLink->cssClass = 'adaptationLinks';
-                                $CommentLink->link = ' See existing Adaptaions ('. $this->objDbProducts->getNoOfAdaptations($productID) . ')';
+                                $CommentLink->link = ' See existing Adaptations ('. $this->objDbProducts->getNoOfAdaptations($productID) . ')';
                                 echo $CommentLink->show();
                                 
                                    
