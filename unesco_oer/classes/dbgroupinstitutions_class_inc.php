@@ -18,7 +18,7 @@
 class dbgroupinstitutions extends dbtable {
 
     function init() {
-        parent::init("tbl_unesco_oer_group_institutions");
+        parent::init('tbl_unesco_oer_group_institutions');
     }
 
     function add_group_institutions($groupid, $institutionid) {
@@ -53,9 +53,3 @@ class dbgroupinstitutions extends dbtable {
 
 }
 ?>
-
-
-
-
-
-
