@@ -127,7 +127,7 @@ $this->appendArrayVar('headerParams', $js);
                 $groupId = $objGroups->getId("ProductCreators");
                 $objGroupOps = $this->getObject("groupops", "groupadmin");
                 $userId = $this->objUser->userId();
-                if ($this->objUser->isLoggedIn() && $objGroupOps->isGroupMember($groupId, $userId)) {
+                if ($this->objUser->isLoggedIn() && $this->objUser->isAdim());// $objGroupOps->isGroupMember($groupId, $userId)) {
 
                     $uri = $this->uri(array("action" => "newProduct", 'nextAction' => 'ViewProduct', 'cancelAction' => 'home', 'add_product_submit' => 'newproduct'));
                     $abLink = new link($uri);
