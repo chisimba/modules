@@ -27,7 +27,7 @@ $this->appendArrayVar('headerParams', $js);
         <div style="clear:both;"></div> 
         <div class="breadCrumb module"> 
             <div id='breadcrumb'>
-                <ul><li class="first"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_add_data_homeBtn', 'unesco_oer') ?></li>
+                <ul><li class="first"><?php echo $this->objLanguage->languageText('mod_unesco_oer_add_data_homeBtn', 'unesco_oer') ?></li>
 
                 </ul>
             </div>
@@ -122,7 +122,12 @@ $this->appendArrayVar('headerParams', $js);
                 $divOpen = '<div class="gridListPipe">|</div>
                                             <div class="gridListDivView">';
                 $divClose = '</div>';
-                if ($this->objUser->isLoggedIn() && $this->objUser->isAdmin()) {
+
+                $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+                $groupId = $objGroups->getId("ProductCreators");
+                $objGroupOps = $this->getObject("groupops", "groupadmin");
+                $userId = $this->objUser->userId();
+                if ($this->objUser->isLoggedIn() && $objGroupOps->isGroupMember($groupId, $userId)) {
 
                     $uri = $this->uri(array("action" => "newProduct", 'nextAction' => 'ViewProduct', 'cancelAction' => 'home', 'add_product_submit' => 'newproduct'));
                     $abLink = new link($uri);
@@ -189,7 +194,7 @@ $this->appendArrayVar('headerParams', $js);
         echo $bookmark;
         ?>
 
-        
+
 
         <!-- Pagination-->
         <div class="paginationDiv">
@@ -207,31 +212,31 @@ $this->appendArrayVar('headerParams', $js);
     <!-- Right column DIv -->
 
     <div class="rightColumnDiv">
-        <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
+        <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
         <div class="rightColumnBorderedDiv">
             <div class="rightColumnContentPadding">
                 <?php
                 $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
                 $featuredProduct = $this->objDbProducts->getProductByID($featuredProductID);
-                
+
                 echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct);
                 ?>
-<!--                <div class="listingAdaptationLinkDiv">
-
-                    <a href="#" class="adaptationLinks">
-                        <?php
-                        //The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
-                     //   $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id']);
-                     //   echo"See all adaptations ($NOofAdaptation)"; // This must be a link;
-                        ?>
-                    </a>
-                </div>-->
+                <!--                <div class="listingAdaptationLinkDiv">
+                
+                                    <a href="#" class="adaptationLinks">
+                <?php
+                //The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
+                //   $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id']);
+                //   echo"See all adaptations ($NOofAdaptation)"; // This must be a link;
+                ?>
+                                    </a>
+                                </div>-->
             </div>
         </div>
 
 
         <div class="spaceBetweenRightBorderedDivs">
-            <div class="featuredHeader innerPadding"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_most', 'unesco_oer') ?></div>
+            <div class="featuredHeader innerPadding"><?php echo $this->objLanguage->languageText('mod_unesco_oer_most', 'unesco_oer') ?></div>
         </div>
 
         <div class="rightColumnContentPadding">

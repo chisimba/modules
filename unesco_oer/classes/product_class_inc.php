@@ -974,16 +974,17 @@ class product extends object {
             $objDbUserGroups = $this->getObject('dbusergroups', 'unesco_oer');
             $arrayUserGroups = $objDbUserGroups->getUserGroups($this->_user->PKId());
 
+            /*
             if (empty($arrayUserGroups)) {
                 $fieldset = $this->newObject('fieldset', 'htmlelements');
                 $fieldset->setLegend('ERROR');
                 $fieldset->addContent('You are not permitted to perform this operation! You must belong to a group');
                 return $fieldset->show();
-            }
+            }*/
 
             $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
 
-            $groups = array();
+            $groups = array("n");
             foreach ($arrayUserGroups as $userGroupRow) {
                 $groupArray = $objDbGroups->getGroupInfo($userGroupRow['groupid']);
                 array_push($groups, $groupArray[0]);
