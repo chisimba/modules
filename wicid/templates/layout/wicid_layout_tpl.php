@@ -33,7 +33,7 @@ $textinput = new textinput('filtervalue');
 $textinput->size = 17;
 
 $table = &$this->newObject('htmltable', 'htmlelements');
-$table->width = '500px';
+$table->width = '800px';
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 $objDatePicker = $this->newObject('datepicker', 'htmlelements');
 $objDatePicker->name = 'startdate';
