@@ -83,6 +83,7 @@ class dbblogcomments extends dbTable
             $blogtitle = $commentarray['postid']; //id, not the title
             //get the title from the id
             $blogtitle = $this->getBlogPostNameFromId($blogtitle);
+            $blogposter= $blogtitle[0]['userid'];
             $blogtitle = $blogtitle[0]['post_title'];
 
             $commentauthor = $commentarray['commentauthor'];
@@ -104,7 +105,7 @@ class dbblogcomments extends dbTable
             //$bodyText = str_replace("<br />", "\r\n", $bodyText);
             //echo $bodyText; die();
             //get the email address
-            $emailadd = $this->objUser->email($puserid);
+            $emailadd = $this->objUser->email($blogposter);
             $commentsemail = $this->objSysConfig->getValue('comments_email', 'blogcomments');
             
             $objMailer = $this->getObject('email', 'mail');
